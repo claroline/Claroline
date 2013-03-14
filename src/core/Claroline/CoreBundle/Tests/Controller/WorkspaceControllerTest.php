@@ -17,7 +17,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
     {
         $this->loadUserData(array('ws_creator' => 'ws_creator'));
         $this->loadWorkspaceData(array('ws_a' => 'ws_creator'));
-        $crawler = $this->logUser($this->getFixtureReference('user/ws_creator'));
+        $crawler = $this->logUser($this->getUser('ws_creator'));
         $link = $crawler->filter('#link-my-workspaces')->link();
         $crawler = $this->client->click($link);
         $this->assertEquals(2, $crawler->filter('.row-workspace')->count());
@@ -27,7 +27,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
     {
         $this->loadUserData(array('admin' => 'admin'));
         $this->loadWorkspaceData(array('ws_e' => 'admin'));
-        $crawler = $this->logUser($this->getFixtureReference('user/admin'));
+        $crawler = $this->logUser($this->getUser('admin'));
         $link = $crawler->filter('#link-my-workspaces')->link();
         $crawler = $this->client->click($link);
         $this->assertEquals(2, $crawler->filter('.row-workspace')->count());
@@ -36,7 +36,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
     public function testWSCreatorCanCreateWS()
     {
         $this->loadUserData(array('ws_creator' => 'ws_creator'));
-        $crawler = $this->logUser($this->getFixtureReference('user/ws_creator'));
+        $crawler = $this->logUser($this->getUser('ws_creator'));
         $link = $crawler->filter('#link-create-ws-form')->link();
         $crawler = $this->client->click($link);
         $form = $crawler->filter('button[type=submit]')->form();
@@ -59,14 +59,14 @@ class WorkspaceControllerTest extends FunctionalTestCase
                 'ws_d' => 'ws_creator',
             )
         );
-        $this->logUser($this->getFixtureReference('user/ws_creator'));
+        $this->logUser($this->getUser('ws_creator'));
         $crawler = $this->client->request(
             'DELETE',
-            "/workspaces/{$this->getFixtureReference('workspace/ws_d')->getId()}"
+            "/workspaces/{$this->getWorkspace('ws_d')->getId()}"
         );
         $crawler = $this->client->request(
             'GET',
-            "/workspaces/user/{$this->getFixtureReference('user/ws_creator')->getId()}"
+            "/workspaces/user/{$this->getUser('ws_creator')->getId()}"
         );
         $this->assertEquals(4, $crawler->filter('.row-workspace')->count());
     }
@@ -82,12 +82,12 @@ class WorkspaceControllerTest extends FunctionalTestCase
                 'ws_d' => 'ws_creator',
             )
         );
-        $this->logUser($this->getFixtureReference('user/ws_creator'));
+        $this->logUser($this->getUser('ws_creator'));
         $crawler = $this->client->request(
             'GET',
-            "/workspaces/user/{$this->getFixtureReference('user/ws_creator')->getId()}"
+            "/workspaces/user/{$this->getUser('ws_creator')->getId()}"
         );
-        $link = $crawler->filter("#link-home-{$this->getFixtureReference('workspace/ws_d')->getId()}")
+        $link = $crawler->filter("#link-home-{$this->getWorkspace('ws_d')->getId()}")
             ->link();
         $crawler = $this->client->click($link);
         $this->assertEquals(1, $crawler->filter(".welcome-home")->count());
@@ -102,7 +102,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
             'ws_f' => 'admin'
             )
         );
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $crawler = $this->client->request('GET', "/workspaces");
         $this->assertEquals(2, $crawler->filter('.row-workspace')->count());
     }
@@ -115,8 +115,8 @@ class WorkspaceControllerTest extends FunctionalTestCase
     public function testUserCantAccessUnregisteredResource()
     {
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $this->logUser($this->getFixtureReference('user/user'));
-        $pwuId = $this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId();
+        $this->logUser($this->getUser('user'));
+        $pwuId = $this->getUser('admin')->getPersonalWorkspace()->getId();
         $this->client->request(
             'GET',
             "/workspaces/{$pwuId}/open/tool/resource_manager"
@@ -127,8 +127,8 @@ class WorkspaceControllerTest extends FunctionalTestCase
     public function testDisplayHome()
     {
         $this->loadUserData(array('user' => 'user'));
-        $this->logUser($this->getFixtureReference('user/user'));
-        $pwsId = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
+        $this->logUser($this->getUser('user'));
+        $pwsId = $this->getUser('user')->getPersonalWorkspace()->getId();
         $this->client->request(
             'GET',
             "/workspaces/{$pwsId}/open/tool/home"
@@ -139,8 +139,8 @@ class WorkspaceControllerTest extends FunctionalTestCase
     public function testUserCantAccessUnregisteredHome()
     {
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $this->logUser($this->getFixtureReference('user/user'));
-        $pwaId = $this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId();
+        $this->logUser($this->getUser('user'));
+        $pwaId = $this->getUser('admin')->getPersonalWorkspace()->getId();
         $this->client->request(
             'GET',
             "/workspaces/{$pwaId}/open/tool/home"
@@ -151,8 +151,8 @@ class WorkspaceControllerTest extends FunctionalTestCase
     public function testDisplayUserManagement()
     {
         $this->loadUserData(array('user' => 'user'));
-        $pwuId = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
-        $this->logUser($this->getFixtureReference('user/user'));
+        $pwuId = $this->getUser('user')->getPersonalWorkspace()->getId();
+        $this->logUser($this->getUser('user'));
         $this->client->request('GET', "/workspaces/{$pwuId}/open/tool/user_management");
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
@@ -160,8 +160,8 @@ class WorkspaceControllerTest extends FunctionalTestCase
     public function testUserCantAccessUnregisteredUserManagement()
     {
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $pwaId = $this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId();
-        $this->logUser($this->getFixtureReference('user/user'));
+        $pwaId = $this->getUser('admin')->getPersonalWorkspace()->getId();
+        $this->logUser($this->getUser('user'));
         $this->client->request('GET', "/workspaces/{$pwaId}/open/tool/user_management");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
@@ -169,8 +169,8 @@ class WorkspaceControllerTest extends FunctionalTestCase
     public function testDisplayUnregisteredUserList()
     {
         $this->loadUserData(array('user' => 'user'));
-        $pwuId = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
-        $this->logUser($this->getFixtureReference('user/user'));
+        $pwuId = $this->getUser('user')->getPersonalWorkspace()->getId();
+        $this->logUser($this->getUser('user'));
         $this->client->request('GET', "/workspaces/tool/user_management/{$pwuId}/users/unregistered");
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
@@ -178,8 +178,8 @@ class WorkspaceControllerTest extends FunctionalTestCase
     public function testUserCantAccessUnregisteredUserList()
     {
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $pwaId = $this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId();
-        $this->logUser($this->getFixtureReference('user/user'));
+        $pwaId = $this->getUser('admin')->getPersonalWorkspace()->getId();
+        $this->logUser($this->getUser('user'));
         $this->client->request('GET', "/workspaces/tool/user_management/{$pwaId}/users/unregistered");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
@@ -187,11 +187,11 @@ class WorkspaceControllerTest extends FunctionalTestCase
     public function testDisplayUserParameters()
     {
         $this->loadUserData(array('user' => 'user'));
-        $pwuId = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
-        $this->logUser($this->getFixtureReference('user/user'));
+        $pwuId = $this->getUser('user')->getPersonalWorkspace()->getId();
+        $this->logUser($this->getUser('user'));
         $this->client->request(
             'GET',
-            "/workspaces/tool/user_management/{$pwuId}/user/{$this->getFixtureReference('user/user')->getId()}"
+            "/workspaces/tool/user_management/{$pwuId}/user/{$this->getUser('user')->getId()}"
         );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
@@ -199,9 +199,9 @@ class WorkspaceControllerTest extends FunctionalTestCase
     public function testUserCantAccessUnregisteredUserParameters()
     {
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $pwaId = $this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId();
-        $userId = $this->getFixtureReference('user/user')->getId();
-        $this->logUser($this->getFixtureReference('user/user'));
+        $pwaId = $this->getUser('admin')->getPersonalWorkspace()->getId();
+        $userId = $this->getUser('user')->getId();
+        $this->logUser($this->getUser('user'));
         $this->client->request('GET', "/workspaces/tool/user_management/{$pwaId}/user/{$userId}");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
@@ -209,8 +209,8 @@ class WorkspaceControllerTest extends FunctionalTestCase
     public function testDisplayGroupManagement()
     {
         $this->loadUserData(array('user' => 'user'));
-        $pwuId = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
-        $this->logUser($this->getFixtureReference('user/user'));
+        $pwuId = $this->getUser('user')->getPersonalWorkspace()->getId();
+        $this->logUser($this->getUser('user'));
         $this->client->request('GET', "/workspaces/{$pwuId}/open/tool/group_management");
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
@@ -218,8 +218,8 @@ class WorkspaceControllerTest extends FunctionalTestCase
     public function testUserCantAccessUnregisteredGroupManagement()
     {
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $pwaId = $this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId();
-        $this->logUser($this->getFixtureReference('user/user'));
+        $pwaId = $this->getUser('admin')->getPersonalWorkspace()->getId();
+        $this->logUser($this->getUser('user'));
         $this->client->request('GET', "/workspaces/{$pwaId}/open/tool/group_management");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
@@ -227,8 +227,8 @@ class WorkspaceControllerTest extends FunctionalTestCase
     public function testDisplayUnregisteredGroupList()
     {
         $this->loadUserData(array('user' => 'user'));
-        $this->logUser($this->getFixtureReference('user/user'));
-        $pwuId = $this->getFixtureReference('user/user')->getPersonalWorkspace()->getId();
+        $this->logUser($this->getUser('user'));
+        $pwuId = $this->getUser('user')->getPersonalWorkspace()->getId();
         $this->client->request('GET', "/workspaces/tool/group_management/{$pwuId}/groups/unregistered");
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
@@ -236,8 +236,8 @@ class WorkspaceControllerTest extends FunctionalTestCase
     public function testUserCantAccessUnregisteredGroupList()
     {
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $this->logUser($this->getFixtureReference('user/user'));
-        $pwaId = $this->getFixtureReference('user/admin')->getPersonalWorkspace()->getId();
+        $this->logUser($this->getUser('user'));
+        $pwaId = $this->getUser('admin')->getPersonalWorkspace()->getId();
         $this->client->request('GET', "/workspaces/tool/group_management/{$pwaId}/groups/unregistered");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }

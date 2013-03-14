@@ -24,8 +24,8 @@ class ResourceTest extends FixtureTestCase
                 ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
                 ->findOneBy(array ('type' => 'default'))
         );
-        $resource->setWorkspace($this->getFixtureReference('user/admin')->getPersonalWorkspace());
-        $resource->setCreator($this->getFixtureReference('user/admin'));
+        $resource->setWorkspace($this->getUser('admin')->getPersonalWorkspace());
+        $resource->setCreator($this->getUser('admin'));
         $resource->setOwnerRights(
             array(
                 'sharable' => true,
@@ -58,8 +58,8 @@ class ResourceTest extends FixtureTestCase
                 ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
                 ->findOneBy(array ('type' => 'default'))
         );
-        $resource->setWorkspace($this->getFixtureReference('user/admin')->getPersonalWorkspace());
-        $resource->setCreator($this->getFixtureReference('user/admin'));
+        $resource->setWorkspace($this->getUser('admin')->getPersonalWorkspace());
+        $resource->setCreator($this->getUser('admin'));
         $resource->setOwnerRights(
             array(
                 'sharable' => true,

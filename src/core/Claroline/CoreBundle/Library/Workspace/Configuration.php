@@ -29,7 +29,7 @@ class Configuration
     {
         $this->workspaceType = self::TYPE_SIMPLE;
         $ds = DIRECTORY_SEPARATOR;
-        $parsedFile = Yaml::parse(__DIR__."{$ds}..{$ds}..{$ds}Resources{$ds}config{$ds}workspace{$ds}default.yml");
+        $parsedFile = Yaml::parse(__DIR__."{$ds}..{$ds}..{$ds}..{$ds}..{$ds}..{$ds}..{$ds}workspaces{$ds}default.yml");
         $this->setCreatorRole($parsedFile['creator_role']);
         $this->setRoles($parsedFile['roles']);
         $this->setTools(array_keys($parsedFile['tools_permissions']));
@@ -154,6 +154,27 @@ class Configuration
 
     private function validate($parsedFile)
     {
-        return true;
+        $errors = array();
+
+        $expectedKeys = array(
+            'tools',
+            'roles',
+            'creator_role',
+            'tools_permissions',
+            'name'
+        );
+
+        foreach ($expectedKeys as $key) {
+            if (!isset($parsedFile[$key])) {
+                $errors[] = "The entry '{$key}' is missing";
+            }
+        }
+
+        if (count($errors) === 0) {
+            return true;
+        } else {
+            return $errors;
+        }
+
     }
 }

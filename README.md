@@ -6,7 +6,6 @@ Requirements
 
 - PHP >= 5.3.3
 - PHP extensions :
-    - SQLite3 or PDO_SQLite (for the profiler)
     - fileinfo (for mime type detection)
     - Optionaly :
         - [gd][1] (for simple icon creation)
@@ -35,6 +34,7 @@ To update your installation to the last development state, use :
 
     git pull
     git submodule update --init --recursive
+    git submodule foreach git checkout master
 
 Then launch the installation script mentioned above : `php app/dev/raw_install`
 

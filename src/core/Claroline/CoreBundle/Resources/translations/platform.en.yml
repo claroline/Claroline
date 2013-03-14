@@ -194,6 +194,7 @@ settings: Settings
 show: Show
 show_as_admin: 'Show as admin'
 show_as_user: 'Show as user'
+teacher: Teacher
 text_form_name: Name
 text_form_shareType: Sharable
 text_form_text: Text

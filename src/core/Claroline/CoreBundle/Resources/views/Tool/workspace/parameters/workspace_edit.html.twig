@@ -19,16 +19,17 @@
         </li>
     </ul>
 
-    <div>
+    <div class="margin">
         {% if is_granted('DELETE', workspace ) %}
-        <a href="#" class="workspace-delete-confirmation">
+        <a href="#" class="workspace-delete-confirmation btn">
             {{ 'workspace_delete'|trans({}, 'platform') }}
         </a>
         {% endif %}
-            <a href="{{ path('claro_workspace_export_form', {'workspaceId': workspace.getId() }) }}">
+            <a href="{{ path('claro_workspace_export_form', {'workspaceId': workspace.getId() }) }}" class='btn'>
                 {{ 'workspace_export'|trans({}, 'platform') }}
             </a>
     </div>
+    <br>
 
     {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
     <form class="form-horizontal" action="{{ path('claro_workspace_edit', {'workspaceId': workspace.getId()}) }}" method="post" {{ form_enctype(form) }}>

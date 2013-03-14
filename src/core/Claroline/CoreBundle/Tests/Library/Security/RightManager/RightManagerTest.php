@@ -33,7 +33,7 @@ class RightManagerTest extends FunctionalTestCase
 
     public function testAddingViewRightGrantsViewRight()
     {
-        $jane = $this->getFixtureReference('user/user');
+        $jane = $this->getUser('user');
         $someEntity = $this->createEntity();
         $isAllowed = $this->rightManager->hasRight($someEntity, $jane, MaskBuilder::MASK_VIEW);
         $this->assertFalse($isAllowed);
@@ -44,7 +44,7 @@ class RightManagerTest extends FunctionalTestCase
 
     public function testAddingViewAndDeleteRightGrantViewRight()
     {
-        $jane = $this->getFixtureReference('user/user');
+        $jane = $this->getUser('user');
         $someEntity = $this->createEntity();
 
         $mb = new MaskBuilder();
@@ -62,7 +62,7 @@ class RightManagerTest extends FunctionalTestCase
     public function testCannotDefineRightOnUnsavedEntity()
     {
         try {
-            $jane = $this->getFixtureReference('user/user');
+            $jane = $this->getUser('user');
             $someEntity = new FirstEntity();
             $this->rightManager->addRight($someEntity, $jane, MaskBuilder::MASK_VIEW);
             $this->fail('No exception thrown');
@@ -88,8 +88,8 @@ class RightManagerTest extends FunctionalTestCase
     {
         $this->loadRoleData(array(array('role_a' => null)));
         $entity = $this->createEntity();
-        $jane = $this->getFixtureReference('user/user');
-        $roleA = $this->getFixtureReference('role/role_a');
+        $jane = $this->getUser('user');
+        $roleA = $this->getRole('role_a');
         $jane->addRole($roleA);
         $this->getEntityManager()->flush();
 
@@ -106,9 +106,9 @@ class RightManagerTest extends FunctionalTestCase
     {
         $this->loadRoleData(array(array('role_d' => null)));
         $entity = $this->createEntity();
-        $roleD = $this->getFixtureReference('role/role_d');
-        $jane = $this->getFixtureReference('user/user');
-        $henry = $this->getFixtureReference('user/ws_creator');
+        $roleD = $this->getRole('role_d');
+        $jane = $this->getUser('user');
+        $henry = $this->getUser('ws_creator');
 
         $this->rightManager->addRight($entity, $roleD, MaskBuilder::MASK_OPERATOR);
         $this->rightManager->addRight($entity, $jane, MaskBuilder::MASK_VIEW);
@@ -131,14 +131,14 @@ class RightManagerTest extends FunctionalTestCase
     public function testPermissionMaskMustBeValid($mask)
     {
         $this->setExpectedException('InvalidArgumentException');
-        $jane = $this->getFixtureReference('user/user');
+        $jane = $this->getUser('user');
         $someEntity = $this->createEntity();
         $this->rightManager->addRight($someEntity, $jane, $mask);
     }
 
     public function testRemoveRightsForbidAccess()
     {
-        $jane = $this->getFixtureReference('user/user');
+        $jane = $this->getUser('user');
         $someEntity = $this->createEntity();
         $rightMask = MaskBuilder::MASK_VIEW;
 
@@ -152,7 +152,7 @@ class RightManagerTest extends FunctionalTestCase
 
     public function testRemoveAllRightsForbidAccess()
     {
-        $jane = $this->getFixtureReference('user/user');
+        $jane = $this->getUser('user');
         $someEntity = $this->createEntity();
         $view = MaskBuilder::MASK_VIEW;
         $edit = MaskBuilder::MASK_EDIT;
@@ -172,7 +172,7 @@ class RightManagerTest extends FunctionalTestCase
 
     public function testSettingRightRemoveAllOldRights()
     {
-        $jane = $this->getFixtureReference('user/user');
+        $jane = $this->getUser('user');
         $someEntity = $this->createEntity();
 
         $mb = new MaskBuilder();
@@ -193,14 +193,14 @@ class RightManagerTest extends FunctionalTestCase
 
     public function testGettingRightReturnsNullIfNoRightWasSet()
     {
-        $jane = $this->getFixtureReference('user/user');
+        $jane = $this->getUser('user');
         $someEntity = $this->createEntity();
         $this->assertNull($this->rightManager->getRight($someEntity, $jane));
     }
 
     public function testGettingRightReturnsRightThatWasSet()
     {
-        $jane = $this->getFixtureReference('user/user');
+        $jane = $this->getUser('user');
         $someEntity = $this->createEntity();
         $this->rightManager->setRight($someEntity, $jane, MaskBuilder::MASK_EDIT);
         $right = $this->rightManager->getRight($someEntity, $jane);
@@ -212,7 +212,7 @@ class RightManagerTest extends FunctionalTestCase
      */
     public function testRightManagerIscompatibleWithSecurityContext($mask, $allowedPermission)
     {
-        $jane = $this->getFixtureReference('user/user');
+        $jane = $this->getUser('user');
         $someEntity = $this->createEntity();
         $this->rightManager->addRight($someEntity, $jane, $mask);
 
@@ -247,10 +247,10 @@ class RightManagerTest extends FunctionalTestCase
     {
         $entity = $this->createEntity();
 
-        $jane = $this->getFixtureReference('user/user');
-        $bob = $this->getFixtureReference('user/user_2');
-        $bill = $this->getFixtureReference('user/user_3');
-        $henry = $this->getFixtureReference('user/ws_creator');
+        $jane = $this->getUser('user');
+        $bob = $this->getUser('user_2');
+        $bill = $this->getUser('user_3');
+        $henry = $this->getUser('ws_creator');
 
         $this->rightManager->addRight($entity, $jane, MaskBuilder::MASK_OWNER);
         $this->rightManager->addRight($entity, $bob, MaskBuilder::MASK_DELETE);
@@ -282,11 +282,11 @@ class RightManagerTest extends FunctionalTestCase
         $this->loadRoleData(array(array('role_c' => null)));
         $entity = $this->createEntity();
 
-        $jane = $this->getFixtureReference('user/user');
-        $bob = $this->getFixtureReference('user/user_2');
-        $bill = $this->getFixtureReference('user/user_3');
+        $jane = $this->getUser('user');
+        $bob = $this->getUser('user_2');
+        $bill = $this->getUser('user_3');
 
-        $roleC = $this->getFixtureReference('role/role_c');
+        $roleC = $this->getRole('role_c');
         $jane->addRole($roleC);
         $bob->addRole($roleC);
         $this->getEntityManager()->flush();
@@ -303,7 +303,7 @@ class RightManagerTest extends FunctionalTestCase
 
     public function testGiveClassPermissionsToUserGrantsPermissionsForClassIdentityAndForEachInstanceWithAnAcl()
     {
-        $jane = $this->getFixtureReference('user/user');
+        $jane = $this->getUser('user');
         $entity = $this->createEntity();
         $this->client->getContainer()
             ->get('security.acl.provider')
@@ -322,7 +322,7 @@ class RightManagerTest extends FunctionalTestCase
 
     public function testSetClassPermissionsForUserCanUpdatePreviousPermissions()
     {
-        $jane = $this->getFixtureReference('user/user');
+        $jane = $this->getUser('user');
         $entity = $this->createEntity();
         $fqcn = get_class($entity);
         $classIdentity = ClassIdentity::fromDomainClass($fqcn);

@@ -7,6 +7,8 @@ use Claroline\CoreBundle\Library\Event\ExportWorkspaceEvent;
 use Claroline\CoreBundle\Library\Event\ImportWorkspaceEvent;
 use Claroline\CoreBundle\Library\Event\ExportResourceArrayEvent;
 use Claroline\CoreBundle\Library\Event\ImportResourceArrayEvent;
+use Claroline\CoreBundle\Library\Event\ExportWidgetConfigEvent;
+use Claroline\CoreBundle\Library\Event\ImportWidgetConfigEvent;
 use Claroline\CoreBundle\Entity\Event;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
@@ -70,16 +72,28 @@ class ToolListener extends ContainerAware
 
     public function onExportHome(ExportWorkspaceEvent $event)
     {
-        $perms = array();
+        $home = array();
         $workspace = $event->getWorkspace();
         $configs = $this->container->get('claroline.widget.manager')
             ->generateWorkspaceDisplayConfig($workspace->getId());
 
         foreach ($configs as $config) {
-            $perms[$config->getWidget()->getName()] = $config->isVisible();
+            $widgetArray = array();
+            $ed = $this->container->get('event_dispatcher');
+            $newEvent = new ExportWidgetConfigEvent($config->getWidget(), $workspace);
+            $ed->dispatch("widget_export_{$config->getWidget()->getName()}_configuration", $newEvent);
+            $widgetArray['name'] = $config->getWidget()->getName();
+            $widgetArray['is_visible'] = $config->isVisible();
+
+            if ($newEvent->getConfig() != null) {
+                $widgetArray['config'] = $newEvent->getConfig();
+            }
+
+            $perms[] = $widgetArray;
         }
 
-        $event->setConfig($perms);
+        $home['widget'] = $perms;
+        $event->setConfig($home);
     }
 
     public function onExportResource(ExportWorkspaceEvent $event)
@@ -118,23 +132,30 @@ class ToolListener extends ContainerAware
     public function onImportHome(ImportWorkspaceEvent $event)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
-
         $config = $event->getConfig();
+        $ed = $this->container->get('event_dispatcher');
 
-        foreach ($config as $widgetName => $value) {
-            $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->findOneByName($widgetName);
-            $parent = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
-                ->findOneBy(array('widget' => $widget, 'parent' => null, 'isDesktop' => false));
-            $displayConfig = new DisplayConfig();
-            $displayConfig->setParent($parent);
-            $displayConfig->setVisible($value);
-            $displayConfig->setWidget($widget);
-            $displayConfig->setDesktop(false);
-            $displayConfig->isLocked(true);
-            $displayConfig->setWorkspace($event->getWorkspace());
-            $em->persist($displayConfig);
+        if (isset($config['widget'])) {
+            foreach ($config['widget'] as $widgetConfig) {
+                $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->findOneByName($widgetConfig['name']);
+                $parent = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+                    ->findOneBy(array('widget' => $widget, 'parent' => null, 'isDesktop' => false));
+                $displayConfig = new DisplayConfig();
+                $displayConfig->setParent($parent);
+                $displayConfig->setVisible($widgetConfig['is_visible']);
+                $displayConfig->setWidget($widget);
+                $displayConfig->setDesktop(false);
+                $displayConfig->isLocked(true);
+                $displayConfig->setWorkspace($event->getWorkspace());
+
+                if (isset($widgetConfig['config'])) {
+                    $newEvent = new ImportWidgetConfigEvent($widgetConfig['config'], $event->getWorkspace());
+                    $ed->dispatch("widget_import_{$widgetConfig['name']}_configuration", $newEvent);
+                }
+
+                $em->persist($displayConfig);
+            }
         }
-
     }
 
     public function onImportResource(ImportWorkspaceEvent $event)
