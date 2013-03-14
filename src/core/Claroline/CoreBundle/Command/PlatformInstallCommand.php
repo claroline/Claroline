@@ -7,6 +7,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Installs the platform, optionaly with plugins and data fixtures.
@@ -78,6 +79,12 @@ class PlatformInstallCommand extends ContainerAwareCommand
             )
         );
         $assetCommand->run($assetInput, $output);
+
+        $fileSystem = new Filesystem();
+        $fileSystem->copy(
+            "{$kernel->getRootDir()}/../vendor/jms/twig-js/twig.js",
+            "{$kernel->getRootDir()}/../web/jms/twig.js"
+        );
 
         $asseticCommand = $this->getApplication()->find('assetic:dump');
         $asseticInput = new ArrayInput(array('command' => 'assetic:dump'));
