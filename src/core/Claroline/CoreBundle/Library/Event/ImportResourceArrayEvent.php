@@ -7,10 +7,15 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 class ImportResourceArrayEvent extends Event
 {
-    public function __construct(array $config, AbstractResource $parent)
+    private $parent;
+    private $config;
+    private $archive;
+    
+    public function __construct(array $config, AbstractResource $parent, \ZipArchive $archive)
     {
         $this->parent = $parent;
         $this->config = $config;
+        $this->archive = $archive;
     }
 
     public function getConfig()
@@ -21,5 +26,10 @@ class ImportResourceArrayEvent extends Event
     public function getParent()
     {
         return $this->parent;
+    }
+    
+    public function getArchive()
+    {
+        return $this->archive;
     }
 }

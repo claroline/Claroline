@@ -168,12 +168,25 @@ class WorkspaceController extends Controller
         $currentRoles = $this->get('claroline.security.utilities')
             ->getRoles($this->get('security.context')->getToken());
 
+        $workspaceOrderTools = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
+            ->findBy(array('workspace' => $workspace));
+        
         $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
             ->findByRolesAndWorkspace($currentRoles, $workspace, true);
 
+        foreach ($tools as $tool) {
+            $toolWithTranslation['tool'] = $tool;
+            foreach ($workspaceOrderTools as $workspaceOrderedTool) {
+                if ($workspaceOrderedTool->getTool() === $tool) {
+                    $toolWithTranslation['translation_key'] = $workspaceOrderedTool->getTranslationKey();
+                }
+            }
+            $toolsWithTranslation[] = $toolWithTranslation;
+        }
+        
         return $this->render(
             'ClarolineCoreBundle:Workspace:tool_list.html.twig',
-            array('tools' => $tools, 'workspace' => $workspace)
+            array('toolsWithTranslation' => $toolsWithTranslation, 'workspace' => $workspace)
         );
     }
 

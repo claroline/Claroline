@@ -86,7 +86,7 @@ class DirectoryListener extends ContainerAware
 
         foreach ($children as $child) {
             $ed = $this->container->get('event_dispatcher');
-            $newEvent = new ExportResourceArrayEvent($resourceRepo->find($child['id']));
+            $newEvent = new ExportResourceArrayEvent($resourceRepo->find($child['id']), $event->getArchive());
             $ed->dispatch("export_{$child['type']}_array", $newEvent);
             $descr = $newEvent->getConfig();
             if (count($descr) > 0) {
@@ -113,7 +113,11 @@ class DirectoryListener extends ContainerAware
 
         if (isset($config['children'])) {
             foreach ($config['children'] as $child) {
-                $newEvent = new ImportResourceArrayEvent($child, $directory);
+                $newEvent = new ImportResourceArrayEvent(
+                    $child, 
+                    $directory, 
+                    $event->getArchive()
+                );
                 $ed->dispatch("import_{$child['type']}_array", $newEvent);
             }
         }
