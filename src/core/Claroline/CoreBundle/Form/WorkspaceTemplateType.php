@@ -25,4 +25,11 @@ class WorkspaceTemplateType extends AbstractType
     {
         return 'workspace_template_form';
     }
+
+    public function getDefaultOptions(array $options)
+    {
+        return array(
+            'translation_domain' => 'platform'
+        );
+    }
 }

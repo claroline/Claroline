@@ -185,6 +185,7 @@ rights: Droits
 role: Rôle
 roles: Rôles
 save: Sauvegarder
+save_as_template: Sauvegarder comme modèle
 search: Rechercher
 see: Voir
 select all: 'Tout sélectionner'
@@ -242,6 +243,7 @@ workspace_form_name: Nom
 workspace_form_template: Modèle
 workspace_form_type: Type
 workspace_resource: Ressources
+workspace_template_form_name: Nom
 workspace_tools: Outils
 workspace_welcome: Accueil
 workspaces: 'Espaces d''activités'
