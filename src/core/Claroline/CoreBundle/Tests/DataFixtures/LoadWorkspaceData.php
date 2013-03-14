@@ -14,14 +14,14 @@ class LoadWorkspaceData extends AbstractFixture implements ContainerAwareInterfa
     static private $codeDiscrCount = 1;
 
     /**
-     * Constructor. Expects an associative array where each key is an unique workspace name
-     * and each value is the creator's username. Users must have been loaded
+     * Constructor. Expects an associative array where each key is an unique workspace
+     * name and each value is a creator's username. Users must have been loaded
      * and referenced in a previous fixtures with a 'user/[username]' label.
      *
-     * For each group, 1 fixture reference will be added:
-     * - role/[group's name] (group's role)
+     * For each workspace, a fixture reference will be added with the following label:
+     * - workspace/[workspace's name]
      *
-     * @param array $users
+     * @param array $workspaces
      */
     public function __construct(array $workspaces)
     {
