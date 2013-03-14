@@ -17,7 +17,7 @@ class DesktopControllerTest extends FunctionalTestCase
     public function testPersoAction()
     {
         $this->loadUserData(array('admin' => 'admin'));
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $this->client->request('GET', '/desktop/tool/open/home');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
@@ -26,7 +26,7 @@ class DesktopControllerTest extends FunctionalTestCase
     public function testResourceManagerAction()
     {
         $this->loadUserData(array('admin' => 'admin'));
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $this->client->request('GET', '/desktop/tool/open/resource_manager');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
@@ -34,7 +34,7 @@ class DesktopControllerTest extends FunctionalTestCase
     public function testDesktopParametersAction()
     {
         $this->loadUserData(array('admin' => 'admin'));
-        $this->logUser($this->getFixtureReference('user/admin'));
+        $this->logUser($this->getUser('admin'));
         $crawler = $this->client->request('GET', '/desktop/tool/open/parameters');
         $this->assertEquals(2, count($crawler->filter('.li-user-parameters')));
     }

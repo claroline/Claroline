@@ -87,8 +87,8 @@ class ResourceExtenderTest extends FunctionalTestCase
 
         $firstRes = new SpecificResource1();
         $firstRes->setSomeField('Test');
-        $firstRes->setCreator($this->getFixtureReference('user/user'));
-        $firstRes->setWorkspace($this->getFixtureReference('user/user')->getPersonalWorkspace());
+        $firstRes->setCreator($this->getUser('user'));
+        $firstRes->setWorkspace($this->getUser('user')->getPersonalWorkspace());
         $firstRes->setName('name');
         $firstRes->setIcon($defaultIcon);
         $firstRes->setOwnerRights(
@@ -103,8 +103,8 @@ class ResourceExtenderTest extends FunctionalTestCase
 
         $secondRes = new SpecificResource2();
         $secondRes->setSomeField('Test');
-        $secondRes->setCreator($this->getFixtureReference('user/ws_creator'));
-        $secondRes->setWorkspace($this->getFixtureReference('user/ws_creator')->getPersonalWorkspace());
+        $secondRes->setCreator($this->getUser('ws_creator'));
+        $secondRes->setWorkspace($this->getUser('ws_creator')->getPersonalWorkspace());
         $secondRes->setName('name');
         $secondRes->setIcon($defaultIcon);
         $secondRes->setOwnerRights(
@@ -119,8 +119,8 @@ class ResourceExtenderTest extends FunctionalTestCase
 
         $thirdRes = new SpecificResource2();
         $thirdRes->setSomeField('Test');
-        $thirdRes->setCreator($this->getFixtureReference('user/admin'));
-        $thirdRes->setWorkspace($this->getFixtureReference('user/admin')->getPersonalWorkspace());
+        $thirdRes->setCreator($this->getUser('admin'));
+        $thirdRes->setWorkspace($this->getUser('admin')->getPersonalWorkspace());
         $thirdRes->setName('name');
         $thirdRes->setIcon($defaultIcon);
         $thirdRes->setOwnerRights(
@@ -135,8 +135,8 @@ class ResourceExtenderTest extends FunctionalTestCase
 
         $fourthRes = new Directory();
         $fourthRes->setName('Test');
-        $fourthRes->setCreator($this->getFixtureReference('user/admin'));
-        $fourthRes->setWorkspace($this->getFixtureReference('user/user')->getPersonalWorkspace());
+        $fourthRes->setCreator($this->getUser('admin'));
+        $fourthRes->setWorkspace($this->getUser('user')->getPersonalWorkspace());
         $fourthRes->setName('name');
         $fourthRes->setIcon($defaultIcon);
         $fourthRes->setOwnerRights(

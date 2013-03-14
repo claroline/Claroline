@@ -24,8 +24,8 @@ class RestrictedOwnerManagerTest extends FixtureTestCase
     public function testThereCanOnlyBeOneOwnerMaximum()
     {
         try {
-            $jane = $this->getFixtureReference('user/user');
-            $henry = $this->getFixtureReference('user/ws_creator');
+            $jane = $this->getUser('user');
+            $henry = $this->getUser('ws_creator');
             $entity = $this->createEntity();
             $mask = MaskBuilder::MASK_OWNER;
             $this->rightManager->addRight($entity, $jane, $mask);
@@ -38,7 +38,7 @@ class RestrictedOwnerManagerTest extends FixtureTestCase
 
     public function testSameOwnerCanBeDefinedAgainAndAgain()
     {
-        $jane = $this->getFixtureReference('user/user');
+        $jane = $this->getUser('user');
         $entity = $this->createEntity();
         $mask = MaskBuilder::MASK_OWNER;
         $this->rightManager->addRight($entity, $jane, $mask);
@@ -47,8 +47,8 @@ class RestrictedOwnerManagerTest extends FixtureTestCase
 
     public function testSettingAnOwnerRemovesTheOwningRightFromOlderOwner()
     {
-        $jane = $this->getFixtureReference('user/user');
-        $henry = $this->getFixtureReference('user/ws_creator');
+        $jane = $this->getUser('user');
+        $henry = $this->getUser('ws_creator');
         $entity = $this->createEntity();
         $mb = new MaskBuilder();
         $mask = $mb->add(MaskBuilder::MASK_OWNER)
@@ -66,7 +66,7 @@ class RestrictedOwnerManagerTest extends FixtureTestCase
     {
         try {
             $entity = $this->createEntity();
-            $role = $this->getFixtureReference('role/user');
+            $role = $this->getRole('user');
             $this->rightManager->addRight($entity, $role, MaskBuilder::MASK_OWNER);
             $this->fail('No exception thrown');
         } catch (SecurityException $ex) {
@@ -77,7 +77,7 @@ class RestrictedOwnerManagerTest extends FixtureTestCase
     public function testUsersCannotOwnAClass()
     {
         try {
-            $role = $this->getFixtureReference('role/user');
+            $role = $this->getRole('user');
             $entity = new FirstEntity();
             $fqcn = get_class($entity);
 

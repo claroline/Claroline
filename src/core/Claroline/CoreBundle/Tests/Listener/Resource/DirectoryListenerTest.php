@@ -1,12 +1,12 @@
 <?php
 
-namespace Claroline\CoreBundle\Controller;
+namespace Claroline\CoreBundle\Listener\Resource;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use DirectoryIterator;
 
-class DirectoryControllerTest extends FunctionalTestCase
+class DirectoryListenerTest extends FunctionalTestCase
 {
     /** @var string */
     private $upDir;
@@ -29,7 +29,7 @@ class DirectoryControllerTest extends FunctionalTestCase
 
     public function testUserCanCreateDirectory()
     {
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $rootDir = new Directory;
         $rootDir->setName('root_dir');
         $this->client
@@ -47,7 +47,7 @@ class DirectoryControllerTest extends FunctionalTestCase
         $this->loadDirectoryData('user', array('user/dir1/dir2'));
         $this->loadFileData('user', 'dir2', array('foo.txt'));
         $dirRi = $this->getDirectory('dir1');
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $this->client->request('GET', "/resource/delete?ids[]={$dirRi->getId()}");
         $this->client->request('GET', "/resource/directory/{$this->getDirectory('user')->getId()}");
         $dir = json_decode($this->client->getResponse()->getContent());

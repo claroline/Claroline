@@ -166,7 +166,7 @@
     <target name="jshint"
          description="Generate checkstyle-jshint.xml using JSHint">
         <exec executable="jshint" output="${builddir}/logs/checkstyle-jshint.xml">
-            <arg value="--reporter=checkstyle" />
+            <arg value="--reporter=${appdir}/dev/checkstyle-errors.js" />
             <arg value="--config" />
             <arg path="${appdir}/build/tools/jshint.json" />
             <arg path="${srcdir}" />

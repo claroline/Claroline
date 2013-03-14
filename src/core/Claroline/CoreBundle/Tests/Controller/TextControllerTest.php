@@ -14,25 +14,9 @@ class TextControllerTest extends FunctionalTestCase
         $this->client->followRedirects();
     }
 
-    public function testAdd()
-    {
-        $this->logUser($this->getFixtureReference('user/user'));
-        $text = $this->addText('This is a text', 'hello world', $this->getDirectory('user')->getId());
-        $this->assertEquals('This is a text', $text->name);
-    }
-
-    public function testDefaultAction()
-    {
-        $this->logUser($this->getFixtureReference('user/user'));
-        $text = $this->addText('This is a text', 'hello world', $this->getDirectory('user')->getId());
-        $crawler = $this->client->request('GET', "/resource/open/text/{$text->id}");
-        $node = $crawler->filter('#text_content');
-        $this->assertTrue(strpos($node->text(), 'hello world') !== false);
-    }
-
     public function testEditByRefAction()
     {
-        $this->logUser($this->getFixtureReference('user/user'));
+        $this->logUser($this->getUser('user'));
         $text = $this->addText('This is a text', 'hello world', $this->getDirectory('user')->getId());
         $crawler = $this->client->request('GET', "/text/form/edit/{$text->id}");
         $form = $crawler->filter('button[type=submit]')->form();
@@ -44,25 +28,6 @@ class TextControllerTest extends FunctionalTestCase
         $text = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($textId);
         $revisions = $text->getRevisions();
         $this->assertEquals(2, count($revisions));
-    }
-
-    public function testCreationFormCanBeDisplayed()
-    {
-        $this->logUser($this->getFixtureReference('user/user'));
-        $crawler = $this->client->request('GET', 'resource/form/text');
-        $form = $crawler->filter('#text_form');
-        $this->assertEquals(count($form), 1);
-    }
-
-    public function testFormErrorsAreDisplayed()
-    {
-        $this->logUser($this->getFixtureReference('user/user'));
-        $crawler = $this->client->request(
-            'POST', "/resource/create/text/{$this->getDirectory('user')->getId()}"
-        );
-
-        $form = $crawler->filter('#text_form');
-        $this->assertEquals(count($form), 1);
     }
 
     private function addText($name, $text, $parentId)

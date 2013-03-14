@@ -17,7 +17,7 @@ class AdministratorVoterTest extends FunctionalTestCase
 
     public function testAdministrorIsAlwaysGranted()
     {
-        $admin = $this->getFixtureReference('user/admin');
+        $admin = $this->getUser('admin');
 
         $this->logUser($admin);
         $security = $this->getSecurityContext();

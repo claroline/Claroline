@@ -72,6 +72,60 @@ footer {
 }
 
 /***********/
+/*  HOME   */
+/***********/
+
+.homespans .border
+{
+       height:200px;
+       position:relative;
+}
+
+.homespans table th
+{
+    text-align:left;
+}
+
+.homespans .border .btn
+{
+    position:absolute;
+    bottom:10px;
+}
+
+.homeicons
+{
+    height:150px;
+    color:@orange;
+    font-size:150px;
+    text-align:center;
+    text-shadow: 4px 4px 3px rgba(0,0,0,.1);
+    white-space:nowrap;
+    margin:0 0 10px 0;
+}
+
+.homeicons .size1
+{
+    font-size:150px;
+    position:relative;
+    left:20px;
+}
+
+.homeicons .size2
+{
+    font-size:120px;
+    position:relative;
+    left:-10px
+}
+
+.homeicons .size3
+{
+    font-size:80px;
+    position:relative;
+    left:-40px
+}
+
+
+/***********/
 /* WIDGETS */
 /***********/
 
@@ -104,6 +158,10 @@ footer {
 /* RESOURCES MGR */
 /*****************/
 
+.breadcrumb
+{
+    margin-bottom:10px;
+}
 
 .resource-manager .breadcrumb
 {
@@ -252,6 +310,16 @@ footer {
     width: 18px;
 }
 
+.resource-rights-form
+{
+    margin:0 10px 10px 10px; 
+}
+
+.resource-rights-form input.pull-right
+{
+    margin-bottom:10px;
+}
+
 /**************/
 /* WORKSPACES */
 /**************/
@@ -373,6 +441,7 @@ a.dropdown-menu-item-disabled:hover {
     background: transparent url("../../../images/loading.gif") no-repeat;
     width: 16px;
     height: 16px;
+    margin: 0 0 10px 0;
 }
 
 .border {
@@ -395,8 +464,10 @@ a.dropdown-menu-item-disabled:hover {
 .sub-section-header
 {
     margin:0;
-    padding:0 0 10px 0;
+    padding:0 0 0 0;
     font-size:21px;
+    overflow:auto;
+    height:auto;
 }
 
 .search-bar
