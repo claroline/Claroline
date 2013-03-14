@@ -15,10 +15,10 @@
         <h3 class="sub-section-header" id="group-list-block">{{ 'groups'|trans({}, 'platform') }}</h3>
 
         <div class="search-bar">
-        <button class="btn btn-secondary delete-group-button pull-left" disabled="disabled">{{ 'delete'|trans({}, 'platform') }}</button>
+        <button class="btn btn-secondary delete-group-button pull-left" disabled="disabled"><i class="icon-trash"></i> {{ 'delete'|trans({}, 'platform') }}</button>
 
         <div class="input-append pull-right">
-                <input class="input-medium" type="text" id="search-group-txt">
+                <input class="input-medium" type="text" id="search-group-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
                 <button class="filter btn" type="button" id="search-group-button">
                     <i class="icon-search"></i> 
                 </button>
@@ -42,7 +42,7 @@
          data-pages="{{ pages }}"
     ></div>
      <p>
-        <button class="btn btn-secondary delete-groups-button">{{ 'delete'|trans({}, 'platform') }}</button>
+        <button class="btn btn-secondary delete-groups-button"><i class="icon-trash"></i> {{ 'delete'|trans({}, 'platform') }}</button>
         </p>
     </div>
      <!-------------- modal box ------------------------------------------------>

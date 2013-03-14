@@ -185,6 +185,7 @@ rights: Rights
 role: Role
 roles: Roles
 save: Save
+save_as_template: Save as template
 search: Search
 see: Voir
 select all: Select all
@@ -194,6 +195,7 @@ settings: Settings
 show: Show
 show_as_admin: 'Show as admin'
 show_as_user: 'Show as user'
+teacher: Teacher
 text_form_name: Name
 text_form_shareType: Sharable
 text_form_text: Text
@@ -241,6 +243,7 @@ workspace_form_name: Name
 workspace_form_template: Template
 workspace_form_type: Type
 workspace_resource: Resources
+workspace_template_form_name: Name
 workspace_tools: Tools
 workspace_welcome: Welcome
 workspaces: Workspaces

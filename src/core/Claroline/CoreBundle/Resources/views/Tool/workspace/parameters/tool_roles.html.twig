@@ -8,46 +8,48 @@
 {% block section_content %}
     <ul class="breadcrumb">
         <li>
-            <a href="{{ path('claro_workspace_open_tool',
-               {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}">
-               {{ 'parameters'|trans({}, 'platform') }}
-            </a>
+        <a href="{{ path('claro_workspace_open_tool',
+            {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}">
+            {{ 'parameters'|trans({}, 'platform') }}
+        </a>
         </li>
-         <span class="divider"> / </span>
+        <span class="divider"> / </span>
         <li>
-            <a href="#">{{ 'tools'|trans({}, 'platform') }}</a>
+        <a href="#">{{ 'tools'|trans({}, 'platform') }}</a>
         </li>
     </ul>
-    <table id="tool-table"
-           class="table table-striped table-bordered table-condensed"
-           data-workspace-id="{{ workspace.getId() }}">
-    <thead>
-        <th> {{ 'tool'|trans({}, 'platform') }} </th>
-        {% for role in roles %}
-            <th> {{ role.getTranslationKey|trans({}, 'platform') }}</th>
-        {% endfor %}
-        <th> {{ 'position'|trans({}, 'platform') }} </th>
-    </thead>
-    <tbody id="tool-table-body">
-        {% for toolPermission in toolPermissions %}
-            <tr class>
-                <td>{{ toolPermission['tool'].getName()|trans({}, 'tools') }}</td>
-                {% for key, isVisible in toolPermission['visibility'] %}
-                    <td data-tool-id="{{ toolPermission['tool'].getId() }}" data-role-id="{{ key }}">
-                       <input type="checkbox"
-                           class="chk-tool-visible"
-                           value="1"
-                           {% if toolPermission['tool'].isDesktopRequired() %} disabled {% endif %}
-                           {% if isVisible %} checked {% endif %}
-                       />
-                    </td>
+    <div class="margin">   
+        <table id="tool-table"
+            class="table table-striped table-bordered table-condensed"
+            data-workspace-id="{{ workspace.getId() }}">
+            <thead>
+                <th> {{ 'tool'|trans({}, 'platform') }} </th>
+                {% for role in roles %}
+                    <th> {{ role.getTranslationKey|trans({}, 'platform') }}</th>
                 {% endfor %}
-                <td>
-                   <div class="icon-circle-arrow-up" style="cursor: pointer;" ></div>
-                   <div class="icon-circle-arrow-down" style="cursor: pointer;" ></div>
-                </td>
-            </tr>
-        {% endfor %}
-    </tbody>
-    </table>
+                <th> {{ 'position'|trans({}, 'platform') }} </th>
+            </thead>
+            <tbody id="tool-table-body">
+                {% for toolPermission in toolPermissions %}
+                    <tr class>
+                        <td>{{ toolPermission['tool'].getName()|trans({}, 'tools') }}</td>
+                        {% for key, isVisible in toolPermission['visibility'] %}
+                            <td data-tool-id="{{ toolPermission['tool'].getId() }}" data-role-id="{{ key }}">
+                                <input type="checkbox"
+                                class="chk-tool-visible"
+                                value="1"
+                                {% if toolPermission['tool'].isDesktopRequired() %} disabled {% endif %}
+                                {% if isVisible %} checked {% endif %}
+                                />
+                            </td>
+                        {% endfor %}
+                        <td>
+                            <div class="icon-circle-arrow-up" style="cursor: pointer;" ></div>
+                            <div class="icon-circle-arrow-down" style="cursor: pointer;" ></div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
