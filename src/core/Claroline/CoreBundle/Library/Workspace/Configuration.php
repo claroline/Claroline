@@ -23,12 +23,18 @@ class Configuration
     private $toolsPermissions;
     private $creatorRole;
     private $toolsConfig;
+    private $templateFile;
 
+    //@todo refactoring __construct/fromTemplate because the ziparchive is opened
+    //twice with fromtemplate.
     public function __construct()
     {
         $this->workspaceType = self::TYPE_SIMPLE;
         $ds = DIRECTORY_SEPARATOR;
-        $parsedFile = Yaml::parse(__DIR__."{$ds}..{$ds}..{$ds}..{$ds}..{$ds}..{$ds}..{$ds}workspaces{$ds}default.yml");
+        $this->templateFile = __DIR__."{$ds}..{$ds}..{$ds}..{$ds}..{$ds}..{$ds}..{$ds}templates{$ds}default.zip";
+        $archive = new \ZipArchive();
+        $archive->open($this->templateFile);
+        $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
         $this->setCreatorRole($parsedFile['creator_role']);
         $this->setRoles($parsedFile['roles']);
         $this->setToolsPermissions($parsedFile['tools_infos']);
@@ -37,13 +43,17 @@ class Configuration
 
     public static function fromTemplate($templateFile)
     {
+        $archive = new \ZipArchive();
+        $archive->open($templateFile);
         $config = new Configuration();
-        $parsedFile = Yaml::parse($templateFile);
+        $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
+        $archive->close();
         $config->validate($parsedFile);
         $config->setCreatorRole($parsedFile['creator_role']);
         $config->setRoles($parsedFile['roles']);
         $config->setToolsPermissions($parsedFile['tools_infos']);
         $config->setToolsConfiguration($parsedFile['tools']);
+        $config->setTemplateFile($templateFile);
 
         return $config;
     }
@@ -138,7 +148,17 @@ class Configuration
     {
         return $this->creatorRole;
     }
-
+    
+    public function setTemplateFile($templateFile)
+    {
+        $this->templateFile = $templateFile;
+    }
+    
+    public function getTemplateFile()
+    {
+        return $this->templateFile;
+    }
+    
     private function validate($parsedFile)
     {
         $errors = array();
@@ -162,6 +182,5 @@ class Configuration
         } else {
             return $errors;
         }
-
     }
 }

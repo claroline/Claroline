@@ -29,7 +29,7 @@ class Creator
         $this->trans = $trans;
         $this->ch = $ch;
         $this->wsCreator = $wsCreator;
-        $this->personalWsTemplateFile = $personalWsTemplateFile."default.yml";
+        $this->personalWsTemplateFile = $personalWsTemplateFile."default.zip";
     }
 
     /**

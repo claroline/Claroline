@@ -9,10 +9,12 @@ class ExportResourceArrayEvent extends Event
 {
     private $resource;
     private $config;
+    private $archive;
 
-    public function __construct(AbstractResource $resource)
+    public function __construct(AbstractResource $resource, \ZipArchive $archive)
     {
         $this->resource = $resource;
+        $this->archive = $archive;
     }
 
     public function getResource()
@@ -28,5 +30,10 @@ class ExportResourceArrayEvent extends Event
     public function getConfig()
     {
         return $this->config;
+    }
+    
+    public function getArchive()
+    {
+        return $this->archive;
     }
 }

@@ -80,7 +80,7 @@ class ToolListener extends ContainerAware
         foreach ($configs as $config) {
             $widgetArray = array();
             $ed = $this->container->get('event_dispatcher');
-            $newEvent = new ExportWidgetConfigEvent($config->getWidget(), $workspace);
+            $newEvent = new ExportWidgetConfigEvent($config->getWidget(), $workspace, $event->getArchive());
             $ed->dispatch("widget_export_{$config->getWidget()->getName()}_configuration", $newEvent);
             $widgetArray['name'] = $config->getWidget()->getName();
             $widgetArray['is_visible'] = $config->isVisible();
@@ -118,7 +118,7 @@ class ToolListener extends ContainerAware
         $children = $resourceRepo->findChildren($root, array('ROLE_ADMIN'));
 
         foreach ($children as $child) {
-            $newEvent = new ExportResourceArrayEvent($resourceRepo->find($child['id']));
+            $newEvent = new ExportResourceArrayEvent($resourceRepo->find($child['id']), $event->getArchive());
             $ed->dispatch("export_{$child['type']}_array", $newEvent);
             $dataChildren = $newEvent->getConfig();
             if ($dataChildren !== null) {
@@ -137,7 +137,8 @@ class ToolListener extends ContainerAware
 
         if (isset($config['widget'])) {
             foreach ($config['widget'] as $widgetConfig) {
-                $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->findOneByName($widgetConfig['name']);
+                $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
+                    ->findOneByName($widgetConfig['name']);
                 $parent = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
                     ->findOneBy(array('widget' => $widget, 'parent' => null, 'isDesktop' => false));
                 $displayConfig = new DisplayConfig();
@@ -149,7 +150,11 @@ class ToolListener extends ContainerAware
                 $displayConfig->setWorkspace($event->getWorkspace());
 
                 if (isset($widgetConfig['config'])) {
-                    $newEvent = new ImportWidgetConfigEvent($widgetConfig['config'], $event->getWorkspace());
+                    $newEvent = new ImportWidgetConfigEvent(
+                            $widgetConfig['config'], 
+                            $event->getWorkspace(), 
+                            $event->getArchive()
+                    );
                     $ed->dispatch("widget_import_{$widgetConfig['name']}_configuration", $newEvent);
                 }
 
@@ -200,7 +205,7 @@ class ToolListener extends ContainerAware
 
         if (isset($config['resources'])) {
             foreach ($config['resources'] as $resource) {
-                $newEvent = new ImportResourceArrayEvent($resource, $root);
+                $newEvent = new ImportResourceArrayEvent($resource, $root, $event->getArchive());
                 $ed->dispatch("import_{$resource['type']}_array", $newEvent);
             }
         }
