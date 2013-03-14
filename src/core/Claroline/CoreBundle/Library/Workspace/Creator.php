@@ -39,7 +39,6 @@ class Creator
     public function createWorkspace(Configuration $config, User $manager)
     {
         $config->check();
-
         $workspaceType = $config->getWorkspaceType();
         $workspace = new $workspaceType;
         $workspace->setName($config->getWorkspaceName());
@@ -65,17 +64,19 @@ class Creator
         $this->entityManager->persist($rootDir);
         $this->entityManager->flush();
         $toolsConfig = $config->getToolsConfiguration();
-
+        $archive = new \ZipArchive();
+        $archive->open($config->getTemplateFile());
+        
         foreach ($toolsConfig as $name => $conf) {
-            $event = new ImportWorkspaceEvent($workspace, $conf);
+            $event = new ImportWorkspaceEvent($workspace, $conf, $archive);
             $this->ed->dispatch('import_workspace_'.$name, $event);
         }
 
         $manager->addRole($this->roleRepo->findManagerRole($workspace));
         $this->addMandatoryTools($workspace, $config);
-
         $this->entityManager->persist($manager);
         $this->entityManager->flush();
+        $archive->close();
 
         return $workspace;
     }
@@ -130,27 +131,24 @@ class Creator
      */
     private function addMandatoryTools(AbstractWorkspace $workspace, Configuration $config)
     {
-        $tools = $config->getTools();
+        $toolsPermissions = $config->getToolsPermissions();
         $order = 1;
 
-        foreach ($tools as $name) {
+        foreach ($toolsPermissions as $name => $data) {
             $tool = $this->entityManager
                 ->getRepository('ClarolineCoreBundle:Tool\Tool')
                 ->findOneBy(array('name' => $name));
-
             $wot = new WorkspaceOrderedTool();
             $wot->setWorkspace($workspace);
+            $wot->setTranslationKey($data['translation_key']);
             $wot->setTool($tool);
             $wot->setOrder($order);
             $this->entityManager->persist($wot);
             $this->entityManager->flush();
+            
             $order++;
-        }
-
-        $toolsPermissions = $config->getToolsPermissions();
-
-        foreach ($toolsPermissions as $name => $roles) {
-            foreach ($roles as $role) {
+            
+            foreach ($data['perms'] as $role) {
                 if ($role === 'ROLE_ANONYMOUS') {
                      $role = $this->entityManager
                         ->getRepository('ClarolineCoreBundle:Role')

@@ -13,6 +13,7 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@event_dispatcher"
-
+            - "%claroline.workspace_template.directory%"
+            
 parameters:
-    claroline.workspace_template.directory: "%kernel.root_dir%/../workspaces/"
+    claroline.workspace_template.directory: "%kernel.root_dir%/../templates/"

@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Library\Event\ExportResourceArrayEvent;
 use Claroline\CoreBundle\Library\Event\ImportResourceArrayEvent;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 
 class FileListener extends ContainerAware
 {
@@ -154,20 +155,38 @@ class FileListener extends ContainerAware
     public function onExportArray(ExportResourceArrayEvent $event)
     {
         $resource = $event->getResource();
+        $hash = $resource->getHashName();
         $config['type'] = 'file';
-        $config['id'] = $resource->getId();
+        $config['hashname'] = $hash;
+        $config['original_name'] = $resource->getName();
+        $event->getArchive()->addFile(
+            $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $hash, 
+            $hash
+        );
         $event->setConfig($config);
         $event->stopPropagation();
     }
 
     public function onImportArray(ImportResourceArrayEvent $event)
     {
+        $ds = DIRECTORY_SEPARATOR;
         $config = $event->getConfig();
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $file = $em->getRepository('ClarolineCoreBundle:Resource\File')->find($config['id']);
-        $newFile = $this->copy($file);
+        $file = new File();
+        $file->setName($config['original_name']);
+        $extension = pathinfo($config['original_name'], PATHINFO_EXTENSION);
+        $hashName = $this->container->get('claroline.resource.utilities')->generateGuid() . "." . $extension;
+        $content = $event->getArchive()->getFromName($config['hashname']);
+        $physicalPath = $this->container->getParameter('claroline.files.directory') . $ds . $hashName;
+        $splFileInfo = new \SplFileInfo($physicalPath);
+        $splFileObject = $splFileInfo->openFile('w+'); 
+        $splFileObject->fwrite($content);
+        $size = filesize($splFileObject);
+        $file->setSize($size);
+        $file->setHashName($hashName);
+        $guesser = MimeTypeGuesser::getInstance();
+        $file->setMimeType($guesser->guess($physicalPath));
         $manager = $this->container->get('claroline.resource.manager');
-        $manager->create($newFile, $event->getParent()->getId(), 'file');
+        $manager->create($file, $event->getParent()->getId(), 'file');
         $event->stopPropagation();
     }
 
