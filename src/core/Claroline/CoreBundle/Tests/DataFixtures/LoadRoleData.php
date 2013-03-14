@@ -13,8 +13,8 @@ class LoadRoleData extends AbstractFixture implements ContainerAwareInterface
     private $roles;
 
     /**
-     * Constructor. Each key is a role name and each value is the role parent.
-     * The role parent must exists or be null;
+     * Constructor. Each key is a role name and each value is a parent role.
+     * Parent role can be either a null value or the name of an existing role.
      *
      * @param array $roles
      */

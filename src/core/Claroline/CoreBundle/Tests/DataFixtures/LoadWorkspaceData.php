@@ -11,16 +11,17 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class LoadWorkspaceData extends AbstractFixture implements ContainerAwareInterface
 {
     private $workspaces;
+    static private $codeDiscrCount = 1;
 
     /**
-     * Constructor. Expects an associative array where each key is an unique workspace name
-     * and each value is the creator's username. Users must have been loaded
+     * Constructor. Expects an associative array where each key is an unique workspace
+     * name and each value is a creator's username. Users must have been loaded
      * and referenced in a previous fixtures with a 'user/[username]' label.
      *
-     * For each group, 1 fixture reference will be added:
-     * - role/[group's name] (group's role)
+     * For each workspace, a fixture reference will be added with the following label:
+     * - workspace/[workspace's name]
      *
-     * @param array $users
+     * @param array $workspaces
      */
     public function __construct(array $workspaces)
     {
@@ -45,14 +46,14 @@ class LoadWorkspaceData extends AbstractFixture implements ContainerAwareInterfa
         foreach ($this->workspaces as $name => $username) {
             $config = new Configuration();
             $config->setWorkspaceName($name);
-            $config->setWorkspaceCode(substr($name, 0, 1).rand(0, 100));
+            $config->setWorkspaceCode(substr($name, 0, 1) . self::$codeDiscrCount);
             $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
             $workspace = $workspaceCreator->createWorkspace($config, $this->getReference('user/'.$username));
-            $this->setReference('workspace/'.$name, $workspace);
+            $this->setReference("workspace/{$name}", $workspace);
             $wsRoot = $manager->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
                 ->findWorkspaceRoot($workspace);
             $this->setReference('directory/'.$name, $wsRoot);
+            ++self::$codeDiscrCount;
         }
     }
 }
-
