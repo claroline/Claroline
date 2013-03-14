@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 if (!file_exists($file = __DIR__ . '/../app/config/local/parameters.yml')) {
     copy(__DIR__ . '/../app/config/local/parameters.yml.dist', $file);
 }
-if (!file_exists($file = __DIR__ . '/../app/config/local/pluging/routing.yml')) {
+if (!file_exists($file = __DIR__ . '/../app/config/local/plugin/routing.yml')) {
     touch($file);
 }
 $kernel = new AppKernel('install', true); // put second parameter to false when development is done
