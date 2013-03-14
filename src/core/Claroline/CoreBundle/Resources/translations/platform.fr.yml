@@ -185,6 +185,7 @@ rights: Droits
 role: Rôle
 roles: Rôles
 save: Sauvegarder
+save_as_template: Sauvegarder comme modèle
 search: Rechercher
 see: Voir
 select all: 'Tout sélectionner'
@@ -194,9 +195,11 @@ settings: Paramètres
 show: Voir
 show_as_admin: 'Voir comme admin'
 show_as_user: 'Voir comme utilisateur'
+teacher: Professeur
 text_form_name: Nom
 text_form_shareType: Redistribution
 text_form_text: Texte
+The code {{ code }} is already assigned to another workspace.: Le code {{ code }} est déjà assigné à un autre espace d'activités.
 to: Jusque
 today: 'Aujourd''hui'
 tool: Outil
@@ -241,6 +244,7 @@ workspace_form_name: Nom
 workspace_form_template: Modèle
 workspace_form_type: Type
 workspace_resource: Ressources
+workspace_template_form_name: Nom
 workspace_tools: Outils
 workspace_welcome: Accueil
 workspaces: 'Espaces d''activités'

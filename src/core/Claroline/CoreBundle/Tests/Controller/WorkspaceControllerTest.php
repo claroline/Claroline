@@ -241,4 +241,27 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->client->request('GET', "/workspaces/tool/group_management/{$pwaId}/groups/unregistered");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
+
+    public function testWSCreatorCantCreateTwoWSWithSameCode()
+    {
+        $this->loadUserData(array('ws_creator' => 'ws_creator'));
+        $crawler = $this->logUser($this->getFixtureReference('user/ws_creator'));
+        $link = $crawler->filter('#link-create-ws-form')->link();
+        $crawler = $this->client->click($link);
+        $form = $crawler->filter('button[type=submit]')->form();
+        $form['workspace_form[name]'] = 'first_new_workspace';
+        $form['workspace_form[type]'] = 'simple';
+        $form['workspace_form[code]'] = 'same_code';
+        $this->client->submit($form);
+        $crawler = $this->client->request('GET', "/workspaces");
+        $this->assertEquals(1, $crawler->filter('.row-workspace')->count());
+        $crawler = $this->client->click($link);
+        $form = $crawler->filter('button[type=submit]')->form();
+        $form['workspace_form[name]'] = 'second_new_workspace';
+        $form['workspace_form[type]'] = 'simple';
+        $form['workspace_form[code]'] = 'same_code';
+        $this->client->submit($form);
+        $crawler = $this->client->request('GET', "/workspaces");
+        $this->assertEquals(1, $crawler->filter('.row-workspace')->count());
+    }
 }

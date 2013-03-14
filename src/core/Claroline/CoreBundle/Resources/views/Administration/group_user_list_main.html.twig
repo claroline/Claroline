@@ -19,12 +19,12 @@
         <h3 class="sub-section-header">{{ 'group'|trans({}, 'platform') }} "{{ group.getName() }}" : {{ 'users'|trans({}, 'platform') }}</h3>
         
         <div class="search-bar">
-            <a id="link_add_user_to_group" class="btn btn-secondary" href="{{ path('claro_admin_user_list_addable_to_group', {'groupId' : group.getId()}) }}">{{ 'add_user'|trans({}, 'platform') }}</a>
-            <button class="btn btn-secondary delete-users-button">{{ 'delete'|trans({}, 'platform') }}</button>
-            <a class="btn btn-secondary" id="link-send-message" href="{{ path('claro_message_form_for_group', {'groupId': group.getId()}) }}">{{ 'send_message'|trans({}, 'platform') }}</a>
+            <a id="link_add_user_to_group" class="btn btn-secondary" href="{{ path('claro_admin_user_list_addable_to_group', {'groupId' : group.getId()}) }}"><i class="icon-plus"></i> {{ 'add_user'|trans({}, 'platform') }}</a>
+            <button class="btn btn-secondary delete-users-button"><i class="icon-trash"></i> {{ 'delete'|trans({}, 'platform') }}</button>
+            <a class="btn btn-secondary" id="link-send-message" href="{{ path('claro_message_form_for_group', {'groupId': group.getId()}) }}"><i class="icon-envelope"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
 
             <div class="input-append pull-right">
-                <input class="input-medium" type="text" id="search-user-txt">
+                <input class="input-medium" type="text" id="search-user-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
                 <button class="filter btn" type="button" id="search-user-button">
                     <i class="icon-search"></i> 
                 </button>
@@ -49,7 +49,10 @@
         <div id="twig-attributes" data-group-id="{{ group.getId() }}">
         </div>
         <p>
-        <button class="btn btn-secondary delete-users-button">{{ 'delete'|trans({}, 'platform') }}</button>
+            <a id="link_add_user_to_group" class="btn btn-secondary" href="{{ path('claro_admin_user_list_addable_to_group', {'groupId' : group.getId()}) }}"><i class="icon-plus"></i> {{ 'add_user'|trans({}, 'platform') }}</a>
+            <button class="btn btn-secondary delete-users-button"><i class="icon-trash"></i> {{ 'delete'|trans({}, 'platform') }}</button>
+            <a class="btn btn-secondary" id="link-send-message" href="{{ path('claro_message_form_for_group', {'groupId': group.getId()}) }}"><i class="icon-envelope"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
+
         </p>
 
     </div>
