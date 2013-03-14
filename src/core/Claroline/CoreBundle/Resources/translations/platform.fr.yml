@@ -199,6 +199,7 @@ teacher: Professeur
 text_form_name: Nom
 text_form_shareType: Redistribution
 text_form_text: Texte
+The code {{ code }} is already assigned to another workspace.: Le code {{ code }} est déjà assigné à un autre espace d'activités.
 to: Jusque
 today: 'Aujourd''hui'
 tool: Outil

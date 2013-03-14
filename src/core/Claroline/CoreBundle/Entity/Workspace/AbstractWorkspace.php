@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Entity\Workspace;
 
 use \RuntimeException;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\SerializerBundle\Annotation\Type;
@@ -21,6 +22,7 @@ use Claroline\CoreBundle\Entity\Tool\WorkspaceTool;
  *     "Claroline\CoreBundle\Entity\Workspace\AggregatorWorkspace"
  *         = "Claroline\CoreBundle\Entity\Workspace\AggregatorWorkspace"
  * })
+ * @DoctrineAssert\UniqueEntity("code")
  */
 abstract class AbstractWorkspace
 {
@@ -43,7 +45,7 @@ abstract class AbstractWorkspace
     protected $name;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      * @Assert\NotBlank()
      */
     protected $code;
