@@ -746,6 +746,8 @@ class ParametersController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+        $wsRegisteredName = $workspace->getName();
+        $wsRegisteredCode = $workspace->getCode();
         $form = $this->createForm(new WorkspaceEditType(), $workspace);
         $request = $this->getRequest();
         $form->bind($request);
@@ -763,6 +765,9 @@ class ParametersController extends Controller
                     )
                 )
             );
+        } else {
+            $workspace->setName($wsRegisteredName);
+            $workspace->setCode($wsRegisteredCode);
         }
 
         return $this->render(
