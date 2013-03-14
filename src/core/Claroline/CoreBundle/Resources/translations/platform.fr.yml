@@ -180,6 +180,7 @@ resources_rights_form_canEdit: Editer
 resources_rights_form_canOpen: Ouvrir
 resources_rights_form_canShare: Partager
 resources_rights_form_canView: Voir
+restore : Restaurer
 results: Résultats
 rights: Droits
 role: Rôle
@@ -204,6 +205,7 @@ to: Jusque
 today: 'Aujourd''hui'
 tool: Outil
 tools: Outils
+trash : Corbeille
 type: Type
 type_s: Type(s)
 unregister: Désinscription
