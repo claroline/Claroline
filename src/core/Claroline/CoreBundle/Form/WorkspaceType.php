@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Yaml\Yaml;
+use Claroline\CoreBundle\Validator\Constraints\WorkspaceUniqueCode;
 
 class WorkspaceType extends AbstractType
 {
@@ -18,7 +19,14 @@ class WorkspaceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text', array('required' => true));
-        $builder->add('code', 'text', array('required' => true));
+        $builder->add(
+            'code',
+            'text',
+            array(
+                'required' => true,
+                'constraints' => array(new WorkspaceUniqueCode())
+                )
+        );
         $builder->add(
             'type',
             'choice',
