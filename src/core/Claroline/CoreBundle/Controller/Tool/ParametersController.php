@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Claroline\CoreBundle\Form\WorkspaceEditType;
 use Claroline\CoreBundle\Form\WorkspaceTemplateType;
-use Symfony\Component\Yaml\Yaml;
 
 class ParametersController extends Controller
 {
@@ -662,13 +661,7 @@ class ParametersController extends Controller
 
         if ($form->isValid()) {
             $name = $form->get('name')->getData();
-            $config = $this->get('claroline.workspace.exporter')->export($workspace);
-            $config['name'] = $name;
-            $yaml = Yaml::dump($config, 10);
-            $ds = DIRECTORY_SEPARATOR;
-            file_put_contents(
-                $this->container->getParameter('claroline.workspace_template.directory')."{$name}.yml", $yaml
-            );
+            $this->get('claroline.workspace.exporter')->export($workspace, $name);
             $route = $this->get('router')->generate(
                 'claro_workspace_open_tool',
                 array('toolName' => 'parameters', 'workspaceId' => $workspace->getId())

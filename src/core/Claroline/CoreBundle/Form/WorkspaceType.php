@@ -35,8 +35,7 @@ class WorkspaceType extends AbstractType
         $templates = array();
         foreach (new \DirectoryIterator($this->templateDir) as $fileInfo) {
             if ($fileInfo->isFile()) {
-                $parsedFile = Yaml::parse($fileInfo->getRealPath());
-                $templates[$fileInfo->getRealPath()] = $parsedFile['name'];
+                $templates[$fileInfo->getRealPath()] = $fileInfo->getBasename();
             }
         }
 

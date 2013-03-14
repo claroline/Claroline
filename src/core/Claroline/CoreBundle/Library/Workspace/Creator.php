@@ -64,17 +64,19 @@ class Creator
         $this->entityManager->persist($rootDir);
         $this->entityManager->flush();
         $toolsConfig = $config->getToolsConfiguration();
-
+        $archive = new \ZipArchive();
+        $archive->open($config->getTemplateFile());
+        
         foreach ($toolsConfig as $name => $conf) {
-            $event = new ImportWorkspaceEvent($workspace, $conf);
+            $event = new ImportWorkspaceEvent($workspace, $conf, $archive);
             $this->ed->dispatch('import_workspace_'.$name, $event);
         }
 
         $manager->addRole($this->roleRepo->findManagerRole($workspace));
         $this->addMandatoryTools($workspace, $config);
-
         $this->entityManager->persist($manager);
         $this->entityManager->flush();
+        $archive->close();
 
         return $workspace;
     }
