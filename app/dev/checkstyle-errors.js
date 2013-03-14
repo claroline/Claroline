@@ -1,17 +1,18 @@
 // Simplified checkstyle reporter, reporting only errors (not warnings)
 // Orginal author: Boy Baukema
 // http://github.com/relaxnow
-module.exports =
-{
-	reporter: function (results, data)
-	{
+
+/* node: true */
+
+module.exports = {
+	reporter: function (results) {
 		"use strict";
 
 		var files = {},
 			out = [],
 			pairs = {
 				"&": "&amp;",
-				'"': "&quot;",
+				"\"": "&quot;",
 				"'": "&apos;",
 				"<": "&lt;",
 				">": "&gt;"
@@ -29,14 +30,14 @@ module.exports =
 
 		results.forEach(function (result) {
 			// Register the file
-			result.file = result.file.replace(/^\.\//, '');
+			result.file = result.file.replace(/^\.\//, "");
 			if (!files[result.file]) {
 				files[result.file] = [];
 			}
 
 			// Add the error
 			files[result.file].push({
-				severity: 'error',
+				severity: "error",
 				line: result.error.line,
 				column: result.error.character,
 				message: result.error.reason,
