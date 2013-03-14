@@ -41,17 +41,19 @@ class LoadWorkspaceData extends AbstractFixture implements ContainerAwareInterfa
     public function load(ObjectManager $manager)
     {
         $workspaceCreator = $this->container->get('claroline.workspace.creator');
+        $codeDiscr = 1;
 
         foreach ($this->workspaces as $name => $username) {
             $config = new Configuration();
             $config->setWorkspaceName($name);
-            $config->setWorkspaceCode(substr($name, 0, 1).rand(0, 100));
+            $config->setWorkspaceCode(substr($name, 0, 1) . $codeDiscr);
             $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
             $workspace = $workspaceCreator->createWorkspace($config, $this->getReference('user/'.$username));
             $this->setReference('workspace/'.$name, $workspace);
             $wsRoot = $manager->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
                 ->findWorkspaceRoot($workspace);
             $this->setReference('directory/'.$name, $wsRoot);
+            ++$codeDiscr;
         }
     }
 }
