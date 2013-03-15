@@ -11,8 +11,8 @@ use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Event\ExportResourceEvent;
 use Claroline\CoreBundle\Library\Event\PlayFileEvent;
-use Claroline\CoreBundle\Library\Event\ExportResourceArrayEvent;
-use Claroline\CoreBundle\Library\Event\ImportResourceArrayEvent;
+use Claroline\CoreBundle\Library\Event\ExportResourceTemplateEvent;
+use Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
@@ -152,7 +152,7 @@ class FileListener extends ContainerAware
         $event->stopPropagation();
     }
 
-    public function onExportArray(ExportResourceArrayEvent $event)
+    public function onExportTemplate(ExportResourceTemplateEvent $event)
     {
         $resource = $event->getResource();
         $hash = $resource->getHashName();
@@ -167,7 +167,7 @@ class FileListener extends ContainerAware
         $event->stopPropagation();
     }
 
-    public function onImportArray(ImportResourceArrayEvent $event)
+    public function onImportTemplate(ImportResourceTemplateEvent $event)
     {
         $ds = DIRECTORY_SEPARATOR;
         $config = $event->getConfig();

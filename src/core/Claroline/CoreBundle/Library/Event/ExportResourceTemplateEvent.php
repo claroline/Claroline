@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Library\Event;
 use Symfony\Component\EventDispatcher\Event;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
-class ExportResourceArrayEvent extends Event
+class ExportResourceTemplateEvent extends Event
 {
     private $resource;
     private $config;
