@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Library\Event;
 use Symfony\Component\EventDispatcher\Event;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
-class ImportResourceArrayEvent extends Event
+class ImportResourceTemplateEvent extends Event
 {
     private $parent;
     private $config;
