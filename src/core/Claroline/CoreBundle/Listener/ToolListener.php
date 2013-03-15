@@ -5,8 +5,8 @@ namespace Claroline\CoreBundle\Listener;
 use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Library\Event\ExportWorkspaceEvent;
 use Claroline\CoreBundle\Library\Event\ImportWorkspaceEvent;
-use Claroline\CoreBundle\Library\Event\ExportResourceArrayEvent;
-use Claroline\CoreBundle\Library\Event\ImportResourceArrayEvent;
+use Claroline\CoreBundle\Library\Event\ExportResourceTemplateEvent;
+use Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent;
 use Claroline\CoreBundle\Library\Event\ExportWidgetConfigEvent;
 use Claroline\CoreBundle\Library\Event\ImportWidgetConfigEvent;
 use Claroline\CoreBundle\Entity\Event;
@@ -118,8 +118,8 @@ class ToolListener extends ContainerAware
         $children = $resourceRepo->findChildren($root, array('ROLE_ADMIN'));
 
         foreach ($children as $child) {
-            $newEvent = new ExportResourceArrayEvent($resourceRepo->find($child['id']), $event->getArchive());
-            $ed->dispatch("export_{$child['type']}_array", $newEvent);
+            $newEvent = new ExportResourceTemplateEvent($resourceRepo->find($child['id']), $event->getArchive());
+            $ed->dispatch("export_{$child['type']}_template", $newEvent);
             $dataChildren = $newEvent->getConfig();
             if ($dataChildren !== null) {
                 $config['resources'][] = $dataChildren;
@@ -205,8 +205,8 @@ class ToolListener extends ContainerAware
 
         if (isset($config['resources'])) {
             foreach ($config['resources'] as $resource) {
-                $newEvent = new ImportResourceArrayEvent($resource, $root, $event->getArchive());
-                $ed->dispatch("import_{$resource['type']}_array", $newEvent);
+                $newEvent = new ImportResourceTemplateEvent($resource, $root, $event->getArchive());
+                $ed->dispatch("import_{$resource['type']}_template", $newEvent);
             }
         }
 
