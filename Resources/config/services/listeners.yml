@@ -9,3 +9,5 @@ services:
             - { name: kernel.event_listener, event: open_claroline_forum, method: onOpen }
             - { name: kernel.event_listener, event: delete_claroline_forum, method: onDelete }
             - { name: kernel.event_listener, event: plugin_options_clarolineforum, method: onAdministrate }
+            - { name: kernel.event_listener, event: export_claroline_forum_template, method: onExportTemplate }
+            - { name: kernel.event_listener, event: import_claroline_forum_template, method: onImportTemplate }

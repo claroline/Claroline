@@ -7,7 +7,11 @@ use Claroline\CoreBundle\Library\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent;
+use Claroline\CoreBundle\Library\Event\ExportResourceTemplateEvent;
 use Claroline\ForumBundle\Entity\Forum;
+use Claroline\ForumBundle\Entity\Subject;
+use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Form\ForumOptionsType;
 use Claroline\ForumBundle\Form\ForumType;
 use Symfony\Component\DependencyInjection\ContainerAware;
@@ -85,5 +89,44 @@ class ForumListener extends ContainerAware
         $em = $this->container->get('doctrine.orm.entity_manager');
         $em->remove($event->getResource());
         $event->stopPropagation();
+    }
+    
+    public function onExportTemplate(ExportResourceTemplateEvent $event)
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $resource = $event->getResource();
+        $config['name'] = $resource->getName();
+        $config['type'] = 'claroline_forum';
+        $subjects = array();
+        $datas = $em->getRepository('ClarolineForumBundle:Forum')->getSubjects($resource);
+        
+        foreach ($datas as $data) {
+            $subjects[] = $data['title'];
+        }
+        
+        $config['subjects'] = $subjects;
+        $event->setConfig($config);
+        $event->stopPropagation();
+    }
+    
+    //@ todo refactoring message name & content.
+    public function onImportTemplate(ImportResourceTemplateEvent $event)
+    {
+        $config = $event->getConfig();
+        $forum = new Forum();
+        $forum->setName($config['name']);
+        $this->container->get('claroline.resource.manager')->create($forum, $event->getParent()->getId(), 'claroline_forum');
+        
+        foreach ($config['subjects'] as $title) {
+            $subject = new Subject();
+            $subject->setName($title);
+            $subject->setTitle($title);
+            $this->container->get('claroline.resource.manager')->create($subject, $forum->getId(), 'claroline_subject');
+            $message = new Message();
+            $message->setContent('tmp');
+            $message->setName('msg-date-tmp');
+            $this->container->get('claroline.resource.manager')->create($message, $subject->getId(), 'claroline_message');
+        }
+        
     }
 }
