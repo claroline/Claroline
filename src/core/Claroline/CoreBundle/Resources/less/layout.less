@@ -262,17 +262,104 @@ footer {
     display:block;
 }
 
-.resource-manager .resources {
-    margin: 15px 0 15px 0 !important;
-    
+.resource-manager .resources 
+{     
+    margin: 0;
+    padding: 0 0 10px 0;
 }
 
-.resource-thumbnail {
-    display: inline-block;
-    width: 130px;
-    height: 140px;
-    margin: 10px 18px;
+.resource-thumbnail 
+{
+    display:inline-block;
+    margin: 10px 0 0 10px;
+    padding:0;
     vertical-align: top;
+    position:relative;
+}
+
+.resource-thumbnail .dropdown-toggle
+{
+    overflow:hidden;
+}
+
+.resource-thumbnail.zoom50
+{
+    width: 50px;
+    height: 75px;
+}
+
+.resource-thumbnail.zoom50 .dropdown-toggle
+{
+    font-size:7px;
+    line-height:10px;
+}
+
+.resource-thumbnail.zoom75
+{
+    width: 75px;
+    height: 111px;
+}
+
+.resource-thumbnail.zoom75 .dropdown-toggle
+{
+    font-size:10px;
+    line-height:15px;
+}
+
+.resource-thumbnail.zoom100
+{
+    width: 100px;
+    height: 150px;
+}
+
+.resource-thumbnail.zoom100 .dropdown-toggle
+{
+    font-size:14px;
+    line-height:20px;
+}
+
+.resource-thumbnail.zoom125
+{
+    width: 125px;
+    height: 185px;
+}
+
+.resource-thumbnail.zoom125 .dropdown-toggle
+{
+    font-size:16px;
+}
+
+.resource-thumbnail.zoom150
+{
+    width: 150px;
+    height: 225px;
+}
+
+.resource-thumbnail.zoom150 .dropdown-toggle
+{
+    font-size:18px;
+}
+
+.resource-thumbnail.zoom200
+{
+    width: 200px;
+    height: 260px;
+}
+
+.resource-thumbnail.zoom200 .dropdown-toggle
+{
+    font-size:20px;
+}
+
+.resource-manager .resource-element
+{
+    padding:3px 10px 0 10px;
+}
+
+.resource-thumbnail input {
+    position:absolute;
+    top:0;
+    left:0;
 }
 
 .resource-thumbnail input[type=checkbox] {
@@ -285,8 +372,8 @@ footer {
 }
 
 .resource-thumbnail img {
-    max-width: 100px;
-    max-heigth: 100px;
+    max-width:100%;
+    max-height:100%;
 }
 
 .resource-thumbnail img:hover,
@@ -397,17 +484,14 @@ a.dropdown-menu-item-disabled:hover {
   cursor: default;
 }
 
-.dropdown-menu {
-  a.dropdown-menu-item-disabled,
-  a.dropdown-menu-item-disabled:visited ,
-  a.dropdown-menu-item-disabled:active,
-  a.dropdown-menu-item-disabled:hover {
+a.dropdown-menu-item-disabled,
+a.dropdown-menu-item-disabled:visited ,
+a.dropdown-menu-item-disabled:active,
+a.dropdown-menu-item-disabled:hover {
     color: #999 ;
     cursor: default;
     background-color: white;
-  }
 }
-
 
 /**********/
 /* Tabs */
