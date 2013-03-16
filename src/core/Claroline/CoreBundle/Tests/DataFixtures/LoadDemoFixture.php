@@ -148,7 +148,7 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
                 'Jane Doe',
                 'Images et vidéos',
                 array(
-                    $this->filepath.'bigbuck.webm',
+                    $this->filepath.'video.mp4',
                     $this->filepath.'wallpaper.jpg'
                  )
             )
@@ -168,7 +168,7 @@ class LoadDemoFixture extends AbstractFixture implements ContainerAwareInterface
                 'Activities',
                 'Jane Doe',
                 array(
-                    $this->getReference('file/bigbuck.webm')->getId(),
+                    $this->getReference('file/video.mp4')->getId(),
                     $this->getReference('file/wallpaper.jpg')->getId()
                 )
             )

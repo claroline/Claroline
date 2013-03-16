@@ -8,11 +8,14 @@ use Symfony\Component\EventDispatcher\Event;
 class ExportWorkspaceEvent extends Event
 {
     private $config;
+    private $workspace;
+    private $archive;
 
-    public function __construct(AbstractWorkspace $workspace)
+    public function __construct(AbstractWorkspace $workspace, \ZipArchive $archive)
     {
         $this->workspace = $workspace;
         $this->config = null;
+        $this->archive = $archive;
     }
 
     public function getWorkspace()
@@ -28,5 +31,10 @@ class ExportWorkspaceEvent extends Event
     public function getConfig()
     {
         return $this->config;
+    }
+    
+    public function getArchive()
+    {
+        return $this->archive;
     }
 }

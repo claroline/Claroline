@@ -81,7 +81,7 @@ class Exporter
         }
 
         $archive->close();
-        //throw new \Exception('coucou');
+        
         return $pathArch;
     }
 

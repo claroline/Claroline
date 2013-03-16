@@ -24,7 +24,7 @@
             <span class="label label-warning"> {{ 'please_wait'|trans({}, 'platform') }} </span>
         </div>
         {% if not is_path_mode %}
-            {% render 'ClarolineCoreBundle:Layout:topBar' %}
+            {% render controller('ClarolineCoreBundle:Layout:topBar') %}
         {% endif %}
         <div id="grid" class="container container-fluid">
             {% block sectionHeader %}
@@ -38,12 +38,12 @@
         <div class="modal hide"></div>
     </div>
     {% if not is_path_mode %}
-        {% render 'ClarolineCoreBundle:Layout:footer' %}
+        {% render controller('ClarolineCoreBundle:Layout:footer') %}
     {% endif %}
 {% endblock %}
 
 {% block javascripts %}
-    <script type="text/javascript" src='{{ asset('../vendor/jms/twig-js/twig.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('twig.js') }}'></script>
     <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-1.7.1.min.js') }}'></script>
     <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>

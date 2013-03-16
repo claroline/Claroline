@@ -8,8 +8,8 @@ use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Library\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
-use Claroline\CoreBundle\Library\Event\ExportResourceArrayEvent;
-use Claroline\CoreBundle\Library\Event\ImportResourceArrayEvent;
+use Claroline\CoreBundle\Library\Event\ExportResourceTemplateEvent;
+use Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DirectoryListener extends ContainerAware
@@ -76,7 +76,7 @@ class DirectoryListener extends ContainerAware
         $event->stopPropagation();
     }
 
-    public function onExportArray(ExportResourceArrayEvent $event)
+    public function onExportTemplate(ExportResourceTemplateEvent $event)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $resourceRepo = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
@@ -86,23 +86,26 @@ class DirectoryListener extends ContainerAware
 
         foreach ($children as $child) {
             $ed = $this->container->get('event_dispatcher');
-            $newEvent = new ExportResourceArrayEvent($resourceRepo->find($child['id']));
-            $ed->dispatch("export_{$child['type']}_array", $newEvent);
+            $newEvent = new ExportResourceTemplateEvent($resourceRepo->find($child['id']), $event->getArchive());
+            $ed->dispatch("export_{$child['type']}_template", $newEvent);
             $descr = $newEvent->getConfig();
+            
             if (count($descr) > 0) {
                 $dataChildren[] = $descr;
             }
         }
 
         $config = array('type' => 'directory', 'name' => $resource->getName());
+        
         if (count($dataChildren) > 0) {
             $config['children'] = $dataChildren;
         }
+        
         $event->setConfig($config);
         $event->stopPropagation();
     }
 
-    public function onImportArray(ImportResourceArrayEvent $event)
+    public function onImportTemplate(ImportResourceTemplateEvent $event)
     {
         $config = $event->getConfig();
         $manager = $this->container->get('claroline.resource.manager');
@@ -113,8 +116,12 @@ class DirectoryListener extends ContainerAware
 
         if (isset($config['children'])) {
             foreach ($config['children'] as $child) {
-                $newEvent = new ImportResourceArrayEvent($child, $directory);
-                $ed->dispatch("import_{$child['type']}_array", $newEvent);
+                $newEvent = new ImportResourceTemplateEvent(
+                    $child, 
+                    $directory, 
+                    $event->getArchive()
+                );
+                $ed->dispatch("import_{$child['type']}_template", $newEvent);
             }
         }
     }
