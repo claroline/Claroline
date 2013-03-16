@@ -15,8 +15,7 @@
 {% if hasMenu == true %}
     <div class="dropdown" rel="tooltip" title="{{ resource.name }}">
         <a class="dropdown-toggle name dropdown-thumbnail" role="button" data-toggle="dropdown" href="#">
-            <span class="resource-name">{{ resource.displayableName|raw }}</span>
-            <b class="caret"></b>
+            <div class="resource-name">{{ resource.displayableName|raw }} <i class="icon-caret-down"></i></div>
         </a>
         <ul class="dropdown-menu" role="menu">
             <li>
@@ -79,5 +78,5 @@
         </ul>
     </div>
 {% else %}
-    <span class="name">{{ resource.displayableName|raw }}&nbsp;&nbsp;&nbsp;</span>
+    <div class="resource-name">{{ resource.displayableName|raw }}&nbsp;&nbsp;&nbsp;</div>
 {% endif %}
