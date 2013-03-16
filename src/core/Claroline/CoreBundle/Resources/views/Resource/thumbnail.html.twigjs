@@ -1,6 +1,6 @@
 {% twig_js name="ResourceManagerThumbnail" %}
 
-<div>
+<div class="resource-element">
     <input type="checkbox"
         value="{{ resource.id }}"
         data-resource-name="{{ resource.name }}"
@@ -9,11 +9,12 @@
     <img src="{{ webRoot }}{{ resource.large_icon }}"
          data-id="{{ resource.id }}"
          data-type="{{ resource.type }}"
-         data-type-id="{{ resource.resource_type_id }}"/>
+         data-type-id="{{ resource.resource_type_id }}"/
+         width="100%">
 </div>
 {% if hasMenu == true %}
     <div class="dropdown" rel="tooltip" title="{{ resource.name }}">
-        <a class="dropdown-toggle name" role="button" data-toggle="dropdown" href="#">
+        <a class="dropdown-toggle name dropdown-thumbnail" role="button" data-toggle="dropdown" href="#">
             <span class="resource-name">{{ resource.displayableName|raw }}</span>
             <b class="caret"></b>
         </a>
