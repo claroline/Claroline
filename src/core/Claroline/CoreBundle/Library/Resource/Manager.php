@@ -260,7 +260,12 @@ class Manager
             $eventName = $this->ut->normalizeEventName('copy', $originalResource->getResourceType()->getName());
             $this->ed->dispatch($eventName, $event);
             $resourceCopy = $event->getCopy();
-
+            if ($resourceCopy === null) {
+                throw new \Exception(
+                    "The resource {$originalResource->getResourceType()->getName()}" .
+                    " couldn't be created."
+                );
+            }
             $resourceCopy->setResourceType($originalResource->getResourceType());
         }
 

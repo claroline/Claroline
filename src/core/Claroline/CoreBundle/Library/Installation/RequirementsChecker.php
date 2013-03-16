@@ -16,12 +16,7 @@ class RequirementsChecker
         $ds = DIRECTORY_SEPARATOR;
         $valid = $warning = $errors = array();
         $parametersPath = "{$this->kernelRootDir}{$ds}config{$ds}local{$ds}parameters.yml";
-        $localPath = "{$this->kernelRootDir}{$ds}config{$ds}local";
-        $filePath = "{$this->kernelRootDir}{$ds}..{$ds}files";
-        $testPath = "{$this->kernelRootDir}{$ds}..{$ds}test";
-        $themePath = "{$this->kernelRootDir}{$ds}..{$ds}src{$ds}core{$ds}Claroline{$ds}"
-            . "CoreBundle{$ds}Resources{$ds}public{$ds}css{$ds}themes";
-
+        
         //Extension verification.
         (extension_loaded('gd')) ?
             $valid[] = 'The php gd extension is loaded.':
@@ -35,19 +30,8 @@ class RequirementsChecker
         (file_exists($parametersPath)) ?
             $valid[] = "The {$parametersPath} file exists.":
             $errors[] = "The {$parametersPath} is missing.";
-        (is_writable($localPath)) ?
-            $valid[] = "The {$localPath} folder is writable":
-            $errors[] = "The {$localPath} folder is not writable";
-        (is_writable($filePath)) ?
-            $valid[] = "The {$filePath} folder is writable":
-            $errors[] = "The {$filePath} folder is not writable";
-        (is_writable($testPath)) ?
-            $valid[] = "The {$testPath} folder is writable":
-            $errors[] = "The {$testPath} folder is not writable";
-        (is_writable($themePath)) ?
-            $valid[] = "The {$themePath} folder is writable":
-            $errors[] = "The {$themePath} folder is not writable";
-
+            
+           
         $requirements['errors'] = $errors;
         $requirements['warning'] = $warning;
         $requirements['valid'] = $valid;

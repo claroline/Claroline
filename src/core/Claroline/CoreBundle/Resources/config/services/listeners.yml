@@ -40,8 +40,8 @@ services:
             - { name: kernel.event_listener, event: create_form_directory, method: onCreateForm }
             - { name: kernel.event_listener, event: create_directory, method: onCreate }
             - { name: kernel.event_listener, event: open_directory, method: onOpen }
-            - { name: kernel.event_listener, event: export_directory_array, method: onExportArray }
-            - { name: kernel.event_listener, event: import_directory_array, method: onImportArray }
+            - { name: kernel.event_listener, event: export_directory_template, method: onExportTemplate }
+            - { name: kernel.event_listener, event: import_directory_template, method: onImportTemplate }
 
     claroline.listener.file_listener:
         class: Claroline\CoreBundle\Listener\Resource\FileListener
@@ -54,8 +54,8 @@ services:
             - { name: kernel.event_listener, event: copy_file, method: onCopy }
             - { name: kernel.event_listener, event: export_file, method: onExport }
             - { name: kernel.event_listener, event: open_file, method: onOpen }
-            - { name: kernel.event_listener, event: export_file_array, method: onExportArray }
-            - { name: kernel.event_listener, event: import_file_array, method: onImportArray }
+            - { name: kernel.event_listener, event: export_file_template, method: onExportTemplate }
+            - { name: kernel.event_listener, event: import_file_template, method: onImportTemplate }
 
     claroline.listener.text_listener:
         class: Claroline\CoreBundle\Listener\Resource\TextListener
