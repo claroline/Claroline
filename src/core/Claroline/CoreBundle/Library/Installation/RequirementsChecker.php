@@ -16,7 +16,7 @@ class RequirementsChecker
         $ds = DIRECTORY_SEPARATOR;
         $valid = $warning = $errors = array();
         $parametersPath = "{$this->kernelRootDir}{$ds}config{$ds}local{$ds}parameters.yml";
-        
+
         //Extension verification.
         (extension_loaded('gd')) ?
             $valid[] = 'The php gd extension is loaded.':
@@ -30,8 +30,7 @@ class RequirementsChecker
         (file_exists($parametersPath)) ?
             $valid[] = "The {$parametersPath} file exists.":
             $errors[] = "The {$parametersPath} is missing.";
-            
-           
+
         $requirements['errors'] = $errors;
         $requirements['warning'] = $warning;
         $requirements['valid'] = $valid;

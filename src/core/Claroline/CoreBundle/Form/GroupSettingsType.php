@@ -20,7 +20,8 @@ class GroupSettingsType extends GroupType
                 'disabled' => false,
                 'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
                     return $er->createQueryBuilder('r')
-                        ->add('where', "r.roleType != " . Role::WS_ROLE);
+                            ->where("r.roleType != " . Role::WS_ROLE)
+                            ->andWhere("r.name != 'ROLE_ANONYMOUS'");
                 }
             )
         );

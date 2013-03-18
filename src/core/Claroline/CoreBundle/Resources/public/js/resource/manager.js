@@ -92,6 +92,23 @@
                         }
                     });
                 },
+                'click ul.zoom li a': function (event) {
+                    event.preventDefault();
+
+                    var zoom=event.currentTarget.getAttribute('id');
+                    var tmp=$(".resource-thumbnail")[0].className.substring($(".resource-thumbnail")[0].className.indexOf("zoom"));
+
+                    //alert($(event.currentTarget).parent());
+                    
+                    $(".dropdown-menu.zoom li").removeClass("active");
+                    $(event.currentTarget).parent().addClass("active");
+
+                    var thumbnail = $(".resource-thumbnail");
+                        
+                    thumbnail.removeClass(tmp);
+                    thumbnail.addClass(zoom);
+                    
+                },
                 'click a.delete': function () {
                     this.dispatcher.trigger('delete', {ids: _.keys(this.checkedResources.resources)});
                     this.checkedResources.resources = {};
@@ -316,7 +333,7 @@
             }
         }),
         Thumbnail: Backbone.View.extend({
-            className: 'resource-thumbnail resource',
+            className: 'resource-thumbnail resource zoom100',
             events: {
                 'click .resource-menu-action': function (event) {
                     event.preventDefault();

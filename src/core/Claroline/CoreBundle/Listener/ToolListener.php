@@ -151,9 +151,9 @@ class ToolListener extends ContainerAware
 
                 if (isset($widgetConfig['config'])) {
                     $newEvent = new ImportWidgetConfigEvent(
-                            $widgetConfig['config'], 
-                            $event->getWorkspace(), 
-                            $event->getArchive()
+                        $widgetConfig['config'],
+                        $event->getWorkspace(),
+                        $event->getArchive()
                     );
                     $ed->dispatch("widget_import_{$widgetConfig['name']}_configuration", $newEvent);
                 }
