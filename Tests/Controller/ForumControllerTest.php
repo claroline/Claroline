@@ -60,7 +60,7 @@ class ForumControllerTest extends FunctionalTestCase
             ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($this->getFixtureReference('forum/test')->getId())
             ->getSubjects();
-        
+
         $crawler = $this->client->request('GET', "/forum/subject/{$subjects[0]->getId()}/offset/0");
         $this->assertEquals(2, count($crawler->filter('.row-message')));
         $crawler = $this->client->request('GET', "/forum/add/message/{$subjects[0]->getId()}");

@@ -88,12 +88,12 @@ class ForumListenerTest extends FunctionalTestCase
          $rootDirId = $this->getDirectory('user')->getId();
          $this->logUser($this->getUser('user'));
          $this->client->request(
-                 'GET',
-                 "/resource/copy/{$rootDirId}?ids[]={$this->getForum('test')->getId()}"
+             'GET',
+             "/resource/copy/{$rootDirId}?ids[]={$this->getForum('test')->getId()}"
          );
          $this->client->request('GET', "/resource/directory/{$rootDirId}");
          $dir = json_decode($this->client->getResponse()->getContent());
          $this->assertObjectHasAttribute('resources', $dir);
-         $this->assertEquals(2, count($dir->resources));;
+         $this->assertEquals(2, count($dir->resources));
     }
 }
