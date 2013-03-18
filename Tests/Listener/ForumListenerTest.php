@@ -2,8 +2,10 @@
 
 namespace Claroline\ForumBundle\Listener;
 
+use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\ForumBundle\DataFixtures\LoadOptionsData;
+use Claroline\ForumBundle\Tests\DataFixtures\LoadForumData;
 
 class ForumListenerTest extends FunctionalTestCase
 {
@@ -70,5 +72,28 @@ class ForumListenerTest extends FunctionalTestCase
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $options = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
         $this->assertEquals(20, $options[0]->getSubjects());
+    }
+
+    public function testForumCopy()
+    {
+        $this->loadFixture(new LoadForumData('test', 'user', 2, 2));
+        $event = new CopyResourceEvent($this->getForum('test'));
+        $this->client->getContainer()->get('event_dispatcher')->dispatch('copy_claroline_forum', $event);
+        $this->assertEquals(1, count($event->getCopy()));
+    }
+
+    public function testForumCopyIsFlushed()
+    {
+         $this->loadFixture(new LoadForumData('test', 'user', 2, 2));
+         $rootDirId = $this->getDirectory('user')->getId();
+         $this->logUser($this->getUser('user'));
+         $this->client->request(
+                 'GET',
+                 "/resource/copy/{$rootDirId}?ids[]={$this->getForum('test')->getId()}"
+         );
+         $this->client->request('GET', "/resource/directory/{$rootDirId}");
+         $dir = json_decode($this->client->getResponse()->getContent());
+         $this->assertObjectHasAttribute('resources', $dir);
+         $this->assertEquals(2, count($dir->resources));;
     }
 }

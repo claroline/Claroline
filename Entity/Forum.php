@@ -14,8 +14,22 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 class Forum extends AbstractResource
 {
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\ForumBundle\Entity\Subject",
+     *     mappedBy="forum"
+     * )
+     * @ORM\OrderBy({"id" = "ASC"})
+     */
+    protected $subjects;
+
     public function __construct()
     {
         $this->subjects = new ArrayCollection();
+    }
+
+    public function getSubjects()
+    {
+        return $this->subjects;
     }
 }

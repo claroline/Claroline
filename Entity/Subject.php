@@ -4,15 +4,22 @@ namespace Claroline\ForumBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Claroline\CoreBundle\Entity\User;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="claro_forum_subject")
  */
-class Subject extends AbstractResource
+class Subject
 {
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
 
     /**
      * @ORM\Column(type="string", name="title")
@@ -21,9 +28,70 @@ class Subject extends AbstractResource
     protected $title;
 
     /**
+     * @ORM\Column(type="datetime", name="created")
+     * @Gedmo\Timestampable(on="create")
+     */
+    protected $creationDate;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="update")
+     */
+    protected $updated;
+
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\ForumBundle\Entity\Forum",
+     *     inversedBy="subjects"
+     * )
+     * @ORM\JoinColumn(
+     *     name="forum_id",
+     *     referencedColumnName="id",
+     *     onDelete="CASCADE"
+     * )
+     */
+    protected $forum;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\ForumBundle\Entity\Message",
+     *     mappedBy="subject"
+     * )
+     * @ORM\OrderBy({"id" = "ASC"})
+     */
+    protected $messages;
+
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\User",
+     *     cascade={"persist"}
+     * )
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    protected $creator;
+
+    /**
      * @Assert\NotBlank()
      */
     protected $message;
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->messages = new ArrayCollection();
+    }
+
+    /**
+     * Returns the resource id.
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     public function getTitle()
     {
@@ -43,5 +111,25 @@ class Subject extends AbstractResource
     public function setMessage($message)
     {
         return $this->message = $message;
+    }
+
+    public function setForum($forum)
+    {
+        $this->forum = $forum;
+    }
+
+    public function getForum()
+    {
+        return $this->forum;
+    }
+
+    /**
+     * Sets the subject creator.
+     *
+     * @param \Claroline\CoreBundle\Entity\User
+     */
+    public function setCreator(User $creator)
+    {
+        $this->creator = $creator;
     }
 }

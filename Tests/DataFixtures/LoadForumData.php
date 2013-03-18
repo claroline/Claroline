@@ -68,29 +68,24 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
             $title = $this->container->get('claroline.utilities.lipsum_generator')->generateLipsum(5);
             $user = $collaborators[rand(0, $maxOffset)];
             $subject = new Subject();
-            $subject->setName($title);
             $subject->setTitle($title);
             $subject->setCreator($user);
             $this->log("subject $title created");
-            $subject = $creator->create($subject, $forum->getId(), 'claroline_subject', $user);
+            $subject->setForum($forum);
+            $manager->persist($subject);
 
-            $entityToBeDetached = array();
             for ($j = 0; $j < $this->nbMessages; $j++) {
 
                 $sender = $collaborators[rand(0, $maxOffset)];
                 $message = new Message();
-                $message->setName('tmp-'.microtime());
+                $message->setSubject($subject);
                 $message->setCreator($sender);
                 $lipsum = $this->container->get('claroline.utilities.lipsum_generator')->generateLipsum(150, true);
                 $message->setContent($lipsum);
-                $inst = $creator->create($message, $subject->getId(), 'claroline_message', $sender);
-                $entityToBeDetached[] = $message;
-                $entityToBeDetached[] = $inst;
+                $manager->persist($message);
+
             }
             $manager->flush();
-            //foreach ($entityToBeDetached as $msg) {
-            //    $manager->detach($msg);
-            //}
         }
 
         $manager->flush();

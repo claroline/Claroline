@@ -8,13 +8,13 @@
 {% block section_content %}
     <ul class="breadcrumb">
         <li>
-            <a href="{{ _path('claro_forum_open', {'resourceId': subject.getParent().getId()}) }}">
-                {{ subject.getParent().getName() }}
+            <a href="{{ _path('claro_forum_open', {'resourceId': subject.getForum().getId()}) }}">
+                {{ subject.getForum().getName() }}
             </a>
         </li>
         <span class="divider"> / </span>
         <li>
-            <a href="{{ _path('claro_forum_open', {'resourceId': subject.getParent().getId()}) }}">{{ subject.getName() }}</a>
+            <a href="{{ _path('claro_forum_open', {'resourceId': subject.getForum().getId()}) }}">{{ subject.getForum().getName() }}</a>
         </li>
     </ul>
     <p>
