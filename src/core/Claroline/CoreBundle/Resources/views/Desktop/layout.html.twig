@@ -11,13 +11,13 @@
             <li class="disabled">
                <a><b>{{ 'desktop'|trans({}, 'platform') }}</b></a>
             </li>
-        
-            {% render "ClarolineCoreBundle:Desktop:renderToolList" %}
+
+            {% render controller("ClarolineCoreBundle:Desktop:renderToolList") %}
         </ul>
     </div>
 
     <div class="span9 section-content border">
-        
+
         {% block section_content %}{% endblock %}
     </div>
 

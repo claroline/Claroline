@@ -18,7 +18,7 @@ app/config/local/parameters.yml
 app/config/local/plugin/*
 vendor/*
 web/bundles/*
-web/jms/*
+web/twig.js
 web/js/*
 web/HTMLPage/*
 files/*

@@ -11,7 +11,7 @@
                 <li class="disabled">
                     <a><b>{{ workspace.getName() }} </b><em>({{ workspace.getCode() }})</em></a>
                 </li>
-                {% render "ClarolineCoreBundle:Workspace:renderToolList" with {'workspaceId': workspace.getId()} %}
+                {% render controller("ClarolineCoreBundle:Workspace:renderToolList", {'workspaceId': workspace.getId()}) %}
             </ul>
         </div>
     {% endif %}

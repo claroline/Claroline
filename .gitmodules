@@ -22,3 +22,6 @@
 [submodule "src/plugin/UJM/ExoBundle"]
 	path = src/plugin/UJM/ExoBundle
 	url = https://github.com/UJM-dev/ExoBundle.git
+[submodule "src/plugin/Imavia/FacetProfileBundle"]
+	path = src/plugin/Imavia/FacetProfileBundle
+	url = https://github.com/Imavia-dev/FacetProfileBundle.git
