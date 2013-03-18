@@ -170,10 +170,10 @@ class WorkspaceController extends Controller
 
         $workspaceOrderTools = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
             ->findBy(array('workspace' => $workspace));
-        
+
         $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
             ->findByRolesAndWorkspace($currentRoles, $workspace, true);
-
+        $toolsWithTranslation = array();
         foreach ($tools as $tool) {
             $toolWithTranslation['tool'] = $tool;
             foreach ($workspaceOrderTools as $workspaceOrderedTool) {
@@ -183,7 +183,7 @@ class WorkspaceController extends Controller
             }
             $toolsWithTranslation[] = $toolWithTranslation;
         }
-        
+
         return $this->render(
             'ClarolineCoreBundle:Workspace:tool_list.html.twig',
             array('toolsWithTranslation' => $toolsWithTranslation, 'workspace' => $workspace)

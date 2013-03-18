@@ -47,7 +47,7 @@ class WorkspaceOrderedTool
      * )
      */
     protected $workspaceToolRoles;
-    
+
     /**
      * @Orm\Column(name="translation_key", type="string")
      */
@@ -82,12 +82,12 @@ class WorkspaceOrderedTool
     {
         return $this->order;
     }
-    
+
     public function setTranslationKey($translationKey)
     {
         $this->translationKey = $translationKey;
     }
-    
+
     public function getTranslationKey()
     {
         return $this->translationKey;

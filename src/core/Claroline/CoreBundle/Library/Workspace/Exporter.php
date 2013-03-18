@@ -23,7 +23,7 @@ class Exporter
 
     public function export(AbstractWorkspace $workspace, $configName)
     {
-        $archive = new \ZipArchive();  
+        $archive = new \ZipArchive();
         $pathArch = $this->templateDir."{$configName}.zip";
         $archive->open($pathArch, \ZipArchive::CREATE);
         $arTools = array();
@@ -31,7 +31,7 @@ class Exporter
         $roleRepo = $this->em->getRepository('ClarolineCoreBundle:Role');
         $workspaceTools = $this->em
                 ->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
-                ->findBy(array('workspace' => $workspace));   
+                ->findBy(array('workspace' => $workspace));
         $roles = $roleRepo->findByWorkspace($workspace);
 
         foreach ($roles as $role) {

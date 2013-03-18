@@ -32,7 +32,7 @@ class ExportWorkspaceEvent extends Event
     {
         return $this->config;
     }
-    
+
     public function getArchive()
     {
         return $this->archive;
