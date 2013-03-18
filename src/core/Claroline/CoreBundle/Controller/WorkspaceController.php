@@ -170,7 +170,7 @@ class WorkspaceController extends Controller
 
         $workspaceOrderTools = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
             ->findBy(array('workspace' => $workspace));
-        
+
         $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
             ->findByRolesAndWorkspace($currentRoles, $workspace, true);
 
@@ -183,7 +183,7 @@ class WorkspaceController extends Controller
             }
             $toolsWithTranslation[] = $toolWithTranslation;
         }
-        
+
         return $this->render(
             'ClarolineCoreBundle:Workspace:tool_list.html.twig',
             array('toolsWithTranslation' => $toolsWithTranslation, 'workspace' => $workspace)
@@ -211,6 +211,12 @@ class WorkspaceController extends Controller
         $event = new DisplayToolEvent($workspace);
         $eventName = 'open_tool_workspace_'.$toolName;
         $this->get('event_dispatcher')->dispatch($eventName, $event);
+
+        if (is_null($event->getContent())) {
+            throw new \Exception(
+                "Tool '{$toolName}' didn't return any Response for tool event '{$eventName}'."
+            );
+        }
 
         return new Response($event->getContent());
     }
