@@ -10,14 +10,14 @@ class ImportWorkspaceEvent extends Event
     private $workspace;
     private $config;
     private $archive;
-    
+
     public function __construct(AbstractWorkspace $workspace, $config, \ZipArchive $archive)
     {
         $this->workspace = $workspace;
         $this->config = $config;
         $this->archive = $archive;
     }
-    
+
     public function getArchive()
     {
         return $this->archive;

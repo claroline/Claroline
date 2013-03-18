@@ -39,7 +39,7 @@ class ExportWidgetConfigEvent extends Event
     {
         return $this->workspace;
     }
-    
+
     public function getArchive()
     {
         return $archive;
