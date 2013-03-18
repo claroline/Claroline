@@ -38,7 +38,7 @@ class ProfileType extends BaseProfileType
                     'disabled' => false,
                     'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
                         return $er->createQueryBuilder('r')
-                                ->add('where', "r.roleType != " . Role::WS_ROLE);
+                                ->add('where', "r.roleType != " . Role::WS_ROLE . " AND r.name != 'ROLE_ANONYMOUS'");
                     }
                 )
             );
@@ -54,7 +54,7 @@ class ProfileType extends BaseProfileType
                     'disabled' => true,
                     'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
                         return $er->createQueryBuilder('r')
-                                ->add('where', "r.roleType != " . Role::WS_ROLE);
+                                ->add('where', "r.roleType != " . Role::WS_ROLE . " AND r.name != 'ROLE_ANONYMOUS'");
                     }
                 )
             );
