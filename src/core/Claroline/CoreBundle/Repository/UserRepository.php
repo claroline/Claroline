@@ -39,10 +39,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         } catch (NoResultException $e) {
             throw new UsernameNotFoundException(
-                sprintf('Unable to find an active admin AcmeUserBundle:User object identified by "%s".', $username),
-                null,
-                0,
-                $e
+                sprintf('Unable to find an active admin AcmeUserBundle:User object identified by "%s".', $username)
             );
         }
 

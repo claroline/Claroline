@@ -24,8 +24,6 @@
                </a>
             </li>
             <li class="divider-vertical"></li>
-        </ul>
-        <ul class="nav">
             <li>
                 <a class="cut disabled"  data-toggle="tooltip" data-placement="bottom" title="{{ 'cut'|trans({}, 'platform') }}">
                     <i class="icon-cut"></i>
@@ -50,6 +48,20 @@
                 <a class="download disabled" data-toggle="tooltip" data-placement="bottom" title="{{ 'download'|trans({}, 'platform') }}">
                     <i class="icon-download-alt"></i>
                 </a>
+            </li>
+            <li class="dropdown">
+                <a class="dropdown-toggle zoom" data-toggle="dropdown">
+                    <i class="icon-zoom-in"></i>
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu zoom">
+                    <li><a id='zoom50'>50%</a></li>
+                    <li><a id='zoom75'>75%</a></li>
+                    <li class="active"><a id='zoom100'>100%</a></li>
+                    <li><a id='zoom125'>125%</a></li>
+                    <li><a id='zoom150'>150%</a></li>
+                    <li><a id='zoom200'>200%</a></li>                    
+                </ul>
             </li>
         </ul>
         <ul class="nav pull-right">

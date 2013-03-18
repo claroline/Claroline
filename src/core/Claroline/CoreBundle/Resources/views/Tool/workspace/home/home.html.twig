@@ -15,6 +15,6 @@
     </li>
         </ul>
 <div class="welcome-home">
-     {% render "ClarolineCoreBundle:Workspace:widgets" with {'workspaceId': workspace.getId()} %}
+     {% render controller("ClarolineCoreBundle:Workspace:widgets", {'workspaceId': workspace.getId()}) %}
 </div>
 {% endblock %}
