@@ -160,7 +160,7 @@ class FileListener extends ContainerAware
         $config['hashname'] = $hash;
         $config['original_name'] = $resource->getName();
         $event->getArchive()->addFile(
-            $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $hash, 
+            $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $hash,
             $hash
         );
         $event->setConfig($config);
@@ -178,7 +178,7 @@ class FileListener extends ContainerAware
         $content = $event->getArchive()->getFromName($config['hashname']);
         $physicalPath = $this->container->getParameter('claroline.files.directory') . $ds . $hashName;
         $splFileInfo = new \SplFileInfo($physicalPath);
-        $splFileObject = $splFileInfo->openFile('w+'); 
+        $splFileObject = $splFileInfo->openFile('w+');
         $splFileObject->fwrite($content);
         $size = filesize($splFileObject);
         $file->setSize($size);

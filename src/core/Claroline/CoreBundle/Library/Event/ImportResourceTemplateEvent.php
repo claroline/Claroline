@@ -10,7 +10,7 @@ class ImportResourceTemplateEvent extends Event
     private $parent;
     private $config;
     private $archive;
-    
+
     public function __construct(array $config, AbstractResource $parent, \ZipArchive $archive)
     {
         $this->parent = $parent;
@@ -27,7 +27,7 @@ class ImportResourceTemplateEvent extends Event
     {
         return $this->parent;
     }
-    
+
     public function getArchive()
     {
         return $this->archive;

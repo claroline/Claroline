@@ -26,6 +26,6 @@ class TemplateValidator
             return true;
         } else {
             return $errors;
-        }        
+        }
     }
 }

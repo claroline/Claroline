@@ -1,7 +1,7 @@
 !placeholder
 !.gitempty
 !templates/default.zip
-!templates/demo.zip
+!templates/fougères.zip
 catalog.xml
 nbproject/*
 app/cache/*
@@ -29,3 +29,4 @@ web/thumbnails/*
 test/files/tmp/*
 src/core/Claroline/CoreBundle/Resources/public/css/themes/*
 templates/*
+
