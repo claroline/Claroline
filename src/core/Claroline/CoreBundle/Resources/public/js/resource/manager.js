@@ -96,10 +96,10 @@
                     event.preventDefault();
 
                     var zoom = event.currentTarget.getAttribute('id');
-                    var tmp = $('.resource-thumbnail')[0].className.substring($('.resource-thumbnail')[0].className.indexOf('zoom'));
+                    var tmp = $('.resource-thumbnail')[0].className.substring(
+                        $('.resource-thumbnail')[0].className.indexOf('zoom')
+                    );
 
-                    //alert($(event.currentTarget).parent());
-                    
                     $('.dropdown-menu.zoom li').removeClass('active');
                     $(event.currentTarget).parent().addClass('active');
 
