@@ -1,0 +1,21 @@
+ujm_category_new_pop:
+    pattern:  /category/new_pop
+    defaults: { _controller: "UJMExoBundle:Category:new_pop" }
+    
+ujm_exercise_open:
+   pattern: /open/{exerciseId}
+   defaults: { _controller: UJMExoBundle:Exercise:open }
+   
+ujm_question_index:
+    pattern: /question/index
+    defaults: { _controller: UJMExoBundle:Question:index }
+    
+ujm_question_new:
+    pattern:  /question/new/{exoID}
+    defaults: { _controller: "UJMExoBundle:Question:new", exoID: -1 }
+    
+ujm_question_dispaly_form_type:
+    pattern: /question/choixFormType
+    defaults: { _controller: UJMExoBundle:Question:choixFormType }
+    requirements:
+      _method: POST

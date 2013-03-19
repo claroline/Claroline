@@ -35,7 +35,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-namespace UJM\ExoBundle\Entity;
+namespace UJM\ExoBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 

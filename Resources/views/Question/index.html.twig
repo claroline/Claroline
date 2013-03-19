@@ -1,0 +1,88 @@
+{#
+ # ExoOnLine
+ # Copyright or © or Copr. Université Jean Monnet (France), 2012
+ # dsi.dev@univ-st-etienne.fr
+ #
+ # This software is a computer program whose purpose is to [describe
+ # functionalities and technical features of your software].
+ #
+ # This software is governed by the CeCILL license under French law and
+ # abiding by the rules of distribution of free software.  You can  use,
+ # modify and/ or redistribute the software under the terms of the CeCILL
+ # license as circulated by CEA, CNRS and INRIA at the following URL
+ # "http://www.cecill.info".
+ #
+ # As a counterpart to the access to the source code and  rights to copy,
+ # modify and redistribute granted by the license, users are provided only
+ # with a limited warranty  and the software's author,  the holder of the
+ # economic rights,  and the successive licensors  have only  limited
+ # liability.
+ #
+ # In this respect, the user's attention is drawn to the risks associated
+ # with loading,  using,  modifying and/or developing or reproducing the
+ # software by the user in light of its specific status of free software,
+ # that may mean  that it is complicated to manipulate,  and  that  also
+ # therefore means  that it is reserved for developers  and  experienced
+ # professionals having in-depth computer knowledge. Users are therefore
+ # encouraged to load and test the software's suitability as regards their
+ # requirements in conditions enabling the security of their systems and/or
+ # data to be ensured and,  more generally, to use and operate it in the
+ # same conditions as regards security.
+ #
+ # The fact that you are presently reading this means that you have had
+ # knowledge of the CeCILL license and that you accept its terms.
+#}
+{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+
+{% block section_content %}
+    <h4>{{ "My questions" | trans }}</h4>
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>{{ "Category" | trans }}</th>
+                <th>{{ "Title" | trans }}</th>
+                <th>{{ "Type" | trans }}</th>
+                <th>{{ "Question" | trans }}</th>
+                <th>{{ "Actions" | trans }}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% set i = 0 %}
+        {% for interaction in interactions %}
+            <tr>
+                <td>{{ interaction.question.category.value }}</td>
+                <td><a href="{{ path('question_show', { 'id': interaction.question.id }) }}">{{ interaction.question.title }}</a></td>
+                <td>{{ interaction.type }}</td>
+                <td>{{ interaction.invite|raw }}</td>
+                <td>
+                    <ul>
+                        {% if(questionWithResponse[i] == 0) %}
+                            <li>
+                                <a href="{{ path('question_edit', { 'id': interaction.question.id }) }}">{{ "Edit" | trans }}</a>
+                            </li>
+                            <li>
+                                <form action="{{ path('question_delete', { 'id': interaction.question.id}) }}" method="post">
+                                    <button type="submit">{{ "Delete of my bank" | trans }}</button>
+                                </form>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a href="{{ path('question_edit', { 'id': interaction.question.id }) }}" style="color:red">{{ "Edit" | trans }}</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </td>
+            </tr>
+            {% set i=i+1 %}
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('ujm_question_new') }}">
+                {{ "Create a new entry" | trans }}
+            </a>
+        </li>
+    </ul>
+{% endblock %}

@@ -3,8 +3,14 @@
 namespace UJM\ExoBundle\Listener;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
 use Claroline\CoreBundle\Library\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
+
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Form\ExerciseType;
 use UJM\ExoBundle\Entity\Subscription;
@@ -73,5 +79,29 @@ class ExerciseListener extends ContainerAware
 
         $event->setErrorFormContent($content);
         $event->stopPropagation();
+    }
+    
+    public function onOpen(OpenResourceEvent $event)
+    {
+        //Redirection to the controller.
+        $route = $this->container
+            ->get('router')
+            ->generate('ujm_exercise_open', array('exerciseId' => $event->getResource()->getId()));
+        $event->setResponse(new RedirectResponse($route));
+        $event->stopPropagation();
+    }
+    
+    public function onDelete(DeleteResourceEvent $event)
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $em->remove($event->getResource());
+        $event->stopPropagation();
+    }
+    
+    public function onDisplayDesktop(DisplayToolEvent $event)
+    {
+        $response = $this->container->get('http_kernel')->forward('UJMExoBundle:Question:index', array());
+        $event->setContent($response);
+        
     }
 }

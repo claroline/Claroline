@@ -1,0 +1,229 @@
+##
+ # ExoOnLine
+ # Copyright or © or Copr. Université Jean Monnet (France), 2012
+ # dsi.dev@univ-st-etienne.fr
+ #
+ # This software is a computer program whose purpose is to [describe
+ # functionalities and technical features of your software].
+ #
+ # This software is governed by the CeCILL license under French law and
+ # abiding by the rules of distribution of free software.  You can  use,
+ # modify and/ or redistribute the software under the terms of the CeCILL
+ # license as circulated by CEA, CNRS and INRIA at the following URL
+ # "http://www.cecill.info".
+ #
+ # As a counterpart to the access to the source code and  rights to copy,
+ # modify and redistribute granted by the license, users are provided only
+ # with a limited warranty  and the software's author,  the holder of the
+ # economic rights,  and the successive licensors  have only  limited
+ # liability.
+ #
+ # In this respect, the user's attention is drawn to the risks associated
+ # with loading,  using,  modifying and/or developing or reproducing the
+ # software by the user in light of its specific status of free software,
+ # that may mean  that it is complicated to manipulate,  and  that  also
+ # therefore means  that it is reserved for developers  and  experienced
+ # professionals having in-depth computer knowledge. Users are therefore
+ # encouraged to load and test the software's suitability as regards their
+ # requirements in conditions enabling the security of their systems and/or
+ # data to be ensured and,  more generally, to use and operate it in the
+ # same conditions as regards security.
+ #
+ # The fact that you are presently reading this means that you have had
+ # knowledge of the CeCILL license and that you accept its terms.
+##
+
+Actions: Actions
+Add: Add
+Add user: Add user
+Administration: Administration
+After the last attempt: After the last attempt
+At the end of assessment: At the end of assessment
+At the same time that the correction: At the same time that the correction
+Availability of correction: Availability of correction
+Availability of score: Availability of score
+Back: Back
+Back to the list: Back to the list
+Bank of questions: Bank of questions
+Category: Category
+close: close
+Comment: Comment
+Compose: Compose
+Create: Create
+Create a new entry: Create a new entry
+Create a new category: Create a new category
+Choice: Choice
+Correction date: Correction date
+Date: Date
+Delete: Delete
+Delete of my bank: Delete of my bank
+Delete of my exercise: Delete of my exercise
+Description: Description
+Document: Document
+Duration: Duration
+Edit: Edit
+End date: End date
+Entry: Entry
+Exercise: Exercise
+Exit: Exit
+Expected answer: Expected answer
+Feedback: Feedback
+Finish: Finish
+From: From
+Group: Group
+Hint: Hint
+Interupt: Interupt
+Import: Import
+Import questions: Import questions
+List: List
+List of exercises: List of exercises
+List of question: List of question
+Lock attempt: Lock attempt
+Mark: Mark
+Maximum number of tries: Maximum number of tries
+Multiple response: Multiple response
+My account: My account
+My questions: My questions
+Never: Never
+Number of questions: Number of questions
+Number of questions to draw: Number of questions to draw
+Paper: Paper
+Paper list: Paper list
+Penalty: Penalty
+Planning_Of_Groups: Planning of groups
+Print paper: Print paper
+Question: Question
+Question list: Question list
+Random order of questions: Random order of questions
+Role: Role
+Show: Show
+Start date: Start date
+Subscription: Subscription
+Test exit: Test output
+Title: Title
+Try: Try
+Type: Type
+Unique response: Unique response
+Use date of end: Use date of end
+User: User
+Your answer: Your answer
+
+#properties of entities
+User.username: Username
+User.password: Password
+User.name: Name
+User.firstName: Firstname
+User.mail: Email
+
+Roles.name: Name of role
+
+Groupes.name: Name of group
+
+Planning.start_time: Start date
+Planning.end_time: End date
+
+Subscription.admin: Granted admin role (exercise)
+
+Exercise.title: Exercise title
+Exercise.description: Description (optional)
+Exercise.shuffle: Random order of questions
+Exercise.nbQuestion: Number of question
+Exercise.duration: Duration
+Exercise.nbQuestionPage: Number of question by page
+Exercise.doprint: Print the copy at the end of test
+Exercise.maxAttemps: Tries allowed
+Exercise.correctionMode: Correction mode
+Exercise.markMode: Availability of the notation
+Exercise.start_date: Start date
+Exercise.end_date: End date
+Exercise.dispButtonIterrupt: Allow the test be stopped
+Exercise.lockAttempt: Lock the test
+
+Question.title: Question title
+Question.description: Description (optional)
+Question.model: Set as model
+Question_creation: Question creation
+
+kind of question: what kind of question ?
+Choose_type: Choose type
+hole: Hole
+QCM: QCM
+graphic: Graphic
+open: Open
+Warning_change_type_q: Warning you may lose your data entered continue ?
+
+response number: Response number
+response: Response
+point: Point
+comment: Comment
+expected response: Expected response
+order: Order
+
+add hint: Add hint
+hint number: Hint number
+consult_hint: Consult the hint, results in a penalty, do you want to continue ?
+
+course_name: Course name
+
+Category.value: Category
+
+Interaction.invite: Question
+Interaction.feedback: Feedback to display whith the correction (optional)
+
+Inter_QCM.shuffle: Order of random selection
+Inter_QCM.ScoreRightResponse: Points for correct answer
+Inter_QCM.ScoreFalseResponse: Points for wrong answer
+Inter_QCM.weightChoice: Assign points by response
+
+Inter_Hole.html: Cloze
+Inter_Hole.orthography: Allow misspellings
+Inter_Hole.score: Score
+Inter_Hole.size: Size
+
+Coords.shape: Shape
+Coords.color: Color
+Coords.score: Points for correct response
+
+TypeQCM.value: QCM type
+
+Choice.label: Proposed answer
+Choice.weight: Points to this response
+Choice.feedback: Feedback (optional)
+Choice.rightResponse: Correct response
+Choice.positionForce: Forced position
+
+TypeOpenQuestion.value: Question type
+
+Hole.orthography: Allow misspellings
+Hole.score: Point for correct response
+Hole.selector: Submit a list
+Hole.size: Size of hole
+
+WordResponse.response_value: Word
+WordResponse.score: Point to this response
+
+Unit.value: Unity
+
+Document.label: Document
+
+Hint.value: Hint
+Hint.penality: Pénality
+
+Exepertise.title_expertise: Expertise title
+Exepertise.description: Description
+
+Response.mark: Mark
+Response.reponse: Response
+
+LockAttempte.date: Date
+
+Edit a category: Edit a category
+Edit a question: Edit a question
+
+#create QCM Question alert
+nbr_choices: The number of choices must be greater than two
+answer_coched: No response expected is checked
+point_answers: You must assign a point to each answer
+point_answer: you must assign a point to the correct answer
+label_empty: Fields of the responses should not be empty
+invite_question: The prompt of question must be completed

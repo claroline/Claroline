@@ -1,0 +1,177 @@
+{#
+ # ExoOnLine
+ # Copyright or © or Copr. Université Jean Monnet (France), 2012
+ # dsi.dev@univ-st-etienne.fr
+ #
+ # This software is a computer program whose purpose is to [describe
+ # functionalities and technical features of your software].
+ #
+ # This software is governed by the CeCILL license under French law and
+ # abiding by the rules of distribution of free software.  You can  use,
+ # modify and/ or redistribute the software under the terms of the CeCILL
+ # license as circulated by CEA, CNRS and INRIA at the following URL
+ # "http://www.cecill.info".
+ #
+ # As a counterpart to the access to the source code and  rights to copy,
+ # modify and redistribute granted by the license, users are provided only
+ # with a limited warranty  and the software's author,  the holder of the
+ # economic rights,  and the successive licensors  have only  limited
+ # liability.
+ #
+ # In this respect, the user's attention is drawn to the risks associated
+ # with loading,  using,  modifying and/or developing or reproducing the
+ # software by the user in light of its specific status of free software,
+ # that may mean  that it is complicated to manipulate,  and  that  also
+ # therefore means  that it is reserved for developers  and  experienced
+ # professionals having in-depth computer knowledge. Users are therefore
+ # encouraged to load and test the software's suitability as regards their
+ # requirements in conditions enabling the security of their systems and/or
+ # data to be ensured and,  more generally, to use and operate it in the
+ # same conditions as regards security.
+ #
+ # The fact that you are presently reading this means that you have had
+ # knowledge of the CeCILL license and that you accept its terms.
+#}
+
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% block section_content %}
+{{ tinymce_init() }}
+
+<h1>Exercise</h1>
+
+<table class="record_properties">
+    <tbody>
+        <tr>
+            <th>{{ "Title" | trans }}</th>
+            <td>{{ entity.title }}</td>
+        </tr>
+        <tr>
+            <th>{{ "Description" | trans }}</th>
+            <td>{{ entity.description|raw }}</td>
+        </tr>
+        <tr>
+            <th>{{ "Random order of questions" | trans }}</th>
+            <td>
+                {% if entity.shuffle == 0 %}
+                    <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
+                {% else %}
+                    <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>{{ "Number of questions to draw" | trans }}</th>
+            <td>{{ entity.nbQuestion }}</td>
+        </tr>
+        <tr>
+            <th>{{ "Date" | trans }}</th>
+            <td>{{ entity.dateCreate|date('Y-m-d H:i:s') }}</td>
+        </tr>
+        <tr>
+            <th>{{ "Duration" | trans }}</th>
+            <td>{{ entity.duration }}</td>
+        </tr>
+        <tr>
+            <th>{{ "Print paper" | trans }}</th>
+            <td>
+                {% if entity.doprint == 0 %}
+                    <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
+                {% else %}
+                    <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>{{ "Maximum number of tries" | trans }}</th>
+            <td>{{ entity.maxAttempts }}</td>
+        </tr>
+        <tr>
+            <th>{{ "Availability of correction" | trans }}</th>
+            <td>
+                {% if(entity.correctionMode == 1) %}
+                    {{ "At the end of assessment" | trans }}
+                {% elseif (entity.correctionMode == 2) %}
+                    {{ "After the last attempt" | trans }}
+                {% elseif (entity.correctionMode == 3) %}
+                    {{ "From" | trans }}
+                {% elseif (entity.correctionMode == 4) %}
+                    {{ "Never" | trans }}
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>{{ "Availability of score" | trans }}</th>
+            <td>
+                {% if(entity.markMode == 1) %}
+                    {{ "At the same time that the correction" | trans }}
+                {% else %}
+                    {{ "At the end of assessment" | trans }}
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>{{ "Start date" | trans }}</th>
+            <td>{{ entity.startdate|date('d-m-Y') }}</td>
+        </tr>
+        <tr>
+            <th>{{ "Use date of end" | trans }}</th>
+            <td>
+                {% if entity.useDateEnd == 0 %}
+                    <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
+                {% else %}
+                    <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>{{ "End date" | trans }}</th>
+            <td>{{ entity.enddate|date('d-m-Y') }}</td>
+        </tr>
+        <tr>
+            <th>{{ "Test exit" | trans }}</th>
+            <td>
+                {% if  entity.dispButtonInterrupt == 0 %}
+                    <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
+                {% else %}
+                    <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>{{ "Lock attempt" | trans }}</th>
+            <td>
+                {% if  entity.lockAttempt == 0 %}
+                    <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
+                {% else %}
+                    <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
+                {% endif %}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<ul class="record_actions">
+    {% if allowToCompose == 1 %}
+        <li>
+            <a href="{#{ path('exercise_paper', { 'id': entity.id }) }#}">{{ "Compose" | trans }}</a>
+        </li>
+    {% endif %}
+    <li>
+        <a href="{#{ path('paper', { 'exoID': entity.id }) }#}">{{ "Paper list" | trans }}</a>
+    </li>
+    {% if subscription.admin == 1 %}
+        <li>
+            <a href="{#{ path('exercise_edit', { 'id': entity.id }) }#}">
+                {{ "Edit" | trans }}
+            </a>
+        </li>
+        <li>
+            <a href="{#{ path('exercise_questions', { 'id': entity.id }) }#} " > <img src="{{ asset('bundles/ujmexo/images/icon_question-reponse.png') }}">
+                {{ "List of question" | trans }}
+            </a>
+        </li>
+    {% endif %}
+</ul>
+
+{% endblock %}
