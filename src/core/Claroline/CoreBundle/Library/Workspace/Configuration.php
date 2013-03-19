@@ -148,17 +148,17 @@ class Configuration
     {
         return $this->creatorRole;
     }
-    
+
     public function setTemplateFile($templateFile)
     {
         $this->templateFile = $templateFile;
     }
-    
+
     public function getTemplateFile()
     {
         return $this->templateFile;
     }
-    
+
     private function validate($parsedFile)
     {
         $errors = array();
