@@ -40,9 +40,13 @@ class Version20120119000000 extends BundleMigration
 
         $this->addId($table);
         $table->addColumn('title', 'string', array('length' => 250));
+        $table->addColumn('forum_id', 'integer');
+        $table->addColumn('user_id', 'integer');
+        $table->addColumn('created', 'datetime');
+        $table->addColumn('updated', 'datetime');
         $this->storeTable($table);
         $table->addForeignKeyConstraint(
-            $schema->getTable('claro_resource'), array('id'), array('id'), array("onDelete" => "CASCADE")
+            $schema->getTable('claro_forum'), array('forum_id'), array('id'), array("onDelete" => "CASCADE")
         );
     }
 
@@ -52,8 +56,12 @@ class Version20120119000000 extends BundleMigration
 
         $this->addId($table);
         $table->addColumn('content', 'text');
+        $table->addColumn('subject_id', 'integer');
+        $table->addColumn('user_id', 'integer');
+        $table->addColumn('created', 'datetime');
+        $table->addColumn('updated', 'datetime');
         $table->addForeignKeyConstraint(
-            $schema->getTable('claro_resource'), array('id'), array('id'), array("onDelete" => "CASCADE")
+            $schema->getTable('claro_forum_subject'), array('subject_id'), array('id'), array("onDelete" => "CASCADE")
         );
     }
 
