@@ -777,8 +777,8 @@ class Version20120119000000 extends BundleMigration
         $this->addId($table);
         $table->addColumn('name', 'string');
         $table->addColumn('class', 'string');
-        $table->addColumn('is_displayable_in_workspace', 'integer');
-        $table->addColumn('is_displayable_in_desktop', 'integer');
+        $table->addColumn('is_displayable_in_workspace', 'boolean');
+        $table->addColumn('is_displayable_in_desktop', 'boolean');
         $table->addColumn('is_workspace_required', 'boolean');
         $table->addColumn('is_desktop_required', 'boolean');
         $table->addColumn('plugin_id', 'integer', array('notnull' => false));

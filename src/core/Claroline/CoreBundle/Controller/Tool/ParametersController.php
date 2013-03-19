@@ -500,9 +500,10 @@ class ParametersController extends Controller
             ->findOneBy(array('workspace' => $workspaceId, 'tool' => $toolId));
 
         if ($wot === null) {
+            $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId);
             $wot = new WorkspaceOrderedTool();
             $wot->setOrder($position);
-            $wot->setTool($em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId));
+            $wot->setTool($tool);
             $wot->setWorkspace($workspace);
             $wot->setTranslationKey($tool->getName());
             $em->persist($wot);
