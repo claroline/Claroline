@@ -95,15 +95,15 @@
                 'click ul.zoom li a': function (event) {
                     event.preventDefault();
 
-                    var zoom=event.currentTarget.getAttribute('id');
-                    var tmp=$(".resource-thumbnail")[0].className.substring($(".resource-thumbnail")[0].className.indexOf("zoom"));
+                    var zoom = event.currentTarget.getAttribute('id');
+                    var tmp = $('.resource-thumbnail')[0].className.substring($('.resource-thumbnail')[0].className.indexOf('zoom'));
 
                     //alert($(event.currentTarget).parent());
                     
-                    $(".dropdown-menu.zoom li").removeClass("active");
-                    $(event.currentTarget).parent().addClass("active");
+                    $('.dropdown-menu.zoom li').removeClass('active');
+                    $(event.currentTarget).parent().addClass('active');
 
-                    var thumbnail = $(".resource-thumbnail");
+                    var thumbnail = $('.resource-thumbnail');
                         
                     thumbnail.removeClass(tmp);
                     thumbnail.addClass(zoom);
@@ -371,7 +371,7 @@
         Resources: Backbone.View.extend({
             className: 'resources',
             events: {
-                'click .resource-thumbnail img': 'dispatchClick',
+                'click .resource-thumbnail .resource-element': 'dispatchClick',
                 'click .resource-thumbnail input[type=checkbox]': 'dispatchCheck',
                 'click .results table a.resource-link': 'dispatchClick',
                 'click .results table input[type=checkbox]': 'dispatchCheck'

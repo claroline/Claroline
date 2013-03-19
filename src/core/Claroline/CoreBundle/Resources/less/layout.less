@@ -277,15 +277,29 @@ footer {
     position:relative;
 }
 
-.resource-thumbnail .dropdown-toggle
+/** ZOOM **/
+
+/** In this case is not posible to use css3 scale property **/
+
+@resourceElementWidth: 70;
+@resourceElementHeight: 80;
+@resourceThumbnailWidth: 100;
+@resourceThumbnailHeight: 150;
+
+.resource-zoom(@width, @height, @percent)
 {
-    overflow:hidden;
+    width:unit(round((@width * @percent)/ 100), px);
+    height:unit(round((@height * @percent) / 100), px);
 }
 
 .resource-thumbnail.zoom50
 {
-    width: 50px;
-    height: 75px;
+    .resource-zoom(@resourceThumbnailWidth, @resourceThumbnailHeight, 50);
+}
+
+.resource-thumbnail.zoom50 .resource-element
+{
+    .resource-zoom(@resourceElementWidth, @resourceElementHeight, 50);
 }
 
 .resource-thumbnail.zoom50 .resource-name
@@ -296,8 +310,12 @@ footer {
 
 .resource-thumbnail.zoom75
 {
-    width: 75px;
-    height: 111px;
+    .resource-zoom(@resourceThumbnailWidth, @resourceThumbnailHeight, 75);
+}
+
+.resource-thumbnail.zoom75 .resource-element
+{
+    .resource-zoom(@resourceElementWidth, @resourceElementHeight, 75);
 }
 
 .resource-thumbnail.zoom75 .resource-name
@@ -308,20 +326,28 @@ footer {
 
 .resource-thumbnail.zoom100
 {
-    width: 100px;
-    height: 150px;
+    .resource-zoom(@resourceThumbnailWidth, @resourceThumbnailHeight, 100);
+}
+
+.resource-thumbnail.zoom100 .resource-element
+{
+    .resource-zoom(@resourceElementWidth, @resourceElementHeight, 100);
 }
 
 .resource-thumbnail.zoom100 .resource-name
 {
-    font-size:14px;
-    line-height:20px;
+    font-size:12px;
+    line-height:18px;
 }
 
 .resource-thumbnail.zoom125
 {
-    width: 125px;
-    height: 185px;
+    .resource-zoom(@resourceThumbnailWidth, @resourceThumbnailHeight, 125);
+}
+
+.resource-thumbnail.zoom125 .resource-element
+{
+    .resource-zoom(@resourceElementWidth, @resourceElementHeight, 125);
 }
 
 .resource-thumbnail.zoom125 .resource-name
@@ -331,8 +357,12 @@ footer {
 
 .resource-thumbnail.zoom150
 {
-    width: 150px;
-    height: 225px;
+    .resource-zoom(@resourceThumbnailWidth, @resourceThumbnailHeight, 150);
+}
+
+.resource-thumbnail.zoom150 .resource-element
+{
+    .resource-zoom(@resourceElementWidth, @resourceElementHeight, 150);
 }
 
 .resource-thumbnail.zoom150 .resource-name
@@ -342,8 +372,12 @@ footer {
 
 .resource-thumbnail.zoom200
 {
-    width: 200px;
-    height: 260px;
+    .resource-zoom(@resourceThumbnailWidth, @resourceThumbnailHeight, 200);
+}
+
+.resource-thumbnail.zoom200 .resource-element
+{
+    .resource-zoom(@resourceElementWidth, @resourceElementHeight, 200);
 }
 
 .resource-thumbnail.zoom200 .resource-name
@@ -351,34 +385,30 @@ footer {
     font-size:20px;
 }
 
-.resource-manager .resource-element
+.resource-thumbnail .resource-element
 {
-    padding:3px 10px 0 10px;
+    background-position: center center;
+    background-size:auto 100% ;
+    background-repeat:no-repeat;
+    
+    padding:0px;
+    margin:5px 0 5px 15%;
+    cursor:pointer;
 }
 
-.resource-thumbnail input {
-    position:absolute;
-    top:0;
-    left:0;
+.resource-thumbnail .checkbox {
+    float:left;    
 }
 
 .resource-thumbnail input[type=checkbox] {
     vertical-align: top;
 }
 
-.resource-thumbnail .name {
+.resource-thumbnail .resource-name {
     display: block;
     text-align: center;
-}
-
-.resource-thumbnail img {
-    max-width:100%;
-    max-height:100%;
-}
-
-.resource-thumbnail img:hover,
-.resource-thumbnail .dropdown-toggle:hover {
-    cursor: pointer;
+    overflow:hidden;
+    word-wrap: break-word;
 }
 
 .resource-thumbnail .dropdown-toggle {
