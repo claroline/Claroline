@@ -173,7 +173,7 @@ class WorkspaceController extends Controller
 
         $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
             ->findByRolesAndWorkspace($currentRoles, $workspace, true);
-
+        $toolsWithTranslation = array();
         foreach ($tools as $tool) {
             $toolWithTranslation['tool'] = $tool;
             foreach ($workspaceOrderTools as $workspaceOrderedTool) {
