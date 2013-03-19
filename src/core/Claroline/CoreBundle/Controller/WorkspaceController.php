@@ -212,6 +212,12 @@ class WorkspaceController extends Controller
         $eventName = 'open_tool_workspace_'.$toolName;
         $this->get('event_dispatcher')->dispatch($eventName, $event);
 
+        if (is_null($event->getContent())) {
+            throw new \Exception(
+                "Tool '{$toolName}' didn't return any Response for tool event '{$eventName}'."
+            );
+        }
+
         return new Response($event->getContent());
     }
 
