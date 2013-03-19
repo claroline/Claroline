@@ -27,7 +27,7 @@ class ImportWidgetConfigEvent extends Event
     {
         return $this->workspace;
     }
-    
+
     public function getArchive()
     {
         return $this->archive;

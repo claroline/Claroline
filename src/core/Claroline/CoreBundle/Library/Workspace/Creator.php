@@ -66,7 +66,7 @@ class Creator
         $toolsConfig = $config->getToolsConfiguration();
         $archive = new \ZipArchive();
         $archive->open($config->getTemplateFile());
-        
+
         foreach ($toolsConfig as $name => $conf) {
             $event = new ImportWorkspaceEvent($workspace, $conf, $archive);
             $this->ed->dispatch('import_workspace_'.$name, $event);
@@ -145,9 +145,9 @@ class Creator
             $wot->setOrder($order);
             $this->entityManager->persist($wot);
             $this->entityManager->flush();
-            
+
             $order++;
-            
+
             foreach ($data['perms'] as $role) {
                 if ($role === 'ROLE_ANONYMOUS') {
                      $role = $this->entityManager

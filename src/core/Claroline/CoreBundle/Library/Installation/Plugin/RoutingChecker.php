@@ -60,6 +60,7 @@ class RoutingChecker implements CheckerInterface
     private function checkRoutingPrefixIsValid()
     {
         $prefix = $this->plugin->getRoutingPrefix();
+
         if (!is_string($prefix)) {
             return $this->errors[] = new ValidationError(
                 "{$this->pluginFqcn} : routing prefix must be a string.",
@@ -84,8 +85,13 @@ class RoutingChecker implements CheckerInterface
 
     private function checkRoutingPrefixIsNotAlreadyRegistered()
     {
-        $registeredPrefixes = $this->extractPrefixes($this->router->getRouteCollection());
-        $pluginPrefix = '/' . $this->plugin->getRoutingPrefix();
+        // As of Symfony 2.2, there is no way to retrieve the prefixes already in use in
+        // the route collection. The following code relies on possible modifications of
+        // the RouteCollection class in the Routing component. To be uncommented if those
+        // changes are accepted.
+        /*
+        $registeredPrefixes = $this->router->getRouteCollection()->getPrefixes();
+        $pluginPrefix = $this->plugin->getRoutingPrefix();
 
         if (in_array($pluginPrefix, $registeredPrefixes)) {
             $resources = (array) $this->yamlParser->parse(file_get_contents($this->mainPluginRoutingFile));
@@ -114,6 +120,7 @@ class RoutingChecker implements CheckerInterface
                 );
             }
         }
+        */
     }
 
     private function checkRoutingResourcesAreLoadable()
@@ -163,24 +170,5 @@ class RoutingChecker implements CheckerInterface
                 );
             }
         }
-    }
-
-    private function extractPrefixes(RouteCollection $collection)
-    {
-        static $prefixes = array();
-
-        if ('' !== $prefix = $collection->getPrefix()) {
-            if (!in_array($prefix, $prefixes)) {
-                $prefixes[] = $prefix;
-            }
-        }
-
-        foreach ($collection as $item) {
-            if ($item instanceof RouteCollection) {
-                $this->extractPrefixes($item);
-            }
-        }
-
-        return $prefixes;
     }
 }
