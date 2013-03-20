@@ -25,7 +25,8 @@ class AppKernel extends Kernel
             new JMS\TwigJsBundle\JMSTwigJsBundle(),
             new Claroline\CoreBundle\ClarolineCoreBundle(),
             new Claroline\Bundle\FrontEndBundle\FrontEndBundle(),
-            new Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle()
+            new Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle(),
+            new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle()
         );
 
         if (file_exists(__DIR__ . '/config/local/plugin/bundles')) {
