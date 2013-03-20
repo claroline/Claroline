@@ -34,6 +34,7 @@ class RoutingCheckerTest extends WebTestCase
      */
     public function testCheckerReturnsAnErrorIfRoutingPrefixIsAlreadyRegistered($pluginFqcn)
     {
+        $this->markTestSkipped('Symfony 2.2 doesn\'t provide a way to retrieve the registered prefixes');
         $errors = $this->checker->check($this->loader->load($pluginFqcn));
         $this->assertEquals(RoutingChecker::ALREADY_REGISTERED_PREFIX, $errors[0]->getCode());
     }

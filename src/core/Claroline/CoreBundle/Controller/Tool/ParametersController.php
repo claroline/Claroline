@@ -501,6 +501,7 @@ class ParametersController extends Controller
         $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId);
 
         if ($wot === null) {
+            $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId);
             $wot = new WorkspaceOrderedTool();
             $wot->setOrder($position);
             $wot->setTool($tool);
