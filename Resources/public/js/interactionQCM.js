@@ -422,7 +422,7 @@ function check_form(nbr_choices, answer_coched, label_empty, point_answers, poin
 
 
 //add choices
-function add_form_choice(multiple_response, unique_response, add, Response_number, Response, point, comment, expected_response, order, source_image_add, source_image_del) 
+function add_form_choice(multiple_response, unique_response, add, Response_number, Response, point, comment, expected_response, order, source_image_add, source_image_del, ChoicepositionForce) 
 {
 
 $('#ujm_exobundle_interactionqcmtype_typeQCM')
@@ -433,7 +433,7 @@ $('#ujm_exobundle_interactionqcmtype_typeQCM')
 
 $('#ujm_exobundle_interactionqcmtype_choices').before('<a href="#" id="add_choice"><img src="' + source_image_add + '">'+add+'</a>');
      
-$('#ujm_exobundle_interactionqcmtype_choices').after('<table style="border: 1px solid black;" id="newTable"><tr> <th>'+Response+'</th> <th>'+point+'</th> <th>'+comment+'</th> <th>'+expected_response+'</th> <th>'+order+'</th> <th>------</th> <th>------</th> </tr></table>');
+$('#ujm_exobundle_interactionqcmtype_choices').after('<table style="border: 1px solid black;" id="newTable"><tr> <th>'+Response+'</th> <th>'+point+'</th> <th>'+comment+'</th> <th>'+expected_response+'</th> <th>'+order+'</th> <th>'+ChoicepositionForce+'</th> <th>------</th> </tr></table>');
 $('#add_choice').css({
         "display":"block",
         "color": "green",

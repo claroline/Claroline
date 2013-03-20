@@ -62,7 +62,7 @@ function category_pop(data){
 
                         $("#div_input_category").html(data);
                         var popup = false;
-                        if(popup == false){                      
+                        if(popup == false){                
                             $("#overlayEffect_cat").fadeIn("slow");
                             $("#popupCategory").fadeIn("slow");
                             $("#closeCategory").fadeIn("slow");                       

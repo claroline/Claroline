@@ -1,6 +1,12 @@
+ujm_category_create_pop:
+    pattern: /category/create_pop
+    defaults: { _controller: UJMExoBundle:Category:create_pop }
+    requirements:
+      _method: POST
+    
 ujm_category_new_pop:
     pattern:  /category/new_pop
-    defaults: { _controller: "UJMExoBundle:Category:new_pop" }
+    defaults: { _controller: UJMExoBundle:Category:new_pop }
     
 ujm_exercise_open:
    pattern: /open/{exerciseId}
@@ -12,7 +18,7 @@ ujm_question_index:
     
 ujm_question_new:
     pattern:  /question/new/{exoID}
-    defaults: { _controller: "UJMExoBundle:Question:new", exoID: -1 }
+    defaults: { _controller: UJMExoBundle:Question:new, exoID: -1 }
     
 ujm_question_dispaly_form_type:
     pattern: /question/choixFormType

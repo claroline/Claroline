@@ -33,44 +33,58 @@
  # knowledge of the CeCILL license and that you accept its terms.
 #}
 
-{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+<h1>Category creation</h1>
 
-{% block stylesheets %}
-    {{ parent() }}
-    <link href="{{ asset('bundles/ujmexo/css/new_category.css') }}" type="text/css" rel="stylesheet" />
-{% endblock %}
-            
-{% block section_content %}
-
-<h1>{{ "Question creation" | trans }}</h1>
-
-<form name="form_type_question">
-<label for="menu_type_question">{{ "kind of question" | trans }}</label>
-<select name="menu_type_question" id="menu_type_question" onchange="cherche_type('{{ "Warning_change_type_q" | trans }}', '{{ exoID }}', '{{ path('ujm_question_dispaly_form_type')}}' )">
-    <option selected="selected">{{ "Choose_type" | trans }}</option>
-    <option>{{ "hole" | trans }}</option>
-    <option>{{ "QCM" | trans }}</option>
-    <option>{{ "graphic" | trans }}</option>
-    <option>{{ "open" | trans }}</option>
-</select>
+<form method="post" {{ form_enctype(form) }}>
+    {{ form_widget(form) }}
 </form>
 
-<div id="formulaire_interactions">
-</div>
+    <p>
+        <button type="submit" id="submit_category">Create</button>
+    </p>
+
+<script type="text/javascript">
+
+    $('#submit_category').click(function() {
+        var nom_cat = $("#ujm_exobundle_categorytype_value").val();
+
+        var exists = false;
+        $("*[id$='_interaction_question_category option']").each(function(){
+            if (this.text == nom_cat) {
+                exists = true;
+                return false;
+            }
+        });
+
+
+        if (exists){
+            alert("existe");
+        }
+        else
+        {
+        //apler l'action create2 avec ajax
+                    $.ajax({
+                    type: "POST",
+                    url: "{{path('ujm_category_create_pop')}}",
+                    data: {
+                        value: nom_cat
+                    },
+                    cache: false,
+                    success: function(data){
+                    	// ne rien faire
+                        $("*[id$='_interaction_question_category']")
+                            .append($('<option selected="selected" value="'+data+'"></option>')
+                            .text(nom_cat));
+
+                        $("#overlayEffect_cat").fadeOut("slow");
+                        $("#popupCategory").fadeOut("slow");
+                        $("#closeCategory").fadeOut("slow");
+                    }
+                    });
+        }
 
 
 
-<ul class="record_actions">
-    <li>
-        <a href="{{ path('ujm_question_index') }}">
-            {{ "Back to the list" | trans }}
-        </a>
-    </li>
-</ul>
-{% endblock %}
+    });
 
-{% block javascripts %}
-    {{ parent() }}
-    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/question.js') }}"></script>    
-{% endblock %}
-
+</script>

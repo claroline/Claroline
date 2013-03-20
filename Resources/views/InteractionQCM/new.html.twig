@@ -45,11 +45,11 @@
 <a href="#" style="margin: 5px 5px 5px 5px;" id="lien_category">{{ "Create a new category" | trans }}</a> 
 
 <div id="popupEA">
-    <div id="popupContainer" class="hidden"> <a id="close" class="hidden" title="close popup">{{ "close" | trans }}</a><h1>Réponse</h1><div id="div_input_popup"><textarea id="input_popup" class="tinymce" data-theme="medium"></textarea></div></div><div id="overlayEffect"> </div>
+    <div id="popupContainer" class="hiddenCat"> <a id="close" class="hiddenCat" title="close popup">{{ "close" | trans }}</a><h1>Réponse</h1><div id="div_input_popup"><textarea id="input_popup" class="tinymce" data-theme="medium"></textarea></div></div><div id="overlayEffect"> </div>
 </div>
 
 <div id="listeCategory">
-    <div id="popupCategory" class="hidden"> <a id="closeCategory" class="hidden" title="close popup">{{ "close" | trans }}</a><h1>{{ "Create a new category" | trans }}</h1><div id="div_input_category"></div></div><div id="overlayEffect_cat"> </div>
+    <div id="popupCategory" class="hiddenCat"> <a id="closeCategory" class="hiddenCat" title="close popup">{{ "close" | trans }}</a><h1>{{ "Create a new category" | trans }}</h1><div id="div_input_category"></div></div><div id="overlayEffect_cat"> </div>
 </div>
 
 
@@ -67,7 +67,7 @@
     link_category('{{ path('ujm_category_new_pop') }}');
     insert_style();
     editionAv();
-    add_form_choice('{{ "Multiple response" | trans }}', '{{ "Unique response" | trans }}', '{{ "add" | trans }}', '{{ "Response number" | trans }}', '{{ "Response" | trans }}', '{{ "point" | trans }}', '{{ "comment" | trans }}', '{{ "expected response" | trans }}', '{{ "order" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}', '{{ asset('bundles/ujmexo/images/delete.png') }}');
+    add_form_choice('{{ "Multiple response" | trans }}', '{{ "Unique response" | trans }}', '{{ "add" | trans }}', '{{ "Response number" | trans }}', '{{ "Response" | trans }}', '{{ "point" | trans }}', '{{ "comment" | trans }}', '{{ "expected response" | trans }}', '{{ "order" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}', '{{ asset('bundles/ujmexo/images/delete.png') }}', '{{ "Choice.positionForce" | trans }}');
     add_form_hint('{{ "add hint" | trans }}', '{{ "hint number" | trans }}', '{{ "Hint" | trans }}', '{{ "Penalty" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');    
 </script>
 
