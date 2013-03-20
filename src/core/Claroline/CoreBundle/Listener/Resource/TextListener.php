@@ -11,6 +11,9 @@ use Claroline\CoreBundle\Library\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Library\Event\ExportResourceTemplateEvent;
+use Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent;
 
 class TextListener extends ContainerAware
 {
@@ -65,6 +68,26 @@ class TextListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    public function onCopy(CopyResourceEvent $event)
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $resource = $event->getResource();
+        $revisions = $resource->getRevisions();
+        $copy = new Text();
+
+        foreach ($revisions as $revision) {
+            $rev = new Revision();
+            $rev->setVersion($revision->getVersion());
+            $rev->setContent($revision->getContent());
+            $rev->setUser($revision->getUser());
+            $rev->setText($copy);
+            $em->persist($rev);
+        }
+
+        $copy->setLastRevision($resource->getLastRevision());
+        $event->setCopy($copy);
+    }
+
     public function onOpen(OpenResourceEvent $event)
     {
         $text = $event->getResource();
@@ -87,5 +110,30 @@ class TextListener extends ContainerAware
         $em->remove($event->getResource());
         $event->stopPropagation();
     }
+
+    public function onExportTemplate(ExportResourceTemplateEvent $event)
+    {
+        $text = $event->getResource();
+        $config['text'] = $text->getLastRevision()->getContent();
+        $event->setConfig($config);
+        $event->stopPropagation();
+    }
+
+    public function onImportTemplate(ImportResourceTemplateEvent $event)
+    {
+//        $em = $this->container->get('doctrine.orm.entity_manager');
+//        $user = $this->container->get('security.context')->getToken()->getUser();
+//        $text = new Text();
+//        $config = $event->getConfig();
+//        $revision = new Revision();
+//        $revision->setContent($config['text']);
+//        $revision->setUser($user);
+//        $revision->setText($text);
+//        $em->persist($revision);
+//        $text->setLastRevision($revision);
+//        $event->setResource($text);
+//        $event->stopPropagation();
+    }
+
 
 }
