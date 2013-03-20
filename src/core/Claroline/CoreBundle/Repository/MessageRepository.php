@@ -64,11 +64,12 @@ class MessageRepository extends NestedTreeRepository
      */
     public function findReceivedByUser(User $user, $isRemoved = false, $offset = null, $limit = null)
     {
+        $isRemovedText = ($isRemoved) ? 'true' : 'false';
         $dql = "SELECT um, m, u FROM Claroline\CoreBundle\Entity\UserMessage um
             JOIN um.user u
             JOIN um.message m
             WHERE u.id = {$user->getId()}
-            AND um.isRemoved = {$isRemoved}
+            AND um.isRemoved = {$isRemovedText}
             ORDER BY m.date DESC";
 
         $query = $this->_em->createQuery($dql);
@@ -81,12 +82,13 @@ class MessageRepository extends NestedTreeRepository
 
     public function findSentByUser(User $user, $isRemoved = false, $offset = null, $limit = null)
     {
+        $isRemovedText = ($isRemoved) ? 'true' : 'false';
         $dql = "SELECT m, u, um, umu FROM Claroline\CoreBundle\Entity\Message m
             JOIN m.userMessages um
             JOIN um.user umu
             JOIN m.user u
             WHERE u.id = {$user->getId()}
-            AND m.isRemoved = {$isRemoved}
+            AND m.isRemoved = {$isRemovedText}
             ORDER BY m.date DESC";
 
         $query = $this->_em->createQuery($dql);
@@ -116,16 +118,17 @@ class MessageRepository extends NestedTreeRepository
         $limit = null
     )
     {
+        $isRemovedText = ($isRemoved) ? 'true' : 'false';
         $search = strtoupper($search);
         $dql = "SELECT um, m, u, mu FROM Claroline\CoreBundle\Entity\UserMessage um
             JOIN um.user u
             JOIN um.message m
             JOIN m.user mu
             WHERE u.id = {$user->getId()}
-            AND um.isRemoved = {$isRemoved}
+            AND um.isRemoved = {$isRemovedText}
             AND UPPER(m.object) LIKE :search
             OR UPPER(mu.username) LIKE :search
-            AND um.isRemoved = {$isRemoved}
+            AND um.isRemoved = {$isRemovedText}
             AND u.id = {$user->getId()}
             ORDER BY m.date DESC";
 
@@ -146,17 +149,18 @@ class MessageRepository extends NestedTreeRepository
         $limit = null
     )
     {
+        $isRemovedText = ($isRemoved) ? 'true' : 'false';
         $search = strtoupper($search);
         $dql = "SELECT m, u, um, umu FROM Claroline\CoreBundle\Entity\Message m
             JOIN m.userMessages um
             JOIN um.user umu
             JOIN m.user u
             WHERE u.id = {$user->getId()}
-            AND m.isRemoved = {$isRemoved}
+            AND m.isRemoved = {$isRemovedText}
             AND UPPER (m.object) LIKE :search
             OR UPPER (umu.username) LIKE :search
             AND u.id = {$user->getId()}
-            AND m.isRemoved = {$isRemoved}
+            AND m.isRemoved = {$isRemovedText}
             ORDER BY m.date DESC";
 
         $query = $this->_em->createQuery($dql);
