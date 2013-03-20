@@ -190,14 +190,14 @@ class TextController extends Controller
      */
     public function editFormAction($textId)
     {
-        $text = $this->container->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\Text')
-            ->find($textId);
+        $textRepo = $this->container->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Resource\Text');
+        $text = $textRepo->find($textId);
 
         return $this->render(
             'ClarolineCoreBundle:Text:edit.html.twig',
             array(
-                'text' => $text->getLastRevision()->getContent(),
+                'text' => $textRepo->getLastRevision($text)->getContent(),
                 'textId' => $textId,
                 'workspace' => $text->getWorkspace()
             )
@@ -227,8 +227,6 @@ class TextController extends Controller
         $revision->setUser($user);
         $em->persist($revision);
         $old->setVersion($version);
-        $old->setLastRevision($revision);
-
         $em->flush();
 
         return new Response('edited');

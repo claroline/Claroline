@@ -45,12 +45,11 @@ class TextListener extends ContainerAware
             $revision = new Revision();
             $revision->setContent($form->getData()->getText());
             $revision->setUser($user);
-            $em->persist($revision);
             $text = new Text();
-            $text->setLastRevision($revision);
             $text->setName($form->getData()->getName());
-            $em->persist($text);
             $revision->setText($text);
+            $em->persist($text);
+            $em->persist($revision);
             $event->setResource($text);
             $event->stopPropagation();
 
@@ -84,17 +83,18 @@ class TextListener extends ContainerAware
             $em->persist($rev);
         }
 
-        $copy->setLastRevision($resource->getLastRevision());
         $event->setCopy($copy);
     }
 
     public function onOpen(OpenResourceEvent $event)
     {
         $text = $event->getResource();
+        $textRepo = $this->container->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Resource\Text');
         $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Text:index.html.twig',
             array(
-                'text' => $text->getLastRevision()->getContent(),
+                'text' => $textRepo->getLastRevision($text)->getContent(),
                 'textId' => $event->getResource()->getId(),
                 'workspace' => $text->getWorkspace()
             )
@@ -121,18 +121,18 @@ class TextListener extends ContainerAware
 
     public function onImportTemplate(ImportResourceTemplateEvent $event)
     {
-//        $em = $this->container->get('doctrine.orm.entity_manager');
-//        $user = $this->container->get('security.context')->getToken()->getUser();
-//        $text = new Text();
-//        $config = $event->getConfig();
-//        $revision = new Revision();
-//        $revision->setContent($config['text']);
-//        $revision->setUser($user);
-//        $revision->setText($text);
-//        $em->persist($revision);
-//        $text->setLastRevision($revision);
-//        $event->setResource($text);
-//        $event->stopPropagation();
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $text = new Text();
+        $em->persist($text);
+        $config = $event->getConfig();
+        $revision = new Revision();
+        $revision->setContent($config['text']);
+        $revision->setUser($user);
+        $revision->setText($text);
+        $em->persist($revision);
+        $event->setResource($text);
+        $event->stopPropagation();
     }
 
 
