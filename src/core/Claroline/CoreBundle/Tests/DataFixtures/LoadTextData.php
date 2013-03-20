@@ -56,7 +56,6 @@ class LoadTextData extends AbstractFixture implements ContainerAwareInterface
             $manager->persist($revision);
             $manager->flush();
             $text = new Text();
-            $text->setLastRevision($revision);
             $text->setName($name);
             $manager->persist($text);
             $revision->setText($text);
