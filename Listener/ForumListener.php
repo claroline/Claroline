@@ -127,7 +127,6 @@ class ForumListener extends ContainerAware
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $resource = $event->getResource();
-        $config['name'] = $resource->getName();
         $config['type'] = 'claroline_forum';
         $datas = $em->getRepository('ClarolineForumBundle:Forum')->findSubjects($resource);
 
@@ -149,9 +148,6 @@ class ForumListener extends ContainerAware
         $em = $this->container->get('doctrine.orm.entity_manager');
         $config = $event->getConfig();
         $forum = new Forum();
-        $forum->setName($config['name']);
-        $this->container->get('claroline.resource.manager')
-            ->create($forum, $event->getParent()->getId(), 'claroline_forum');
         $user = $this->container->get('security.context')->getToken()->getUser();
 
         foreach ($config['subjects'] as $subject) {
@@ -167,8 +163,7 @@ class ForumListener extends ContainerAware
             $em->persist($message);
         }
 
-        $em->persist($forum);
-        $em->flush();
+        $event->setResource($forum);
         $event->stopPropagation();
     }
 }
