@@ -167,21 +167,28 @@ class AbstractResourceRepository extends MaterializedPathRepository
      * Returns all the resources a user can open, filtered with given criteria.
      *
      * @param Array $criterias Array of criterias to use to build the filter.
-     * @param $roles as array of role (string)
-     * @param boolean $asArray returns a list of arrays if true, else a list of entities.
+     * @param User $user The user searching resources.
+     * @param boolean $bypassRights if the the request bypass every rights.
      *
      * @return an array of arrays or entities
      */
-    public function findUserResourcesByCriteria(User $user, array $criteria)
+    public function findUserResourcesByCriteria(array $criteria, $user = null, $bypassRights = false)
     {
+        if ($user == null && $bypassRights = false) {
+            throw new \Excpetion('Rights cannot be included without user');
+        }
         $builder = new ResourceQueryBuilder();
         $builder->select()
-            ->from()
-            ->joinRightsForUser($user)
-            ->where()
-            ->whereIsVisible(1)
-            ->whereInUserWorkspace($user)
-            ->whereCanOpen();
+            ->from();
+        if ($bypassRights) {
+            $builder->joinRightsForUser($user);
+        }
+        $builder->where();
+        if ($bypassRights) {
+            $builder->whereIsVisible(1)
+                ->whereInUserWorkspace($user)
+                ->whereCanOpen();
+        }
 
         foreach ($criteria as $key => $value) {
             if ($value != null) {

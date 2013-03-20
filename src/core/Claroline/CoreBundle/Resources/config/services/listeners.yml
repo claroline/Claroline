@@ -66,6 +66,9 @@ services:
             - { name: kernel.event_listener, event: create_text, method: onCreate }
             - { name: kernel.event_listener, event: open_text, method: onOpen }
             - { name: kernel.event_listener, event: delete_text, method: onDelete }
+            - { name: kernel.event_listener, event: copy_text, method: onCopy }
+            - { name: kernel.event_listener, event: export_text_template, method: onExportTemplate }
+            - { name: kernel.event_listener, event: import_text_template, method: onImportTemplate }
 
     claroline.listener.activity_listener:
         class: Claroline\CoreBundle\Listener\Resource\ActivityListener
@@ -75,7 +78,10 @@ services:
             - { name: kernel.event_listener, event: create_form_activity, method: onCreateForm }
             - { name: kernel.event_listener, event: create_activity, method: onCreate }
             - { name: kernel.event_listener, event: open_activity, method: onOpen }
+            - { name: kernel.event_listener, event: copy_activity, method: onCopy }
             - { name: kernel.event_listener, event: delete_activity, method: onDelete }
+            - { name: kernel.event_listener, event: export_activity_template, method: onExportTemplate }
+            - { name: kernel.event_listener, event: import_activity_template, method: onImportTemplate }
 
     claroline.listener.logger:
         class: Claroline\CoreBundle\Listener\LogListener
