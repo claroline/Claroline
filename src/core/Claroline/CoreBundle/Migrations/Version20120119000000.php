@@ -488,6 +488,13 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('version', 'integer');
         $table->addColumn('current_text_id', 'integer');
 
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_resource'),
+            array('id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+
         $this->storeTable($table);
     }
 
