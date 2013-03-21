@@ -54,6 +54,11 @@ class ResourceType
     protected $isVisible;
 
     /**
+     * @ORM\Column(type="boolean", name="is_exportable")
+     */
+    protected $isExportable;
+
+    /**
      * @ORM\Column(type="boolean", name="is_browsable")
      */
     protected $isBrowsable;
@@ -216,5 +221,15 @@ class ResourceType
     public function addAbstractResource($abstractResource)
     {
         $this->abstractResource->add($abstractResource);
+    }
+
+    public function setExportable($isExportable)
+    {
+        $this->isExportable = $isExportable;
+    }
+
+    public function getExportable()
+    {
+        return $this->isExportable;
     }
 }

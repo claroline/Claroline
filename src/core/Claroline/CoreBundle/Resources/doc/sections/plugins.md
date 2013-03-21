@@ -60,6 +60,7 @@ Full plugin configuration file example:
           name: claroline_example
           is_visible: true
           is_browsable: true
+          is_exportable: false
           icon: res_text.png
 
       tools:

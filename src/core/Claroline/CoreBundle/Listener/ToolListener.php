@@ -93,6 +93,8 @@ class ToolListener extends ContainerAware
     }
 
     //@todo: Optimize this if possible (it should be possible to reduce the number of dql requests)
+    //@todo: When exporting the resource, there should be only "exportable" resources. Therefore
+    //the query builder must be updated
     //because a new request is made each time to retrieve each resource right.
     public function onExportResource(ExportWorkspaceEvent $event)
     {
@@ -126,6 +128,7 @@ class ToolListener extends ContainerAware
         }
 
         $criteria['roots'] = array($root->getName());
+        $criteria['isExportable'] = true;
         $config['resources'] = array();
         $resources = $resourceRepo->findUserResourcesByCriteria($criteria, null, true);
 
@@ -134,22 +137,23 @@ class ToolListener extends ContainerAware
             $ed->dispatch("export_{$resource['type']}_template", $newEvent);
             $dataResources = $newEvent->getConfig();
 
-            if ($dataResources !== null) {
-                foreach ($roles as $role) {
-                    $perms = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
-                        ->findMaximumRights(array($role->getName()), $root);
-                    $perms['canCreate'] = array();
-
-                    $dataResources['perms'][rtrim(str_replace(range(0, 9), '', $role->getName()), '_')] = $perms;
-                }
-
-                $dataResources['parent'] = $resource['parent_id'];
-                $dataResources['id'] = $resource['id'];
-                $dataResources['type'] = $resource['type'];
-                $dataResources['name'] = $resource['name'];
-                $config['resources'][] = $dataResources;
-
+            if ($dataResources === null) {
+                throw new \Exception("The event export_{$resource['type']}_template did not return any config");
             }
+
+            foreach ($roles as $role) {
+                $perms = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
+                    ->findMaximumRights(array($role->getName()), $root);
+                $perms['canCreate'] = array();
+
+                $dataResources['perms'][rtrim(str_replace(range(0, 9), '', $role->getName()), '_')] = $perms;
+            }
+
+            $dataResources['parent'] = $resource['parent_id'];
+            $dataResources['id'] = $resource['id'];
+            $dataResources['type'] = $resource['type'];
+            $dataResources['name'] = $resource['name'];
+            $config['resources'][] = $dataResources;
         }
 
         $config['resources'] = $this->sortResources($config['resources']);
