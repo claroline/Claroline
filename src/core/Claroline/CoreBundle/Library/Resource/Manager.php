@@ -404,9 +404,6 @@ class Manager
         $rights->setRole($role);
         $rights->setResource($resource);
         $rights->setWorkspace($workspace);
-
-        $resourceTypes = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-            ->findByIsVisible(true);
         $rights->setCreatableResourceTypes($resourceTypes);
 
         $this->em->persist($rights);
