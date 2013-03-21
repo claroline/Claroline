@@ -97,6 +97,8 @@ class Manager
         } else {
             $this->setResourceRights($resource, $rights);
         }
+        
+        $this->em->flush();
         $event = new ResourceLogEvent($resource, ResourceLogEvent::CREATE_ACTION);
         $this->ed->dispatch('log_resource', $event);
 

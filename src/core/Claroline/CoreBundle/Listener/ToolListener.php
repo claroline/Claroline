@@ -130,7 +130,7 @@ class ToolListener extends ContainerAware
         $resources = $resourceRepo->findUserResourcesByCriteria($criteria, null, true);
 
         foreach ($resources as $resource) {
-            $newEvent = new ExportResourceTemplateEvent($resourceRepo->find($resource['id']) , $event->getArchive());
+            $newEvent = new ExportResourceTemplateEvent($resourceRepo->find($resource['id']), $event->getArchive());
             $ed->dispatch("export_{$resource['type']}_template", $newEvent);
             $dataResources = $newEvent->getConfig();
 
@@ -227,8 +227,10 @@ class ToolListener extends ContainerAware
                 );
                 $createdResources[$resource['id']] = $resourceEntity;
             } else {
-                throw new \Exception("The event import_{$resource['type']}_template did not set" .
-                    " any resource");
+                throw new \Exception(
+                    "The event import_{$resource['type']}_template did not set" .
+                    " any resource"
+                );
             }
         }
 
@@ -460,11 +462,11 @@ class ToolListener extends ContainerAware
                     //make some room to move the activity after the researched key
                     $newConfig = $this->shift($config, $key);
                     //moving the activity
-                    $newConfig[$key+1] = $config[$tmpI];
+                    $newConfig[$key + 1] = $config[$tmpI];
                     unset($newConfig[$tmpI]);
                     $config = array_values($newConfig);
                     //the key has changed
-                    $tmpI = $key+1;
+                    $tmpI = $key + 1;
                 }
             }
         }
@@ -482,7 +484,7 @@ class ToolListener extends ContainerAware
      */
     private function searchConfigById(array $config, $id)
     {
-        foreach($config as $key => $item) {
+        foreach ($config as $key => $item) {
             if ($item['id'] === $id) {
                 return $key;
             }
@@ -497,13 +499,14 @@ class ToolListener extends ContainerAware
      * @param array $config
      * @param type $key
      */
-    private function shift(array $config, $key) {
+    private function shift(array $config, $key)
+    {
         $size = count($config);
         $size--;
         for ($i = $size; $i >= $key; $i--) {
-            $config[$i+1] = $config[$i];
+            $config[$i + 1] = $config[$i];
         }
-        unset($config[$key+1]);
+        unset($config[$key + 1]);
 
         return $config;
     }
