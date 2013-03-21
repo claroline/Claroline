@@ -112,7 +112,6 @@ class MessageControllerTest extends FunctionalTestCase
         $this->loadMessagesData(array(array('to' => 'user', 'from' => 'admin', 'object' => 'foo')));
         $crawler = $this->logUser($this->getUser('user'));
         $crawler = $this->client->request('GET', '/message/list/received/0');
-        // var_dump($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($crawler->filter('.mark-as-read')));
         $messages = $this->client
             ->getContainer()

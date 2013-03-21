@@ -6,9 +6,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityManager;
 use Gedmo\Exception\UnexpectedValueException;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Library\Event\ResourceLogEvent;
@@ -51,12 +53,13 @@ class Manager
      * @param integer           $parentId       The id of the parent resource
      * @param string            $resourceType   The string identifier of the resource type
      * @param User              $user           The creator of the resource (optional)
+     * @param array             $rights         And array of rights
      *
      * @return  AbstractResource
      *
      * @throws \Exception
      */
-    public function create(AbstractResource $resource, $parentId, $resourceType, User $user = null)
+    public function create(AbstractResource $resource, $parentId, $resourceType, User $user = null, $rights = null)
     {
         $resourceType = $this->em
             ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
@@ -89,7 +92,13 @@ class Manager
         }
 
         $this->em->persist($resource);
-        $this->setResourceRights($parent, $resource);
+        if ($rights === null) {
+            $this->cloneParentRights($parent, $resource);
+        } else {
+            $this->setResourceRights($resource, $rights);
+        }
+        
+        $this->em->flush();
         $event = new ResourceLogEvent($resource, ResourceLogEvent::CREATE_ACTION);
         $this->ed->dispatch('log_resource', $event);
 
@@ -115,7 +124,7 @@ class Manager
         }
         try {
             $this->em->flush();
-            $this->setResourceRights($parent, $child);
+            $this->cloneParentRights($parent, $child);
 
             $event = new ResourceLogEvent(
                 $child,
@@ -184,7 +193,7 @@ class Manager
             $copy->setWorkspace($parent->getWorkspace());
             $copy->setName($resource->getName());
             $copy->setName($this->ut->getUniqueName($copy, $parent));
-            $this->setResourceRights($parent, $copy);
+            $this->cloneParentRights($parent, $copy);
 
             if ($resource->getResourceType()->getName() == 'directory') {
                 foreach ($resource->getChildren() as $child) {
@@ -213,7 +222,7 @@ class Manager
      * @param AbstractResource $children
      *
      */
-    public function setResourceRights(AbstractResource $parent, AbstractResource $children)
+    public function cloneParentRights(AbstractResource $parent, AbstractResource $children)
     {
         $resourceRights = $this->em
             ->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
@@ -303,5 +312,142 @@ class Manager
         $this->em->remove($resource);
         $logEvent = new ResourceLogEvent($resource, ResourceLogEvent::DELETE_ACTION);
         $this->ed->dispatch('log_resource', $logEvent);
+    }
+
+    /**
+     * Sets the resource rights of a resource.
+     * Expects an array of role of the following form:
+     * array('ROLE_WS_MANAGER' => array('canOpen' => true, 'canEdit' => false', ...)
+     * The 'canCopy' key must contain an array of resourceTypes name.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     * @param array $rights
+     */
+    public function setResourceRights(AbstractResource $resource, array $rights)
+    {
+        $roleRepo = $this->em->getRepository('ClarolineCoreBundle:Role');
+        $resourceTypeRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType');
+        $workspace = $resource->getWorkspace();
+        $this->setResourceOwnerRights(true, true, true, true, true, $resource);
+
+        foreach ($rights as $role => $permissions) {
+            $resourceTypes = array();
+
+            foreach ($permissions['canCreate'] as $type) {
+                $rt = $resourceTypeRepo->findOneByName($type);
+                $resourceTypes[] = $rt;
+            }
+
+            $role = $roleRepo->findOneBy(array('name' => $role.'_'.$workspace->getId()));
+            $this->createDefaultsResourcesRights(
+                $permissions['canDelete'],
+                $permissions['canOpen'],
+                $permissions['canEdit'],
+                $permissions['canCopy'],
+                $permissions['canExport'],
+                $role,
+                $resource,
+                $workspace,
+                $resourceTypes
+            );
+        }
+
+        $this->createDefaultsResourcesRights(
+            false, false, false, false, false,
+            $roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
+            $resource,
+            $workspace,
+            array()
+        );
+
+        $resourceTypeRepo->findByIsVisible(true);
+
+        $this->createDefaultsResourcesRights(
+            true, true, true, true, true,
+            $roleRepo->findOneBy(array('name' => 'ROLE_ADMIN')),
+            $resource,
+            $workspace,
+            $resourceTypes
+        );
+    }
+
+    /**
+     * Create default permissions for a role and a resource.
+     *
+     * @param boolean $canDelete
+     * @param boolean $canOpen
+     * @param boolean $canEdit
+     * @param boolean $canCopy
+     * @param boolean $canExport
+     * @param boolean $canCreate
+     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceRights
+     */
+    private function createDefaultsResourcesRights(
+        $canDelete,
+        $canOpen,
+        $canEdit,
+        $canCopy,
+        $canExport,
+        Role $role,
+        AbstractResource $resource,
+        AbstractWorkspace $workspace,
+        array $resourceTypes
+    )
+    {
+        $rights = new ResourceRights();
+        $rights->setCanCopy($canCopy);
+        $rights->setCanDelete($canDelete);
+        $rights->setCanEdit($canEdit);
+        $rights->setCanOpen($canOpen);
+        $rights->setCanExport($canExport);
+        $rights->setRole($role);
+        $rights->setResource($resource);
+        $rights->setWorkspace($workspace);
+        $rights->setCreatableResourceTypes($resourceTypes);
+
+        $this->em->persist($rights);
+    }
+
+    /**
+     * Sets the resource owner rights.
+     *
+     * @param boolean $isSharable
+     * @param boolean $isEditable
+     * @param boolean $isDeletable
+     * @param boolean $isExportable
+     * @param boolean $isCopiable
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\AbstractResource
+     */
+    public function setResourceOwnerRights(
+        $isSharable,
+        $isEditable,
+        $isDeletable,
+        $isExportable,
+        $isCopiable,
+        AbstractResource $resource
+    )
+    {
+        $resource->setSharable($isSharable);
+        $resource->setEditable($isEditable);
+        $resource->setDeletable($isDeletable);
+        $resource->setExportable($isExportable);
+        $resource->setCopiable($isCopiable);
+
+        if ($resource instanceof Directory) {
+            $resourceTypes = $this->em
+                ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+                ->findBy(array('isVisible' => true));
+
+            foreach ($resourceTypes as $resourceType) {
+                $resource->addResourceTypeCreation($resourceType);
+            }
+        }
+
+        return $resource;
     }
 }

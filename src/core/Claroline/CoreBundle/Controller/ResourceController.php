@@ -35,6 +35,12 @@ class ResourceController extends Controller
         $event = new CreateFormResourceEvent();
         $this->get('event_dispatcher')->dispatch($eventName, $event);
 
+        if($event->getResponseContent() === "") {
+            throw new \Exception(
+                "Event '{$eventName}' didn't receive any response."
+            );
+        }
+
         return new Response($event->getResponseContent());
     }
 
@@ -423,7 +429,7 @@ class ResourceController extends Controller
         }
 
         $user = $this->get('security.context')->getToken()->getUser();
-        $resources = $resourceRepo->findUserResourcesByCriteria($user, $criteria);
+        $resources = $resourceRepo->findUserResourcesByCriteria($criteria, $user);
         $response = new Response(json_encode(array('resources' => $resources, 'path' => $path)));
         $response->headers->set('Content-Type', 'application/json');
 
@@ -463,8 +469,8 @@ class ResourceController extends Controller
                 $shortcut->setResource($resource->getResource());
             }
 
-            $this->get('claroline.resource.manager')->setResourceRights($shortcut->getParent(), $shortcut);
-            //$this->get('claroline.resource.manager')->setResourceRights($shortcut->getParent(), $resource);
+            $this->get('claroline.resource.manager')->cloneParentRights($shortcut->getParent(), $shortcut);
+            //$this->get('claroline.resource.manager')->cloneParentRights($shortcut->getParent(), $resource);
 
             $em->persist($shortcut);
             $em->flush();

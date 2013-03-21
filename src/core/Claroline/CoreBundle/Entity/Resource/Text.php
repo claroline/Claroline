@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\TextRepository")
  * @ORM\Table(name="claro_text")
  */
 class Text extends AbstractResource
@@ -25,15 +25,6 @@ class Text extends AbstractResource
      * @ORM\OrderBy({"version" = "DESC"})
      */
     protected $revisions;
-
-    /**
-     * @ORM\OneToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\Revision",
-     *     cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(name="current_text_id", referencedColumnName="id")
-     */
-    protected $lastRevision;
 
     /** @var string */
     protected $text;
@@ -58,16 +49,6 @@ class Text extends AbstractResource
     public function getRevisions()
     {
         return $this->revisions;
-    }
-
-    public function setLastRevision($revision)
-    {
-        $this->lastRevision = $revision;
-    }
-
-    public function getLastRevision()
-    {
-        return $this->lastRevision;
     }
 
     public function addRevision($revision)

@@ -30,13 +30,24 @@ class Exporter
         $description = array();
         $roleRepo = $this->em->getRepository('ClarolineCoreBundle:Role');
         $workspaceTools = $this->em
-                ->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
-                ->findBy(array('workspace' => $workspace));
+            ->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
+            ->findBy(array('workspace' => $workspace));
         $roles = $roleRepo->findByWorkspace($workspace);
+        $root = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+            ->findWorkspaceRoot($workspace);
 
         foreach ($roles as $role) {
             $name = rtrim(str_replace(range(0, 9), '', $role->getName()), '_');
             $arRole[$name] = $role->getTranslationKey();
+        }
+
+        foreach ($roles as $role) {
+            $perms = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
+                ->findMaximumRights(array($role->getName()), $root);
+            $perms['canCreate'] = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
+                ->findCreationRights(array($role->getName()), $root);
+
+            $description['root_perms'][rtrim(str_replace(range(0, 9), '', $role->getName()), '_')] = $perms;
         }
 
         foreach ($workspaceTools as $workspaceTool) {

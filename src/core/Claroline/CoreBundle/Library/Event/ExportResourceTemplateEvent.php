@@ -10,11 +10,13 @@ class ExportResourceTemplateEvent extends Event
     private $resource;
     private $config;
     private $archive;
+    private $resourceDependencies;
 
     public function __construct(AbstractResource $resource, \ZipArchive $archive)
     {
         $this->resource = $resource;
         $this->archive = $archive;
+        $this->resourceDependencies = array();
     }
 
     public function getResource()
@@ -35,5 +37,25 @@ class ExportResourceTemplateEvent extends Event
     public function getArchive()
     {
         return $this->archive;
+    }
+
+    /**
+     * Sets the resource dependencies
+     *
+     * @param array
+     */
+    public function setResourceDependencies(array $resourceDependencies)
+    {
+        $this->resourceDependencies = $resourceDependencies;
+    }
+
+    /**
+     * Gets the resource dependencies
+     *
+     * @return array
+     */
+    public function getResourceDependencies()
+    {
+        return $this->resourceDependencies;
     }
 }
