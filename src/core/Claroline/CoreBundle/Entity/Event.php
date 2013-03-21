@@ -25,7 +25,7 @@ class Event
     private $title;
 
     /**
-     * @ORM\Column(name="start", type="integer")
+     * @ORM\Column(name="start", type="integer",nullable=true)
      */
     private $start;
 
@@ -81,24 +81,55 @@ class Event
 
     public function getStart()
     {
+        if (is_null($this->start)) {
 
-        return $this->start;
+            return $this->start;
+
+        } else {
+            $date = date('d-m-Y', $this->start);
+
+            return (new \Datetime($date));
+
+        }
+
     }
 
-    public function setStart(\DateTime $start)
+    public function setStart($start)
     {
-        $timestamp = $start->getTimestamp();
-        $this->start = $timestamp;
+        if (!is_null($start)) {
+            if ($start instanceof \Datetime) {
+                $this->start = $start->getTimestamp();
+            } else {
+                $date  = new \Datetime($start);
+                $this->start = $date->getTimestamp();
+            }
+        }
     }
 
     public function getEnd()
     {
-        return $this->end;
+        if (is_null($this->end)) {
+
+            return $this->end;
+
+        } else {
+            $date = date('d-m-Y', $this->end);
+
+            return (new \Datetime($date));
+        }
+
     }
 
-    public function setEnd(\DateTime $end)
+    public function setEnd($end)
     {
-        $this->end = $end->getTimestamp();
+        if (!is_null($end)) {
+            if ($end instanceof \Datetime) {
+                $this->end = $end-> getTimestamp();
+            } else {
+                $date  = new \Datetime($end);
+                $this->end = $date->getTimestamp();
+            }
+        }
     }
 
     public function getDescription()

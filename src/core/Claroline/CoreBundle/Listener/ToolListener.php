@@ -375,27 +375,17 @@ class ToolListener extends ContainerAware
     public function desktopCalendar()
     {
         $event = new Event();
-        $formBuilder = $this->container->get('form.factory')->createBuilder('form', $event, array());
-        $formBuilder->add('title', 'text')
-            ->add(
-                'end',
-                'date',
-                array(
-                    'format' => 'dd-MM-yyyy',
-                    'widget' => 'choice',
-                )
-            )
-            ->add(
-                'allDay',
-                'checkbox',
-                array(
-                    'label' => 'all day ?')
-            )
-            ->add('description', 'textarea');
+        $formBuilder = $this->container->get('form.factory')->createBuilder(new CalendarType(), $event, array());
+        $em = $this->container-> get('doctrine.orm.entity_manager');
+        $usr = $this->container-> get('security.context')-> getToken()-> getUser();
+        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, 1);
 
         return $this->container->get('templating')->render(
             'ClarolineCoreBundle:Tool/desktop/calendar:calendar.html.twig',
-            array('form' => $formBuilder-> getForm()-> createView())
+            array(
+                'form' => $formBuilder-> getForm()-> createView(),
+                'listEvents' => $listEvents,
+                )
         );
     }
 
