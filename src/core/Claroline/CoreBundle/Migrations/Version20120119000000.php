@@ -748,7 +748,7 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable('claro_event');
         $this->addId($table);
         $table->addColumn('title', 'string', array('notnull' => true, 'length' => 50));
-        $table->addColumn('start', 'integer', array('notnull' => true));
+        $table->addColumn('start', 'integer', array('notnull' => false));
         $table->addColumn('end', 'integer', array('notnull' => false));
         $table->addColumn('description', 'string', array('notnull' => false, 'length' => 255));
         $table->addColumn('workspace_id', 'integer', array('notnull' => true));
