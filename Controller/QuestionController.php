@@ -83,15 +83,12 @@ class QuestionController extends Controller
 
         $questionWithResponse = array();
         $em = $this->getDoctrine()->getEntityManager();
-        foreach($interactions as $interaction)
-        {
+        foreach($interactions as $interaction) {
             $response = $em->getRepository('UJMExoBundle:Response')->findBy(array('interaction' => $interaction->getId()));
-            if (count($response) > 0)
-            {
+            if (count($response) > 0) {
                 $questionWithResponse[] = 1;
             }
-            else
-            {
+            else {
                 $questionWithResponse[] = 0;
             }
         }
@@ -112,8 +109,7 @@ class QuestionController extends Controller
     {
         $question = $this->controlUserQuestion($id);
 
-        if(count($question) > 0)
-        {
+        if(count($question) > 0) {
             $interaction = $this->getDoctrine()
                                    ->getEntityManager()
                                    ->getRepository('UJMExoBundle:Interaction')
@@ -121,8 +117,7 @@ class QuestionController extends Controller
 
             $type_inter = $interaction[0]->getType();
 
-            switch ($type_inter)
-            {
+            switch ($type_inter) {
                 case "InteractionQCM":
 
                     $response = new Response();
@@ -131,12 +126,10 @@ class QuestionController extends Controller
                                    ->getRepository('UJMExoBundle:InteractionQCM')
                                    ->getInteractionQCM($interaction[0]->getId());
 
-                    if($interactionQCM[0]->getShuffle())
-                    {
+                    if($interactionQCM[0]->getShuffle()) {
                         $interactionQCM[0]->shuffleChoices();
                     }
-                    else
-                    {
+                    else {
                         $interactionQCM[0]->sortChoices();
                     }
 
@@ -169,8 +162,7 @@ class QuestionController extends Controller
                     break;
             }
         }
-        else
-        {
+        else {
             return $this->redirect($this->generateUrl('question'));
         }
 
@@ -219,8 +211,7 @@ class QuestionController extends Controller
     {
         $question = $this->controlUserQuestion($id);
 
-        if(count($question) > 0)
-        {
+        if(count($question) > 0) {
             $interaction = $this->getDoctrine()
                                    ->getEntityManager()
                                    ->getRepository('UJMExoBundle:Interaction')
@@ -233,8 +224,7 @@ class QuestionController extends Controller
             $response = $em->getRepository('UJMExoBundle:Response')->findBy(array('interaction' => $interaction[0]->getId()));
             $nbResponses = count($response);
 
-            switch ($type_inter)
-            {
+            switch ($type_inter) {
                 case "InteractionQCM":
 
                     $interactionQCM = $this->getDoctrine()
@@ -282,8 +272,7 @@ class QuestionController extends Controller
                     break;
             }
         }
-        else
-        {
+        else {
             return $this->redirect($this->generateUrl('question'));
         }
         
@@ -332,8 +321,7 @@ class QuestionController extends Controller
     {
         $question = $this->controlUserQuestion($id);
 
-        if(count($question) > 0)
-        {
+        if(count($question) > 0) {
             $em = $this->getDoctrine()->getEntityManager();
 
             $eq = $this->getDoctrine()
@@ -341,8 +329,7 @@ class QuestionController extends Controller
                        ->getRepository('UJMExoBundle:ExerciseQuestion')
                        ->getExercises($id);
 
-            foreach($eq as $e)
-            {
+            foreach($eq as $e) {
                 $em->remove($e);
             }
 
@@ -355,8 +342,7 @@ class QuestionController extends Controller
 
             $type_inter = $interaction[0]->getType();
 
-            switch ($type_inter)
-            {
+            switch ($type_inter) {
                 case "InteractionQCM":
                     $interactionQCM = $this->getDoctrine()
                                            ->getEntityManager()
@@ -405,18 +391,15 @@ class QuestionController extends Controller
 
         $request = $this->container->get('request');
 
-        if($request->isXmlHttpRequest())
-        {
+        if($request->isXmlHttpRequest()) {
             $val_type = 0;
 
             $val_type = $request->request->get('indice_type');
             $exoID = $request->request->get('exercise');
 
-            if($val_type != 0)
-            {
+            if($val_type != 0) {
                 //index 1=Hole Question
-                if($val_type == 1)
-                {
+                if($val_type == 1) {
                     $entity = new InteractionHole();
                     $form   = $this->createForm(new InteractionHoleType($this->container->get('security.context')->getToken()->getUser()), $entity);
                     return $this->container->get('templating')->renderResponse('UJMExoBundle:InteractionHole:new.html.twig', array(
@@ -428,8 +411,7 @@ class QuestionController extends Controller
                 }                
                 
                 //index 1=QCM Question
-                if($val_type == 2)
-                {
+                if($val_type == 2) {
                     $entity = new InteractionQCM();
                     $form   = $this->createForm(new InteractionQCMType($this->container->get('security.context')->getToken()->getUser()), $entity);
                     return $this->container->get('templating')->renderResponse('UJMExoBundle:InteractionQCM:new.html.twig', array(
@@ -441,8 +423,7 @@ class QuestionController extends Controller
                 }                
                 
                 //index 1=Graphic Question
-                if($val_type == 3)
-                {
+                if($val_type == 3) {
                     $entity = new InteractionGraphic();
                     $form   = $this->createForm(new InteractionGraphicType($this->container->get('security.context')->getToken()->getUser()), $entity);
                     return $this->container->get('templating')->renderResponse('UJMExoBundle:InteractionGraphic:new.html.twig', array(
@@ -454,8 +435,7 @@ class QuestionController extends Controller
                 }
                 
                 //index 1=Open Question
-                if($val_type == 4)
-                {
+                if($val_type == 4) {
                     $entity = new InteractionOpen();
                     $form   = $this->createForm(new InteractionOpenType($this->container->get('security.context')->getToken()->getUser()), $entity);
                     return $this->container->get('templating')->renderResponse('UJMExoBundle:InteractionOpen:new.html.twig', array(
@@ -467,8 +447,7 @@ class QuestionController extends Controller
                 }                
                 
             }
-            else
-            {
+            else{
                 
             }          
         } 

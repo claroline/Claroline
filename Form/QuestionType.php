@@ -67,20 +67,7 @@ class QuestionType extends AbstractType
                                              )
                  )
             ->add('description', 'textarea', array('attr' => array('class' => 'tinymce', 'data-theme' => 'medium'), 'required' => false, 'label' => 'Question.description'))
-            //->add('dateCreate', 'date')
-            /*->add('dateCreate', 'date', array(
-                                                'widget' => 'single_text',
-                                                'input' => 'datetime',
-                                                'format' => 'dd/MM/yyyy',
-                                                'attr' => array('class' => 'date'),
-                                                ))*/
-            //->add('dateModify', 'date', array('required' => false))
-            //->add('locked', 'checkbox', array('required' => false))
-            ->add('model', 'checkbox', array('required' => false, 'label' => 'Question.model'))
-            //->add('expertise')
-            //->add('documents')
-            //->add('user', 'entity', array('class' => 'UJM\\ExoBundle\\Entity\\User',))
-        ;
+            ->add('model', 'checkbox', array('required' => false, 'label' => 'Question.model'));
     }
 
     public function getName()

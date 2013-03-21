@@ -45,8 +45,7 @@ class TypeQCMType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('value')
-        ;
+            ->add('value');
     }
 
     public function getName()

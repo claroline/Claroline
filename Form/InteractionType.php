@@ -65,9 +65,7 @@ class InteractionType extends AbstractType
             ->add('hints', 'collection', array('type'      => new HintType,
                                               'prototype'  => true,
                                               'allow_add'  => true ,
-                                              'allow_delete' => true))
-            //->add('question')
-        ;
+                                              'allow_delete' => true));
     }
 
     public function getName()

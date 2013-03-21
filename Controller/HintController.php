@@ -75,22 +75,18 @@ class HintController extends Controller
        $request = $this->container->get('request');
        $session = $this->getRequest()->getSession();
 
-        if($request->isXmlHttpRequest())
-        {
+        if($request->isXmlHttpRequest()) {
             $id = $request->request->get('id');
             
             $em = $this->getDoctrine()->getEntityManager();
             $entity = $em->getRepository('UJMExoBundle:Hint')->find($id);
-            if (!$entity)
-            {
+            if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Hint entity.');
             } 
             $deleteForm = $this->createDeleteForm($id);
 
-            if($request->request->get('paper') == null)
-            {
-                if ( !$session->get('penalties') )
-                {
+            if($request->request->get('paper') == null) {
+                if ( !$session->get('penalties') ) {
                     $penalties = array();
                     $session->set('penalties', $penalties);
                 }
@@ -98,8 +94,7 @@ class HintController extends Controller
                 $penalties[$id] = $entity->getPenality();
                 $session->set('penalties', $penalties);
             }
-            else
-            {
+            else {
                 $lhp = new LinkHintPaper($entity, $em->getRepository('UJMExoBundle:Paper')->find($session->get('paper')));
                 $lhp->setView(1);
                 $em->persist($lhp);
@@ -112,8 +107,7 @@ class HintController extends Controller
 
                     ));                                         
         }
-        else
-        {
+        else {
             return 0;
         } 
     }

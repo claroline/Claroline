@@ -1,29 +1,27 @@
-function cherche_type(Warning_change_type_q, exoID, afficher_form_type )
-{
-    if (($('#formulaire_interactions').find('div').length) > 0) 
+function cherche_type(warningChangeTypeQ, exoID, displayFormType ) {
+    if (($("#formulaire_interactions").find("div").length) > 0) 
     {
-        if(confirm(Warning_change_type_q))
+        if(confirm(warningChangeTypeQ))
         {
-            cherche_type_ajax (exoID, afficher_form_type);
+            cherche_type_ajax (exoID, displayFormType);
         }
     }
     else
     {
-        cherche_type_ajax (exoID, afficher_form_type);
+        cherche_type_ajax (exoID, displayFormType);
     }
 }
 
-function cherche_type_ajax (exoID, afficher_form_type)
-{
+function cherche_type_ajax (exoID, displayFormType) {
     var indice_type = $("#menu_type_question option:selected").index();
 
     $.ajax({
         type: "POST",
-        url: afficher_form_type,
+        url: displayFormType,
         data: { indice_type: indice_type, exercise: exoID },
         cache: false,
         success: function(data){
-        $('#formulaire_interactions').html(data);
+        $("#formulaire_interactions").html(data);
         }
     });    
 }

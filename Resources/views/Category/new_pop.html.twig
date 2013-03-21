@@ -45,11 +45,11 @@
 
 <script type="text/javascript">
 
-    $('#submit_category').click(function() {
+    $("#submit_category").click(function() {
         var nom_cat = $("#ujm_exobundle_categorytype_value").val();
 
         var exists = false;
-        $("*[id$='_interaction_question_category option']").each(function(){
+        $("*[id$='_interaction_question_category option']").each(function() {
             if (this.text == nom_cat) {
                 exists = true;
                 return false;
@@ -57,11 +57,10 @@
         });
 
 
-        if (exists){
+        if (exists) {
             alert("existe");
         }
-        else
-        {
+        else {
         //apler l'action create2 avec ajax
                     $.ajax({
                     type: "POST",

@@ -50,10 +50,7 @@ class ChoiceType extends AbstractType
             ->add('weight', 'text', array('required' => false, 'label' => ' '))
             ->add('feedback', 'textarea', array('required' => false, 'label' => ' '))
             ->add('rightResponse', 'checkbox', array('required' => false, 'label' => ' '))
-            ->add('positionForce', 'checkbox', array('required' => false, 'label' => ' '))
-            
-            //->add('interactionQCM')
-        ;
+            ->add('positionForce', 'checkbox', array('required' => false, 'label' => ' '));
     }
 
     public function getName()

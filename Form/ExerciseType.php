@@ -60,8 +60,8 @@ class ExerciseType extends AbstractType
                                                                                                           '1' => 'At the end of assessment',
                                                                                                           '2' => 'After the last attempt',
                                                                                                           '3' => 'From',
-                                                                                                          '4' => 'Never'
-            )))
+                                                                                                          '4' => 'Never')
+                 ))
             ->add('dateCorrection', 'datetime', array(
                                                 'widget' => 'single_text',
                                                 'input' => 'datetime',
@@ -71,8 +71,8 @@ class ExerciseType extends AbstractType
                                                 ))
             ->add('markMode', 'choice', array('label' => 'Availability of score', 'choices' => array(
                                                                                                '1' => 'At the same time that the correction',
-                                                                                               '2' => 'At the end of assessment'
-            )))
+                                                                                               '2' => 'At the end of assessment')
+                ))
             ->add('start_date', 'datetime', array(
                                                 'widget' => 'single_text',
                                                 'input' => 'datetime',
@@ -89,10 +89,7 @@ class ExerciseType extends AbstractType
                                                 'label' => 'end_date'
                                                 ))
             ->add('dispButtonInterrupt', 'checkbox', array('required' => false, 'label' => 'Test exit'))
-            ->add('lockAttempt', 'checkbox', array('required' => false, 'label' => 'Lock attempt'))
-            //->add('groupes')
-            //->add('questions')
-        ;
+            ->add('lockAttempt', 'checkbox', array('required' => false, 'label' => 'Lock attempt'));
     }
 
     public function getName()

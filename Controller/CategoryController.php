@@ -110,7 +110,7 @@ class CategoryController extends Controller
      * Displays a form to create a new Category entity in AJAX window.
      *
      */
-     public function new_popAction()
+    public function new_popAction()
     {
         $entity = new Category();
         $form   = $this->createForm(new CategoryType(), $entity);
@@ -158,8 +158,7 @@ class CategoryController extends Controller
     {
        $request = $this->container->get('request');
 
-        if($request->isXmlHttpRequest())
-        {
+        if($request->isXmlHttpRequest()) {
             $val = $request->request->get('value');
             $entity  = new Category();
                 $entity->setValue($val);

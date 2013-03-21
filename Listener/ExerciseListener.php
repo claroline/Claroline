@@ -80,7 +80,7 @@ class ExerciseListener extends ContainerAware
         $event->setErrorFormContent($content);
         $event->stopPropagation();
     }
-    
+
     public function onOpen(OpenResourceEvent $event)
     {
         //Redirection to the controller.
@@ -90,18 +90,18 @@ class ExerciseListener extends ContainerAware
         $event->setResponse(new RedirectResponse($route));
         $event->stopPropagation();
     }
-    
+
     public function onDelete(DeleteResourceEvent $event)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $em->remove($event->getResource());
         $event->stopPropagation();
     }
-    
+
     public function onDisplayDesktop(DisplayToolEvent $event)
     {
         $response = $this->container->get('http_kernel')->forward('UJMExoBundle:Question:index', array());
         $event->setContent($response);
-        
+    
     }
 }
