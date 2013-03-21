@@ -205,7 +205,7 @@ class ToolListener extends ContainerAware
         $createdResources[$config['root_id']] = $root;
 
         foreach ($config['directory'] as $resource) {
-            $newEvent = new ImportResourceTemplateEvent($resource, $root, $event->getArchive());
+            $newEvent = new ImportResourceTemplateEvent($resource, $root, $event->getArchive(), $event->getUser());
             $ed->dispatch("import_{$resource['type']}_template", $newEvent);
 
             $childResources = $newEvent->getCreatedResources();
@@ -216,7 +216,7 @@ class ToolListener extends ContainerAware
         }
 
         foreach ($config['resources'] as $resource) {
-            $newEvent = new ImportResourceTemplateEvent($resource, $root, $event->getArchive());
+            $newEvent = new ImportResourceTemplateEvent($resource, $root, $event->getArchive(), $event->getUser());
             $newEvent->setCreatedResources($createdResources);
             $ed->dispatch("import_{$resource['type']}_template", $newEvent);
             $resourceEntity = $newEvent->getResource();
@@ -227,7 +227,7 @@ class ToolListener extends ContainerAware
                     $resourceEntity,
                     $createdResources[$resource['parent']],
                     $resource['type'],
-                    $this->container->get('security.context')->getToken()->getUser(),
+                    $event->getUser(),
                     $resource['perms']
                 );
                 $createdResources[$resource['id']] = $resourceEntity;

@@ -10,18 +10,18 @@ claro_execute:
     pattern: /execute
     defaults: { _controller: 'ClarolineCoreBundle:Install:execute' }
     requirements: { _method: post }
-claro_setup:
-    pattern: /
-    defaults: { _controller: 'ClarolineCoreBundle:Install:index' }
 claro_permission:
     pattern: /permission
     defaults: { _controller: 'ClarolineCoreBundle:Install:permission' }
+claro_setup:
+    pattern: /
+    defaults: { _controller: 'ClarolineCoreBundle:Install:index' }
 claro_showAdminForm:
     pattern: /step_3
     defaults: { _controller: 'ClarolineCoreBundle:Install:showAdminForm' }
     requirements: { _method: post }
 claro_showDbForm:
-    pattern: /step_2/{lg}
+    pattern: '/step_2/{lg}'
     defaults: { _controller: 'ClarolineCoreBundle:Install:showDbForm' }
 claro_sucess:
     pattern: /sucess
