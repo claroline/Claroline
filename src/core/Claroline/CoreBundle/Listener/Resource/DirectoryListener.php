@@ -122,7 +122,7 @@ class DirectoryListener extends ContainerAware
             $directory,
             $event->getParent()->getId(),
             $config['type'],
-            $this->container->get('security.context')->getToken()->getUser(),
+            $event->getUser(),
             $config['perms']
         );
         $ed = $this->container->get('event_dispatcher');
@@ -132,7 +132,8 @@ class DirectoryListener extends ContainerAware
             $newEvent = new ImportResourceTemplateEvent(
                 $child,
                 $directory,
-                $event->getArchive()
+                $event->getArchive(),
+                $event->getUser()
             );
             $newEvent->setCreatedResources($createdResources);
             $ed->dispatch("import_{$child['type']}_template", $newEvent);
