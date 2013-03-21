@@ -91,7 +91,6 @@
 
         $('.delete-msg').click(function () {
             $('#validation-box').modal('show');
-            $('#validation-box-body').html('delete');
         });
 
         $('.mark-as-read').live('click', function (e) {
