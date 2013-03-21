@@ -285,12 +285,20 @@ class WorkspaceController extends Controller
                 }
             }
 
-            if ($foundRole == null) {
+            $isAdmin = $this->get('security.context')->getToken()->getUser()->hasRole('ROLE_ADMIN');
+
+            if ($foundRole === null && !$isAdmin) {
                 throw new AccessDeniedHttpException('No role found in that workspace');
             }
 
-            $openedTool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-                ->findByRolesAndWorkspace(array($foundRole->getRole()), $workspace, true);
+            if ($isAdmin) {
+                //admin always open the home.
+                $openedTool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
+                    ->findBy(array('name' => 'home'));
+            } else {
+                $openedTool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
+                    ->findByRolesAndWorkspace(array($foundRole->getRole()), $workspace, true);
+            }
 
         } else {
             $foundRole = 'ROLE_ANONYMOUS';
