@@ -174,13 +174,21 @@ class WorkspaceController extends Controller
         $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
             ->findByRolesAndWorkspace($currentRoles, $workspace, true);
         $toolsWithTranslation = array();
+
         foreach ($tools as $tool) {
             $toolWithTranslation['tool'] = $tool;
+            $found = false;
             foreach ($workspaceOrderTools as $workspaceOrderedTool) {
                 if ($workspaceOrderedTool->getTool() === $tool) {
                     $toolWithTranslation['translation_key'] = $workspaceOrderedTool->getTranslationKey();
+                    $found = true;
                 }
             }
+
+            if (!$found) {
+                $toolWithTranslation['translation_key'] = $tool->getName();
+            }
+
             $toolsWithTranslation[] = $toolWithTranslation;
         }
 
