@@ -30,8 +30,8 @@ class Exporter
         $description = array();
         $roleRepo = $this->em->getRepository('ClarolineCoreBundle:Role');
         $workspaceTools = $this->em
-                ->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
-                ->findBy(array('workspace' => $workspace));
+            ->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
+            ->findBy(array('workspace' => $workspace));
         $roles = $roleRepo->findByWorkspace($workspace);
         $root = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->findWorkspaceRoot($workspace);

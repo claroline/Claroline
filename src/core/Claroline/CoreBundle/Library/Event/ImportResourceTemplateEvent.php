@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Library\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\User;
 
 class ImportResourceTemplateEvent extends Event
 {
@@ -12,12 +13,14 @@ class ImportResourceTemplateEvent extends Event
     private $archive;
     private $resource;
     private $createdResources;
+    private $user;
 
-    public function __construct(array $config, AbstractResource $parent, \ZipArchive $archive)
+    public function __construct(array $config, AbstractResource $parent, \ZipArchive $archive, User $user)
     {
         $this->parent = $parent;
         $this->config = $config;
         $this->archive = $archive;
+        $this->user = $user;
         $this->createdResources = array();
     }
 
@@ -70,5 +73,10 @@ class ImportResourceTemplateEvent extends Event
     public function getCreatedResources()
     {
         return $this->createdResources;
+    }
+
+    public function getUser()
+    {
+        return $this->user;
     }
 }
