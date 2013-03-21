@@ -90,7 +90,6 @@
 
         $('.delete-msg').click(function () {
             $('#validation-box').modal('show');
-            $('#validation-box-body').html('delete');
         });
 
         $('#modal-valid-button').click(function () {
