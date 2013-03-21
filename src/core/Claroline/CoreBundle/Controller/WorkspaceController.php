@@ -174,13 +174,21 @@ class WorkspaceController extends Controller
         $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
             ->findByRolesAndWorkspace($currentRoles, $workspace, true);
         $toolsWithTranslation = array();
+
         foreach ($tools as $tool) {
             $toolWithTranslation['tool'] = $tool;
+            $found = false;
             foreach ($workspaceOrderTools as $workspaceOrderedTool) {
                 if ($workspaceOrderedTool->getTool() === $tool) {
                     $toolWithTranslation['translation_key'] = $workspaceOrderedTool->getTranslationKey();
+                    $found = true;
                 }
             }
+
+            if (!$found) {
+                $toolWithTranslation['translation_key'] = $tool->getName();
+            }
+
             $toolsWithTranslation[] = $toolWithTranslation;
         }
 
@@ -211,6 +219,12 @@ class WorkspaceController extends Controller
         $event = new DisplayToolEvent($workspace);
         $eventName = 'open_tool_workspace_'.$toolName;
         $this->get('event_dispatcher')->dispatch($eventName, $event);
+
+        if (is_null($event->getContent())) {
+            throw new \Exception(
+                "Tool '{$toolName}' didn't return any Response for tool event '{$eventName}'."
+            );
+        }
 
         return new Response($event->getContent());
     }
@@ -271,12 +285,20 @@ class WorkspaceController extends Controller
                 }
             }
 
-            if ($foundRole == null) {
+            $isAdmin = $this->get('security.context')->getToken()->getUser()->hasRole('ROLE_ADMIN');
+
+            if ($foundRole === null && !$isAdmin) {
                 throw new AccessDeniedHttpException('No role found in that workspace');
             }
 
-            $openedTool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-                ->findByRolesAndWorkspace(array($foundRole->getRole()), $workspace, true);
+            if ($isAdmin) {
+                //admin always open the home.
+                $openedTool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
+                    ->findBy(array('name' => 'home'));
+            } else {
+                $openedTool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
+                    ->findByRolesAndWorkspace(array($foundRole->getRole()), $workspace, true);
+            }
 
         } else {
             $foundRole = 'ROLE_ANONYMOUS';

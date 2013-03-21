@@ -25,3 +25,6 @@
 [submodule "src/plugin/Imavia/FacetProfileBundle"]
 	path = src/plugin/Imavia/FacetProfileBundle
 	url = https://github.com/Imavia-dev/FacetProfileBundle.git
+[submodule "src/plugin/ICAP/ReferenceBundle"]
+	path = src/plugin/ICAP/ReferenceBundle
+	url = https://github.com/iCAPLyon1/ReferenceBundle.git

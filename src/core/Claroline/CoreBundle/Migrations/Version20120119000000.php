@@ -486,7 +486,13 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable('claro_text');
         $this->addId($table);
         $table->addColumn('version', 'integer');
-        $table->addColumn('current_text_id', 'integer');
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_resource'),
+            array('id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
 
         $this->storeTable($table);
     }
@@ -777,8 +783,8 @@ class Version20120119000000 extends BundleMigration
         $this->addId($table);
         $table->addColumn('name', 'string');
         $table->addColumn('class', 'string');
-        $table->addColumn('is_displayable_in_workspace', 'integer');
-        $table->addColumn('is_displayable_in_desktop', 'integer');
+        $table->addColumn('is_displayable_in_workspace', 'boolean');
+        $table->addColumn('is_displayable_in_desktop', 'boolean');
         $table->addColumn('is_workspace_required', 'boolean');
         $table->addColumn('is_desktop_required', 'boolean');
         $table->addColumn('plugin_id', 'integer', array('notnull' => false));

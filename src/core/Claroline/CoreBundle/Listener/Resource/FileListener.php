@@ -158,7 +158,6 @@ class FileListener extends ContainerAware
         $hash = $resource->getHashName();
         $config['type'] = 'file';
         $config['hashname'] = $hash;
-        $config['original_name'] = $resource->getName();
         $event->getArchive()->addFile(
             $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $hash,
             $hash
@@ -172,8 +171,7 @@ class FileListener extends ContainerAware
         $ds = DIRECTORY_SEPARATOR;
         $config = $event->getConfig();
         $file = new File();
-        $file->setName($config['original_name']);
-        $extension = pathinfo($config['original_name'], PATHINFO_EXTENSION);
+        $extension = pathinfo($config['name'], PATHINFO_EXTENSION);
         $hashName = $this->container->get('claroline.resource.utilities')->generateGuid() . "." . $extension;
         $content = $event->getArchive()->getFromName($config['hashname']);
         $physicalPath = $this->container->getParameter('claroline.files.directory') . $ds . $hashName;
@@ -185,8 +183,7 @@ class FileListener extends ContainerAware
         $file->setHashName($hashName);
         $guesser = MimeTypeGuesser::getInstance();
         $file->setMimeType($guesser->guess($physicalPath));
-        $manager = $this->container->get('claroline.resource.manager');
-        $manager->create($file, $event->getParent()->getId(), 'file');
+        $event->setResource($file);
         $event->stopPropagation();
     }
 

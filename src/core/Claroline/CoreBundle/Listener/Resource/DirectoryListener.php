@@ -81,24 +81,31 @@ class DirectoryListener extends ContainerAware
         $em = $this->container->get('doctrine.orm.entity_manager');
         $resourceRepo = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
         $resource = $event->getResource();
+        //@todo one request to retrieve every directory and not needing a condition.
         $children = $resourceRepo->findChildren($resource, array('ROLE_ADMIN'));
         $dataChildren = array();
+        $ed = $this->container->get('event_dispatcher');
 
         foreach ($children as $child) {
-            $ed = $this->container->get('event_dispatcher');
-            $newEvent = new ExportResourceTemplateEvent($resourceRepo->find($child['id']), $event->getArchive());
-            $ed->dispatch("export_{$child['type']}_template", $newEvent);
-            $descr = $newEvent->getConfig();
-
-            if (count($descr) > 0) {
+            if ($child['type'] === 'directory') {
+                $newEvent = new ExportResourceTemplateEvent($resourceRepo->find($child['id']), $event->getArchive());
+                $ed->dispatch("export_{$child['type']}_template", $newEvent);
+                $descr = $newEvent->getConfig();
                 $dataChildren[] = $descr;
             }
         }
 
-        $config = array('type' => 'directory', 'name' => $resource->getName());
+        $config = array('type' => 'directory', 'name' => $resource->getName(), 'id' => $resource->getId());
+        $config['children'] = $dataChildren;
+        $roles = $em->getRepository('ClarolineCoreBundle:Role')->findByWorkspace($resource->getWorkspace());
 
-        if (count($dataChildren) > 0) {
-            $config['children'] = $dataChildren;
+        foreach ($roles as $role) {
+            $perms = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
+                ->findMaximumRights(array($role->getName()), $resource);
+            $perms['canCreate'] = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
+                ->findCreationRights(array($role->getName()), $resource);
+
+            $config['perms'][rtrim(str_replace(range(0, 9), '', $role->getName()), '_')] = $perms;
         }
 
         $event->setConfig($config);
@@ -111,18 +118,34 @@ class DirectoryListener extends ContainerAware
         $manager = $this->container->get('claroline.resource.manager');
         $directory = new Directory();
         $directory->setName($config['name']);
-        $manager->create($directory, $event->getParent()->getId(), 'directory');
+        $manager->create(
+            $directory,
+            $event->getParent()->getId(),
+            $config['type'],
+            $event->getUser(),
+            $config['perms']
+        );
         $ed = $this->container->get('event_dispatcher');
+        $createdResources[$config['id']] = $directory;
 
-        if (isset($config['children'])) {
-            foreach ($config['children'] as $child) {
-                $newEvent = new ImportResourceTemplateEvent(
-                    $child,
-                    $directory,
-                    $event->getArchive()
-                );
-                $ed->dispatch("import_{$child['type']}_template", $newEvent);
+        foreach ($config['children'] as $child) {
+            $newEvent = new ImportResourceTemplateEvent(
+                $child,
+                $directory,
+                $event->getArchive(),
+                $event->getUser()
+            );
+            $newEvent->setCreatedResources($createdResources);
+            $ed->dispatch("import_{$child['type']}_template", $newEvent);
+
+            $childResources = $newEvent->getCreatedResources();
+
+            foreach ($childResources as $key => $value) {
+                $createdResources[$key] = $value;
             }
         }
+
+        $event->setCreatedResources($createdResources);
+        $event->stopPropagation();
     }
 }
