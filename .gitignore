@@ -1,7 +1,6 @@
 !placeholder
 !.gitempty
 !templates/default.zip
-!templates/fougères.zip
 catalog.xml
 nbproject/*
 app/cache/*
