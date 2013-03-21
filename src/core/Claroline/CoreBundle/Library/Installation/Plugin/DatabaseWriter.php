@@ -203,6 +203,7 @@ class DatabaseWriter
         $resourceType->setName($resource['name']);
         $resourceType->setVisible($resource['is_visible']);
         $resourceType->setBrowsable($resource['is_browsable']);
+        $resourceType->setExportable($resource['is_exportable']);
         $resourceType->setPlugin($pluginEntity);
         $resourceClass = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findOneBy(array('class' => $resource['class']));

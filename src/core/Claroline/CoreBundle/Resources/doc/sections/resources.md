@@ -73,6 +73,9 @@ This file will be parsed by the plugin installator to install your plugin and cr
             is_visible: true
             # Is it possible to navigate within your resource (does it have sub-resources ?)
             is_browsable: true
+            # Do you want your resource to be exported as a part of a workspace model ?
+            # Note: the default value of this parameter is "false"
+            is_exportable: false
             # Icon for your resource.
             # They must be stored in the Resource/public/images/icon
             icon: res_text.png
@@ -374,3 +377,8 @@ COPY => parent is required
 Rights are defined for the first time at the workspace root at the workspace creation.
 When a resource is created, the parent rights are copied to the children rights (same when a resource is moved
 or copied).
+
+## Resource export.
+
+### @see forum bundle. No doc yet (import/export_template events). These events need to be caught
+if the resource is exportable.
