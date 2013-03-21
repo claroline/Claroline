@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Resource\Revision;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * TextManager will redirect to this controller once a directory is "open" or "edit".
@@ -229,6 +230,11 @@ class TextController extends Controller
         $old->setVersion($version);
         $em->flush();
 
-        return new Response('edited');
+        $route = $this->get('router')->generate(
+            'claro_resource_open',
+            array('resourceType' => 'text', 'resourceId' => $textId)
+        );
+
+        return new RedirectResponse($route);
     }
 }

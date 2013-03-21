@@ -67,7 +67,7 @@ class Creator
         $toolsConfig = $config->getToolsConfiguration();
 
         foreach ($toolsConfig as $name => $conf) {
-            $event = new ImportWorkspaceEvent($workspace, $conf, $archive, $rootDir);
+            $event = new ImportWorkspaceEvent($workspace, $conf, $archive, $rootDir, $manager);
             $this->ed->dispatch('import_workspace_'.$name, $event);
         }
 

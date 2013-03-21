@@ -14,7 +14,7 @@ high: "Haute"
 low: "Basse"
 medium: "Normale"
 new entry: "Nouvelle entrée"
-non plan task: 'Taches non planifiées'
+task: 'Taches'
 no event found: "Pas d'évènements"
 start date: "Date début"
 title: "Titre de l'évènement"
