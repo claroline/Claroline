@@ -106,19 +106,14 @@ class ToolListener extends ContainerAware
         $config['root_id'] = $root->getId();
 
         $ed = $this->container->get('event_dispatcher');
-        //@todo request to retreive only directories so the if condition is not needed.
-        $children = $resourceRepo->findChildren($root, array('ROLE_ADMIN'));
-        $config['directory'] = array();
+        $dirType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('directory');
+        $children = $resourceRepo->findBy(array('parent' => $root, 'resourceType' => $dirType));
 
         foreach ($children as $child) {
-            $newEvent = new ExportResourceTemplateEvent($resourceRepo->find($child['id']), $event->getArchive());
-            $ed->dispatch("export_{$child['type']}_template", $newEvent);
+            $newEvent = new ExportResourceTemplateEvent($child, $event->getArchive());
+            $ed->dispatch("export_directory_template", $newEvent);
             $dataChildren = $newEvent->getConfig();
-
-            //permissions were set in the listener.
-            if ($dataChildren['type'] === 'directory') {
-                $config['directory'][] = $dataChildren;
-            }
+            $config['directory'][] = $dataChildren;
         }
 
         $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
