@@ -55,4 +55,11 @@ claro_workspace_export:
     pattern: '/{workspaceId}/export'
     defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceExport' }
     requirements: { _method: POST }
-
+claro_workspace_order_tool_edit_form:
+    pattern: '/{workspaceId}/tools/{workspaceOrderToolId}/editform'
+    defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceOrderToolEditForm' }
+    requirements: { _method: GET }
+claro_workspace_order_tool_edit:
+    pattern: '/{workspaceId}/tools/{workspaceOrderToolId}/edit'
+    defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceOrderToolEdit' }
+    requirements: { _method: POST }

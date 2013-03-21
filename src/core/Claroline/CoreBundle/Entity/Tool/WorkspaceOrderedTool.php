@@ -53,6 +53,11 @@ class WorkspaceOrderedTool
      */
     protected $translationKey;
 
+    public function getId()
+    {
+        return $this->id;
+    }
+
     public function setWorkspace($ws)
     {
         $this->workspace = $ws;

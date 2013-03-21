@@ -13,6 +13,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Claroline\CoreBundle\Form\WorkspaceEditType;
+use Claroline\CoreBundle\Form\WorkspaceOrderToolEditType;
 use Claroline\CoreBundle\Form\WorkspaceTemplateType;
 
 class ParametersController extends Controller
@@ -339,10 +340,8 @@ class ParametersController extends Controller
         $wsRoles = $em->getRepository('ClarolineCoreBundle:Role')->findByWorkspace($workspace);
         $anonRole = $em->getRepository('ClarolineCoreBundle:Role')->findBy(array('name' => 'ROLE_ANONYMOUS'));
         $wsRoles = array_merge($wsRoles, $anonRole);
-        $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->findBy(array('isDisplayableInWorkspace' => true));
         $wot = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
-            ->findBy(array('workspace' => $workspaceId));
+            ->findBy(array('workspace' => $workspaceId), array('order' => 'ASC'));
 
         /*
          * Creates an easy to use array with tools visibility permissons.
@@ -379,7 +378,7 @@ class ParametersController extends Controller
                 $roleVisibility[$role->getId()] = $isVisible;
             }
             $toolsPermissions[$orderedTool->getOrder()] = array(
-                'tool' => $orderedTool->getTool(),
+                'tool' => $orderedTool,
                 'visibility' => $roleVisibility
             );
         }
@@ -388,11 +387,39 @@ class ParametersController extends Controller
 
         //this is the missing part of the array
         $toFill = array();
+        //default display_order if there is no WorkspaceOrderTool
+        $nextDisplayOrder = 1;
+
+        if (!empty($toolsPermissions)) {
+            //the next display_order will be the incrementation of the last WorkspaceOrderTool display_order
+            $nextDisplayOrder = $orderedTool->getOrder() + 1;
+        }
+
         foreach ($undisplayedTools as $undisplayedTool) {
+            $wot = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
+                ->findOneBy(array('workspace' => $workspaceId, 'tool' => $undisplayedTool->getId()));
+
+            //create a WorkspaceOrderedTool for each Tool that hasn't already one
+            if ($wot === null) {
+                $wot = new WorkspaceOrderedTool();
+                $wot->setOrder($nextDisplayOrder++);
+                $wot->setTool($undisplayedTool);
+                $wot->setWorkspace($workspace);
+                $wot->setTranslationKey(
+                    $this->container->get('translator')->trans(
+                        $undisplayedTool->getName(),
+                        array(),
+                        'tools'
+                    )
+                );
+                $em->persist($wot);
+                $em->flush();
+            }
+
             foreach ($wsRoles as $role) {
                 $roleVisibility[$role->getId()] = false;
             }
-            $toFill[] = array('tool' => $undisplayedTool, 'visibility' => $roleVisibility);
+            $toFill[] = array('tool' => $wot, 'visibility' => $roleVisibility);
         }
 
         $toolsPermissions = $this->arrayFill($toolsPermissions, $toFill);
@@ -402,44 +429,8 @@ class ParametersController extends Controller
             array(
                 'roles' => $wsRoles,
                 'workspace' => $workspace,
-                'workspaceTools' => $tools,
                 'toolPermissions' => $toolsPermissions
             )
-        );
-    }
-
-    public function workspaceToolsParametersAction($workspaceId, $roleName)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-        $role = $em->getRepository('ClarolineCoreBundle:Role')->findOneBy(array('name' => $roleName));
-
-        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
-            throw new AccessDeniedHttpException();
-        }
-
-        $workspaceTools = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceToolRole')
-            ->findBy(array('workspace' => $workspace, 'role' => $role));
-
-        $orderedToolList = array();
-
-        foreach ($workspaceTools as $workspaceTool) {
-            $workspaceTool->getTool()->setVisible(true);
-            $orderedToolList[$workspaceTool->getOrder()] = $workspaceTool->getTool();
-        }
-
-        $undisplayedTools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->findByRolesAndWorkspace(array($roleName), $workspace, false);
-
-        foreach ($undisplayedTools as $tool) {
-            $tool->setVisible(false);
-        }
-
-        $tools = $tools = $this->arrayFill($orderedToolList, $undisplayedTools);
-
-        return $this->render(
-            'ClarolineCoreBundle:Tool\workspace\parameters:tool_parameters.html.twig',
-            array('tools' => $tools, 'workspace' => $workspace, 'role' => $role)
         );
     }
 
@@ -738,8 +729,7 @@ class ParametersController extends Controller
 
         return $this->render(
             'ClarolineCoreBundle:Tool\workspace\parameters:workspace_edit.html.twig',
-            array('form' => $form->createView(),
-                  'workspace' => $workspace)
+            array('form' => $form->createView(), 'workspace' => $workspace)
         );
     }
 
@@ -773,8 +763,49 @@ class ParametersController extends Controller
 
         return $this->render(
             'ClarolineCoreBundle:Tool\workspace\parameters:workspace_edit.html.twig',
-            array('form' => $form->createView(),
-                  'workspace' => $workspace)
+            array('form' => $form->createView(), 'workspace' => $workspace)
+        );
+    }
+
+    public function workspaceOrderToolEditFormAction($workspaceId, $workspaceOrderToolId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+        $wot = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')->find($workspaceOrderToolId);
+
+        $form = $this->createForm(new WorkspaceOrderToolEditType(), $wot);
+
+        return $this->render(
+            'ClarolineCoreBundle:Tool\workspace\parameters:workspace_order_tool_edit.html.twig',
+            array('form' => $form->createView(), 'workspace' => $workspace, 'wot' => $wot)
+        );
+    }
+
+    public function workspaceOrderToolEditAction($workspaceId, $workspaceOrderToolId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+        $wot = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')->find($workspaceOrderToolId);
+
+        $form = $this->createForm(new WorkspaceOrderToolEditType(), $wot);
+        $request = $this->getRequest();
+        $form->bind($request);
+
+        if ($form->isValid()) {
+            $em->persist($wot);
+            $em->flush();
+
+            return $this->redirect(
+                $this->generateUrl(
+                    'claro_workspace_tools_roles',
+                    array('workspaceId' => $workspaceId)
+                )
+            );
+        }
+
+        return $this->render(
+            'ClarolineCoreBundle:Tool\workspace\parameters:workspace_order_tool_edit.html.twig',
+            array('form' => $form->createView(), 'workspace' => $workspace, 'wot' => $wot)
         );
     }
 }
