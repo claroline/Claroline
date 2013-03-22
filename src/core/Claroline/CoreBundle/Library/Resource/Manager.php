@@ -97,7 +97,7 @@ class Manager
         } else {
             $this->setResourceRights($resource, $rights);
         }
-        
+
         $this->em->flush();
         $event = new ResourceLogEvent($resource, ResourceLogEvent::CREATE_ACTION);
         $this->ed->dispatch('log_resource', $event);
@@ -151,10 +151,7 @@ class Manager
             $this->em->remove($resource);
         } else {
             if ($resource->getResourceType()->getName() !== 'directory') {
-                $eventName = $this->ut->normalizeEventName(
-                    'delete', $resource->getResourceType()->getName()
-                );
-
+                $eventName = 'delete_'.$resource->getResourceType()->getName();
                 $event = new DeleteResourceEvent($resource);
                 $this->ed->dispatch($eventName, $event);
                 $logEvent = new ResourceLogEvent($resource, ResourceLogEvent::DELETE_ACTION);
@@ -266,7 +263,7 @@ class Manager
             $resourceCopy->setResourceType($dirType);
         } else {
             $event = new CopyResourceEvent($originalResource);
-            $eventName = $this->ut->normalizeEventName('copy', $originalResource->getResourceType()->getName());
+            $eventName = 'copy_' . $originalResource->getResourceType()->getName();
             $this->ed->dispatch($eventName, $event);
             $resourceCopy = $event->getCopy();
             if ($resourceCopy === null) {

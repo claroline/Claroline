@@ -228,7 +228,7 @@ class ResourceType
         $this->isExportable = $isExportable;
     }
 
-    public function getExportable()
+    public function isExportable()
     {
         return $this->isExportable;
     }

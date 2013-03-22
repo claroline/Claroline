@@ -9,7 +9,7 @@ use Claroline\CoreBundle\Library\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
-use Claroline\CoreBundle\Library\Event\ExportResourceEvent;
+use Claroline\CoreBundle\Library\Event\DownloadResourceEvent;
 use Claroline\CoreBundle\Library\Event\PlayFileEvent;
 use Claroline\CoreBundle\Library\Event\ExportResourceTemplateEvent;
 use Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent;
@@ -92,7 +92,7 @@ class FileListener extends ContainerAware
         $event->stopPropagation();
     }
 
-    public function onExport(ExportResourceEvent $event)
+    public function onDownload(DownloadResourceEvent $event)
     {
         $file = $event->getResource();
         $hash = $file->getHashName();

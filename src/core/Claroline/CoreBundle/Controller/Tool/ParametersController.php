@@ -112,7 +112,7 @@ class ParametersController extends Controller
         $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
             ->find($widgetId);
         $event = new ConfigureWidgetWorkspaceEvent($workspace);
-        $eventName = strtolower("widget_{$widget->getName()}_configuration_workspace");
+        $eventName = "widget_{$widget->getName()}_configuration_workspace";
         $this->get('event_dispatcher')->dispatch($eventName, $event);
         if ($event->getContent() !== '') {
             return $this->render(
@@ -192,7 +192,7 @@ class ParametersController extends Controller
         $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
             ->find($widgetId);
         $event = new ConfigureWidgetDesktopEvent($user);
-        $eventName = strtolower("widget_{$widget->getName()}_configuration_desktop");
+        $eventName = "widget_{$widget->getName()}_configuration_desktop";
         $this->get('event_dispatcher')->dispatch($eventName, $event);
 
         if ($event->getContent() !== '') {

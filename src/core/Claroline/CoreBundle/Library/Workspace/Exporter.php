@@ -51,6 +51,7 @@ class Exporter
         }
 
         foreach ($workspaceTools as $workspaceTool) {
+
             $tool = $workspaceTool->getTool();
             $roles = $roleRepo->findByWorkspaceAndTool($workspace, $tool);
             $arToolRoles = array();
@@ -62,9 +63,17 @@ class Exporter
             $arTools[$tool->getName()]['perms'] = $arToolRoles;
             $arTools[$tool->getName()]['translation_key'] = $workspaceTool->getTranslationKey();
 
-            $event = new ExportWorkspaceEvent($workspace, $archive);
-            $this->ed->dispatch('export_workspace_'.$tool->getName(), $event);
-            if ($event->getConfig() !== null) {
+            if ($workspaceTool->getTool()->isExportable()) {
+                $event = new ExportWorkspaceEvent($workspace, $archive);
+                $this->ed->dispatch('tool_'.$tool->getName().'_to_template', $event);
+
+                if ($event->getConfig() === null) {
+                    throw new \Exception(
+                        'The event tool_' . $tool->getName() .
+                        '_to_template did not return any config.'
+                    );
+                }
+
                 $description['tools'][$tool->getName()] = $event->getConfig();
             }
         }

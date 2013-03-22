@@ -113,8 +113,10 @@ class TextListener extends ContainerAware
 
     public function onExportTemplate(ExportResourceTemplateEvent $event)
     {
+        $textRepo = $this->container->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Resource\Text');
         $text = $event->getResource();
-        $config['text'] = $text->getLastRevision()->getContent();
+        $config['text'] = $textRepo->getLastRevision($text)->getContent();
         $event->setConfig($config);
         $event->stopPropagation();
     }

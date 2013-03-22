@@ -6,7 +6,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Library\Resource\Utilities;
-use Claroline\CoreBundle\Library\Event\ExportResourceEvent;
+use Claroline\CoreBundle\Library\Event\DownloadResourceEvent;
 use Claroline\CoreBundle\Library\Event\ResourceLogEvent;
 use Symfony\Component\Security\Core\SecurityContext;
 
@@ -60,8 +60,8 @@ class Exporter
 
             if ($resource->getResourceType()->getName() != 'directory') {
 
-                $eventName = $this->ut->normalizeEventName('export', $resource->getResourceType()->getName());
-                $event = new ExportResourceEvent($resource);
+                $eventName = 'download_'. $resource->getResourceType()->getName();
+                $event = new DownloadResourceEvent($resource);
                 $this->ed->dispatch($eventName, $event);
                 $obj = $event->getItem();
 
