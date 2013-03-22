@@ -31,6 +31,7 @@ class LoadWidgetData extends AbstractFixture implements OrderedFixtureInterface
             $widget->setConfigurable($item[1]);
             $widget->setIcon('fake/icon/path');
             $widget->setPlugin(null);
+            $widget->setExportable(false);
             $manager->persist($widget);
 
             $wWidgetConfig = new DisplayConfig();

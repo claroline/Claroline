@@ -376,6 +376,19 @@ class ResourceQueryBuilder
         return $this;
     }
 
+    public function whereIsExportable($boolean)
+    {
+        if (!$this->isFirstWhereClause) {
+            $this->dql .= ' AND ';
+        }
+
+        $this->dql .= " rt.isExportable = :boolean";
+        $this->preparedStatementValue[':boolean'] = $boolean;
+        $this->isFirstWhereClause = false;
+
+        return $this;
+    }
+
     public function wherePath($path, $includeFirstNode)
     {
         if (!$this->isFirstWhereClause) {

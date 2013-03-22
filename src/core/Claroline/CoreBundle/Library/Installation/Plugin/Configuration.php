@@ -95,6 +95,7 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                             ->end()
                        ->booleanNode('is_visible')->isRequired()->end()
+                       ->scalarNode('is_exportable')->defaultValue(false)->end()
                        ->booleanNode('is_browsable')->isRequired()->end()
                        ->scalarNode('icon')
                            ->validate()
@@ -135,6 +136,7 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('name')->isRequired()->end()
                         ->booleanNode('is_configurable')->isRequired()->end()
+                        ->scalarNode('is_exportable')->defaultValue(false)->end()
                         ->scalarNode('icon')
                             ->validate()
                             ->ifTrue(
@@ -164,6 +166,7 @@ class Configuration implements ConfigurationInterface
                         ->booleanNode('is_displayable_in_workspace')->isRequired()->end()
                         ->booleanNode('is_displayable_in_desktop')->isRequired()->end()
                         ->scalarNode('class')->end()
+                        ->scalarNode('is_exportable')->defaultValue(false)->end()
                     ->end()
                 ->end()
             ->end()
