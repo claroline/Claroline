@@ -3,13 +3,15 @@
 namespace Claroline\CoreBundle\Listener\Resource;
 
 use Claroline\CoreBundle\Entity\Resource\Activity;
+use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
 use Claroline\CoreBundle\Form\ActivityType;
 use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Library\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Library\Event\ExportResourceTemplateEvent;
+use Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent;
 use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
-use Claroline\CoreBundle\Library\Event\ExportResourceEvent;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -64,12 +66,69 @@ class ActivityListener extends ContainerAware
 
     public function onCopy(CopyResourceEvent $event)
     {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $resource = $event->getResource();
+        $copy = new Activity();
+        $copy->setInstructions($resource->getInstructions());
+        $resourceActivities = $resource->getResourceActivities();
 
+        foreach ($resourceActivities as $resourceActivity) {
+            $ra = new ResourceActivity();
+            $ra->setResource($resourceActivity->getResource());
+            $ra->setSequenceOrder($resourceActivity->getSequenceOrder());
+            $ra->setActivity($copy);
+            $em->persist($ra);
+        }
+
+        $event->setCopy($copy);
+        $event->stopPropagation();
     }
 
-    public function onExport(ExportResourceEvent $event)
+    public function onExportTemplate(ExportResourceTemplateEvent $event)
     {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $resource = $event->getResource();
+        $config['instructions'] = $resource->getInstructions();
+        $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
+            ->findResourceActivities($resource);
+        $resourceDependencies = array();
 
+        foreach ($resourceActivities as $resourceActivity) {
+            if ($resourceActivity->getResource()->getWorkspace() === $resource->getWorkspace()) {
+                $resourceActivityConfig['id'] =  $resourceActivity->getResource()->getId();
+                $resourceActivityConfig['order'] = $resourceActivity->getSequenceOrder();
+                $config['resources'][] = $resourceActivityConfig;
+            }
+        }
+
+        $event->setResourceDependencies($resourceDependencies);
+        $event->setConfig($config);
+        $event->stopPropagation();
+    }
+
+    /**
+     * If the activity is recursive, it may or may not work depending on where
+     * the activity is defined in the config file.
+     *
+     * @param \Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent $event
+     */
+    public function onImportTemplate(ImportResourceTemplateEvent $event)
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $config = $event->getConfig();
+        $activity = new Activity();
+        $activity->setInstructions($config['instructions']);
+
+        foreach ($config['resources'] as $data) {
+            $resourceActivity = new ResourceActivity();
+            $resourceActivity->setResource($event->find($data['id']));
+            $resourceActivity->setSequenceOrder($data['order']);
+            $resourceActivity->setActivity($activity);
+            $em->persist($resourceActivity);
+        }
+
+        $event->setResource($activity);
+        $event->stopPropagation();
     }
 
     public function onOpen(OpenResourceEvent $event)
@@ -81,7 +140,7 @@ class ActivityListener extends ContainerAware
         $resourceActivities = $this->container
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
-            ->findActivities($activity);
+            ->findResourceActivities($activity);
 
         if ($this->container->get('security.context')->getToken()->getUser() == $activity->getCreator()) {
             $content = $this->container->get('templating')->render(

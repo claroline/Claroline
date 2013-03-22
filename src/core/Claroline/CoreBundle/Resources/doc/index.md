@@ -3,9 +3,8 @@ Development documentation
 
 This documentation covers the architecture of the Claroline platform, of its core and
 its plugin system. It also includes information on best practices and references to
-useful external resources. It doesn't cover the topics of the installation nor the
-development requirements. For these matters, you can see the main [readme][1]
-file.
+useful external resources. It doesn't cover the topic of the installation. For this
+matter, you can see the main [readme][1] file.
 
 Structure
 ---------
@@ -17,7 +16,7 @@ Structure
     - [Tools][6]
     - [Widgets][7]
     - [Players][8]
-
+- [Development tools][9]
 
 [1]: ../../../../README.md
 [2]: sections/overview.md
@@ -27,3 +26,4 @@ Structure
 [6]: sections/tools.md
 [7]: sections/widgets.md
 [8]: sections/players.md
+[9]: sections/dev-tools.md

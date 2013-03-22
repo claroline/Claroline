@@ -10,11 +10,7 @@ use Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent;
 use Claroline\CoreBundle\Library\Event\ExportWidgetConfigEvent;
 use Claroline\CoreBundle\Library\Event\ImportWidgetConfigEvent;
 use Claroline\CoreBundle\Entity\Event;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
-use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Form\CalendarType;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
@@ -80,12 +76,21 @@ class ToolListener extends ContainerAware
         foreach ($configs as $config) {
             $widgetArray = array();
             $ed = $this->container->get('event_dispatcher');
-            $newEvent = new ExportWidgetConfigEvent($config->getWidget(), $workspace, $event->getArchive());
-            $ed->dispatch("widget_export_{$config->getWidget()->getName()}_configuration", $newEvent);
             $widgetArray['name'] = $config->getWidget()->getName();
             $widgetArray['is_visible'] = $config->isVisible();
-
-            if ($newEvent->getConfig() != null) {
+            if ($config->getWidget()->isExportable()) {
+                $newEvent = new ExportWidgetConfigEvent(
+                    $config->getWidget(),
+                    $workspace,
+                    $event->getArchive()
+                );
+                $ed->dispatch("widget_{$config->getWidget()->getName()}_to_template", $newEvent);
+                if ($newEvent->getConfig() === null) {
+                    throw new \Exception(
+                        "The event widget_{$config->getWidget()->getName()}_to_template" .
+                        " did not return any response"
+                    );
+                }
                 $widgetArray['config'] = $newEvent->getConfig();
             }
 
@@ -96,6 +101,10 @@ class ToolListener extends ContainerAware
         $event->setConfig($home);
     }
 
+    //@todo: Optimize this if possible (it should be possible to reduce the number of dql requests)
+    //@todo: When exporting the resource, there should be only "exportable" resources. Therefore
+    //the query builder must be updated
+    //because a new request is made each time to retrieve each resource right.
     public function onExportResource(ExportWorkspaceEvent $event)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
@@ -105,27 +114,61 @@ class ToolListener extends ContainerAware
         $root = $resourceRepo->findWorkspaceRoot($workspace);
 
         $roles = $em->getRepository('ClarolineCoreBundle:Role')->findByWorkspace($workspace);
-
-        foreach ($roles as $role) {
-            $perms = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
-                ->findMaximumRights(array($role->getName()), $root);
-            //temporary: no creation rights export for now
-            $perms['canCreate'] = 1;
-            $config['perms'][rtrim(str_replace(range(0, 9), '', $role->getName()), '_')] = $perms;
-        }
+        $config['root_id'] = $root->getId();
 
         $ed = $this->container->get('event_dispatcher');
-        $children = $resourceRepo->findChildren($root, array('ROLE_ADMIN'));
+        $dirType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('directory');
+        $children = $resourceRepo->findBy(array('parent' => $root, 'resourceType' => $dirType));
 
         foreach ($children as $child) {
-            $newEvent = new ExportResourceTemplateEvent($resourceRepo->find($child['id']), $event->getArchive());
-            $ed->dispatch("export_{$child['type']}_template", $newEvent);
+            $newEvent = new ExportResourceTemplateEvent($child, $event->getArchive());
+            $ed->dispatch("resource_directory_to_template", $newEvent);
             $dataChildren = $newEvent->getConfig();
-            if ($dataChildren !== null) {
-                $config['resources'][] = $dataChildren;
+            if ($dataChildren == null) {
+                throw new \Exception('The event resource_directory_to_template did not return any config');
+            }
+            $config['directory'][] = $dataChildren;
+        }
+
+        $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
+        $criteria = array();
+
+        foreach ($resourceTypes as $type) {
+            if ($type->getName() !== 'directory') {
+                $criteria['types'][] = $type->getName();
             }
         }
 
+        $criteria['roots'] = array($root->getName());
+        $criteria['isExportable'] = true;
+        $config['resources'] = array();
+        $resources = $resourceRepo->findUserResourcesByCriteria($criteria, null, true);
+
+        foreach ($resources as $resource) {
+            $newEvent = new ExportResourceTemplateEvent($resourceRepo->find($resource['id']), $event->getArchive());
+            $ed->dispatch("resource_{$resource['type']}_to_template", $newEvent);
+            $dataResources = $newEvent->getConfig();
+
+            if ($dataResources === null) {
+                throw new \Exception("The event resource_{$resource['type']}_to_template did not return any config");
+            }
+
+            foreach ($roles as $role) {
+                $perms = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
+                    ->findMaximumRights(array($role->getName()), $root);
+                $perms['canCreate'] = array();
+
+                $dataResources['perms'][rtrim(str_replace(range(0, 9), '', $role->getName()), '_')] = $perms;
+            }
+
+            $dataResources['parent'] = $resource['parent_id'];
+            $dataResources['id'] = $resource['id'];
+            $dataResources['type'] = $resource['type'];
+            $dataResources['name'] = $resource['name'];
+            $config['resources'][] = $dataResources;
+        }
+
+        $config['resources'] = $this->sortResources($config['resources']);
         $event->setConfig($config);
     }
 
@@ -155,7 +198,7 @@ class ToolListener extends ContainerAware
                         $event->getWorkspace(),
                         $event->getArchive()
                     );
-                    $ed->dispatch("widget_import_{$widgetConfig['name']}_configuration", $newEvent);
+                    $ed->dispatch("widget_{$widgetConfig['name']}_from_template", $newEvent);
                 }
 
                 $em->persist($displayConfig);
@@ -165,48 +208,45 @@ class ToolListener extends ContainerAware
 
     public function onImportResource(ImportWorkspaceEvent $event)
     {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $roleRepo = $em->getRepository('ClarolineCoreBundle:Role');
+        $manager = $this->container->get('claroline.resource.manager');
         $config = $event->getConfig();
-        $workspace = $event->getWorkspace();
-        $root = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->findWorkspaceRoot($workspace);
+        $root = $event->getRoot();
+        $ed = $this->container->get('event_dispatcher');
+        $createdResources = array();
+        $createdResources[$config['root_id']] = $root;
 
-        foreach ($config['perms'] as $role => $permission) {
-            $this->createDefaultsResourcesRights(
-                $permission['canDelete'],
-                $permission['canOpen'],
-                $permission['canEdit'],
-                $permission['canCopy'],
-                $permission['canExport'],
-                $permission['canCopy'],
-                $roleRepo->findOneBy(array('name' => $role.'_'.$workspace->getId())),
-                $root,
-                $workspace
-            );
+        foreach ($config['directory'] as $resource) {
+            $newEvent = new ImportResourceTemplateEvent($resource, $root, $event->getArchive(), $event->getUser());
+            $ed->dispatch("resource_{$resource['type']}_from_template", $newEvent);
+
+            $childResources = $newEvent->getCreatedResources();
+
+            foreach ($childResources as $key => $value) {
+                $createdResources[$key] = $value;
+            }
         }
 
-        $this->createDefaultsResourcesRights(
-            false, false, false, false, false, false,
-            $roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
-            $root,
-            $workspace
-        );
+        foreach ($config['resources'] as $resource) {
+            $newEvent = new ImportResourceTemplateEvent($resource, $root, $event->getArchive(), $event->getUser());
+            $newEvent->setCreatedResources($createdResources);
+            $ed->dispatch("resource_{$resource['type']}_from_template", $newEvent);
+            $resourceEntity = $newEvent->getResource();
 
-        $this->createDefaultsResourcesRights(
-            true, true, true, true, true, true,
-            $roleRepo->findOneBy(array('name' => 'ROLE_ADMIN')),
-            $root,
-            $workspace
-        );
-
-        $em->flush();
-        $ed = $this->container->get('event_dispatcher');
-
-        if (isset($config['resources'])) {
-            foreach ($config['resources'] as $resource) {
-                $newEvent = new ImportResourceTemplateEvent($resource, $root, $event->getArchive());
-                $ed->dispatch("import_{$resource['type']}_template", $newEvent);
+            if ($resourceEntity !== null) {
+                $resourceEntity->setName($resource['name']);
+                $manager->create(
+                    $resourceEntity,
+                    $createdResources[$resource['parent']],
+                    $resource['type'],
+                    $event->getUser(),
+                    $resource['perms']
+                );
+                $createdResources[$resource['id']] = $resourceEntity;
+            } else {
+                throw new \Exception(
+                    "The event import_{$resource['type']}_template did not set" .
+                    " any resource"
+                );
             }
         }
 
@@ -375,74 +415,106 @@ class ToolListener extends ContainerAware
     public function desktopCalendar()
     {
         $event = new Event();
-        $formBuilder = $this->container->get('form.factory')->createBuilder('form', $event, array());
-        $formBuilder->add('title', 'text')
-            ->add(
-                'end',
-                'date',
-                array(
-                    'format' => 'dd-MM-yyyy',
-                    'widget' => 'choice',
-                )
-            )
-            ->add(
-                'allDay',
-                'checkbox',
-                array(
-                    'label' => 'all day ?')
-            )
-            ->add('description', 'textarea');
+        $formBuilder = $this->container->get('form.factory')->createBuilder(new CalendarType(), $event, array());
+        $em = $this->container-> get('doctrine.orm.entity_manager');
+        $usr = $this->container-> get('security.context')-> getToken()-> getUser();
+        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, 1);
 
         return $this->container->get('templating')->render(
             'ClarolineCoreBundle:Tool/desktop/calendar:calendar.html.twig',
-            array('form' => $formBuilder-> getForm()-> createView())
+            array(
+                'form' => $formBuilder-> getForm()-> createView(),
+                'listEvents' => $listEvents,
+                )
         );
     }
 
     /**
-     * Create default permissions for a role and a resource.
+     * Reorder the $config array. The resources included in an activity must be placed before
+     * the activity itself.
+     * I don't guarantee it'll work every time.
      *
-     * @param boolean $canDelete
-     * @param boolean $canOpen
-     * @param boolean $canEdit
-     * @param boolean $canCopy
-     * @param boolean $canExport
-     * @param boolean $canCreate
-     * @param \Claroline\CoreBundle\Entity\Role $role
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     * @param array $config
      *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceRights
+     * @return array $config
      */
-    private function createDefaultsResourcesRights(
-        $canDelete,
-        $canOpen,
-        $canEdit,
-        $canCopy,
-        $canExport,
-        $canCreate,
-        Role $role,
-        AbstractResource $resource,
-        AbstractWorkspace $workspace
-    )
+    private function sortResources(array $config)
     {
-        $rights = new ResourceRights();
-        $rights->setCanCopy($canCopy);
-        $rights->setCanDelete($canDelete);
-        $rights->setCanEdit($canEdit);
-        $rights->setCanOpen($canOpen);
-        $rights->setCanExport($canExport);
-        $rights->setRole($role);
-        $rights->setResource($resource);
-        $rights->setWorkspace($workspace);
-        $em = $this->container->get('doctrine.orm.entity_manager');
+        //step 1: activities go after everything else
+        for ($i = 0, $countActivity = 0, $size = count($config); $i < $size; $i++) {
+            $item = $config[$i];
 
-        if ($canCreate) {
-            $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-                ->findByIsVisible(true);
-            $rights->setCreatableResourceTypes($resourceTypes);
+            if ($item['type'] === 'activity') {
+                array_push($config, $config[$i]);
+                unset($config[$i]);
+                $countActivity++;
+            }
         }
 
-        $em->persist($rights);
+        //step 2: sort activities
+        $config = array_values($config);
+        $newConfig = $config;
+
+        for ($i = $size - $countActivity; $i < $size; $i++) {
+
+            //what does the activity need
+            foreach ($config[$i]['resources'] as $item) {
+                $key = $this->searchConfigById($config, $item['id']);
+                //current key of the moving activity
+                $tmpI = $i;
+
+                //if the researched key is after the activity
+                if ($key > $tmpI) {
+                    //make some room to move the activity after the researched key
+                    $newConfig = $this->shift($config, $key);
+                    //moving the activity
+                    $newConfig[$key + 1] = $config[$tmpI];
+                    unset($newConfig[$tmpI]);
+                    $config = array_values($newConfig);
+                    //the key has changed
+                    $tmpI = $key + 1;
+                }
+            }
+        }
+
+        return $config;
+    }
+
+    /**
+     * Search a resource by Id in the $config array (for the template export)
+     *
+     * @param array $config
+     * @param integer $id
+     *
+     * @return the key wich was found for the resourceId.
+     */
+    private function searchConfigById(array $config, $id)
+    {
+        foreach ($config as $key => $item) {
+            if ($item['id'] === $id) {
+                return $key;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Shift by one to the right the element on an array after the key $key.
+     *
+     * @param array $config
+     * @param type $key
+     */
+    private function shift(array $config, $key)
+    {
+        $size = count($config);
+        $size--;
+        for ($i = $size; $i >= $key; $i--) {
+            $config[$i + 1] = $config[$i];
+        }
+        unset($config[$key + 1]);
+
+        return $config;
     }
 }
 

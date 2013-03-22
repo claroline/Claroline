@@ -30,8 +30,7 @@ class ResourceController extends Controller
      */
     public function creationFormAction($resourceType)
     {
-        $eventName = $this->get('claroline.resource.utilities')
-            ->normalizeEventName('create_form', $resourceType);
+        $eventName = 'create_form_'.$resourceType;
         $event = new CreateFormResourceEvent();
         $this->get('event_dispatcher')->dispatch($eventName, $event);
 
@@ -61,9 +60,7 @@ class ResourceController extends Controller
         $collection = new ResourceCollection(array($parent));
         $collection->setAttributes(array('type' => $resourceType));
         $this->checkAccess('CREATE', $collection);
-
-        $eventName = $this->get('claroline.resource.utilities')
-            ->normalizeEventName('create', $resourceType);
+        $eventName = 'create_'.$resourceType;
         $event = new CreateResourceEvent($resourceType);
         $this->get('event_dispatcher')->dispatch($eventName, $event);
         $response = new Response();
@@ -109,8 +106,7 @@ class ResourceController extends Controller
         $this->checkAccess('OPEN', $collection);
         $resource = $this->getResource($resource);
         $event = new OpenResourceEvent($resource);
-        $eventName = $this->get('claroline.resource.utilities')
-            ->normalizeEventName('open', $resourceType);
+        $eventName = 'open_'.$resourceType;
         $this->get('event_dispatcher')->dispatch($eventName, $event);
         $resource = $this->getResource($resource);
 
@@ -221,8 +217,7 @@ class ResourceController extends Controller
      */
     public function customAction($resourceType, $action, $resourceId)
     {
-        $eventName = $this->get('claroline.resource.utilities')
-            ->normalizeEventName($action, $resourceType);
+        $eventName = $action . '_' . $resourceType;
         $em = $this->get('doctrine.orm.entity_manager');
         $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($resourceId);
@@ -429,7 +424,7 @@ class ResourceController extends Controller
         }
 
         $user = $this->get('security.context')->getToken()->getUser();
-        $resources = $resourceRepo->findUserResourcesByCriteria($user, $criteria);
+        $resources = $resourceRepo->findUserResourcesByCriteria($criteria, $user);
         $response = new Response(json_encode(array('resources' => $resources, 'path' => $path)));
         $response->headers->set('Content-Type', 'application/json');
 
@@ -469,8 +464,8 @@ class ResourceController extends Controller
                 $shortcut->setResource($resource->getResource());
             }
 
-            $this->get('claroline.resource.manager')->setResourceRights($shortcut->getParent(), $shortcut);
-            //$this->get('claroline.resource.manager')->setResourceRights($shortcut->getParent(), $resource);
+            $this->get('claroline.resource.manager')->cloneParentRights($shortcut->getParent(), $shortcut);
+            //$this->get('claroline.resource.manager')->cloneParentRights($shortcut->getParent(), $resource);
 
             $em->persist($shortcut);
             $em->flush();

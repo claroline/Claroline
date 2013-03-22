@@ -92,6 +92,7 @@ mail_form_content: Contenu
 mail_form_object: Objet
 manage_rights: 'Gérer les droits'
 manager: Gestionnaire
+messages_confirm_delete : 'Etes vous sûr de vouloir supprimer ce message ?'
 message_form_content: Contenu
 message_form_object: Objet
 message_form_to: A

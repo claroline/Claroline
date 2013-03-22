@@ -23,6 +23,7 @@ class Configuration
     private $toolsPermissions;
     private $creatorRole;
     private $toolsConfig;
+    private $permsRootConfig;
     private $templateFile;
 
     //@todo refactoring __construct/fromTemplate because the ziparchive is opened
@@ -39,6 +40,7 @@ class Configuration
         $this->setRoles($parsedFile['roles']);
         $this->setToolsPermissions($parsedFile['tools_infos']);
         $this->setToolsConfiguration($parsedFile['tools']);
+        $this->setPermsRootConfiguration($parsedFile['root_perms']);
     }
 
     public static function fromTemplate($templateFile)
@@ -53,6 +55,7 @@ class Configuration
         $config->setRoles($parsedFile['roles']);
         $config->setToolsPermissions($parsedFile['tools_infos']);
         $config->setToolsConfiguration($parsedFile['tools']);
+        $config->setPermsRootConfiguration($parsedFile['root_perms']);
         $config->setTemplateFile($templateFile);
 
         return $config;
@@ -157,6 +160,16 @@ class Configuration
     public function getTemplateFile()
     {
         return $this->templateFile;
+    }
+
+    public function setPermsRootConfiguration($config)
+    {
+        $this->permsRootConfig = $config;
+    }
+
+    public function getPermsRootConfiguration()
+    {
+        return $this->permsRootConfig;
     }
 
     private function validate($parsedFile)

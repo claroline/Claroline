@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class CalendarType extends AbstractType
 {
@@ -12,12 +13,19 @@ class CalendarType extends AbstractType
         $builder
             ->add('title', 'text', array('required' => true))
             ->add(
+                'start',
+                'date',
+                array(
+                    'format' => 'd-M-yyyy',
+                    'widget' => 'single_text',
+                    )
+            )
+            ->add(
                 'end',
                 'date',
                 array(
-                    'format' => 'dd-MM-yyyy',
+                    'format' => 'd-M-yyyy',
                     'widget' => 'single_text',
-                    'data' => new \DateTime('now')
                 )
             )
             ->add(
@@ -46,11 +54,20 @@ class CalendarType extends AbstractType
         return 'calendar_form';
     }
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array(
-            'data_class' => 'Claroline\CoreBundle\Entity\Event',
-            'translation_domain' => 'calendar'
-        );
+        $resolver
+            ->setDefaults(
+                array(
+                    'class' => 'Claroline\CoreBundle\Entity\Event',
+                    'translation_domain' => 'calendar'
+                )
+            )
+            ->setOptional(
+                array(
+                    'start',
+                    'end'
+                )
+            );
     }
 }

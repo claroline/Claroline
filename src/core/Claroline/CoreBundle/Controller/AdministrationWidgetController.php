@@ -60,7 +60,7 @@ class AdministrationWidgetController extends Controller
         $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
             ->find($widgetId);
         $event = new ConfigureWidgetWorkspaceEvent(null, true);
-        $eventName = strtolower("widget_{$widget->getName()}_configuration_workspace");
+        $eventName = "widget_{$widget->getName()}_configuration_workspace";
         $this->get('event_dispatcher')->dispatch($eventName, $event);
 
         if ($event->getContent() != '') {
@@ -88,7 +88,7 @@ class AdministrationWidgetController extends Controller
         $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
             ->find($widgetId);
         $event = new ConfigureWidgetDesktopEvent(null, true);
-        $eventName = strtolower("widget_{$widget->getName()}_configuration_desktop");
+        $eventName = "widget_{$widget->getName()}_configuration_desktop";
         $this->get('event_dispatcher')->dispatch($eventName, $event);
 
         if ($event->getContent() != '') {
