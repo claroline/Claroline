@@ -10,5 +10,5 @@ services:
             - { name: kernel.event_listener, event: copy_claroline_forum, method: onCopy }
             - { name: kernel.event_listener, event: delete_claroline_forum, method: onDelete }
             - { name: kernel.event_listener, event: plugin_options_clarolineforum, method: onAdministrate }
-            - { name: kernel.event_listener, event: export_claroline_forum_template, method: onExportTemplate }
-            - { name: kernel.event_listener, event: import_claroline_forum_template, method: onImportTemplate }
+            - { name: kernel.event_listener, event: resource_claroline_forum_to_template, method: onExportTemplate }
+            - { name: kernel.event_listener, event: resource_claroline_forum_from_template, method: onImportTemplate }
