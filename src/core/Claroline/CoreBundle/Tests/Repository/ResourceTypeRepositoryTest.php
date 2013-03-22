@@ -80,6 +80,7 @@ class ResourceTypeRepositoryTest extends TransactionalTestCase
         $firstType->setVisible(true);
         $firstType->setBrowsable(false);
         $firstType->setPlugin($plugin);
+        $firstType->setExportable(false);
 
         $secondType = new ResourceType();
         $secondType->setName('Type y');
@@ -87,11 +88,13 @@ class ResourceTypeRepositoryTest extends TransactionalTestCase
         $secondType->setVisible(true);
         $secondType->setBrowsable(false);
         $secondType->setPlugin($plugin);
+        $secondType->setExportable(false);
 
         $thirdType = new ResourceType();
         $thirdType->setName('Type z');
         $thirdType->setVisible(true);
         $thirdType->setBrowsable(false);
+        $thirdType->setExportable(false);
 
         $this->em->persist($plugin);
         $this->em->persist($firstType);

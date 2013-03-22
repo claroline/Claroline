@@ -203,6 +203,7 @@ class DatabaseWriter
         $resourceType->setName($resource['name']);
         $resourceType->setVisible($resource['is_visible']);
         $resourceType->setBrowsable($resource['is_browsable']);
+        $resourceType->setExportable($resource['is_exportable']);
         $resourceType->setPlugin($pluginEntity);
         $resourceClass = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findOneBy(array('class' => $resource['class']));
@@ -227,6 +228,7 @@ class DatabaseWriter
         $widgetEntity = new Widget();
         $widgetEntity->setName($widget['name']);
         $widgetEntity->setConfigurable($widget['is_configurable']);
+        $widgetEntity->setExportable($widget['is_exportable']);
         $widgetEntity->setPlugin($pluginEntity);
 
         if (isset($widget['icon'])) {
@@ -269,6 +271,7 @@ class DatabaseWriter
         $toolEntity->setIsDesktopRequired(false);
         $toolEntity->setIsWorkspaceRequired(false);
         $toolEntity->setPlugin($pluginEntity);
+        $toolEntity->setExportable($tool['is_exportable']);
 
         if (isset($tool['class'])) {
             $toolEntity->setClass(
