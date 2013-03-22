@@ -47,7 +47,9 @@ class ExerciseType extends AbstractType
         $builder
             ->add('name', 'hidden', array('data' => 'exercise'))
             ->add('title', 'text', array('label' => 'Title'))
-            ->add('description', 'textarea', array('label' => 'Description', 'attr' => array('class' => 'tinymce', 'data-theme' => 'medium'), 'required' => false ))
+            ->add('description', 'textarea', array('label' => 'Description',
+                                                   'attr' => array('class' => 'tinymce', 'data-theme' => 'medium'),
+                                                   'required' => false ))
             ->add('shuffle', 'checkbox', array('required' => false, 'label' => 'Random order of questions'))
             ->add('nbQuestion', 'text', array('label' => 'Number of questions to draw'))
             //->add('dateCreate')
@@ -56,38 +58,35 @@ class ExerciseType extends AbstractType
             ->add('doprint', 'checkbox', array('required' => false, 'label' => 'Print paper'))
             ->add('maxAttempts', 'text', array('label' => 'Maximum number of tries'))
             //->add('correctionMode', 'text', array('label' => 'Availability of correction'))
-            ->add('correctionMode', 'choice', array('label' => 'Availability of correction', 'choices' => array(
-                                                                                                          '1' => 'At the end of assessment',
-                                                                                                          '2' => 'After the last attempt',
-                                                                                                          '3' => 'From',
-                                                                                                          '4' => 'Never')
-                 ))
-            ->add('dateCorrection', 'datetime', array(
-                                                'widget' => 'single_text',
-                                                'input' => 'datetime',
-                                                'format' => 'dd/MM/yyyy HH:mm',
-                                                'attr' => array('class' => 'date'),
-                                                'label' => 'Correction date'
-                                                ))
-            ->add('markMode', 'choice', array('label' => 'Availability of score', 'choices' => array(
-                                                                                               '1' => 'At the same time that the correction',
-                                                                                               '2' => 'At the end of assessment')
-                ))
-            ->add('start_date', 'datetime', array(
-                                                'widget' => 'single_text',
-                                                'input' => 'datetime',
-                                                'format' => 'dd/MM/yyyy HH:mm',
-                                                'attr' => array('class' => 'date'),
-                                                'label' => 'Start date'
-                                                ))
+            ->add('correctionMode', 'choice', array('label' => 'Availability of correction',
+                                                    'choices' => array('1' => 'At the end of assessment',
+                                                                       '2' => 'After the last attempt',
+                                                                       '3' => 'From',
+                                                                       '4' => 'Never')
+                                                   ))
+            ->add('dateCorrection', 'datetime', array('widget' => 'single_text',
+                                                      'input' => 'datetime',
+                                                      'format' => 'dd/MM/yyyy HH:mm',
+                                                      'attr' => array('class' => 'date'),
+                                                      'label' => 'Correction date'
+                                                     ))
+            ->add('markMode', 'choice', array('label' => 'Availability of score',
+                                              'choices' => array('1' => 'At the same time that the correction',
+                                                                 '2' => 'At the end of assessment')
+                                             ))
+            ->add('start_date', 'datetime', array('widget' => 'single_text',
+                                                 'input' => 'datetime',
+                                                 'format' => 'dd/MM/yyyy HH:mm',
+                                                 'attr' => array('class' => 'date'),
+                                                 'label' => 'Start date'
+                                                 ))
             ->add('useDateEnd', 'checkbox', array('required' => false, 'label' => 'Use date of end'))
-            ->add('end_date', 'datetime', array(
-                                                'widget' => 'single_text',
+            ->add('end_date', 'datetime', array('widget' => 'single_text',
                                                 'input' => 'datetime',
                                                 'format' => 'dd/MM/yyyy HH:mm',
                                                 'attr' => array('class' => 'date'),
                                                 'label' => 'end_date'
-                                                ))
+                                               ))
             ->add('dispButtonInterrupt', 'checkbox', array('required' => false, 'label' => 'Test exit'))
             ->add('lockAttempt', 'checkbox', array('required' => false, 'label' => 'Lock attempt'));
     }

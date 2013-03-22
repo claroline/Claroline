@@ -67,11 +67,12 @@ class InteractionQCMHandler
 
     public function processAdd()
     {
-        if( $this->request->getMethod() == 'POST' ) {
+        if ( $this->request->getMethod() == 'POST' ) {
             $this->form->bindRequest($this->request);
 
-            if( $this->form->isValid() ) {
+            if ( $this->form->isValid() ) {
                 $this->onSuccessAdd($this->form->getData());
+                
                 return true;
             }
         }
@@ -92,7 +93,7 @@ class InteractionQCMHandler
 
         // On persiste tous les choices de l'interaction QCM.
         $ord = 1;
-        foreach($interQCM->getChoices() as $choice) {
+        foreach ($interQCM->getChoices() as $choice) {
             $choice->setOrdre($ord);
             $interQCM->addChoice($choice);            
             $this->em->persist($choice);
@@ -101,35 +102,35 @@ class InteractionQCMHandler
         }
 
         //On persite tous les hints de l'entité interaction
-        foreach($interQCM->getInteraction()->getHints() as $hint) {
+        foreach ($interQCM->getInteraction()->getHints() as $hint) {
             $interQCM->getInteraction()->addHint($hint);
             $this->em->persist($hint);
         }
 
         $this->em->flush();
 
-        if($this->exercise != -1) {
+        if ($this->exercise != -1) {
             $exo = $this->em->getRepository('UJMExoBundle:Exercise')->find($this->exercise);
-            $EQ = new ExerciseQuestion($exo,$interQCM->getInteraction()->getQuestion());
+            $eq = new ExerciseQuestion($exo,$interQCM->getInteraction()->getQuestion());
 
             $dql = 'SELECT max(eq.ordre) FROM UJM\ExoBundle\Entity\ExerciseQuestion eq '
                 . 'WHERE eq.exercise='.$this->exercise;
             $query = $this->em->createQuery($dql);
             $maxOrdre = $query->getResult();
 
-            $EQ->setOrdre((int)$maxOrdre[0][1]+1);
-            $this->em->persist($EQ);
+            $eq->setOrdre((int)$maxOrdre[0][1]+1);
+            $this->em->persist($eq);
 
             $this->em->flush();
         }
 
     }
-    
+
     public function processUpdate(InteractionQCM $originalInterQCM)
     {
         $originalChoices = array();
         $originalHints = array();
-        
+
         // Create an array of the current Choice objects in the database
         foreach ($originalInterQCM->getChoices() as $choice) {
             $originalChoices[] = $choice;
@@ -137,19 +138,20 @@ class InteractionQCMHandler
         foreach ($originalInterQCM->getInteraction()->getHints() as $hint) {
             $originalHints[] = $hint;
         }
-        
+
         if( $this->request->getMethod() == 'POST' ) {
             $this->form->bindRequest($this->request);
 
-            if( $this->form->isValid() ) {
+            if ( $this->form->isValid() ) {
                 $this->onSuccessUpdate($this->form->getData(), $originalChoices, $originalHints);
+                
                 return true;
             }
         }
 
         return false;
     }
-    
+
     private function onSuccessUpdate(InteractionQCM $interQCM, $originalChoices, $originalHints)
     {
         // filter $originalChoices to contain choice no longer present
@@ -169,10 +171,9 @@ class InteractionQCMHandler
             // if you wanted to delete the Choice entirely, you can also do that
             $this->em->remove($choice);
         }
-            
-       
+
         // filter $originalHints to contain hint no longer present
-        foreach($interQCM->getInteraction()->getHints() as $hint) {
+        foreach ($interQCM->getInteraction()->getHints() as $hint) {
             foreach ($originalHints as $key => $toDel) {
                 if ($toDel->getId() === $hint->getId()) {
                     unset($originalHints[$key]);
@@ -187,25 +188,24 @@ class InteractionQCMHandler
 
             // if you wanted to delete the Hint entirely, you can also do that
             $this->em->remove($hint);
-        }            
-       
-            
+        }
+
         $this->em->persist($interQCM);
         $this->em->persist($interQCM->getInteraction()->getQuestion());
         $this->em->persist($interQCM->getInteraction());
             
         // On persiste tous les choices de l'interaction QCM.
-        foreach($interQCM->getChoices() as $choice) {
+        foreach ($interQCM->getChoices() as $choice) {
             $interQCM->addChoice($choice);
             $this->em->persist($choice);
         }
 
         //On persite tous les hints de l'entité interaction
-        foreach($interQCM->getInteraction()->getHints() as $hint) {
+        foreach ($interQCM->getInteraction()->getHints() as $hint) {
             $interQCM->getInteraction()->addHint($hint);
             $this->em->persist($hint);
         }
-            
+
         $this->em->flush();
 
     }

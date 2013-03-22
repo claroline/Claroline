@@ -62,8 +62,8 @@ class HintController extends Controller
         $entities = $em->getRepository('UJMExoBundle:Hint')->findAll();
 
         return $this->render('UJMExoBundle:Hint:index.html.twig', array(
-            'entities' => $entities
-        ));
+                             'entities' => $entities
+                            ));
     }
 
     /**
@@ -72,12 +72,12 @@ class HintController extends Controller
      */
     public function showAction()
     {
-       $request = $this->container->get('request');
-       $session = $this->getRequest()->getSession();
+        $request = $this->container->get('request');
+        $session = $this->getRequest()->getSession();
 
-        if($request->isXmlHttpRequest()) {
+        if ($request->isXmlHttpRequest()) {
             $id = $request->request->get('id');
-            
+
             $em = $this->getDoctrine()->getEntityManager();
             $entity = $em->getRepository('UJMExoBundle:Hint')->find($id);
             if (!$entity) {
@@ -85,7 +85,7 @@ class HintController extends Controller
             } 
             $deleteForm = $this->createDeleteForm($id);
 
-            if($request->request->get('paper') == null) {
+            if ($request->request->get('paper') == null) {
                 if ( !$session->get('penalties') ) {
                     $penalties = array();
                     $session->set('penalties', $penalties);
@@ -93,8 +93,7 @@ class HintController extends Controller
                 $penalties = $session->get('penalties');
                 $penalties[$id] = $entity->getPenality();
                 $session->set('penalties', $penalties);
-            }
-            else {
+            } else {
                 $lhp = new LinkHintPaper($entity, $em->getRepository('UJMExoBundle:Paper')->find($session->get('paper')));
                 $lhp->setView(1);
                 $em->persist($lhp);
@@ -102,14 +101,14 @@ class HintController extends Controller
             }
 
             return $this->container->get('templating')->renderResponse('UJMExoBundle:Hint:show.html.twig', array(
-                        'entity'      => $entity,
-                        'delete_form' => $deleteForm->createView(),
+                                                                       'entity'      => $entity,
+                                                                       'delete_form' => $deleteForm->createView(),
 
-                    ));                                         
-        }
-        else {
+                                                                      ));                                         
+        } else {
+            
             return 0;
-        } 
+        }
     }
 
     /**
@@ -122,9 +121,9 @@ class HintController extends Controller
         $form   = $this->createForm(new HintType(), $entity);
 
         return $this->render('UJMExoBundle:Hint:new.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView()
-        ));
+                             'entity' => $entity,
+                             'form'   => $form->createView()
+                            ));
     }
 
     /**
@@ -144,13 +143,12 @@ class HintController extends Controller
             $em->flush();
 
             return $this->redirect($this->generateUrl('hint_show', array('id' => $entity->getId())));
-            
         }
 
         return $this->render('UJMExoBundle:Hint:new.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView()
-        ));
+                             'entity' => $entity,
+                             'form'   => $form->createView()
+                            ));
     }
 
     /**
@@ -171,10 +169,10 @@ class HintController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('UJMExoBundle:Hint:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
+                             'entity'      => $entity,
+                             'edit_form'   => $editForm->createView(),
+                             'delete_form' => $deleteForm->createView(),
+                            ));
     }
 
     /**
@@ -206,10 +204,10 @@ class HintController extends Controller
         }
 
         return $this->render('UJMExoBundle:Hint:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
+                             'entity'      => $entity,
+                             'edit_form'   => $editForm->createView(),
+                             'delete_form' => $deleteForm->createView(),
+                            ));
     }
 
     /**
@@ -242,8 +240,7 @@ class HintController extends Controller
     {
         return $this->createFormBuilder(array('id' => $id))
             ->add('id', 'hidden')
-            ->getForm()
-        ;
+            ->getForm();
     }
         
 }

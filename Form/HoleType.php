@@ -19,14 +19,13 @@ class HoleType extends AbstractType
                                                        'prototype' => true,
                                                        //'by_reference' => false,
                                                        'allow_add' => true,
-                                                       'allow_delete' => true));
+                                                       'allow_delete' => true
+                                                      ));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'UJM\ExoBundle\Entity\Hole'
-        ));
+        $resolver->setDefaults(array('data_class' => 'UJM\ExoBundle\Entity\Hole'));
     }
 
     public function getName()

@@ -45,7 +45,10 @@ class ChoiceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('label', 'textarea', array('label' => ' '))//, array('attr' => array('class' => 'tinymce', 'data-theme' => 'medium'), 'label' => 'Choice.label'))
+            ->add('label', 'textarea', array('label' => ' '))
+                                             //, array('attr' => array('class' => 'tinymce', 'data-theme' => 'medium'),
+                                             //'label' => 'Choice.label'
+                                            //))
             ->add('ordre', 'text')
             ->add('weight', 'text', array('required' => false, 'label' => ' '))
             ->add('feedback', 'textarea', array('required' => false, 'label' => ' '))

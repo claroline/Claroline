@@ -102,6 +102,5 @@ class ExerciseListener extends ContainerAware
     {
         $response = $this->container->get('http_kernel')->forward('UJMExoBundle:Question:index', array());
         $event->setContent($response);
-    
     }
 }
