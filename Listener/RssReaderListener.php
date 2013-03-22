@@ -174,9 +174,11 @@ class RssReaderListener extends ContainerAware
 
         if ($rssconfig !== null) {
             $config['url'] = $rssconfig->getUrl();
-            $event->setConfig($config);
+        } else {
+            $config['url'] = null;
         }
 
+        $event->setConfig($config);
         $event->stopPropagation();
     }
 
@@ -184,15 +186,17 @@ class RssReaderListener extends ContainerAware
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $data = $event->getConfig();
-        $config = new Config();
-        $config->setWorkspace($event->getWorkspace());
-        $config->setUrl($data['url']);
-        $config->setDesktop(false);
-        $config->setDefault(false);
-        $config->setUser(null);
-        $em->persist($config);
-        $em->flush();
-        $event->stopPropagation();
+        if ($data['url'] != null) {
+            $config = new Config();
+            $config->setWorkspace($event->getWorkspace());
+            $config->setUrl($data['url']);
+            $config->setDesktop(false);
+            $config->setDefault(false);
+            $config->setUser(null);
+            $em->persist($config);
+            $em->flush();
+            $event->stopPropagation();
+        }
     }
 
     private function getRssContent($rssconfig)
