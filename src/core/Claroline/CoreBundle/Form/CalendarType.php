@@ -54,23 +54,20 @@ class CalendarType extends AbstractType
         return 'calendar_form';
     }
 
-
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver
-        ->setDefaults(
-            array(
-                'class' => 'Claroline\CoreBundle\Entity\Event',
-                'translation_domain' => 'calendar'
+            ->setDefaults(
+                array(
+                    'class' => 'Claroline\CoreBundle\Entity\Event',
+                    'translation_domain' => 'calendar'
                 )
-        )
-
-         ->setOptional(
-             array(
-                'start',
-                'end'
             )
-        ->setAllowedTypes()
-         );
+            ->setOptional(
+                array(
+                    'start',
+                    'end'
+                )
+            );
     }
 }
