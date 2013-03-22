@@ -587,6 +587,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('plugin_id', 'integer', array('notnull' => false));
         $table->addColumn('is_configurable', 'boolean');
         $table->addColumn('icon', 'string', array('length' => 255));
+        $table->addColumn('is_exportable', 'boolean');
         $table->addUniqueIndex(array('name'));
 
         $table->addForeignKeyConstraint(
@@ -788,6 +789,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('is_displayable_in_desktop', 'boolean');
         $table->addColumn('is_workspace_required', 'boolean');
         $table->addColumn('is_desktop_required', 'boolean');
+        $table->addColumn('is_exportable', 'boolean');
         $table->addColumn('plugin_id', 'integer', array('notnull' => false));
 
         $table->addForeignKeyConstraint(

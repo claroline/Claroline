@@ -140,7 +140,7 @@ You declare in this file all events that you want to catch.
           - { name: kernel.event_listener, event: create_form_claroline_example, method: onCreateForm }
           - { name: kernel.event_listener, event: create_claroline_example, method: onCreate }
           - { name: kernel.event_listener, event: delete_claroline_example, method: onDelete }
-          - { name: kernel.event_listener, event: export_claroline_example, method: onExport }
+          - { name: kernel.event_listener, event: download_claroline_example, method: onDownload }
           - { name: kernel.event_listener, event: copy_claroline_example, method: onCopy }
           - { name: kernel.event_listener, event: open_claroline_example, method: onOpen }
           - { name: kernel.event_listener, event: plugin_options_clarolineexample, method: onAdministrate }
@@ -150,12 +150,12 @@ Here is the list of events fired by the resource manager (lower case is forced h
 * create_form_*resourcetypename*
 * create_*resourcetypename*
 * delete_*resourcetypename*
-* export_*resourcetypename*
+* download_*resourcetypename*
 * copy_*resourcetypename*
 * open_*resourcetypename*
 * *customaction*_*resourcetypename*
 
-Where *resourcetypename* is the name of your resource in lowercase (e.g. "example") and *customaction* is a custom action you defined earlier in the plugin configuration (e.g. "open").
+Where *resourcetypename* is the name of your resource (e.g. "example") and *customaction* is a custom action you defined earlier in the plugin configuration (e.g. "open").
 
 This event is fired by the plugin managemement page:
 

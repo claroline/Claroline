@@ -9,7 +9,7 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 /**
  * Event dispatched by the resource controller when a custom action is asked on a resource.
  */
-class ExportResourceEvent extends Event
+class DownloadResourceEvent extends Event
 {
     private $resource;
     private $item;
