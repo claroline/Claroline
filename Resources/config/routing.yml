@@ -1,6 +1,6 @@
 ujm_category_create_pop:
     pattern: /category/create_pop
-    defaults: { _controller: UJMExoBundle:Category:create_pop }
+    defaults: { _controller: UJMExoBundle:Category:createPop }
     requirements:
       _method: POST
     
