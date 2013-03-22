@@ -1,3 +1,6 @@
 claro_desktop_calendar_show:
     pattern: /show/
     defaults: { _controller: 'ClarolineCoreBundle:Tool\Calendar:desktopShow' }
+claro_desktop_calendar_move:
+    pattern: /move/
+    defaults: { _controller: 'ClarolineCoreBundle:Tool\Calendar:move' }

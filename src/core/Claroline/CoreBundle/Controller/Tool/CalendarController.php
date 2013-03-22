@@ -32,8 +32,8 @@ class CalendarController extends Controller
 
             if ($form->isValid()) {
 
-                $date = explode('(', $postData['date']);
-                $event->setStart(new \DateTime($date[0]));
+                 $date = explode('(', $postData['date']);
+                $event->setStart($date[0]);
 
                 // the end date has to be bigger
                 if ($event->getStart() <= $event->getEnd()) {
@@ -44,8 +44,8 @@ class CalendarController extends Controller
                     $data = array(
                         'id' => $event->getId(),
                         'title' => $event->getTitle(),
-                        'start' => date('Y-m-d', $event->getStart()),
-                        'end' => date('Y-m-d', $event->getEnd()),
+                        'start' => $event->getStart(),
+                        'end' => $event->getEnd(),
                         'color' => $event->getPriority(),
                     );
 
@@ -82,8 +82,8 @@ class CalendarController extends Controller
                 $data[$key]['id'] = $object->getId();
                 $data[$key]['title'] = $object->getTitle();
                 $data[$key]['allDay'] = $object->getAllDay();
-                $data[$key]['start'] = $object->getStart();
-                $data[$key]['end'] = $object->getEnd();
+                $data[$key]['start'] = $object->getStart()->getTimestamp();
+                $data[$key]['end'] = $object->getEnd()->getTimestamp();
                 $data[$key]['color'] = $object->getPriority();
 
         }
@@ -105,11 +105,11 @@ class CalendarController extends Controller
         $repository = $em->getRepository('ClarolineCoreBundle:Event');
         $event = $repository->find($postData['id']);
         // timestamp 1h = 3600
-        $newStartDate = $event->getStart() + ((3600 * 24) * $postData['dayDelta']);
-        $dateStart = new \DateTime(date('Y-m-d', $newStartDate));
+        $newStartDate = $event->getStart()->getTimestamp() + ((3600 * 24) * $postData['dayDelta']);
+        $dateStart = new \DateTime(date('d-m-Y', $newStartDate));
         $event->setStart($dateStart);
-        $newEndDate = $event->getEnd() + ((3600 * 24) * $postData['dayDelta']);
-        $dateEnd = new \DateTime(date('Y-m-d', $newEndDate));
+        $newEndDate = $event->getEnd()->getTimestamp() + ((3600 * 24) * $postData['dayDelta']);
+        $dateEnd = new \DateTime(date('d-m-Y', $newEndDate));
         $event->setStart($dateStart);
         $event->setEnd($dateEnd);
         $em->flush();
@@ -120,8 +120,8 @@ class CalendarController extends Controller
                     'id' => $event->getId(),
                     'title' => $event->getTitle(),
                     'allDay' => $event->getAllDay(),
-                    'start' => $event->getStart(),
-                    'end' => $event->getEnd(),
+                    'start' => $event->getStart()->getTimestamp(),
+                    'end' => $event->getEnd()->getTimestamp(),
                     'color' => $event->getPriority()
                     )
             ),
@@ -141,9 +141,11 @@ class CalendarController extends Controller
         $form = $this->createForm(new CalendarType(), $event);
 
         if ($request->getMethod() === 'POST') {
+
             $form->bindRequest($request);
 
             if ($form->isValid()) {
+
                 $em->persist($event);
                 $em->flush();
             }
@@ -187,7 +189,7 @@ class CalendarController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $usr = $this-> get('security.context')-> getToken()-> getUser();
-        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUser($usr);
+        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, 0);
         $data = array();
         foreach ($listEvents as $key => $object) {
             $data[$key]['id'] = $object->getId();
@@ -197,7 +199,6 @@ class CalendarController extends Controller
             $data[$key]['start'] = $object->getStart();
             $data[$key]['end'] = $object->getEnd();
             $data[$key]['color'] = $object->getPriority();
-
         }
 
         return new Response(
