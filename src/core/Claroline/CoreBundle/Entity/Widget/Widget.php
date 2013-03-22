@@ -41,6 +41,11 @@ class Widget
      */
     protected $icon;
 
+    /**
+     * @ORM\Column(type="boolean", name="is_exportable")
+     */
+    protected $isExportable;
+
     public function getId()
     {
         return $this->id;
@@ -84,5 +89,15 @@ class Widget
     public function getIcon()
     {
         return $this->icon;
+    }
+
+    public function setExportable($isExportable)
+    {
+        $this->isExportable = $isExportable;
+    }
+
+    public function isExportable()
+    {
+        return $this->isExportable;
     }
 }

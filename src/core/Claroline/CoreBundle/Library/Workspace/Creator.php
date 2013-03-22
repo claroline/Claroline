@@ -68,7 +68,7 @@ class Creator
 
         foreach ($toolsConfig as $name => $conf) {
             $event = new ImportWorkspaceEvent($workspace, $conf, $archive, $rootDir, $manager);
-            $this->ed->dispatch('import_workspace_'.$name, $event);
+            $this->ed->dispatch('tool_'.$name.'_from_template', $event);
         }
 
         $manager->addRole($this->roleRepo->findManagerRole($workspace));
