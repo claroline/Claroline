@@ -20,6 +20,11 @@
             </a>
         </li>
     </ul>
+    <div> <strong>Couleur</strong>
+    <span style="color:#FF0000">  {{ 'high'|trans({}, 'calendar') }} </span>
+    <span style="color:#01A9DB"> {{ 'medium'|trans({}, 'calendar') }} </span>
+    <span style="color:#848484"> {{ 'low'|trans({}, 'calendar') }} </span> 
+    </div>
     <div id='calendar' class="span9"></div>
     <div  id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
@@ -46,12 +51,6 @@
     </div>
 
     <div class="span2">
-        <div> Couleur</div>
-        <ul>
-            <li style="color:#FF0000">  {{ 'high'|trans({}, 'calendar') }} </span></li>
-            <li style="color:#01A9DB"> {{ 'medium'|trans({}, 'calendar') }} </li>
-            <li style="color:#848484"> {{ 'low'|trans({}, 'calendar') }} </li>
-        </ul>
         <h4> <u>{{'task'|trans({}, 'calendar') }} </u></h4>
         {% for e in listEvents  %}
         <div class="border">

@@ -76,12 +76,21 @@ class ToolListener extends ContainerAware
         foreach ($configs as $config) {
             $widgetArray = array();
             $ed = $this->container->get('event_dispatcher');
-            $newEvent = new ExportWidgetConfigEvent($config->getWidget(), $workspace, $event->getArchive());
-            $ed->dispatch("widget_export_{$config->getWidget()->getName()}_configuration", $newEvent);
             $widgetArray['name'] = $config->getWidget()->getName();
             $widgetArray['is_visible'] = $config->isVisible();
-
-            if ($newEvent->getConfig() != null) {
+            if ($config->getWidget()->isExportable()) {
+                $newEvent = new ExportWidgetConfigEvent(
+                    $config->getWidget(),
+                    $workspace,
+                    $event->getArchive()
+                );
+                $ed->dispatch("widget_{$config->getWidget()->getName()}_to_template", $newEvent);
+                if ($newEvent->getConfig() === null) {
+                    throw new \Exception(
+                        "The event widget_{$config->getWidget()->getName()}_to_template" .
+                        " did not return any response"
+                    );
+                }
                 $widgetArray['config'] = $newEvent->getConfig();
             }
 
@@ -93,6 +102,8 @@ class ToolListener extends ContainerAware
     }
 
     //@todo: Optimize this if possible (it should be possible to reduce the number of dql requests)
+    //@todo: When exporting the resource, there should be only "exportable" resources. Therefore
+    //the query builder must be updated
     //because a new request is made each time to retrieve each resource right.
     public function onExportResource(ExportWorkspaceEvent $event)
     {
@@ -111,8 +122,11 @@ class ToolListener extends ContainerAware
 
         foreach ($children as $child) {
             $newEvent = new ExportResourceTemplateEvent($child, $event->getArchive());
-            $ed->dispatch("export_directory_template", $newEvent);
+            $ed->dispatch("resource_directory_to_template", $newEvent);
             $dataChildren = $newEvent->getConfig();
+            if ($dataChildren == null) {
+                throw new \Exception('The event resource_directory_to_template did not return any config');
+            }
             $config['directory'][] = $dataChildren;
         }
 
@@ -126,30 +140,32 @@ class ToolListener extends ContainerAware
         }
 
         $criteria['roots'] = array($root->getName());
+        $criteria['isExportable'] = true;
         $config['resources'] = array();
         $resources = $resourceRepo->findUserResourcesByCriteria($criteria, null, true);
 
         foreach ($resources as $resource) {
             $newEvent = new ExportResourceTemplateEvent($resourceRepo->find($resource['id']), $event->getArchive());
-            $ed->dispatch("export_{$resource['type']}_template", $newEvent);
+            $ed->dispatch("resource_{$resource['type']}_to_template", $newEvent);
             $dataResources = $newEvent->getConfig();
 
-            if ($dataResources !== null) {
-                foreach ($roles as $role) {
-                    $perms = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
-                        ->findMaximumRights(array($role->getName()), $root);
-                    $perms['canCreate'] = array();
-
-                    $dataResources['perms'][rtrim(str_replace(range(0, 9), '', $role->getName()), '_')] = $perms;
-                }
-
-                $dataResources['parent'] = $resource['parent_id'];
-                $dataResources['id'] = $resource['id'];
-                $dataResources['type'] = $resource['type'];
-                $dataResources['name'] = $resource['name'];
-                $config['resources'][] = $dataResources;
-
+            if ($dataResources === null) {
+                throw new \Exception("The event resource_{$resource['type']}_to_template did not return any config");
             }
+
+            foreach ($roles as $role) {
+                $perms = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
+                    ->findMaximumRights(array($role->getName()), $root);
+                $perms['canCreate'] = array();
+
+                $dataResources['perms'][rtrim(str_replace(range(0, 9), '', $role->getName()), '_')] = $perms;
+            }
+
+            $dataResources['parent'] = $resource['parent_id'];
+            $dataResources['id'] = $resource['id'];
+            $dataResources['type'] = $resource['type'];
+            $dataResources['name'] = $resource['name'];
+            $config['resources'][] = $dataResources;
         }
 
         $config['resources'] = $this->sortResources($config['resources']);
@@ -182,7 +198,7 @@ class ToolListener extends ContainerAware
                         $event->getWorkspace(),
                         $event->getArchive()
                     );
-                    $ed->dispatch("widget_import_{$widgetConfig['name']}_configuration", $newEvent);
+                    $ed->dispatch("widget_{$widgetConfig['name']}_from_template", $newEvent);
                 }
 
                 $em->persist($displayConfig);
@@ -201,7 +217,7 @@ class ToolListener extends ContainerAware
 
         foreach ($config['directory'] as $resource) {
             $newEvent = new ImportResourceTemplateEvent($resource, $root, $event->getArchive(), $event->getUser());
-            $ed->dispatch("import_{$resource['type']}_template", $newEvent);
+            $ed->dispatch("resource_{$resource['type']}_from_template", $newEvent);
 
             $childResources = $newEvent->getCreatedResources();
 
@@ -213,7 +229,7 @@ class ToolListener extends ContainerAware
         foreach ($config['resources'] as $resource) {
             $newEvent = new ImportResourceTemplateEvent($resource, $root, $event->getArchive(), $event->getUser());
             $newEvent->setCreatedResources($createdResources);
-            $ed->dispatch("import_{$resource['type']}_template", $newEvent);
+            $ed->dispatch("resource_{$resource['type']}_from_template", $newEvent);
             $resourceEntity = $newEvent->getResource();
 
             if ($resourceEntity !== null) {

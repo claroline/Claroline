@@ -9,7 +9,7 @@
         var clickedDate = null,
             id = null,
             url = null;
-        var dayClickWorkspace = function (date, allDay) {
+        var dayClickWorkspace = function (date) {
             clickedDate = date;
             $('#deleteBtn').hide();
             $('#save').show();
@@ -18,27 +18,22 @@
             $('#calendar_form').find('input:radio, input:checkbox')
                 .removeAttr('checked')
                 .removeAttr('selected');
-            
-                var  currentDate = new Date();
-                var pickedDate = new Date(date);
-                $('#calendar_form_start').val(date.getDate()+ '/' +
-                    (date.getMonth() + 1) + '/' + date.getFullYear())
-                if (pickedDate > currentDate) {
-                    $('#calendar_form_end').val(pickedDate.getDate()+ '/' +
+            var  currentDate = new Date();
+            var pickedDate = new Date(date);
+            $('#calendar_form_start').val(date.getDate() + '/' +
+                (date.getMonth() + 1) + '/' + date.getFullYear());
+            if (pickedDate > currentDate) {
+                $('#calendar_form_end').val(pickedDate.getDate() + '/' +
                     (pickedDate.getMonth() + 1) + '/' + pickedDate.getFullYear());
-                } else {
-                    $('#calendar_form_end').val(currentDate.getDate()+ '/' +
+            } else {
+                $('#calendar_form_end').val(currentDate.getDate() + '/' +
                     (currentDate.getMonth() + 1) + '/' + currentDate.getFullYear());
-                }
-
-                $('#myModal').modal();
-            
+            }
+            $('#myModal').modal();
         };
-
         var dayClickDesktop = function () {
             alert('Not implemented yet');
         };
-
         var dayClickFunction = context === 'desktop' ? dayClickDesktop : dayClickWorkspace;
 
         $('#save').click(function () {
@@ -126,7 +121,6 @@
                         $('#myModal').modal('hide');
                         $('#deleteBtn').removeAttr('disabled');
                         $('#calendar').fullCalendar('removeEvents', id);
-                        
                     }
                 }
             });
@@ -145,13 +139,13 @@
             $('#save').hide();
             var list = e.target.parentElement.children;
             $('#myModal').modal('show');
-            $('#calendar_form').find('input:text, input:password, input:file, select, textarea').val('');         
+            $('#calendar_form').find('input:text, input:password, input:file, select, textarea').val('');
             $('#myModalLabel').val('Modifier une entrée');
             $('#calendar_form_title')
-                .attr('value',$(e.target.parentElement.parentElement.children)[1].innerHTML);
+                .attr('value', $(e.target.parentElement.parentElement.children)[1].innerHTML);
             $('#calendar_form_start').val($(list[0])[0].innerHTML);
             $('#calendar_form_end').val($(list[1])[0].innerHTML);
-            $('#calendar_form_description').val($(list[2])[0].innerHTML);  
+            $('#calendar_form_description').val($(list[2])[0].innerHTML);
         });
         function dropEvent(event, dayDelta, minuteDelta) {
             id = event.id;
