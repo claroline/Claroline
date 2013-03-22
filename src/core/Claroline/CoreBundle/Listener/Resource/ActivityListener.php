@@ -95,7 +95,7 @@ class ActivityListener extends ContainerAware
 
         foreach ($resourceActivities as $resourceActivity) {
             if ($resourceActivity->getResource()->getWorkspace() === $resource->getWorkspace()) {
-                $resourceActivityConfig['id'] =  $resourceActivity->getResource()->getId();
+                $resourceActivityConfig['id'] = $resourceActivity->getResource()->getId();
                 $resourceActivityConfig['order'] = $resourceActivity->getSequenceOrder();
                 $config['resources'][] = $resourceActivityConfig;
             }

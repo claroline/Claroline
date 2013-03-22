@@ -73,11 +73,11 @@ class CalendarType extends AbstractType
                 )
         )
 
-         ->setOptional(
+        ->setOptional(
             array (
                 'start',
                 'end'
             )
-         );
+        );
     }
 }
