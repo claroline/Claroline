@@ -51,7 +51,8 @@ Full plugin configuration file example:
 
       widgets:
         - name: claroline_mywidget1
-          is_configurable: false
+    #     is_configurable: false
+          is_exportable: true
     #   - name: claroline_mywidget2
     #     is_configurable: false
 
@@ -60,11 +61,13 @@ Full plugin configuration file example:
           name: claroline_example
           is_visible: true
           is_browsable: true
+          is_exportable: false
           icon: res_text.png
 
       tools:
         - name: claroline_mytool
           #class: res_text.png
+          #is_exportable: true
           is_displayable_in_workspace: true
           is_displayable_in_desktop: true
 

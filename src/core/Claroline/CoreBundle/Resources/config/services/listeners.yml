@@ -40,8 +40,8 @@ services:
             - { name: kernel.event_listener, event: create_form_directory, method: onCreateForm }
             - { name: kernel.event_listener, event: create_directory, method: onCreate }
             - { name: kernel.event_listener, event: open_directory, method: onOpen }
-            - { name: kernel.event_listener, event: export_directory_template, method: onExportTemplate }
-            - { name: kernel.event_listener, event: import_directory_template, method: onImportTemplate }
+            - { name: kernel.event_listener, event: resource_directory_to_template, method: onExportTemplate }
+            - { name: kernel.event_listener, event: resource_directory_from_template, method: onImportTemplate }
 
     claroline.listener.file_listener:
         class: Claroline\CoreBundle\Listener\Resource\FileListener
@@ -52,10 +52,10 @@ services:
             - { name: kernel.event_listener, event: create_file, method: onCreate }
             - { name: kernel.event_listener, event: delete_file, method: onDelete }
             - { name: kernel.event_listener, event: copy_file, method: onCopy }
-            - { name: kernel.event_listener, event: export_file, method: onExport }
+            - { name: kernel.event_listener, event: download_file, method: onDownload }
             - { name: kernel.event_listener, event: open_file, method: onOpen }
-            - { name: kernel.event_listener, event: export_file_template, method: onExportTemplate }
-            - { name: kernel.event_listener, event: import_file_template, method: onImportTemplate }
+            - { name: kernel.event_listener, event: resource_file_to_template, method: onExportTemplate }
+            - { name: kernel.event_listener, event: resource_file_from_template, method: onImportTemplate }
 
     claroline.listener.text_listener:
         class: Claroline\CoreBundle\Listener\Resource\TextListener
@@ -66,6 +66,9 @@ services:
             - { name: kernel.event_listener, event: create_text, method: onCreate }
             - { name: kernel.event_listener, event: open_text, method: onOpen }
             - { name: kernel.event_listener, event: delete_text, method: onDelete }
+            - { name: kernel.event_listener, event: copy_text, method: onCopy }
+            - { name: kernel.event_listener, event: resource_text_to_template, method: onExportTemplate }
+            - { name: kernel.event_listener, event: resource_text_from_template, method: onImportTemplate }
 
     claroline.listener.activity_listener:
         class: Claroline\CoreBundle\Listener\Resource\ActivityListener
@@ -75,7 +78,10 @@ services:
             - { name: kernel.event_listener, event: create_form_activity, method: onCreateForm }
             - { name: kernel.event_listener, event: create_activity, method: onCreate }
             - { name: kernel.event_listener, event: open_activity, method: onOpen }
+            - { name: kernel.event_listener, event: copy_activity, method: onCopy }
             - { name: kernel.event_listener, event: delete_activity, method: onDelete }
+            - { name: kernel.event_listener, event: resource_activity_to_template, method: onExportTemplate }
+            - { name: kernel.event_listener, event: resource_activity_from_template, method: onImportTemplate }
 
     claroline.listener.logger:
         class: Claroline\CoreBundle\Listener\LogListener
@@ -108,7 +114,7 @@ services:
         - { name: kernel.event_listener, event: open_tool_desktop_home, method: onDisplayDesktopHome }
         - { name: kernel.event_listener, event: open_tool_desktop_parameters, method: onDisplayDesktopParameters }
         - { name: kernel.event_listener, event: open_tool_desktop_calendar, method: onDisplayDesktopCalendar }
-        - { name: kernel.event_listener, event: export_workspace_home, method: onExportHome }
-        - { name: kernel.event_listener, event: import_workspace_home, method: onImportHome }
-        - { name: kernel.event_listener, event: export_workspace_resource_manager, method: onExportResource }
-        - { name: kernel.event_listener, event: import_workspace_resource_manager, method: onImportResource }
+        - { name: kernel.event_listener, event: tool_home_to_template, method: onExportHome }
+        - { name: kernel.event_listener, event: tool_home_from_template, method: onImportHome }
+        - { name: kernel.event_listener, event: tool_resource_manager_to_template, method: onExportResource }
+        - { name: kernel.event_listener, event: tool_resource_manager_from_template, method: onImportResource }

@@ -31,7 +31,7 @@ class DesktopController extends Controller
 
         foreach ($configs as $config) {
             if ($config->isVisible()) {
-                $eventName = strtolower("widget_{$config->getWidget()->getName()}_desktop");
+                $eventName = "widget_{$config->getWidget()->getName()}_desktop";
                 $event = new DisplayWidgetEvent();
                 $this->get('event_dispatcher')->dispatch($eventName, $event);
                 $responsesString[strtolower($config->getWidget()->getName())] = $event->getContent();

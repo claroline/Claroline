@@ -4,10 +4,9 @@ namespace Claroline\CoreBundle\Library\Workspace;
 
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\Event\ImportWorkspaceEvent;
-use Claroline\CoreBundle\Library\Security\RightManager\RightManager;
+use Claroline\CoreBundle\Library\Resource\Manager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole;
@@ -16,14 +15,14 @@ use Claroline\CoreBundle\Entity\Tool\WorkspaceOrderedTool;
 class Creator
 {
     private $entityManager;
-    private $rightManager;
+    private $manager;
     private $roleRepo;
     private $ed;
 
-    public function __construct(EntityManager $em, RightManager $rm, $ed)
+    public function __construct(EntityManager $em, Manager $rm, $ed)
     {
         $this->entityManager = $em;
-        $this->rightManager = $rm;
+        $this->manager = $rm;
         $this->roleRepo = $this->entityManager->getRepository('ClarolineCoreBundle:Role');
         $this->ed = $ed;
     }
@@ -60,16 +59,16 @@ class Creator
         $rootDir->setIcon($directoryIcon);
         $rootDir->setResourceType($directoryType);
         $rootDir->setWorkspace($workspace);
-        $this->setResourceOwnerRights(true, true, true, true, true, $rootDir);
+        $this->manager->setResourceRights($rootDir, $config->getPermsRootConfiguration());
         $this->entityManager->persist($rootDir);
         $this->entityManager->flush();
-        $toolsConfig = $config->getToolsConfiguration();
         $archive = new \ZipArchive();
         $archive->open($config->getTemplateFile());
+        $toolsConfig = $config->getToolsConfiguration();
 
         foreach ($toolsConfig as $name => $conf) {
-            $event = new ImportWorkspaceEvent($workspace, $conf, $archive);
-            $this->ed->dispatch('import_workspace_'.$name, $event);
+            $event = new ImportWorkspaceEvent($workspace, $conf, $archive, $rootDir, $manager);
+            $this->ed->dispatch('tool_'.$name.'_from_template', $event);
         }
 
         $manager->addRole($this->roleRepo->findManagerRole($workspace));
@@ -145,7 +144,6 @@ class Creator
             $wot->setOrder($order);
             $this->entityManager->persist($wot);
             $this->entityManager->flush();
-
             $order++;
 
             foreach ($data['perms'] as $role) {
@@ -178,30 +176,5 @@ class Creator
         $wtr->setWorkspaceOrderedTool($wot);
         $this->entityManager->persist($wtr);
         $this->entityManager->flush();
-    }
-
-    private function setResourceOwnerRights(
-        $isSharable,
-        $isEditable,
-        $isDeletable,
-        $isExportable,
-        $isCopiable,
-        AbstractResource $resource
-    )
-    {
-        $resource->setSharable($isSharable);
-        $resource->setEditable($isEditable);
-        $resource->setDeletable($isDeletable);
-        $resource->setExportable($isExportable);
-        $resource->setCopiable($isCopiable);
-        $resourceTypes = $this->entityManager
-            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-            ->findBy(array('isVisible' => true));
-
-        foreach ($resourceTypes as $resourceType) {
-            $resource->addResourceTypeCreation($resourceType);
-        }
-
-        return $resource;
     }
 }

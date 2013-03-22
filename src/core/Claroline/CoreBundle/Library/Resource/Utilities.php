@@ -44,19 +44,6 @@ class Utilities
     }
 
     /**
-     * Normalize events name.
-     * 
-     * @param string $prefix
-     * @param string $resourceType
-     *
-     * @return string
-     */
-    public function normalizeEventName($prefix, $resourceType)
-    {
-        return $prefix . '_' . strtolower(str_replace(' ', '_', $resourceType));
-    }
-
-    /**
      * Generates a globally unique identifier.
      *
      * @see http://php.net/manual/fr/function.com-create-guid.php

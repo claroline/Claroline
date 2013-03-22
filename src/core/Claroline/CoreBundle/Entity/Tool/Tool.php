@@ -70,6 +70,11 @@ class Tool
     protected $isDisplayableInDesktop;
 
     /**
+     * @ORM\Column(type="boolean", name="is_exportable")
+     */
+    protected $isExportable;
+
+    /**
      * Unmapped var used for the tool configuration.
      *
      * @var boolean
@@ -174,6 +179,16 @@ class Tool
     public function isDisplayableInDesktop()
     {
         return $this->isDisplayableInDesktop;
+    }
+
+    public function setExportable($isExportable)
+    {
+        $this->isExportable = $isExportable;
+    }
+
+    public function isExportable()
+    {
+        return $this->isExportable;
     }
 }
 
