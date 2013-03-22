@@ -48,8 +48,8 @@ This is done by cloning the repositories in the *Standards* directory of your PH
 installation. The name of the directories in which the standards are cloned is important,
 so be sure to specify them that way :
 
-    $ git clone https://github.com/klaussilveira/phpcs-psr PSR
-    $ git clone https://github.com/opensky/Symfony2-coding-standard Symfony2
+    $ git clone https://github.com/klaussilveira/phpcs-psr.git PSR
+    $ git clone https://github.com/opensky/Symfony2-coding-standard.git Symfony2
 
 Usage example :
 
