@@ -51,8 +51,8 @@ class InstallController extends Controller
             'local' => (is_writable('../app/config/local') ? 'OK' : 'KO'),
             'file' => (is_writable('../files') ? 'OK' : 'KO'),
             'web' => (is_writable('../web') ? 'OK' : 'KO'),
-             'log' => (is_writable('../app/logs') ? 'OK' : 'KO'),
-             'cache' =>(is_writable('app/cache/') ? 'OK' : 'KO'),
+            'log' => (is_writable('../app/logs') ? 'OK' : 'KO'),
+            'cache' => (is_writable('app/cache/') ? 'OK' : 'KO'),
             'lg' => $lg
 
         );
