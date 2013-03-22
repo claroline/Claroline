@@ -302,4 +302,67 @@ class ParametersControllerTest extends FunctionalTestCase
         );
         $this->assertEquals($wsBCode, $crawler->filter('#workspace_edit_form_code')->attr('value'));
     }
+
+    public function testRenameWorkspaceOrderTool()
+    {
+        $home = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool')
+            ->findOneBy(array('name' => 'home'));
+        $workspace = $this->getWorkspace('john');
+        $this->logUser($this->getUser('john'));
+        $wot = $this->em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
+            ->findOneBy(array('tool' => $home, 'workspace' => $workspace));
+
+        $crawler = $this->client->request(
+            'GET',
+            "/workspaces/tool/properties/{$workspace->getId()}/tools/{$wot->getId()}/editform"
+        );
+        $form = $crawler->filter('button[type=submit]')->form();
+        $form['workspace_order_tool_edit_form[translationKey]'] = 'modified_translation_key';
+        $this->client->submit($form);
+        $this->em->clear();
+
+        $newTranslationKey = $this->em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
+            ->findOneBy(array('tool' => $home, 'workspace' => $workspace))
+            ->getTranslationKey();
+
+        $this->assertEquals(
+            'modified_translation_key',
+            $newTranslationKey
+        );
+    }
+
+    public function testCantRenameWorkspaceOrderToolWithAnotherWOTName()
+    {
+        $home = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool')
+            ->findOneBy(array('name' => 'home'));
+        $workspace = $this->getWorkspace('john');
+        $this->logUser($this->getUser('john'));
+        $wot = $this->em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
+            ->findOneBy(array('tool' => $home, 'workspace' => $workspace));
+        $oldTranslationKey = $wot->getTranslationKey();
+
+        $resourceManager = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool')
+            ->findOneBy(array('name' => 'resource_manager'));
+        $rmTranslationKey = $this->em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
+            ->findOneBy(array('tool' => $resourceManager, 'workspace' => $workspace))
+            ->getTranslationKey();
+
+        $crawler = $this->client->request(
+            'GET',
+            "/workspaces/tool/properties/{$workspace->getId()}/tools/{$wot->getId()}/editform"
+        );
+        $form = $crawler->filter('button[type=submit]')->form();
+        $form['workspace_order_tool_edit_form[translationKey]'] = $rmTranslationKey;
+        $this->client->submit($form);
+        $this->em->clear();
+
+        $newTranslationKey = $this->em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
+            ->findOneBy(array('tool' => $home, 'workspace' => $workspace))
+            ->getTranslationKey();
+
+        $this->assertEquals(
+            $oldTranslationKey,
+            $newTranslationKey
+        );
+    }
 }
