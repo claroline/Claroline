@@ -9,7 +9,9 @@
 
     <div class="search-bar">
         <button class="btn btn-secondary delete-msg" id="delete-msg">{{ 'delete'|trans({}, 'platform') }}</button>
-        <span>&nbsp;&nbsp;{{'select all'|trans({}, 'platform')}} <input type="checkbox" name="all" id="allChecked"/></span>
+        <span>&nbsp;&nbsp;
+            
+            {{'select all'|trans({}, 'platform')}} <input type="checkbox" name="all" id="allChecked"/></span>
 
         <div class="input-append pull-right">
             <input class="input-medium" type="text" id="search-msg-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
@@ -40,7 +42,7 @@
         <div class="modal-header">
         </div>
         <div class="modal-body" id="modal-body">
-            <div id="validation-box-body"></div>
+            <div id="validation-box-body">{{'messages_confirm_delete'|trans({}, 'platform') }}</div>
             <div id="deleting" class="loading"></div>
         </div>
         <div class="modal-footer">

@@ -9,7 +9,7 @@ class EventRepository extends EntityRepository
     /*
     * Get all the user's events by collecting all the workspace where is allowed to write
     */
-    public function findByUser(User $user )
+    public function findByUser(User $user , $allDay)
     {
         $dql = "
             SELECT e 
@@ -22,14 +22,14 @@ class EventRepository extends EntityRepository
                 JOIN r.users u
                 WHERE u.id = :userId
             )
-            WHERE e.allDay = 1
+            WHERE e.allDay = :allDay
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userId', $user->getId());
+        $query->setParameter('allDay', $allDay);
 
         return $query->getResult();
     }
-
 
     public function findByWorkspaceId($workspaceId,$allDay)
     {

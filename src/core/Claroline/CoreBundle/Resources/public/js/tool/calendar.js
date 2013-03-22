@@ -10,7 +10,6 @@
             id = null,
             url = null;
         var dayClickWorkspace = function (date, allDay) {
-            $('#calendar_form_end_day').datepicker('show');
             clickedDate = date;
             $('#deleteBtn').hide();
             $('#save').show();
@@ -19,25 +18,21 @@
             $('#calendar_form').find('input:radio, input:checkbox')
                 .removeAttr('checked')
                 .removeAttr('selected');
-
-            if (allDay) {
+            
                 var  currentDate = new Date();
                 var pickedDate = new Date(date);
-                $('#divTitle').html('Start date ' + pickedDate.getDate() + '/' +
-                    (pickedDate.getMonth() + 1) + '/' + pickedDate.getFullYear());
-
+                $('#calendar_form_start').val(date.getDate()+ '/' +
+                    (date.getMonth() + 1) + '/' + date.getFullYear())
                 if (pickedDate > currentDate) {
-                    $('#calendar_form_end_day').val(pickedDate.getDate());
-                    $('#calendar_form_end_month').val(pickedDate.getMonth() + 1);
-                    $('#calendar_form_end_year').val(pickedDate.getFullYear());
+                    $('#calendar_form_end').val(pickedDate.getDate()+ '/' +
+                    (pickedDate.getMonth() + 1) + '/' + pickedDate.getFullYear());
                 } else {
-                    $('#calendar_form_end_day').val(currentDate.getDate());
-                    $('#calendar_form_end_month').val(currentDate.getMonth() + 1);
-                    $('#calendar_form_end_year').val(currentDate.getFullYear());
+                    $('#calendar_form_end').val(currentDate.getDate()+ '/' +
+                    (currentDate.getMonth() + 1) + '/' + currentDate.getFullYear());
                 }
 
                 $('#myModal').modal();
-            }
+            
         };
 
         var dayClickDesktop = function () {
@@ -128,9 +123,10 @@
                 },
                 'success': function (xhr) {
                     if (xhr.status === 200) {
+                        $('#myModal').modal('hide');
                         $('#deleteBtn').removeAttr('disabled');
                         $('#calendar').fullCalendar('removeEvents', id);
-                        $('#myModal').modal('hide');
+                        
                     }
                 }
             });
@@ -146,16 +142,16 @@
         });
 
         $('.update-task').on('click', function (e) {
+            $('#save').hide();
             var list = e.target.parentElement.children;
             $('#myModal').modal('show');
-            var Event = {};
-            Event.start = $(list[0])[0].innerHTML;
-            Event.end = $(list[1])[0].innerHTML;
-            Event.title = $(e.target.parentElement.parentElement.children)[1].innerHTML;
-            Event.description = $(list[2])[0].innerHTML;
-            Event.color = $(list[3])[0].innerHTML;
-            console.debug(Event);
-            modifiedEvent(Event);
+            $('#calendar_form').find('input:text, input:password, input:file, select, textarea').val('');         
+            $('#myModalLabel').val('Modifier une entrée');
+            $('#calendar_form_title')
+                .attr('value',$(e.target.parentElement.parentElement.children)[1].innerHTML);
+            $('#calendar_form_start').val($(list[0])[0].innerHTML);
+            $('#calendar_form_end').val($(list[1])[0].innerHTML);
+            $('#calendar_form_description').val($(list[2])[0].innerHTML);  
         });
         function dropEvent(event, dayDelta, minuteDelta) {
             id = event.id;
@@ -206,23 +202,21 @@
             $('#calendar_form_description').val(calEvent.description);
             $('#calendar_form_priority option[value=' + calEvent.color + ']').attr('selected', 'selected');
             var pickedDate = new Date(calEvent.start);
+            $('#calendar_form_start').val(pickedDate.getDate() + '/' +
+                (pickedDate.getMonth() + 1) + '/' + pickedDate.getFullYear());
             if (calEvent.end === null)
             {
 
-                $('#calendar_form_end_day').val(pickedDate.getDate());
-                $('#calendar_form_end_month').val(pickedDate.getMonth() + 1);
-                $('#fcalendar_form_end_year').val(pickedDate.getFullYear());
+                $('#calendar_form_end').val(pickedDate.getDate() + '/' +
+                (pickedDate.getMonth() + 1) + '/' + pickedDate.getFullYear());
             }
             else
             {
                 var Enddate = new Date(calEvent.end);
-                $('#calendar_form_end_day').val(Enddate.getDate());
-                $('#calendar_form_end_month').val(Enddate.getMonth() + 1);
-                $('#fcalendar_form_end_year').val(Enddate.getFullYear());
+                $('#calendar_form_end').val(Enddate.getDate() + '/' +
+                (Enddate.getMonth() + 1) + '/' + Enddate.getFullYear());
             }
 
-            $('#divTitle').html('Start date ' + pickedDate.getDate() + '/' +
-                (pickedDate.getMonth() + 1) + '/' + pickedDate.getFullYear());
             $.ajaxSetup({
                 'type': 'POST',
                 'error': function (xhr, textStatus) {
@@ -261,7 +255,6 @@
             },
             dayClick: dayClickFunction,
             eventClick:  function (calEvent) {
-                console.debug(calEvent);
                 modifiedEvent(calEvent);
             },
             eventRender: function () {

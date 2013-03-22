@@ -1,7 +1,6 @@
 !placeholder
 !.gitempty
 !templates/default.zip
-!templates/fougères.zip
 catalog.xml
 nbproject/*
 app/cache/*
@@ -16,6 +15,7 @@ app/build/pdepend
 app/build/tools/phpunit.xml
 app/config/local/parameters.yml
 app/config/local/plugin/*
+app/config/local/install.yml
 vendor/*
 web/bundles/*
 web/twig.js
@@ -29,4 +29,3 @@ web/thumbnails/*
 test/files/tmp/*
 src/core/Claroline/CoreBundle/Resources/public/css/themes/*
 templates/*
-
