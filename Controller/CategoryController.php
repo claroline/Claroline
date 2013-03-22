@@ -172,7 +172,7 @@ class CategoryController extends Controller
         } else {
 
             return 0;
-        }             
+        }
 
     }
 

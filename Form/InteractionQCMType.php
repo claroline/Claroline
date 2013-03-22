@@ -58,7 +58,7 @@ class InteractionQCMType extends AbstractType
         $builder->add('scoreRightResponse', 'text', array('required' => false,
                                                           'label' => 'Inter_QCM.ScoreRightResponse'
                                                          ));
-        $builder->add('scoreFalseResponse', 'text', array('required' => false, 
+        $builder->add('scoreFalseResponse', 'text', array('required' => false,
                                                           'label' => 'Inter_QCM.ScoreFalseResponse'
                                                          ));
         $builder->add('weightResponse', 'checkbox', array('required' => false, 'label' => 'Inter_QCM.weightChoice'));

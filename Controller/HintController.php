@@ -82,7 +82,7 @@ class HintController extends Controller
             $entity = $em->getRepository('UJMExoBundle:Hint')->find($id);
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Hint entity.');
-            } 
+            }
             $deleteForm = $this->createDeleteForm($id);
 
             if ($request->request->get('paper') == null) {
@@ -104,9 +104,9 @@ class HintController extends Controller
                                                                        'entity'      => $entity,
                                                                        'delete_form' => $deleteForm->createView(),
 
-                                                                      ));                                         
+                                                                      ));
         } else {
-            
+
             return 0;
         }
     }
@@ -242,5 +242,5 @@ class HintController extends Controller
             ->add('id', 'hidden')
             ->getForm();
     }
-        
+
 }

@@ -134,8 +134,10 @@ class QuestionController extends Controller
 
                     $form   = $this->createForm(new ResponseType(), $response);
 
-                    return $this->render('UJMExoBundle:InteractionQCM:paper.html.twig',
-                            array('interactionQCM' => $interactionQCM[0], 'form'   => $form->createView()));
+                    return $this->render('UJMExoBundle:InteractionQCM:paper.html.twig', array(
+                                         'interactionQCM' => $interactionQCM[0],
+                                         'form'   => $form->createView()
+                                        ));
 
                     break;
 
@@ -153,8 +155,10 @@ class QuestionController extends Controller
 
                     $form   = $this->createForm(new ResponseType(), $response);
 
-                    return $this->render('UJMExoBundle:InteractionHole:paper.html.twig',
-                            array('interactionHole' => $interactionHole[0], 'form'   => $form->createView()));
+                    return $this->render('UJMExoBundle:InteractionHole:paper.html.twig', array(
+                                         'interactionHole' => $interactionHole[0],
+                                         'form'   => $form->createView()
+                                        ));
 
                     break;
 
@@ -194,7 +198,7 @@ class QuestionController extends Controller
             $em->flush();
 
             return $this->redirect($this->generateUrl('question_show', array('id' => $entity->getId())));
- 
+
         }
 
         return $this->render('UJMExoBundle:Question:new.html.twig', array(
@@ -260,7 +264,7 @@ class QuestionController extends Controller
                     $editForm = $this->createForm(new InteractionHoleType($this->container->get('security.context')
                             ->getToken()->getUser()), $interactionHole[0]);
                     $deleteForm = $this->createDeleteForm($interactionHole[0]->getId());
-                    
+
                     return $this->render('UJMExoBundle:InteractionHole:edit.html.twig', array(
                                          'entity'      => $interactionHole[0],
                                          'edit_form'   => $editForm->createView(),
@@ -350,8 +354,9 @@ class QuestionController extends Controller
                                            ->getEntityManager()
                                            ->getRepository('UJMExoBundle:InteractionQCM')
                                            ->getInteractionQCM($interaction[0]->getId());
-                    return $this->forward('UJMExoBundle:InteractionQCM:delete',
-                            array('id' => $interactionQCM[0]->getId()));
+                    return $this->forward('UJMExoBundle:InteractionQCM:delete', array(
+                                          'id' => $interactionQCM[0]->getId()
+                                         ));
 
                     break;
 
@@ -364,15 +369,16 @@ class QuestionController extends Controller
                                             ->getEntityManager()
                                             ->getRepository('UJMExoBundle:InteractionHole')
                                             ->getInteractionHole($interaction[0]->getId());
-                    return $this->forward('UJMExoBundle:InteractionHole:delete',
-                            array('id' => $interactionHole[0]->getId()));
+                    return $this->forward('UJMExoBundle:InteractionHole:delete', array(
+                                          'id' => $interactionHole[0]->getId()
+                                         ));
 
                     break;
 
                 case "InteractionOpen":
 
                     break;
-           }
+            }
 
         }
 
@@ -447,10 +453,10 @@ class QuestionController extends Controller
                                                                               ));
                 }
 
-            } else{
+            } else {
 
-            }          
-        } 
+            }
+        }
     }
 
     /**

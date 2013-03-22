@@ -59,11 +59,11 @@ class QuestionType extends AbstractType
         $uid = $this->user->getId();
         $builder
             ->add('title', 'text', array('label' => 'Question.title'))
-            ->add('category', 'entity', array('class' => 'UJM\\ExoBundle\\Entity\\Category', 
+            ->add('category', 'entity', array('class' => 'UJM\\ExoBundle\\Entity\\Category',
                                               'label' => 'Category.value',
                                               'query_builder' => function (CategoryRepository $cr) use ($uid) {
                                                                     return $cr->getUserCategory($uid);
-                                                                 }
+                                              }
                                              ))
             ->add('description', 'textarea', array('attr' => array('class' => 'tinymce', 'data-theme' => 'medium'),
                                                    'required' => false, 'label' => 'Question.description'

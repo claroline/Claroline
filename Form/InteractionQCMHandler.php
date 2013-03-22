@@ -72,7 +72,7 @@ class InteractionQCMHandler
 
             if ( $this->form->isValid() ) {
                 $this->onSuccessAdd($this->form->getData());
-                
+
                 return true;
             }
         }
@@ -95,7 +95,7 @@ class InteractionQCMHandler
         $ord = 1;
         foreach ($interQCM->getChoices() as $choice) {
             $choice->setOrdre($ord);
-            $interQCM->addChoice($choice);            
+            $interQCM->addChoice($choice);
             $this->em->persist($choice);
             $ord = $ord+1;
             //echo($choice->getRightResponse());
@@ -111,14 +111,14 @@ class InteractionQCMHandler
 
         if ($this->exercise != -1) {
             $exo = $this->em->getRepository('UJMExoBundle:Exercise')->find($this->exercise);
-            $eq = new ExerciseQuestion($exo,$interQCM->getInteraction()->getQuestion());
+            $eq = new ExerciseQuestion($exo, $interQCM->getInteraction()->getQuestion());
 
             $dql = 'SELECT max(eq.ordre) FROM UJM\ExoBundle\Entity\ExerciseQuestion eq '
                 . 'WHERE eq.exercise='.$this->exercise;
             $query = $this->em->createQuery($dql);
             $maxOrdre = $query->getResult();
 
-            $eq->setOrdre((int)$maxOrdre[0][1]+1);
+            $eq->setOrdre((int) $maxOrdre[0][1] + 1);
             $this->em->persist($eq);
 
             $this->em->flush();
@@ -144,7 +144,7 @@ class InteractionQCMHandler
 
             if ( $this->form->isValid() ) {
                 $this->onSuccessUpdate($this->form->getData(), $originalChoices, $originalHints);
-                
+
                 return true;
             }
         }
@@ -193,7 +193,7 @@ class InteractionQCMHandler
         $this->em->persist($interQCM);
         $this->em->persist($interQCM->getInteraction()->getQuestion());
         $this->em->persist($interQCM->getInteraction());
-            
+
         // On persiste tous les choices de l'interaction QCM.
         foreach ($interQCM->getChoices() as $choice) {
             $interQCM->addChoice($choice);

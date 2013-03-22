@@ -93,7 +93,7 @@ class ExerciseController extends Controller
                                 ));
         } else {
             $url = $this->container->get('request')->headers->get('referer');
-            
+
             return new RedirectResponse($url);
         }
     }
@@ -133,7 +133,7 @@ class ExerciseController extends Controller
         } else {
             return $this->redirect($this->generateUrl('exercise'));
         }
-   }
+    }
 
     /**
     *To import in this Exercise a Question of the User's bank.
@@ -187,7 +187,7 @@ class ExerciseController extends Controller
             $query = $em->createQuery($dql);
             $maxOrdre = $query->getResult();
 
-            $eq->setOrdre((int)$maxOrdre[0][1]+1);
+            $eq->setOrdre((int) $maxOrdre[0][1]+1);
             $em->persist($eq);
 
             $em->flush();
@@ -267,7 +267,7 @@ class ExerciseController extends Controller
                                      ->getExerciseInteraction($this->getDoctrine()
                                              ->getEntityManager(), $id, $exercise->getShuffle(), $exercise->getNbQuestion());
 
-                foreach($interactions as $interaction) {
+                foreach ($interactions as $interaction) {
                     $orderInter = $orderInter.$interaction->getId().';';
                     $tabOrderInter[] = $interaction->getId();
                 }
@@ -358,7 +358,7 @@ class ExerciseController extends Controller
 
         //To display selectioned question
         $numQuestionToDisplayed = $request->get('numQuestionToDisplayed');
-        
+
         if ($numQuestionToDisplayed == 'finish') {
             return $this->finishExercise();
         } elseif ($numQuestionToDisplayed == 'interupt') {
@@ -381,7 +381,7 @@ class ExerciseController extends Controller
     {
         $session = $this->getRequest()->getSession();
         $tabOrderInter = $session->get('tabOrderInter');
-        
+
         switch ($typeInterToDisplayed) {
             case "InteractionQCM":
 
@@ -519,7 +519,7 @@ class ExerciseController extends Controller
         if ( ($subscription[0]->getAdmin() != 1) && ($exercise->getMaxAttempts() > 0 )
                 && ($exercise->getMaxAttempts() <= $this->container->get('UJM_Exo.exerciseServices')->getNbPaper($user->getId(), $exercise->getId())) ) {
             return false;
-        }  else {
+        } else {
             return true;
         }
     }
