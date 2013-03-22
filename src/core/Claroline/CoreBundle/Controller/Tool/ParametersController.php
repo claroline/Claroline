@@ -414,6 +414,8 @@ class ParametersController extends Controller
                 );
                 $em->persist($wot);
                 $em->flush();
+            } else {
+                continue;
             }
 
             foreach ($wsRoles as $role) {
