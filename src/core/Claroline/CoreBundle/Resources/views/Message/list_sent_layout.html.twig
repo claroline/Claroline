@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block section_content %}
-    
+
     <div class="search-bar">
         <button class="btn btn-secondary delete-msg" id="delete-msg">{{ 'delete'|trans({}, 'platform') }}</button>
         <span>&nbsp;&nbsp;{{'select all'|trans({}, 'platform')}} <input type="checkbox" name="all" id="allChecked"/></span>
@@ -14,7 +14,7 @@
         <div class="input-append pull-right">
             <input class="input-medium" type="text" id="search-msg-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
             <button class="filter btn" type="button" id="search-msg">
-                <i class="icon-search"></i> 
+                <i class="icon-search"></i>
             </button>
         </div>
     </div>
@@ -24,7 +24,7 @@
         <thead>
             <tr>
                 <th>{{ 'date'|trans({}, 'platform') }}</th>
-                <th>{{ 'to'|trans({}, 'platform') }}</th>
+                <th>{{ 'to_message'|trans({}, 'platform') }}</th>
                 <th>{{ 'object'|trans({}, 'platform') }}</th>
                 <th>{{ 'delete'|trans({}, 'platform') }} </th>
             </tr>

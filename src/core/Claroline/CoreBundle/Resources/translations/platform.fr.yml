@@ -60,6 +60,7 @@ find_workspaces: 'Tous les espaces'
 first_name: Prénom
 form_role: Rôle
 from: Depuis
+from_message: De
 general: Général
 group: Groupe
 group_form_name: Nom
@@ -203,6 +204,7 @@ text_form_shareType: Redistribution
 text_form_text: Texte
 The code {{ code }} is already assigned to another workspace.: Le code {{ code }} est déjà assigné à un autre espace d'activités.
 to: Jusque
+to_message: A
 today: 'Aujourd''hui'
 tool: Outil
 tools: Outils
