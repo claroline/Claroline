@@ -3,10 +3,12 @@
 namespace Claroline\CoreBundle\Entity\Tool;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="claro_workspace_ordered_tool")
+ * @DoctrineAssert\UniqueEntity({"translationKey", "workspace"})
  */
 class WorkspaceOrderedTool
 {
@@ -52,6 +54,11 @@ class WorkspaceOrderedTool
      * @Orm\Column(name="translation_key", type="string")
      */
     protected $translationKey;
+
+    public function getId()
+    {
+        return $this->id;
+    }
 
     public function setWorkspace($ws)
     {

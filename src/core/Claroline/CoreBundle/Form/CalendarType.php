@@ -55,10 +55,10 @@ class CalendarType extends AbstractType
         return 'calendar_form';
     }
 
-
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver
+
         ->setDefaults(
             array(
                 'title' => 'hello',

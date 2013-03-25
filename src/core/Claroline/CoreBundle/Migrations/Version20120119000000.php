@@ -828,6 +828,7 @@ class Version20120119000000 extends BundleMigration
 
         $table->addUniqueIndex(array('tool_id', 'workspace_id'));
         $table->addUniqueIndex(array('workspace_id', 'display_order'));
+        $table->addUniqueIndex(array('workspace_id', 'translation_key'));
 
         $this->storeTable($table);
     }
