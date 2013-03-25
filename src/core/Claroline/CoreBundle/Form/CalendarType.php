@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
@@ -60,9 +61,21 @@ class CalendarType extends AbstractType
         $resolver
         ->setDefaults(
             array(
+                'title' => 'hello',
+                'priority' => '#FF0000',
+                'workspace' => new SimpleWorkspace() ,
+                'user' => new \Claroline\CoreBundle\Entity\User(),
                 'class' => 'Claroline\CoreBundle\Entity\Event',
                 'translation_domain' => 'calendar'
                 )
+        )
+        ->setRequired(
+            array(
+                'title',
+                'priority',
+                'workspace',
+                'user'
+            )
         )
 
          ->setOptional(
@@ -70,7 +83,18 @@ class CalendarType extends AbstractType
                 'start',
                 'end'
             )
-        ->setAllowedTypes()
-         );
+         )
+        ->setAllowedtypes(
+            array(
+                'title' => 'string',
+                'workspace' => 'Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace',
+                'user' => 'Claroline\CoreBundle\Entity\User'
+            )
+        )
+        ->setAllowedValues(
+            array(
+                'priority' => array('#FF0000', '#01A9DB', '#848484')
+            )
+        );
     }
 }
