@@ -284,8 +284,11 @@ class MessageController extends Controller
             foreach ($params['ids'] as $id) {
                 $message = $em->getRepository('ClarolineCoreBundle:UserMessage')
                     ->find($id);
-                $message->markAsRemoved();
-                $em->persist($message);
+
+                if (!is_null($message)) {
+                    $message->markAsRemoved();
+                    $em->persist($message);
+                }
             }
             $em->flush();
         }
@@ -309,8 +312,10 @@ class MessageController extends Controller
             foreach ($params['ids'] as $id) {
                 $userMessage = $em->getRepository('ClarolineCoreBundle:UserMessage')
                     ->find($id);
-                $userMessage->markAsRemoved();
-                $em->persist($userMessage);
+                if (!is_null($userMessage)) {
+                    $userMessage->markAsRemoved();
+                    $em->persist($userMessage);
+                }
             }
             $em->flush();
         }
