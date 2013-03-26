@@ -52,7 +52,7 @@ class InstallController extends Controller
             'file' => (is_writable('../files') ? 'OK' : 'KO'),
             'web' => (is_writable('../web') ? 'OK' : 'KO'),
              'log' => (is_writable('../app/logs') ? 'OK' : 'KO'),
-             'cache' =>(is_writable('app/cache/') ? 'OK' : 'KO'),
+             'cache' => (is_writable('app/cache/') ? 'OK' : 'KO'),
             'lg' => $lg
 
         );
@@ -90,7 +90,7 @@ class InstallController extends Controller
         $request = $this->get('request');
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->bind($request);
 
             if ($form->isValid()) {
                 $postData = $request->request->get('install_form');
