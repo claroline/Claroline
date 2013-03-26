@@ -148,7 +148,7 @@ class ForumListener extends ContainerAware
         $em = $this->container->get('doctrine.orm.entity_manager');
         $config = $event->getConfig();
         $forum = new Forum();
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $event->getUser();
 
         foreach ($config['subjects'] as $subject) {
             $subjectEntity = new Subject();

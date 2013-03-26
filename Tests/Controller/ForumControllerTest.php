@@ -35,6 +35,7 @@ class ForumControllerTest extends FunctionalTestCase
         $this->client->submit($form);
         $crawler = $this->client
             ->request('GET', "/forum/{$this->getFixtureReference('forum/test')->getId()}/offset/0");
+            var_dump($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($crawler->filter('.row-subject')));
     }
 

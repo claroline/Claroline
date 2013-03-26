@@ -113,9 +113,10 @@ class Subject
         return $this->message = $message;
     }
 
-    public function setForum($forum)
+    public function setForum(Forum $forum)
     {
         $this->forum = $forum;
+        $forum->addSubject($this);
     }
 
     public function getForum()

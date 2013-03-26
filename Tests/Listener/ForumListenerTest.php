@@ -3,6 +3,8 @@
 namespace Claroline\ForumBundle\Listener;
 
 use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Library\Event\ExportResourceTemplateEvent;
+use Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent;
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\ForumBundle\DataFixtures\LoadOptionsData;
 use Claroline\ForumBundle\Tests\DataFixtures\LoadForumData;
@@ -95,5 +97,36 @@ class ForumListenerTest extends FunctionalTestCase
          $dir = json_decode($this->client->getResponse()->getContent());
          $this->assertObjectHasAttribute('resources', $dir);
          $this->assertEquals(2, count($dir->resources));
+    }
+
+    public function testExportTemplateForum()
+    {
+         $this->loadFixture(new LoadForumData('test', 'user', 2, 2));
+         $event = new ExportResourceTemplateEvent($this->getForum('test'));
+         $this->client->getContainer()->get('event_dispatcher')
+             ->dispatch('resource_claroline_forum_to_template', $event);
+         $config = $event->getConfig();
+         $this->assertEquals(2, count($config['subjects']));
+    }
+
+    public function testImportTemplateForum()
+    {
+        $forum = array(
+            'subjects' => array(
+                array('title' => 'title 1', 'initial_message' => 'message 1'),
+                array('title' => 'title 2', 'initial_message' => 'message 2')
+            )
+        );
+
+        $event = new ImportResourceTemplateEvent(
+            $forum,
+            $this->getDirectory('user'),
+            $this->getUser('user')
+        );
+
+        $this->client->getContainer()->get('event_dispatcher')
+            ->dispatch('resource_claroline_forum_from_template', $event);
+
+        $this->assertEquals(2, count($event->getResource()->getSubjects()));
     }
 }

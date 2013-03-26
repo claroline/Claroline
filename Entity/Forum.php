@@ -32,4 +32,14 @@ class Forum extends AbstractResource
     {
         return $this->subjects;
     }
+
+    public function addSubject(Subject $subject)
+    {
+        $this->subjects->add($subject);
+    }
+
+    public function removeSubject(Subject $subject)
+    {
+        $this->subjects->removeElement($subject);
+    }
 }
