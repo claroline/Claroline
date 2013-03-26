@@ -104,7 +104,7 @@ class WorkspaceController extends Controller
 
         $form = $this->get('form.factory')
             ->create(new WorkspaceType($this->container->getParameter('claroline.workspace_template.directory')));
-        $form->bindRequest($this->getRequest());
+        $form->bind($this->getRequest());
 
         if ($form->isValid()) {
             $type = $form->get('type')->getData() == 'simple' ?
