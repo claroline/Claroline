@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Listener;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
-use Claroline\CoreBundle\Library\Event\ExportWorkspaceEvent;
+use Claroline\CoreBundle\Library\Event\ExportToolEvent;
 
 class ToolListenerTest extends FunctionalTestCase
 {
@@ -21,7 +21,7 @@ class ToolListenerTest extends FunctionalTestCase
         $displayConfig->invertVisible();
         $listener = new ToolListener();
         $listener->setContainer($this->client->getContainer());
-        $event = new ExportWorkspaceEvent($this->getWorkspace('user'), new \ZipArchive());
+        $event = new ExportToolEvent($this->getWorkspace('user'));
         $listener->onExportHome($event);
         $config = $event->getConfig();
         //resource logger should be the 1st on the list
@@ -30,22 +30,18 @@ class ToolListenerTest extends FunctionalTestCase
 
     public function testOnExportResources()
     {
-        $this->markTestSkipped('I think that Zips are a source of problem for this test');
         $this->loadPlatformRoleData();
         $this->loadUserData(array('user' => 'user'));
-        $archive = new \ZipArchive();
-        $archive->open(
-            $this->client->getContainer()->getParameter('claroline.workspace_template.directory').'demo.zip',
-            \ZipArchive::CREATE
-        );
-        $event = new ExportWorkspaceEvent($this->getWorkspace('user'), new \ZipArchive());
+        $this->loadFileData('user', 'user', array('foo.txt', 'bar.txt'));
+        $this->loadDirectoryData('user', array('user/container'));
+        $event = new ExportToolEvent($this->getWorkspace('user'));
         $listener = new ToolListener();
         $listener->setContainer($this->client->getContainer());
         $listener->onExportResource($event);
         $config = $event->getConfig();
-        $archive->close();
         $this->assertEquals(2, count($config['resources']));
-        $this->assertEquals(1, count($config['resources'][0]['children']));
+        $this->assertEquals(1, count($config['directory']));
+        $this->assertEquals(2, count($event->getFiles()));
     }
 }
 

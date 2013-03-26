@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Library\Workspace;
 
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Library\Event\ExportWorkspaceEvent;
+use Claroline\CoreBundle\Library\Event\ExportToolEvent;
 use Symfony\Component\Yaml\Yaml;
 
 class Exporter
@@ -64,7 +64,7 @@ class Exporter
             $arTools[$tool->getName()]['translation_key'] = $workspaceTool->getTranslationKey();
 
             if ($workspaceTool->getTool()->isExportable()) {
-                $event = new ExportWorkspaceEvent($workspace, $archive);
+                $event = new ExportToolEvent($workspace);
                 $this->ed->dispatch('tool_'.$tool->getName().'_to_template', $event);
 
                 if ($event->getConfig() === null) {
@@ -75,6 +75,11 @@ class Exporter
                 }
 
                 $description['tools'][$tool->getName()] = $event->getConfig();
+                $description['tools'][$tool->getName()]['files'] = $event->getFilenamesFromArchive();
+
+                foreach ($event->getFiles() as $file) {
+                    $archive->addFile($file['original_path'], $file['archive_path']);
+                }
             }
         }
 

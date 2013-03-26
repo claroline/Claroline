@@ -64,6 +64,7 @@ class ActivityListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    //@todo: Are resources needing to be copied.
     public function onCopy(CopyResourceEvent $event)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
