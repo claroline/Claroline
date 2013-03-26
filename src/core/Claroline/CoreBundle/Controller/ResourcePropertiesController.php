@@ -51,7 +51,7 @@ class ResourcePropertiesController extends Controller
         $collection = new ResourceCollection(array($resource));
         $this->checkAccess('EDIT', $collection);
         $form = $this->createForm(new ResourceNameType(), $resource);
-        $form->bindRequest($request);
+        $form->bind($request);
 
         if ($form->isValid()) {
             $em->persist($resource);
