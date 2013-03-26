@@ -11,10 +11,6 @@ claro_message_delete_trash:
     defaults: { _controller: 'ClarolineCoreBundle:Message:deleteTrash' }
     options: { expose: true }
     requirements: { _method: DELETE }
-claro_message_restore_from_trash:
-    pattern: /restore
-    defaults: { _controller: 'ClarolineCoreBundle:Message:restoreFromTrash' }
-    options: { expose: true }
 claro_message_form:
     pattern: /form
     defaults: { _controller: 'ClarolineCoreBundle:Message:form' }
@@ -57,6 +53,10 @@ claro_message_list_sent_search:
 claro_message_mark_as_read:
     pattern: '/mark_as_read/{userMessageId}'
     defaults: { _controller: 'ClarolineCoreBundle:Message:markAsRead' }
+    options: { expose: true }
+claro_message_restore_from_trash:
+    pattern: /restore
+    defaults: { _controller: 'ClarolineCoreBundle:Message:restoreFromTrash' }
     options: { expose: true }
 claro_message_send:
     pattern: '/send/{parentId}'
