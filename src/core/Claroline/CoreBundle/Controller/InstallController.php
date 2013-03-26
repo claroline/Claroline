@@ -90,7 +90,7 @@ class InstallController extends Controller
         $request = $this->get('request');
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->bind($request);
 
             if ($form->isValid()) {
                 $postData = $request->request->get('install_form');

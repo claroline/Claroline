@@ -65,7 +65,7 @@ class Plugin
 
     public function getShortName()
     {
-        return $this->getVendorName() . str_replace('Bundle', '', $this->getBundleName());
+        return strtolower($this->getVendorName() . str_replace('Bundle', '', $this->getBundleName()));
     }
 
     public function getVendorName()

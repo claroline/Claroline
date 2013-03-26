@@ -13,30 +13,6 @@ claro_tool_workspace_remove:
     defaults: { _controller: 'ClarolineCoreBundle:Tool/Parameters:workspaceRemoveTool' }
     requirements: { _method: POST }
     options: { expose: true }
-claro_workspace_edit:
-    pattern: '/{workspaceId}/edit'
-    defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceEdit' }
-    requirements: { _method: POST }
-claro_workspace_edit_form:
-    pattern: '/{workspaceId}/editform'
-    defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceEditForm' }
-    requirements: { _method: GET }
-claro_workspace_export:
-    pattern: '/{workspaceId}/export'
-    defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceExport' }
-    requirements: { _method: POST }
-claro_workspace_export_form:
-    pattern: '/{workspaceId}/form/export'
-    defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceExportForm' }
-    requirements: { _method: GET }
-claro_workspace_resource_rights_creation_form:
-    pattern: '/{workspaceId}/resource/rights/form/role/{roleId}'
-    defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceResourceRightsCreationForm' }
-    requirements: { _method: GET }
-claro_workspace_resource_rights_form:
-    pattern: '/{workspaceId}/resource/rights/form'
-    defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceResourceRightsForm' }
-    requirements: { _method: GET }
 claro_workspace_tools_roles:
     pattern: '/{workspaceId}/tools'
     defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceToolsRoles' }
@@ -55,3 +31,35 @@ claro_workspace_widget_properties:
     pattern: '/{workspaceId}/widget'
     defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceWidgetsProperties' }
     requirements: { _method: GET }
+claro_workspace_resource_rights_form:
+    pattern: '/{workspaceId}/resource/rights/form'
+    defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceResourceRightsForm' }
+    requirements: { _method: GET }
+claro_workspace_resource_rights_creation_form:
+    pattern: '/{workspaceId}/resource/rights/form/role/{roleId}'
+    defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceResourceRightsCreationForm' }
+    requirements: { _method: GET }
+claro_workspace_edit:
+    pattern: '/{workspaceId}/edit'
+    defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceEdit' }
+    requirements: { _method: POST }
+claro_workspace_edit_form:
+    pattern: '/{workspaceId}/editform'
+    defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceEditForm' }
+    requirements: { _method: GET }
+claro_workspace_export_form:
+    pattern: '/{workspaceId}/form/export'
+    defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceExportForm' }
+    requirements: { _method: GET }
+claro_workspace_export:
+    pattern: '/{workspaceId}/export'
+    defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceExport' }
+    requirements: { _method: POST }
+claro_workspace_order_tool_edit_form:
+    pattern: '/{workspaceId}/tools/{workspaceOrderToolId}/editform'
+    defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceOrderToolEditForm' }
+    requirements: { _method: GET }
+claro_workspace_order_tool_edit:
+    pattern: '/{workspaceId}/tools/{workspaceOrderToolId}/edit'
+    defaults: { _controller: 'ClarolineCoreBundle:Tool\Parameters:workspaceOrderToolEdit' }
+    requirements: { _method: POST }

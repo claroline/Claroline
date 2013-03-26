@@ -9,19 +9,19 @@
             <figure>
                 {% if plugin.hasOptions() %}
                     <a href="{{ path('claro_admin_plugin_options', {'domain': plugin.getShortName()}) }}">
-                {% endif %}    
-                
+                {% endif %}
+
                 <img src="{{ asset(plugin.getIcon()) }}"/>
-                
+
                 {% if plugin.hasOptions() %}
                     </a>
                 {% endif %}
-                
+
                 <figcaption class="plugin-figcaption">
                 {% if plugin.hasOptions() %}
                     <a href="{{ path('claro_admin_plugin_options', {'domain': plugin.getShortName()}) }}">{{  plugin.getShortName()|lower|trans({}, 'plugin_description') }}</a>
                 {% else %}
-                    {{  plugin.getShortName()|lower|trans({}, 'plugin_description') }}
+                    {{  plugin.getShortName()|trans({}, 'plugin_description') }}
                 {% endif %}
             </figcaption>
             </figure>

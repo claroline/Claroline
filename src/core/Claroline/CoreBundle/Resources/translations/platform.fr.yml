@@ -15,8 +15,8 @@ admin_form_firstName : 'Prenom'
 admin_form_lastName : 'Nom de famille'
 admin_form_plainPassword_first : 'Mot de passe'
 admin_form_plainPassword_second : 'Répétez votre mot de passe'
-admin_form_mail : 'Email adress'
-admin_form_username : 'Username'
+admin_form_mail : 'Adresse email'
+admin_form_username : 'Nom d''utilisateur'
 agenda: Agenda
 all_workspaces: 'Tous les espaces'
 anonymous: Anonyme
@@ -60,6 +60,7 @@ find_workspaces: 'Tous les espaces'
 first_name: Prénom
 form_role: Rôle
 from: Depuis
+from_message: De
 general: Général
 group: Groupe
 group_form_name: Nom
@@ -92,7 +93,9 @@ mail_form_content: Contenu
 mail_form_object: Objet
 manage_rights: 'Gérer les droits'
 manager: Gestionnaire
-messages_confirm_delete : 'Etes vous sûr de vouloir supprimer ce message ?'
+messages_confirm_delete: 'Etes-vous sûr de vouloir supprimer ce(s) message(s) ?'
+messages_confirm_permanent_delete: 'Etes-vous sûr de vouloir supprimer définitivement ce(s) message(s) ?'
+messages_confirm_restore: 'Etes-vous sûr de vouloir restaurer ce(s) message(s) ?'
 message_form_content: Contenu
 message_form_object: Objet
 message_form_to: A
@@ -203,6 +206,7 @@ text_form_shareType: Redistribution
 text_form_text: Texte
 The code {{ code }} is already assigned to another workspace.: Le code {{ code }} est déjà assigné à un autre espace d'activités.
 to: Jusque
+to_message: A
 today: 'Aujourd''hui'
 tool: Outil
 tools: Outils
@@ -246,6 +250,7 @@ workspace_form_code: Code
 workspace_form_name: Nom
 workspace_form_template: Modèle
 workspace_form_type: Type
+workspace_order_tool_edit_form_translationKey: Nom
 workspace_resource: Ressources
 workspace_template_form_name: Nom
 workspace_tools: Outils

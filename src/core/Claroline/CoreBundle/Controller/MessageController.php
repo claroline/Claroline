@@ -89,16 +89,24 @@ class MessageController extends Controller
         $request = $this->get('request');
         $em = $this->get('doctrine.orm.entity_manager');
         $form = $this->get('form.factory')->create(new MessageType(), new Message());
-        $form->bindRequest($request);
+        $form->bind($request);
 
         if ($form->isValid()) {
             $message = $form->getData();
             $message->setUser($user);
+            $message->setSenderUsername($user->getUsername());
             $parent = $em->getRepository('ClarolineCoreBundle:Message')->find($parentId);
 
             if ($parent != null) {
                 $message->setParent($parent);
             }
+            $em->persist($message);
+
+            // create an UserMessage for the sender
+            $userMessage = new UserMessage(true);
+            $userMessage->setUser($user);
+            $userMessage->setMessage($message);
+            $em->persist($userMessage);
 
             $to = preg_replace('/\s+/', '', $form->get('to')->getData());
 
@@ -113,6 +121,15 @@ class MessageController extends Controller
                 $userMessage = new UserMessage();
                 $userMessage->setUser($user);
                 $userMessage->setMessage($message);
+                $receiversUsername = $message->getReceiverUsername();
+
+                if (empty($receiversUsername)) {
+                    $receiversUsername = $username;
+
+                } else {
+                    $receiversUsername .= ", $username";
+                }
+                $message->setReceiverUsername($receiversUsername);
                 $em->persist($userMessage);
                 $em->persist($message);
             }
@@ -185,12 +202,12 @@ class MessageController extends Controller
     {
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
-        $messages = $em->getRepository('ClarolineCoreBundle:Message')
+        $userMessages = $em->getRepository('ClarolineCoreBundle:Message')
             ->findSentByUser($user, false, $offset, self::MESSAGE_PER_PAGE);
 
         return $this->render(
             'ClarolineCoreBundle:Message:list_message.html.twig',
-            array('messages' => $messages)
+            array('userMessages' => $userMessages)
         );
     }
 
@@ -265,10 +282,13 @@ class MessageController extends Controller
         if (isset($params['ids'])) {
             $em = $this->get('doctrine.orm.entity_manager');
             foreach ($params['ids'] as $id) {
-                $message = $em->getRepository('ClarolineCoreBundle:Message')
+                $message = $em->getRepository('ClarolineCoreBundle:UserMessage')
                     ->find($id);
-                $message->markAsRemoved();
-                $em->persist($message);
+
+                if (!is_null($message)) {
+                    $message->markAsRemoved();
+                    $em->persist($message);
+                }
             }
             $em->flush();
         }
@@ -292,7 +312,57 @@ class MessageController extends Controller
             foreach ($params['ids'] as $id) {
                 $userMessage = $em->getRepository('ClarolineCoreBundle:UserMessage')
                     ->find($id);
-                $userMessage->markAsRemoved();
+                if (!is_null($userMessage)) {
+                    $userMessage->markAsRemoved();
+                    $em->persist($userMessage);
+                }
+            }
+            $em->flush();
+        }
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * Deletes a message from trash (permanent delete).
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteTrashAction()
+    {
+        $params = $this->get('request')->query->all();
+
+        if (isset($params['ids'])) {
+            $em = $this->get('doctrine.orm.entity_manager');
+
+            foreach ($params['ids'] as $id) {
+                $userMessage = $em->getRepository('ClarolineCoreBundle:UserMessage')
+                    ->find($id);
+                $em->remove($userMessage);
+            }
+            $em->flush();
+        }
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * Restore a message from the trash.
+     * It takes an array of ids in the query string (ids[]=1&ids[]=2).
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function restoreFromTrashAction()
+    {
+        $params = $this->get('request')->query->all();
+
+        if (isset($params['ids'])) {
+            $em = $this->get('doctrine.orm.entity_manager');
+
+            foreach ($params['ids'] as $id) {
+                $userMessage = $em->getRepository('ClarolineCoreBundle:UserMessage')
+                    ->find($id);
+                $userMessage->markAsUnremoved();
                 $em->persist($userMessage);
             }
             $em->flush();
@@ -336,12 +406,12 @@ class MessageController extends Controller
     {
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
-        $messages = $em->getRepository('ClarolineCoreBundle:Message')
+        $userMessages = $em->getRepository('ClarolineCoreBundle:Message')
             ->findSentByUserAndObjectAndUsername($user, $search, false, $offset, self::MESSAGE_PER_PAGE);
 
         return $this->render(
             'ClarolineCoreBundle:Message:list_message.html.twig',
-            array('messages' => $messages)
+            array('userMessages' => $userMessages)
         );
     }
 
