@@ -1,12 +1,18 @@
-{% for message in messages %}
+{% for userMessage in userMessages %}
+    {% set message = userMessage.getMessage() %}
     <tr class="row-message">
         <td>{{ message.getDate()|date('d-m-Y') }}</td>
         <td>
-            {% for userMessage in message.getUserMessages() %}
-                {{ userMessage.getUser().getUsername() }}{% if not loop.last %}, {%endif %}
+            {% set first = true %}
+            {% for receivedUserMessage in message.getUserMessages() %}
+                {% if not first and not receivedUserMessage.isSent() %}, {% endif %}
+                {% if not receivedUserMessage.isSent() %}
+                {{ receivedUserMessage.getUser().getUsername() }}
+                {% set first = false %}
+                {% endif %}
             {% endfor %}
         </td>
         <td><a href="{{ path('claro_message_show', {'messageId': message.getId()}) }}">{{ message.getObject() }}</a></td>
-        <td><input class="chk-delete" value="{{ message.getId() }}" type="checkbox"></input></td>
+        <td><input class="chk-delete" value="{{ userMessage.getId() }}" type="checkbox"></input></td>
     </tr>
 {% endfor %}

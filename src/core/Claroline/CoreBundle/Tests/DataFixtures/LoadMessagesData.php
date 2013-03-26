@@ -45,7 +45,11 @@ class LoadMessagesData extends LoggableFixture implements ContainerAwareInterfac
             $userMessage->setMessage($message);
             $message->setUser($this->getReference('user/'.$data['from']));
             $userMessage->setUser($this->getReference('user/'.$data['to']));
+            $senderUserMessage = new UserMessage(true);
+            $senderUserMessage->setMessage($message);
+            $senderUserMessage->setUser($this->getReference('user/'.$data['from']));
             $manager->persist($userMessage);
+            $manager->persist($senderUserMessage);
             $manager->persist($message);
         }
 

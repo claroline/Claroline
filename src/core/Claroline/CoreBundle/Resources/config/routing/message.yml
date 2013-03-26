@@ -6,6 +6,15 @@ claro_message_delete_to:
     pattern: /delete/to
     defaults: { _controller: 'ClarolineCoreBundle:Message:deleteToUser' }
     options: { expose: true }
+claro_message_delete_trash:
+    pattern: /delete/trash
+    defaults: { _controller: 'ClarolineCoreBundle:Message:deleteTrash' }
+    options: { expose: true }
+    requirements: { _method: DELETE }
+claro_message_restore_from_trash:
+    pattern: /restore
+    defaults: { _controller: 'ClarolineCoreBundle:Message:restoreFromTrash' }
+    options: { expose: true }
 claro_message_form:
     pattern: /form
     defaults: { _controller: 'ClarolineCoreBundle:Message:form' }
