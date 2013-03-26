@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Library\Workspace;
 
 use Doctrine\ORM\EntityManager;
-use Claroline\CoreBundle\Library\Event\ImportWorkspaceEvent;
+use Claroline\CoreBundle\Library\Event\ImportToolEvent;
 use Claroline\CoreBundle\Library\Resource\Manager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
@@ -62,12 +62,22 @@ class Creator
         $this->manager->setResourceRights($rootDir, $config->getPermsRootConfiguration());
         $this->entityManager->persist($rootDir);
         $this->entityManager->flush();
+        //tmpzip wich will be extracted to retrieve the needed files.
+        $extractPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('claro_ws_tmp_', true);
         $archive = new \ZipArchive();
-        $archive->open($config->getTemplateFile());
+        $archive->open($config->getArchive());
+        $archive->extractTo($extractPath);
         $toolsConfig = $config->getToolsConfiguration();
 
         foreach ($toolsConfig as $name => $conf) {
-            $event = new ImportWorkspaceEvent($workspace, $conf, $archive, $rootDir, $manager);
+            $realPaths = array();
+
+            foreach ($conf['files'] as $path) {
+                $realPaths[] = $extractPath . DIRECTORY_SEPARATOR . $path;
+            }
+
+            $event = new ImportToolEvent($workspace, $conf, $rootDir, $manager);
+            $event->setFiles($realPaths);
             $this->ed->dispatch('tool_'.$name.'_from_template', $event);
         }
 

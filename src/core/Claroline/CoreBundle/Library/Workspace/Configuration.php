@@ -41,6 +41,7 @@ class Configuration
         $this->setToolsPermissions($parsedFile['tools_infos']);
         $this->setToolsConfiguration($parsedFile['tools']);
         $this->setPermsRootConfiguration($parsedFile['root_perms']);
+        $this->setArchive($this->templateFile);
     }
 
     public static function fromTemplate($templateFile)
@@ -56,7 +57,7 @@ class Configuration
         $config->setToolsPermissions($parsedFile['tools_infos']);
         $config->setToolsConfiguration($parsedFile['tools']);
         $config->setPermsRootConfiguration($parsedFile['root_perms']);
-        $config->setTemplateFile($templateFile);
+        $config->setArchive($templateFile);
 
         return $config;
     }
@@ -152,12 +153,12 @@ class Configuration
         return $this->creatorRole;
     }
 
-    public function setTemplateFile($templateFile)
+    public function setArchive($templateFile)
     {
         $this->templateFile = $templateFile;
     }
 
-    public function getTemplateFile()
+    public function getArchive()
     {
         return $this->templateFile;
     }
