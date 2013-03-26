@@ -6,6 +6,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Claroline\CoreBundle\Validator\Constraints\SendToUsernames;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
 
 class MessageType extends AbstractType
 {
@@ -79,10 +81,13 @@ class MessageType extends AbstractType
         return 'message_form';
     }
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array(
-            'translation_domain' => 'platform'
+        $resolver
+        ->setDefaults(
+            array(
+                'translation_domain' => 'platform'
+                )
         );
     }
 }
