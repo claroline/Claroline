@@ -28,7 +28,7 @@ class CalendarController extends Controller
         if ($request->getMethod() === 'POST') {
             // get the value not send by the built in form
             $postData = $request->request->all();
-            $form->bindRequest($request);
+            $form->bind($request);
 
             if ($form->isValid()) {
 
@@ -142,7 +142,7 @@ class CalendarController extends Controller
 
         if ($request->getMethod() === 'POST') {
 
-            $form->bindRequest($request);
+            $form->bind($request);
 
             if ($form->isValid()) {
 

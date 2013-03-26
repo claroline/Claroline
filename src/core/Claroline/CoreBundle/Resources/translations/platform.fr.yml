@@ -15,8 +15,8 @@ admin_form_firstName : 'Prenom'
 admin_form_lastName : 'Nom de famille'
 admin_form_plainPassword_first : 'Mot de passe'
 admin_form_plainPassword_second : 'Répétez votre mot de passe'
-admin_form_mail : 'Email adress'
-admin_form_username : 'Username'
+admin_form_mail : 'Adresse email'
+admin_form_username : 'Nom d''utilisateur'
 agenda: Agenda
 all_workspaces: 'Tous les espaces'
 anonymous: Anonyme
