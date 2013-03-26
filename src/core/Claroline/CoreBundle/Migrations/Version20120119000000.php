@@ -453,6 +453,8 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('lvl', 'integer', array('notnull' => true));
         $table->addColumn('root', 'integer', array('notnull' => false));
         $table->addColumn('parent_id', 'integer', array('notnull' => false));
+        $table->addColumn('sender_username', 'string');
+        $table->addColumn('receiver_username', 'string');
 
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_user'),

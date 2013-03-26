@@ -94,6 +94,7 @@ class MessageController extends Controller
         if ($form->isValid()) {
             $message = $form->getData();
             $message->setUser($user);
+            $message->setSenderUsername($user->getUsername());
             $parent = $em->getRepository('ClarolineCoreBundle:Message')->find($parentId);
 
             if ($parent != null) {
@@ -120,6 +121,15 @@ class MessageController extends Controller
                 $userMessage = new UserMessage();
                 $userMessage->setUser($user);
                 $userMessage->setMessage($message);
+                $receiversUsername = $message->getReceiverUsername();
+
+                if (empty($receiversUsername)) {
+                    $receiversUsername = $username;
+
+                } else {
+                    $receiversUsername .= ", $username";
+                }
+                $message->setReceiverUsername($receiversUsername);
                 $em->persist($userMessage);
                 $em->persist($message);
             }
