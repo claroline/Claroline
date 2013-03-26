@@ -109,7 +109,7 @@ class ResourcePropertiesController extends Controller
         }
 
         $form = $this->createForm(new ResourcePropertiesType(), $resource);
-        $form->bindRequest($request);
+        $form->bind($request);
 
         if ($form->isValid()) {
             $data = $form->getData();
