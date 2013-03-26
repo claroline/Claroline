@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Form;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class WorkspaceTemplateType extends AbstractType
 {
@@ -26,10 +27,13 @@ class WorkspaceTemplateType extends AbstractType
         return 'workspace_template_form';
     }
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array(
-            'translation_domain' => 'platform'
+        $resolver
+        ->setDefaults(
+            array(
+                'translation_domain' => 'platform'
+                )
         );
     }
 }

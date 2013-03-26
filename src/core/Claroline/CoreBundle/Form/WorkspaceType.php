@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Yaml\Yaml;
 use Claroline\CoreBundle\Validator\Constraints\WorkspaceUniqueCode;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class WorkspaceType extends AbstractType
 {
@@ -64,10 +65,13 @@ class WorkspaceType extends AbstractType
         return 'workspace_form';
     }
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array(
-            'translation_domain' => 'platform'
+        $resolver
+        ->setDefaults(
+            array(
+                'translation_domain' => 'platform'
+                )
         );
     }
 }

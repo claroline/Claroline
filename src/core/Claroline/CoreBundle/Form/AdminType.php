@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\FormBuilderInterface;
-
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 /**
  * Form used to collect minimal information on the administrator in the plaform
  * installation process.
@@ -21,11 +21,15 @@ class AdminType extends BaseProfileType
         return 'admin_form';
     }
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array(
-            'data_class' => 'Claroline\CoreBundle\Entity\User',
-            'translation_domain' => 'platform'
+        $resolver
+
+        ->setDefaults(
+            array(
+                'class' => 'Claroline\CoreBundle\Entity\User',
+                'translation_domain' => 'platform'
+                )
         );
     }
 }

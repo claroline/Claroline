@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ResourcePropertiesType extends AbstractType
 {
@@ -56,10 +57,13 @@ class ResourcePropertiesType extends AbstractType
         return 'resource_properties_form';
     }
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array(
-            'translation_domain' => 'platform'
+        $resolver
+        ->setDefaults(
+            array(
+                'translation_domain' => 'platform'
+                )
         );
     }
 }

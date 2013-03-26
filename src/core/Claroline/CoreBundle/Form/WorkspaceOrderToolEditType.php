@@ -6,18 +6,16 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-
-class ActivityType extends AbstractType
+class WorkspaceOrderToolEditType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text');
-        $builder->add('instructions', 'textarea');
+        $builder->add('translationKey', 'text', array('required' => true));
     }
 
     public function getName()
     {
-        return 'activity_form';
+        return 'workspace_order_tool_edit_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

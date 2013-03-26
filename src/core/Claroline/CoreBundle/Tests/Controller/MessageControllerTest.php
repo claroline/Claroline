@@ -130,13 +130,10 @@ class MessageControllerTest extends FunctionalTestCase
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->loadMessagesData(array(array('from' => 'user', 'to' => 'admin', 'object' => 'foo')));
         $crawler = $this->logUser($this->getUser('user'));
-        $messages = $this->client
-            ->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Message')
-            ->findAll();
-        $msgId = $messages[0]->getId();
-        $this->client->request('GET', "/message/delete/from?ids[]={$msgId}");
+        $userMessages = $this->em->getRepository('ClarolineCoreBundle:UserMessage')
+            ->findBy(array('user' => $this->getUser('user')->getId()));
+        $usrmsgId = $userMessages[0]->getId();
+        $this->client->request('GET', "/message/delete/from?ids[]={$usrmsgId}");
         $crawler = $this->client->request('GET', '/message/list/removed/0');
         $this->assertEquals(1, count($crawler->filter('.row-user-message')));
     }
@@ -211,5 +208,89 @@ class MessageControllerTest extends FunctionalTestCase
         $this->client->request('GET', "/message/delete/to?ids[]={$usrmsgId}");
         $crawler = $this->client->request('GET', "/message/list/removed/search/{$object}/offset/0");
         $this->assertEquals(1, count($crawler->filter('.row-user-message')));
+    }
+
+    public function testRestoreRemovedReceivedMessage()
+    {
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
+        $this->loadMessagesData(array(array('to' => 'user', 'from' => 'admin', 'object' => 'foo')));
+        $this->logUser($this->getUser('user'));
+        $userMessages = $this->em->getRepository('ClarolineCoreBundle:UserMessage')
+            ->findBy(array('user' => $this->getUser('user')->getId()));
+        $usrmsgId = $userMessages[0]->getId();
+        $crawler = $this->client->request('GET', '/message/list/received/0');
+        $this->assertEquals(1, count($crawler->filter('.row-user-message')));
+        $this->client->request('GET', "/message/delete/to?ids[]={$usrmsgId}");
+        $crawler = $this->client->request('GET', '/message/list/removed/0');
+        $this->assertEquals(1, count($crawler->filter('.row-user-message')));
+        $crawler = $this->client->request('GET', '/message/list/received/0');
+        $this->assertEquals(0, count($crawler->filter('.row-user-message')));
+        $this->client->request('DELETE', "/message/restore?ids[]={$usrmsgId}");
+        $crawler = $this->client->request('GET', '/message/list/removed/0');
+        $this->assertEquals(0, count($crawler->filter('.row-user-message')));
+        $crawler = $this->client->request('GET', '/message/list/received/0');
+        $this->assertEquals(1, count($crawler->filter('.row-user-message')));
+    }
+
+    public function testRestoreRemovedSentMessage()
+    {
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
+        $this->loadMessagesData(array(array('to' => 'admin', 'from' => 'user', 'object' => 'foo')));
+        $this->logUser($this->getUser('user'));
+        $userMessages = $this->em->getRepository('ClarolineCoreBundle:UserMessage')
+            ->findBy(array('user' => $this->getUser('user')->getId()));
+        $usrmsgId = $userMessages[0]->getId();
+        $crawler = $this->client->request('GET', '/message/list/sent/0');
+        $this->assertEquals(1, count($crawler->filter('.row-message')));
+        $this->client->request('GET', "/message/delete/to?ids[]={$usrmsgId}");
+        $crawler = $this->client->request('GET', '/message/list/removed/0');
+        $this->assertEquals(1, count($crawler->filter('.row-user-message')));
+        $crawler = $this->client->request('GET', '/message/list/sent/0');
+        $this->assertEquals(0, count($crawler->filter('.row-message')));
+        $this->client->request('DELETE', "/message/restore?ids[]={$usrmsgId}");
+        $crawler = $this->client->request('GET', '/message/list/removed/0');
+        $this->assertEquals(0, count($crawler->filter('.row-user-message')));
+        $crawler = $this->client->request('GET', '/message/list/sent/0');
+        $this->assertEquals(1, count($crawler->filter('.row-message')));
+    }
+
+    public function testDeletePermanentlyReceivedMessage()
+    {
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
+        $this->loadMessagesData(array(array('to' => 'user', 'from' => 'admin', 'object' => 'foo')));
+        $this->logUser($this->getUser('user'));
+        $userMessages = $this->em->getRepository('ClarolineCoreBundle:UserMessage')
+            ->findBy(array('user' => $this->getUser('user')->getId()));
+        $usrmsgId = $userMessages[0]->getId();
+        $crawler = $this->client->request('GET', '/message/list/received/0');
+        $this->assertEquals(1, count($crawler->filter('.row-user-message')));
+        $this->client->request('GET', "/message/delete/to?ids[]={$usrmsgId}");
+        $crawler = $this->client->request('GET', '/message/list/removed/0');
+        $this->assertEquals(1, count($crawler->filter('.row-user-message')));
+        $this->client->request('DELETE', "/message/delete/trash?ids[]={$usrmsgId}");
+        $crawler = $this->client->request('GET', '/message/list/removed/0');
+        $this->assertEquals(0, count($crawler->filter('.row-user-message')));
+        $crawler = $this->client->request('GET', '/message/list/received/0');
+        $this->assertEquals(0, count($crawler->filter('.row-user-message')));
+    }
+
+    public function testDeletePermanentlySentMessage()
+    {
+        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
+        $this->loadMessagesData(array(array('to' => 'admin', 'from' => 'user', 'object' => 'foo')));
+        $this->logUser($this->getUser('user'));
+        $userMessages = $this->em->getRepository('ClarolineCoreBundle:UserMessage')
+            ->findBy(array('user' => $this->getUser('user')->getId()));
+        $usrmsgId = $userMessages[0]->getId();
+        $crawler = $this->client->request('GET', '/message/list/sent/0');
+        $this->assertEquals(1, count($crawler->filter('.row-message')));
+        $this->client->request('GET', "/message/delete/to?ids[]={$usrmsgId}");
+        $crawler = $this->client->request('GET', '/message/list/removed/0');
+        $this->assertEquals(1, count($crawler->filter('.row-user-message')));
+        $this->client->request('DELETE', "/message/delete/trash?ids[]={$usrmsgId}");
+        $crawler = $this->client->request('GET', '/message/list/removed/0');
+        $this->assertEquals(0, count($crawler->filter('.row-user-message')));
+        $crawler = $this->client->request('GET', '/message/list/sent/0');
+        $this->assertEquals(0, count($crawler->filter('.row-message')));
     }
 }

@@ -422,8 +422,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('message_id', 'integer');
         $table->addColumn('is_read', 'boolean');
         $table->addColumn('is_removed', 'boolean');
-
-        $table->addUniqueIndex(array('user_id', 'message_id'));
+        $table->addColumn('is_sent', 'boolean');
 
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_user'),
@@ -454,6 +453,8 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('lvl', 'integer', array('notnull' => true));
         $table->addColumn('root', 'integer', array('notnull' => false));
         $table->addColumn('parent_id', 'integer', array('notnull' => false));
+        $table->addColumn('sender_username', 'string');
+        $table->addColumn('receiver_username', 'string');
 
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_user'),
@@ -828,6 +829,7 @@ class Version20120119000000 extends BundleMigration
 
         $table->addUniqueIndex(array('tool_id', 'workspace_id'));
         $table->addUniqueIndex(array('workspace_id', 'display_order'));
+        $table->addUniqueIndex(array('workspace_id', 'translation_key'));
 
         $this->storeTable($table);
     }

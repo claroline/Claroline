@@ -126,9 +126,9 @@
                         $(element).parent().parent().remove();
                     });
                     $('#validation-box').modal('hide');
-                    $('#validation-box-body').empty();
-                    $('.delete-users-button').attr('disabled', 'disabled');
+                    $('.delete-msg').attr('disabled', 'disabled');
                     $('#deleting').hide();
+                    $('#allChecked').attr('checked', false);
                 },
                 type: 'DELETE'
             });
@@ -136,7 +136,6 @@
 
         $('#modal-cancel-button').click(function () {
             $('#validation-box').modal('hide');
-            $('#validation-box-body').empty();
         });
 
         $('#allChecked').click(function () {
