@@ -422,8 +422,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('message_id', 'integer');
         $table->addColumn('is_read', 'boolean');
         $table->addColumn('is_removed', 'boolean');
-
-        $table->addUniqueIndex(array('user_id', 'message_id'));
+        $table->addColumn('is_sent', 'boolean');
 
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_user'),

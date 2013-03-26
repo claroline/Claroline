@@ -94,6 +94,8 @@ mail_form_object: Object
 manage_rights: 'Manage rights'
 manager: Manager
 messages_confirm_delete : 'Are your sure , you want to delete this file ?'
+messages_confirm_permanent_delete: 'Are you sure you want to permanently delete this(these) message(s) ?'
+messages_confirm_restore: 'Are you sure you want to restore this(these) message(s) ?'
 message_form_content: Content
 message_form_object: Object
 message_form_to: To

@@ -163,6 +163,11 @@ class Message
         $this->isRemoved = true;
     }
 
+    public function markAsUnremoved()
+    {
+        $this->isRemoved = false;
+    }
+
     public function getUserMessages()
     {
         return $this->userMessages;

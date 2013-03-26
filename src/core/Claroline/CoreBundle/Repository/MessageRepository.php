@@ -70,6 +70,7 @@ class MessageRepository extends NestedTreeRepository
             JOIN um.message m
             WHERE u.id = {$user->getId()}
             AND um.isRemoved = {$isRemovedText}
+            AND um.isSent = false
             ORDER BY m.date DESC";
 
         $query = $this->_em->createQuery($dql);
@@ -83,12 +84,12 @@ class MessageRepository extends NestedTreeRepository
     public function findSentByUser(User $user, $isRemoved = false, $offset = null, $limit = null)
     {
         $isRemovedText = ($isRemoved) ? 'true' : 'false';
-        $dql = "SELECT m, u, um, umu FROM Claroline\CoreBundle\Entity\Message m
-            JOIN m.userMessages um
-            JOIN um.user umu
-            JOIN m.user u
+        $dql = "SELECT um, m, u FROM Claroline\CoreBundle\Entity\UserMessage um
+            JOIN um.user u
+            JOIN um.message m
             WHERE u.id = {$user->getId()}
-            AND m.isRemoved = {$isRemovedText}
+            AND um.isRemoved = {$isRemovedText}
+            AND um.isSent = true
             ORDER BY m.date DESC";
 
         $query = $this->_em->createQuery($dql);
@@ -126,9 +127,11 @@ class MessageRepository extends NestedTreeRepository
             JOIN m.user mu
             WHERE u.id = {$user->getId()}
             AND um.isRemoved = {$isRemovedText}
+            AND um.isSent = false
             AND UPPER(m.object) LIKE :search
             OR UPPER(mu.username) LIKE :search
             AND um.isRemoved = {$isRemovedText}
+            AND um.isSent = false
             AND u.id = {$user->getId()}
             ORDER BY m.date DESC";
 
@@ -151,17 +154,33 @@ class MessageRepository extends NestedTreeRepository
     {
         $isRemovedText = ($isRemoved) ? 'true' : 'false';
         $search = strtoupper($search);
-        $dql = "SELECT m, u, um, umu FROM Claroline\CoreBundle\Entity\Message m
-            JOIN m.userMessages um
-            JOIN um.user umu
-            JOIN m.user u
+        $dql = "SELECT um, m, u, mu FROM Claroline\CoreBundle\Entity\UserMessage um
+            JOIN um.user u
+            JOIN um.message m
+            JOIN m.user mu
             WHERE u.id = {$user->getId()}
-            AND m.isRemoved = {$isRemovedText}
+            AND um.isRemoved = {$isRemovedText}
+            AND um.isSent = true
             AND UPPER (m.object) LIKE :search
-            OR UPPER (umu.username) LIKE :search
+            OR UPPER (u.username) LIKE :search
             AND u.id = {$user->getId()}
-            AND m.isRemoved = {$isRemovedText}
+            AND um.isRemoved = {$isRemovedText}
+            AND um.isSent = true
             ORDER BY m.date DESC";
+//        $dql = "SELECT um, m, u, mu FROM Claroline\CoreBundle\Entity\UserMessage um
+//            JOIN um.user u
+//            JOIN um.message m
+//            JOIN m.user mu
+//            WHERE u.id = {$user->getId()}
+//            AND um.isRemoved = {$isRemovedText}
+//            AND um.isSent = true
+//            AND UPPER (m.object) LIKE :search
+//            OR u.id = {$user->getId()}
+//            AND um.isRemoved = {$isRemovedText}
+//            AND um.isSent = true
+//            AND EXISTS (SELECT um
+////            OR UPPER (u.username) LIKE :search
+//            ORDER BY m.date DESC";
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('search', "%{$search}%");
@@ -174,14 +193,11 @@ class MessageRepository extends NestedTreeRepository
 
     public function findRemovedByUser(User $user, $offset = null, $limit = null)
     {
-        $dql = "SELECT um, m, u, u FROM Claroline\CoreBundle\Entity\UserMessage um
+        $dql = "SELECT um, u, m FROM Claroline\CoreBundle\Entity\UserMessage um
             JOIN um.user u
             JOIN um.message m
-            JOIN m.user mu
             WHERE u.id = {$user->getId()}
             AND um.isRemoved = true
-            OR mu.id = {$user->getId()}
-            AND m.isRemoved = true
             ORDER BY m.date DESC";
 
         $query = $this->_em->createQuery($dql);
@@ -218,11 +234,6 @@ class MessageRepository extends NestedTreeRepository
             WHERE u.id = {$user->getId()}
             AND um.isRemoved = true
             AND UPPER(m.object) LIKE :search
-            OR mu.id = {$user->getId()}
-            AND m.isRemoved = true
-            AND UPPER(m.object) LIKE :search
-            OR m.isRemoved = true
-            AND UPPER(mu.username) LIKE :search
             OR um.isRemoved = true
             AND u.id = {$user->getId()}
             AND UPPER(mu.username) LIKE :search
