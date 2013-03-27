@@ -130,7 +130,8 @@
     </table>    
  
 {# ------------------------------------------------- Boutton validation formulaire ---------------------------------------------------------------------------- #}    
-    {{ form_rest(form) }}
+    <div style="visibility: hidden;">{{ form_rest(form) }}</div>
+    {{ form_errors(form) }}
     <p><br/>
         <button type="submit" onclick="Verifier();return false;">{{ "Create" | trans }}</button>
     </p>

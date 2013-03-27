@@ -1,0 +1,82 @@
+{#
+ # ExoOnLine
+ # Copyright or © or Copr. Université Jean Monnet (France), 2012
+ # dsi.dev@univ-st-etienne.fr
+ #
+ # This software is a computer program whose purpose is to [describe
+ # functionalities and technical features of your software].
+ #
+ # This software is governed by the CeCILL license under French law and
+ # abiding by the rules of distribution of free software.  You can  use,
+ # modify and/ or redistribute the software under the terms of the CeCILL
+ # license as circulated by CEA, CNRS and INRIA at the following URL
+ # "http://www.cecill.info".
+ #
+ # As a counterpart to the access to the source code and  rights to copy,
+ # modify and redistribute granted by the license, users are provided only
+ # with a limited warranty  and the software's author,  the holder of the
+ # economic rights,  and the successive licensors  have only  limited
+ # liability.
+ #
+ # In this respect, the user's attention is drawn to the risks associated
+ # with loading,  using,  modifying and/or developing or reproducing the
+ # software by the user in light of its specific status of free software,
+ # that may mean  that it is complicated to manipulate,  and  that  also
+ # therefore means  that it is reserved for developers  and  experienced
+ # professionals having in-depth computer knowledge. Users are therefore
+ # encouraged to load and test the software's suitability as regards their
+ # requirements in conditions enabling the security of their systems and/or
+ # data to be ensured and,  more generally, to use and operate it in the
+ # same conditions as regards security.
+ #
+ # The fact that you are presently reading this means that you have had
+ # knowledge of the CeCILL license and that you accept its terms.
+#}
+
+{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/ujmexo/css/paper.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+
+{% block title %} {{ "Paper" | trans }} {{ "Question" | trans }} {% endblock %}
+
+
+
+{% block section_content %}
+
+<h1> Question : {{ interactionGraphic.interaction.question.title }}</h1>
+
+<div name="description">
+    <p>{{ interactionGraphic.interaction.question.description|raw }}<p/>
+</div>
+
+<h3 name="question">
+    <p>{{ interactionGraphic.interaction.invite|raw }}<p/>
+</h3>
+
+<h5>{{ "consignes" | trans }} :</h5>
+<h6 id="ref"><em>{{ "position" | trans }}<br/>{{ "selection" | trans }}<br/>{{ "raz" | trans }}</em></h6>
+
+<p id="ContainerCursor">{%set i=1%}
+    {% for coords in listeCoords %} {%set place = 170+i*25%}
+        <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{i}}" id="cursor{{i}}" 
+             style="position: absolute; left: {{ place }}px;"/>{%set i=i+1%}
+   {% endfor %}
+</p><p>
+    <img src="{{ asset(interactionGraphic.document.url) }}" alt="AnswerImg" id="AnswerImg" 
+         width="{{ interactionGraphic.width }}" height="{{ interactionGraphic.height }}" style="margin-top: 30px"/>
+</p>
+
+<form class="well label_bold" name="ValidGraphic" id="ValidGraphic" action="#{#{ path('interactiongraphic_create') }#}" method="post" {#{ form_enctype(form) }#}>
+    <input type="hidden" id="nbpoitner" name="nbpoitner" value="{{ i }}"/>
+</form>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphicdisplay.js') }}"></script>
+{% endblock %}

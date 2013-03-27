@@ -61,7 +61,7 @@ use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Form\ResponseType;
 
 
-
+use UJM\ExoBundle\Repository\InteractionGraphicRepository;
 /**
  * Question controller.
  *
@@ -142,6 +142,19 @@ class QuestionController extends Controller
                     break;
 
                 case "InteractionGraphic":
+                    
+                    $interactionGraph = $this->getDoctrine()
+                                         ->getEntityManager()
+                                         ->getRepository('UJMExoBundle:InteractionGraphic')
+                                         ->getInteractionGraphic($interaction[0]->getId());
+
+                    $repository = $this->getDoctrine()
+                                       ->getManager()
+                                       ->getRepository('UJMExoBundle:Coords');
+
+                    $listeCoords = $repository->findBy(array('interactionGraphic' => $interactionGraph[0]));
+
+                    return $this->render('UJMExoBundle:InteractionGraphic:paper.html.twig', array('interactionGraphic' => $interactionGraph[0], 'listeCoords' => $listeCoords));
 
                     break;
 
