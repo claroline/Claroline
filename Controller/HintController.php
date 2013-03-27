@@ -91,7 +91,7 @@ class HintController extends Controller
                     $session->set('penalties', $penalties);
                 }
                 $penalties = $session->get('penalties');
-                $penalties[$id] = $entity->getPenality();
+                $penalties[$id] = $entity->getPenalty();
                 $session->set('penalties', $penalties);
             } else {
                 $lhp = new LinkHintPaper($entity, $em->getRepository('UJMExoBundle:Paper')->find($session->get('paper')));

@@ -46,7 +46,7 @@ class HintType extends AbstractType
     {
         $builder
             ->add('value', 'textarea', array('label' => 'Hint.value'))
-            ->add('penality', 'text', array('label' => 'Hint.penality'));
+            ->add('penalty', 'text', array('label' => 'Hint.penalty'));
     }
 
     public function getName()

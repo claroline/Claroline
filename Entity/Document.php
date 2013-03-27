@@ -42,7 +42,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * UJM\ExoBundle\Entity\Document
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\DocumentRepository")
  * @ORM\Table(name="ujm_document")
  */
 class Document

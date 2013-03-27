@@ -33,105 +33,40 @@
  *
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
-*/
-
-namespace UJM\ExoBundle\Entity;
-
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * UJM\ExoBundle\Entity\Hint
- *
- * @ORM\Entity
- * @ORM\Table(name="ujm_hint")
  */
-class Hint
-{
-    /**
-     * @var integer $id
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
 
-    /**
-     * @var string $value
-     *
-     * @ORM\Column(name="value", type="string", length=255)
-     */
-    private $value;
+namespace UJM\ExoBundle\Form;
 
-    /**
-     * @var float $penalty
-     *
-     * @ORM\Column(name="penalty", type="float")
-     */
-    private $penalty;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Claroline\CoreBundle\Entity\User;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Interaction", inversedBy="hints")
-     */
-    private $interaction;
+class InteractionGraphicType extends AbstractType {
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
+    private $user;
+
+    public function __construct(User $user) {
+        $this->user = $user;
     }
 
-    /**
-     * Set value
-     *
-     * @param string $value
-     */
-    public function setValue($value)
-    {
-        $this->value = $value;
+    public function buildForm(FormBuilderInterface $builder, array $options) {
+        $id = $this->user->getId();
+
+        $builder->add('interaction', new InteractionType($this->user))
+                ->add('document', 'entity', array('class' => 'UJMExoBundle:Document',
+                                                  'property' => 'label',
+                                                // Request to get the pictures matching to the user_id
+                                                  'query_builder' => function (\UJM\ExoBundle\Repository\DocumentRepository $repository) use ($id)
+                                                                     {
+                                                                     return $repository->createQueryBuilder('d')
+                                                                                       ->where('d.user = ?1')
+                                                                                       ->setParameter(1, $id);
+                                                                     },
+                                                  ));
+        ;
     }
 
-    /**
-     * Get value
-     *
-     * @return string
-     */
-    public function getValue()
-    {
-        return $this->value;
-    }
-
-    /**
-     * Set penalty
-     *
-     * @param float $penalty
-     */
-    public function setPenalty($penalty)
-    {
-        $this->penalty = $penalty;
-    }
-
-    /**
-     * Get penalty
-     *
-     * @return float
-     */
-    public function getPenalty()
-    {
-        return $this->penalty;
-    }
-
-    public function getInteraction()
-    {
-        return $this->interaction;
-    }
-
-    public function setInteraction(\UJM\ExoBundle\Entity\Interaction $interaction)
-    {
-        $this->interaction = $interaction;
+    public function getName() {
+        return 'ujm_exobundle_interactiongraphictype';
     }
 }

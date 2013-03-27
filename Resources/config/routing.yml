@@ -25,3 +25,23 @@ ujm_question_dispaly_form_type:
     defaults: { _controller: UJMExoBundle:Question:choixFormType }
     requirements:
       _method: POST
+      
+ujm_interactiongraphic_create:
+    pattern:  /question/InteractionGraphic/create
+    defaults: { _controller: "UJMExoBundle:InteractionGraphic:create" }
+    requirements: { _method: post }
+    
+ujm_interactiongraphic_AjoutImg:
+    pattern:  /question/InteractionGraphic/AjoutImg
+    defaults: { _controller: "UJMExoBundle:WSRest:postDocumentAdd" }
+    requirements: { _method: post }
+    
+ujm_interactiongraphic_SavePic:
+    pattern:  /question/InteractionGraphic/SavePic
+    defaults: { _controller: "UJMExoBundle:InteractionGraphic:SavePic" }
+    
+ujm_interactiongraphic_DisplayPic:
+    pattern:  /question/InteractionGraphic/DisplayPic
+    defaults: { _controller: "UJMExoBundle:InteractionGraphic:DisplayPic" }
+    requirements:
+      _method: POST

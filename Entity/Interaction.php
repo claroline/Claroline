@@ -110,7 +110,7 @@ class Interaction
     private $question;
 
     /**
-     * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\Hint", mappedBy="interaction", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\Hint", mappedBy="interaction", cascade={"remove","persist"})
      */
     private $hints;
 
@@ -279,6 +279,10 @@ class Interaction
         $hint->setInteraction($this);
     }
 
+    public function removeHint(\UJM\ExoBundle\Entity\Hint $hint)
+    {
+    }
+    
     public function setHints($hints)
     {
         foreach ($hints as $hint) {
