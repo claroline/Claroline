@@ -71,6 +71,14 @@ class LayoutController extends Controller
             $loginTarget = $this->get('router')->generate('claro_desktop_open');
         }
 
+        $isImpersonated = false;
+
+        foreach ($this->container->get('security.context')->getToken()->getRoles() as $role) {
+            if ($role instanceof \Symfony\Component\Security\Core\Role\SwitchUserRole) {
+                $isImpersonated = true;
+            }
+        }
+        
         return $this->render(
             'ClarolineCoreBundle:Layout:top_bar.html.twig',
             array(
@@ -81,6 +89,7 @@ class LayoutController extends Controller
                 'login_target' => $loginTarget,
                 'workspaces' => $workspaces,
                 'personalWs' => $personalWs,
+                "isImpersonated" => $isImpersonated
             )
         );
     }

@@ -138,9 +138,13 @@
                             </li>
                             <li class="divider"></li>
                             <li>
-                            <a href="{{ path('claro_security_logout') }}" id="link-logout">
+                                {% if isImpersonated %}
+                                    <a href="{{ path('claro_desktop_open', {'_switch': '_exit'}) }}">
+                                {% else %}
+                                    <a href="{{ path('claro_security_logout') }}" id="link-logout">
+                                {% endif %}
                                 {{ 'logout'|trans({}, 'platform') }}
-                            </a>
+                                </a>
                             </li>
                         {% else %}
                             {% if register_target is not null %}
@@ -158,7 +162,6 @@
                             </li>
                         {% endif %}
                     </ul>
-
                     </li>
                 </ul>
             </div>
