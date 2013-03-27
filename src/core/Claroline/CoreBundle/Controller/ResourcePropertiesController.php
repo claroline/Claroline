@@ -56,7 +56,8 @@ class ResourcePropertiesController extends Controller
         if ($form->isValid()) {
             $em->persist($resource);
             $em->flush();
-            $response = new Response("[\"{$resource->getName()}\"]");
+            $content = json_encode(array($resource->getName()));
+            $response = new Response($content);
             $response->headers->set('Content-Type', 'application/json');
 
             return $response;
