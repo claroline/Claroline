@@ -59,13 +59,15 @@ class CategoryController extends Controller
         $uid = $user->getId();
 
         $entities = $this->getDoctrine()
-                               ->getEntityManager()
-                               ->getRepository('UJMExoBundle:Category')
-                               ->getUserCategory($uid);
+            ->getEntityManager()
+            ->getRepository('UJMExoBundle:Category')
+            ->getUserCategory($uid);
 
-        return $this->render('UJMExoBundle:Category:index.html.twig', array(
-                             'entities' => $entities->getQuery()->getResult()
-                            ));
+        return $this->render(
+            'UJMExoBundle:Category:index.html.twig', array(
+            'entities' => $entities->getQuery()->getResult()
+            )
+        );
     }
 
     /**
@@ -84,11 +86,12 @@ class CategoryController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
 
-        return $this->render('UJMExoBundle:Category:show.html.twig', array(
-                             'entity'      => $entity,
-                             'delete_form' => $deleteForm->createView(),
-
-                            ));
+        return $this->render(
+            'UJMExoBundle:Category:show.html.twig', array(
+            'entity'      => $entity,
+            'delete_form' => $deleteForm->createView(),
+            )
+        );
     }
 
     /**
@@ -100,10 +103,12 @@ class CategoryController extends Controller
         $entity = new Category();
         $form   = $this->createForm(new CategoryType(), $entity);
 
-        return $this->render('UJMExoBundle:Category:new.html.twig', array(
-                             'entity' => $entity,
-                             'form'   => $form->createView()
-                            ));
+        return $this->render(
+            'UJMExoBundle:Category:new.html.twig', array(
+            'entity' => $entity,
+            'form'   => $form->createView()
+            )
+        );
     }
 
     /**
@@ -115,10 +120,12 @@ class CategoryController extends Controller
         $entity = new Category();
         $form   = $this->createForm(new CategoryType(), $entity);
 
-        return $this->render('UJMExoBundle:Category:new_pop.html.twig', array(
-                             'entity' => $entity,
-                             'form'   => $form->createView()
-                            ));
+        return $this->render(
+            'UJMExoBundle:Category:new_pop.html.twig', array(
+            'entity' => $entity,
+            'form'   => $form->createView()
+            )
+        );
     }
 
     /**
@@ -144,10 +151,12 @@ class CategoryController extends Controller
 
         }
 
-        return $this->render('UJMExoBundle:Category:new.html.twig', array(
-                             'entity' => $entity,
-                             'form'   => $form->createView()
-                            ));
+        return $this->render(
+            'UJMExoBundle:Category:new.html.twig', array(
+            'entity' => $entity,
+            'form'   => $form->createView()
+            )
+        );
     }
 
     /**
@@ -193,11 +202,13 @@ class CategoryController extends Controller
         $editForm = $this->createForm(new CategoryType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        return $this->render('UJMExoBundle:Category:edit.html.twig', array(
-                             'entity'      => $entity,
-                             'edit_form'   => $editForm->createView(),
-                             'delete_form' => $deleteForm->createView(),
-                            ));
+        return $this->render(
+            'UJMExoBundle:Category:edit.html.twig', array(
+            'entity'      => $entity,
+            'edit_form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+            )
+        );
     }
 
     /**
@@ -228,11 +239,13 @@ class CategoryController extends Controller
             return $this->redirect($this->generateUrl('category_edit', array('id' => $id)));
         }
 
-        return $this->render('UJMExoBundle:Category:edit.html.twig', array(
-                             'entity'      => $entity,
-                             'edit_form'   => $editForm->createView(),
-                             'delete_form' => $deleteForm->createView(),
-                            ));
+        return $this->render(
+            'UJMExoBundle:Category:edit.html.twig', array(
+            'entity'      => $entity,
+            'edit_form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+            )
+        );
     }
 
     /**
