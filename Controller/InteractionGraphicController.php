@@ -357,7 +357,7 @@ class InteractionGraphicController extends Controller
             return "purple";
             break;
         case "b" :
-             "blue";
+            return "blue";
             break;
         case "r" :
             return "red";
