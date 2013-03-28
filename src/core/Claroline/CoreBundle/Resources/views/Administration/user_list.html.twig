@@ -27,5 +27,12 @@
                 {{ 'show'|trans({}, 'platform') }}
             </a>
         </td>
+        {% if is_granted('ROLE_ADMIN') %}
+        <td>
+            <a href="{{ path('claro_desktop_open', {'_switch': user.getUsername()}) }}">
+                {{ 'steal_session'|trans({}, 'platform') }}
+            </a>
+        </td>
+        {% endif %}
     </tr>
 {% endfor %}

@@ -156,12 +156,10 @@ class FileListener extends ContainerAware
     {
         $resource = $event->getResource();
         $hash = $resource->getHashName();
+        //@todo: remove this line without breaking everything ('type' is set by the tool listener).
         $config['type'] = 'file';
-        $config['hashname'] = $hash;
-        $event->getArchive()->addFile(
-            $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $hash,
-            $hash
-        );
+        $filePath = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $hash;
+        $event->setFiles(array(array('archive_path' => $hash, 'original_path' => $filePath)));
         $event->setConfig($config);
         $event->stopPropagation();
     }
@@ -169,16 +167,13 @@ class FileListener extends ContainerAware
     public function onImportTemplate(ImportResourceTemplateEvent $event)
     {
         $ds = DIRECTORY_SEPARATOR;
-        $config = $event->getConfig();
+        $files = $event->getFiles();
         $file = new File();
-        $extension = pathinfo($config['name'], PATHINFO_EXTENSION);
+        $extension = pathinfo($files[0], PATHINFO_EXTENSION);
         $hashName = $this->container->get('claroline.resource.utilities')->generateGuid() . "." . $extension;
-        $content = $event->getArchive()->getFromName($config['hashname']);
         $physicalPath = $this->container->getParameter('claroline.files.directory') . $ds . $hashName;
-        $splFileInfo = new \SplFileInfo($physicalPath);
-        $splFileObject = $splFileInfo->openFile('w+');
-        $splFileObject->fwrite($content);
-        $size = filesize($splFileObject);
+        rename($files[0], $physicalPath);
+        $size = filesize($physicalPath);
         $file->setSize($size);
         $file->setHashName($hashName);
         $guesser = MimeTypeGuesser::getInstance();

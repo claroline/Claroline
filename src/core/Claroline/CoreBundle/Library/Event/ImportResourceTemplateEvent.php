@@ -10,18 +10,18 @@ class ImportResourceTemplateEvent extends Event
 {
     private $parent;
     private $config;
-    private $archive;
     private $resource;
     private $createdResources;
     private $user;
+    private $files;
 
-    public function __construct(array $config, AbstractResource $parent, \ZipArchive $archive, User $user)
+    public function __construct(array $config, AbstractResource $parent, User $user)
     {
         $this->parent = $parent;
         $this->config = $config;
-        $this->archive = $archive;
         $this->user = $user;
         $this->createdResources = array();
+        $this->files = array();
     }
 
     public function getConfig()
@@ -32,11 +32,6 @@ class ImportResourceTemplateEvent extends Event
     public function getParent()
     {
         return $this->parent;
-    }
-
-    public function getArchive()
-    {
-        return $this->archive;
     }
 
     public function setResource(AbstractResource $resource)
@@ -78,5 +73,23 @@ class ImportResourceTemplateEvent extends Event
     public function getUser()
     {
         return $this->user;
+    }
+
+    public function getFiles()
+    {
+        return $this->files;
+    }
+
+    /**
+     * Expects an array of files.
+     * Each item of the array is an array with the following keys:
+     * 'archive_path' => '/pathname/in/archive'
+     * 'original_path' => '/pathname/in/extracted/dir'
+     *
+     * @param array $files
+     */
+    public function setFiles($files)
+    {
+        $this->files = $files;
     }
 }
