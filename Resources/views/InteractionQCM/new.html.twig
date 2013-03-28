@@ -33,7 +33,7 @@
  # knowledge of the CeCILL license and that you accept its terms.
 #}
 
-<form class="well label_bold" onsubmit="return check_form('{{ "nbr_choices" | trans }}', '{{ "answer_coched" | trans }}', '{{ "label_empty" | trans }}', '{{ "point_answers" | trans }}', '{{ "point_answer" | trans }}', '{{ "invite_question" | trans }}');" action="{#{ path('interactionqcm_create') }#}" method="post" {{ form_enctype(form) }}>
+<form class="well label_bold" onsubmit="return check_form('{{ "nbr_choices" | trans }}', '{{ "answer_coched" | trans }}', '{{ "label_empty" | trans }}', '{{ "point_answers" | trans }}', '{{ "point_answer" | trans }}', '{{ "invite_question" | trans }}');" action="{{ path('ujm_interactionqcm_create') }}" method="post" {{ form_enctype(form) }}>
     {{ form_widget(form) }}
     <p>
         <input type="hidden" name="exercise" value="{{ exoID }}" />

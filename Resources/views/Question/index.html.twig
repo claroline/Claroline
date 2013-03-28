@@ -51,7 +51,7 @@
         {% for interaction in interactions %}
             <tr>
                 <td>{{ interaction.question.category.value }}</td>
-                <td><a href="{#{ path('question_show', { 'id': interaction.question.id }) }}">{{ interaction.question.title }#}</a></td>
+                <td><a href="{{ path('ujm_question_show', { 'id': interaction.question.id }) }}">{{ interaction.question.title }}</a></td>
                 <td>{{ interaction.type }}</td>
                 <td>{{ interaction.invite|raw }}</td>
                 <td>

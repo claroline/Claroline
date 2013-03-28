@@ -12,6 +12,11 @@ ujm_exercise_open:
    pattern: /open/{exerciseId}
    defaults: { _controller: UJMExoBundle:Exercise:open }
    
+ujm_interactionqcm_create:
+    pattern:  /interactionqcm/create
+    defaults: { _controller: "UJMExoBundle:InteractionQCM:create" }
+    requirements: { _method: post }
+   
 ujm_question_index:
     pattern: /question/index
     defaults: { _controller: UJMExoBundle:Question:index }
@@ -25,6 +30,10 @@ ujm_question_dispaly_form_type:
     defaults: { _controller: UJMExoBundle:Question:choixFormType }
     requirements:
       _method: POST
+      
+ujm_question_show:
+    pattern:  /question/show/{id}
+    defaults: { _controller: "UJMExoBundle:Question:show" }
       
 ujm_interactiongraphic_create:
     pattern:  /question/InteractionGraphic/create
