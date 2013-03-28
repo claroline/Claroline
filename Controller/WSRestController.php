@@ -58,33 +58,33 @@ class WSRestController extends Controller
         //on poste les données label,url, type, login
         //le login permet de lier le doc à un utilisateur mais aussi de vérifier que le login correspond bien à l'utilisateur connecté.
 
-        if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {   
+        if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
             //var_dump($this->container->get('router'));die();
-            $user_dir = './bundles/ujmexo/users_documents/'.$this->container->get('security.context')->getToken()->getUser()->getUsername();
-            //echo $user_dir;die();
-            
+            $userDir = './bundles/ujmexo/users_documents/'.$this->container->get('security.context')->getToken()->getUser()->getUsername();
+            //echo $userDir;die();
+
             if (!is_dir('./bundles/ujmexo/users_documents/')) {
                 mkdir('./bundles/ujmexo/users_documents/');
             }
-            
-            if (!is_dir($user_dir)) {
+
+            if (!is_dir($userDir)) {
                 $dirs = array('audio','images','media','video');
-                mkdir($user_dir);
-                
+                mkdir($userDir);
+
                 foreach ($dirs as $dir) {
-                    mkdir($user_dir.'/'.$dir);
+                    mkdir($userDir.'/'.$dir);
                 }
             }
 
-            if ((isset($_FILES['picture'])) && ($_FILES['picture'] != '')) {               
+            if ((isset($_FILES['picture'])) && ($_FILES['picture'] != '')) {
                 $file = basename($_FILES['picture']['name']);
-                move_uploaded_file($_FILES['picture']['tmp_name'], $user_dir.'/images/'. $file);
+                move_uploaded_file($_FILES['picture']['tmp_name'], $userDir.'/images/'. $file);
 
                 $em = $this->getDoctrine()->getEntityManager();
                 $document = new Document();
 
                 $document->setLabel($_POST['label']);
-                $document->setUrl($user_dir.'/images/'. $file);
+                $document->setUrl($userDir.'/images/'. $file);
                 $document->setType(strrchr($file, '.'));
                 $document->setUser($this->container->get('security.context')->getToken()->getUser());
 

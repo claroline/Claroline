@@ -49,14 +49,14 @@ use UJM\ExoBundle\Entity\Coords;
  * InteractionGraphic controller.
  *
  */
-class InteractionGraphicController extends Controller 
+class InteractionGraphicController extends Controller
 {
 
     /**
      * Lists all InteractionGraphic entities.
      *
      */
-    public function indexAction() 
+    public function indexAction()
     {
         $em = $this->getDoctrine()->getEntityManager();
 
@@ -71,7 +71,7 @@ class InteractionGraphicController extends Controller
      * Finds and displays a InteractionGraphic entity.
      *
      */
-    public function showAction($id) 
+    public function showAction($id)
     {
         $em = $this->getDoctrine()->getEntityManager();
 
@@ -93,7 +93,7 @@ class InteractionGraphicController extends Controller
      * Displays a form to create a new InteractionGraphic entity.
      *
      */
-    public function newAction() 
+    public function newAction()
     {
         $entity = new InteractionGraphic();
         $form = $this->createForm(new InteractionGraphicType(), $entity);
@@ -108,7 +108,7 @@ class InteractionGraphicController extends Controller
      * Creates a new InteractionGraphic entity.
      *
      */
-    public function createAction() 
+    public function createAction()
     {
 
         $user = $this->container->get('security.context')->getToken()->getUser();
@@ -127,31 +127,31 @@ class InteractionGraphicController extends Controller
 
         $interGraph->setHeight($height);
         $interGraph->setWidth($width);
-        
+
         $coords = $this->get('request')->get('coordsZone'); // Get the answer zones
-        
-        $coord = preg_split('[,]',$coords);
+
+        $coord = preg_split('[,]', $coords);
         $lengthCoord = count($coord);
-        
+
         for ($i = 0; $i < $lengthCoord; $i++) {
 
-            $B4 = array(";", "-");
-            $After   = array(",", ",");
+            $b4 = array(";", "-");
+            $after   = array(",", ",");
 
-            $data = str_replace($B4, $After, $coord[$i]);
+            $data = str_replace($b4, $after, $coord[$i]);
 
             list(${'url'.$i}, ${'value'.$i}, ${'point'.$i}) = explode(",", $data);
-            
-            ${'value'.$i} = str_replace("_", ",", ${'value'.$i});  
+
+            ${'value'.$i} = str_replace("_", ",", ${'value'.$i});
             ${'url'.$i} = substr(${'url'.$i}, 61);
-            
+
             ${'shape'.$i} = $this->getShape(${'url'.$i});
             ${'color'.$i} = $this->getColor(${'url'.$i});
         }
 
         for ($i = 0; $i < $lengthCoord; $i++) {
             ${'co'.$i} = new Coords();
-        
+
             ${'co'.$i}->setValue(${'value'.$i});
             ${'co'.$i}->setShape(${'shape'.$i});
             ${'co'.$i}->setColor(${'color'.$i});
@@ -165,7 +165,7 @@ class InteractionGraphicController extends Controller
             $em->persist($interGraph);
             $em->persist($interGraph->getInteraction()->getQuestion());
             $em->persist($interGraph->getInteraction());
-            
+
             for ($i = 0; $i < $lengthCoord; $i++) {
                 $em->persist(${'co'.$i});
             }
@@ -184,7 +184,7 @@ class InteractionGraphicController extends Controller
      * Displays a form to edit an existing InteractionGraphic entity.
      *
      */
-    public function editAction($id) 
+    public function editAction($id)
     {
         $em = $this->getDoctrine()->getEntityManager();
 
@@ -208,7 +208,7 @@ class InteractionGraphicController extends Controller
      * Edits an existing InteractionGraphic entity.
      *
      */
-    public function updateAction($id) 
+    public function updateAction($id)
     {
         $em = $this->getDoctrine()->getEntityManager();
 
@@ -243,7 +243,7 @@ class InteractionGraphicController extends Controller
      * Deletes a InteractionGraphic entity.
      *
      */
-    public function deleteAction($id) 
+    public function deleteAction($id)
     {
         $form = $this->createDeleteForm($id);
         $request = $this->getRequest();
@@ -265,19 +265,18 @@ class InteractionGraphicController extends Controller
         return $this->redirect($this->generateUrl('interactiongraphic'));
     }
 
-    private function createDeleteForm($id) 
+    private function createDeleteForm($id)
     {
         return $this->createFormBuilder(array('id' => $id))
                     ->add('id', 'hidden')
-                    ->getForm()
-        ;
+                    ->getForm();
     }
 
     /**
      * Display the twig view to add a new picture to the user document.
      *
      */
-    public function SavePicAction() 
+    public function SavePicAction()
     {
         return $this->render('UJMExoBundle:InteractionGraphic:page.html.twig');
     }
@@ -286,14 +285,15 @@ class InteractionGraphicController extends Controller
      * Get the adress of the selected picture in order to display it.
      *
      */
-    public function DisplayPicAction() 
+    public function DisplayPicAction()
     {
 
         $request = $this->container->get('request');
 
         if ($request->isXmlHttpRequest()) {
             $label = $request->request->get('value');
-            if ($label) { // If the sended label isn't empty, get the matching adress
+            // If the sended label isn't empty, get the matching adress
+            if ($label) {
                 $repository = $this->getDoctrine()
                                    ->getManager()
                                    ->getRepository('UJMExoBundle:Document');
@@ -310,55 +310,55 @@ class InteractionGraphicController extends Controller
 
         return new Response($url);
     }
-    
+
     /**
      * Get the shape of the answer zone
      *
-     */   
+     */
     public function getShape($url)
     {
-        $chaine = substr($url,0,1);
-     
+        $chaine = substr($url, 0, 1);
+
         if ($chaine == "r") {
             return "rectangle";
-        } else if($chaine == "c") {
+        } else if ($chaine == "c") {
             return "circle";
         }
     }
-    
+
     /**
      * Get the color of the answer zone
      *
-     */ 
+     */
     public function getColor($url)
     {
-        $chaine = substr($url, -5, 1); 
-        
+        $chaine = substr($url, -5, 1);
+
         switch ($chaine) {
-        case "w" :
-           return "white";
-           break;
-        case "g" :
-           return "green";
-           break;
-        case "p" :
-           return "purple";
-           break;
-        case "b" :
-           return "blue";
-           break;
-        case "r" :
-           return "red";
-           break;
-        case "o" :
-           return "orange";
-           break;
-        case "y" :
-           return "yellow";
-           break;
-       default :
-           return "white";
-           break;
+            case "w" :
+                return "white";
+                break;
+            case "g" :
+                return "green";
+                break;
+            case "p" :
+                return "purple";
+                break;
+            case "b" :
+                 "blue";
+                break;
+            case "r" :
+                return "red";
+                break;
+            case "o" :
+                return "orange";
+                break;
+            case "y" :
+                return "yellow";
+                break;
+            default :
+                return "white";
+                break;
         }
     }
 }
