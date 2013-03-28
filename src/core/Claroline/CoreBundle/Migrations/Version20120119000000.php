@@ -813,7 +813,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('tool_id', 'integer');
         $table->addColumn('workspace_id', 'integer');
         $table->addColumn('display_order', 'integer');
-        $table->addColumn('translation_key', 'string');
+        $table->addColumn('name', 'string');
 
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_tools'),
@@ -831,7 +831,7 @@ class Version20120119000000 extends BundleMigration
 
         $table->addUniqueIndex(array('tool_id', 'workspace_id'));
         $table->addUniqueIndex(array('workspace_id', 'display_order'));
-        $table->addUniqueIndex(array('workspace_id', 'translation_key'));
+        $table->addUniqueIndex(array('workspace_id', 'name'));
 
         $this->storeTable($table);
     }
