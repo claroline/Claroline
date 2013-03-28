@@ -57,9 +57,9 @@ class LayoutController extends Controller
             $countUnreadMessages = $em->getRepository('ClarolineCoreBundle:Message')
                 ->countUnread($user);
             $username = $user->getFirstName() . ' ' . $user->getLastName();
-//            $workspaces = $wsRepo->findByUser($user);
             $personalWs = $user->getPersonalWorkspace();
-            $wsLogs = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceLog')->findLatestWorkspaceByUser($user);
+            $wsLogs = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceLog')
+                ->findLatestWorkspaceByUser($user);
 
             if (!empty($wsLogs)) {
                 $workspaces = array();
@@ -68,27 +68,6 @@ class LayoutController extends Controller
                     $workspaces[] = $wsLog[0]->getWorkspace();
                 }
             }
-//            if (empty($wsLogs)) {
-//                throw new \Exception('vide');
-//            } else {
-//                $value = $wsLogs[0]->getWorkspace()->getId()
-//                        . " - " . $wsLogs[1]->getWorkspace()->getId()
-//                        . " - " . $wsLogs[2]->getWorkspace()->getId();
-//                $ws = "";
-//                $value2 = "";
-//                foreach ($wsLogs as $wsLog) {
-//                    $ws .= " ### " . $wsLog[0]->getWorkspace()->getId();
-//                    $value2 .= " *** " . $wsLog['md'];
-//                }
-//                $value = $ws . "\n" . $value2;
-//                $value = $wsLogs[0][1]
-//                        . " *** " . $wsLogs[1][1]
-//                        . " *** " . $wsLogs[2][1];
-//                throw new \Exception($value);
-//                throw new \Exception($wsLogs[0]->getWorkspace()->getId());
-//                throw new \Exception(count($wsLogs));
-//                throw new \Exception(print_r($wsLogs[0], true));
-//            }
         } else {
             $username = $this->get('translator')->trans('anonymous', array(), 'platform');
             $workspaces = $wsRepo->findByAnonymous();
@@ -108,7 +87,7 @@ class LayoutController extends Controller
                 $isImpersonated = true;
             }
         }
-        
+
         return $this->render(
             'ClarolineCoreBundle:Layout:top_bar.html.twig',
             array(
