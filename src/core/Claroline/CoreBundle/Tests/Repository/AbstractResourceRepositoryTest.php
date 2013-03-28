@@ -115,11 +115,11 @@ class AbstractResourceRepositoryTest extends FixtureTestCase
     public function testFindByCriteria()
     {
         $this->loadUserData(array('jane' => 'user'));
-        sleep(3);
         $timeOne = new \DateTime();
+        sleep(1);
         $this->loadDirectoryData('jane', array('jane/dir1'));
         $this->loadDirectoryData('john', array('john/dir2/dir3', 'john/dir4'));
-        sleep(3);
+        sleep(1);
         $timeTwo = new \DateTime();
         $this->loadFileData('john', 'dir4', array('foo.txt'));
 
@@ -136,7 +136,7 @@ class AbstractResourceRepositoryTest extends FixtureTestCase
         $this->assertEquals(1, count($resources));
 
         $resources = $this->repo->findByCriteria(array('dateTo' => $timeOne->format('Y-m-d H:i:s')));
-        $this->assertEquals(6, count($resources));
+        $this->assertEquals(2, count($resources));
 
         $resources = $this->repo->findByCriteria(array('name' => 'j'));
         $this->assertEquals(2, count($resources));
