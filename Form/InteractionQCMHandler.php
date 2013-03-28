@@ -139,7 +139,7 @@ class InteractionQCMHandler
             $originalHints[] = $hint;
         }
 
-        if( $this->request->getMethod() == 'POST' ) {
+        if ( $this->request->getMethod() == 'POST' ) {
             $this->form->bindRequest($this->request);
 
             if ( $this->form->isValid() ) {

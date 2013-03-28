@@ -45,15 +45,38 @@ class ChoiceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('label', 'textarea', array('label' => ' '))
+            ->add(
+                'label', 'textarea', array(
+                    'label' => ' '
+                )
+            )
                                              //, array('attr' => array('class' => 'tinymce', 'data-theme' => 'medium'),
                                              //'label' => 'Choice.label'
                                             //))
-            ->add('ordre', 'text')
-            ->add('weight', 'text', array('required' => false, 'label' => ' '))
-            ->add('feedback', 'textarea', array('required' => false, 'label' => ' '))
-            ->add('rightResponse', 'checkbox', array('required' => false, 'label' => ' '))
-            ->add('positionForce', 'checkbox', array('required' => false, 'label' => ' '));
+            ->add(
+                'ordre', 'text'
+            )
+            ->add(
+                'weight', 'text', array(
+                    'required' => false, 'label' => ' '
+                )
+            )
+            ->add(
+                'feedback', 'textarea', array(
+                    'required' => false, 'label' => ' '
+                )
+            )
+            ->add(
+                'rightResponse', 'checkbox', array(
+                    'required' => false, 'label' => ' '
+                )
+            )
+            ->add(
+                'positionForce', 'checkbox', array(
+                    'required' => false, 'label' => ' '
+                )
+            )
+        ;
     }
 
     public function getName()
@@ -64,7 +87,7 @@ class ChoiceType extends AbstractType
     public function getDefaultOptions(array $options)
     {
         return array(
-            'data_class'      => 'UJM\ExoBundle\Entity\Choice'
+            'data_class' => 'UJM\ExoBundle\Entity\Choice'
         );
     }
 }

@@ -53,24 +53,64 @@ class InteractionQCMType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('interaction', new InteractionType($this->user));
-        $builder->add('shuffle', 'checkbox', array('label' => 'Inter_QCM.shuffle', 'required' => false));
-        $builder->add('scoreRightResponse', 'text', array('required' => false,
-                                                          'label' => 'Inter_QCM.ScoreRightResponse'
-                                                         ));
-        $builder->add('scoreFalseResponse', 'text', array('required' => false,
-                                                          'label' => 'Inter_QCM.ScoreFalseResponse'
-                                                         ));
-        $builder->add('weightResponse', 'checkbox', array('required' => false, 'label' => 'Inter_QCM.weightChoice'));
+        $builder
+            ->add(
+                'interaction', new InteractionType(
+                    $this->user
+                )
+            )
+        ;
+        $builder
+            ->add(
+                'shuffle', 'checkbox', array(
+                    'label' => 'Inter_QCM.shuffle', 
+                    'required' => false
+                )
+            )
+        ;
+        $builder
+            ->add(
+                'scoreRightResponse', 'text', array(
+                    'required' => false,
+                    'label' => 'Inter_QCM.ScoreRightResponse'
+                )
+            )
+        ;
+        $builder
+            ->add(
+                'scoreFalseResponse', 'text', array(
+                    'required' => false,
+                    'label' => 'Inter_QCM.ScoreFalseResponse'
+                )
+            )
+        ;
+        $builder
+            ->add(
+                'weightResponse', 'checkbox', array(
+                    'required' => false, 
+                    'label' => 'Inter_QCM.weightChoice'
+                )
+            )
+        ;
         //$builder->add('interaction');
-        $builder->add('typeQCM', 'entity', array('class' => 'UJM\\ExoBundle\\Entity\\TypeQCM',
-                                                 'label' => 'TypeQCM.value'
-                                                ));
-        $builder->add('choices', 'collection', array('type'      => new ChoiceType,
-                                                     'prototype' => true,
-                                                     'allow_add' => true,
-                                                     'allow_delete' => true
-                                                    ));
+        $builder
+            ->add(
+                'typeQCM', 'entity', array(
+                    'class' => 'UJM\\ExoBundle\\Entity\\TypeQCM',
+                    'label' => 'TypeQCM.value'
+                )
+            )
+        ;
+        $builder
+            ->add(
+                'choices', 'collection', array(
+                    'type' => new ChoiceType,
+                    'prototype' => true,
+                    'allow_add' => true,
+                    'allow_delete' => true
+                )
+            )
+        ;
     }
 
     public function getName()

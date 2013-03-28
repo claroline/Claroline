@@ -45,8 +45,17 @@ class HintType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('value', 'textarea', array('label' => 'Hint.value'))
-            ->add('penalty', 'text', array('label' => 'Hint.penalty'));
+            ->add(
+                'value', 'textarea', array(
+                    'label' => 'Hint.value'
+                )
+            )
+            ->add(
+                'penalty', 'text', array(
+                    'label' => 'Hint.penalty'
+                )
+            )
+        ;
     }
 
     public function getName()
@@ -57,7 +66,7 @@ class HintType extends AbstractType
     public function getDefaultOptions(array $options)
     {
         return array(
-            'data_class'      => 'UJM\ExoBundle\Entity\Hint'
+            'data_class' => 'UJM\ExoBundle\Entity\Hint'
         );
     }
 }

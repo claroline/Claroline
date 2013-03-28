@@ -41,32 +41,41 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Claroline\CoreBundle\Entity\User;
 
-class InteractionGraphicType extends AbstractType {
+class InteractionGraphicType extends AbstractType
+{
 
     private $user;
 
-    public function __construct(User $user) {
+    public function __construct(User $user)
+    {
         $this->user = $user;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $id = $this->user->getId();
 
-        $builder->add('interaction', new InteractionType($this->user))
-                ->add('document', 'entity', array('class' => 'UJMExoBundle:Document',
-                                                  'property' => 'label',
-                                                // Request to get the pictures matching to the user_id
-                                                  'query_builder' => function (\UJM\ExoBundle\Repository\DocumentRepository $repository) use ($id)
-                                                                     {
-                                                                     return $repository->createQueryBuilder('d')
-                                                                                       ->where('d.user = ?1')
-                                                                                       ->setParameter(1, $id);
-                                                                     },
-                                                  ));
+        $builder
+            ->add(
+                'interaction', new InteractionType($this->user)
+            )
+            ->add(
+                'document', 'entity', array(
+                    'class' => 'UJMExoBundle:Document',
+                    'property' => 'label',
+                  // Request to get the pictures matching to the user_id
+                    'query_builder' => function (\UJM\ExoBundle\Repository\DocumentRepository $repository) use ($id) {
+                        return $repository->createQueryBuilder('d')
+                            ->where('d.user = ?1')
+                            ->setParameter(1, $id);
+                    },
+                )
+            )
         ;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return 'ujm_exobundle_interactiongraphictype';
     }
 }

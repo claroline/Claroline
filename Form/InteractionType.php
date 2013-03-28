@@ -55,24 +55,48 @@ class InteractionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('question', new QuestionType($this->user))
+            ->add(
+                'question', new QuestionType(
+                    $this->user
+                )
+            )
             //->add('type', 'text')
-            ->add('invite', 'textarea', array('attr' => array('class' => 'tinymce', 'data-theme' => 'medium'),
-                                              'required' => false,
-                                              'label' => 'Interaction.invite'
-                                             ))
-            ->add('ordre', 'hidden', array('required' => false))
-            ->add('feedBack', 'textarea', array('attr' => array('class' => 'tinymce', 'data-theme' => 'medium'),
-                                                'required' => false,
-                                                'label' => 'Interaction.feedback'
-                                               ))
+            ->add(
+                'invite', 'textarea', array(
+                    'attr' => array(
+                        'class' => 'tinymce', 
+                        'data-theme' => 'medium'
+                    ),
+                    'required' => false,
+                    'label' => 'Interaction.invite'
+                )
+            )
+            ->add(
+                'ordre', 'hidden', array(
+                    'required' => false
+                )
+            )
+            ->add(
+                'feedBack', 'textarea', array(
+                    'attr' => array(
+                        'class' => 'tinymce', 
+                        'data-theme' => 'medium'
+                    ),
+                    'required' => false,
+                    'label' => 'Interaction.feedback'
+                )
+            )
             //->add('locked_expertise', 'checkbox', array('required' => false))
             //->add('documents')
-            ->add('hints', 'collection', array('type'      => new HintType,
-                                               'prototype'  => true,
-                                               'allow_add'  => true ,
-                                               'allow_delete' => true
-                                              ));
+            ->add(
+                'hints', 'collection', array(
+                    'type' => new HintType,
+                    'prototype' => true,
+                    'allow_add' => true ,
+                    'allow_delete' => true
+                )
+            )
+        ;
     }
 
     public function getName()
@@ -83,7 +107,7 @@ class InteractionType extends AbstractType
     public function getDefaultOptions(array $options)
     {
         return array(
-            'data_class'      => 'UJM\ExoBundle\Entity\Interaction'
+            'data_class' => 'UJM\ExoBundle\Entity\Interaction'
         );
     }
 }
