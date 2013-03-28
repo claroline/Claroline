@@ -142,7 +142,7 @@ class ToolListener extends ContainerAware
         $criteria['roots'] = array($root->getName());
         $criteria['isExportable'] = true;
         $config['resources'] = array();
-        $resources = $resourceRepo->findUserResourcesByCriteria($criteria, null, true);
+        $resources = $resourceRepo->findByCriteria($criteria);
 
         foreach ($resources as $resource) {
             $newEvent = new ExportResourceTemplateEvent($resourceRepo->find($resource['id']), $event->getArchive());

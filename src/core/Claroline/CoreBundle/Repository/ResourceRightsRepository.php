@@ -10,8 +10,8 @@ class ResourceRightsRepository extends EntityRepository
     /**
      * Used by the ResourceVoter.
      *
-     * @param type array $rights
-     * @param type AbstractResource $resource
+     * @param array[string]     $rights
+     * @param AbstractResource  $resource
      *
      * @return ResourceRights;
      */
