@@ -108,6 +108,16 @@ class Message
      */
     protected $children;
 
+    /**
+     * @ORM\Column(type="string", name="sender_username")
+     */
+    protected $senderUsername;
+
+    /**
+     * @ORM\Column(type="string", name="receiver_username")
+     */
+    protected $receiverUsername;
+
     public function __construct()
     {
         $this->isRemoved = false;
@@ -163,6 +173,11 @@ class Message
         $this->isRemoved = true;
     }
 
+    public function markAsUnremoved()
+    {
+        $this->isRemoved = false;
+    }
+
     public function getUserMessages()
     {
         return $this->userMessages;
@@ -211,5 +226,25 @@ class Message
     public function setTo($to)
     {
         $this->to = $to;
+    }
+
+    public function setSenderUsername($senderUsername)
+    {
+        $this->senderUsername = $senderUsername;
+    }
+
+    public function getSenderUsername()
+    {
+        return $this->senderUsername;
+    }
+
+    public function setReceiverUsername($receiverUsername)
+    {
+        $this->receiverUsername = $receiverUsername;
+    }
+
+    public function getReceiverUsername()
+    {
+        return $this->receiverUsername;
     }
 }

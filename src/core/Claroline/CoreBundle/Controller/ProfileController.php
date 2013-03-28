@@ -36,7 +36,7 @@ class ProfileController extends Controller
         $request = $this->get('request');
         $user = $this->get('security.context')->getToken()->getUser();
         $form = $this->get('form.factory')->create(new ProfileType($user->getOwnedRoles()), $user);
-        $form->bindRequest($request);
+        $form->bind($request);
 
         if ($form->isValid()) {
             $user = $form->getData();

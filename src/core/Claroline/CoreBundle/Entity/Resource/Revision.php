@@ -66,9 +66,10 @@ class Revision
         $this->version = $version;
     }
 
-    public function setText($text)
+    public function setText(Text $text)
     {
         $this->text = $text;
+        $text->addRevision($this);
     }
 
     public function getText()

@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Form;
 use Symfony\Component\Form\FormBuilderInterface;
 use Claroline\CoreBundle\Form\GroupType;
 use Claroline\CoreBundle\Entity\Role;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class GroupSettingsType extends GroupType
 {
@@ -32,10 +33,13 @@ class GroupSettingsType extends GroupType
         return 'group_form';
     }
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array(
-            'translation_domain' => 'platform'
+        $resolver
+        ->setDefaults(
+            array(
+                'translation_domain' => 'platform'
+                )
         );
     }
 }

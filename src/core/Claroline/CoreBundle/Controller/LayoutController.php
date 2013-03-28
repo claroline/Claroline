@@ -57,8 +57,38 @@ class LayoutController extends Controller
             $countUnreadMessages = $em->getRepository('ClarolineCoreBundle:Message')
                 ->countUnread($user);
             $username = $user->getFirstName() . ' ' . $user->getLastName();
-            $workspaces = $wsRepo->findByUser($user);
+//            $workspaces = $wsRepo->findByUser($user);
             $personalWs = $user->getPersonalWorkspace();
+            $wsLogs = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceLog')->findLatestWorkspaceByUser($user);
+
+            if (!empty($wsLogs)) {
+                $workspaces = array();
+
+                foreach ($wsLogs as $wsLog) {
+                    $workspaces[] = $wsLog[0]->getWorkspace();
+                }
+            }
+//            if (empty($wsLogs)) {
+//                throw new \Exception('vide');
+//            } else {
+//                $value = $wsLogs[0]->getWorkspace()->getId()
+//                        . " - " . $wsLogs[1]->getWorkspace()->getId()
+//                        . " - " . $wsLogs[2]->getWorkspace()->getId();
+//                $ws = "";
+//                $value2 = "";
+//                foreach ($wsLogs as $wsLog) {
+//                    $ws .= " ### " . $wsLog[0]->getWorkspace()->getId();
+//                    $value2 .= " *** " . $wsLog['md'];
+//                }
+//                $value = $ws . "\n" . $value2;
+//                $value = $wsLogs[0][1]
+//                        . " *** " . $wsLogs[1][1]
+//                        . " *** " . $wsLogs[2][1];
+//                throw new \Exception($value);
+//                throw new \Exception($wsLogs[0]->getWorkspace()->getId());
+//                throw new \Exception(count($wsLogs));
+//                throw new \Exception(print_r($wsLogs[0], true));
+//            }
         } else {
             $username = $this->get('translator')->trans('anonymous', array(), 'platform');
             $workspaces = $wsRepo->findByAnonymous();
@@ -71,6 +101,14 @@ class LayoutController extends Controller
             $loginTarget = $this->get('router')->generate('claro_desktop_open');
         }
 
+        $isImpersonated = false;
+
+        foreach ($this->container->get('security.context')->getToken()->getRoles() as $role) {
+            if ($role instanceof \Symfony\Component\Security\Core\Role\SwitchUserRole) {
+                $isImpersonated = true;
+            }
+        }
+        
         return $this->render(
             'ClarolineCoreBundle:Layout:top_bar.html.twig',
             array(
@@ -81,6 +119,7 @@ class LayoutController extends Controller
                 'login_target' => $loginTarget,
                 'workspaces' => $workspaces,
                 'personalWs' => $personalWs,
+                "isImpersonated" => $isImpersonated
             )
         );
     }

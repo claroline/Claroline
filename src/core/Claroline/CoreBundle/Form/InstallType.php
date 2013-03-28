@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class InstallType extends AbstractType
 {
@@ -12,20 +13,15 @@ class InstallType extends AbstractType
         $builder
             ->add(
                 'dbHost',
-                'text',
-                array(
-                    'label' => 'Serveur'
-                )
+                'text'
             )
             ->add(
                 'dbName',
-                'text',
-                array('label' => 'nom de la base de donnée')
+                'text'
             )
             ->add(
                 'dbUser',
-                'text',
-                array('label' => 'nom d\'utilisateur')
+                'text'
             )
             ->add(
                 'dbPassword',
@@ -53,11 +49,46 @@ class InstallType extends AbstractType
         return 'install_form';
     }
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array(
-            'data_class' => 'Claroline\CoreBundle\Library\Installation\Install',
-            'translation_domain' => 'install'
+        $resolver
+
+        ->setDefaults(
+            array(
+                'class' => 'Claroline\CoreBundle\Library\Installation\Install',
+                'translation_domain' => 'install',
+                'dbHost' => 'ok',
+                'dbName' => '',
+                'dbUser' => '',
+                'dbDriver' => 'pdo_mysql'
+                )
+        )
+        ->setRequired(
+            array(
+                'dbHost',
+                'dbName',
+                'dbUser',
+                'dbDriver',
+            )
+        )
+        ->setOptional(
+            array(
+                'dbPassword'
+            )
+        )
+        ->setAllowedtypes(
+            array(
+                'dbHost' => 'string',
+                'dbName' => 'string',
+                'dbUser' => 'string',
+                'dbDriver' => 'string',
+                'dbPassword' => array('string' ,null)
+            )
+        )
+        ->setAllowedValues(
+            array(
+                'dbDriver' => array('pdo_mysql', 'pdo_pgsql', 'pdo_sqlsrv'),
+            )
         );
     }
 }

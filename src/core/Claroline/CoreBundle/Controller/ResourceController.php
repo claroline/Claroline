@@ -34,7 +34,7 @@ class ResourceController extends Controller
         $event = new CreateFormResourceEvent();
         $this->get('event_dispatcher')->dispatch($eventName, $event);
 
-        if($event->getResponseContent() === "") {
+        if ($event->getResponseContent() === "") {
             throw new \Exception(
                 "Event '{$eventName}' didn't receive any response."
             );

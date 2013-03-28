@@ -25,7 +25,7 @@ tinyMCE.init({
         <div class="accordion-group message-show">
             <div class="accordion-heading">
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ ancestor.getId() }}">
-                     {{ 'object'|trans({}, 'platform') }}: {{ ancestor.getObject()|raw }} | {{ 'from'|trans({}, 'platform') }}:  {{ ancestor.getUser().getUsername() }}
+                     {{ 'object'|trans({}, 'platform') }}: {{ ancestor.getObject()|raw }} | {{ 'from_message'|trans({}, 'platform') }}:  {{ ancestor.getUser().getUsername() }}
                 </a>
             </div>
             <div id="collapse{{ ancestor.getId() }}" class="accordion-body collapse {% if loop.last %}in{% endif %}">

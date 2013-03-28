@@ -28,6 +28,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             WHERE u.username LIKE :username"
             ;
 
+        //must add the role ?
         $query = $this->_em->createQuery($dql);
         $query->setParameter('username', $username);
 
