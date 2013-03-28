@@ -38,7 +38,7 @@ class LayoutController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function topBarAction()
+    public function topBarAction($workspaceId = null)
     {
         $isLogged = false;
         $countUnreadMessages = 0;
@@ -47,10 +47,20 @@ class LayoutController extends Controller
         $loginTarget = null;
         $workspaces = null;
         $personalWs = null;
+        $currentWs = null;
+        $isInAWorkspace = false;
 
         $user = $this->container->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
         $wsRepo = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
+
+        if (!is_null($workspaceId)) {
+            $currentWs = $wsRepo->findOneById($workspaceId);
+
+            if (!empty($currentWs)) {
+                $isInAWorkspace = true;
+            }
+        }
 
         if ($user instanceof User) {
             $isLogged = true;
@@ -98,7 +108,9 @@ class LayoutController extends Controller
                 'login_target' => $loginTarget,
                 'workspaces' => $workspaces,
                 'personalWs' => $personalWs,
-                "isImpersonated" => $isImpersonated
+                "isImpersonated" => $isImpersonated,
+                'isInAWorkspace' => $isInAWorkspace,
+                'currentWorkspace' => $currentWs
             )
         );
     }

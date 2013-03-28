@@ -50,7 +50,12 @@
                         <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             <i class="icon-book"></i>
+                            {% if isInAWorkspace %}
+                            {{ currentWorkspace.getName() }}
+                            <span class="workspace-code">({{ currentWorkspace.getCode() }})</span>
+                            {% else %}
                             {{ 'workspaces'|trans({}, 'platform') }}
+                            {% endif %}
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
