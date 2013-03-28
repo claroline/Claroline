@@ -146,7 +146,6 @@ class Creator
         $order = 1;
 
         foreach ($toolsPermissions as $name => $data) {
-            var_dump($data);
             $tool = $this->entityManager
                 ->getRepository('ClarolineCoreBundle:Tool\Tool')
                 ->findOneBy(array('name' => $name));
