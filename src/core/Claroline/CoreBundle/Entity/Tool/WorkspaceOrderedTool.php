@@ -8,7 +8,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="claro_workspace_ordered_tool")
- * @DoctrineAssert\UniqueEntity({"translationKey", "workspace"})
+ * @DoctrineAssert\UniqueEntity({"name", "workspace"})
  */
 class WorkspaceOrderedTool
 {
@@ -51,9 +51,9 @@ class WorkspaceOrderedTool
     protected $workspaceToolRoles;
 
     /**
-     * @Orm\Column(name="translation_key", type="string")
+     * @Orm\Column(type="string")
      */
-    protected $translationKey;
+    protected $name;
 
     public function getId()
     {
@@ -90,13 +90,13 @@ class WorkspaceOrderedTool
         return $this->order;
     }
 
-    public function setTranslationKey($translationKey)
+    public function setName($name)
     {
-        $this->translationKey = $translationKey;
+        $this->name = $name;
     }
 
-    public function getTranslationKey()
+    public function getName()
     {
-        return $this->translationKey;
+        return $this->name;
     }
 }

@@ -405,7 +405,7 @@ class ParametersController extends Controller
                 $wot->setOrder($nextDisplayOrder++);
                 $wot->setTool($undisplayedTool);
                 $wot->setWorkspace($workspace);
-                $wot->setTranslationKey(
+                $wot->setName(
                     $this->container->get('translator')->trans(
                         $undisplayedTool->getName(),
                         array(),
@@ -499,7 +499,7 @@ class ParametersController extends Controller
             $wot->setOrder($position);
             $wot->setTool($tool);
             $wot->setWorkspace($workspace);
-            $wot->setTranslationKey($tool->getName());
+            $wot->setName($tool->getName());
             $em->persist($wot);
         }
 
