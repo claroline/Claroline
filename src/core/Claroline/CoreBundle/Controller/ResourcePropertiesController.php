@@ -190,7 +190,7 @@ class ResourcePropertiesController extends Controller
     private function checkAccess($permission, $collection)
     {
         if (!$this->get('security.context')->isGranted($permission, $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
+            throw new AccessDeniedException(print_r($collection->getErrorsForDisplay(), true));
         }
     }
 }
