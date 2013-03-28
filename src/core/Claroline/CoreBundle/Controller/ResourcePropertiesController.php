@@ -9,10 +9,18 @@ use Claroline\CoreBundle\Entity\Resource\IconType;
 use Claroline\CoreBundle\Form\ResourcePropertiesType;
 use Claroline\CoreBundle\Form\ResourceNameType;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+
 
 class ResourcePropertiesController extends Controller
 {
     /**
+     * @Route(
+     *     "/rename/form/{resourceId}",
+     *     name="claro_resource_rename_form",
+     *     options={"expose"=true}
+     * )
+     *
      * Displays the form allowing to rename a resource.
      *
      * @param integer $resourceId the resource id
@@ -36,6 +44,12 @@ class ResourcePropertiesController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/rename/{resourceId}",
+     *     name="claro_resource_rename",
+     *     options={"expose"=true}
+     * )
+     *
      * Renames a resource.
      *
      * @param integer $resourceId the resource id
@@ -69,6 +83,12 @@ class ResourcePropertiesController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/properties/form/{resourceId}",
+     *     name="claro_resource_form_properties",
+     *     options={"expose"=true}
+     * )
+     *
      * Displays the resource properties form.
      *
      * @param integer $resourceId the resource id
@@ -91,6 +111,12 @@ class ResourcePropertiesController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/properties/edit/{resourceId}",
+     *     name="claro_resource_edit_properties",
+     *     options={"expose"=true}
+     * )
+     *
      * Changes the resource properties.
      *
      * @param integer $resourceId the resource id
