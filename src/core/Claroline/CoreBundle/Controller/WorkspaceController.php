@@ -181,13 +181,13 @@ class WorkspaceController extends Controller
             $found = false;
             foreach ($workspaceOrderTools as $workspaceOrderedTool) {
                 if ($workspaceOrderedTool->getTool() === $tool) {
-                    $toolWithTranslation['translation_key'] = $workspaceOrderedTool->getTranslationKey();
+                    $toolWithTranslation['name'] = $workspaceOrderedTool->getName();
                     $found = true;
                 }
             }
 
             if (!$found) {
-                $toolWithTranslation['translation_key'] = $tool->getName();
+                $toolWithTranslation['name'] = $tool->getName();
             }
 
             $toolsWithTranslation[] = $toolWithTranslation;

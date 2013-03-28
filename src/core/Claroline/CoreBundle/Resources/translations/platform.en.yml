@@ -252,7 +252,7 @@ workspace_form_code: Code
 workspace_form_name: Name
 workspace_form_template: Template
 workspace_form_type: Type
-workspace_order_tool_edit_form_translationKey: Name
+workspace_order_tool_edit_form_name: Name
 workspace_resource: Resources
 workspace_template_form_name: Name
 workspace_tools: Tools

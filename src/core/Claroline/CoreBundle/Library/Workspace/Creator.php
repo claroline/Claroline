@@ -18,13 +18,15 @@ class Creator
     private $manager;
     private $roleRepo;
     private $ed;
+    private $translator;
 
-    public function __construct(EntityManager $em, Manager $rm, $ed)
+    public function __construct(EntityManager $em, Manager $rm, $ed, $translator)
     {
         $this->entityManager = $em;
         $this->manager = $rm;
         $this->roleRepo = $this->entityManager->getRepository('ClarolineCoreBundle:Role');
         $this->ed = $ed;
+        $this->translator = $translator;
     }
 
     /**
@@ -144,12 +146,19 @@ class Creator
         $order = 1;
 
         foreach ($toolsPermissions as $name => $data) {
+            var_dump($data);
             $tool = $this->entityManager
                 ->getRepository('ClarolineCoreBundle:Tool\Tool')
                 ->findOneBy(array('name' => $name));
             $wot = new WorkspaceOrderedTool();
             $wot->setWorkspace($workspace);
-            $wot->setTranslationKey($data['translation_key']);
+            $wot->setName(
+                $this->translator->trans(
+                    $data['name'],
+                    array(),
+                    'tools'
+                )
+            );
             $wot->setTool($tool);
             $wot->setOrder($order);
             $this->entityManager->persist($wot);
