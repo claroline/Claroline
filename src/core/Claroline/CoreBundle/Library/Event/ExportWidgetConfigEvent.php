@@ -11,13 +11,11 @@ class ExportWidgetConfigEvent extends Event
     private $config;
     private $workspace;
     private $widget;
-    private $archive;
 
-    public function __construct(Widget $widget, AbstractWorkspace $workspace, \ZipArchive $archive)
+    public function __construct(Widget $widget, AbstractWorkspace $workspace)
     {
         $this->widget = $widget;
         $this->workspace = $workspace;
-        $this->archive = $archive;
     }
 
     public function setConfig($config)
@@ -38,11 +36,6 @@ class ExportWidgetConfigEvent extends Event
     public function getWorkspace()
     {
         return $this->workspace;
-    }
-
-    public function getArchive()
-    {
-        return $archive;
     }
 }
 

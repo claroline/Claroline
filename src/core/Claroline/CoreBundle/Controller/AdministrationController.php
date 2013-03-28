@@ -67,7 +67,7 @@ class AdministrationController extends Controller
             ->getUser()
             ->getOwnedRoles();
         $form = $this->get('form.factory')->create(new ProfileType($userRoles), new User());
-        $form->bindRequest($request);
+        $form->bind($request);
 
         if ($form->isValid()) {
             $user = $form->getData();
@@ -295,7 +295,7 @@ class AdministrationController extends Controller
     {
         $request = $this->get('request');
         $form = $this->get('form.factory')->create(new GroupType(), new Group());
-        $form->bindRequest($request);
+        $form->bind($request);
 
         if ($form->isValid()) {
             $group = $form->getData();
@@ -542,7 +542,7 @@ class AdministrationController extends Controller
         $group = $em->getRepository('ClarolineCoreBundle:Group')
             ->find($groupId);
         $form = $this->createForm(new GroupSettingsType(), $group);
-        $form->bindRequest($request);
+        $form->bind($request);
 
         if ($form->isValid()) {
             $group = $form->getData();
@@ -585,7 +585,7 @@ class AdministrationController extends Controller
         $request = $this->get('request');
         $configHandler = $this->get('claroline.config.platform_config_handler');
         $form = $this->get('form.factory')->create(new PlatformParametersType($this->getThemes()));
-        $form->bindRequest($request);
+        $form->bind($request);
 
         if ($form->isValid()) {
             try {

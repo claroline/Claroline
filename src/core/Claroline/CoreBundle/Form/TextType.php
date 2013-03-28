@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class TextType extends AbstractType
 {
@@ -18,11 +19,14 @@ class TextType extends AbstractType
         return 'text_form';
     }
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array(
-            'data_class' => 'Claroline\CoreBundle\Entity\Resource\Text',
-            'translation_domain' => 'platform'
+        $resolver
+        ->setDefaults(
+            array(
+                'classe' => 'Claroline\CoreBundle\Entity\Resource\Text',
+                'translation_domain' => 'platform'
+                )
         );
     }
 }

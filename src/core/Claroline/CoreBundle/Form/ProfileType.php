@@ -4,6 +4,8 @@ namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Claroline\CoreBundle\Entity\Role;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
 
 class ProfileType extends BaseProfileType
 {
@@ -68,10 +70,13 @@ class ProfileType extends BaseProfileType
         return 'profile_form';
     }
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array(
-            'translation_domain' => 'platform'
+        $resolver
+        ->setDefaults(
+            array(
+                'translation_domain' => 'platform'
+                )
         );
     }
 }

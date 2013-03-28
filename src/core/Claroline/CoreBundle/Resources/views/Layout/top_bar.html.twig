@@ -54,16 +54,21 @@
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
-                            {% for workspace in workspaces %}
-                                <li>
-                                <a href="{{ path('claro_workspace_open',
-                                    {'workspaceId': workspace.getId()}) }}"
-                                    id="link-workspace-{{ workspace.getId() }}">
-                                    {{ workspace.getName() }}
-                                    <span class="workspace-code">({{ workspace.getCode() }})</span>
-                                </a>
-                                </li>
-                            {% endfor %}
+                            <li class="dropdown-submenu">
+                                <a href="#">{{ 'history'|trans({}, 'platform') }}</a>
+                                <ul class="dropdown-menu">
+                                {% for workspace in workspaces %}
+                                    <li>
+                                    <a href="{{ path('claro_workspace_open',
+                                        {'workspaceId': workspace.getId()}) }}"
+                                        id="link-workspace-{{ workspace.getId() }}">
+                                        {{ workspace.getName() }}
+                                        <span class="workspace-code">({{ workspace.getCode() }})</span>
+                                    </a>
+                                    </li>
+                                {% endfor %}
+                                </ul>
+                            </li>
                             {% if isLogged %}
                                 <li class="divider"></li>
                                 <li>
@@ -138,9 +143,13 @@
                             </li>
                             <li class="divider"></li>
                             <li>
-                            <a href="{{ path('claro_security_logout') }}" id="link-logout">
+                                {% if isImpersonated %}
+                                    <a href="{{ path('claro_desktop_open', {'_switch': '_exit'}) }}">
+                                {% else %}
+                                    <a href="{{ path('claro_security_logout') }}" id="link-logout">
+                                {% endif %}
                                 {{ 'logout'|trans({}, 'platform') }}
-                            </a>
+                                </a>
                             </li>
                         {% else %}
                             {% if register_target is not null %}
@@ -158,7 +167,6 @@
                             </li>
                         {% endif %}
                     </ul>
-
                     </li>
                 </ul>
             </div>

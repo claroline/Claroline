@@ -43,7 +43,7 @@ class RegistrationController extends Controller
         $this->checkAccess();
         $user = new User();
         $form = $this->get('form.factory')->create(new BaseProfileType(), $user);
-        $form->bindRequest($this->get('request'));
+        $form->bind($this->get('request'));
 
         if ($form->isValid()) {
             $em = $this->get('doctrine.orm.entity_manager');

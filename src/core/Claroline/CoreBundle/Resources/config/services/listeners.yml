@@ -83,6 +83,13 @@ services:
             - { name: kernel.event_listener, event: resource_activity_to_template, method: onExportTemplate }
             - { name: kernel.event_listener, event: resource_activity_from_template, method: onImportTemplate }
 
+    claroline.listener.workspace_logger:
+        class: Claroline\CoreBundle\Listener\WorkspaceLogListener
+        calls:
+           - [setContainer, ["@service_container"]]
+        tags:
+           - { name: kernel.event_listener, event: log_workspace_access, method: onLogWorkspaceAccess }
+
     claroline.listener.logger:
         class: Claroline\CoreBundle\Listener\LogListener
         calls:
