@@ -22,6 +22,8 @@ class UserTest extends FunctionalTestCase
         $this->loadGroupData(array('group_c' => array('ws_creator')));
         $group = $this->getGroup('group_c');
         $group->addRole($this->getRole('role_f'));
+        $this->em->persist($group);
+        $this->em->flush();
 
         $wsCreator = $this->getUser('ws_creator');
 
@@ -31,7 +33,6 @@ class UserTest extends FunctionalTestCase
         $this->assertTrue($securityContext->isGranted(PlatformRoles::WS_CREATOR));
 
         $groupC = $this->getGroup('group_c');
-        $securityContext->getToken()->setUser($wsCreator); // refresh session info
 
         $this->assertTrue($securityContext->isGranted(PlatformRoles::USER));
         $this->assertTrue($securityContext->isGranted(PlatformRoles::WS_CREATOR));
@@ -40,8 +41,10 @@ class UserTest extends FunctionalTestCase
         $this->assertTrue($securityContext->isGranted('ROLE_role_f'));
 
         $groupC->removeUser($wsCreator);
-        $this->getEntityManager()->flush();
-        $securityContext->getToken()->setUser($wsCreator); // refresh session info
+        $this->em->persist($groupC);
+        $this->em->flush();
+        $this->logUser($wsCreator);
+        $securityContext = $this->getSecurityContext();
 
         $this->assertTrue($securityContext->isGranted(PlatformRoles::USER));
         $this->assertTrue($securityContext->isGranted(PlatformRoles::WS_CREATOR));
