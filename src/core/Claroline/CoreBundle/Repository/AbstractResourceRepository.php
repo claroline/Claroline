@@ -177,29 +177,22 @@ class AbstractResourceRepository extends MaterializedPathRepository
                 ->whereCanOpen();
         }
 
-        foreach ($criteria as $key => $value) {
+        $filterMethodMap = array(
+            'types' => 'whereTypeIn',
+            'roots' => 'whereRootIn',
+            'dateFrom' => 'whereDateFrom',
+            'dateTo' => 'whereDateTo',
+            'name' => 'whereNameLike',
+            'isExportable' => 'whereIsExportable'
+        );
+        $allowedFilters = array_keys($filterMethodMap);
+
+        foreach ($criteria as $filter => $value) {
             if ($value !== null) {
-                switch ($key) {
-                    case 'types':
-                        $builder->whereTypeIn($value);
-                        break;
-                    case 'roots':
-                        $builder->whereRootIn($value);
-                        break;
-                    case 'dateFrom':
-                        $builder->whereDateFrom($value);
-                        break;
-                    case 'dateTo':
-                        $builder->whereDateTo($value);
-                        break;
-                    case 'name':
-                        $builder->whereNameLike($value);
-                        break;
-                    case 'isExportable':
-                        $builder->whereIsExportable($value);
-                        break;
-                    default:
-                        throw new UnknownFilterException("Unknown filter '{$key}'");
+                if (in_array($filter, $allowedFilters)) {
+                    $builder->{$filterMethodMap[$filter]}($value);
+                } else {
+                    throw new UnknownFilterException("Unknown filter '{$filter}'");
                 }
             }
         }
