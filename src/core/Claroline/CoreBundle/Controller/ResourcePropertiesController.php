@@ -56,7 +56,8 @@ class ResourcePropertiesController extends Controller
         if ($form->isValid()) {
             $em->persist($resource);
             $em->flush();
-            $response = new Response("[\"{$resource->getName()}\"]");
+            $content = json_encode(array($resource->getName()));
+            $response = new Response($content);
             $response->headers->set('Content-Type', 'application/json');
 
             return $response;
@@ -189,7 +190,7 @@ class ResourcePropertiesController extends Controller
     private function checkAccess($permission, $collection)
     {
         if (!$this->get('security.context')->isGranted($permission, $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
+            throw new AccessDeniedException(print_r($collection->getErrorsForDisplay(), true));
         }
     }
 }
