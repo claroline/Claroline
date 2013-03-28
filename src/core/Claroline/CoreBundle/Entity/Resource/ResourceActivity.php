@@ -40,6 +40,7 @@ class ResourceActivity
     public function setActivity(Activity $activity)
     {
         $this->activity = $activity;
+        $activity->addResourceActivity($this);
     }
 
     public function getActivity()
