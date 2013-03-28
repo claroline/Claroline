@@ -13,8 +13,9 @@ use Claroline\CoreBundle\Form\PlatformParametersType;
 use Claroline\CoreBundle\Library\Event\PluginOptionsEvent;
 use Claroline\CoreBundle\Library\Configuration\UnwritableException;
 use Claroline\CoreBundle\Repository\UserRepository;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Form\FormError;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 /**
  * Controller of the platform administration section (users, groups,
@@ -36,6 +37,12 @@ class AdministrationController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/user/form",
+     *     name="claro_admin_user_creation_form"
+     * )
+     * @Method("GET")
+     *
      * Displays the user creation form.
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -55,6 +62,12 @@ class AdministrationController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/user",
+     *     name="claro_admin_create_user"
+     * )
+     * @Method("POST")
+     *
      * Creates an user (and its personal workspace) and redirects to the user list.
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -83,6 +96,13 @@ class AdministrationController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/users",
+     *     name="claro_admin_multidelete_user",
+     *     options = {"expose"=true}
+     * )
+     * @Method("DELETE")
+     *
      * Removes many users from the platform.
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -111,6 +131,12 @@ class AdministrationController extends Controller
     }
 
     /**
+     * @Route(
+     *     "users",
+     *     name="claro_admin_user_list"
+     * )
+     * @Method("GET")
+     *
      * Displays the platform user list.
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -121,6 +147,14 @@ class AdministrationController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/users/{offset}",
+     *     name="claro_admin_paginated_user_list",
+     *     requirements={"offset"="^(?=.*[0-9].*$)\d*$"},
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     *
      * Returns the platform users.
      *
      * @param $offset
@@ -146,6 +180,14 @@ class AdministrationController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/users/search/{search}/{offset}",
+     *     name="claro_admin_paginated_search_user_list",
+     *     requirements={"offset"="^(?=.*[0-9].*$)\d*$"},
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     *
      * Returns the platform users whose name, username or lastname matche $search.
      *
      * @param integer $offset
@@ -173,6 +215,14 @@ class AdministrationController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/group/{groupId}/users/{offset}",
+     *     name="claro_admin_paginated_group_user_list",
+     *     options={"expose"=true},
+     *     requirements={"groupId"="^(?=.*[1-9].*$)\d*$", "offset"="^(?=.*[0-9].*$)\d*$"}
+     * )
+     * @Method("GET")
+     *
      * Returns the group users.
      *
      * @param integer $groupId
@@ -199,6 +249,14 @@ class AdministrationController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/group/{groupId}/search/{search}/users/{offset}",
+     *     name="claro_admin_paginated_search_group_user_list",
+     *     requirements={"groupId"="^(?=.*[1-9].*$)\d*$", "offset"="^(?=.*[0-9].*$)\d*$"},
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     *
      * Returns the group users whose name or username or lastname matches $search.
      *
      * @param integer $groupId
@@ -226,6 +284,14 @@ class AdministrationController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/groups/{offset}",
+     *     name="claro_admin_paginated_group_list",
+     *     options={"expose"=true},
+     *     requirements={"offset"="^(?=.*[0-9].*$)\d*$"}
+     * )
+     * @Method("GET")
+     *
      * Returns the platform group list.
      *
      * @param integer $offset the offset.
@@ -247,7 +313,15 @@ class AdministrationController extends Controller
         return $response;
     }
 
-    /*
+    /**
+     * @Route(
+     *     "/groups/search/{search}/{offset}",
+     *     name="claro_admin_paginated_search_group_list",
+     *     requirements={"offset"="^(?=.*[0-9].*$)\d*$"},
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     *
      * Returns the platform group list whose names match $search.
      *
      * @param $offset the $offset.
@@ -272,6 +346,12 @@ class AdministrationController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/group/form",
+     *     name="claro_admin_group_creation_form"
+     * )
+     * @Method("GET")
+     *
      * Displays the group creation form.
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -287,6 +367,12 @@ class AdministrationController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/group",
+     *     name="claro_admin_create_group"
+     * )
+     * @Method("POST")
+     *
      * Creates a group and redirects to the group list.
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -313,6 +399,12 @@ class AdministrationController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/groups",
+     *     name="claro_admin_group_list"
+     * )
+     * @Method("GET")
+     *
      * Displays the platform group list.
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -331,6 +423,13 @@ class AdministrationController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/group/{groupId}",
+     *     name="claro_admin_group_user_list",
+     *     requirements={"groupId"="^(?=.*[0-9].*$)\d*$"}
+     * )
+     * @Method("GET")
+     *
      * Displays the users of a group.
      *
      * @param integer $groupId
@@ -349,6 +448,14 @@ class AdministrationController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/group/add/{groupId}",
+     *     name="claro_admin_user_list_addable_to_group",
+     *     requirements={"groupId"="^(?=.*[0-9].*$)\d*$"},
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     *
      * Displays the user list with a control allowing to add them to a group.
      *
      * @param integer $groupId
@@ -367,6 +474,14 @@ class AdministrationController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/group/{groupId}/unregistered/users/{offset}",
+     *     name="claro_admin_groupless_users",
+     *     requirements={"groupId"="^(?=.*[0-9].*$)\d*$", "offset"="^(?=.*[0-9].*$)\d*$"},
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     *
      * Returns a list of users not registered to the Group $group.
      *
      * @param integer $groupId
@@ -392,6 +507,14 @@ class AdministrationController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/group/{groupId}/unregistered/users/{offset}/search/{search}",
+     *     name="claro_admin_search_groupless_users",
+     *     requirements={"offset"="^(?=.*[0-9].*$)\d*$", "groupId"="^(?=.*[1-9].*$)\d*$"},
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     *
      * Returns a list of users not registered to the Group $group whose username, firstname
      * or lastname matches $search.
      *
@@ -419,6 +542,14 @@ class AdministrationController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/group/{groupId}/users",
+     *     name="claro_admin_multiadd_user_to_group",
+     *     requirements={"groupId"="^(?=.*[0-9].*$)\d*$"},
+     *     options={"expose"=true}
+     * )
+     * @Method("PUT")
+     *
      * Adds multiple user to a group.
      *
      * @param integer $groupId
@@ -458,6 +589,14 @@ class AdministrationController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/group/{groupId}/users",
+     *     name="claro_admin_multidelete_user_from_group",
+     *     options={"expose"=true},
+     *     requirements={"groupId"="^(?=.*[1-9].*$)\d*$"}
+     * )
+     * @Method("DELETE")
+     *
      * Removes users from a group.
      *
      * @param integer $groupId
@@ -486,6 +625,13 @@ class AdministrationController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/groups",
+     *     name="claro_admin_multidelete_group",
+     *     options={"expose"=true}
+     * )
+     * @Method("DELETE")
+     *
      * Deletes multiple groups.
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -509,6 +655,13 @@ class AdministrationController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/group/settings/form/{groupId}",
+     *     name="claro_admin_group_settings_form",
+     *     requirements={"groupId"="^(?=.*[1-9].*$)\d*$"}
+     * )
+     * @Method("GET")
+     *
      * Displays an edition form for a group.
      *
      * @param integer $groupId
@@ -529,6 +682,11 @@ class AdministrationController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/group/settings/update/{groupId}",
+     *     name="claro_admin_update_group_settings"
+     * )
+     *
      * Updates the settings of a group and redirects to the group list.
      *
      * @param integer $groupId
@@ -559,6 +717,16 @@ class AdministrationController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/platform/settings/form",
+     *     name="claro_admin_platform_settings_form"
+     * )
+     * @Route(
+     *     "/",
+     *     name="claro_admin_index",
+     *     options={"expose"=true}
+     * )
+     *
      * Displays the platform settings.
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -576,6 +744,11 @@ class AdministrationController extends Controller
     }
 
     /**
+     * @Route(
+     *     "claro_admin_update_platform_settings",
+     *     name="claro_admin_update_platform_settings"
+     * )
+     *
      * Updates the platform settings and redirects to the settings form.
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -611,6 +784,12 @@ class AdministrationController extends Controller
     }
 
     /**
+     * @Route(
+     *     "plugins",
+     *     name="claro_admin_plugins"
+     * )
+     * @Method("GET")
+     *
      * Display the plugin list
      *
      * @return Response
@@ -627,10 +806,18 @@ class AdministrationController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/plugin/{domain}/options",
+     *     name="claro_admin_plugin_options"
+     * )
+     * @Method("GET")
+     *
      * Redirects to the plugin mangagement page.
      *
      * @param string $domain
+     *
      * @return Response
+     *
      * @throws \Exception
      */
     public function pluginParametersAction($domain)
@@ -659,6 +846,7 @@ class AdministrationController extends Controller
      *  @TODO use directory iterator
      *
      *  @param $path string The path of the themes.
+     *
      *  @return array with a list of the themes availables.
      */
     private function getThemes($path = "/../Resources/less/themes/")

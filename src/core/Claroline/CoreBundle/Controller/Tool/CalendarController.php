@@ -8,6 +8,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Claroline\CoreBundle\Entity\Event;
 use Claroline\CoreBundle\Form\CalendarType;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
  * Controller of the calendar
@@ -70,6 +71,12 @@ class CalendarController extends Controller
         }
     }
 
+    /**
+     * @Route(
+     *     "/show/",
+     *     name="claro_desktop_calendar_show"
+     * )
+     */
     public function showAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -95,6 +102,12 @@ class CalendarController extends Controller
         );
     }
 
+    /**
+     * @Route(
+     *     "/move/",
+     *     name="claro_desktop_calendar_move"
+     * )
+     */
     public function moveAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');

@@ -14,20 +14,24 @@ claro_registration:
     prefix: register
 
 claro_desktop:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/desktop.yml"
+    resource: "@ClarolineCoreBundle/Controller/DesktopController.php"
     prefix: desktop
+    type: annotation
 
 claro_desktop_tool_calendar:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/desktop_tool_calendar.yml"
+    resource: "@ClarolineCoreBundle/Controller/Tool/CalendarController.php"
     prefix: desktop/tool/calendar
+    type: annotation
 
 claro_desktop_tool_home:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/desktop_tool_home.yml"
+    resource: "@ClarolineCoreBundle/Controller/Tool/HomeController.php"
     prefix: desktop/tool/home
+    type: annotation
 
 claro_desktop_tool_properties:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/desktop_tool_parameters.yml"
+    resource: "@ClarolineCoreBundle/Controller/Tool/DesktopParametersController.php"
     prefix: desktop/tool/properties
+    type: annotation
 
 claro_workspace:
     resource: "@ClarolineCoreBundle/Resources/config/routing/workspace.yml"
@@ -50,8 +54,14 @@ claro_workspace_tool_calendar:
     prefix: workspaces/tool/calendar
 
 claro_admin:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/admin.yml"
+    resource: "@ClarolineCoreBundle/Controller/AdministrationController.php"
     prefix: admin
+    type: annotation
+
+claro_admin_widget:
+    resource: "@ClarolineCoreBundle/Controller/AdministrationWidgetController.php"
+    prefix: admin
+    type: annotation
 
 claro_resource:
     resource: "@ClarolineCoreBundle/Resources/config/routing/resource.yml"
@@ -70,8 +80,9 @@ claro_message:
     prefix: message
 
 claro_activity:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/activity.yml"
+    resource: "@ClarolineCoreBundle/Controller/ActivityController.php"
     prefix: activity
+    type: annotation
 
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
