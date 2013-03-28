@@ -6,10 +6,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Library\Event\ConfigureWidgetWorkspaceEvent;
 use Claroline\CoreBundle\Library\Event\ConfigureWidgetDesktopEvent;
 use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 class AdministrationWidgetController extends Controller
 {
     /**
+     * @Route(
+     *     "/widgets",
+     *     name="claro_admin_widgets"
+     * )
+     * @Method("GET")
      * Displays the list of widget options for the administrator.
      *
      * @return Response
@@ -29,9 +36,18 @@ class AdministrationWidgetController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/plugin/lock/{displayConfigId}",
+     *     name="claro_admin_invert_widgetconfig_lock",
+     *     options={"expose"=true}
+     * )
+     * @Method("POST")
+     *
      * Sets true|false to the widget displayConfig isLockedByAdmin option.
      *
      * @param integer $displayConfigId
+     *
+     * @return Response
      */
     public function invertLockWidgetAction($displayConfigId)
     {
@@ -46,6 +62,13 @@ class AdministrationWidgetController extends Controller
     }
 
     /**
+     * @Route(
+     *     "widget/{widgetId}/configuration/workspace",
+     *     name="claro_admin_widget_configuration_workspace",
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     *
      * Asks a widget to render its configuration form for a workspace.
      *
      * @param type $widgetId the widget id.
@@ -74,6 +97,13 @@ class AdministrationWidgetController extends Controller
     }
 
     /**
+     * @Route(
+     *     "widget/{widgetId}/configuration/desktop",
+     *     name="claro_admin_widget_configuration_desktop",
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     *
      * Asks a widget to render its configuration form for a workspace.
      *
      * @param type $widgetId the widget id.
@@ -102,6 +132,13 @@ class AdministrationWidgetController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/plugin/visible/{displayConfigId}",
+     *     name="claro_admin_invert_widgetconfig_visible",
+     *     options={"expose"=true}
+     * )
+     * @Method("POST")
+     *
      * Sets true|false to the widget displayConfig isVisible option.
      *
      * @param integer $displayConfigId

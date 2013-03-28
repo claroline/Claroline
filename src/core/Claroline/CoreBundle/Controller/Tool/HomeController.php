@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Controller\Tool;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
  * Controller of the platform homepage.
@@ -10,6 +11,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class HomeController extends Controller
 {
     /**
+     * @Route(
+     *     "/perso",
+     *     name="claro_tool_desktop_perso"
+     * )
+     *
      * Displays the Perso desktop tab.
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -20,6 +26,11 @@ class HomeController extends Controller
     }
 
     /**
+     / @Route(
+     *     "/info",
+     *     name="claro_tool_desktop_info"
+     * )
+     *
      * Displays the Info desktop tab.
      *
      * @return \Symfony\Component\HttpFoundation\Response
