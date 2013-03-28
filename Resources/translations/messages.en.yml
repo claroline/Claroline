@@ -207,7 +207,7 @@ Unit.value: Unity
 Document.label: Document
 
 Hint.value: Hint
-Hint.penality: Pénality
+Hint.penalty: Penality
 
 Exepertise.title_expertise: Expertise title
 Exepertise.description: Description
@@ -227,3 +227,26 @@ point_answers: You must assign a point to each answer
 point_answer: you must assign a point to the correct answer
 label_empty: Fields of the responses should not be empty
 invite_question: The prompt of question must be completed
+
+#Create Graphic Question
+Hints: Hints
+Document: Answer picture
+Add a new picture ...: Add a new picture ...
+Picture name: Picture name
+Upload !: Upload !
+Uploading ...: Uploading ...
+Select: Select
+Redimmension: To  re-size the picture, press MAJ key and move your mouse.
+Selection: To select an answer zone, press CTRL key and click on the picture where it should be placed.
+Effacer: To erase an answer zone, press VERR. MAJ key and click on the erasable answer zone.
+unsupport: Your browser doesn't accept canvas. Please, update.
+Zone de réponse: Answer zone
+Forme: Shape
+Couleur: Color
+Points: Points
+cercle: circle
+rectangle: rectangle
+consignes: Instructions
+position: => Place pointers below (red cross) on the picture. The pointer's center defines your answer.
+selection: => Click on a pointer to select it and click again on the picture to define your answer.
+raz: => To reset pointers, press "c".

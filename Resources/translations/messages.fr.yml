@@ -207,7 +207,7 @@ Unit.value: Unité
 Document.label: Document
 
 Hint.value: Indice
-Hint.penality: Pénalité
+Hint.penalty: Pénalité
 consult_hint: Consulter l'indice entraîne une pénalité, voulez vous continuer ?
 
 Exepertise.title_expertise: Titre de l'expertise
@@ -228,3 +228,26 @@ point_answers: Vous devez assigner un point à chaque réponse
 point_answer: Vous devez assigner un point à la réponse attendue
 label_empty: les champs des réponses ne doivent pas être vides
 invite_question: l'invite de la question doit être rempli
+
+#Create Graphic Question
+Hints: Indices
+Document: Image réponse
+Add a new picture ...: Ajouter une nouvelle image ...
+Picture name: Nom de l'image
+Upload !: Télécharger !
+Uploading ...: Chargement en cours...
+Select: Sélectionner
+Redimmension: Pour redimmensionner l'image, appuyez sur la touche MAJ et déplacez la souris.
+Selection: Pour selectionner une zone de réponse, maintenez la touche CTRL enfoncée et cliquez sur l'image à l'endroit où vous voulez la placer.
+Effacer: Pour effacer une zone de réponse, maintenez la touche VERR. MAJ enfoncée et cliquez sur la zone de réponse à effacer.
+unsupport: Désolé, votre navigateur ne supporte pas Canvas. Mettez-vous à jour.
+Zone de réponse: Zone de réponse
+Forme: Forme
+Couleur: Couleur
+Points: Points
+cercle: cercle
+rectangle: rectangle
+consignes: Consignes
+position: => Positionner le(s) pointeur(s) ci-dessous (croix rouge) sur l'image. La position du centre du pointeur défini votre réponse.
+selection: => Cliquez sur un pointeurs pour le sélectionner et cliquez ensuite sur l'image pour définir votre zone de réponse.
+raz: => Pour remettre à zéro tous les pointeurs, appuyez sur "c".

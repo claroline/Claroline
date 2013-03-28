@@ -58,16 +58,16 @@
                     <ul>
                         {% if(questionWithResponse[i] == 0) %}
                             <li>
-                                <a href="{#{ path('question_edit', { 'id': interaction.question.id }) }#}">{{ "Edit" | trans }}</a>
+                                <a href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}">{{ "Edit" | trans }}</a>
                             </li>
                             <li>
-                                <form action="{#{ path('question_delete', { 'id': interaction.question.id}) }#}" method="post">
+                                <form action="{{ path('ujm_question_delete', { 'id': interaction.question.id}) }}" method="post">
                                     <button type="submit">{{ "Delete of my bank" | trans }}</button>
                                 </form>
                             </li>
                         {% else %}
                             <li>
-                                <a href="{#{ path('question_edit', { 'id': interaction.question.id }) }#}" style="color:red">{{ "Edit" | trans }}</a>
+                                <a href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}" style="color:red">{{ "Edit" | trans }}</a>
                             </li>
                         {% endif %}
                     </ul>
