@@ -79,18 +79,20 @@ class ExerciseController extends Controller
             //$deleteForm = $this->createDeleteForm($id);
 
             if ( ($this->controlDate($subscription, $exercise) === true)
-                    && ($this->controlMaxAttemps($exercise, $user, $subscription) === true) ) {
+                && ($this->controlMaxAttemps($exercise, $user, $subscription) === true) 
+            ) {
                 $allowToCompose = 1;
             }
 
-            return $this->render('UJMExoBundle:Exercise:show.html.twig', array(
-                                 'workspace'      => $workspace,
-                                 'entity'         => $exercise,
-                                 //'delete_form'    => $deleteForm->createView(),
-                                 'subscription'   => $subscription[0],
-                                 'allowToCompose' => $allowToCompose
-
-                                ));
+            return $this->render(
+                'UJMExoBundle:Exercise:show.html.twig', array(
+                'workspace'      => $workspace,
+                'entity'         => $exercise,
+                //'delete_form'    => $deleteForm->createView(),
+                'subscription'   => $subscription[0],
+                'allowToCompose' => $allowToCompose
+                )
+            );
         } else {
             $url = $this->container->get('request')->headers->get('referer');
 
@@ -110,14 +112,14 @@ class ExerciseController extends Controller
 
         if ((count($subscription) > 0) and ($subscription[0]->getAdmin() == 1)) {
             $interactions = $this->getDoctrine()
-                                 ->getEntityManager()
-                                 ->getRepository('UJMExoBundle:Interaction')
-                                 ->getExerciseInteraction($em, $id, 0);
+                ->getEntityManager()
+                ->getRepository('UJMExoBundle:Interaction')
+                ->getExerciseInteraction($em, $id, 0);
 
             $questionWithResponse = array();
             foreach ($interactions as $interaction) {
                 $response = $em->getRepository('UJMExoBundle:Response')
-                        ->findBy(array('interaction' => $interaction->getId()));
+                    ->findBy(array('interaction' => $interaction->getId()));
                 if (count($response) > 0) {
                     $questionWithResponse[] = 1;
                 } else {
@@ -125,11 +127,13 @@ class ExerciseController extends Controller
                 }
             }
 
-            return $this->render('UJMExoBundle:Question:exerciseQuestion.html.twig', array(
-                                 'interactions'         => $interactions,
-                                 'exerciseID'           => $id,
-                                 'questionWithResponse' => $questionWithResponse
-                                ));
+            return $this->render(
+                'UJMExoBundle:Question:exerciseQuestion.html.twig', array(
+                'interactions'         => $interactions,
+                'exerciseID'           => $id,
+                'questionWithResponse' => $questionWithResponse
+                )
+            );
         } else {
             return $this->redirect($this->generateUrl('exercise'));
         }
@@ -149,14 +153,16 @@ class ExerciseController extends Controller
         if ((count($subscription) > 0) and ($subscription[0]->getAdmin() == 1)) {
 
             $interactions = $this->getDoctrine()
-                                  ->getEntityManager()
-                                  ->getRepository('UJMExoBundle:Interaction')
-                                  ->getUserInteractionImport($this->getDoctrine()->getEntityManager(), $uid, $exoID);
+                ->getEntityManager()
+                ->getRepository('UJMExoBundle:Interaction')
+                ->getUserInteractionImport($this->getDoctrine()->getEntityManager(), $uid, $exoID);
 
-            return $this->render('UJMExoBundle:Question:import.html.twig', array(
+            return $this->render(
+                'UJMExoBundle:Question:import.html.twig', array(
                 'interactions' => $interactions,
                 'exoID'   => $exoID
-            ));
+                )
+            );
         } else {
             return $this->redirect($this->generateUrl('exercise'));
         }
@@ -170,9 +176,9 @@ class ExerciseController extends Controller
     {
         $user = $this->container->get('security.context')->getToken()->getUser();
         $question = $this->getDoctrine()
-                         ->getEntityManager()
-                         ->getRepository('UJMExoBundle:Question')
-                         ->getControlOwnerQuestion($user->getId(), $qid);
+            ->getEntityManager()
+            ->getRepository('UJMExoBundle:Question')
+            ->getControlOwnerQuestion($user->getId(), $qid);
 
         if (count($question) > 0 ) {
             $em = $this->getDoctrine()->getEntityManager();
@@ -243,9 +249,9 @@ class ExerciseController extends Controller
 
             //Verify if it exists a not finished paper
             $paper = $this->getDoctrine()
-                          ->getEntityManager()
-                          ->getRepository('UJMExoBundle:Paper')
-                          ->getPaper($user->getId(), $id);
+                ->getEntityManager()
+                ->getRepository('UJMExoBundle:Paper')
+                ->getPaper($user->getId(), $id);
 
             //if not exist a paper no finished
             if (count($paper) == 0) {
@@ -262,10 +268,11 @@ class ExerciseController extends Controller
                 $paper->setInterupt(0);
 
                 $interactions = $this->getDoctrine()
-                                     ->getEntityManager()
-                                     ->getRepository('UJMExoBundle:Interaction')
-                                     ->getExerciseInteraction($this->getDoctrine()
-                                             ->getEntityManager(), $id, $exercise->getShuffle(), $exercise->getNbQuestion());
+                    ->getEntityManager()
+                    ->getRepository('UJMExoBundle:Interaction')
+                    ->getExerciseInteraction(
+                        $this->getDoctrine()->getEntityManager(), $id, $exercise->getShuffle(), $exercise->getNbQuestion()
+                    );
 
                 foreach ($interactions as $interaction) {
                     $orderInter = $orderInter.$interaction->getId().';';
@@ -314,26 +321,26 @@ class ExerciseController extends Controller
         $ip = $exerciseSer->getIP();
         $interactionToValidatedID = $request->get('interactionToValidated');
         $response = $this->getDoctrine()
-                         ->getEntityManager()
-                         ->getRepository('UJMExoBundle:Response')
-                         ->getAlreadyResponded($session->get('paper'), $interactionToValidatedID);
+            ->getEntityManager()
+            ->getRepository('UJMExoBundle:Response')
+            ->getAlreadyResponded($session->get('paper'), $interactionToValidatedID);
 
         switch ($typeInterToRecorded) {
-            case "InteractionQCM":
-                $res = $exerciseSer->responseQCM($request, $session->get('paper'));
-                break;
+        case "InteractionQCM":
+            $res = $exerciseSer->responseQCM($request, $session->get('paper'));
+            break;
 
-            case "InteractionGraphic":
+        case "InteractionGraphic":
 
-                break;
+            break;
 
-            case "InteractionHole":
+        case "InteractionHole":
 
-                break;
+            break;
 
-            case "InteractionOpen":
+        case "InteractionOpen":
 
-                break;
+            break;
         }
 
         if (count($response) == 0) {
@@ -383,54 +390,56 @@ class ExerciseController extends Controller
         $tabOrderInter = $session->get('tabOrderInter');
 
         switch ($typeInterToDisplayed) {
-            case "InteractionQCM":
+        case "InteractionQCM":
 
-                $interactionToDisplayed = $this->getDoctrine()
-                                               ->getEntityManager()
-                                               ->getRepository('UJMExoBundle:InteractionQCM')
-                                               ->getInteractionQCM($interactionToDisplay->getId());
+            $interactionToDisplayed = $this->getDoctrine()
+                ->getEntityManager()
+                ->getRepository('UJMExoBundle:InteractionQCM')
+                ->getInteractionQCM($interactionToDisplay->getId());
 
-                if ($interactionToDisplayed[0]->getShuffle()) {
-                    $interactionToDisplayed[0]->shuffleChoices();
-                } else {
-                    $interactionToDisplayed[0]->sortChoices();
-                }
+            if ($interactionToDisplayed[0]->getShuffle()) {
+                $interactionToDisplayed[0]->shuffleChoices();
+            } else {
+                $interactionToDisplayed[0]->sortChoices();
+            }
 
-                $responseGiven = $this->getDoctrine()
-                                      ->getEntityManager()
-                                      ->getRepository('UJMExoBundle:Response')
-                                      ->getAlreadyResponded($session->get('paper'), $interactionToDisplay->getId());
+            $responseGiven = $this->getDoctrine()
+                ->getEntityManager()
+                ->getRepository('UJMExoBundle:Response')
+                ->getAlreadyResponded($session->get('paper'), $interactionToDisplay->getId());
 
-                if (count($responseGiven) > 0) {
-                    $responseGiven = $responseGiven[0]->getResponse();
-                } else {
-                    $responseGiven = '';
-                }
+            if (count($responseGiven) > 0) {
+                $responseGiven = $responseGiven[0]->getResponse();
+            } else {
+                $responseGiven = '';
+            }
 
-                break;
+            break;
 
-            case "InteractionGraphic":
+        case "InteractionGraphic":
 
-                break;
+            break;
 
-            case "InteractionHole":
+        case "InteractionHole":
 
-                break;
+            break;
 
-            case "InteractionOpen":
+        case "InteractionOpen":
 
-                break;
+            break;
         }
 
-        return $this->render('UJMExoBundle:Exercise:paper.html.twig', array(
-                             'tabOrderInter'          => $tabOrderInter,
-                             'interactionToDisplayed' => $interactionToDisplayed[0],
-                             'interactionType'        => $typeInterToDisplayed,
-                             'numQ'                   => $numQuestionToDisplayed,
-                             'paper'                  => $session->get('paper'),
-                             'response'               => $responseGiven,
-                             'dispButtonInterrupt'    => $dispButtonInterrupt
-                            ));
+        return $this->render(
+            'UJMExoBundle:Exercise:paper.html.twig', array(
+            'tabOrderInter'          => $tabOrderInter,
+            'interactionToDisplayed' => $interactionToDisplayed[0],
+            'interactionType'        => $typeInterToDisplayed,
+            'numQ'                   => $numQuestionToDisplayed,
+            'paper'                  => $session->get('paper'),
+            'response'               => $responseGiven,
+            'dispButtonInterrupt'    => $dispButtonInterrupt
+            )
+        );
     }
 
     /**
@@ -479,9 +488,9 @@ class ExerciseController extends Controller
         $user = $this->container->get('security.context')->getToken()->getUser();
 
         $subscription = $this->getDoctrine()
-                             ->getEntityManager()
-                             ->getRepository('UJMExoBundle:Subscription')
-                             ->getControlExerciseEnroll($user->getId(), $exoID);
+            ->getEntityManager()
+            ->getRepository('UJMExoBundle:Subscription')
+            ->getControlExerciseEnroll($user->getId(), $exoID);
 
         return $subscription;
     }
@@ -492,18 +501,12 @@ class ExerciseController extends Controller
      */
     private function controlDate($subscription, $exercise)
     {
-        if ( (count($subscription) > 0)
-                && (
-                    (
-                        ($exercise->getStartDate()->format('Y-m-d H:i:s') <= date('Y-m-d H:i:s'))
-                        &&
-                        ( ($exercise->getUseDateEnd() == 0)
-                                || ($exercise->getEndDate()->format('Y-m-d H:i:s') >= date('Y-m-d H:i:s'))
-                        )
-                    )
-                || ($subscription[0]->getAdmin() == 1)
-                )
-           ) {
+        if ((count($subscription) > 0)
+            && ((($exercise->getStartDate()->format('Y-m-d H:i:s') <= date('Y-m-d H:i:s'))
+            && (($exercise->getUseDateEnd() == 0)
+            || ($exercise->getEndDate()->format('Y-m-d H:i:s') >= date('Y-m-d H:i:s'))))
+            || ($subscription[0]->getAdmin() == 1))
+        ) {
             return true;
         } else {
             return false;
@@ -516,8 +519,9 @@ class ExerciseController extends Controller
      */
     private function controlMaxAttemps($exercise, $user, $subscription)
     {
-        if ( ($subscription[0]->getAdmin() != 1) && ($exercise->getMaxAttempts() > 0 )
-                && ($exercise->getMaxAttempts() <= $this->container->get('UJM_Exo.exerciseServices')->getNbPaper($user->getId(), $exercise->getId())) ) {
+        if (($subscription[0]->getAdmin() != 1) && ($exercise->getMaxAttempts() > 0)
+            && ($exercise->getMaxAttempts() <= $this->container->get('UJM_Exo.exerciseServices')->getNbPaper($user->getId(), $exercise->getId())) 
+        ) {
             return false;
         } else {
             return true;

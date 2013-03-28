@@ -62,9 +62,11 @@ class InteractionGraphicController extends Controller
 
         $entities = $em->getRepository('UJMExoBundle:InteractionGraphic')->findAll();
 
-        return $this->render('UJMExoBundle:InteractionGraphic:index.html.twig', array(
-                             'entities' => $entities
-                             ));
+        return $this->render(
+            'UJMExoBundle:InteractionGraphic:index.html.twig', array(
+            'entities' => $entities
+            )
+        );
     }
 
     /**
@@ -83,10 +85,12 @@ class InteractionGraphicController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
 
-        return $this->render('UJMExoBundle:InteractionGraphic:show.html.twig', array(
-                             'entity' => $entity,
-                             'delete_form' => $deleteForm->createView(),
-                             ));
+        return $this->render(
+            'UJMExoBundle:InteractionGraphic:show.html.twig', array(
+            'entity' => $entity,
+            'delete_form' => $deleteForm->createView(),
+            )
+        );
     }
 
     /**
@@ -98,10 +102,12 @@ class InteractionGraphicController extends Controller
         $entity = new InteractionGraphic();
         $form = $this->createForm(new InteractionGraphicType(), $entity);
 
-        return $this->render('UJMExoBundle:InteractionGraphic:new.html.twig', array(
-                             'entity' => $entity,
-                             'form' => $form->createView()
-                             ));
+        return $this->render(
+            'UJMExoBundle:InteractionGraphic:new.html.twig', array(
+            'entity' => $entity,
+            'form' => $form->createView()
+            )
+        );
     }
 
     /**
@@ -174,10 +180,12 @@ class InteractionGraphicController extends Controller
             return $this->redirect($this->generateUrl('ujm_question_index'));
         }
 
-        return $this->render('UJMExoBundle:InteractionGraphic:new.html.twig', array(
-                             'interGraph' => $interGraph,
-                             'form' => $form->createView()
-                             ));
+        return $this->render(
+            'UJMExoBundle:InteractionGraphic:new.html.twig', array(
+            'interGraph' => $interGraph,
+            'form' => $form->createView()
+            )
+        );
     }
 
     /**
@@ -197,11 +205,13 @@ class InteractionGraphicController extends Controller
         $editForm = $this->createForm(new InteractionGraphicType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        return $this->render('UJMExoBundle:InteractionGraphic:edit.html.twig', array(
-                             'entity' => $entity,
-                             'edit_form' => $editForm->createView(),
-                             'delete_form' => $deleteForm->createView(),
-                             ));
+        return $this->render(
+            'UJMExoBundle:InteractionGraphic:edit.html.twig', array(
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+            )
+        );
     }
 
     /**
@@ -232,11 +242,13 @@ class InteractionGraphicController extends Controller
             return $this->redirect($this->generateUrl('interactiongraphic_edit', array('id' => $id)));
         }
 
-        return $this->render('UJMExoBundle:InteractionGraphic:edit.html.twig', array(
-                             'entity' => $entity,
-                             'edit_form' => $editForm->createView(),
-                             'delete_form' => $deleteForm->createView(),
-                             ));
+        return $this->render(
+            'UJMExoBundle:InteractionGraphic:edit.html.twig', array(
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+            )
+        );
     }
 
     /**
@@ -268,8 +280,8 @@ class InteractionGraphicController extends Controller
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder(array('id' => $id))
-                    ->add('id', 'hidden')
-                    ->getForm();
+            ->add('id', 'hidden')
+            ->getForm();
     }
 
     /**
@@ -295,8 +307,8 @@ class InteractionGraphicController extends Controller
             // If the sended label isn't empty, get the matching adress
             if ($label) {
                 $repository = $this->getDoctrine()
-                                   ->getManager()
-                                   ->getRepository('UJMExoBundle:Document');
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:Document');
 
                 $pic = $repository->findOneBy(array('label' => $label));
                 $sufix = substr($pic->getUrl(), 2);
@@ -335,30 +347,30 @@ class InteractionGraphicController extends Controller
         $chaine = substr($url, -5, 1);
 
         switch ($chaine) {
-            case "w" :
-                return "white";
-                break;
-            case "g" :
-                return "green";
-                break;
-            case "p" :
-                return "purple";
-                break;
-            case "b" :
-                 "blue";
-                break;
-            case "r" :
-                return "red";
-                break;
-            case "o" :
-                return "orange";
-                break;
-            case "y" :
-                return "yellow";
-                break;
-            default :
-                return "white";
-                break;
+        case "w" :
+            return "white";
+            break;
+        case "g" :
+            return "green";
+            break;
+        case "p" :
+            return "purple";
+            break;
+        case "b" :
+             "blue";
+            break;
+        case "r" :
+            return "red";
+            break;
+        case "o" :
+            return "orange";
+            break;
+        case "y" :
+            return "yellow";
+            break;
+        default :
+            return "white";
+            break;
         }
     }
 }

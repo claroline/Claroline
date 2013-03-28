@@ -61,9 +61,11 @@ class HintController extends Controller
 
         $entities = $em->getRepository('UJMExoBundle:Hint')->findAll();
 
-        return $this->render('UJMExoBundle:Hint:index.html.twig', array(
-                             'entities' => $entities
-                            ));
+        return $this->render(
+            'UJMExoBundle:Hint:index.html.twig', array(
+            'entities' => $entities
+            )
+        );
     }
 
     /**
@@ -100,11 +102,12 @@ class HintController extends Controller
                 $em->flush();
             }
 
-            return $this->container->get('templating')->renderResponse('UJMExoBundle:Hint:show.html.twig', array(
-                                                                       'entity'      => $entity,
-                                                                       'delete_form' => $deleteForm->createView(),
-
-                                                                      ));
+            return $this->container->get('templating')->renderResponse(
+                'UJMExoBundle:Hint:show.html.twig', array(
+                'entity'      => $entity,
+                'delete_form' => $deleteForm->createView(),
+                )
+            );
         } else {
 
             return 0;
@@ -120,10 +123,12 @@ class HintController extends Controller
         $entity = new Hint();
         $form   = $this->createForm(new HintType(), $entity);
 
-        return $this->render('UJMExoBundle:Hint:new.html.twig', array(
-                             'entity' => $entity,
-                             'form'   => $form->createView()
-                            ));
+        return $this->render(
+            'UJMExoBundle:Hint:new.html.twig', array(
+            'entity' => $entity,
+            'form'   => $form->createView()
+            )
+        );
     }
 
     /**
@@ -145,10 +150,12 @@ class HintController extends Controller
             return $this->redirect($this->generateUrl('hint_show', array('id' => $entity->getId())));
         }
 
-        return $this->render('UJMExoBundle:Hint:new.html.twig', array(
-                             'entity' => $entity,
-                             'form'   => $form->createView()
-                            ));
+        return $this->render(
+            'UJMExoBundle:Hint:new.html.twig', array(
+            'entity' => $entity,
+            'form'   => $form->createView()
+            )
+        );
     }
 
     /**
@@ -168,11 +175,13 @@ class HintController extends Controller
         $editForm = $this->createForm(new HintType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        return $this->render('UJMExoBundle:Hint:edit.html.twig', array(
-                             'entity'      => $entity,
-                             'edit_form'   => $editForm->createView(),
-                             'delete_form' => $deleteForm->createView(),
-                            ));
+        return $this->render(
+            'UJMExoBundle:Hint:edit.html.twig', array(
+            'entity'      => $entity,
+            'edit_form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+            )
+        );
     }
 
     /**
@@ -203,11 +212,13 @@ class HintController extends Controller
             return $this->redirect($this->generateUrl('hint_edit', array('id' => $id)));
         }
 
-        return $this->render('UJMExoBundle:Hint:edit.html.twig', array(
-                             'entity'      => $entity,
-                             'edit_form'   => $editForm->createView(),
-                             'delete_form' => $deleteForm->createView(),
-                            ));
+        return $this->render(
+            'UJMExoBundle:Hint:edit.html.twig', array(
+            'entity'      => $entity,
+            'edit_form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+            )
+        );
     }
 
     /**
@@ -242,5 +253,4 @@ class HintController extends Controller
             ->add('id', 'hidden')
             ->getForm();
     }
-
 }

@@ -77,15 +77,15 @@ class QuestionController extends Controller
         $user = $this->container->get('security.context')->getToken()->getUser();
         $uid = $user->getId();
         $interactions = $this->getDoctrine()
-                             ->getEntityManager()
-                             ->getRepository('UJMExoBundle:Interaction')
-                             ->getUserInteraction($uid);
+            ->getEntityManager()
+            ->getRepository('UJMExoBundle:Interaction')
+            ->getUserInteraction($uid);
 
         $questionWithResponse = array();
         $em = $this->getDoctrine()->getEntityManager();
         foreach ($interactions as $interaction) {
             $response = $em->getRepository('UJMExoBundle:Response')
-                           ->findBy(array('interaction' => $interaction->getId()));
+                ->findBy(array('interaction' => $interaction->getId()));
             if (count($response) > 0) {
                 $questionWithResponse[] = 1;
             } else {
@@ -95,10 +95,12 @@ class QuestionController extends Controller
 
         //var_dump($questionWithResponse);
 
-        return $this->render('UJMExoBundle:Question:index.html.twig', array(
-                             'interactions'         => $interactions,
-                             'questionWithResponse' => $questionWithResponse
-                            ));
+        return $this->render(
+            'UJMExoBundle:Question:index.html.twig', array(
+            'interactions'         => $interactions,
+            'questionWithResponse' => $questionWithResponse
+            )
+        );
     }
 
     /**
@@ -111,73 +113,82 @@ class QuestionController extends Controller
 
         if (count($question) > 0) {
             $interaction = $this->getDoctrine()
-                                ->getEntityManager()
-                                ->getRepository('UJMExoBundle:Interaction')
-                                ->getInteraction($id);
+                ->getEntityManager()
+                ->getRepository('UJMExoBundle:Interaction')
+                ->getInteraction($id);
 
             $typeInter = $interaction[0]->getType();
 
             switch ($typeInter) {
-                case "InteractionQCM":
+            case "InteractionQCM":
 
-                    $response = new Response();
-                    $interactionQCM = $this->getDoctrine()
-                                           ->getEntityManager()
-                                           ->getRepository('UJMExoBundle:InteractionQCM')
-                                           ->getInteractionQCM($interaction[0]->getId());
+                $response = new Response();
+                $interactionQCM = $this->getDoctrine()
+                    ->getEntityManager()
+                    ->getRepository('UJMExoBundle:InteractionQCM')
+                    ->getInteractionQCM($interaction[0]->getId());
 
-                    if ($interactionQCM[0]->getShuffle()) {
-                        $interactionQCM[0]->shuffleChoices();
-                    } else {
-                        $interactionQCM[0]->sortChoices();
-                    }
+                if ($interactionQCM[0]->getShuffle()) {
+                    $interactionQCM[0]->shuffleChoices();
+                } else {
+                    $interactionQCM[0]->sortChoices();
+                }
 
-                    $form   = $this->createForm(new ResponseType(), $response);
+                $form   = $this->createForm(new ResponseType(), $response);
 
-                    return $this->render('UJMExoBundle:InteractionQCM:paper.html.twig', array(
-                                         'interactionQCM' => $interactionQCM[0],
-                                         'form'   => $form->createView()
-                                        ));
+                return $this->render(
+                    'UJMExoBundle:InteractionQCM:paper.html.twig', array(
+                    'interactionQCM' => $interactionQCM[0],
+                    'form'   => $form->createView()
+                    )
+                );
 
-                    break;
+                break;
 
-                case "InteractionGraphic":
-                    
-                    $interactionGraph = $this->getDoctrine()
-                                         ->getEntityManager()
-                                         ->getRepository('UJMExoBundle:InteractionGraphic')
-                                         ->getInteractionGraphic($interaction[0]->getId());
+            case "InteractionGraphic":
 
-                    $repository = $this->getDoctrine()
-                                       ->getManager()
-                                       ->getRepository('UJMExoBundle:Coords');
+                $interactionGraph = $this->getDoctrine()
+                    ->getEntityManager()
+                    ->getRepository('UJMExoBundle:InteractionGraphic')
+                    ->getInteractionGraphic($interaction[0]->getId());
 
-                    $listeCoords = $repository->findBy(array('interactionGraphic' => $interactionGraph[0]));
+                $repository = $this->getDoctrine()
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:Coords');
 
-                    return $this->render('UJMExoBundle:InteractionGraphic:paper.html.twig', array('interactionGraphic' => $interactionGraph[0], 'listeCoords' => $listeCoords));
+                $listeCoords = $repository->findBy(array('interactionGraphic' => $interactionGraph[0]));
 
-                    break;
+                return $this->render(
+                    'UJMExoBundle:InteractionGraphic:paper.html.twig', 
+                    array(
+                        'interactionGraphic' => $interactionGraph[0], 
+                        'listeCoords' => $listeCoords)
+                );
 
-                case "InteractionHole":
+                break;
 
-                    $response = new Response();
-                    $interactionHole = $this->getDoctrine()
-                                            ->getEntityManager()
-                                            ->getRepository('UJMExoBundle:InteractionHole')
-                                            ->getInteractionHole($interaction[0]->getId());
+            case "InteractionHole":
 
-                    $form   = $this->createForm(new ResponseType(), $response);
+                $response = new Response();
+                $interactionHole = $this->getDoctrine()
+                    ->getEntityManager()
+                    ->getRepository('UJMExoBundle:InteractionHole')
+                    ->getInteractionHole($interaction[0]->getId());
 
-                    return $this->render('UJMExoBundle:InteractionHole:paper.html.twig', array(
-                                         'interactionHole' => $interactionHole[0],
-                                         'form'   => $form->createView()
-                                        ));
+                $form   = $this->createForm(new ResponseType(), $response);
 
-                    break;
+                return $this->render(
+                    'UJMExoBundle:InteractionHole:paper.html.twig', array(
+                    'interactionHole' => $interactionHole[0],
+                    'form'   => $form->createView()
+                    )
+                );
 
-                case "InteractionOpen":
+                break;
 
-                    break;
+            case "InteractionOpen":
+
+                break;
             }
         } else {
             return $this->redirect($this->generateUrl('question'));
@@ -214,10 +225,12 @@ class QuestionController extends Controller
 
         }
 
-        return $this->render('UJMExoBundle:Question:new.html.twig', array(
-                             'entity' => $entity,
-                             'form'   => $form->createView()
-                            ));
+        return $this->render(
+            'UJMExoBundle:Question:new.html.twig', array(
+            'entity' => $entity,
+            'form'   => $form->createView()
+            )
+        );
     }
 
     /**
@@ -230,66 +243,78 @@ class QuestionController extends Controller
 
         if (count($question) > 0) {
             $interaction = $this->getDoctrine()
-                                ->getEntityManager()
-                                ->getRepository('UJMExoBundle:Interaction')
-                                ->getInteraction($id);
+                ->getEntityManager()
+                ->getRepository('UJMExoBundle:Interaction')
+                ->getInteraction($id);
 
             $typeInter = $interaction[0]->getType();
 
             $nbResponses = 0;
             $em = $this->getDoctrine()->getEntityManager();
             $response = $em->getRepository('UJMExoBundle:Response')
-                    ->findBy(array('interaction' => $interaction[0]->getId()));
+                ->findBy(array('interaction' => $interaction[0]->getId()));
             $nbResponses = count($response);
 
             switch ($typeInter) {
-                case "InteractionQCM":
+            case "InteractionQCM":
 
-                    $interactionQCM = $this->getDoctrine()
-                                           ->getEntityManager()
-                                           ->getRepository('UJMExoBundle:InteractionQCM')
-                                           ->getInteractionQCM($interaction[0]->getId());
-                    //apel fonction qui trie
-                    $interactionQCM[0]->sortChoices();
+                $interactionQCM = $this->getDoctrine()
+                    ->getEntityManager()
+                    ->getRepository('UJMExoBundle:InteractionQCM')
+                    ->getInteractionQCM($interaction[0]->getId());
+                //apel fonction qui trie
+                $interactionQCM[0]->sortChoices();
 
-                    $editForm = $this->createForm(new InteractionQCMType($this->container->get('security.context')
-                            ->getToken()->getUser()), $interactionQCM[0]);
-                    $deleteForm = $this->createDeleteForm($interactionQCM[0]->getId());
+                $editForm = $this->createForm(
+                    new InteractionQCMType(
+                        $this->container->get('security.context')
+                            ->getToken()->getUser()
+                    ), $interactionQCM[0]
+                );
+                $deleteForm = $this->createDeleteForm($interactionQCM[0]->getId());
 
-                    return $this->render('UJMExoBundle:InteractionQCM:edit.html.twig', array(
-                                         'entity'      => $interactionQCM[0],
-                                         'edit_form'   => $editForm->createView(),
-                                         'delete_form' => $deleteForm->createView(),
-                                         'nbResponses' => $nbResponses
-                                        ));
-                    break;
+                return $this->render(
+                    'UJMExoBundle:InteractionQCM:edit.html.twig', array(
+                    'entity'      => $interactionQCM[0],
+                    'edit_form'   => $editForm->createView(),
+                    'delete_form' => $deleteForm->createView(),
+                    'nbResponses' => $nbResponses
+                    )
+                );
+                break;
 
-                case "InteractionGraphic":
+            case "InteractionGraphic":
 
-                    break;
+                break;
 
-                case "InteractionHole":
-                    $interactionHole = $this->getDoctrine()
-                                            ->getEntityManager()
-                                            ->getRepository('UJMExoBundle:InteractionHole')
-                                            ->getInteractionHole($interaction[0]->getId());
+            case "InteractionHole":
+                $interactionHole = $this->getDoctrine()
+                    ->getEntityManager()
+                    ->getRepository('UJMExoBundle:InteractionHole')
+                    ->getInteractionHole($interaction[0]->getId());
 
-                    $editForm = $this->createForm(new InteractionHoleType($this->container->get('security.context')
-                            ->getToken()->getUser()), $interactionHole[0]);
-                    $deleteForm = $this->createDeleteForm($interactionHole[0]->getId());
+                $editForm = $this->createForm(
+                    new InteractionHoleType(
+                        $this->container->get('security.context')
+                            ->getToken()->getUser()
+                    ), $interactionHole[0]
+                );
+                $deleteForm = $this->createDeleteForm($interactionHole[0]->getId());
 
-                    return $this->render('UJMExoBundle:InteractionHole:edit.html.twig', array(
-                                         'entity'      => $interactionHole[0],
-                                         'edit_form'   => $editForm->createView(),
-                                         'delete_form' => $deleteForm->createView(),
-                                         'nbResponses' => $nbResponses
-                                        ));
+                return $this->render(
+                    'UJMExoBundle:InteractionHole:edit.html.twig', array(
+                    'entity'      => $interactionHole[0],
+                    'edit_form'   => $editForm->createView(),
+                    'delete_form' => $deleteForm->createView(),
+                    'nbResponses' => $nbResponses
+                    )
+                );
 
-                    break;
+                break;
 
-                case "InteractionOpen":
+            case "InteractionOpen":
 
-                    break;
+                break;
             }
         } else {
             return $this->redirect($this->generateUrl('question'));
@@ -325,11 +350,13 @@ class QuestionController extends Controller
             return $this->redirect($this->generateUrl('question_edit', array('id' => $id)));
         }
 
-        return $this->render('UJMExoBundle:Question:edit.html.twig', array(
-                             'entity'      => $entity,
-                             'edit_form'   => $editForm->createView(),
-                             'delete_form' => $deleteForm->createView(),
-                            ));
+        return $this->render(
+            'UJMExoBundle:Question:edit.html.twig', array(
+            'entity'      => $entity,
+            'edit_form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+            )
+        );
     }
 
     /**
@@ -344,9 +371,9 @@ class QuestionController extends Controller
             $em = $this->getDoctrine()->getEntityManager();
 
             $eq = $this->getDoctrine()
-                       ->getEntityManager()
-                       ->getRepository('UJMExoBundle:ExerciseQuestion')
-                       ->getExercises($id);
+                ->getEntityManager()
+                ->getRepository('UJMExoBundle:ExerciseQuestion')
+                ->getExercises($id);
 
             foreach ($eq as $e) {
                 $em->remove($e);
@@ -355,53 +382,56 @@ class QuestionController extends Controller
             $em->flush();
 
             $interaction = $this->getDoctrine()
-                                ->getEntityManager()
-                                ->getRepository('UJMExoBundle:Interaction')
-                                ->getInteraction($id);
+                ->getEntityManager()
+                ->getRepository('UJMExoBundle:Interaction')
+                ->getInteraction($id);
 
             $typeInter = $interaction[0]->getType();
 
             switch ($typeInter) {
-                case "InteractionQCM":
-                    $interactionQCM = $this->getDoctrine()
-                                           ->getEntityManager()
-                                           ->getRepository('UJMExoBundle:InteractionQCM')
-                                           ->getInteractionQCM($interaction[0]->getId());
-                    return $this->forward('UJMExoBundle:InteractionQCM:delete', array(
-                                          'id' => $interactionQCM[0]->getId()
-                                         ));
+            case "InteractionQCM":
+                $interactionQCM = $this->getDoctrine()
+                    ->getEntityManager()
+                    ->getRepository('UJMExoBundle:InteractionQCM')
+                    ->getInteractionQCM($interaction[0]->getId());
+                return $this->forward(
+                    'UJMExoBundle:InteractionQCM:delete', array(
+                        'id' => $interactionQCM[0]->getId()
+                    )
+                );
 
-                    break;
+                break;
 
-                case "InteractionGraphic":
+            case "InteractionGraphic":
 
-                    break;
+                break;
 
-                case "InteractionHole":
-                    $interactionHole = $this->getDoctrine()
-                                            ->getEntityManager()
-                                            ->getRepository('UJMExoBundle:InteractionHole')
-                                            ->getInteractionHole($interaction[0]->getId());
-                    return $this->forward('UJMExoBundle:InteractionHole:delete', array(
-                                          'id' => $interactionHole[0]->getId()
-                                         ));
+            case "InteractionHole":
+                $interactionHole = $this->getDoctrine()
+                    ->getEntityManager()
+                    ->getRepository('UJMExoBundle:InteractionHole')
+                    ->getInteractionHole($interaction[0]->getId());
+                
+                return $this->forward(
+                    'UJMExoBundle:InteractionHole:delete', array(
+                        'id' => $interactionHole[0]->getId()
+                    )
+                );
 
-                    break;
+                break;
 
-                case "InteractionOpen":
+            case "InteractionOpen":
 
-                    break;
+                break;
             }
-
         }
-
     }
 
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder(array('id' => $id))
-                    ->add('id', 'hidden')
-                    ->getForm();
+            ->add('id', 'hidden')
+            ->getForm();
     }
 
     /**
@@ -423,51 +453,79 @@ class QuestionController extends Controller
                 //index 1=Hole Question
                 if ($valType == 1) {
                     $entity = new InteractionHole();
-                    $form   = $this->createForm(new InteractionHoleType($this->container->get('security.context')
-                            ->getToken()->getUser()), $entity);
-                    return $this->container->get('templating')->renderResponse('UJMExoBundle:InteractionHole:new.html.twig', array(
-                                                                               'exoID'  => $exoID,
-                                                                               'entity' => $entity,
-                                                                               'form'   => $form->createView()
-                                                                              ));
+                    $form   = $this->createForm(
+                        new InteractionHoleType(
+                            $this->container->get('security.context')
+                                ->getToken()->getUser()
+                        ), $entity
+                    );
+                    
+                    return $this->container->get('templating')->renderResponse(
+                        'UJMExoBundle:InteractionHole:new.html.twig', array(
+                        'exoID'  => $exoID,
+                        'entity' => $entity,
+                        'form'   => $form->createView()
+                        )
+                    );
                 }
 
                 //index 1=QCM Question
                 if ($valType == 2) {
                     $entity = new InteractionQCM();
-                    $form   = $this->createForm(new InteractionQCMType($this->container->get('security.context')->getToken()->getUser()), $entity);
-                    return $this->container->get('templating')->renderResponse('UJMExoBundle:InteractionQCM:new.html.twig', array(
-                                                                               'exoID'  => $exoID,
-                                                                               'entity' => $entity,
-                                                                               'form'   => $form->createView()
-                                                                              ));
+                    $form   = $this->createForm(
+                        new InteractionQCMType(
+                            $this->container->get('security.context')
+                                ->getToken()->getUser()
+                        ), $entity
+                    );
+                    
+                    return $this->container->get('templating')->renderResponse(
+                        'UJMExoBundle:InteractionQCM:new.html.twig', array(
+                        'exoID'  => $exoID,
+                        'entity' => $entity,
+                        'form'   => $form->createView()
+                        )
+                    );
                 }
 
                 //index 1=Graphic Question
                 if ($valType == 3) {
                     $entity = new InteractionGraphic();
-                    $form   = $this->createForm(new InteractionGraphicType($this->container->get('security.context')->getToken()->getUser()), $entity);
-                    return $this->container->get('templating')->renderResponse('UJMExoBundle:InteractionGraphic:new.html.twig', array(
-                                                                               'exoID'  => $exoID,
-                                                                               'entity' => $entity,
-                                                                               'form'   => $form->createView()
-                                                                              ));
+                    $form   = $this->createForm(
+                        new InteractionGraphicType(
+                            $this->container->get('security.context')
+                                ->getToken()->getUser()
+                        ), $entity
+                    );
+                    
+                    return $this->container->get('templating')->renderResponse(
+                        'UJMExoBundle:InteractionGraphic:new.html.twig', array(
+                        'exoID'  => $exoID,
+                        'entity' => $entity,
+                        'form'   => $form->createView()
+                        )
+                    );
                 }
 
                 //index 1=Open Question
                 if ($valType == 4) {
                     $entity = new InteractionOpen();
-                    $form   = $this->createForm(new InteractionOpenType($this->container->get('security.context')
-                            ->getToken()->getUser()), $entity);
-                    return $this->container->get('templating')->renderResponse('UJMExoBundle:InteractionOpen:new.html.twig', array(
-                                                                               'exoID'  => $exoID,
-                                                                               'entity' => $entity,
-                                                                               'form'   => $form->createView()
-                                                                              ));
+                    $form   = $this->createForm(
+                        new InteractionOpenType(
+                            $this->container->get('security.context')
+                                ->getToken()->getUser()
+                        ), $entity
+                    );
+                    
+                    return $this->container->get('templating')->renderResponse(
+                        'UJMExoBundle:InteractionOpen:new.html.twig', array(
+                        'exoID'  => $exoID,
+                        'entity' => $entity,
+                        'form'   => $form->createView()
+                        )
+                    );
                 }
-
             } else {
-
             }
         }
     }
@@ -481,11 +539,10 @@ class QuestionController extends Controller
         $user = $this->container->get('security.context')->getToken()->getUser();
 
         $question = $this->getDoctrine()
-                         ->getEntityManager()
-                         ->getRepository('UJMExoBundle:Question')
-                         ->getControlOwnerQuestion($user->getId(), $questionID);
+            ->getEntityManager()
+            ->getRepository('UJMExoBundle:Question')
+            ->getControlOwnerQuestion($user->getId(), $questionID);
 
         return $question;
     }
-
 }

@@ -59,9 +59,11 @@ class InteractionQCMController extends Controller
 
         $entities = $em->getRepository('UJMExoBundle:InteractionQCM')->findAll();
 
-        return $this->render('UJMExoBundle:InteractionQCM:index.html.twig', array(
-                             'entities' => $entities
-                             ));
+        return $this->render(
+            'UJMExoBundle:InteractionQCM:index.html.twig', array(
+            'entities' => $entities
+            )
+        );
     }
 
     /**
@@ -80,10 +82,12 @@ class InteractionQCMController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
 
-        return $this->render('UJMExoBundle:InteractionQCM:show.html.twig', array(
-                             'entity'      => $entity,
-                             'delete_form' => $deleteForm->createView(),
-                             ));
+        return $this->render(
+            'UJMExoBundle:InteractionQCM:show.html.twig', array(
+            'entity'      => $entity,
+            'delete_form' => $deleteForm->createView(),
+            )
+        );
     }
 
     /**
@@ -95,10 +99,12 @@ class InteractionQCMController extends Controller
         $entity = new InteractionQCM($this->container->get('security.context')->getToken()->getUser());
         $form   = $this->createForm(new InteractionQCMType($this->container->get('security.context')->getToken()->getUser()), $entity);
 
-        return $this->render('UJMExoBundle:InteractionQCM:new.html.twig', array(
-                             'entity' => $entity,
-                             'form'   => $form->createView(),
-                             ));
+        return $this->render(
+            'UJMExoBundle:InteractionQCM:new.html.twig', array(
+            'entity' => $entity,
+            'form'   => $form->createView(),
+            )
+        );
     }
 
     /**
@@ -112,8 +118,10 @@ class InteractionQCMController extends Controller
 
         $exoID = $this->container->get('request')->request->get('exercise');
 
-        $formHandler = new InteractionQCMHandler($form, $this->get('request'), $this->getDoctrine()->getEntityManager(), 
-                                                 $this->container->get('security.context')->getToken()->getUser(), $exoID);
+        $formHandler = new InteractionQCMHandler(
+            $form, $this->get('request'), $this->getDoctrine()->getEntityManager(), 
+            $this->container->get('security.context')->getToken()->getUser(), $exoID
+        );
 
         if ($formHandler->processAdd()) {
             //return $this->redirect($this->generateUrl('question_show', array('id' => $interQCM->getInteraction()->getQuestion()->getId(), 'paper' => 0)) );
@@ -124,11 +132,13 @@ class InteractionQCMController extends Controller
             }
         }
 
-        return $this->render('UJMExoBundle:InteractionQCM:new.html.twig', array(
-                             'entity' => $interQCM,
-                             'form'   => $form->createView(),
-                             'exoID'  => $exoID,
-                             ));
+        return $this->render(
+            'UJMExoBundle:InteractionQCM:new.html.twig', array(
+            'entity' => $interQCM,
+            'form'   => $form->createView(),
+            'exoID'  => $exoID,
+            )
+        );
     }
 
     /**
@@ -148,11 +158,13 @@ class InteractionQCMController extends Controller
         $editForm = $this->createForm(new InteractionQCMType($this->container->get('security.context')->getToken()->getUser()), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        return $this->render('UJMExoBundle:InteractionQCM:edit.html.twig', array(
-                             'entity'      => $entity,
-                             'edit_form'   => $editForm->createView(),
-                             'delete_form' => $deleteForm->createView(),
-                             ));
+        return $this->render(
+            'UJMExoBundle:InteractionQCM:edit.html.twig', array(
+            'entity'      => $entity,
+            'edit_form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+            )
+        );
     }
 
     /**
@@ -170,8 +182,10 @@ class InteractionQCMController extends Controller
         }
 
         $editForm   = $this->createForm(new InteractionQCMType($this->container->get('security.context')->getToken()->getUser()), $interQCM);
-        $formHandler = new InteractionQCMHandler($editForm, $this->get('request'), $this->getDoctrine()->getEntityManager(), 
-                                                 $this->container->get('security.context')->getToken()->getUser());
+        $formHandler = new InteractionQCMHandler(
+            $editForm, $this->get('request'), $this->getDoctrine()->getEntityManager(), 
+            $this->container->get('security.context')->getToken()->getUser()
+        );
                
         if ($formHandler->processUpdate($interQCM)) {
             return $this->redirect($this->generateUrl('question'));
@@ -179,11 +193,13 @@ class InteractionQCMController extends Controller
         
         $deleteForm = $this->createDeleteForm($id);
         
-        return $this->render('UJMExoBundle:InteractionQCM:edit.html.twig', array(
-                             'entity'      => $interQCM,
-                             'edit_form'   => $editForm->createView(),
-                             'delete_form' => $deleteForm->createView(),
-                             ));
+        return $this->render(
+            'UJMExoBundle:InteractionQCM:edit.html.twig', array(
+            'entity'      => $interQCM,
+            'edit_form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+            )
+        );
     }
 
     /**
@@ -215,8 +231,8 @@ class InteractionQCMController extends Controller
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder(array('id' => $id))
-                    ->add('id', 'hidden')
-                    ->getForm()
+            ->add('id', 'hidden')
+            ->getForm()
         ;
     }
 
@@ -230,11 +246,13 @@ class InteractionQCMController extends Controller
         $exerciseSer = $this->container->get('UJM_Exo.exerciseServices');
         $res = $exerciseSer->responseQCM($request);
 
-        return $this->render('UJMExoBundle:InteractionQCM:qcmOverview.html.twig', array(
-                             'score'      => $res['score'],
-                             'penalty'    => $res['penalty'],
-                             'interQCM'   => $res['interQCM'],
-                             'response'   => $res['response']
-                             ));
+        return $this->render(
+            'UJMExoBundle:InteractionQCM:qcmOverview.html.twig', array(
+            'score'      => $res['score'],
+            'penalty'    => $res['penalty'],
+            'interQCM'   => $res['interQCM'],
+            'response'   => $res['response']
+            )
+        );
     }
 }
