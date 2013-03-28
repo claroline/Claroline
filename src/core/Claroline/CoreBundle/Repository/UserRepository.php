@@ -28,7 +28,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             WHERE u.username LIKE :username"
             ;
 
-        //must add the role ?
         $query = $this->_em->createQuery($dql);
         $query->setParameter('username', $username);
 
@@ -57,6 +56,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         if (!$this->supportsClass($class)) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $class));
         }
+        throw new \Exception('gdfr');
 
         $dql = "SELECT u, groups, group_roles, roles, ws, pwu FROM Claroline\CoreBundle\Entity\User u
             LEFT JOIN u.groups groups
