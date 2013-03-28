@@ -5,12 +5,18 @@ claro_index:
 claro_security:
     resource: "@ClarolineCoreBundle/Resources/config/routing/security.yml"
 
+claro_authentication:
+    resource: "@ClarolineCoreBundle/Controller/AuthenticationController.php"
+    type: annotation
+
 claro_profile:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/profile.yml"
+    resource: "@ClarolineCoreBundle/Controller/ProfileController.php"
     prefix: profile
+    type: annotation
 
 claro_registration:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/registration.yml"
+    resource: "@ClarolineCoreBundle/Controller/RegistrationController.php"
+    type: annotation
     prefix: register
 
 claro_desktop:
@@ -64,20 +70,34 @@ claro_admin_widget:
     type: annotation
 
 claro_resource:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/resource.yml"
+    resource: "@ClarolineCoreBundle/Controller/ResourceController.php"
     prefix: resource
+    type: annotation
+
+claro_resource_parameters:
+    resource: "@ClarolineCoreBundle/Controller/ResourcePropertiesController.php"
+    prefix: resource
+    type: annotation
+
+claro_resource_rights:
+    resource: "@ClarolineCoreBundle/Controller/ResourceRightsController.php"
+    prefix: resource
+    type: annotation
 
 claro_text:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/text.yml"
+    resource: "@ClarolineCoreBundle/Controller/TextController.php"
     prefix: text
+    type: annotation
 
 claro_mail:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/mail.yml"
+    resource: "@ClarolineCoreBundle/Controller/MailController.php"
     prefix: mail
+    type: annotation
 
 claro_message:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/message.yml"
+    resource: "@ClarolineCoreBundle/Controller/MessageController.php"
     prefix: message
+    type: annotation
 
 claro_activity:
     resource: "@ClarolineCoreBundle/Controller/ActivityController.php"
@@ -88,5 +108,6 @@ fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
 
 claro_install:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/install.yml"
+    resource: "@ClarolineCoreBundle/Controller/InstallController.php"
+    type: annotation
     prefix: install

@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\BaseProfileType;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Library\Security\Acl\ClassIdentity;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
  * Controller for user self-registration. Access to this functionality requires
@@ -17,6 +18,11 @@ use Claroline\CoreBundle\Library\Security\Acl\ClassIdentity;
 class RegistrationController extends Controller
 {
     /**
+     * @Route(
+     *     "/form",
+     *     name="claro_registration_user_registration_form"
+     * )
+     *
      * Displays the user self-registration form.
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -34,6 +40,11 @@ class RegistrationController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/create",
+     *     name="claro_registration_register_user"
+     * )
+     *
      * Registers a new user and displays a flash message in case of success.
      *
      * @return \Symfony\Component\HttpFoundation\Response
