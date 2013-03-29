@@ -1,11 +1,4 @@
-claro_rss_config_create:
-    pattern: /workspace/{workspaceId}/isDesktop/{isDesktop}/isDefault/{isDefault}/user/{userId}
-    defaults: { _controller: ClarolineRssReaderBundle:RssReader:createConfig }
-    requirements:
-      _method: POST
-
-claro_rss_config_update:
-    pattern: /update/workspace/{configId}
-    defaults: { _controller: ClarolineRssReaderBundle:RssReader:updateConfig }
-    requirements:
-      _method: POST
+claro_rss:
+    resource: "@ClarolineRssReaderBundle/Controller/RssReaderController.php"
+    type:     annotation
+    prefix:   /

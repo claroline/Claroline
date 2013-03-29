@@ -7,9 +7,18 @@ use Claroline\RssReaderBundle\Form\ConfigType;
 use Claroline\RssReaderBundle\Entity\Config;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 class RssReaderController extends Controller
 {
+    /**
+     * @Route(
+     *     "/workspace/{workspaceId}/isDesktop/{isDesktop}/isDefault/{isDefault}/user/{userId}",
+     *     name="claro_rss_config_create"
+     * )
+     * @Method("POST")
+     */
     public function createConfigAction($workspaceId, $isDesktop, $isDefault, $userId)
     {
         $form = $this->get('form.factory')->create(new ConfigType(), new Config());
@@ -66,6 +75,13 @@ class RssReaderController extends Controller
         return new RedirectResponse($this->generateUrl('claro_desktop_open'));
     }
 
+    /**
+     * @Route(
+     *     "/update/workspace/{configId}",
+     *     name="/update/workspace/{configId}"
+     * )
+     * @Method("POST")
+     */
     public function updateConfigAction($configId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
