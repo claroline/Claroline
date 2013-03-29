@@ -7,12 +7,19 @@ use Claroline\CoreBundle\Entity\UserMessage;
 use Claroline\CoreBundle\Form\MessageType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 class MessageController extends Controller
 {
     const MESSAGE_PER_PAGE = 20;
 
     /**
+     * @Route(
+     *     "/form/group/{groupId}",
+     *     name="claro_message_form_for_group"
+     * )
+     *
      * Displays the message form. It'll be sent to every user of a group.
      * In order to do this, this methods redirects to the form creation controller
      * with a query string including every users of the group.
@@ -45,6 +52,11 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/form",
+     *     name="claro_message_form"
+     * )
+     *
      * Display the message form.
      * It takes a array of user ids (query string: ids[]=1&ids[]=2).
      * The "to" field of the form must be completed in the following way: username1; username2; username3
@@ -75,12 +87,20 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/send/{parentId}",
+     *     name="claro_message_send",
+     *     defaults={"parentId"=0}
+     * )
+     *
      * Handles the message form submission.
      *
      * @param integer $parentId the parent message (in a discussion, you can answer
      * to a message wich is the parent). The entity Message is a nested tree.
      * By default (no parent) $parentId = 0 (defined in the message.yml file).
+     *
      * @todo: add success/error message
+     *
      * @return Response
      */
     public function sendAction($parentId)
@@ -150,6 +170,11 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/list/received",
+     *     name="claro_message_list_received_layout"
+     * )
+     *
      * Displays the layout of the received message list.
      *
      * @return Response
@@ -160,6 +185,11 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/list/sent",
+     *     name="claro_message_list_sent_layout"
+     * )
+     *
      * Displays the layout of the sent message list.
      *
      * @return Response
@@ -170,6 +200,12 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/list/received/{offset}",
+     *     name="claro_message_list_received",
+     *     options={"expose"=true}
+     * )
+     *
      * Displays a partial list of received message for the current user.
      * This method is called with ajax and append the result in the layout.
      *
@@ -191,6 +227,12 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/list/sent/{offset}",
+     *     name="claro_message_list_sent",
+     *     options={"expose"=true}
+     * )
+     *
      * Displays a partial list of sent message for the current user.
      * This method is called with ajax and append the result in the layout.
      *
@@ -212,6 +254,11 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/list/removed",
+     *     name="claro_message_list_removed_layout"
+     * )
+     *
      * Displays the layout of the removed message list.
      *
      * @return Response
@@ -224,6 +271,11 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/show/{messageId}",
+     *     name="claro_message_show"
+     * )
+     *
      * Displays a message.
      *
      * @param integer $messageId the message id
@@ -270,6 +322,12 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/delete/from",
+     *     name="claro_message_delete_from",
+     *     options={"expose"=true}
+     * )
+     *
      * Deletes a message from the sent message list (soft delete).
      * It takes an array of ids in the query string (ids[]=1&ids[]=2).
      *
@@ -297,6 +355,12 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/delete/to",
+     *     name="claro_message_delete_to",
+     *     options={"expose"=true}
+     * )
+     *
      * Deletes a message from the received message list (soft delete).
      * It takes an array of ids in the query string (ids[]=1&ids[]=2).
      *
@@ -324,6 +388,13 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/delete/trash",
+     *     name="claro_message_delete_trash",
+     *     options={"expose"=true}
+     * )
+     * @Method("DELETE")
+     *
      * Deletes a message from trash (permanent delete).
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -347,6 +418,12 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/restore",
+     *     name="claro_message_restore_from_trash",
+     *     options={"expose"=true}
+     * )
+     *
      * Restore a message from the trash.
      * It takes an array of ids in the query string (ids[]=1&ids[]=2).
      *
@@ -372,6 +449,12 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/list/received/search/{search}/offset/{offset}",
+     *     name="claro_message_list_received_search",
+     *     options={"expose"=true}
+     * )
+     *
      * Displays a partial list of received message for the current user.
      * This method is called with ajax and append the result in the layout.
      *
@@ -394,6 +477,12 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/list/sent/search/{search}/offset/{offset}",
+     *     name="claro_message_list_sent_search",
+     *     options={"expose"=true}
+     * )
+     *
      * Displays a partial list of sent message for the current user.
      * This method is called with ajax and append the result in the layout.
      *
@@ -416,6 +505,12 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/list/removed/{offset}",
+     *     name="claro_message_list_removed",
+     *     options={"expose"=true}
+     * )
+     *
      * Displays a partial list of removed message for the current user.
      * This method is called with ajax and append the result in the layout.
      *
@@ -437,6 +532,12 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/list/removed/search/{search}/offset/{offset}",
+     *     name="claro_message_list_removed_search",
+     *     options={"expose"=true}
+     * )
+     *
      * Displays a partial list of removed message for the current user.
      * This method is called with ajax and append the result in the layout.
      *
@@ -459,6 +560,12 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/mark_as_read/{userMessageId}",
+     *     name="claro_message_mark_as_read",
+     *     options={"expose"=true}
+     * )
+     *
      * Marks a message as read.
      *
      * @param integer $userMessageId the userMessage id (when you send a message,

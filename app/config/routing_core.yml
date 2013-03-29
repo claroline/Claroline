@@ -5,77 +5,114 @@ claro_index:
 claro_security:
     resource: "@ClarolineCoreBundle/Resources/config/routing/security.yml"
 
+claro_authentication:
+    resource: "@ClarolineCoreBundle/Controller/AuthenticationController.php"
+    type: annotation
+
 claro_profile:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/profile.yml"
+    resource: "@ClarolineCoreBundle/Controller/ProfileController.php"
     prefix: profile
+    type: annotation
 
 claro_registration:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/registration.yml"
+    resource: "@ClarolineCoreBundle/Controller/RegistrationController.php"
+    type: annotation
     prefix: register
 
 claro_desktop:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/desktop.yml"
+    resource: "@ClarolineCoreBundle/Controller/DesktopController.php"
     prefix: desktop
+    type: annotation
 
 claro_desktop_tool_calendar:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/desktop_tool_calendar.yml"
+    resource: "@ClarolineCoreBundle/Controller/Tool/DesktopCalendarController.php"
     prefix: desktop/tool/calendar
+    type: annotation
 
 claro_desktop_tool_home:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/desktop_tool_home.yml"
+    resource: "@ClarolineCoreBundle/Controller/Tool/HomeController.php"
     prefix: desktop/tool/home
+    type: annotation
 
 claro_desktop_tool_properties:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/desktop_tool_parameters.yml"
+    resource: "@ClarolineCoreBundle/Controller/Tool/DesktopParametersController.php"
     prefix: desktop/tool/properties
+    type: annotation
 
 claro_workspace:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/workspace.yml"
+    resource: "@ClarolineCoreBundle/Controller/WorkspaceController.php"
     prefix: workspaces
+    type: annotation
 
 claro_workspace_tool_properties:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/workspace_tool_parameters.yml"
+    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceParametersController.php"
     prefix: workspaces/tool/properties
+    type: annotation
 
 claro_workspace_tool_user:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/workspace_tool_user.yml"
+    resource: "@ClarolineCoreBundle/Controller/Tool/UserController.php"
     prefix: workspaces/tool/user_management
+    type: annotation
 
 claro_workspace_tool_group:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/workspace_tool_group.yml"
+    resource: "@ClarolineCoreBundle/Controller/Tool/GroupController.php"
     prefix: workspaces/tool/group_management
+    type: annotation
 
 claro_workspace_tool_calendar:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/workspace_tool_calendar.yml"
+    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceCalendarController.php"
     prefix: workspaces/tool/calendar
+    type: annotation
 
 claro_admin:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/admin.yml"
+    resource: "@ClarolineCoreBundle/Controller/AdministrationController.php"
     prefix: admin
+    type: annotation
+
+claro_admin_widget:
+    resource: "@ClarolineCoreBundle/Controller/AdministrationWidgetController.php"
+    prefix: admin
+    type: annotation
 
 claro_resource:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/resource.yml"
+    resource: "@ClarolineCoreBundle/Controller/ResourceController.php"
     prefix: resource
+    type: annotation
+
+claro_resource_parameters:
+    resource: "@ClarolineCoreBundle/Controller/ResourcePropertiesController.php"
+    prefix: resource
+    type: annotation
+
+claro_resource_rights:
+    resource: "@ClarolineCoreBundle/Controller/ResourceRightsController.php"
+    prefix: resource
+    type: annotation
 
 claro_text:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/text.yml"
+    resource: "@ClarolineCoreBundle/Controller/TextController.php"
     prefix: text
+    type: annotation
 
 claro_mail:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/mail.yml"
+    resource: "@ClarolineCoreBundle/Controller/MailController.php"
     prefix: mail
+    type: annotation
 
 claro_message:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/message.yml"
+    resource: "@ClarolineCoreBundle/Controller/MessageController.php"
     prefix: message
+    type: annotation
 
 claro_activity:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/activity.yml"
+    resource: "@ClarolineCoreBundle/Controller/ActivityController.php"
     prefix: activity
+    type: annotation
 
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
 
 claro_install:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/install.yml"
+    resource: "@ClarolineCoreBundle/Controller/InstallController.php"
+    type: annotation
     prefix: install
