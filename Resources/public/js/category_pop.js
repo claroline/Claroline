@@ -11,7 +11,6 @@ function linkCategory(categoryNewPop) {
                 categoryPop(data);
             }
         });
-
     });
 }
 
@@ -57,32 +56,32 @@ function categoryPop(data) {
                                     "position": "absolute",
                                     "top": "-25px",
                                     "right": "-22px"
-                                });        
+                                });
 
 
                         $("#div_input_category").html(data);
                         var popup = false;
-                        if(popup == false) {                
+                        if (popup === false) {
                             $("#overlayEffect_cat").fadeIn("slow");
                             $("#popupCategory").fadeIn("slow");
-                            $("#closeCategory").fadeIn("slow");                       
+                            $("#closeCategory").fadeIn("slow");
                             popup = true;
                         }
 
                         //////////
 
-                                $("#closeCategory").click(function() {
+                                $("#closeCategory").click(function () {
                                         //acutaliser la liste de category
-                                        
+
                                         hidePopup();
                                 });
 
-                                $("#overlayEffect_cat").click(function() {
+                                $("#overlayEffect_cat").click(function () {
                                         hidePopup();
                                 });
 
                                 function hidePopup() {
-                                        if(popup==true) {
+                                        if (popup === true) {
                                                 $("#overlayEffect_cat").fadeOut("slow");
                                                 $("#popupCategory").fadeOut("slow");
                                                 $("#closeCategory").fadeOut("slow");
@@ -91,6 +90,5 @@ function categoryPop(data) {
                                 }
 
                             ///////////
-
 
 }
