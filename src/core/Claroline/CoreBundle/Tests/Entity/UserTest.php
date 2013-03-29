@@ -15,7 +15,7 @@ class UserTest extends FunctionalTestCase
 
     public function testGetRolesReturnsUserOwnedRolesAndGroupOwnedRolesAndIncludesRoleAncestors()
     {
-        $this->loadUserData(array('ws_creator' => 'ws_creator'));
+       $this->loadUserData(array('ws_creator' => 'ws_creator'));
         $this->loadRoleData(array(array('role_c' => null)));
         $this->loadRoleData(array(array('role_e' => 'role_c')));
         $this->loadRoleData(array(array('role_f' => 'role_e')));

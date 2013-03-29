@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContext;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
  * Authentication/login controller.
@@ -11,6 +12,12 @@ use Symfony\Component\Security\Core\SecurityContext;
 class AuthenticationController extends Controller
 {
     /**
+     * @Route(
+     *     "/login",
+     *     name="claro_security_login",
+     *     options={"expose"=true}
+     * )
+     *
      * Standard Symfony form login controller.
      *
      * @see http://symfony.com/doc/current/book/security.html#using-a-traditional-login-form

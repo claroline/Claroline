@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Form\ProfileType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
  * Controller of the user profile.
@@ -11,6 +12,11 @@ use Claroline\CoreBundle\Form\ProfileType;
 class ProfileController extends Controller
 {
     /**
+     * @Route(
+     *     "/form",
+     *     name="claro_profile_form"
+     * )
+     *
      * Displays an editable form of the current user's profile.
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -27,6 +33,11 @@ class ProfileController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/update",
+     *     name="claro_profile_update"
+     * )
+     *
      * Updates the user's profile and redirects to the profile form.
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -55,6 +66,11 @@ class ProfileController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/view/{userId}",
+     *     name="claro_profile_view"
+     * )
+     *
      * Displays the public profile of an user.
      *
      * @param integer $userId The id of the user we want to see the profile
