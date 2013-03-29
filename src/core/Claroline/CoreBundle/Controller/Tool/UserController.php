@@ -167,11 +167,7 @@ class UserController extends Controller
                 self::NUMBER_USER_PER_ITERATION
             );
         $users = $this->paginatorToArray($paginatorUsers);
-        $content = $this->renderView(
-            'ClarolineCoreBundle:model:users.json.twig',
-            array('users' => $users)
-        );
-        $response = new Response($content);
+        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
@@ -212,11 +208,7 @@ class UserController extends Controller
                 self::NUMBER_USER_PER_ITERATION
             );
         $users = $this->paginatorToArray($paginatorUsers);
-        $content = $this->renderView(
-            'ClarolineCoreBundle:model:users.json.twig',
-            array('users' => $users)
-        );
-        $response = new Response($content);
+        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
@@ -262,11 +254,7 @@ class UserController extends Controller
             $em->flush();
         }
 
-        $content = $this->renderView(
-            'ClarolineCoreBundle:model:users.json.twig',
-            array('users' => $users)
-        );
-        $response = new Response($content);
+        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
@@ -304,11 +292,7 @@ class UserController extends Controller
                 self::NUMBER_USER_PER_ITERATION
             );
         $users = $this->paginatorToArray($paginatorUsers);
-        $content = $this->renderView(
-            'ClarolineCoreBundle:model:users.json.twig',
-            array('users' => $users)
-        );
-        $response = new Response($content);
+        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
@@ -346,11 +330,7 @@ class UserController extends Controller
                 self::NUMBER_USER_PER_ITERATION
             );
         $users = $this->paginatorToArray($paginatorUsers);
-        $content = $this->renderView(
-            'ClarolineCoreBundle:model:users.json.twig',
-            array('users' => $users)
-        );
-        $response = new Response($content);
+        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;

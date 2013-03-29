@@ -238,11 +238,7 @@ class AdministrationController extends Controller
         $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')
             ->findByGroup($group, $offset, self::USER_PER_PAGE);
         $users = $this->paginatorToArray($paginatorUsers);
-        $content = $this->renderView(
-            'ClarolineCoreBundle:model:users.json.twig',
-            array('users' => $users)
-        );
-        $response = new Response($content);
+        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
@@ -273,11 +269,7 @@ class AdministrationController extends Controller
         $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')
             ->findByNameAndGroup($search, $group, $offset, self::USER_PER_PAGE);
         $users = $this->paginatorToArray($paginatorUsers);
-        $content = $this->renderView(
-            'ClarolineCoreBundle:model:users.json.twig',
-            array('users' => $users)
-        );
-        $response = new Response($content);
+        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
@@ -496,11 +488,7 @@ class AdministrationController extends Controller
         $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')
             ->findGroupOutsiders($group, $offset, self::USER_PER_PAGE);
         $users = $this->paginatorToArray($paginatorUsers);
-        $content = $this->renderView(
-            'ClarolineCoreBundle:model:users.json.twig',
-            array('users' => $users)
-        );
-        $response = new Response($content);
+        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
@@ -531,11 +519,7 @@ class AdministrationController extends Controller
         $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')
             ->findGroupOutsidersByName($group, $search, $offset, self::USER_PER_PAGE);
         $users = $this->paginatorToArray($paginatorUsers);
-        $content = $this->renderView(
-            'ClarolineCoreBundle:model:users.json.twig',
-            array('users' => $users)
-        );
-        $response = new Response($content);
+        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
@@ -578,11 +562,7 @@ class AdministrationController extends Controller
 
         $em->persist($group);
         $em->flush();
-        $content = $this->renderView(
-            'ClarolineCoreBundle:model:users.json.twig',
-            array('users' => $users)
-        );
-        $response = new Response($content);
+        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
