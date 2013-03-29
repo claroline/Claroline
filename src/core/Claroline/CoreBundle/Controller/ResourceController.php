@@ -116,7 +116,7 @@ class ResourceController extends Controller
      */
     public function openAction($resourceId, $resourceType)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($resourceId);
         $collection = new ResourceCollection(array($resource));
@@ -157,7 +157,7 @@ class ResourceController extends Controller
     public function deleteAction()
     {
         $ids = $this->container->get('request')->query->get('ids', array());
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $collection = new ResourceCollection();
 
         foreach ($ids as $id) {
@@ -194,7 +194,7 @@ class ResourceController extends Controller
     public function moveAction($newParentId)
     {
         $ids = $this->container->get('request')->query->get('ids', array());
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $resourceRepo = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
         $newParent = $resourceRepo->find($newParentId);
         $resourceManager = $this->get('claroline.resource.manager');
@@ -355,7 +355,7 @@ class ResourceController extends Controller
         $path = array();
         $creatableTypes = array();
         $resources = array();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.context')->getToken()->getUser();
         $resourceRepo = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
         $directoryId = (integer) $directoryId;
@@ -418,7 +418,7 @@ class ResourceController extends Controller
     {
         $ids = $this->container->get('request')->query->get('ids', array());
         $token = $this->get('security.context')->getToken();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $parent = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($resourceDestinationId);
         $newNodes = array();

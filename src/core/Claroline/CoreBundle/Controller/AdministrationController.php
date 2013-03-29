@@ -116,7 +116,7 @@ class AdministrationController extends Controller
         $params = $this->get('request')->query->all();
 
         if (isset($params['ids'])) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
 
             foreach ($params['ids'] as $userId) {
                 $user = $em->getRepository('ClarolineCoreBundle:User')
@@ -163,7 +163,7 @@ class AdministrationController extends Controller
      */
     public function usersAction($offset)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         // TODO: quick fix (force doctrine to reload only the concerned roles
         // -- otherwise all the roles loaded by the security context are returned)
         $em->detach($this->get('security.context')->getToken()->getUser());
@@ -197,7 +197,7 @@ class AdministrationController extends Controller
      */
     public function searchUsersAction($offset, $search)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         // TODO: quick fix (force doctrine to reload only the concerned roles
         // -- otherwise all the roles loaded by the security context are returned)
         $em->detach($this->get('security.context')->getToken()->getUser());
@@ -233,7 +233,7 @@ class AdministrationController extends Controller
     // Doesn't work yet due to a sql error from the repository
     public function usersOfGroupAction($groupId, $offset)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $group = $em->find('ClarolineCoreBundle:Group', $groupId);
         $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')
             ->findByGroup($group, $offset, self::USER_PER_PAGE);
@@ -264,7 +264,7 @@ class AdministrationController extends Controller
     // Doesn't work yet due to a sql error from the repository
     public function searchUsersOfGroupAction($groupId, $offset, $search)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $group = $em->find('ClarolineCoreBundle:Group', $groupId);
         $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')
             ->findByNameAndGroup($search, $group, $offset, self::USER_PER_PAGE);
@@ -292,7 +292,7 @@ class AdministrationController extends Controller
      */
     public function groupsAction($offset)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $paginatorGroups = $em->getRepository('ClarolineCoreBundle:Group')
             ->findAll($offset, self::GROUP_PER_PAGE);
         $groups = $this->paginatorToArray($paginatorGroups);
@@ -324,7 +324,7 @@ class AdministrationController extends Controller
 
     public function searchGroupsAction($offset, $search)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $paginatorGroups = $em->getRepository('ClarolineCoreBundle:Group')
             ->findByName($search, $offset, self::GROUP_PER_PAGE);
         $groups = $this->paginatorToArray($paginatorGroups);
@@ -377,7 +377,7 @@ class AdministrationController extends Controller
 
         if ($form->isValid()) {
             $group = $form->getData();
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $em->persist($group);
             $em->flush();
 
@@ -403,7 +403,7 @@ class AdministrationController extends Controller
      */
     public function groupListAction()
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery('SELECT COUNT(g.id) FROM Claroline\CoreBundle\Entity\Group g');
         $count = $query->getSingleScalarResult();
         $pages = ceil($count / self::USER_PER_PAGE);
@@ -430,7 +430,7 @@ class AdministrationController extends Controller
      */
     public function groupUserListAction($groupId)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
 
         return $this->render(
@@ -456,7 +456,7 @@ class AdministrationController extends Controller
      */
     public function addUserToGroupLayoutAction($groupId)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
 
         return $this->render(
@@ -483,7 +483,7 @@ class AdministrationController extends Controller
      */
     public function grouplessUsersAction($groupId, $offset)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $group = $em->find('ClarolineCoreBundle:Group', $groupId);
         $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')
             ->findGroupOutsiders($group, $offset, self::USER_PER_PAGE);
@@ -514,7 +514,7 @@ class AdministrationController extends Controller
      */
     public function searchGrouplessUsersAction($groupId, $search, $offset)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $group = $em->find('ClarolineCoreBundle:Group', $groupId);
         $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')
             ->findGroupOutsidersByName($group, $search, $offset, self::USER_PER_PAGE);
@@ -542,7 +542,7 @@ class AdministrationController extends Controller
      */
     public function addUsersToGroupAction($groupId)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $params = $this->get('request')->query->all();
         $group = $em->getRepository('ClarolineCoreBundle:Group')
             ->find($groupId);
@@ -586,7 +586,7 @@ class AdministrationController extends Controller
     public function deleteUsersFromGroupAction($groupId)
     {
         $params = $this->get('request')->query->all();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $group = $em->getRepository('ClarolineCoreBundle:Group')
             ->find($groupId);
 
@@ -618,7 +618,7 @@ class AdministrationController extends Controller
      */
     public function deleteGroupsAction()
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $params = $this->get('request')->query->all();
 
         if (isset($params['ids'])) {
@@ -650,7 +650,7 @@ class AdministrationController extends Controller
      */
     public function groupSettingsFormAction($groupId)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $group = $em->getRepository('ClarolineCoreBundle:Group')
             ->find($groupId);
         $form = $this->createForm(new GroupSettingsType(), $group);
@@ -676,7 +676,7 @@ class AdministrationController extends Controller
     public function updateGroupSettingsAction($groupId)
     {
         $request = $this->get('request');
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $group = $em->getRepository('ClarolineCoreBundle:Group')
             ->find($groupId);
         $form = $this->createForm(new GroupSettingsType(), $group);
