@@ -197,7 +197,7 @@ class UserController extends Controller
      */
     public function searchUnregisteredUsersAction($search, $workspaceId, $offset)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
             ->find($workspaceId);
         $this->checkRegistration($workspace);
