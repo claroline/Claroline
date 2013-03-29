@@ -4,10 +4,17 @@ namespace Claroline\VideoPlayerBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 //todo use sf2.2 BinaryFileResponse
 class VideoPlayerController extends Controller
 {
+    /**
+     * @Route(
+     *     "/stream/video/{videoId}",
+     *     name="claro_stream_video"
+     * )
+     */
     public function streamAction($videoId)
     {
         $video = $this

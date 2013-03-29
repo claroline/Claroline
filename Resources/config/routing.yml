@@ -1,3 +1,4 @@
-claro_stream_video:
-   pattern: /stream/video/{videoId}
-   defaults: { _controller: ClarolineVideoPlayerBundle:VideoPlayer:stream }
+claro_video_player:
+    resource: "@ClarolineVideoPlayerBundle/Controller/VideoPlayerController.php"
+    type:     annotation
+    prefix:   /
