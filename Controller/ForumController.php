@@ -10,12 +10,23 @@ use Claroline\ForumBundle\Form\ForumOptionsType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Form\FormError;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
  * ForumController
  */
 class ForumController extends Controller
 {
+    /**
+     * @Route(
+     *     "/open/{resourceId}",
+     *     name="claro_forum_open"
+     * )
+     *
+     * @param integer $resourceId
+     *
+     * @return Response
+     */
     public function openAction($resourceId)
     {
         $em = $this->getDoctrine()->getEntityManager();
@@ -36,6 +47,18 @@ class ForumController extends Controller
         );
     }
 
+    /**
+     * @Route(
+     *     "/{forumId}/offset/{offset}",
+     *     name="claro_forum_subjects",
+     *     options={"expose"=true}
+     * )
+     *
+     * @param integer $forumId
+     * @param integer $offset
+     *
+     * @return Response
+     */
     public function subjectsAction($forumId, $offset)
     {
         $em = $this->getDoctrine()->getEntityManager();
@@ -49,6 +72,16 @@ class ForumController extends Controller
         );
     }
 
+    /**
+     * @Route(
+     *     "/form/subject/{forumId}",
+     *     name="claro_forum_form_subject_creation"
+     * )
+     *
+     * @param integer $forumId
+     *
+     * @return Response
+     */
     public function forumSubjectCreationFormAction($forumId)
     {
         $formSubject = $this->get('form.factory')->create(new SubjectType());
@@ -70,7 +103,16 @@ class ForumController extends Controller
     /*
      * The form submission is working but I had to do some weird things to make it works.
      */
-
+    /**
+     * @Route(
+     *     "/subject/create/{forumId}",
+     *     name="claro_forum_create_subject"
+     * )
+     *
+     * @param integer $forumId
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function createSubjectAction($forumId)
     {
         $form = $this->get('form.factory')->create(new SubjectType(), new Subject);
@@ -115,6 +157,16 @@ class ForumController extends Controller
         );
     }
 
+    /**
+     * @Route(
+     *     "/subject/message/{subjectId}",
+     *     name="claro_forum_show_message"
+     * )
+     *
+     * @param integer $subjectId
+     *
+     * @return Response
+     */
     public function showMessagesAction($subjectId)
     {
         $em = $this->getDoctrine()->getEntityManager();
@@ -138,6 +190,16 @@ class ForumController extends Controller
         );
     }
 
+    /**
+     * @Route(
+     *     "/add/message/{subjectId}",
+     *     name="claro_forum_message_form"
+     * )
+     *
+     * @param integer $subjectId
+     *
+     * @return Response
+     */
     public function messageCreationFormAction($subjectId)
     {
         $form = $this->get('form.factory')->create(new MessageType());
@@ -154,6 +216,18 @@ class ForumController extends Controller
         );
     }
 
+    /**
+     * @Route(
+     *     "/subject/{subjectId}/offset/{offset}",
+     *     name="claro_forum_messages",
+     *     options={"expose"=true}
+     * )
+     *
+     * @param integer $subjectId
+     * @param integer $offset
+     *
+     * @return Response
+     */
     public function messagesAction($subjectId, $offset)
     {
         $em = $this->getDoctrine()->getEntityManager();
@@ -168,6 +242,16 @@ class ForumController extends Controller
         );
     }
 
+    /**
+     * @Route(
+     *     "/create/message/{subjectId}",
+     *     name="claro_forum_create_message"
+     * )
+     *
+     * @param integer $subjectId
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function createMessageAction($subjectId)
     {
         $form = $this->container->get('form.factory')->create(new MessageType, new Message());
@@ -198,6 +282,14 @@ class ForumController extends Controller
         );
     }
 
+    /**
+     * @Route(
+     *     "/options/edit",
+     *     name="claro_forum_edit_options"
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function editForumOptionsAction()
     {
         $em = $this->getDoctrine()->getEntityManager();
