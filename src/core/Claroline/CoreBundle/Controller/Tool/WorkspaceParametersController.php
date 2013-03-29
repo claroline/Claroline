@@ -188,23 +188,26 @@ class WorkspaceParametersController extends Controller
         $wtr = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceToolRole')->findByWorkspace($workspace);
 
         foreach ($wot as $orderedTool) {
-            //creates the visibility array
-            foreach ($wsRoles as $role) {
-                $isVisible = false;
-                //is the tool visible for a role in a workspace ?
-                foreach ($wtr as $workspaceToolRole) {
-                    if ($workspaceToolRole->getRole() == $role
-                        && $workspaceToolRole->getWorkspaceOrderedTool()->getTool() == $orderedTool->getTool()
-                        && $workspaceToolRole->getWorkspaceOrderedTool()->getWorkspace() == $workspace) {
-                        $isVisible = true;
+
+            if ($orderedTool->getTool()->isDisplayableInWorkspace()) {
+                //creates the visibility array
+                foreach ($wsRoles as $role) {
+                    $isVisible = false;
+                    //is the tool visible for a role in a workspace ?
+                    foreach ($wtr as $workspaceToolRole) {
+                        if ($workspaceToolRole->getRole() == $role
+                            && $workspaceToolRole->getWorkspaceOrderedTool()->getTool() == $orderedTool->getTool()
+                            && $workspaceToolRole->getWorkspaceOrderedTool()->getWorkspace() == $workspace) {
+                            $isVisible = true;
+                        }
                     }
+                    $roleVisibility[$role->getId()] = $isVisible;
                 }
-                $roleVisibility[$role->getId()] = $isVisible;
+                $toolsPermissions[] = array(
+                    'tool' => $orderedTool,
+                    'visibility' => $roleVisibility
+                );
             }
-            $toolsPermissions[$orderedTool->getOrder()] = array(
-                'tool' => $orderedTool,
-                'visibility' => $roleVisibility
-            );
         }
 
         $undisplayedTools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findByWorkspace($workspace, false);
@@ -220,32 +223,35 @@ class WorkspaceParametersController extends Controller
         }
 
         foreach ($undisplayedTools as $undisplayedTool) {
-            $wot = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
-                ->findOneBy(array('workspace' => $workspaceId, 'tool' => $undisplayedTool->getId()));
 
-            //create a WorkspaceOrderedTool for each Tool that hasn't already one
-            if ($wot === null) {
-                $wot = new WorkspaceOrderedTool();
-                $wot->setOrder($nextDisplayOrder++);
-                $wot->setTool($undisplayedTool);
-                $wot->setWorkspace($workspace);
-                $wot->setTranslationKey(
-                    $this->container->get('translator')->trans(
-                        $undisplayedTool->getName(),
-                        array(),
-                        'tools'
-                    )
-                );
-                $em->persist($wot);
-                $em->flush();
-            } else {
-                continue;
-            }
+            if ($undisplayedTool->isDisplayableInWorkspace()) {
+                $wot = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
+                    ->findOneBy(array('workspace' => $workspaceId, 'tool' => $undisplayedTool->getId()));
 
-            foreach ($wsRoles as $role) {
-                $roleVisibility[$role->getId()] = false;
+                //create a WorkspaceOrderedTool for each Tool that hasn't already one
+                if ($wot === null) {
+                    $wot = new WorkspaceOrderedTool();
+                    $wot->setOrder($nextDisplayOrder++);
+                    $wot->setTool($undisplayedTool);
+                    $wot->setWorkspace($workspace);
+                    $wot->setName(
+                        $this->container->get('translator')->trans(
+                            $undisplayedTool->getName(),
+                            array(),
+                            'tools'
+                        )
+                    );
+                    $em->persist($wot);
+                    $em->flush();
+                } else {
+                    continue;
+                }
+
+                foreach ($wsRoles as $role) {
+                    $roleVisibility[$role->getId()] = false;
+                }
+                $toFill[] = array('tool' => $wot, 'visibility' => $roleVisibility);
             }
-            $toFill[] = array('tool' => $wot, 'visibility' => $roleVisibility);
         }
 
         $toolsPermissions = $this->container->get('claroline.utilities.misc')->arrayFill($toolsPermissions, $toFill);
@@ -337,7 +343,7 @@ class WorkspaceParametersController extends Controller
             $wot->setOrder($position);
             $wot->setTool($tool);
             $wot->setWorkspace($workspace);
-            $wot->setTranslationKey($tool->getName());
+            $wot->setName($tool->getName());
             $em->persist($wot);
         }
 

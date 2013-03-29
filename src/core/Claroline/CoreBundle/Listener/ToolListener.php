@@ -141,7 +141,7 @@ class ToolListener extends ContainerAware
         $criteria['roots'] = array($root->getName());
         $criteria['isExportable'] = true;
         $config['resources'] = array();
-        $resources = $resourceRepo->findUserResourcesByCriteria($criteria, null, true);
+        $resources = $resourceRepo->findByCriteria($criteria);
         $addToArchive = array();
 
         foreach ($resources as $resource) {

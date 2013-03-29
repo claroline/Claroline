@@ -372,7 +372,7 @@ class ResourceController extends Controller
             }
 
             $path = $resourceRepo->findAncestors($directory);
-            $resources = $resourceRepo->findChildren($directory, $currentRoles, true);
+            $resources = $resourceRepo->findChildren($directory, $currentRoles);
 
             $creationRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
                 ->findCreationRights($currentRoles, $directory);
@@ -485,8 +485,8 @@ class ResourceController extends Controller
             $path = $resourceRepo->findAncestors($directory);
         }
 
-        $user = $this->get('security.context')->getToken()->getUser();
-        $resources = $resourceRepo->findUserResourcesByCriteria($criteria, $user);
+        $userRoles = $this->get('security.context')->getToken()->getRoles();
+        $resources = $resourceRepo->findByCriteria($criteria, $userRoles);
         $response = new Response(json_encode(array('resources' => $resources, 'path' => $path)));
         $response->headers->set('Content-Type', 'application/json');
 
