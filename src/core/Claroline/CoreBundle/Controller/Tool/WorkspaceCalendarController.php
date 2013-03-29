@@ -9,14 +9,25 @@ use Claroline\CoreBundle\Entity\Event;
 use Claroline\CoreBundle\Form\CalendarType;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 /**
  * Controller of the calendar
  */
-class CalendarController extends Controller
+class WorkspaceCalendarController extends Controller
 {
     const ABSTRACT_WS_CLASS = 'ClarolineCoreBundle:Workspace\AbstractWorkspace';
 
+    /**
+     * @Route(
+     *     "/{workspaceId}/add",
+     *     name="claro_workspace_agenda_add_event"
+     * )
+     *
+     * @param integer $workspaceId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function addEventAction($workspaceId)
     {
         $em = $this->getDoctrine()->getManager();
@@ -73,9 +84,91 @@ class CalendarController extends Controller
 
     /**
      * @Route(
-     *     "/show/",
-     *     name="claro_desktop_calendar_show"
+     *     "/{workspaceId}/update",
+     *     name="claro_workspace_agenda_update"
      * )
+     * @Method("POST")
+     *
+     * @param type $workspaceId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function updateAction($workspaceId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $this->checkUserIsAllowed('calendar', $workspace);
+        $request = $this->get('request');
+        $postData = $request->request->all();
+        $event = $em->getRepository('ClarolineCoreBundle:Event')->find($postData['id']);
+        $form = $this->createForm(new CalendarType(), $event);
+
+        if ($request->getMethod() === 'POST') {
+
+            $form->bind($request);
+
+            if ($form->isValid()) {
+
+                $em->persist($event);
+                $em->flush();
+            }
+
+            return new Response(
+                json_encode(
+                    array(
+                        'id' => $event->getId(),
+                        'title' => $event->getTitle(),
+                        'start' => $event->getStart(),
+                        'end' => $event->getEnd(),
+                        'color' => $event->getPriority()
+                    )
+                ),
+                200,
+                array('Content-Type' => 'application/json')
+            );
+        }
+    }
+
+    /**
+     * @Route(
+     *     "/{workspaceId}/delete",
+     *     name="claro_workspace_agenda_delete"
+     * )
+     * @Method("POST")
+     *
+     * @param integer $workspaceId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteAction($workspaceId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $this->checkUserIsAllowed('calendar', $workspace);
+        $repository = $em->getRepository('ClarolineCoreBundle:Event');
+        $request = $this->get('request');
+        $postData = $request->request->all();
+        $event = $repository->find($postData['id']);
+        $em->remove($event);
+        $em->flush();
+
+        return new Response(
+            json_encode(array('greeting' => 'delete')),
+            200,
+            array('Content-Type' => 'application/json')
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/{workspaceId}/show",
+     *     name="claro_workspace_agenda_show"
+     * )
+     * @Method("GET")
+     *
+     * @param integer $workspaceId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function showAction($workspaceId)
     {
@@ -104,8 +197,8 @@ class CalendarController extends Controller
 
     /**
      * @Route(
-     *     "/move/",
-     *     name="claro_desktop_calendar_move"
+     *     "/{workspaceId}/move",
+     *     name="claro_workspace_calendar_move"
      * )
      */
     public function moveAction($workspaceId)
@@ -143,83 +236,6 @@ class CalendarController extends Controller
         );
     }
 
-    public function updateAction($workspaceId)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $this->checkUserIsAllowed('calendar', $workspace);
-        $request = $this->get('request');
-        $postData = $request->request->all();
-        $event = $em->getRepository('ClarolineCoreBundle:Event')->find($postData['id']);
-        $form = $this->createForm(new CalendarType(), $event);
-
-        if ($request->getMethod() === 'POST') {
-
-            $form->bind($request);
-
-            if ($form->isValid()) {
-
-                $em->persist($event);
-                $em->flush();
-            }
-
-            return new Response(
-                json_encode(
-                    array(
-                        'id' => $event->getId(),
-                        'title' => $event->getTitle(),
-                        'start' => $event->getStart(),
-                        'end' => $event->getEnd(),
-                        'color' => $event->getPriority()
-                    )
-                ),
-                200,
-                array('Content-Type' => 'application/json')
-            );
-        }
-    }
-
-    public function deleteAction($workspaceId)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $this->checkUserIsAllowed('calendar', $workspace);
-        $repository = $em->getRepository('ClarolineCoreBundle:Event');
-        $request = $this->get('request');
-        $postData = $request->request->all();
-        $event = $repository->find($postData['id']);
-        $em->remove($event);
-        $em->flush();
-
-        return new Response(
-            json_encode(array('greeting' => 'delete')),
-            200,
-            array('Content-Type' => 'application/json')
-        );
-    }
-
-    public function desktopShowAction()
-    {
-        $em = $this->getDoctrine()->getManager();
-        $usr = $this-> get('security.context')-> getToken()-> getUser();
-        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, 0);
-        $data = array();
-        foreach ($listEvents as $key => $object) {
-            $data[$key]['id'] = $object->getId();
-            $workspace = $object->getWorkspace();
-            $data[$key]['title'] = $workspace->getName().': '.$object->getTitle();
-            $data[$key]['allDay'] = $object->getAllDay();
-            $data[$key]['start'] = $object->getStart();
-            $data[$key]['end'] = $object->getEnd();
-            $data[$key]['color'] = $object->getPriority();
-        }
-
-        return new Response(
-            json_encode($data),
-            200,
-            array('Content-Type' => 'application/json')
-        );
-    }
 
     private function checkUserIsAllowed($permission, AbstractWorkspace $workspace)
     {
