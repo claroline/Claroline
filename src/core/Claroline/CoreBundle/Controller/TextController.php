@@ -156,7 +156,7 @@ class TextController extends Controller
      */
     public function historyAction($textId)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $text = $em->getRepository('ClarolineCoreBundle:Resource\Text')->find($textId);
         $revisions = $text->getRevisions();
         $size = count($revisions);
@@ -234,7 +234,7 @@ class TextController extends Controller
         $request = $this->get('request');
         $user = $this->get('security.context')->getToken()->getUser();
         $text = $request->request->get('content');
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $old = $em->getRepository('ClarolineCoreBundle:Resource\Text')->find($textId);
         $version = $old->getVersion();
         $revision = new Revision();

@@ -59,7 +59,7 @@ class ResourcePropertiesController extends Controller
     public function renameAction($resourceId)
     {
         $request = $this->get('request');
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($resourceId);
         $collection = new ResourceCollection(array($resource));

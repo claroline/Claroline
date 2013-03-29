@@ -51,7 +51,7 @@ class DesktopParametersController extends Controller
      */
     public function desktopInvertVisibleUserWidgetAction($widgetId, $displayConfigId)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.context')->getToken()->getUser();
         $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
             ->find($widgetId);

@@ -33,7 +33,7 @@ class WorkspaceParametersController extends Controller
      */
     public function workspaceWidgetsPropertiesAction($workspaceId)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
         if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
@@ -70,7 +70,7 @@ class WorkspaceParametersController extends Controller
      */
     public function workspaceInvertVisibleWidgetAction($workspaceId, $widgetId, $displayConfigId)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
             ->find($workspaceId);
 
