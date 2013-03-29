@@ -116,6 +116,12 @@ class WorkspaceController extends Controller
     /**
      * Creates a workspace from a form sent by POST.
      *
+     * @Route(
+     *     "/",
+     *     name="claro_workspace_create"
+     * )
+     * @Method("POST")
+     *
      * @return RedirectResponse
      *
      * @throws AccessDeniedHttpException
