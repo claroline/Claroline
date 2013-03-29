@@ -25,7 +25,7 @@ claro_desktop:
     type: annotation
 
 claro_desktop_tool_calendar:
-    resource: "@ClarolineCoreBundle/Controller/Tool/CalendarController.php"
+    resource: "@ClarolineCoreBundle/Controller/Tool/DesktopCalendarController.php"
     prefix: desktop/tool/calendar
     type: annotation
 
@@ -40,24 +40,29 @@ claro_desktop_tool_properties:
     type: annotation
 
 claro_workspace:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/workspace.yml"
+    resource: "@ClarolineCoreBundle/Controller/WorkspaceController.php"
     prefix: workspaces
+    type: annotation
 
 claro_workspace_tool_properties:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/workspace_tool_parameters.yml"
+    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceParametersController.php"
     prefix: workspaces/tool/properties
+    type: annotation
 
 claro_workspace_tool_user:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/workspace_tool_user.yml"
+    resource: "@ClarolineCoreBundle/Controller/Tool/UserController.php"
     prefix: workspaces/tool/user_management
+    type: annotation
 
 claro_workspace_tool_group:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/workspace_tool_group.yml"
+    resource: "@ClarolineCoreBundle/Controller/Tool/GroupController.php"
     prefix: workspaces/tool/group_management
+    type: annotation
 
 claro_workspace_tool_calendar:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/workspace_tool_calendar.yml"
+    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceCalendarController.php"
     prefix: workspaces/tool/calendar
+    type: annotation
 
 claro_admin:
     resource: "@ClarolineCoreBundle/Controller/AdministrationController.php"

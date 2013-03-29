@@ -13,10 +13,18 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Claroline\CoreBundle\Form\WorkspaceEditType;
 use Claroline\CoreBundle\Form\WorkspaceOrderToolEditType;
 use Claroline\CoreBundle\Form\WorkspaceTemplateType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-class ParametersController extends Controller
+class WorkspaceParametersController extends Controller
 {
     /**
+     * @Route(
+     *     "/{workspaceId}/widget",
+     *     name="claro_workspace_widget_properties"
+     * )
+     * @Method("GET")
+     *
      * Renders the workspace widget properties page.
      *
      * @param integer $workspaceId
@@ -42,6 +50,13 @@ class ParametersController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/{workspaceId}/widget/{widgetId}/baseconfig/{displayConfigId}/invertvisible",
+     *     name="claro_workspace_widget_invertvisible",
+     *     options={"expose"=true}
+     * )
+     * @Method("POST")
+     *
      * Inverts the visibility boolean of a widget in the specified workspace.
      * If the DisplayConfig entity for the workspace doesn't exist in the database
      * yet, it's created here.
@@ -91,6 +106,13 @@ class ParametersController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/{workspaceId}/widget/{widgetId}/configuration",
+     *     name="claro_workspace_widget_configuration",
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     *
      * Asks a widget to render its configuration page for a workspace.
      *
      * @param integer $workspaceId
@@ -123,6 +145,13 @@ class ParametersController extends Controller
         throw new \Exception("event {$eventName} didn't return any Response");
     }
 
+    /**
+     * @Route(
+     *     "/{workspaceId}/tools",
+     *     name="claro_workspace_tools_roles"
+     * )
+     * @Method("GET")
+     */
     public function workspaceToolsRolesAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -219,7 +248,7 @@ class ParametersController extends Controller
             $toFill[] = array('tool' => $wot, 'visibility' => $roleVisibility);
         }
 
-        $toolsPermissions = $this->arrayFill($toolsPermissions, $toFill);
+        $toolsPermissions = $this->container->get('claroline.utilities.misc')->arrayFill($toolsPermissions, $toFill);
 
         return $this->render(
             'ClarolineCoreBundle:Tool\workspace\parameters:tool_roles.html.twig',
@@ -232,6 +261,13 @@ class ParametersController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/remove/tool/{toolId}/workspace/{workspaceId}/role/{roleId}",
+     *     name="claro_tool_workspace_remove",
+     *     options={"expose"=true}
+     * )
+     * @Method("POST")
+     *
      * Remove a tool from a role in a workspace.
      *
      * @param integer $toolId
@@ -263,6 +299,13 @@ class ParametersController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/add/tool/{toolId}/position/{position}/workspace/{workspaceId}/role/{roleId}",
+     *     name="claro_tool_workspace_add",
+     *     options={"expose"=true}
+     * )
+     * @Method("POST")
+     *
      * Adds a tool to a role in a workspace.
      *
      * @param integer $toolId
@@ -308,6 +351,13 @@ class ParametersController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/move/tool/{toolId}/position/{position}/workspace/{workspaceId}",
+     *     name="claro_tool_workspace_move",
+     *     options={"expose"=true}
+     * )
+     * @Method("POST")
+     *
      * This method switch the position of a tool with an other one.
      *
      * @param integer $toolId
@@ -369,6 +419,19 @@ class ParametersController extends Controller
         return new Response('success');
     }
 
+    /**
+     * @Route(
+     *     "/{workspaceId}/resource/rights/form",
+     *     name="claro_workspace_resource_rights_form"
+     * )
+     * @Method("GET")
+     *
+     * @param integer $workspaceId
+     *
+     * @return Response
+     *
+     * @throws AccessDeniedHttpException
+     */
     public function workspaceResourceRightsFormAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -388,6 +451,20 @@ class ParametersController extends Controller
         );
     }
 
+    /**
+     * @Route(
+     *     "/{workspaceId}/resource/rights/form/role/{roleId}",
+     *     name="claro_workspace_resource_rights_creation_form"
+     * )
+     * @Method("GET")
+     *
+     * @param integer $workspaceId
+     * @param integer $roleId
+     *
+     * @return Response
+     *
+     * @throws AccessDeniedHttpException
+     */
     public function workspaceResourceRightsCreationFormAction($workspaceId, $roleId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -417,6 +494,19 @@ class ParametersController extends Controller
         );
     }
 
+    /**
+     * @Route(
+     *     "/{workspaceId}/form/export",
+     *     name="claro_workspace_export_form"
+     * )
+     * @Method("GET")
+     *
+     * @param integer $workspaceId
+     *
+     * @return Response
+     *
+     * @throws AccessDeniedHttpException
+     */
     public function workspaceExportFormAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -436,6 +526,19 @@ class ParametersController extends Controller
         );
     }
 
+    /**
+     * @Route(
+     *     "/{workspaceId}/export",
+     *     name="claro_workspace_export"
+     * )
+     * @Method("POST")
+     *
+     * @param integer $workspaceId
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
+     * @throws AccessDeniedHttpException
+     */
     public function workspaceExportAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -469,54 +572,16 @@ class ParametersController extends Controller
     }
 
     /**
-     * Fill the empty value on $fillable with $array and sort it.
+     * @Route(
+     *     "/{workspaceId}/editform",
+     *     name="claro_workspace_edit_form"
+     * )
+     * @Method("GET")
      *
-     * Ie:
-     * $fillable[4] = value4
-     * $fillable[1] = value1
-     * $fillable[2] = value2
+     * @param integer $workspaceId
      *
-     * $array[] = value3
-     *
-     * One the function is fired the results is
-     * $fillable[1] = value1
-     * $fillable[2] = value2
-     * $fillable[3] = value3
-     * $fillable[4] = value4
-     *
-     * @param array $fillable
-     * @param array $array
-     *
-     * @return array
+     * @return Response
      */
-    public function arrayFill(array $fillable, array $array)
-    {
-        ksort($fillable);
-        $saveKey = 1;
-        $filledArray = array();
-
-        foreach ($fillable as $key => $value) {
-            if ($key - $saveKey != 0) {
-                while ($key - $saveKey >= 1) {
-                    $filledArray[$saveKey] = array_shift($array);
-                    $saveKey++;
-                }
-                $filledArray[$key] = $value;
-            } else {
-                $filledArray[$key] = $value;
-            }
-            $saveKey++;
-        }
-
-        if (count($array) > 0) {
-            foreach ($array as $item) {
-                $filledArray[] = $item;
-            }
-        }
-
-        return $filledArray;
-    }
-
     public function workspaceEditFormAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -530,6 +595,18 @@ class ParametersController extends Controller
         );
     }
 
+
+    /**
+     * @Route(
+     *     "/{workspaceId}/edit",
+     *     name="claro_workspace_edit"
+     * )
+     * @Method("POST")
+     *
+     * @param integer $workspaceId
+     *
+     * @return Response
+     */
     public function workspaceEditAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -564,6 +641,18 @@ class ParametersController extends Controller
         );
     }
 
+    /**
+     * @Route(
+     *     "/{workspaceId}/tools/{workspaceOrderToolId}/editform",
+     *     name="claro_workspace_order_tool_edit_form"
+     * )
+     * @Method("GET")
+     *
+     * @param integer $workspaceId
+     * @param integer $workspaceOrderToolId
+     *
+     * @return Response
+     */
     public function workspaceOrderToolEditFormAction($workspaceId, $workspaceOrderToolId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -578,6 +667,18 @@ class ParametersController extends Controller
         );
     }
 
+    /**
+     * @Route(
+     *     "/{workspaceId}/tools/{workspaceOrderToolId}/edit",
+     *     name="claro_workspace_order_tool_edit"
+     * )
+     * @Method("POST")
+     *
+     * @param integer $workspaceId
+     * @param integer $workspaceOrderToolId
+     *
+     * @return Response
+     */
     public function workspaceOrderToolEditAction($workspaceId, $workspaceOrderToolId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
