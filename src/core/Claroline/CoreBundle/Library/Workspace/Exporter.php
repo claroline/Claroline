@@ -61,7 +61,7 @@ class Exporter
             }
 
             $arTools[$tool->getName()]['perms'] = $arToolRoles;
-            $arTools[$tool->getName()]['translation_key'] = $workspaceTool->getTranslationKey();
+            $arTools[$tool->getName()]['name'] = $workspaceTool->getName();
 
             if ($workspaceTool->getTool()->isExportable()) {
                 $event = new ExportToolEvent($workspace);

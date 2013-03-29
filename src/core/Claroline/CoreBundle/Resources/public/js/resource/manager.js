@@ -104,10 +104,10 @@
                     $(event.currentTarget).parent().addClass('active');
 
                     var thumbnail = $('.resource-thumbnail');
-                        
+
                     thumbnail.removeClass(tmp);
                     thumbnail.addClass(zoom);
-                    
+
                 },
                 'click a.delete': function () {
                     this.dispatcher.trigger('delete', {ids: _.keys(this.checkedResources.resources)});
