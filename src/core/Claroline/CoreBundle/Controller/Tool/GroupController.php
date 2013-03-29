@@ -200,11 +200,7 @@ class GroupController extends Controller
         $paginatorGroups = $em->getRepository('ClarolineCoreBundle:Group')
             ->findWorkspaceOutsider($workspace, $offset, self::NUMBER_GROUP_PER_ITERATION);
         $groups = $this->paginatorToArray($paginatorGroups);
-        $content = $this->renderView(
-            'ClarolineCoreBundle:Tool\workspace\group_management:group.json.twig',
-            array('groups' => $groups)
-        );
-        $response = new Response($content);
+        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeGroups($groups));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
@@ -235,11 +231,7 @@ class GroupController extends Controller
         $paginatorGroups = $em->getRepository('ClarolineCoreBundle:Group')
             ->findByWorkspace($workspace, $offset, self::NUMBER_GROUP_PER_ITERATION);
         $groups = $this->paginatorToArray($paginatorGroups);
-        $content = $this->renderView(
-            'ClarolineCoreBundle:Tool\workspace\group_management:group.json.twig',
-            array('groups' => $groups)
-        );
-        $response = new Response($content);
+        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeGroups($groups));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
@@ -282,11 +274,7 @@ class GroupController extends Controller
             }
         }
 
-        $content = $this->renderView(
-            'ClarolineCoreBundle:Tool\workspace\group_management:group.json.twig',
-            array('groups' => $groups)
-        );
-        $response = new Response($content);
+        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeGroups($groups));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
@@ -324,11 +312,7 @@ class GroupController extends Controller
                 self::NUMBER_GROUP_PER_ITERATION
             );
         $groups = $this->paginatorToArray($paginatorGroups);
-        $content = $this->renderView(
-            'ClarolineCoreBundle:Tool\workspace\group_management:group.json.twig',
-            array('groups' => $groups)
-        );
-        $response = new Response($content);
+        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeGroups($groups));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
@@ -366,11 +350,7 @@ class GroupController extends Controller
                 self::NUMBER_GROUP_PER_ITERATION
             );
         $groups = $this->paginatorToArray($paginatorGroups);
-        $content = $this->renderView(
-            'ClarolineCoreBundle:Tool\workspace\group_management:group.json.twig',
-            array('groups' => $groups)
-        );
-        $response = new Response($content);
+        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeGroups($groups));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
