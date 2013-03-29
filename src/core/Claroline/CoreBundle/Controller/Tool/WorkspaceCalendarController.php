@@ -198,7 +198,7 @@ class WorkspaceCalendarController extends Controller
     /**
      * @Route(
      *     "/{workspaceId}/move",
-     *     name="claro_workspace_calendar_move"
+     *     name="claro_workspace_agenda_move"
      * )
      */
     public function moveAction($workspaceId)
