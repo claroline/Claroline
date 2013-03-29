@@ -29,7 +29,7 @@ class ForumController extends Controller
      */
     public function openAction($resourceId)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $forum = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($resourceId);
         $limits = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
         $limit = $limits[0]->getSubjects();
@@ -61,7 +61,7 @@ class ForumController extends Controller
      */
     public function subjectsAction($forumId, $offset)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $forum = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($forumId);
         $limits = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
         $limit = $limits[0]->getSubjects();
@@ -117,7 +117,7 @@ class ForumController extends Controller
     {
         $form = $this->get('form.factory')->create(new SubjectType(), new Subject);
         $form->bindRequest($this->get('request'));
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $forum = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($forumId);
 
         if ($form->isValid()) {
@@ -169,7 +169,7 @@ class ForumController extends Controller
      */
     public function showMessagesAction($subjectId)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $subject = $em->getRepository('ClarolineForumBundle:Subject')->find($subjectId);
         $countMessages = $em->getRepository('ClarolineForumBundle:Forum')
@@ -203,7 +203,7 @@ class ForumController extends Controller
     public function messageCreationFormAction($subjectId)
     {
         $form = $this->get('form.factory')->create(new MessageType());
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $subject = $em->getRepository('ClarolineForumBundle:Subject')->find($subjectId);
 
         return $this->render(
@@ -230,7 +230,7 @@ class ForumController extends Controller
      */
     public function messagesAction($subjectId, $offset)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $subject = $em->getRepository('ClarolineForumBundle:Subject')->find($subjectId);
         $limits = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
         $limit = $limits[0]->getMessages();
@@ -256,7 +256,7 @@ class ForumController extends Controller
     {
         $form = $this->container->get('form.factory')->create(new MessageType, new Message());
         $form->bindRequest($this->get('request'));
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $subject = $em->getRepository('ClarolineForumBundle:Subject')->find($subjectId);
 
         if ($form->isValid()) {
@@ -292,7 +292,7 @@ class ForumController extends Controller
      */
     public function editForumOptionsAction()
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $forumOptions = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
         $form = $this->container->get('form.factory')->create(new ForumOptionsType(), $forumOptions[0]);
         $form->bindRequest($this->get('request'));
