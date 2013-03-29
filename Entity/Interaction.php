@@ -282,7 +282,7 @@ class Interaction
     public function removeHint(\UJM\ExoBundle\Entity\Hint $hint)
     {
     }
-    
+
     public function setHints($hints)
     {
         foreach ($hints as $hint) {

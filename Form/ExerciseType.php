@@ -59,7 +59,7 @@ class ExerciseType extends AbstractType
                 'description', 'textarea', array(
                     'label' => 'Description',
                     'attr' => array('class' => 'tinymce', 'data-theme' => 'medium'),
-                    'required' => false 
+                    'required' => false
                 )
             )
             ->add(
@@ -151,8 +151,7 @@ class ExerciseType extends AbstractType
                 'lockAttempt', 'checkbox', array(
                     'required' => false, 'label' => 'Lock attempt'
                 )
-            )
-        ;
+            );
     }
 
     public function getName()

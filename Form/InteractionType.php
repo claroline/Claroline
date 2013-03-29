@@ -64,7 +64,7 @@ class InteractionType extends AbstractType
             ->add(
                 'invite', 'textarea', array(
                     'attr' => array(
-                        'class' => 'tinymce', 
+                        'class' => 'tinymce',
                         'data-theme' => 'medium'
                     ),
                     'required' => false,
@@ -79,7 +79,7 @@ class InteractionType extends AbstractType
             ->add(
                 'feedBack', 'textarea', array(
                     'attr' => array(
-                        'class' => 'tinymce', 
+                        'class' => 'tinymce',
                         'data-theme' => 'medium'
                     ),
                     'required' => false,
@@ -95,8 +95,7 @@ class InteractionType extends AbstractType
                     'allow_add' => true ,
                     'allow_delete' => true
                 )
-            )
-        ;
+            );
     }
 
     public function getName()

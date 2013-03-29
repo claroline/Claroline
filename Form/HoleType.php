@@ -33,8 +33,7 @@ class HoleType extends AbstractType
                     'allow_add' => true,
                     'allow_delete' => true
                 )
-            )
-        ;
+            );
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

@@ -70,8 +70,7 @@ class InteractionGraphicType extends AbstractType
                             ->setParameter(1, $id);
                     },
                 )
-            )
-        ;
+            );
     }
 
     public function getName()

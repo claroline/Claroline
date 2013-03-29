@@ -58,40 +58,35 @@ class InteractionQCMType extends AbstractType
                 'interaction', new InteractionType(
                     $this->user
                 )
-            )
-        ;
+            );
         $builder
             ->add(
                 'shuffle', 'checkbox', array(
-                    'label' => 'Inter_QCM.shuffle', 
+                    'label' => 'Inter_QCM.shuffle',
                     'required' => false
                 )
-            )
-        ;
+            );
         $builder
             ->add(
                 'scoreRightResponse', 'text', array(
                     'required' => false,
                     'label' => 'Inter_QCM.ScoreRightResponse'
                 )
-            )
-        ;
+            );
         $builder
             ->add(
                 'scoreFalseResponse', 'text', array(
                     'required' => false,
                     'label' => 'Inter_QCM.ScoreFalseResponse'
                 )
-            )
-        ;
+            );
         $builder
             ->add(
                 'weightResponse', 'checkbox', array(
-                    'required' => false, 
+                    'required' => false,
                     'label' => 'Inter_QCM.weightChoice'
                 )
-            )
-        ;
+            );
         //$builder->add('interaction');
         $builder
             ->add(
@@ -99,8 +94,7 @@ class InteractionQCMType extends AbstractType
                     'class' => 'UJM\\ExoBundle\\Entity\\TypeQCM',
                     'label' => 'TypeQCM.value'
                 )
-            )
-        ;
+            );
         $builder
             ->add(
                 'choices', 'collection', array(
@@ -109,8 +103,7 @@ class InteractionQCMType extends AbstractType
                     'allow_add' => true,
                     'allow_delete' => true
                 )
-            )
-        ;
+            );
     }
 
     public function getName()

@@ -56,11 +56,12 @@ class WSRestController extends Controller
     public function postDocumentAddAction()
     {
         //on poste les données label,url, type, login
-        //le login permet de lier le doc à un utilisateur mais aussi de vérifier que le login correspond bien à l'utilisateur connecté.
+        //le login permet de lier le doc à un user mais aussi de vérifier que le login correspond bien à l'user connecté
 
         if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
             //var_dump($this->container->get('router'));die();
-            $userDir = './bundles/ujmexo/users_documents/'.$this->container->get('security.context')->getToken()->getUser()->getUsername();
+            $userDir = './bundles/ujmexo/users_documents/'.$this->container->get('security.context')
+                ->getToken()->getUser()->getUsername();
             //echo $userDir;die();
 
             if (!is_dir('./bundles/ujmexo/users_documents/')) {

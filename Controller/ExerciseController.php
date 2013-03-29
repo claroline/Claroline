@@ -79,7 +79,7 @@ class ExerciseController extends Controller
             //$deleteForm = $this->createDeleteForm($id);
 
             if ( ($this->controlDate($subscription, $exercise) === true)
-                && ($this->controlMaxAttemps($exercise, $user, $subscription) === true) 
+                && ($this->controlMaxAttemps($exercise, $user, $subscription) === true)
             ) {
                 $allowToCompose = 1;
             }
@@ -193,7 +193,7 @@ class ExerciseController extends Controller
             $query = $em->createQuery($dql);
             $maxOrdre = $query->getResult();
 
-            $eq->setOrdre((int) $maxOrdre[0][1]+1);
+            $eq->setOrdre((int) $maxOrdre[0][1] + 1);
             $em->persist($eq);
 
             $em->flush();
@@ -215,7 +215,8 @@ class ExerciseController extends Controller
 
         if ((count($subscription) > 0) and ($subscription[0]->getAdmin() == 1)) {
             $em = $this->getDoctrine()->getEntityManager();
-            $eq = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findOneBy(array('exercise' => $exoID, 'question' => $qid));
+            $eq = $em->getRepository('UJMExoBundle:ExerciseQuestion')
+                ->findOneBy(array('exercise' => $exoID, 'question' => $qid));
             $em->remove($eq);
             $em->flush();
         }
@@ -271,7 +272,8 @@ class ExerciseController extends Controller
                     ->getEntityManager()
                     ->getRepository('UJMExoBundle:Interaction')
                     ->getExerciseInteraction(
-                        $this->getDoctrine()->getEntityManager(), $id, $exercise->getShuffle(), $exercise->getNbQuestion()
+                        $this->getDoctrine()->getEntityManager(), $id, 
+                            $exercise->getShuffle(), $exercise->getNbQuestion()
                     );
 
                 foreach ($interactions as $interaction) {
@@ -326,21 +328,21 @@ class ExerciseController extends Controller
             ->getAlreadyResponded($session->get('paper'), $interactionToValidatedID);
 
         switch ($typeInterToRecorded) {
-        case "InteractionQCM":
-            $res = $exerciseSer->responseQCM($request, $session->get('paper'));
-            break;
+            case "InteractionQCM":
+                $res = $exerciseSer->responseQCM($request, $session->get('paper'));
+                break;
 
-        case "InteractionGraphic":
+            case "InteractionGraphic":
 
-            break;
+                break;
 
-        case "InteractionHole":
+            case "InteractionHole":
 
-            break;
+                break;
 
-        case "InteractionOpen":
+            case "InteractionOpen":
 
-            break;
+                break;
         }
 
         if (count($response) == 0) {
@@ -375,7 +377,8 @@ class ExerciseController extends Controller
             $interactionToDisplay = $em->getRepository('UJMExoBundle:Interaction')->find($interactionToDisplayedID);
             $typeInterToDisplayed = $interactionToDisplay->getType();
 
-            return $this->displayQuestion($numQuestionToDisplayed, $interactionToDisplay, $typeInterToDisplayed, $response->getPaper()->getExercise()->getDispButtonInterrupt());
+            return $this->displayQuestion($numQuestionToDisplayed, $interactionToDisplay, $typeInterToDisplayed, 
+                $response->getPaper()->getExercise()->getDispButtonInterrupt());
         }
 
     }
@@ -384,49 +387,50 @@ class ExerciseController extends Controller
      * Finds and displays the question selectionned by the User in an assesment
      *
      */
-    private function displayQuestion($numQuestionToDisplayed, $interactionToDisplay, $typeInterToDisplayed, $dispButtonInterrupt)
+    private function displayQuestion($numQuestionToDisplayed, $interactionToDisplay, 
+        $typeInterToDisplayed, $dispButtonInterrupt)
     {
         $session = $this->getRequest()->getSession();
         $tabOrderInter = $session->get('tabOrderInter');
 
         switch ($typeInterToDisplayed) {
-        case "InteractionQCM":
+            case "InteractionQCM":
 
-            $interactionToDisplayed = $this->getDoctrine()
-                ->getEntityManager()
-                ->getRepository('UJMExoBundle:InteractionQCM')
-                ->getInteractionQCM($interactionToDisplay->getId());
+                $interactionToDisplayed = $this->getDoctrine()
+                    ->getEntityManager()
+                    ->getRepository('UJMExoBundle:InteractionQCM')
+                    ->getInteractionQCM($interactionToDisplay->getId());
 
-            if ($interactionToDisplayed[0]->getShuffle()) {
-                $interactionToDisplayed[0]->shuffleChoices();
-            } else {
-                $interactionToDisplayed[0]->sortChoices();
-            }
+                if ($interactionToDisplayed[0]->getShuffle()) {
+                    $interactionToDisplayed[0]->shuffleChoices();
+                } else {
+                    $interactionToDisplayed[0]->sortChoices();
+                }
 
-            $responseGiven = $this->getDoctrine()
-                ->getEntityManager()
-                ->getRepository('UJMExoBundle:Response')
-                ->getAlreadyResponded($session->get('paper'), $interactionToDisplay->getId());
+                $responseGiven = $this->getDoctrine()
+                    ->getEntityManager()
+                    ->getRepository('UJMExoBundle:Response')
+                    ->getAlreadyResponded($session->get('paper'), $interactionToDisplay->getId());
 
-            if (count($responseGiven) > 0) {
-                $responseGiven = $responseGiven[0]->getResponse();
-            } else {
-                $responseGiven = '';
-            }
+                if (count($responseGiven) > 0) {
+                    $responseGiven = $responseGiven[0]->getResponse();
+                } else {
+                    $responseGiven = '';
+                }
 
-            break;
+                break;
 
-        case "InteractionGraphic":
+            case "InteractionGraphic":
 
-            break;
+                break;
 
-        case "InteractionHole":
+            case "InteractionHole":
 
-            break;
+                break;
 
-        case "InteractionOpen":
+            case "InteractionOpen":
 
-            break;
+                break;
         }
 
         return $this->render(
@@ -520,7 +524,8 @@ class ExerciseController extends Controller
     private function controlMaxAttemps($exercise, $user, $subscription)
     {
         if (($subscription[0]->getAdmin() != 1) && ($exercise->getMaxAttempts() > 0)
-            && ($exercise->getMaxAttempts() <= $this->container->get('UJM_Exo.exerciseServices')->getNbPaper($user->getId(), $exercise->getId())) 
+            && ($exercise->getMaxAttempts() <= $this->container->get('UJM_Exo.exerciseServices')
+                ->getNbPaper($user->getId(), $exercise->getId()))
         ) {
             return false;
         } else {

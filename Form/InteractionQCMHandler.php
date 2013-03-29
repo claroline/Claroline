@@ -69,7 +69,7 @@ class InteractionQCMHandler
     {
         if ( $this->request->getMethod() == 'POST' ) {
             $this->form->bindRequest($this->request);
-            
+
             if ( $this->form->isValid() ) {
                 $this->onSuccessAdd($this->form->getData());
 
@@ -97,7 +97,7 @@ class InteractionQCMHandler
             $choice->setOrdre($ord);
             $interQCM->addChoice($choice);
             $this->em->persist($choice);
-            $ord = $ord+1;
+            $ord = $ord + 1;
             //echo($choice->getRightResponse());
         }
 

@@ -57,7 +57,7 @@ class QuestionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $uid = $this->user->getId();
-       
+
         $builder
             ->add(
                 'title', 'text', array(
@@ -76,20 +76,19 @@ class QuestionType extends AbstractType
             ->add(
                 'description', 'textarea', array(
                     'attr' => array(
-                        'class' => 'tinymce', 
+                        'class' => 'tinymce',
                         'data-theme' => 'medium'
                     ),
-                    'required' => false, 
+                    'required' => false,
                     'label' => 'Question.description'
                 )
             )
             ->add(
                 'model', 'checkbox', array(
-                    'required' => false, 
+                    'required' => false,
                     'label' => 'Question.model'
                 )
-            )
-        ;
+            );
     }
 
     public function getName()

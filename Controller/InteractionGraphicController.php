@@ -141,10 +141,10 @@ class InteractionGraphicController extends Controller
 
         for ($i = 0; $i < $lengthCoord; $i++) {
 
-            $b4 = array(";", "-");
-            $after   = array(",", ",");
+            $before = array(";", "-");
+            $after = array(",", ",");
 
-            $data = str_replace($b4, $after, $coord[$i]);
+            $data = str_replace($before, $after, $coord[$i]);
 
             list(${'url'.$i}, ${'value'.$i}, ${'point'.$i}) = explode(",", $data);
 
@@ -288,7 +288,7 @@ class InteractionGraphicController extends Controller
      * Display the twig view to add a new picture to the user document.
      *
      */
-    public function SavePicAction()
+    public function savePicAction()
     {
         return $this->render('UJMExoBundle:InteractionGraphic:page.html.twig');
     }
@@ -297,7 +297,7 @@ class InteractionGraphicController extends Controller
      * Get the adress of the selected picture in order to display it.
      *
      */
-    public function DisplayPicAction()
+    public function displayPicAction()
     {
 
         $request = $this->container->get('request');
@@ -347,30 +347,22 @@ class InteractionGraphicController extends Controller
         $chaine = substr($url, -5, 1);
 
         switch ($chaine) {
-        case "w" :
-            return "white";
-            break;
-        case "g" :
-            return "green";
-            break;
-        case "p" :
-            return "purple";
-            break;
-        case "b" :
-            return "blue";
-            break;
-        case "r" :
-            return "red";
-            break;
-        case "o" :
-            return "orange";
-            break;
-        case "y" :
-            return "yellow";
-            break;
-        default :
-            return "white";
-            break;
+            case "w" :
+                return "white";
+            case "g" :
+                return "green";
+            case "p" :
+                return "purple";
+            case "b" :
+                return "blue";
+            case "r" :
+                return "red";
+            case "o" :
+                return "orange";
+            case "y" :
+                return "yellow";
+            default :
+                return "white";
         }
     }
 }

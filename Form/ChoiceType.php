@@ -75,8 +75,7 @@ class ChoiceType extends AbstractType
                 'positionForce', 'checkbox', array(
                     'required' => false, 'label' => ' '
                 )
-            )
-        ;
+            );
     }
 
     public function getName()
