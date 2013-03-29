@@ -291,7 +291,7 @@ class WorkspaceController extends Controller
         $responsesString = '';
         $configs = $this->get('claroline.widget.manager')
             ->generateWorkspaceDisplayConfig($workspaceId);
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
 
         foreach ($configs as $config) {
@@ -324,7 +324,7 @@ class WorkspaceController extends Controller
      */
     public function openAction($workspaceId)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
 
         if ('anon.' != $this->get('security.context')->getToken()->getUser()) {

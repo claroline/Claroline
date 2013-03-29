@@ -51,7 +51,7 @@ class ProfileController extends Controller
 
         if ($form->isValid()) {
             $user = $form->getData();
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
             $this->get('security.context')->getToken()->setUser($user);
@@ -79,7 +79,7 @@ class ProfileController extends Controller
      */
     public function viewAction($userId)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository('ClarolineCoreBundle:User')->find($userId);
 
         return $this->render(
