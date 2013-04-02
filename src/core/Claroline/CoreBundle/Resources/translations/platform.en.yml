@@ -201,7 +201,8 @@ settings: Settings
 show: Show
 show_as_admin: 'Show as admin'
 show_as_user: 'Show as user'
-steal_session: 'Steal the session'
+show_as: 'Show as'
+show_profile: 'Show profile'
 switch: Switch
 teacher: Teacher
 text_form_name: Name

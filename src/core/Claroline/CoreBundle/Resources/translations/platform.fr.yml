@@ -201,6 +201,8 @@ settings: Paramètres
 show: Voir
 show_as_admin: 'Voir comme admin'
 show_as_user: 'Voir comme utilisateur'
+show_as: 'Voir comme'
+show_profile: 'Voir le profile'
 steal_session: 'Voler la session'
 switch: Echanger
 teacher: Professeur
