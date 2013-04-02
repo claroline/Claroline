@@ -46,21 +46,21 @@
 
 {% block section_content %}
 
-<h1> Question : {{ interactionGraphic.interaction.question.title }}</h1>
+<h1> Question : {{ interactionGraphic.interaction.question.title }} </h1>
 
 <div name="description">
-    <p>{{ interactionGraphic.interaction.question.description|raw }}<p/>
+    <p>{{ interactionGraphic.interaction.question.description|raw }}</p>
 </div>
 
 <h3 name="question">
-    <p>{{ interactionGraphic.interaction.invite|raw }}<p/>
+    <p>{{ interactionGraphic.interaction.invite|raw }}</p>
 </h3>
 
 <h5>{{ "consignes" | trans }} :</h5>
 <h6 id="ref"><em>{{ "position" | trans }}<br/>{{ "selection" | trans }}<br/>{{ "raz" | trans }}</em></h6>
 
 <p id="ContainerCursor">{%set i=1%}
-    {% for coords in listeCoords %} {%set place = 170+i*25%}
+    {% for coords in listeCoords %} {%set place = 680+i*25%}
         <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{i}}" id="cursor{{i}}" 
              style="position: absolute; left: {{ place }}px;"/>{%set i=i+1%}
    {% endfor %}
@@ -69,9 +69,23 @@
          width="{{ interactionGraphic.width }}" height="{{ interactionGraphic.height }}" style="margin-top: 30px"/>
 </p>
 
-<form class="well label_bold" name="ValidGraphic" id="ValidGraphic" action="#{#{ path('interactiongraphic_create') }#}" method="post" {#{ form_enctype(form) }#}>
+<form class="well label_bold" name="ValidGraphic" id="ValidGraphic" {#action="#{#{ path('interactiongraphic_create') }#"#} method="post">
     <input type="hidden" id="nbpoitner" name="nbpoitner" value="{{ i }}"/>
-</form>
+    
+    <table>
+        {% set nbr_hint = 1 %}
+        {% for hint in interactionGraphic.interaction.hints %}              
+            <tr>
+                <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}', '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }}', '{{nbr_hint}}')">{{ "Hint" | trans }} {{nbr_hint}} </a></td>
+                <td id="div_hint{{nbr_hint}}"></td>
+            </tr>
+            {% set nbr_hint = nbr_hint + 1 %}
+        {% endfor %}
+    </table><br/>
+    
+    <button type="submit" onclick="LookOver();return false;">{{ "relire" | trans }}</button>
+    <button type="submit" onclick="EndTheTest('{{ "sur" | trans }}');return false;">{{ "fin" | trans }}</button>
+</form><br/>
 
 {% endblock %}
 

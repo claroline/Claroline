@@ -208,7 +208,7 @@ Document.label: Document
 
 Hint.value: Indice
 Hint.penalty: Pénalité
-consult_hint: Consulter l'indice entraîne une pénalité, voulez vous continuer ?
+consult_hint: Consulter l\'indice entraîne une pénalité, voulez vous continuer ?
 
 Exepertise.title_expertise: Titre de l'expertise
 Exepertise.description: Description
@@ -251,3 +251,6 @@ consignes: Consignes
 position: => Positionner le(s) pointeur(s) ci-dessous (croix rouge) sur l'image. La position du centre du pointeur défini votre réponse.
 selection: => Cliquez sur un pointeurs pour le sélectionner et cliquez ensuite sur l'image pour définir votre zone de réponse.
 raz: => Pour remettre à zéro tous les pointeurs, appuyez sur "c".
+relire: Relire ma copie
+fin: Terminer le test
+sur: Vous êtes sur ? (vous ne pourrez plus modifier vos réponses)

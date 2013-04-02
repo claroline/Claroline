@@ -97,8 +97,10 @@ class InteractionQCMController extends Controller
     public function newAction()
     {
         $entity = new InteractionQCM($this->container->get('security.context')->getToken()->getUser());
-        $form   = $this->createForm(new InteractionQCMType(
-            $this->container->get('security.context')->getToken()->getUser()), $entity
+        $form   = $this->createForm(
+            new InteractionQCMType(
+                $this->container->get('security.context')->getToken()->getUser()
+            ), $entity
         );
 
         return $this->render(
@@ -116,8 +118,10 @@ class InteractionQCMController extends Controller
     public function createAction()
     {
         $interQCM  = new InteractionQCM();
-        $form      = $this->createForm(new InteractionQCMType(
-            $this->container->get('security.context')->getToken()->getUser()), $interQCM
+        $form      = $this->createForm(
+            new InteractionQCMType(
+                $this->container->get('security.context')->getToken()->getUser()
+            ), $interQCM
         );
 
         $exoID = $this->container->get('request')->request->get('exercise');
@@ -160,8 +164,10 @@ class InteractionQCMController extends Controller
             throw $this->createNotFoundException('Unable to find InteractionQCM entity.');
         }
 
-        $editForm = $this->createForm(new InteractionQCMType(
-            $this->container->get('security.context')->getToken()->getUser()), $entity
+        $editForm = $this->createForm(
+            new InteractionQCMType(
+                $this->container->get('security.context')->getToken()->getUser()
+            ), $entity
         );
         $deleteForm = $this->createDeleteForm($id);
 
@@ -188,8 +194,10 @@ class InteractionQCMController extends Controller
             throw $this->createNotFoundException('Unable to find InteractionQCM entity.');
         }
 
-        $editForm   = $this->createForm(new InteractionQCMType(
-            $this->container->get('security.context')->getToken()->getUser()), $interQCM
+        $editForm   = $this->createForm(
+            new InteractionQCMType(
+                $this->container->get('security.context')->getToken()->getUser()
+            ), $interQCM
         );
         $formHandler = new InteractionQCMHandler(
             $editForm, $this->get('request'), $this->getDoctrine()->getEntityManager(),

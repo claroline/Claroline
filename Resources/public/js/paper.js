@@ -6,12 +6,12 @@ function show_hint(idHint, path_hint_show, confirm_hint, nbr_hint, paper) {
             data: {
                 id: idHint,
                 paper: paper
-            }, 
+            },
             cache: false,
-            success: function (data){
-                $('#div_hint'+nbr_hint).html(data);
-            }                   
-        });  
+            success: function (data) {
+                $("#div_hint" + nbr_hint).html(data);
+            }
+        });
     } else {
         // return fales;
     }

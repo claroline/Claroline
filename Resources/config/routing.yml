@@ -60,10 +60,15 @@ ujm_interactiongraphic_AjoutImg:
     
 ujm_interactiongraphic_SavePic:
     pattern:  /question/InteractionGraphic/SavePic
-    defaults: { _controller: "UJMExoBundle:InteractionGraphic:SavePic" }
+    defaults: { _controller: "UJMExoBundle:InteractionGraphic:savePic" }
     
 ujm_interactiongraphic_DisplayPic:
     pattern:  /question/InteractionGraphic/DisplayPic
-    defaults: { _controller: "UJMExoBundle:InteractionGraphic:DisplayPic" }
+    defaults: { _controller: "UJMExoBundle:InteractionGraphic:displayPic" }
     requirements:
       _method: POST
+
+ujm_hint_show:
+    pattern:  /question/hint/show
+    defaults: { _controller: "UJMExoBundle:Hint:show" }
+    requirements: { _method: post }

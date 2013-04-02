@@ -5,13 +5,17 @@ var context = canvas.getContext('2d'); // To draw the image
 var el = document.getElementById('movable'); // To get the shape and the color of the answer zone
 var imgx; // Coord x of the answer zone
 var imgy; // Coord y of the answer zone
+var mousex; // Position x of the mouse
+var mousey; // position y of the mouse
 var pic = new Image(); // The question image
 var pressMAJ; // If key MAJ press or not
 var pressCTRL; // If key CTRL press or not
 var pressTAB; // If key VERR. MAJ press or not
+var result; // src of the answer image
 var sens; // Move of the mouse
 var scalex = 0; // Width of the image after resize
 var scaley = 0; // Height of the image after resize
+var t; // Contain all the information of one answer zone (ccords, shape, color ...)
 var value = 0; // Size of the resizing
 var x = 0; // Mouse x after move
 var xPrecedent = 0; // Mouse x before move
@@ -108,7 +112,7 @@ function Verifier() {
     }
 
     // No picture load
-    if (document.getElementById('imgwidth').value === 0 && titleOk === true && questionOk === true) {
+    if (document.getElementById('imgwidth').value == 0 && titleOk === true && questionOk === true) {
         if (language.indexOf('fr') > -1) {
             alert('Vous devez télécharger une image !');
             return false;
@@ -121,7 +125,7 @@ function Verifier() {
     }
 
     // No answer zone
-    if (document.getElementById('coordsZone').value === 0 && imgOk === true && titleOk === true && questionOk === true) {
+    if (document.getElementById('coordsZone').value == 0 && imgOk === true && titleOk === true && questionOk === true) {
         if (language.indexOf('fr') > -1) {
             alert('Vous n\'avez mis aucune zone de réponse ...');
             return false;
@@ -177,7 +181,7 @@ function changezone() {
             break;
         }
 
-    } else if(document.getElementById('shape').value === 'rect') {
+    } else if (document.getElementById('shape').value === 'rect') {
         switch (document.getElementById('color').value) {
         case 'white' :
             document.getElementById('movable').src = '/Claroline/web/bundles/ujmexo/images/graphic/rectanglew.jpg';
@@ -217,7 +221,7 @@ function  ResizeImg(sens) {
 
     if (sens === 'gauche') {
         value -= 27;
-    }else if (sens === 'droite') {
+    } else if (sens === 'droite') {
         value += 27;
     }
 
@@ -229,7 +233,7 @@ function  ResizeImg(sens) {
     if (scalex > 27 && scaley > 27) { // Not resize too small or negativ
 
         context.clearRect(0, 0, canvas.width, canvas.height);
-        
+
         canvas.width = scalex;
         canvas.height = scaley;
 
@@ -288,7 +292,7 @@ document.addEventListener('mousemove', function (event) { // To resize the selec
         xPrecedent = x;
         yPrecedent = y;
 
-        if (event.x != undefined && event.y != undefined) { // IE
+        if (event.x !== undefined && event.y !== undefined) { // IE
             x = event.layerX;
             y = event.layerY;
         } else { // Firefox
@@ -301,7 +305,7 @@ document.addEventListener('mousemove', function (event) { // To resize the selec
 
         if (x < xPrecedent) { // Gauche
             sens = 'gauche';
-        } else if(x > xPrecedent) { // Droite
+        } else if (x > xPrecedent) { // Droite
             sens = 'droite';
         }
 
@@ -316,7 +320,7 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
     if (pressCTRL === true) {
 
         // Position de la souris dans la fenetre :
-        if (e.x != undefined && e.y != undefined) { // IE
+        if (e.x !== undefined && e.y !== undefined) { // IE
             mousex = e.layerX;
             mousey = e.layerY;
         } else { // Firefox
@@ -346,7 +350,7 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
             context.drawImage(img, imgx - 10, imgy - 10);
 
             // Add the new answer zone informations to the tab in order to send it to the controller
-            var val = img.src + ';' + imgx + "_" + imgy + "-" + document.getElementById('points').value;
+            var val = img.src + ';' + imgx + '_' + imgy + '-' + document.getElementById('points').value;
             AnswerZones.push(val);
         }
         pressCTRL = false;
@@ -358,7 +362,7 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
     if (pressTAB === true) {
 
         // Position de la souris dans la fenetre :
-        if (e.x != undefined && e.y != undefined ){ // IE
+        if (e.x !== undefined && e.y !== undefined) { // IE
             x = e.layerX;
             y = e.layerY;
         } else { // Firefox
@@ -384,8 +388,8 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
             ty2 = parseInt(ty) + 10;
 
             if (x > tx1 && x < tx2 && y > ty1 && y < ty2) {
-                AnswerZones.splice(i,1);
-                if (i == 0 && AnswerZones.length < 1) {
+                AnswerZones.splice(i, 1);
+                if (i === 0 && AnswerZones.length < 1) {
                     document.getElementById('coordsZone').value = 0;
                 }
                 break;

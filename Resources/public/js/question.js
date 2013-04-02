@@ -1,4 +1,4 @@
-function cherche_type_ajax (exoID, displayFormType) {
+function cherche_type_ajax(exoID, displayFormType) {
     var indice_type = $("#menu_type_question option:selected").index();
 
     $.ajax({

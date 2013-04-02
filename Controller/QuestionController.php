@@ -385,7 +385,7 @@ class QuestionController extends Controller
                         ->getEntityManager()
                         ->getRepository('UJMExoBundle:InteractionQCM')
                         ->getInteractionQCM($interaction[0]->getId());
-                    
+
                     return $this->forward(
                         'UJMExoBundle:InteractionQCM:delete', array(
                             'id' => $interactionQCM[0]->getId()

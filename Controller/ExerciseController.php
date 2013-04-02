@@ -272,8 +272,8 @@ class ExerciseController extends Controller
                     ->getEntityManager()
                     ->getRepository('UJMExoBundle:Interaction')
                     ->getExerciseInteraction(
-                        $this->getDoctrine()->getEntityManager(), $id, 
-                            $exercise->getShuffle(), $exercise->getNbQuestion()
+                        $this->getDoctrine()->getEntityManager(), $id,
+                        $exercise->getShuffle(), $exercise->getNbQuestion()
                     );
 
                 foreach ($interactions as $interaction) {
@@ -377,8 +377,10 @@ class ExerciseController extends Controller
             $interactionToDisplay = $em->getRepository('UJMExoBundle:Interaction')->find($interactionToDisplayedID);
             $typeInterToDisplayed = $interactionToDisplay->getType();
 
-            return $this->displayQuestion($numQuestionToDisplayed, $interactionToDisplay, $typeInterToDisplayed, 
-                $response->getPaper()->getExercise()->getDispButtonInterrupt());
+            return $this->displayQuestion(
+                $numQuestionToDisplayed, $interactionToDisplay, $typeInterToDisplayed,
+                $response->getPaper()->getExercise()->getDispButtonInterrupt()
+            );
         }
 
     }
@@ -387,9 +389,9 @@ class ExerciseController extends Controller
      * Finds and displays the question selectionned by the User in an assesment
      *
      */
-    private function displayQuestion($numQuestionToDisplayed, $interactionToDisplay, 
-        $typeInterToDisplayed, $dispButtonInterrupt)
-    {
+    private function displayQuestion($numQuestionToDisplayed, $interactionToDisplay,
+        $typeInterToDisplayed, $dispButtonInterrupt
+    ){
         $session = $this->getRequest()->getSession();
         $tabOrderInter = $session->get('tabOrderInter');
 
