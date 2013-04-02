@@ -37,7 +37,7 @@ class ResourceRightsRepository extends EntityRepository
 
         foreach ($roles as $role) {
             $dql .= $index !== 0 ? ' OR ' : '';
-            $dql .= "resource.id = {$resource->getId()} AND role.name LIKE '{$role}'";
+            $dql .= "resource.id = {$resource->getId()} AND role.name = '{$role}'";
             ++$index;
         }
 
@@ -64,7 +64,7 @@ class ResourceRightsRepository extends EntityRepository
 
         foreach ($roles as $role) {
             $dql .= $index !== 0 ? ' OR ' : '';
-            $dql .= "resource.id = {$resource->getId()} AND role.name LIKE '{$role}'";
+            $dql .= "resource.id = {$resource->getId()} AND role.name = '{$role}'";
             ++$index;
         }
 
