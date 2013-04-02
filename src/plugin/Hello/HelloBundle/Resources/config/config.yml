@@ -1,0 +1,24 @@
+plugin:
+  has_options: false
+  #icon: icon.png
+
+  widgets:
+    - name: hello_hello
+      is_configurable: false
+      is_exportable: true
+
+
+  resources:
+    - class: Hello\HelloBundle\Entity\Example
+      name: claroline_example1
+      is_visible: true
+      is_browsable: true
+      is_exportable: false
+#     icon: res_text.png
+#
+  tools:
+     - name: Imavia
+#      #class: res_text.png
+#      #is_exportable: true
+       is_displayable_in_workspace: true
+       is_displayable_in_desktop: true
