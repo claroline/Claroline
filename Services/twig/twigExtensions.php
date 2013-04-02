@@ -75,21 +75,19 @@ class TwigExtensions extends \Twig_Extension
         return preg_match((string) $pattern, (string) $str);
     }
 
-    public function getInterTwig($inter_id, $type_inter)
+    public function getInterTwig($interId, $typeInter)
     {
         //$em = $this->doctrine->getEntityManager();
 
-        switch ($type_inter)
+        switch ($typeInter)
         {
             case "InteractionQCM":
-                //$interQCM = $em->getRepository('UJMExoBundle:InteractionQCM')->find($inter_id);
                 $interQCM = $this->doctrine
                                  ->getEntityManager()
                                  ->getRepository('UJMExoBundle:InteractionQCM')
-                                 ->getInteractionQCM($inter_id);
+                                 ->getInteractionQCM($interId);
                 $inter['question'] = $interQCM[0];
                 $inter['maxScore'] = $this->getQCMScoreMax($interQCM[0]);
-                //$inter = $em->getRepository('UJMExoBundle:InteractionQCM')->findOneBy(array('id' => $inter_id));
             break;
 
             case "InteractionGraphic":
@@ -111,20 +109,16 @@ class TwigExtensions extends \Twig_Extension
     private function getQCMScoreMax($interQCM)
     {
         $scoreMax = 0;
-        if($interQCM->getWeightResponse() == 1)
-        {
-            foreach($interQCM->getChoices() as $choice)
-            {
-                if($choice->getRightResponse() == 1)
-                {
+        if ($interQCM->getWeightResponse() == 1) {
+            foreach ($interQCM->getChoices() as $choice) {
+                if ($choice->getRightResponse() == 1) {
                     $scoreMax += $choice->getWeight();
                 }
             }
-        }
-        else
-        {
+        } else {
             $scoreMax = $interQCM->getScoreRightResponse();
         }
+
         return $scoreMax;
     }
 

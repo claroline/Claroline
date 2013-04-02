@@ -35,7 +35,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
 */
 
-/* 
+/*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -56,12 +56,13 @@ class exerciseServices
 
     public function getIP()
     {
-        if(isset($_SERVER['HTTP_X_FORWARDED_FOR']))
+        if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        elseif(isset($_SERVER['HTTP_CLIENT_IP']))
+        } elseif (isset($_SERVER['HTTP_CLIENT_IP'])) {
             $ip = $_SERVER['HTTP_CLIENT_IP'];
-        else
+        } else {
             $ip = $_SERVER['REMOTE_ADDR'];
+        }
 
         return $ip;
     }
@@ -75,14 +76,10 @@ class exerciseServices
         $em = $this->doctrine->getEntityManager();
         $interQCM = $em->getRepository('UJMExoBundle:InteractionQCM')->find($interactionQCMID);
 
-        if ($interQCM->getTypeQCM()->getId() == 2)
-        {
+        if ($interQCM->getTypeQCM()->getId() == 2) {
            $response[] = $request->request->get('choice');
-        }
-        else
-        {
-           if($request->request->get('choice') != null)
-           {
+        } else {
+           if ($request->request->get('choice') != null) {
                $response = $request->request->get('choice');
            }
         }
@@ -93,33 +90,22 @@ class exerciseServices
 
         $session = $request->getSession();
 
-        if($paperID == 0)
-        {
-            if ($session->get('penalties'))
-            {
-               foreach($session->get('penalties') as $penal)
-               {
+        if ($paperID == 0) {
+            if ($session->get('penalties')) {
+               foreach ($session->get('penalties') as $penal) {
                    $penalty += $penal;
                }
             }
             $session->remove('penalties');
-        }
-        else
-        {
-             //on controle l'entité linkhintpaper
-             /*$hintsViewed = $this->doctrine
-                                 ->getEntityManager()
-                                 ->getRepository('UJMExoBundle:LinkHintPaper')
-                                 ->getHintViewed($paperID);*/
+        } else {
             $penalty = $this->getPenalty($interQCM->getInteraction(), $paperID);
 
         }
-         
+
         $score = $this->qcmMark($interQCM, $response, $allChoices, $penalty);
 
         $responseID = '';
-        foreach ($response as $res)
-        {
+        foreach ($response as $res) {
             $responseID .= $res.';';
         }
 
@@ -141,12 +127,9 @@ class exerciseServices
         $rightChoices = array();
         $markByChoice = array();
 
-        if (!$interQCM->getWeightResponse())
-        {
-            foreach($allChoices as $choice)
-            {
-                if ($choice->getRightResponse())
-                {
+        if (!$interQCM->getWeightResponse()) {
+            foreach ($allChoices as $choice) {
+                if ($choice->getRightResponse()) {
                     $rightChoices[] = (string) $choice->getId();
                 }
             }
@@ -154,48 +137,37 @@ class exerciseServices
             $result = array_diff($response, $rightChoices);
             $result2 = array_diff($rightChoices, $response);
 
-           if ( (count($result) == 0) && (count($result2) == 0) )
-           {
+           if ( (count($result) == 0) && (count($result2) == 0) ) {
                $score = $interQCM->getScoreRightResponse() - $penality;
-           }
-           else
-           {
+           } else {
                $score = $interQCM->getScoreFalseResponse() - $penality;
            }
-           if ($score < 0)
-           {
+           if ($score < 0) {
                $score = 0;
            }
            $score .= '/'.$interQCM->getScoreRightResponse();
-        }
-        else
-        {
+        } else {
             //points par réponse
             $scoreMax = 0;
 
-            foreach($allChoices as $choice)
-            {
+            foreach ($allChoices as $choice) {
                 $markByChoice[(string) $choice->getId()] = $choice->getWeight();
-                if ($choice->getRightResponse())
-                {
+                if ($choice->getRightResponse()) {
                     $scoreMax += $choice->getWeight();
                 }
             }
 
-            foreach ($response as $res)
-            {
+            foreach ($response as $res) {
                 $score += $markByChoice[$res];
             }
 
-            if ($score > $scoreMax)
-            {
+            if ($score > $scoreMax) {
                 $score = $scoreMax;
             }
 
             $score -= $penality;
 
-            if ($score < 0)
-            {
+            if ($score < 0) {
                 $score = 0;
             }
             $score .= '/'.$scoreMax;
@@ -224,20 +196,17 @@ class exerciseServices
         $em = $this->doctrine->getEntityManager();
 
         $hints = $interaction->getHints();
-        
-        foreach($hints as $hint)
-        {
+
+        foreach ($hints as $hint) {
             $lhp = $this->doctrine
                         ->getEntityManager()
                         ->getRepository('UJMExoBundle:LinkHintPaper')
                         ->getLHP($hint->getId(), $paperID);
-            if(count($lhp) > 0)
-            {
+            if (count($lhp) > 0) {
                 $penalty += $hint->getPenality();
             }
         }
+
         return $penalty;
     }
 }
-
-?>
