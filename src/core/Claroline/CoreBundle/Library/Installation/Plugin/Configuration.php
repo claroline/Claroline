@@ -260,9 +260,6 @@ class Configuration implements ConfigurationInterface
 
     public static function isNameAlreadyExist($v, $listNames)
     {
-        var_dump($v);
-        var_dump($listNames);
-
         return (!in_array($v, $listNames));
     }
 }

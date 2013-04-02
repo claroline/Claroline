@@ -1,5 +1,0 @@
-claro_hello:
-    pattern: /hello
-    defaults: { _controller: HelloBundle:Hello:index }
-    requirements:
-      _method: POST
