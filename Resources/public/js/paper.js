@@ -1,4 +1,5 @@
 function show_hint(idHint, path_hint_show, confirm_hint, nbr_hint, paper) {
+    "use strict";
     if (confirm(confirm_hint)) {
         $.ajax({
             type: "POST",

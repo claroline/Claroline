@@ -390,8 +390,8 @@ class ExerciseController extends Controller
      *
      */
     private function displayQuestion($numQuestionToDisplayed, $interactionToDisplay,
-        $typeInterToDisplayed, $dispButtonInterrupt
-    ){
+        $typeInterToDisplayed, $dispButtonInterrupt) 
+    {
         $session = $this->getRequest()->getSession();
         $tabOrderInter = $session->get('tabOrderInter');
 

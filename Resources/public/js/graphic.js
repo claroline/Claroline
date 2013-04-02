@@ -16,6 +16,13 @@ var sens; // Move of the mouse
 var scalex = 0; // Width of the image after resize
 var scaley = 0; // Height of the image after resize
 var t; // Contain all the information of one answer zone (ccords, shape, color ...)
+var ts; // Src of the answer zone
+var tx; // Position x of the answer zone
+var ty; // Position y of the answer zone
+var tx1; // Limit up of the answer zone 
+var tx2; // Limit down of the answer zone
+var ty1; // Limit left of the answer zone
+var ty2; // Limit right of the answer zone
 var value = 0; // Size of the resizing
 var x = 0; // Mouse x after move
 var xPrecedent = 0; // Mouse x before move
@@ -33,6 +40,7 @@ if (navigator.browserLanguage) {
 
 // Get the url's picture matching to the label in the list
 function sendData(select) {
+    "use strict";
 
     // Send the label of the picture to get the adress in order to display it
     $.ajax({
@@ -51,6 +59,7 @@ function sendData(select) {
 
 // Display the selected picture
 function LoadPic() {
+    "use strict";
 
     var list = document.InterGraphForm.ujm_exobundle_interactiongraphictype_document; // List of all the user's pictures
     var select = list.options[list.selectedIndex].innerHTML; // Label of the selected picture
@@ -78,7 +87,8 @@ function LoadPic() {
 }
 
 // Submit form without an empty field
-function Verifier() {
+function Verifier(noTitle, noQuestion, noImg, noAnswerZone) {
+    "use strict";
 
     var imgOk = false; // Image is upload
     var questionOk = false; // Question is asked
@@ -87,52 +97,32 @@ function Verifier() {
 
     // No title
     if (document.InterGraphForm.ujm_exobundle_interactiongraphictype_interaction_question_title.value === '') {
-        if (language.indexOf('fr') > -1) {
-            alert('La question n\'a pas de titre.');
-            return false;
-        } else {
-            alert('The question has no title.');
-            return false;
-        }
+        alert(noTitle);
+        return false;
     } else {
         titleOk = true;
     }
 
     // No question asked
     if (document.InterGraphForm.ujm_exobundle_interactiongraphictype_interaction_invite.value === '' && titleOk === true) {
-        if (language.indexOf('fr') > -1) {
-            alert('Vous ne posez aucune question ...');
-            return false;
-        } else {
-            alert('You ask for nothing ...');
-            return false;
-        }
+       alert(noQuestion);
+       return false;
     } else {
         questionOk = true;
     }
 
     // No picture load
     if (document.getElementById('imgwidth').value == 0 && titleOk === true && questionOk === true) {
-        if (language.indexOf('fr') > -1) {
-            alert('Vous devez télécharger une image !');
-            return false;
-        } else {
-            alert('You must upload a picture !');
-            return false;
-        }
+        alert(noImg);
+        return false;
     } else {
         imgOk = true;
     }
 
     // No answer zone
     if (document.getElementById('coordsZone').value == 0 && imgOk === true && titleOk === true && questionOk === true) {
-        if (language.indexOf('fr') > -1) {
-            alert('Vous n\'avez mis aucune zone de réponse ...');
-            return false;
-        } else {
-            alert('There is no answer zone ...');
-            return false;
-        }
+        alert(noAnswerZone);
+        return false;
     } else {
         zoneOk = true;
     }
@@ -145,6 +135,7 @@ function Verifier() {
 
 // Change the shape and the color of the answer zone
 function changezone() {
+    "use strict";
 
     if (document.getElementById('shape').value === 'circle') {
         switch (document.getElementById('color').value) {
@@ -218,6 +209,7 @@ function changezone() {
 }
 
 function  ResizeImg(sens) {
+    "use strict";
 
     if (sens === 'gauche') {
         value -= 27;
@@ -251,6 +243,7 @@ function  ResizeImg(sens) {
 // :::::::::::::::::::::::::::::::::::::::::: EventListener :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 document.addEventListener('keydown', function (e) {
+    "use strict";
 
     if (e.keyCode === 16) { // Touch MAJ down
         pressMAJ = true;
@@ -269,6 +262,7 @@ document.addEventListener('keydown', function (e) {
 }, false);
 
 document.addEventListener('keyup', function (e) {
+    "use strict";
 
     if (e.keyCode === 16) { // Touch MAJ up
         pressMAJ = false;
@@ -287,6 +281,7 @@ document.addEventListener('keyup', function (e) {
 }, false);
 
 document.addEventListener('mousemove', function (event) { // To resize the selected picture
+    "use strict";
 
     if (pressMAJ === true) {
         xPrecedent = x;
@@ -316,6 +311,7 @@ document.addEventListener('mousemove', function (event) { // To resize the selec
 });
 
 document.addEventListener('click', function (e) { // To add/delete answer zones
+    "use strict";
 
     if (pressCTRL === true) {
 

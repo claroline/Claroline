@@ -133,7 +133,7 @@
     <div style="visibility: hidden;">{{ form_rest(form) }}</div>
     {{ form_errors(form) }}
     <p>
-        <button type="submit" onclick="Verifier();return false;">{{ "Create" | trans }}</button>
+        <button type="submit" onclick="Verifier('{{ "noTitle" | trans }}', '{{ "noQuestion" | trans }}','{{ "noImg" | trans }}', '{{ "noAnswerZone" | trans }}');return false;">{{ "Create" | trans }}</button>
     </p>
 </form>
 

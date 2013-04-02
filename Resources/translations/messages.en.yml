@@ -253,3 +253,7 @@ raz: => To reset pointers, press "c".
 relire: Look over my paper
 fin: End the test
 sur: Are you sure ? (You will not be able to edit your answers anymore)
+noTitle: The question has no title.
+noQuestion: You ask for nothing ...
+noImg: You must upload a picture !
+noAnswerZone: There is no answer zone ...

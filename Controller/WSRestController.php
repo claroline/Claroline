@@ -56,7 +56,7 @@ class WSRestController extends Controller
     public function postDocumentAddAction()
     {
         //on poste les données label,url, type, login
-        //le login permet de lier le doc à un user mais aussi de vérifier que le login correspond bien à l'user connecté
+        //le login permet de lier le doc à un user + de vérifier que le login correspond bien à l'user connecté
 
         if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
             //var_dump($this->container->get('router'));die();
