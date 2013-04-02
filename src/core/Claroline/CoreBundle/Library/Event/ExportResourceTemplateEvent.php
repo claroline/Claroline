@@ -9,14 +9,14 @@ class ExportResourceTemplateEvent extends Event
 {
     private $resource;
     private $config;
-    private $archive;
     private $resourceDependencies;
+    private $files;
 
-    public function __construct(AbstractResource $resource, \ZipArchive $archive)
+    public function __construct(AbstractResource $resource)
     {
         $this->resource = $resource;
-        $this->archive = $archive;
         $this->resourceDependencies = array();
+        $this->files = array();
     }
 
     public function getResource()
@@ -34,9 +34,22 @@ class ExportResourceTemplateEvent extends Event
         return $this->config;
     }
 
-    public function getArchive()
+    /**
+     * Expects an array of files.
+     * Each item of the array is an array with the following keys:
+     * 'archive_path' => '/pathname/in/archive'
+     * 'original_path' => '/pathname/in/project'
+     *
+     * @param array $files
+     */
+    public function setFiles(array $files)
     {
-        return $this->archive;
+        $this->files = $files;
+    }
+
+    public function getFiles()
+    {
+        return $this->files;
     }
 
     /**

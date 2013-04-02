@@ -3,8 +3,8 @@
 namespace Claroline\CoreBundle\Listener;
 
 use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Library\Event\ExportWorkspaceEvent;
-use Claroline\CoreBundle\Library\Event\ImportWorkspaceEvent;
+use Claroline\CoreBundle\Library\Event\ExportToolEvent;
+use Claroline\CoreBundle\Library\Event\ImportToolEvent;
 use Claroline\CoreBundle\Library\Event\ExportResourceTemplateEvent;
 use Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent;
 use Claroline\CoreBundle\Library\Event\ExportWidgetConfigEvent;
@@ -66,7 +66,7 @@ class ToolListener extends ContainerAware
         $event->setContent($this->desktopCalendar());
     }
 
-    public function onExportHome(ExportWorkspaceEvent $event)
+    public function onExportHome(ExportToolEvent $event)
     {
         $home = array();
         $workspace = $event->getWorkspace();
@@ -81,8 +81,7 @@ class ToolListener extends ContainerAware
             if ($config->getWidget()->isExportable()) {
                 $newEvent = new ExportWidgetConfigEvent(
                     $config->getWidget(),
-                    $workspace,
-                    $event->getArchive()
+                    $workspace
                 );
                 $ed->dispatch("widget_{$config->getWidget()->getName()}_to_template", $newEvent);
                 if ($newEvent->getConfig() === null) {
@@ -105,7 +104,7 @@ class ToolListener extends ContainerAware
     //@todo: When exporting the resource, there should be only "exportable" resources. Therefore
     //the query builder must be updated
     //because a new request is made each time to retrieve each resource right.
-    public function onExportResource(ExportWorkspaceEvent $event)
+    public function onExportResource(ExportToolEvent $event)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $config = array();
@@ -121,7 +120,7 @@ class ToolListener extends ContainerAware
         $children = $resourceRepo->findBy(array('parent' => $root, 'resourceType' => $dirType));
 
         foreach ($children as $child) {
-            $newEvent = new ExportResourceTemplateEvent($child, $event->getArchive());
+            $newEvent = new ExportResourceTemplateEvent($child);
             $ed->dispatch("resource_directory_to_template", $newEvent);
             $dataChildren = $newEvent->getConfig();
             if ($dataChildren == null) {
@@ -142,10 +141,11 @@ class ToolListener extends ContainerAware
         $criteria['roots'] = array($root->getName());
         $criteria['isExportable'] = true;
         $config['resources'] = array();
-        $resources = $resourceRepo->findUserResourcesByCriteria($criteria, null, true);
+        $resources = $resourceRepo->findByCriteria($criteria);
+        $addToArchive = array();
 
         foreach ($resources as $resource) {
-            $newEvent = new ExportResourceTemplateEvent($resourceRepo->find($resource['id']), $event->getArchive());
+            $newEvent = new ExportResourceTemplateEvent($resourceRepo->find($resource['id']));
             $ed->dispatch("resource_{$resource['type']}_to_template", $newEvent);
             $dataResources = $newEvent->getConfig();
 
@@ -165,14 +165,23 @@ class ToolListener extends ContainerAware
             $dataResources['id'] = $resource['id'];
             $dataResources['type'] = $resource['type'];
             $dataResources['name'] = $resource['name'];
+            $requiredFiles = array();
+
+            foreach ($newEvent->getFiles() as $item) {
+                $addToArchive[] = $item;
+                $requiredFiles[] = $item['archive_path'];
+                $dataResources['files'] = $requiredFiles;
+            }
+
             $config['resources'][] = $dataResources;
         }
 
+        $event->setFiles($addToArchive);
         $config['resources'] = $this->sortResources($config['resources']);
         $event->setConfig($config);
     }
 
-    public function onImportHome(ImportWorkspaceEvent $event)
+    public function onImportHome(ImportToolEvent $event)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $config = $event->getConfig();
@@ -195,8 +204,7 @@ class ToolListener extends ContainerAware
                 if (isset($widgetConfig['config'])) {
                     $newEvent = new ImportWidgetConfigEvent(
                         $widgetConfig['config'],
-                        $event->getWorkspace(),
-                        $event->getArchive()
+                        $event->getWorkspace()
                     );
                     $ed->dispatch("widget_{$widgetConfig['name']}_from_template", $newEvent);
                 }
@@ -206,7 +214,7 @@ class ToolListener extends ContainerAware
         }
     }
 
-    public function onImportResource(ImportWorkspaceEvent $event)
+    public function onImportResource(ImportToolEvent $event)
     {
         $manager = $this->container->get('claroline.resource.manager');
         $config = $event->getConfig();
@@ -215,20 +223,40 @@ class ToolListener extends ContainerAware
         $createdResources = array();
         $createdResources[$config['root_id']] = $root;
 
-        foreach ($config['directory'] as $resource) {
-            $newEvent = new ImportResourceTemplateEvent($resource, $root, $event->getArchive(), $event->getUser());
-            $ed->dispatch("resource_{$resource['type']}_from_template", $newEvent);
+        if (isset($config['directory'])) {
+            foreach ($config['directory'] as $resource) {
+                $newEvent = new ImportResourceTemplateEvent($resource, $root, $event->getUser());
+                $ed->dispatch("resource_{$resource['type']}_from_template", $newEvent);
 
-            $childResources = $newEvent->getCreatedResources();
+                $childResources = $newEvent->getCreatedResources();
 
-            foreach ($childResources as $key => $value) {
-                $createdResources[$key] = $value;
+                foreach ($childResources as $key => $value) {
+                    $createdResources[$key] = $value;
+                }
             }
         }
 
+        $requiredFiles = $event->getFiles();
+
         foreach ($config['resources'] as $resource) {
-            $newEvent = new ImportResourceTemplateEvent($resource, $root, $event->getArchive(), $event->getUser());
+            $newEvent = new ImportResourceTemplateEvent($resource, $root, $event->getUser());
             $newEvent->setCreatedResources($createdResources);
+            $fileContent = array();
+
+            if (isset($resource['files'])) {
+                $files = $resource['files'];
+
+                foreach ($files as $file) {
+                    foreach ($requiredFiles as $requiredFile) {
+                        if ($file === pathinfo($requiredFile, PATHINFO_BASENAME)) {
+                            $fileContent[] = requiredFile;
+                        }
+                    }
+                }
+            }
+
+            $newEvent->setFiles($fileContent);
+
             $ed->dispatch("resource_{$resource['type']}_from_template", $newEvent);
             $resourceEntity = $newEvent->getResource();
 

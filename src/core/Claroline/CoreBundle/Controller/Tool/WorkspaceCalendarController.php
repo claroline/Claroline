@@ -8,14 +8,26 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Claroline\CoreBundle\Entity\Event;
 use Claroline\CoreBundle\Form\CalendarType;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 /**
  * Controller of the calendar
  */
-class CalendarController extends Controller
+class WorkspaceCalendarController extends Controller
 {
     const ABSTRACT_WS_CLASS = 'ClarolineCoreBundle:Workspace\AbstractWorkspace';
 
+    /**
+     * @Route(
+     *     "/{workspaceId}/add",
+     *     name="claro_workspace_agenda_add_event"
+     * )
+     *
+     * @param integer $workspaceId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function addEventAction($workspaceId)
     {
         $em = $this->getDoctrine()->getManager();
@@ -70,66 +82,17 @@ class CalendarController extends Controller
         }
     }
 
-    public function showAction($workspaceId)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $this->checkUserIsAllowed('calendar', $workspace);
-        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findbyWorkspaceId($workspaceId, false);
-        $data = array();
-        foreach ($listEvents as $key => $object) {
-
-                $data[$key]['id'] = $object->getId();
-                $data[$key]['title'] = $object->getTitle();
-                $data[$key]['allDay'] = $object->getAllDay();
-                $data[$key]['start'] = $object->getStart()->getTimestamp();
-                $data[$key]['end'] = $object->getEnd()->getTimestamp();
-                $data[$key]['color'] = $object->getPriority();
-
-        }
-
-        return new Response(
-            json_encode($data),
-            200,
-            array('Content-Type' => 'application/json')
-        );
-    }
-
-    public function moveAction($workspaceId)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $this->checkUserIsAllowed('calendar', $workspace);
-        $request = $this->get('request');
-        $postData = $request->request->all();
-        $repository = $em->getRepository('ClarolineCoreBundle:Event');
-        $event = $repository->find($postData['id']);
-        // timestamp 1h = 3600
-        $newStartDate = $event->getStart()->getTimestamp() + ((3600 * 24) * $postData['dayDelta']);
-        $dateStart = new \DateTime(date('d-m-Y', $newStartDate));
-        $event->setStart($dateStart);
-        $newEndDate = $event->getEnd()->getTimestamp() + ((3600 * 24) * $postData['dayDelta']);
-        $dateEnd = new \DateTime(date('d-m-Y', $newEndDate));
-        $event->setStart($dateStart);
-        $event->setEnd($dateEnd);
-        $em->flush();
-
-        return new Response(
-            json_encode(
-                array(
-                    'id' => $event->getId(),
-                    'title' => $event->getTitle(),
-                    'allDay' => $event->getAllDay(),
-                    'start' => $event->getStart()->getTimestamp(),
-                    'end' => $event->getEnd()->getTimestamp(),
-                    'color' => $event->getPriority()
-                    )
-            ),
-            200,
-            array('Content-Type' => 'application/json')
-        );
-    }
-
+    /**
+     * @Route(
+     *     "/{workspaceId}/update",
+     *     name="claro_workspace_agenda_update"
+     * )
+     * @Method("POST")
+     *
+     * @param type $workspaceId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function updateAction($workspaceId)
     {
         $em = $this->getDoctrine()->getManager();
@@ -166,6 +129,17 @@ class CalendarController extends Controller
         }
     }
 
+    /**
+     * @Route(
+     *     "/{workspaceId}/delete",
+     *     name="claro_workspace_agenda_delete"
+     * )
+     * @Method("POST")
+     *
+     * @param integer $workspaceId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function deleteAction($workspaceId)
     {
         $em = $this->getDoctrine()->getManager();
@@ -185,20 +159,33 @@ class CalendarController extends Controller
         );
     }
 
-    public function desktopShowAction()
+    /**
+     * @Route(
+     *     "/{workspaceId}/show",
+     *     name="claro_workspace_agenda_show"
+     * )
+     * @Method("GET")
+     *
+     * @param integer $workspaceId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function showAction($workspaceId)
     {
-        $em = $this->getDoctrine()->getManager();
-        $usr = $this-> get('security.context')-> getToken()-> getUser();
-        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, 0);
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $this->checkUserIsAllowed('calendar', $workspace);
+        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findbyWorkspaceId($workspaceId, false);
         $data = array();
         foreach ($listEvents as $key => $object) {
-            $data[$key]['id'] = $object->getId();
-            $workspace = $object->getWorkspace();
-            $data[$key]['title'] = $workspace->getName().': '.$object->getTitle();
-            $data[$key]['allDay'] = $object->getAllDay();
-            $data[$key]['start'] = $object->getStart();
-            $data[$key]['end'] = $object->getEnd();
-            $data[$key]['color'] = $object->getPriority();
+
+                $data[$key]['id'] = $object->getId();
+                $data[$key]['title'] = $object->getTitle();
+                $data[$key]['allDay'] = $object->getAllDay();
+                $data[$key]['start'] = $object->getStart()->getTimestamp();
+                $data[$key]['end'] = $object->getEnd()->getTimestamp();
+                $data[$key]['color'] = $object->getPriority();
+
         }
 
         return new Response(
@@ -207,6 +194,48 @@ class CalendarController extends Controller
             array('Content-Type' => 'application/json')
         );
     }
+
+    /**
+     * @Route(
+     *     "/{workspaceId}/move",
+     *     name="claro_workspace_agenda_move"
+     * )
+     */
+    public function moveAction($workspaceId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $this->checkUserIsAllowed('calendar', $workspace);
+        $request = $this->get('request');
+        $postData = $request->request->all();
+        $repository = $em->getRepository('ClarolineCoreBundle:Event');
+        $event = $repository->find($postData['id']);
+        // timestamp 1h = 3600
+        $newStartDate = $event->getStart()->getTimestamp() + ((3600 * 24) * $postData['dayDelta']);
+        $dateStart = new \DateTime(date('d-m-Y', $newStartDate));
+        $event->setStart($dateStart);
+        $newEndDate = $event->getEnd()->getTimestamp() + ((3600 * 24) * $postData['dayDelta']);
+        $dateEnd = new \DateTime(date('d-m-Y', $newEndDate));
+        $event->setStart($dateStart);
+        $event->setEnd($dateEnd);
+        $em->flush();
+
+        return new Response(
+            json_encode(
+                array(
+                    'id' => $event->getId(),
+                    'title' => $event->getTitle(),
+                    'allDay' => $event->getAllDay(),
+                    'start' => $event->getStart()->getTimestamp(),
+                    'end' => $event->getEnd()->getTimestamp(),
+                    'color' => $event->getPriority()
+                    )
+            ),
+            200,
+            array('Content-Type' => 'application/json')
+        );
+    }
+
 
     private function checkUserIsAllowed($permission, AbstractWorkspace $workspace)
     {

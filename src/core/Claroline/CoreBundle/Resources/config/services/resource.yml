@@ -31,6 +31,7 @@ services:
          arguments:
            - "@doctrine.orm.entity_manager"
            - "@claroline.security.utilities"
+           - "@translator"
 
     claroline.resource.mode_extension:
         class: Claroline\CoreBundle\Library\Twig\ResourceModeExtension

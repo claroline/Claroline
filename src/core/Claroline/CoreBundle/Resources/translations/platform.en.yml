@@ -60,6 +60,7 @@ find_workspaces: 'Find workspaces'
 first_name: 'First name'
 form_role: Role
 from: From
+from_message: From
 general: General
 group: Group
 group_form_name: Name
@@ -67,6 +68,7 @@ group_form_ownedRoles: Roles
 group_form_platformRole: Role
 group_parameter: 'Group parameter'
 groups: Groups
+history: History
 home: Home
 id: Id
 informations: Informations
@@ -93,6 +95,8 @@ mail_form_object: Object
 manage_rights: 'Manage rights'
 manager: Manager
 messages_confirm_delete : 'Are your sure , you want to delete this file ?'
+messages_confirm_permanent_delete: 'Are you sure you want to permanently delete this(these) message(s) ?'
+messages_confirm_restore: 'Are you sure you want to restore this(these) message(s) ?'
 message_form_content: Content
 message_form_object: Object
 message_form_to: To
@@ -197,11 +201,15 @@ settings: Settings
 show: Show
 show_as_admin: 'Show as admin'
 show_as_user: 'Show as user'
+show_as: 'Show as'
+show_profile: 'Show profile'
+switch: Switch
 teacher: Teacher
 text_form_name: Name
 text_form_shareType: Sharable
 text_form_text: Text
 to: To
+to_message: To
 today: Today
 tool: Tool
 tools: Tools
@@ -245,7 +253,7 @@ workspace_form_code: Code
 workspace_form_name: Name
 workspace_form_template: Template
 workspace_form_type: Type
-workspace_order_tool_edit_form_translationKey: Name
+workspace_order_tool_edit_form_name: Name
 workspace_resource: Resources
 workspace_template_form_name: Name
 workspace_tools: Tools

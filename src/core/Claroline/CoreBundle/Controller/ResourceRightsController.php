@@ -6,14 +6,23 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class ResourceRightsController extends Controller
 {
     /**
+     * @Route(
+     *     "/{resourceId}/rights/form",
+     *     name="claro_resource_right_form",
+     *     options={"expose"=true}
+     * )
+     *
      * Displays the resource rights form.
      *
      * @param integer $resourceId the resource id
+     *
      * @return Response
+     *
      * @throws AccessDeniedException if the current user is not allowed to edit the resource
      */
     public function rightFormAction($resourceId)
@@ -37,12 +46,20 @@ class ResourceRightsController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/{resourceId}/rights/edit",
+     *     name="claro_resource_right_edit",
+     *     options={"expose"=true}
+     * )
+     *
      * Handles the submission of the resource rights form. Expects an array of permissions
      * by role to be passed by POST method. Permissions are set to false when not passed
      * in the request.
      *
      * @param integer $resourceId the resource id
+     *
      * @return Response
+     *
      * @throws AccessDeniedException if the current user is not allowed to edit the resource
      */
     public function editRightsAction($resourceId)
@@ -78,13 +95,21 @@ class ResourceRightsController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/{resourceId}/role/{roleId}/right/creation/form",
+     *     name="claro_resource_right_creation_form",
+     *     options={"expose"=true}
+     * )
+     *
      * Displays the form for resource creation rights (i.e the right to create a
      * type of resource in a directory). Show the different resource types already
      * allowed for creation.
      *
      * @param integer $resourceId the resource id
      * @param integer $roleId     the role for which the form is displayed
+     *
      * @return Response
+     *
      * @throws AccessDeniedException if the current user is not allowed to edit the resource
      */
     public function rightCreationFormAction($resourceId, $roleId)
@@ -113,6 +138,12 @@ class ResourceRightsController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/{resourceId}/role/{roleId}/right/creation/edit",
+     *     name="claro_resource_rights_creation_edit",
+     *     options={"expose"=true}
+     * )
+     *
      * Handles the submission of the resource rights creation form. Expects an
      * array of resource type ids to be passed by POST method. Only the types
      * passed in the request will be allowed.

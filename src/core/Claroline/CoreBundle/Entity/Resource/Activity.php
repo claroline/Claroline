@@ -62,21 +62,12 @@ class Activity extends AbstractResource
 
     public function addResourceActivity(ResourceActivity $newResourceActivity)
     {
-        $newActivityPath = $newResourceActivity->getResource()->getPath();
-
-        foreach ($this->resourcesActivities as $resourceActivity) {
-            if ($resourceActivity->getResource()->getPath() === $newActivityPath ) {
-                throw new \Exception(
-                    'This resource was already added in the current activity'
-                );
-            }
-        }
-        $this->resources->add($resourceActivity);
+        $this->resourcesActivities->add($newResourceActivity);
     }
 
-    public function removeResource(ResourceActivity $resourceActivity)
+    public function removeResourceActivity(ResourceActivity $resourceActivity)
     {
-        $this->resources->removeElement($resourceActivity);
+        $this->resourcesActivities->removeElement($resourceActivity);
     }
 
     public function getResourceActivities()

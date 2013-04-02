@@ -10,6 +10,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
+use Claroline\CoreBundle\Library\Event\WorkspaceLogEvent;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 /**
  * This controller is able to:
@@ -22,6 +25,13 @@ class WorkspaceController extends Controller
     const ABSTRACT_WS_CLASS = 'ClarolineCoreBundle:Workspace\AbstractWorkspace';
 
     /**
+     * @Route(
+     *     "/",
+     *     name="claro_workspace_list",
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     *
      * Renders the workspace list page with its claroline layout.
      *
      * @throws AccessDeniedHttpException
@@ -44,6 +54,14 @@ class WorkspaceController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/user/{userId}",
+     *     name="claro_workspace_by_user",
+     *     requirements={"userId"="^(?=.*[1-9].*$)\d*$"},
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     *
      * Renders the registered workspace list for a user.
      *
      * @param integer $userId
@@ -70,6 +88,12 @@ class WorkspaceController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/new/form",
+     *     name="claro_workspace_creation_form"
+     * )
+     * @Method("GET")
+     *
      * Renders the workspace creation form.
      *
      * @return Response
@@ -91,6 +115,12 @@ class WorkspaceController extends Controller
 
     /**
      * Creates a workspace from a form sent by POST.
+     *
+     * @Route(
+     *     "/",
+     *     name="claro_workspace_create"
+     * )
+     * @Method("POST")
      *
      * @return RedirectResponse
      *
@@ -129,7 +159,13 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * Deletes a workspace and redirects to the desktop_index.
+     * @Route(
+     *     "/{workspaceId}",
+     *     name="claro_workspace_delete",
+     *     options={"expose"=true},
+     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
+     * )
+     * @Method("DELETE")
      *
      * @param integer $workspaceId
      *
@@ -180,13 +216,13 @@ class WorkspaceController extends Controller
             $found = false;
             foreach ($workspaceOrderTools as $workspaceOrderedTool) {
                 if ($workspaceOrderedTool->getTool() === $tool) {
-                    $toolWithTranslation['translation_key'] = $workspaceOrderedTool->getTranslationKey();
+                    $toolWithTranslation['name'] = $workspaceOrderedTool->getName();
                     $found = true;
                 }
             }
 
             if (!$found) {
-                $toolWithTranslation['translation_key'] = $tool->getName();
+                $toolWithTranslation['name'] = $tool->getName();
             }
 
             $toolsWithTranslation[] = $toolWithTranslation;
@@ -199,6 +235,13 @@ class WorkspaceController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/{workspaceId}/open/tool/{toolName}",
+     *     name="claro_workspace_open_tool",
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     *
      * Opens a tool.
      *
      * @param type $toolName
@@ -230,20 +273,25 @@ class WorkspaceController extends Controller
     }
 
     //todo dql for this
-
     /**
-    * Display registered widgets.
-    *
-    * @param $workspaceId the workspace id
-    *
-    * @return \Symfony\Component\HttpFoundation\Response
-    */
+     * @Route(
+     *     "/{workspaceId}/widgets",
+     *     name="claro_workspace_widgets"
+     * )
+     * @Method("GET")
+     *
+     * Display registered widgets.
+     *
+     * @param $workspaceId the workspace id
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function widgetsAction($workspaceId)
     {
         $responsesString = '';
         $configs = $this->get('claroline.widget.manager')
             ->generateWorkspaceDisplayConfig($workspaceId);
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
 
         foreach ($configs as $config) {
@@ -262,6 +310,12 @@ class WorkspaceController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/{workspaceId}/open",
+     *     name="claro_workspace_open"
+     * )
+     * @Method("GET")
+     *
      * Open the first tool of a workspace.
      *
      * @param integer $workspaceId
@@ -270,7 +324,7 @@ class WorkspaceController extends Controller
      */
     public function openAction($workspaceId)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
 
         if ('anon.' != $this->get('security.context')->getToken()->getUser()) {
@@ -314,6 +368,11 @@ class WorkspaceController extends Controller
             'claro_workspace_open_tool',
             array('workspaceId' => $workspaceId, 'toolName' => $openedTool[0]->getName())
         );
+
+        $user = $this->get('security.context')->getToken()->getUser();
+        $date = new \DateTime();
+        $workspaceLogEvent = new WorkspaceLogEvent('workspace_access', $date, $user, $workspace, '');
+        $this->get('event_dispatcher')->dispatch('log_workspace_access', $workspaceLogEvent);
 
         return new RedirectResponse($route);
     }

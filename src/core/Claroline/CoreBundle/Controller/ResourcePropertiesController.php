@@ -9,10 +9,18 @@ use Claroline\CoreBundle\Entity\Resource\IconType;
 use Claroline\CoreBundle\Form\ResourcePropertiesType;
 use Claroline\CoreBundle\Form\ResourceNameType;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+
 
 class ResourcePropertiesController extends Controller
 {
     /**
+     * @Route(
+     *     "/rename/form/{resourceId}",
+     *     name="claro_resource_rename_form",
+     *     options={"expose"=true}
+     * )
+     *
      * Displays the form allowing to rename a resource.
      *
      * @param integer $resourceId the resource id
@@ -36,6 +44,12 @@ class ResourcePropertiesController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/rename/{resourceId}",
+     *     name="claro_resource_rename",
+     *     options={"expose"=true}
+     * )
+     *
      * Renames a resource.
      *
      * @param integer $resourceId the resource id
@@ -45,7 +59,7 @@ class ResourcePropertiesController extends Controller
     public function renameAction($resourceId)
     {
         $request = $this->get('request');
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($resourceId);
         $collection = new ResourceCollection(array($resource));
@@ -56,7 +70,8 @@ class ResourcePropertiesController extends Controller
         if ($form->isValid()) {
             $em->persist($resource);
             $em->flush();
-            $response = new Response("[\"{$resource->getName()}\"]");
+            $content = json_encode(array($resource->getName()));
+            $response = new Response($content);
             $response->headers->set('Content-Type', 'application/json');
 
             return $response;
@@ -69,6 +84,12 @@ class ResourcePropertiesController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/properties/form/{resourceId}",
+     *     name="claro_resource_form_properties",
+     *     options={"expose"=true}
+     * )
+     *
      * Displays the resource properties form.
      *
      * @param integer $resourceId the resource id
@@ -91,6 +112,12 @@ class ResourcePropertiesController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/properties/edit/{resourceId}",
+     *     name="claro_resource_edit_properties",
+     *     options={"expose"=true}
+     * )
+     *
      * Changes the resource properties.
      *
      * @param integer $resourceId the resource id
@@ -189,7 +216,7 @@ class ResourcePropertiesController extends Controller
     private function checkAccess($permission, $collection)
     {
         if (!$this->get('security.context')->isGranted($permission, $collection)) {
-            throw new AccessDeniedException(var_dump($collection->getErrorsForDisplay()));
+            throw new AccessDeniedException(print_r($collection->getErrorsForDisplay(), true));
         }
     }
 }

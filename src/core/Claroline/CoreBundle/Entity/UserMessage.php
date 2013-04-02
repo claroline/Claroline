@@ -43,10 +43,16 @@ class UserMessage
      */
     protected $isRead;
 
-    public function __construct()
+    /**
+     * @ORM\Column(type="boolean", name="is_sent")
+     */
+    protected $isSent;
+
+    public function __construct($isSent = false)
     {
         $this->isRead = false;
         $this->isRemoved = false;
+        $this->isSent = $isSent;
     }
 
     public function getId()
@@ -57,6 +63,11 @@ class UserMessage
     public function markAsRemoved()
     {
         $this->isRemoved = true;
+    }
+
+    public function markAsUnremoved()
+    {
+        $this->isRemoved = false;
     }
 
     public function markAsRead()
@@ -72,6 +83,11 @@ class UserMessage
     public function isRead()
     {
         return $this->isRead;
+    }
+
+    public function isSent()
+    {
+        return $this->isSent;
     }
 
     public function getMessage()

@@ -19,6 +19,7 @@ security:
             form_login: ~
             anonymous: ~
             logout: true
+            switch_user: { role: ROLE_ADMIN, parameter: _switch }
 
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }

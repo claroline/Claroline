@@ -5,6 +5,8 @@ namespace Claroline\CoreBundle\Listener\Resource;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Library\Event\ExportResourceTemplateEvent;
+use Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent;
 
 class FileListenerTest extends FunctionalTestCase
 {
@@ -92,6 +94,30 @@ class FileListenerTest extends FunctionalTestCase
         $event = new CopyResourceEvent($file);
         $this->client->getContainer()->get('event_dispatcher')->dispatch('copy_file', $event);
         $this->assertEquals(1, count($event->getCopy()));
+    }
+
+    public function testExportTemplate()
+    {
+        $this->loadFileData('user', 'user', array('foo.txt'));
+        $event = new ExportResourceTemplateEvent($this->getFile('foo.txt'));
+        $this->client->getContainer()->get('event_dispatcher')->dispatch('resource_file_to_template', $event);
+        $this->assertEquals(1, count($event->getFiles()));
+        $this->assertEquals(1, count($event->getConfig()));
+    }
+
+    public function testImportTemplate()
+    {
+        $resource = array();
+        $files = array(tempnam(sys_get_temp_dir(), 'claro_tmp_'));
+        $event = new ImportResourceTemplateEvent(
+            $resource,
+            $this->getDirectory('user'),
+            $this->getUser('user')
+        );
+        $event->setFiles($files);
+        $this->client->getContainer()->get('event_dispatcher')->dispatch('resource_file_from_template', $event);
+        $this->assertEquals(1, count($event->getResource()));
+        $this->assertEquals(1, count($this->getUploadedFiles()));
     }
 
     private function getUploadedFiles()

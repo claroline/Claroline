@@ -4,10 +4,16 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Form\MailType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class MailController extends Controller
 {
     /**
+     * @Route(
+     *     "/form/{userId}",
+     *     name="claro_mail_form"
+     * )
+     *
      * Displays the mail form.
      *
      * @param integer $userId
@@ -25,6 +31,10 @@ class MailController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/send/{userId}",
+     *     name="claro_mail_send"
+     * )
      * Handles the mail form submission (sends a mail).
      *
      * @param integer $userId

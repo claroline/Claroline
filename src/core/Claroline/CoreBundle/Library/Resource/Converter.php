@@ -12,11 +12,13 @@ class Converter
     /* @var EntityManager */
     private $em;
     private $ut;
+    private $translator;
 
-    public function __construct(EntityManager $em, SecurityUtilities $ut)
+    public function __construct(EntityManager $em, SecurityUtilities $ut, $translator)
     {
         $this->em = $em;
         $this->ut = $ut;
+        $this->translator = $translator;
     }
 
     /**
@@ -80,5 +82,56 @@ class Converter
         $json = json_encode($phpArray);
 
         return $json;
+    }
+
+    public function jsonEncodeGroups($groups)
+    {
+        $content = array();
+
+        for ($i = 0, $size = count($groups); $i < $size; $i++) {
+            $content[$i]['id'] = $groups[$i]->getId();
+            $content[$i]['name'] = $groups[$i]->getName();
+            $rolesString = '';
+            $roles = $groups[$i]->getOwnedRoles();
+
+            for ($j = 0, $rolesCount = count($roles); $j < $rolesCount; $j++) {
+                $rolesString.= "{$this->translator->trans($roles[$j]->getTranslationKey(), array(), 'platform')}";
+                if ($j <= $rolesCount - 2) {
+                    $rolesString.=' ,';
+                }
+            }
+
+            $content[$i]['roles'] = $rolesString;
+
+        }
+
+        return json_encode($content);
+    }
+
+    public function jsonEncodeUsers($users)
+    {
+        $content = array();
+
+        for ($i = 0, $size = count($users); $i < $size; $i++) {
+            $content[$i]['id'] = $users[$i]->getId();
+            $content[$i]['username'] = $users[$i]->getUsername();
+            $content[$i]['lastname'] = $users[$i]->getLastName();
+            $content[$i]['firstname'] = $users[$i]->getFirstName();
+            $content[$i]['administrativeCode'] = $users[$i]->getAdministrativeCode();
+
+            $rolesString = '';
+            $roles = $users[$i]->getOwnedRoles();
+
+            for ($j = 0, $rolesCount = count($roles); $j < $rolesCount; $j++) {
+                $rolesString.= "{$this->translator->trans($roles[$j]->getTranslationKey(), array(), 'platform')}";
+                if ($j <= $rolesCount - 2) {
+                    $rolesString.=' ,';
+                }
+            }
+
+            $content[$i]['roles'] = $rolesString;
+        }
+
+        return json_encode($content);
     }
 }

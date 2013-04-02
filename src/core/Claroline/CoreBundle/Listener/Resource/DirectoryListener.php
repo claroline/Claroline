@@ -88,7 +88,7 @@ class DirectoryListener extends ContainerAware
 
         foreach ($children as $child) {
             if ($child['type'] === 'directory') {
-                $newEvent = new ExportResourceTemplateEvent($resourceRepo->find($child['id']), $event->getArchive());
+                $newEvent = new ExportResourceTemplateEvent($resourceRepo->find($child['id']));
                 $ed->dispatch("resource_directory_to_template", $newEvent);
                 $descr = $newEvent->getConfig();
                 $dataChildren[] = $descr;
@@ -132,7 +132,6 @@ class DirectoryListener extends ContainerAware
             $newEvent = new ImportResourceTemplateEvent(
                 $child,
                 $directory,
-                $event->getArchive(),
                 $event->getUser()
             );
             $newEvent->setCreatedResources($createdResources);
