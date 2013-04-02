@@ -7,12 +7,19 @@ use Claroline\CoreBundle\Entity\UserMessage;
 use Claroline\CoreBundle\Form\MessageType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 class MessageController extends Controller
 {
     const MESSAGE_PER_PAGE = 20;
 
     /**
+     * @Route(
+     *     "/form/group/{groupId}",
+     *     name="claro_message_form_for_group"
+     * )
+     *
      * Displays the message form. It'll be sent to every user of a group.
      * In order to do this, this methods redirects to the form creation controller
      * with a query string including every users of the group.
@@ -45,6 +52,11 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/form",
+     *     name="claro_message_form"
+     * )
+     *
      * Display the message form.
      * It takes a array of user ids (query string: ids[]=1&ids[]=2).
      * The "to" field of the form must be completed in the following way: username1; username2; username3
@@ -75,12 +87,20 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/send/{parentId}",
+     *     name="claro_message_send",
+     *     defaults={"parentId"=0}
+     * )
+     *
      * Handles the message form submission.
      *
      * @param integer $parentId the parent message (in a discussion, you can answer
      * to a message wich is the parent). The entity Message is a nested tree.
      * By default (no parent) $parentId = 0 (defined in the message.yml file).
+     *
      * @todo: add success/error message
+     *
      * @return Response
      */
     public function sendAction($parentId)
@@ -89,16 +109,24 @@ class MessageController extends Controller
         $request = $this->get('request');
         $em = $this->get('doctrine.orm.entity_manager');
         $form = $this->get('form.factory')->create(new MessageType(), new Message());
-        $form->bindRequest($request);
+        $form->bind($request);
 
         if ($form->isValid()) {
             $message = $form->getData();
             $message->setUser($user);
+            $message->setSenderUsername($user->getUsername());
             $parent = $em->getRepository('ClarolineCoreBundle:Message')->find($parentId);
 
             if ($parent != null) {
                 $message->setParent($parent);
             }
+            $em->persist($message);
+
+            // create an UserMessage for the sender
+            $userMessage = new UserMessage(true);
+            $userMessage->setUser($user);
+            $userMessage->setMessage($message);
+            $em->persist($userMessage);
 
             $to = preg_replace('/\s+/', '', $form->get('to')->getData());
 
@@ -113,6 +141,15 @@ class MessageController extends Controller
                 $userMessage = new UserMessage();
                 $userMessage->setUser($user);
                 $userMessage->setMessage($message);
+                $receiversUsername = $message->getReceiverUsername();
+
+                if (empty($receiversUsername)) {
+                    $receiversUsername = $username;
+
+                } else {
+                    $receiversUsername .= ", $username";
+                }
+                $message->setReceiverUsername($receiversUsername);
                 $em->persist($userMessage);
                 $em->persist($message);
             }
@@ -133,6 +170,11 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/list/received",
+     *     name="claro_message_list_received_layout"
+     * )
+     *
      * Displays the layout of the received message list.
      *
      * @return Response
@@ -143,6 +185,11 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/list/sent",
+     *     name="claro_message_list_sent_layout"
+     * )
+     *
      * Displays the layout of the sent message list.
      *
      * @return Response
@@ -153,6 +200,12 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/list/received/{offset}",
+     *     name="claro_message_list_received",
+     *     options={"expose"=true}
+     * )
+     *
      * Displays a partial list of received message for the current user.
      * This method is called with ajax and append the result in the layout.
      *
@@ -174,6 +227,12 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/list/sent/{offset}",
+     *     name="claro_message_list_sent",
+     *     options={"expose"=true}
+     * )
+     *
      * Displays a partial list of sent message for the current user.
      * This method is called with ajax and append the result in the layout.
      *
@@ -185,16 +244,21 @@ class MessageController extends Controller
     {
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
-        $messages = $em->getRepository('ClarolineCoreBundle:Message')
+        $userMessages = $em->getRepository('ClarolineCoreBundle:Message')
             ->findSentByUser($user, false, $offset, self::MESSAGE_PER_PAGE);
 
         return $this->render(
             'ClarolineCoreBundle:Message:list_message.html.twig',
-            array('messages' => $messages)
+            array('userMessages' => $userMessages)
         );
     }
 
     /**
+     * @Route(
+     *     "/list/removed",
+     *     name="claro_message_list_removed_layout"
+     * )
+     *
      * Displays the layout of the removed message list.
      *
      * @return Response
@@ -207,6 +271,11 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/show/{messageId}",
+     *     name="claro_message_show"
+     * )
+     *
      * Displays a message.
      *
      * @param integer $messageId the message id
@@ -253,6 +322,12 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/delete/from",
+     *     name="claro_message_delete_from",
+     *     options={"expose"=true}
+     * )
+     *
      * Deletes a message from the sent message list (soft delete).
      * It takes an array of ids in the query string (ids[]=1&ids[]=2).
      *
@@ -265,10 +340,13 @@ class MessageController extends Controller
         if (isset($params['ids'])) {
             $em = $this->get('doctrine.orm.entity_manager');
             foreach ($params['ids'] as $id) {
-                $message = $em->getRepository('ClarolineCoreBundle:Message')
+                $message = $em->getRepository('ClarolineCoreBundle:UserMessage')
                     ->find($id);
-                $message->markAsRemoved();
-                $em->persist($message);
+
+                if (!is_null($message)) {
+                    $message->markAsRemoved();
+                    $em->persist($message);
+                }
             }
             $em->flush();
         }
@@ -277,6 +355,12 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/delete/to",
+     *     name="claro_message_delete_to",
+     *     options={"expose"=true}
+     * )
+     *
      * Deletes a message from the received message list (soft delete).
      * It takes an array of ids in the query string (ids[]=1&ids[]=2).
      *
@@ -292,7 +376,70 @@ class MessageController extends Controller
             foreach ($params['ids'] as $id) {
                 $userMessage = $em->getRepository('ClarolineCoreBundle:UserMessage')
                     ->find($id);
-                $userMessage->markAsRemoved();
+                if (!is_null($userMessage)) {
+                    $userMessage->markAsRemoved();
+                    $em->persist($userMessage);
+                }
+            }
+            $em->flush();
+        }
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @Route(
+     *     "/delete/trash",
+     *     name="claro_message_delete_trash",
+     *     options={"expose"=true}
+     * )
+     * @Method("DELETE")
+     *
+     * Deletes a message from trash (permanent delete).
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteTrashAction()
+    {
+        $params = $this->get('request')->query->all();
+
+        if (isset($params['ids'])) {
+            $em = $this->get('doctrine.orm.entity_manager');
+
+            foreach ($params['ids'] as $id) {
+                $userMessage = $em->getRepository('ClarolineCoreBundle:UserMessage')
+                    ->find($id);
+                $em->remove($userMessage);
+            }
+            $em->flush();
+        }
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @Route(
+     *     "/restore",
+     *     name="claro_message_restore_from_trash",
+     *     options={"expose"=true}
+     * )
+     *
+     * Restore a message from the trash.
+     * It takes an array of ids in the query string (ids[]=1&ids[]=2).
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function restoreFromTrashAction()
+    {
+        $params = $this->get('request')->query->all();
+
+        if (isset($params['ids'])) {
+            $em = $this->get('doctrine.orm.entity_manager');
+
+            foreach ($params['ids'] as $id) {
+                $userMessage = $em->getRepository('ClarolineCoreBundle:UserMessage')
+                    ->find($id);
+                $userMessage->markAsUnremoved();
                 $em->persist($userMessage);
             }
             $em->flush();
@@ -302,6 +449,12 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/list/received/search/{search}/offset/{offset}",
+     *     name="claro_message_list_received_search",
+     *     options={"expose"=true}
+     * )
+     *
      * Displays a partial list of received message for the current user.
      * This method is called with ajax and append the result in the layout.
      *
@@ -324,6 +477,12 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/list/sent/search/{search}/offset/{offset}",
+     *     name="claro_message_list_sent_search",
+     *     options={"expose"=true}
+     * )
+     *
      * Displays a partial list of sent message for the current user.
      * This method is called with ajax and append the result in the layout.
      *
@@ -336,16 +495,22 @@ class MessageController extends Controller
     {
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
-        $messages = $em->getRepository('ClarolineCoreBundle:Message')
+        $userMessages = $em->getRepository('ClarolineCoreBundle:Message')
             ->findSentByUserAndObjectAndUsername($user, $search, false, $offset, self::MESSAGE_PER_PAGE);
 
         return $this->render(
             'ClarolineCoreBundle:Message:list_message.html.twig',
-            array('messages' => $messages)
+            array('userMessages' => $userMessages)
         );
     }
 
     /**
+     * @Route(
+     *     "/list/removed/{offset}",
+     *     name="claro_message_list_removed",
+     *     options={"expose"=true}
+     * )
+     *
      * Displays a partial list of removed message for the current user.
      * This method is called with ajax and append the result in the layout.
      *
@@ -367,6 +532,12 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/list/removed/search/{search}/offset/{offset}",
+     *     name="claro_message_list_removed_search",
+     *     options={"expose"=true}
+     * )
+     *
      * Displays a partial list of removed message for the current user.
      * This method is called with ajax and append the result in the layout.
      *
@@ -389,6 +560,12 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/mark_as_read/{userMessageId}",
+     *     name="claro_message_mark_as_read",
+     *     options={"expose"=true}
+     * )
+     *
      * Marks a message as read.
      *
      * @param integer $userMessageId the userMessage id (when you send a message,

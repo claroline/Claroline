@@ -43,7 +43,7 @@ class WorkspaceRepository extends EntityRepository
             JOIN w.workspaceOrderedTools wot
             JOIN wot.workspaceToolRoles wtr
             JOIN wtr.role r
-            WHERE r.name LIKE 'ROLE_ANONYMOUS'";
+            WHERE r.name = 'ROLE_ANONYMOUS'";
 
             $query = $this->_em->createQuery($dql);
 

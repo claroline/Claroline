@@ -19,10 +19,10 @@
             <div class="input-append pull-right">
                 <input class="input-medium" type="text" id="search-user-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
                 <button class="filter btn" type="button" id="search-user-button">
-                    <i class="icon-search"></i> 
+                    <i class="icon-search"></i>
                 </button>
             </div>
-           
+
         </div>
         <table id="user-table"  class="table table-striped table-bordered table-condensed">
             <thead>
@@ -34,7 +34,10 @@
                     <th>{{ 'mail'|trans({}, 'platform') }}</th>
                     <th>{{ 'role'|trans({}, 'platform') }}</th>
                     <th></th>
-                    <th>{{ 'show'|trans({}, 'platform') }}</th>
+                    <th>{{ 'show_profile'|trans({}, 'platform') }}</th>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <th>{{ 'show_as'|trans({}, 'platform') }}</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody id="user-table-body">

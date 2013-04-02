@@ -3,6 +3,9 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
+use Claroline\CoreBundle\Library\Event\ExportResourceTemplateEvent;
+use Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent;
+use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
 
 class TextListenerTest extends FunctionalTestCase
 {
@@ -47,6 +50,44 @@ class TextListenerTest extends FunctionalTestCase
 
         $form = $crawler->filter('#text_form');
         $this->assertEquals(count($form), 1);
+    }
+
+    public function testOnCopyText()
+    {
+        $this->logUser($this->getUser('user'));
+        $text = $this->addText('This is a text', 'hello world', $this->getDirectory('user')->getId());
+        $this->client->request(
+            'GET',
+            "/resource/copy/{$this->getDirectory('user')->getId()}?ids[]={$text->id}"
+        );
+        $this->client->request('GET', "/resource/directory/{$this->getDirectory('user')->getId()}");
+        $dir = json_decode($this->client->getResponse()->getContent());
+        $this->assertObjectHasAttribute('resources', $dir);
+        $this->assertEquals(2, count($dir->resources));
+    }
+
+    public function testExportTemplate()
+    {
+        $this->loadTextData('user', 'user', 200, array('foo'));
+
+        $event = new ExportResourceTemplateEvent($this->getText('foo'));
+        $this->client->getContainer()->get('event_dispatcher')->dispatch('resource_text_to_template', $event);
+        $config = $event->getConfig();
+        $this->assertTrue(isset($config['text']));
+    }
+
+    public function testImportTemplate()
+    {
+        $text['text'] = 'Hello world !';
+
+        $event = new ImportResourceTemplateEvent(
+            $text,
+            $this->getDirectory('user'),
+            $this->getUser('user')
+        );
+
+        $this->client->getContainer()->get('event_dispatcher')->dispatch('resource_text_from_template', $event);
+        $this->assertEquals(1, count($event->getResource()->getRevisions()));
     }
 
     private function addText($name, $text, $parentId)

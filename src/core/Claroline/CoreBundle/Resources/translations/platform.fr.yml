@@ -60,6 +60,7 @@ find_workspaces: 'Tous les espaces'
 first_name: Prénom
 form_role: Rôle
 from: Depuis
+from_message: De
 general: Général
 group: Groupe
 group_form_name: Nom
@@ -67,6 +68,7 @@ group_form_ownedRoles: Rôles
 group_form_platformRole: Role
 group_parameter: 'Paramètres du groupe'
 groups: Groupes
+history: Historique
 home: Accueil
 id: Id
 informations: Informations
@@ -92,7 +94,9 @@ mail_form_content: Contenu
 mail_form_object: Objet
 manage_rights: 'Gérer les droits'
 manager: Gestionnaire
-messages_confirm_delete : 'Etes vous sûr de vouloir supprimer ce message ?'
+messages_confirm_delete: 'Etes-vous sûr de vouloir supprimer ce(s) message(s) ?'
+messages_confirm_permanent_delete: 'Etes-vous sûr de vouloir supprimer définitivement ce(s) message(s) ?'
+messages_confirm_restore: 'Etes-vous sûr de vouloir restaurer ce(s) message(s) ?'
 message_form_content: Contenu
 message_form_object: Objet
 message_form_to: A
@@ -197,12 +201,17 @@ settings: Paramètres
 show: Voir
 show_as_admin: 'Voir comme admin'
 show_as_user: 'Voir comme utilisateur'
+show_as: 'Voir comme'
+show_profile: 'Voir le profile'
+steal_session: 'Voler la session'
+switch: Echanger
 teacher: Professeur
 text_form_name: Nom
 text_form_shareType: Redistribution
 text_form_text: Texte
 The code {{ code }} is already assigned to another workspace.: Le code {{ code }} est déjà assigné à un autre espace d'activités.
 to: Jusque
+to_message: A
 today: 'Aujourd''hui'
 tool: Outil
 tools: Outils
@@ -246,7 +255,7 @@ workspace_form_code: Code
 workspace_form_name: Nom
 workspace_form_template: Modèle
 workspace_form_type: Type
-workspace_order_tool_edit_form_translationKey: Nom
+workspace_order_tool_edit_form_name: Nom
 workspace_resource: Ressources
 workspace_template_form_name: Nom
 workspace_tools: Outils

@@ -4,21 +4,27 @@ namespace Claroline\CoreBundle\Controller\Tool;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
-use Claroline\CoreBundle\Entity\Tool\DesktopTool;
 use Claroline\CoreBundle\Entity\Tool\WorkspaceOrderedTool;
 use Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole;
 use Claroline\CoreBundle\Library\Event\ConfigureWidgetWorkspaceEvent;
-use Claroline\CoreBundle\Library\Event\ConfigureWidgetDesktopEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Claroline\CoreBundle\Form\WorkspaceEditType;
 use Claroline\CoreBundle\Form\WorkspaceOrderToolEditType;
 use Claroline\CoreBundle\Form\WorkspaceTemplateType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-class ParametersController extends Controller
+class WorkspaceParametersController extends Controller
 {
     /**
+     * @Route(
+     *     "/{workspaceId}/widget",
+     *     name="claro_workspace_widget_properties"
+     * )
+     * @Method("GET")
+     *
      * Renders the workspace widget properties page.
      *
      * @param integer $workspaceId
@@ -27,7 +33,7 @@ class ParametersController extends Controller
      */
     public function workspaceWidgetsPropertiesAction($workspaceId)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
         if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
@@ -44,6 +50,13 @@ class ParametersController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/{workspaceId}/widget/{widgetId}/baseconfig/{displayConfigId}/invertvisible",
+     *     name="claro_workspace_widget_invertvisible",
+     *     options={"expose"=true}
+     * )
+     * @Method("POST")
+     *
      * Inverts the visibility boolean of a widget in the specified workspace.
      * If the DisplayConfig entity for the workspace doesn't exist in the database
      * yet, it's created here.
@@ -57,7 +70,7 @@ class ParametersController extends Controller
      */
     public function workspaceInvertVisibleWidgetAction($workspaceId, $widgetId, $displayConfigId)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
             ->find($workspaceId);
 
@@ -93,6 +106,13 @@ class ParametersController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/{workspaceId}/widget/{widgetId}/configuration",
+     *     name="claro_workspace_widget_configuration",
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     *
      * Asks a widget to render its configuration page for a workspace.
      *
      * @param integer $workspaceId
@@ -126,208 +146,12 @@ class ParametersController extends Controller
     }
 
     /**
-     * Displays the widget configuration page.
-     *
-     * @return Response
+     * @Route(
+     *     "/{workspaceId}/tools",
+     *     name="claro_workspace_tools_roles"
+     * )
+     * @Method("GET")
      */
-    public function desktopWidgetPropertiesAction()
-    {
-        $user = $this->get('security.context')->getToken()->getUser();
-        $configs = $this->get('claroline.widget.manager')
-            ->generateDesktopDisplayConfig($user->getId());
-
-        return $this->render(
-            'ClarolineCoreBundle:Tool\desktop\parameters:widget_properties.html.twig',
-            array('configs' => $configs, 'user' => $user)
-        );
-    }
-
-    /**
-     * Inverts the visibility boolean for a widget for the current user.
-     *
-     * @param integer $widgetId        the widget id
-     * @param integer $displayConfigId the display config id (the configuration entity for widgets)
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function desktopInvertVisibleUserWidgetAction($widgetId, $displayConfigId)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $user = $this->get('security.context')->getToken()->getUser();
-        $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
-            ->find($widgetId);
-        $displayConfig = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
-            ->findOneBy(array('user' => $user, 'widget' => $widget));
-
-        if ($displayConfig == null) {
-            $displayConfig = new DisplayConfig();
-            $baseConfig = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
-                ->find($displayConfigId);
-            $displayConfig->setParent($baseConfig);
-            $displayConfig->setWidget($widget);
-            $displayConfig->setUser($user);
-            $displayConfig->setVisible($baseConfig->isVisible());
-            $displayConfig->setLock(true);
-            $displayConfig->setDesktop(true);
-            $displayConfig->invertVisible();
-        } else {
-            $displayConfig->invertVisible();
-        }
-
-        $em->persist($displayConfig);
-        $em->flush();
-
-        return new Response('success');
-    }
-
-    /**
-     * Asks a widget to display its configuration page.
-     *
-     * @param integer $widgetId the widget id
-     *
-     * @return Response
-     */
-    public function desktopConfigureWidgetAction($widgetId)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $user = $this->get('security.context')->getToken()->getUser();
-        $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
-            ->find($widgetId);
-        $event = new ConfigureWidgetDesktopEvent($user);
-        $eventName = "widget_{$widget->getName()}_configuration_desktop";
-        $this->get('event_dispatcher')->dispatch($eventName, $event);
-
-        if ($event->getContent() !== '') {
-            return $this->render(
-                'ClarolineCoreBundle:Tool\desktop\parameters:widget_configuration.html.twig',
-                array('content' => $event->getContent())
-            );
-        }
-
-        throw new \Exception("event $eventName didn't return any Response");
-    }
-
-    /**
-     * Displays the tools configuration page.
-     *
-     * @return Response
-     */
-    public function desktopConfigureToolAction()
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $user = $this->get('security.context')->getToken()->getUser();
-        $orderedToolList = array();
-        $desktopTools = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')->findBy(array('user' => $user));
-
-        foreach ($desktopTools as $desktopTool) {
-            $desktopTool->getTool()->setVisible(true);
-            $orderedToolList[$desktopTool->getOrder()] = $desktopTool->getTool();
-        }
-
-        $undisplayedTools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findByUser($user, false);
-
-        foreach ($undisplayedTools as $tool) {
-            $tool->setVisible(false);
-        }
-
-        $tools = $this->arrayFill($orderedToolList, $undisplayedTools);
-
-        return $this->render(
-            'ClarolineCoreBundle:Tool\desktop\parameters:tool_properties.html.twig',
-            array('tools' => $tools)
-        );
-    }
-
-    /**
-     * Remove a tool from the desktop.
-     *
-     * @param integer $toolId
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Exception
-     */
-    public function desktopRemoveToolAction($toolId)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $user = $this->get('security.context')->getToken()->getUser();
-        $desktopTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
-            ->findOneBy(array('user' => $user, 'tool' => $toolId));
-        $em->remove($desktopTool);
-        $em->flush();
-
-        return new Response('success', 204);
-    }
-
-    /**
-     * Add a tool to the desktop.
-     *
-     * @param integer $toolId
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Exception
-     */
-    public function desktopAddToolAction($toolId, $position)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId);
-        $user = $this->get('security.context')->getToken()->getUser();
-        $switchTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
-            ->findOneBy(array('user' => $user, 'order' => $position));
-        if ($switchTool != null) {
-            throw new \RuntimeException('A tool already exists at this position');
-        }
-        $desktopTool = new DesktopTool();
-        $desktopTool->setUser($user);
-        $desktopTool->setTool($tool);
-        $desktopTool->setOrder($position);
-        $em->persist($desktopTool);
-        $em->flush();
-
-        return new Response('success', 204);
-    }
-
-    /**
-     * This method switch the position of a tool with an other one.
-     *
-     * @param integer $toolId
-     * @param integer $position
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function desktopMoveToolAction($toolId, $position)
-    {
-         $em = $this->get('doctrine.orm.entity_manager');
-         $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId);
-         $user = $this->get('security.context')->getToken()->getUser();
-         $movingTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
-            ->findOneBy(array('user' => $user, 'tool' => $tool));
-         $switchTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
-            ->findOneBy(array('user' => $user, 'order' => $position));
-
-        //if a tool is already at this position, he must go "far away"
-        if ($switchTool !== null) {
-            //go far away ! Integrety constraints.
-            $switchTool->setOrder('99');
-            $em->persist($switchTool);
-        }
-
-        $em->flush();
-
-        //the tool must exists
-        if ($movingTool !== null) {
-            $newPosition = $movingTool->getOrder();
-            $movingTool->setOrder(intval($position));
-            $em->persist($movingTool);
-        }
-
-         //put the original tool back.
-        if ($switchTool !== null) {
-            $switchTool->setOrder($newPosition);
-            $em->persist($switchTool);
-        }
-
-        $em->flush();
-
-        return new Response('<body>success</body>');
-    }
-
     public function workspaceToolsRolesAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -364,23 +188,26 @@ class ParametersController extends Controller
         $wtr = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceToolRole')->findByWorkspace($workspace);
 
         foreach ($wot as $orderedTool) {
-            //creates the visibility array
-            foreach ($wsRoles as $role) {
-                $isVisible = false;
-                //is the tool visible for a role in a workspace ?
-                foreach ($wtr as $workspaceToolRole) {
-                    if ($workspaceToolRole->getRole() == $role
-                        && $workspaceToolRole->getWorkspaceOrderedTool()->getTool() == $orderedTool->getTool()
-                        && $workspaceToolRole->getWorkspaceOrderedTool()->getWorkspace() == $workspace) {
-                        $isVisible = true;
+
+            if ($orderedTool->getTool()->isDisplayableInWorkspace()) {
+                //creates the visibility array
+                foreach ($wsRoles as $role) {
+                    $isVisible = false;
+                    //is the tool visible for a role in a workspace ?
+                    foreach ($wtr as $workspaceToolRole) {
+                        if ($workspaceToolRole->getRole() == $role
+                            && $workspaceToolRole->getWorkspaceOrderedTool()->getTool() == $orderedTool->getTool()
+                            && $workspaceToolRole->getWorkspaceOrderedTool()->getWorkspace() == $workspace) {
+                            $isVisible = true;
+                        }
                     }
+                    $roleVisibility[$role->getId()] = $isVisible;
                 }
-                $roleVisibility[$role->getId()] = $isVisible;
+                $toolsPermissions[] = array(
+                    'tool' => $orderedTool,
+                    'visibility' => $roleVisibility
+                );
             }
-            $toolsPermissions[$orderedTool->getOrder()] = array(
-                'tool' => $orderedTool,
-                'visibility' => $roleVisibility
-            );
         }
 
         $undisplayedTools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findByWorkspace($workspace, false);
@@ -396,35 +223,38 @@ class ParametersController extends Controller
         }
 
         foreach ($undisplayedTools as $undisplayedTool) {
-            $wot = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
-                ->findOneBy(array('workspace' => $workspaceId, 'tool' => $undisplayedTool->getId()));
 
-            //create a WorkspaceOrderedTool for each Tool that hasn't already one
-            if ($wot === null) {
-                $wot = new WorkspaceOrderedTool();
-                $wot->setOrder($nextDisplayOrder++);
-                $wot->setTool($undisplayedTool);
-                $wot->setWorkspace($workspace);
-                $wot->setTranslationKey(
-                    $this->container->get('translator')->trans(
-                        $undisplayedTool->getName(),
-                        array(),
-                        'tools'
-                    )
-                );
-                $em->persist($wot);
-                $em->flush();
-            } else {
-                continue;
-            }
+            if ($undisplayedTool->isDisplayableInWorkspace()) {
+                $wot = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
+                    ->findOneBy(array('workspace' => $workspaceId, 'tool' => $undisplayedTool->getId()));
 
-            foreach ($wsRoles as $role) {
-                $roleVisibility[$role->getId()] = false;
+                //create a WorkspaceOrderedTool for each Tool that hasn't already one
+                if ($wot === null) {
+                    $wot = new WorkspaceOrderedTool();
+                    $wot->setOrder($nextDisplayOrder++);
+                    $wot->setTool($undisplayedTool);
+                    $wot->setWorkspace($workspace);
+                    $wot->setName(
+                        $this->container->get('translator')->trans(
+                            $undisplayedTool->getName(),
+                            array(),
+                            'tools'
+                        )
+                    );
+                    $em->persist($wot);
+                    $em->flush();
+                } else {
+                    continue;
+                }
+
+                foreach ($wsRoles as $role) {
+                    $roleVisibility[$role->getId()] = false;
+                }
+                $toFill[] = array('tool' => $wot, 'visibility' => $roleVisibility);
             }
-            $toFill[] = array('tool' => $wot, 'visibility' => $roleVisibility);
         }
 
-        $toolsPermissions = $this->arrayFill($toolsPermissions, $toFill);
+        $toolsPermissions = $this->container->get('claroline.utilities.misc')->arrayFill($toolsPermissions, $toFill);
 
         return $this->render(
             'ClarolineCoreBundle:Tool\workspace\parameters:tool_roles.html.twig',
@@ -437,6 +267,13 @@ class ParametersController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/remove/tool/{toolId}/workspace/{workspaceId}/role/{roleId}",
+     *     name="claro_tool_workspace_remove",
+     *     options={"expose"=true}
+     * )
+     * @Method("POST")
+     *
      * Remove a tool from a role in a workspace.
      *
      * @param integer $toolId
@@ -468,6 +305,13 @@ class ParametersController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/add/tool/{toolId}/position/{position}/workspace/{workspaceId}/role/{roleId}",
+     *     name="claro_tool_workspace_add",
+     *     options={"expose"=true}
+     * )
+     * @Method("POST")
+     *
      * Adds a tool to a role in a workspace.
      *
      * @param integer $toolId
@@ -499,7 +343,7 @@ class ParametersController extends Controller
             $wot->setOrder($position);
             $wot->setTool($tool);
             $wot->setWorkspace($workspace);
-            $wot->setTranslationKey($tool->getName());
+            $wot->setName($tool->getName());
             $em->persist($wot);
         }
 
@@ -513,6 +357,13 @@ class ParametersController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/move/tool/{toolId}/position/{position}/workspace/{workspaceId}",
+     *     name="claro_tool_workspace_move",
+     *     options={"expose"=true}
+     * )
+     * @Method("POST")
+     *
      * This method switch the position of a tool with an other one.
      *
      * @param integer $toolId
@@ -574,6 +425,19 @@ class ParametersController extends Controller
         return new Response('success');
     }
 
+    /**
+     * @Route(
+     *     "/{workspaceId}/resource/rights/form",
+     *     name="claro_workspace_resource_rights_form"
+     * )
+     * @Method("GET")
+     *
+     * @param integer $workspaceId
+     *
+     * @return Response
+     *
+     * @throws AccessDeniedHttpException
+     */
     public function workspaceResourceRightsFormAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -593,6 +457,20 @@ class ParametersController extends Controller
         );
     }
 
+    /**
+     * @Route(
+     *     "/{workspaceId}/resource/rights/form/role/{roleId}",
+     *     name="claro_workspace_resource_rights_creation_form"
+     * )
+     * @Method("GET")
+     *
+     * @param integer $workspaceId
+     * @param integer $roleId
+     *
+     * @return Response
+     *
+     * @throws AccessDeniedHttpException
+     */
     public function workspaceResourceRightsCreationFormAction($workspaceId, $roleId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -622,6 +500,19 @@ class ParametersController extends Controller
         );
     }
 
+    /**
+     * @Route(
+     *     "/{workspaceId}/form/export",
+     *     name="claro_workspace_export_form"
+     * )
+     * @Method("GET")
+     *
+     * @param integer $workspaceId
+     *
+     * @return Response
+     *
+     * @throws AccessDeniedHttpException
+     */
     public function workspaceExportFormAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -641,6 +532,19 @@ class ParametersController extends Controller
         );
     }
 
+    /**
+     * @Route(
+     *     "/{workspaceId}/export",
+     *     name="claro_workspace_export"
+     * )
+     * @Method("POST")
+     *
+     * @param integer $workspaceId
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
+     * @throws AccessDeniedHttpException
+     */
     public function workspaceExportAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -674,55 +578,16 @@ class ParametersController extends Controller
     }
 
     /**
-     * Fill the empty value on $fillable with $array and sort it.
+     * @Route(
+     *     "/{workspaceId}/editform",
+     *     name="claro_workspace_edit_form"
+     * )
+     * @Method("GET")
      *
-     * Ie:
-     * $fillable[4] = value4
-     * $fillable[1] = value1
-     * $fillable[2] = value2
+     * @param integer $workspaceId
      *
-     * $array[] = value3
-     *
-     * One the function is fired the results is
-     * $fillable[1] = value1
-     * $fillable[2] = value2
-     * $fillable[3] = value3
-     * $fillable[4] = value4
-     *
-     * @param array $fillable
-     * @param array $array
-     *
-     * @return array
+     * @return Response
      */
-    public function arrayFill(array $fillable, array $array)
-    {
-        ksort($fillable);
-        $saveKey = 1;
-        $filledArray = array();
-
-        foreach ($fillable as $key => $value) {
-            if ($key - $saveKey != 0) {
-                while ($key - $saveKey >= 1) {
-                    $filledArray[$saveKey] = array_shift($array);
-                    $saveKey++;
-                }
-                $filledArray[$key] = $value;
-            } else {
-                $filledArray[$key] = $value;
-            }
-            $saveKey++;
-        }
-
-        if (count($array) > 0) {
-            foreach ($array as $item) {
-                $filledArray[] = $item;
-            }
-        }
-
-        return $filledArray;
-
-    }
-
     public function workspaceEditFormAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -736,6 +601,18 @@ class ParametersController extends Controller
         );
     }
 
+
+    /**
+     * @Route(
+     *     "/{workspaceId}/edit",
+     *     name="claro_workspace_edit"
+     * )
+     * @Method("POST")
+     *
+     * @param integer $workspaceId
+     *
+     * @return Response
+     */
     public function workspaceEditAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -770,6 +647,18 @@ class ParametersController extends Controller
         );
     }
 
+    /**
+     * @Route(
+     *     "/{workspaceId}/tools/{workspaceOrderToolId}/editform",
+     *     name="claro_workspace_order_tool_edit_form"
+     * )
+     * @Method("GET")
+     *
+     * @param integer $workspaceId
+     * @param integer $workspaceOrderToolId
+     *
+     * @return Response
+     */
     public function workspaceOrderToolEditFormAction($workspaceId, $workspaceOrderToolId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -784,6 +673,18 @@ class ParametersController extends Controller
         );
     }
 
+    /**
+     * @Route(
+     *     "/{workspaceId}/tools/{workspaceOrderToolId}/edit",
+     *     name="claro_workspace_order_tool_edit"
+     * )
+     * @Method("POST")
+     *
+     * @param integer $workspaceId
+     * @param integer $workspaceOrderToolId
+     *
+     * @return Response
+     */
     public function workspaceOrderToolEditAction($workspaceId, $workspaceOrderToolId)
     {
         $em = $this->get('doctrine.orm.entity_manager');

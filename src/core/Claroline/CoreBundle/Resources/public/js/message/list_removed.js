@@ -5,7 +5,7 @@
         loading = false,
         stop = false,
         mode = 0,
-        standardRoute =  function () {
+        standardRoute = function () {
             return Routing.generate('claro_message_list_removed', {
                 'offset' : $('.row-user-message').length
             });
@@ -59,9 +59,9 @@
     function initEvents() {
         $('.chk-delete').live('change', function () {
             if ($('.chk-delete:checked').length) {
-                $('.delete-msg').removeAttr('disabled');
+                $('.button-msg').removeAttr('disabled');
             } else {
-                $('.delete-msg').attr('disabled', 'disabled');
+                $('.button-msg').attr('disabled', 'disabled');
             }
         });
 
@@ -89,10 +89,10 @@
         });
 
         $('.delete-msg').click(function () {
-            $('#validation-box').modal('show');
+            $('#delete-validation-box').modal('show');
         });
 
-        $('#modal-valid-button').click(function () {
+        $('#delete-modal-valid-button').click(function () {
             var parameters = {};
             var i = 0;
             var array = [];
@@ -102,7 +102,7 @@
             });
             parameters.ids = array;
 
-            var route = Routing.generate('claro_message_delete_to');
+            var route = Routing.generate('claro_message_delete_trash');
             route +=  '?' + $.param(parameters);
             $.ajax({
                 url: route,
@@ -110,23 +110,58 @@
                     $('.chk-delete:checked').each(function (index, element) {
                         $(element).parent().parent().remove();
                     });
-                    $('#validation-box').modal('hide');
-                    $('#validation-box-body').empty();
-                    $('.delete-users-button').attr('disabled', 'disabled');
+                    $('#delete-validation-box').modal('hide');
+                    $('.button-msg').attr('disabled', 'disabled');
+                    $('#allChecked').attr('checked', false);
                 },
                 type: 'DELETE'
             });
         });
 
-        $('#modal-cancel-button').click(function () {
-            $('#validation-box').modal('hide');
-            $('#validation-box-body').empty();
+        $('#delete-modal-cancel-button').click(function () {
+            $('#delete-validation-box').modal('hide');
+        });
+
+        $('#restore-msg').click(function () {
+            var parameters = {};
+            var i = 0;
+            var array = [];
+            $('.chk-delete:checked').each(function (index, element) {
+                array[i] = element.value;
+                i++;
+            });
+            parameters.ids = array;
+
+            var route = Routing.generate('claro_message_restore_from_trash');
+            route +=  '?' + $.param(parameters);
+            $.ajax({
+                url: route,
+                success: function () {
+                    $('.chk-delete:checked').each(function (index, element) {
+                        $(element).parent().parent().remove();
+                    });
+                    $('.button-msg').attr('disabled', 'disabled');
+                    $('#allChecked').attr('checked', false);
+                },
+                type: 'DELETE'
+            });
+        });
+
+        $('#allChecked').click(function () {
+            if ($('#allChecked').is(':checked')) {
+                $(' INPUT[@class=' + 'chk-delete' + '][type="checkbox"]').attr('checked', true);
+                $('.button-msg').removeAttr('disabled');
+            }
+            else {
+                $(' INPUT[@class=' + 'chk-delete' + '][type="checkbox"]').attr('checked', false);
+                $('.button-msg').attr('disabled', 'disabled');
+            }
         });
     }
 
     $('html, body').animate({scrollTop: 0}, 0);
     $('#deleting').hide();
-    $('.delete-msg').attr('disabled', 'disabled');
+    $('.button-msg').attr('disabled', 'disabled');
 
     initEvents();
     lazyloadUserMessage(standardRoute);

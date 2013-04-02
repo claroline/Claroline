@@ -17,3 +17,6 @@ services:
         class: %controller_name_converter.class%
         arguments:
           - "@kernel"
+
+    claroline.utilities.misc:
+        class: Claroline\CoreBundle\Library\Utilities\ClaroUtilities

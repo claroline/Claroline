@@ -124,7 +124,7 @@ class TextListener extends ContainerAware
     public function onImportTemplate(ImportResourceTemplateEvent $event)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $event->getUser();
         $text = new Text();
         $em->persist($text);
         $config = $event->getConfig();
@@ -136,6 +136,4 @@ class TextListener extends ContainerAware
         $event->setResource($text);
         $event->stopPropagation();
     }
-
-
 }

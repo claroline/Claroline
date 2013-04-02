@@ -1,3 +1,0 @@
-claro_jasmine_spec_runner:
-    pattern: /jasmine
-    defaults: { _controller: 'ClarolineCoreBundle:Jasmine:index' }

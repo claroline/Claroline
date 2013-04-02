@@ -28,18 +28,18 @@ class RoleRepository extends NestedTreeRepository
     {
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
-            WHERE r.name LIKE 'ROLE_WS_COLLABORATOR_{$workspace->getId()}'
+            WHERE r.name = 'ROLE_WS_COLLABORATOR_{$workspace->getId()}'
         ";
-         $query = $this->_em->createQuery($dql);
+        $query = $this->_em->createQuery($dql);
 
-         return $query->getSingleResult();
+        return $query->getSingleResult();
     }
 
     public function findVisitorRole(AbstractWorkspace $workspace)
     {
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
-            WHERE r.name LIKE 'ROLE_WS_VISITOR_{$workspace->getId()}'
+            WHERE r.name = 'ROLE_WS_VISITOR_{$workspace->getId()}'
         ";
         $query = $this->_em->createQuery($dql);
 
@@ -50,7 +50,7 @@ class RoleRepository extends NestedTreeRepository
     {
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
-            WHERE r.name LIKE 'ROLE_WS_MANAGER_{$workspace->getId()}'
+            WHERE r.name = 'ROLE_WS_MANAGER_{$workspace->getId()}'
         ";
         $query = $this->_em->createQuery($dql);
 

@@ -264,6 +264,10 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
 
     public function isEqualTo(UserInterface $user)
     {
+        if ($user->getRoles() !== $this->getRoles()) {
+            return false;
+        }
+
         if (!$user instanceof User) {
             return false;
         }
@@ -272,19 +276,25 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
             return false;
         }
 
-        if ($this->password !== $user->getPassword()) {
-            return false;
-        }
-
-        if ($this->getSalt() !== $user->getSalt()) {
+        if ($this->id !== $user->getId())
+        {
             return false;
         }
 
         /*
-        return $user instanceof User
-            && $this->username === $user->getUsername()
-            && $this->password === $user->getPassword()
-            && $this->getSalt() === $user->getSalt();*/
+         * Impersonating user doesn't workspace with these. They always return false.
+         *
+        if ($this->password !== $user->getPassword()) {
+            throw new \Exception('not password of');
+            return false;
+        }
+
+        if ($this->getSalt() !== $user->getSalt()) {
+            throw new \Exception('not salt of');
+            return false;
+        }*/
+
+        return true;
     }
 
     public function getPhone()
@@ -319,12 +329,21 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
 
     public function serialize()
     {
-        return serialize(array($this->id));
+        return serialize(
+            array(
+                'id' => $this->id,
+                'username' => $this->username,
+            )
+        );
     }
 
     public function unserialize($serialized)
     {
-        $this->id = unserialize($serialized);
+        $unserialized = unserialize($serialized);
+        $this->id = $unserialized['id'];
+        $this->username = $unserialized['username'];
+        $this->roles = new ArrayCollection();
+        $this->groups = new ArrayCollection();
     }
 
     public function setPersonalWorkspace($workspace)

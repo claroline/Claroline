@@ -10,8 +10,8 @@ class ResourceRightsRepository extends EntityRepository
     /**
      * Used by the ResourceVoter.
      *
-     * @param type array $rights
-     * @param type AbstractResource $resource
+     * @param array[string]     $rights
+     * @param AbstractResource  $resource
      *
      * @return ResourceRights;
      */
@@ -37,7 +37,7 @@ class ResourceRightsRepository extends EntityRepository
 
         foreach ($roles as $role) {
             $dql .= $index !== 0 ? ' OR ' : '';
-            $dql .= "resource.id = {$resource->getId()} AND role.name LIKE '{$role}'";
+            $dql .= "resource.id = {$resource->getId()} AND role.name = '{$role}'";
             ++$index;
         }
 
@@ -64,7 +64,7 @@ class ResourceRightsRepository extends EntityRepository
 
         foreach ($roles as $role) {
             $dql .= $index !== 0 ? ' OR ' : '';
-            $dql .= "resource.id = {$resource->getId()} AND role.name LIKE '{$role}'";
+            $dql .= "resource.id = {$resource->getId()} AND role.name = '{$role}'";
             ++$index;
         }
 

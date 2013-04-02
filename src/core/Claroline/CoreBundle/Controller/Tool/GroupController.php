@@ -8,6 +8,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 class GroupController extends Controller
 {
@@ -15,6 +17,21 @@ class GroupController extends Controller
     const NUMBER_GROUP_PER_ITERATION = 25;
 
     /**
+     * @Route(
+     *     "/{workspaceId}/tools/group/{groupId}",
+     *     name="claro_workspace_tools_show_group_parameters",
+     *     options={"expose"=true},
+     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$", "groupId"="^(?=.*[1-9].*$)\d*$"}
+     * )
+     *
+     * @Route(
+     *     "/{workspaceId}/group/{groupId}",
+     *     name="claro_workspace_tools_edit_group_parameters",
+     *     options={"expose"=true},
+     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$", "groupId"="^(?=.*[1-9].*$)\d*$" }
+     * )
+     * @Method({"POST", "GET"})
+     *
      * Renders the group parameter page with its layout and
      * edit the group parameters for the selected workspace.
      *
@@ -89,6 +106,13 @@ class GroupController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/{workspaceId}/groups/unregistered",
+     *     name="claro_workspace_unregistered_groups_list",
+     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
+     * )
+     * @Method("GET")
+     *
      * Renders the unregistered group list layout for a workspace.
      *
      * @param integer $workspaceId workspace id
@@ -108,6 +132,14 @@ class GroupController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/{workspaceId}/groups",
+     *     name="claro_workspace_delete_groups",
+     *     options={"expose"=true},
+     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
+     * )
+     * @Method("DELETE")
+     *
      * Removes many groups from a workspace.
      * It uses a query string of groupIds as parameter (groupIds[]=1&groupIds[]=2)
      *
@@ -144,6 +176,14 @@ class GroupController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/{workspaceId}/groups/{offset}/unregistered",
+     *     name="claro_workspace_unregistered_groups_paginated",
+     *     options={"expose"=true},
+     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$", "offset"="^(?=.*[0-9].*$)\d*$"}
+     * )
+     * @Method("GET")
+     *
      * Returns a partial json representation of the unregistered groups of a workspace.
      *
      * @param integer $workspaceId the workspace id
@@ -160,17 +200,21 @@ class GroupController extends Controller
         $paginatorGroups = $em->getRepository('ClarolineCoreBundle:Group')
             ->findWorkspaceOutsider($workspace, $offset, self::NUMBER_GROUP_PER_ITERATION);
         $groups = $this->paginatorToArray($paginatorGroups);
-        $content = $this->renderView(
-            'ClarolineCoreBundle:Tool\workspace\group_management:group.json.twig',
-            array('groups' => $groups)
-        );
-        $response = new Response($content);
+        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeGroups($groups));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
     }
 
     /**
+     * @Route(
+     *     "/{workspaceId}/groups/{offset}/registered",
+     *     name="claro_workspace_registered_groups_paginated",
+     *     options={"expose"=true},
+     *     requirements={"workspaceId"="(?=.*[0-9].*$)\d*$", "offset"="(?=.*[0-9].*$)\d*$"}
+     * )
+     * @Method("GET")
+     *
      * Returns a partial json representation of the registered groups of a workspace.
      *
      * @param integer $workspaceId the workspace id
@@ -187,17 +231,21 @@ class GroupController extends Controller
         $paginatorGroups = $em->getRepository('ClarolineCoreBundle:Group')
             ->findByWorkspace($workspace, $offset, self::NUMBER_GROUP_PER_ITERATION);
         $groups = $this->paginatorToArray($paginatorGroups);
-        $content = $this->renderView(
-            'ClarolineCoreBundle:Tool\workspace\group_management:group.json.twig',
-            array('groups' => $groups)
-        );
-        $response = new Response($content);
+        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeGroups($groups));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
     }
 
     /**
+     * @Route(
+     *     "/{workspaceId}/add/group",
+     *     name="claro_workspace_multiadd_group",
+     *     options={"expose"=true},
+     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
+     * )
+     * @Method("PUT")
+     *
      * Adds many groups to a workspace.
      * It uses a query string of groupIds as parameter (groupIds[]=1&groupIds[]=2)
      *
@@ -226,17 +274,21 @@ class GroupController extends Controller
             }
         }
 
-        $content = $this->renderView(
-            'ClarolineCoreBundle:Tool\workspace\group_management:group.json.twig',
-            array('groups' => $groups)
-        );
-        $response = new Response($content);
+        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeGroups($groups));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
     }
 
     /**
+     * @Route(
+     *     "/{workspaceId}/group/search/{search}/unregistered/{offset}",
+     *     name="claro_workspace_search_unregistered_groups",
+     *     requirements={"workspaceId"="^(?=.*[0-9].*$)\d*$"},
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     *
      * Returns a partial json representation of the unregistered groups of a workspace.
      * It'll search every groups whose name match $search.
      *
@@ -260,17 +312,21 @@ class GroupController extends Controller
                 self::NUMBER_GROUP_PER_ITERATION
             );
         $groups = $this->paginatorToArray($paginatorGroups);
-        $content = $this->renderView(
-            'ClarolineCoreBundle:Tool\workspace\group_management:group.json.twig',
-            array('groups' => $groups)
-        );
-        $response = new Response($content);
+        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeGroups($groups));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
     }
 
     /**
+     * @Route(
+     *     "/{workspaceId}/group/search/{search}/registered/{offset}",
+     *     name="claro_workspace_search_registered_groups",
+     *     requirements={"workspaceId"="^(?=.*[0-9].*$)\d*$"},
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     *
      * Returns a partial json representation of the registered groups of a workspace.
      * It'll search every groups whose name match $search.
      *
@@ -294,11 +350,7 @@ class GroupController extends Controller
                 self::NUMBER_GROUP_PER_ITERATION
             );
         $groups = $this->paginatorToArray($paginatorGroups);
-        $content = $this->renderView(
-            'ClarolineCoreBundle:Tool\workspace\group_management:group.json.twig',
-            array('groups' => $groups)
-        );
-        $response = new Response($content);
+        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeGroups($groups));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;

@@ -4,6 +4,8 @@ namespace Claroline\CoreBundle\Listener\Resource;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Library\Event\ExportResourceTemplateEvent;
+use Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent;
 use DirectoryIterator;
 
 class DirectoryListenerTest extends FunctionalTestCase
@@ -53,6 +55,57 @@ class DirectoryListenerTest extends FunctionalTestCase
         $dir = json_decode($this->client->getResponse()->getContent());
         $this->assertObjectHasAttribute('resources', $dir);
         $this->assertEquals(0, count($dir->resources));
+    }
+
+    public function testExportTemplate()
+    {
+        $this->loadDirectoryData('user', array('user/dir1/dir2/dir3'));
+        $event = new ExportResourceTemplateEvent($this->getDirectory('dir1'));
+        $this->client->getContainer()->get('event_dispatcher')->dispatch('resource_directory_to_template', $event);
+        $config = $event->getConfig();
+        $this->assertEquals(1, count($config['children']));
+        $this->assertEquals(1, count($config['children'][0]['children']));
+    }
+
+    public function testImportTemplate()
+    {
+        $canDo = array(
+            'canEdit' => false,
+            'canOpen' => true,
+            'canDelete' => false,
+            'canCopy' => false,
+            'canExport' => false,
+            'canCreate' => array('directory')
+        );
+
+        $perms = array(
+            'ROLE_WS_VISITOR' => $canDo,
+            'ROLE_WS_COLLABORATOR' => $canDo,
+            'ROLE_WS_MANAGER' => $canDo
+        );
+
+        $directory = array(
+            'type' => 'directory',
+            'name' => 'dir1',
+            'id' => 1,
+            'children' => array(array(
+                'type' => 'directory',
+                'name' => 'dir2',
+                'id' => 2,
+                'children' => array(),
+                'perms' => $perms
+            )),
+            'perms' => $perms
+        );
+
+        $event = new ImportResourceTemplateEvent(
+            $directory,
+            $this->getDirectory('user'),
+            $this->getUser('user')
+        );
+
+        $this->client->getContainer()->get('event_dispatcher')->dispatch('resource_directory_from_template', $event);
+        $this->assertEquals(2, count($event->getCreatedResources()));
     }
 
     private function cleanDirectory($dir)

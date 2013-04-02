@@ -6,14 +6,20 @@ use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
  * Controller of the user's desktop.
  */
 class ActivityController extends Controller
 {
-
     /**
+     * @Route(
+     *    "/{activityId}/add/resource/{resourceId}",
+     *    name="claro_activity_add_resource",
+          options={"expose"=true}
+     * )
+     *
      * Adds a resource to an activity.
      *
      * @param type $resourceId the resource id
@@ -46,6 +52,12 @@ class ActivityController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/{activityId}/remove/resource/{resourceId}",
+     *     name="claro_activity_remove_resource",
+     *     options={"expose"=true}
+     * )
+     *
      * Remove a resource from an activity.
      *
      * @param type $resourceId the resource id
@@ -65,11 +77,17 @@ class ActivityController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/{activityId}/set/sequence",
+     *     name="claro_activity_set_sequence",
+     *     options={"expose"=true}
+     * )
+
      * Sets the order of the resource in an activity.
      * It takes an array of resourceIds as parameter (querystring: ids[]=1&ids[]=2 ...)
      *
      * @param type $activityId the activity id
-     *
+     * 
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function setSequenceOrderAction($activityId)
@@ -94,6 +112,12 @@ class ActivityController extends Controller
     }
 
     /**
+     * @Route(
+     *    "/leftmenu/{activityId}",
+     *    name="claro_activity_left_menu",
+     *    options={"expose"=true}
+     * )
+     *
      * Renders the left menu of the activity player.
      * Called from an iframe.
      *
@@ -126,6 +150,11 @@ class ActivityController extends Controller
     }
 
     /**
+     * @Route (
+     *     "/player/{activityId}",
+     *     name="claro_activity_show_player"
+     * )
+     *
      * Shows the player layout.
      *
      * @param type $activityId the activity.
@@ -150,6 +179,11 @@ class ActivityController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/instructions/{activityId}",
+     *     name="claro_activity_show_instructions"
+     * )
+
      * Show the instructions of an activity.
      *
      * @param type $activityId the activity id
