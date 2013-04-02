@@ -319,7 +319,7 @@ class ExerciseController extends Controller
         $tabOrderInter = $session->get('tabOrderInter');
 
         //To record response
-        $exerciseSer = $this->container->get('UJM_Exo.exerciseServices');
+        $exerciseSer = $this->container->get('ujm.exercise_services');
         $ip = $exerciseSer->getIP();
         $interactionToValidatedID = $request->get('interactionToValidated');
         $response = $this->getDoctrine()
@@ -526,7 +526,7 @@ class ExerciseController extends Controller
     private function controlMaxAttemps($exercise, $user, $subscription)
     {
         if (($subscription[0]->getAdmin() != 1) && ($exercise->getMaxAttempts() > 0)
-            && ($exercise->getMaxAttempts() <= $this->container->get('UJM_Exo.exerciseServices')
+            && ($exercise->getMaxAttempts() <= $this->container->get('ujm.exercise_services')
                 ->getNbPaper($user->getId(), $exercise->getId()))
         ) {
             return false;

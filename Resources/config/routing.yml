@@ -16,6 +16,11 @@ ujm_interactionqcm_create:
     pattern:  /interactionqcm/create
     defaults: { _controller: "UJMExoBundle:InteractionQCM:create" }
     requirements: { _method: post }
+    
+ujm_interactionqcm_response:
+    pattern: /testQCM
+    defaults: { _controller: "UJMExoBundle:InteractionQCM:responseQcm" }
+    requirements: { _method: post }
    
 ujm_question_index:
     pattern: /question/index

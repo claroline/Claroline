@@ -259,7 +259,7 @@ class InteractionQCMController extends Controller
     public function responseQcmAction()
     {
         $request = $this->get('request');
-        $exerciseSer = $this->container->get('UJM_Exo.exerciseServices');
+        $exerciseSer = $this->container->get('ujm.exercise_services');
         $res = $exerciseSer->responseQCM($request);
 
         return $this->render(

@@ -1,0 +1,113 @@
+{#
+ # ExoOnLine
+ # Copyright or © or Copr. Université Jean Monnet (France), 2012
+ # dsi.dev@univ-st-etienne.fr
+ #
+ # This software is a computer program whose purpose is to [describe
+ # functionalities and technical features of your software].
+ #
+ # This software is governed by the CeCILL license under French law and
+ # abiding by the rules of distribution of free software.  You can  use,
+ # modify and/ or redistribute the software under the terms of the CeCILL
+ # license as circulated by CEA, CNRS and INRIA at the following URL
+ # "http://www.cecill.info".
+ #
+ # As a counterpart to the access to the source code and  rights to copy,
+ # modify and redistribute granted by the license, users are provided only
+ # with a limited warranty  and the software's author,  the holder of the
+ # economic rights,  and the successive licensors  have only  limited
+ # liability.
+ #
+ # In this respect, the user's attention is drawn to the risks associated
+ # with loading,  using,  modifying and/or developing or reproducing the
+ # software by the user in light of its specific status of free software,
+ # that may mean  that it is complicated to manipulate,  and  that  also
+ # therefore means  that it is reserved for developers  and  experienced
+ # professionals having in-depth computer knowledge. Users are therefore
+ # encouraged to load and test the software's suitability as regards their
+ # requirements in conditions enabling the security of their systems and/or
+ # data to be ensured and,  more generally, to use and operate it in the
+ # same conditions as regards security.
+ #
+ # The fact that you are presently reading this means that you have had
+ # knowledge of the CeCILL license and that you accept its terms.
+#}
+
+{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+
+        {% block stylesheets %}
+            {{ parent() }}
+            <link href="{{ asset('bundles/ujmexo/css/paper.css') }}" type="text/css" rel="stylesheet" />
+        {% endblock %}
+
+    {% block title %} Correction {% endblock %}
+
+
+
+{% block section_content %}
+
+<div name="title">
+    {{ interQCM.interaction.question.title}}
+</div>
+
+<div name="description">
+    {{ interQCM.interaction.question.description|raw}}
+</div>
+
+<div name="invite">
+    {{ interQCM.interaction.invite|raw}}
+</div>
+
+<table border="1">
+    <tr>
+        <th>{{ "Your answer" | trans }}</th>
+        <th>{{ "Expected answer" | trans }}</th>
+        <th>{{ "Choice" | trans }}</th>
+        <th>{{ "Feedback" | trans }}</th>
+    </tr>
+
+    {% for choice in interQCM.choices %}
+        <tr>
+            <td>
+                {% if regexTwig('/' ~ choice.id ~ ';/', response) > 0 %}
+                {# choice checked by student #}
+                    {% if choice.rightResponse %}
+                        <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
+                    {% else %}
+                        <img src="{{ asset('bundles/ujmexo/images/checkbox_on_red.gif') }}">
+                    {% endif %}
+                {% else %}
+                    <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
+                {% endif %}
+            </td>
+            <td>
+                {% if choice.rightResponse %}
+                    <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
+                {% else %}
+                    <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
+                {% endif %}
+            </td>
+            <td>
+                {{ choice.label|raw }}
+            </td>
+            <td>
+                {{ choice.feedback|raw }}
+            </td>
+        </tr>
+    {% endfor %}
+
+</table>
+
+<div name="feddback">
+    {{ interQCM.interaction.feedback|raw}}
+</div>
+{% if penalty > 0 %}
+    {{ "Penalty" | trans }}: {{ penalty }}<br/>
+{% endif %}
+{{ "Mark" | trans }}: <span id="score">{{ score }}</span>
+<br/><br/>
+
+<a href="{{ path('ujm_question_index') }}">{{ "Question list" | trans }}</a>
+
+
+{% endblock %}
