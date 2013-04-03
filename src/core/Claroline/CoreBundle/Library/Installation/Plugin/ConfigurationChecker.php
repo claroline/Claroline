@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Library\PluginBundle;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Config\Definition\Processor;
 use Claroline\CoreBundle\Library\Installation\Plugin\Configuration;
+use Doctrine\ORM\EntityManager;
 
 /**
  * Checker used to validate the configuration file of a plugin.
@@ -13,10 +14,12 @@ use Claroline\CoreBundle\Library\Installation\Plugin\Configuration;
 class ConfigurationChecker implements CheckerInterface
 {
     private $processedConfiguration;
+    private $em;
 
-    public function __construct(Yaml $yamlParser)
+    public function __construct(Yaml $yamlParser, EntityManager $em)
     {
         $this->yamlParser = $yamlParser;
+        $this->em = $em;
     }
 
     /**
@@ -35,9 +38,18 @@ class ConfigurationChecker implements CheckerInterface
 
             return $errors;
         }
+        $listResource = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
+        foreach ($listResource as $resource) {
+                $names[] = $resource->getName();
+        }
+
+        $listTool = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool')->findAll();
+        foreach ($listTool as $tool) {
+                $tools[] = $tool->getName();
+        }
 
         $processor = new Processor();
-        $configuration = new Configuration($plugin);
+        $configuration = new Configuration($plugin, $names, $tools);
 
         try {
             $processedConfiguration = $processor->processConfiguration($configuration, $config);
@@ -54,4 +66,5 @@ class ConfigurationChecker implements CheckerInterface
     {
         return $this->processedConfiguration;
     }
+
 }
