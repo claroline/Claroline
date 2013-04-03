@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\RoleRepository")
  * @ORM\Table(name="claro_role")
  * @ORM\HasLifecycleCallbacks
- * @Gedmo\Tree(type="nested")
  * @DoctrineAssert\UniqueEntity("name")
  */
 class Role implements RoleInterface
@@ -48,53 +47,6 @@ class Role implements RoleInterface
      * @ORM\Column(name="is_read_only", type="boolean")
      */
     protected $isReadOnly = false;
-
-    /**
-     * @Gedmo\TreeLeft
-     * @ORM\Column(name="lft", type="integer")
-     */
-    protected $lft;
-
-    /**
-     * @Gedmo\TreeLevel
-     * @ORM\Column(name="lvl", type="integer")
-     */
-    protected $lvl;
-
-    /**
-     * @Gedmo\TreeRight
-     * @ORM\Column(name="rgt", type="integer")
-     */
-    protected $rgt;
-
-    /**
-     * @Gedmo\TreeRoot
-     * @ORM\Column(name="root", type="integer", nullable=true)
-     */
-    protected $root;
-
-    /**
-     * @Gedmo\TreeParent
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Role",
-     *     inversedBy="children"
-     * )
-     * @ORM\JoinColumn(
-     *     name="parent_id",
-     *     referencedColumnName="id",
-     *     onDelete="SET NULL"
-     * )
-     */
-    protected $parent;
-
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Role",
-     *     mappedBy="parent"
-     * )
-     * @ORM\OrderBy({"lft" = "ASC"})
-     */
-    protected $children;
 
     /**
      * @ORM\ManyToMany(

@@ -427,4 +427,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         return $paginator;
     }
+
+    public function count()
+    {
+        $dql = "SELECT COUNT(u) FROM Claroline\CoreBundle\Entity\User u";
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getSingleResult();
+    }
 }
