@@ -197,11 +197,6 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('name', 'string', array('length' => 255));
         $table->addColumn('translation_key', 'string', array('length' => 255, 'notnull' => false));
         $table->addColumn('is_read_only', 'boolean', array('notnull' => true));
-        $table->addColumn('lft', 'integer', array('notnull' => true));
-        $table->addColumn('rgt', 'integer', array('notnull' => true));
-        $table->addColumn('lvl', 'integer', array('notnull' => true));
-        $table->addColumn('root', 'integer', array('notnull' => false));
-        $table->addColumn('parent_id', 'integer', array('notnull' => false));
         $table->addColumn('role_type', 'integer', array('notnull' => false));
         $table->addColumn('workspace_id', 'integer', array('notnull' => false));
 
