@@ -48,14 +48,13 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
     {
         $this->manager = $manager;
 
-        $numTot = ((1 - pow($this->numberDirectory,  $this->depth + 1)) / (1 - $this->numberDirectory)) - 1;
+        $numTot = ((1 - pow($this->numberDirectory, $this->depth + 1)) / (1 - $this->numberDirectory)) - 1;
         $this->log("Number of directories that will be generated per workspace: ". $numTot);
         $this->log("Number of files that will be generated per workspace: ". $numTot * $this->numberFiles);
         $this->log("Number of filled workspaces: ". $this->numberRoots);
         $this->log("Total resources: ". $this->numberRoots * ($numTot * $this->numberFiles + $numTot));
 
         $this->user = $this->findJohnDoe($manager);
-
 
         $count = $manager->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->count();
         $this->suffixName = $count;
@@ -79,7 +78,8 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
         }
     }
 
-    private function generateItems(EntityManager $em, $maxDepth, $curDepth, $directoryCount, $fileCount, $parent) {
+    private function generateItems(EntityManager $em, $maxDepth, $curDepth, $directoryCount, $fileCount, $parent)
+    {
         $curDepth++;
 
         for ($j = 0; $j < $directoryCount; $j++) {
@@ -87,7 +87,7 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
             $dir = $this->addDirectory($parent, $this->user);
 
             for ($k = 0; $k < $fileCount; $k++) {
-                $file = $this->addFile($parent, $this->user);
+                $this->addFile($parent, $this->user);
             }
 
             if ($curDepth < $maxDepth) {
