@@ -6,14 +6,19 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Doctrine\ORM\EntityManager;
 
 class Configuration implements ConfigurationInterface
 {
     private $plugin;
+    private $listNames;
+    private $listTools;
 
-    public function __construct(PluginBundle $plugin)
+    public function __construct(PluginBundle $plugin, Array $resourcesName, Array $listTools)
     {
         $this->plugin = $plugin;
+        $this->listNames = $resourcesName;
+        $this->listTools = $listTools;
     }
 
     public function getConfigTreeBuilder()
@@ -60,20 +65,34 @@ class Configuration implements ConfigurationInterface
         $pluginFqcn = get_class($plugin);
         $resourceFile = $plugin->getConfigFile();
         $imgFolder = $plugin->getImgFolder();
+        $listNames = $this->listNames;
 
         $pluginSection
             ->arrayNode('resources')
                 ->prototype('array')
                     ->children()
-                       ->scalarNode('name')->isRequired()->end()
+                       ->scalarNode('name')
+                         ->isRequired()
+                            ->validate()
+                                    ->ifTrue(
+                                        function ($v) use ($plugin,$listNames) {
+                                            return !call_user_func_array(
+                                                __CLASS__ . '::isNameAlreadyExist',
+                                                array($v, $listNames)
+                                            );
+                                        }
+                                    )
+                                    ->thenInvalid($pluginFqcn . " : the ressource type name already exists")
+                            ->end()
+                         ->end()
                        ->scalarNode('class')
                             ->isRequired()
                                 ->validate()
                                     ->ifTrue(
-                                        function ($v) {
+                                        function ($v) use ($plugin) {
                                             return !call_user_func_array(
                                                 __CLASS__ . '::isResourceLocationValid',
-                                                array($v)
+                                                array($v, $plugin)
                                             );
                                         }
                                     )
@@ -134,7 +153,8 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('widgets')
                 ->prototype('array')
                     ->children()
-                        ->scalarNode('name')->isRequired()->end()
+                        ->scalarNode('name')
+                        ->isRequired()->end()
                         ->booleanNode('is_configurable')->isRequired()->end()
                         ->scalarNode('is_exportable')->defaultValue(false)->end()
                         ->scalarNode('icon')
@@ -158,11 +178,27 @@ class Configuration implements ConfigurationInterface
 
     private function addToolSection($pluginSection)
     {
+        $tools = $this->listTools;
+        $plugin = $this->plugin;
+        $pluginFqcn = get_class($plugin);
         $pluginSection
             ->arrayNode('tools')
                 ->prototype('array')
                     ->children()
-                        ->scalarNode('name')->isRequired()->end()
+                        ->scalarNode('name')
+                          ->isRequired()
+                            ->validate()
+                                    ->ifTrue(
+                                        function ($v) use ($tools) {
+                                            return !call_user_func_array(
+                                                __CLASS__ . '::isNameAlreadyExist',
+                                                array($v, $tools)
+                                            );
+                                        }
+                                    )
+                                    ->thenInvalid($pluginFqcn . " : the tool name already exists")
+                                ->end()
+                        ->end()
                         ->booleanNode('is_displayable_in_workspace')->isRequired()->end()
                         ->booleanNode('is_displayable_in_desktop')->isRequired()->end()
                         ->scalarNode('class')->end()
@@ -220,5 +256,10 @@ class Configuration implements ConfigurationInterface
         $expectedImgLocation = $imgFolder.$ds.$v;
 
         return file_exists($expectedImgLocation);
+    }
+
+    public static function isNameAlreadyExist($v, $listNames)
+    {
+        return (!in_array($v, $listNames));
     }
 }

@@ -19,6 +19,11 @@
             </a>
         </li>
     </ul>
+    <div id="selectWorkspace">
+        {% for e in listEvents %}
+                {{ e.workspace.getName()}}
+        {% endfor %}
+    </div>
     <div id='calendar' class="span9"></div>
     <div  id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
@@ -31,7 +36,7 @@
                 {{ form_widget(form) }}
             </form>
             <a href="{{ path('claro_desktop_calendar_show') }}" id="link"></a>
-             <a href="{{ path('claro_workspace_agenda_delete') }}" id="delete"></a>
+           {#}  <a href="{{ path('claro_workspace_agenda_delete') }}" id="delete"></a>
             <a href="{{ path('claro_workspace_agenda_delete') }}" id="update"></a>#}
         </div>
     <div class="modal-footer">

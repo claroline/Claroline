@@ -66,6 +66,7 @@ services:
         class: Claroline\CoreBundle\Library\Installation\Plugin\ConfigurationChecker
         arguments:
             - "@symfony.yaml"
+            - "@doctrine.orm.entity_manager"
 
     claroline.plugin.migrator:
         class: Claroline\CoreBundle\Library\Installation\Plugin\Migrator
