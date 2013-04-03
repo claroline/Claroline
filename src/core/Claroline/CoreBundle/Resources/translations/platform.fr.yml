@@ -150,7 +150,7 @@ profile_form_ownedRoles: Role(s)
 profile_form_phone: Téléphone
 profile_form_plainPassword_first: 'Mot de passe'
 profile_form_plainPassword_second: Vérification
-profile_form_platformRole: Role
+profile_form_platformRoles: Rôles
 profile_form_username: 'Nom d''utilisateur'
 properties: Propriétés
 public: Publique
