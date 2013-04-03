@@ -38,7 +38,7 @@ class LoadUsersData extends LoggableFixture implements ContainerAwareInterface
         $userCreator = $this->container->get('claroline.user.creator');
         $role = $manager->getRepository('ClarolineCoreBundle:Role')->findOneBy(array('name' => 'ROLE_USER'));
         $count = $manager->getRepository('ClarolineCoreBundle:User')->count();
-        $totalUsers = $count[1] + 1;
+        $totalUsers = $count + 1;
 
         for ($j = 0, $i = 0; $i < $this->numberUsers; $i++, $totalUsers++) {
             $user = new User();
