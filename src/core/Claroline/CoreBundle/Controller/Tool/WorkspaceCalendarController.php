@@ -56,8 +56,8 @@ class WorkspaceCalendarController extends Controller
                     $data = array(
                         'id' => $event->getId(),
                         'title' => $event->getTitle(),
-                        'start' => $event->getStart(),
-                        'end' => $event->getEnd(),
+                        'start' => $event->getStart()->getTimestamp(),
+                        'end' => $event->getEnd()->getTimestamp(),
                         'color' => $event->getPriority(),
                     );
 
@@ -118,8 +118,8 @@ class WorkspaceCalendarController extends Controller
                     array(
                         'id' => $event->getId(),
                         'title' => $event->getTitle(),
-                        'start' => $event->getStart(),
-                        'end' => $event->getEnd(),
+                        'start' => $event->getStart()->getTimestamp(),
+                        'end' => $event->getEnd()->getTimestamp(),
                         'color' => $event->getPriority()
                     )
                 ),
