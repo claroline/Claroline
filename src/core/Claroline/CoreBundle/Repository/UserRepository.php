@@ -433,6 +433,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $dql = "SELECT COUNT(u) FROM Claroline\CoreBundle\Entity\User u";
         $query = $this->_em->createQuery($dql);
 
-        return $query->getSingleResult();
+        return $query->getSingleScalarResult();
     }
 }

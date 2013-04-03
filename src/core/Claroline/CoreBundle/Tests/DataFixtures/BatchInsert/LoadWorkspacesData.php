@@ -7,7 +7,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Library\Fixtures\LoggableFixture;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\EntityManager;
 
 /**
  * Loads a large amount of workspace.
@@ -39,11 +38,11 @@ class LoadWorkspacesData extends LoggableFixture implements ContainerAwareInterf
     {
         $workspaceCreator = $this->container->get('claroline.workspace.creator');
         $count = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->count();
-        $totalWorkspaces = $count[1] + 1;
+        $totalWorkspaces = $count + 1;
         $admin = $this->findJohnDoe($manager);
 
         for ($j = 0, $i = 0; $i < $this->numberWorkspaces; $i++, $totalWorkspaces++) {
-            $manfatoryFieldValue = "ws_" . $totalWorkspaces;
+            $manfatoryFieldValue = "ws_batch" . $totalWorkspaces;
             $config = new Configuration();
             $config->setWorkspaceName($manfatoryFieldValue);
             $config->setWorkspaceCode($manfatoryFieldValue);
@@ -58,8 +57,6 @@ class LoadWorkspacesData extends LoggableFixture implements ContainerAwareInterf
                 $admin = $this->findJohnDoe($manager);
                 $totalInserts = $i + 1;
                 $this->log("batch [{$j}] | workspaces [{$totalInserts}] | UOW  [{$manager->getUnitOfWork()->size()}]");
-                $uow = $manager->getUnitOfWork();
-                $map = $uow->getIdentityMap();
             }
         }
     }

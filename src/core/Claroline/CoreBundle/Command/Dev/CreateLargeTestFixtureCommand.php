@@ -8,6 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Claroline\CoreBundle\Tests\DataFixtures\BatchInsert\LoadUsersData;
 use Claroline\CoreBundle\Tests\DataFixtures\BatchInsert\LoadWorkspacesData;
+use Claroline\CoreBundle\Tests\DataFixtures\BatchInsert\LoadResourcesData;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 
 /**
@@ -22,7 +23,11 @@ class CreateLargeTestFixtureCommand extends ContainerAwareCommand
         $this->setDefinition(
             array(
                 new InputArgument('number_user', InputArgument::REQUIRED, 'The number of user.'),
-                new InputArgument('number_workspace', InputArgument::REQUIRED, 'The number of workspace.')
+                new InputArgument('number_workspace', InputArgument::REQUIRED, 'The number of workspace.'),
+                new InputArgument('number_directory', InputArgument::REQUIRED, 'The number of directory per level.'),
+                new InputArgument('number_file', InputArgument::REQUIRED, 'The number of file per level.'),
+                new InputArgument('depth', InputArgument::REQUIRED, 'The depth of the data tree(s).'),
+                new InputArgument('number_roots', InputArgument::REQUIRED, 'The number of roots.')
             )
         );
     }
@@ -31,7 +36,11 @@ class CreateLargeTestFixtureCommand extends ContainerAwareCommand
     {
         $params = array(
             'number_user' => 'users',
-            'number_workspace' => 'workspaces'
+            'number_workspace' => 'workspaces',
+            'number_directory' => 'number directory per level',
+            'number_file' => 'number file per level',
+            'depth' => 'depth',
+            'number_roots' => 'numberRoots'
         );
 
         foreach ($params as $argument => $argumentName) {
@@ -64,6 +73,10 @@ class CreateLargeTestFixtureCommand extends ContainerAwareCommand
     {
         $numberUser = $input->getArgument('number_user');
         $numberWorkspace = $input->getArgument('number_workspace');
+        $numberDirectory = $input->getArgument('number_directory');
+        $numberFile = $input->getArgument('number_file');
+        $numberRoots = $input->getArgument('number_roots');
+        $depth = $input->getArgument('depth');
         $output->writeln('Loading fixtures...');
         $output->writeln('Loading users...');
         $fixture = new LoadUsersData($numberUser);
@@ -79,6 +92,16 @@ class CreateLargeTestFixtureCommand extends ContainerAwareCommand
         $fixture->load($em);
         $output->writeln('Loading workspaces...');
         $fixture = new LoadWorkspacesData($numberWorkspace);
+        $fixture->setReferenceRepository($referenceRepo);
+        $fixture->setContainer($this->getContainer());
+        $fixture->setLogger(
+            function ($message) use ($output) {
+                $output->writeln($message);
+            }
+        );
+        $fixture->load($em);
+        $output->writeln('Loading resources...');
+        $fixture = new LoadResourcesData($depth, $numberFile, $numberDirectory, $numberRoots);
         $fixture->setReferenceRepository($referenceRepo);
         $fixture->setContainer($this->getContainer());
         $fixture->setLogger(
