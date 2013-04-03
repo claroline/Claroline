@@ -46,6 +46,9 @@ class Version20120119000000 extends BundleMigration
         $this->createWorkspaceOrderToolTable($schema);
         $this->createWorkspaceToolsRoleTable($schema);
         $this->createWorkspaceLogTable($schema);
+        $this->createContentTable($schema);
+        $this->createTypeTable($schema);
+        $this->createContent2TypeTable($schema);
     }
 
     public function down(Schema $schema)
@@ -88,6 +91,9 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_workspace_tools_role');
         $schema->dropTable('claro_user_desktop_tool');
         $schema->dropTable('claro_workspace_log');
+        $schema->dropTable('claro_content');
+        $schema->dropTable('claro_type');
+        $schema->dropTable('claro_content2type');
     }
 
     private function createUserTable(Schema $schema)
@@ -906,6 +912,70 @@ class Version20120119000000 extends BundleMigration
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_workspace'),
             array('workspace_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+    }
+
+    private function createContentTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_content');
+
+        $this->addId($table);
+        $table->addColumn('title', 'string', array('length' => 255));
+        $table->addColumn('content', 'text');
+        $table->addColumn('generated_content', 'string', array('notnull' => false, 'length' => 255));
+        $table->addColumn('created', 'datetime');
+        $table->addColumn('modified', 'datetime');
+
+        $this->storeTable($table);
+    }
+
+    private function createTypeTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_type');
+
+        $this->addId($table);
+        $table->addColumn('name', 'string', array('length' => 255));
+        $table->addColumn('max_content_page', 'integer');
+
+        $this->storeTable($table);
+    }
+
+    private function createContent2TypeTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_content2type');
+        $this->addId($table);
+        $table->addColumn('content_id', 'integer', array('notnull' => true));
+        $table->addColumn('type_id', 'integer', array('notnull' => true));
+        $table->addColumn('size', 'string', array('length' => 30));
+        $table->addColumn('next_id', 'integer', array('notnull' => false));
+        $table->addColumn('back_id', 'integer', array('notnull' => false));
+
+        $this->storeTable($table);
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_content'),
+            array('content_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+        $table->addForeignKeyConstraint(
+            $schema->getTable('claro_type'),
+            array('type_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_content2type'),
+            array('next_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+        $table->addForeignKeyConstraint(
+            $schema->getTable('claro_content2type'),
+            array('back_id'),
             array('id'),
             array('onDelete' => 'CASCADE')
         );
