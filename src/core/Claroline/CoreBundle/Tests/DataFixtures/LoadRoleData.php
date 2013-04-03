@@ -14,7 +14,6 @@ class LoadRoleData extends AbstractFixture implements ContainerAwareInterface
 
     /**
      * Constructor. Each key is a role name and each value is a parent role.
-     * Parent role can be either a null value or the name of an existing role.
      *
      * @param array $roles
      */
@@ -36,18 +35,13 @@ class LoadRoleData extends AbstractFixture implements ContainerAwareInterface
      */
     public function load(ObjectManager $manager)
     {
-        foreach ($this->roles as $roles) {
-            foreach ($roles as $roleName => $parentName) {
-                $role = new Role();
-                $role->setName('ROLE_'.$roleName);
-                $role->setTranslationKey($roleName);
-                $role->setRoleType(Role::CUSTOM_ROLE);
-                if ($parentName !== null) {
-                    $role->setParent($this->getReference('role/'.$parentName));
-                }
-                $manager->persist($role);
-                $this->addReference('role/'.$roleName, $role);
-            }
+        foreach ($this->roles as $role) {
+            $entityRole = new Role();
+            $entityRole->setName('ROLE_'.$role);
+            $entityRole->setTranslationKey($role);
+            $entityRole->setRoleType(Role::CUSTOM_ROLE);
+            $manager->persist($entityRole);
+            $this->addReference('role/'.$role, $entityRole);
         }
 
         $manager->flush();
