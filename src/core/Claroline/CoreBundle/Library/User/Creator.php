@@ -55,7 +55,6 @@ class Creator
         $workspace = $this->wsCreator->createWorkspace($config, $user);
         $user->setPersonalWorkspace($workspace);
         $this->em->persist($workspace);
-        $this->em->flush();
 
         $repo = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool');
         $requiredTools[] = $repo->findOneBy(array('name' => 'home'));
