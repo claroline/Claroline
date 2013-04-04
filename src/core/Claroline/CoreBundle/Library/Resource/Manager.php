@@ -59,7 +59,15 @@ class Manager
      *
      * @throws \Exception
      */
-    public function create(AbstractResource $resource, $parentId, $resourceType, User $user = null, $rights = null)
+    public function create(
+        AbstractResource $resource,
+        $parentId,
+        $resourceType,
+        User $user = null,
+        $rights = null,
+        $autoflush = true,
+        $autolog = true
+    )
     {
         $resourceType = $this->em
             ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
@@ -98,9 +106,14 @@ class Manager
             $this->setResourceRights($resource, $rights);
         }
 
-        $this->em->flush();
-        $event = new ResourceLogEvent($resource, ResourceLogEvent::CREATE_ACTION);
-        $this->ed->dispatch('log_resource', $event);
+        if ($autoflush) {
+            $this->em->flush();
+        }
+
+        if ($autolog) {
+            $event = new ResourceLogEvent($resource, ResourceLogEvent::CREATE_ACTION);
+            $this->ed->dispatch('log_resource', $event);
+        }
 
         return $resource;
     }
@@ -125,6 +138,7 @@ class Manager
         try {
             $this->em->flush();
             $this->cloneParentRights($parent, $child);
+            $this->em->flush();
 
             $event = new ResourceLogEvent(
                 $child,
@@ -191,6 +205,7 @@ class Manager
             $copy->setName($resource->getName());
             $copy->setName($this->ut->getUniqueName($copy, $parent));
             $this->cloneParentRights($parent, $copy);
+            $this->em->flush();
 
             if ($resource->getResourceType()->getName() == 'directory') {
                 foreach ($resource->getChildren() as $child) {
@@ -241,7 +256,6 @@ class Manager
         $children->setOwnerRights($parent->getOwnerRights());
 
         $this->em->persist($children);
-        $this->em->flush();
     }
 
     /**

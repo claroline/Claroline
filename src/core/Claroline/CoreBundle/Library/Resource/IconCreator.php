@@ -107,7 +107,6 @@ class IconCreator
                 $icon->setShortcut(false);
                 $this->createShortcutIcon($icon);
                 $this->em->persist($icon);
-                $this->em->flush();
 
                 return $icon;
             }
@@ -196,7 +195,6 @@ class IconCreator
         $shortcutIcon->setShortcutIcon($shortcutIcon);
         $this->em->persist($icon);
         $this->em->persist($shortcutIcon);
-        $this->em->flush();
 
         return $shortcutIcon;
 
