@@ -105,8 +105,8 @@ $("body").on("click", ".creator-button", function(event) {
 $("body").on("click", ".content-size", function(event){
     var element = parentByClassName(event.target, 'content-element');
     var size = (element.className.match (/\bspan\S+/g) || []).join(' ').substr(4);
-    var id = $(event.target).data("id");
-    var type = $(event.target).data("type");
+    var id = $(element).data("id");
+    var type = $(element).data("type");
 
     $("#sizes a.border").removeClass('active');
 
@@ -123,6 +123,37 @@ $("body").on("click", ".content-size", function(event){
     
     
     $("#sizes").modal("show");
+});
+
+
+$("body").on("click", ".content-delete", function(event){
+    var element = parentByClassName(event.target, 'content-element');
+    var id = $(element).data("id");
+
+    if(id && element)
+    {        
+        $.ajax( asset+"content/delete/"+id )
+        .done(
+                function(data)
+                {
+                    if(data == "true")
+                    {
+                        $(element).hide('slow', function(){ $(this).remove(); })
+                    }
+                    else
+                    {
+                        alert("error1");
+                    }
+                }
+                )
+        .error(
+                function(data)
+                {
+                    alert("error");
+                }
+              )
+        ;
+    }
 });
 
 $("body").on("click", "#sizes a.border", function(event){

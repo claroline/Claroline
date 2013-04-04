@@ -55,7 +55,7 @@ class HomeController extends Controller
 
             return $this->render(
                 $this->container->get('claroline.common.home_service')->defaultTemplate("ClarolineCoreBundle:types:$type.html.twig"), 
-                array('content' => $content, 'size' => $size, 'menu' => $menu));
+                array('content' => $content, 'size' => $size, 'menu' => $menu, 'type' => $type));
         }
         else
         {
@@ -202,6 +202,55 @@ class HomeController extends Controller
     }
 
     /**
+     * Delete a content by POST method. This is used by ajax.
+     * The response is the word true in a string in success, otherwise false.
+     *
+     * @route("/content/delete/{id}", name="claroline_delete_create")
+     *
+     * @param \String $id The id of the content.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteAction($id)
+    {
+        $response = "false";
+
+        $manager = $this->getDoctrine()->getManager();
+
+        $content = $manager->getRepository("ClarolineCoreBundle:Home\Content")->find($id);
+
+        if($this->get('security.context')->isGranted('ROLE_ADMIN') and $content)
+        {
+            $content2types = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findBy(array('content' => $content));
+
+            foreach($content2types as $content2type)
+            {
+                $back = $content2type->getBack();
+                $next = $content2type->getNext();   
+
+                if($back)
+                {
+                    $back->setNext($content2type->getNext());
+                }
+
+                if($next)
+                {
+                    $next->setBack($content2type->getBack());
+                }
+
+                $manager->remove($content2type);
+            }
+       
+            $manager->remove($content);
+            $manager->flush();
+
+            $response = "true";
+        }
+
+        return new Response($response);
+    }
+
+    /**
      * Render the HTML of the creator box.
      *
      * @param \String $type The type of the content to create.
@@ -268,7 +317,7 @@ class HomeController extends Controller
 
                     $content.= $this->render(
                         $this->container->get('claroline.common.home_service')->defaultTemplate("ClarolineCoreBundle:types:".$type->getName().".html.twig"), 
-                        array('content' => $first->getContent(), 'size' => $first->getSize(), 'menu' => $menu))->getContent();
+                        array('content' => $first->getContent(), 'size' => $first->getSize(), 'menu' => $menu, 'type' => $type->getName()))->getContent();
                     $first = $first->getNext();
                 }
 
