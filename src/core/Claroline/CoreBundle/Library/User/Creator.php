@@ -42,6 +42,7 @@ class Creator
      */
     public function create(User $user)
     {
+        $user->addRole($this->em->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER'));
         $this->em->persist($user);
         $config = Configuration::fromTemplate($this->personalWsTemplateFile);
         //uncomment this line when the templating system is working

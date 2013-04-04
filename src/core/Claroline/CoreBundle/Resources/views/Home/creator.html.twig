@@ -1,0 +1,25 @@
+<div class="creator">
+    <div class="content row-fluid">
+        <div class="border span12">
+            <input type="text" placeholder="{{ "Optional title" | trans({}, 'home') }}..." class="content-title">
+        </div>
+    </div>
+    <div class=" content row-fluid">
+        <div class="border span12">
+            <textarea class="content-text" placeholder="{{ "Create" | trans({}, 'home') }} {{ "a content" | trans({}, 'home') }}..."></textarea>
+
+            <div class="navbar navbar-static-top">
+                <div class="navbar-inner">
+                    <ul class="nav">
+                        <li><a href="#"><i class="icon-picture"></i> {{ "Add Pictures" | trans({}, 'home') }}</a></li>
+                        <li><a href="#"><i class="icon-paper-clip"></i> {{ "Add Files" | trans({}, 'home') }}</a></li>
+                        <li class="divider-vertical"></li>
+                    </ul>    
+                    <ul class="nav pull-right">
+                        <li><div><a class="creator-button btn btn-primary">{{ 'Create' | trans({}, 'home') }}</a></div></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

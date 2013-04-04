@@ -49,11 +49,11 @@ class AdministrationController extends Controller
      */
     public function userCreationFormAction()
     {
-        $userRoles = $this->get('security.context')
-            ->getToken()
-            ->getUser()
-            ->getOwnedRoles();
-        $form = $this->createForm(new ProfileType($userRoles));
+        $user = $this->get('security.context')->getToken()->getUser();
+        $roles = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Role')
+            ->findPlatformRoles($user);
+        $form = $this->createForm(new ProfileType($roles));
 
         return $this->render(
             'ClarolineCoreBundle:Administration:user_creation_form.html.twig',
@@ -75,15 +75,19 @@ class AdministrationController extends Controller
     public function createUserAction()
     {
         $request = $this->get('request');
-        $userRoles = $this->get('security.context')
-            ->getToken()
-            ->getUser()
-            ->getOwnedRoles();
-        $form = $this->get('form.factory')->create(new ProfileType($userRoles), new User());
+        $user = $this->get('security.context')->getToken()->getUser();
+        $roles = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Role')
+            ->findPlatformRoles($user);
+        $form = $this->get('form.factory')->create(new ProfileType($roles), new User());
         $form->bind($request);
 
         if ($form->isValid()) {
             $user = $form->getData();
+            $newRoles = $form->get('platformRoles')->getData();
+            foreach ($newRoles as $role) {
+                $user->addRole($role);
+            }
             $this->get('claroline.user.creator')->create($user);
 
             return $this->redirect($this->generateUrl('claro_admin_user_list'));

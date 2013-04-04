@@ -1,9 +1,13 @@
-claro_index:
-    pattern: /
-    defaults: { _controller: ClarolineCoreBundle:Home:index }
+claro_security_login_check:
+    pattern: /login_check
+    options: { expose: true }
 
-claro_security:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/security.yml"
+claro_security_logout:
+    pattern: /logout
+
+claro_index:
+    resource: "@ClarolineCoreBundle/Controller/HomeController.php"
+    type: annotation
 
 claro_authentication:
     resource: "@ClarolineCoreBundle/Controller/AuthenticationController.php"
@@ -116,3 +120,4 @@ claro_install:
     resource: "@ClarolineCoreBundle/Controller/InstallController.php"
     type: annotation
     prefix: install
+

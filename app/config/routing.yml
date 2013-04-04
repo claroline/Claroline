@@ -1,5 +1,5 @@
 _core:
-    resource: routing_core.yml
+    resource: "@ClarolineCoreBundle/Resources/config/routing/routing.yml"
 
 _plugin:
     resource: local/plugin/routing.yml

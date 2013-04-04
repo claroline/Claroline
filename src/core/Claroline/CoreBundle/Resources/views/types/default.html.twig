@@ -1,0 +1,15 @@
+{% if content != null %}
+
+<div class="content-element border {{ size }} relative">
+    {{ menu | raw }}
+    <div class="margin">
+        {% if content.title != "" %}
+            <h3 class="sub-section-header">{{ content.title }}</h3>
+        {% endif %}
+        <p class="text">{{ content.content | nl2br}}</p>
+        <i class="muted">{{ content.created | timeAgo }}</i>
+    </div>
+
+</div>
+
+{% endif %}
