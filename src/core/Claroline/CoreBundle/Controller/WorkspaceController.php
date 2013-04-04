@@ -55,31 +55,29 @@ class WorkspaceController extends Controller
 
     /**
      * @Route(
-     *     "/user/{userId}",
+     *     "/user",
      *     name="claro_workspace_by_user",
-     *     requirements={"userId"="^(?=.*[1-9].*$)\d*$"},
      *     options={"expose"=true}
      * )
      * @Method("GET")
      *
      * Renders the registered workspace list for a user.
      *
-     * @param integer $userId
-     *
      * @throws AccessDeniedHttpException
      *
      * @return Response
      */
-    public function listWorkspacesByUserAction($userId)
+    public function listWorkspacesByUserAction()
     {
         if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
             throw new AccessDeniedHttpException();
         }
 
         $em = $this->get('doctrine.orm.entity_manager');
-        $user = $em->find('ClarolineCoreBundle:User', $userId);
+        $roles = $this->get('security.context')->getToken()->getUser()->getRoles();
+
         $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)
-            ->findByUser($user);
+            ->findByRoles($roles);
 
         return $this->render(
             'ClarolineCoreBundle:Workspace:list.html.twig',
