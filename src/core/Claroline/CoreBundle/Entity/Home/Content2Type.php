@@ -152,7 +152,7 @@ class Content2Type
      * @param \Claroline\CoreBundle\Entity\Home\Content2Type $next
      * @return Content2Type
      */
-    public function setNext(\Claroline\CoreBundle\Entity\Home\Content2Type $next)
+    public function setNext($next)
     {
         $this->next = $next;
     
@@ -175,7 +175,7 @@ class Content2Type
      * @param \Claroline\CoreBundle\Entity\Home\Content2Type $back
      * @return Content2Type
      */
-    public function setBack(\Claroline\CoreBundle\Entity\Home\Content2Type $back)
+    public function setBack($back)
     {
         $this->back = $back;
     
