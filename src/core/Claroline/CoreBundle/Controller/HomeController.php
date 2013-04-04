@@ -322,7 +322,11 @@ class HomeController extends Controller
                 }
 
                 return $content;
-            }  
+            }
+            else
+            {
+                return " "; // Not yet content
+            }
         }
 
         return null;
