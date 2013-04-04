@@ -2,24 +2,45 @@
 
 namespace Claroline\CoreBundle\Listener;
 
+use JMS\DiExtraBundle\Annotation as DI;
+use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceLog;
 use Claroline\CoreBundle\Library\Event\WorkspaceLogEvent;
-use Symfony\Component\DependencyInjection\ContainerAware;
 
-class WorkspaceLogListener extends ContainerAware
+/**
+ * @DI\Service
+ */
+class WorkspaceLogListener
 {
+    private $em;
+
+    /**
+     * @DI\InjectParams({
+     *     "em" = @DI\Inject("doctrine.orm.entity_manager")
+     * })
+     *
+     * @param \Doctrine\ORM\EntityManager $em
+     */
+    public function __construct(EntityManager $em)
+    {
+        $this->em = $em;
+    }
+
+    /**
+     * @DI\Observe("log_workspace_access")
+     *
+     * @param WorkspaceLogEvent $event
+     */
     public function onLogWorkspaceAccess(WorkspaceLogEvent $event)
     {
-        $wsLog = new WorkspaceLog();
-
         if ($event->getType() === WorkspaceLogEvent::ACCESS_ACTION) {
+            $wsLog = new WorkspaceLog();
             $wsLog->setType($event->getType());
             $wsLog->setUser($event->getUser());
             $wsLog->setWorkspace($event->getWorkspace());
             $wsLog->setData($event->getData());
-            $em = $this->container->get('doctrine.orm.entity_manager');
-            $em->persist($wsLog);
-            $em->flush();
+            $this->em->persist($wsLog);
+            $this->em->flush();
         }
     }
 }

@@ -2,6 +2,11 @@
 
 namespace Claroline\CoreBundle\Listener\Resource;
 
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
+use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Form\FileType;
 use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
@@ -13,12 +18,31 @@ use Claroline\CoreBundle\Library\Event\DownloadResourceEvent;
 use Claroline\CoreBundle\Library\Event\PlayFileEvent;
 use Claroline\CoreBundle\Library\Event\ExportResourceTemplateEvent;
 use Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent;
-use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 
-class FileListener extends ContainerAware
+/**
+ * @DI\Service
+ */
+class FileListener implements ContainerAwareInterface
 {
+    private $container;
+
+    /**
+     * @DI\InjectParams({
+     *     "container" = @DI\Inject("service_container")
+     * })
+     *
+     * @param ContainerInterface $container
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * @DI\Observe("create_form_file")
+     *
+     * @param CreateFormResourceEvent $event
+     */
     public function onCreateForm(CreateFormResourceEvent $event)
     {
         $form = $this->container->get('form.factory')->create(new FileType, new File());
@@ -33,6 +57,11 @@ class FileListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    /**
+     * @DI\Observe("create_file")
+     *
+     * @param CreateResourceEvent $event
+     */
     public function onCreate(CreateResourceEvent $event)
     {
         $request = $this->container->get('request');
@@ -69,6 +98,11 @@ class FileListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    /**
+     * @DI\Observe("delete_file")
+     *
+     * @param DeleteResourceEvent $event
+     */
     public function onDelete(DeleteResourceEvent $event)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
@@ -83,6 +117,11 @@ class FileListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    /**
+     * @DI\Observe("copy_file")
+     *
+     * @param CopyResourceEvent $event
+     */
     public function onCopy(CopyResourceEvent $event)
     {
         $newFile = $this->copy($event->getResource());
@@ -92,6 +131,11 @@ class FileListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    /**
+     * @DI\Observe("download_file")
+     *
+     * @param DownloadResourceEvent $event
+     */
     public function onDownload(DownloadResourceEvent $event)
     {
         $file = $event->getResource();
@@ -100,6 +144,11 @@ class FileListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    /**
+     * @DI\Observe("open_file")
+     *
+     * @param OpenResourceEvent $event
+     */
     public function onOpen(OpenResourceEvent $event)
     {
         $ds = DIRECTORY_SEPARATOR;
@@ -152,6 +201,11 @@ class FileListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    /**
+     * @DI\Observe("resource_file_to_template")
+     *
+     * @param ExportResourceTemplateEvent $event
+     */
     public function onExportTemplate(ExportResourceTemplateEvent $event)
     {
         $resource = $event->getResource();
@@ -164,6 +218,11 @@ class FileListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    /**
+     * @DI\Observe("resource_file_from_template")
+     *
+     * @param ImportResourceTemplateEvent $event
+     */
     public function onImportTemplate(ImportResourceTemplateEvent $event)
     {
         $ds = DIRECTORY_SEPARATOR;
@@ -183,9 +242,11 @@ class FileListener extends ContainerAware
     }
 
     /**
-     * Copy a file (no persistence).
-     * @param \Claroline\CoreBundle\Listener\Resource\AbstractResource $resource
-     * @return \Claroline\CoreBundle\Entity\Resource\File
+     * Copies a file (no persistence).
+     *
+     * @param File $resource
+     *
+     * @return File
      */
     private function copy(File $resource)
     {

@@ -5,7 +5,14 @@ namespace Claroline\CoreBundle\Listener;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\DoctrineListener(
+ *     events = {"loadClassMetaData"},
+ *     connection = "default"
+ * )
+ */
 class ResourceExtender implements EventSubscriber
 {
     public function getSubscribedEvents()

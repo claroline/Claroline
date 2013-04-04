@@ -2,6 +2,9 @@
 
 namespace Claroline\CoreBundle\Listener;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Library\Event\ExportToolEvent;
 use Claroline\CoreBundle\Library\Event\ImportToolEvent;
@@ -12,60 +15,131 @@ use Claroline\CoreBundle\Library\Event\ImportWidgetConfigEvent;
 use Claroline\CoreBundle\Entity\Event;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Claroline\CoreBundle\Form\CalendarType;
-use Symfony\Component\DependencyInjection\ContainerAware;
 
-class ToolListener extends ContainerAware
+/**
+ * @DI\Service
+ */
+class ToolListener
 {
+    private $container;
+
+    /**
+     * @DI\InjectParams({
+     *     "container" = @DI\Inject("service_container")
+     * })
+     *
+     * @param ContainerInterface $container
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * @DI\Observe("open_tool_workspace_resource_manager")
+     *
+     * @param DisplayToolEvent $event
+     */
     public function onDisplayWorkspaceResouceManager(DisplayToolEvent $event)
     {
         $event->setContent($this->resourceWorkspace($event->getWorkspace()->getId()));
     }
 
+    /**
+     * @DI\Observe("open_tool_workspace_parameters")
+     *
+     * @param DisplayToolEvent $event
+     */
     public function onDisplayWorkspaceParameters(DisplayToolEvent $event)
     {
          $event->setContent($this->workspaceParameters($event->getWorkspace()->getId()));
     }
 
+    /**
+     * @DI\Observe("open_tool_workspace_user_management")
+     *
+     * @param DisplayToolEvent $event
+     */
     public function onDisplayWorkspaceUserManagement(DisplayToolEvent $event)
     {
         $event->setContent($this->usersManagement($event->getWorkspace()->getId()));
     }
 
+    /**
+     * @DI\Observe("open_tool_workspace_group_management")
+     *
+     * @param DisplayToolEvent $event
+     */
     public function onDisplayWorkspaceGroupManagement(DisplayToolEvent $event)
     {
         $event->setContent($this->groupsManagement($event->getWorkspace()->getId()));
     }
 
+    /**
+     * @DI\Observe("open_tool_workspace_home")
+     *
+     * @param DisplayToolEvent $event
+     */
     public function onDisplayWorkspaceHome(DisplayToolEvent $event)
     {
         $event->setContent($this->workspaceHome($event->getWorkspace()->getId()));
     }
 
+    /**
+     * @DI\Observe("open_tool_workspace_calendar")
+     *
+     * @param DisplayToolEvent $event
+     */
     public function onDisplayWorkspaceCalendar(DisplayToolEvent $event)
     {
         $event->setContent($this->workspaceCalendar($event->getWorkspace()->getId()));
     }
 
+    /**
+     * @DI\Observe("open_tool_desktop_resource_manager")
+     *
+     * @param DisplayToolEvent $event
+     */
     public function onDisplayDesktopResourceManager(DisplayToolEvent $event)
     {
         $event->setContent($this->resourceDesktop());
     }
 
+    /**
+     * @DI\Observe("open_tool_desktop_home")
+     *
+     * @param DisplayToolEvent $event
+     */
     public function onDisplayDesktopHome(DisplayToolEvent $event)
     {
         $event->setContent($this->desktopHome());
     }
 
+    /**
+     * @DI\Observe("open_tool_desktop_parameters")
+     *
+     * @param DisplayToolEvent $event
+     */
     public function onDisplayDesktopParameters(DisplayToolEvent $event)
     {
         $event->setContent($this->desktopParameters());
     }
 
+    /**
+     * @DI\Observe("open_tool_desktop_calendar")
+     *
+     * @param DisplayToolEvent $event
+     */
     public function onDisplayDesktopCalendar(DisplayToolEvent $event)
     {
         $event->setContent($this->desktopCalendar());
     }
 
+    /**
+     * @DI\Observe("tool_home_to_template")
+     *
+     * @param ExportToolEvent $event
+     */
     public function onExportHome(ExportToolEvent $event)
     {
         $home = array();
@@ -100,10 +174,16 @@ class ToolListener extends ContainerAware
         $event->setConfig($home);
     }
 
-    //@todo: Optimize this if possible (it should be possible to reduce the number of dql requests)
-    //@todo: When exporting the resource, there should be only "exportable" resources. Therefore
-    //the query builder must be updated
-    //because a new request is made each time to retrieve each resource right.
+    /**
+     * @DI\Observe("tool_resource_manager_to_template")
+     *
+     * @todo: Optimize this if possible (it should be possible to reduce the number of dql requests)
+     * @todo: When exporting the resource, there should be only "exportable" resources. Therefore
+     * the query builder must be updated because a new request is made each time to retrieve each
+     * resource right.
+     *
+     * @param ExportToolEvent $event
+     */
     public function onExportResource(ExportToolEvent $event)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
@@ -181,6 +261,11 @@ class ToolListener extends ContainerAware
         $event->setConfig($config);
     }
 
+    /**
+     * @DI\Observe("tool_home_from_template")
+     *
+     * @param ImportToolEvent $event
+     */
     public function onImportHome(ImportToolEvent $event)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
@@ -214,6 +299,12 @@ class ToolListener extends ContainerAware
         }
     }
 
+    /**
+     * @DI\Observe("tool_resource_manager_from_template")
+     *
+     * @param ImportToolEvent $event
+     * @throws Exception
+     */
     public function onImportResource(ImportToolEvent $event)
     {
         $manager = $this->container->get('claroline.resource.manager');
