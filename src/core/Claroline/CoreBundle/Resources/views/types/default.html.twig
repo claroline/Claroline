@@ -1,6 +1,6 @@
 {% if content != null %}
 
-<div class="content-element border {{ size }} relative">
+<div class="content-element border {{ size }} relative" data-id="{{ content.id }}" data-type="{{ type }}">
     {{ menu | raw }}
     <div class="margin">
         {% if content.title != "" %}
