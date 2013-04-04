@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Form;
 use Symfony\Component\Form\FormBuilderInterface;
 use Claroline\CoreBundle\Entity\Role;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 
 
 class ProfileType extends BaseProfileType
@@ -13,6 +14,8 @@ class ProfileType extends BaseProfileType
 
     public function __construct($platformRoles)
     {
+        $this->platformRoles = new ArrayCollection ($platformRoles);
+
         foreach ($platformRoles as $role) {
 
             if ($role->getTranslationKey() == 'admin') {
@@ -30,12 +33,14 @@ class ProfileType extends BaseProfileType
             ->add('phone', 'text', array('required' => false));
         if ($this->grantRole == true) {
             $builder->add(
-                'platformRole',
+                'platformRoles',
                 'entity',
                 array(
+                    'mapped' => false,
+                    'data' => $this->platformRoles,
                     'class' => 'Claroline\CoreBundle\Entity\Role',
                     'expanded' => false,
-                    'multiple' => false,
+                    'multiple' => true,
                     'property' => 'translationKey',
                     'disabled' => false,
                     'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
@@ -47,12 +52,14 @@ class ProfileType extends BaseProfileType
             );
         } else {
             $builder->add(
-                'platformRole',
+                'platformRoles',
                 'entity',
                 array(
+                    'mapped' => false,
+                    'data' => $this->platformRoles,
                     'class' => 'Claroline\CoreBundle\Entity\Role',
                     'expanded' => false,
-                    'multiple' => false,
+                    'multiple' => true,
                     'property' => 'translationKey',
                     'disabled' => true,
                     'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {

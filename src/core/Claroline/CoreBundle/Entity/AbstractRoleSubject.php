@@ -24,7 +24,7 @@ abstract class AbstractRoleSubject
      */
     public function addRole(Role $role)
     {
-        $roles = $this->getOwnedRoles(true);
+        $roles = $this->getOwnedRoles();
 
         if (!$roles->contains($role)) {
             $this->roles->add($role);
@@ -32,49 +32,13 @@ abstract class AbstractRoleSubject
     }
 
     /**
-     * Removes a role from the subject role collection. The children of the role to be
-     * removed are removed as well, but its parent is kept (ex: given a hierarchy
-     * ROLE_A -> ROLE_B -> ROLE_C, removing ROLE_B from a subject who has ROLE_C will
-     * remove ROLE_B and ROLE_C, but not ROLE_A).
+     * Removes a role from the subject role collection.
      *
      * @param Role $role
-     * @param bool $keepParent
      */
-    public function removeRole(Role $role, $keepParent = true)
+    public function removeRole(Role $role)
     {
-        foreach ($this->roles as $storedRole) {
-            if ($role === $storedRole) {
-                // remove role
-                $this->roles->removeElement($storedRole);
-
-                // but keep parent role, if any
-                if ($keepParent) {
-                    if (null !== $parentRole = $storedRole->getParent()) {
-                        $this->roles->add($parentRole);
-                    }
-                }
-
-                return;
-            } else {
-                $currentRole = $storedRole;
-
-                while (null !== $parentRole = $currentRole->getParent()) {
-                    if ($parentRole === $role) {
-                        // remove children role
-                        $this->roles->removeElement($storedRole);
-
-                        // but keep parent role, if any
-                        if ($keepParent) {
-                            if (null !== $ancestorRole = $parentRole->getParent()) {
-                                $this->roles->add($ancestorRole);
-                            }
-                        }
-                    }
-
-                    $currentRole = $parentRole;
-                }
-            }
-        }
+        $this->roles->removeElement($role);
     }
 
     /**
@@ -96,24 +60,9 @@ abstract class AbstractRoleSubject
      *
      * @return ArrayCollection[Role]
      */
-    public function getOwnedRoles($includeAncestorRoles = false)
+    public function getOwnedRoles()
     {
-        if (false === $includeAncestorRoles) {
-            return $this->roles;
-        }
-
-        $roles = new ArrayCollection();
-
-        foreach ($this->roles as $role) {
-            $roles->add($role);
-
-            while (null !== $parentRole = $role->getParent()) {
-                $roles->add($parentRole);
-                $role = $parentRole;
-            }
-        }
-
-        return $roles;
+        return $this->roles;
     }
 
     /**
