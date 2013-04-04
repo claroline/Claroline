@@ -255,8 +255,9 @@ class ParametersControllerTest extends FunctionalTestCase
 
         $crawler = $this->client->request(
             'GET',
-            "/workspaces/user/{$wsCreatorId}"
+            "/workspaces/user"
         );
+
         $this->assertEquals(3, $crawler->filter('.row-workspace')->count());
 
         $crawler = $this->client->request(

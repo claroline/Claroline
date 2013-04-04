@@ -61,6 +61,8 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
         $count = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->count();
         $maxWsId = $count;
 
+        $start = time();
+
         for ($i = 0; $i < $this->numberRoots; $i++) {
             $ws = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
                 ->find($maxWsId);
@@ -76,6 +78,14 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
             );
             $maxWsId--;
         }
+
+        $end = time();
+        $duration = ($end - $start);
+
+        $this->log("Time elapsed for the resource creation: " . $this->timeElapsed($duration));
+
+        return $this->timeElapsed($duration);
+
     }
 
     private function generateItems(EntityManager $em, $maxDepth, $curDepth, $directoryCount, $fileCount, $parent)
@@ -98,6 +108,7 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
                     // Clear the EntityManager (EM) to free memory and speed all EM operations.
                     // We may clear the EM only when coming back at level 1 else we have
                     // problems with entities needed in the hierarchy.
+                    $em->flush();
                     $em->clear();
                     $this->log(" [UOW size: " . $em->getUnitOfWork()->size() . "]");
                     // Re-attach all needed entities else we have problems later.
@@ -119,7 +130,7 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
         $dir->setName($name);
         $this->log('create '.$name);
         $dir = $this->container->get('claroline.resource.manager')
-            ->create($dir, $parent->getId(), 'directory', $user);
+            ->create($dir, $parent->getId(), 'directory', $user, null, false, true);
         $this->totalResources++;
 
         return $dir;
@@ -137,7 +148,7 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
         $file->setSize(0);
         $this->log('create '.$name);
         $file = $this->container->get('claroline.resource.manager')
-            ->create($file, $parent->getId(), 'file', $user);
+            ->create($file, $parent->getId(), 'file', $user, null, false, false);
         $this->totalResources++;
 
         return $file;
@@ -149,6 +160,30 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
         $query->setFetchMode("MyProject\User", "address", "EXTRA_LAZY");
 
         return $query->getSingleResult();
+    }
+
+    /**
+     * From http://php.net/manual/en/function.time.php
+     *
+     * @param type $secs
+     * @return type
+     */
+    private function timeElapsed($secs)
+    {
+        $bit = array(
+            'y' => $secs / 31556926 % 12,
+            'w' => $secs / 604800 % 52,
+            'd' => $secs / 86400 % 7,
+            'h' => $secs / 3600 % 24,
+            'm' => $secs / 60 % 60,
+            's' => $secs % 60
+            );
+
+        foreach($bit as $k => $v) {
+            if($v > 0)$ret[] = $v . $k;
+        }
+
+        return join(' ', $ret);
     }
 
 }

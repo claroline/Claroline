@@ -25,8 +25,8 @@ class CreateLargeTestFixtureCommand extends ContainerAwareCommand
                 new InputArgument('number_user', InputArgument::REQUIRED, 'The number of user.'),
                 new InputArgument('number_workspace', InputArgument::REQUIRED, 'The number of workspace.'),
                 new InputArgument('number_directory', InputArgument::REQUIRED, 'The number of directory per level.'),
-                new InputArgument('number_file', InputArgument::REQUIRED, 'The number of file per level.'),
-                new InputArgument('depth', InputArgument::REQUIRED, 'The depth of the data tree(s).'),
+                new InputArgument('number_file', InputArgument::REQUIRED, 'The number of file per level (recommanded: 5).'),
+                new InputArgument('depth', InputArgument::REQUIRED, 'The depth of the data tree(s) (recommanded: 2).'),
                 new InputArgument('number_roots', InputArgument::REQUIRED, 'The number of roots.')
             )
         );
@@ -37,9 +37,9 @@ class CreateLargeTestFixtureCommand extends ContainerAwareCommand
         $params = array(
             'number_user' => 'users',
             'number_workspace' => 'workspaces',
-            'number_directory' => 'number directory per level',
-            'number_file' => 'number file per level',
-            'depth' => 'depth',
+            'number_directory' => 'number directory per level  (recommanded: 10).',
+            'number_file' => 'number file per level (recommanded: 5).',
+            'depth' => 'depth (recommanded: 2).',
             'number_roots' => 'numberRoots'
         );
 
