@@ -48,7 +48,12 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
     {
         $this->manager = $manager;
 
-        $numTot = ((1 - pow($this->numberDirectory, $this->depth + 1)) / (1 - $this->numberDirectory)) - 1;
+        if ($this->numberDirectory <= 1) {
+            $numTot = $this->numberFiles;
+        } else {
+            $numTot = ((1 - pow($this->numberDirectory, $this->depth + 1)) / (1 - $this->numberDirectory)) - 1;
+        }
+
         $this->log("Number of directories that will be generated per workspace: ". $numTot);
         $this->log("Number of files that will be generated per workspace: ". $numTot * $this->numberFiles);
         $this->log("Number of filled workspaces: ". $this->numberRoots);
@@ -80,11 +85,10 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
         }
 
         $end = time();
-        $duration = ($end - $start);
+        $duration = $this->container->get('claroline.utilities.misc')->timeElapsed($end - $start);
+        $this->log("Time elapsed for the demo creation: " . $duration);
 
-        $this->log("Time elapsed for the resource creation: " . $this->timeElapsed($duration));
-
-        return $this->timeElapsed($duration);
+        return $duration;
 
     }
 
@@ -161,29 +165,4 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
 
         return $query->getSingleResult();
     }
-
-    /**
-     * From http://php.net/manual/en/function.time.php
-     *
-     * @param type $secs
-     * @return type
-     */
-    private function timeElapsed($secs)
-    {
-        $bit = array(
-            'y' => $secs / 31556926 % 12,
-            'w' => $secs / 604800 % 52,
-            'd' => $secs / 86400 % 7,
-            'h' => $secs / 3600 % 24,
-            'm' => $secs / 60 % 60,
-            's' => $secs % 60
-            );
-
-        foreach($bit as $k => $v) {
-            if($v > 0)$ret[] = $v . $k;
-        }
-
-        return join(' ', $ret);
-    }
-
 }

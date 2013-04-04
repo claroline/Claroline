@@ -31,7 +31,7 @@ class LoadWorkspacesData extends LoggableFixture implements ContainerAwareInterf
         $this->container = $container;
     }
 
-        /**
+    /**
      * {@inheritDoc}
      */
     public function load(ObjectManager $manager)
@@ -40,6 +40,8 @@ class LoadWorkspacesData extends LoggableFixture implements ContainerAwareInterf
         $count = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->count();
         $totalWorkspaces = $count + 1;
         $admin = $this->findJohnDoe($manager);
+
+        $start = time();
 
         for ($j = 0, $i = 0; $i < $this->numberWorkspaces; $i++, $totalWorkspaces++) {
             $manfatoryFieldValue = "ws_batch" . $totalWorkspaces;
@@ -59,6 +61,12 @@ class LoadWorkspacesData extends LoggableFixture implements ContainerAwareInterf
                 $this->log("batch [{$j}] | workspaces [{$totalInserts}] | UOW  [{$manager->getUnitOfWork()->size()}]");
             }
         }
+
+        $end = time();
+        $duration = $this->container->get('claroline.utilities.misc')->timeElapsed($end - $start);
+        $this->log("Time elapsed for the workspace creation: " . $duration);
+
+        return $duration;
     }
 
     private function findJohnDoe(ObjectManager $manager)

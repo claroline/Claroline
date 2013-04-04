@@ -63,7 +63,7 @@ class Creator
         $rootDir->setWorkspace($workspace);
         $this->manager->setResourceRights($rootDir, $config->getPermsRootConfiguration());
         $this->entityManager->persist($rootDir);
-        $this->entityManager->flush();
+        //$this->entityManager->flush();
         //tmpzip wich will be extracted to retrieve the needed files.
         $extractPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('claro_ws_tmp_', true);
         $archive = new \ZipArchive();
@@ -162,7 +162,7 @@ class Creator
             $wot->setTool($tool);
             $wot->setOrder($order);
             $this->entityManager->persist($wot);
-            $this->entityManager->flush();
+            //$this->entityManager->flush();
             $order++;
 
             foreach ($data['perms'] as $role) {
@@ -178,8 +178,8 @@ class Creator
 
                 $tool = $this->entityManager
                     ->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneBy(array('name' => $name));
-                $wot = $this->entityManager->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
-                    ->findOneBy(array('tool' => $tool, 'workspace' => $workspace));
+                    //$wot = $this->entityManager->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
+                    //->findOneBy(array('tool' => $tool, 'workspace' => $workspace));
 
                 $this->setWorkspaceToolRole($wot, $role);
             }
@@ -194,6 +194,6 @@ class Creator
         $wtr->setRole($role);
         $wtr->setWorkspaceOrderedTool($wot);
         $this->entityManager->persist($wtr);
-        $this->entityManager->flush();
+//        $this->entityManager->flush();
     }
 }

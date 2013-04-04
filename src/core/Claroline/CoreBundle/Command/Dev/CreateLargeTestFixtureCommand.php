@@ -89,7 +89,7 @@ class CreateLargeTestFixtureCommand extends ContainerAwareCommand
                 $output->writeln($message);
             }
         );
-        $fixture->load($em);
+        $durationUser = $fixture->load($em);
         $output->writeln('Loading workspaces...');
         $fixture = new LoadWorkspacesData($numberWorkspace);
         $fixture->setReferenceRepository($referenceRepo);
@@ -99,7 +99,7 @@ class CreateLargeTestFixtureCommand extends ContainerAwareCommand
                 $output->writeln($message);
             }
         );
-        $fixture->load($em);
+        $durationWorkspace = $fixture->load($em);
         $output->writeln('Loading resources...');
         $fixture = new LoadResourcesData($depth, $numberFile, $numberDirectory, $numberRoots);
         $fixture->setReferenceRepository($referenceRepo);
@@ -109,7 +109,11 @@ class CreateLargeTestFixtureCommand extends ContainerAwareCommand
                 $output->writeln($message);
             }
         );
-        $fixture->load($em);
+        $durationResource = $fixture->load($em);
+        $output->writeLn('********************************************************');
+        $output->writeLn("Time elapsed for the user creation: " . $durationUser);
+        $output->writeLn("Time elapsed for the workspace creation: " . $durationWorkspace);
+        $output->writeLn("Time elapsed for the resource creation: " . $durationResource);
         $output->writeln('Done');
     }
 }
