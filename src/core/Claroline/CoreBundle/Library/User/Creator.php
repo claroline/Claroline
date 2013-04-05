@@ -52,7 +52,7 @@ class Creator
         $personalWorkspaceName = $this->trans->trans('personal_workspace', array(), 'platform');
         $config->setWorkspaceName($personalWorkspaceName);
         $config->setWorkspaceCode($user->getUsername());
-        $workspace = $this->wsCreator->createWorkspace($config, $user);
+        $workspace = $this->wsCreator->createWorkspace($config, $user, false);
         $user->setPersonalWorkspace($workspace);
         $this->em->persist($workspace);
 

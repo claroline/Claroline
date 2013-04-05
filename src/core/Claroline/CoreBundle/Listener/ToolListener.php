@@ -297,7 +297,7 @@ class ToolListener extends ContainerAware
             ->findWorkspaceRoot($workspace)
             ->getId();
         $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-            ->findBy(array('isVisible' => true));
+            ->findAll();
 
         return $this->container->get('templating')->render(
             'ClarolineCoreBundle:Tool\workspace\resource_manager:resources.html.twig', array(
@@ -392,7 +392,7 @@ class ToolListener extends ContainerAware
         $resourceTypes = $this->container
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-            ->findBy(array('isVisible' => true));
+            ->findAll();
 
         return $this->container->get('templating')->render(
             'ClarolineCoreBundle:Tool\desktop\resource_manager:resources.html.twig',
