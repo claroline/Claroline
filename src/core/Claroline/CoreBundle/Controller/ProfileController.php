@@ -24,7 +24,10 @@ class ProfileController extends Controller
     public function formAction()
     {
         $user = $this->get('security.context')->getToken()->getUser();
-        $form = $this->createForm(new ProfileType($user->getOwnedRoles()), $user);
+        $roles = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Role')
+            ->findPlatformRoles($user);
+        $form = $this->createForm(new ProfileType($roles), $user);
 
         return $this->render(
             'ClarolineCoreBundle:Profile:profile_form.html.twig',
@@ -46,11 +49,29 @@ class ProfileController extends Controller
     {
         $request = $this->get('request');
         $user = $this->get('security.context')->getToken()->getUser();
-        $form = $this->get('form.factory')->create(new ProfileType($user->getOwnedRoles()), $user);
+        $roles = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Role')
+            ->findPlatformRoles($user);
+        $form = $this->get('form.factory')->create(new ProfileType($roles), $user);
         $form->bind($request);
 
         if ($form->isValid()) {
+
             $user = $form->getData();
+            $newRoles = $form->get('platformRoles')->getData();
+            $userRole = $this->get('doctrine.orm.entity_manager')
+                ->getRepository('ClarolineCoreBundle:Role')
+                ->findOneByName('ROLE_USER');
+
+            foreach ($roles as $role) {
+                if ($role !== $userRole) {
+                    $user->removeRole($role);
+                }
+            }
+            foreach ($newRoles as $role) {
+                $user->addRole($role);
+            }
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();

@@ -153,11 +153,6 @@ class ParametersControllerTest extends FunctionalTestCase
     {
         $this->markTestSkipped("event is not catched");
         $this->registerStubPlugins(array('Valid\WithWidgets\ValidWithWidgets'));
-        $pwuId = $this->getUser('john')->getPersonalWorkspace()->getId();
-        $this->logUser($this->getUser('john'));
-        $widget = $this->em
-            ->getRepository('ClarolineCoreBundle:Widget\Widget')
-            ->findOneByName('claroline_testwidget1');
     }
 
 
@@ -171,7 +166,6 @@ class ParametersControllerTest extends FunctionalTestCase
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
             ->findAll();
-        $countConfigs = count($configs);
         $crawler = $this->client->request('GET', "/workspaces/{$pwuId}/widgets");
         $countVisibleWidgets = count($crawler->filter('.widget'));
         $this->client->request(
@@ -261,8 +255,9 @@ class ParametersControllerTest extends FunctionalTestCase
 
         $crawler = $this->client->request(
             'GET',
-            "/workspaces/user/{$wsCreatorId}"
+            "/workspaces/user"
         );
+
         $this->assertEquals(3, $crawler->filter('.row-workspace')->count());
 
         $crawler = $this->client->request(
@@ -283,7 +278,6 @@ class ParametersControllerTest extends FunctionalTestCase
             )
         );
         $this->logUser($this->getFixtureReference('user/ws_creator'));
-        $wsCreatorId = $this->getFixtureReference('user/ws_creator')->getId();
         $wsBId = $this->getFixtureReference('workspace/ws_b')->getId();
         $wsBCode = $this->getFixtureReference('workspace/ws_b')->getCode();
         $wsACode = $this->getFixtureReference('workspace/ws_a')->getCode();

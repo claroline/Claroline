@@ -71,7 +71,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $form['profile_form[username]'] = 'tototata';
         $form['profile_form[plainPassword][first]'] = 'abc';
         $form['profile_form[plainPassword][second]'] = 'abc';
-        $form['profile_form[platformRole]'] = $this->getRole('user')->getId();
+        $form['profile_form[platformRoles]'] = $this->getRole('user')->getId();
         $this->client->submit($form);
         $user = $this->getUser('tototata');
         $repositoryWs = $user->getPersonalWorkspace();
