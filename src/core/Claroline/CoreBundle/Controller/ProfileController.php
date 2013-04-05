@@ -34,6 +34,8 @@ class ProfileController extends Controller
      */
     public function updateAction()
     {
+        
+
         $request = $this->get('request');
         $user = $this->get('security.context')->getToken()->getUser();
         $form = $this->get('form.factory')->create(new ProfileType($user->getOwnedRoles()), $user);
@@ -41,13 +43,20 @@ class ProfileController extends Controller
 
         if ($form->isValid()) {
             $user = $form->getData();
+
             $em = $this->getDoctrine()->getEntityManager();
+            $uow = $em->getUnitOfWork();
+            $uow->computeChangeSets();
+            $changeSet = $uow->getEntityChangeSet($user);
+
             $em->persist($user);
             $em->flush();
             $this->get('security.context')->getToken()->setUser($user);
 
             //TODO What do we put in $oldValues and $newValues ?? All user object ?
-            $log = new LogUserUpdateEvent($user, $oldValues, $newValues);
+
+
+            $log = new LogUserUpdateEvent($user, $changeSet);
             $this->get('event_dispatcher')->dispatch('log', $log);
 
             return $this->redirect($this->generateUrl('claro_profile_form'));
