@@ -97,7 +97,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     /**
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
-     *     inversedBy="users"
+     *     inversedBy="users", fetch="EXTRA_LAZY"
      * )
      * @ORM\JoinTable(
      *     name="claro_user_role",
@@ -276,8 +276,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
             return false;
         }
 
-        if ($this->id !== $user->getId())
-        {
+        if ($this->id !== $user->getId()) {
             return false;
         }
 

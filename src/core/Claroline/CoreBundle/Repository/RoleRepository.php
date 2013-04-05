@@ -2,13 +2,14 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
+use Doctrine\ORM\EntityRepository;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 
-class RoleRepository extends NestedTreeRepository
+class RoleRepository extends EntityRepository
 {
     public function findByWorkspace(AbstractWorkspace $workspace)
     {
@@ -44,6 +45,17 @@ class RoleRepository extends NestedTreeRepository
         $query = $this->_em->createQuery($dql);
 
         return $query->getSingleResult();
+    }
+
+    public function findPlatformRoles(User $user)
+    {
+        $dql = "
+            SELECT r FROM Claroline\CoreBundle\Entity\Role r
+            JOIN r.users u
+            WHERE u.id = {$user->getId()} AND r.roleType != " . Role::WS_ROLE;
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
     }
 
     public function findManagerRole(AbstractWorkspace $workspace)

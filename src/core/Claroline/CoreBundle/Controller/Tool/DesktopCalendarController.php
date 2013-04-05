@@ -11,7 +11,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 /**
  * Controller of the calendar
  */
-class DesktopCalendarController extends Controller{
+class DesktopCalendarController extends Controller
+{
 
     const ABSTRACT_WS_CLASS = 'ClarolineCoreBundle:Workspace\AbstractWorkspace';
 
@@ -32,8 +33,8 @@ class DesktopCalendarController extends Controller{
             $workspace = $object->getWorkspace();
             $data[$key]['title'] = $workspace->getName().': '.$object->getTitle();
             $data[$key]['allDay'] = $object->getAllDay();
-            $data[$key]['start'] = $object->getStart();
-            $data[$key]['end'] = $object->getEnd();
+            $data[$key]['start'] = $object->getStart()->getTimestamp();
+            $data[$key]['end'] = $object->getEnd()->getTimestamp();
             $data[$key]['color'] = $object->getPriority();
         }
 

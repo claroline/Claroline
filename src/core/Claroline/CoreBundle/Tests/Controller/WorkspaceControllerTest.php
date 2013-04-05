@@ -59,15 +59,18 @@ class WorkspaceControllerTest extends FunctionalTestCase
                 'ws_d' => 'ws_creator',
             )
         );
+
         $this->logUser($this->getUser('ws_creator'));
+
         $crawler = $this->client->request(
             'DELETE',
             "/workspaces/{$this->getWorkspace('ws_d')->getId()}"
         );
         $crawler = $this->client->request(
             'GET',
-            "/workspaces/user/{$this->getUser('ws_creator')->getId()}"
+            "/workspaces/user"
         );
+
         $this->assertEquals(4, $crawler->filter('.row-workspace')->count());
     }
 
@@ -85,7 +88,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->logUser($this->getUser('ws_creator'));
         $crawler = $this->client->request(
             'GET',
-            "/workspaces/user/{$this->getUser('ws_creator')->getId()}"
+            "/workspaces"
         );
         $link = $crawler->filter("#link-home-{$this->getWorkspace('ws_d')->getId()}")
             ->link();

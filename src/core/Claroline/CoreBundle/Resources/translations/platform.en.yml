@@ -155,7 +155,7 @@ profile_form_ownedRoles: Role(s)
 profile_form_phone: Phone
 profile_form_plainPassword_first: Password
 profile_form_plainPassword_second: Verification
-profile_form_platformRole: Role
+profile_form_platformRoles: Roles
 profile_form_username: Username
 properties: Properties
 public: Public
