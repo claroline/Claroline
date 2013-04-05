@@ -578,39 +578,39 @@ class WorkspaceController extends Controller
 
     /**
      * @Route(
-     *     "/{userId}/workspace/{workspaceId}/tag/add/{tagId}",
+     *     "/{userId}/workspace/{workspaceId}/tag/remove/{workspaceTagId}",
      *     name="claro_workspace_tag_remove",
      *     options={"expose"=true}
      * )
-     * @Method("POST")
+     * @Method("DELETE")
      *
      * Remove Tag from Workspace
      *
      * @param integer $userId
      * @param integer $workspaceId
-     * @param integer $tagId
+     * @param integer $workspaceTagId
      *
      * @return Response
      */
     public function removeTagFromWorkspace($userId, $workspaceId, $workspaceTagId)
     {
-//        $em = $this->get('doctrine.orm.entity_manager');
-//        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-//        $workspaceTag = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')->find($workspaceTagId);
-//        $user = $this->get('security.context')->getToken()->getUser();
-//
-//        if (is_null($user) || is_null($workspace) || is_null($workspaceTag)) {
-//            throw new \RuntimeException('User, Workspace or Tag cannot be null');
-//        }
-//
-//        if (!$this->get('security.context')->isGranted('ROLE_USER') || $user->getId() !== $workspaceTag->getUser()->getId()) {
-//            throw new \AccessDeniedException();
-//        }
-//
-//        $relWorkspaceTag = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-//            ->findOneBy(array('user' => $user->getId(), 'workspace' => $workspace->getId(), 'tag' => $workspaceTag->getId()));
-//        $em->remove($relWorkspaceTag);
-//        $em->flush();
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+        $workspaceTag = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')->find($workspaceTagId);
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        if (is_null($user) || is_null($workspace) || is_null($workspaceTag)) {
+            throw new \RuntimeException('User, Workspace or Tag cannot be null');
+        }
+
+        if (!$this->get('security.context')->isGranted('ROLE_USER') || $user->getId() !== $workspaceTag->getUser()->getId()) {
+            throw new \AccessDeniedException();
+        }
+
+        $relWorkspaceTag = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
+            ->findOneBy(array('user' => $user->getId(), 'workspace' => $workspace->getId(), 'tag' => $workspaceTag->getId()));
+        $em->remove($relWorkspaceTag);
+        $em->flush();
 
         return new Response('success', 204);
     }
