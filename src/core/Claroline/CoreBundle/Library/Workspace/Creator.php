@@ -37,7 +37,7 @@ class Creator
      *
      * @return AbstractWorkspace
      */
-    public function createWorkspace(Configuration $config, User $manager)
+    public function createWorkspace(Configuration $config, User $manager, $autoflush = true)
     {
         $config->check();
         $workspaceType = $config->getWorkspaceType();
@@ -86,7 +86,9 @@ class Creator
         $manager->addRole($this->roleRepo->findManagerRole($workspace));
         $this->addMandatoryTools($workspace, $config);
         $this->entityManager->persist($manager);
-        $this->entityManager->flush();
+        if ($autoflush) {
+            $this->entityManager->flush();
+        }
         $archive->close();
 
         return $workspace;
