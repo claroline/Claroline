@@ -593,6 +593,10 @@ class WorkspaceParametersController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
+        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
+            throw new AccessDeniedHttpException();
+        }
+
         $form = $this->createForm(new WorkspaceEditType(), $workspace);
 
         return $this->render(
@@ -617,6 +621,11 @@ class WorkspaceParametersController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+
+        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
+            throw new AccessDeniedHttpException();
+        }
+
         $wsRegisteredName = $workspace->getName();
         $wsRegisteredCode = $workspace->getCode();
         $form = $this->createForm(new WorkspaceEditType(), $workspace);
@@ -663,6 +672,11 @@ class WorkspaceParametersController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+
+        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
+            throw new AccessDeniedHttpException();
+        }
+
         $wot = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')->find($workspaceOrderToolId);
 
         $form = $this->createForm(new WorkspaceOrderToolEditType(), $wot);
@@ -689,6 +703,11 @@ class WorkspaceParametersController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+
+        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
+            throw new AccessDeniedHttpException();
+        }
+
         $wot = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')->find($workspaceOrderToolId);
 
         $form = $this->createForm(new WorkspaceOrderToolEditType(), $wot);
