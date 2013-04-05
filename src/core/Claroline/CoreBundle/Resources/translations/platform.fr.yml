@@ -89,6 +89,7 @@ log_resource_read_verb: 'a ouvert'
 log_user_create_verb: 'a créé le compte'
 log_user_login_verb: "s'est connecté(e)"
 log_user_delete_verb: 'a supprimé le compte'
+log_user_update_verb: 'a modifié le compte'
 login: Connexion
 login_failure: 'La connexion a échoué. Vérifiez que votre nom d''utilisateur et votre mot de passe sont corrects.'
 logout: Déconnexion

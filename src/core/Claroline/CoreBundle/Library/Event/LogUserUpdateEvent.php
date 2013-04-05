@@ -13,7 +13,7 @@ class LogUserUpdateEvent extends LogGenericEvent
      * 
      * Please respect Underscore naming convention for property names (all lower case words separated with underscores)
      */
-    public function __construct($receiver, $oldValues, $newValues)
+    public function __construct($receiver, $changeSet)
     {
         parent::__construct(
             self::action,
@@ -21,8 +21,7 @@ class LogUserUpdateEvent extends LogGenericEvent
                 'receiver_user' => array(
                     'first_name' => $receiver->getFirstName(),
                     'last_name' => $receiver->getLastName(),
-                    'old_values' => $oldValues,
-                    'new_values' => $newValues
+                    'change_set' => $changeSet
                 )
             ),
             $receiver
