@@ -1,4 +1,5 @@
 {% macro showTag(tag) %}
+{% if tag.getRelWorkspaceTagList() is not empty %}
     <div class="accordion" id="accordion-{{ tag.getId() }}">
         <div class="accordion-group">
             <div class="accordion-heading">
@@ -41,6 +42,7 @@
             </div>
         </div>
     </div>
+{% endif %}
 {% endmacro %}
 
 {% from _self import showTag %}

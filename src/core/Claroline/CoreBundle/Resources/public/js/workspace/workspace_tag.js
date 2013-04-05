@@ -30,4 +30,25 @@
             });
         });
     });
+
+    $('.remove-tag-button').click(function () {
+        var twigWorkspaceId = $(this).attr('data-workspace-id');
+        var twigTagId = $(this).attr('data-tag-id');
+        var row = $(this).parent();
+
+        $.ajax({
+            url: Routing.generate(
+                'claro_workspace_tag_remove',
+                {
+                    'userId': twigUserId,
+                    'workspaceId': twigWorkspaceId,
+                    'workspaceTagId': twigTagId
+                }
+            ),
+            type: 'DELETE',
+            success: function () {
+                row.remove();
+            }
+        });
+    });
 })();
