@@ -1,5 +1,5 @@
 function linkCategory(categoryNewPop) {
-    "use strict";
+    //"use strict";
     //deplacer bouton créer une nouvelle catégorie
     $("*[id$='_interaction_question']").contents("div:nth-child(2)").append($("#lien_category"));
 
@@ -16,7 +16,7 @@ function linkCategory(categoryNewPop) {
 }
 
 function categoryPop(data) {
-    "use strict";
+    //"use strict";
 
     $("#overlayEffect_cat").css({
         "display": "none",
@@ -83,7 +83,7 @@ function categoryPop(data) {
     });
 
     function hidePopup() {
-        "use strict";
+        //"use strict";
         if (popup === true) {
             $("#overlayEffect_cat").fadeOut("slow");
             $("#popupCategory").fadeOut("slow");

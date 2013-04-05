@@ -1,6 +1,6 @@
 //css hint
 function hintCSS() {
-    "use strict";
+    //"use strict";
     //creer une ligne
     $("*[id$='_interaction_hints']").children('div').each(function (index) {
             $('#newTable2').append('<tr class="ligne_choice2" >  </tr>');
@@ -51,7 +51,7 @@ function hintCSS() {
 
 //css hint
 function hintCSSEdit() {
-    "use strict";
+    //"use strict";
     $("*[id$='_interaction_hints']").after('<table style="border: 1px solid black;" id="newTable2"><tr> <th>Num indice</th> <th>Indice</th> <th>penalité</th> <th>------</th> </tr></table>');
 
     //creer une ligne
@@ -119,7 +119,7 @@ function hintCSSEdit() {
 
 
 function addFormHintEdit(add_h, source_image_add) {
-    "use strict";
+    //"use strict";
     $("*[id$='_interaction_hints']").before('<a href="#" id="add_hint"><img src="' + source_image_add + '">' + add_h + '</a>');
     $('#add_hint').css({
             'display': 'block',
@@ -139,7 +139,7 @@ function addFormHintEdit(add_h, source_image_add) {
 }
 
 function addFormHint(add_h, hint_number, hint, Penalty, source_image_add) {
-    "use strict";
+    //"use strict";
     $("*[id$='_interaction_hints']").before('<a href="#" id="add_hint"><img src="' + source_image_add + '">' + add_h + '</a>');
     $('#add_hint').css({
             'display': 'block',
@@ -157,7 +157,7 @@ function addFormHint(add_h, hint_number, hint, Penalty, source_image_add) {
 }
 
 function addHint(hint_number, hint, Penalty) {
-    "use strict";
+    //"use strict";
 
     var $container = $("*[id$='_interaction_hints']");
     if ($('#newTable2').length) {

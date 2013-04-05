@@ -205,7 +205,7 @@ class InteractionQCMController extends Controller
         );
 
         if ($formHandler->processUpdate($interQCM)) {
-            return $this->redirect($this->generateUrl('question'));
+            return $this->redirect($this->generateUrl('ujm_question_index'));
         }
 
         $deleteForm = $this->createDeleteForm($id);
