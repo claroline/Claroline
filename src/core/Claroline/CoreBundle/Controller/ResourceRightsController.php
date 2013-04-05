@@ -123,8 +123,7 @@ class ResourceRightsController extends Controller
             ->find($roleId);
         $config = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
             ->findOneBy(array('resource' => $resourceId, 'role' => $role));
-        $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-            ->findBy(array('isVisible' => true));
+        $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
 
         return $this->render(
             'ClarolineCoreBundle:Resource:rights_creation.html.twig',
