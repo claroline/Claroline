@@ -49,11 +49,6 @@ class ResourceType
     protected $class;
 
     /**
-     * @ORM\Column(type="boolean", name="is_visible")
-     */
-    protected $isVisible;
-
-    /**
      * @ORM\Column(type="boolean", name="is_exportable")
      */
     protected $isExportable;
@@ -151,16 +146,6 @@ class ResourceType
     public function getBrowsable()
     {
         return $this->isBrowsable;
-    }
-
-    public function setVisible($isVisible)
-    {
-        $this->isVisible = $isVisible;
-    }
-
-    public function isVisible()
-    {
-        return $this->isVisible;
     }
 
     public function setPlugin(Plugin $plugin)

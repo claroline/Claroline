@@ -82,7 +82,7 @@ class LoadFileData extends AbstractFixture implements ContainerAwareInterface
 
             $mimeType = MimeTypeGuesser::getInstance()->guess($targetFilePath);
             $file->setMimeType($mimeType);
-            $resourceManager->create($file, $directory->getId(), 'file', $user, null, false);
+            $resourceManager->create($file, $directory->getId(), 'file', $user);
             $this->addReference("file/{$fileName}", $file);
         }
 
