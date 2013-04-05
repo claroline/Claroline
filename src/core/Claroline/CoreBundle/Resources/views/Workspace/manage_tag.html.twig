@@ -48,10 +48,16 @@
                         </td>
                         <td>
                             {% for workspaceTag in workspacesTags[workspace.getId()] %}
-                                <span class="label label-success">{{ workspaceTag.getTag().getName() }}</span>
+                                <span class="label label-success">
+                                    {{ workspaceTag.getTag().getName() }}
+                                    <i  class="icon-remove-sign remove-tag-button"
+                                        data-workspace-id="{{ workspace.getId() }}"
+                                        data-tag-id="{{ workspaceTag.getTag().getId() }}"
+                                    >
+                                    </i>
+                                </span>
                             {% endfor %}
-                            <i
-                                class="icon-plus-sign add-tag-button"
+                            <i  class="icon-plus-sign add-tag-button"
                                 data-trigger="hover"
                                 data-placement="top"
                                 data-content="{{ 'add_tag_to_workspace'|trans({}, 'platform') }}"
