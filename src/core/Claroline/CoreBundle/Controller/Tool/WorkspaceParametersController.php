@@ -485,8 +485,7 @@ class WorkspaceParametersController extends Controller
             ->find($roleId);
         $config = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
             ->findOneBy(array('resource' => $resource, 'role' => $role));
-        $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-            ->findBy(array('isVisible' => true));
+        $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
 
         return $this->render(
             'ClarolineCoreBundle:Tool\workspace\parameters:resource_rights_creation.html.twig',
