@@ -11,6 +11,7 @@ use Claroline\CoreBundle\Form\GroupType;
 use Claroline\CoreBundle\Form\GroupSettingsType;
 use Claroline\CoreBundle\Form\PlatformParametersType;
 use Claroline\CoreBundle\Library\Event\PluginOptionsEvent;
+use Claroline\CoreBundle\Library\Event\LogUserDeleteEvent;
 use Claroline\CoreBundle\Library\Configuration\UnwritableException;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -96,12 +97,17 @@ class AdministrationController extends Controller
         $params = $this->get('request')->query->all();
 
         if (isset($params['ids'])) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->get('doctrine.orm.entity_manager');
 
             foreach ($params['ids'] as $userId) {
                 $user = $em->getRepository('ClarolineCoreBundle:User')
                     ->find($userId);
+
                 $em->remove($user);
+                $em->flush();
+
+                $log = new LogUserDeleteEvent($user);
+                $this->get('event_dispatcher')->dispatch('log', $log);
             }
 
             $em->flush();

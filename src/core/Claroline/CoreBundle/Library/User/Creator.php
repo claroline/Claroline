@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Workspace\Creator as WsCreator;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Tool\DesktopTool;
+use Claroline\CoreBundle\Library\Event\LogUserCreateEvent;
 
 class Creator
 {
@@ -16,13 +17,15 @@ class Creator
     private $ch;
     private $wsCreator;
     private $personalWsTemplateFile;
+    private $container;
 
     public function __construct(
         EntityManager $em,
         Translator $trans,
         PlatformConfigurationHandler $ch,
         WsCreator $wsCreator,
-        $personalWsTemplateFile
+        $personalWsTemplateFile,
+        $container
     )
     {
         $this->em = $em;
@@ -30,6 +33,7 @@ class Creator
         $this->ch = $ch;
         $this->wsCreator = $wsCreator;
         $this->personalWsTemplateFile = $personalWsTemplateFile."default.zip";
+        $this->container = $container;
     }
 
     /**
@@ -73,6 +77,10 @@ class Creator
         }
 
         $this->em->flush();
+
+        // Log user creation
+        $log = new LogUserCreateEvent($user);
+        $this->container->get('event_dispatcher')->dispatch('log', $log);
 
         return $user;
     }
