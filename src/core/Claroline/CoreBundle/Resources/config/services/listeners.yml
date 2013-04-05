@@ -27,6 +27,13 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onCoreException, priority: 1 }
 
+    claroline.security.authentication_success:
+        class: Claroline\CoreBundle\Listener\AuthenticationSuccessListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: security.interactive_login, method: onAuthenticationSuccess }
+
     claroline.listener.resource_extender:
         class: Claroline\CoreBundle\Listener\ResourceExtender
         tags:
@@ -88,10 +95,10 @@ services:
         calls:
            - [setContainer, ["@service_container"]]
         tags:
-           - { name: kernel.event_listener, event: log_resource, method: onLogResource }
+           - { name: kernel.event_listener, event: log, method: onLog }
 
     claroline.listener.core_resource_logger:
-      class:  Claroline\CoreBundle\Listener\CoreResourceLogListener
+      class:  Claroline\CoreBundle\Listener\CoreLogListener
       calls:
         - [setContainer, ["@service_container"]]
       tags:

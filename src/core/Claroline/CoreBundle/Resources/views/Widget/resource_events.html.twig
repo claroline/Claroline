@@ -3,18 +3,37 @@
     {% for log in logs %}
     <li>
         <span class="notification-date">
-            {% if log.getDate()|date('d-m-Y') == ''|date('d-m-Y') %}
+            {% if log.getDateLog()|date('d-m-Y') == ''|date('d-m-Y') %}
                 {{ 'today'|trans({}, 'platform') ~ ', ' }}
             {% else %}
-                {{ log.getDate()|date('d-m-Y') ~ ', ' }}
-            {% endif %}{{ log.getDate()|date('H:i') }}
+                {{ log.getDateLog()|date('d-m-Y') ~ ', ' }}
+            {% endif %}{{ log.getDateLog()|date('H:i') }}
         </span> :
-        {{ log.getUpdator().getFirstName() ~ ' ' ~ log.getUpdator().getLastName() }}
-        {{ ('log_' ~ log.getAction() ~ '_verb')|trans({}, 'platform') }}
-        {% if log.getResource() != null %}
-            <a href="{{ path('claro_resource_open', {'resourceType': log.getResourceType().getName(), 'action': 'open', 'resourceId': log.getResource().getId()})}}"> {{ log.getPath() }}</a>
+        {% if log.getDetails().doer is defined %}
+            {{ log.getDetails().doer.first_name ~ ' ' ~ log.getDetails().doer.last_name }}
         {% else %}
-            <em>{{ log.getPath() }}</em>
+            {{ ('log_default_user')|trans({}, 'platform') }}
+        {% endif %}
+        {{ ('log_' ~ log.getAction() ~ '_verb')|trans({}, 'platform') }}
+        
+        {% if 'resource_' in log.getAction() %}
+            {% if log.getResource() != null %}
+                <a href="{{ path('claro_resource_open', {'resourceType': log.getResourceType().getName(), 'action': 'open', 'resourceId': log.getResource().getId()})}}"> {{ log.getDetails().resource.path }}</a>
+            {% else %}
+                <em>{{ log.getDetails().resource.path }}</em>
+            {% endif %}
+        {% endif %}
+
+        {% if 'user_' in log.getAction() %}
+            {% if log.getDetails().receiver_user is defined %}
+                {% if log.getReceiver() != null %}
+                    <a href="{{ path('claro_profile_view', {'userId': log.getReceiver().getId()}) }}">
+                        {{ log.getDetails().receiver_user.first_name }} {{ log.getDetails().receiver_user.last_name }}
+                    </a>
+                {% else %}
+                    <em>{{ log.getDetails().receiver_user.first_name }} {{ log.getDetails().receiver_user.last_name }}</em>
+                {% endif %}
+            {% endif %}
         {% endif %}
     </li>
 

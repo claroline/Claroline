@@ -18,11 +18,12 @@ class ResourceLogRepository extends EntityRepository
         }
 
         $dql = "
-            SELECT DISTINCT rl, res, rt FROM Claroline\CoreBundle\Entity\Logger\ResourceLog rl
-            JOIN rl.workspace ws
+            SELECT DISTINCT rl, res, rt FROM Claroline\CoreBundle\Entity\Logger\Log rl
+            LEFT JOIN rl.workspace ws
             LEFT JOIN rl.resource res
             LEFT JOIN res.resourceType rt
-            JOIN ws.roles r";
+            LEFT JOIN ws.roles r
+            LEFT JOIN rl.doer doer";
 
         if ($workspace !== null) {
             $dql .= " WHERE ws.id = {$workspace->getId()} ";
@@ -34,7 +35,7 @@ class ResourceLogRepository extends EntityRepository
                     JOIN w.roles wr
                     JOIN wr.users ur
                     WHERE ur.id = {$user->getId()}
-                )";
+                ) OR doer.id = {$user->getId()}";
         }
 
         $dql .= ' ORDER by rl.dateLog DESC';

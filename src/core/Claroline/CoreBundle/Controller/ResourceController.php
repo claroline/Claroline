@@ -14,7 +14,8 @@ use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Library\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Event\CustomActionResourceEvent;
-use Claroline\CoreBundle\Library\Event\ResourceLogEvent;
+use Claroline\CoreBundle\Library\Event\LogResourceReadEvent;
+use Claroline\CoreBundle\Library\Event\LogResourceCreateEvent;
 use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
 
 class ResourceController extends Controller
@@ -117,8 +118,9 @@ class ResourceController extends Controller
         }
 
         $resource = $this->getResource($resource);
-        $logEvent = new ResourceLogEvent($resource, 'open');
-        $this->get('event_dispatcher')->dispatch('log_resource', $logEvent);
+
+        $log = new LogResourceReadEvent($resource);
+        $this->get('event_dispatcher')->dispatch('log', $log);
 
         return $event->getResponse();
     }
@@ -234,8 +236,10 @@ class ResourceController extends Controller
 
         $ri = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($resourceId);
-        $logevent = new ResourceLogEvent($ri, $action);
-        $this->get('event_dispatcher')->dispatch('log_resource', $logevent);
+
+        //TODO waiting for define CustomActions
+        // $logevent = new ResourceLogEvent($ri, $action);
+        // $this->get('event_dispatcher')->dispatch('log_resource', $logevent);
 
         return $event->getResponse();
     }

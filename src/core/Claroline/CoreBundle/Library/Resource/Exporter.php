@@ -73,11 +73,11 @@ class Exporter
             } else {
                 $archive->addEmptyDir($this->getRelativePath($currentDir, $resource). $resource->getName());
             }
-            $event = new ResourceLogEvent(
-                $resource,
-                ResourceLogEvent::EXPORT_ACTION
-            );
-            $this->ed->dispatch('log_resource', $event);
+            // $event = new ResourceLogEvent(
+            //     $resource,
+            //     ResourceLogEvent::EXPORT_ACTION
+            // );
+            // $this->ed->dispatch('log_resource', $event);
         }
 
         $archive->close();

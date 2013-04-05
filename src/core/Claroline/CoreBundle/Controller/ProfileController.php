@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Form\ProfileType;
+use Claroline\CoreBundle\Library\Event\LogUserUpdateEvent;
 
 /**
  * Controller of the user profile.
@@ -44,6 +45,10 @@ class ProfileController extends Controller
             $em->persist($user);
             $em->flush();
             $this->get('security.context')->getToken()->setUser($user);
+
+            //TODO What do we put in $oldValues and $newValues ?? All user object ?
+            $log = new LogUserUpdateEvent($user, $oldValues, $newValues);
+            $this->get('event_dispatcher')->dispatch('log', $log);
 
             return $this->redirect($this->generateUrl('claro_profile_form'));
         }
