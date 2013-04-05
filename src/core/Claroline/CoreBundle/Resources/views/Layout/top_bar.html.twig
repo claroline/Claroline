@@ -121,6 +121,7 @@
                             </a>
                             </li>
                             <li class="divider"></li>
+                            {% if personalWs is not null %}
                             <li>
                             <a href="{{ path('claro_workspace_open_tool',
                                 {'workspaceId': personalWs.getId(), 'toolName': 'home'}) }}"
@@ -128,6 +129,7 @@
                                 {{ 'my_workspace'|trans({}, 'platform') }}
                             </a>
                             </li>
+                            {% endif %}
                             <li>
                             <a href="#" id="link-agenda">
                                 {{ 'my_agenda'|trans({}, 'platform') }}

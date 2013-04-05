@@ -46,6 +46,8 @@ class Version20120119000000 extends BundleMigration
         $this->createWorkspaceOrderToolTable($schema);
         $this->createWorkspaceToolsRoleTable($schema);
         $this->createWorkspaceLogTable($schema);
+        $this->createWorkspaceTagTable($schema);
+        $this->createRelWorkspaceTagTable($schema);
         $this->createContentTable($schema);
         $this->createTypeTable($schema);
         $this->createContent2TypeTable($schema);
@@ -91,6 +93,8 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_workspace_tools_role');
         $schema->dropTable('claro_user_desktop_tool');
         $schema->dropTable('claro_workspace_log');
+        $schema->dropTable('claro_workspace_tag');
+        $schema->dropTable('claro_rel_workspace_tag');
         $schema->dropTable('claro_content');
         $schema->dropTable('claro_type');
         $schema->dropTable('claro_content2type');
@@ -117,7 +121,7 @@ class Version20120119000000 extends BundleMigration
             $this->getStoredTable('claro_workspace'),
             array('workspace_id'),
             array('id'),
-            array('onDelete' => 'CASCADE')
+            array('onDelete' => 'SET NULL')
         );
         $this->storeTable($table);
     }
@@ -911,6 +915,23 @@ class Version20120119000000 extends BundleMigration
         );
     }
 
+    private function createWorkspaceTagTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_workspace_tag');
+        $this->addId($table);
+        $table->addColumn('name', 'string');
+        $table->addColumn('user_id', 'integer', array('notnull' => false));
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_user'),
+            array('user_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+
+        $table->addUniqueIndex(array('user_id', 'name'));
+    }
+
     private function createContentTable(Schema $schema)
     {
         $table = $schema->createTable('claro_content');
@@ -934,6 +955,29 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('max_content_page', 'integer');
 
         $this->storeTable($table);
+    }
+
+    private function createRelWorkspaceTagTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_rel_workspace_tag');
+        $this->addId($table);
+        $table->addColumn('user_id', 'integer');
+        $table->addColumn('workspace_id', 'integer');
+        $table->addColumn('tag_id', 'integer');
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_user'),
+            array('user_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_workspace'),
+            array('workspace_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
     }
 
     private function createContent2TypeTable(Schema $schema)

@@ -6,6 +6,7 @@ add: Add
 add_group: 'Add group'
 add_group_s_confirm_message: 'group(s) added'
 add_resource: 'Add resource'
+add_tag_to_workspace: 'Add tag to workspace'
 add_user: 'Add user'
 add_user_s_confirm_message: 'users(s) added'
 admin: Administrator
@@ -18,6 +19,7 @@ admin_form_username : 'Username'
 administration: Administration
 administrative_code: 'Administrative code'
 agenda: Agenda
+all_my_workspaces: 'All my workspaces'
 all_workspaces: 'All workspaces'
 anonymous: Anonymous
 by: by
@@ -32,6 +34,7 @@ copy: Copy
 create: Create
 creation: Creation
 create_group: 'Create group'
+create_new_tag: 'Create new tag'
 create_workspace: 'Create workspace'
 creation_date: 'Creation date'
 cut: Cut
@@ -46,6 +49,7 @@ display_options: 'Display options'
 done_on: 'done on'
 download: Download
 edit: Edit
+enter_tag_name_message: 'Please enter a tag name'
 export: Export
 fast_answer: 'Fast answer'
 file: File
@@ -93,6 +97,7 @@ mail: Mail
 mail_form_content: Content
 mail_form_object: Object
 manage_rights: 'Manage rights'
+manage_tags: 'Manage tags'
 manager: Manager
 messages_confirm_delete : 'Are your sure , you want to delete this file ?'
 messages_confirm_permanent_delete: 'Are you sure you want to permanently delete this(these) message(s) ?'
@@ -204,6 +209,7 @@ show_as_user: 'Show as user'
 show_as: 'Show as'
 show_profile: 'Show profile'
 switch: Switch
+tag: Tag
 teacher: Teacher
 text_form_name: Name
 text_form_shareType: Sharable
@@ -255,6 +261,7 @@ workspace_form_template: Template
 workspace_form_type: Type
 workspace_order_tool_edit_form_name: Name
 workspace_resource: Resources
+workspace_tag_form_name: Name
 workspace_template_form_name: Name
 workspace_tools: Tools
 workspace_welcome: Welcome
