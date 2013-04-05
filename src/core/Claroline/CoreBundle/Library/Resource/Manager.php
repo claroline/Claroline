@@ -371,7 +371,7 @@ class Manager
             array()
         );
 
-        $resourceTypeRepo->findByIsVisible(true);
+        $resourceTypeRepo->findAll();
 
         $this->createDefaultsResourcesRights(
             true, true, true, true, true,
@@ -452,7 +452,7 @@ class Manager
         if ($resource instanceof Directory) {
             $resourceTypes = $this->em
                 ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-                ->findBy(array('isVisible' => true));
+                ->findAll();
 
             foreach ($resourceTypes as $resourceType) {
                 $resource->addResourceTypeCreation($resourceType);

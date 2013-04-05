@@ -434,7 +434,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->loadFileData('user', 'Bar', array('Bat'));
         $allVisibleResourceTypes = $this->getEntityManager()
             ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-            ->findByIsVisible(true);
+            ->findAll(true);
 
         $this->logUser($this->getUser('user'));
         $this->client->request('GET', "/resource/directory/{$this->getDirectory('Bar')->getId()}");
