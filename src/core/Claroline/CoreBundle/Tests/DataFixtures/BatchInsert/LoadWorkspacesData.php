@@ -49,8 +49,7 @@ class LoadWorkspacesData extends LoggableFixture implements ContainerAwareInterf
             $config->setWorkspaceName($manfatoryFieldValue);
             $config->setWorkspaceCode($manfatoryFieldValue);
             $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
-            $workspaceCreator->createWorkspace($config, $admin);
-            $this->log("UOW[{$manager->getUnitOfWork()->size()}]");
+            $workspace = $workspaceCreator->createWorkspace($config, $admin, false);
 
             if (($i % self::BATCH_SIZE) === 0) {
                 $j++;
@@ -62,6 +61,8 @@ class LoadWorkspacesData extends LoggableFixture implements ContainerAwareInterf
             }
         }
 
+        $manager->flush();
+        $manager->clear();
         $end = time();
         $duration = $this->container->get('claroline.utilities.misc')->timeElapsed($end - $start);
         $this->log("Time elapsed for the workspace creation: " . $duration);
