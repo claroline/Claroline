@@ -46,7 +46,7 @@ class Content
      *
      * @ORM\Column(name="generated_content", type="string", length=255, nullable=true)
      */
-    private $generated_content;
+    private $generatedContent;
 
     /**
      * @var \DateTime
@@ -152,8 +152,7 @@ class Content
     {
         if ($modified) {
             $this->modified = $modified;
-        }
-        else {
+        } else {
             $this->modified = new \Datetime();
         }
 
@@ -178,7 +177,7 @@ class Content
      */
     public function setGeneratedContent($generatedContent)
     {
-        $this->generated_content = $generatedContent;
+        $this->generatedContent = $generatedContent;
 
         return $this;
     }
@@ -190,6 +189,6 @@ class Content
      */
     public function getGeneratedContent()
     {
-        return $this->generated_content;
+        return $this->generatedContent;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Library\Home;
 
-Class HomeService
+class HomeService
 {
     /**
      * Verify if a twig template exists, If the template does not exists a default path will be return;
@@ -14,7 +14,7 @@ Class HomeService
     {
         $dir = explode(":", $path);
 
-        $controller = preg_split('/(?=[A-Z])/',$dir[0]);
+        $controller = preg_split('/(?=[A-Z])/', $dir[0]);
         $controller = array_slice($controller, (count($controller) - 2));
         $controller = implode("", $controller);
 
@@ -23,8 +23,7 @@ Class HomeService
         if ($dir[1] == "") {
             $dir[0] = $dir[0].":";
             $tmp = array_slice($dir, 2);
-        }
-        else {
+        } else {
             $tmp = array_slice($dir, 1);
 
             if (!file_exists($base.$tmp[0])) {
@@ -34,13 +33,12 @@ Class HomeService
 
         if (file_exists($base.implode("/", $tmp))) {
             return $dir[0].":".implode(":", $tmp);
-        }
-        else {
-	        $file = explode(".", $tmp[count($tmp)-1]);
+        } else {
+            $file = explode(".", $tmp[count($tmp) - 1]);
 
             $file[0] = "default";
 
-	        $tmp[count($tmp)-1] = implode(".", $file);
+            $tmp[count($tmp) - 1] = implode(".", $file);
 
             if (file_exists($base.implode("/", $tmp))) {
                 return $dir[0].":".implode(":", $tmp);

@@ -14,7 +14,7 @@ class Type
 {
     public function __construct()
     {
-        $this->max_content_page = 100;
+        $this->maxContentPage = 100;
     }
 
     /**
@@ -38,7 +38,7 @@ class Type
      *
      * @ORM\Column(name="max_content_page", type="integer")
      */
-    private $max_content_page;
+    private $maxContentPage;
 
 
     /**
@@ -82,7 +82,7 @@ class Type
      */
     public function setMaxContentPage($maxContentPage)
     {
-        $this->max_content_page = $maxContentPage;
+        $this->maxContentPage = $maxContentPage;
 
         return $this;
     }
@@ -94,6 +94,6 @@ class Type
      */
     public function getMaxContentPage()
     {
-        return $this->max_content_page;
+        return $this->maxContentPage;
     }
 }
