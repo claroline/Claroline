@@ -25,8 +25,8 @@ class CreateLargeTestFixtureCommand extends ContainerAwareCommand
                 new InputArgument('number_user', InputArgument::REQUIRED, 'The number of user.'),
                 new InputArgument('number_workspace', InputArgument::REQUIRED, 'The number of workspace.'),
                 new InputArgument('number_directory', InputArgument::REQUIRED, 'The number of directory per level.'),
-                new InputArgument('number_file', InputArgument::REQUIRED, 'The number of file per level.'),
-                new InputArgument('depth', InputArgument::REQUIRED, 'The depth of the data tree(s).'),
+                new InputArgument('number_file', InputArgument::REQUIRED, 'The number of file per level (recommanded: 5).'),
+                new InputArgument('depth', InputArgument::REQUIRED, 'The depth of the data tree(s) (recommanded: 2).'),
                 new InputArgument('number_roots', InputArgument::REQUIRED, 'The number of roots.')
             )
         );
@@ -37,9 +37,9 @@ class CreateLargeTestFixtureCommand extends ContainerAwareCommand
         $params = array(
             'number_user' => 'users',
             'number_workspace' => 'workspaces',
-            'number_directory' => 'number directory per level',
-            'number_file' => 'number file per level',
-            'depth' => 'depth',
+            'number_directory' => 'number directory per level  (recommanded: 10).',
+            'number_file' => 'number file per level (recommanded: 5).',
+            'depth' => 'depth (recommanded: 2).',
             'number_roots' => 'numberRoots'
         );
 
@@ -89,7 +89,7 @@ class CreateLargeTestFixtureCommand extends ContainerAwareCommand
                 $output->writeln($message);
             }
         );
-        $fixture->load($em);
+        $durationUser = $fixture->load($em);
         $output->writeln('Loading workspaces...');
         $fixture = new LoadWorkspacesData($numberWorkspace);
         $fixture->setReferenceRepository($referenceRepo);
@@ -99,7 +99,7 @@ class CreateLargeTestFixtureCommand extends ContainerAwareCommand
                 $output->writeln($message);
             }
         );
-        $fixture->load($em);
+        $durationWorkspace = $fixture->load($em);
         $output->writeln('Loading resources...');
         $fixture = new LoadResourcesData($depth, $numberFile, $numberDirectory, $numberRoots);
         $fixture->setReferenceRepository($referenceRepo);
@@ -109,7 +109,11 @@ class CreateLargeTestFixtureCommand extends ContainerAwareCommand
                 $output->writeln($message);
             }
         );
-        $fixture->load($em);
+        $durationResource = $fixture->load($em);
+        $output->writeLn('********************************************************');
+        $output->writeLn("Time elapsed for the user creation: " . $durationUser);
+        $output->writeLn("Time elapsed for the workspace creation: " . $durationWorkspace);
+        $output->writeLn("Time elapsed for the resource creation: " . $durationResource);
         $output->writeln('Done');
     }
 }

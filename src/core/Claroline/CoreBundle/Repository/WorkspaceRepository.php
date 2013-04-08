@@ -57,4 +57,22 @@ class WorkspaceRepository extends EntityRepository
 
         return $query->getSingleScalarResult();
     }
+
+    public function findByRoles(array $roles)
+    {
+        $dql = "
+            SELECT DISTINCT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            JOIN w.workspaceOrderedTools wot
+            JOIN wot.workspaceToolRoles wtr
+            JOIN wtr.role r
+            WHERE r.name = '{$roles[0]}'";
+
+        for ($i = 1, $size = count($roles); $i < $size; $i++) {
+            $dql .= " OR r.name = '{$roles[$i]}'";
+        }
+
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
 }

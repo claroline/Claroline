@@ -63,7 +63,8 @@ class ToolRepository extends EntityRepository
             return $dql;
         }
 
-        return "SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool";
+        return "SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool
+            WHERE tool.isDisplayableInWorkspace = true";
     }
 
     private function getUndisplayedToolsForRolesInWorkspaceQuery(array $roles, AbstractWorkspace $workspace)
