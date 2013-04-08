@@ -251,9 +251,6 @@ consignes: Consignes
 position: => Positionner le(s) pointeur(s) ci-dessous (croix rouge) sur l'image. La position du centre du pointeur défini votre réponse.
 selection: => Cliquez sur un pointeurs pour le sélectionner et cliquez ensuite sur l'image pour définir votre zone de réponse.
 raz: => Pour remettre à zéro tous les pointeurs, appuyez sur "c".
-relire: Relire ma copie
-fin: Terminer le test
-sur: Vous êtes sur ? (vous ne pourrez plus modifier vos réponses)
 noTitle: La question n\'a pas de titre.
 noQuestion: Vous ne posez aucune question ...
 noImg: Vous devez télécharger une image !

@@ -370,7 +370,6 @@ class InteractionGraphicController extends Controller
     {
          
         $request = $this->container->get('request');
-                var_dump($request->get('answers'));
         $exerciseSer = $this->container->get('ujm.exercise_services');
         $res = $exerciseSer->responseGraphic($request);
 

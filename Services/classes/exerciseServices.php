@@ -222,7 +222,6 @@ class exerciseServices
         $answers = $request->request->get('answers');
         $graphId = $request->request->get('graphId');
         $max = $request->request->get('nbpointer');
-        
         $em = $this->doctrine->getEntityManager();
         $rightCoords = $em->getRepository('UJMExoBundle:Coords')->findBy(array('interactionGraphic' => $graphId));  
 

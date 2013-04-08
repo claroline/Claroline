@@ -11,31 +11,23 @@ var tempCoords = {};
 var validGraphic = document.getElementById('ValidGraphic'); // The form to validate
 var x; // Mouse x position
 var y; // Mouse y position
-var ze;
 var j;
 
 document.addEventListener('click', function (e) {
     //"use strict";
-
     for (j = 1 ; j < taille ; j++) {
-        if (e.target.id == 'cursor' + j) {
+        if (e.target.id == 'cursor' + j && drag == false) {
             cible = e.target;
             document.body.style.cursor = 'pointer';
 
-            var w = cible.offsetLeft - answerImg.offsetLeft +7;
-            var c = cible.offsetTop - answerImg.offsetTop+7;
+            var w = cible.offsetLeft - answerImg.offsetLeft + 7;
+            var c = cible.offsetTop - answerImg.offsetTop + 7;
             var temp = w + '-' + c;
 
-//            for (ze = 0 ; ze < taille-1 ; ze++) {
-//                if(temp == tempCoords[ze]){
-//                    tempCoords.splice(ze, 1);
-//                }
-//            }
-
-           for (var ci in tempCoords) {
-               if (temp == tempCoords[ci] && ci == e.target.id && drag == false){
-                   delete tempCoords[ci];
-               }
+            for (var ci in tempCoords) {
+                if (temp == tempCoords[ci] && ci == e.target.id && drag == false){
+                    delete tempCoords[ci];
+                }
             }
         }
     }
@@ -82,10 +74,6 @@ document.addEventListener('mousemove', function (e) {
             x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
             y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
         }
-
-       // Position de la souris dans l'image :
-       //x -= cible.offsetLeft;
-       //y -= cible.offsetTop;
 
         cible.style.left = String(x - 10) + 'px';
         cible.style.top = String(y - 10) + 'px';
