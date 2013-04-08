@@ -24,13 +24,13 @@ class ResourceExtender implements EventSubscriber
     {
         $classMetadata = $event->getClassMetadata();
 
-        if ($classMetadata->getName() == 'Claroline\CoreBundle\Entity\Resource\AbstractResource') {
+        if ($classMetadata->getName() === 'Claroline\CoreBundle\Entity\Resource\AbstractResource') {
             $pluginTypes = $event->getEntityManager()
                 ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
                 ->findPluginResourceNameFqcns();
 
             foreach ($pluginTypes as $pluginType) {
-                if ($pluginType['class'] != '') {
+                if ($pluginType['class'] !== null) {
                     $classMetadata->discriminatorMap[$pluginType['class']] = $pluginType['class'];
                     $classMetadata->subClasses[] = $pluginType['class'];
                 }
