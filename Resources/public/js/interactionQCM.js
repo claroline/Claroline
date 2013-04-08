@@ -447,7 +447,7 @@ function addFormChoice(multipleResponse, uniqueResponse, add, responseNumber, re
 }
 
 function addFormChoiceEdit(multipleResponse, uniqueResponse, add, responseNumber, response, point, comment,
-    expectedResponse, order, sourceImageAdd, nbResponses, typeQCM, ChoicepositionForce) {
+    expectedResponse, order, sourceImageAdd, nbResponses, typeQCM, ChoicepositionForce, source_image_del) {
     //"use strict";
 
     $('#ujm_exobundle_interactionqcmtype_typeQCM')
@@ -479,7 +479,7 @@ function addFormChoiceEdit(multipleResponse, uniqueResponse, add, responseNumber
             });
 
     $('#add_choice').click(function () {
-        addChoice();
+        addChoice(source_image_del);
         if ($(this).attr('href') === '#') {
             return false;
         }

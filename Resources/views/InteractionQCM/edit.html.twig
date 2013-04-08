@@ -87,7 +87,7 @@
 $(document).ready(function() {
     linkCategory('{{ path('ujm_category_new_pop') }}');
     insertStyle();
-    addFormChoiceEdit('{{ "Multiple response" | trans }}', '{{ "Unique response" | trans }}', '{{ "add" | trans }}', '{{ "Response number" | trans }}', '{{ "Response" | trans }}', '{{ "point" | trans }}', '{{ "comment" | trans }}', '{{ "expected response" | trans }}', '{{ "order" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}', '{{ nbResponses }}', '{{entity.typeQCM.id}}', '{{ "Choice.positionForce" | trans }}');
+    addFormChoiceEdit('{{ "Multiple response" | trans }}', '{{ "Unique response" | trans }}', '{{ "add" | trans }}', '{{ "Response number" | trans }}', '{{ "Response" | trans }}', '{{ "point" | trans }}', '{{ "comment" | trans }}', '{{ "expected response" | trans }}', '{{ "order" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}', '{{ nbResponses }}', '{{entity.typeQCM.id}}', '{{ "Choice.positionForce" | trans }}', '{{ asset('bundles/ujmexo/images/delete.png') }}');
     choiceCSSEdit('{{ asset('bundles/ujmexo/images/delete.png') }}', {{ nbResponses }});
     editionAv();		
     hintCSSEdit();
