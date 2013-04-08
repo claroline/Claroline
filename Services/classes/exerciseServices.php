@@ -77,11 +77,11 @@ class exerciseServices
         $interQCM = $em->getRepository('UJMExoBundle:InteractionQCM')->find($interactionQCMID);
 
         if ($interQCM->getTypeQCM()->getId() == 2) {
-           $response[] = $request->request->get('choice');
+            $response[] = $request->request->get('choice');
         } else {
-           if ($request->request->get('choice') != null) {
-               $response = $request->request->get('choice');
-           }
+            if ($request->request->get('choice') != null) {
+                $response = $request->request->get('choice');
+            }
         }
 
         $allChoices = $interQCM->getChoices();
@@ -92,9 +92,9 @@ class exerciseServices
 
         if ($paperID == 0) {
             if ($session->get('penalties')) {
-               foreach ($session->get('penalties') as $penal) {
-                   $penalty += $penal;
-               }
+                foreach ($session->get('penalties') as $penal) {
+                    $penalty += $penal;
+                }
             }
             $session->remove('penalties');
         } else {
@@ -135,17 +135,17 @@ class exerciseServices
             }
 
             $result = array_diff($response, $rightChoices);
-            $result2 = array_diff($rightChoices, $response);
+            $resultBis = array_diff($rightChoices, $response);
 
-           if ( (count($result) == 0) && (count($result2) == 0) ) {
-               $score = $interQCM->getScoreRightResponse() - $penality;
-           } else {
-               $score = $interQCM->getScoreFalseResponse() - $penality;
-           }
-           if ($score < 0) {
-               $score = 0;
-           }
-           $score .= '/'.$interQCM->getScoreRightResponse();
+            if ( (count($result) == 0) && (count($resultBis) == 0) ) {
+                $score = $interQCM->getScoreRightResponse() - $penality;
+            } else {
+                $score = $interQCM->getScoreFalseResponse() - $penality;
+            }
+            if ($score < 0) {
+                $score = 0;
+            }
+            $score .= '/'.$interQCM->getScoreRightResponse();
         } else {
             //points par réponse
             $scoreMax = 0;
