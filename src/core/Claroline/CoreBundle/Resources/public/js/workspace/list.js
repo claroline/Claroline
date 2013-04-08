@@ -1,6 +1,6 @@
 (function () {
     'use strict';
-    
+
     $('.link-delete-workspace').click(function () {
         var workspaceId = $(this).attr('data-workspace-id');
         var route = Routing.generate('claro_workspace_delete', {'workspaceId': workspaceId});

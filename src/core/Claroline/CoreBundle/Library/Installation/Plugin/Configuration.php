@@ -14,10 +14,10 @@ class Configuration implements ConfigurationInterface
     private $listNames;
     private $listTools;
 
-    public function __construct(PluginBundle $plugin, Array $resourcesName, Array $listTools)
+    public function __construct(PluginBundle $plugin, array $resourceNames, array $listTools)
     {
         $this->plugin = $plugin;
-        $this->listNames = $resourcesName;
+        $this->listNames = $resourceNames;
         $this->listTools = $listTools;
     }
 

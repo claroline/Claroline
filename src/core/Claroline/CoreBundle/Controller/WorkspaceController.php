@@ -412,7 +412,7 @@ class WorkspaceController extends Controller
 
         foreach ($workspaces as $workspace) {
             $relWsTagsByWs = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-                ->findBy(array('user' => $user->getId(), 'workspace' => $workspace->getId()));
+                ->findByUserAndWorkspace($user, $workspace);
             $workspacesTags[$workspace->getId()] = $relWsTagsByWs;
         }
 
@@ -556,17 +556,10 @@ class WorkspaceController extends Controller
         }
 
         $relWsTag = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findOneBy(
-                array(
-                    'user' => $user->getId(),
-                    'workspace' => $workspace->getId(),
-                    'tag' => $tag->getId()
-                )
-            );
+            ->findOneByUserAndWorkspaceAndTag($user, $workspace, $tag);
 
         if ($relWsTag === null) {
             $relWsTag = new RelWorkspaceTag();
-            $relWsTag->setUser($user);
             $relWsTag->setWorkspace($workspace);
             $relWsTag->setTag($tag);
             $em->persist($relWsTag);
@@ -603,12 +596,13 @@ class WorkspaceController extends Controller
             throw new \RuntimeException('User, Workspace or Tag cannot be null');
         }
 
-        if (!$this->get('security.context')->isGranted('ROLE_USER') || $user->getId() !== $workspaceTag->getUser()->getId()) {
+        if (!$this->get('security.context')->isGranted('ROLE_USER')
+            || $user->getId() !== $workspaceTag->getUser()->getId()) {
             throw new \AccessDeniedException();
         }
 
         $relWorkspaceTag = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findOneBy(array('user' => $user->getId(), 'workspace' => $workspace->getId(), 'tag' => $workspaceTag->getId()));
+            ->findOneByUserAndWorkspaceAndTag($user, $workspace, $workspaceTag);
         $em->remove($relWorkspaceTag);
         $em->flush();
 
