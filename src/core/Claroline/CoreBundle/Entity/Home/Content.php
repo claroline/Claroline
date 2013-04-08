@@ -66,7 +66,7 @@ class Content
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -82,14 +82,14 @@ class Content
     public function setTitle($title)
     {
         $this->title = $title;
-    
+
         return $this;
     }
 
     /**
      * Get title
      *
-     * @return string 
+     * @return string
      */
     public function getTitle()
     {
@@ -105,14 +105,14 @@ class Content
     public function setContent($content)
     {
         $this->content = $content;
-    
+
         return $this;
     }
 
     /**
      * Get content
      *
-     * @return string 
+     * @return string
      */
     public function getContent()
     {
@@ -128,14 +128,14 @@ class Content
     public function setCreated($created)
     {
         $this->created = $created;
-    
+
         return $this;
     }
 
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -150,12 +150,10 @@ class Content
      */
     public function setModified($modified = null)
     {
-        if($modified)
-        {
+        if ($modified) {
             $this->modified = $modified;
         }
-        else
-        {
+        else {
             $this->modified = new \Datetime();
         }
 
@@ -165,7 +163,7 @@ class Content
     /**
      * Get modified
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getModified()
     {
@@ -181,14 +179,14 @@ class Content
     public function setGeneratedContent($generatedContent)
     {
         $this->generated_content = $generatedContent;
-    
+
         return $this;
     }
 
     /**
      * Get generated_content
      *
-     * @return string 
+     * @return string
      */
     public function getGeneratedContent()
     {

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Claroline\CoreBundle\Twig;
 
@@ -16,7 +16,7 @@ class HomeExtension extends \Twig_Extension
     {
         $this->translator = $translator;
     }
-        
+
     /**
      * Get filters of the service
      *
@@ -40,26 +40,40 @@ class HomeExtension extends \Twig_Extension
     function timeAgo($start)
     {
         $end = new \DateTime("now");
-        
+
         $interval = $start->diff($end);
 
         $formats = array("%Y", "%m", "%W", "%d", "%H", "%i", "%s");
-        $translation["singular"] = array("%Y" => "year", "%m" => "month", "%W" => "week", "%d" => "day", "%H" => "hour", "%i" => "minute", "%s" => "second");
-        $translation["plural"] = array("%Y" => "years", "%m" => "months", "%W" => "weeks", "%d" => "days", "%H" => "hours", "%i" => "minutes", "%s" => "seconds");
+        $translation["singular"] = array(
+            "%Y" => "year",
+            "%m" => "month",
+            "%W" => "week",
+            "%d" => "day",
+            "%H" => "hour",
+            "%i" => "minute",
+            "%s" => "second"
+        );
+        $translation["plural"] = array(
+            "%Y" => "years",
+            "%m" => "months",
+            "%W" => "weeks",
+            "%d" => "days",
+            "%H" => "hours",
+            "%i" => "minutes",
+            "%s" => "seconds"
+        );
 
         foreach($formats as $format)
         {
-            if($format == "%W") //fix for week that does not exist in DataInterval obj
-            {
+            if ($format == "%W") { //fix for week that does not exist in DataInterval obj
+
                 $i = round($interval->format("%d") / 8);
             }
-            else
-            {
+            else {
                 $i = ltrim($interval->format($format), "0");
             }
 
-            if($i>0)
-            {
+            if ($i>0) {
                 return $this->translator->transChoice(
                     "%count% ".$translation["singular"][$format]." ago|%count% ".$translation["plural"][$format]." ago",
                     $i,

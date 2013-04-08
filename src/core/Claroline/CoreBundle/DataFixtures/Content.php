@@ -19,7 +19,7 @@ class Contents extends AbstractFixture implements OrderedFixtureInterface
 
 La volonté des auteurs est aussi de permettre l'utilisation du logiciel par le plus grand nombre, d'où le choix d'une licence Open Source pour sa diffusion.
 
-Conçue pour satisfaire le monde de l’enseignement, de la formation mais aussi de l'entreprise, la plateforme ClarolineConnect© (dont la version Bêta sortira en septembre 2013), permet aux utilisateurs une plus grande ouverture vers le web et les outils collaboratifs. 
+Conçue pour satisfaire le monde de l’enseignement, de la formation mais aussi de l'entreprise, la plateforme ClarolineConnect© (dont la version Bêta sortira en septembre 2013), permet aux utilisateurs une plus grande ouverture vers le web et les outils collaboratifs.
 
 Davantage centrée sur l'utilisateur, ClarolineConnect© propose des outils d’apprentissage performants en intégrant des fonctions de type réseau social ainsi que des outils communautaires et interactifs (wiki, forum, blog ...).
 
@@ -37,14 +37,15 @@ Professeur:
 Nom d'utilisateur: JaneDoe
 Mot de passe: JaneDoe"
         );
+
         $sizes = array("span8", "span4");
 
         $type = $manager->getRepository("ClarolineCoreBundle:Home\Type")->findOneBy(array('name' => 'home'));
 
-        if($type)
-        {
-            foreach($titles as $i => $title)
-            {
+        if ($type) {
+
+            foreach ($titles as $i => $title) {
+
                 $content[$i] = new Content();
                 $content[$i]->setTitle($title);
                 $content[$i]->setContent($texts[$i]);
@@ -58,11 +59,11 @@ Mot de passe: JaneDoe"
                 $content2type->setSize($sizes[$i]);
 
                 $manager->persist($content2type);
-                
+
                 $manager->persist($content[$i]);
 
                 $manager->flush();
-                
+
             }
         }
     }
@@ -71,5 +72,4 @@ Mot de passe: JaneDoe"
     {
         return 8; // the order in which fixtures will be loaded
     }
-    
 }
