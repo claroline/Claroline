@@ -242,7 +242,6 @@ class ParametersControllerTest extends FunctionalTestCase
             )
         );
         $this->logUser($this->getUser('ws_creator'));
-        $wsCreatorId = $this->getUser('ws_creator')->getId();
         $wsBId = $this->getWorkspace('ws_b')->getId();
         $crawler = $this->client->request(
             'GET',
