@@ -103,6 +103,7 @@ class InteractionQCMHandler
 
         //On persite tous les hints de l'entité interaction
         foreach ($interQCM->getInteraction()->getHints() as $hint) {
+            $hint->setPenalty(ltrim($hint->getPenalty(), '-'));
             $interQCM->getInteraction()->addHint($hint);
             $this->em->persist($hint);
         }

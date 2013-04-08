@@ -1,5 +1,5 @@
 function editionAv() {
-    "use strict";
+    //"use strict";
 
     var popup = false;
     var row;
@@ -44,7 +44,7 @@ function editionAv() {
     });
 
     function hidePopup() {
-        "use strict";
+        //"use strict";
         
         if (popup === true) {
             $('#overlayEffect').fadeOut('slow');
@@ -95,7 +95,7 @@ function editionAv() {
         'right': '-22px'
     });
 
-    $('.hidden').css({
+    $('.hiddenCat').css({
         'display': 'none'
     });
 }
