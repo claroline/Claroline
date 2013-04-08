@@ -86,15 +86,7 @@ class RssReaderController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $rssConfig = $em->getRepository('ClarolineRssReaderBundle:Config')->find($configId);
-
-        if ($rssConfig->getWorkspace() !== null) {
-            if (!$this->get('security.context')->isGranted('parameters', $rssConfig->getWorkspace())) {
-                throw new AccessDeniedHttpException();
-            }
-        } elseif ($this->get('security.context')->getToken()->getUser() != $rssConfig->getUser()) {
-            throw new AccessDeniedHttpException();
-        }
-
+        $this->checkAccess($rssConfig);
         $form = $this->get('form.factory')->create(new ConfigType(), $rssConfig);
         $form->bindRequest($this->get('request'));
 
@@ -132,5 +124,16 @@ class RssReaderController extends Controller
         }
 
         return new RedirectResponse($this->generateUrl('claro_admin_widgets'));
+    }
+
+    private function checkAccess($rssConfig)
+    {
+        if ($rssConfig->getWorkspace() !== null) {
+            if (!$this->get('security.context')->isGranted('parameters', $rssConfig->getWorkspace())) {
+                throw new AccessDeniedHttpException();
+            }
+        } elseif ($this->get('security.context')->getToken()->getUser() !== $rssConfig->getUser()) {
+            throw new AccessDeniedHttpException();
+        }
     }
 }
