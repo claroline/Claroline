@@ -1,11 +1,6 @@
 
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
-{% block javascripts %}
-    {{ parent() }}
-    <script src='{{ asset('bundles/clarolinecore/js/workspace/list.js') }}' type="text/javascript"></script>
-{% endblock %}
-
 {% block sectionHeader %}
     {{ macros.sectionHeader('workspaces'|trans({}, 'platform')) }}
 {% endblock %}
@@ -19,12 +14,8 @@
                    {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
                    id="link-home-{{ workspace.getId() }}">
                    {{ workspace.getName() }}
+                   <span class="workspace-code">({{ workspace.getCode() }})</span>
                 </a>
-                {% if is_granted('DELETE', workspace ) %}
-                   <a href="#" data-workspace-id="{{workspace.getId()}}" class="link-delete-workspace" id="link-delete-{{workspace.getId}}">
-                       {{ 'delete'|trans({}, 'platform') }}
-                   </a>
-                {% endif %}
             </li>
             {% endfor %}
         </ul>
