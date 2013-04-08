@@ -9,7 +9,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\DoctrineListener(
- *     events = {"loadClassMetaData"},
+ *     events = {"loadClassMetadata"},
  *     connection = "default"
  * )
  */
