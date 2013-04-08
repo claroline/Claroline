@@ -85,5 +85,7 @@ class LoadFileData extends AbstractFixture implements ContainerAwareInterface
             $resourceManager->create($file, $directory->getId(), 'file', $user);
             $this->addReference("file/{$fileName}", $file);
         }
+
+        $manager->flush();
     }
 }

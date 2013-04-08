@@ -65,18 +65,22 @@ class InstallController extends Controller
             'lg' => $lg
 
         );
-        $folder = array(
-            'app/config/local' => (is_writable('../app/config/local') ? 'OK' : 'KO'),
-            'files' => (is_writable('../files') ? 'OK' : 'KO'),
-            'web' => (is_writable('../web') ? 'OK' : 'KO'),
-            'app/logs' => (is_writable('../app/logs') ? 'OK' : 'KO'),
-            'app/cache' => (is_writable('app/cache/') ? 'OK' : 'KO'),);
+
+        $ds = DIRECTORY_SEPARATOR;
+        $writableFolders = array(
+            "app{$ds}config{$ds}local", 'files', 'web', "app{$ds}logs", "app{$ds}cache", 'templates'
+        );
+        $folders = array();
+
+        foreach ($writableFolders as $folder) {
+            $folders[$folder] = (is_writable("..{$ds}{$folder}") ? 'OK' : 'KO');
+        }
 
         return $this->render(
             'ClarolineCoreBundle:Install:permission.html.twig',
             array(
                 'version' => $version,
-                'folders' => $folder
+                'folders' => $folders
                 )
         );
     }

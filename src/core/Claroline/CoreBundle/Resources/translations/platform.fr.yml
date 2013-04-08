@@ -6,6 +6,7 @@ add: Ajouter
 add_group: 'Ajouter un groupe'
 add_group_s_confirm_message: 'groupe(s) ajouté(s)'
 add_resource: 'Ajouter une ressource'
+add_tag_to_workspace: 'Ajouter un Tag à l''espace d''activités'
 add_user: 'Ajouter un utilisateur'
 add_user_s_confirm_message: 'utilisateur(s) ajouté(s)'
 admin: Administrateur
@@ -18,6 +19,7 @@ admin_form_plainPassword_second : 'Répétez votre mot de passe'
 admin_form_mail : 'Adresse email'
 admin_form_username : 'Nom d''utilisateur'
 agenda: Agenda
+all_my_workspaces: 'Tous mes espaces d''activités'
 all_workspaces: 'Tous les espaces'
 anonymous: Anonyme
 by: par
@@ -32,6 +34,7 @@ copy: Copier
 create: Créer
 creation: Création
 create_group: 'Créer un groupe'
+create_new_tag: 'Créer un nouveau Tag'
 create_workspace: 'Créer un espace d''activités'
 creation_date: 'Date de création'
 cut: Couper
@@ -46,6 +49,7 @@ display_options: 'Options d''affichage'
 done_on: 'effectuée sur'
 download: Télécharger
 edit: Modifier
+enter_tag_name_message: 'Veuillez entrer un nom de Tag'
 export: Exporter
 fast_answer: 'Réponse rapide'
 file: Fichier
@@ -93,6 +97,7 @@ mail: Mail
 mail_form_content: Contenu
 mail_form_object: Objet
 manage_rights: 'Gérer les droits'
+manage_tags: 'Gestion des Tags'
 manager: Gestionnaire
 messages_confirm_delete: 'Etes-vous sûr de vouloir supprimer ce(s) message(s) ?'
 messages_confirm_permanent_delete: 'Etes-vous sûr de vouloir supprimer définitivement ce(s) message(s) ?'
@@ -205,6 +210,7 @@ show_as: 'Voir comme'
 show_profile: 'Voir le profile'
 steal_session: 'Voler la session'
 switch: Echanger
+tag: Tag
 teacher: Professeur
 text_form_name: Nom
 text_form_shareType: Redistribution
@@ -257,6 +263,7 @@ workspace_form_template: Modèle
 workspace_form_type: Type
 workspace_order_tool_edit_form_name: Nom
 workspace_resource: Ressources
+workspace_tag_form_name: Nom
 workspace_template_form_name: Nom
 workspace_tools: Outils
 workspace_welcome: Accueil

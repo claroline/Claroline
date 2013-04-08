@@ -40,6 +40,8 @@ class LoadUsersData extends LoggableFixture implements ContainerAwareInterface
         $count = $manager->getRepository('ClarolineCoreBundle:User')->count();
         $totalUsers = $count + 1;
 
+        $start = time();
+
         for ($j = 0, $i = 0; $i < $this->numberUsers; $i++, $totalUsers++) {
             $user = new User();
             $mandatoryFieldValue = "user_{$totalUsers}";
@@ -60,6 +62,12 @@ class LoadUsersData extends LoggableFixture implements ContainerAwareInterface
                 $this->log("batch [{$j}] | users [{$totalInserts}] | UOW  [{$manager->getUnitOfWork()->size()}]");
             }
         }
+
+        $end = time();
+        $duration = $this->container->get('claroline.utilities.misc')->timeElapsed($end - $start);
+        $this->log("Time elapsed for the user creation: " . $duration);
+
+        return $duration;
     }
 
 }
