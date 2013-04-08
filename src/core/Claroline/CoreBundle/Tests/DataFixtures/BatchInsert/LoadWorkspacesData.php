@@ -40,16 +40,15 @@ class LoadWorkspacesData extends LoggableFixture implements ContainerAwareInterf
         $count = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->count();
         $totalWorkspaces = $count + 1;
         $admin = $this->findJohnDoe($manager);
-
+        $config = new Configuration();
         $start = time();
 
         for ($j = 0, $i = 0; $i < $this->numberWorkspaces; $i++, $totalWorkspaces++) {
             $manfatoryFieldValue = "ws_batch" . $totalWorkspaces;
-            $config = new Configuration();
             $config->setWorkspaceName($manfatoryFieldValue);
             $config->setWorkspaceCode($manfatoryFieldValue);
             $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
-            $workspace = $workspaceCreator->createWorkspace($config, $admin, false);
+            $workspaceCreator->createWorkspace($config, $admin, false);
 
             if (($i % self::BATCH_SIZE) === 0) {
                 $j++;
