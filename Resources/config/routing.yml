@@ -21,10 +21,10 @@ ujm_interactionqcm_response:
     pattern: /testQCM
     defaults: { _controller: "UJMExoBundle:InteractionQCM:responseQcm" }
     requirements: { _method: post }
-    
-ujm_interactiongraphic_response:
-    pattern: /testGraphic
-    defaults: { _controller: "UJMExoBundle:InteractionGraphic:responseGraphic" }
+
+ujm_interactionqcm_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "UJMExoBundle:InteractionQCM:update" }
     requirements: { _method: post }
    
 ujm_question_index:
@@ -82,3 +82,7 @@ ujm_hint_show:
     pattern:  /question/hint/show
     defaults: { _controller: "UJMExoBundle:Hint:show" }
     requirements: { _method: post }
+
+ujm_interactiongraphic_response:
+    pattern: /testGraphic
+    defaults: { _controller: "UJMExoBundle:InteractionGraphic:responseGraphic" }
