@@ -40,7 +40,7 @@ if (navigator.browserLanguage) {
 
 // Get the url's picture matching to the label in the list
 function sendData(select) {
-    "use strict";
+    //"use strict";
 
     // Send the label of the picture to get the adress in order to display it
     $.ajax({
@@ -59,7 +59,7 @@ function sendData(select) {
 
 // Display the selected picture
 function LoadPic() {
-    "use strict";
+    //"use strict";
 
     var list = document.InterGraphForm.ujm_exobundle_interactiongraphictype_document; // List of all the user's pictures
     var select = list.options[list.selectedIndex].innerHTML; // Label of the selected picture
@@ -88,7 +88,7 @@ function LoadPic() {
 
 // Submit form without an empty field
 function Verifier(noTitle, noQuestion, noImg, noAnswerZone) {
-    "use strict";
+    //"use strict";
 
     var imgOk = false; // Image is upload
     var questionOk = false; // Question is asked
@@ -135,7 +135,7 @@ function Verifier(noTitle, noQuestion, noImg, noAnswerZone) {
 
 // Change the shape and the color of the answer zone
 function changezone() {
-    "use strict";
+    //"use strict";
 
     if (document.getElementById('shape').value === 'circle') {
         switch (document.getElementById('color').value) {
@@ -209,7 +209,7 @@ function changezone() {
 }
 
 function  ResizeImg(sens) {
-    "use strict";
+    //"use strict";
 
     if (sens === 'gauche') {
         value -= 27;
@@ -243,7 +243,7 @@ function  ResizeImg(sens) {
 // :::::::::::::::::::::::::::::::::::::::::: EventListener :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 document.addEventListener('keydown', function (e) {
-    "use strict";
+    //"use strict";
 
     if (e.keyCode === 16) { // Touch MAJ down
         pressMAJ = true;
@@ -262,7 +262,7 @@ document.addEventListener('keydown', function (e) {
 }, false);
 
 document.addEventListener('keyup', function (e) {
-    "use strict";
+    //"use strict";
 
     if (e.keyCode === 16) { // Touch MAJ up
         pressMAJ = false;
@@ -281,7 +281,7 @@ document.addEventListener('keyup', function (e) {
 }, false);
 
 document.addEventListener('mousemove', function (event) { // To resize the selected picture
-    "use strict";
+    //"use strict";
 
     if (pressMAJ === true) {
         xPrecedent = x;
@@ -311,7 +311,7 @@ document.addEventListener('mousemove', function (event) { // To resize the selec
 });
 
 document.addEventListener('click', function (e) { // To add/delete answer zones
-    "use strict";
+    //"use strict";
 
     if (pressCTRL === true) {
 

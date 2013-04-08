@@ -1,0 +1,42 @@
+{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+
+    {% block stylesheets %}
+        {{ parent() }}
+        <link href="{{ asset('bundles/ujmexo/css/paper.css') }}" type="text/css" rel="stylesheet" />
+    {% endblock %}
+            
+    {% block title %} Correction {% endblock %}
+
+{% block section_content %}
+    
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/GraphicOverview.js') }}"></script>
+    
+    <img src="{{asset (doc.url)}}" width="{{ interG.width }}" height="{{ interG.height }}" alt="AnswerImage" id="AnswerImage"/><br/>
+    
+    {%set i = 0 %}    
+    
+    {% for c in coords %} 
+    
+        {% set numb = coords[i].value|split(',') %}
+        {% set repco = rep[i]|split('-') %}
+    
+        <img src="/Claroline/web/bundles/ujmexo/images/graphic/circlew.png" alt="RightAnswer{{i}}" id="ra{{i}}"
+             style="position: absolute; z-index: 2;"/><br/>
+        
+        <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{i}}" id="cursor{{i}}" 
+             style="position: absolute; z-index: 7;"/>
+
+        <script type="text/javascript">whichImg('{{coords[i].shape}}', '{{coords[i].color}}', {{i}}, 
+            {{ numb[0] }}, {{ numb[1] }}, {{repco[0]}},{{repco[1]}})</script>
+            
+        {%set i=i+1%}
+
+    {% endfor %}
+    
+    {% set score = point - penalty %}
+            
+    <p>score : {{ score }}/{{ total }}.<br/>Points bonne réponse : {{ point }} avec : -{{ penalty }} d'indice.</p>
+    
+<a href="{{ path('ujm_question_index') }}">{{ "Question list" | trans }}</a>
+
+{% endblock %}

@@ -3,26 +3,47 @@ var cible; // The selected pointer
 var containerCursor = document.getElementById('ContainerCursor'); // Container to display the cursor
 var cur; // Cursor with a defined number
 var drag = false; // Allow or not to move the pointer
+var out = false; // To know if is out the image
 var ox = containerCursor.offsetLeft; // Top left of the cursor's container
 var ref = document.getElementById('ref'); // The instructions div to get it position and place pointers after
-var taille = document.getElementById('nbpoitner').value; // Number of pointers + 1
-var validGraphic = document.getElementById('ValidGraphic'); // Form to end the test or look over answers
+var taille = document.getElementById('nbpointer').value; // Number of pointers + 1
+var tempCoords = {};
+var validGraphic = document.getElementById('ValidGraphic'); // The form to validate
 var x; // Mouse x position
 var y; // Mouse y position
+var ze;
+var j;
 
 document.addEventListener('click', function (e) {
-    "use strict";
+    //"use strict";
 
-    for (var j = 1 ; j < taille ; j++) {
+    for (j = 1 ; j < taille ; j++) {
         if (e.target.id == 'cursor' + j) {
             cible = e.target;
             document.body.style.cursor = 'pointer';
+
+            var w = cible.offsetLeft - answerImg.offsetLeft +7;
+            var c = cible.offsetTop - answerImg.offsetTop+7;
+            var temp = w + '-' + c;
+
+//            for (ze = 0 ; ze < taille-1 ; ze++) {
+//                if(temp == tempCoords[ze]){
+//                    tempCoords.splice(ze, 1);
+//                }
+//            }
+
+           for (var ci in tempCoords) {
+               if (temp == tempCoords[ci] && ci == e.target.id && drag == false){
+                   delete tempCoords[ci];
+               }
+            }
         }
     }
 }, false);
 
+
 document.addEventListener('click', function (e) {
-    "use strict";
+    //"use strict";
     if (drag === true) {
 
         var t1 = x - 10; // Position x of the mouse
@@ -35,16 +56,23 @@ document.addEventListener('click', function (e) {
             // Replace the cursor at its initial place
             cible.style.left = String(ox + (cible.id.substr(6)) * 25) + 'px';
             cible.style.top = String(ref.offsetTop + 70) + 'px';
+            out = true;
         }
-
+        
+        if(out == false){
+            var contain = (cible.offsetLeft - answerImg.offsetLeft +7) + '-' + (cible.offsetTop - answerImg.offsetTop+7);
+            tempCoords[cible.id] = contain;
+        }
+        
         cible = null;
         drag = false;
+        out = false;
         document.body.style.cursor = 'default';
     }
 }, false);
 
 document.addEventListener('mousemove', function (e) {
-    "use strict";
+    //"use strict";
     if (cible) {
         // Position de la souris dans la fenetre :
         if (e.x != undefined && e.y != undefined) { // IE
@@ -56,8 +84,8 @@ document.addEventListener('mousemove', function (e) {
         }
 
        // Position de la souris dans l'image :
-       //x -= canvas.offsetLeft;
-       //y -= canvas.offsetTop;
+       //x -= cible.offsetLeft;
+       //y -= cible.offsetTop;
 
         cible.style.left = String(x - 10) + 'px';
         cible.style.top = String(y - 10) + 'px';
@@ -67,18 +95,20 @@ document.addEventListener('mousemove', function (e) {
 }, false);
 
 document.addEventListener('keydown', function (e) {
-    "use strict";
+    //"use strict";
     if (e.keyCode === 67) {
         for (var x = 1 ; x < taille ; x++) {
             cur = 'cursor' + x;
             document.getElementById(cur).style.left = String(ox + x * 25) + 'px';
             document.getElementById(cur).style.top = String(ref.offsetTop + 70) + 'px';
         }
+        
+        tempCoords = {};
     }
 }, false);
 
 window.addEventListener('load', function (e) {
-    "use strict";
+    //"use strict";
     for (var x = 1 ; x < taille ; x++) {
         cur = 'cursor' + x;
         document.getElementById(cur).style.left = String(ox + x * 25) + 'px';
@@ -86,18 +116,27 @@ window.addEventListener('load', function (e) {
     }
 }, false);
 
-function EndTheTest(message) {
-    "use strict";
-    if (!confirm(message)) {
+function NoEmptyAnswer(noAnswerZone) { 
+    
+    var item = getTaille(tempCoords);
+    
+    if (item == 0) { 
+        alert(noAnswerZone);
         return false;
     } else {
-        validGraphic.action = '##';
+        for (var cur in tempCoords) {
+            document.getElementById('answers').value += tempCoords[cur]+',';
+        }
         validGraphic.submit();
     }
 }
 
-function LookOver() {
-    "use strict";
-    validGraphic.action = '#';
-    validGraphic.submit();
+function getTaille(tab){
+    
+    var i = 0;
+    
+    for (var id in tab) {
+        i++;
+    }
+    return i;
 }
