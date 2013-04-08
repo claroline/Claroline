@@ -1,11 +1,9 @@
 var asset = $("#asset").html(); //global
 
-if(asset)
-{
-    asset = asset+"app_dev.php/";
+if (asset) {
+    asset = asset + "app_dev.php/";
 }
-else
-{
+else {
     asset = "?/";
 }
 
@@ -17,16 +15,12 @@ else
  * 
  * @return [DOM obj]
  */
-function parentByClassName(element, classname)
-{
-    if(element.parentNode!=undefined && element.parentNode!=null)
-    {
-        if(element.parentNode.className.indexOf(classname)!=-1)
-        {
+function parentByClassName(element, classname) {
+    if (element.parentNode != undefined && element.parentNode != null) {
+        if (element.parentNode.className.indexOf(classname) != -1) {
             return element.parentNode;
         }
-        else
-        {
+        else {
             return parentByClassName(element.parentNode, classname);
         }
     }
@@ -45,16 +39,15 @@ function creator(element)
     var creator = parentByClassName(element, "creator");
     var title = creator.getElementsByTagName("input")[0];
     var text = creator.getElementsByTagName("textarea")[0];
+    var type = $(creator).data("type");
 
-    if(text.value!="" || title.value!="")
-    {
-        $.post( asset+"content/create", { "title": title.value, "text": text.value })
+    if (text.value != "" || title.value != "") {
+        $.post( asset + "content/create", { "title": title.value, "text": text.value, "type": type })
             .done(
                     function(data)
                     {
-                        if(!isNaN(data))
-                        {
-                            $.ajax( asset+"content/"+data )
+                        if (!isNaN(data)) {
+                            $.ajax( asset + "content/" + data + "/" + type )
                                  .done(
                                     function(data)
                                     {
@@ -66,21 +59,63 @@ function creator(element)
                             title.value = "";
                             text.value = "";
                         }
-                        else
-                        {
-                            alert("error");
+                        else {
+                            modal("content/error");
                         }
                     }
                     )
             .error(
                     function(data)
                     {
-                        alert("error");
+                            modal("content/error");
                     }
                   )
             ;
 
     }
+}
+
+function modal(url, id, element)
+{
+	id = typeof(id) != 'undefined' ? id : null;
+    element = typeof(element) != 'undefined' ? element : null;
+
+    $.ajax( asset + url )
+        .done(
+                function(data)
+                {
+
+                    var modal = document.createElement("div");
+		            modal.className = "modal hide fade";
+
+                    if (id) {
+                        modal.setAttribute("id", id);
+                    }
+
+                    if (element) {
+                        $(modal).data("element", element);
+                    }
+
+                    modal.innerHTML = data;
+
+                    $(modal).appendTo("body");
+
+                    $(modal).modal("show");
+
+                    $(modal).on('hidden', function () {
+                        $(this).remove();    
+                    });
+                    
+                }
+              )
+        .error(
+                function(data)
+                {
+                    modal("content/error");
+                }
+              )
+        ;
+
 }
 
 /** DOM events **/
@@ -92,8 +127,7 @@ $("body").on("mouseenter", ".content-element", function() {
 });
 
 $("body").on("mouseleave", ".content-element", function() {
-    if(!$(this).find(".content-menu").hasClass("open"))
-    {
+    if (!$(this).find(".content-menu").hasClass("open")) {
         $(this).find(".content-menu").addClass("hide");
     }
 });
@@ -108,48 +142,37 @@ $("body").on("click", ".content-size", function(event){
     var id = $(element).data("id");
     var type = $(element).data("type");
 
-    $("#sizes a.border").removeClass('active');
-
-    $("#sizes a.border").addClass(function() {
-        if($(this).html() == size)
-        {
-            return "active";
-        }
-    });
-
-    $("#sizes").data("id", id);
-    $("#sizes").data("type", type);
-    $("#sizes").data("element", element);
-    
-    
-    $("#sizes").modal("show");
+    modal("content/size/" + id + "/" + size + "/" + type, "sizes", element);
 });
-
 
 $("body").on("click", ".content-delete", function(event){
     var element = parentByClassName(event.target, 'content-element');
-    var id = $(element).data("id");
+    
+    modal("content/confirm", "delete-content", element);
+});
 
-    if(id && element)
-    {        
-        $.ajax( asset+"content/delete/"+id )
+$("body").on("click", "#delete-content a.delete", function(){
+    var element = $("#delete-content").data("element");
+    var id = $(element).data("id");
+    
+    if (id && element) {        
+        $.ajax( asset + "content/delete/" + id )
         .done(
                 function(data)
                 {
-                    if(data == "true")
-                    {
-                        $(element).hide('slow', function(){ $(this).remove(); })
+                    if (data == "true") {
+                        $(element).hide('slow', function(){ $(this).remove(); });
                     }
                     else
                     {
-                        alert("error1");
+                        modal("content/error");
                     }
                 }
                 )
         .error(
                 function(data)
                 {
-                    alert("error");
+                    modal("content/error");
                 }
               )
         ;
@@ -157,19 +180,17 @@ $("body").on("click", ".content-delete", function(event){
 });
 
 $("body").on("click", "#sizes a.border", function(event){
-    var size = "span"+event.target.innerHTML;
-    var id = $("#sizes").data("id");
-    var type = $("#sizes").data("type");
+    var size = "span" + event.target.innerHTML;
+    var id = $("#sizes .modal-body").data("id");
+    var type = $("#sizes .modal-body").data("type");
     var element = $("#sizes").data("element");
 
-    if(id && type && element)
-    {  
-        $.post( asset+"content/update/"+id, { "size": size, "type": type })
+    if (id && type && element) {  
+        $.post( asset + "content/update/" + id, { "size": size, "type": type })
         .done(
                 function(data)
                 {
-                    if(data == "true")
-                    {
+                    if (data == "true") {
                         $(element).removeClass (function (index, css) {
                             return (css.match (/\bspan\S+/g) || []).join(' ');
                         });
@@ -180,14 +201,14 @@ $("body").on("click", "#sizes a.border", function(event){
                     }
                     else
                     {
-                        alert("error1");
+                        modal("content/error");
                     }
                 }
                 )
         .error(
                 function(data)
                 {
-                    alert("error");
+                    modal("content/error");
                 }
               )
         ;
@@ -196,22 +217,19 @@ $("body").on("click", "#sizes a.border", function(event){
 
 //@TODO find a way to atach of new elements
 $(".creator textarea").css("height", function(){
-    return (2 * $(this).css("line-height").substr(0, $(this).css("line-height").indexOf("px")))+"px"
+    return (2 * $(this).css("line-height").substr(0, $(this).css("line-height").indexOf("px"))) + "px"
 });
 
 //@TODO find a way to atach of new elements
 $(".creator textarea").keyup(function(event){
     
-    if(event && event.keyCode) 
-    {
-        if(event.keyCode==13 | event.keyCode==86 | event.keyCode==8 | event.keyCode==46)
-        {
+    if (event && event.keyCode){
+        if (event.keyCode == 13 | event.keyCode == 86 | event.keyCode == 8 | event.keyCode == 46) {
             var lineheight = $(this).css("line-height").substr(0, $(this).css("line-height").indexOf("px"));
             var lines = $(this).val().split("\n").length;
 
-            $(this).css("height", ((lines + 1)*lineheight)+"px");
+            $(this).css("height", ((lines + 1)*lineheight) + "px");
         }
-
     }
 });
 

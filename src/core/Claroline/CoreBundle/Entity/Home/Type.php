@@ -15,7 +15,7 @@ class Type
     public function __construct()
     {
         $this->max_content_page = 100;
-    } 
+    }
 
     /**
      * @var integer
@@ -44,7 +44,7 @@ class Type
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -60,14 +60,14 @@ class Type
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -83,14 +83,14 @@ class Type
     public function setMaxContentPage($maxContentPage)
     {
         $this->max_content_page = $maxContentPage;
-    
+
         return $this;
     }
 
     /**
      * Get max_content_page
      *
-     * @return integer 
+     * @return integer
      */
     public function getMaxContentPage()
     {
