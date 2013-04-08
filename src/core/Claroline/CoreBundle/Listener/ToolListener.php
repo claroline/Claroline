@@ -182,9 +182,15 @@ class ToolListener extends ContainerAware
         $ed = $this->container->get('event_dispatcher');
 
         if (isset($config['widget'])) {
+            $unknownWidgets = array();
             foreach ($config['widget'] as $widgetConfig) {
                 $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
                     ->findOneByName($widgetConfig['name']);
+
+                if ($widget === null) {
+                    $unknownWidgets[] = $widgetConfig['name'];
+                }
+
                 $parent = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
                     ->findOneBy(array('widget' => $widget, 'parent' => null, 'isDesktop' => false));
                 $displayConfig = new DisplayConfig();
@@ -205,6 +211,18 @@ class ToolListener extends ContainerAware
 
                 $em->persist($displayConfig);
             }
+        }
+
+        if (count($unknownWidgets) > 0) {
+            $content = "Widget(s) ";
+
+            foreach ($unknownWidgets as $unknown) {
+                $content .= "{$unknown}, ";
+            }
+
+            $content.= "were not found";
+
+            throw new \Exception($content);
         }
     }
 
