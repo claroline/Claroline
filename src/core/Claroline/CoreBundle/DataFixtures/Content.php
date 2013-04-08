@@ -13,9 +13,13 @@ class Contents extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        $titles = array('ClarolineConnect© : plateforme Claroline de nouvelle génération.', 'ClarolineConnect© Demo');
+        $titles = array(
+            'ClarolineConnect© : plateforme Claroline de nouvelle génération.',
+            'ClarolineConnect© Demo'
+        );
+
         $texts = array(
-"Cet espace de démonstration propose un aperçu des diverses fonctionnalités de ce LMS (Learning Management System) résolument tourné vers les usages d'aujourd'hui et les technologies de demain, tout en respectant les objectifs fondamentaux du projet Claroline: simplicité d'utilisation, souplesse de mise en oeuvre et stabilité du code.
+            "Cet espace de démonstration propose un aperçu des diverses fonctionnalités de ce LMS (Learning Management System) résolument tourné vers les usages d'aujourd'hui et les technologies de demain, tout en respectant les objectifs fondamentaux du projet Claroline: simplicité d'utilisation, souplesse de mise en oeuvre et stabilité du code.
 
 La volonté des auteurs est aussi de permettre l'utilisation du logiciel par le plus grand nombre, d'où le choix d'une licence Open Source pour sa diffusion.
 
@@ -50,15 +54,17 @@ Mot de passe: JaneDoe"
                 $content[$i]->setTitle($title);
                 $content[$i]->setContent($texts[$i]);
 
-                $first = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(array('back' => null, 'type' => $type));
+                $first = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(
+                    array('back' => null, 'type' => $type)
+                );
 
-                $content2type = new Content2Type($first);
+                $contentType = new Content2Type($first);
 
-                $content2type->setContent($content[$i]);
-                $content2type->setType($type);
-                $content2type->setSize($sizes[$i]);
+                $contentType->setContent($content[$i]);
+                $contentType->setType($type);
+                $contentType->setSize($sizes[$i]);
 
-                $manager->persist($content2type);
+                $manager->persist($contentType);
 
                 $manager->persist($content[$i]);
 

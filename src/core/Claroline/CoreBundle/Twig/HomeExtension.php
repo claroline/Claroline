@@ -37,7 +37,7 @@ class HomeExtension extends \Twig_Extension
      * @return \String
      * @see Symfony\Component\Translation\Translator
      */
-    function timeAgo($start)
+    public function timeAgo($start)
     {
         $end = new \DateTime("now");
 
@@ -63,17 +63,15 @@ class HomeExtension extends \Twig_Extension
             "%s" => "seconds"
         );
 
-        foreach($formats as $format)
-        {
-            if ($format == "%W") { //fix for week that does not exist in DataInterval obj
+        foreach ($formats as $format) {
+            if ($format == "%W") {
 
-                $i = round($interval->format("%d") / 8);
-            }
-            else {
+                $i = round($interval->format("%d") / 8); //fix for week that does not exist in DataInterval obj
+            } else {
                 $i = ltrim($interval->format($format), "0");
             }
 
-            if ($i>0) {
+            if ($i > 0) {
                 return $this->translator->transChoice(
                     "%count% ".$translation["singular"][$format]." ago|%count% ".$translation["plural"][$format]." ago",
                     $i,

@@ -15,10 +15,15 @@ class HomeController extends Controller
      * Get content by id, if the content does not exists an error is given.
      * This method require claroline.common.home_service.
      *
-     * @route("/content/{id}/{type}", requirements={"id" = "\d+"}, name="claroline_get_content_by_id_and_type", defaults={"type" = "home"})
+     * @route(
+     *     "/content/{id}/{type}", 
+     *     requirements={"id" = "\d+"}, 
+     *     name="claroline_get_content_by_id_and_type", 
+     *     defaults={"type" = "home"})
      *
      * @param \String $id The id of the content.
-     * @param \String $type The type of the content, this parameter is optional, but this parameter could be usefull because the contents can have different twigs templates and sizes by their type.
+     * @param \String $type The type of the content, this parameter is optional, but this parameter could be usefull
+     *                      because the contents can have different twigs templates and sizes by their type.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      * @see Claroline\CoreBundle\Library\Home\HomeService()
@@ -39,15 +44,14 @@ class HomeController extends Controller
                     array('name' => $type)
                 );
 
-                $content2type = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(
+                $contentType = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(
                     array('content' => $content, 'type' => $types)
                 );
 
-                if ($types and $content2type) {
-                    $size = $content2type->getSize();
+                if ($types and $contentType) {
+                    $size = $contentType->getSize();
                 }
-            }
-            else {
+            } else {
 
                 //default values
                 $type = "default";
@@ -60,10 +64,9 @@ class HomeController extends Controller
                 $this->container->get('claroline.common.home_service')->defaultTemplate(
                     "ClarolineCoreBundle:types:$type.html.twig"
                 ),
-                array('content' => $content, 'size' => $size, 'menu' => $menu, 'type' => $type));
-        }
-        else
-        {
+                array('content' => $content, 'size' => $size, 'menu' => $menu, 'type' => $type)
+            );
+        } else {
             return $this->render(
                 'ClarolineCoreBundle:Home:error.html.twig',
                 array('path' => "Content ".$id)
@@ -92,8 +95,7 @@ class HomeController extends Controller
                 'ClarolineCoreBundle:Home:layout.html.twig',
                 array('content' => $content, 'creator' => $creator)
             );
-        }
-        else {
+        } else {
             return $this->render(
                 'ClarolineCoreBundle:Home:error.html.twig',
                 array('path' => $type)
@@ -116,8 +118,8 @@ class HomeController extends Controller
         if ($this->get('security.context')->isGranted('ROLE_ADMIN') and
             isset($_POST['title']) and isset($_POST['text']) and isset($_POST['type'])) {
 
-            $title =  $_POST['title'];
-            $text =  $_POST['text'];
+            $title = $_POST['title'];
+            $text = $_POST['text'];
 
             $manager = $this->getDoctrine()->getManager();
 
@@ -137,12 +139,12 @@ class HomeController extends Controller
                     array('back' => null, 'type' => $type)
                 );
 
-                $content2type = new Content2Type($first);
+                $contentType = new Content2Type($first);
 
-                $content2type->setContent($content);
-                $content2type->setType($type);
+                $contentType->setContent($content);
+                $contentType->setType($type);
 
-                $manager->persist($content2type);
+                $manager->persist($contentType);
 
                 $manager->flush();
 
@@ -186,19 +188,18 @@ class HomeController extends Controller
                 $content->setGeneratedContent($_POST['generated_content']);
             }
 
-            if(isset($_POST['size']) and isset($_POST['type']))
-            {
-                $type =  $manager->getRepository("ClarolineCoreBundle:Home\Type")->findOneBy(
+            if (isset($_POST['size']) and isset($_POST['type'])) {
+                $type = $manager->getRepository("ClarolineCoreBundle:Home\Type")->findOneBy(
                     array('name' => $_POST['type'])
                 );
 
-                $content2type = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(
+                $contentType = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(
                     array('content' => $content, 'type' => $type)
                 );
 
-                if ($content2type) {
-                    $content2type->setSize($_POST['size']);
-                    $manager->persist($content2type);
+                if ($contentType) {
+                    $contentType->setSize($_POST['size']);
+                    $manager->persist($contentType);
                 }
             }
 
@@ -239,24 +240,23 @@ class HomeController extends Controller
 
         if ($this->get('security.context')->isGranted('ROLE_ADMIN') and $content) {
 
-            $content2types = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findBy(
+            $contentTypes = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findBy(
                 array('content' => $content)
             );
 
-            foreach($content2types as $content2type)
-            {
-                $back = $content2type->getBack();
-                $next = $content2type->getNext();
+            foreach ($contentTypes as $contentType) {
+                $back = $contentType->getBack();
+                $next = $contentType->getNext();
 
                 if ($back) {
-                    $back->setNext($content2type->getNext());
+                    $back->setNext($contentType->getNext());
                 }
 
                 if ($next) {
-                    $next->setBack($content2type->getBack());
+                    $next->setBack($contentType->getBack());
                 }
 
-                $manager->remove($content2type);
+                $manager->remove($contentType);
             }
 
             $manager->remove($content);
@@ -282,9 +282,7 @@ class HomeController extends Controller
                 'ClarolineCoreBundle:Home:creator.html.twig',
                 array('type' => $type)
             );
-        }
-        else
-        {
+        } else {
             return new Response("");
         }
     }
@@ -305,8 +303,7 @@ class HomeController extends Controller
                 'ClarolineCoreBundle:Home:menu.html.twig',
                 array('id' => $id, 'size' => $size, 'type' => $type)
             );
-        }
-        else {
+        } else {
             return new Response("");
         }
     }
@@ -350,14 +347,15 @@ class HomeController extends Controller
                 array('back' => null, 'type' => $type)
             );
 
-            if($first) {
+            if ($first) {
                 $content = "";
 
                 for ($i = 0; $i < $type->getMaxContentPage() and $first != null; $i++) {
                     $menu = $this->menuAction(
                         $first->getContent()->getId(),
                         $first->getSize(),
-                        $type->getName())->getContent();
+                        $type->getName()
+                    )->getContent();
 
                     $content .= $this->render(
                         $this->container->get('claroline.common.home_service')->defaultTemplate(
@@ -375,8 +373,7 @@ class HomeController extends Controller
                 }
 
                 return $content;
-            }
-            else {
+            } else {
                 return " "; // Not yet content
             }
         }

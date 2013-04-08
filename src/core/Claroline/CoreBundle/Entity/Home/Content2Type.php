@@ -20,8 +20,7 @@ class Content2Type
             $first->setBack($this);
             $this->next = $first;
             $this->back = null;
-        }
-        else {
+        } else {
             $this->next = null;
             $this->back = null;
         }
