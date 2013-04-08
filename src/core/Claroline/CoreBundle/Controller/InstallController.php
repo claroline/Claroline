@@ -70,7 +70,8 @@ class InstallController extends Controller
             'files' => (is_writable('../files') ? 'OK' : 'KO'),
             'web' => (is_writable('../web') ? 'OK' : 'KO'),
             'app/logs' => (is_writable('../app/logs') ? 'OK' : 'KO'),
-            'app/cache' => (is_writable('app/cache/') ? 'OK' : 'KO'),);
+            'app/cache' => (is_writable('../app/cache/') ? 'OK' : 'KO'),
+            'template' => (is_writable('../templates')) ? 'OK' : 'KO');
 
         return $this->render(
             'ClarolineCoreBundle:Install:permission.html.twig',
