@@ -29,12 +29,12 @@ function editionAv() {
 
     $('#close').click(function () {
         var text = $('#input_popup').val();
-        row.contents('td:nth-child(2)').find('textarea').val(text);
-        row.contents('td:nth-child(2)').find('textarea').hide();
+        row.contents('td:nth-child(1)').find('textarea').val(text);
+        row.contents('td:nth-child(1)').find('textarea').hide();
         row.find('#divReplaceTextarea').remove();
-        row.contents('td:nth-child(2)').find('br').remove();
-        row.contents('td:nth-child(2)').append('<br /><div id="divReplaceTextarea" style="border:solid 1px red; width:200px; height:110px; padding:5px; overflow:auto; "></div> ');
-        row.contents('td:nth-child(2)').children('div').last().html(text);
+        row.contents('td:nth-child(1)').find('br').remove();
+        row.contents('td:nth-child(1)').append('<br /><div id="divReplaceTextarea" style="border:solid 1px red; width:200px; height:110px; padding:5px; overflow:auto; "></div> ');
+        row.contents('td:nth-child(1)').children('div').last().html(text);
         $('#input_popup').val('');
         hidePopup();
     });

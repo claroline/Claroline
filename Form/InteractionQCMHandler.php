@@ -158,7 +158,7 @@ class InteractionQCMHandler
         // filter $originalChoices to contain choice no longer present
         foreach ($interQCM->getChoices() as $choice) {
             foreach ($originalChoices as $key => $toDel) {
-                if ($toDel->getId() === $choice->getId()) {
+                if ($toDel->getId() == $choice->getId()) {
                     unset($originalChoices[$key]);
                 }
             }
@@ -176,7 +176,7 @@ class InteractionQCMHandler
         // filter $originalHints to contain hint no longer present
         foreach ($interQCM->getInteraction()->getHints() as $hint) {
             foreach ($originalHints as $key => $toDel) {
-                if ($toDel->getId() === $hint->getId()) {
+                if ($toDel->getId() == $hint->getId()) {
                     unset($originalHints[$key]);
                 }
             }
@@ -196,9 +196,12 @@ class InteractionQCMHandler
         $this->em->persist($interQCM->getInteraction());
 
         // On persiste tous les choices de l'interaction QCM.
+        $ord = 1;
         foreach ($interQCM->getChoices() as $choice) {
+            $choice->setOrdre($ord);
             $interQCM->addChoice($choice);
             $this->em->persist($choice);
+            $ord++;
         }
 
         //On persite tous les hints de l'entité interaction
