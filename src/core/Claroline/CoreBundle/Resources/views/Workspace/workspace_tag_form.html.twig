@@ -1,0 +1,20 @@
+{% extends "ClarolineCoreBundle::layout.html.twig" %}
+
+{% block content %}
+    {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
+    <form class="form-horizontal"
+          id="workspace_tag_form"
+          action="{{ path('claro_workspace_tag_create', {'userId': user.getId()}) }}"
+          method="post" {{ form_enctype(form) }}>
+        <fieldset>
+            <legend>{{ 'create_new_tag'|trans({}, 'platform') }} :</legend>
+            {{ form_widget(form) }}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+                <a href="{{ path('claro_workspace_manage_tag') }}">
+                    <button type="button" class="btn">{{ 'cancel'|trans({}, 'platform') }}</button>
+                </a>
+            </div>
+        </fieldset>
+    </form>
+{% endblock %}

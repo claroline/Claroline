@@ -76,7 +76,7 @@ class ProfileController extends Controller
             $em->persist($user);
             $em->flush();
             $this->get('security.context')->getToken()->setUser($user);
-            
+
             return $this->redirect($this->generateUrl('claro_profile_form'));
         }
 

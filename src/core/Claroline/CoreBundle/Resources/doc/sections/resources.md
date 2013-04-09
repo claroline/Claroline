@@ -69,8 +69,6 @@ This file will be parsed by the plugin installator to install your plugin and cr
           - class: Claroline\ExampleBundle\Entity\Example
             # Your resource type name
             name: claroline_example
-            # Is it visible in the resource manager ?
-            is_visible: true
             # Is it possible to navigate within your resource (does it have sub-resources ?)
             is_browsable: true
             # Do you want your resource to be exported as a part of a workspace model ?

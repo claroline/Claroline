@@ -45,4 +45,33 @@ class WorkspaceRepositoryTest extends FixtureTestCase
         $this->assertEquals('Workspace_1', $userWs[1]->getName());
         $this->assertEquals('Workspace_2', $userWs[2]->getName());
     }
+
+    public function testfindByRolesResturnsExcectedResults()
+    {
+        $this->loadUserData(array('creator' => 'ws_creator'));
+        $user = $this->getUser('user');
+        $this->loadGroupData(array('group_a' => array('user')));
+        $group = $this->getGroup('group_a');
+        $roleRepo = $this->em->getRepository('ClarolineCoreBundle:Role');
+
+        $this->loadWorkspaceData(
+            array(
+                'Workspace_1' => 'creator',
+                'Workspace_2' => 'creator',
+                'Workspace_3' => 'creator'
+            )
+        );
+
+        $user->addRole($roleRepo->findCollaboratorRole($this->getWorkspace('Workspace_1')));
+        $group->addRole($roleRepo->findCollaboratorRole($this->getWorkspace('Workspace_2')));
+        $this->em->persist($user);
+        $this->em->persist($group);
+        $this->em->flush();
+
+        $ws = $this->em
+            ->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
+            ->findByRoles($user->getRoles());
+
+        $this->assertEquals(3, count($ws));
+    }
 }

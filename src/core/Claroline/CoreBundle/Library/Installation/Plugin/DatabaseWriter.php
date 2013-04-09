@@ -201,7 +201,6 @@ class DatabaseWriter
     {
         $resourceType = new ResourceType();
         $resourceType->setName($resource['name']);
-        $resourceType->setVisible($resource['is_visible']);
         $resourceType->setBrowsable($resource['is_browsable']);
         $resourceType->setExportable($resource['is_exportable']);
         $resourceType->setPlugin($pluginEntity);

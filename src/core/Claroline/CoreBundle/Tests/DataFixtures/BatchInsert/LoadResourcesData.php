@@ -48,7 +48,12 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
     {
         $this->manager = $manager;
 
-        $numTot = ((1 - pow($this->numberDirectory,  $this->depth + 1)) / (1 - $this->numberDirectory)) - 1;
+        if ($this->numberDirectory <= 1) {
+            $numTot = $this->numberFiles;
+        } else {
+            $numTot = ((1 - pow($this->numberDirectory, $this->depth + 1)) / (1 - $this->numberDirectory)) - 1;
+        }
+
         $this->log("Number of directories that will be generated per workspace: ". $numTot);
         $this->log("Number of files that will be generated per workspace: ". $numTot * $this->numberFiles);
         $this->log("Number of filled workspaces: ". $this->numberRoots);
@@ -56,11 +61,12 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
 
         $this->user = $this->findJohnDoe($manager);
 
-
         $count = $manager->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->count();
         $this->suffixName = $count;
         $count = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->count();
         $maxWsId = $count;
+
+        $start = time();
 
         for ($i = 0; $i < $this->numberRoots; $i++) {
             $ws = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
@@ -77,9 +83,17 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
             );
             $maxWsId--;
         }
+
+        $end = time();
+        $duration = $this->container->get('claroline.utilities.misc')->timeElapsed($end - $start);
+        $this->log("Time elapsed for the demo creation: " . $duration);
+
+        return $duration;
+
     }
 
-    private function generateItems(EntityManager $em, $maxDepth, $curDepth, $directoryCount, $fileCount, $parent) {
+    private function generateItems(EntityManager $em, $maxDepth, $curDepth, $directoryCount, $fileCount, $parent)
+    {
         $curDepth++;
 
         for ($j = 0; $j < $directoryCount; $j++) {
@@ -87,7 +101,7 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
             $dir = $this->addDirectory($parent, $this->user);
 
             for ($k = 0; $k < $fileCount; $k++) {
-                $file = $this->addFile($parent, $this->user);
+                $this->addFile($parent, $this->user);
             }
 
             if ($curDepth < $maxDepth) {
@@ -98,6 +112,7 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
                     // Clear the EntityManager (EM) to free memory and speed all EM operations.
                     // We may clear the EM only when coming back at level 1 else we have
                     // problems with entities needed in the hierarchy.
+                    $em->flush();
                     $em->clear();
                     $this->log(" [UOW size: " . $em->getUnitOfWork()->size() . "]");
                     // Re-attach all needed entities else we have problems later.
@@ -119,7 +134,7 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
         $dir->setName($name);
         $this->log('create '.$name);
         $dir = $this->container->get('claroline.resource.manager')
-            ->create($dir, $parent->getId(), 'directory', $user);
+            ->create($dir, $parent->getId(), 'directory', $user, null, false, true);
         $this->totalResources++;
 
         return $dir;
@@ -137,7 +152,7 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
         $file->setSize(0);
         $this->log('create '.$name);
         $file = $this->container->get('claroline.resource.manager')
-            ->create($file, $parent->getId(), 'file', $user);
+            ->create($file, $parent->getId(), 'file', $user, null, false, false);
         $this->totalResources++;
 
         return $file;
@@ -150,5 +165,4 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
 
         return $query->getSingleResult();
     }
-
 }

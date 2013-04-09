@@ -209,15 +209,7 @@ class ToolListener
             $config['directory'][] = $dataChildren;
         }
 
-        $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
         $criteria = array();
-
-        foreach ($resourceTypes as $type) {
-            if ($type->getName() !== 'directory') {
-                $criteria['types'][] = $type->getName();
-            }
-        }
-
         $criteria['roots'] = array($root->getName());
         $criteria['isExportable'] = true;
         $config['resources'] = array();
@@ -225,35 +217,37 @@ class ToolListener
         $addToArchive = array();
 
         foreach ($resources as $resource) {
-            $newEvent = new ExportResourceTemplateEvent($resourceRepo->find($resource['id']));
-            $ed->dispatch("resource_{$resource['type']}_to_template", $newEvent);
-            $dataResources = $newEvent->getConfig();
+            if ($resource['type'] !== 'directory') {
+                $newEvent = new ExportResourceTemplateEvent($resourceRepo->find($resource['id']));
+                $ed->dispatch("resource_{$resource['type']}_to_template", $newEvent);
+                $dataResources = $newEvent->getConfig();
 
-            if ($dataResources === null) {
-                throw new \Exception("The event resource_{$resource['type']}_to_template did not return any config");
+                if ($dataResources === null) {
+                    throw new \Exception("The event resource_{$resource['type']}_to_template did not return any config");
+                }
+
+                foreach ($roles as $role) {
+                    $perms = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
+                        ->findMaximumRights(array($role->getName()), $root);
+                    $perms['canCreate'] = array();
+
+                    $dataResources['perms'][rtrim(str_replace(range(0, 9), '', $role->getName()), '_')] = $perms;
+                }
+
+                $dataResources['parent'] = $resource['parent_id'];
+                $dataResources['id'] = $resource['id'];
+                $dataResources['type'] = $resource['type'];
+                $dataResources['name'] = $resource['name'];
+                $requiredFiles = array();
+
+                foreach ($newEvent->getFiles() as $item) {
+                    $addToArchive[] = $item;
+                    $requiredFiles[] = $item['archive_path'];
+                    $dataResources['files'] = $requiredFiles;
+                }
+
+                $config['resources'][] = $dataResources;
             }
-
-            foreach ($roles as $role) {
-                $perms = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
-                    ->findMaximumRights(array($role->getName()), $root);
-                $perms['canCreate'] = array();
-
-                $dataResources['perms'][rtrim(str_replace(range(0, 9), '', $role->getName()), '_')] = $perms;
-            }
-
-            $dataResources['parent'] = $resource['parent_id'];
-            $dataResources['id'] = $resource['id'];
-            $dataResources['type'] = $resource['type'];
-            $dataResources['name'] = $resource['name'];
-            $requiredFiles = array();
-
-            foreach ($newEvent->getFiles() as $item) {
-                $addToArchive[] = $item;
-                $requiredFiles[] = $item['archive_path'];
-                $dataResources['files'] = $requiredFiles;
-            }
-
-            $config['resources'][] = $dataResources;
         }
 
         $event->setFiles($addToArchive);
@@ -307,68 +301,12 @@ class ToolListener
      */
     public function onImportResource(ImportToolEvent $event)
     {
-        $manager = $this->container->get('claroline.resource.manager');
         $config = $event->getConfig();
         $root = $event->getRoot();
-        $ed = $this->container->get('event_dispatcher');
         $createdResources = array();
         $createdResources[$config['root_id']] = $root;
-
-        if (isset($config['directory'])) {
-            foreach ($config['directory'] as $resource) {
-                $newEvent = new ImportResourceTemplateEvent($resource, $root, $event->getUser());
-                $ed->dispatch("resource_{$resource['type']}_from_template", $newEvent);
-
-                $childResources = $newEvent->getCreatedResources();
-
-                foreach ($childResources as $key => $value) {
-                    $createdResources[$key] = $value;
-                }
-            }
-        }
-
-        $requiredFiles = $event->getFiles();
-
-        foreach ($config['resources'] as $resource) {
-            $newEvent = new ImportResourceTemplateEvent($resource, $root, $event->getUser());
-            $newEvent->setCreatedResources($createdResources);
-            $fileContent = array();
-
-            if (isset($resource['files'])) {
-                $files = $resource['files'];
-
-                foreach ($files as $file) {
-                    foreach ($requiredFiles as $requiredFile) {
-                        if ($file === pathinfo($requiredFile, PATHINFO_BASENAME)) {
-                            $fileContent[] = requiredFile;
-                        }
-                    }
-                }
-            }
-
-            $newEvent->setFiles($fileContent);
-
-            $ed->dispatch("resource_{$resource['type']}_from_template", $newEvent);
-            $resourceEntity = $newEvent->getResource();
-
-            if ($resourceEntity !== null) {
-                $resourceEntity->setName($resource['name']);
-                $manager->create(
-                    $resourceEntity,
-                    $createdResources[$resource['parent']],
-                    $resource['type'],
-                    $event->getUser(),
-                    $resource['perms']
-                );
-                $createdResources[$resource['id']] = $resourceEntity;
-            } else {
-                throw new \Exception(
-                    "The event import_{$resource['type']}_template did not set" .
-                    " any resource"
-                );
-            }
-        }
-
+        $createdResources = $this->loadDirectories($config, $createdResources, $event->getRoot(), $event->getUser());
+        $this->loadFiles($config, $createdResources, $event->getFiles(), $event->getRoot(), $event->getUser());
     }
 
     /**
@@ -388,7 +326,7 @@ class ToolListener
             ->findWorkspaceRoot($workspace)
             ->getId();
         $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-            ->findBy(array('isVisible' => true));
+            ->findAll();
 
         return $this->container->get('templating')->render(
             'ClarolineCoreBundle:Tool\workspace\resource_manager:resources.html.twig', array(
@@ -483,7 +421,7 @@ class ToolListener
         $resourceTypes = $this->container
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-            ->findBy(array('isVisible' => true));
+            ->findAll();
 
         return $this->container->get('templating')->render(
             'ClarolineCoreBundle:Tool\desktop\resource_manager:resources.html.twig',
@@ -634,6 +572,85 @@ class ToolListener
         unset($config[$key + 1]);
 
         return $config;
+    }
+
+    /**
+     * Load directories from a template config file.
+     *
+     * @param array $config the config file.
+     * @param array $createdResources the list of already created resource [$id] => [$entity]
+     *
+     * @return array
+     */
+    private function loadDirectories($config, $createdResources, $root, $user)
+    {
+        if (isset($config['directory'])) {
+
+            $ed = $this->container->get('event_dispatcher');
+
+            foreach ($config['directory'] as $resource) {
+                $newEvent = new ImportResourceTemplateEvent($resource, $root, $user);
+                $ed->dispatch("resource_{$resource['type']}_from_template", $newEvent);
+
+                $childResources = $newEvent->getCreatedResources();
+
+                foreach ($childResources as $key => $value) {
+                    $createdResources[$key] = $value;
+                }
+            }
+        }
+
+        return $createdResources;
+    }
+
+    /**
+     *
+     */
+    private function loadFiles($config, $createdResources, $requiredFiles, $root, $user)
+    {
+        $manager = $this->container->get('claroline.resource.manager');
+        $ed = $this->container->get('event_dispatcher');
+
+        foreach ($config['resources'] as $resource) {
+
+            $newEvent = new ImportResourceTemplateEvent($resource, $root, $user);
+            $newEvent->setCreatedResources($createdResources);
+            $fileContent = array();
+
+            if (isset($resource['files'])) {
+                $files = $resource['files'];
+
+                foreach ($files as $file) {
+                    foreach ($requiredFiles as $requiredFile) {
+                        if ($file === pathinfo($requiredFile, PATHINFO_BASENAME)) {
+                            $fileContent[] = $requiredFile;
+                        }
+                    }
+                }
+            }
+
+            $newEvent->setFiles($fileContent);
+
+            $ed->dispatch("resource_{$resource['type']}_from_template", $newEvent);
+            $resourceEntity = $newEvent->getResource();
+
+            if ($resourceEntity !== null) {
+                $resourceEntity->setName($resource['name']);
+                $manager->create(
+                    $resourceEntity,
+                    $createdResources[$resource['parent']],
+                    $resource['type'],
+                    $user,
+                    $resource['perms']
+                );
+                $createdResources[$resource['id']] = $resourceEntity;
+            } else {
+                throw new \Exception(
+                    "The event import_{$resource['type']}_template did not set" .
+                    " any resource"
+                );
+            }
+        }
     }
 }
 

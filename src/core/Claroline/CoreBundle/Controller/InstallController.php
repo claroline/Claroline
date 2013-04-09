@@ -62,18 +62,26 @@ class InstallController extends Controller
         $version = array(
             'php' => phpversion(),
             'mysql' => mysqli_get_client_version(),
-            'local' => (is_writable('../app/config/local') ? 'OK' : 'KO'),
-            'file' => (is_writable('../files') ? 'OK' : 'KO'),
-            'web' => (is_writable('../web') ? 'OK' : 'KO'),
-            'log' => (is_writable('../app/logs') ? 'OK' : 'KO'),
-            'cache' => (is_writable('app/cache/') ? 'OK' : 'KO'),
             'lg' => $lg
 
         );
 
+        $ds = DIRECTORY_SEPARATOR;
+        $writableFolders = array(
+            "app{$ds}config{$ds}local", 'files', 'web', "app{$ds}logs", "app{$ds}cache", 'templates'
+        );
+        $folders = array();
+
+        foreach ($writableFolders as $folder) {
+            $folders[$folder] = (is_writable("..{$ds}{$folder}") ? 'OK' : 'KO');
+        }
+
         return $this->render(
             'ClarolineCoreBundle:Install:permission.html.twig',
-            array('version' => $version )
+            array(
+                'version' => $version,
+                'folders' => $folders
+                )
         );
     }
 
@@ -82,7 +90,7 @@ class InstallController extends Controller
      *     "/step_2/{lg}",
      *     name="claro_showDbForm"
      * )
-     * @Method("POST")
+     * @Method({"POST","GET"})
      */
     public function showDbFormAction($lg)
     {
@@ -146,15 +154,7 @@ class InstallController extends Controller
                         );
                     }
                     if ($this->putInYml($postData, $form->getName(), 'install_form') == 1) {
-                        $user = new User();
-                        $form = $this->createForm(new AdminType, $user);
-
-                        return $this->render(
-                            'ClarolineCoreBundle:Install:checkAdmin.html.twig',
-                            array(
-                                'version' => $value['locale'],
-                                'form' => $form->createView())
-                        );
+                        return $this->showAdminForm();
                     } else {
                         $this->get('session')->setFlash('error', 'Erreur lors de l ecriture des données');
                     }
@@ -177,6 +177,27 @@ class InstallController extends Controller
         }
     }
 
+    /**
+    *@Route(
+    *   "/AdminForm",
+    *   name="claro_showAdminForm"
+    *)
+    *
+    */
+    public function showAdminForm()
+    {
+        $value = $this->readYml(self::PATH);
+        $this->get('translator')->setlocale($value['locale']);
+        $user = new User();
+        $form = $this->createForm(new AdminType, $user);
+
+        return $this->render(
+            'ClarolineCoreBundle:Install:checkAdmin.html.twig',
+            array(
+                'version' => $value['locale'],
+                'form' => $form->createView())
+        );
+    }
     /**
      * @Route(
      *     "/step_check3",
@@ -304,6 +325,21 @@ class InstallController extends Controller
         }
 
         return $this->render('ClarolineCoreBundle:Install:sucess.html.twig');
+    }
+
+    /**
+     * @Route(
+     *     "/sucess",
+     *     name="claro_sucess"
+     * )
+     * @Method("POST")
+     */
+    public function successAction()
+    {
+
+        return $this->render(
+            'ClarolineCoreBundle:Install:sucess.html.twig'
+        );
     }
 
     /**
@@ -458,18 +494,4 @@ class InstallController extends Controller
         }
     }
 
-    /**
-     * @Route(
-     *     "/sucess",
-     *     name="claro_sucess"
-     * )
-     * @Method("POST")
-     */
-    public function successAction()
-    {
-
-        return $this->render(
-            'ClarolineCoreBundle:Install:sucess.html.twig'
-        );
-    }
 }

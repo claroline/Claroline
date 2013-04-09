@@ -53,4 +53,34 @@ class ClaroUtilities
 
         return $filledArray;
     }
+
+
+    /**
+     * From http://php.net/manual/en/function.time.php
+     *
+     * @param integer $secs
+     *
+     * @return string
+     */
+    public function timeElapsed($secs)
+    {
+        if ($secs === 0) {
+            return '0s';
+        }
+        
+        $bit = array(
+            'y' => $secs / 31556926 % 12,
+            'w' => $secs / 604800 % 52,
+            'd' => $secs / 86400 % 7,
+            'h' => $secs / 3600 % 24,
+            'm' => $secs / 60 % 60,
+            's' => $secs % 60
+            );
+
+        foreach($bit as $k => $v) {
+            if($v > 0)$ret[] = $v . $k;
+        }
+
+        return join(' ', $ret);
+    }
 }
