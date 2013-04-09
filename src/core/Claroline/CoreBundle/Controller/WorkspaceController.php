@@ -402,7 +402,7 @@ class WorkspaceController extends Controller
     public function manageTagAction()
     {
         if (!$this->get('security.context')->isGranted('ROLE_USER')) {
-            throw new \AccessDeniedException();
+            throw new AccessDeniedHttpException();
         }
 
         $em = $this->get('doctrine.orm.entity_manager');
@@ -451,7 +451,7 @@ class WorkspaceController extends Controller
     public function manageAdminTagAction()
     {
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            throw new \AccessDeniedException();
+            throw new AccessDeniedHttpException();
         }
 
         $em = $this->get('doctrine.orm.entity_manager');
@@ -463,7 +463,7 @@ class WorkspaceController extends Controller
 
         foreach ($workspaces as $workspace) {
             $relWsTagsByWs = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-                ->findAdminByWorkspaceAndUser($workspace);
+                ->findAdminByWorkspace($workspace);
             $workspacesTags[$workspace->getId()] = $relWsTagsByWs;
         }
 
@@ -499,7 +499,7 @@ class WorkspaceController extends Controller
     public function workspaceTagCreateFormAction()
     {
         if (!$this->get('security.context')->isGranted('ROLE_USER')) {
-            throw new \AccessDeniedException();
+            throw new AccessDeniedHttpException();
         }
 
         $user = $this->get('security.context')->getToken()->getUser();
@@ -527,7 +527,7 @@ class WorkspaceController extends Controller
     public function workspaceAdminTagCreateFormAction()
     {
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            throw new \AccessDeniedException();
+            throw new AccessDeniedHttpException();
         }
 
         $workspaceTag = new WorkspaceTag();
@@ -556,13 +556,13 @@ class WorkspaceController extends Controller
     public function workspaceTagCreateAction($userId)
     {
         if (!$this->get('security.context')->isGranted('ROLE_USER')) {
-            throw new \AccessDeniedException();
+            throw new AccessDeniedHttpException();
         }
 
         $user = $this->get('security.context')->getToken()->getUser();
 
         if ($user->getId() != $userId) {
-            throw new \AccessDeniedException();
+            throw new AccessDeniedHttpException();
         }
 
         $em = $this->get('doctrine.orm.entity_manager');
@@ -602,7 +602,7 @@ class WorkspaceController extends Controller
     public function workspaceAdminTagCreateAction()
     {
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            throw new \AccessDeniedException();
+            throw new AccessDeniedHttpException();
         }
 
         $em = $this->get('doctrine.orm.entity_manager');
@@ -647,7 +647,7 @@ class WorkspaceController extends Controller
     public function addTagToWorkspace($userId, $workspaceId, $tagName)
     {
         if (!$this->get('security.context')->isGranted('ROLE_USER')) {
-            throw new \AccessDeniedException();
+            throw new AccessDeniedHttpException();
         }
 
         $user = $this->get('security.context')->getToken()->getUser();
@@ -657,7 +657,7 @@ class WorkspaceController extends Controller
         if (is_null($user) || is_null($workspace)) {
             throw new \RuntimeException('User, Workspace cannot be null');
         } elseif ($user->getId() != $userId) {
-            throw new \AccessDeniedException();
+            throw new AccessDeniedHttpException();
         }
 
         $tag = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
@@ -703,7 +703,7 @@ class WorkspaceController extends Controller
     public function addAdminTagToWorkspace($workspaceId, $tagName)
     {
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            throw new \AccessDeniedException();
+            throw new AccessDeniedHttpException();
         }
 
         $em = $this->get('doctrine.orm.entity_manager');
@@ -768,7 +768,7 @@ class WorkspaceController extends Controller
         if (!$this->get('security.context')->isGranted('ROLE_USER')
             || $user->getId() !== $workspaceTag->getUser()->getId()
             || $user->getId() != $userId) {
-            throw new \AccessDeniedException();
+            throw new AccessDeniedHttpException();
         }
 
         $relWorkspaceTag = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
@@ -797,7 +797,7 @@ class WorkspaceController extends Controller
     public function removeAdminTagFromWorkspace($workspaceId, $workspaceTagId)
     {
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            throw new \AccessDeniedException();
+            throw new AccessDeniedHttpException();
         }
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);

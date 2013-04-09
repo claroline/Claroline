@@ -26,7 +26,7 @@ class RelWorkspaceTagRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findAdminByWorkspaceAndUser(AbstractWorkspace $workspace)
+    public function findAdminByWorkspace(AbstractWorkspace $workspace)
     {
         $dql = "
             SELECT rwt, t
