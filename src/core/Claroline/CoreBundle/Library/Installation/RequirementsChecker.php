@@ -17,16 +17,23 @@ class RequirementsChecker
         $valid = $warning = $errors = array();
         $parametersPath = "{$this->kernelRootDir}{$ds}config{$ds}local{$ds}parameters.yml";
 
+        $extensions = array(
+            array('name' => 'gd', 'required' => false),
+            array('name' => 'ffmpeg', 'required' => false),
+            array('name' => 'fileinfo', 'required' => true),
+        );
+
         //Extension verification.
-        (extension_loaded('gd')) ?
-            $valid[] = 'The php gd extension is loaded.':
-            $warning[] = 'The php gd extension is missing.';
-        (extension_loaded('ffmpeg')) ?
-            $valid[] = 'The php ffmpeg extension is loaded.':
-            $warning[] = 'The php ffmpeg extension is missing.';
-        (extension_loaded('fileinfo')) ?
-            $valid[] = 'The php fileinfo extension is loaded.':
-            $errors[] = 'The php fileinfo extension is missing.';
+        foreach ($extensions as $extension) {
+            if (extension_loaded($extension['name'])) {
+                $valid[] = "The {$extension['name']} extension is loaded";
+            } else {
+                $extension['required'] ?
+                    $errors[] = "The {$extension['name']} is missing":
+                    $warning[] = "The {$extension['name']} is missing";
+            }
+        }
+
         (file_exists($parametersPath)) ?
             $valid[] = "The {$parametersPath} file exists.":
             $errors[] = "The {$parametersPath} is missing.";

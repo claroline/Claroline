@@ -21,7 +21,7 @@ class DumpTemplateCommand extends ContainerAwareCommand
         $output->writeln('dumping...');
         $ds = DIRECTORY_SEPARATOR;
         $templateFile = $this->getContainer()
-            ->getParameter('claroline.workspace_template.directory') . $ds. 'default.zip';
+            ->getParameter('claroline.param.templates_directory') . $ds. 'default.zip';
         $archive = new \ZipArchive();
         $archive->open($templateFile);
         $parsedFile = Yaml::parse($archive->getFromName('config.yml'));

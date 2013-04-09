@@ -116,7 +116,7 @@ class WorkspaceController extends Controller
         }
 
         $form = $this->get('form.factory')
-            ->create(new WorkspaceType($this->container->getParameter('claroline.workspace_template.directory')));
+            ->create(new WorkspaceType($this->container->getParameter('claroline.param.templates_directory')));
 
         return $this->render(
             'ClarolineCoreBundle:Workspace:form.html.twig',
@@ -144,7 +144,7 @@ class WorkspaceController extends Controller
         }
 
         $form = $this->get('form.factory')
-            ->create(new WorkspaceType($this->container->getParameter('claroline.workspace_template.directory')));
+            ->create(new WorkspaceType($this->container->getParameter('claroline.param.templates_directory')));
         $form->bind($this->getRequest());
 
         if ($form->isValid()) {

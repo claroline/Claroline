@@ -2,7 +2,10 @@
 
 namespace Claroline\CoreBundle\Listener\Resource;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Form\DirectoryType;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Library\Event\CreateFormResourceEvent;
@@ -10,10 +13,31 @@ use Claroline\CoreBundle\Library\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Library\Event\ExportResourceTemplateEvent;
 use Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class DirectoryListener extends ContainerAware
+/**
+ * @DI\Service
+ */
+class DirectoryListener implements ContainerAwareInterface
 {
+    private $container;
+
+    /**
+     * @DI\InjectParams({
+     *     "container" = @DI\Inject("service_container")
+     * })
+     *
+     * @param ContainerInterface $container
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * @DI\Observe("create_form_directory")
+     *
+     * @param CreateFormResourceEvent $event
+     */
     public function onCreateForm(CreateFormResourceEvent $event)
     {
         $form = $this->container->get('form.factory')->create(new DirectoryType, new Directory());
@@ -28,6 +52,11 @@ class DirectoryListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    /**
+     * @DI\Observe("create_directory")
+     *
+     * @param CreateResourceEvent $event
+     */
     public function onCreate(CreateResourceEvent $event)
     {
         $request = $this->container->get('request');
@@ -54,6 +83,11 @@ class DirectoryListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    /**
+     * @DI\Observe("open_directory")
+     *
+     * @param OpenResourceEvent $event
+     */
     public function onOpen(OpenResourceEvent $event)
     {
         $dir = $event->getResource();
@@ -76,6 +110,11 @@ class DirectoryListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    /**
+     * @DI\Observe("resource_directory_to_template")
+     *
+     * @param ExportResourceTemplateEvent $event
+     */
     public function onExportTemplate(ExportResourceTemplateEvent $event)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
@@ -112,8 +151,14 @@ class DirectoryListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    /**
+     * @DI\Observe("resource_directory_from_template")
+     *
+     * @param ImportResourceTemplateEvent $event
+     */
     public function onImportTemplate(ImportResourceTemplateEvent $event)
     {
+        var_dump($event->getParent()->getId());
         $config = $event->getConfig();
         $manager = $this->container->get('claroline.resource.manager');
         $directory = new Directory();

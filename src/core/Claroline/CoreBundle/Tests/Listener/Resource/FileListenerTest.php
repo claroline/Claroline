@@ -24,7 +24,7 @@ class FileListenerTest extends FunctionalTestCase
         $this->client->followRedirects();
         $ds = DIRECTORY_SEPARATOR;
         $this->stubDir = __DIR__ . "{$ds}..{$ds}Stub{$ds}files{$ds}";
-        $this->upDir = $this->client->getContainer()->getParameter('claroline.files.directory');
+        $this->upDir = $this->client->getContainer()->getParameter('claroline.param.files_directory');
     }
 
     public function tearDown()

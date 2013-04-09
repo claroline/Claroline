@@ -61,6 +61,14 @@ swiftmailer:
 jms_security_extra:
     secure_all_services: false
 
+jms_di_extra:
+    locations:
+        # set the following option to false and explicitely name
+        # the bundles for optimal performance in dev environment
+        all_bundles: true
+        # bundles: [FooBundle, AcmeBlogBundle]
+        directories: ["%kernel.root_dir%/../src"]
+
 stof_doctrine_extensions:
     orm:
         default:

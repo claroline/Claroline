@@ -14,8 +14,8 @@ class Type
 {
     public function __construct()
     {
-        $this->max_content_page = 100;
-    } 
+        $this->maxContentPage = 100;
+    }
 
     /**
      * @var integer
@@ -38,13 +38,13 @@ class Type
      *
      * @ORM\Column(name="max_content_page", type="integer")
      */
-    private $max_content_page;
+    private $maxContentPage;
 
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -60,14 +60,14 @@ class Type
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -82,18 +82,18 @@ class Type
      */
     public function setMaxContentPage($maxContentPage)
     {
-        $this->max_content_page = $maxContentPage;
-    
+        $this->maxContentPage = $maxContentPage;
+
         return $this;
     }
 
     /**
      * Get max_content_page
      *
-     * @return integer 
+     * @return integer
      */
     public function getMaxContentPage()
     {
-        return $this->max_content_page;
+        return $this->maxContentPage;
     }
 }
