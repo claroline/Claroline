@@ -95,22 +95,25 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
     }
 
     /**
-     * Clears the cache (mandatory after plugin installation/uninstallation)
+     * Clears the cache in production environment (mandatory after plugin
+     * installation/uninstallation).
      *
      * @param OutputInterface $output
      */
     protected function resetCache(OutputInterface $output)
     {
-        $command = $this->getApplication()->find('cache:clear');
+        if ($this->getContainer()->get('kernel')->getEnvironment() === 'prod') {
+            $command = $this->getApplication()->find('cache:clear');
 
-        $input = new ArrayInput(
-            array(
-                'command' => 'cache:clear',
-                '--no-warmup' => true,
-            )
-        );
+            $input = new ArrayInput(
+                array(
+                    'command' => 'cache:clear',
+                    '--no-warmup' => true,
+                )
+            );
 
-        $command->run($input, $output);
+            $command->run($input, $output);
+        }
     }
 
     /**
