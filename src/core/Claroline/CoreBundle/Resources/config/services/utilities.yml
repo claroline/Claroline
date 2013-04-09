@@ -17,3 +17,8 @@ services:
         class: %controller_name_converter.class%
         arguments:
           - "@kernel"
+
+    claroline.utilities.caml_case_to_underscore__filter_extension:
+        class: Claroline\CoreBundle\Library\Twig\CamlCaseToUnderscoreFilterExtension
+        tags:
+            - { name: twig.extension }

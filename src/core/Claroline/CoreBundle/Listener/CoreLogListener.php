@@ -27,7 +27,7 @@ class CoreLogListener extends ContainerAware
 
         return $this->container
             ->get('templating')
-            ->render('ClarolineCoreBundle:Widget:resource_events.html.twig', array('logs' => $logs));
+            ->render('ClarolineCoreBundle:Log:view_list.html.twig', array('logs' => $logs));
     }
 
     private function renderForDesktop()
@@ -38,7 +38,7 @@ class CoreLogListener extends ContainerAware
 
         return $this->container
             ->get('templating')
-            ->render('ClarolineCoreBundle:Widget:resource_events.html.twig', array('logs' => $logs));
+            ->render('ClarolineCoreBundle:Log:view_list.html.twig', array('logs' => $logs));
     }
 }
 

@@ -9,6 +9,10 @@ claro_profile:
     resource: "@ClarolineCoreBundle/Resources/config/routing/profile.yml"
     prefix: profile
 
+claro_log:
+    resource: "@ClarolineCoreBundle/Resources/config/routing/log.yml"
+    prefix: log
+
 claro_registration:
     resource: "@ClarolineCoreBundle/Resources/config/routing/registration.yml"
     prefix: register

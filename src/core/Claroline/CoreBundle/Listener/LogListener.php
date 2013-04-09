@@ -102,14 +102,14 @@ class LogListener extends ContainerAware
             if (count($log->getDoerPlatformRoles()) > 0) {
                 $doerPlatformRolesDetails = array();
                 foreach ($log->getDoerPlatformRoles() as $platformRole) {
-                    $doerPlatformRolesDetails[] = $platformRole->getName();   
+                    $doerPlatformRolesDetails[] = $platformRole->getTranslationKey();   
                 }
                 $details['doer']['platform_roles'] = $doerPlatformRolesDetails;
             }
             if (count($log->getDoerWorkspaceRoles()) > 0) {
                 $doerWorkspaceRolesDetails = array();
                 foreach ($log->getDoerWorkspaceRoles() as $workspaceRole) {
-                    $doerWorkspaceRolesDetails[] = $workspaceRole->getName();   
+                    $doerWorkspaceRolesDetails[] = $workspaceRole->getTranslationKey();   
                 }
                 $details['doer']['workspace_roles'] = $doerWorkspaceRolesDetails;
             }

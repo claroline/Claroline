@@ -90,6 +90,16 @@ log_user_create_verb: 'has created the account'
 log_user_login_verb: 'has logged'
 log_user_delete_verb: 'has deleted the account'
 log_user_update_verb: 'has update the account'
+log_see_details: 'see details'
+log_doer: 'Doer'
+log_receiver_user: 'Action''s target'
+log_himself: 'Himself'
+log_change_set: 'List of modified properties'
+log_old_values: 'Old values'
+log_new_values: 'New values'
+log_platform_roles: 'Platform roles'
+log_workspace_roles: 'Workspace roles'
+log_resource: 'Action''s target'
 login: Login
 login_failure: 'Login has failed. Check your username and password are correct.'
 logout: Logout
@@ -201,6 +211,7 @@ see: Voir
 select all: Select all
 send_mail: 'Send a mail'
 send_message: 'Send a message'
+session_id: 'Session id'
 settings: Settings
 show: Show
 show_as_admin: 'Show as admin'
