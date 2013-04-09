@@ -87,9 +87,19 @@ log_export_verb: 'a exporté'
 log_resource_move_verb: 'a déplacé'
 log_resource_read_verb: 'a ouvert'
 log_user_create_verb: 'a créé le compte'
-log_user_login_verb: "s'est connecté(e)"
+log_user_login_verb: 's''est connecté(e)'
 log_user_delete_verb: 'a supprimé le compte'
 log_user_update_verb: 'a modifié le compte'
+log_see_details: 'voir le détail'
+log_doer: 'Auteur de l''action'
+log_receiver_user: 'Cible de l''action'
+log_himself: 'Lui-même'
+log_change_set: 'Liste des propriétés modifiées'
+log_old_values: 'Anciennes valeurs'
+log_new_values: 'Nouvelles valeurs'
+log_platform_roles: 'Roles plateforme'
+log_workspace_roles: 'Roles espace d''activités'
+log_resource: 'Cible de l''action'
 login: Connexion
 login_failure: 'La connexion a échoué. Vérifiez que votre nom d''utilisateur et votre mot de passe sont corrects.'
 logout: Déconnexion
@@ -201,6 +211,7 @@ see: Voir
 select all: 'Tout sélectionner'
 send_mail: 'Envoyer un mail'
 send_message: 'Envoyer un message'
+session_id: 'Identifiant de session'
 settings: Paramètres
 show: Voir
 show_as_admin: 'Voir comme admin'

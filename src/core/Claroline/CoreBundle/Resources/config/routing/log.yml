@@ -1,0 +1,3 @@
+claro_log_view_details:
+    pattern: '/view_details/{logId}'
+    defaults: { _controller: 'ClarolineCoreBundle:Log:viewDetails' }
