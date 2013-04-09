@@ -1,13 +1,3 @@
-parameters:
-
-    claroline.install.prod_migrations_directory: Migrations
-    claroline.install.test_migrations_directory: Tests/Stub/Migrations
-    claroline.install.include_test_migrations: false # see config_test.yml
-    claroline.plugin.directory: "%kernel.root_dir%/../src/plugin"
-    claroline.plugin.namespaces_config_file: "%kernel.root_dir%/config/local/plugin/namespaces"
-    claroline.plugin.bundles_config_file: "%kernel.root_dir%/config/local/plugin/bundles"
-    claroline.plugin.routing_config_file: "%kernel.root_dir%/config/local/plugin/routing.yml"
-
 services:
 
     claroline.install.core_installer:

@@ -16,5 +16,3 @@ services:
             - "@event_dispatcher"
             - "%claroline.workspace_template.directory%"
 
-parameters:
-    claroline.workspace_template.directory: "%kernel.root_dir%/../templates/"
