@@ -35,7 +35,7 @@ parameters:
     claroline.param.thumbnails_directory: "%kernel.root_dir%/../test/thumbnails"
     claroline.param.stub_plugin_directory: %kernel.root_dir%/../src/core/Claroline/CoreBundle/Tests/Stub/plugin
     claroline.param.include_test_migrations: true
-    claroline.param.plaftorm_config_handler_class : Claroline\CoreBundle\Library\Testing\PlatformTestConfigurationHandler
+    claroline.param.platform_config_handler_class : Claroline\CoreBundle\Library\Testing\PlatformTestConfigurationHandler
     claroline.param.platform_options_files:
         prod: %kernel.root_dir%/config/local/platform_options.yml
         test: %kernel.root_dir%/config/local/platform_test_options.yml
