@@ -218,24 +218,29 @@ class exerciseServices
     
     public function responseGraphic($request, $paperID = 0)
     {
-        $point = 0;$res = array();
+        $point = 0;
         $answers = $request->request->get('answers');
         $graphId = $request->request->get('graphId');
         $max = $request->request->get('nbpointer');
-        
         $em = $this->doctrine->getEntityManager();
-        $rightCoords = $em->getRepository('UJMExoBundle:Coords')->findBy(array('interactionGraphic' => $graphId));  
+        $rightCoords = $em->getRepository('UJMExoBundle:Coords')->findBy(array('interactionGraphic' => $graphId));
+        $verif = [];
+        $z = 0;
 
         $coords = preg_split('[,]', $answers);
         $total = 0;
        
-        for ($i=0;$i<$max-1;$i++) {
-            for ($j=0;$j<$max-1;$j++) {
+        for ($i = 0 ; $i < $max - 1 ; $i++) {
+            for ($j = 0 ; $j < $max - 1 ; $j++) {
                 list($xa,$ya) = explode("-", $coords[$j]);
                 list($xr,$yr) = explode(",",$rightCoords[$i]->getValue());
                 
-                if((($xa) < ($xr + 10)) && (($xa) > ($xr - 10)) && (($ya) < ($yr + 10)) && (($ya) > ($yr - 10))) {
-                   $point += $rightCoords[$i]->getScoreCoords();
+                if ((($xa) < ($xr + 10)) && (($xa) > ($xr - 10)) && (($ya) < ($yr + 10)) && (($ya) > ($yr - 10))) {
+                    if ($this->alreadyDone($rightCoords[$i], $verif, $z)) {
+                        $point += $rightCoords[$i]->getScoreCoords();
+                        $verif[$z] = $rightCoords[$i];
+                        $z++;
+                    }
                 }
             }
             $total += $rightCoords[$i]->getScoreCoords();
@@ -254,17 +259,21 @@ class exerciseServices
                    
                    $signe = substr($penal, 0, 1);
 
-                    if($signe == '-'){
+                    if ($signe == '-') {
                         $penalty += substr($penal, 1);
-                    }else{                   
+                    } else {                   
                         $penalty += $penal;
                     }
-               }
+                }
             }
             $session->remove('penalties');
         } else {
             $penalty = $this->getPenalty($interG->getInteraction(), $paperID);
-
+        }
+        
+        $score = $point - $penalty;
+        if ($score < 0) {
+            $score = 0;
         }
 
         $res = array(
@@ -274,9 +283,24 @@ class exerciseServices
             'coords' => $rightCoords,
             'doc' => $doc,
             'total' => $total,
-            'rep' => $coords
+            'rep' => $coords,
+            'score' => $score
         );
         
         return $res;
     }
-}               
+    
+    public function alreadyDone($coor, $verif, $z){
+        $resu = true;
+
+        for ($v = 0 ; $v < $z ; $v++) {
+            if ($coor == $verif[$v]) {
+                $resu = false;
+                break;
+            } else {
+                $resu = true;
+            }
+        }
+        return $resu;
+    }
+}

@@ -57,7 +57,7 @@
 </h3>
 
 <h5>{{ "consignes" | trans }} :</h5>
-<h6 id="ref"><em>{{ "position" | trans }}<br/>{{ "selection" | trans }}<br/>{{ "raz" | trans }}</em></h6>
+<h6 id="ref"><em>{{ "position" | trans }}<br/>{{ "selection" | trans }}<br/>{{ "raz" | trans }}<br/>{{ "onlyOnce" | trans }}</em></h6>
 
 <p id="ContainerCursor">{%set i=1%}
     {% for coords in listeCoords %} {%set place = 680+i*25%}
@@ -84,7 +84,7 @@
         {% endfor %}
     </table><br/>
     
-    <button type="submit" onclick="NoEmptyAnswer('{{ "noAnswerZone" | trans }}');return false;">Ok</button>
+    <button type="submit" onclick="NoEmptyAnswer('{{ "noAnswerZone" | trans }}','{{ "notAll" | trans }}');return false;">Ok</button>
 </form><br/>
 
 <div id="test"></div>
