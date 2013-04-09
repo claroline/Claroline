@@ -276,8 +276,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
             return false;
         }
 
-        if ($this->id !== $user->getId())
-        {
+        if ($this->id !== $user->getId()) {
             return false;
         }
 

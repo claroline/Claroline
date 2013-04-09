@@ -1,4 +1,8 @@
 'Size of content': 'Size of content'
+Error: Error
+'An error occurred': 'An error occurred'
+'Please try again later or check your internet connection': 'Please try again later or check your internet connection'
+Ok: Ok
 Size: Size
 Edit: Edit
 Delete: Delete
@@ -7,6 +11,9 @@ Create: Create
 'a content': 'a content'
 'Add Pictures': 'Add Pictures'
 'Add Files': 'Add Files'
+'Are you sure you want to delete this content?': 'Are you sure you want to delete this content?'
+'This action is irreversible': 'This action is irreversible'
+Cancel: Cancel
 '%count% year ago|%count% years ago': '%count% year ago|%count% years ago'
 '%count% month ago|%count% months ago': '%count% month ago|%count% months ago'
 '%count% week ago|%count% weeks ago': '%count% week ago|%count% weeks ago'

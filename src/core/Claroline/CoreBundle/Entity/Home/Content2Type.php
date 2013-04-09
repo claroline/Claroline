@@ -16,14 +16,11 @@ class Content2Type
     {
         $this->size = "span12"; //The size may be between 1 and 12 that correspont to span1 ant span12 of bootstrap
 
-        if($first)
-        {
+        if ($first) {
             $first->setBack($this);
             $this->next = $first;
             $this->back = null;
-        }
-        else
-        {
+        } else {
             $this->next = null;
             $this->back = null;
         }
@@ -70,7 +67,7 @@ class Content2Type
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -86,14 +83,14 @@ class Content2Type
     public function setSize($size)
     {
         $this->size = $size;
-    
+
         return $this;
     }
 
     /**
      * Get size
      *
-     * @return string 
+     * @return string
      */
     public function getSize()
     {
@@ -109,14 +106,14 @@ class Content2Type
     public function setContent(\Claroline\CoreBundle\Entity\Home\Content $content)
     {
         $this->content = $content;
-    
+
         return $this;
     }
 
     /**
      * Get content
      *
-     * @return \Claroline\CoreBundle\Entity\Home\Content 
+     * @return \Claroline\CoreBundle\Entity\Home\Content
      */
     public function getContent()
     {
@@ -132,14 +129,14 @@ class Content2Type
     public function setType(\Claroline\CoreBundle\Entity\Home\Type $type)
     {
         $this->type = $type;
-    
+
         return $this;
     }
 
     /**
      * Get type
      *
-     * @return \Claroline\CoreBundle\Entity\Home\Type 
+     * @return \Claroline\CoreBundle\Entity\Home\Type
      */
     public function getType()
     {
@@ -152,17 +149,17 @@ class Content2Type
      * @param \Claroline\CoreBundle\Entity\Home\Content2Type $next
      * @return Content2Type
      */
-    public function setNext(\Claroline\CoreBundle\Entity\Home\Content2Type $next)
+    public function setNext($next)
     {
         $this->next = $next;
-    
+
         return $this;
     }
 
     /**
      * Get next
      *
-     * @return \Claroline\CoreBundle\Entity\Home\Content2Type 
+     * @return \Claroline\CoreBundle\Entity\Home\Content2Type
      */
     public function getNext()
     {
@@ -175,17 +172,17 @@ class Content2Type
      * @param \Claroline\CoreBundle\Entity\Home\Content2Type $back
      * @return Content2Type
      */
-    public function setBack(\Claroline\CoreBundle\Entity\Home\Content2Type $back)
+    public function setBack($back)
     {
         $this->back = $back;
-    
+
         return $this;
     }
 
     /**
      * Get back
      *
-     * @return \Claroline\CoreBundle\Entity\Home\Content2Type 
+     * @return \Claroline\CoreBundle\Entity\Home\Content2Type
      */
     public function getBack()
     {

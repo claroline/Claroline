@@ -85,7 +85,7 @@
                             {% if isLogged %}
                                 <li class="divider"></li>
                                 <li>
-                                <a href="{{ path('claro_workspace_by_user', {'userId': app.user.id }) }}" id="link-my-workspaces">
+                                <a href="{{ path('claro_workspace_by_user') }}" id="link-my-workspaces">
                                     {{ 'my_workspaces'|trans({}, 'platform') }}
                                 </a>
                                 </li>
@@ -121,6 +121,7 @@
                             </a>
                             </li>
                             <li class="divider"></li>
+                            {% if personalWs is not null %}
                             <li>
                             <a href="{{ path('claro_workspace_open_tool',
                                 {'workspaceId': personalWs.getId(), 'toolName': 'home'}) }}"
@@ -128,6 +129,7 @@
                                 {{ 'my_workspace'|trans({}, 'platform') }}
                             </a>
                             </li>
+                            {% endif %}
                             <li>
                             <a href="#" id="link-agenda">
                                 {{ 'my_agenda'|trans({}, 'platform') }}
