@@ -12,6 +12,6 @@ parameters:
     claroline.param.plugin_bundles_file: "%kernel.root_dir%/config/local/plugin/bundles"
     claroline.param.plugin_routing_file: "%kernel.root_dir%/config/local/plugin/routing.yml"
     claroline.param.include_test_migrations: false
-    claroline.param.plaftorm_config_handler_class: Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler
-    claroline.param.plaftorm_options_files:
+    claroline.param.platform_config_handler_class: Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler
+    claroline.param.platform_options_files:
         prod: %kernel.root_dir%/config/local/platform_options.yml
