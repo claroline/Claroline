@@ -4,7 +4,6 @@ plugin:
     resources:
         - class: UJM\ExoBundle\Entity\Exercise
           name: ujm_exercise
-          is_visible: true
           is_browsable: false
           icon: res_exo.png
          
