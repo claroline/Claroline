@@ -317,14 +317,14 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->client->submit($form);
 
         $tag = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findOneBy(array('user' => $userId, 'name'=> 'tag'));
+            ->findOneBy(array('user' => $userId, 'name' => 'tag'));
 
         $this->client->request(
             "POST",
             "/workspaces/{$userId}/workspace/{$workspaceId}/tag/add/{$tag->getName()}"
         );
         $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findByUserAndWorkspace($this->getUser('user'), $pws);
+            ->findByWorkspaceAndUser($pws, $this->getUser('user'));
         $this->assertEquals(1, count($relWsTag));
 
         $this->client->request(
@@ -332,7 +332,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
             "/workspaces/{$userId}/workspace/{$workspaceId}/tag/remove/{$tag->getId()}"
         );
         $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findByUserAndWorkspace($this->getUser('user'), $pws);
+            ->findByWorkspaceAndUser($pws, $this->getUser('user'));
         $this->assertEquals(0, count($relWsTag));
     }
 
@@ -352,7 +352,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
             ->findByUser($this->getUser('user'));
         $this->assertEquals(1, count($tags));
         $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findOneByUserAndWorkspaceAndTag($this->getUser('user'), $pws, $tags[0]);
+            ->findOneByWorkspaceAndTagAndUser($pws, $tags[0], $this->getUser('user'));
         $this->assertNotNull($relWsTag);
     }
 }
