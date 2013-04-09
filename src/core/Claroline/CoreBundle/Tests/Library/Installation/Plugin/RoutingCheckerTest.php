@@ -16,7 +16,7 @@ class RoutingCheckerTest extends WebTestCase
     {
         $container = static::createClient()->getContainer();
         $this->checker = $container->get('claroline.plugin.routing_checker');
-        $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
+        $pluginDirectory = $container->getParameter('claroline.param.stub_plugin_directory');
         $this->loader = new Loader($pluginDirectory);
     }
 

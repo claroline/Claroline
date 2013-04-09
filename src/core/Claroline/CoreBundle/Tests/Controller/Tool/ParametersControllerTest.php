@@ -221,7 +221,7 @@ class ParametersControllerTest extends FunctionalTestCase
     {
         $container = $this->client->getContainer();
         $dbWriter = $container->get('claroline.plugin.recorder_database_writer');
-        $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
+        $pluginDirectory = $container->getParameter('claroline.param.stub_plugin_directory');
         $loader = new Loader($pluginDirectory);
         $validator = $container->get('claroline.plugin.validator');
 

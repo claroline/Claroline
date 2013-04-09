@@ -13,12 +13,12 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
         $this->loadPlatformRolesFixture();
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->client->followRedirects();
-        $this->thumbsDir = $this->client->getContainer()->getParameter('claroline.thumbnails.directory');
+        $this->thumbsDir = $this->client->getContainer()->getParameter('claroline.param.thumbnails_directory');
     }
 
     public function tearDown()
     {
-        $this->cleanDirectory($this->client->getContainer()->getParameter('claroline.files.directory'));
+        $this->cleanDirectory($this->client->getContainer()->getParameter('claroline.param.files_directory'));
         $this->cleanDirectory($this->thumbsDir);
         parent::tearDown();
     }

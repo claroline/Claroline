@@ -4,6 +4,6 @@
 
 services:
      claroline.config.platform_config_handler:
-        class: %claroline.config.platform_handler_class%
+        class: %claroline.param.plaftorm_config_handler_class%
         arguments:
-            - %claroline.config.platform_options_files%
+            - %claroline.param.platform_options_files%

@@ -14,5 +14,5 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@event_dispatcher"
-            - "%claroline.workspace_template.directory%"
+            - "%claroline.param.templates_directory%"
 

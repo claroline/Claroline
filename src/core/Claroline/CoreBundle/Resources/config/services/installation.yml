@@ -17,9 +17,9 @@ services:
         arguments:
             - "@doctrine.dbal.default_connection"
             - "@claroline.install.migration_helper"
-            - %claroline.install.prod_migrations_directory%
-            - %claroline.install.test_migrations_directory%
-            - %claroline.install.include_test_migrations%
+            - %claroline.param.prod_migrations_directory%
+            - %claroline.param.test_migrations_directory%
+            - %claroline.param.include_test_migrations%
 
     claroline.install.migration_helper:
         public: false
@@ -37,7 +37,7 @@ services:
     claroline.plugin.loader:
         class: Claroline\CoreBundle\Library\Installation\Plugin\Loader
         arguments:
-            - %claroline.plugin.directory%
+            - %claroline.param.plugin_directory%
 
     claroline.plugin.validator:
         class: Claroline\CoreBundle\Library\Installation\Plugin\Validator
@@ -72,9 +72,9 @@ services:
     claroline.plugin.recorder_configuration_file_writer:
         class: Claroline\CoreBundle\Library\Installation\Plugin\ConfigurationFileWriter
         arguments:
-            - %claroline.plugin.namespaces_config_file%
-            - %claroline.plugin.bundles_config_file%
-            - %claroline.plugin.routing_config_file%
+            - %claroline.param.plugin_namespaces_file%
+            - %claroline.param.plugin_bundles_file%
+            - %claroline.param.plugin_routing_file%
             - "@symfony.yaml"
 
     claroline.plugin.recorder_database_writer:
