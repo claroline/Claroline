@@ -24,28 +24,28 @@ class IconCreatorTest extends FixtureTestCase
         }
 
         $videoPath = __DIR__ . "..{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}video.mp4";
-        $copyVideoPath = $this->client->getContainer()->getParameter('claroline.files.directory').$ds."video.mp4";
+        $copyVideoPath = $this->client->getContainer()->getParameter('claroline.param.files_directory').$ds."video.mp4";
         copy($videoPath, $copyVideoPath);
 
         $videoPath = __DIR__ . "..{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}video.unknownExtension";
-        $copyVideoPath = $this->client->getContainer()->getParameter('claroline.files.directory').$ds
+        $copyVideoPath = $this->client->getContainer()->getParameter('claroline.param.files_directory').$ds
             . "video.unknownExtension";
         copy($videoPath, $copyVideoPath);
 
         $imagePath = __DIR__ . "..{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}image.jpg";
-        $copyImagePath = $this->client->getContainer()->getParameter('claroline.files.directory').$ds."image.jpg";
+        $copyImagePath = $this->client->getContainer()->getParameter('claroline.param.files_directory').$ds."image.jpg";
         copy($imagePath, $copyImagePath);
 
         $imagePath = __DIR__ . "..{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}image.unknownExtension";
-        $copyImagePath = $this->client->getContainer()->getParameter('claroline.files.directory').$ds
+        $copyImagePath = $this->client->getContainer()->getParameter('claroline.param.files_directory').$ds
             . "image.unknownExtension";
         copy($imagePath, $copyImagePath);
 
         $textPath = __DIR__ . "..{$ds}..{$ds}..{$ds}Stub{$ds}files{$ds}text.txt";
-        $copyTestPath = "{$this->client->getContainer()->getParameter('claroline.files.directory')}{$ds}text.txt";
+        $copyTestPath = "{$this->client->getContainer()->getParameter('claroline.param.files_directory')}{$ds}text.txt";
         copy($textPath, $copyTestPath);
 
-        $this->thumbDir = $this->client->getContainer()->getParameter('claroline.thumbnails.directory');
+        $this->thumbDir = $this->client->getContainer()->getParameter('claroline.param.thumbnails_directory');
         $this->iconCreator = $this->client->getContainer()->get('claroline.resource.icon_creator');
 
         $this->fileType = $this->client
@@ -57,7 +57,7 @@ class IconCreatorTest extends FixtureTestCase
 
     protected function tearDown()
     {
-        $this->cleanDirectory($this->client->getContainer()->getParameter('claroline.files.directory'));
+        $this->cleanDirectory($this->client->getContainer()->getParameter('claroline.param.files_directory'));
         $this->cleanDirectory($this->thumbDir);
         parent::tearDown();
     }

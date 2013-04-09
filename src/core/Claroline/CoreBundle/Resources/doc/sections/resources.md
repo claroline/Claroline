@@ -164,7 +164,6 @@ Where the shortbundle name is your bundle name without 'Bundle'.
 #### note concerning the download
 
 If your plugin don't catch the download event, a placeholder will be set in the archive.
-The export event is fired for resource whose is_visible field is set to true.
 
 ### Listener implementation class
 

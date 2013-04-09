@@ -13,13 +13,17 @@ class Contents extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        $titles = array('ClarolineConnect© : plateforme Claroline de nouvelle génération.', 'ClarolineConnect© Demo');
+        $titles = array(
+            'ClarolineConnect© : plateforme Claroline de nouvelle génération.',
+            'ClarolineConnect© Demo'
+        );
+
         $texts = array(
-"Cet espace de démonstration propose un aperçu des diverses fonctionnalités de ce LMS (Learning Management System) résolument tourné vers les usages d'aujourd'hui et les technologies de demain, tout en respectant les objectifs fondamentaux du projet Claroline: simplicité d'utilisation, souplesse de mise en oeuvre et stabilité du code.
+            "Cet espace de démonstration propose un aperçu des diverses fonctionnalités de ce LMS (Learning Management System) résolument tourné vers les usages d'aujourd'hui et les technologies de demain, tout en respectant les objectifs fondamentaux du projet Claroline: simplicité d'utilisation, souplesse de mise en oeuvre et stabilité du code.
 
 La volonté des auteurs est aussi de permettre l'utilisation du logiciel par le plus grand nombre, d'où le choix d'une licence Open Source pour sa diffusion.
 
-Conçue pour satisfaire le monde de l’enseignement, de la formation mais aussi de l'entreprise, la plateforme ClarolineConnect© (dont la version Bêta sortira en septembre 2013), permet aux utilisateurs une plus grande ouverture vers le web et les outils collaboratifs. 
+Conçue pour satisfaire le monde de l’enseignement, de la formation mais aussi de l'entreprise, la plateforme ClarolineConnect© (dont la version Bêta sortira en septembre 2013), permet aux utilisateurs une plus grande ouverture vers le web et les outils collaboratifs.
 
 Davantage centrée sur l'utilisateur, ClarolineConnect© propose des outils d’apprentissage performants en intégrant des fonctions de type réseau social ainsi que des outils communautaires et interactifs (wiki, forum, blog ...).
 
@@ -37,32 +41,35 @@ Professeur:
 Nom d'utilisateur: JaneDoe
 Mot de passe: JaneDoe"
         );
+
         $sizes = array("span8", "span4");
 
         $type = $manager->getRepository("ClarolineCoreBundle:Home\Type")->findOneBy(array('name' => 'home'));
 
-        if($type)
-        {
-            foreach($titles as $i => $title)
-            {
+        if ($type) {
+
+            foreach ($titles as $i => $title) {
+
                 $content[$i] = new Content();
                 $content[$i]->setTitle($title);
                 $content[$i]->setContent($texts[$i]);
 
-                $first = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(array('back' => null, 'type' => $type));
+                $first = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(
+                    array('back' => null, 'type' => $type)
+                );
 
-                $content2type = new Content2Type($first);
+                $contentType = new Content2Type($first);
 
-                $content2type->setContent($content[$i]);
-                $content2type->setType($type);
-                $content2type->setSize($sizes[$i]);
+                $contentType->setContent($content[$i]);
+                $contentType->setType($type);
+                $contentType->setSize($sizes[$i]);
 
-                $manager->persist($content2type);
-                
+                $manager->persist($contentType);
+
                 $manager->persist($content[$i]);
 
                 $manager->flush();
-                
+
             }
         }
     }
@@ -71,5 +78,4 @@ Mot de passe: JaneDoe"
     {
         return 8; // the order in which fixtures will be loaded
     }
-    
 }

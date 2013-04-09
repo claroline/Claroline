@@ -42,8 +42,9 @@ class PlatformInstallCommand extends ContainerAwareCommand
         $aclCommand = $this->getApplication()->find('init:acl');
         $aclCommand->run(new ArrayInput(array('command' => 'init:acl')), $output);
 
+        $kernel = $this->getApplication()->getKernel();
+
         if ($input->getOption('with-fixtures')) {
-            $kernel = $this->getApplication()->getKernel();
             $environment = $kernel->getEnvironment();
 
             if ($environment === 'prod' || $environment === 'dev' || $environment == 'test') {

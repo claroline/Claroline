@@ -1,0 +1,9 @@
+# This file contains only services that cannot be defined using annotations
+# (because their definition is conditional, e.g. requires parameters that
+# may depend on the environment).
+
+services:
+     claroline.config.platform_config_handler:
+        class: %claroline.param.plaftorm_config_handler_class%
+        arguments:
+            - %claroline.param.platform_options_files%

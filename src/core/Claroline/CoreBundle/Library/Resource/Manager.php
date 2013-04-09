@@ -418,7 +418,6 @@ class Manager
         $rights->setResource($resource);
         $rights->setWorkspace($workspace);
         $rights->setCreatableResourceTypes($resourceTypes);
-
         $this->em->persist($rights);
     }
 
