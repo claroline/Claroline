@@ -10,7 +10,7 @@ class PdfPlayerListener extends ContainerAware
 {
     public function onOpenPdf (PlayFileEvent $event)
     {
-        $path = $this->container->getParameter('claroline.files.directory')
+        $path = $this->container->getParameter('claroline.param.files_directory')
             . DIRECTORY_SEPARATOR
             . $event->getResource()->getHashName();
         $content = $this->container->get('templating')->render(
