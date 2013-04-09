@@ -23,7 +23,7 @@ class VideoPlayerController extends Controller
             ->find($videoId);
 
         $response = new StreamedResponse();
-        $path = $this->container->getParameter('claroline.files.directory')
+        $path = $this->container->getParameter('claroline.param.files_directory')
             . DIRECTORY_SEPARATOR
             . $video->getHashName();
         $response->setCallBack(
