@@ -32,11 +32,18 @@
         {%set i=i+1%}
 
     {% endfor %}
-    
-    {% set score = point - penalty %}
-            
-    <p>score : {{ score }}/{{ total }}.<br/>Points bonne réponse : {{ point }} avec : -{{ penalty }} d'indice.</p>
-    
+
+    <p>Score : {{ score }}/{{ total }}.<br/>
+       
+        {% if score == 0 %} 
+            Aucune bonne réponse.
+        {% elseif penalty == 0 %}
+            Indices non vus, pas de pénalité.
+        {% else %}
+            Points bonne réponse : {{ point }} avec : -{{ penalty }} de pénalité pour indices vus.
+        {% endif %}
+    </p>
+        
 <a href="{{ path('ujm_question_index') }}">{{ "Question list" | trans }}</a>
 
 {% endblock %}

@@ -381,7 +381,8 @@ class InteractionGraphicController extends Controller
             'coords' => $res['coords'],
             'doc' => $res['doc'],
             'total' => $res['total'],
-            'rep' => $res['rep']
+            'rep' => $res['rep'],
+            'score' => $res['score']
             )
         );
     }

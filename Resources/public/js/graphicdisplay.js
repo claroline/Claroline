@@ -11,7 +11,8 @@ var tempCoords = {};
 var validGraphic = document.getElementById('ValidGraphic'); // The form to validate
 var x; // Mouse x position
 var y; // Mouse y position
-var j;
+var j; // For for instruction
+var longueur = 88; // height of the div "Instructions"
 
 document.addEventListener('click', function (e) {
     //"use strict";
@@ -47,12 +48,12 @@ document.addEventListener('click', function (e) {
         if ((t1) > (t3) || (t1) < (answerImg.offsetLeft - 7) || (t2) > (t4) || (t2) < (answerImg.offsetTop - 7)) {
             // Replace the cursor at its initial place
             cible.style.left = String(ox + (cible.id.substr(6)) * 25) + 'px';
-            cible.style.top = String(ref.offsetTop + 70) + 'px';
+            cible.style.top = String(ref.offsetTop + longueur) + 'px';
             out = true;
         }
         
         if(out == false){
-            var contain = (cible.offsetLeft - answerImg.offsetLeft +7) + '-' + (cible.offsetTop - answerImg.offsetTop+7);
+            var contain = (cible.offsetLeft - answerImg.offsetLeft + 7) + '-' + (cible.offsetTop - answerImg.offsetTop + 7);
             tempCoords[cible.id] = contain;
         }
         
@@ -88,7 +89,7 @@ document.addEventListener('keydown', function (e) {
         for (var x = 1 ; x < taille ; x++) {
             cur = 'cursor' + x;
             document.getElementById(cur).style.left = String(ox + x * 25) + 'px';
-            document.getElementById(cur).style.top = String(ref.offsetTop + 70) + 'px';
+            document.getElementById(cur).style.top = String(ref.offsetTop + longueur) + 'px';
         }
         
         tempCoords = {};
@@ -100,20 +101,23 @@ window.addEventListener('load', function (e) {
     for (var x = 1 ; x < taille ; x++) {
         cur = 'cursor' + x;
         document.getElementById(cur).style.left = String(ox + x * 25) + 'px';
-        document.getElementById(cur).style.top = String(ref.offsetTop + 70) + 'px';
+        document.getElementById(cur).style.top = String(ref.offsetTop + longueur) + 'px';
     }
 }, false);
 
-function NoEmptyAnswer(noAnswerZone) { 
+function NoEmptyAnswer(noAnswerZone, notAll) { 
     
     var item = getTaille(tempCoords);
     
     if (item == 0) { 
         alert(noAnswerZone);
         return false;
+    } else if (item < (taille - 1)) {
+        alert(notAll);
+        return false;
     } else {
         for (var cur in tempCoords) {
-            document.getElementById('answers').value += tempCoords[cur]+',';
+            document.getElementById('answers').value += tempCoords[cur] + ',';
         }
         validGraphic.submit();
     }
