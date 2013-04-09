@@ -205,9 +205,9 @@ class exerciseServices
             if (count($lhp) > 0) {
                 $signe = substr($hint->getPenality(), 0, 1);
 
-                if($signe == '-'){
+                if ($signe == '-') {
                     $penalty += substr($hint->getPenality(), 1);
-                }else{                   
+                } else {
                     $penalty += $hint->getPenality();
                 }
             }
@@ -215,7 +215,7 @@ class exerciseServices
 
         return $penalty;
     }
-    
+
     public function responseGraphic($request, $paperID = 0)
     {
         $point = 0;
@@ -229,12 +229,12 @@ class exerciseServices
 
         $coords = preg_split('[,]', $answers);
         $total = 0;
-       
-        for ($i = 0 ; $i < $max - 1 ; $i++) {
-            for ($j = 0 ; $j < $max - 1 ; $j++) {
+
+        for ($i = 0; $i < $max - 1; $i++) {
+            for ($j = 0; $j < $max - 1; $j++) {
                 list($xa,$ya) = explode("-", $coords[$j]);
-                list($xr,$yr) = explode(",",$rightCoords[$i]->getValue());
-                
+                list($xr,$yr) = explode(",", $rightCoords[$i]->getValue());
+
                 if ((($xa) < ($xr + 10)) && (($xa) > ($xr - 10)) && (($ya) < ($yr + 10)) && (($ya) > ($yr - 10))) {
                     if ($this->alreadyDone($rightCoords[$i], $verif, $z)) {
                         $point += $rightCoords[$i]->getScoreCoords();
@@ -245,23 +245,23 @@ class exerciseServices
             }
             $total += $rightCoords[$i]->getScoreCoords();
         }
-        
+
         $interG = $em->getRepository('UJMExoBundle:InteractionGraphic')->find($graphId);
-        $doc = $em->getRepository('UJMExoBundle:Document')->findOneBy(array('id' => $interG->getDocument())); 
+        $doc = $em->getRepository('UJMExoBundle:Document')->findOneBy(array('id' => $interG->getDocument()));
 
         $penalty = 0;
-        
+
         $session = $request->getSession();
 
         if ($paperID == 0) {
             if ($session->get('penalties')) {
-               foreach ($session->get('penalties') as $penal) {
-                   
-                   $signe = substr($penal, 0, 1);
+                foreach ($session->get('penalties') as $penal) {
+
+                    $signe = substr($penal, 0, 1);
 
                     if ($signe == '-') {
                         $penalty += substr($penal, 1);
-                    } else {                   
+                    } else {
                         $penalty += $penal;
                     }
                 }
@@ -270,7 +270,7 @@ class exerciseServices
         } else {
             $penalty = $this->getPenalty($interG->getInteraction(), $paperID);
         }
-        
+
         $score = $point - $penalty;
         if ($score < 0) {
             $score = 0;
@@ -286,14 +286,15 @@ class exerciseServices
             'rep' => $coords,
             'score' => $score
         );
-        
+
         return $res;
     }
-    
-    public function alreadyDone($coor, $verif, $z){
+
+    public function alreadyDone($coor, $verif, $z)
+    {
         $resu = true;
 
-        for ($v = 0 ; $v < $z ; $v++) {
+        for ($v = 0; $v < $z; $v++) {
             if ($coor == $verif[$v]) {
                 $resu = false;
                 break;
@@ -301,6 +302,7 @@ class exerciseServices
                 $resu = true;
             }
         }
+
         return $resu;
     }
 }
