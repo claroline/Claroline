@@ -15,7 +15,7 @@ class ResourceExtenderTest extends FunctionalTestCase
         $listeners = $this->em->getEventManager()->getListeners(Events::loadClassMetadata);
 
         foreach ($listeners as $listener) {
-            if ($listener instanceof ResourceExtender) {
+            if ($listener === 'claroline.core_bundle.listener.resource_extender') {
                 return;
             }
         }
