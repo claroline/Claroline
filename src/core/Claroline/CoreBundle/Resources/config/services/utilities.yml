@@ -10,7 +10,7 @@ services:
         class: Claroline\CoreBundle\Library\Utilities\ThumbnailCreator
         arguments:
           - "%kernel.root_dir%"
-          - "%claroline.thumbnails.directory%"
+          - "%claroline.param.thumbnails_directory%"
           - "@claroline.resource.utilities"
 
     claroline.utilities.controller_name_parser:

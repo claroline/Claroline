@@ -68,9 +68,9 @@ class IconCreator
 
         // if video or img => generate the thumbnail, otherwise find an existing one.
         if (($mimeElements[0] === 'video' || $mimeElements[0] === 'image') && $isFixture == false) {
-            $originalPath = $this->container->getParameter('claroline.files.directory')
+            $originalPath = $this->container->getParameter('claroline.param.files_directory')
                 . DIRECTORY_SEPARATOR . $resource->getHashName();
-            $newPath = $this->container->getParameter('claroline.thumbnails.directory')
+            $newPath = $this->container->getParameter('claroline.param.thumbnails_directory')
                 . DIRECTORY_SEPARATOR
                 . $this->container->get('claroline.resource.utilities')->generateGuid() . ".png";
 
@@ -214,10 +214,10 @@ class IconCreator
         $iconName = $file->getClientOriginalName();
         $extension = pathinfo($iconName, PATHINFO_EXTENSION);
         $hashName = $this->container->get('claroline.resource.utilities')->generateGuid() . "." . $extension;
-        $file->move($this->container->getParameter('claroline.thumbnails.directory'), $hashName);
+        $file->move($this->container->getParameter('claroline.param.thumbnails_directory'), $hashName);
         //entity creation
         $icon = new ResourceIcon();
-        $icon->setIconLocation("{$this->container->getParameter('claroline.thumbnails.directory')}{$ds}{$hashName}");
+        $icon->setIconLocation("{$this->container->getParameter('claroline.param.thumbnails_directory')}{$ds}{$hashName}");
         $icon->setRelativeUrl("thumbnails/{$hashName}");
         $customType = $this->em
             ->getRepository('ClarolineCoreBundle:Resource\IconType')
