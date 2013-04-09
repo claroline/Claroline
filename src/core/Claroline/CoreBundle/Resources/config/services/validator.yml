@@ -11,3 +11,9 @@ services:
             - [setEntityManager, ["@doctrine.orm.entity_manager"]]
         tags:
             - { name: validator.constraint_validator, alias: workspace_unique_code_validator}
+    claroline.validator.validator_admin_ws_tag_unique_name:
+        class: Claroline\CoreBundle\Validator\Constraints\AdminWorkspaceTagUniqueNameValidator
+        calls:
+            - [setEntityManager, ["@doctrine.orm.entity_manager"]]
+        tags:
+            - { name: validator.constraint_validator, alias: admin_workspace_tag_unique_name_validator}
