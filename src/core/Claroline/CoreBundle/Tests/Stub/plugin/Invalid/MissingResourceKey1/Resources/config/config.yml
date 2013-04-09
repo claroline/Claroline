@@ -1,5 +1,5 @@
 plugin:
   has_options: true
-  
+
   resources:
-    - is_visible: true
+    - is_browsable: false
