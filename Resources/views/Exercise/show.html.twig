@@ -162,7 +162,7 @@
     </li>
     {% if subscription.admin == 1 %}
         <li>
-            <a href="{#{ path('exercise_edit', { 'id': entity.id }) }#}">
+            <a href="{{ path('ujm_exercise_edit', { 'id': entity.id }) }}">
                 {{ "Edit" | trans }}
             </a>
         </li>

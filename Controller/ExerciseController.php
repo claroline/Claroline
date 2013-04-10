@@ -55,6 +55,69 @@ use UJM\ExoBundle\Entity\Interaction;
 class ExerciseController extends Controller
 {
 
+
+    /**
+     * Displays a form to edit an existing Exercise entity.
+     *
+     */
+    public function editAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($id);
+        $workspace = $exercise->getWorkspace();
+
+        $subscription = $this->controlSubscription($id);
+
+        if ((count($subscription) > 0) and ($subscription[0]->getAdmin() == 1)) {
+
+            if (!$exercise) {
+                throw $this->createNotFoundException('Unable to find Exercise entity.');
+            }
+
+            $editForm = $this->createForm(new ExerciseType(), $exercise);
+
+            return $this->render('UJMExoBundle:Exercise:edit.html.twig', array(
+                                 'workspace'   => $workspace,
+                                 'entity'      => $exercise,
+                                 'edit_form'   => $editForm->createView(),
+                                 ));
+        } else {
+            return $this->redirect($this->generateUrl('ujm_exercise_index'));
+        }
+    }
+
+    /**
+     * Edits an existing Exercise entity.
+     *
+     */
+    public function updateAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($id);
+
+        $entity = $em->getRepository('UJMExoBundle:Exercise')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Exercise entity.');
+        }
+
+        $editForm    = $this->createForm(new ExerciseType(), $entity);
+
+        $formHandler = new ExerciseHandler($editForm, $this->get('request'), $this->getDoctrine()->getEntityManager(),
+            $this->container->get('security.context')->getToken()->getUser(), 'update');
+
+        if ($formHandler->process()) {
+            return $this->redirect($this->generateUrl('claro_resource_open', array('resourceType' => $exercise->getResourceType()->getName(), 'resourceId' => $id)));
+        }
+
+        return $this->render('UJMExoBundle:Exercise:edit.html.twig', array(
+                             'entity'      => $entity,
+                             'edit_form'   => $editForm->createView(),
+                             ));
+    }
+
     /**
      * Finds and displays a Exercise entity if the User is enrolled.
      *
