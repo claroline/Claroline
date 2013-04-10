@@ -16,7 +16,6 @@ class ActivityControllerTest extends FunctionalTestCase
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
-
     }
 
     public function testAddThenRemoveResource()

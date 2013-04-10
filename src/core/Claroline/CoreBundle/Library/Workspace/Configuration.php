@@ -27,6 +27,7 @@ class Configuration
     private $templateFile;
 
     //@todo refactoring __construct/fromTemplate because the ziparchive is opened
+    //@todo templateFile must come from the parameter claroline.workspace_template.directory
     //twice with fromtemplate.
     public function __construct()
     {
@@ -51,7 +52,6 @@ class Configuration
         $config = new Configuration();
         $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
         $archive->close();
-        $config->validate($parsedFile);
         $config->setCreatorRole($parsedFile['creator_role']);
         $config->setRoles($parsedFile['roles']);
         $config->setToolsPermissions($parsedFile['tools_infos']);
@@ -171,10 +171,5 @@ class Configuration
     public function getPermsRootConfiguration()
     {
         return $this->permsRootConfig;
-    }
-
-    private function validate($parsedFile)
-    {
-
     }
 }
