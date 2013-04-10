@@ -27,6 +27,7 @@ class DatabaseWriter
     private $fileSystem;
     private $kernelRootDir;
     private $templateBuilder;
+    private $templateDir;
 
     /**
      * Constructor.
@@ -50,7 +51,7 @@ class DatabaseWriter
         $this->im = $im;
         $this->fileSystem = $fileSystem;
         $this->kernelRootDir = $kernelRootDir;
-        $this->templateBuilder = TemplateBuilder::fromTemplate($templateDir."default.zip");
+        $this->templateDir = $templateDir;
     }
 
     /**
@@ -60,6 +61,7 @@ class DatabaseWriter
      */
     public function insert(PluginBundle $plugin, array $pluginConfiguration)
     {
+        $this->templateBuilder = TemplateBuilder::fromTemplate($this->templateDir."default.zip");
         $pluginEntity = new Plugin();
         $pluginEntity->setVendorName($plugin->getVendorName());
         $pluginEntity->setBundleName($plugin->getBundleName());
@@ -89,8 +91,8 @@ class DatabaseWriter
      */
     public function delete($pluginFqcn)
     {
+        $this->templateBuilder = TemplateBuilder::fromTemplate($this->templateDir."default.zip");
         $plugin = $this->getPluginEntity($pluginFqcn);
-
         // code below is for "re-parenting" the resources which depend on one
         // of the resource types the plugin might have declared
         $resourceTypes = $this->em

@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Command;
 
+use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -35,14 +36,15 @@ class PlatformInstallCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $kernel = $this->getApplication()->getKernel();
+        $output->writeln('Generating default prod/dev template...');
+        $defaultPath = $this->getContainer()->getParameter('claroline.workspace_template.directory').'default.zip';
+        TemplateBuilder::buildDefault($defaultPath);
         $output->writeln('Installing the platform...');
         $manager = $this->getContainer()->get('claroline.install.core_installer');
         $manager->install();
-
         $aclCommand = $this->getApplication()->find('init:acl');
         $aclCommand->run(new ArrayInput(array('command' => 'init:acl')), $output);
-
-        $kernel = $this->getApplication()->getKernel();
 
         if ($input->getOption('with-fixtures')) {
             $environment = $kernel->getEnvironment();
@@ -90,7 +92,16 @@ class PlatformInstallCommand extends ContainerAwareCommand
         $asseticCommand = $this->getApplication()->find('assetic:dump');
         $asseticInput = new ArrayInput(array('command' => 'assetic:dump'));
         $asseticCommand->run($asseticInput, $output);
-
+        $output->writeln('Generating test template...');
+        $testTemplate = "{$kernel->getRootDir()}/../test/templates/default.zip";
+        $fileSystem->copy($defaultPath, $testTemplate);
+        $arch = new \ZipArchive();
+        $arch->open($testTemplate);
+        file_put_contents(
+            "{$kernel->getRootDir()}/../test/templates/config.yml",
+            $arch->getFromName('config.yml')
+        );
+        $arch->close();
         $output->writeln('Done');
     }
 }

@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
+use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
 
 class DatabaseWriterTest extends FunctionalTestCase
 {
@@ -39,6 +40,7 @@ class DatabaseWriterTest extends FunctionalTestCase
 
         $this->assertEquals($plugin->getVendorName(), $pluginEntity->getVendorName());
         $this->assertEquals($plugin->getBundleName(), $pluginEntity->getBundleName());
+        $this->resetTemplate(array($fqcn));
     }
 
     public function testInsertThenDeleteAPluginLeavesDatabaseUnchanged()
@@ -53,6 +55,7 @@ class DatabaseWriterTest extends FunctionalTestCase
             ->findOneByBundleFQCN('Valid\Simple\ValidSimple');
 
         $this->assertEquals(0, count($plugins));
+        $this->resetTemplate(array('Valid\Simple\ValidSimple'));
     }
 
     public function testInsertThrowsAnExceptionIfPluginEntityIsNotValid()
@@ -64,6 +67,7 @@ class DatabaseWriterTest extends FunctionalTestCase
         $this->dbWriter->insert($plugin, $this->validator->getPluginConfiguration());
         // violates unique name constraint
         $this->dbWriter->insert($plugin, $this->validator->getPluginConfiguration());
+        $this->resetTemplate(array('Valid\Simple\ValidSimple'));
     }
 
     public function testIsSavedReturnsExpectedValue()
@@ -71,12 +75,10 @@ class DatabaseWriterTest extends FunctionalTestCase
         $pluginFqcn = 'Valid\Simple\ValidSimple';
         $plugin = $this->loader->load($pluginFqcn);
         $this->validator->validate($plugin);
-
         $this->assertFalse($this->dbWriter->isSaved($pluginFqcn));
-
         $this->dbWriter->insert($plugin, $this->validator->getPluginConfiguration());
-
         $this->assertTrue($this->dbWriter->isSaved($pluginFqcn));
+        $this->resetTemplate(array('Valid\Simple\ValidSimple'));
     }
 
     public function testCustomResourceTypesArePersisted()
@@ -102,6 +104,7 @@ class DatabaseWriterTest extends FunctionalTestCase
         $this->assertEquals(2, count($pluginResourceTypes));
         $this->assertEquals('ResourceA', $pluginResourceTypes[0]->getName());
         $this->assertEquals('ResourceB', $pluginResourceTypes[1]->getName());
+        $this->resetTemplate(array('Valid\Simple\ValidSimple'));
     }
 
     public function testResourceIconsArePersisted()
@@ -155,6 +158,7 @@ class DatabaseWriterTest extends FunctionalTestCase
         $this->assertEquals(1, count($customAction));
         $customName = $customAction[0]->getAction();
         $this->assertEquals('open', $customName);
+        $this->resetTemplate(array('Valid\WithCustomActions\ValidWithCustomActions'));
     }
 
     public function testPluginIconIsPersisted()
@@ -171,6 +175,7 @@ class DatabaseWriterTest extends FunctionalTestCase
 
         $pluginEntity = $this->em->createQuery($dql)->getResult();
         $this->assertContains('icon.gif', $pluginEntity[0]->getIcon());
+        $this->resetTemplate(array('Valid\WithIcon\ValidWithIcon'));
     }
 
     public function testPluginToolIsPersisted()
@@ -187,6 +192,7 @@ class DatabaseWriterTest extends FunctionalTestCase
 
         $pluginEntity = $this->em->createQuery($dql)->getResult();
         $this->assertEquals(1, count($pluginEntity));
+        $this->resetTemplate(array('Valid\WithTools\ValidWithTools'));
     }
 
     public function testInsertThenDeleteFileExtension()
@@ -217,6 +223,7 @@ class DatabaseWriterTest extends FunctionalTestCase
             ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->findOneByName('resourceA');
         $this->assertEquals($resource->getResourceType()->getName(), 'file');
+        $this->resetTemplate(array('Valid\WithFileExtension\ValidWithFileExtension'));
     }
 
     public function pluginProvider()
@@ -225,5 +232,16 @@ class DatabaseWriterTest extends FunctionalTestCase
             array('Valid\Simple\ValidSimple'),
             array('Valid\Custom\ValidCustom')
         );
+    }
+
+    private function resetTemplate()
+    {
+        $container = $this->client->getContainer();
+        $yml = $container->getParameter('claroline.workspace_template.directory').'config.yml';
+        $archpath = $container->getParameter('claroline.workspace_template.directory').'default.zip';
+        $archive = new \ZipArchive();
+        $archive->open($archpath, \ZipArchive::OVERWRITE);
+        $archive->addFile($yml, 'config.yml');
+        $archive->close();
     }
 }
