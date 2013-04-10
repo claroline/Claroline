@@ -21,7 +21,7 @@ class DatabaseWriterTest extends FunctionalTestCase
         parent::setUp();
         $this->container = $this->client->getContainer();
         $this->dbWriter = $this->container->get('claroline.plugin.recorder_database_writer');
-        $pluginDirectory = $this->container->getParameter('claroline.stub_plugin_directory');
+        $pluginDirectory = $this->container->getParameter('claroline.param.stub_plugin_directory');
         $this->loader = new Loader($pluginDirectory);
         $this->validator = $this->container->get('claroline.plugin.validator');
     }

@@ -5,6 +5,12 @@ namespace Claroline\CoreBundle\Library\Testing;
 use Symfony\Component\Yaml\Yaml;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 
+/**
+ * Service for accesssing/modifying the platform configuration parameters in test
+ * environment (modification are stored in a separate file and merged with the prod/dev
+ * configuration). The service annotation cannot be used as the service class is not the
+ * same in other environments (see Library\Configuration\PlatformConfigurationHandler).
+ */
 class PlatformTestConfigurationHandler extends PlatformConfigurationHandler
 {
     private $testConfigFile;
