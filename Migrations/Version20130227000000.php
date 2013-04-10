@@ -649,6 +649,7 @@ class Version20130227000000 extends BundleMigration
         $table->addColumn('shape', 'string', array('length' => 255));
         $table->addColumn('color', 'string', array('length' => 255));
         $table->addColumn('score_coords', 'float');
+        $table->addColumn('size', 'float');
         $table->addColumn('interaction_graphic_id', 'integer', array('notnull' => false));
         $table->addForeignKeyConstraint(
             $this->getStoredTable('ujm_interaction_graphic'),

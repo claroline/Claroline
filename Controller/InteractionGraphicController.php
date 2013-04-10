@@ -163,6 +163,7 @@ class InteractionGraphicController extends Controller
             ${'co'.$i}->setColor(${'color'.$i});
             ${'co'.$i}->setScoreCoords(${'point'.$i});
             ${'co'.$i}->setInteractionGraphic($interGraph);
+            ${'co'.$i}->setSize(10);
         }
 
         if ($form->isValid()) {
@@ -365,24 +366,25 @@ class InteractionGraphicController extends Controller
                 return "white";
         }
     }
-    
-     public function responseGraphicAction()
+
+    public function responseGraphicAction()
     {
-         
+
         $request = $this->container->get('request');
         $exerciseSer = $this->container->get('ujm.exercise_services');
         $res = $exerciseSer->responseGraphic($request);
 
-        return $this->render('UJMExoBundle:InteractionGraphic:graphicOverview.html.twig'
-            , array(
-            'point' => $res['point'],
-            'penalty' => $res['penalty'],
-            'interG' => $res['interG'],
-            'coords' => $res['coords'],
-            'doc' => $res['doc'],
-            'total' => $res['total'],
-            'rep' => $res['rep'],
-            'score' => $res['score']
+        return $this->render(
+            'UJMExoBundle:InteractionGraphic:graphicOverview.html.twig',
+            array(
+                'point' => $res['point'],
+                'penalty' => $res['penalty'],
+                'interG' => $res['interG'],
+                'coords' => $res['coords'],
+                'doc' => $res['doc'],
+                'total' => $res['total'],
+                'rep' => $res['rep'],
+                'score' => $res['score']
             )
         );
     }

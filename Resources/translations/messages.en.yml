@@ -237,8 +237,9 @@ Upload !: Upload !
 Uploading ...: Uploading ...
 Select: Select
 Redimmension: To  re-size the picture, press MAJ key and move your mouse.
-Selection: To select an answer zone, press CTRL key and click on the picture where it should be placed.
-Effacer: To erase an answer zone, press VERR. MAJ key and click on the erasable answer zone.
+Resize: To resize the answer zone, select the zone by a click, then press Alt and move your mouse.
+Selection: To define an answer zone, press CTRL key and click on the picture where it should be placed.
+Effacer: To erase an answer zone, press s key and click on the erasable answer zone.
 unsupport: Your browser doesn't accept canvas. Please, update.
 Zone de réponse: Answer zone
 Forme: Shape

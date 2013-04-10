@@ -26,7 +26,7 @@ document.addEventListener('click', function (e) {
             var temp = w + '-' + c;
 
             for (var ci in tempCoords) {
-                if (temp == tempCoords[ci] && ci == e.target.id && drag == false){
+                if (temp == tempCoords[ci] && ci == e.target.id && drag == false) {
                     delete tempCoords[ci];
                 }
             }
@@ -51,12 +51,12 @@ document.addEventListener('click', function (e) {
             cible.style.top = String(ref.offsetTop + longueur) + 'px';
             out = true;
         }
-        
-        if(out == false){
+
+        if (out == false) {
             var contain = (cible.offsetLeft - answerImg.offsetLeft + 7) + '-' + (cible.offsetTop - answerImg.offsetTop + 7);
             tempCoords[cible.id] = contain;
         }
-        
+
         cible = null;
         drag = false;
         out = false;
@@ -91,7 +91,7 @@ document.addEventListener('keydown', function (e) {
             document.getElementById(cur).style.left = String(ox + x * 25) + 'px';
             document.getElementById(cur).style.top = String(ref.offsetTop + longueur) + 'px';
         }
-        
+
         tempCoords = {};
     }
 }, false);
@@ -105,11 +105,21 @@ window.addEventListener('load', function (e) {
     }
 }, false);
 
-function NoEmptyAnswer(noAnswerZone, notAll) { 
-    
+function getTaille(tab) {
+
+    var i = 0;
+
+    for (var id in tab) {
+        i++;
+    }
+    return i;
+}
+
+function NoEmptyAnswer(noAnswerZone, notAll) {
+
     var item = getTaille(tempCoords);
-    
-    if (item == 0) { 
+
+    if (item == 0) {
         alert(noAnswerZone);
         return false;
     } else if (item < (taille - 1)) {
@@ -121,14 +131,4 @@ function NoEmptyAnswer(noAnswerZone, notAll) {
         }
         validGraphic.submit();
     }
-}
-
-function getTaille(tab){
-    
-    var i = 0;
-    
-    for (var id in tab) {
-        i++;
-    }
-    return i;
 }

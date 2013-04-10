@@ -77,18 +77,14 @@
  
 {# ------------------------------------------------- Zone affichage image ---------------------------------------------------------------------------- #}    
     
-    <p>{{ "Redimmension" | trans }}</p>
+    <p>{{ "Redimmension" | trans }}<br/>{{ "Resize" | trans }}<br/>{{ "Selection" | trans }}<br/>{{ "Effacer" | trans }}</p>
     
-    <canvas id="canvas" width="0" height="0">
-      <p>{{ "unsupport" | trans }}</p>
-    </canvas>
+    <img src="" width="" height="" id="AnswerImage"/>
 
     <input type="hidden" id="imgwidth" name="imgwidth" value="0"/>
     <input type="hidden" id="imgheight" name="imgheight" value="0"/>
     <input type="hidden" id="coordsZone" name="coordsZone" value="0"/>
     
-    <p id="rep">{{ "Selection" | trans }}<br/>{{ "Effacer" | trans }}</p>
-
 {# ------------------------------------------------- tableau zone de reponse ---------------------------------------------------------------------------- #}    
     
     <table>
@@ -159,5 +155,3 @@
     addFormHint('{{ "add hint" | trans }}', '{{ "hint number" | trans }}', '{{ "Hint" | trans }}', '{{ "Penalty" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');    
     linkCategory('{{ path('ujm_category_new_pop') }}');
 </script>
-
-<div id="test"></div>

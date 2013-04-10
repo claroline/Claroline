@@ -11,7 +11,18 @@
     
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/GraphicOverview.js') }}"></script>
     
-    <img src="{{asset (doc.url)}}" width="{{ interG.width }}" height="{{ interG.height }}" alt="AnswerImage" id="AnswerImage"/><br/>
+    <p><img src="{{asset (doc.url)}}" width="{{ interG.width }}" height="{{ interG.height }}" alt="AnswerImage" id="AnswerImage"/></p>
+    
+    <p>Score : {{ score }}/{{ total }}.<br/>
+       
+        {% if score == 0 %} 
+            Aucune bonne réponse.
+        {% elseif penalty == 0 %}
+            Indices non vus, pas de pénalité.
+        {% else %}
+            Points bonne réponse : {{ point }} avec : -{{ penalty }} de pénalité pour indices vus.
+        {% endif %}
+    </p>
     
     {%set i = 0 %}    
     
@@ -33,17 +44,6 @@
 
     {% endfor %}
 
-    <p>Score : {{ score }}/{{ total }}.<br/>
-       
-        {% if score == 0 %} 
-            Aucune bonne réponse.
-        {% elseif penalty == 0 %}
-            Indices non vus, pas de pénalité.
-        {% else %}
-            Points bonne réponse : {{ point }} avec : -{{ penalty }} de pénalité pour indices vus.
-        {% endif %}
-    </p>
-        
 <a href="{{ path('ujm_question_index') }}">{{ "Question list" | trans }}</a>
 
 {% endblock %}

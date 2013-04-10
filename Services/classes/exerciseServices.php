@@ -224,7 +224,7 @@ class exerciseServices
         $max = $request->request->get('nbpointer');
         $em = $this->doctrine->getEntityManager();
         $rightCoords = $em->getRepository('UJMExoBundle:Coords')->findBy(array('interactionGraphic' => $graphId));
-        $verif = [];
+        $verif = array();
         $z = 0;
 
         $coords = preg_split('[,]', $answers);

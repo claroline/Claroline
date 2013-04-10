@@ -1,16 +1,18 @@
 // :::::::::::::::::::::::::::::::::::::::::: Declaration variables :::::::::::::::::::::::::::::::::::::::::::::::::::
+var allow = false;
+var answerImg = document.getElementById('AnswerImage');
 var AnswerZones; // Tab contains all informations of Coords
-var canvas  = document.querySelector('#canvas'); // Where is draw the image
-var context = canvas.getContext('2d'); // To draw the image
 var el = document.getElementById('movable'); // To get the shape and the color of the answer zone
 var imgx; // Coord x of the answer zone
 var imgy; // Coord y of the answer zone
+var indice = 0; // Number of answer zone
+var j; // For for instruction
 var mousex; // Position x of the mouse
 var mousey; // position y of the mouse
-var pic = new Image(); // The question image
-var pressMAJ; // If key MAJ press or not
-var pressCTRL; // If key CTRL press or not
-var pressTAB; // If key VERR. MAJ press or not
+var pressMAJ; // If key MAJ pressed or not
+var pressCTRL; // If key CTRL pressed or not
+var pressALT; // If key ALT pressed or not
+var pressS; // If key s pressed or not
 var result; // src of the answer image
 var sens; // Move of the mouse
 var scalex = 0; // Width of the image after resize
@@ -28,6 +30,9 @@ var x = 0; // Mouse x after move
 var xPrecedent = 0; // Mouse x before move
 var y = 0; // Mouse y after move
 var yPrecedent = 0; // Mouse y before move
+
+
+
 
 // Display alert into navigator language
 if (navigator.browserLanguage) {
@@ -52,7 +57,7 @@ function sendData(select) {
         cache: false,
         success: function (data) {
             result = data.substr((data.indexOf('>/') + 2));
-            pic.src = result;
+            answerImg.src = result;
         }
     });
 }
@@ -66,20 +71,6 @@ function LoadPic() {
 
     sendData(select);
 
-    pic.onload = function () {
-        canvas.width = pic.width;
-        canvas.height = pic.height;
-
-        context.clearRect(0, 0, canvas.width, canvas.height);
-
-        context.drawImage(pic, 0, 0);
-
-        document.getElementById('imgwidth').value = pic.width; // Pass width of the image to the controller
-        document.getElementById('imgheight').value = pic.height; // Pass height of the image to the controller
-
-        scalex = pic.width;
-        scaley = pic.height;
-    };
     // New picture load, initialization var :
     value = 0;
     AnswerZones = [];
@@ -105,14 +96,16 @@ function Verifier(noTitle, noQuestion, noImg, noAnswerZone) {
 
     // No question asked
     if (document.InterGraphForm.ujm_exobundle_interactiongraphictype_interaction_invite.value === '' && titleOk === true) {
-       alert(noQuestion);
-       return false;
+        alert(noQuestion);
+        return false;
     } else {
         questionOk = true;
     }
 
     // No picture load
-    if (document.getElementById('imgwidth').value == 0 && titleOk === true && questionOk === true) {
+    if (document.getElementById('AnswerImage').src == 'http://127.0.0.1/Claroline/web/app_dev.php/exercise/question/new'
+        && titleOk === true && questionOk === true
+    ) {
         alert(noImg);
         return false;
     } else {
@@ -129,6 +122,9 @@ function Verifier(noTitle, noQuestion, noImg, noAnswerZone) {
 
     // Submit if required fields not empty
     if (imgOk === true && zoneOk === true && titleOk === true && questionOk === true) {
+        document.getElementById('imgwidth').value = answerImg.width; // Pass width of the image to the controller
+        document.getElementById('imgheight').value = answerImg.height; // Pass height of the image to the controller
+        
         document.getElementById('InterGraphForm').submit();
     }
 }
@@ -140,70 +136,70 @@ function changezone() {
     if (document.getElementById('shape').value === 'circle') {
         switch (document.getElementById('color').value) {
         case 'white' :
-            document.getElementById('movable').src = '/Claroline/web/bundles/ujmexo/images/graphic/circlew.png';
+            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/circlew.png';
             break;
 
         case 'red' :
-            document.getElementById('movable').src = '/Claroline/web/bundles/ujmexo/images/graphic/circler.png';
+            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/circler.png';
             break;
 
         case 'blue' :
-            document.getElementById('movable').src = '/Claroline/web/bundles/ujmexo/images/graphic/circleb.png';
+            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/circleb.png';
             break;
 
         case 'purple' :
-            document.getElementById('movable').src = '/Claroline/web/bundles/ujmexo/images/graphic/circlep.png';
+            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/circlep.png';
             break;
 
         case 'green' :
-            document.getElementById('movable').src = '/Claroline/web/bundles/ujmexo/images/graphic/circleg.png';
+            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/circleg.png';
             break;
 
         case 'orange' :
-            document.getElementById('movable').src = '/Claroline/web/bundles/ujmexo/images/graphic/circleo.png';
+            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/circleo.png';
             break;
 
         case 'yellow' :
-            document.getElementById('movable').src = '/Claroline/web/bundles/ujmexo/images/graphic/circley.png';
+            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/circley.png';
             break;
 
         default :
-            document.getElementById('movable').src = '/Claroline/web/bundles/ujmexo/images/graphic/circlew.png';
+            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/circlew.png';
             break;
         }
 
     } else if (document.getElementById('shape').value === 'rect') {
         switch (document.getElementById('color').value) {
         case 'white' :
-            document.getElementById('movable').src = '/Claroline/web/bundles/ujmexo/images/graphic/rectanglew.jpg';
+            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/rectanglew.jpg';
             break;
 
         case 'red' :
-            document.getElementById('movable').src = '/Claroline/web/bundles/ujmexo/images/graphic/rectangler.jpg';
+            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/rectangler.jpg';
             break;
 
         case 'blue' :
-            document.getElementById('movable').src = '/Claroline/web/bundles/ujmexo/images/graphic/rectangleb.jpg';
+            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/rectangleb.jpg';
             break;
 
         case 'purple' :
-            document.getElementById('movable').src = '/Claroline/web/bundles/ujmexo/images/graphic/rectanglep.jpg';
+            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/rectanglep.jpg';
             break;
 
         case 'green' :
-            document.getElementById('movable').src = '/Claroline/web/bundles/ujmexo/images/graphic/rectangleg.jpg';
+            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/rectangleg.jpg';
             break;
 
         case 'orange' :
-            document.getElementById('movable').src = '/Claroline/web/bundles/ujmexo/images/graphic/rectangleo.jpg';
+            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/rectangleo.jpg';
             break;
 
         case 'yellow' :
-            document.getElementById('movable').src = '/Claroline/web/bundles/ujmexo/images/graphic/rectangley.jpg';
+            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/rectangley.jpg';
             break;
 
         default :
-            document.getElementById('movable').src = '/Claroline/web/bundles/ujmexo/images/graphic/rectanglew.jpg';
+            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/rectanglew.jpg';
         }
     }
 }
@@ -212,32 +208,60 @@ function  ResizeImg(sens) {
     //"use strict";
 
     if (sens === 'gauche') {
-        value -= 27;
+        value -= 5;
     } else if (sens === 'droite') {
-        value += 27;
+        value += 5;
     }
 
-    scalex = pic.width + value; // New picture width
+    scalex = answerImg.width + value; // New picture width
 
-    var ratio = pic.height / pic.width;
+    var ratio = answerImg.height / answerImg.width;
     scaley = scalex * ratio; // New picture height proportional to width
 
     if (scalex > 27 && scaley > 27) { // Not resize too small or negativ
 
-        context.clearRect(0, 0, canvas.width, canvas.height);
-
-        canvas.width = scalex;
-        canvas.height = scaley;
-
-        context.drawImage(pic, 0, 0, scalex, scaley);
-
-        document.getElementById('imgwidth').value = scalex;
-        document.getElementById('imgheight').value = scaley;
-
-        // Réinitialization of answer zones
-        AnswerZones = [];
-        document.getElementById('coordsZone').value = 0;
+        answerImg.width = scalex;
+        answerImg.height = scaley;
     }
+}
+
+function  ResizePointer(sens) {
+    //"use strict";
+    
+    if (sens === 'gauche') {
+        cible.width -= 2;
+    } else if (sens === 'droite') {
+        cible.width += 2;
+    }
+
+    if(cible.width < 10){
+        cible.width = 10;
+    }
+    cible.height += cible.width * (cible.height / cible.height);
+}
+
+function MouseSens(event) {
+    xPrecedent = x;
+    yPrecedent = y;
+
+    if (event.x !== undefined && event.y !== undefined) { // IE
+        x = event.layerX;
+        y = event.layerY;
+    } else { // Firefox
+        x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+        y = event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+    }
+
+    x -= answerImg.offsetLeft; // MouseX position
+    y -= answerImg.offsetTop;  // MouseY position
+
+    if (x < xPrecedent) { // Gauche
+        sens = 'gauche';
+    } else if (x > xPrecedent) { // Droite
+        sens = 'droite';
+    }
+
+    return sens;
 }
 
 // :::::::::::::::::::::::::::::::::::::::::: EventListener :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -255,9 +279,13 @@ document.addEventListener('keydown', function (e) {
         document.body.style.cursor = 'move';
     }
 
-    if (e.keyCode === 20) { // Touch VERR. MAJ down
-        pressTAB = true;
+    if (e.keyCode === 83) { // Touch s down
+        pressS = true;
         //document.body.style.cursor='suppr';
+    }
+    
+    if (e.keyCode === 18) { // Touch ALT down
+        pressALT = true;
     }
 }, false);
 
@@ -274,9 +302,13 @@ document.addEventListener('keyup', function (e) {
         document.body.style.cursor = 'default';
     }
 
-    if (e.keyCode === 20) { // Touch VERR. MAJ up
-        pressTAB = false;
+    if (e.keyCode === 83) { // Touch s up
+        pressS = false;
         //document.body.style.cursor='default';
+    }
+    
+    if (e.KeyCode === 18) { // Touch ALT up
+        pressALT = false;
     }
 }, false);
 
@@ -284,29 +316,13 @@ document.addEventListener('mousemove', function (event) { // To resize the selec
     //"use strict";
 
     if (pressMAJ === true) {
-        xPrecedent = x;
-        yPrecedent = y;
-
-        if (event.x !== undefined && event.y !== undefined) { // IE
-            x = event.layerX;
-            y = event.layerY;
-        } else { // Firefox
-            x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-            y = event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-        }
-
-        x -= canvas.offsetLeft; // MouseX position
-        y -= canvas.offsetTop;  // MouseY position
-
-        if (x < xPrecedent) { // Gauche
-            sens = 'gauche';
-        } else if (x > xPrecedent) { // Droite
-            sens = 'droite';
-        }
-
-        ResizeImg(sens);
-
+        ResizeImg(MouseSens(event));
         pressMAJ = false;
+    }
+    
+    if (pressALT === true && allow == true) {
+        ResizePointer(MouseSens(event));
+        pressALT = false;
     }
 });
 
@@ -324,12 +340,10 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
             mousey = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
         }
 
-        var t1 = mousex - 10; // Position x of the mouse
-        var t2 = mousey - 10; // Position y of the mouse
-        var t3 = canvas.offsetLeft + scalex; // Width of the image
-        var t4 = canvas.offsetTop + scaley; // Height of the image
-
-        if ((t1) > (t3) || (t1) < (canvas.offsetLeft - 10) || (t2) > (t4) || (t2) < (canvas.offsetTop - 10)) {// Out img
+        // If out of the image
+        if ((mousex) > (answerImg.offsetLeft + answerImg.width) || (mousex) < (answerImg.offsetLeft) || 
+            (mousey) > (answerImg.offsetTop + answerImg.height) || (mousey) < (answerImg.offsetTop)) {
+            
             if (language.indexOf('fr') > -1) {
                 alert('Vous devez mettre la zone de reponse DANS l\'image ...');
             } else {
@@ -337,15 +351,25 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
             }
             document.body.style.cursor = 'default';
         } else {
-            var img = new Image(); // A new answer zone
+ 
+            var img = new Image();
+    
+            img.style.position = 'absolute';
+            img.style.left = String(mousex - 10) + 'px';
+            img.style.top = String(mousey - 10) + 'px';
+            img.id = 'img'+indice;
+            indice++;
             img.src = el.src;
+            
+            document.body.appendChild(img);
 
-            imgx = mousex - canvas.offsetLeft;
-            imgy = mousey - canvas.offsetTop;
-
-            context.drawImage(img, imgx - 10, imgy - 10);
-
-            // Add the new answer zone informations to the tab in order to send it to the controller
+// Add the new answer zone informations to the tab in order to send it to the controller
+            imgx = parseInt(img.style.left.substr(0, img.style.left.indexOf('p')));
+                imgx -= answerImg.offsetLeft - 10;
+                
+            imgy = parseInt(img.style.top.substr(0, img.style.top.indexOf('p')));
+                imgy -= answerImg.offsetTop - 10;
+                
             var val = img.src + ';' + imgx + '_' + imgy + '-' + document.getElementById('points').value;
             AnswerZones.push(val);
         }
@@ -355,7 +379,7 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
         document.getElementById('coordsZone').value = AnswerZones;
     }
 
-    if (pressTAB === true) {
+    if (pressS === true) {
 
         // Position de la souris dans la fenetre :
         if (e.x !== undefined && e.y !== undefined) { // IE
@@ -367,8 +391,8 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
         }
 
         // Position de la souris dans l'image :
-        x -= canvas.offsetLeft;
-        y -= canvas.offsetTop;
+        x -= answerImg.offsetLeft;
+        y -= answerImg.offsetTop;
 
         // Suppression de l'element selectionné
         for (var i = 0, c = AnswerZones.length; i < c; i++) {
@@ -394,28 +418,26 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
 
         document.getElementById('coordsZone').value = AnswerZones;
 
-        context.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Réaffichage de l'image
-        context.drawImage(pic, 0, 0, scalex, scaley);
-
-        // Réaffichage des zones de reponses non supprimées
-        for (var z = 0, l = AnswerZones.length; z < l; z++) {
-
-            t = AnswerZones[z];
-            ts = t.substr(0, t.indexOf(';'));
-            tx = t.substring(t.indexOf(';') + 1, t.indexOf('_'));
-            ty = t.substring(t.indexOf('_') + 1, t.indexOf('-'));
-
-            tx1 = tx - 10;
-            tx2 = parseInt(tx) + 10;
-            ty1 = ty - 10;
-            ty2 = parseInt(ty) + 10;
-
-            var zone = new Image();
-            zone.src = ts;
-            context.drawImage(zone, tx - 10, ty - 10);
+        for (j = 0 ; j < indice ; j++) {
+            if (e.target.id == 'img' + j){
+                var image = document.getElementById(e.target.id);
+                image.parentNode.removeChild(image);
+            }
         }
-        pressTAB = false;
+        pressS = false;
+    }
+    
+    for (j = 0 ; j < indice ; j++) {
+        if (e.target.id == 'img' + j) {
+            cible = e.target;
+            allow = true;
+            document.onmousedown = function () {
+                return false;
+            }
+        }
+    }
+
+    document.onmousedown = function () {
+        return true;
     }
 }, false);

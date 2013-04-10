@@ -89,6 +89,13 @@ class Coords
      * @ORM\JoinColumn(name="interaction_graphic_id", referencedColumnName="id")
      */
     private $interactionGraphic;
+    
+    /**
+     * @var float $size
+     *
+     * @ORM\Column(name="size", type="float")
+     */
+    private $size;
 
     /**
      * Get id
@@ -178,6 +185,26 @@ class Coords
     public function getScoreCoords()
     {
         return $this->scoreCoords;
+    }
+    
+    /**
+     * Set sizes
+     *
+     * @param float $size
+     */
+    public function setSize($size)
+    {
+        $this->size = $size;
+    }
+
+    /**
+     * Get size
+     *
+     * @return float
+     */
+    public function getSize()
+    {
+        return $this->size;
     }
 
     public function getInteractionGraphic()
