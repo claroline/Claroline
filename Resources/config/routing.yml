@@ -58,7 +58,7 @@ ujm_question_index:
     defaults: { _controller: UJMExoBundle:Question:index }
     
 ujm_question_show:
-    pattern:  /{id}/show
+    pattern:  /{id}/question/show
     defaults: { _controller: "UJMExoBundle:Question:show" }
     
 ujm_question_new:
@@ -66,11 +66,11 @@ ujm_question_new:
     defaults: { _controller: UJMExoBundle:Question:new, exoID: -1 }
     
 ujm_question_edit:
-    pattern:  /{id}/edit
+    pattern:  /{id}/question/edit
     defaults: { _controller: "UJMExoBundle:Question:edit" }
     
 ujm_question_delete:
-    pattern:  /{id}/delete
+    pattern:  /{id}/question/delete
     defaults: { _controller: "UJMExoBundle:Question:delete" }
     requirements: { _method: post }
     
