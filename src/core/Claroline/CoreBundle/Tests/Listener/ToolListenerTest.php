@@ -4,6 +4,8 @@ namespace Claroline\CoreBundle\Listener;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Library\Event\ExportToolEvent;
+use Claroline\CoreBundle\Listener\Tool\HomeListener;
+use Claroline\CoreBundle\Listener\Tool\ResourceManagerListener;
 
 class ToolListenerTest extends FunctionalTestCase
 {
@@ -19,8 +21,12 @@ class ToolListenerTest extends FunctionalTestCase
             ->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
             ->findOneBy(array('workspace' => $this->getWorkspace('user'), 'widget' => $loggerWidget));
         $displayConfig->invertVisible();
-        $listener = new ToolListener();
-        $listener->setContainer($this->client->getContainer());
+        $listener = new HomeListener(
+            $this->client->getContainer()->get('doctrine.orm.entity_manager'),
+            $this->client->getContainer()->get('event_dispatcher'),
+            $this->client->getContainer()->get('templating'),
+            $this->client->getContainer()->get('claroline.widget.manager')
+        );
         $event = new ExportToolEvent($this->getWorkspace('user'));
         $listener->onExportHome($event);
         $config = $event->getConfig();
@@ -35,8 +41,12 @@ class ToolListenerTest extends FunctionalTestCase
         $this->loadFileData('user', 'user', array('foo.txt', 'bar.txt'));
         $this->loadDirectoryData('user', array('user/container'));
         $event = new ExportToolEvent($this->getWorkspace('user'));
-        $listener = new ToolListener();
-        $listener->setContainer($this->client->getContainer());
+        $listener = new ResourceManagerListener(
+            $this->client->getContainer()->get('doctrine.orm.entity_manager'),
+            $this->client->getContainer()->get('event_dispatcher'),
+            $this->client->getContainer()->get('templating'),
+            $this->client->getContainer()->get('claroline.resource.manager')
+        );
         $listener->onExportResource($event);
         $config = $event->getConfig();
         $this->assertEquals(2, count($config['resources']));

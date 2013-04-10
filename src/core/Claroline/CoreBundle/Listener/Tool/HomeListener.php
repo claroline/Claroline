@@ -1,5 +1,7 @@
 <?php
 
+namespace Claroline\CoreBundle\Listener\Tool;
+
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Event\ExportWidgetConfigEvent;
 use Claroline\CoreBundle\Library\Event\ImportWidgetConfigEvent;
@@ -18,13 +20,15 @@ class HomeListener
      *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
      *     "ed" = @DI\Inject("event_dispatcher"),
      *     "templating" = @DI\Inject("templating"),
+     *     "wm" = @DI\Inject("claroline.widget.manager")
      * })
      */
-    public function __construct($em, $ed, $templating)
+    public function __construct($em, $ed, $templating, $wm)
     {
         $this->em = $em;
         $this->ed = $ed;
         $this->templating = $templating;
+        $this->wm = $wm;
     }
 
    /**
@@ -110,8 +114,7 @@ class HomeListener
     {
         $home = array();
         $workspace = $event->getWorkspace();
-        $configs = $this->container->get('claroline.widget.manager')
-            ->generateWorkspaceDisplayConfig($workspace->getId());
+        $configs = $this->wm->generateWorkspaceDisplayConfig($workspace->getId());
 
         foreach ($configs as $config) {
             $widgetArray = array();
