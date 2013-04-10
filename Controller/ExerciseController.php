@@ -108,6 +108,9 @@ class ExerciseController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
 
+        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($id);
+        $workspace = $exercise->getWorkspace();
+
         $subscription = $this->controlSubscription($id);
 
         if ((count($subscription) > 0) and ($subscription[0]->getAdmin() == 1)) {
@@ -129,6 +132,7 @@ class ExerciseController extends Controller
 
             return $this->render(
                 'UJMExoBundle:Question:exerciseQuestion.html.twig', array(
+                'workspace'            => $workspace,
                 'interactions'         => $interactions,
                 'exerciseID'           => $id,
                 'questionWithResponse' => $questionWithResponse
@@ -145,6 +149,11 @@ class ExerciseController extends Controller
     */
     public function importQuestionAction($exoID)
     {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
+        $workspace = $exercise->getWorkspace();
+
         $user = $this->container->get('security.context')->getToken()->getUser();
         $uid = $user->getId();
 
@@ -159,12 +168,13 @@ class ExerciseController extends Controller
 
             return $this->render(
                 'UJMExoBundle:Question:import.html.twig', array(
+                'workspace'    => $workspace,
                 'interactions' => $interactions,
-                'exoID'   => $exoID
+                'exoID'        => $exoID
                 )
             );
         } else {
-            return $this->redirect($this->generateUrl('exercise'));
+            return $this->redirect($this->generateUrl('ujm_exercise'));
         }
     }
 
@@ -198,9 +208,9 @@ class ExerciseController extends Controller
 
             $em->flush();
 
-            return $this->redirect($this->generateUrl('exercise_questions', array('id' => $exoID)));
+            return $this->redirect($this->generateUrl('ujm_exercise_questions', array('id' => $exoID)));
         } else {
-            return $this->redirect($this->generateUrl('exercise_import_question', array('exoID' => $exoID)));
+            return $this->redirect($this->generateUrl('ujm_exercise_import_question', array('exoID' => $exoID)));
         }
     }
 
@@ -221,7 +231,7 @@ class ExerciseController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('exercise_questions', array('id' => $exoID)));
+        return $this->redirect($this->generateUrl('ujm_exercise_questions', array('id' => $exoID)));
     }
 
     /**
@@ -390,7 +400,7 @@ class ExerciseController extends Controller
      *
      */
     private function displayQuestion($numQuestionToDisplayed, $interactionToDisplay,
-        $typeInterToDisplayed, $dispButtonInterrupt) 
+        $typeInterToDisplayed, $dispButtonInterrupt)
     {
         $session = $this->getRequest()->getSession();
         $tabOrderInter = $session->get('tabOrderInter');

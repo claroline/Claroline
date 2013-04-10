@@ -167,7 +167,7 @@
             </a>
         </li>
         <li>
-            <a href="{#{ path('exercise_questions', { 'id': entity.id }) }#} " > <img src="{{ asset('bundles/ujmexo/images/icon_question-reponse.png') }}">
+            <a href="{{ path('ujm_exercise_questions', { 'id': entity.id }) }} " > <img src="{{ asset('bundles/ujmexo/images/icon_question-reponse.png') }}">
                 {{ "List of question" | trans }}
             </a>
         </li>

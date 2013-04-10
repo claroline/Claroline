@@ -160,7 +160,7 @@ class InteractionRepository extends EntityRepository
      */
     public function getUserInteractionImport($em, $uid, $exoId)
     {
-        $dql = "
+        /*$dql = "
             SELECT i FROM UJM\ExoBundle\Entity\Interaction i
             JOIN i.question q JOIN q.category c '
             WHERE q.user='{$uid}'
@@ -171,6 +171,30 @@ class InteractionRepository extends EntityRepository
             )
             ORDER BY c.value, q.title";
 
-        return $em->createQuery($dql)->getResult();
+        return $em->createQuery($dql)->getResult();*/
+
+        $questions = array();
+
+        $dql = 'SELECT eq FROM UJM\ExoBundle\Entity\ExerciseQuestion eq WHERE eq.exercise=' . $exoId
+            . ' ORDER BY eq.ordre';
+
+        $query = $em->createQuery($dql);
+        $eqs = $query->getResult();
+
+        foreach ($eqs as $eq) {
+            $questions[] = $eq->getQuestion()->getId();
+        }
+
+        $qb = $this->createQueryBuilder('i');
+
+        $qb->join('i.question', 'q')
+            ->join('q.category', 'c')
+            ->join('q.user', 'u')
+            ->where($qb->expr()->in('u.id', $uid))
+            ->andWhere('q.id not in ('.implode(',', $questions).')')
+            ->orderBy('c.value', 'ASC')
+            ->addOrderBy('q.title', 'ASC');
+
+        return $qb->getQuery()->getResult();
     }
 }
