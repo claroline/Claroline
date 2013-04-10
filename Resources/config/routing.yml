@@ -49,7 +49,7 @@ ujm_interactionqcm_response:
     requirements: { _method: post }
 
 ujm_interactionqcm_update:
-    pattern:  /{id}/update
+    pattern:  /{id}/qcm/update
     defaults: { _controller: "UJMExoBundle:InteractionQCM:update" }
     requirements: { _method: post }
    
