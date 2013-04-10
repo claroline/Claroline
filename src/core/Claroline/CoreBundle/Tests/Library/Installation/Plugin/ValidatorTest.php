@@ -62,7 +62,7 @@ class ValidatorTest extends WebTestCase
 
         $container = static::createClient()->getContainer();
         $validator = $container->get('claroline.plugin.validator');
-        $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
+        $pluginDirectory = $container->getParameter('claroline.param.stub_plugin_directory');
         $loader = new Loader($pluginDirectory);
         $plugin = $loader->load($pluginFqcn);
         $errors = $validator->validate($plugin);

@@ -80,7 +80,7 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
             );
         }
 
-        $pluginDirectory = $this->getContainer()->getParameter('claroline.plugin.directory');
+        $pluginDirectory = $this->getContainer()->getParameter('claroline.param.plugin_directory');
         $hasEffect = false;
         $output->writeln("Scanning plugin directory ('{$pluginDirectory}')...");
         $pluginFQCNs = $this->getAvailablePluginFQCNs($pluginDirectory);

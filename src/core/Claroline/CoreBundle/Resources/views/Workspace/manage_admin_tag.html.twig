@@ -8,21 +8,21 @@
 {% block content %}
     <ul class="breadcrumb">
         <li>
-            <a href="{{ path('claro_workspace_by_user', {'userId': user.getId()}) }}">
-                {{ 'my_workspaces'|trans({}, 'platform') }}
+            <a href="{{ path('claro_workspace_list') }}">
+                {{ 'all_workspaces'|trans({}, 'platform') }}
             </a>
         </li>
         <span class="divider"> / </span>
         <li>
-            <a href="#">{{ 'tags_management'|trans({}, 'platform') }}</a>
+            <a href="#">{{ 'admin_tags_management'|trans({}, 'platform') }}</a>
         </li>
     </ul>
 
-    <h1>{{ 'tags_management'|trans({}, 'platform') }}</h1>
+    <h1>{{ 'admin_tags_management'|trans({}, 'platform') }}</h1>
 
     <div>
-        <a href="{{ path('claro_workspace_tag_create_form') }}">
-            <button type="button" class="btn">{{ 'create_new_tag'|trans({}, 'platform') }}</button>
+        <a href="{{ path('claro_workspace_admin_tag_create_form') }}">
+            <button type="button" class="btn">{{ 'create_new_admin_tag'|trans({}, 'platform') }}</button>
         </a>
         {#
         <a href="#">
@@ -32,6 +32,7 @@
     </div>
 
     <br>
+
 
     <div>
         <table id="manage-tag-table" class="table table-striped table-bordered table-condensed">
@@ -48,21 +49,13 @@
                         </td>
                         <td>
                             {% for workspaceTag in workspacesTags[workspace.getId()] %}
-                                <span class="label
-                                    {% if workspaceTag.getTag().getUser() is not null %}
-                                        label-success
-                                    {% else %}
-                                        label-important
-                                    {% endif %}
-                                ">
+                                <span class="label label-important">
                                     {{ workspaceTag.getTag().getName() }}
-                                    {% if workspaceTag.getTag().getUser() is not null %}
-                                        <i  class="icon-remove-sign remove-tag-button"
-                                            data-workspace-id="{{ workspace.getId() }}"
-                                            data-tag-id="{{ workspaceTag.getTag().getId() }}"
-                                        >
-                                        </i>
-                                    {% endif %}
+                                    <i  class="icon-remove-sign remove-admin-tag-button"
+                                        data-workspace-id="{{ workspace.getId() }}"
+                                        data-tag-id="{{ workspaceTag.getTag().getId() }}"
+                                    >
+                                    </i>
                                 </span>
                             {% endfor %}
                             <i  class="icon-plus-sign add-tag-button"
@@ -98,7 +91,7 @@
                 autocomplete='off'>
         </div>
         <div class="modal-footer">
-            <input type="button" id="add-tag-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
+            <input type="button" id="add-admin-tag-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
             <input type="button" class="btn btn-secondary" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
         </div>
     </div>

@@ -6,6 +6,11 @@ use \RuntimeException;
 use Symfony\Component\Yaml\Yaml;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfiguration;
 
+/**
+ * Service for accesssing/modifying the platform configuration parameters in prod/dev
+ * environments. The service annotation cannot be used as the class is not the same
+ * in test environment (see Library\Testing\PlatformTestConfigurationHandler).
+ */
 class PlatformConfigurationHandler
 {
     private $configFile;

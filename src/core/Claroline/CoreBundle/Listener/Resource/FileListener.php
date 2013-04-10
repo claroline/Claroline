@@ -76,7 +76,7 @@ class FileListener implements ContainerAwareInterface
             $size = filesize($tmpFile);
             $mimeType = $tmpFile->getClientMimeType();
             $hashName = $this->container->get('claroline.resource.utilities')->generateGuid() . "." . $extension;
-            $tmpFile->move($this->container->getParameter('claroline.files.directory'), $hashName);
+            $tmpFile->move($this->container->getParameter('claroline.param.files_directory'), $hashName);
             $file->setSize($size);
             $file->setName($fileName);
             $file->setHashName($hashName);
@@ -107,7 +107,7 @@ class FileListener implements ContainerAwareInterface
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $em->remove($event->getResource());
-        $pathName = $this->container->getParameter('claroline.files.directory')
+        $pathName = $this->container->getParameter('claroline.param.files_directory')
             . DIRECTORY_SEPARATOR
             . $event->getResource()->getHashName();
         if (file_exists($pathName)) {
@@ -140,7 +140,7 @@ class FileListener implements ContainerAwareInterface
     {
         $file = $event->getResource();
         $hash = $file->getHashName();
-        $event->setItem($this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $hash);
+        $event->setItem($this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR . $hash);
         $event->stopPropagation();
     }
 
@@ -170,7 +170,7 @@ class FileListener implements ContainerAwareInterface
                 $response = $fallBackPlayEvent->getResponse();
             } else {
                 $item = $this->container
-                    ->getParameter('claroline.files.directory') . $ds . $file->getHashName();
+                    ->getParameter('claroline.param.files_directory') . $ds . $file->getHashName();
                 $file = file_get_contents($item);
                 $response = new Response();
                 $response->setContent($file);
@@ -212,7 +212,7 @@ class FileListener implements ContainerAwareInterface
         $hash = $resource->getHashName();
         //@todo: remove this line without breaking everything ('type' is set by the tool listener).
         $config['type'] = 'file';
-        $filePath = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $hash;
+        $filePath = $this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR . $hash;
         $event->setFiles(array(array('archive_path' => $hash, 'original_path' => $filePath)));
         $event->setConfig($config);
         $event->stopPropagation();
@@ -230,7 +230,7 @@ class FileListener implements ContainerAwareInterface
         $file = new File();
         $extension = pathinfo($files[0], PATHINFO_EXTENSION);
         $hashName = $this->container->get('claroline.resource.utilities')->generateGuid() . "." . $extension;
-        $physicalPath = $this->container->getParameter('claroline.files.directory') . $ds . $hashName;
+        $physicalPath = $this->container->getParameter('claroline.param.files_directory') . $ds . $hashName;
         rename($files[0], $physicalPath);
         $size = filesize($physicalPath);
         $file->setSize($size);
@@ -259,8 +259,8 @@ class FileListener implements ContainerAwareInterface
             ->get('claroline.resource.utilities')
             ->generateGuid() . '.' . pathinfo($resource->getHashName(), PATHINFO_EXTENSION);
         $newFile->setHashName($hashName);
-        $filePath = $this->container->getParameter('claroline.files.directory') . $ds . $resource->getHashName();
-        $newPath = $this->container->getParameter('claroline.files.directory') . $ds . $hashName;
+        $filePath = $this->container->getParameter('claroline.param.files_directory') . $ds . $resource->getHashName();
+        $newPath = $this->container->getParameter('claroline.param.files_directory') . $ds . $hashName;
         copy($filePath, $newPath);
 
         return $newFile;
