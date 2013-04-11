@@ -50,7 +50,7 @@ This example will show you the main files of a basic HTML5 video player.
     {
         public function onOpenVideo(PlayFileEvent $event)
         {
-            $path = $this->container->getParameter('claroline.files.directory').DIRECTORY_SEPARATOR.$event->getInstance()->getResource()->getHashName();
+            $path = $this->container->getParameter('claroline.param.files_directory').DIRECTORY_SEPARATOR.$event->getInstance()->getResource()->getHashName();
             $content = $this->container->get('templating')
                 ->render('ClarolineVideoPlayerBundle::video.html.twig',
                     array('workspace' => $event->getInstance()->getWorkspace(), 'path' => $path, 'video' => $event->getInstance()->getResource()));
@@ -88,7 +88,7 @@ This example will show you the main files of a basic HTML5 video player.
             $video = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\File')->find($videoId);
 
             $response = new StreamedResponse();
-            $path = $this->container->getParameter('claroline.files.directory').DIRECTORY_SEPARATOR.$video->getHashName();
+            $path = $this->container->getParameter('claroline.param.files_directory').DIRECTORY_SEPARATOR.$video->getHashName();
             $response->setCallBack(function() use($path){
                 readfile($path);
             });

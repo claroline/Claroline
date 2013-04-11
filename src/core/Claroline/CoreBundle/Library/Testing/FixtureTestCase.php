@@ -52,8 +52,8 @@ abstract class FixtureTestCase extends TransactionalTestCase
         $container = $this->client->getContainer();
         $cleanTestFilesDirectories(
             array(
-                $container->getParameter('claroline.files.directory'),
-                $container->getParameter('claroline.thumbnails.directory'),
+                $container->getParameter('claroline.param.files_directory'),
+                $container->getParameter('claroline.param.thumbnails_directory'),
             )
         );
         parent::tearDown();
