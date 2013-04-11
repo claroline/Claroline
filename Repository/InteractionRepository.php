@@ -188,12 +188,14 @@ class InteractionRepository extends EntityRepository
         $qb = $this->createQueryBuilder('i');
 
         $qb->join('i.question', 'q')
-            ->join('q.category', 'c')
-            ->join('q.user', 'u')
-            ->where($qb->expr()->in('u.id', $uid))
-            ->andWhere('q.id not in ('.implode(',', $questions).')')
-            ->orderBy('c.value', 'ASC')
-            ->addOrderBy('q.title', 'ASC');
+           ->join('q.category', 'c')
+           ->join('q.user', 'u')
+           ->where($qb->expr()->in('u.id', $uid));
+        if (count($questions) > 0) {
+             $qb->andWhere('q.id not in ('.implode(',', $questions).')');
+        }
+        $qb->orderBy('c.value', 'ASC')
+           ->addOrderBy('q.title', 'ASC');
 
         return $qb->getQuery()->getResult();
     }
