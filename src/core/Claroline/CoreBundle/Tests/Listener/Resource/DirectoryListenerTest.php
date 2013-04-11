@@ -19,7 +19,7 @@ class DirectoryListenerTest extends FunctionalTestCase
         $this->loadPlatformRolesFixture();
         $this->loadUserData(array('user' => 'user'));
         $this->client->followRedirects();
-        $this->upDir = $this->client->getContainer()->getParameter('claroline.files.directory');
+        $this->upDir = $this->client->getContainer()->getParameter('claroline.param.files_directory');
         $this->cleanDirectory($this->upDir);
     }
 

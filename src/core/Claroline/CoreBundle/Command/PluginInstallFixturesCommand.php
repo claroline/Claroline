@@ -18,7 +18,7 @@ class PluginInstallFixturesCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $pluginDirectory = $this->getContainer()->getParameter('claroline.plugin.directory');
+        $pluginDirectory = $this->getContainer()->getParameter('claroline.param.plugin_directory');
         $output->writeln("Scanning plugin directory ('{$pluginDirectory}')...");
         $pluginFQCNs = $this->getAvailablePluginFQCNs($pluginDirectory);
 

@@ -343,10 +343,24 @@ class Manager
 
         foreach ($rights as $role => $permissions) {
             $resourceTypes = array();
+            $unknownTypes = array();
 
             foreach ($permissions['canCreate'] as $type) {
                 $rt = $resourceTypeRepo->findOneByName($type);
+                if ($rt === null) {
+                    $unknownTypes[] = $type['name'];
+                }
                 $resourceTypes[] = $rt;
+            }
+
+            if (count($unknownTypes) > 0) {
+                $content = "The resource type(s) ";
+                foreach ($unknownTypes as $unknown) {
+                    $content .= "{$unknown}, ";
+                }
+                $content .= "were not found";
+                
+                throw new \Exception($content);
             }
 
             $role = $roleRepo->findOneBy(array('name' => $role.'_'.$workspace->getId()));

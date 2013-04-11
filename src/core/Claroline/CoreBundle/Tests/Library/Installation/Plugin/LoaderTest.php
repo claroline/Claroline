@@ -14,7 +14,7 @@ class LoaderTest extends WebTestCase
     {
         $pluginDirectory = static::createClient()
             ->getContainer()
-            ->getParameter('claroline.stub_plugin_directory');
+            ->getParameter('claroline.param.stub_plugin_directory');
         $this->loader = new Loader($pluginDirectory);
     }
 
