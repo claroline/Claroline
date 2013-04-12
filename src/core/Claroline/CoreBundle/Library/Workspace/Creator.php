@@ -63,8 +63,7 @@ class Creator
         $rootDir->setWorkspace($workspace);
         $this->manager->setResourceRights($rootDir, $config->getPermsRootConfiguration());
         $this->entityManager->persist($rootDir);
-        //$this->entityManager->flush();
-        //tmpzip wich will be extracted to retrieve the needed files.
+        $this->entityManager->flush();
         $extractPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('claro_ws_tmp_', true);
         $archive = new \ZipArchive();
         $archive->open($config->getArchive());

@@ -14,11 +14,11 @@
         </li>
         <span class="divider"> / </span>
         <li>
-            <a href="#">{{ 'manage_tags'|trans({}, 'platform') }}</a>
+            <a href="#">{{ 'tags_management'|trans({}, 'platform') }}</a>
         </li>
     </ul>
 
-    <h1>{{ 'manage_tags'|trans({}, 'platform') }}</h1>
+    <h1>{{ 'tags_management'|trans({}, 'platform') }}</h1>
 
     <div>
         <a href="{{ path('claro_workspace_tag_create_form') }}">
@@ -48,13 +48,21 @@
                         </td>
                         <td>
                             {% for workspaceTag in workspacesTags[workspace.getId()] %}
-                                <span class="label label-success">
+                                <span class="label
+                                    {% if workspaceTag.getTag().getUser() is not null %}
+                                        label-success
+                                    {% else %}
+                                        label-important
+                                    {% endif %}
+                                ">
                                     {{ workspaceTag.getTag().getName() }}
-                                    <i  class="icon-remove-sign remove-tag-button"
-                                        data-workspace-id="{{ workspace.getId() }}"
-                                        data-tag-id="{{ workspaceTag.getTag().getId() }}"
-                                    >
-                                    </i>
+                                    {% if workspaceTag.getTag().getUser() is not null %}
+                                        <i  class="icon-remove-sign remove-tag-button"
+                                            data-workspace-id="{{ workspace.getId() }}"
+                                            data-tag-id="{{ workspaceTag.getTag().getId() }}"
+                                        >
+                                        </i>
+                                    {% endif %}
                                 </span>
                             {% endfor %}
                             <i  class="icon-plus-sign add-tag-button"

@@ -9,6 +9,18 @@ claro_index:
     resource: "@ClarolineCoreBundle/Controller/HomeController.php"
     type: annotation
 
+claro_content_error:
+    pattern: /content/error
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'ClarolineCoreBundle:Home:ajaxerror.html.twig'
+
+claro_content_confirm:
+    pattern: /content/confirm
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'ClarolineCoreBundle:Home:confirm.html.twig'
+
 claro_authentication:
     resource: "@ClarolineCoreBundle/Controller/AuthenticationController.php"
     type: annotation

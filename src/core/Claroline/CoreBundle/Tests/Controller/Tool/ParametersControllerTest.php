@@ -147,12 +147,14 @@ class ParametersControllerTest extends FunctionalTestCase
         $this->logUser($this->getUser('john'));
         $crawler = $this->client->request('GET', "/workspaces/tool/properties/{$pwuId}/widget");
         $this->assertGreaterThan(3, count($crawler->filter('.row-widget-config')));
+        $this->resetTemplate();
     }
 
     public function testDisplayWidgetConfigurationFormPage()
     {
         $this->markTestSkipped("event is not catched");
         $this->registerStubPlugins(array('Valid\WithWidgets\ValidWithWidgets'));
+        $this->resetTemplate();
     }
 
 
@@ -182,6 +184,7 @@ class ParametersControllerTest extends FunctionalTestCase
         $this->logUser($this->getUser('john'));
         $crawler = $this->client->request('GET', "/workspaces/{$pwuId}/widgets");
         $this->assertEquals(++$countVisibleWidgets, count($crawler->filter('.widget')));
+        $this->resetTemplate();
     }
 
     public function testDesktopManagerCanInvertWidgetVisible()
@@ -221,7 +224,7 @@ class ParametersControllerTest extends FunctionalTestCase
     {
         $container = $this->client->getContainer();
         $dbWriter = $container->get('claroline.plugin.recorder_database_writer');
-        $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
+        $pluginDirectory = $container->getParameter('claroline.param.stub_plugin_directory');
         $loader = new Loader($pluginDirectory);
         $validator = $container->get('claroline.plugin.validator');
 
@@ -242,7 +245,6 @@ class ParametersControllerTest extends FunctionalTestCase
             )
         );
         $this->logUser($this->getUser('ws_creator'));
-        $wsCreatorId = $this->getUser('ws_creator')->getId();
         $wsBId = $this->getWorkspace('ws_b')->getId();
         $crawler = $this->client->request(
             'GET',
@@ -358,5 +360,16 @@ class ParametersControllerTest extends FunctionalTestCase
             $oldName,
             $newName
         );
+    }
+
+    private function resetTemplate()
+    {
+        $container = $this->client->getContainer();
+        $yml = $container->getParameter('claroline.workspace_template.directory').'config.yml';
+        $archpath = $container->getParameter('claroline.workspace_template.directory').'default.zip';
+        $archive = new \ZipArchive();
+        $archive->open($archpath, \ZipArchive::OVERWRITE);
+        $archive->addFile($yml, 'config.yml');
+        $archive->close();
     }
 }

@@ -27,6 +27,7 @@ class Configuration
     private $templateFile;
 
     //@todo refactoring __construct/fromTemplate because the ziparchive is opened
+    //@todo templateFile must come from the parameter claroline.workspace_template.directory
     //twice with fromtemplate.
     public function __construct()
     {
@@ -35,11 +36,7 @@ class Configuration
         $this->templateFile = __DIR__."{$ds}..{$ds}..{$ds}..{$ds}..{$ds}..{$ds}..{$ds}templates{$ds}default.zip";
         $archive = new \ZipArchive();
         $archive->open($this->templateFile);
-        //$parsedFile = Yaml::parse($archive->getFromName('config.yml'));
-        //Use claroline:template:dump_default command and copy/paste the result in getDefaults
-        //if the default template changed.
-        //Speeds up the workspace creation by 0.1 second / workspace.
-        $parsedFile = $this->getDefault();
+        $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
         $this->setCreatorRole($parsedFile['creator_role']);
         $this->setRoles($parsedFile['roles']);
         $this->setToolsPermissions($parsedFile['tools_infos']);
@@ -55,7 +52,6 @@ class Configuration
         $config = new Configuration();
         $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
         $archive->close();
-        $config->validate($parsedFile);
         $config->setCreatorRole($parsedFile['creator_role']);
         $config->setRoles($parsedFile['roles']);
         $config->setToolsPermissions($parsedFile['tools_infos']);
@@ -175,215 +171,5 @@ class Configuration
     public function getPermsRootConfiguration()
     {
         return $this->permsRootConfig;
-    }
-
-    private function validate($parsedFile)
-    {
-        $errors = array();
-
-        $expectedKeys = array(
-            'tools',
-            'roles',
-            'creator_role',
-            'tools_permissions',
-            'name'
-        );
-
-        foreach ($expectedKeys as $key) {
-            if (!isset($parsedFile[$key])) {
-                $errors[] = "The entry '{$key}' is missing";
-            }
-        }
-
-        if (count($errors) === 0) {
-            return true;
-        } else {
-            return $errors;
-        }
-    }
-
-    private function getDefault() {
-        return array(
-            'root_perms' =>
-            array(
-                'ROLE_WS_VISITOR' =>
-                array(
-                    'canEdit' => '0',
-                    'canOpen' => '0',
-                    'canDelete' => '0',
-                    'canCopy' => '0',
-                    'canExport' => '0',
-                    'canCreate' =>
-                    array(
-                    ),
-                ),
-                'ROLE_WS_COLLABORATOR' =>
-                array(
-                    'canEdit' => '0',
-                    'canOpen' => '1',
-                    'canDelete' => '0',
-                    'canCopy' => '0',
-                    'canExport' => '1',
-                    'canCreate' =>
-                    array(
-                    ),
-                ),
-                'ROLE_WS_MANAGER' =>
-                array(
-                    'canEdit' => '1',
-                    'canOpen' => '1',
-                    'canDelete' => '1',
-                    'canCopy' => '1',
-                    'canExport' => '1',
-                    'canCreate' =>
-                    array(
-                        0 =>
-                        array(
-                            'name' => 'file',
-                        ),
-                        1 =>
-                        array(
-                            'name' => 'directory',
-                        ),
-                        2 =>
-                        array(
-                            'name' => 'text',
-                        ),
-                        3 =>
-                        array(
-                            'name' => 'resource_shortcut',
-                        ),
-                        4 =>
-                        array(
-                            'name' => 'activity',
-                        ),
-                        5 =>
-                        array(
-                            'name' => 'claroline_site',
-                        ),
-                        6 =>
-                        array(
-                            'name' => 'claroline_forum',
-                        ),
-                        7 =>
-                        array(
-                            'name' => 'claroline_example',
-                        ),
-                        8 =>
-                        array(
-                            'name' => 'icap_referencebank',
-                        ),
-                        9 =>
-                        array(
-                            'name' => 'ujm_exercise',
-                        ),
-                    ),
-                ),
-            ),
-            'tools' =>
-            array(
-                'home' =>
-                array(
-                    'widget' =>
-                    array(
-                        0 =>
-                        array(
-                            'name' => 'core_resource_logger',
-                            'is_visible' => true,
-                        ),
-                        1 =>
-                        array(
-                            'name' => 'claroline_rssreader',
-                            'is_visible' => true,
-                            'config' =>
-                            array(
-                                'url' => NULL,
-                            ),
-                        ),
-                        2 =>
-                        array(
-                            'name' => 'claroline_mywidget1',
-                            'is_visible' => true,
-                        ),
-                    ),
-                    'files' =>
-                    array(
-                    ),
-                ),
-                'resource_manager' =>
-                array(
-                    'root_id' => 28,
-                    'resources' =>
-                    array(
-                    ),
-                    'files' =>
-                    array(
-                    ),
-                ),
-            ),
-            'roles' =>
-            array(
-                'ROLE_WS_VISITOR' => 'visitor',
-                'ROLE_WS_COLLABORATOR' => 'collaborator',
-                'ROLE_WS_MANAGER' => 'manager',
-            ),
-            'creator_role' => 'ROLE_WS_MANAGER',
-            'tools_infos' =>
-            array(
-                'home' =>
-                array(
-                    'perms' =>
-                    array(
-                        0 => 'ROLE_WS_VISITOR',
-                        1 => 'ROLE_WS_COLLABORATOR',
-                        2 => 'ROLE_WS_MANAGER',
-                    ),
-                    'name' => 'Accueil',
-                ),
-                'resource_manager' =>
-                array(
-                    'perms' =>
-                    array(
-                        0 => 'ROLE_WS_COLLABORATOR',
-                        1 => 'ROLE_WS_MANAGER',
-                    ),
-                    'name' => 'Ressources',
-                ),
-                'calendar' =>
-                array(
-                    'perms' =>
-                    array(
-                        0 => 'ROLE_WS_COLLABORATOR',
-                        1 => 'ROLE_WS_MANAGER',
-                    ),
-                    'name' => 'Calendrier',
-                ),
-                'parameters' =>
-                array(
-                    'perms' =>
-                    array(
-                        0 => 'ROLE_WS_MANAGER',
-                    ),
-                    'name' => 'Paramètres',
-                ),
-                'group_management' =>
-                array(
-                    'perms' =>
-                    array(
-                        0 => 'ROLE_WS_MANAGER',
-                    ),
-                    'name' => 'Groupes',
-                ),
-                'user_management' =>
-                array(
-                    'perms' =>
-                    array(
-                        0 => 'ROLE_WS_MANAGER',
-                    ),
-                    'name' => 'Utilisateurs',
-                ),
-            ),
-            'name' => 'default',
-        );
     }
 }

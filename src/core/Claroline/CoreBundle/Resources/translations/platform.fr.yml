@@ -18,6 +18,8 @@ admin_form_plainPassword_first : 'Mot de passe'
 admin_form_plainPassword_second : 'Répétez votre mot de passe'
 admin_form_mail : 'Adresse email'
 admin_form_username : 'Nom d''utilisateur'
+admin_tags_management: 'Gestion des Tags administrateur'
+admin_workspace_tag_form_name: Nom
 agenda: Agenda
 all_my_workspaces: 'Tous mes espaces d''activités'
 all_workspaces: 'Tous les espaces'
@@ -34,6 +36,7 @@ copy: Copier
 create: Créer
 creation: Création
 create_group: 'Créer un groupe'
+create_new_admin_tag: 'Créer un nouveau Tag administrateur'
 create_new_tag: 'Créer un nouveau Tag'
 create_workspace: 'Créer un espace d''activités'
 creation_date: 'Date de création'
@@ -97,7 +100,6 @@ mail: Mail
 mail_form_content: Contenu
 mail_form_object: Objet
 manage_rights: 'Gérer les droits'
-manage_tags: 'Gestion des Tags'
 manager: Gestionnaire
 messages_confirm_delete: 'Etes-vous sûr de vouloir supprimer ce(s) message(s) ?'
 messages_confirm_permanent_delete: 'Etes-vous sûr de vouloir supprimer définitivement ce(s) message(s) ?'
@@ -211,11 +213,11 @@ show_profile: 'Voir le profile'
 steal_session: 'Voler la session'
 switch: Echanger
 tag: Tag
+tags_management: 'Gestion des Tags'
 teacher: Professeur
 text_form_name: Nom
 text_form_shareType: Redistribution
 text_form_text: Texte
-The code {{ code }} is already assigned to another workspace.: Le code {{ code }} est déjà assigné à un autre espace d'activités.
 to: Jusque
 tool_form_name : "Nom"
 tool_form_displayName : "Nom affiché"

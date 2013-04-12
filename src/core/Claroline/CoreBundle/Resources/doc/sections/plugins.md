@@ -59,7 +59,6 @@ Full plugin configuration file example:
       resources:
         - class: Claroline\ExampleBundle\Entity\Example
           name: claroline_example
-          is_visible: true
           is_browsable: true
           is_exportable: false
           icon: res_text.png
