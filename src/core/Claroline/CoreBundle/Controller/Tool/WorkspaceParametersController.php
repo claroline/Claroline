@@ -164,52 +164,7 @@ class WorkspaceParametersController extends Controller
         $wsRoles = $em->getRepository('ClarolineCoreBundle:Role')->findByWorkspace($workspace);
         $anonRole = $em->getRepository('ClarolineCoreBundle:Role')->findBy(array('name' => 'ROLE_ANONYMOUS'));
         $wsRoles = array_merge($wsRoles, $anonRole);
-        $wot = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
-            ->findBy(array('workspace' => $workspaceId), array('order' => 'ASC'));
-
-        /*
-         * Creates an easy to use array with tools visibility permissons.
-         * The array has the following structure:
-         *
-         * array[$order] => array(
-         *  'tool' => $tool'
-         *  'visibility' => array('
-         *      ROLE_1 => $bool,
-         *      ROLE_2 => $bool,
-         *      ROLE_3 => $bool)
-         * );
-         */
-
-        /*
-         * Loading all the datas from the WorkspaceToolRole entities
-         * so doctrine won't do a new request every time the isToolVisibleForRoleInWorkspace()
-         * is fired.
-         */
-        $wtr = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceToolRole')->findByWorkspace($workspace);
-
-        foreach ($wot as $orderedTool) {
-
-            if ($orderedTool->getTool()->isDisplayableInWorkspace()) {
-                //creates the visibility array
-                foreach ($wsRoles as $role) {
-                    $isVisible = false;
-                    //is the tool visible for a role in a workspace ?
-                    foreach ($wtr as $workspaceToolRole) {
-                        if ($workspaceToolRole->getRole() == $role
-                            && $workspaceToolRole->getWorkspaceOrderedTool()->getTool() == $orderedTool->getTool()
-                            && $workspaceToolRole->getWorkspaceOrderedTool()->getWorkspace() == $workspace) {
-                            $isVisible = true;
-                        }
-                    }
-                    $roleVisibility[$role->getId()] = $isVisible;
-                }
-                $toolsPermissions[] = array(
-                    'tool' => $orderedTool,
-                    'visibility' => $roleVisibility
-                );
-            }
-        }
-
+        $toolsPermissions = $this->getToolPermissions($workspace, $wsRoles);
         $undisplayedTools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findByWorkspace($workspace, false);
 
         //this is the missing part of the array
@@ -219,7 +174,7 @@ class WorkspaceParametersController extends Controller
 
         if (!empty($toolsPermissions)) {
             //the next display_order will be the incrementation of the last WorkspaceOrderTool display_order
-            $nextDisplayOrder = $orderedTool->getOrder() + 1;
+            $nextDisplayOrder = count($toolsPermissions) + 1;
         }
 
         foreach ($undisplayedTools as $undisplayedTool) {
@@ -729,5 +684,54 @@ class WorkspaceParametersController extends Controller
             'ClarolineCoreBundle:Tool\workspace\parameters:workspace_order_tool_edit.html.twig',
             array('form' => $form->createView(), 'workspace' => $workspace, 'wot' => $wot)
         );
+    }
+
+    /**
+     * Creates an easy to use array with tools visibility permissons.
+     * The array has the following structure:
+     *
+     * array[$order] => array(
+     *  'tool' => $tool'
+     *  'visibility' => array('
+     *      ROLE_1 => $bool,
+     *      ROLE_2 => $bool,
+     *      ROLE_3 => $bool)
+     * );
+     */
+    private function getToolPermissions($workspace, $wsRoles)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $wot = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
+            ->findBy(array('workspace' => $workspace->getId()), array('order' => 'ASC'));
+        /* Loading all the datas from the WorkspaceToolRole entities
+         * so doctrine won't do a new request every time the isToolVisibleForRoleInWorkspace()
+         * is fired.
+         */
+        $wtr = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceToolRole')->findByWorkspace($workspace);
+
+        foreach ($wot as $orderedTool) {
+
+            if ($orderedTool->getTool()->isDisplayableInWorkspace()) {
+                //creates the visibility array
+                foreach ($wsRoles as $role) {
+                    $isVisible = false;
+                    //is the tool visible for a role in a workspace ?
+                    foreach ($wtr as $workspaceToolRole) {
+                        if ($workspaceToolRole->getRole() == $role
+                            && $workspaceToolRole->getWorkspaceOrderedTool()->getTool() == $orderedTool->getTool()
+                            && $workspaceToolRole->getWorkspaceOrderedTool()->getWorkspace() == $workspace) {
+                            $isVisible = true;
+                        }
+                    }
+                    $roleVisibility[$role->getId()] = $isVisible;
+                }
+                $toolsPermissions[] = array(
+                    'tool' => $orderedTool,
+                    'visibility' => $roleVisibility
+                );
+            }
+        }
+
+        return $toolsPermissions;
     }
 }

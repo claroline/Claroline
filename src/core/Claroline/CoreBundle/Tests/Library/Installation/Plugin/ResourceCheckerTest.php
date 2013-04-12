@@ -17,7 +17,7 @@ class ResourceCheckerTest extends WebTestCase
     {
         $container = static::createClient()->getContainer();
         $this->checker = $container->get('claroline.plugin.config_checker');
-        $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
+        $pluginDirectory = $container->getParameter('claroline.param.stub_plugin_directory');
         $this->loader = new Loader($pluginDirectory);
     }
 

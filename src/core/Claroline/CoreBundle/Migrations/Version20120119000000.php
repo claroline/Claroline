@@ -931,6 +931,8 @@ class Version20120119000000 extends BundleMigration
         );
 
         $table->addUniqueIndex(array('user_id', 'name'));
+
+        $this->storeTable($table);
     }
 
     private function createContentTable(Schema $schema)
@@ -962,20 +964,21 @@ class Version20120119000000 extends BundleMigration
     {
         $table = $schema->createTable('claro_rel_workspace_tag');
         $this->addId($table);
-        $table->addColumn('user_id', 'integer');
         $table->addColumn('workspace_id', 'integer');
         $table->addColumn('tag_id', 'integer');
 
+        $table->addUniqueIndex(array('workspace_id', 'tag_id'));
+
         $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_user'),
-            array('user_id'),
+            $this->getStoredTable('claro_workspace'),
+            array('workspace_id'),
             array('id'),
             array('onDelete' => 'CASCADE')
         );
 
         $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_workspace'),
-            array('workspace_id'),
+            $this->getStoredTable('claro_workspace_tag'),
+            array('tag_id'),
             array('id'),
             array('onDelete' => 'CASCADE')
         );

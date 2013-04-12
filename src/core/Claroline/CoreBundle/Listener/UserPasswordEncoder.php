@@ -2,15 +2,34 @@
 
 namespace Claroline\CoreBundle\Listener;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\User;
 
-class UserPasswordEncoder extends ContainerAware implements EventSubscriber
+/**
+ * @DI\DoctrineListener(
+ *     events = {"prePersist", "preUpdate"},
+ *     connection = "default"
+ * )
+ */
+class UserPasswordEncoder implements EventSubscriber
 {
+    private $encoderFactory;
+
+    /**
+     * @DI\InjectParams({
+     *     "encoderFactory" = @DI\Inject("security.encoder_factory")
+     * })
+     */
+    public function __construct(EncoderFactory $encoderFactory)
+    {
+        $this->encoderFactory = $encoderFactory;
+    }
+
     public function getSubscribedEvents()
     {
         return array(Events::prePersist, Events::preUpdate);
@@ -40,8 +59,8 @@ class UserPasswordEncoder extends ContainerAware implements EventSubscriber
 
     private function encodePassword(User $user)
     {
-        $encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
-
-        return $encoder->encodePassword($user->getPlainPassword(), $user->getSalt());
+        return $this->encoderFactory
+            ->getEncoder($user)
+            ->encodePassword($user->getPlainPassword(), $user->getSalt());
     }
 }

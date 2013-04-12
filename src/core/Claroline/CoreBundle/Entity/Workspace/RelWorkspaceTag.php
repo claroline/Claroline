@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Entity\Workspace;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\RelWorkspaceTagRepository")
  * @ORM\Table(name="claro_rel_workspace_tag")
  */
 class RelWorkspaceTag
@@ -16,14 +16,6 @@ class RelWorkspaceTag
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\User"
-     * )
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
-    protected $user;
 
     /**
      * @ORM\ManyToOne(
@@ -49,16 +41,6 @@ class RelWorkspaceTag
     public function setId($id)
     {
         $this->id = $id;
-    }
-
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    public function setUser($user)
-    {
-        $this->user = $user;
     }
 
     public function getWorkspace()

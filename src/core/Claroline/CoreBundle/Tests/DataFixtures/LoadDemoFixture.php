@@ -160,49 +160,8 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
             )
         );
 
-        $this->loadFixture(
-            new LoadForumData('Forum 1', 'JaneDoe', 5, 5, $this->getReference('directory/Cours 1'))
-        );
-
-        $this->loadFixture(
-            new LoadForumData('Forum doc', 'JaneDoe', 5, 5, $this->getReference('directory/Docs'))
-        );
-
-        $this->loadFixture(
-            new LoadActivityData(
-                'Chapitre 1',
-                'Activities',
-                'Jane Doe',
-                array(
-                    $this->getReference('file/video.mp4')->getId(),
-                    $this->getReference('file/wallpaper.jpg')->getId()
-                )
-            )
-        );
-
-        $this->loadFixture(
-            new LoadActivityData(
-                'Chapitre 2',
-                'Activities',
-                'Jane Doe',
-                array(
-                    $this->getReference('file/lorem.pdf')->getId(),
-                    $this->getReference('file/symfony.pdf')->getId()
-                )
-            )
-        );
-
-        $this->loadFixture(
-            new LoadActivityData(
-                'Activité',
-                'Jane Doe',
-                'Jane Doe',
-                array(
-                    $this->getReference('activity/Chapitre 1')->getId(),
-                    $this->getReference('activity/Chapitre 2')->getId()
-                )
-            )
-        );
+        $this->createForums();
+        $this->createActivities();
     }
 
     private function loadFixture($fixture)
@@ -288,6 +247,56 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         }
         $this->loadFixture(
             new LoadGroupData($loadGroupDataParameters)
+        );
+    }
+
+    private function createActivities()
+    {
+        $this->loadFixture(
+            new LoadActivityData(
+                'Chapitre 1',
+                'Activities',
+                'Jane Doe',
+                array(
+                    $this->getReference('file/video.mp4')->getId(),
+                    $this->getReference('file/wallpaper.jpg')->getId()
+                )
+            )
+        );
+
+        $this->loadFixture(
+            new LoadActivityData(
+                'Chapitre 2',
+                'Activities',
+                'Jane Doe',
+                array(
+                    $this->getReference('file/lorem.pdf')->getId(),
+                    $this->getReference('file/symfony.pdf')->getId()
+                )
+            )
+        );
+
+        $this->loadFixture(
+            new LoadActivityData(
+                'Activité',
+                'Jane Doe',
+                'Jane Doe',
+                array(
+                    $this->getReference('activity/Chapitre 1')->getId(),
+                    $this->getReference('activity/Chapitre 2')->getId()
+                )
+            )
+        );
+    }
+
+    private function createForums()
+    {
+        $this->loadFixture(
+            new LoadForumData('Forum 1', 'JaneDoe', 5, 5, $this->getReference('directory/Cours 1'))
+        );
+
+        $this->loadFixture(
+            new LoadForumData('Forum doc', 'JaneDoe', 5, 5, $this->getReference('directory/Docs'))
         );
     }
 
