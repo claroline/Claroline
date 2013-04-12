@@ -35,7 +35,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
 */
 
-namespace UJM\ExoBundle\DataFixtures\ORM;
+namespace UJM\ExoBundle\DataFixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
