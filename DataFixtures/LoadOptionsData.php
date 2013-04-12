@@ -50,8 +50,8 @@ class LoadOptionsData extends AbstractFixture
     {
         $this->manager = $manager;
 
-        $val_tqcm = array('Multiple response', 'Unique response');
-        foreach ($val_tqcm as $val) {
+        $valTqcm = array('Multiple response', 'Unique response');
+        foreach ($valTqcm as $val) {
             $this->newTQCM($val);
         }
 
@@ -65,5 +65,5 @@ class LoadOptionsData extends AbstractFixture
 
         $this->manager->persist($tqcm);
     }
-    
+
 }
