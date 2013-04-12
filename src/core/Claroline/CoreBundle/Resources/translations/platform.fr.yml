@@ -217,6 +217,8 @@ text_form_shareType: Redistribution
 text_form_text: Texte
 The code {{ code }} is already assigned to another workspace.: Le code {{ code }} est déjà assigné à un autre espace d'activités.
 to: Jusque
+tool_form_name : "Nom"
+tool_form_displayName : "Nom affiché"
 to_message: A
 today: 'Aujourd''hui'
 tool: Outil
