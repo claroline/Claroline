@@ -78,6 +78,11 @@ claro_admin_widget:
     prefix: admin
     type: annotation
 
+claro_admin_tool:
+    resource: "@ClarolineCoreBundle/Controller/Tool/AdministrationToolController.php"
+    prefix: admin
+    type: annotation
+
 claro_resource:
     resource: "@ClarolineCoreBundle/Controller/ResourceController.php"
     prefix: resource
