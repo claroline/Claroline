@@ -1,0 +1,149 @@
+{#
+ # ExoOnLine
+ # Copyright or © or Copr. Université Jean Monnet (France), 2012
+ # dsi.dev@univ-st-etienne.fr
+ #
+ # This software is a computer program whose purpose is to [describe
+ # functionalities and technical features of your software].
+ #
+ # This software is governed by the CeCILL license under French law and
+ # abiding by the rules of distribution of free software.  You can  use,
+ # modify and/ or redistribute the software under the terms of the CeCILL
+ # license as circulated by CEA, CNRS and INRIA at the following URL
+ # "http://www.cecill.info".
+ #
+ # As a counterpart to the access to the source code and  rights to copy,
+ # modify and redistribute granted by the license, users are provided only
+ # with a limited warranty  and the software's author,  the holder of the
+ # economic rights,  and the successive licensors  have only  limited
+ # liability.
+ #
+ # In this respect, the user's attention is drawn to the risks associated
+ # with loading,  using,  modifying and/or developing or reproducing the
+ # software by the user in light of its specific status of free software,
+ # that may mean  that it is complicated to manipulate,  and  that  also
+ # therefore means  that it is reserved for developers  and  experienced
+ # professionals having in-depth computer knowledge. Users are therefore
+ # encouraged to load and test the software's suitability as regards their
+ # requirements in conditions enabling the security of their systems and/or
+ # data to be ensured and,  more generally, to use and operate it in the
+ # same conditions as regards security.
+ #
+ # The fact that you are presently reading this means that you have had
+ # knowledge of the CeCILL license and that you accept its terms.
+#}
+
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block title %} {{ "Paper" | trans }} {% endblock %}
+
+
+
+{% block section_content %}
+{% set indexMax = 1 %}
+<table>
+<tr>
+{% for interactionID in tabOrderInter %}
+    {% if loop.index != numQ %}
+        <td>
+            <a href="#" onClick="submitForm({{ loop.index }});">{{ loop.index }}</a>
+            {% set indexMax = loop.index %}
+        </td>
+    {% else %}
+        <td>
+            {{ loop.index }}
+            {% set indexMax = loop.index %}
+        </td>
+    {% endif %}
+{% endfor %}
+</tr>
+</table>
+
+<form class="well" action="{{ path('ujm_exercise_paper_nav') }}" method="post" name="formResponse" id="formResponse">
+    <input type="hidden" name="numQuestionToDisplayed" id="numQuestionToDisplayed" value="" />
+    {% if interactionType == 'InteractionQCM' %}
+        <h1> Q : {{ interactionToDisplayed.interaction.question.title }} ?</h1>
+        <input type="hidden" name="interactionQCMToValidated" value={{ interactionToDisplayed.id }} />
+        <input type="hidden" name="interactionToValidated" value={{ interactionToDisplayed.interaction.id }} />
+        <input type="hidden" name="typeInteraction" value="InteractionQCM" />
+
+        {% if interactionToDisplayed.interaction.question.description != null %}
+            <div name="description">
+                <p>{{ interactionToDisplayed.interaction.question.description|raw }}<p/>
+            </div>
+        {% endif %}
+
+        <div name="question">
+            <p>{{ interactionToDisplayed.interaction.invite|raw }}<p/>
+        </div>
+
+        <p>
+            <table>
+                {% for choice in interactionToDisplayed.choices %}
+                    {% set checked = "" %}
+                    <tr>
+                        <td>{{ choice.label|raw }}</td>
+                        {% if regexTwig('/' ~ choice.id ~ ';/', response) > 0 %}
+                            {% set checked = "checked" %}
+                        {% endif %}
+                        {% if interactionToDisplayed.typeQCM.id == 2 %}
+                            <td><INPUT type="radio" name="choice" value="{{ choice.id }}" {{ checked }} /></td>
+                        {% else %}
+                            <td><INPUT type="checkbox" name="choice[]" value="{{ choice.id }}" {{ checked }} /></td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </table>
+
+            <table>
+                {% set nbr_hint = 1 %}
+                {% for hint in interactionToDisplayed.interaction.hints %}
+                    <tr>
+                        <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}', '{{path('hint_show')}}', '{{ "consult_hint" | trans }}', '{{nbr_hint}}', '{{paper}}')">{{ "Hint" | trans }} {{nbr_hint}} </a></td>
+                        <td id="div_hint{{nbr_hint}}"></td>
+                    </tr>
+                    {% set nbr_hint = nbr_hint + 1 %}
+                {% endfor %}
+            </table>
+
+            <input type="hidden" name="testQCM" value="testQCM" />
+            <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}" />
+        </p>
+
+    {% elseif interactionToDisplayed.type == InteractionHole %}
+    {% endif %}
+</form>
+
+<table>
+    <tr>
+        {% if numQ != 1 %}
+            <td> <a href="#" onClick="submitForm(1);"> << </a> </td>
+            <td> <a href="#" onClick="submitForm({{ numQ-1 }});"> < </a> </td>
+        {% else %}
+            <td> << </td>
+            <td> < </td>
+        {% endif %}
+        {% if numQ != indexMax %}
+            <td> <a href="#" onClick="submitForm({{ numQ+1 }});"> > </a> </td>
+            <td> <a href="#" onClick="submitForm({{ indexMax }});"> >> </a> </td>
+        {% else %}
+            <td> > </td>
+            <td> >> </td>
+        {% endif %}
+        {% if dispButtonInterrupt %}
+            <td> <input type="button" value="{{ "Interupt" | trans }}" onClick="interupt()" /> </td>
+        {% endif %}
+        <td> <input type="button" value="{{ "Finish" | trans }}" onClick="finish()" /> </td>
+    </tr>
+</table>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
+{% endblock %}

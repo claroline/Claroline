@@ -310,13 +310,15 @@ class ExerciseController extends Controller
         $subscription = $this->controlSubscription($id);
         $em = $this->getDoctrine()->getEntityManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($id);
+        
+        $workspace = $exercise->getWorkspace();
 
         if ($this->controlDate($subscription, $exercise) === true) {
             $session = $this->getRequest()->getSession();
             $orderInter = '';
             $tabOrderInter = array();
 
-            $dql = 'SELECT max(p.num_paper) FROM UJM\ExoBundle\Entity\Paper p '
+            $dql = 'SELECT max(p.numPaper) FROM UJM\ExoBundle\Entity\Paper p '
                  . 'WHERE p.exercise='.$id.' AND p.user='.$uid;
             $query = $em->createQuery($dql);
             $maxNumPaper = $query->getResult();
@@ -371,7 +373,7 @@ class ExerciseController extends Controller
             $typeInter = $interactions[0]->getType();
 
             //To display selectioned question
-            return $this->displayQuestion(1, $interactions[0], $typeInter, $exercise->getDispButtonInterrupt());
+            return $this->displayQuestion(1, $interactions[0], $typeInter, $exercise->getDispButtonInterrupt(), $workspace);
         } else {
             return $this->redirect($this->generateUrl('exercise_show', array('id' => $id)));
         }
@@ -386,6 +388,8 @@ class ExerciseController extends Controller
         $response = '';
         $em = $this->getDoctrine()->getEntityManager();
         $session = $this->getRequest()->getSession();
+        $paper = $em->getRepository('UJMExoBundle:Paper')->find($session->get('paper'));
+        $workspace = $paper->getExercise()->getWorkspace();
         $request = $this->getRequest();
         $typeInterToRecorded = $request->get('typeInteraction');
 
@@ -422,7 +426,7 @@ class ExerciseController extends Controller
             //INSERT Response
             $response = new Response();
             $response->setNbTries(1);
-            $response->setPaper($em->getRepository('UJMExoBundle:Paper')->find($session->get('paper')));
+            $response->setPaper($paper);
             $response->setInteraction($em->getRepository('UJMExoBundle:Interaction')->find($interactionToValidatedID));
         } else {
             //UPDATE Response
@@ -452,7 +456,7 @@ class ExerciseController extends Controller
 
             return $this->displayQuestion(
                 $numQuestionToDisplayed, $interactionToDisplay, $typeInterToDisplayed,
-                $response->getPaper()->getExercise()->getDispButtonInterrupt()
+                $response->getPaper()->getExercise()->getDispButtonInterrupt(), $workspace
             );
         }
 
@@ -463,7 +467,7 @@ class ExerciseController extends Controller
      *
      */
     private function displayQuestion($numQuestionToDisplayed, $interactionToDisplay,
-        $typeInterToDisplayed, $dispButtonInterrupt)
+        $typeInterToDisplayed, $dispButtonInterrupt, $workspace)
     {
         $session = $this->getRequest()->getSession();
         $tabOrderInter = $session->get('tabOrderInter');
@@ -510,6 +514,7 @@ class ExerciseController extends Controller
 
         return $this->render(
             'UJMExoBundle:Exercise:paper.html.twig', array(
+            'workspace'              => $workspace,
             'tabOrderInter'          => $tabOrderInter,
             'interactionToDisplayed' => $interactionToDisplayed[0],
             'interactionType'        => $typeInterToDisplayed,
