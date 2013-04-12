@@ -55,11 +55,6 @@ class LoadOptionsData extends AbstractFixture
             $this->newTQCM($val);
         }
 
-        $val_role = array('ROLE_ADMIN', 'ROLE_USER');
-        foreach ($val_role as $val) {
-            $this->newRole($val);
-        }
-
         $this->manager->flush();
     }
 
