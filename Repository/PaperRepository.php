@@ -89,8 +89,8 @@ class PaperRepository extends EntityRepository
         $qb->join('p.exercise', 'e')
             ->join('p.user', 'u')
             ->where($qb->expr()->in('e.id', $exerciseID))
-            ->orderBy('u.name', 'ASC')
-            ->addOrderBy('u.firstname', 'ASC')
+            ->orderBy('u.lastName', 'ASC')
+            ->addOrderBy('u.firstName', 'ASC')
             ->addOrderBy('p.id', 'ASC');
 
         return $qb->getQuery()->getResult();

@@ -158,7 +158,7 @@
         </li>
     {% endif %}
     <li>
-        <a href="{#{ path('paper', { 'exoID': entity.id }) }#}">{{ "Paper list" | trans }}</a>
+        <a href="{{ path('ujm_paper_list', { 'exoID': entity.id }) }}">{{ "Paper list" | trans }}</a>
     </li>
     {% if subscription.admin == 1 %}
         <li>

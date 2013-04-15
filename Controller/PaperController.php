@@ -56,6 +56,10 @@ class PaperController extends Controller
     public function indexAction($exoID)
     {
         $user = $this->container->get('security.context')->getToken()->getUser();
+        
+        $em = $this->getDoctrine()->getEntityManager();
+        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
+        $workspace = $exercise->getWorkspace();
 
         $subscription = $this->getSubscription($user, $exoID);
 
@@ -76,8 +80,9 @@ class PaperController extends Controller
         }
 
         return $this->render('UJMExoBundle:Paper:index.html.twig', array(
-                             'papers'  => $papers,
-                             'isAdmin' => $subscription[0]->getAdmin(),
+                             'workspace' => $workspace,
+                             'papers'    => $papers,
+                             'isAdmin'   => $subscription[0]->getAdmin(),
                              ));
     }
 
