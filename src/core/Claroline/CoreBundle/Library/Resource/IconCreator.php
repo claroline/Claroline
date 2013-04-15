@@ -181,11 +181,11 @@ class IconCreator
 
         $shortcutIcon = new ResourceIcon();
         $shortcutIcon->setIconLocation($shortcutLocation);
-        $tmpRelativeUrl = substr(
-            $shortcutLocation,
-            ($pos = strpos($shortcutLocation, "web{$ds}bundles")
-            ) !== false ? $pos + 1 : 0
-        );
+        if (strstr($shortcutLocation, "bundles")) {
+            $tmpRelativeUrl = strstr($shortcutLocation, "bundles");
+        } else {
+            $tmpRelativeUrl = strstr($shortcutLocation, "thumbnails");
+        }
         $relativeUrl = str_replace('\\', '/', $tmpRelativeUrl);
         $shortcutIcon->setRelativeUrl($relativeUrl);
         $shortcutIcon->setIconType($icon->getIconType());
