@@ -44,13 +44,13 @@ if (navigator.browserLanguage) {
 // :::::::::::::::::::::::::::::::::::::::::: Functions :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 // Get the url's picture matching to the label in the list
-function sendData(select) {
+function sendData(select,path) {
     //"use strict";
 
     // Send the label of the picture to get the adress in order to display it
     $.ajax({
         type: 'POST',
-        url: '/Claroline/web/app_dev.php/exercise/question/InteractionGraphic/DisplayPic',
+        url: path,
         data: {
             value : select
         },
@@ -63,18 +63,25 @@ function sendData(select) {
 }
 
 // Display the selected picture
-function LoadPic() {
+function LoadPic(path) {
     //"use strict";
 
     var list = document.InterGraphForm.ujm_exobundle_interactiongraphictype_document; // List of all the user's pictures
     var select = list.options[list.selectedIndex].innerHTML; // Label of the selected picture
 
-    sendData(select);
+    sendData(select,path);
 
     // New picture load, initialization var :
     value = 0;
     AnswerZones = [];
     document.getElementById('coordsZone').value = 0;
+    
+    for (j = 0 ; j < indice ; j++) {
+        if(document.getElementById('img' + j)){
+            document.getElementById('img' + j).parentNode.removeChild(document.getElementById('img' + j));
+        }
+    }
+    indice = 0;
 }
 
 // Submit form without an empty field
@@ -103,9 +110,7 @@ function Verifier(noTitle, noQuestion, noImg, noAnswerZone) {
     }
 
     // No picture load
-    if (document.getElementById('AnswerImage').src == 'http://127.0.0.1/Claroline/web/app_dev.php/exercise/question/new'
-        && titleOk === true && questionOk === true
-    ) {
+    if (document.getElementById('AnswerImage').src.indexOf('users_document') == -1 && titleOk === true && questionOk === true) {
         alert(noImg);
         return false;
     } else {
@@ -130,76 +135,76 @@ function Verifier(noTitle, noQuestion, noImg, noAnswerZone) {
 }
 
 // Change the shape and the color of the answer zone
-function changezone() {
+function changezone(prefix) {
     //"use strict";
 
     if (document.getElementById('shape').value === 'circle') {
         switch (document.getElementById('color').value) {
         case 'white' :
-            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/circlew.png';
+            el.src = prefix+'circlew.png';
             break;
 
         case 'red' :
-            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/circler.png';
+            el.src = prefix+'circler.png';
             break;
 
         case 'blue' :
-            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/circleb.png';
+            el.src = prefix+'circleb.png';
             break;
 
         case 'purple' :
-            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/circlep.png';
+            el.src = prefix+'circlep.png';
             break;
 
         case 'green' :
-            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/circleg.png';
+            el.src = prefix+'circleg.png';
             break;
 
         case 'orange' :
-            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/circleo.png';
+            el.src = prefix+'circleo.png';
             break;
 
         case 'yellow' :
-            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/circley.png';
+            el.src = prefix+'circley.png';
             break;
 
         default :
-            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/circlew.png';
+            el.src = prefix+'circlew.png';
             break;
         }
 
     } else if (document.getElementById('shape').value === 'rect') {
         switch (document.getElementById('color').value) {
         case 'white' :
-            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/rectanglew.jpg';
+            el.src = prefix+'rectanglew.jpg';
             break;
 
         case 'red' :
-            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/rectangler.jpg';
+            el.src = prefix+'rectangler.jpg';
             break;
 
         case 'blue' :
-            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/rectangleb.jpg';
+            el.src = prefix+'rectangleb.jpg';
             break;
 
         case 'purple' :
-            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/rectanglep.jpg';
+            el.src = prefix+'rectanglep.jpg';
             break;
 
         case 'green' :
-            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/rectangleg.jpg';
+            el.src = prefix+'rectangleg.jpg';
             break;
 
         case 'orange' :
-            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/rectangleo.jpg';
+            el.src = prefix+'rectangleo.jpg';
             break;
 
         case 'yellow' :
-            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/rectangley.jpg';
+            el.src = prefix+'rectangley.jpg';
             break;
 
         default :
-            el.src = '/Claroline/web/bundles/ujmexo/images/graphic/rectanglew.jpg';
+            el.src = prefix+'rectanglew.jpg';
         }
     }
 }
@@ -219,7 +224,6 @@ function  ResizeImg(sens) {
     scaley = scalex * ratio; // New picture height proportional to width
 
     if (scalex > 27 && scaley > 27) { // Not resize too small or negativ
-
         answerImg.width = scalex;
         answerImg.height = scaley;
     }
@@ -229,15 +233,28 @@ function  ResizePointer(sens) {
     //"use strict";
     
     if (sens === 'gauche') {
-        cible.width -= 2;
+        cible.width -= 5;
     } else if (sens === 'droite') {
-        cible.width += 2;
+        cible.width += 5;
     }
 
     if(cible.width < 10){
         cible.width = 10;
     }
     cible.height += cible.width * (cible.height / cible.height);
+
+    for (var i = 0, c = AnswerZones.length; i < c; i++) {
+        var x = cible.style.left.substr(0, cible.style.left.indexOf('p'))- answerImg.offsetLeft + 10;
+        var y = cible.style.top.substr(0, cible.style.top.indexOf('p')) - answerImg.offsetTop + 10;
+        var coord = x +'_' + y;
+
+        if (coord == AnswerZones[i].substring(AnswerZones[i].indexOf(';')+1, AnswerZones[i].indexOf('-'))){
+            AnswerZones[i] = AnswerZones[i].replace(AnswerZones[i].substr(AnswerZones[i].indexOf('~')+1),cible.width);
+            break;
+        }
+        
+    }
+    document.getElementById('coordsZone').value = AnswerZones;
 }
 
 function MouseSens(event) {
@@ -328,7 +345,7 @@ document.addEventListener('mousemove', function (event) { // To resize the selec
 
 document.addEventListener('click', function (e) { // To add/delete answer zones
     //"use strict";
-
+    
     if (pressCTRL === true) {
 
         // Position de la souris dans la fenetre :
@@ -357,71 +374,45 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
             img.style.position = 'absolute';
             img.style.left = String(mousex - 10) + 'px';
             img.style.top = String(mousey - 10) + 'px';
+            
             img.id = 'img'+indice;
             indice++;
+            
             img.src = el.src;
             
             document.body.appendChild(img);
 
-// Add the new answer zone informations to the tab in order to send it to the controller
+            // Add the new answer zone informations to the tab in order to send it to the controller
             imgx = parseInt(img.style.left.substr(0, img.style.left.indexOf('p')));
                 imgx -= answerImg.offsetLeft - 10;
                 
             imgy = parseInt(img.style.top.substr(0, img.style.top.indexOf('p')));
                 imgy -= answerImg.offsetTop - 10;
                 
-            var val = img.src + ';' + imgx + '_' + imgy + '-' + document.getElementById('points').value;
+            var val = img.src + ';' + imgx + '_' + imgy + '-' + document.getElementById('points').value + '~' + img.width;
+
             AnswerZones.push(val);
         }
         pressCTRL = false;
 
-        // Send the answer zones to the controller
+        // Send the answer zones informations to the controller
         document.getElementById('coordsZone').value = AnswerZones;
     }
 
     if (pressS === true) {
 
-        // Position de la souris dans la fenetre :
-        if (e.x !== undefined && e.y !== undefined) { // IE
-            x = e.layerX;
-            y = e.layerY;
-        } else { // Firefox
-            x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-            y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-        }
-
-        // Position de la souris dans l'image :
-        x -= answerImg.offsetLeft;
-        y -= answerImg.offsetTop;
-
-        // Suppression de l'element selectionné
-        for (var i = 0, c = AnswerZones.length; i < c; i++) {
-
-            t = AnswerZones[i];
-            ts = t.substr(0, t.indexOf(';'));
-            tx = t.substring(t.indexOf(';') + 1, t.indexOf('_'));
-            ty = t.substring(t.indexOf('_') + 1, t.indexOf('-'));
-
-            tx1 = tx - 10;
-            tx2 = parseInt(tx) + 10;
-            ty1 = ty - 10;
-            ty2 = parseInt(ty) + 10;
-
-            if (x > tx1 && x < tx2 && y > ty1 && y < ty2) {
-                AnswerZones.splice(i, 1);
-                if (i === 0 && AnswerZones.length < 1) {
-                    document.getElementById('coordsZone').value = 0;
-                }
-                break;
-            }
-        }
-
         document.getElementById('coordsZone').value = AnswerZones;
 
         for (j = 0 ; j < indice ; j++) {
-            if (e.target.id == 'img' + j){
+            if (e.target.id == 'img' + j) {
                 var image = document.getElementById(e.target.id);
                 image.parentNode.removeChild(image);
+                    AnswerZones.splice(j, 1);
+
+                    if (j === 0 && AnswerZones.length < 1) {
+                        document.getElementById('coordsZone').value = 0;
+                    }
+                    break;
             }
         }
         pressS = false;
@@ -439,5 +430,5 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
 
     document.onmousedown = function () {
         return true;
-    }
+    } 
 }, false);

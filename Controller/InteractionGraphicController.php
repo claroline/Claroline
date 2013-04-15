@@ -141,12 +141,12 @@ class InteractionGraphicController extends Controller
 
         for ($i = 0; $i < $lengthCoord; $i++) {
 
-            $before = array(";", "-");
-            $after = array(",", ",");
+            $before = array(";", "-","~");
+            $after = array(",", ",",",");
 
             $data = str_replace($before, $after, $coord[$i]);
-
-            list(${'url'.$i}, ${'value'.$i}, ${'point'.$i}) = explode(",", $data);
+            
+            list(${'url'.$i}, ${'value'.$i}, ${'point'.$i}, ${'size'.$i}) = explode(",", $data);
 
             ${'value'.$i} = str_replace("_", ",", ${'value'.$i});
             ${'url'.$i} = substr(${'url'.$i}, 61);
@@ -163,7 +163,7 @@ class InteractionGraphicController extends Controller
             ${'co'.$i}->setColor(${'color'.$i});
             ${'co'.$i}->setScoreCoords(${'point'.$i});
             ${'co'.$i}->setInteractionGraphic($interGraph);
-            ${'co'.$i}->setSize(10);
+            ${'co'.$i}->setSize(${'size'.$i});
         }
 
         if ($form->isValid()) {
