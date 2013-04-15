@@ -15,7 +15,6 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceToolReadEvent;
-use Claroline\CoreBundle\Library\Event\WorkspaceLogEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
@@ -383,11 +382,6 @@ class WorkspaceController extends Controller
             'claro_workspace_open_tool',
             array('workspaceId' => $workspaceId, 'toolName' => $openedTool[0]->getName())
         );
-
-        $user = $this->get('security.context')->getToken()->getUser();
-        $date = new \DateTime();
-        $workspaceLogEvent = new WorkspaceLogEvent('workspace_access', $date, $user, $workspace, '');
-        $this->get('event_dispatcher')->dispatch('log_workspace_access', $workspaceLogEvent);
 
         return new RedirectResponse($route);
     }
