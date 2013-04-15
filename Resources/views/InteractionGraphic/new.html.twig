@@ -73,12 +73,12 @@
  
 {# ------------------------------------------------- Boutton affichage image ---------------------------------------------------------------------------- #}
     
-    <p><input id="LoadImg" type="button" value="{{ "Select" | trans }}" onclick="LoadPic()"/></p>
+    <p><input id="LoadImg" type="button" value="{{ "Select" | trans }}" onclick="LoadPic('{{ path('ujm_interactiongraphic_DisplayPic') }}')"/></p>
  
 {# ------------------------------------------------- Zone affichage image ---------------------------------------------------------------------------- #}    
     
     <p>{{ "Redimmension" | trans }}<br/>{{ "Resize" | trans }}<br/>{{ "Selection" | trans }}<br/>{{ "Effacer" | trans }}</p>
-    
+
     <img src="" width="" height="" id="AnswerImage"/>
 
     <input type="hidden" id="imgwidth" name="imgwidth" value="0"/>
@@ -101,14 +101,14 @@
             </td>
 
             <td>
-                <select id="shape" name="shape" size="1" style="width:100px" onchange="changezone()">
+                <select id="shape" name="shape" size="1" style="width:100px" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}')">
                         <option value="circle"  selected>{{ "cercle" | trans }}</option>
                         <option value="rect" >{{ "rectangle" | trans }}</option>
                 </select>
             </td>
 
             <td>
-                <select id="color" name="color" size="1" style="width:70px" onchange="changezone()">
+                <select id="color" name="color" size="1" style="width:70px" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}')">
                         <option value="white"  style="background-color:#FFFFFF;"selected>&nbsp;&nbsp;&nbsp;</option>
                         <option value="red"    style="background-color:#FF0000;">&nbsp;&nbsp;&nbsp;</option>
                         <option value="blue"   style="background-color:#002FFF;">&nbsp;&nbsp;&nbsp;</option> 
