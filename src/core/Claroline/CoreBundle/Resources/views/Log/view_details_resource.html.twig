@@ -9,7 +9,7 @@
 
         {% if log.getResourceType() %}
         <dt>{{ ('type')|trans({}, 'platform') }}</dt>
-        <dd>{{ log.getResourceType().getName() }}</dd>
+        <dd>{{ log.getResourceType().getName()|trans({}, 'resource') }}</dd>
         {% endif %}
     </dl>
 {% endif %}

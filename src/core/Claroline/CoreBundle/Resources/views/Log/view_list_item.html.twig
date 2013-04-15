@@ -129,7 +129,7 @@
 {% if 'ws_tool_' in log.getAction() %}
     {% if log.getToolName() %}
         <strong>
-            {{ log.getToolName()|trans({}, 'platform') }}
+            {{ log.getToolName()|trans({}, 'tools') }}
         </strong>
     {% endif %}
 
