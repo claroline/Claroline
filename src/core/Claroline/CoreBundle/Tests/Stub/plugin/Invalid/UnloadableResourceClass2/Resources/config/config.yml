@@ -4,6 +4,5 @@ plugin:
   resources:
 
     - class: Invalid\UnloadableResourceClass2\Entity\ResourceX
-      is_visible: true
       is_browsable: true
       name: ResourceX

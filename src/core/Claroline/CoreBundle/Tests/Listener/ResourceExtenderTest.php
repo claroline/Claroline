@@ -15,7 +15,7 @@ class ResourceExtenderTest extends FunctionalTestCase
         $listeners = $this->em->getEventManager()->getListeners(Events::loadClassMetadata);
 
         foreach ($listeners as $listener) {
-            if ($listener instanceof ResourceExtender) {
+            if ($listener === 'claroline.core_bundle.listener.resource_extender') {
                 return;
             }
         }
@@ -67,11 +67,11 @@ class ResourceExtenderTest extends FunctionalTestCase
         $pluginId = $conn->lastInsertId();
 
         // Insert two specific resource types (see test/Stub/Entity)
-        $sql = "INSERT INTO claro_resource_type (plugin_id, class, name, is_visible, is_browsable)"
+        $sql = "INSERT INTO claro_resource_type (plugin_id, class, name, is_browsable)"
             . " VALUES ({$pluginId}, 'Claroline\\\CoreBundle\\\Tests\\\Stub\\\Entity\\\SpecificResource1',"
-            . " 'SpecificResource1', true, false),"
+            . " 'SpecificResource1', false),"
             . " ({$pluginId}, 'Claroline\\\CoreBundle\\\Tests\\\Stub\\\Entity\\\SpecificResource2',"
-            . " 'SpecificResource2', true, false)";
+            . " 'SpecificResource2', false)";
         $conn->exec($sql);
     }
 

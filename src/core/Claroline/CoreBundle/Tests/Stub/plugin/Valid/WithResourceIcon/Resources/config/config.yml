@@ -4,6 +4,5 @@ plugin:
   resources:
     - class: Valid\WithResourceIcon\Entity\ResourceX
       name: ResourceX
-      is_visible: true
       is_browsable: true
       icon: validwithlargeicon.gif

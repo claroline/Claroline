@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Library\Installation\Plugin\Loader;
+use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
 
 class AdministrationControllerTest extends FunctionalTestCase
 {
@@ -19,16 +20,19 @@ class AdministrationControllerTest extends FunctionalTestCase
             ->getContainer()
             ->get('claroline.config.platform_config_handler');
         $this->client->followRedirects();
+
     }
 
     protected function tearDown()
     {
         parent::tearDown();
+
         $this->configHandler->eraseTestConfiguration();
     }
 
     public function testAdmincanViewGroups()
     {
+
         $this->loadGroupData(array ('group_a' => array('john', 'admin')));
         $crawler = $this->logUser($this->getUser('admin'));
         $crawler = $this->client->request('GET', '/admin/groups/0');
@@ -71,7 +75,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $form['profile_form[username]'] = 'tototata';
         $form['profile_form[plainPassword][first]'] = 'abc';
         $form['profile_form[plainPassword][second]'] = 'abc';
-        $form['profile_form[platformRole]'] = $this->getRole('user')->getId();
+        $form['profile_form[platformRoles]'] = $this->getRole('user')->getId();
         $this->client->submit($form);
         $user = $this->getUser('tototata');
         $repositoryWs = $user->getPersonalWorkspace();
@@ -315,6 +319,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $crawler = $this->client->request('GET', '/admin/widgets');
         //example has 4 widgets
         $this->assertGreaterThan(3, count($crawler->filter('.row-widget-config')));
+        $this->resetTemplate();
     }
 
     public function testAdminCanSetWidgetVisibleOption()
@@ -338,6 +343,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
             ->findBy(array('isVisible' => false, 'isDesktop' => false));
         $this->assertGreaterThan(0, count($configs));
+        $this->resetTemplate();
     }
 
     public function testAdminCanSetWidgetLockOption()
@@ -361,6 +367,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
             ->findBy(array('isLocked' => true, 'isDesktop' => false));
         $this->assertGreaterThan(0, count($configs));
+        $this->resetTemplate();
     }
 
     public function testDesktopDisplayVisibleWidgets()
@@ -377,6 +384,7 @@ class AdministrationControllerTest extends FunctionalTestCase
             ->findBy(array('isVisible' => true, 'isDesktop' => true));
         $crawler = $this->client->request('GET', '/desktop/tool/open/home');
         $this->assertEquals(count($crawler->filter('.widget')), count($configs));
+        $this->resetTemplate();
     }
 
     public function testConfigureWorkspaceWidgetActionThrowsEvent()
@@ -404,7 +412,7 @@ class AdministrationControllerTest extends FunctionalTestCase
     {
         $container = $this->client->getContainer();
         $dbWriter = $container->get('claroline.plugin.recorder_database_writer');
-        $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
+        $pluginDirectory = $container->getParameter('claroline.param.stub_plugin_directory');
         $loader = new Loader($pluginDirectory);
         $validator = $container->get('claroline.plugin.validator');
 
@@ -413,6 +421,17 @@ class AdministrationControllerTest extends FunctionalTestCase
             $validator->validate($plugin);
             $dbWriter->insert($plugin, $validator->getPluginConfiguration());
         }
+    }
+
+    private function resetTemplate()
+    {
+        $container = $this->client->getContainer();
+        $yml = $container->getParameter('claroline.workspace_template.directory').'config.yml';
+        $archpath = $container->getParameter('claroline.workspace_template.directory').'default.zip';
+        $archive = new \ZipArchive();
+        $archive->open($archpath, \ZipArchive::OVERWRITE);
+        $archive->addFile($yml, 'config.yml');
+        $archive->close();
     }
 
     private function getUser($username)

@@ -6,6 +6,7 @@ add: Add
 add_group: 'Add group'
 add_group_s_confirm_message: 'group(s) added'
 add_resource: 'Add resource'
+add_tag_to_workspace: 'Add tag to workspace'
 add_user: 'Add user'
 add_user_s_confirm_message: 'users(s) added'
 admin: Administrator
@@ -15,9 +16,12 @@ admin_form_plainPassword_first : 'Paswword'
 admin_form_plainPassword_second : 'Repeat your password'
 admin_form_mail : 'Email adress'
 admin_form_username : 'Username'
+admin_tags_management: 'Admin tags management'
+admin_workspace_tag_form_name: Name
 administration: Administration
 administrative_code: 'Administrative code'
 agenda: Agenda
+all_my_workspaces: 'All my workspaces'
 all_workspaces: 'All workspaces'
 anonymous: Anonymous
 by: by
@@ -32,6 +36,8 @@ copy: Copy
 create: Create
 creation: Creation
 create_group: 'Create group'
+create_new_admin_tag: 'Create new admin tag'
+create_new_tag: 'Create new tag'
 create_workspace: 'Create workspace'
 creation_date: 'Creation date'
 cut: Cut
@@ -46,6 +52,7 @@ display_options: 'Display options'
 done_on: 'done on'
 download: Download
 edit: Edit
+enter_tag_name_message: 'Please enter a tag name'
 export: Export
 fast_answer: 'Fast answer'
 file: File
@@ -68,6 +75,7 @@ group_form_ownedRoles: Roles
 group_form_platformRole: Role
 group_parameter: 'Group parameter'
 groups: Groups
+history: History
 home: Home
 id: Id
 informations: Informations
@@ -215,7 +223,7 @@ profile_form_ownedRoles: Role(s)
 profile_form_phone: Phone
 profile_form_plainPassword_first: Password
 profile_form_plainPassword_second: Verification
-profile_form_platformRole: Role
+profile_form_platformRoles: Roles
 profile_form_username: Username
 properties: Properties
 public: Public
@@ -267,8 +275,11 @@ settings: Settings
 show: Show
 show_as_admin: 'Show as admin'
 show_as_user: 'Show as user'
-steal_session: 'Steal the session'
+show_as: 'Show as'
+show_profile: 'Show profile'
 switch: Switch
+tag: Tag
+tags_management: 'Tags management'
 teacher: Teacher
 text_form_name: Name
 text_form_shareType: Sharable
@@ -278,6 +289,8 @@ to_message: To
 today: Today
 tool: Tool
 tools: Tools
+tool_form_name : "tool name"
+tool_form_displayName : "Displayed tool name"
 trash : Trash
 type: Type
 type_s: Type(s)
@@ -318,8 +331,9 @@ workspace_form_code: Code
 workspace_form_name: Name
 workspace_form_template: Template
 workspace_form_type: Type
-workspace_order_tool_edit_form_translationKey: Name
+workspace_order_tool_edit_form_name: Name
 workspace_resource: Resources
+workspace_tag_form_name: Name
 workspace_template_form_name: Name
 workspace_tools: Tools
 workspace_welcome: Welcome

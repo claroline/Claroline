@@ -128,7 +128,7 @@ class ResourceRightsControllerTest extends FunctionalTestCase
             ->findCollaboratorRole($this->getWorkspace('john'))
             ->getId();
         $resourceTypes = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-            ->findByIsVisible(true);
+            ->findAll();
         $this->logUser($this->getUser('john'));
 
         $this->client->request(

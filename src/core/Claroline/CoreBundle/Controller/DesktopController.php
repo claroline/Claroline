@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
  * Controller of the user's desktop.
@@ -14,6 +15,11 @@ use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
 class DesktopController extends Controller
 {
     /**
+     * @Route(
+     *     "/widgets",
+     *     name="claro_desktop_widgets"
+     * )
+     *
      * Displays registered widgets.
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -62,6 +68,12 @@ class DesktopController extends Controller
     }
 
     /**
+     * @Route(
+     *     "tool/open/{toolName}",
+     *     name="claro_desktop_open_tool",
+     *     options={"expose"=true}
+     * )
+     *
      * Opens a tool.
      *
      * @param string $toolName
@@ -84,6 +96,11 @@ class DesktopController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/open",
+     *     name="claro_desktop_open"
+     * )
+     *
      * Opens the desktop.
      *
      * @return Response

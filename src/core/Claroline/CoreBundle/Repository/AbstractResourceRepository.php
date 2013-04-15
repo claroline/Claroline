@@ -2,43 +2,46 @@
 
 namespace Claroline\CoreBundle\Repository;
 
+use Doctrine\ORM\AbstractQuery;
+use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
-use Doctrine\ORM\AbstractQuery;
+use Claroline\CoreBundle\Repository\Exception\UnknownFilterException;
 
 /**
- * Repository of methods to access AbstractResource entities.
+ * Repository for AbstractResource entities. The methods of this class may return
+ * entities either as objects or as as arrays (see their respective documentation).
  */
 class AbstractResourceRepository extends MaterializedPathRepository
 {
     /**
-     * Returns the root resource of the workspace
-     * @param AbstractWorkspace $ws
-     * @return a resource resource entity
+     * Returns the root directory of a workspace.
+     *
+     * @param AbstractWorkspace $workspace
+     *
+     * @return AbstractResource
      */
-    public function findWorkspaceRoot(AbstractWorkspace $ws)
+    public function findWorkspaceRoot(AbstractWorkspace $workspace)
     {
-        $dql = '
-            SELECT ar
-            FROM Claroline\CoreBundle\Entity\Resource\AbstractResource ar
-            WHERE ar.lvl = 1 AND ar.workspace = :ws_id
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('ws_id', $ws->getId());
+        $builder = new ResourceQueryBuilder();
+        $builder->selectAsEntity()
+            ->whereInWorkspace($workspace)
+            ->whereParentIsNull();
+        $query = $this->_em->createQuery($builder->getDql());
+        $query->setParameters($builder->getParameters());
 
         return $query->getOneOrNullResult();
     }
 
     /**
-     * Returns the descendants of a resource. Always returns entities.
+     * Returns the descendants of a resource.
      *
      * @param AbstractResource  $resource           The resource node to start with
      * @param boolean           $includeStartNode   Whether the given resource should be included in the result
      * @param string            $filterResourceType A resource type to filter the results
      *
-     * @return AbstractResource
+     * @return array[AbstractResource]
      */
     public function findDescendants(
         AbstractResource $resource,
@@ -46,102 +49,93 @@ class AbstractResourceRepository extends MaterializedPathRepository
         $filterResourceType = null
     )
     {
-
-        $builder = new ResourceQueryBuilder('SELECT ar');
-        $builder->from()
-            ->where()
-            ->whereIsVisible(1)
-            ->wherePath($resource->getPath(), $includeStartNode);
+        $builder = new ResourceQueryBuilder();
+        $builder->selectAsEntity(true)
+            ->wherePathLike($resource->getPath(), $includeStartNode);
 
         if ($filterResourceType) {
-            $builder->whereTypes(array($filterResourceType));
+            $builder->whereTypeIn(array($filterResourceType));
         }
 
-        $dql = $builder->getDql();
-        $query = $this->_em->createQuery($dql);
-        $builder->setQueryParameters($query);
+        $query = $this->_em->createQuery($builder->getDql());
+        $query->setParameters($builder->getParameters());
 
         return $this->executeQuery($query, null, null, false);
     }
 
     /**
-     * Returns all direct resources under parent. Returns a list of entities or an array if requested.
-     * Returns a list of rights for every resources.
-     * The admin has every rights no matter what.
+     * Returns the immediate children of a resource that are openable by any of the given roles.
      *
-     * @param AbstractResource $parent Parent ID of children that we request.
-     * @param string ResourceType ID to filter on.
-     * @param boolean $isVisible if true, returns only resources that are visible.
-     * @param array roles an array of role (string)
+     * @param AbstractResource  $parent The id of the parent of the requested children
+     * @param array[string]     $roles  An array of roles
      *
-     * @return an array of arrays or entities
+     * @throw InvalidArgumentException if the array of roles is empty
+     *
+     * @return array[array] An array of resources represented as arrays
      */
-    public function findChildren(AbstractResource $parent, $roles, $isVisible = true)
+    public function findChildren(AbstractResource $parent, array $roles)
     {
-        $isAdmin = false;
-
-        foreach ($roles as $role) {
-            if ($role === 'ROLE_ADMIN') {
-                $isAdmin = true;
-            }
+        if (count($roles) === 0) {
+            throw new \RuntimeException('Roles cannot be empty');
         }
 
-        if ($isAdmin) {
-            $query = $this->buildAdminChildrenQuery($parent, $isVisible);
-        } else {
-            $query = $this->buildForRolesChildrenQuery($parent, $roles);
-        }
+        $builder = new ResourceQueryBuilder();
+        $children = array();
 
-        $results = array();
-
-        if (!$isAdmin) {
-            $results = $this->executeQuery($query);
-        } else {
+        if (in_array('ROLE_ADMIN', $roles)) {
+            $builder->selectAsArray()
+                ->whereParentIs($parent);
+            $query = $this->_em->createQuery($builder->getDql());
+            $query->setParameters($builder->getParameters());
             $items = $query->iterate(null, AbstractQuery::HYDRATE_ARRAY);
 
             foreach ($items as $key => $item) {
                 $item[$key]['can_export'] = true;
                 $item[$key]['can_edit'] = true;
                 $item[$key]['can_delete'] = true;
-                $results[] = $item[$key];
+                $children[] = $item[$key];
             }
+        } else {
+            $builder->selectAsArray(true)
+                ->whereParentIs($parent)
+                ->whereRoleIn($roles)
+                ->whereCanOpen()
+                ->groupById();
+            $query = $this->_em->createQuery($builder->getDql());
+            $query->setParameters($builder->getParameters());
+            $children = $this->executeQuery($query);
         }
 
-        return $results;
+        return $children;
     }
 
     /**
-     * Returns the list of roots for the given user. Returns a list of entities or an array if requested.
+     * Returns the root directories a user has access to.
      *
-     * @param User $user Owner of the resources.
-     * @param boolean $asArray returns a list of arrays if true, else a list of entities.
+     * @param User $user
      *
-     * @return an array of arrays or entities
+     * @return array[array] An array of resources represented as arrays
      */
     public function findWorkspaceRootsByUser(User $user)
     {
         $builder = new ResourceQueryBuilder();
-        $dql = $builder->select()
-            ->from()
-            ->where()
+        $dql = $builder->selectAsArray()
             ->whereParentIsNull()
             ->whereInUserWorkspace($user)
             ->orderByPath()
             ->getDql();
-
         $query = $this->_em->createQuery($dql);
-        $builder->setQueryParameters($query);
+        $query->setParameters($builder->getParameters());
 
         return $this->executeQuery($query);
     }
 
     /**
-     * Returns an array of all ancestors of a abstractResource
-     * (the resource itlsef is returned too).
+     * Returns the ancestors of a resource, including the resource itself.
      *
-     * @param listDirectChildrenResourceInstances $resource The resource about which we want ancestors.
+     * @param AbstractResource $resource
      *
-     * @return array (name, id)
+     * @return array[array] An array of resources represented as arrays
      */
     public function findAncestors(AbstractResource $resource)
     {
@@ -164,124 +158,62 @@ class AbstractResourceRepository extends MaterializedPathRepository
     }
 
     /**
-     * Returns all the resources a user can open, filtered with given criteria.
+     * Returns the resources matching a set of given criterias. If an array
+     * of roles is passed, only the resources that can be opended by any of
+     * these roles are matched.
      *
-     * @param Array $criterias Array of criterias to use to build the filter.
-     * @param User $user The user searching resources.
-     * @param boolean $bypassRights if the the request bypass every rights.
+     * @param array $criteria   An array of search filters
+     * @param array $roles      An array of user's roles
      *
-     * @return an array of arrays or entities
+     * @return array[array] An array of resources represented as arrays
      */
-    public function findUserResourcesByCriteria(array $criteria, $user = null, $bypassRights = false)
+    public function findByCriteria(array $criteria, array $roles = null)
     {
-        if ($user == null && $bypassRights = false) {
-            throw new \Excpetion('Rights cannot be included without user');
-        }
         $builder = new ResourceQueryBuilder();
-        $builder->select()
-            ->from();
-        if ($bypassRights) {
-            $builder->joinRightsForUser($user);
-        }
-        $builder->where();
-        if ($bypassRights) {
-            $builder->whereIsVisible(1)
-                ->whereInUserWorkspace($user)
+        $builder->selectAsArray();
+
+        if ($roles) {
+            $builder->whereRoleIn($roles)
                 ->whereCanOpen();
         }
 
-        foreach ($criteria as $key => $value) {
-            if ($value != null) {
-                $methodName = 'where' . ucfirst($key);
-                $builder->$methodName($value);
+        $filterMethodMap = array(
+            'types' => 'whereTypeIn',
+            'roots' => 'whereRootIn',
+            'dateFrom' => 'whereDateFrom',
+            'dateTo' => 'whereDateTo',
+            'name' => 'whereNameLike',
+            'isExportable' => 'whereIsExportable'
+        );
+        $allowedFilters = array_keys($filterMethodMap);
+
+        foreach ($criteria as $filter => $value) {
+            if ($value !== null) {
+                if (in_array($filter, $allowedFilters)) {
+                    $builder->{$filterMethodMap[$filter]}($value);
+                } else {
+                    throw new UnknownFilterException("Unknown filter '{$filter}'");
+                }
             }
         }
 
         $dql = $builder->orderByPath()->getDql();
         $query = $this->_em->createQuery($dql);
-        $builder->setQueryParameters($query);
+        $query->setParameters($builder->getParameters());
 
         return $this->executeQuery($query);
     }
 
     /**
-     * The children query for the admin (every resource is shown).
-     *
-     * @param AbstractResource $parent
-     * @param boolean $asArray
-     * @param boolean $isVisible
-     *
-     * @return Query
-     */
-    private function buildAdminChildrenQuery(AbstractResource $parent, $isVisible)
-    {
-        $builder = new ResourceQueryBuilder();
-        $builder->select()
-            ->from()
-            ->where()
-            ->whereParent($parent)
-            ->whereIsVisible($isVisible);
-
-        $dql = $builder->getDql();
-        $query = $this->_em->createQuery($dql);
-        $builder->setQueryParameters($query);
-
-        return $query;
-    }
-
-    /**
-     * The children query an array of Roles.
-     *
-     * @param AbstractResource $parent
-     * @param array roles
-     * @param ResourceType $resourceType
-     * @param boolean $asArray
-     * @param boolean $isVisible
-     *
-     * @return Query
-     */
-    private function buildForRolesChildrenQuery(
-        AbstractResource $parent,
-        $roles,
-        $isVisible = true
-    )
-    {
-
-         $builder = new ResourceQueryBuilder();
-         $builder->select()
-             ->selectPermissions()
-             ->from()
-             ->leftJoinOnRightsAndRole()
-             ->where();
-
-        for ($i = 0, $count = count($roles); $i < $count; $i++) {
-            if ($i != 0) {
-                $builder->addClause('or');
-            }
-
-            $builder->whereParent($parent)
-                ->whereIsVisible($isVisible)
-                ->whereCanOpen()
-                ->whereRole($roles[$i]);
-        }
-
-        $dql = $builder->groupById()->getDql();
-        $query = $this->_em->createQuery($dql);
-        $builder->setQueryParameters($query);
-
-        return $query;
-    }
-
-    /**
-     * Execute a DQL query and may return a list of entities or a list of arrays.
+     * Executes a DQL query and returns resources as entities or arrays.
      * If it returns arrays, it add a "pathfordisplay" field in each item.
      *
-     * @param Query $query The query to execute.
-     * @param boolean $asArray Set it to true if you want the result as a list of arrays.
-     * @param int $numrows Maximum number of rows to return.
-     * @param int ResourceType $resourceType Resource type to filter on.
+     * @param Query   $query    The query to execute
+     * @param integer $offset   First row to start with
+     * @param integer $numrows  Maximum number of rows to return
+     * @param boolean $asArray  Whether the resources must be returned as arrays or as objects
      *
-     * @return array of arrays or array of entities
+     * @return array[AbstractResource|array]
      */
     private function executeQuery($query, $offset = null, $numrows = null, $asArray = true)
     {
@@ -289,16 +221,24 @@ class AbstractResourceRepository extends MaterializedPathRepository
         $query->setMaxResults($numrows);
 
         if ($asArray) {
-            $res = $query->getArrayResult();
+            $resources = $query->getArrayResult();
             // Add a field "pathfordisplay" in each entity (as array) of the given array.
-            foreach ($res as &$r) {
-                $r['pathfordisplay'] = AbstractResource::convertPathForDisplay($r["path"]);
-                unset($r['path']);
+            foreach ($resources as &$resource) {
+                $resource['pathfordisplay'] = AbstractResource::convertPathForDisplay($resource['path']);
+                unset($resource['path']);
             }
 
-            return $res;
+            return $resources;
         }
 
         return $query->getResult();
+    }
+
+    public function count()
+    {
+        $dql = "SELECT COUNT(w) FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w";
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getSingleScalarResult();
     }
 }

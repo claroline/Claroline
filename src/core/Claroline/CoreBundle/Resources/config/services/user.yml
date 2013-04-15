@@ -7,5 +7,9 @@ services:
             - "@translator"
             - "@claroline.config.platform_config_handler"
             - "@claroline.workspace.creator"
+<<<<<<< HEAD
             - %claroline.workspace_template.directory%
             - "@service_container"
+=======
+            - %claroline.param.templates_directory%
+>>>>>>> master

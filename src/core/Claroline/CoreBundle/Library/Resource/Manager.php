@@ -63,7 +63,15 @@ class Manager
      *
      * @throws \Exception
      */
-    public function create(AbstractResource $resource, $parentId, $resourceType, User $user = null, $rights = null)
+    public function create(
+        AbstractResource $resource,
+        $parentId,
+        $resourceType,
+        User $user = null,
+        $rights = null,
+        $autoflush = true,
+        $autolog = true
+    )
     {
         $resourceType = $this->em
             ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
@@ -102,9 +110,20 @@ class Manager
             $this->setResourceRights($resource, $rights);
         }
 
+<<<<<<< HEAD
         $this->em->flush();
         $log = new LogResourceCreateEvent($resource);
         $this->ed->dispatch('log', $log);
+=======
+        if ($autoflush) {
+            $this->em->flush();
+        }
+
+        if ($autolog) {
+            $event = new ResourceLogEvent($resource, ResourceLogEvent::CREATE_ACTION);
+            $this->ed->dispatch('log_resource', $event);
+        }
+>>>>>>> master
 
         return $resource;
     }
@@ -130,6 +149,7 @@ class Manager
         try {
             $this->em->flush();
             $this->cloneParentRights($parent, $child);
+            $this->em->flush();
 
             $log = new LogResourceMoveEvent($child, $oldParent);
             $this->ed->dispatch('log', $log);
@@ -193,6 +213,7 @@ class Manager
             $copy->setName($resource->getName());
             $copy->setName($this->ut->getUniqueName($copy, $parent));
             $this->cloneParentRights($parent, $copy);
+            $this->em->flush();
 
             if ($resource->getResourceType()->getName() == 'directory') {
                 foreach ($resource->getChildren() as $child) {
@@ -239,7 +260,6 @@ class Manager
         $children->setOwnerRights($parent->getOwnerRights());
 
         $this->em->persist($children);
-        $this->em->flush();
     }
 
     /**
@@ -333,10 +353,24 @@ class Manager
 
         foreach ($rights as $role => $permissions) {
             $resourceTypes = array();
+            $unknownTypes = array();
 
             foreach ($permissions['canCreate'] as $type) {
                 $rt = $resourceTypeRepo->findOneByName($type);
+                if ($rt === null) {
+                    $unknownTypes[] = $type['name'];
+                }
                 $resourceTypes[] = $rt;
+            }
+
+            if (count($unknownTypes) > 0) {
+                $content = "The resource type(s) ";
+                foreach ($unknownTypes as $unknown) {
+                    $content .= "{$unknown}, ";
+                }
+                $content .= "were not found";
+                
+                throw new \Exception($content);
             }
 
             $role = $roleRepo->findOneBy(array('name' => $role.'_'.$workspace->getId()));
@@ -361,7 +395,7 @@ class Manager
             array()
         );
 
-        $resourceTypeRepo->findByIsVisible(true);
+        $resourceTypeRepo->findAll();
 
         $this->createDefaultsResourcesRights(
             true, true, true, true, true,
@@ -408,7 +442,6 @@ class Manager
         $rights->setResource($resource);
         $rights->setWorkspace($workspace);
         $rights->setCreatableResourceTypes($resourceTypes);
-
         $this->em->persist($rights);
     }
 
@@ -442,7 +475,7 @@ class Manager
         if ($resource instanceof Directory) {
             $resourceTypes = $this->em
                 ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-                ->findBy(array('isVisible' => true));
+                ->findAll();
 
             foreach ($resourceTypes as $resourceType) {
                 $resource->addResourceTypeCreation($resourceType);

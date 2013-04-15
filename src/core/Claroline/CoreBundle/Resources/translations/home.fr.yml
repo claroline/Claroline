@@ -1,0 +1,23 @@
+'Size of content': 'Taille du contenu'
+Error: Erreur
+'An error occurred': 'Une erreur s''est produite'
+'Please try again later or check your internet connection': 'Veuillez réessayer plus tard ou vérifiez votre connexion Internet'
+Ok: Ok
+Size: Taille
+Edit: Editer
+Delete: Effacer
+'Optional title': 'Titre facultatif'
+Create: Créer
+'a content': 'un contenu'
+'Add Pictures': 'Ajouter des photos'
+'Add Files': 'Ajouter des fichiers'
+'Are you sure you want to delete this content?': 'Êtes-vous sûr de vouloir supprimer ce contenu?'
+'This action is irreversible': 'Cette action est irréversible'
+Cancel: Annuler
+'%count% year ago|%count% years ago': 'Il y a %count% an|Il y a %count% ans'
+'%count% month ago|%count% months ago': 'Il y a %count% mois|Il y a %count% mois'
+'%count% week ago|%count% weeks ago': 'Il y a %count% semaine|Il y a %count% semaines'
+'%count% day ago|%count% days ago': 'Il y a %count% jour|Il y a %count% jours'
+'%count% hour ago|%count% hours ago': 'Il y a %count% heure|Il y a %count% heures'
+'%count% minute ago|%count% minutes ago': 'Il y a %count% minute|Il y a %count% minutes'
+'%count% second ago|%count% seconds ago': 'Il y a %count% seconde|Il y a %count% secondes'

@@ -8,8 +8,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+<<<<<<< HEAD
 use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleSubscribeEvent;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleUnsubscribeEvent;
+=======
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+>>>>>>> master
 
 class UserController extends Controller
 {
@@ -20,6 +25,13 @@ class UserController extends Controller
     const NUMBER_USER_PER_ITERATION = 25;
 
     /**
+     * @Route(
+     *     "/{workspaceId}/users/unregistered",
+     *     name="claro_workspace_unregistered_users_list",
+     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$" }
+     * )
+     * @Method("GET")
+     *
      * Renders the unregistered user list layout for a workspace.
      *
      * @param integer $workspaceId the workspace id
@@ -39,6 +51,21 @@ class UserController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/{workspaceId}/user/{userId}",
+     *     name="claro_workspace_tools_show_user_parameters",
+     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$", "userId"="^(?=.*[1-9].*$)\d*$" },
+     *     options={"expose"=true}
+     * )
+     *
+     * @Route(
+     *     "/{workspaceId}/user/{userId}",
+     *     name="claro_workspace_tools_edit_user_parameters",
+     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$", "userId"="^(?=.*[1-9].*$)\d*$" },
+     *     options={"expose"=true}
+     * )
+     * @Method({"POST", "GET"})
+     *
      * Renders the user parameter page with its layout and
      * edit the user parameters for the selected workspace.
      *
@@ -111,6 +138,14 @@ class UserController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/{workspaceId}/user/search/{search}/registered/{offset}",
+     *     name="claro_workspace_search_registered_users",
+     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$", "offset"="^(?=.*[0-9].*$)\d*$"},
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     *
      * Returns a partial json representation of the registered users of a workspace.
      * It'll search every users whose name match $search.
      *
@@ -137,17 +172,21 @@ class UserController extends Controller
                 self::NUMBER_USER_PER_ITERATION
             );
         $users = $this->paginatorToArray($paginatorUsers);
-        $content = $this->renderView(
-            'ClarolineCoreBundle:model:users.json.twig',
-            array('users' => $users)
-        );
-        $response = new Response($content);
+        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
     }
 
     /**
+     * @Route(
+     *     "/{workspaceId}/user/search/{search}/unregistered/{offset}",
+     *     name="claro_workspace_search_unregistered_users",
+     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$", "offset"="^(?=.*[0-9].*$)\d*$" },
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     *
      * Returns a partial json representation of the unregistered users of a workspace.
      * It'll search every users whose name match $search.
      *
@@ -159,7 +198,7 @@ class UserController extends Controller
      */
     public function searchUnregisteredUsersAction($search, $workspaceId, $offset)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
             ->find($workspaceId);
         $this->checkRegistration($workspace);
@@ -174,17 +213,21 @@ class UserController extends Controller
                 self::NUMBER_USER_PER_ITERATION
             );
         $users = $this->paginatorToArray($paginatorUsers);
-        $content = $this->renderView(
-            'ClarolineCoreBundle:model:users.json.twig',
-            array('users' => $users)
-        );
-        $response = new Response($content);
+        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
     }
 
     /**
+     * @Route(
+     *     "/{workspaceId}/add/user",
+     *     name="claro_workspace_multiadd_user",
+     *     options={"expose"=true},
+     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
+     * )
+     * @Method("PUT")
+     *
      * Adds many users to a workspace.
      * It uses a query string of userIds as parameter (userIds[]=1&userIds[]=2)
      *
@@ -217,6 +260,7 @@ class UserController extends Controller
             $em->flush();
         }
 
+<<<<<<< HEAD
         foreach ($users as $user) {
             $log = new LogWorkspaceRoleSubscribeEvent($role, $user);
             $this->get('event_dispatcher')->dispatch('log', $log);
@@ -227,12 +271,23 @@ class UserController extends Controller
             array('users' => $users)
         );
         $response = new Response($content);
+=======
+        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
+>>>>>>> master
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
     }
 
     /**
+     * @Route(
+     *     "/{workspaceId}/users/{offset}/registered",
+     *     name="claro_workspace_registered_users_paginated",
+     *     options={"expose"=true},
+     *     requirements={"workspaceId"="^(?=.*[0-9].*$)\d*$", "offset"="^(?=.*[0-9].*$)\d*$"}
+     * )
+     * @Method("GET")
+     *
      * Returns a partial json representation of the registered users of a workspace.
      *
      * @param integer $workspaceId the workspace id
@@ -256,17 +311,21 @@ class UserController extends Controller
                 self::NUMBER_USER_PER_ITERATION
             );
         $users = $this->paginatorToArray($paginatorUsers);
-        $content = $this->renderView(
-            'ClarolineCoreBundle:model:users.json.twig',
-            array('users' => $users)
-        );
-        $response = new Response($content);
+        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
     }
 
     /**
+     * @Route(
+     *     "/{workspaceId}/users/{offset}/unregistered",
+     *     name="claro_workspace_unregistered_users_paginated",
+     *     options={"expose"=true},
+     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$", "offset"="^(?=.*[0-9].*$)\d*$" }
+     * )
+     * @Method("GET")
+     *
      * Returns a partial json representation of the unregistered users of a workspace.
      *
      * @param integer $workspaceId the workspace id
@@ -290,17 +349,21 @@ class UserController extends Controller
                 self::NUMBER_USER_PER_ITERATION
             );
         $users = $this->paginatorToArray($paginatorUsers);
-        $content = $this->renderView(
-            'ClarolineCoreBundle:model:users.json.twig',
-            array('users' => $users)
-        );
-        $response = new Response($content);
+        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
     }
 
     /**
+     * @Route(
+     *     "/{workspaceId}/users",
+     *     name="claro_workspace_delete_users",
+     *     options={"expose"=true},
+     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
+     * )
+     * @Method("DELETE")
+     *
      * Removes many users from a workspace.
      * It uses a query string of groupIds as parameter (userIds[]=1&userIds[]=2)
      *

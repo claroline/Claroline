@@ -50,24 +50,42 @@
                         <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             <i class="icon-book"></i>
+                            {% if isInAWorkspace %}
+                            {{ currentWorkspace.getName() }}
+                            <span class="workspace-code">({{ currentWorkspace.getCode() }})</span>
+                            {% else %}
                             {{ 'workspaces'|trans({}, 'platform') }}
+                            {% endif %}
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
-                            {% for workspace in workspaces %}
-                                <li>
-                                <a href="{{ path('claro_workspace_open',
-                                    {'workspaceId': workspace.getId()}) }}"
-                                    id="link-workspace-{{ workspace.getId() }}">
-                                    {{ workspace.getName() }}
-                                    <span class="workspace-code">({{ workspace.getCode() }})</span>
-                                </a>
-                                </li>
-                            {% endfor %}
+                            <li class="
+                                {% if workspaces is empty %}
+                                    disabled
+                                {% else %}
+                                    dropdown-submenu
+                                {% endif %}
+                            ">
+                                <a href="#" class="disabled">{{ 'history'|trans({}, 'platform') }}</a>
+                                {% if not workspaces is empty %}
+                                    <ul class="dropdown-menu">
+                                    {% for workspace in workspaces %}
+                                        <li>
+                                        <a href="{{ path('claro_workspace_open',
+                                            {'workspaceId': workspace.getId()}) }}"
+                                            id="link-workspace-{{ workspace.getId() }}">
+                                            {{ workspace.getName() }}
+                                            <span class="workspace-code">({{ workspace.getCode() }})</span>
+                                        </a>
+                                        </li>
+                                    {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </li>
                             {% if isLogged %}
                                 <li class="divider"></li>
                                 <li>
-                                <a href="{{ path('claro_workspace_by_user', {'userId': app.user.id }) }}" id="link-my-workspaces">
+                                <a href="{{ path('claro_workspace_by_user') }}" id="link-my-workspaces">
                                     {{ 'my_workspaces'|trans({}, 'platform') }}
                                 </a>
                                 </li>
@@ -103,6 +121,7 @@
                             </a>
                             </li>
                             <li class="divider"></li>
+                            {% if personalWs is not null %}
                             <li>
                             <a href="{{ path('claro_workspace_open_tool',
                                 {'workspaceId': personalWs.getId(), 'toolName': 'home'}) }}"
@@ -110,6 +129,7 @@
                                 {{ 'my_workspace'|trans({}, 'platform') }}
                             </a>
                             </li>
+                            {% endif %}
                             <li>
                             <a href="#" id="link-agenda">
                                 {{ 'my_agenda'|trans({}, 'platform') }}

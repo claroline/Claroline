@@ -28,7 +28,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             WHERE u.username LIKE :username"
             ;
 
-        //must add the role ?
         $query = $this->_em->createQuery($dql);
         $query->setParameter('username', $username);
 
@@ -427,5 +426,13 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $paginator = new Paginator($query, true);
 
         return $paginator;
+    }
+
+    public function count()
+    {
+        $dql = "SELECT COUNT(u) FROM Claroline\CoreBundle\Entity\User u";
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getSingleScalarResult();
     }
 }

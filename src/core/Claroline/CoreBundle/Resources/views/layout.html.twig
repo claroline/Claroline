@@ -24,7 +24,11 @@
             <span class="label label-warning"> {{ 'please_wait'|trans({}, 'platform') }} </span>
         </div>
         {% if not is_path_mode %}
+            {% if workspace is defined %}
+            {% render controller('ClarolineCoreBundle:Layout:topBar', {'workspaceId': workspace.getId()}) %}
+            {% else %}
             {% render controller('ClarolineCoreBundle:Layout:topBar') %}
+            {% endif %}
         {% endif %}
         <div id="grid" class="container container-fluid">
             {% block sectionHeader %}

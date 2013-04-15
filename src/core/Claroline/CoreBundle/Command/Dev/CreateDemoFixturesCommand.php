@@ -24,6 +24,11 @@ class CreateDemoFixturesCommand extends ContainerAwareCommand
         $referenceRepo = new ReferenceRepository($em);
         $fixture->setReferenceRepository($referenceRepo);
         $fixture->setContainer($this->getContainer());
+        $fixture->setLogger(
+            function ($message) use ($output) {
+                $output->writeln($message);
+            }
+        );
         $fixture->load($em);
         $output->writeln('Done');
     }

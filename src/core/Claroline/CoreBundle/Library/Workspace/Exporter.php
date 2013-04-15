@@ -23,6 +23,10 @@ class Exporter
 
     public function export(AbstractWorkspace $workspace, $configName)
     {
+        if (!is_writable($this->templateDir)) {
+            throw new \Exception("{$this->templateDir} is not writable");
+        }
+
         $archive = new \ZipArchive();
         $pathArch = $this->templateDir."{$configName}.zip";
         $archive->open($pathArch, \ZipArchive::CREATE);
@@ -61,7 +65,7 @@ class Exporter
             }
 
             $arTools[$tool->getName()]['perms'] = $arToolRoles;
-            $arTools[$tool->getName()]['translation_key'] = $workspaceTool->getTranslationKey();
+            $arTools[$tool->getName()]['name'] = $workspaceTool->getName();
 
             if ($workspaceTool->getTool()->isExportable()) {
                 $event = new ExportToolEvent($workspace);

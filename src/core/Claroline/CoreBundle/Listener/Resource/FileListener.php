@@ -2,6 +2,11 @@
 
 namespace Claroline\CoreBundle\Listener\Resource;
 
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
+use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Form\FileType;
 use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
@@ -13,12 +18,31 @@ use Claroline\CoreBundle\Library\Event\DownloadResourceEvent;
 use Claroline\CoreBundle\Library\Event\PlayFileEvent;
 use Claroline\CoreBundle\Library\Event\ExportResourceTemplateEvent;
 use Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent;
-use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 
-class FileListener extends ContainerAware
+/**
+ * @DI\Service
+ */
+class FileListener implements ContainerAwareInterface
 {
+    private $container;
+
+    /**
+     * @DI\InjectParams({
+     *     "container" = @DI\Inject("service_container")
+     * })
+     *
+     * @param ContainerInterface $container
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * @DI\Observe("create_form_file")
+     *
+     * @param CreateFormResourceEvent $event
+     */
     public function onCreateForm(CreateFormResourceEvent $event)
     {
         $form = $this->container->get('form.factory')->create(new FileType, new File());
@@ -33,6 +57,11 @@ class FileListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    /**
+     * @DI\Observe("create_file")
+     *
+     * @param CreateResourceEvent $event
+     */
     public function onCreate(CreateResourceEvent $event)
     {
         $request = $this->container->get('request');
@@ -47,7 +76,7 @@ class FileListener extends ContainerAware
             $size = filesize($tmpFile);
             $mimeType = $tmpFile->getClientMimeType();
             $hashName = $this->container->get('claroline.resource.utilities')->generateGuid() . "." . $extension;
-            $tmpFile->move($this->container->getParameter('claroline.files.directory'), $hashName);
+            $tmpFile->move($this->container->getParameter('claroline.param.files_directory'), $hashName);
             $file->setSize($size);
             $file->setName($fileName);
             $file->setHashName($hashName);
@@ -69,11 +98,16 @@ class FileListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    /**
+     * @DI\Observe("delete_file")
+     *
+     * @param DeleteResourceEvent $event
+     */
     public function onDelete(DeleteResourceEvent $event)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $em->remove($event->getResource());
-        $pathName = $this->container->getParameter('claroline.files.directory')
+        $pathName = $this->container->getParameter('claroline.param.files_directory')
             . DIRECTORY_SEPARATOR
             . $event->getResource()->getHashName();
         if (file_exists($pathName)) {
@@ -83,6 +117,11 @@ class FileListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    /**
+     * @DI\Observe("copy_file")
+     *
+     * @param CopyResourceEvent $event
+     */
     public function onCopy(CopyResourceEvent $event)
     {
         $newFile = $this->copy($event->getResource());
@@ -92,14 +131,24 @@ class FileListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    /**
+     * @DI\Observe("download_file")
+     *
+     * @param DownloadResourceEvent $event
+     */
     public function onDownload(DownloadResourceEvent $event)
     {
         $file = $event->getResource();
         $hash = $file->getHashName();
-        $event->setItem($this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $hash);
+        $event->setItem($this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR . $hash);
         $event->stopPropagation();
     }
 
+    /**
+     * @DI\Observe("open_file")
+     *
+     * @param OpenResourceEvent $event
+     */
     public function onOpen(OpenResourceEvent $event)
     {
         $ds = DIRECTORY_SEPARATOR;
@@ -121,7 +170,7 @@ class FileListener extends ContainerAware
                 $response = $fallBackPlayEvent->getResponse();
             } else {
                 $item = $this->container
-                    ->getParameter('claroline.files.directory') . $ds . $file->getHashName();
+                    ->getParameter('claroline.param.files_directory') . $ds . $file->getHashName();
                 $file = file_get_contents($item);
                 $response = new Response();
                 $response->setContent($file);
@@ -152,18 +201,28 @@ class FileListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    /**
+     * @DI\Observe("resource_file_to_template")
+     *
+     * @param ExportResourceTemplateEvent $event
+     */
     public function onExportTemplate(ExportResourceTemplateEvent $event)
     {
         $resource = $event->getResource();
         $hash = $resource->getHashName();
         //@todo: remove this line without breaking everything ('type' is set by the tool listener).
         $config['type'] = 'file';
-        $filePath = $this->container->getParameter('claroline.files.directory') . DIRECTORY_SEPARATOR . $hash;
+        $filePath = $this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR . $hash;
         $event->setFiles(array(array('archive_path' => $hash, 'original_path' => $filePath)));
         $event->setConfig($config);
         $event->stopPropagation();
     }
 
+    /**
+     * @DI\Observe("resource_file_from_template")
+     *
+     * @param ImportResourceTemplateEvent $event
+     */
     public function onImportTemplate(ImportResourceTemplateEvent $event)
     {
         $ds = DIRECTORY_SEPARATOR;
@@ -171,7 +230,7 @@ class FileListener extends ContainerAware
         $file = new File();
         $extension = pathinfo($files[0], PATHINFO_EXTENSION);
         $hashName = $this->container->get('claroline.resource.utilities')->generateGuid() . "." . $extension;
-        $physicalPath = $this->container->getParameter('claroline.files.directory') . $ds . $hashName;
+        $physicalPath = $this->container->getParameter('claroline.param.files_directory') . $ds . $hashName;
         rename($files[0], $physicalPath);
         $size = filesize($physicalPath);
         $file->setSize($size);
@@ -183,9 +242,11 @@ class FileListener extends ContainerAware
     }
 
     /**
-     * Copy a file (no persistence).
-     * @param \Claroline\CoreBundle\Listener\Resource\AbstractResource $resource
-     * @return \Claroline\CoreBundle\Entity\Resource\File
+     * Copies a file (no persistence).
+     *
+     * @param File $resource
+     *
+     * @return File
      */
     private function copy(File $resource)
     {
@@ -198,8 +259,8 @@ class FileListener extends ContainerAware
             ->get('claroline.resource.utilities')
             ->generateGuid() . '.' . pathinfo($resource->getHashName(), PATHINFO_EXTENSION);
         $newFile->setHashName($hashName);
-        $filePath = $this->container->getParameter('claroline.files.directory') . $ds . $resource->getHashName();
-        $newPath = $this->container->getParameter('claroline.files.directory') . $ds . $hashName;
+        $filePath = $this->container->getParameter('claroline.param.files_directory') . $ds . $resource->getHashName();
+        $newPath = $this->container->getParameter('claroline.param.files_directory') . $ds . $hashName;
         copy($filePath, $newPath);
 
         return $newFile;

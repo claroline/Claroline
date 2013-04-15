@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Resource\Revision;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
  * TextManager will redirect to this controller once a directory is "open" or "edit".
@@ -142,6 +143,11 @@ class TextController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/history/{textId}",
+     *     name="claro_text_history"
+     * )
+     *
      * Shows the diff between every text version. This function is a test.
      *
      * @param integer $textId
@@ -150,7 +156,7 @@ class TextController extends Controller
      */
     public function historyAction($textId)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $text = $em->getRepository('ClarolineCoreBundle:Resource\Text')->find($textId);
         $revisions = $text->getRevisions();
         $size = count($revisions);
@@ -183,6 +189,11 @@ class TextController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/form/edit/{textId}",
+     *     name="claro_text_edit_form"
+     * )
+     *
      * Displays the text edition form.
      *
      * @param integer $textId
@@ -206,6 +217,11 @@ class TextController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/edit/{textId}",
+     *     name="claro_text_edit"
+     * )
+     *
      * Handles the text edition form submission.
      *
      * @param integer $textId
@@ -218,7 +234,7 @@ class TextController extends Controller
         $request = $this->get('request');
         $user = $this->get('security.context')->getToken()->getUser();
         $text = $request->request->get('content');
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $old = $em->getRepository('ClarolineCoreBundle:Resource\Text')->find($textId);
         $version = $old->getVersion();
         $revision = new Revision();

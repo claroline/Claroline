@@ -147,17 +147,14 @@ class ParametersControllerTest extends FunctionalTestCase
         $this->logUser($this->getUser('john'));
         $crawler = $this->client->request('GET', "/workspaces/tool/properties/{$pwuId}/widget");
         $this->assertGreaterThan(3, count($crawler->filter('.row-widget-config')));
+        $this->resetTemplate();
     }
 
     public function testDisplayWidgetConfigurationFormPage()
     {
         $this->markTestSkipped("event is not catched");
         $this->registerStubPlugins(array('Valid\WithWidgets\ValidWithWidgets'));
-        $pwuId = $this->getUser('john')->getPersonalWorkspace()->getId();
-        $this->logUser($this->getUser('john'));
-        $widget = $this->em
-            ->getRepository('ClarolineCoreBundle:Widget\Widget')
-            ->findOneByName('claroline_testwidget1');
+        $this->resetTemplate();
     }
 
 
@@ -171,7 +168,6 @@ class ParametersControllerTest extends FunctionalTestCase
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
             ->findAll();
-        $countConfigs = count($configs);
         $crawler = $this->client->request('GET', "/workspaces/{$pwuId}/widgets");
         $countVisibleWidgets = count($crawler->filter('.widget'));
         $this->client->request(
@@ -188,6 +184,7 @@ class ParametersControllerTest extends FunctionalTestCase
         $this->logUser($this->getUser('john'));
         $crawler = $this->client->request('GET', "/workspaces/{$pwuId}/widgets");
         $this->assertEquals(++$countVisibleWidgets, count($crawler->filter('.widget')));
+        $this->resetTemplate();
     }
 
     public function testDesktopManagerCanInvertWidgetVisible()
@@ -227,7 +224,7 @@ class ParametersControllerTest extends FunctionalTestCase
     {
         $container = $this->client->getContainer();
         $dbWriter = $container->get('claroline.plugin.recorder_database_writer');
-        $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
+        $pluginDirectory = $container->getParameter('claroline.param.stub_plugin_directory');
         $loader = new Loader($pluginDirectory);
         $validator = $container->get('claroline.plugin.validator');
 
@@ -248,7 +245,6 @@ class ParametersControllerTest extends FunctionalTestCase
             )
         );
         $this->logUser($this->getUser('ws_creator'));
-        $wsCreatorId = $this->getUser('ws_creator')->getId();
         $wsBId = $this->getWorkspace('ws_b')->getId();
         $crawler = $this->client->request(
             'GET',
@@ -261,8 +257,9 @@ class ParametersControllerTest extends FunctionalTestCase
 
         $crawler = $this->client->request(
             'GET',
-            "/workspaces/user/{$wsCreatorId}"
+            "/workspaces/user"
         );
+
         $this->assertEquals(3, $crawler->filter('.row-workspace')->count());
 
         $crawler = $this->client->request(
@@ -283,7 +280,6 @@ class ParametersControllerTest extends FunctionalTestCase
             )
         );
         $this->logUser($this->getFixtureReference('user/ws_creator'));
-        $wsCreatorId = $this->getFixtureReference('user/ws_creator')->getId();
         $wsBId = $this->getFixtureReference('workspace/ws_b')->getId();
         $wsBCode = $this->getFixtureReference('workspace/ws_b')->getCode();
         $wsACode = $this->getFixtureReference('workspace/ws_a')->getCode();
@@ -317,17 +313,17 @@ class ParametersControllerTest extends FunctionalTestCase
             "/workspaces/tool/properties/{$workspace->getId()}/tools/{$wot->getId()}/editform"
         );
         $form = $crawler->filter('button[type=submit]')->form();
-        $form['workspace_order_tool_edit_form[translationKey]'] = 'modified_translation_key';
+        $form['workspace_order_tool_edit_form[name]'] = 'modified_name';
         $this->client->submit($form);
         $this->em->clear();
 
-        $newTranslationKey = $this->em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
+        $newName = $this->em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
             ->findOneBy(array('tool' => $home, 'workspace' => $workspace))
-            ->getTranslationKey();
+            ->getName();
 
         $this->assertEquals(
-            'modified_translation_key',
-            $newTranslationKey
+            'modified_name',
+            $newName
         );
     }
 
@@ -339,30 +335,41 @@ class ParametersControllerTest extends FunctionalTestCase
         $this->logUser($this->getUser('john'));
         $wot = $this->em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
             ->findOneBy(array('tool' => $home, 'workspace' => $workspace));
-        $oldTranslationKey = $wot->getTranslationKey();
+        $oldName = $wot->getName();
 
         $resourceManager = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool')
             ->findOneBy(array('name' => 'resource_manager'));
-        $rmTranslationKey = $this->em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
+        $rmName = $this->em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
             ->findOneBy(array('tool' => $resourceManager, 'workspace' => $workspace))
-            ->getTranslationKey();
+            ->getName();
 
         $crawler = $this->client->request(
             'GET',
             "/workspaces/tool/properties/{$workspace->getId()}/tools/{$wot->getId()}/editform"
         );
         $form = $crawler->filter('button[type=submit]')->form();
-        $form['workspace_order_tool_edit_form[translationKey]'] = $rmTranslationKey;
+        $form['workspace_order_tool_edit_form[name]'] = $rmName;
         $this->client->submit($form);
         $this->em->clear();
 
-        $newTranslationKey = $this->em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
+        $newName = $this->em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
             ->findOneBy(array('tool' => $home, 'workspace' => $workspace))
-            ->getTranslationKey();
+            ->getName();
 
         $this->assertEquals(
-            $oldTranslationKey,
-            $newTranslationKey
+            $oldName,
+            $newName
         );
+    }
+
+    private function resetTemplate()
+    {
+        $container = $this->client->getContainer();
+        $yml = $container->getParameter('claroline.workspace_template.directory').'config.yml';
+        $archpath = $container->getParameter('claroline.workspace_template.directory').'default.zip';
+        $archive = new \ZipArchive();
+        $archive->open($archpath, \ZipArchive::OVERWRITE);
+        $archive->addFile($yml, 'config.yml');
+        $archive->close();
     }
 }
