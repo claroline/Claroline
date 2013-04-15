@@ -8,13 +8,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-<<<<<<< HEAD
 use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleSubscribeEvent;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleUnsubscribeEvent;
-=======
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
->>>>>>> master
 
 class UserController extends Controller
 {
@@ -260,7 +257,6 @@ class UserController extends Controller
             $em->flush();
         }
 
-<<<<<<< HEAD
         foreach ($users as $user) {
             $log = new LogWorkspaceRoleSubscribeEvent($role, $user);
             $this->get('event_dispatcher')->dispatch('log', $log);
@@ -270,10 +266,7 @@ class UserController extends Controller
             'ClarolineCoreBundle:model:users.json.twig',
             array('users' => $users)
         );
-        $response = new Response($content);
-=======
         $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
->>>>>>> master
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;

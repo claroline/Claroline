@@ -110,20 +110,14 @@ class Manager
             $this->setResourceRights($resource, $rights);
         }
 
-<<<<<<< HEAD
-        $this->em->flush();
-        $log = new LogResourceCreateEvent($resource);
-        $this->ed->dispatch('log', $log);
-=======
         if ($autoflush) {
             $this->em->flush();
         }
 
         if ($autolog) {
-            $event = new ResourceLogEvent($resource, ResourceLogEvent::CREATE_ACTION);
-            $this->ed->dispatch('log_resource', $event);
+            $log = new LogResourceCreateEvent($resource);
+            $this->ed->dispatch('log', $log);
         }
->>>>>>> master
 
         return $resource;
     }

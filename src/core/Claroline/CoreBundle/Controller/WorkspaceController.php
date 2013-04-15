@@ -14,13 +14,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
-<<<<<<< HEAD
 use Claroline\CoreBundle\Library\Event\LogWorkspaceToolReadEvent;
-=======
 use Claroline\CoreBundle\Library\Event\WorkspaceLogEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
->>>>>>> master
 
 /**
  * This controller is able to:

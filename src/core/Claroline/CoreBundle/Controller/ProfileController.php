@@ -4,11 +4,8 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Form\ProfileType;
-<<<<<<< HEAD
 use Claroline\CoreBundle\Library\Event\LogUserUpdateEvent;
-=======
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
->>>>>>> master
 
 /**
  * Controller of the user profile.
@@ -64,14 +61,13 @@ class ProfileController extends Controller
         if ($form->isValid()) {
 
             $user = $form->getData();
-<<<<<<< HEAD
 
             $em = $this->getDoctrine()->getEntityManager();
             $unitOfWork = $em->getUnitOfWork();
             $unitOfWork->computeChangeSets();
             $changeSet = $unitOfWork->getEntityChangeSet($user);
+            //TODO add platformRoles to changeSet
 
-=======
             $newRoles = $form->get('platformRoles')->getData();
             $userRole = $this->get('doctrine.orm.entity_manager')
                 ->getRepository('ClarolineCoreBundle:Role')
@@ -87,13 +83,9 @@ class ProfileController extends Controller
             }
 
             $em = $this->getDoctrine()->getManager();
->>>>>>> master
             $em->persist($user);
             $em->flush();
             $this->get('security.context')->getToken()->setUser($user);
-
-            //TODO What do we put in $oldValues and $newValues ?? All user object ?
-
 
             $log = new LogUserUpdateEvent($user, $changeSet);
             $this->get('event_dispatcher')->dispatch('log', $log);
