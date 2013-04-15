@@ -6,11 +6,15 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceLogRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\LogRepository")
  * @ORM\Table(name="claro_log")
  */
 class Log
 {
+    const doerTypeAnonymous = 'anonymous';
+    const doerTypeUser = 'user';
+    const doerTypePlatform = 'platform';
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -40,6 +44,11 @@ class Log
      * @ORM\JoinColumn(name="doer_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     protected $doer;
+
+    /**
+     * @ORM\Column(type="string", name="doer_type", nullable=false)
+     */
+    protected $doerType;
 
     /**
      * @ORM\Column(type="string", name="doer_ip", nullable=true)
@@ -101,6 +110,11 @@ class Log
      * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     protected $workspace;
+
+    /**
+     * @ORM\Column(type="string", name="tool_name", nullable=true)
+     */
+    protected $toolName;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource")
@@ -218,6 +232,29 @@ class Log
     public function getDetails()
     {
         return $this->details;
+    }
+
+    /**
+     * Set doerType
+     *
+     * @param string $doerType
+     * @return Log
+     */
+    public function setDoerType($doerType)
+    {
+        $this->doerType = $doerType;
+
+        return $this;
+    }
+
+    /**
+     * Get doerType
+     *
+     * @return string 
+     */
+    public function getDoerType()
+    {
+        return $this->doerType;
     }
 
     /**
@@ -537,5 +574,28 @@ class Log
     public function getRole()
     {
         return $this->role;
+    }
+
+    /**
+     * Set toolName
+     *
+     * @param string $toolName
+     * @return Log
+     */
+    public function setToolName($toolName)
+    {
+        $this->toolName = $toolName;
+
+        return $this;
+    }
+
+    /**
+     * Get toolName
+     *
+     * @return string 
+     */
+    public function getToolName()
+    {
+        return $this->toolName;
     }
 }

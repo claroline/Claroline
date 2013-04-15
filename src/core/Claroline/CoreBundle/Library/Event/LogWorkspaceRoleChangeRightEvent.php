@@ -4,43 +4,37 @@ namespace Claroline\CoreBundle\Library\Event;
 
 class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent
 {
-    const action = 'workspace_role_change_right';
+    const action = 'ws_role_change_right';
 
     /**
      * Constructor.
-     * OldRights and newRights expected variables are arrays which contain all modified rights, for example:
-     * ('can_delete' => 'false', 'can_copy' => 'true' etc.)
+     * ChangeSet expected variable is array which contain all modified properties, in the following form:
+     * ('propertyName1' => ['property old value 1', 'property new value 1'], 'propertyName2' => ['property old value 2', 'property new value 2'] etc.)
      * 
-     * Please respect Underscore naming convention for property names (all lower case words separated with underscores)
+     * Please respect lower caml case naming convention for property names
      */
-    public function __construct($role, $resource, $oldRights, $newRights)
+    public function __construct($role, $resource, $changeSet)
     {
         parent::__construct(
             self::action,
             array(
-                'owner' => array(
-                    'last_name' => $role->getWorkspace()->getCreator()->getLastName(),
-                    'first_name' => $role->getWorkspace()->getCreator()->getFirstName()
-                ),
                 'role' => array(
-                    'name' => $role->getName(),
-                    'old_values' => $oldRights,
-                    'new_values' => $newRights
+                    'name' => $role->getTranslationKey(),
+                    'change_set' => $changeSet
                 ),
                 'workspace' => array(
-                    'name' => $role->getWorkspace()->getName()
+                    'name' => $resource->getWorkspace()->getName()
                 ),
                 'resource' => array(
                     'name' => $resource->getName(),
-                    'path' => $resource->getPath()
+                    'path' => $resource->getPathForDisplay()
                 )
             ),
             null,
             null,
             $resource,
             $role,
-            $role->getWorkspace(),
-            $role->getWorkspace()->getCreator()
+            $resource->getWorkspace()
         );
     }
 }

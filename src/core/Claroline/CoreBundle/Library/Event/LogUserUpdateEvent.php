@@ -8,10 +8,10 @@ class LogUserUpdateEvent extends LogGenericEvent
 
     /**
      * Constructor.
-     * OldValues and newValues expected variables are arrays which contain all modified properties, in the following form:
-     * ('property_name_1' => 'property_value_1', 'property_name_2' => 'property_value_2' etc.)
+     * ChangeSet expected variable is array which contain all modified properties, in the following form:
+     * ('propertyName1' => ['property old value 1', 'property new value 1'], 'propertyName2' => ['property old value 2', 'property new value 2'] etc.)
      * 
-     * Please respect Underscore naming convention for property names (all lower case words separated with underscores)
+     * Please respect lower caml case naming convention for property names
      */
     public function __construct($receiver, $changeSet)
     {

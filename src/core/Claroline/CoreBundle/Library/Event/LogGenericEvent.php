@@ -6,18 +6,19 @@ use Symfony\Component\EventDispatcher\Event;
 
 class LogGenericEvent extends Event
 {
-    private $action;
+    protected $action;
     
-    private $details;
-    private $receiver;
-    private $receiverGroup;
-    private $resource;
-    private $role;
-    private $workspace;
-    private $owner;
+    protected $details;
+    protected $receiver;
+    protected $receiverGroup;
+    protected $resource;
+    protected $role;
+    protected $workspace;
+    protected $owner;
+    protected $toolName;
 
-    private $childType;
-    private $childAction;
+    protected $childType;
+    protected $childAction;
 
     /**
      * Constructor.
@@ -30,6 +31,7 @@ class LogGenericEvent extends Event
         $role = null,
         $workspace = null,
         $owner = null,
+        $toolName = null,
         $childType = null,
         $childAction = null)
     {
@@ -41,6 +43,7 @@ class LogGenericEvent extends Event
         $this->role = $role;
         $this->workspace = $workspace;
         $this->owner = $owner;
+        $this->toolName = $toolName;
         $this->childType = $childType;
         $this->childAction = $childAction;
     }
@@ -102,11 +105,19 @@ class LogGenericEvent extends Event
     }
 
     /**
-     * Returns the action's target owner (from resource or workspace)
+     * Returns the action's target owner (from resource)
      */
     public function getOwner()
     {
         return $this->owner;
+    }
+
+    /**
+     * Returns the action's target tool's name
+     */
+    public function getToolName()
+    {
+        return $this->toolName;
     }
 
     /**

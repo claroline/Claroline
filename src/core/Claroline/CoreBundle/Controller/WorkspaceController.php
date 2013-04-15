@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
+use Claroline\CoreBundle\Library\Event\LogWorkspaceToolReadEvent;
 
 /**
  * This controller is able to:
@@ -225,6 +226,9 @@ class WorkspaceController extends Controller
                 "Tool '{$toolName}' didn't return any Response for tool event '{$eventName}'."
             );
         }
+
+        $log = new LogWorkspaceToolReadEvent($workspace, $toolName);
+        $this->get('event_dispatcher')->dispatch('log', $log);
 
         return new Response($event->getContent());
     }

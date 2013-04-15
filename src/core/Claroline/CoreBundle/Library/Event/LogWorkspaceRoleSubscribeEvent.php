@@ -4,7 +4,8 @@ namespace Claroline\CoreBundle\Library\Event;
 
 class LogWorkspaceRoleSubscribeEvent extends LogGenericEvent
 {
-    const action = 'workspace_role_subscribe';
+    const action_user = 'ws_role_subscribe_user';
+    const action_group = 'ws_role_subscribe_group';
 
     /**
      * Constructor.
@@ -12,17 +13,13 @@ class LogWorkspaceRoleSubscribeEvent extends LogGenericEvent
     public function __construct($role, $receiver=null, $receiverGroup=null)
     {
         $details = array(
-            'owner' => array(
-                'last_name' => $role->getWorkspace()->getCreator()->getLastName(),
-                'first_name' => $role->getWorkspace()->getCreator()->getFirstName()
-            ),
             'role' => array(
-                'name' => $role->getName()
+                'name' => $role->getTranslationKey()
             ),
             'workspace' => array(
                 'name' => $role->getWorkspace()->getName()
-            ),
-        )
+            )
+        );
 
         if ($receiver !== null) {
             $details['receiver_user'] = array(
@@ -37,15 +34,18 @@ class LogWorkspaceRoleSubscribeEvent extends LogGenericEvent
             );
         }
 
+        $action = self::action_user;
+        if ($receiverGroup != null) {
+            $action = self::action_group;
+        }
         parent::__construct(
-            self::action,
+            $action,
             $details,   
             $receiver,
             $receiverGroup,
             null,
             $role,
-            $role->getWorkspace(),
-            $role->getWorkspace()->getCreator()
+            $role->getWorkspace()
         );
     }
 }

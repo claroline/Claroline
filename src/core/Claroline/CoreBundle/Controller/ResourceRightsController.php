@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleChangeRightEvent;
 
 class ResourceRightsController extends Controller
 {
@@ -59,17 +60,36 @@ class ResourceRightsController extends Controller
             $resourceRepo->findDescendants($resource, true) :
             array($resource);
 
+        $editedResourceRightsWithChangeSet = array();
         for ($i = 0, $targetCount = count($targetResources); $i < $targetCount; ++$i) {
-            $roleRights = $rightsRepo->findNonAdminRights($targetResources[$i]);
+            $targetResource = $targetResources[$i];
+            $roleRights = $rightsRepo->findNonAdminRights($targetResource);
 
             for ($j = 0, $rightsCount = count($roleRights); $j < $rightsCount; ++$j) {
+                $roleRight = $roleRights[$j];
                 foreach ($permissions as $permission) {
                     $i === 0 && $referenceRights[$j][$permission]
-                        = isset($parameters['roleRights'][$roleRights[$j]->getId()][$permission]);
+                        = isset($parameters['roleRights'][$roleRight->getId()][$permission]);
                     $setter = 'setCan' . ucfirst($permission);
-                    $roleRights[$j]->{$setter}($referenceRights[$j][$permission]);
+                    $roleRight->{$setter}($referenceRights[$j][$permission]);
+                }
+
+                $unitOfWork = $em->getUnitOfWork();
+                $unitOfWork->computeChangeSets();
+                $changeSet = $unitOfWork->getEntityChangeSet($roleRight);
+
+                if (count($changeSet) > 0) {
+                    $editedResourceRightsWithChangeSet[] = array('resource_rights' => $roleRight, 'change_set' => $changeSet);
                 }
             }
+        }
+
+        foreach ($editedResourceRightsWithChangeSet as $roleRightWithChangeSet) {
+            $roleRight = $roleRightWithChangeSet['resource_rights'];
+            $changeSet = $roleRightWithChangeSet['change_set'];
+
+            $log = new LogWorkspaceRoleChangeRightEvent($roleRight->getRole(), $roleRight->getResource(), $changeSet);
+            $this->get('event_dispatcher')->dispatch('log', $log);
         }
 
         $em->flush();

@@ -1,0 +1,146 @@
+<span class="notification-date">
+    {% if log.getDateLog()|date('d-m-Y') == ''|date('d-m-Y') %}
+        {{ 'today'|trans({}, 'platform') ~ ', ' }}
+    {% else %}
+        {{ log.getDateLog()|date('d-m-Y') ~ ', ' }}
+    {% endif %}{{ log.getDateLog()|date('H:i') }}
+</span> :
+<strong>
+    {% if log.getDetails().doer is defined %}
+        <strong>
+            {% if log.getDoer() != null %}
+                <a href="{{ path('claro_profile_view', {'userId': log.getDoer().getId()}) }}">
+                    {{ log.getDetails().doer.first_name }} {{ log.getDetails().doer.last_name }}
+                </a>
+            {% else %}
+                <em>{{ log.getDetails().doer.first_name }} {{ log.getDetails().doer.last_name }}</em>
+            {% endif %}
+        </strong>
+    {% elseif log.getDoerType == 'platform' %}
+        {{ ('log_default_user')|trans({}, 'platform') }}
+    {% elseif log.getDoerType == 'anonymous' %}
+        {{ ('anonymous')|trans({}, 'platform') }}
+    {% endif %}
+</strong>
+
+{{ ('log_' ~ log.getAction() ~ '_verb')|trans({}, 'platform') }}
+
+{% if 'resource_' in log.getAction() %}
+    <strong>
+        {% if log.getResource() != null %}
+            <a href="{{ path('claro_resource_open', {'resourceType': log.getResourceType().getName(), 'action': 'open', 'resourceId': log.getResource().getId()})}}"> {{ log.getDetails().resource.path }}</a>
+        {% else %}
+            <em>{{ log.getDetails().resource.path }}</em>
+        {% endif %}
+    </strong>
+{% endif %}
+
+{% if 'user_' in log.getAction() %}
+    {% if log.getDetails().receiver_user is defined %}
+        <strong>
+            {% if log.getReceiver() != null %}
+                <a href="{{ path('claro_profile_view', {'userId': log.getReceiver().getId()}) }}">
+                    {{ log.getDetails().receiver_user.first_name }} {{ log.getDetails().receiver_user.last_name }}
+                </a>
+            {% else %}
+                <em>{{ log.getDetails().receiver_user.first_name }} {{ log.getDetails().receiver_user.last_name }}</em>
+            {% endif %}
+        </strong>
+    {% endif %}
+{% endif %}
+
+{% if 'group_' in log.getAction() %}
+    {% if log.getDetails().receiver_group is defined %}
+        <strong>
+            {% if is_granted('ROLE_ADMIN') and log.getReceiverGroup() != null %}
+                <a href="{{ path('claro_admin_group_user_list', {'groupId': log.getReceiverGroup().getId()}) }}">
+                    {{ log.getDetails().receiver_group.name }}
+                </a>
+            {% elseif log.getReceiverGroup() != null %}
+                {{ log.getDetails().receiver_group.name }}
+            {% else %}
+                <em>{{ log.getDetails().receiver_group.name }}</em>
+            {% endif %}
+        </strong>
+    {% endif %}
+{% endif %}
+
+{% if 'ws_role_' in log.getAction() %}
+    {% if log.getDetails().receiver_user is defined %}
+        <strong>
+            {% if log.getReceiver() != null %}
+                <a href="{{ path('claro_profile_view', {'userId': log.getReceiver().getId()}) }}">
+                    {{ log.getDetails().receiver_user.first_name }} {{ log.getDetails().receiver_user.last_name }}
+                </a>
+            {% else %}
+                <em>{{ log.getDetails().receiver_user.first_name }} {{ log.getDetails().receiver_user.last_name }}</em>
+            {% endif %}
+        </strong>
+    {% elseif log.getDetails().receiver_group is defined %}
+        <strong>
+            {% if is_granted('ROLE_ADMIN') and log.getReceiverGroup() != null %}
+                <a href="{{ path('claro_admin_group_user_list', {'groupId': log.getReceiverGroup().getId()}) }}">
+                    {{ log.getDetails().receiver_group.name }}
+                </a>
+            {% elseif log.getReceiverGroup() != null %}
+                {{ log.getDetails().receiver_group.name }}
+            {% else %}
+                <em>{{ log.getDetails().receiver_group.name }}</em>
+            {% endif %}
+        </strong>
+    {% endif %}
+
+    {% if log.getDetails().receiver_user is defined or log.getDetails().receiver_group is defined %}
+        {{ ('log_' ~ log.getAction() ~ '_verb_middle')|trans({}, 'platform') }}
+    {% endif %}
+
+    {% if log.getDetails().role is defined %}
+        <strong>
+            {% if log.Role() != null %}
+                {{ log.getDetails().role.name|trans({}, 'platform') }}
+            {% else %}
+                <em>{{ log.getDetails().role.name|trans({}, 'platform') }}</em>
+            {% endif %}
+        </strong>
+    {% endif %}
+
+    {% if log.getDetails().resource is defined%}
+        {{ ('log_' ~ log.getAction() ~ '_verb_middle')|trans({}, 'platform') }}
+        <strong>
+            {% if log.getResource() != null %}
+                <a href="{{ path('claro_resource_open', {'resourceType': log.getResourceType().getName(), 'action': 'open', 'resourceId': log.getResource().getId()})}}"> {{ log.getDetails().resource.path }}</a>
+            {% else %}
+                <em>{{ log.getDetails().resource.path }}</em>
+            {% endif %}
+        </strong>
+    {% endif %}
+{% endif %}
+
+{% if 'workspace_' in log.getAction() %}
+    {% if log.getDetails().workspace is defined %}
+        {% if log.getWorkspace() != null %}
+            <a href="{{ path('claro_workspace_open', { 'workspaceId': log.getWorkspace().getId() }) }}"> {{ log.getDetails().workspace.name }}</a>
+        {% else %}
+            <em>{{ log.getDetails().workspace.name }}</em>
+        {% endif %}
+    {% endif %}
+{% endif %}
+
+{% if 'ws_tool_' in log.getAction() %}
+    {% if log.getToolName() %}
+        <strong>
+            {{ log.getToolName()|trans({}, 'platform') }}
+        </strong>
+    {% endif %}
+
+    {{ ('log_' ~ log.getAction() ~ '_verb_middle')|trans({}, 'platform') }}
+    {% if log.getDetails().workspace is defined %}
+        <strong>
+            {% if log.getWorkspace() != null %}
+                <a href="{{ path('claro_workspace_open', { 'workspaceId': log.getWorkspace().getId() }) }}"> {{ log.getDetails().workspace.name }}</a>
+            {% else %}
+                <em>{{ log.getDetails().workspace.name }}</em>
+            {% endif %}
+        </strong>
+    {% endif %}
+{% endif %}

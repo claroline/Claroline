@@ -19,7 +19,6 @@ class LogGroupCreateEvent extends LogGenericEvent
                 )
             ),
             null,
-            null,
             $receiverGroup
         );
     }

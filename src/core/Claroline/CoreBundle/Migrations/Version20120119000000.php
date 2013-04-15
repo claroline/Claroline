@@ -560,7 +560,9 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('action', 'string');
         $table->addColumn('date_log', 'datetime');
         $table->addColumn('details', 'json_array', array('notnull' => false));
+        $table->addColumn('doer_type', 'string');
         $table->addColumn('doer_ip', 'string', array('notnull' => false));
+        $table->addColumn('tool_name', 'string', array('notnull' => false));
         $table->addColumn('child_type', 'string', array('notnull' => false));
         $table->addColumn('child_action', 'string', array('notnull' => false));
 

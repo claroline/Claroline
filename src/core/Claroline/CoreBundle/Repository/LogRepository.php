@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
-class ResourceLogRepository extends EntityRepository
+class LogRepository extends EntityRepository
 {
     public function findLastLogs($user, $workspace = null)
     {
@@ -40,7 +40,7 @@ class ResourceLogRepository extends EntityRepository
 
         $dql .= ' ORDER by rl.dateLog DESC';
         $query = $this->_em->createQuery($dql);
-        $query->setMaxResults(5);
+        $query->setMaxResults(20);
 
         return $query->getResult();
     }

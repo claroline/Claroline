@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Library\Event;
 
 class LogWorkspaceRoleCreateEvent extends LogGenericEvent
 {
-    const action = 'workspace_role_create';
+    const action = 'ws_role_create';
 
     /**
      * Constructor.
@@ -14,10 +14,6 @@ class LogWorkspaceRoleCreateEvent extends LogGenericEvent
         parent::__construct(
             self::action,
             array(
-                'owner' => array(
-                    'last_name' => $role->getWorkspace()->getCreator()->getLastName(),
-                    'first_name' => $role->getWorkspace()->getCreator()->getFirstName()
-                ),
                 'role' => array(
                     'name' => $role->getName()
                 ),
@@ -29,8 +25,7 @@ class LogWorkspaceRoleCreateEvent extends LogGenericEvent
             null,
             null,
             $role,
-            $role->getWorkspace(),
-            $role->getWorkspace()->getCreator()
+            $role->getWorkspace()
         );
     }
 }

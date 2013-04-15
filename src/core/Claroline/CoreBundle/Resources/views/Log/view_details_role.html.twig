@@ -1,0 +1,8 @@
+{% if log.getDetails().role is defined %}
+    <h4>{{ ('log_role')|trans({}, 'platform') }}</h4>
+
+    <dl class="dl-horizontal">
+        <dt>{{ ('name')|trans({}, 'platform') }}</dt>
+        <dd>{{ log.getDetails().role.name|trans({}, 'platform') }}</dd>
+    </dl>
+{% endif %}

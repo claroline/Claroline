@@ -1,0 +1,28 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block content %}
+    <h1>{{ ('log_'~log.getAction()~'_title')|trans({}, 'platform')}}</h1>
+    <p>{% include 'ClarolineCoreBundle:Log:view_list_item.html.twig' %}</p>
+
+    <h3>{{'log_context'|trans({}, 'platform')}}</h3>
+    
+    {% include 'ClarolineCoreBundle:Log:view_details_doer.html.twig' %}
+
+    {% include 'ClarolineCoreBundle:Log:view_details_role.html.twig' %}
+        
+    {% include 'ClarolineCoreBundle:Log:view_details_receiver_user.html.twig' %}
+
+    {% include 'ClarolineCoreBundle:Log:view_details_receiver_group.html.twig' %}
+
+    {% include 'ClarolineCoreBundle:Log:view_details_resource.html.twig' %}
+
+    {% include 'ClarolineCoreBundle:Log:view_details_owner.html.twig' %}
+
+    {% include 'ClarolineCoreBundle:Log:view_details_workspace.html.twig' %}
+
+    {% include 'ClarolineCoreBundle:Log:view_details_action_' ~ log.getAction() ~ '.html.twig' ignore missing %}
+
+    {#
+    <small>{{ log.getDetails()|json_encode}}</small>
+    #}
+{% endblock %}
