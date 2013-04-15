@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
+use Symfony\Component\Yaml\Yaml;
 
 class DatabaseWriterTest extends FunctionalTestCase
 {
@@ -226,6 +227,84 @@ class DatabaseWriterTest extends FunctionalTestCase
         $this->resetTemplate(array('Valid\WithFileExtension\ValidWithFileExtension'));
     }
 
+    public function testInsertTheDeleteToolUpdateDefaultTemplate()
+    {
+        $container = $this->client->getContainer();
+        $archive = new \ZipArchive();
+        $archpath = $container->getParameter('claroline.workspace_template.directory').'default.zip';
+        $archive->open($archpath);
+        $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
+        $oldTools = count($parsedFile['tools_infos']);
+        $archive->close();
+        $pluginFqcn = 'Valid\WithTools\ValidWithTools';
+        $plugin = $this->loader->load($pluginFqcn);
+        $this->validator->validate($plugin);
+        $this->dbWriter->insert($plugin, $this->validator->getPluginConfiguration());
+        $archive->open($archpath);
+        $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
+        $newTools = count($parsedFile['tools_infos']);
+        $archive->close();
+        $this->assertEquals(1, $newTools - $oldTools);
+        $this->dbWriter->delete($pluginFqcn);
+        $archive->open($archpath);
+        $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
+        $endTools = count($parsedFile['tools_infos']);
+        $archive->close();
+        $this->assertEquals(0, $oldTools - $endTools);
+    }
+
+    public function testInsertThenDeleteWidgetUpdateTemplate()
+    {
+        $container = $this->client->getContainer();
+        $archive = new \ZipArchive();
+        $archpath = $container->getParameter('claroline.workspace_template.directory').'default.zip';
+        $archive->open($archpath);
+        $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
+        $oldWidget = count($parsedFile['tools']['home']['widget']);
+        $archive->close();
+        $pluginFqcn = 'Valid\WithWidgets\ValidWithWidgets';
+        $plugin = $this->loader->load($pluginFqcn);
+        $this->validator->validate($plugin);
+        $this->dbWriter->insert($plugin, $this->validator->getPluginConfiguration());
+        $archive->open($archpath);
+        $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
+        $newWidget = count($parsedFile['tools']['home']['widget']);
+        $archive->close();
+        $this->assertEquals(4, $newWidget - $oldWidget);
+        $this->dbWriter->delete($pluginFqcn);
+        $archive->open($archpath);
+        $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
+        $endWidget = count($parsedFile['tools']['home']['widget']);
+        $archive->close();
+        $this->assertEquals(0, $oldWidget - $endWidget);
+    }
+
+    public function testInsertThenDeleteResourceTypeUpdateTemplate()
+    {
+        $container = $this->client->getContainer();
+        $archive = new \ZipArchive();
+        $archpath = $container->getParameter('claroline.workspace_template.directory').'default.zip';
+        $archive->open($archpath);
+        $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
+        $oldResources = count($parsedFile['root_perms']['ROLE_WS_MANAGER']['canCreate']);
+        $archive->close();
+        $pluginFqcn = 'Valid\WithCustomResources\ValidWithCustomResources';
+        $plugin = $this->loader->load($pluginFqcn);
+        $this->validator->validate($plugin);
+        $this->dbWriter->insert($plugin, $this->validator->getPluginConfiguration());
+        $archive->open($archpath);
+        $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
+        $newResources = count($parsedFile['root_perms']['ROLE_WS_MANAGER']['canCreate']);
+        $archive->close();
+        $this->assertEquals(2, $newResources - $oldResources);
+        $this->dbWriter->delete($pluginFqcn);
+        $archive->open($archpath);
+        $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
+        $endResources = count($parsedFile['root_perms']['ROLE_WS_MANAGER']['canCreate']);
+        $archive->close();
+        $this->assertEquals(0, $oldResources - $endResources);
+    }
+
     public function pluginProvider()
     {
         return array(
@@ -243,5 +322,10 @@ class DatabaseWriterTest extends FunctionalTestCase
         $archive->open($archpath, \ZipArchive::OVERWRITE);
         $archive->addFile($yml, 'config.yml');
         $archive->close();
+    }
+
+    private function removePlugin($pluginFqcn)
+    {
+
     }
 }

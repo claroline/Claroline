@@ -62,3 +62,7 @@ services:
         class: Claroline\CoreBundle\Library\Security\Utilities
         arguments:
           - "@doctrine.orm.entity_manager"
+
+    claroline.security.ajax_authentication_failure_handler:
+        class: Claroline\CoreBundle\Listener\AjaxAuthenticationFailureHandler
+        parent: security.authentication.failure_handler

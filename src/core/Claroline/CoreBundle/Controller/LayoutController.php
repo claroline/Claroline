@@ -114,4 +114,9 @@ class LayoutController extends Controller
             )
         );
     }
+
+    public function javascriptInitAction()
+    {
+        return $this->render('ClarolineCoreBundle:Layout:javascript.js.twig');
+    }
 }

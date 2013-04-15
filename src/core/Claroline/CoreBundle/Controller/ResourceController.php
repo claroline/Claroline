@@ -458,7 +458,7 @@ class ResourceController extends Controller
      *     name="claro_resource_filter",
      *     options={"expose"=true}
      * )
-     * 
+     *
      * Returns a json representation of a resource search result.
      *
      * @param integer $directoryId The id of the directory from which the search was started
