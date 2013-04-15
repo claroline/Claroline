@@ -40,7 +40,7 @@ class LogRepository extends EntityRepository
 
         $dql .= ' ORDER by rl.dateLog DESC';
         $query = $this->_em->createQuery($dql);
-        $query->setMaxResults(20);
+        $query->setMaxResults(5);
 
         return $query->getResult();
     }

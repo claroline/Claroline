@@ -37,6 +37,6 @@ class LogResourceReadEvent extends LogGenericEvent implements NotRepeatableLog
 
     public function getLogSignature()
     {
-        return $resource->getId();
+        return $this->resource->getId();
     }
 }

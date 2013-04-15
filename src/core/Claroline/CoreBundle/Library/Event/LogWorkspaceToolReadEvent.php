@@ -30,6 +30,6 @@ class LogWorkspaceToolReadEvent extends LogGenericEvent implements NotRepeatable
 
     public function getLogSignature()
     {
-        return $this->getWorkspace()->getId().'_'.$this->getToolName();
+        return $this->workspace->getId().'_'.$this->toolName;
     }
 }
