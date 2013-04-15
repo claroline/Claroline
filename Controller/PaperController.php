@@ -92,20 +92,20 @@ class PaperController extends Controller
         $paper = $em->getRepository('UJMExoBundle:Paper')->find($id);
 
         $subscription = $this->getSubscription($user, $paper->getExercise()->getId());
-        
+
         $worspace = $paper->getExercise()->getWorkspace();
 
         if (($subscription[0]->getAdmin() != 1) && ($paper->getEnd() == null)) {
-            
+
             return $this->redirect($this->generateUrl('exercise_show', array('id' => $paper->getExercise()->getId())));
-            
-        } else if (($subscription[0]->getAdmin() == 1) || (($user->getId() == $paper->getUser()->getId()) && 
-                  (($paper->getExercise()->getCorrectionMode() == 1) || (($paper->getExercise()->getCorrectionMode() == 3) && 
+
+        } else if (($subscription[0]->getAdmin() == 1) || (($user->getId() == $paper->getUser()->getId()) &&
+                  (($paper->getExercise()->getCorrectionMode() == 1) || (($paper->getExercise()->getCorrectionMode() == 3) &&
                   ($paper->getExercise()->getDateCorrection()->format('Y-m-d H:i:s') <= date("Y-m-d H:i:s"))) || (($paper->getExercise()->getCorrectionMode() == 2) &&
-                  ($paper->getExercise()->getMaxAttemps() <= $this->container->get('UJM_Exo.exerciseServices')->getNbPaper($user->getId(), $paper->getExercise()->getId())))))){
-            
+                  ($paper->getExercise()->getMaxAttemps() <= $this->container->get('UJM_Exo.exerciseServices')->getNbPaper($user->getId(), $paper->getExercise()->getId())))))) {
+
             $display = 'all';
-            
+
         } else if (($user->getId() == $paper->getUser()->getId()) && ($paper->getExercise()->getMarkMode() == 2)) {
             //si pas le droit à la correction mais que la note peut être affiché à la fin du test
             $display = 'score';
@@ -169,14 +169,13 @@ class PaperController extends Controller
     {
         return $this->createFormBuilder(array('id' => $id))
                     ->add('id', 'hidden')
-                    ->getForm()
-        ;
+                    ->getForm();
     }
 
     private function orderInteractions($interactions, $order)
     {
         $inter = array();
-        $order = substr ($order, 0, strlen($order) - 1);
+        $order = substr($order, 0, strlen($order) - 1);
         $order = explode(';', $order);
 
         foreach ($order as $interId) {
@@ -188,13 +187,14 @@ class PaperController extends Controller
                 }
             }
         }
+
         return $inter;
     }
 
     private function orderResponses($responses, $order)
     {
         $resp = array();
-        $order = substr ($order, 0, strlen($order) - 1);
+        $order = substr($order, 0, strlen($order) - 1);
         $order = explode(';', $order);
         foreach ($order as $interId) {
             $tem = 0;
@@ -215,6 +215,7 @@ class PaperController extends Controller
                 $resp[] = $response;
             }
         }
+
         return $resp;
     }
 
