@@ -219,6 +219,8 @@ text_form_name: Nom
 text_form_shareType: Redistribution
 text_form_text: Texte
 to: Jusque
+tool_form_name : "Nom"
+tool_form_displayName : "Nom affiché"
 to_message: A
 today: 'Aujourd''hui'
 tool: Outil
