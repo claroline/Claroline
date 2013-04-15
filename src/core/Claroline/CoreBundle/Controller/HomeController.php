@@ -273,17 +273,30 @@ class HomeController extends Controller
      *
      * @param \String $type The type of the content to create.
      *
+     * @route("/content/creator/{type}/{id}", name="claroline_content_creator")
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function creatorAction($type)
+    public function creatorAction($type, $id = null, $content = null)
     {
-        if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
+        if ($id and !$content) {
+            $manager = $this->getDoctrine()->getManager();
+
+            $content = $manager->getRepository("ClarolineCoreBundle:Home\Content")->find($id);
+        }
+
+        if ($this->get('security.context')->isGranted('ROLE_ADMIN') and $content) {
+            return $this->render(
+                'ClarolineCoreBundle:Home:creator.html.twig',
+                array('content' => $content, 'type' => $type)
+            );
+        } else if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
             return $this->render(
                 'ClarolineCoreBundle:Home:creator.html.twig',
                 array('type' => $type)
             );
         } else {
-            return new Response("");
+            return new Response();
         }
     }
 

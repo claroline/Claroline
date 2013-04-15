@@ -13,7 +13,7 @@ claro_content_error:
     pattern: /content/error
     defaults:
         _controller: FrameworkBundle:Template:template
-        template: 'ClarolineCoreBundle:Home:error.html.twig'
+        template: 'ClarolineCoreBundle:Home:ajaxerror.html.twig'
 
 claro_content_confirm:
     pattern: /content/confirm
@@ -87,6 +87,11 @@ claro_admin:
 
 claro_admin_widget:
     resource: "@ClarolineCoreBundle/Controller/AdministrationWidgetController.php"
+    prefix: admin
+    type: annotation
+
+claro_admin_tool:
+    resource: "@ClarolineCoreBundle/Controller/Tool/AdministrationToolController.php"
     prefix: admin
     type: annotation
 
