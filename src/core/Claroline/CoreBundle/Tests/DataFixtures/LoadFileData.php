@@ -60,7 +60,7 @@ class LoadFileData extends AbstractFixture implements ContainerAwareInterface
         $directory = $this->getReference("directory/{$this->directory}");
         $resourceManager = $this->container->get('claroline.resource.manager');
         $resourceUtilities = $this->container->get('claroline.resource.utilities');
-        $filesDirectory = $this->container->getParameter('claroline.files.directory');
+        $filesDirectory = $this->container->getParameter('claroline.param.files_directory');
 
         foreach ($this->files as $filePath) {
             $filePathParts = explode(DIRECTORY_SEPARATOR, $filePath);
@@ -85,5 +85,7 @@ class LoadFileData extends AbstractFixture implements ContainerAwareInterface
             $resourceManager->create($file, $directory->getId(), 'file', $user);
             $this->addReference("file/{$fileName}", $file);
         }
+
+        $manager->flush();
     }
 }

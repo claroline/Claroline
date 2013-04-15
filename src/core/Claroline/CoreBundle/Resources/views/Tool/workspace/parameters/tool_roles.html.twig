@@ -38,7 +38,7 @@
                                         'workspaceOrderToolId': toolPermission['tool'].getId()}) }}">
                                 <i class="icon-pencil"></i>
                             </a>
-                            {{ toolPermission['tool'].getTranslationKey() }}
+                            {{ toolPermission['tool'].getName() }}
                             <small><em>({{ toolPermission['tool'].getTool().getName()|trans({}, 'tools') }})</em></small>
                         </td>
                         {% for key, isVisible in toolPermission['visibility'] %}

@@ -17,12 +17,19 @@ use Claroline\CoreBundle\Library\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Library\Event\LogResourceReadEvent;
 use Claroline\CoreBundle\Library\Event\LogResourceCreateEvent;
 use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class ResourceController extends Controller
 {
     const THUMB_PER_PAGE = 12;
 
     /**
+     * @Route(
+     *     "/form/{resourceType}",
+     *     name="claro_resource_creation_form",
+     *     options={"expose"=true}
+     * )
+     *
      * Renders the creation form for a given resource type.
      *
      * @param string $resourceType the resource type
@@ -45,6 +52,12 @@ class ResourceController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/create/{resourceType}/{parentId}",
+     *     name="claro_resource_create",
+     *     options={"expose"=true}
+     * )
+     *
      * Creates a resource.
      *
      * @param string  $resourceType the resource type
@@ -86,6 +99,12 @@ class ResourceController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/open/{resourceType}/{resourceId}",
+     *     name="claro_resource_open",
+     *     options={"expose"=true}
+     * )
+     *
      * Opens a resource.
      *
      * @param integer $resourceId  the resource id
@@ -98,7 +117,7 @@ class ResourceController extends Controller
      */
     public function openAction($resourceId, $resourceType)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($resourceId);
         $collection = new ResourceCollection(array($resource));
@@ -126,6 +145,12 @@ class ResourceController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/delete",
+     *     name="claro_resource_delete",
+     *     options={"expose"=true}
+     * )
+     *
      * Removes a many resources from a workspace.
      * Takes an array of ids as parameters (query string: "ids[]=1&ids[]=2" ...).
      *
@@ -134,7 +159,7 @@ class ResourceController extends Controller
     public function deleteAction()
     {
         $ids = $this->container->get('request')->query->get('ids', array());
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $collection = new ResourceCollection();
 
         foreach ($ids as $id) {
@@ -156,6 +181,12 @@ class ResourceController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/move/{newParentId}",
+     *     name="claro_resource_move",
+     *     options={"expose"=true}
+     * )
+     *
      * Moves many resource (changes their parents). This function takes an array
      * of parameters which are the ids of the moved resources
      * (query string: "ids[]=1&ids[]=2" ...).
@@ -165,7 +196,7 @@ class ResourceController extends Controller
     public function moveAction($newParentId)
     {
         $ids = $this->container->get('request')->query->get('ids', array());
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $resourceRepo = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
         $newParent = $resourceRepo->find($newParentId);
         $resourceManager = $this->get('claroline.resource.manager');
@@ -208,6 +239,12 @@ class ResourceController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/custom/{resourceType}/{action}/{resourceId}",
+     *     name="claro_resource_custom",
+     *     options={"expose"=true}
+     * )
+     *
      * Handles any custom action (i.e. not defined in this controller) on a
      * resource of a given type.
      *
@@ -245,6 +282,12 @@ class ResourceController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/export",
+     *     name="claro_resource_export",
+     *     options={"expose"=true}
+     * )
+     *
      * This function takes an array of parameters. Theses parameters are the ids
      * of the resources which are going to be downloaded
      * (query string: "ids[]=1&ids[]=2" ...).
@@ -288,6 +331,13 @@ class ResourceController extends Controller
     }
 
     /**
+     * @Route(
+     *     "directory/{directoryId}",
+     *     name="claro_resource_directory",
+     *     options={"expose"=true},
+     *     defaults={"resourceId"=0}
+     * )
+     *
      * Returns a json representation of a directory, containing the following items :
      * - The path of the directory
      * - The resource types the user is allowed to create in the directory
@@ -309,7 +359,7 @@ class ResourceController extends Controller
         $path = array();
         $creatableTypes = array();
         $resources = array();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.context')->getToken()->getUser();
         $resourceRepo = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
         $directoryId = (integer) $directoryId;
@@ -326,7 +376,7 @@ class ResourceController extends Controller
             }
 
             $path = $resourceRepo->findAncestors($directory);
-            $resources = $resourceRepo->findChildren($directory, $currentRoles, true);
+            $resources = $resourceRepo->findChildren($directory, $currentRoles);
 
             $creationRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
                 ->findCreationRights($currentRoles, $directory);
@@ -355,6 +405,12 @@ class ResourceController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/copy/{resourceDestinationId}",
+     *     name="claro_resource_copy",
+     *     options={"expose"=true}
+     * )
+     *
      * Adds multiple resource resource to a workspace.
      * Needs an array of ids to be functionnal (query string: "ids[]=1&ids[]=2" ...).
      *
@@ -366,7 +422,7 @@ class ResourceController extends Controller
     {
         $ids = $this->container->get('request')->query->get('ids', array());
         $token = $this->get('security.context')->getToken();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $parent = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($resourceDestinationId);
         $newNodes = array();
@@ -401,6 +457,12 @@ class ResourceController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/filter/{directoryId}",
+     *     name="claro_resource_filter",
+     *     options={"expose"=true}
+     * )
+     * 
      * Returns a json representation of a resource search result.
      *
      * @param integer $directoryId The id of the directory from which the search was started
@@ -427,8 +489,8 @@ class ResourceController extends Controller
             $path = $resourceRepo->findAncestors($directory);
         }
 
-        $user = $this->get('security.context')->getToken()->getUser();
-        $resources = $resourceRepo->findUserResourcesByCriteria($criteria, $user);
+        $userRoles = $this->get('security.context')->getToken()->getRoles();
+        $resources = $resourceRepo->findByCriteria($criteria, $userRoles);
         $response = new Response(json_encode(array('resources' => $resources, 'path' => $path)));
         $response->headers->set('Content-Type', 'application/json');
 
@@ -436,6 +498,12 @@ class ResourceController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/shortcut/{newParentId}/create",
+     *     name="claro_resource_create_shortcut",
+     *     options={"expose"=true}
+     * )
+     *
      * Creates (one or several) shortcuts.
      * Takes an array of ids to be functionnal (query string: "ids[]=1&ids[]=2" ...).
      *

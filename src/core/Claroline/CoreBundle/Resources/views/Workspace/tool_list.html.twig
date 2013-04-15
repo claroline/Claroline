@@ -2,7 +2,7 @@
     <li{% if path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': toolWithTranslation['tool'].getName()}) == app.request.requesturi %} class="active"{% endif %}>
     <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': toolWithTranslation['tool'].getName()}) }}">
         <i class="{{ toolWithTranslation['tool'].getClass() }}"></i>
-        <span>{{ toolWithTranslation['translation_key']|trans({}, 'tools') }}</span>
+        <span>{{ toolWithTranslation['name'] }}</span>
         <i class="icon-chevron-right pull-right"></i>
     </a>
     </li>

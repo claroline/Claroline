@@ -86,7 +86,7 @@ class RightManagerTest extends FunctionalTestCase
 
     public function testPermissionCanBeGrantedThroughRoleAndUser()
     {
-        $this->loadRoleData(array(array('role_a' => null)));
+        $this->loadRoleData(array('role_a'));
         $entity = $this->createEntity();
         $jane = $this->getUser('user');
         $roleA = $this->getRole('role_a');
@@ -104,7 +104,7 @@ class RightManagerTest extends FunctionalTestCase
 
     public function testRemovePermissionsForRoleRemovesPermissionsForAllUsersWhoHaveThatRole()
     {
-        $this->loadRoleData(array(array('role_d' => null)));
+        $this->loadRoleData(array('role_d'));
         $entity = $this->createEntity();
         $roleD = $this->getRole('role_d');
         $jane = $this->getUser('user');
@@ -279,7 +279,7 @@ class RightManagerTest extends FunctionalTestCase
 
     public function testGiveRightsForRoleGrantsPermissionsToAllUsersWhoHaveThatRole()
     {
-        $this->loadRoleData(array(array('role_c' => null)));
+        $this->loadRoleData(array('role_c'));
         $entity = $this->createEntity();
 
         $jane = $this->getUser('user');

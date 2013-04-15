@@ -1,0 +1,93 @@
+{% macro showTag(tag) %}
+{% if tag.getRelWorkspaceTagList() is not empty %}
+    <div class="accordion" id="accordion-{{ tag.getId() }}">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <a  class="accordion-toggle"
+                    data-toggle="collapse"
+                    data-parent="#accordion-{{ tag.getId() }}"
+                    href="#collapse-{{ tag.getId() }}"
+                >
+                    <i class="icon-align-justify"></i>
+                    {{ tag.getName() }}
+                    <i class="icon-chevron-down pull-right"></i>
+                </a>
+            </div>
+            <div id="collapse-{{ tag.getId() }}" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>
+                        {% for relWorkspaceTag in tag.getRelWorkspaceTagList() %}
+                        {% set workspace = relWorkspaceTag.getWorkspace() %}
+                        <li class="row-workspace row-workspace-id-{{ workspace.getId() }}">
+                            <i class="icon-book"></i>
+                            <a href="{{ path('claro_workspace_open',
+                               {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
+                               id="link-home-{{ workspace.getId() }}"
+                            >
+                               {{ workspace.getName() }}
+                               <span class="workspace-code">({{ workspace.getCode() }})</span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endmacro %}
+
+{% from _self import showTag %}
+
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block sectionHeader %}
+    {{ macros.sectionHeader('my_workspaces'|trans({}, 'platform')) }}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <a href="{{ path('claro_workspace_manage_tag') }}">
+            <button type="button" class="btn">{{ 'tags_management'|trans({}, 'platform') }}</button>
+        </a>
+    </div>
+    <br>
+    <div class="accordion" id="accordion-all">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <a  class="accordion-toggle"
+                    data-toggle="collapse"
+                    data-parent="#accordion-all"
+                    href="#collapse-all"
+                >
+                    <i class="icon-align-justify"></i>
+                    {{ 'all_my_workspaces'|trans({}, 'platform') }}
+                    <i class="icon-chevron-down pull-right"></i>
+                </a>
+            </div>
+            <div id="collapse-all" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>
+                        {% for workspace in workspaces %}
+                        <li class="row-workspace row-workspace-id-{{ workspace.getId() }}">
+                            <i class="icon-book"></i>
+                            <a  href="{{ path('claro_workspace_open',
+                                {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
+                                id="link-home-{{ workspace.getId() }}"
+                            >
+                               {{ workspace.getName() }}
+                               <span class="workspace-code">({{ workspace.getCode() }})</span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% for tag in tags %}
+    {{ showTag(tag) }}
+    {% endfor %}
+
+{% endblock %}

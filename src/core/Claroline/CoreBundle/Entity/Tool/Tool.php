@@ -21,7 +21,10 @@ class Tool
      * @ORM\Column(name="name", type="string")
      */
     protected $name;
-
+    /**
+     * @ORM\Column(name="display_name", type="string")
+     */
+    protected $displayName;
     /**
      * @ORM\Column(name="class", type="string")
      */
@@ -95,7 +98,17 @@ class Tool
     {
         return $this->name;
     }
+    
+    public function setDisplayName($displayName)
+    {
+        $this->displayName = $displayName;
+    }
 
+    public function getDisplayName()
+    {
+        return $this->displayName;
+    }
+    
     public function setClass($class)
     {
         $this->class = $class;

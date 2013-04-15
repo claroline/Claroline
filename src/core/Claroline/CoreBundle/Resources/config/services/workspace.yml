@@ -7,13 +7,15 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@claroline.resource.manager"
             - "@event_dispatcher"
+            - "@translator"
 
     claroline.workspace.exporter:
         class: Claroline\CoreBundle\Library\Workspace\Exporter
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@event_dispatcher"
-            - "%claroline.workspace_template.directory%"
+            - "%claroline.param.templates_directory%"
 
 parameters:
     claroline.workspace_template.directory: "%kernel.root_dir%/../templates/"
+

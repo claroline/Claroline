@@ -4,7 +4,6 @@ plugin:
   resources:
     - class: Valid\WithCustomActions\Entity\ResourceXCustom
       name: ResourceXCustom
-      is_visible: true
       is_browsable: true
       actions:
         - name: open

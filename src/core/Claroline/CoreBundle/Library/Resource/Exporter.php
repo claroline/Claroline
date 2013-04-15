@@ -111,7 +111,7 @@ class Exporter
             $children = $repoIns->getChildren($directory, false);
 
             foreach ($children as $child) {
-                if ($child->getResourceType()->getName() != 'directory' && $child->getResourceType()->isVisible()) {
+                if ($child->getResourceType()->getName() != 'directory') {
                     $toAppend[] = $child->getId();
                 }
             }

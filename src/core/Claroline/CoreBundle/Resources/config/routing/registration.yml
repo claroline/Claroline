@@ -1,6 +1,0 @@
-claro_registration_register_user:
-    pattern: /create
-    defaults: { _controller: 'ClarolineCoreBundle:Registration:registerUser' }
-claro_registration_user_registration_form:
-    pattern: /form
-    defaults: { _controller: 'ClarolineCoreBundle:Registration:userRegistrationForm' }

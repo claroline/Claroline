@@ -2,6 +2,10 @@
 
 namespace Claroline\CoreBundle\Listener\Resource;
 
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
+use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
 use Claroline\CoreBundle\Form\ActivityType;
@@ -12,11 +16,31 @@ use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Library\Event\ExportResourceTemplateEvent;
 use Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent;
 use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
-use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\HttpFoundation\Response;
 
-class ActivityListener extends ContainerAware
+/**
+ * @DI\Service
+ */
+class ActivityListener implements ContainerAwareInterface
 {
+    private $container;
+
+    /**
+     * @DI\InjectParams({
+     *     "container" = @DI\Inject("service_container")
+     * })
+     *
+     * @param ContainerInterface $container
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * @DI\Observe("create_form_activity")
+     *
+     * @param CreateFormResourceEvent $event
+     */
     public function onCreateForm(CreateFormResourceEvent $event)
     {
         $form = $this->container->get('form.factory')->create(new ActivityType, new Activity());
@@ -31,6 +55,11 @@ class ActivityListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    /**
+     * @DI\Observe("create_activity")
+     *
+     * @param CreateResourceEvent $event
+     */
     public function onCreate(CreateResourceEvent $event)
     {
         $request = $this->container->get('request');
@@ -57,6 +86,11 @@ class ActivityListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    /**
+     * @DI\Observe("delete_activity")
+     *
+     * @param DeleteResourceEvent $event
+     */
     public function onDelete(DeleteResourceEvent $event)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
@@ -64,7 +98,13 @@ class ActivityListener extends ContainerAware
         $event->stopPropagation();
     }
 
-    //@todo: Are resources needing to be copied.
+    /**
+     * @DI\Observe("copy_activity")
+     *
+     * @todo: Do the resources need to be copied ?
+     *
+     * @param CopyResourceEvent $event
+     */
     public function onCopy(CopyResourceEvent $event)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
@@ -85,6 +125,11 @@ class ActivityListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    /**
+     * @DI\Observe("resource_activity_to_template")
+     *
+     * @param ExportResourceTemplateEvent $event
+     */
     public function onExportTemplate(ExportResourceTemplateEvent $event)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
@@ -108,10 +153,9 @@ class ActivityListener extends ContainerAware
     }
 
     /**
-     * If the activity is recursive, it may or may not work depending on where
-     * the activity is defined in the config file.
+     * @DI\Observe("resource_activity_from_template")
      *
-     * @param \Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent $event
+     * @param ImportResourceTemplateEvent $event
      */
     public function onImportTemplate(ImportResourceTemplateEvent $event)
     {
@@ -132,11 +176,16 @@ class ActivityListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    /**
+     * @DI\Observe("open_activity")
+     *
+     * @param OpenResourceEvent $event
+     */
     public function onOpen(OpenResourceEvent $event)
     {
         $resourceTypes = $this->container->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-            ->findBy(array('isVisible' => true));
+            ->findAll();
         $activity = $event->getResource();
         $resourceActivities = $this->container
             ->get('doctrine.orm.entity_manager')

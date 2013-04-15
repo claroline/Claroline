@@ -10,7 +10,7 @@ services:
         class: Claroline\CoreBundle\Library\Utilities\ThumbnailCreator
         arguments:
           - "%kernel.root_dir%"
-          - "%claroline.thumbnails.directory%"
+          - "%claroline.param.thumbnails_directory%"
           - "@claroline.resource.utilities"
 
     claroline.utilities.controller_name_parser:
@@ -18,7 +18,12 @@ services:
         arguments:
           - "@kernel"
 
+<<<<<<< HEAD
     claroline.utilities.caml_case_to_underscore__filter_extension:
         class: Claroline\CoreBundle\Library\Twig\CamlCaseToUnderscoreFilterExtension
         tags:
             - { name: twig.extension }
+=======
+    claroline.utilities.misc:
+        class: Claroline\CoreBundle\Library\Utilities\ClaroUtilities
+>>>>>>> master

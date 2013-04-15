@@ -17,7 +17,7 @@ class MigratorTest extends TransactionalTestCase
         parent::setUp();
         $container = $this->client->getContainer();
         $this->migrator = $container->get('claroline.plugin.migrator');
-        $pluginDirectory = $container->getParameter('claroline.stub_plugin_directory');
+        $pluginDirectory = $container->getParameter('claroline.param.stub_plugin_directory');
         $this->loader = new Loader($pluginDirectory);
     }
 

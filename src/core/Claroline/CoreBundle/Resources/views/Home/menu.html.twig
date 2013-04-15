@@ -1,0 +1,14 @@
+<div class="content-menu btn-group float-right-top hide">
+    <a class="btn dropdown-toggle" data-toggle="dropdown">
+        <i class="icon-cog"></i> 
+        <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu pull-right">
+        {% if type != "default" %}
+        <li><a class="content-size"><i class="icon-resize-horizontal"></i> {{ "Size" | trans({}, 'home') }}</a></li>
+        {% endif %}
+        <li><a class="content-edit"><i class="icon-edit"></i> {{ "Edit" | trans({}, 'home') }}</a></li>
+        <li><a class="content-delete"><i class="icon-trash"></i> {{ "Delete" | trans({}, 'home') }}</a></li>
+    </ul>
+</div>
+

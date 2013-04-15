@@ -3,6 +3,10 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Form\WorkspaceType;
+use Claroline\CoreBundle\Form\WorkspaceTagType;
+use Claroline\CoreBundle\Form\AdminWorkspaceTagType;
+use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
+use Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -10,7 +14,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
+<<<<<<< HEAD
 use Claroline\CoreBundle\Library\Event\LogWorkspaceToolReadEvent;
+=======
+use Claroline\CoreBundle\Library\Event\WorkspaceLogEvent;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+>>>>>>> master
 
 /**
  * This controller is able to:
@@ -23,6 +33,13 @@ class WorkspaceController extends Controller
     const ABSTRACT_WS_CLASS = 'ClarolineCoreBundle:Workspace\AbstractWorkspace';
 
     /**
+     * @Route(
+     *     "/",
+     *     name="claro_workspace_list",
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     *
      * Renders the workspace list page with its claroline layout.
      *
      * @throws AccessDeniedHttpException
@@ -37,40 +54,61 @@ class WorkspaceController extends Controller
 
         $em = $this->get('doctrine.orm.entity_manager');
         $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)->findNonPersonal();
+        $tags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+            ->findByUser(null);
 
         return $this->render(
             'ClarolineCoreBundle:Workspace:list.html.twig',
-            array('workspaces' => $workspaces)
+            array('workspaces' => $workspaces, 'tags' => $tags)
         );
     }
 
     /**
-     * Renders the registered workspace list for a user.
+     * @Route(
+     *     "/user",
+     *     name="claro_workspace_by_user",
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
      *
-     * @param integer $userId
+     * Renders the registered workspace list for a user.
      *
      * @throws AccessDeniedHttpException
      *
      * @return Response
      */
-    public function listWorkspacesByUserAction($userId)
+    public function listWorkspacesByUserAction()
     {
         if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
             throw new AccessDeniedHttpException();
         }
 
         $em = $this->get('doctrine.orm.entity_manager');
-        $user = $em->find('ClarolineCoreBundle:User', $userId);
+        $user = $this->get('security.context')->getToken()->getUser();
+        $roles = $user->getRoles();
+
         $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)
-            ->findByUser($user);
+            ->findByRoles($roles);
+        $tags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+            ->findBy(array('user' => $user->getId()));
 
         return $this->render(
-            'ClarolineCoreBundle:Workspace:list.html.twig',
-            array('workspaces' => $workspaces)
+            'ClarolineCoreBundle:Workspace:list_my_workspaces.html.twig',
+            array(
+                'user' => $user,
+                'workspaces' => $workspaces,
+                'tags' => $tags
+            )
         );
     }
 
     /**
+     * @Route(
+     *     "/new/form",
+     *     name="claro_workspace_creation_form"
+     * )
+     * @Method("GET")
+     *
      * Renders the workspace creation form.
      *
      * @return Response
@@ -82,7 +120,7 @@ class WorkspaceController extends Controller
         }
 
         $form = $this->get('form.factory')
-            ->create(new WorkspaceType($this->container->getParameter('claroline.workspace_template.directory')));
+            ->create(new WorkspaceType($this->container->getParameter('claroline.param.templates_directory')));
 
         return $this->render(
             'ClarolineCoreBundle:Workspace:form.html.twig',
@@ -92,6 +130,12 @@ class WorkspaceController extends Controller
 
     /**
      * Creates a workspace from a form sent by POST.
+     *
+     * @Route(
+     *     "/",
+     *     name="claro_workspace_create"
+     * )
+     * @Method("POST")
      *
      * @return RedirectResponse
      *
@@ -104,7 +148,7 @@ class WorkspaceController extends Controller
         }
 
         $form = $this->get('form.factory')
-            ->create(new WorkspaceType($this->container->getParameter('claroline.workspace_template.directory')));
+            ->create(new WorkspaceType($this->container->getParameter('claroline.param.templates_directory')));
         $form->bind($this->getRequest());
 
         if ($form->isValid()) {
@@ -130,7 +174,13 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * Deletes a workspace and redirects to the desktop_index.
+     * @Route(
+     *     "/{workspaceId}",
+     *     name="claro_workspace_delete",
+     *     options={"expose"=true},
+     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
+     * )
+     * @Method("DELETE")
      *
      * @param integer $workspaceId
      *
@@ -181,13 +231,13 @@ class WorkspaceController extends Controller
             $found = false;
             foreach ($workspaceOrderTools as $workspaceOrderedTool) {
                 if ($workspaceOrderedTool->getTool() === $tool) {
-                    $toolWithTranslation['translation_key'] = $workspaceOrderedTool->getTranslationKey();
+                    $toolWithTranslation['name'] = $workspaceOrderedTool->getName();
                     $found = true;
                 }
             }
 
             if (!$found) {
-                $toolWithTranslation['translation_key'] = $tool->getName();
+                $toolWithTranslation['name'] = $tool->getName();
             }
 
             $toolsWithTranslation[] = $toolWithTranslation;
@@ -200,6 +250,13 @@ class WorkspaceController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/{workspaceId}/open/tool/{toolName}",
+     *     name="claro_workspace_open_tool",
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     *
      * Opens a tool.
      *
      * @param type $toolName
@@ -234,20 +291,25 @@ class WorkspaceController extends Controller
     }
 
     //todo dql for this
-
     /**
-    * Display registered widgets.
-    *
-    * @param $workspaceId the workspace id
-    *
-    * @return \Symfony\Component\HttpFoundation\Response
-    */
+     * @Route(
+     *     "/{workspaceId}/widgets",
+     *     name="claro_workspace_widgets"
+     * )
+     * @Method("GET")
+     *
+     * Display registered widgets.
+     *
+     * @param $workspaceId the workspace id
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function widgetsAction($workspaceId)
     {
         $responsesString = '';
         $configs = $this->get('claroline.widget.manager')
             ->generateWorkspaceDisplayConfig($workspaceId);
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
 
         foreach ($configs as $config) {
@@ -266,6 +328,12 @@ class WorkspaceController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/{workspaceId}/open",
+     *     name="claro_workspace_open"
+     * )
+     * @Method("GET")
+     *
      * Open the first tool of a workspace.
      *
      * @param integer $workspaceId
@@ -274,7 +342,7 @@ class WorkspaceController extends Controller
      */
     public function openAction($workspaceId)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
 
         if ('anon.' != $this->get('security.context')->getToken()->getUser()) {
@@ -319,6 +387,438 @@ class WorkspaceController extends Controller
             array('workspaceId' => $workspaceId, 'toolName' => $openedTool[0]->getName())
         );
 
+        $user = $this->get('security.context')->getToken()->getUser();
+        $date = new \DateTime();
+        $workspaceLogEvent = new WorkspaceLogEvent('workspace_access', $date, $user, $workspace, '');
+        $this->get('event_dispatcher')->dispatch('log_workspace_access', $workspaceLogEvent);
+
         return new RedirectResponse($route);
+    }
+
+    /**
+     * @Route(
+     *     "/tag",
+     *     name="claro_workspace_manage_tag"
+     * )
+     * @Method("GET")
+     *
+     * Display a table showing tags associated to user's workspaces
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function manageTagAction()
+    {
+        if (!$this->get('security.context')->isGranted('ROLE_USER')) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $em = $this->get('doctrine.orm.entity_manager');
+        $user = $this->get('security.context')->getToken()->getUser();
+        $tags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+            ->findBy(array('user' => $user->getId()));
+        $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)
+            ->findByUser($user);
+        $workspacesTags = array();
+
+        foreach ($workspaces as $workspace) {
+            $relWsTagsByWs = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
+                ->findAllByWorkspaceAndUser($workspace, $user);
+            $workspacesTags[$workspace->getId()] = $relWsTagsByWs;
+        }
+
+        $tagsNameTxt = '[';
+        foreach ($tags as $tag) {
+            $tagsNameTxt .= '"' . $tag->getName() . '",';
+        }
+        $tagsNameTxt = substr($tagsNameTxt, 0, strlen($tagsNameTxt) - 1);
+        $tagsNameTxt .= ']';
+
+        return $this->render(
+            'ClarolineCoreBundle:Workspace:manage_tag.html.twig',
+            array(
+                'user' => $user,
+                'tagsNameTxt' => $tagsNameTxt,
+                'workspaces' => $workspaces,
+                'workspacesTags' => $workspacesTags
+            )
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/tag/admin",
+     *     name="claro_workspace_manage_admin_tag"
+     * )
+     * @Method("GET")
+     *
+     * Display a table showing tags associated to user's workspaces
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function manageAdminTagAction()
+    {
+        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $em = $this->get('doctrine.orm.entity_manager');
+        $user = $this->get('security.context')->getToken()->getUser();
+        $tags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+            ->findByUser(null);
+        $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)->findNonPersonal();
+        $workspacesTags = array();
+
+        foreach ($workspaces as $workspace) {
+            $relWsTagsByWs = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
+                ->findAdminByWorkspace($workspace);
+            $workspacesTags[$workspace->getId()] = $relWsTagsByWs;
+        }
+
+        $tagsNameTxt = '[';
+        foreach ($tags as $tag) {
+            $tagsNameTxt .= '"' . $tag->getName() . '",';
+        }
+        $tagsNameTxt = substr($tagsNameTxt, 0, strlen($tagsNameTxt) - 1);
+        $tagsNameTxt .= ']';
+
+        return $this->render(
+            'ClarolineCoreBundle:Workspace:manage_admin_tag.html.twig',
+            array(
+                'user' => $user,
+                'tagsNameTxt' => $tagsNameTxt,
+                'workspaces' => $workspaces,
+                'workspacesTags' => $workspacesTags
+            )
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/tag/createform",
+     *     name="claro_workspace_tag_create_form"
+     * )
+     * @Method("GET")
+     *
+     * Renders the Tag creation form
+     *
+     * @return Response
+     */
+    public function workspaceTagCreateFormAction()
+    {
+        if (!$this->get('security.context')->isGranted('ROLE_USER')) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $user = $this->get('security.context')->getToken()->getUser();
+        $workspaceTag = new WorkspaceTag();
+        $workspaceTag->setUser($user);
+        $form = $this->createForm(new WorkspaceTagType(), $workspaceTag);
+
+        return $this->render(
+            'ClarolineCoreBundle:Workspace:workspace_tag_form.html.twig',
+            array('form' => $form->createView(), 'user' => $user)
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/tag/admin/createform",
+     *     name="claro_workspace_admin_tag_create_form"
+     * )
+     * @Method("GET")
+     *
+     * Renders the Tag creation form
+     *
+     * @return Response
+     */
+    public function workspaceAdminTagCreateFormAction()
+    {
+        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $workspaceTag = new WorkspaceTag();
+        $workspaceTag->setUser(null);
+        $form = $this->createForm(new AdminWorkspaceTagType(), $workspaceTag);
+
+        return $this->render(
+            'ClarolineCoreBundle:Workspace:workspace_admin_tag_form.html.twig',
+            array('form' => $form->createView())
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/tag/create/{userId}",
+     *     name="claro_workspace_tag_create"
+     * )
+     * @Method("POST")
+     *
+     * Creates a new Tag
+     *
+     * @param integer $userId
+     *
+     * @return RedirectResponse
+     */
+    public function workspaceTagCreateAction($userId)
+    {
+        if (!$this->get('security.context')->isGranted('ROLE_USER')) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        if ($user->getId() != $userId) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspaceTag = new WorkspaceTag();
+        $workspaceTag->setUser($user);
+
+        $form = $this->createForm(new WorkspaceTagType(), $workspaceTag);
+        $request = $this->getRequest();
+        $form->bind($request);
+
+        if ($form->isValid()) {
+            $em->persist($workspaceTag);
+            $em->flush();
+
+            return $this->redirect(
+                $this->generateUrl('claro_workspace_manage_tag')
+            );
+        }
+
+        return $this->render(
+            'ClarolineCoreBundle:Workspace:workspace_tag_form.html.twig',
+            array('form' => $form->createView(), 'user' => $user)
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/tag/admin/create",
+     *     name="claro_workspace_admin_tag_create"
+     * )
+     * @Method("POST")
+     *
+     * Creates a new Tag
+     *
+     * @return RedirectResponse
+     */
+    public function workspaceAdminTagCreateAction()
+    {
+        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspaceTag = new WorkspaceTag();
+        $workspaceTag->setUser(null);
+
+        $form = $this->createForm(new AdminWorkspaceTagType(), $workspaceTag);
+        $request = $this->getRequest();
+        $form->bind($request);
+
+        if ($form->isValid()) {
+            $em->persist($workspaceTag);
+            $em->flush();
+
+            return $this->redirect(
+                $this->generateUrl('claro_workspace_manage_admin_tag')
+            );
+        }
+
+        return $this->render(
+            'ClarolineCoreBundle:Workspace:workspace_admin_tag_form.html.twig',
+            array('form' => $form->createView())
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/{userId}/workspace/{workspaceId}/tag/add/{tagName}",
+     *     name="claro_workspace_tag_add",
+     *     options={"expose"=true}
+     * )
+     * @Method("POST")
+     *
+     * Add Tag to Workspace
+     *
+     * @param integer $userId
+     * @param integer $workspaceId
+     * @param string $tagName
+     *
+     * @return Response
+     */
+    public function addTagToWorkspace($userId, $workspaceId, $tagName)
+    {
+        if (!$this->get('security.context')->isGranted('ROLE_USER')) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $user = $this->get('security.context')->getToken()->getUser();
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+
+        if (is_null($user) || is_null($workspace)) {
+            throw new \RuntimeException('User, Workspace cannot be null');
+        } elseif ($user->getId() != $userId) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $tag = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+            ->findOneBy(array('name' => $tagName, 'user' => $user->getId()));
+
+        if ($tag === null) {
+            $tag = new WorkspaceTag();
+            $tag->setName($tagName);
+            $tag->setUser($user);
+            $em->persist($tag);
+            $em->flush();
+        }
+
+        $relWsTag = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
+            ->findOneByWorkspaceAndTagAndUser($workspace, $tag, $user);
+
+        if ($relWsTag == null) {
+            $relWsTag = new RelWorkspaceTag();
+            $relWsTag->setWorkspace($workspace);
+            $relWsTag->setTag($tag);
+            $em->persist($relWsTag);
+            $em->flush();
+        }
+
+        return new Response('success', 204);
+    }
+
+        /**
+     * @Route(
+     *     "/workspace/{workspaceId}/tag/add/{tagName}",
+     *     name="claro_workspace_admin_tag_add",
+     *     options={"expose"=true}
+     * )
+     * @Method("POST")
+     *
+     * Add Tag to Workspace
+     *
+     * @param integer $workspaceId
+     * @param string $tagName
+     *
+     * @return Response
+     */
+    public function addAdminTagToWorkspace($workspaceId, $tagName)
+    {
+        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+
+        if (is_null($workspace)) {
+            throw new \RuntimeException('Workspace cannot be null');
+        }
+
+        $tag = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+            ->findOneBy(array('name' => $tagName, 'user' => null));
+
+        if ($tag === null) {
+            $tag = new WorkspaceTag();
+            $tag->setName($tagName);
+            $tag->setUser(null);
+            $em->persist($tag);
+            $em->flush();
+        }
+
+        $relWsTag = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
+            ->findOneAdminByWorkspaceAndTag($workspace, $tag);
+
+        if ($relWsTag === null) {
+            $relWsTag = new RelWorkspaceTag();
+            $relWsTag->setWorkspace($workspace);
+            $relWsTag->setTag($tag);
+            $em->persist($relWsTag);
+            $em->flush();
+        }
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @Route(
+     *     "/{userId}/workspace/{workspaceId}/tag/remove/{workspaceTagId}",
+     *     name="claro_workspace_tag_remove",
+     *     options={"expose"=true}
+     * )
+     * @Method("DELETE")
+     *
+     * Remove Tag from Workspace
+     *
+     * @param integer $userId
+     * @param integer $workspaceId
+     * @param integer $workspaceTagId
+     *
+     * @return Response
+     */
+    public function removeTagFromWorkspace($userId, $workspaceId, $workspaceTagId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+        $workspaceTag = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')->find($workspaceTagId);
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        if (is_null($user) || is_null($workspace) || is_null($workspaceTag)) {
+            throw new \RuntimeException('User, Workspace or Tag cannot be null');
+        }
+
+        if (!$this->get('security.context')->isGranted('ROLE_USER')
+            || $user->getId() !== $workspaceTag->getUser()->getId()
+            || $user->getId() != $userId) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $relWorkspaceTag = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
+            ->findOneByWorkspaceAndTagAndUser($workspace, $workspaceTag, $user);
+        $em->remove($relWorkspaceTag);
+        $em->flush();
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @Route(
+     *     "/workspace/{workspaceId}/tag/remove/{workspaceTagId}",
+     *     name="claro_workspace_admin_tag_remove",
+     *     options={"expose"=true}
+     * )
+     * @Method("DELETE")
+     *
+     * Remove admin Tag from Workspace
+     *
+     * @param integer $workspaceId
+     * @param integer $workspaceTagId
+     *
+     * @return Response
+     */
+    public function removeAdminTagFromWorkspace($workspaceId, $workspaceTagId)
+    {
+        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedHttpException();
+        }
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+        $workspaceTag = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')->find($workspaceTagId);
+
+        if (is_null($workspace) || is_null($workspaceTag)) {
+            throw new \RuntimeException('Workspace or Tag cannot be null');
+        }
+
+        $relWorkspaceTag = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
+            ->findOneAdminByWorkspaceAndTag($workspace, $workspaceTag);
+        $em->remove($relWorkspaceTag);
+        $em->flush();
+
+        return new Response('success', 204);
     }
 }

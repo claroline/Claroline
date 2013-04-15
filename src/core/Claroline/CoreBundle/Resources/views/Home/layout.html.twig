@@ -1,0 +1,22 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block content %}
+
+<div id="asset" class="hide">{{ asset("") }}</div>
+
+{% if content != null %}
+
+{{ creator | raw }}
+
+<div class="content row-fluid">
+    {{ content | raw }}
+</div>
+
+{% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/home/content.js') }}"></script>
+{% endblock %}

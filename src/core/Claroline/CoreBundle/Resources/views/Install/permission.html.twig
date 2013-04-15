@@ -35,21 +35,19 @@
                     <td>  4.xx</td>
                     <td> {{version.mysql}} </td>
                 </tr>
+                {% for key,value in folders %}
                 <tr>
                     <td>{{ 'permission'|trans({}, 'install') }} </td>
-                    <td> [{{'folders'|trans({}, 'install')}} app/local]</td>
-                    <td> {{version.local}} </td>
+                    <td> [{{'folders'|trans({}, 'install')}} {{key}}]</td>
+                    <td> {% if value == 'KO'%}
+                       <span style="color:#FF0000"> {{value}} </span>  
+                        {% else %}
+                            {{value}}
+                         {% endif %}
+                    </td>
                 </tr>
-                <tr>
-                    <td>{{ 'permission'|trans({}, 'install') }} </td>
-                    <td> [{{'folders'|trans({}, 'install')}} web]</td>
-                    <td> {{version.web}} </td>
-                </tr>
-                <tr>
-                    <td>{{ 'permission'|trans({}, 'install') }} </td>
-                    <td> [{{'folders'|trans({}, 'install')}} files]</td>
-                    <td> {{version.file}} </td>
-                </tr>
+                {% endfor %}
+                
             </tbody>
         </table>
         <p>

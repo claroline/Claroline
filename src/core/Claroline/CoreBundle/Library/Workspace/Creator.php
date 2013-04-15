@@ -20,13 +20,15 @@ class Creator
     private $manager;
     private $roleRepo;
     private $ed;
+    private $translator;
 
-    public function __construct(EntityManager $em, Manager $rm, $ed)
+    public function __construct(EntityManager $em, Manager $rm, $ed, $translator)
     {
         $this->entityManager = $em;
         $this->manager = $rm;
         $this->roleRepo = $this->entityManager->getRepository('ClarolineCoreBundle:Role');
         $this->ed = $ed;
+        $this->translator = $translator;
     }
 
     /**
@@ -37,7 +39,7 @@ class Creator
      *
      * @return AbstractWorkspace
      */
-    public function createWorkspace(Configuration $config, User $manager)
+    public function createWorkspace(Configuration $config, User $manager, $autoflush = true)
     {
         $config->check();
         $workspaceType = $config->getWorkspaceType();
@@ -64,7 +66,6 @@ class Creator
         $this->manager->setResourceRights($rootDir, $config->getPermsRootConfiguration());
         $this->entityManager->persist($rootDir);
         $this->entityManager->flush();
-        //tmpzip wich will be extracted to retrieve the needed files.
         $extractPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('claro_ws_tmp_', true);
         $archive = new \ZipArchive();
         $archive->open($config->getArchive());
@@ -86,7 +87,9 @@ class Creator
         $manager->addRole($this->roleRepo->findManagerRole($workspace));
         $this->addMandatoryTools($workspace, $config);
         $this->entityManager->persist($manager);
-        $this->entityManager->flush();
+        if ($autoflush) {
+            $this->entityManager->flush();
+        }
         $archive->close();
 
         $log = new LogWorkspaceCreateEvent($workspace);
@@ -149,16 +152,23 @@ class Creator
         $order = 1;
 
         foreach ($toolsPermissions as $name => $data) {
+
             $tool = $this->entityManager
                 ->getRepository('ClarolineCoreBundle:Tool\Tool')
                 ->findOneBy(array('name' => $name));
             $wot = new WorkspaceOrderedTool();
             $wot->setWorkspace($workspace);
-            $wot->setTranslationKey($data['translation_key']);
+            $wot->setName(
+                $this->translator->trans(
+                    $data['name'],
+                    array(),
+                    'tools'
+                )
+            );
             $wot->setTool($tool);
             $wot->setOrder($order);
             $this->entityManager->persist($wot);
-            $this->entityManager->flush();
+            //$this->entityManager->flush();
             $order++;
 
             foreach ($data['perms'] as $role) {
@@ -174,8 +184,8 @@ class Creator
 
                 $tool = $this->entityManager
                     ->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneBy(array('name' => $name));
-                $wot = $this->entityManager->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
-                    ->findOneBy(array('tool' => $tool, 'workspace' => $workspace));
+                    //$wot = $this->entityManager->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
+                    //->findOneBy(array('tool' => $tool, 'workspace' => $workspace));
 
                 $this->setWorkspaceToolRole($wot, $role);
             }
@@ -190,6 +200,6 @@ class Creator
         $wtr->setRole($role);
         $wtr->setWorkspaceOrderedTool($wot);
         $this->entityManager->persist($wtr);
-        $this->entityManager->flush();
+//        $this->entityManager->flush();
     }
 }

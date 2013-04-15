@@ -34,9 +34,9 @@
                     <th>{{ 'mail'|trans({}, 'platform') }}</th>
                     <th>{{ 'role'|trans({}, 'platform') }}</th>
                     <th></th>
-                    <th>{{ 'show'|trans({}, 'platform') }}</th>
+                    <th>{{ 'show_profile'|trans({}, 'platform') }}</th>
                     {% if is_granted('ROLE_ADMIN') %}
-                        <th>{{ 'steal_session'|trans({}, 'platform') }}</th>
+                        <th>{{ 'show_as'|trans({}, 'platform') }}</th>
                     {% endif %}
                 </tr>
             </thead>

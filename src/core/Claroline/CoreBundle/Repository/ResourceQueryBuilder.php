@@ -2,430 +2,398 @@
 
 namespace Claroline\CoreBundle\Repository;
 
+use Symfony\Component\Security\Core\Role\RoleInterface;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Repository\Exception\MissingSelectClauseException;
 
+/**
+ * Builder for DQL queries on AbstractResource entities.
+ */
 class ResourceQueryBuilder
 {
-    private $dql;
-    private $isFirstWhereClause;
-    private $preparedStatementValue;
-    //Count the number of time the whereRole method was used (required for
-    //the prepared statement.
-    private $whereRoleCounter;
-
-    public function __construct($dql = '')
-    {
-        $this->dql = $dql;
-        $this->isFirstWhereClause = true;
-        $this->preparedStatementValue = array();
-        $this->whereRoleCounter = 0;
-    }
-
-    /** SELECT DQL part to get entities. */
-    //  Technical note:
-    //      Selecting "ar" is needed to force Doctrine to load both entities
-    //      at the same time (same SQL request) else doctrine will make N requests
-    //      to get "ar" information.
-    //      That's also the reason why we do not use
-    //      the "MaterializedPathRepository->getChildren" method.
+    private $joinSingleRelatives = true;
+    private $resultAsArray = false;
+    private $leftJoinRights = false;
+    private $selectClause;
+    private $whereClause;
+    private $orderClause;
+    private $groupByClause;
+    private $parameters = array();
 
     /**
-     * Basic select.
+     * Selects resources as entities.
      *
-     * @return \Claroline\CoreBundle\Repository\ResourceQueryBuilder
+     * @param boolean $joinSingleRelatives Whether the creator, type and icon must be joined to the query
+     *
+     * @return ResourceQueryBuilder
      */
-    public function select()
+    public function selectAsEntity($joinSingleRelatives = false)
     {
-        $this->dql .= "SELECT DISTINCT
-            ar.id as id,
-            ar.name as name,
-            ar.path as path,
-            IDENTITY(ar.parent) as parent_id,
-            aru.username as creator_username,
-            rt.name as type,
-            rt.isBrowsable as is_browsable,
-            ic.relativeUrl as large_icon";
+        $this->joinSingleRelatives = $joinSingleRelatives;
+        $this->selectClause = 'SELECT resource' . PHP_EOL;
 
         return $this;
     }
 
     /**
-     * Adds the resource permissions to the basic select.
+     * Selects resources as arrays. Resource type, creator and icon are always added to the query.
      *
-     * @return \Claroline\CoreBundle\Repository\ResourceQueryBuilder
-     */
-    public function selectPermissions()
-    {
-         $this->dql .= ', MAX (arRights.canExport) as can_export'
-             . ', MAX (arRights.canDelete) as can_delete'
-             . ', MAX (arRights.canEdit) as can_edit';
-
-         return $this;
-    }
-
-    /**
-     * From (use it with select()).
+     * @param boolean $withMaxPermissions Whether maximum permissions must be calculated and added to the result
      *
-     * @return \Claroline\CoreBundle\Repository\ResourceQueryBuilder
+     * @return ResourceQueryBuilder
      */
-    public function from()
+    public function selectAsArray($withMaxPermissions = false)
     {
-        $this->dql .= " FROM Claroline\CoreBundle\Entity\Resource\AbstractResource ar
-            JOIN ar.creator aru
-            JOIN ar.resourceType rt
-            JOIN ar.icon ic";
+        $this->resultAsArray = true;
+        $this->joinSingleRelatives = true;
+        $eol = PHP_EOL;
+        $this->selectClause =
+            "SELECT DISTINCT{$eol}" .
+            "    resource.id as id,{$eol}" .
+            "    resource.name as name,{$eol}" .
+            "    resource.path as path,{$eol}" .
+            "    IDENTITY(resource.parent) as parent_id,{$eol}" .
+            "    creator.username as creator_username,{$eol}" .
+            "    resourceType.name as type,{$eol}" .
+            "    resourceType.isBrowsable as is_browsable,{$eol}" .
+            "    icon.relativeUrl as large_icon";
 
-        return $this;
-    }
-
-    /**
-     * Adds the where clause.
-     *
-     * @return \Claroline\CoreBundle\Repository\ResourceQueryBuilder
-     */
-    public function where()
-    {
-        $this->dql .= " WHERE ";
-
-        return $this;
-    }
-
-    /**
-     * Adds a clause.
-     *
-     * @return \Claroline\CoreBundle\Repository\ResourceQueryBuilder
-     */
-    public function addClause($clause)
-    {
-        $clause = strtoupper($clause);
-        if ($clause === 'OR') {
-            $this->isFirstWhereClause = true;
+        if ($withMaxPermissions) {
+            $this->leftJoinRights = true;
+            $this->selectClause .=
+                ",{$eol}" .
+                "    MAX (rights.canExport) as can_export,{$eol}" .
+                "    MAX (rights.canDelete) as can_delete,{$eol}" .
+                "    MAX (rights.canEdit) as can_edit";
         }
 
-        $this->dql .= " {$clause} ";
+        $this->selectClause .= $eol;
 
         return $this;
     }
 
     /**
-     * Join on the user rights (and roles).
+     * Filters resources belonging to a given workspace.
      *
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param AbstractWorkspace $workspace
+     *
+     * @return ResourceQueryBuilder
+     */
+    public function whereInWorkspace(AbstractWorkspace $workspace)
+    {
+        $this->addWhereClause('resource.workspace = :workspace_id');
+        $this->parameters[':workspace_id'] = $workspace->getId();
+
+        return $this;
+    }
+
+    /**
+     * Filters resources that are the immediate children of a given resource.
+     *
+     * @param AbstractResource $parent
+     *
+     * @return ResourceQueryBuilder
+     */
+    public function whereParentIs(AbstractResource $parent)
+    {
+        $this->addWhereClause('resource.parent = :ar_parentId');
+        $this->parameters[':ar_parentId'] = $parent->getId();
+
+        return $this;
+    }
+
+    /**
+     * Filters resources whose path begins with a given path.
+     *
+     * @param string    $path
+     * @param boolean   $includeGivenPath
+     *
+     * @return ResourceQueryBuilder
+     */
+    public function wherePathLike($path, $includeGivenPath = true)
+    {
+        $this->addWhereClause('resource.path LIKE :pathlike');
+        $this->parameters[':pathlike'] = $path . '%';
+
+        if (!$includeGivenPath) {
+            $this->addWhereClause('resource.path <> :path');
+            $this->parameters[':path'] = $path;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Filters resources that are bound to any of the given roles.
+     *
+     * @param array[string|RoleInterface] $roles
      *
      * @return \Claroline\CoreBundle\Repository\ResourceQueryBuilder
      */
-    public function joinRightsForUser(User $user)
+    public function whereRoleIn(array $roles)
     {
-        $this->dql .= "
-            JOIN ar.rights arRights
-            JOIN arRights.role rightRole WITH rightRole IN (
-                SELECT currentUserRole FROM Claroline\CoreBundle\Entity\Role currentUserRole
-                JOIN currentUserRole.users currentUser
-                WHERE currentUser.id = {$user->getId()}
-            ) ";
+        if (0 < $count = count($roles)) {
+            $this->leftJoinRights = true;
+            $eol = PHP_EOL;
+            $clause = "{$eol}({$eol}";
 
-        return $this;
-    }
+            for ($i = 0; $i < $count; ++$i) {
+                $role = $roles[$i] instanceof RoleInterface ? $roles[$i]->getRole() : $roles[$i];
+                $clause .= $i > 0 ? '    OR ' : '    ';
+                $clause .= "rightRole.name = :role_{$i}{$eol}";
+                $this->parameters[":role_{$i}"] = $role;
+            }
 
-    public function leftJoinOnRightsAndRole()
-    {
-        $this->dql .= " LEFT JOIN ar.rights arRights JOIN arRights.role rightRole ";
-
-        return $this;
-    }
-
-    public function whereIsVisible()
-    {
-        if (!$this->isFirstWhereClause) {
-            $this->dql .= ' AND ';
+            $this->addWhereClause($clause . ')');
         }
-
-        $this->dql .= " rt.isVisible = 1 ";
-        $this->isFirstWhereClause = false;
-
-        return $this;
-    }
-
-    public function whereInUserWorkspace(User $user)
-    {
-        if (!$this->isFirstWhereClause) {
-            $this->dql .= ' AND ';
-        }
-
-        $this->dql .= " ar.workspace IN
-            (
-                SELECT aw FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace aw
-                JOIN aw.roles r
-                JOIN r.users u
-                WHERE u.id = :u_id
-            ) ";
-
-        $this->preparedStatementValue[':u_id'] = $user->getId();
-        $this->isFirstWhereClause = false;
 
         return $this;
     }
 
     /**
-     * Requires a join on the rights.
+     * Filters resources that can be opened.
      *
-     * @return \Claroline\CoreBundle\Repository\ResourceQueryBuilder
+     * @return ResourceQueryBuilder
      */
     public function whereCanOpen()
     {
-        if (!$this->isFirstWhereClause) {
-            $this->dql .= ' AND ';
-        }
-
-        $this->dql .= ' arRights.canOpen = 1 ';
-        $this->isFirstWhereClause = false;
+        $this->leftJoinRights = true;
+        $this->addWhereClause('rights.canOpen = true');
 
         return $this;
     }
 
     /**
-     * Requires a join on the rights.
-     * whereRoleCounter = temporary (?) fix if the method is used many time
-     * inside a loop (buildForRolesChildrenQuery)
+     * Filters resources belonging to any of the workspaces a given user has access to.
      *
-     * @param string $roleName
-
-     * @return \Claroline\CoreBundle\Repository\ResourceQueryBuilder
+     * @param User $user
+     *
+     * @return ResourceQueryBuilder
      */
-    public function whereRole($roleName)
+    public function whereInUserWorkspace(User $user)
     {
-        if (!$this->isFirstWhereClause) {
-            $this->dql .= ' AND ';
-        }
-
-         $this->dql .= "rightRole.name LIKE :role_name{$this->whereRoleCounter}";
-         $this->isFirstWhereClause = false;
-         $this->preparedStatementValue[":role_name{$this->whereRoleCounter}"] = $roleName;
-         $this->whereRoleCounter++;
-
-         return $this;
-    }
-
-    public function whereParent(AbstractResource $parent)
-    {
-        if (!$this->isFirstWhereClause) {
-            $this->dql .= ' AND ';
-        }
-
-        $this->dql .= ' ar.parent = :ar_parentId ';
-        $this->isFirstWhereClause = false;
-        $this->preparedStatementValue[':ar_parentId'] = $parent->getId();
+        $eol = PHP_EOL;
+        $clause =
+            "resource.workspace IN{$eol}" .
+            "({$eol}" .
+            "    SELECT aw FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace aw{$eol}" .
+            "    JOIN aw.roles r{$eol}" .
+            "    JOIN r.users u{$eol}" .
+            "    WHERE u.id = :user_id{$eol}" .
+            ")";
+        $this->addWhereClause($clause);
+        $this->parameters[':user_id'] = $user->getId();
 
         return $this;
-    }
-
-    public function whereParentIsNull()
-    {
-        if (!$this->isFirstWhereClause) {
-            $this->dql .= ' AND ';
-        }
-
-        $this->dql .= ' ar.parent IS NULL ';
-        $this->isFirstWhereClause = false;
-
-        return $this;
-    }
-
-    public function getDql()
-    {
-        return $this->dql;
-    }
-
-    public function setFirstWhereClause($bool)
-    {
-        $this->isFirstWhereClause = $bool;
     }
 
     /**
-     * Build the Dql part of the filter about Types.
+     * Filters resources of any of the given types.
      *
-     * @param array $types the types name;
+     * @param array[string] $types
      *
-     * @return \Claroline\CoreBundle\Repository\ResourceQueryBuilder
+     * @return ResourceQueryBuilder
      */
-    public function whereTypes(array $types)
+    public function whereTypeIn(array $types)
     {
-        if (!$this->isFirstWhereClause) {
-            $this->dql .= ' AND ';
-        }
+        if (count($types) > 0) {
+            $this->joinSingleRelatives = true;
+            $clause = '';
 
-        $isFirst = true;
-        $dqlPart = "";
-
-        for ($i = 0, $count = count($types); $i < $count; $i++) {
-            if ($isFirst) {
-                $dqlPart .= " (rt.name = :types{$i}";   // eg. "types0"
-                $isFirst = false;
-            } else {
-                $dqlPart .= " OR rt.name = :types{$i}";
+            for ($i = 0, $count = count($types); $i < $count; $i++) {
+                $clause .= $i === 0 ?
+                    "resourceType.name = :type_{$i}" :
+                    "OR resourceType.name = :type_{$i}";
+                $clause .= $i < $count - 1 ? PHP_EOL : '';
+                $this->parameters[":type_{$i}"] = $types[$i];
             }
 
-            $this->preparedStatementValue[":types{$i}"] = $types[$i];
+            $this->addWhereClause($clause);
         }
-        if (strlen($dqlPart) > 0) {
-            $dqlPart .= ") ";
-        }
-
-        $this->dql .= $dqlPart;
-        $this->isFirstWhereClause = false;
 
         return $this;
     }
 
     /**
-     * Build the Dql part of the filter about Root.
+     * Filters resources that are the descendants of any of the given root directory paths.
      *
-     * @param array $roots the path of the $roots
+     * @param array[string] $roots
      *
-     * @return \Claroline\CoreBundle\Repository\ResourceQueryBuilder
+     * @return ResourceQueryBuilder
      */
-    public function whereRoots(array $roots)
+    public function whereRootIn(array $roots)
     {
-        if (!$this->isFirstWhereClause) {
-            $this->dql .= ' AND ';
-        }
+        if (0 !== $count = count($roots)) {
+            $eol = PHP_EOL;
+            $clause = "{$eol}({$eol}";
 
-        $dqlPart = "";
-        $isFirst = true;
-
-        for ($i = 0, $count = count($roots); $i < $count; $i++) {
-            if ($isFirst) {
-                $dqlPart .= "(ar.path like :roots{$i} ";
-                $isFirst = false;
-            } else {
-                $dqlPart .= " OR ar.path like :roots{$i} ";
+            for ($i = 0; $i < $count; $i++) {
+                $clause .= $i > 0 ? '    OR ' : '    ';
+                $clause .= "resource.path LIKE :root_{$i}{$eol}";
+                $this->parameters[":root_{$i}"] = "{$roots[$i]}%";
             }
-            $this->preparedStatementValue[":roots{$i}"] = "{$roots[$i]}%";
-        }
-        if (strlen($dqlPart) > 0) {
-            $dqlPart .= ')';
-        }
 
-        $this->dql .= $dqlPart;
-        $this->isFirstWhereClause = false;
+            $this->addWhereClause($clause . ')');
+        }
 
         return $this;
     }
 
     /**
-     *
-     * Build the Dql part of the filter about FromDate.
+     * Filters resources created at or after a given date.
      *
      * @param string $date
      *
-     * @return \Claroline\CoreBundle\Repository\ResourceQueryBuilder
+     * @return ResourceQueryBuilder
      */
     public function whereDateFrom($date)
     {
-        if (!$this->isFirstWhereClause) {
-            $this->dql .= ' AND ';
-        }
-
-        $this->dql .= " ar.creationDate >= :dateFrom ";
-        $this->preparedStatementValue[':dateFrom'] = $date;
-        $this->isFirstWhereClause = false;
+        $this->addWhereClause('resource.creationDate >= :dateFrom');
+        $this->parameters[':dateFrom'] = $date;
 
         return $this;
     }
 
     /**
-     * Build the Dql part of the filter about ToDate.
+     * Filters resources created at or before a given date.
      *
      * @param string $date
      *
-     * @return \Claroline\CoreBundle\Repository\ResourceQueryBuilder
+     * @return ResourceQueryBuilder
      */
     public function whereDateTo($date)
     {
-        if (!$this->isFirstWhereClause) {
-            $this->dql .= ' AND ';
-        }
-
-        $this->dql .= " ar.creationDate <= :dateTo ";
-        $this->preparedStatementValue[':dateTo'] = $date;
-        $this->isFirstWhereClause = false;
+        $this->addWhereClause('resource.creationDate <= :dateTo');
+        $this->parameters[':dateTo'] = $date;
 
         return $this;
     }
 
-
-
     /**
-     * Build the Dql part of the filter about Name.
+     * Filters resources whose name contains a given string.
      *
      * @param string $name
      *
-     * @return \Claroline\CoreBundle\Repository\ResourceQueryBuilder
+     * @return ResourceQueryBuilder
      */
-    public function whereName($name)
+    public function whereNameLike($name)
     {
-        if (!$this->isFirstWhereClause) {
-            $this->dql .= ' AND ';
-        }
-
-        $this->dql .= " ar.name LIKE :name ";
-        $this->preparedStatementValue[':name'] = "%{$name}%";
-        $this->isFirstWhereClause = false;
+        $this->addWhereClause('resource.name LIKE :name');
+        $this->parameters[':name'] = "%{$name}%";
 
         return $this;
     }
 
-    public function whereIsExportable($boolean)
+    /**
+     * Filters resources that can or cannot be exported.
+     *
+     * @param boolean $isExportable
+     *
+     * @return ResourceQueryBuilder
+     */
+    public function whereIsExportable($isExportable)
     {
-        if (!$this->isFirstWhereClause) {
-            $this->dql .= ' AND ';
-        }
-
-        $this->dql .= " rt.isExportable = :boolean";
-        $this->preparedStatementValue[':boolean'] = $boolean;
-        $this->isFirstWhereClause = false;
+        $this->joinSingleRelatives = true;
+        $this->addWhereClause('resourceType.isExportable = :isExportable');
+        $this->parameters[':isExportable'] = $isExportable;
 
         return $this;
     }
 
-    public function wherePath($path, $includeFirstNode)
+    /**
+     * Filters the resources that don't have a parent (roots).
+     *
+     * @return Claroline\CoreBundle\Repository\ResourceQueryBuilder
+     */
+    public function whereParentIsNull()
     {
-        if (!$this->isFirstWhereClause) {
-            $this->dql .= ' AND ';
-        }
-        $startNodeClause = '';
-        if (!$includeFirstNode) {
-            $startNodeClause = 'AND ar.path <> :path';
-            $this->preparedStatementValue[':path'] = $path;
-        }
-        $this->dql .= "(ar.path LIKE :pathlike {$startNodeClause})";
-        $this->preparedStatementValue[':pathlike'] = "{$path}%";
-        $this->isFirstWhereClause = false;
+        $this->addWhereClause('resource.parent IS NULL');
 
         return $this;
     }
 
+    /**
+     * Orders resources by path.
+     *
+     * @return Claroline\CoreBundle\Repository\ResourceQueryBuilder
+     */
     public function orderByPath()
     {
-        $this->dql .= ' ORDER BY ar.path ';
+        $this->orderClause = 'ORDER BY resource.path' . PHP_EOL;
 
         return $this;
     }
 
+    /**
+     * Groups resources by id.
+     *
+     * @return ResourceQueryBuilder
+     */
     public function groupById()
     {
-        $this->dql .= ' GROUP BY ar.id ';
+        $this->groupByClause = 'GROUP BY resource.id' . PHP_EOL;
 
         return $this;
     }
 
-    public function setQueryParameters(\Doctrine\ORM\Query $query)
+    /**
+     * Returns the dql query string.
+     *
+     * @return string
+     *
+     * @throws MissingSelectClauseException if no select method was previously called
+     */
+    public function getDql()
     {
-        foreach ($this->preparedStatementValue as $key => $value) {
-            $query->setParameter($key, $value);
+        if (null === $this->selectClause) {
+            throw new MissingSelectClauseException('Select clause is missing');
         }
 
-        return $query;
+        $eol = PHP_EOL;
+        $joinRelatives = $this->joinSingleRelatives ?
+            "JOIN resource.creator creator{$eol}" .
+            "JOIN resource.resourceType resourceType{$eol}" .
+            "JOIN resource.icon icon{$eol}" :
+            '';
+        $joinRights = $this->leftJoinRights ?
+            "LEFT JOIN resource.rights rights{$eol}" .
+            "JOIN rights.role rightRole{$eol}" :
+            '';
+        $dql =
+            $this->selectClause .
+            "FROM Claroline\CoreBundle\Entity\Resource\AbstractResource resource{$eol}" .
+            $joinRelatives .
+            $joinRights .
+            $this->whereClause .
+            $this->orderClause .
+            $this->groupByClause;
+
+        return $dql;
+    }
+
+    /**
+     * Returns the parameters used when building the query.
+     *
+     * @return array
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * Adds a statement to the query "WHERE" clause.
+     *
+     * @param string $clause
+     */
+    private function addWhereClause($clause)
+    {
+        if (null === $this->whereClause) {
+            $this->whereClause = "WHERE {$clause}" . PHP_EOL;
+        } else {
+            $this->whereClause = $this->whereClause . "AND {$clause}" . PHP_EOL;
+        }
     }
 }

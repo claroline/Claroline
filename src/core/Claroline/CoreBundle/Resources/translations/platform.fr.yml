@@ -6,6 +6,7 @@ add: Ajouter
 add_group: 'Ajouter un groupe'
 add_group_s_confirm_message: 'groupe(s) ajouté(s)'
 add_resource: 'Ajouter une ressource'
+add_tag_to_workspace: 'Ajouter un Tag à l''espace d''activités'
 add_user: 'Ajouter un utilisateur'
 add_user_s_confirm_message: 'utilisateur(s) ajouté(s)'
 admin: Administrateur
@@ -17,7 +18,10 @@ admin_form_plainPassword_first : 'Mot de passe'
 admin_form_plainPassword_second : 'Répétez votre mot de passe'
 admin_form_mail : 'Adresse email'
 admin_form_username : 'Nom d''utilisateur'
+admin_tags_management: 'Gestion des Tags administrateur'
+admin_workspace_tag_form_name: Nom
 agenda: Agenda
+all_my_workspaces: 'Tous mes espaces d''activités'
 all_workspaces: 'Tous les espaces'
 anonymous: Anonyme
 by: par
@@ -32,6 +36,8 @@ copy: Copier
 create: Créer
 creation: Création
 create_group: 'Créer un groupe'
+create_new_admin_tag: 'Créer un nouveau Tag administrateur'
+create_new_tag: 'Créer un nouveau Tag'
 create_workspace: 'Créer un espace d''activités'
 creation_date: 'Date de création'
 cut: Couper
@@ -46,6 +52,7 @@ display_options: 'Options d''affichage'
 done_on: 'effectuée sur'
 download: Télécharger
 edit: Modifier
+enter_tag_name_message: 'Veuillez entrer un nom de Tag'
 export: Exporter
 fast_answer: 'Réponse rapide'
 file: Fichier
@@ -68,6 +75,7 @@ group_form_ownedRoles: Rôles
 group_form_platformRole: Role
 group_parameter: 'Paramètres du groupe'
 groups: Groupes
+history: Historique
 home: Accueil
 id: Id
 informations: Informations
@@ -215,7 +223,7 @@ profile_form_ownedRoles: Role(s)
 profile_form_phone: Téléphone
 profile_form_plainPassword_first: 'Mot de passe'
 profile_form_plainPassword_second: Vérification
-profile_form_platformRole: Role
+profile_form_platformRoles: Rôles
 profile_form_username: 'Nom d''utilisateur'
 properties: Propriétés
 public: Publique
@@ -267,14 +275,19 @@ settings: Paramètres
 show: Voir
 show_as_admin: 'Voir comme admin'
 show_as_user: 'Voir comme utilisateur'
+show_as: 'Voir comme'
+show_profile: 'Voir le profile'
 steal_session: 'Voler la session'
 switch: Echanger
+tag: Tag
+tags_management: 'Gestion des Tags'
 teacher: Professeur
 text_form_name: Nom
 text_form_shareType: Redistribution
 text_form_text: Texte
-The code {{ code }} is already assigned to another workspace.: Le code {{ code }} est déjà assigné à un autre espace d'activités.
 to: Jusque
+tool_form_name : "Nom"
+tool_form_displayName : "Nom affiché"
 to_message: A
 today: 'Aujourd''hui'
 tool: Outil
@@ -319,8 +332,9 @@ workspace_form_code: Code
 workspace_form_name: Nom
 workspace_form_template: Modèle
 workspace_form_type: Type
-workspace_order_tool_edit_form_translationKey: Nom
+workspace_order_tool_edit_form_name: Nom
 workspace_resource: Ressources
+workspace_tag_form_name: Nom
 workspace_template_form_name: Nom
 workspace_tools: Outils
 workspace_welcome: Accueil

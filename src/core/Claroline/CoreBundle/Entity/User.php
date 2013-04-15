@@ -97,7 +97,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     /**
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
-     *     inversedBy="users"
+     *     inversedBy="users", fetch="EXTRA_LAZY"
      * )
      * @ORM\JoinTable(
      *     name="claro_user_role",
@@ -265,6 +265,10 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
 
     public function isEqualTo(UserInterface $user)
     {
+        if ($user->getRoles() !== $this->getRoles()) {
+            return false;
+        }
+
         if (!$user instanceof User) {
             return false;
         }
@@ -273,8 +277,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
             return false;
         }
 
-        if ($this->id !== $user->getId())
-        {
+        if ($this->id !== $user->getId()) {
             return false;
         }
 
@@ -289,9 +292,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         if ($this->getSalt() !== $user->getSalt()) {
             throw new \Exception('not salt of');
             return false;
-        }
-         *
-         */
+        }*/
 
         return true;
     }
@@ -341,6 +342,8 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $unserialized = unserialize($serialized);
         $this->id = $unserialized['id'];
         $this->username = $unserialized['username'];
+        $this->roles = new ArrayCollection();
+        $this->groups = new ArrayCollection();
     }
 
     public function setPersonalWorkspace($workspace)
