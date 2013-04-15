@@ -63,7 +63,7 @@ ujm_interactionqcm_update:
     requirements: { _method: post }
     
 ujm_paper_list:
-    pattern:  /{exoID}
+    pattern:  /paper/list/{exoID}
     defaults: { _controller: "UJMExoBundle:Paper:index" }
 
 ujm_paper_show:
