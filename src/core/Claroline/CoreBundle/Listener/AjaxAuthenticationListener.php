@@ -63,10 +63,10 @@ class AjaxAuthenticationListener
             );
 
             //@see https://github.com/gillest/HackSessionBundle
-//            if (!$request->hasPreviousSession()) {
-//                $request->cookies->set(session_name(), 'tmp');
-//                $request->setSession($this->session);
-//            }
+            if (!$request->hasPreviousSession()) {
+                $request->cookies->set(session_name(), 'tmp');
+                $request->setSession($this->session);
+            }
 
             $event->setResponse(new Response($form, 403));
         }
