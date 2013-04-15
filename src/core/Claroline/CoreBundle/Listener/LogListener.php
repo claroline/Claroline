@@ -4,16 +4,16 @@ namespace Claroline\CoreBundle\Listener;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Claroline\CoreBundle\Library\Event\LogGenericEvent;
-use Claroline\CoreBundle\Library\Event\LogUserCreateEvent;
 use Claroline\CoreBundle\Library\Event\LogGroupDeleteEvent;
 use Claroline\CoreBundle\Library\Event\LogResourceDeleteEvent;
 use Claroline\CoreBundle\Library\Event\LogUserDeleteEvent;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleDeleteEvent;
+use Claroline\CoreBundle\Library\Event\NotRepeatableLog;
 use Claroline\CoreBundle\Entity\Logger\Log;
 
 class LogListener extends ContainerAware
 {
-    public function onLog(LogGenericEvent $event)
+    private function createLog(LogGenericEvent $event)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $em->flush();
@@ -26,16 +26,19 @@ class LogListener extends ContainerAware
         $doer = null;
         $sessionId = null;
         $doerIp = null;
+        $doerType = null;
+
         if ($token === null) {
-            if ($event->getAction() === LogUserCreateEvent::action) {
-                //Handling the case where a user creates his own account (without being already logged)
-                $doer = $event->getReceiver();
-            } else {
-                //For manage data fixture case the doer must be nullable
-                $doer = null;
-            }
+            $doer = null;
+            $doerType = Log::doerTypePlatform;
         } else {
-            $doer = $token->getUser();
+            if ($token->getUser() === 'anon.') {
+                $doer = null;
+                $doerType = Log::doerTypeAnonymous;
+            } else {
+                $doer = $token->getUser();
+                $doerType = Log::doerTypeUser;
+            }
             $request = $this->container->get('request');
             $sessionId = $request->getSession()->getId();
             $doerIp = $request->getClientIp();
@@ -47,6 +50,7 @@ class LogListener extends ContainerAware
         $log->setAction($event->getAction());
         $log->setChildType($event->getChildType());
         $log->setChildAction($event->getChildAction());
+        $log->setToolName($event->getToolName());
 
         //Object properties
         $log->setOwner($event->getOwner());
@@ -54,6 +58,8 @@ class LogListener extends ContainerAware
             //Prevent self delete case
             $log->setDoer($doer);
         }
+        $log->setDoerType($doerType);
+
         $log->setDoerIp($doerIp);
         if ($event->getAction() !== LogUserDeleteEvent::action) {
             //Prevent user delete case
@@ -118,5 +124,60 @@ class LogListener extends ContainerAware
 
         $em->persist($log);
         $em->flush();
+    }
+
+    /**
+     * Is a repeat if the session contains a same logSignature for the same action category
+     * TODO add a time range concept date params in the session object
+     */
+    private function isARepeat(LogGenericEvent $event)
+    {   
+        if ($this->container->get('security.context')->getToken() === null) {
+            //Only if have a user session;
+
+            return false;
+        }
+
+        if ($event instanceof NotRepeatableLog) {
+            $request = $this->container->get('request');
+            $session = $request->getSession();
+
+            $is = false;
+            $pushInSession = true;
+            $now = time();
+            if ($session->get($event->getAction()) != null) {
+                $oldArray = json_decode($session->get($event->getAction()));
+                $oldSignature = $oldArray->logSignature;
+                $oldTime = $oldArray->time;
+
+                if ($oldSignature == $event->getLogSignature()) {
+                    $diff = ($now - $oldTime);
+                    if ($diff > $this->container->getParameter('non_repeatable_log_time_in_seconds')) {
+                        $is = false;
+                    } else {
+                        $is = true;
+                        $pushInSession = false;
+                    }
+                }                
+            }
+
+            if ($pushInSession) {
+                //Update last logSignature for this event category
+                $array = array('logSignature' => $event->getLogSignature(), 'time' => $now);
+                $session->set($event->getAction(), json_encode($array));
+            }
+
+            return $is;
+        } else {
+
+            return false;
+        }
+    }
+
+    public function onLog(LogGenericEvent $event)
+    {
+        if (!($event instanceof NotRepeatableLog) or !$this->isARepeat($event)) {
+            $this->createLog($event);
+        }
     }
 }

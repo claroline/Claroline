@@ -8,14 +8,12 @@ class LogResourceUpdateEvent extends LogGenericEvent
 
     /**
      * Constructor.
-     * LogResourceUpdateEvent is used by CoreBundle or plugins when a resource's properties changed (e.g. name, icon, posts per page, comments per article, blog banner etc.)
-     *
-     * OldValues and newValues expected variables are arrays which contain all modified properties, in the following form:
-     * ('property_name_1' => 'property_value_1', 'property_name_2' => 'property_value_2' etc.)
+     * ChangeSet expected variable is array which contain all modified properties, in the following form:
+     * ('propertyName1' => ['property old value 1', 'property new value 1'], 'propertyName2' => ['property old value 2', 'property new value 2'] etc.)
      * 
-     * Please respect Underscore naming convention for property names (all lower case words separated with underscores)
+     * Please respect lower caml case naming convention for property names
      */
-    public function __construct($resource, $oldValues, newValues)
+    public function __construct($resource, $changeSet)
     {
         parent::__construct(
             self::action,
@@ -23,8 +21,7 @@ class LogResourceUpdateEvent extends LogGenericEvent
                 'resource' => array(
                     'name' => $resource->getName(),
                     'path' => $resource->getPathForDisplay(),
-                    'old_values' => $oldValues,
-                    'new_values' => $newValues
+                    'change_set' => $changeSet
                 ),
                 'workspace' => array(
                     'name' => $resource->getWorkspace()->getName()

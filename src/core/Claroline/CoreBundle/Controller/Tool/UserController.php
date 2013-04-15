@@ -8,6 +8,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleSubscribeEvent;
+use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleUnsubscribeEvent;
 
 class UserController extends Controller
 {
@@ -199,6 +201,7 @@ class UserController extends Controller
             ->find($workspaceId);
         $this->checkRegistration($workspace);
         $roleRepo = $em->getRepository('ClarolineCoreBundle:Role');
+        $role = $roleRepo->findCollaboratorRole($workspace);
 
         if (isset($params['ids'])) {
 
@@ -208,11 +211,16 @@ class UserController extends Controller
                 $userRole = $roleRepo->findWorkspaceRoleForUser($user, $workspace);
                 if ($userRole === null) {
                     $users[] = $user;
-                    $user->addRole($roleRepo->findCollaboratorRole($workspace));
+                    $user->addRole($role);
                 }
             }
             $em->flush();
         }
+
+        foreach ($users as $user) {
+            $log = new LogWorkspaceRoleSubscribeEvent($role, $user);
+            $this->get('event_dispatcher')->dispatch('log', $log);
+        }        
 
         $content = $this->renderView(
             'ClarolineCoreBundle:model:users.json.twig',
@@ -310,6 +318,8 @@ class UserController extends Controller
             ->findByWorkspace($workspace);
         $params = $this->get('request')->query->all();
 
+        $users= array();
+        $rolesForUsers = array();
         if (isset($params['ids'])) {
             $this->checkRemoveManagerRoleIsValid($params['ids'], $workspace);
             foreach ($params['ids'] as $userId) {
@@ -317,10 +327,23 @@ class UserController extends Controller
                 $user = $em->find('ClarolineCoreBundle:User', $userId);
 
                 if (null != $user) {
+                    $rolesForUser = array();
                     foreach ($roles as $role) {
-                        $user->removeRole($role);
+                        if ($user->hasRole($role->getName())) {
+                            $user->removeRole($role);
+                            $rolesForUser[] = $role;
+                        }
                     }
+                    $users[] = $user;
+                    $rolesForUsers['user_'.$user->getId()] = $rolesForUser;
                 }
+            }
+        }
+
+        foreach ($users as $user) {
+            foreach ($rolesForUsers['user_'.$user->getId()] as $role) {
+                $log = new LogWorkspaceRoleUnsubscribeEvent($role, $user);
+                $this->get('event_dispatcher')->dispatch('log', $log);
             }
         }
 

@@ -1,0 +1,29 @@
+{% if log.getDetails().receiver_user.change_set is defined  and log.getDetails().receiver_user.change_set|length > 0 %}
+    <div>
+        <h4>{{ ('log_change_set')|trans({}, 'platform') }}</h4>
+        <h5>{{ ('log_old_values')|trans({}, 'platform') }}</h4>
+        <dl class="dl-horizontal">
+            {% for key, values in log.getDetails().receiver_user.change_set %}
+                {% if key != 'password' %}
+                    <dt>{{ key|caml_case_to_underscore|trans({}, 'platform') }}</dt>
+                    <dd>
+                        {% if values[0] %}
+                            {{ values[0] }}
+                        {% else %}
+                            ...
+                        {% endif %}
+                    </dd>
+                {% endif %}
+            {% endfor %}
+        </dl>
+        <h5>{{ ('log_new_values')|trans({}, 'platform') }}</h4>
+        <dl class="dl-horizontal">
+            {% for key, values in log.getDetails().receiver_user.change_set %}
+                {% if key != 'password' %}
+                    <dt>{{ key|caml_case_to_underscore|trans({}, 'platform') }}</dt>
+                    <dd>{{ values[1] }}</dd>
+                {% endif %}
+            {% endfor %}
+        </dl>
+    </div>
+{% endif %}

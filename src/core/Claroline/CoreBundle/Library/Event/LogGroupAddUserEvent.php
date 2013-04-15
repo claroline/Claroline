@@ -21,7 +21,7 @@ class LogGroupAddUserEvent extends LogGenericEvent
                 'receiver_user' => array(
                     'last_name' => $receiver->getLastName(),
                     'first_name' => $receiver->getFirstName()
-                )
+                ),
                 'receiver_group' => array(
                     'name' => $receiverGroup->getName()
                 )

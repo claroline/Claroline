@@ -8,6 +8,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleSubscribeEvent;
+use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleUnsubscribeEvent;
 
 class GroupController extends Controller
 {
@@ -125,16 +127,31 @@ class GroupController extends Controller
             ->findByWorkspace($workspace);
         $params = $this->get('request')->query->all();
 
+        $groups= array();
+        $rolesForGroups = array();
         if (isset($params['ids'])) {
             $this->checkRemoveManagerRoleIsValid($params['ids'], $workspace);
             foreach ($params['ids'] as $groupId) {
                 $group = $em->find('ClarolineCoreBundle:Group', $groupId);
 
                 if (null != $group) {
+                    $rolesForGroup = array();
                     foreach ($roles as $role) {
-                        $group->removeRole($role);
+                        if ($group->hasRole($role->getName())) {
+                            $group->removeRole($role);
+                            $rolesForGroup[] = $role;
+                        }
                     }
+                    $groups[] = $group;
+                    $rolesForGroups['group_'.$group->getId()] = $rolesForGroup;
                 }
+            }
+        }
+
+        foreach ($groups as $group) {
+            foreach ($rolesForGroups['group_'.$group->getId()] as $role) {
+                $log = new LogWorkspaceRoleUnsubscribeEvent($role, null, $group);
+                $this->get('event_dispatcher')->dispatch('log', $log);
             }
         }
 
@@ -212,19 +229,23 @@ class GroupController extends Controller
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
             ->find($workspaceId);
         $this->checkRegistration($workspace);
+        $role = $em->getRepository('ClarolineCoreBundle:Role')
+                        ->findCollaboratorRole($workspace);
         $groups = array();
 
         if (isset($params['ids'])) {
             foreach ($params['ids'] as $groupId) {
                 $group = $em->find('ClarolineCoreBundle:Group', $groupId);
                 $groups[] = $group;
-                $group->addRole(
-                    $em->getRepository('ClarolineCoreBundle:Role')
-                        ->findCollaboratorRole($workspace)
-                );
+                $group->addRole($role);
                 $em->flush();
             }
         }
+
+        foreach ($groups as $group) {
+            $log = new LogWorkspaceRoleSubscribeEvent($role, null, $group);
+            $this->get('event_dispatcher')->dispatch('log', $log);
+        } 
 
         $content = $this->renderView(
             'ClarolineCoreBundle:Tool\workspace\group_management:group.json.twig',

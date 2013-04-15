@@ -4,28 +4,23 @@ namespace Claroline\CoreBundle\Library\Event;
 
 class LogWorkspaceRoleUpdateEvent extends LogGenericEvent
 {
-    const action = 'workspace_role_update';
+    const action = 'ws_role_update';
 
     /**
      * Constructor.
-     * OldValues and newValues expected variables are arrays which contain all modified properties, in the following form:
-     * ('property_name_1' => 'property_value_1', 'property_name_2' => 'property_value_2' etc.)
+     * ChangeSet expected variable is array which contain all modified properties, in the following form:
+     * ('propertyName1' => ['property old value 1', 'property new value 1'], 'propertyName2' => ['property old value 2', 'property new value 2'] etc.)
      * 
-     * Please respect Underscore naming convention for property names (all lower case words separated with underscores)
+     * Please respect lower caml case naming convention for property names
      */
-    public function __construct($role, $oldValues, $newValues)
+    public function __construct($role, $changeSet)
     {
         parent::__construct(
             self::action,
             array(
-                'owner' => array(
-                    'last_name' => $role->getWorkspace()->getCreator()->getLastName(),
-                    'first_name' => $role->getWorkspace()->getCreator()->getFirstName()
-                ),
                 'role' => array(
                     'name' => $role->getName(),
-                    'old_values' => $oldValues,
-                    'new_values' => $newValues
+                    'change_set' => $changeSet
                 ),
                 'workspace' => array(
                     'name' => $role->getWorkspace()->getName()
@@ -35,8 +30,7 @@ class LogWorkspaceRoleUpdateEvent extends LogGenericEvent
             null,
             null,
             $role,
-            $role->getWorkspace(),
-            $role->getWorkspace()->getCreator()
+            $role->getWorkspace()
         );
     }
 }
