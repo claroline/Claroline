@@ -8,13 +8,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-<<<<<<< HEAD
 use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleSubscribeEvent;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleUnsubscribeEvent;
-=======
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
->>>>>>> master
 
 class GroupController extends Controller
 {
@@ -293,7 +290,6 @@ class GroupController extends Controller
             }
         }
 
-<<<<<<< HEAD
         foreach ($groups as $group) {
             $log = new LogWorkspaceRoleSubscribeEvent($role, null, $group);
             $this->get('event_dispatcher')->dispatch('log', $log);
@@ -303,10 +299,8 @@ class GroupController extends Controller
             'ClarolineCoreBundle:Tool\workspace\group_management:group.json.twig',
             array('groups' => $groups)
         );
-        $response = new Response($content);
-=======
+
         $response = new Response($this->get('claroline.resource.converter')->jsonEncodeGroups($groups));
->>>>>>> master
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;

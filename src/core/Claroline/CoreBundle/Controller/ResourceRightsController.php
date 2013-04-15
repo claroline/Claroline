@@ -6,11 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-<<<<<<< HEAD
 use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleChangeRightEvent;
-=======
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
->>>>>>> master
 
 class ResourceRightsController extends Controller
 {

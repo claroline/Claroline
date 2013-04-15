@@ -12,7 +12,7 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 /**
  * @DI\Service
  */
-class ResourceLogWidgetListener
+class LogWidgetListener
 {
     private $em;
     private $securityContext;
@@ -60,11 +60,11 @@ class ResourceLogWidgetListener
 
     private function renderLogs(AbstractWorkspace $workspace = null)
     {
-         $logs = $this->em->getRepository('ClarolineCoreBundle:Logger\ResourceLog')
+         $logs = $this->em->getRepository('ClarolineCoreBundle:Logger\Log')
             ->findLastLogs($this->securityContext->getToken()->getUser(), $workspace);
 
         return $this->twig->render(
-            'ClarolineCoreBundle:Widget:resource_events.html.twig',
+            'ClarolineCoreBundle:Log:view_list.html.twig',
             array('logs' => $logs)
         );
     }

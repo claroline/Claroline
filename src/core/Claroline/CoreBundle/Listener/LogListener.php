@@ -2,8 +2,6 @@
 
 namespace Claroline\CoreBundle\Listener;
 
-<<<<<<< HEAD:src/core/Claroline/CoreBundle/Listener/LogListener.php
-use Symfony\Component\DependencyInjection\ContainerAware;
 use Claroline\CoreBundle\Library\Event\LogGenericEvent;
 use Claroline\CoreBundle\Library\Event\LogGroupDeleteEvent;
 use Claroline\CoreBundle\Library\Event\LogResourceDeleteEvent;
@@ -11,63 +9,46 @@ use Claroline\CoreBundle\Library\Event\LogUserDeleteEvent;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleDeleteEvent;
 use Claroline\CoreBundle\Library\Event\NotRepeatableLog;
 use Claroline\CoreBundle\Entity\Logger\Log;
-=======
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Doctrine\ORM\EntityManager;
-use Claroline\CoreBundle\Library\Event\ResourceLogEvent;
-use Claroline\CoreBundle\Entity\Logger\ResourceLog;
->>>>>>> master:src/core/Claroline/CoreBundle/Listener/ResourceLogListener.php
+
 
 /**
  * @DI\Service
  */
-class ResourceLogListener
+class LogListener
 {
-<<<<<<< HEAD:src/core/Claroline/CoreBundle/Listener/LogListener.php
-    private function createLog(LogGenericEvent $event)
-=======
     private $em;
     private $securityContext;
+    private $container;
 
     /**
      * @DI\InjectParams({
      *     "em"         = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "context"    = @DI\Inject("security.context")
+     *     "context"    = @DI\Inject("security.context"),
+     *     "container"  = @DI\Inject("service_container")
      * })
      *
      * @param \Doctrine\ORM\EntityManager $em
      */
-    public function __construct(EntityManager $em, SecurityContextInterface $context)
+    public function __construct(EntityManager $em, SecurityContextInterface $context, $container)
     {
         $this->em = $em;
         $this->securityContext = $context;
+        $this->container = $container;
     }
 
-    /**
-     * @DI\Observe("log_resource")
-     *
-     * @param WorkspaceLogEvent $event
-     */
-    public function onLogResource(ResourceLogEvent $event)
->>>>>>> master:src/core/Claroline/CoreBundle/Listener/ResourceLogListener.php
+    private function createLog(LogGenericEvent $event)
     {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $em->flush();
+        $this->em->flush();
 
-        $logger = $this->container->get('logger');
-        $logger->info('onLogResource');
-
-<<<<<<< HEAD:src/core/Claroline/CoreBundle/Listener/LogListener.php
         //Add doer details
         $token = $this->container->get('security.context')->getToken();
         $doer = null;
         $sessionId = null;
         $doerIp = null;
         $doerType = null;
-=======
-        $token = $this->securityContext->getToken();
->>>>>>> master:src/core/Claroline/CoreBundle/Listener/ResourceLogListener.php
 
         if ($token === null) {
             $doer = null;
@@ -85,7 +66,6 @@ class ResourceLogListener
             $doerIp = $request->getClientIp();
         }
 
-<<<<<<< HEAD:src/core/Claroline/CoreBundle/Listener/LogListener.php
         $log = new Log();
 
         //Simple type properties
@@ -126,7 +106,7 @@ class ResourceLogListener
         if ($doer !== null) {
             $log->addDoerPlatformRole($doer->getPlatformRole());
             if ($event->getWorkspace() !== null) {
-                $roleRepository = $em->getRepository('ClarolineCoreBundle:Role');
+                $roleRepository = $this->em->getRepository('ClarolineCoreBundle:Role');
                 $log->addDoerWorkspaceRole($roleRepository->findWorkspaceRoleForUser($doer, $event->getWorkspace()));
             }
         }
@@ -164,24 +144,12 @@ class ResourceLogListener
         }
         $log->setDetails($details);
 
-        $em->persist($log);
-        $em->flush();
-=======
-        $rs->setCreator($event->getResource()->getCreator());
-        $rs->setUpdator($user);
-        $rs->setAction($event->getAction());
-        $rs->setLogDescription($event->getLogDescription());
-        $rs->setPath($event->getResource()->getPathForDisplay());
-        $rs->setResourceType($event->getResource()->getResourceType());
-        $rs->setWorkspace($event->getResource()->getWorkspace());
-        $this->em->persist($rs);
+        $this->em->persist($log);
         $this->em->flush();
->>>>>>> master:src/core/Claroline/CoreBundle/Listener/ResourceLogListener.php
     }
 
     /**
      * Is a repeat if the session contains a same logSignature for the same action category
-     * TODO add a time range concept date params in the session object
      */
     private function isARepeat(LogGenericEvent $event)
     {   
@@ -227,6 +195,11 @@ class ResourceLogListener
         }
     }
 
+    /**
+     * @DI\Observe("log")
+     *
+     * @param WorkspaceLogEvent $event
+     */
     public function onLog(LogGenericEvent $event)
     {
         if (!($event instanceof NotRepeatableLog) or !$this->isARepeat($event)) {

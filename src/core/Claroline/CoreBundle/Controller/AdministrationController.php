@@ -126,11 +126,7 @@ class AdministrationController extends Controller
         $params = $this->get('request')->query->all();
 
         if (isset($params['ids'])) {
-<<<<<<< HEAD
-            $em = $this->get('doctrine.orm.entity_manager');
-=======
             $em = $this->getDoctrine()->getManager();
->>>>>>> master
 
             foreach ($params['ids'] as $userId) {
                 $user = $em->getRepository('ClarolineCoreBundle:User')
@@ -584,7 +580,6 @@ class AdministrationController extends Controller
 
         $em->persist($group);
         $em->flush();
-<<<<<<< HEAD
 
         foreach ($users as $user) {
             $log = new LogGroupAddUserEvent($group, $user);
@@ -595,10 +590,7 @@ class AdministrationController extends Controller
             'ClarolineCoreBundle:model:users.json.twig',
             array('users' => $users)
         );
-        $response = new Response($content);
-=======
         $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
->>>>>>> master
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
