@@ -42,6 +42,7 @@ use Symfony\Component\HttpFoundation\Response;
 use UJM\ExoBundle\Entity\InteractionGraphic;
 use UJM\ExoBundle\Form\InteractionGraphicType;
 use UJM\ExoBundle\Entity\Coords;
+use UJM\ExoBundle\Entity\ExerciseQuestion;
 
 //use UJM\ExoBundle\Entity\Document;
 
@@ -123,6 +124,8 @@ class InteractionGraphicController extends Controller
         $request = $this->getRequest();
         $form = $this->createForm(new InteractionGraphicType($user), $interGraph);
         $form->bindRequest($request);
+        
+        $exoID = $this->container->get('request')->request->get('exercise');
 
         $interGraph->getInteraction()->getQuestion()->setDateCreate(new \Datetime()); // Set Creation Date to today
         $interGraph->getInteraction()->getQuestion()->setUser($user); // add the user to the question
@@ -177,14 +180,34 @@ class InteractionGraphicController extends Controller
                 $em->persist(${'co'.$i});
             }
             $em->flush();
+            
+            if ($exoID != -1) {
+                $exo = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
+                $eq = new ExerciseQuestion($exo, $interGraph->getInteraction()->getQuestion());
 
-            return $this->redirect($this->generateUrl('ujm_question_index'));
+                $dql = 'SELECT max(eq.ordre) FROM UJM\ExoBundle\Entity\ExerciseQuestion eq '
+                    . 'WHERE eq.exercise='.$exoID;
+                $query = $em->createQuery($dql);
+                $maxOrdre = $query->getResult();
+
+                $eq->setOrdre((int) $maxOrdre[0][1] + 1);
+                $em->persist($eq);
+
+                $em->flush();
+            }
+
+            if ($exoID == -1) {
+                return $this->redirect($this->generateUrl('ujm_question_index'));
+            } else {
+                return $this->redirect($this->generateUrl('ujm_exercise_questions', array('id' => $exoID)));
+            }
         }
 
         return $this->render(
             'UJMExoBundle:InteractionGraphic:new.html.twig', array(
             'interGraph' => $interGraph,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'exoID'  => $exoID,
             )
         );
     }

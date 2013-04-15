@@ -247,13 +247,12 @@ function  ResizePointer(sens) {
         var x = cible.style.left.substr(0, cible.style.left.indexOf('p'))- answerImg.offsetLeft + 10;
         var y = cible.style.top.substr(0, cible.style.top.indexOf('p')) - answerImg.offsetTop + 10;
         var coord = x +'_' + y;
-
+alert('avant : '+AnswerZones[i]);
         if (coord == AnswerZones[i].substring(AnswerZones[i].indexOf(';')+1, AnswerZones[i].indexOf('-'))){
             AnswerZones[i] = AnswerZones[i].replace(AnswerZones[i].substr(AnswerZones[i].indexOf('~')+1),cible.width);
             break;
         }
-        
-    }
+    }alert('apres : '+AnswerZones[i]);
     document.getElementById('coordsZone').value = AnswerZones;
 }
 
