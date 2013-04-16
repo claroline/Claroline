@@ -319,6 +319,8 @@ class DatabaseWriter
         $this->em->persist($toolEntity);
         $this->em->flush();
 
-        $this->templateBuilder->addTool($tool['name'], $tool['name']);
+        if ($tool['is_displayable_in_workspace']) {
+            $this->templateBuilder->addTool($tool['name'], $tool['name']);
+        }
     }
 }
