@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Controller\Tool;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Library\Installation\Plugin\Loader;
-use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
 
 class ParametersControllerTest extends FunctionalTestCase
 {
