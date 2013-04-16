@@ -73,7 +73,8 @@
  
 {# ------------------------------------------------- Boutton affichage image ---------------------------------------------------------------------------- #}
     
-    <p><input id="LoadImg" type="button" value="{{ "Select" | trans }}" onclick="LoadPic('{{ path('ujm_interactiongraphic_DisplayPic') }}')"/></p>
+    <p><input id="LoadImg" type="button" value="{{ "Select" | trans }}" onclick="LoadPic('{{ path('ujm_interactiongraphic_DisplayPic') }}',
+            '{{ asset('bundles') }}')"/></p>
  
 {# ------------------------------------------------- Zone affichage image ---------------------------------------------------------------------------- #}    
     

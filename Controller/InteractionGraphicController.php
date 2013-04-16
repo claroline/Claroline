@@ -328,6 +328,8 @@ class InteractionGraphicController extends Controller
 
         if ($request->isXmlHttpRequest()) {
             $label = $request->request->get('value');
+            $prefix = $request->request->get('prefix');
+            
             // If the sended label isn't empty, get the matching adress
             if ($label) {
                 $repository = $this->getDoctrine()
@@ -335,13 +337,12 @@ class InteractionGraphicController extends Controller
                     ->getRepository('UJMExoBundle:Document');
 
                 $pic = $repository->findOneBy(array('label' => $label));
-                $sufix = substr($pic->getUrl(), 2);
+                $sufix = substr($pic->getUrl(), 9);
             } else {
                 $sufix = ""; // Else don't display anything
             }
         }
 
-        $prefix = "//Claroline/web/";
         $url = $prefix . $sufix;
 
         return new Response($url);

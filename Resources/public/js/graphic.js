@@ -44,7 +44,7 @@ if (navigator.browserLanguage) {
 // :::::::::::::::::::::::::::::::::::::::::: Functions :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 // Get the url's picture matching to the label in the list
-function sendData(select,path) {
+function sendData(select,path,prefx) {
     //"use strict";
 
     // Send the label of the picture to get the adress in order to display it
@@ -52,24 +52,23 @@ function sendData(select,path) {
         type: 'POST',
         url: path,
         data: {
-            value : select
+            value : select, prefix : prefx
         },
         cache: false,
         success: function (data) {
-            result = data.substr((data.indexOf('>/') + 2));
-            answerImg.src = result;
+            answerImg.src = data;
         }
     });
 }
 
 // Display the selected picture
-function LoadPic(path) {
+function LoadPic(path,prefx) {
     //"use strict";
 
     var list = document.InterGraphForm.ujm_exobundle_interactiongraphictype_document; // List of all the user's pictures
     var select = list.options[list.selectedIndex].innerHTML; // Label of the selected picture
 
-    sendData(select,path);
+    sendData(select,path,prefx);
 
     // New picture load, initialization var :
     value = 0;
@@ -247,12 +246,12 @@ function  ResizePointer(sens) {
         var x = cible.style.left.substr(0, cible.style.left.indexOf('p'))- answerImg.offsetLeft + 10;
         var y = cible.style.top.substr(0, cible.style.top.indexOf('p')) - answerImg.offsetTop + 10;
         var coord = x +'_' + y;
-alert('avant : '+AnswerZones[i]);
+
         if (coord == AnswerZones[i].substring(AnswerZones[i].indexOf(';')+1, AnswerZones[i].indexOf('-'))){
             AnswerZones[i] = AnswerZones[i].replace(AnswerZones[i].substr(AnswerZones[i].indexOf('~')+1),cible.width);
             break;
         }
-    }alert('apres : '+AnswerZones[i]);
+    }
     document.getElementById('coordsZone').value = AnswerZones;
 }
 

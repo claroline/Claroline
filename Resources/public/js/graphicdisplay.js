@@ -12,7 +12,7 @@ var validGraphic = document.getElementById('ValidGraphic'); // The form to valid
 var x; // Mouse x position
 var y; // Mouse y position
 var j; // For for instruction
-var longueur = 88; // height of the div "Instructions"
+var longueur = ref.scrollHeight + 10; // height of the div "Instructions"
 
 document.addEventListener('click', function (e) {
     //"use strict";
@@ -21,8 +21,8 @@ document.addEventListener('click', function (e) {
             cible = e.target;
             document.body.style.cursor = 'pointer';
 
-            var w = cible.offsetLeft - answerImg.offsetLeft + 7;
-            var c = cible.offsetTop - answerImg.offsetTop + 7;
+            var w = cible.offsetLeft - answerImg.offsetLeft + 10;
+            var c = cible.offsetTop - answerImg.offsetTop + 10;
             var temp = w + '-' + c;
 
             for (var ci in tempCoords) {
@@ -45,7 +45,7 @@ document.addEventListener('click', function (e) {
         var t4 = answerImg.offsetTop + answerImg.height - 10; // Height of the image
 
         // Out of the image
-        if ((t1) > (t3) || (t1) < (answerImg.offsetLeft - 7) || (t2) > (t4) || (t2) < (answerImg.offsetTop - 7)) {
+        if ((t1) > (t3) || (t1) < (answerImg.offsetLeft - 10) || (t2) > (t4) || (t2) < (answerImg.offsetTop - 10)) {
             // Replace the cursor at its initial place
             cible.style.left = String(ox + (cible.id.substr(6)) * 25) + 'px';
             cible.style.top = String(ref.offsetTop + longueur) + 'px';
@@ -53,7 +53,7 @@ document.addEventListener('click', function (e) {
         }
 
         if (out == false) {
-            var contain = (cible.offsetLeft - answerImg.offsetLeft + 7) + '-' + (cible.offsetTop - answerImg.offsetTop + 7);
+            var contain = (cible.offsetLeft - answerImg.offsetLeft + 10) + '-' + (cible.offsetTop - answerImg.offsetTop + 10);
             tempCoords[cible.id] = contain;
         }
 

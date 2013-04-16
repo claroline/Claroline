@@ -234,8 +234,10 @@ class exerciseServices
             for ($j = 0; $j < $max - 1; $j++) {
                 list($xa,$ya) = explode("-", $coords[$j]);
                 list($xr,$yr) = explode(",", $rightCoords[$i]->getValue());
-
-                if ((($xa) < ($xr + 10)) && (($xa) > ($xr - 10)) && (($ya) < ($yr + 10)) && (($ya) > ($yr - 10))) {
+                
+                $valid = $rightCoords[$i]->getSize()/2;
+                
+                if ((($xa) < ($xr + $valid)) && (($xa) > ($xr - $valid)) && (($ya) < ($yr + $valid)) && (($ya) > ($yr - $valid))) {
                     if ($this->alreadyDone($rightCoords[$i], $verif, $z)) {
                         $point += $rightCoords[$i]->getScoreCoords();
                         $verif[$z] = $rightCoords[$i];
