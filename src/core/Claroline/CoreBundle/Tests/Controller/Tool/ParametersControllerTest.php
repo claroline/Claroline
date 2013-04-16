@@ -525,6 +525,27 @@ class ParametersControllerTest extends FunctionalTestCase
         $this->assertEquals(1, count($crawler->filter('#workspace_template_form')));
     }
 
+    public function testDesktopWidgetProperties()
+    {
+        $this->logUser($this->getUser('john'));
+        $crawler = $this->client->request(
+           'GET',
+           "/desktop/tool/properties/widget/properties"
+        );
+
+        $this->assertEquals(1, count($crawler->filter('#widget-table')));
+    }
+
+    public function testDesktopConfigureToolsPage()
+    {
+        $this->logUser($this->getUser('john'));
+        $crawler = $this->client->request(
+            'GET',
+            "desktop/tool/properties/tools"
+        );
+        $this->assertEquals(3, count($crawler->filter('input:checked[type="checkbox"]')));
+    }
+
     private function resetTemplate()
     {
         $container = $this->client->getContainer();
