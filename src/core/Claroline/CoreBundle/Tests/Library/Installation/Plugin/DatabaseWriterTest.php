@@ -231,7 +231,7 @@ class DatabaseWriterTest extends FunctionalTestCase
     {
         $container = $this->client->getContainer();
         $archive = new \ZipArchive();
-        $archpath = $container->getParameter('claroline.workspace_template.directory').'default.zip';
+        $archpath = $container->getParameter('claroline.param.templates_directory').'default.zip';
         $archive->open($archpath);
         $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
         $oldTools = count($parsedFile['tools_infos']);
@@ -257,7 +257,7 @@ class DatabaseWriterTest extends FunctionalTestCase
     {
         $container = $this->client->getContainer();
         $archive = new \ZipArchive();
-        $archpath = $container->getParameter('claroline.workspace_template.directory').'default.zip';
+        $archpath = $container->getParameter('claroline.param.templates_directory').'default.zip';
         $archive->open($archpath);
         $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
         $oldWidget = count($parsedFile['tools']['home']['widget']);
@@ -283,7 +283,7 @@ class DatabaseWriterTest extends FunctionalTestCase
     {
         $container = $this->client->getContainer();
         $archive = new \ZipArchive();
-        $archpath = $container->getParameter('claroline.workspace_template.directory').'default.zip';
+        $archpath = $container->getParameter('claroline.param.templates_directory').'default.zip';
         $archive->open($archpath);
         $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
         $oldResources = count($parsedFile['root_perms']['ROLE_WS_MANAGER']['canCreate']);
@@ -316,16 +316,11 @@ class DatabaseWriterTest extends FunctionalTestCase
     private function resetTemplate()
     {
         $container = $this->client->getContainer();
-        $yml = $container->getParameter('claroline.workspace_template.directory').'config.yml';
-        $archpath = $container->getParameter('claroline.workspace_template.directory').'default.zip';
+        $yml = $container->getParameter('claroline.param.templates_directory').'config.yml';
+        $archpath = $container->getParameter('claroline.param.templates_directory').'default.zip';
         $archive = new \ZipArchive();
         $archive->open($archpath, \ZipArchive::OVERWRITE);
         $archive->addFile($yml, 'config.yml');
         $archive->close();
-    }
-
-    private function removePlugin($pluginFqcn)
-    {
-
     }
 }
