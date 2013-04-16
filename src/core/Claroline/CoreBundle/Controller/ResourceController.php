@@ -388,6 +388,9 @@ class ResourceController extends Controller
                     $creatableTypes[$type['name']] = $translator->trans($type['name'], array(), 'resource');
                 }
             }
+
+            $log = new LogResourceReadEvent($directory);
+            $this->get('event_dispatcher')->dispatch('log', $log);
         }
 
         $response = new Response(
