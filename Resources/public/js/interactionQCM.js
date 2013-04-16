@@ -13,7 +13,10 @@ function insertStyle() {
         } else {
             $('#newTable .ligne_choice').each(function (index) {
                 $('#newTable tr:first').contents('th:nth-child(5)').show();
-                $(this).contents('td:nth-child(5)').after('<td id="button_down_click" class="colonne_choice" style="width: 125px; " > <div> <button id="button_up_click" type="button" class="button_up" >Up</button><button type="button" class="button_down" >Down</button> </div>  </td>');
+                $(this).contents('td:nth-child(5)')
+                        .after('<td id="button_down_click" class="colonne_choice" style="width: 125px; " > \n\
+                               <div> <button id="button_up_click" type="button" class="button_up" >Up</button>\n\
+                               <button type="button" class="button_down" >Down</button> </div>  </td>');
                 $('#newTable .button_down').css({
                     'display': 'block',
                     'color': 'red',
@@ -47,9 +50,11 @@ function insertStyle() {
                     $(this).contents('td:nth-child(5)').find('input').prop('type', 'checkbox');
                     //donner des name différents au inputs
                     $(this).contents('td:nth-child(5)').find('input').removeAttr('name');
-                    $(this).contents('td:nth-child(5)').find('input').attr('name', 'ujm_exobundle_interactionqcmtype[choices][' + ii + '][rightResponse]');
+                    $(this).contents('td:nth-child(5)').find('input')
+                            .attr('name', 'ujm_exobundle_interactionqcmtype[choices][' + ii + '][rightResponse]');
                     $(this).contents('td:nth-child(5)').find('input').removeAttr('id');
-                    $(this).contents('td:nth-child(5)').find('input').attr('id', 'ujm_exobundle_interactionqcmtype_choices_' + ii + '_rightResponse');
+                    $(this).contents('td:nth-child(5)').find('input')
+                            .attr('id', 'ujm_exobundle_interactionqcmtype_choices_' + ii + '_rightResponse');
                     ii = ii + 1;
                 });
         }
@@ -125,7 +130,8 @@ function choiceCSS(sourceImageDel) {
     });
 
     $('#newTable .ligne_choice:last').append('<td class="colonne_choice" >  </td>');
-    $('#newTable .colonne_choice:last').append($('#newTable .ligne_choice:last').children('div').children('label').first());
+    $('#newTable .colonne_choice:last').append($('#newTable .ligne_choice:last').children('div').children('label')
+            .first());
     $('#newTable .ligne_choice:last').children('div').children('div').children('div').each(function (index) {
         $('#newTable .ligne_choice:last').append('<td class="colonne_choice" >  </td>');
         $('#newTable .colonne_choice:last').append($(this));
@@ -134,7 +140,10 @@ function choiceCSS(sourceImageDel) {
 
     //ajout colonne ordre
     if ($('#ujm_exobundle_interactionqcmtype_shuffle').is(':checked') === false) {
-        $('#newTable .ligne_choice:last').contents('td:nth-child(7)').after('<td id="button_down_click" class="colonne_choice" style="width: 125px; " > <div> <button id="button_up_click" type="button" class="button_up" >Up</button><button type="button" class="button_down" >Down</button> </div>  </td>');
+        $('#newTable .ligne_choice:last').contents('td:nth-child(7)')
+                .after('<td id="button_down_click" class="colonne_choice" style="width: 125px; " >\n\
+                       <div> <button id="button_up_click" type="button" class="button_up" >Up</button>\n\
+                       <button type="button" class="button_down" >Down</button> </div>  </td>');
         $('#newTable .button_down').css({
             'display': 'block',
             'color': 'red',
@@ -161,13 +170,15 @@ function choiceCSS(sourceImageDel) {
     if ($('#ujm_exobundle_interactionqcmtype_typeQCM').val() === 2) {
         $('#newTable .ligne_choice:last').contents('td:nth-child(6)').find('input').prop('type', 'radio');
         $('#newTable .ligne_choice:last').contents('td:nth-child(6)').find('input').removeAttr('id');
-        $('#newTable .ligne_choice:last').contents('td:nth-child(6)').find('input').attr('id', 'reponse_attendue_radio');
+        $('#newTable .ligne_choice:last').contents('td:nth-child(6)').find('input')
+                .attr('id', 'reponse_attendue_radio');
     } else {
         $('#newTable .ligne_choice:last').contents('td:nth-child(6)').find('input').prop('type', 'checkbox');
     }
 
     //ajout de la derniere colonne pr l'ajout et la supression
-    $('#newTable .ligne_choice:last').contents('td:last').after('<td><a href="#" id="delete_choice"><img src="' + sourceImageDel + '" /></a> </td> ');
+    $('#newTable .ligne_choice:last').contents('td:last')
+            .after('<td><a href="#" id="delete_choice"><img src="' + sourceImageDel + '" /></a> </td> ');
 
     // clique boutons supprimer lignes du tableau
     $('#delete_choice').live('click', function () {
@@ -183,7 +194,8 @@ function choiceCSS(sourceImageDel) {
     $('#newTable tr').contents('td').css({'border': '1px solid #aaaaaa'});
 
     //ajouter bouton édition avancée ds colonne réponse
-    $('#newTable .ligne_choice:last').contents('td:nth-child(1)').children('div').before('<button id="button_editionA" type="button" class="button_editionA" >édition avancée</button>');
+    $('#newTable .ligne_choice:last').contents('td:nth-child(1)').children('div')
+            .before('<button id="button_editionA" type="button" class="button_editionA" >édition avancée</button>');
     $('#newTable .button_editionA').css({
         'display': 'block',
         'color': 'red',
@@ -231,7 +243,9 @@ function choiceCSSEdit(sourceImageDel, nbResponses) {
         var row = $(this);
         var text = row.contents('td:nth-child(3)').find('textarea').val();
         row.contents('td:nth-child(3)').find('textarea').hide();
-        row.contents('td:nth-child(3)').append('<br /><div id="divReplaceTextarea" style="border:solid 1px red; width:200px; height:110px; padding:5px; overflow:auto; "></div> ');
+        row.contents('td:nth-child(3)')
+                .append('<br />\n\<div id="divReplaceTextarea" style="border:solid 1px red; width:200px; height:110px;\n\
+                                  padding:5px; overflow:auto; "></div> ');
         row.contents('td:nth-child(3)').children('div').last().html(text);
     });
 
@@ -239,7 +253,10 @@ function choiceCSSEdit(sourceImageDel, nbResponses) {
     //ajout colonne ordre
     if ($('#ujm_exobundle_interactionqcmtype_shuffle').is(':checked') === false) {
         $('#newTable .ligne_choice').each(function (index) {
-            $(this).contents('td:nth-child(7)').after('<td id="button_down_click" class="colonne_choice" style="width: 125px; " > <div> <button id="button_up_click" type="button" class="button_up" >Up</button><button type="button" class="button_down" >Down</button> </div>  </td>');
+            $(this).contents('td:nth-child(7)')
+                    .after('<td id="button_down_click" class="colonne_choice" style="width: 125px; " >\n\
+                           <div> <button id="button_up_click" type="button" class="button_up" >Up</button>\n\
+                           <button type="button" class="button_down" >Down</button> </div>  </td>');
         });
         $('#newTable .button_down').css({
             'display': 'block',
@@ -272,7 +289,8 @@ function choiceCSSEdit(sourceImageDel, nbResponses) {
             $(this).contents('td:nth-child(5)').find('input').removeAttr('id');
             $(this).contents('td:nth-child(5)').find('input').attr('id', 'reponse_attendue_radio');
             $(this).contents('td:nth-child(5)').find('input').removeAttr('name');
-            $(this).contents('td:nth-child(5)').find('input').attr('name', 'ujm_exobundle_interactionqcmtype[choices][' + index + '][rightResponse]');
+            $(this).contents('td:nth-child(5)').find('input')
+                    .attr('name', 'ujm_exobundle_interactionqcmtype[choices][' + index + '][rightResponse]');
 
         });
     } else {
@@ -284,7 +302,8 @@ function choiceCSSEdit(sourceImageDel, nbResponses) {
     //ajout de la derniere colonne pr l'ajout et la supression
     $('#newTable .ligne_choice').each(function (index) {
         if (nbResponses == 0) {
-            $(this).contents('td:last').after('<td><a href="#" id="delete_choice"><img src="' + sourceImageDel + '" /></a> </td> ');
+            $(this).contents('td:last').after('<td><a href="#" id="delete_choice">\n\
+                                              <img src="' + sourceImageDel + '" /></a> </td> ');
         } else {
             $(this).contents('td:last').after('<td><img src="' + sourceImageDel + '" /></td> ');
         }
@@ -310,7 +329,8 @@ function choiceCSSEdit(sourceImageDel, nbResponses) {
 
     //ajouter bouton édition avancée ds colonne réponse
     $('#newTable .ligne_choice').each(function (index) {
-        $(this).contents('td:nth-child(1)').children('div').before('<button id="button_editionA" type="button" class="button_editionA" >édition avancée</button>');
+        $(this).contents('td:nth-child(1)').children('div')
+                .before('<button id="button_editionA" type="button" class="button_editionA" >édition avancée</button>');
     });
     $('#newTable .button_editionA').css({
         'display': 'block',
@@ -418,15 +438,15 @@ function addFormChoice(multipleResponse, uniqueResponse, add, responseNumber, re
         .find('option')
         .remove()
         .end()
-        .append('<option selected="selected" value="1">'+multipleResponse+'</option><option value="2">'+uniqueResponse+
-            '</option>')
+        .append('<option selected="selected" value="1">' + multipleResponse + '</option>\n\
+                <option value="2">' + uniqueResponse + '</option>')
 
     $('#ujm_exobundle_interactionqcmtype_choices').before('<a href="#" id="add_choice"><img src="' + sourceImageAdd +
-        '">'+add+'</a>');
+        '">' + add + '</a>');
 
     $('#ujm_exobundle_interactionqcmtype_choices').after('<table style="border: 1px solid black;" id="newTable"><tr> <th>'
-        +response+'</th> <th>'+point+'</th> <th>'+comment+'</th> <th>'+expectedResponse+'</th> <th>'+order+'</th> <th>'+
-        ChoicepositionForce+'</th> <th>------</th> </tr></table>');
+        + response + '</th> <th>'+point+'</th> <th>' + comment + '</th> <th>'+expectedResponse+'</th> <th>' + order + 
+        '</th> <th>' + ChoicepositionForce + '</th> <th>------</th> </tr></table>');
     $('#add_choice').css({
         'display': 'block',
         'color': 'green',
@@ -456,22 +476,23 @@ function addFormChoiceEdit(multipleResponse, uniqueResponse, add, responseNumber
         .end()
 
     if (typeQCM == 1) {
-        $('#ujm_exobundle_interactionqcmtype_typeQCM').append('<option selected="selected" value="1">' + multipleResponse +
-            '</option><option value="2">' + uniqueResponse + '</option>')
+        $('#ujm_exobundle_interactionqcmtype_typeQCM').append('<option selected="selected" value="1">'
+          + multipleResponse + '</option><option value="2">' + uniqueResponse + '</option>')
     } else {
         $('#ujm_exobundle_interactionqcmtype_typeQCM').append('<option value="1">' + multipleResponse +
             '</option><option selected="selected" value="2">' + uniqueResponse + '</option>')
     }
 
     if (nbResponses == 0){
-        $('#ujm_exobundle_interactionqcmtype_choices').before('<a href="#" id="add_choice"><img src="' + sourceImageAdd +
-            '">' + add + '</a>');
+        $('#ujm_exobundle_interactionqcmtype_choices').before('<a href="#" id="add_choice"><img src="'
+          + sourceImageAdd + '">' + add + '</a>');
     }
 
 
     $('#ujm_exobundle_interactionqcmtype_choices').after('<table style="border: 1px solid black;" id="newTable"><tr> \n\
         <th>' + response + '</th> <th>' + point + '</th> <th>' + comment + '</th> <th>' +
-        expectedResponse + '</th> <th>' + order + '</th> <th>' + ChoicepositionForce+ '</th> <th>------</th> </tr></table>');
+        expectedResponse + '</th> <th>' + order + '</th> <th>' + ChoicepositionForce + '</th> \n\
+        <th>------</th> </tr></table>');
     $('#add_choice').css({
             'display':'block',
             'color': 'green',
