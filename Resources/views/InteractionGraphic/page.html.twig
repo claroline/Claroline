@@ -37,8 +37,8 @@
     <link href="{{ asset('bundles/ujmexo/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css"/>
 {% endblock %}
 
-<form class="well label_bold" id="uploadForm" enctype="multipart/form-data" action="{{ path('ujm_interactiongraphic_AjoutImg') }}" 
-      method="post" onsubmit="return ChangeList()">
+<form class="well label_bold" id="uploadForm" enctype="multipart/form-data" onsubmit="DisplayMessage()"
+      method="post" action="{{ path('ujm_interactiongraphic_AjoutImg') }}">
     
     <label for="label">{{ "Picture name" | trans }}</label>
     <input type="text" id='label' name='label' required="true"/><br/>
@@ -47,37 +47,36 @@
     <input id="uploadSubmit" type="submit" value="{{ "Upload !" | trans }}"/><p id="Result">{{ "Uploading ..." | trans }}</p>
 </form>
 
+<script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-1.7.1.min.js') }}'></script>
 <script type="text/javascript">
     var button = document.getElementById('uploadSubmit'); // The submit button to hide it or not when uploading
     var list = document.getElementById('Result'); // The uploading text when submit button is hide
     
     // Display or not the button to upload
     list.style.display = "none";
+    button.style.display = "block";
 
-        function ChangeList() {
+    function ChangeList(idDoc, label) {
 
-            if (document.getElementById('label').value == '') {
-                list.style.display = "none";
-                button.style.display = "block";
-            } else {
-                if (document.getElementById('picture').value == null) {
-                    list.style.display = "none";
-                    button.style.display = "block";
-                } else {
-                    // Edit the selected picture (in the list) to the new added
-                    var nom_cat = document.getElementById('label').value;
-                    this_select = window.opener.document.InterGraphForm.ujm_exobundle_interactiongraphictype_document;
+        list.style.display = "none";
+        button.style.display = "block";
 
-                    this_select.options[this_select.length] = new Option(nom_cat, nom_cat, true, true);
+        this_select = window.opener.document.InterGraphForm.ujm_exobundle_interactiongraphictype_document;
+        this_select.options[this_select.length] = new Option(label, idDoc, true, true);
 
-                    for (var i = 0; i < this_select.options.length; i++) {
-                        if (this_select.options[i].value == nom_cat) {
-                            this_select.options[i].selected = true;
-                        }
-                    }
-                    list.style.display = "block";
-                    button.style.display = "none";
-                }
+        for (var i = 0; i < this_select.options.length; i++) {
+            if (this_select.options[i].value == idDoc) {
+                this_select.options[i].selected = true;
             }
         }
+    }
+
+    function DisplayMessage() {
+        list.style.display = "block";
+        button.style.display = "none";
+    }
 </script>
+
+{% if idDoc is defined %}
+    <script type="text/javascript">ChangeList('{{ idDoc }}', '{{ label }}');</script>
+{% endif %}

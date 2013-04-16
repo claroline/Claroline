@@ -62,7 +62,6 @@ class WSRestController extends Controller
             //var_dump($this->container->get('router'));die();
             $userDir = './bundles/ujmexo/users_documents/'.$this->container->get('security.context')
                 ->getToken()->getUser()->getUsername();
-            //echo $userDir;die();
 
             if (!is_dir('./bundles/ujmexo/users_documents/')) {
                 mkdir('./bundles/ujmexo/users_documents/');
@@ -76,25 +75,25 @@ class WSRestController extends Controller
                     mkdir($userDir.'/'.$dir);
                 }
             }
-
+            
             if ((isset($_FILES['picture'])) && ($_FILES['picture'] != '')) {
-                $file = basename($_FILES['picture']['name']);
+                $file = basename($_FILES['picture']['name']); 
                 move_uploaded_file($_FILES['picture']['tmp_name'], $userDir.'/images/'. $file);
 
                 $em = $this->getDoctrine()->getEntityManager();
                 $document = new Document();
-
+                
                 $document->setLabel($_POST['label']);
                 $document->setUrl($userDir.'/images/'. $file);
                 $document->setType(strrchr($file, '.'));
                 $document->setUser($this->container->get('security.context')->getToken()->getUser());
-
+                
                 $em->persist($document);
 
                 $em->flush();
             }
 
-            return $this->redirect($_SERVER["HTTP_REFERER"]);
+            return $this->render('UJMExoBundle:InteractionGraphic:page.html.twig', array('idDoc' => $document->getId(), 'label' => $document->getLabel()));
         } else {
             return 'Not authorized';
         }
