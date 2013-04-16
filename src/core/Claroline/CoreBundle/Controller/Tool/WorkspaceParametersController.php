@@ -178,7 +178,6 @@ class WorkspaceParametersController extends Controller
         }
 
         foreach ($undisplayedTools as $undisplayedTool) {
-
             if ($undisplayedTool->isDisplayableInWorkspace()) {
                 $wot = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
                     ->findOneBy(array('workspace' => $workspaceId, 'tool' => $undisplayedTool->getId()));

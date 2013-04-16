@@ -13,6 +13,7 @@ class Listener
 
     public function onConfigure($event)
     {
+        throw new \Exception('Here I came');
         $event->setContent('configure stub widget form');
     }
 }
