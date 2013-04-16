@@ -84,7 +84,7 @@ services:
             - "@claroline.resource.icon_creator"
             - "@filesystem"
             - %kernel.root_dir%
-            - %claroline.workspace_template.directory%
+            - %claroline.param.templates_directory%
 
     claroline.installation.requirements_checker:
         class: Claroline\CoreBundle\Library\Installation\RequirementsChecker

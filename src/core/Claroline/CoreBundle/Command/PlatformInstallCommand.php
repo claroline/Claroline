@@ -38,7 +38,7 @@ class PlatformInstallCommand extends ContainerAwareCommand
     {
         $kernel = $this->getApplication()->getKernel();
         $output->writeln('Generating default prod/dev template...');
-        $defaultPath = $this->getContainer()->getParameter('claroline.workspace_template.directory').'default.zip';
+        $defaultPath = $this->getContainer()->getParameter('claroline.param.templates_directory').'default.zip';
         TemplateBuilder::buildDefault($defaultPath);
         $output->writeln('Installing the platform...');
         $manager = $this->getContainer()->get('claroline.install.core_installer');
