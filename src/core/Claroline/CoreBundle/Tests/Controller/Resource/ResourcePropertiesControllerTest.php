@@ -95,7 +95,7 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $images = $this->getUploadedFiles($this->thumbsDir);
         $this->assertEquals(2, count($images));
-        $name = str_replace("thumbnails{$ds}", "", $jsonResponse->icon);
+        $name = str_replace("thumbnails/", "", $jsonResponse->icon);
         $this->assertContains($name, $images);
     }
 
