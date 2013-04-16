@@ -59,8 +59,6 @@ tools:
         files: {  }
     claroline_mytool:
         files: {  }
-    ujm_questions:
-        files: {  }
     Imavia:
         files: {  }
 roles:
@@ -102,11 +100,6 @@ tools_infos:
             - ROLE_WS_COLLABORATOR
             - ROLE_WS_MANAGER
         name: claroline_mytool
-    ujm_questions:
-        perms:
-            - ROLE_WS_COLLABORATOR
-            - ROLE_WS_MANAGER
-        name: ujm_questions
     Imavia:
         perms:
             - ROLE_WS_COLLABORATOR
