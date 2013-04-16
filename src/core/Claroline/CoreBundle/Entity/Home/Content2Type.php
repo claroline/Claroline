@@ -188,4 +188,18 @@ class Content2Type
     {
         return $this->back;
     }
+
+     /**
+     * Detach a content from a type, this function can be used for reorder or delete contents.
+     */
+    public function detach()
+    {
+        if ($this->getBack()) {
+            $this->getBack()->setNext($this->getNext());
+        }
+
+        if ($this->getNext()) {
+            $this->getNext()->setBack($this->getBack());
+        }
+    }
 }
