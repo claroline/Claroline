@@ -26,8 +26,9 @@ claro_authentication:
     type: annotation
 
 claro_log:
-    resource: "@ClarolineCoreBundle/Resources/config/routing/log.yml"
+    resource: "@ClarolineCoreBundle/Controller/LogController.php"
     prefix: log
+    type: annotation
 
 claro_profile:
     resource: "@ClarolineCoreBundle/Controller/ProfileController.php"

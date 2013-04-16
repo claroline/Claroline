@@ -29,10 +29,12 @@ class LogResourceShortcutEvent extends LogGenericEvent
                 )
                 'source' => array(
                     'resource' => array(
+                        'id' => $source->getId(),
                         'name' => $source->getName(),
                         'path' => $source->getPathForDisplay()
                     ),
                     'workspace' => array(
+                        'id' => $source->getWorkspace()->getId(),
                         'name' => $source->getWorkspace()->getName()
                     ),
                 )

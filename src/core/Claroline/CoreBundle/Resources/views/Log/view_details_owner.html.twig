@@ -10,7 +10,8 @@
 
     {% if log.getOwner() and log.getDoer() and log.getOwner().getId() == log.getDoer().getId() %}
         <dl class="dl-horizontal">
-            <dt>{{ ('log_himself')|trans({}, 'platform') }}</dt>
+            <dt></dt>
+            <dd>{{ ('log_himself')|trans({}, 'platform') }}</dd>
         </dl>
     {% else %}
         <dl class="dl-horizontal">

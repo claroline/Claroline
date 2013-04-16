@@ -23,6 +23,6 @@
     {% include 'ClarolineCoreBundle:Log:view_details_action_' ~ log.getAction() ~ '.html.twig' ignore missing %}
 
     {#
-    <small>{{ log.getDetails()|json_encode}}</small>
     #}
+    <small>{{ log.getDetails()|json_encode}}</small>
 {% endblock %}

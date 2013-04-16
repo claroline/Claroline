@@ -3,7 +3,8 @@
 
     {% if log.getReceiver() and log.getDoer() and log.getReceiver().getId() == log.getDoer().getId() %}
         <dl class="dl-horizontal">
-            <dt>{{ ('log_himself')|trans({}, 'platform') }}</dt>
+            <dt></dt>
+            <dd>{{ ('log_himself')|trans({}, 'platform') }}</dd>
         </dl>
     {% else %}
         <dl class="dl-horizontal">
