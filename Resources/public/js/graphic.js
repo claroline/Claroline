@@ -322,7 +322,7 @@ document.addEventListener('keyup', function (e) {
         //document.body.style.cursor='default';
     }
     
-    if (e.KeyCode === 18) { // Touch ALT up
+    if (e.keyCode === 18) { // Touch ALT up
         pressALT = false;
     }
 }, false);
@@ -332,12 +332,10 @@ document.addEventListener('mousemove', function (event) { // To resize the selec
 
     if (pressMAJ === true) {
         ResizeImg(MouseSens(event));
-        pressMAJ = false;
     }
     
     if (pressALT === true && allow == true) {
         ResizePointer(MouseSens(event));
-        pressALT = false;
     }
 });
 
@@ -356,13 +354,13 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
         }
 
         // If out of the image
-        if ((mousex) > (answerImg.offsetLeft + answerImg.width) || (mousex) < (answerImg.offsetLeft) || 
-            (mousey) > (answerImg.offsetTop + answerImg.height) || (mousey) < (answerImg.offsetTop)) {
+        if ((mousex+10) > (answerImg.offsetLeft + answerImg.width) || (mousex-10) < (answerImg.offsetLeft) || 
+            (mousey+10) > (answerImg.offsetTop + answerImg.height) || (mousey-10) < (answerImg.offsetTop)) {
             
             if (language.indexOf('fr') > -1) {
-                alert('Vous devez mettre la zone de reponse DANS l\'image ...');
+                alert('Vous devez mettre la zone de reponse complète DANS l\'image ...');
             } else {
-                alert('You must put the answer zone INSIDE the picture ...');
+                alert('You must put all the answer zone INSIDE the picture ...');
             }
             document.body.style.cursor = 'default';
         } else {
