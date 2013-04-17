@@ -29,6 +29,5 @@ class ClarolineCoreExtension extends Extension
         $loader->load('widget.yml');
         $loader->load('user.yml');
         $loader->load('validator.yml');
-        $loader->load('home.yml');
     }
 }
