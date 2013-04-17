@@ -12,7 +12,7 @@ class DesktopControllerTest extends FunctionalTestCase
         $this->client->followRedirects();
         $this->loadPlatformRolesFixture();
     }
-
+    
     //test if the url is working
     public function testPersoAction()
     {
@@ -37,5 +37,14 @@ class DesktopControllerTest extends FunctionalTestCase
         $this->logUser($this->getUser('admin'));
         $crawler = $this->client->request('GET', '/desktop/tool/open/parameters');
         $this->assertEquals(2, count($crawler->filter('.li-user-parameters')));
+    }
+
+    public function testOpenDesktopActionRedirectsToHomeByDefault()
+    {
+        $this->loadUserData(array('admin' => 'admin'));
+        $this->logUser($this->getUser('admin'));
+        $this->client->request('GET', '/desktop/open');
+        $currentUrl = $this->client->getRequest()->getUri();
+        $this->assertRegExp('/\/open\/home$/', $currentUrl);
     }
 }

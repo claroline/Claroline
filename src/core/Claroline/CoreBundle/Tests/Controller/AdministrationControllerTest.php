@@ -426,8 +426,8 @@ class AdministrationControllerTest extends FunctionalTestCase
     private function resetTemplate()
     {
         $container = $this->client->getContainer();
-        $yml = $container->getParameter('claroline.workspace_template.directory').'config.yml';
-        $archpath = $container->getParameter('claroline.workspace_template.directory').'default.zip';
+        $yml = $container->getParameter('claroline.param.templates_directory').'config.yml';
+        $archpath = $container->getParameter('claroline.param.templates_directory').'default.zip';
         $archive = new \ZipArchive();
         $archive->open($archpath, \ZipArchive::OVERWRITE);
         $archive->addFile($yml, 'config.yml');

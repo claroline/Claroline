@@ -34,7 +34,6 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testRename()
     {
         $tool = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool')->find(1);
-        var_dump($tool->getId());
         $id = $tool->getId();
         $crawler = $this->client->request(
             'POST',

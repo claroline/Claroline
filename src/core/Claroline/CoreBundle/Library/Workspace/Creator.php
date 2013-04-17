@@ -195,6 +195,5 @@ class Creator
         $wtr->setRole($role);
         $wtr->setWorkspaceOrderedTool($wot);
         $this->entityManager->persist($wtr);
-//        $this->entityManager->flush();
     }
 }
