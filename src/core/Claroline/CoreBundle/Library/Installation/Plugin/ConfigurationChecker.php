@@ -7,15 +7,24 @@ use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Config\Definition\Processor;
 use Claroline\CoreBundle\Library\Installation\Plugin\Configuration;
 use Doctrine\ORM\EntityManager;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Checker used to validate the configuration file of a plugin.
+ *
+ * @DI\Service("claroline.plugin.config_checker")
  */
 class ConfigurationChecker implements CheckerInterface
 {
     private $processedConfiguration;
     private $em;
 
+    /**
+     * @DI\InjectParams({
+     *     "yamlParser" = @DI\Inject("symfony.yaml"),
+     *     "em" = @DI\Inject("doctrine.orm.entity_manager")
+     * })
+     */
     public function __construct(Yaml $yamlParser, EntityManager $em)
     {
         $this->yamlParser = $yamlParser;

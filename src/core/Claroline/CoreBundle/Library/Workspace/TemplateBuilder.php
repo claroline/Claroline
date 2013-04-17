@@ -101,9 +101,15 @@ class TemplateBuilder
     public static function buildDefault($defaultPath)
     {
         $archive = new \ZipArchive();
-        $archive->open($defaultPath, \ZipArchive::CREATE);
-        $archive->addFromString('config.yml', Yaml::dump(TemplateBuilder::getDefaultConfig(), 10));
-        $archive->close();
+
+        if (true === $code = $archive->open($defaultPath, \ZipArchive::CREATE)) {
+            $archive->addFromString('config.yml', Yaml::dump(TemplateBuilder::getDefaultConfig(), 10));
+            $archive->close();
+        } else {
+            throw new \Exception(
+                "Couldn't open template archive '{$defaultPath}' (error {$code})"
+            );
+        }
     }
 
     public static function getDefaultConfig() {

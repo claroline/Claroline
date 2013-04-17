@@ -2,10 +2,20 @@
 
 namespace Claroline\CoreBundle\Library\Installation;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
+/**
+ * @DI\Service("claroline.installation.requirements_checker")
+ */
 class RequirementsChecker
 {
     private $kernelRootDir;
 
+    /**
+     * @DI\InjectParams({
+     *     "kernelRootDir" = @DI\Inject("%kernel.root_dir%")
+     * })
+     */
     public function __construct($kernelRootDir)
     {
         $this->kernelRootDir = $kernelRootDir;
