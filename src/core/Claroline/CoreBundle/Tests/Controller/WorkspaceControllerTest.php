@@ -397,7 +397,6 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->loadUserData(array('admin' => 'admin'));
         $this->logUser($this->getUser('admin'));
         $pws = $this->getUser('admin')->getPersonalWorkspace();
-        $userId = $this->getUser('admin')->getId();
         $workspaceId = $pws->getId();
         $crawler = $this->client->request("GET", "/workspaces/tag/admin/createform");
         $form = $crawler->filter('button[type=submit]')->form();

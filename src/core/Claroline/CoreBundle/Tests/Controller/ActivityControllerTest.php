@@ -111,7 +111,7 @@ class ActivityControllerTest extends FunctionalTestCase
         $fileTwo = $this->getFile('bar.txt');
         $this->logUser($this->getUser('admin'));
         $activity = $this->createActivity('name', 'instruction');
-        $activityEntity = $this->client
+        $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Resource\Activity')
