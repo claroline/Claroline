@@ -193,7 +193,7 @@ class ParametersControllerTest extends FunctionalTestCase
         $this->loadUserData(array('alfred' => 'user'));
         $pwuId = $this->getUser('john')->getPersonalWorkspace()->getId();
         $this->logUser($this->getUser('alfred'));
-        $crawler = $this->client->request('GET', "/workspaces/tool/properties/{$pwuId}/widget");
+        $this->client->request('GET', "/workspaces/tool/properties/{$pwuId}/widget");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
@@ -224,7 +224,6 @@ class ParametersControllerTest extends FunctionalTestCase
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
             ->findAll();
-        $countConfigs = count($configs);
         $crawler = $this->client->request('GET', "/workspaces/{$pwuId}/widgets");
         $countVisibleWidgets = count($crawler->filter('.widget'));
         $this->client->request(
@@ -551,7 +550,7 @@ class ParametersControllerTest extends FunctionalTestCase
         $this->logUser($this->getUser('john'));
         $tool = $this->client->getContainer()->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneByName('parameters');
-        $crawler = $this->client->request(
+        $this->client->request(
             'POST',
             "desktop/tool/properties/remove/tool/{$tool->getId()}"
         );

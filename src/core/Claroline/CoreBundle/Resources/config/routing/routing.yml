@@ -60,6 +60,11 @@ claro_workspace:
     prefix: workspaces
     type: annotation
 
+claro_workspace_tag:
+    resource: "@ClarolineCoreBundle/Controller/WorkspaceTagController.php"
+    prefix: workspaces
+    type: annotation
+
 claro_workspace_tool_properties:
     resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceParametersController.php"
     prefix: workspaces/tool/properties

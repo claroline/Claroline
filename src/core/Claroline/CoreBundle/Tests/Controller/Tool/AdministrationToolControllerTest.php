@@ -25,8 +25,8 @@ class AdministrationControllerTest extends FunctionalTestCase
 
     public function testAdminCanSeeTool()
     {
-        $crawler = $this->logUser($this->getUser('admin'));
-        $crawler = $this->client->request('GET', 'admin/tool/show');
+        $this->logUser($this->getUser('admin'));
+        $this->client->request('GET', 'admin/tool/show');
         $status = $this->client->getResponse()->getStatusCode();
         $this->assertEquals(200, $status);
     }
@@ -35,7 +35,7 @@ class AdministrationControllerTest extends FunctionalTestCase
     {
         $tool = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool')->find(1);
         $id = $tool->getId();
-        $crawler = $this->client->request(
+        $this->client->request(
             'POST',
             "/admin/tool/modify/{$id}",
             array(
