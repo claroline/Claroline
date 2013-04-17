@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Twig;
+namespace Claroline\CoreBundle\Library\Twig;
 
 class HomeExtension extends \Twig_Extension
 {

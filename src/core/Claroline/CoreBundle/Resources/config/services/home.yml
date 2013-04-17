@@ -4,7 +4,7 @@ services:
         arguments: []
 
     claroline.twig.home_extension:
-        class: Claroline\CoreBundle\Twig\HomeExtension
+        class: Claroline\CoreBundle\Library\Twig\HomeExtension
         arguments: [@translator]
         tags:
             - { name: twig.extension }
