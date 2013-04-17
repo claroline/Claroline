@@ -3,11 +3,14 @@
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use \RuntimeException;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * The plugin loader is used to instantiate a plugin bundle class (in order to
  * perform checks, access some of its methods, etc.) while it is not yet
  * known by the application kernel.
+ *
+ * @DI\Service("claroline.plugin.loader")
  */
 class Loader
 {
@@ -22,6 +25,10 @@ class Loader
      * Constructor.
      *
      * @param string $pluginDirectory
+     *
+     * @DI\InjectParams({
+     *     "pluginDirectory" = @DI\Inject("%claroline.param.plugin_directory%")
+     * })
      */
     public function __construct($pluginDirectory)
     {
