@@ -89,7 +89,7 @@ class Coords
      * @ORM\JoinColumn(name="interaction_graphic_id", referencedColumnName="id")
      */
     private $interactionGraphic;
-    
+
     /**
      * @var float $size
      *
@@ -186,7 +186,7 @@ class Coords
     {
         return $this->scoreCoords;
     }
-    
+
     /**
      * Set sizes
      *

@@ -124,7 +124,7 @@ class InteractionGraphicController extends Controller
         $request = $this->getRequest();
         $form = $this->createForm(new InteractionGraphicType($user), $interGraph);
         $form->bindRequest($request);
-        
+
         $exoID = $this->container->get('request')->request->get('exercise');
 
         $interGraph->getInteraction()->getQuestion()->setDateCreate(new \Datetime()); // Set Creation Date to today
@@ -148,7 +148,7 @@ class InteractionGraphicController extends Controller
             $after = array(",", ",",",");
 
             $data = str_replace($before, $after, $coord[$i]);
-            
+
             list(${'url'.$i}, ${'value'.$i}, ${'point'.$i}, ${'size'.$i}) = explode(",", $data);
 
             ${'value'.$i} = str_replace("_", ",", ${'value'.$i});
@@ -180,7 +180,7 @@ class InteractionGraphicController extends Controller
                 $em->persist(${'co'.$i});
             }
             $em->flush();
-            
+
             if ($exoID != -1) {
                 $exo = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
                 $eq = new ExerciseQuestion($exo, $interGraph->getInteraction()->getQuestion());
@@ -329,7 +329,7 @@ class InteractionGraphicController extends Controller
         if ($request->isXmlHttpRequest()) {
             $label = $request->request->get('value');
             $prefix = $request->request->get('prefix');
-            
+
             // If the sended label isn't empty, get the matching adress
             if ($label) {
                 $repository = $this->getDoctrine()
@@ -356,7 +356,7 @@ class InteractionGraphicController extends Controller
     {
         $temp = strrpos($url, 'graphic/') + 8;
         $chaine = substr($url, $temp, 1);
-        
+
         if ($chaine == "r") {
             return "rectangle";
         } else if ($chaine == "c") {
@@ -372,7 +372,7 @@ class InteractionGraphicController extends Controller
     {
         $temp = strrpos($url, '.') - 1;
         $chaine = substr($url, $temp, 1);
-         
+
         switch ($chaine) {
             case "w" :
                 return "white";

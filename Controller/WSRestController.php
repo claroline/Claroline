@@ -59,7 +59,6 @@ class WSRestController extends Controller
         //le login permet de lier le doc à un user + de vérifier que le login correspond bien à l'user connecté
 
         if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            //var_dump($this->container->get('router'));die();
             $userDir = './bundles/ujmexo/users_documents/'.$this->container->get('security.context')
                 ->getToken()->getUser()->getUsername();
 
@@ -75,25 +74,31 @@ class WSRestController extends Controller
                     mkdir($userDir.'/'.$dir);
                 }
             }
-            
+
             if ((isset($_FILES['picture'])) && ($_FILES['picture'] != '')) {
-                $file = basename($_FILES['picture']['name']); 
+                $file = basename($_FILES['picture']['name']);
                 move_uploaded_file($_FILES['picture']['tmp_name'], $userDir.'/images/'. $file);
 
                 $em = $this->getDoctrine()->getEntityManager();
                 $document = new Document();
-                
+
                 $document->setLabel($_POST['label']);
                 $document->setUrl($userDir.'/images/'. $file);
                 $document->setType(strrchr($file, '.'));
                 $document->setUser($this->container->get('security.context')->getToken()->getUser());
-                
+
                 $em->persist($document);
 
                 $em->flush();
             }
 
-            return $this->render('UJMExoBundle:InteractionGraphic:page.html.twig', array('idDoc' => $document->getId(), 'label' => $document->getLabel()));
+            return $this->render(
+                'UJMExoBundle:InteractionGraphic:page.html.twig', 
+                array(
+                    'idDoc' => $document->getId(),
+                    'label' => $document->getLabel()
+                )
+            );
         } else {
             return 'Not authorized';
         }

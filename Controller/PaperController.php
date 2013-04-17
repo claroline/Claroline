@@ -56,7 +56,7 @@ class PaperController extends Controller
     public function indexAction($exoID)
     {
         $user = $this->container->get('security.context')->getToken()->getUser();
-        
+
         $em = $this->getDoctrine()->getEntityManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
         $workspace = $exercise->getWorkspace();
@@ -79,11 +79,14 @@ class PaperController extends Controller
                             ->getExerciseUserPapers($user->getId(), $exoID);
         }
 
-        return $this->render('UJMExoBundle:Paper:index.html.twig', array(
-                             'workspace' => $workspace,
-                             'papers'    => $papers,
-                             'isAdmin'   => $subscription[0]->getAdmin(),
-                             ));
+        return $this->render(
+            'UJMExoBundle:Paper:index.html.twig', 
+            array(
+                'workspace' => $workspace,
+                'papers'    => $papers,
+                'isAdmin'   => $subscription[0]->getAdmin(),
+            )
+        );
     }
 
     /**
@@ -137,15 +140,18 @@ class PaperController extends Controller
                            ->getRepository('UJMExoBundle:LinkHintPaper')
                            ->getHintViewed($paper->getId());
 
-        return $this->render('UJMExoBundle:Paper:show.html.twig', array(
-                             'workspace'    => $worspace,
-                             'exoId'        => $paper->getExercise()->getId(),
-                             'interactions' => $interactions,
-                             'responses'    => $responses,
-                             'hintViewed'   => $hintViewed,
-                             'correction'   => $paper->getExercise()->getCorrectionMode(),
-                             'display'      => $display,
-                             ));
+        return $this->render(
+            'UJMExoBundle:Paper:show.html.twig', 
+            array(
+                'workspace'    => $worspace,
+                'exoId'        => $paper->getExercise()->getId(),
+                'interactions' => $interactions,
+                'responses'    => $responses,
+                'hintViewed'   => $hintViewed,
+                'correction'   => $paper->getExercise()->getCorrectionMode(),
+                'display'      => $display,
+            )
+        );
     }
 
     public function deleteAction($id)

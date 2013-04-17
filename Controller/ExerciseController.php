@@ -77,11 +77,14 @@ class ExerciseController extends Controller
 
             $editForm = $this->createForm(new ExerciseType(), $exercise);
 
-            return $this->render('UJMExoBundle:Exercise:edit.html.twig', array(
-                                 'workspace'   => $workspace,
-                                 'entity'      => $exercise,
-                                 'edit_form'   => $editForm->createView(),
-                                 ));
+            return $this->render(
+                'UJMExoBundle:Exercise:edit.html.twig',
+                array(
+                    'workspace'   => $workspace,
+                    'entity'      => $exercise,
+                    'edit_form'   => $editForm->createView(),
+                )
+            );
         } else {
             return $this->redirect($this->generateUrl('ujm_exercise_index'));
         }
@@ -112,10 +115,13 @@ class ExerciseController extends Controller
             return $this->redirect($this->generateUrl('claro_resource_open', array('resourceType' => $exercise->getResourceType()->getName(), 'resourceId' => $id)));
         }
 
-        return $this->render('UJMExoBundle:Exercise:edit.html.twig', array(
-                             'entity'      => $entity,
-                             'edit_form'   => $editForm->createView(),
-                             ));
+        return $this->render(
+            'UJMExoBundle:Exercise:edit.html.twig',
+            array(
+                'entity'      => $entity,
+                'edit_form'   => $editForm->createView(),
+            )
+        );
     }
 
     /**
@@ -148,12 +154,13 @@ class ExerciseController extends Controller
             }
 
             return $this->render(
-                'UJMExoBundle:Exercise:show.html.twig', array(
-                'workspace'      => $workspace,
-                'entity'         => $exercise,
-                //'delete_form'    => $deleteForm->createView(),
-                'subscription'   => $subscription[0],
-                'allowToCompose' => $allowToCompose
+                'UJMExoBundle:Exercise:show.html.twig',
+                array(
+                    'workspace'      => $workspace,
+                    'entity'         => $exercise,
+                    //'delete_form'    => $deleteForm->createView(),
+                    'subscription'   => $subscription[0],
+                    'allowToCompose' => $allowToCompose
                 )
             );
         } else {
@@ -194,11 +201,12 @@ class ExerciseController extends Controller
             }
 
             return $this->render(
-                'UJMExoBundle:Question:exerciseQuestion.html.twig', array(
-                'workspace'            => $workspace,
-                'interactions'         => $interactions,
-                'exerciseID'           => $id,
-                'questionWithResponse' => $questionWithResponse
+                'UJMExoBundle:Question:exerciseQuestion.html.twig',
+                array(
+                    'workspace'            => $workspace,
+                    'interactions'         => $interactions,
+                    'exerciseID'           => $id,
+                    'questionWithResponse' => $questionWithResponse
                 )
             );
         } else {
@@ -230,10 +238,11 @@ class ExerciseController extends Controller
                 ->getUserInteractionImport($this->getDoctrine()->getEntityManager(), $uid, $exoID);
 
             return $this->render(
-                'UJMExoBundle:Question:import.html.twig', array(
-                'workspace'    => $workspace,
-                'interactions' => $interactions,
-                'exoID'        => $exoID
+                'UJMExoBundle:Question:import.html.twig',
+                array(
+                    'workspace'    => $workspace,
+                    'interactions' => $interactions,
+                    'exoID'        => $exoID
                 )
             );
         } else {
@@ -253,7 +262,7 @@ class ExerciseController extends Controller
             ->getRepository('UJMExoBundle:Question')
             ->getControlOwnerQuestion($user->getId(), $qid);
 
-        if (count($question) > 0 ) {
+        if (count($question) > 0) {
             $em = $this->getDoctrine()->getEntityManager();
 
             $exo = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
@@ -459,7 +468,6 @@ class ExerciseController extends Controller
                 $response->getPaper()->getExercise()->getDispButtonInterrupt(), $workspace
             );
         }
-
     }
 
     /**
@@ -467,8 +475,8 @@ class ExerciseController extends Controller
      *
      */
     private function displayQuestion($numQuestionToDisplayed, $interactionToDisplay,
-        $typeInterToDisplayed, $dispButtonInterrupt, $workspace)
-    {
+        $typeInterToDisplayed, $dispButtonInterrupt, $workspace
+    ) {
         $session = $this->getRequest()->getSession();
         $tabOrderInter = $session->get('tabOrderInter');
 
@@ -513,15 +521,16 @@ class ExerciseController extends Controller
         }
 
         return $this->render(
-            'UJMExoBundle:Exercise:paper.html.twig', array(
-            'workspace'              => $workspace,
-            'tabOrderInter'          => $tabOrderInter,
-            'interactionToDisplayed' => $interactionToDisplayed[0],
-            'interactionType'        => $typeInterToDisplayed,
-            'numQ'                   => $numQuestionToDisplayed,
-            'paper'                  => $session->get('paper'),
-            'response'               => $responseGiven,
-            'dispButtonInterrupt'    => $dispButtonInterrupt
+            'UJMExoBundle:Exercise:paper.html.twig',
+            array(
+                'workspace'              => $workspace,
+                'tabOrderInter'          => $tabOrderInter,
+                'interactionToDisplayed' => $interactionToDisplayed[0],
+                'interactionType'        => $typeInterToDisplayed,
+                'numQ'                   => $numQuestionToDisplayed,
+                'paper'                  => $session->get('paper'),
+                'response'               => $responseGiven,
+                'dispButtonInterrupt'    => $dispButtonInterrupt
             )
         );
     }
@@ -542,7 +551,6 @@ class ExerciseController extends Controller
         $em->flush();
 
         return $this->forward('UJMExoBundle:Paper:show', array('id' => $paper->getId()));
-
     }
 
     /**
@@ -560,7 +568,6 @@ class ExerciseController extends Controller
         $em->flush();
 
         return $this->redirect($this->generateUrl('exercise_show', array('id' => $paper->getExercise()->getId())));
-
     }
 
     /**
