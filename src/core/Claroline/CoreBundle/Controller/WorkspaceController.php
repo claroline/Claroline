@@ -339,8 +339,8 @@ class WorkspaceController extends Controller
             $foundRole = null;
 
             foreach ($roles as $wsRole) {
-                foreach ($this->get('security.context')->getToken()->getRoles() as $userRole) {
-                    if ($userRole->getRole() == $wsRole->getName()) {
+                foreach ($this->get('security.context')->getToken()->getUser()->getRoles() as $userRole) {
+                    if ($userRole == $wsRole->getName()) {
                         $foundRole = $userRole;
                     }
                 }
@@ -358,7 +358,7 @@ class WorkspaceController extends Controller
                     ->findBy(array('name' => 'home'));
             } else {
                 $openedTool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-                    ->findByRolesAndWorkspace(array($foundRole->getRole()), $workspace, true);
+                    ->findByRolesAndWorkspace(array($foundRole), $workspace, true);
             }
 
         } else {

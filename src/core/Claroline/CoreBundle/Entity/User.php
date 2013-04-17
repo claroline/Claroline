@@ -267,11 +267,11 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         if ($user->getRoles() !== $this->getRoles()) {
             return false;
         }
-
-        if (!$user instanceof User) {
-            return false;
-        }
-
+//
+//        if (!$user instanceof User) {
+//            return false;
+//        }
+//
         if ($this->username !== $user->getUsername()) {
             return false;
         }
@@ -332,6 +332,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
             array(
                 'id' => $this->id,
                 'username' => $this->username,
+                'roles' => $this->getRoles()
             )
         );
     }
@@ -341,7 +342,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $unserialized = unserialize($serialized);
         $this->id = $unserialized['id'];
         $this->username = $unserialized['username'];
-        $this->roles = new ArrayCollection();
+        $this->rolesStringAsArray = $unserialized['roles'];
         $this->groups = new ArrayCollection();
     }
 
