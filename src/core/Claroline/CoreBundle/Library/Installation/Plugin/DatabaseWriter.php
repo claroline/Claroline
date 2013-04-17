@@ -15,10 +15,13 @@ use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Symfony\Component\Filesystem\Filesystem;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * This class is used to save/delete a plugin an its possible dependencies (like
  * custom resource types) in the database.
+ *
+ * @DI\Service("claroline.plugin.recorder_database_writer")
  */
 class DatabaseWriter
 {
@@ -37,6 +40,14 @@ class DatabaseWriter
      * @param IconCreator       $im
      * @param string            $kernelRootDir
      * @param string            $templateDir
+     *
+     * @DI\InjectParams({
+     *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "im" = @DI\Inject("claroline.resource.icon_creator"),
+     *     "fileSystem" = @DI\Inject("filesystem"),
+     *     "kernelRootDir" = @DI\Inject("%kernel.root_dir%"),
+     *     "templateDir" = @DI\Inject("%claroline.param.templates_directory%")
+     * })
      */
     public function __construct(
         EntityManager $em,

@@ -3,11 +3,14 @@
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Claroline\CoreBundle\Library\PluginBundle;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * This recorder is used to register a plugin both in database and in the
  * application configuration files. It uses dedicated components to perform
  * this task.
+ *
+ * @DI\Service("claroline.plugin.recorder")
  */
 class Recorder
 {
@@ -19,6 +22,11 @@ class Recorder
      *
      * @param ConfigurationFileWriter   $configWriter
      * @param DatabaseWriter            $dbWriter
+     *
+     * @DI\InjectParams({
+     *     "configWriter" = @DI\Inject("claroline.plugin.recorder_configuration_file_writer"),
+     *     "dbWriter" = @DI\Inject("claroline.plugin.recorder_database_writer")
+     * })
      */
     public function __construct(ConfigurationFileWriter $configWriter, DatabaseWriter $dbWriter)
     {

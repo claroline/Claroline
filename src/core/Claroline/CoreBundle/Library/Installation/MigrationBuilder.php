@@ -6,7 +6,11 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Migrations\Migration;
 use Doctrine\DBAL\Migrations\Configuration\Configuration;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.install.migration_builder")
+ */
 class MigrationBuilder
 {
     private $connection;
@@ -15,6 +19,15 @@ class MigrationBuilder
     private $testMigrationsRelativePath;
     private $includeTestMigrations;
 
+    /**
+     * @DI\InjectParams({
+     *     "connection" = @DI\Inject("doctrine.dbal.default_connection"),
+     *     "helper" = @DI\Inject("claroline.install.migration_helper"),
+     *     "prodMigrationsRelativePath" = @DI\Inject("%claroline.param.prod_migrations_directory%"),
+     *     "testMigrationsRelativePath" = @DI\Inject("%claroline.param.test_migrations_directory%"),
+     *     "includeTestMigrations" = @DI\Inject("%claroline.param.include_test_migrations%")
+     * })
+     */
     public function __construct(
         Connection $connection,
         MigrationHelper $helper,
