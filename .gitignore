@@ -23,10 +23,10 @@ web/js/*
 web/HTMLPage/*
 files/*
 files/tmp/*
-templates/default.zip
+templates/*
 test/files/*
-test/templates/*
 test/thumbnails/*
+test/templates/*
 web/thumbnails/*
 test/files/tmp/*
 src/core/Claroline/CoreBundle/Resources/public/css/themes/*
