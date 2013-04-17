@@ -1,7 +1,8 @@
 // :::::::::::::::::::::::::::::::::::::::::: Declaration variables :::::::::::::::::::::::::::::::::::::::::::::::::::
-var allow = false;
-var answerImg = document.getElementById('AnswerImage');
+var allow = false; // To know if answer zone is selected before resize
+var answerImg = document.getElementById('AnswerImage'); // The background answer image
 var AnswerZones; // Tab contains all informations of Coords
+var cible; // The selected answer zones
 var el = document.getElementById('movable'); // To get the shape and the color of the answer zone
 var imgx; // Coord x of the answer zone
 var imgy; // Coord y of the answer zone
@@ -9,30 +10,21 @@ var indice = 0; // Number of answer zone
 var j; // For for instruction
 var mousex; // Position x of the mouse
 var mousey; // position y of the mouse
+var moving = false; // If move answer zones
 var pressMAJ; // If key MAJ pressed or not
 var pressCTRL; // If key CTRL pressed or not
 var pressALT; // If key ALT pressed or not
 var pressS; // If key s pressed or not
+var resizing = false; // If resize answer zone
 var result; // src of the answer image
 var sens; // Move of the mouse
 var scalex = 0; // Width of the image after resize
 var scaley = 0; // Height of the image after resize
-var t; // Contain all the information of one answer zone (ccords, shape, color ...)
-var ts; // Src of the answer zone
-var tx; // Position x of the answer zone
-var ty; // Position y of the answer zone
-var tx1; // Limit up of the answer zone 
-var tx2; // Limit down of the answer zone
-var ty1; // Limit left of the answer zone
-var ty2; // Limit right of the answer zone
 var value = 0; // Size of the resizing
 var x = 0; // Mouse x after move
 var xPrecedent = 0; // Mouse x before move
 var y = 0; // Mouse y after move
 var yPrecedent = 0; // Mouse y before move
-
-
-
 
 // Display alert into navigator language
 if (navigator.browserLanguage) {
@@ -40,6 +32,9 @@ if (navigator.browserLanguage) {
 } else {
     var language = navigator.language; // FIrefox
 }
+
+document.getElementById('Instructions').style.display = "none";
+document.getElementById('Consignes').style.display = "block";
 
 // :::::::::::::::::::::::::::::::::::::::::: Functions :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -240,11 +235,12 @@ function  ResizePointer(sens) {
     if(cible.width < 10){
         cible.width = 10;
     }
+    
     cible.height += cible.width * (cible.height / cible.height);
 
     for (var i = 0, c = AnswerZones.length; i < c; i++) {
-        var x = cible.style.left.substr(0, cible.style.left.indexOf('p'))- answerImg.offsetLeft + 10;
-        var y = cible.style.top.substr(0, cible.style.top.indexOf('p')) - answerImg.offsetTop + 10;
+        x = cible.style.left.substr(0, cible.style.left.indexOf('p'))- answerImg.offsetLeft + 10;
+        y = cible.style.top.substr(0, cible.style.top.indexOf('p')) - answerImg.offsetTop + 10;
         var coord = x +'_' + y;
 
         if (coord == AnswerZones[i].substring(AnswerZones[i].indexOf(';')+1, AnswerZones[i].indexOf('-'))){
@@ -252,6 +248,7 @@ function  ResizePointer(sens) {
             break;
         }
     }
+    
     document.getElementById('coordsZone').value = AnswerZones;
 }
 
@@ -277,6 +274,22 @@ function MouseSens(event) {
     }
 
     return sens;
+}
+
+function MoveAnswerZone(e) {
+    
+    // Get mouse position
+    if (e.x != undefined && e.y != undefined) { // IE
+        x = e.layerX;
+        y = e.layerY;
+    } else { // Firefox
+        x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+        y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+    }
+
+    // Move answer zone to mouse position (cursor center)
+    cible.style.left = String(x - (cible.width/2)) + 'px';
+    cible.style.top = String(y - (cible.height/2)) + 'px';
 }
 
 // :::::::::::::::::::::::::::::::::::::::::: EventListener :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -330,18 +343,39 @@ document.addEventListener('keyup', function (e) {
 document.addEventListener('mousemove', function (event) { // To resize the selected picture
     //"use strict";
 
+    // Moving answer zone
+    if (cible && resizing == false){
+        MoveAnswerZone(event);
+        moving = true;
+    }
+    
+    // Resizing answer image
     if (pressMAJ === true) {
         ResizeImg(MouseSens(event));
     }
     
-    if (pressALT === true && allow == true) {
+    // Resizing answer zone
+    if (pressALT === true && allow === true) {
         ResizePointer(MouseSens(event));
+        resizing = true;
     }
 });
 
 document.addEventListener('click', function (e) { // To add/delete answer zones
     //"use strict";
     
+    // Get the clicked answer zone
+    for (j = 0 ; j < indice ; j++) {
+        if (e.target.id == 'img' + j) {
+            cible = e.target;
+            allow = true;
+            document.onmousedown = function () { // Stop selection during move/resize
+                return false;
+            }
+        }
+    }
+    
+    // To add an answer zone
     if (pressCTRL === true) {
 
         // Position de la souris dans la fenetre :
@@ -354,8 +388,8 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
         }
 
         // If out of the image
-        if ((mousex+10) > (answerImg.offsetLeft + answerImg.width) || (mousex-10) < (answerImg.offsetLeft) || 
-            (mousey+10) > (answerImg.offsetTop + answerImg.height) || (mousey-10) < (answerImg.offsetTop)) {
+        if ((mousex + 10) > (answerImg.offsetLeft + answerImg.width) || (mousex - 10) < (answerImg.offsetLeft) || 
+            (mousey + 10) > (answerImg.offsetTop + answerImg.height) || (mousey - 10) < (answerImg.offsetTop)) {
             
             if (language.indexOf('fr') > -1) {
                 alert('Vous devez mettre la zone de reponse complète DANS l\'image ...');
@@ -395,6 +429,7 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
         document.getElementById('coordsZone').value = AnswerZones;
     }
 
+    // To delete an answer zone
     if (pressS === true) {
 
         document.getElementById('coordsZone').value = AnswerZones;
@@ -414,17 +449,19 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
         pressS = false;
     }
     
-    for (j = 0 ; j < indice ; j++) {
-        if (e.target.id == 'img' + j) {
-            cible = e.target;
-            allow = true;
-            document.onmousedown = function () {
-                return false;
-            }
-        }
-    }
-
-    document.onmousedown = function () {
+    document.onmousedown = function () { // Restart selection
+        resizing = false; // Stop resizing && allow moving
         return true;
     } 
+    
+    // To stop moving
+    if (moving === true && allow === true) {
+        cible = null;
+        moving = false;
+    }
 }, false);
+
+function DisplayInstruction() {
+    document.getElementById('Instructions').style.display = "block";
+    document.getElementById('Consignes').style.display = "none";
+}

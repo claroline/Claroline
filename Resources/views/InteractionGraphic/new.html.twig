@@ -59,16 +59,15 @@
         {{ form_row(form.interaction.hints) }}         
     </p>
     
-{# ------------------------------------------------- Champs Liste images ---------------------------------------------------------------------------- #}    
-    
-    <p>        
-        {{ form_row(form.document) }}   
-
 {# ------------------------------------------------- Lien nouvelle image ---------------------------------------------------------------------------- #}            
    
-    <a href="{{ path('ujm_interactiongraphic_SavePic') }}" onclick="window.open(this.href, 'NewPic', 
+    <p><a href="{{ path('ujm_interactiongraphic_SavePic') }}" onclick="window.open(this.href, 'NewPic', 
         'height=167, width=287, top=300, left=570, toolbar=no, menubar=no, location=no, resizable=yes, scrollbars=no, status=no'
-        ); return false;">{{ "Add a new picture ..." | trans }}</a>
+    ); return false;" style="float: right; margin-right: 42%">{{ "Add a new picture ..." | trans }}</a>
+            
+{# ------------------------------------------------- Champs Liste images ---------------------------------------------------------------------------- #} 
+            
+        {{ form_row(form.document) }}   
     </p>  
  
 {# ------------------------------------------------- Boutton affichage image ---------------------------------------------------------------------------- #}
@@ -78,7 +77,13 @@
  
 {# ------------------------------------------------- Zone affichage image ---------------------------------------------------------------------------- #}    
     
-    <p>{{ "Redimmension" | trans }}<br/>{{ "Resize" | trans }}<br/>{{ "Selection" | trans }}<br/>{{ "Effacer" | trans }}</p>
+    <a onclick="DisplayInstruction()" id="Consignes" 
+       onmouseover="document.body.style.cursor = 'pointer';"
+       onmouseout="document.body.style.cursor = 'default';"
+    >Instructions</a>
+              
+    <p id="Instructions">{{ "Redimmension" | trans }}<br/>{{ "Selection" | trans }}<br/>{{ "PlaceZone" | trans }}<br/>
+        {{ "Resize" | trans }}<br/>{{ "Effacer" | trans }}</p>
 
     <img src="" width="" height="" id="AnswerImage"/>
 
@@ -105,20 +110,20 @@
 
             <td>
                 <select id="shape" name="shape" size="1" style="width:100px" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}')">
-                        <option value="circle"  selected>{{ "cercle" | trans }}</option>
-                        <option value="rect" >{{ "rectangle" | trans }}</option>
+                    <option value="circle"  selected>{{ "cercle" | trans }}</option>
+                    <option value="rect" >{{ "rectangle" | trans }}</option>
                 </select>
             </td>
 
             <td>
                 <select id="color" name="color" size="1" style="width:70px" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}')">
-                        <option value="white"  style="background-color:#FFFFFF;"selected>&nbsp;&nbsp;&nbsp;</option>
-                        <option value="red"    style="background-color:#FF0000;">&nbsp;&nbsp;&nbsp;</option>
-                        <option value="blue"   style="background-color:#002FFF;">&nbsp;&nbsp;&nbsp;</option> 
-                        <option value="purple" style="background-color:#8B008B;">&nbsp;&nbsp;&nbsp;</option>
-                        <option value="green"  style="background-color:#008600;">&nbsp;&nbsp;&nbsp;</option>
-                        <option value="orange"   style="background-color:#FF7A00;">&nbsp;&nbsp;&nbsp;</option>
-                        <option value="yellow"   style="background-color:#FFFF09;">&nbsp;&nbsp;&nbsp;</option>
+                    <option value="white"    style="background-color:#FFFFFF;"selected> &nbsp;&nbsp;&nbsp; </option>
+                    <option value="red"      style="background-color:#FF0000;">         &nbsp;&nbsp;&nbsp; </option>
+                    <option value="blue"     style="background-color:#002FFF;">         &nbsp;&nbsp;&nbsp; </option> 
+                    <option value="purple"   style="background-color:#8B008B;">         &nbsp;&nbsp;&nbsp; </option>
+                    <option value="green"    style="background-color:#008600;">         &nbsp;&nbsp;&nbsp; </option>
+                    <option value="orange"   style="background-color:#FF7A00;">         &nbsp;&nbsp;&nbsp; </option>
+                    <option value="yellow"   style="background-color:#FFFF09;">         &nbsp;&nbsp;&nbsp; </option>
                 </select>
             </td>
 

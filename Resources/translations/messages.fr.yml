@@ -238,7 +238,8 @@ Upload !: Télécharger !
 Uploading ...: Chargement en cours...
 Select: Sélectionner
 Redimmension: Pour redimmensionner l'image, appuyez sur la touche MAJ et déplacez la souris.
-Resize: Pour redimmensionner la zone de réponse, selection la zone par un click puis appuyez sur Alt en bougeant la souris.
+PlaceZone: Pour déplacer une zone de réponse, selecionnez-la en cliquant dessus et disposez-la en recliquant à l'endroit voulu.
+Resize: Pour redimmensionner la zone de réponse, selection la en cliquant dessus puis appuyez sur Alt en bougeant la souris.
 Selection: Pour définir une zone de réponse, maintenez la touche CTRL enfoncée et cliquez sur l'image à l'endroit où vous voulez la placer.
 Effacer: Pour effacer une zone de réponse, maintenez la touche s enfoncée et cliquez sur la zone de réponse à effacer.
 unsupport: Désolé, votre navigateur ne supporte pas Canvas. Mettez-vous à jour.

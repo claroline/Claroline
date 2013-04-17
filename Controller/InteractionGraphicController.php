@@ -152,7 +152,7 @@ class InteractionGraphicController extends Controller
             list(${'url'.$i}, ${'value'.$i}, ${'point'.$i}, ${'size'.$i}) = explode(",", $data);
 
             ${'value'.$i} = str_replace("_", ",", ${'value'.$i});
-            ${'url'.$i} = substr(${'url'.$i}, 61);
+            ${'url'.$i} = substr(${'url'.$i}, strrpos(${'url'.$i}, '/bundles'));
 
             ${'shape'.$i} = $this->getShape(${'url'.$i});
             ${'color'.$i} = $this->getColor(${'url'.$i});
@@ -354,8 +354,9 @@ class InteractionGraphicController extends Controller
      */
     public function getShape($url)
     {
-        $chaine = substr($url, 0, 1);
-
+        $temp = strrpos($url, 'graphic/') + 8;
+        $chaine = substr($url, $temp, 1);
+        
         if ($chaine == "r") {
             return "rectangle";
         } else if ($chaine == "c") {
@@ -369,8 +370,9 @@ class InteractionGraphicController extends Controller
      */
     public function getColor($url)
     {
-        $chaine = substr($url, -5, 1);
-
+        $temp = strrpos($url, '.') - 1;
+        $chaine = substr($url, $temp, 1);
+         
         switch ($chaine) {
             case "w" :
                 return "white";
