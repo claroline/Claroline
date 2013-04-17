@@ -151,6 +151,9 @@ class Creator
             $tool = $this->entityManager
                 ->getRepository('ClarolineCoreBundle:Tool\Tool')
                 ->findOneBy(array('name' => $name));
+            if (!$tool->isDisplayableInWorkspace()) {
+                throw new \Exception('The tool ' .$name. 'is not displayable in a workspace');
+            }
             $wot = new WorkspaceOrderedTool();
             $wot->setWorkspace($workspace);
             $wot->setName(
