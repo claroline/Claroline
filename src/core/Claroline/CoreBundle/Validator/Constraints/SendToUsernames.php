@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraint;
  */
 class SendToUsernames extends Constraint
 {
-    public $message = 'The username {{ username }} does not exist.';
+    public $message = 'The user {{ username }} does not exist.';
 
     public function validatedBy()
     {
