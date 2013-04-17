@@ -1,7 +1,0 @@
-services:
-     claroline.config.platform_config_twig_extension:
-        class: Claroline\CoreBundle\Library\Twig\PlatformConfigurationExtension
-        arguments:
-            - "@claroline.config.platform_config_handler"
-        tags:
-            - { name: twig.extension }
