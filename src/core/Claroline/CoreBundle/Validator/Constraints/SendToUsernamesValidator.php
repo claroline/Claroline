@@ -22,7 +22,7 @@ class SendToUsernamesValidator extends ConstraintValidator
             }
         }
 
-        return true;
+        return;
     }
 
     public function setEntityManager(EntityManager $em)
