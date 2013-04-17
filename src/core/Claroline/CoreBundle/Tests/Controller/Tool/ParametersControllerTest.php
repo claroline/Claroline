@@ -546,6 +546,18 @@ class ParametersControllerTest extends FunctionalTestCase
         $this->assertEquals(3, count($crawler->filter('input:checked[type="checkbox"]')));
     }
 
+    public function testRemoveParametersFromDesktop()
+    {
+        $this->logUser($this->getUser('john'));
+        $tool = $this->client->getContainer()->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneByName('parameters');
+        $crawler = $this->client->request(
+            'POST',
+            "desktop/tool/properties/remove/tool/{$tool->getId()}"
+        );
+        $this->assertContains('remove the parameter', $this->client->getResponse()->getContent());
+    }
+
     private function resetTemplate()
     {
         $container = $this->client->getContainer();
