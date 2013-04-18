@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Library\Security;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
+use Claroline\CoreBundle\Library\Security\Token\ViewAsToken;
 
 class Utilities
 {
@@ -69,6 +70,8 @@ class Utilities
     /**
      * Returns the roles (an array of string) of the $token.
      *
+     * @todo remove this $method
+     *
      * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
      *
      * @return array
@@ -77,14 +80,8 @@ class Utilities
     {
         $roles = array();
 
-        if ($token instanceof AnonymousToken) {
-            foreach ($token->getRoles() as $role) {
-                $roles[] = $role->getRole();
-            }
-        } else {
-            foreach ($token->getUser()->getRoles() as $role) {
-                $roles[] = $role;
-            }
+        foreach ($token->getRoles() as $role) {
+            $roles[] = $role->getRole();
         }
 
         return $roles;

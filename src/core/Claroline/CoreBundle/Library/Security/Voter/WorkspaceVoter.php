@@ -69,7 +69,6 @@ class WorkspaceVoter implements VoterInterface
             ->findByRolesAndWorkspace($this->ut->getRoles($token), $workspace, true);
 
         foreach ($tools as $tool) {
-
             if ($tool->getName() === $action) {
                 return true;
             }
