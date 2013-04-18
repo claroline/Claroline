@@ -26,19 +26,13 @@ class Configuration
     private $permsRootConfig;
     private $templateFile;
 
-    /**
-     * @todo template must come from the parameter claroline.param.templates_directory
-     */
-    public function __construct($template = null)
+    public function __construct($template)
     {
-        $ds = DIRECTORY_SEPARATOR;
-        $this->templateFile = $template ?
-            $template :
-            __DIR__ . "{$ds}..{$ds}..{$ds}..{$ds}..{$ds}..{$ds}..{$ds}templates{$ds}default.zip";
+        $this->templateFile = $template;
         $this->workspaceType = self::TYPE_SIMPLE;
         $archive = new \ZipArchive();
 
-        if (true === $code = $archive->open($this->templateFile)) {
+        if (true === $code = $archive->open($template)) {
             $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
             $archive->close();
             $this->setCreatorRole($parsedFile['creator_role']);
