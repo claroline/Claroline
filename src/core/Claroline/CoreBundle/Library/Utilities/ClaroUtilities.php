@@ -1,10 +1,13 @@
 <?php
 
 namespace Claroline\CoreBundle\Library\Utilities;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.utilities.misc")
+ */
 class ClaroUtilities
 {
-
     /**
      * Fill the empty value on $fillable with $array and sort it.
      *
@@ -67,7 +70,7 @@ class ClaroUtilities
         if ($secs === 0) {
             return '0s';
         }
-        
+
         $bit = array(
             'y' => $secs / 31556926 % 12,
             'w' => $secs / 604800 % 52,
