@@ -28,8 +28,7 @@
                 {% endif %}
             {% endfor %}
         </dl>
-        {#
-        #}
+
         <h5>{{ ('log_new_values')|trans({}, 'platform') }}</h4>
         <dl class="dl-horizontal">
             {% for key, values in log.getDetails().role.change_set %}
@@ -57,6 +56,6 @@
                 {% endif %}
             {% endfor %}
         </dl>
-        
+  
     </div>
 {% endif %}
