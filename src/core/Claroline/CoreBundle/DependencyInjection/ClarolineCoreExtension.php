@@ -17,12 +17,9 @@ class ClarolineCoreExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $locator = new FileLocator(__DIR__ . '/../Resources/config/services');
+        $locator = new FileLocator(__DIR__ . '/../Resources/config');
         $loader = new YamlFileLoader($container, $locator);
-        $loader->load('../parameters.yml');
-        $loader->load('../services.yml');
-        $loader->load('workspace.yml');
-        $loader->load('widget.yml');
-        $loader->load('validator.yml');
+        $loader->load('parameters.yml');
+        $loader->load('services.yml');
     }
 }
