@@ -156,4 +156,9 @@ abstract class AbstractWorkspace
     {
         return $this->workspaceOrderedTools;
     }
+
+    public function getRoles()
+    {
+        return $this->roles;
+    }
 }
