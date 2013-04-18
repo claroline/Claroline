@@ -6,20 +6,30 @@ use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Library\Event\ExportToolEvent;
 use Symfony\Component\Yaml\Yaml;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.workspace.exporter")
+ */
 class Exporter
 {
     private $em;
     private $ed;
     private $templateDir;
 
+    /**
+     * @DI\InjectParams({
+     *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "ed" = @DI\Inject("event_dispatcher"),
+     *     "templateDir" = @DI\Inject("%claroline.param.templates_directory%")
+     * })
+     */
     public function __construct(EntityManager $em, $ed, $templateDir)
     {
         $this->em = $em;
         $this->ed = $ed;
         $this->templateDir = $templateDir;
     }
-
 
     public function export(AbstractWorkspace $workspace, $configName)
     {
