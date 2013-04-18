@@ -166,8 +166,10 @@ class LogListener
             $is = false;
             $pushInSession = true;
             $now = time();
-            if ($session->get($event->getAction()) != null) {
-                $oldArray = json_decode($session->get($event->getAction()));
+            //if ($session->get($event->getAction()) != null) {
+            if ($session->get($event->getLogSignature()) != null) {
+                //$oldArray = json_decode($session->get($event->getAction()));
+                $oldArray = json_decode($session->get($event->getLogSignature()));
                 $oldSignature = $oldArray->logSignature;
                 $oldTime = $oldArray->time;
 
@@ -179,13 +181,14 @@ class LogListener
                         $is = true;
                         $pushInSession = false;
                     }
-                }                
+                }
             }
 
             if ($pushInSession) {
                 //Update last logSignature for this event category
                 $array = array('logSignature' => $event->getLogSignature(), 'time' => $now);
-                $session->set($event->getAction(), json_encode($array));
+                //$session->set($event->getAction(), json_encode($array));
+                $session->set($event->getLogSignature(), json_encode($array));
             }
 
             return $is;
