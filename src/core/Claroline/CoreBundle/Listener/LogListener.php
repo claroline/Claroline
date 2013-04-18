@@ -107,7 +107,10 @@ class LogListener
             $log->addDoerPlatformRole($doer->getPlatformRole());
             if ($event->getWorkspace() !== null) {
                 $roleRepository = $this->em->getRepository('ClarolineCoreBundle:Role');
-                $log->addDoerWorkspaceRole($roleRepository->findWorkspaceRoleForUser($doer, $event->getWorkspace()));
+                $workspaceRole = $roleRepository->findWorkspaceRoleForUser($doer, $event->getWorkspace());
+                if ($workspaceRole != null) {
+                    $log->addDoerWorkspaceRole($workspaceRole);
+                }
             }
         }
         if ($event->getResource() !== null) {
