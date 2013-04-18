@@ -3,7 +3,11 @@
 namespace Claroline\CoreBundle\Library\Resource;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.resource.utilities")
+ */
 class Utilities
 {
     /**
@@ -16,7 +20,7 @@ class Utilities
      *
      * @return string
      */
-    public function getUniqueName (AbstractResource $resource, AbstractResource $parent)
+    public function getUniqueName(AbstractResource $resource, AbstractResource $parent)
     {
         $children = $parent->getChildren();
         $name = $resource->getName();
