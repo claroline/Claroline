@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
-use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
 use Symfony\Component\Yaml\Yaml;
 
 class DatabaseWriterTest extends FunctionalTestCase
@@ -311,16 +310,5 @@ class DatabaseWriterTest extends FunctionalTestCase
             array('Valid\Simple\ValidSimple'),
             array('Valid\Custom\ValidCustom')
         );
-    }
-
-    private function resetTemplate()
-    {
-        $container = $this->client->getContainer();
-        $yml = $container->getParameter('claroline.param.templates_directory').'config.yml';
-        $archpath = $container->getParameter('claroline.param.templates_directory').'default.zip';
-        $archive = new \ZipArchive();
-        $archive->open($archpath, \ZipArchive::OVERWRITE);
-        $archive->addFile($yml, 'config.yml');
-        $archive->close();
     }
 }
