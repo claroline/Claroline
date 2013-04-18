@@ -8,6 +8,12 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationFailureHandler;
 use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service(
+ *     "claroline.security.ajax_authentication_failure_handler",
+ *     parent="security.authentication.failure_handler"
+ * )
+ */
 class AjaxAuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
 {
    /**
