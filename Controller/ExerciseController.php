@@ -419,7 +419,7 @@ class ExerciseController extends Controller
                 break;
 
             case "InteractionGraphic":
-
+                $res = $exerciseSer->responseGraphic($request, $session->get('paper'));
                 break;
 
             case "InteractionHole":
@@ -477,6 +477,7 @@ class ExerciseController extends Controller
     private function displayQuestion($numQuestionToDisplayed, $interactionToDisplay,
         $typeInterToDisplayed, $dispButtonInterrupt, $workspace
     ) {
+        $em = $this->getDoctrine()->getEntityManager();
         $session = $this->getRequest()->getSession();
         $tabOrderInter = $session->get('tabOrderInter');
 
@@ -509,6 +510,27 @@ class ExerciseController extends Controller
 
             case "InteractionGraphic":
 
+                $interactionToDisplayed = $this->getDoctrine()
+                    ->getEntityManager()
+                    ->getRepository('UJMExoBundle:InteractionGraphic')
+                    ->getInteractionGraphic($interactionToDisplay->getId());
+
+                $coords = $em->getRepository('UJMExoBundle:Coords')
+                    ->findBy(array('interactionGraphic' => $interactionToDisplayed[0]->getId()));
+
+                $responseGiven = $this->getDoctrine()
+                    ->getEntityManager()
+                    ->getRepository('UJMExoBundle:Response')
+                    ->getAlreadyResponded($session->get('paper'), $interactionToDisplay->getId());
+
+                if (count($responseGiven) > 0) {
+                    $responseGiven = $responseGiven[0]->getResponse();
+                } else {
+                    $responseGiven = '';
+                }
+
+                $array['listCoords'] = $coords;
+
                 break;
 
             case "InteractionHole":
@@ -520,18 +542,18 @@ class ExerciseController extends Controller
                 break;
         }
 
+        $array['workspace']              = $workspace;
+        $array['tabOrderInter']          = $tabOrderInter;
+        $array['interactionToDisplayed'] = $interactionToDisplayed[0];
+        $array['interactionType']        = $typeInterToDisplayed;
+        $array['numQ']                   = $numQuestionToDisplayed;
+        $array['paper']                  = $session->get('paper');
+        $array['response']               = $responseGiven;
+        $array['dispButtonInterrupt']    = $dispButtonInterrupt;
+
         return $this->render(
             'UJMExoBundle:Exercise:paper.html.twig',
-            array(
-                'workspace'              => $workspace,
-                'tabOrderInter'          => $tabOrderInter,
-                'interactionToDisplayed' => $interactionToDisplayed[0],
-                'interactionType'        => $typeInterToDisplayed,
-                'numQ'                   => $numQuestionToDisplayed,
-                'paper'                  => $session->get('paper'),
-                'response'               => $responseGiven,
-                'dispButtonInterrupt'    => $dispButtonInterrupt
-            )
+            $array
         );
     }
 

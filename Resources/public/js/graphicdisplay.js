@@ -127,7 +127,7 @@ function NoEmptyAnswer(noAnswerZone, notAll) {
         return false;
     } else {
         for (var cur in tempCoords) {
-            document.getElementById('answers').value += tempCoords[cur] + ',';
+            document.getElementById('answers').value += tempCoords[cur] + ';';
         }
         validGraphic.submit();
     }

@@ -227,7 +227,7 @@ class exerciseServices
         $verif = array();
         $z = 0;
 
-        $coords = preg_split('[,]', $answers);
+        $coords = preg_split('[;]', $answers);
         $total = 0;
 
         for ($i = 0; $i < $max - 1; $i++) {
@@ -286,9 +286,10 @@ class exerciseServices
             'doc' => $doc,
             'total' => $total,
             'rep' => $coords,
-            'score' => $score
+            'score' => $score,
+            'response' => $answers
         );
-
+        
         return $res;
     }
 
