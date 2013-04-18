@@ -4,7 +4,18 @@
         <h5>{{ ('log_old_values')|trans({}, 'platform') }}</h5>
         <dl class="dl-horizontal">
             {% for key, values in log.getDetails().receiver_user.change_set %}
-                {% if key != 'password' %}
+                 {% if key == 'roles'%}
+                    {% for role, rights in values %}
+                        <dt>{{ role|trans({}, 'platform') }}</dt>
+                        <dd>
+                            {% if rights[0] %}
+                                {{ ('yes')|trans({}, 'platform') }}
+                            {% else %}
+                                {{ ('no')|trans({}, 'platform') }}
+                            {% endif %}
+                        </dd>
+                    {% endfor %}
+                {% elseif key != 'password' %}
                     <dt>{{ key|caml_case_to_underscore|trans({}, 'platform') }}</dt>
                     <dd>
                         {% if values[0] %}
@@ -19,7 +30,18 @@
         <h5>{{ ('log_new_values')|trans({}, 'platform') }}</h5>
         <dl class="dl-horizontal">
             {% for key, values in log.getDetails().receiver_user.change_set %}
-                {% if key != 'password' %}
+                {% if key == 'roles'%}
+                    {% for role, rights in values %}
+                        <dt>{{ role|trans({}, 'platform') }}</dt>
+                        <dd>
+                            {% if rights[1] %}
+                                {{ ('yes')|trans({}, 'platform') }}
+                            {% else %}
+                                {{ ('no')|trans({}, 'platform') }}
+                            {% endif %}
+                        </dd>
+                    {% endfor %}
+                {% elseif key != 'password' %}
                     <dt>{{ key|caml_case_to_underscore|trans({}, 'platform') }}</dt>
                     <dd>{{ values[1] }}</dd>
                 {% endif %}

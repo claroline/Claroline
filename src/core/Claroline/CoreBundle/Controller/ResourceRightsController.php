@@ -211,7 +211,7 @@ class ResourceRightsController extends Controller
                 if (!$this->isInResourceTypes($resourceType, $resourceRights->getCreatableResourceTypes())) {
                     $removedResourceTypes[] = $resourceType;
                 }
-            }            
+            }
 
             $createRights = array();
             if (count($addedResourceTypes) > 0) {

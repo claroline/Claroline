@@ -12,6 +12,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
  */
 class ProfileController extends Controller
 {
+    private function isInRoles($role, $roles) {
+        foreach ($roles as $current) {
+            if ($role->getId() == $current->getId()) {
+                
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @Route(
      *     "/form",
@@ -66,7 +77,6 @@ class ProfileController extends Controller
             $unitOfWork = $em->getUnitOfWork();
             $unitOfWork->computeChangeSets();
             $changeSet = $unitOfWork->getEntityChangeSet($user);
-            //TODO add platformRoles to changeSet
 
             $newRoles = $form->get('platformRoles')->getData();
             $userRole = $this->get('doctrine.orm.entity_manager')
@@ -86,6 +96,28 @@ class ProfileController extends Controller
             $em->persist($user);
             $em->flush();
             $this->get('security.context')->getToken()->setUser($user);
+
+            $newRoles = $this->get('doctrine.orm.entity_manager')
+                ->getRepository('ClarolineCoreBundle:Role')
+                ->findPlatformRoles($user);
+
+            $rolesChangeSet = array();
+            //Detect added
+            foreach ($newRoles as $role) {
+                if (!$this->isInRoles($role, $roles)) {
+                   $rolesChangeSet[$role->getTranslationKey()] = array(false, true);
+                }
+            }
+            //Detect removed
+            foreach ($roles as $role) {
+                if (!$this->isInRoles($role, $newRoles)) {
+                    $rolesChangeSet[$role->getTranslationKey()] = array(true, false);
+                }
+            }
+            if (count($rolesChangeSet) > 0) {
+                $changeSet['roles'] = $rolesChangeSet;
+            }
+
 
             $log = new LogUserUpdateEvent($user, $changeSet);
             $this->get('event_dispatcher')->dispatch('log', $log);
