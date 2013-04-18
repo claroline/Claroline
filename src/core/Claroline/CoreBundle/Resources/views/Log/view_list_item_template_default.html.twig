@@ -1,0 +1,49 @@
+{% include 'ClarolineCoreBundle:Log:view_list_item_doer.html.twig' %}
+
+{{ ('log_' ~ log.getAction() ~ '_verb')|trans({}, 'platform') }}
+
+{% if 'resource_' in log.getAction() %}
+    {% include 'ClarolineCoreBundle:Log:view_list_item_resource.html.twig' %}
+{% endif %}
+
+{% if 'user_' in log.getAction() %}
+    {% include 'ClarolineCoreBundle:Log:view_list_item_receiver_user.html.twig' %}
+{% endif %}
+
+{% if 'group_' in log.getAction() %}
+    {% include 'ClarolineCoreBundle:Log:view_list_item_receiver_group.html.twig' %}
+{% endif %}
+
+{% if 'ws_role_' in log.getAction() %}
+    {% if log.getDetails().receiver_user is defined %}
+        {% include 'ClarolineCoreBundle:Log:view_list_item_receiver_user.html.twig' %}
+    {% elseif log.getDetails().receiver_group is defined %}
+        {% include 'ClarolineCoreBundle:Log:view_list_item_receiver_group.html.twig' %}
+    {% endif %}
+
+    {% if log.getDetails().receiver_user is defined or log.getDetails().receiver_group is defined %}
+        {{ ('log_' ~ log.getAction() ~ '_verb_middle')|trans({}, 'platform') }}
+    {% endif %}
+
+    {% if log.getDetails().role is defined %}
+        {% include 'ClarolineCoreBundle:Log:view_list_item_role.html.twig' %}
+    {% endif %}
+
+    {% if log.getDetails().resource is defined%}
+        {{ ('log_' ~ log.getAction() ~ '_verb_middle')|trans({}, 'platform') }}
+        {% include 'ClarolineCoreBundle:Log:view_list_item_resource.html.twig' %}
+    {% endif %}
+{% endif %}
+
+{% if 'workspace_' in log.getAction() %}
+    {% include 'ClarolineCoreBundle:Log:view_list_item_workspace.html.twig' %}
+{% endif %}
+
+{% if 'ws_tool_' in log.getAction() %}
+    {% if log.getToolName() %}
+        {% include 'ClarolineCoreBundle:Log:view_list_item_tool.html.twig' %}
+    {% endif %}
+
+    {{ ('log_' ~ log.getAction() ~ '_verb_middle')|trans({}, 'platform') }}
+    {% include 'ClarolineCoreBundle:Log:view_list_item_workspace.html.twig' %}
+{% endif %}

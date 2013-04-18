@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Library\Event;
 
 class LogUserCreateEvent extends LogGenericEvent
 {
-    const action = 'user_create';
+    const ACTION = 'user_create';
 
     /**
      * Constructor.
@@ -12,7 +12,7 @@ class LogUserCreateEvent extends LogGenericEvent
     public function __construct($receiver)
     {
         parent::__construct(
-            self::action,
+            self::ACTION,
             array(
                 'receiver_user' => array(
                     'last_name' => $receiver->getLastName(),

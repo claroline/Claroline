@@ -4,7 +4,8 @@ namespace Claroline\CoreBundle\Library\Event;
 
 class LogResourceUpdateEvent extends LogGenericEvent
 {
-    const action = 'resource_update';
+    const ACTION = 'resource_update';
+    const ACTION_RENAME = 'resource_update_rename';
 
     /**
      * Constructor.
@@ -15,8 +16,13 @@ class LogResourceUpdateEvent extends LogGenericEvent
      */
     public function __construct($resource, $changeSet)
     {
+        $action = self::ACTION;
+        if ($changeSet != null and count($changeSet) == 1 and array_key_exists('name', $changeSet)) {
+            $action = self::ACTION_RENAME;
+        }
+
         parent::__construct(
-            self::action,
+            $action,
             array(
                 'resource' => array(
                     'name' => $resource->getName(),

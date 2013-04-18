@@ -1,0 +1,9 @@
+{% if log.getDetails().resource is defined%}
+    <strong>
+        {% if log.getResource() != null %}
+            <a href="{{ path('claro_resource_open', {'resourceType': log.getResourceType().getName(), 'action': 'open', 'resourceId': log.getResource().getId()})}}"> {{ log.getDetails().resource.path }}</a>
+        {% else %}
+            <em>{{ log.getDetails().resource.path }}</em>
+        {% endif %}
+    </strong>
+{% endif %}

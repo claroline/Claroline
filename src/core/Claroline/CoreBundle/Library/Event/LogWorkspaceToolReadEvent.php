@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Library\Event;
 
 class LogWorkspaceToolReadEvent extends LogGenericEvent implements NotRepeatableLog
 {
-    const action = 'ws_tool_read';
+    const ACTION = 'ws_tool_read';
 
     /**
      * Constructor.
@@ -12,7 +12,7 @@ class LogWorkspaceToolReadEvent extends LogGenericEvent implements NotRepeatable
     public function __construct($workspace, $toolName)
     {
         parent::__construct(
-            self::action,
+            self::ACTION,
             array(
                 'workspace' => array(
                     'name' => $workspace->getName()

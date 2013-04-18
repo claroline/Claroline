@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Library\Event;
 
 class LogResourceCopyEvent extends LogGenericEvent
 {
-    const action = 'resource_copy';
+    const ACTION = 'resource_copy';
 
     /**
      * Constructor.
@@ -14,7 +14,7 @@ class LogResourceCopyEvent extends LogGenericEvent
     public function __construct($resource, $source)
     {
         parent::__construct(
-            self::action,
+            self::ACTION,
             array(
                 'resource' => array(
                     'name' => $resource->getName(),

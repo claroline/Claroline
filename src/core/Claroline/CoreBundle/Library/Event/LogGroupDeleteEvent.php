@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Library\Event;
 
 class LogGroupDeleteEvent extends LogGenericEvent
 {
-    const action = 'group_delete';
+    const ACTION = 'group_delete';
 
     /**
      * Constructor.
@@ -12,7 +12,7 @@ class LogGroupDeleteEvent extends LogGenericEvent
     public function __construct($receiverGroup)
     {
         parent::__construct(
-            self::action,
+            self::ACTION,
             array(
                 'receiver_group' => array(
                     'name' => $receiverGroup->getName()
