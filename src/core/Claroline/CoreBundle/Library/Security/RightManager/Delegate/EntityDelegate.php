@@ -7,7 +7,11 @@ use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Exception\InvalidDomainObjectException;
 use Claroline\CoreBundle\Library\Security\SecurityException;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.security.right_manager.delegate.entity")
+ */
 class EntityDelegate implements TargetDelegateInterface
 {
     public function getAces(Acl $acl)

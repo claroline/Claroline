@@ -5,11 +5,15 @@ namespace Claroline\CoreBundle\Library\Security\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * This voter grants access to admin users, whenever the attribute or the
  * class is. This means that administrators are seen by the AccessDecisionManager
  * as if they have all the possible roles and permissions on every object or class.
+ *
+ * @DI\Service
+ * @DI\Tag("security.voter")
  */
 class AdministratorVoter implements VoterInterface
 {
