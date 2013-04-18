@@ -4,28 +4,59 @@
         <h5>{{ ('log_old_values')|trans({}, 'platform') }}</h4>
         <dl class="dl-horizontal">
             {% for key, values in log.getDetails().role.change_set %}
-                <dt>{{ key|caml_case_to_underscore|trans({}, 'platform') }}</dt>
-                <dd>
-                    {% if values[0] %}
-                        {{ ('yes')|trans({}, 'platform') }}
-                    {% else %}
-                        {{ ('no')|trans({}, 'platform') }}
-                    {% endif %}
-                </dd>
+                {% if key == 'can_create'%}
+                    {% for type, rights in values %}
+                        {% set type = type|caml_case_to_underscore|trans({}, 'platform') %}
+                        <dt>{{ 'can_create'|trans({'%type%': type}, 'platform') }}</dt>
+                        <dd>
+                            {% if rights[0] %}
+                                {{ ('yes')|trans({}, 'platform') }}
+                            {% else %}
+                                {{ ('no')|trans({}, 'platform') }}
+                            {% endif %}
+                        </dd>
+                    {% endfor %}
+                {% else %}
+                    <dt>{{ key|caml_case_to_underscore|trans({}, 'platform') }}</dt>
+                    <dd>
+                        {% if values[0] %}
+                            {{ ('yes')|trans({}, 'platform') }}
+                        {% else %}
+                            {{ ('no')|trans({}, 'platform') }}
+                        {% endif %}
+                    </dd>
+                {% endif %}
             {% endfor %}
         </dl>
+        {#
+        #}
         <h5>{{ ('log_new_values')|trans({}, 'platform') }}</h4>
         <dl class="dl-horizontal">
             {% for key, values in log.getDetails().role.change_set %}
-                <dt>{{ key|caml_case_to_underscore|trans({}, 'platform') }}</dt>
-                <dd>
-                    {% if values[1] %}
-                        {{ ('yes')|trans({}, 'platform') }}
-                    {% else %}
-                        {{ ('no')|trans({}, 'platform') }}
-                    {% endif %}
-                </dd>
+                {% if key == 'can_create'%}
+                    {% for type, rights in values %}
+                        {% set type = type|caml_case_to_underscore|trans({}, 'platform') %}
+                        <dt>{{ 'can_create'|trans({'%type%': type}, 'platform') }}</dt>
+                        <dd>
+                            {% if rights[1] %}
+                                {{ ('yes')|trans({}, 'platform') }}
+                            {% else %}
+                                {{ ('no')|trans({}, 'platform') }}
+                            {% endif %}
+                        </dd>
+                    {% endfor %}
+                {% else %}
+                    <dt>{{ key|caml_case_to_underscore|trans({}, 'platform') }}</dt>
+                    <dd>
+                        {% if values[1] %}
+                            {{ ('yes')|trans({}, 'platform') }}
+                        {% else %}
+                            {{ ('no')|trans({}, 'platform') }}
+                        {% endif %}
+                    </dd>
+                {% endif %}
             {% endfor %}
         </dl>
+        
     </div>
 {% endif %}
