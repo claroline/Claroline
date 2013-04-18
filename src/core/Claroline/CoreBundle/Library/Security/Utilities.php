@@ -6,7 +6,11 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Claroline\CoreBundle\Library\Security\Token\ViewAsToken;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.security.utilities")
+ */
 class Utilities
 {
     /** @var EntityManager */
@@ -20,6 +24,10 @@ class Utilities
      * Constructor.
      *
      * @param ContainerInterface $container
+     *
+     * @DI\InjectParams({
+     *     "em" = @DI\Inject("doctrine.orm.entity_manager")
+     * })
      */
     public function __construct(EntityManager $em)
     {
@@ -43,7 +51,7 @@ class Utilities
      * @param array $checks
      * @param string $typeOfRight
      *
-     * @Return array
+     * @return array
      */
     public function setRightsRequest(array $checks, $typeOfRight)
     {

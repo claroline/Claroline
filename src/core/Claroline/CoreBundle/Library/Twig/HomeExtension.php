@@ -6,7 +6,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 
 /**
- * @DI\Service()
+ * @DI\Service
  * @DI\Tag("twig.extension")
  */
 class HomeExtension extends \Twig_Extension

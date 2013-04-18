@@ -10,13 +10,25 @@ use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Translation\Translator;
 use Doctrine\ORM\EntityManager;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service
+ * @DI\Tag("security.voter")
+ */
 class WorkspaceVoter implements VoterInterface
 {
     private $em;
     private $translator;
     private $ut;
 
+    /**
+     * @DI\InjectParams({
+     *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "translator" = @DI\Inject("translator"),
+     *     "ut" = @DI\Inject("claroline.security.utilities")
+     * })
+     */
     public function __construct(EntityManager $em, Translator $translator, Utilities $ut)
     {
         $this->em = $em;
