@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Library\Event;
 
 class LogResourceShortcutEvent extends LogGenericEvent
 {
-    const action = 'resource_shortcut';
+    const ACTION = 'resource_shortcut';
 
     /**
      * Constructor.
@@ -14,7 +14,7 @@ class LogResourceShortcutEvent extends LogGenericEvent
     public function __construct($resource, $source)
     {
         parent::__construct(
-            self::action,
+            self::ACTION,
             array(
                 'resource' => array(
                     'name' => $resource->getName(),

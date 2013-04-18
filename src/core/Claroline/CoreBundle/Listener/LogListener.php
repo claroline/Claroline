@@ -76,29 +76,29 @@ class LogListener
 
         //Object properties
         $log->setOwner($event->getOwner());
-        if (!($event->getAction() === LogUserDeleteEvent::action && $event->getReceiver() === $doer)) {
+        if (!($event->getAction() === LogUserDeleteEvent::ACTION && $event->getReceiver() === $doer)) {
             //Prevent self delete case
             $log->setDoer($doer);
         }
         $log->setDoerType($doerType);
 
         $log->setDoerIp($doerIp);
-        if ($event->getAction() !== LogUserDeleteEvent::action) {
+        if ($event->getAction() !== LogUserDeleteEvent::ACTION) {
             //Prevent user delete case
             $log->setReceiver($event->getReceiver());
         }
-        if ($event->getAction() !== LogGroupDeleteEvent::action) {
+        if ($event->getAction() !== LogGroupDeleteEvent::ACTION) {
             $log->setReceiverGroup($event->getReceiverGroup());
         }
-        if (!($event->getAction() === LogResourceDeleteEvent::action && $event->getResource() === $event->getWorkspace())) {
+        if (!($event->getAction() === LogResourceDeleteEvent::ACTION && $event->getResource() === $event->getWorkspace())) {
             //Prevent delete workspace case
             $log->setWorkspace($event->getWorkspace());
         }
-        if ($event->getAction() !== LogResourceDeleteEvent::action) {
+        if ($event->getAction() !== LogResourceDeleteEvent::ACTION) {
             //Prevent delete resource case
             $log->setResource($event->getResource());
         }
-        if ($event->getAction() !== LogWorkspaceRoleDeleteEvent::action) {
+        if ($event->getAction() !== LogWorkspaceRoleDeleteEvent::ACTION) {
             //Prevent delete role case
             $log->setRole($event->getRole());
         }

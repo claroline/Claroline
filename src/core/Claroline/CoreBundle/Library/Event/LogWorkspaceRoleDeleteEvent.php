@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Library\Event;
 
 class LogWorkspaceRoleDeleteEvent extends LogGenericEvent
 {
-    const action = 'ws_role_delete';
+    const ACTION = 'ws_role_delete';
 
     /**
      * Constructor.
@@ -12,7 +12,7 @@ class LogWorkspaceRoleDeleteEvent extends LogGenericEvent
     public function __construct($role)
     {
         parent::__construct(
-            self::action,
+            self::ACTION,
             array(
                 'role' => array(
                     'name' => $role->getName()

@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Library\Event;
 
 class LogWorkspaceCreateEvent extends LogGenericEvent
 {
-    const action = 'workspace_create';
+    const ACTION = 'workspace_create';
 
     /**
      * Constructor.
@@ -12,7 +12,7 @@ class LogWorkspaceCreateEvent extends LogGenericEvent
     public function __construct($workspace)
     {
         parent::__construct(
-            self::action,
+            self::ACTION,
             array(
                 'workspace' => array(
                     'name' => $workspace->getName()

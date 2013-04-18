@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Library\Event;
 
 class LogResourceCreateEvent extends LogGenericEvent
 {
-    const action = 'resource_create';
+    const ACTION = 'resource_create';
 
     /**
      * Constructor.
@@ -12,7 +12,7 @@ class LogResourceCreateEvent extends LogGenericEvent
     public function __construct($resource)
     {
         parent::__construct(
-            self::action,
+            self::ACTION,
             array(
                 'resource' => array(
                     'name' => $resource->getName(),

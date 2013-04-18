@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Library\Event;
 
 class LogResourceDeleteEvent extends LogGenericEvent
 {
-    const action = 'resource_delete';
+    const ACTION = 'resource_delete';
 
     /**
      * Constructor.
@@ -12,7 +12,7 @@ class LogResourceDeleteEvent extends LogGenericEvent
     public function __construct($resource)
     {
         parent::__construct(
-            self::action,
+            self::ACTION,
             array(
                 'resource' => array(
                     'name' => $resource->getName(),

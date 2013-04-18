@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Library\Event;
 
 class LogWorkspaceRoleUpdateEvent extends LogGenericEvent
 {
-    const action = 'ws_role_update';
+    const ACTION = 'ws_role_update';
 
     /**
      * Constructor.
@@ -16,7 +16,7 @@ class LogWorkspaceRoleUpdateEvent extends LogGenericEvent
     public function __construct($role, $changeSet)
     {
         parent::__construct(
-            self::action,
+            self::ACTION,
             array(
                 'role' => array(
                     'name' => $role->getName(),

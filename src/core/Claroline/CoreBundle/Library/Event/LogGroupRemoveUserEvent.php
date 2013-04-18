@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Library\Event;
 
 class LogGroupRemoveUserEvent extends LogGenericEvent
 {
-    const action = 'group_remove_user';
+    const ACTION = 'group_remove_user';
 
     /**
      * Constructor.
@@ -16,7 +16,7 @@ class LogGroupRemoveUserEvent extends LogGenericEvent
     public function __construct($receiverGroup, $receiver)
     {
         parent::__construct(
-            self::action,
+            self::ACTION,
             array(
                 'receiver_user' => array(
                     'last_name' => $receiver->getLastName(),

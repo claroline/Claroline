@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Library\Event;
 
 class LogResourceReadEvent extends LogGenericEvent implements NotRepeatableLog
 {
-    const action = 'resource_read';
+    const ACTION = 'resource_read';
 
     /**
      * Constructor.
@@ -12,7 +12,7 @@ class LogResourceReadEvent extends LogGenericEvent implements NotRepeatableLog
     public function __construct($resource)
     {
         parent::__construct(
-            self::action,
+            self::ACTION,
             array(
                 'resource' => array(
                     'name' => $resource->getName(),

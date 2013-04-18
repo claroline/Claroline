@@ -4,8 +4,8 @@ namespace Claroline\CoreBundle\Library\Event;
 
 class LogWorkspaceRoleUnsubscribeEvent extends LogGenericEvent
 {
-    const action_user = 'ws_role_unsubscribe_user';
-    const action_group = 'ws_role_unsubscribe_group';
+    const ACTION_USER = 'ws_role_unsubscribe_user';
+    const ACTION_GROUP = 'ws_role_unsubscribe_group';
 
     /**
      * Constructor.
@@ -34,9 +34,9 @@ class LogWorkspaceRoleUnsubscribeEvent extends LogGenericEvent
             );
         }
 
-        $action = self::action_user;
+        $action = self::ACTION_USER;
         if ($receiverGroup != null) {
-            $action = self::action_group;
+            $action = self::ACTION_GROUP;
         }
         parent::__construct(
             $action,

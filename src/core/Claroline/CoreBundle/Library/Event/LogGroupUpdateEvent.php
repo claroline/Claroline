@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Library\Event;
 
 class LogGroupUpdateEvent extends LogGenericEvent
 {
-    const action = 'group_update';
+    const ACTION = 'group_update';
 
     /**
      * Constructor.
@@ -16,7 +16,7 @@ class LogGroupUpdateEvent extends LogGenericEvent
     public function __construct($receiverGroup, $changeSet)
     {
         parent::__construct(
-            self::action,
+            self::ACTION,
             array(
                 'receiver_group' => array(
                     'name' => $receiverGroup->getName(),
