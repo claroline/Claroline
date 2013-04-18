@@ -443,7 +443,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertObjectHasAttribute('creatableTypes', $jsonResponse);
         $this->assertObjectHasAttribute('resources', $jsonResponse);
         $this->assertEquals(3, count($jsonResponse->path));
-        $this->assertEquals(count($allVisibleResourceTypes), count((array) $jsonResponse->creatableTypes));
+        $this->assertEquals(5, count((array) $jsonResponse->creatableTypes));
         $this->assertEquals(2, count((array) $jsonResponse->resources));
     }
 

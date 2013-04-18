@@ -447,8 +447,8 @@ class ParametersControllerTest extends FunctionalTestCase
         $countCheckedTools = $crawler->filter("td[data-role-id={$roleCollaborator->getId()}] input:checked[type='checkbox']");
         $countUncheckedTools = $crawler->filter("td[data-role-id={$roleCollaborator->getId()}] input:not(:checked[type='checkbox'])");
 
-        $this->assertEquals(5, count($countCheckedTools));
-        $this->assertEquals(3, count($countUncheckedTools));
+        $this->assertEquals(3, count($countCheckedTools));
+        $this->assertEquals(5, count($countUncheckedTools));
     }
 
     public function testWorkspaceResourceRightsForm()
@@ -480,9 +480,8 @@ class ParametersControllerTest extends FunctionalTestCase
             "/workspaces/tool/properties/{$wsId}/resource/rights/form/role/{$managerRole->getId()}"
          );
 
-         $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
          $this->assertEquals(
-             count($resourceTypes),
+             5,
              count($crawler->filter('input:checked[type="checkbox"]'))
          );
     }
@@ -555,31 +554,5 @@ class ParametersControllerTest extends FunctionalTestCase
             "desktop/tool/properties/remove/tool/{$tool->getId()}"
         );
         $this->assertContains('remove the parameter', $this->client->getResponse()->getContent());
-    }
-
-    private function resetTemplate()
-    {
-        $container = $this->client->getContainer();
-        $yml = $container->getParameter('claroline.param.templates_directory').'config.yml';
-        $archpath = $container->getParameter('claroline.param.templates_directory').'default.zip';
-        $archive = new \ZipArchive();
-        $archive->open($archpath, \ZipArchive::OVERWRITE);
-        $archive->addFile($yml, 'config.yml');
-        $archive->close();
-    }
-
-    private function registerStubPlugins(array $pluginFqcns)
-    {
-        $container = $this->client->getContainer();
-        $dbWriter = $container->get('claroline.plugin.recorder_database_writer');
-        $pluginDirectory = $container->getParameter('claroline.param.stub_plugin_directory');
-        $loader = new Loader($pluginDirectory);
-        $validator = $container->get('claroline.plugin.validator');
-
-        foreach ($pluginFqcns as $pluginFqcn) {
-            $plugin = $loader->load($pluginFqcn);
-            $validator->validate($plugin);
-            $dbWriter->insert($plugin, $validator->getPluginConfiguration());
-        }
     }
 }

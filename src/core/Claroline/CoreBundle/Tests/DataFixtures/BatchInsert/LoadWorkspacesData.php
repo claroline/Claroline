@@ -40,7 +40,8 @@ class LoadWorkspacesData extends LoggableFixture implements ContainerAwareInterf
         $count = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->count();
         $totalWorkspaces = $count + 1;
         $admin = $this->findJohnDoe($manager);
-        $config = new Configuration();
+        $personalWsTemplateFile = $this->container->get('claroline.param.templates_directory')."default.zip";
+        $config = new Configuration($personalWsTemplateFile);
         $start = time();
 
         for ($j = 0, $i = 0; $i < $this->numberWorkspaces; $i++, $totalWorkspaces++) {

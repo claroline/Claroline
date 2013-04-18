@@ -408,32 +408,6 @@ class AdministrationControllerTest extends FunctionalTestCase
         $this->assertEquals(count($crawler->filter('#rss_form')), 1);
     }
 
-    private function registerStubPlugins(array $pluginFqcns)
-    {
-        $container = $this->client->getContainer();
-        $dbWriter = $container->get('claroline.plugin.recorder_database_writer');
-        $pluginDirectory = $container->getParameter('claroline.param.stub_plugin_directory');
-        $loader = new Loader($pluginDirectory);
-        $validator = $container->get('claroline.plugin.validator');
-
-        foreach ($pluginFqcns as $pluginFqcn) {
-            $plugin = $loader->load($pluginFqcn);
-            $validator->validate($plugin);
-            $dbWriter->insert($plugin, $validator->getPluginConfiguration());
-        }
-    }
-
-    private function resetTemplate()
-    {
-        $container = $this->client->getContainer();
-        $yml = $container->getParameter('claroline.param.templates_directory').'config.yml';
-        $archpath = $container->getParameter('claroline.param.templates_directory').'default.zip';
-        $archive = new \ZipArchive();
-        $archive->open($archpath, \ZipArchive::OVERWRITE);
-        $archive->addFile($yml, 'config.yml');
-        $archive->close();
-    }
-
     private function getUser($username)
     {
         $user = $this->em->getRepository('ClarolineCoreBundle:User')
