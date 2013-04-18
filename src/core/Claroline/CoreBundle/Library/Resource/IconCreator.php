@@ -9,15 +9,23 @@ use Claroline\CoreBundle\Entity\Resource\IconType;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.resource.icon_creator")
+ */
 class IconCreator
 {
     private $container;
     /** @var EntityManager */
     private $em;
-
     private $ic;
 
+    /**
+     * @DI\InjectParams({
+     *     "container" = @DI\Inject("service_container")
+     * })
+     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
