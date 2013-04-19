@@ -12,7 +12,7 @@ class DesktopControllerTest extends FunctionalTestCase
         $this->client->followRedirects();
         $this->loadPlatformRolesFixture();
     }
-    
+
     //test if the url is working
     public function testPersoAction()
     {

@@ -14,7 +14,7 @@ class ProfileType extends BaseProfileType
 
     public function __construct($platformRoles)
     {
-        $this->platformRoles = new ArrayCollection ($platformRoles);
+        $this->platformRoles = new ArrayCollection($platformRoles);
 
         foreach ($platformRoles as $role) {
 

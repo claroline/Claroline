@@ -432,10 +432,6 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->loadDirectoryData('user', array('user/Foo/Bar'));
         $this->loadFileData('user', 'Bar', array('Baz'));
         $this->loadFileData('user', 'Bar', array('Bat'));
-        $allVisibleResourceTypes = $this->getEntityManager()
-            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-            ->findAll(true);
-
         $this->logUser($this->getUser('user'));
         $this->client->request('GET', "/resource/directory/{$this->getDirectory('Bar')->getId()}");
         $jsonResponse = json_decode($this->client->getResponse()->getContent());

@@ -267,11 +267,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         if ($user->getRoles() !== $this->getRoles()) {
             return false;
         }
-//
-//        if (!$user instanceof User) {
-//            return false;
-//        }
-//
+
         if ($this->username !== $user->getUsername()) {
             return false;
         }
