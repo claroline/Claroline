@@ -14,7 +14,11 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Library\Event\ResourceLogEvent;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.resource.manager")
+ */
 class Manager
 {
     /** @var EntityManager */
@@ -34,6 +38,10 @@ class Manager
      * Constructor.
      *
      * @param ContainerInterface $container
+     * 
+     * @DI\InjectParams({
+     *     "container" = @DI\Inject("service_container")
+     * })
      */
     public function __construct(ContainerInterface $container)
     {

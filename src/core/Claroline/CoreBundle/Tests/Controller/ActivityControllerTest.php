@@ -103,6 +103,34 @@ class ActivityControllerTest extends FunctionalTestCase
         $this->assertEquals($ids, array_reverse($reverseIds));
     }
 
+    public function testShowPlayer()
+    {
+        $this->loadFileData('admin', 'admin', array('foo.txt'));
+        $this->loadFileData('admin', 'admin', array('bar.txt'));
+        $fileOne = $this->getFile('foo.txt');
+        $fileTwo = $this->getFile('bar.txt');
+        $this->logUser($this->getUser('admin'));
+        $activity = $this->createActivity('name', 'instruction');
+        $this->client
+            ->getContainer()
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Resource\Activity')
+            ->find($activity->id);
+        $this->client->request(
+            'POST',
+            "/activity/{$activity->id}/add/resource/{$fileOne->getId()}"
+        );
+        $this->client->request(
+            'POST',
+            "/activity/{$activity->id}/add/resource/{$fileTwo->getId()}"
+        );
+        $crawler = $this->client->request(
+            'GET', "/activity/player/{$activity->id}"
+        );
+        $this->assertEquals(1, count($crawler->filter('#left-frame')));
+        $this->assertEquals(1, count($crawler->filter('#right-frame')));
+    }
+
     private function createActivity($name, $instruction)
     {
         $this->client->request(
@@ -110,7 +138,6 @@ class ActivityControllerTest extends FunctionalTestCase
             "/resource/create/activity/{$this->getFile('foo.txt')->getId()}",
             array('activity_form' => array('name' => $name, 'instructions' => $instruction))
         );
-
         $obj = json_decode($this->client->getResponse()->getContent());
 
         return $obj[0];

@@ -3,18 +3,28 @@
 namespace Claroline\CoreBundle\Library\Widget;
 
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
+use Doctrine\ORM\EntityManager;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.widget.manager")
+ */
 class Manager
 {
     private $em;
 
-    public function __construct($em)
+    /**
+     * @DI\InjectParams({
+     *     "em" = @DI\Inject("doctrine.orm.entity_manager")
+     * })
+     */
+    public function __construct(EntityManager $em)
     {
         $this->em = $em;
     }
 
     /**
-     * Generate the the configuration of every widget of the current workspace.
+     * Generates the the configuration of every widget of the current workspace.
      * Widgets configuration works as a nested tree.
      * If the configuration was never defined before, a temporary one is created (lvl1)
      * with the parameters wich were defined by the admin .

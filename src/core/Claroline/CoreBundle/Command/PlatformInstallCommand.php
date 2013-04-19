@@ -37,9 +37,23 @@ class PlatformInstallCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $kernel = $this->getApplication()->getKernel();
-        $output->writeln('Generating default prod/dev template...');
-        $defaultPath = $this->getContainer()->getParameter('claroline.workspace_template.directory').'default.zip';
+        $environment = $kernel->getEnvironment();
+        $output->writeln("Generating default {$environment} template...");
+        $defaultPath = $this->getContainer()->getParameter('claroline.param.templates_directory').'default.zip';
         TemplateBuilder::buildDefault($defaultPath);
+
+        if ($environment == 'test') {
+            $arch = new \ZipArchive();
+            $arch->open($defaultPath);
+            $content = $arch->getFromName('config.yml');
+            $configPath = "{$this->getContainer()->getParameter('claroline.param.templates_directory')}config.yml";
+            file_put_contents(
+                $configPath,
+                $content
+            );
+            $arch->close();
+        }
+
         $output->writeln('Installing the platform...');
         $manager = $this->getContainer()->get('claroline.install.core_installer');
         $manager->install();
@@ -47,8 +61,6 @@ class PlatformInstallCommand extends ContainerAwareCommand
         $aclCommand->run(new ArrayInput(array('command' => 'init:acl')), $output);
 
         if ($input->getOption('with-fixtures')) {
-            $environment = $kernel->getEnvironment();
-
             if ($environment === 'prod' || $environment === 'dev' || $environment == 'test') {
                 $coreBundleDirectory = $kernel->getRootDir()
                     . '/../src/core/Claroline/CoreBundle';
@@ -92,16 +104,6 @@ class PlatformInstallCommand extends ContainerAwareCommand
         $asseticCommand = $this->getApplication()->find('assetic:dump');
         $asseticInput = new ArrayInput(array('command' => 'assetic:dump'));
         $asseticCommand->run($asseticInput, $output);
-        $output->writeln('Generating test template...');
-        $testTemplate = "{$kernel->getRootDir()}/../test/templates/default.zip";
-        $fileSystem->copy($defaultPath, $testTemplate);
-        $arch = new \ZipArchive();
-        $arch->open($testTemplate);
-        file_put_contents(
-            "{$kernel->getRootDir()}/../test/templates/config.yml",
-            $arch->getFromName('config.yml')
-        );
-        $arch->close();
         $output->writeln('Done');
     }
 }

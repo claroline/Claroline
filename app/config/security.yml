@@ -16,7 +16,8 @@ security:
             security: false
         main:
             pattern: ^/
-            form_login: ~
+            form_login: 
+              failure_handler: claroline.security.ajax_authentication_failure_handler
             anonymous: ~
             logout: true
             switch_user: { role: ROLE_ADMIN, parameter: _switch }

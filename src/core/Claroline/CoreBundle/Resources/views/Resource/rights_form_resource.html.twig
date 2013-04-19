@@ -10,8 +10,10 @@
             {% block createHeader %}{% endblock %}
         </tr>
         {% for permissions in roleRights %}
-        <tr class="role-permissions">
-            <td>{{ permissions.getRole().getTranslationKey()|trans({}, 'platform') }}</td>
+        <tr class="role-permissions" data-name="{{ permissions.getRole().getTranslationKey() }}">
+            <td>
+                {{ permissions.getRole().getTranslationKey()|trans({}, 'platform') }}
+            </td>
             <td>
                 <input name="roleRights[{{ permissions.getId() }}][delete]" type="checkbox"
                 {% if (permissions.canDelete()) and (resource.isDeletable()) %}

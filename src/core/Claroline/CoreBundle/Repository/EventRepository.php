@@ -45,4 +45,19 @@ class EventRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function findByUserId()
+    {
+        $dql = "
+            SELECT e 
+            FROM Claroline\CoreBundle\Entity\Event e
+            WHERE e.user = :userId
+            AND e.allDay = :allDay
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('userId', $userId);
+        $query->setParameter('allDay', $allDay);
+
+        return $query->getResult();
+    }
 }
