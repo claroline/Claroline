@@ -175,13 +175,18 @@ class ToolListener
         $formBuilder = $this->container->get('form.factory')->createBuilder(new CalendarType(), $event, array());
         $em = $this->container-> get('doctrine.orm.entity_manager');
         $usr = $this->container-> get('security.context')-> getToken()-> getUser();
-        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, 1);
+        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findAll();
+        $cours = array();
+        foreach ($listEvents as $event ) {
+            $cours[] = $event->getWorkspace()->getName();
+        }
 
         return $this->container->get('templating')->render(
             'ClarolineCoreBundle:Tool/desktop/calendar:calendar.html.twig',
             array(
                 'form' => $formBuilder-> getForm()-> createView(),
                 'listEvents' => $listEvents,
+                'cours' => array_unique($cours)
                 )
         );
     }
