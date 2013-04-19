@@ -132,7 +132,7 @@ class LayoutController extends Controller
             }
         }
 
-        $workspaceId = substr($impersonatedRole, -2);
+        $workspaceId = substr($impersonatedRole, strripos($impersonatedRole, '_') + 1);
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
             ->find($workspaceId);
         $roleEntity = $em->getRepository('ClarolineCoreBundle:Role')
