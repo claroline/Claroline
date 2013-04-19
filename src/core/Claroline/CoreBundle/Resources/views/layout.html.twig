@@ -32,7 +32,7 @@
         {% endif %}
 
         <div id="grid" class="container container-fluid">
-            {% if is_granted('ROLE_USURPATE_WORKSPACE_ROLE') %}
+            {% if has_role('ROLE_USURPATE_WORKSPACE_ROLE') %}
                 {% render controller('ClarolineCoreBundle:Layout:renderWarningImpersonation') %}
             {% endif %}
             {% block sectionHeader %}
