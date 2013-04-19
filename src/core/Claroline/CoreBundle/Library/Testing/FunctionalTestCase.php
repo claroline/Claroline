@@ -54,7 +54,9 @@ abstract class FunctionalTestCase extends FixtureTestCase
     public function addResourceTypeToTemplate($name)
     {
         $container = $this->client->getContainer();
-        $builder = TemplateBuilder::fromTemplate($container->getParameter('claroline.param.templates_directory')."default.zip");
+        $builder = TemplateBuilder::fromTemplate(
+            $container->getParameter('claroline.param.templates_directory')."default.zip"
+        );
         $builder->addResourceType($name, 'ROLE_WS_MANAGER');
         $builder->write();
     }

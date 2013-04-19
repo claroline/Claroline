@@ -120,7 +120,8 @@ class MessageRepository extends NestedTreeRepository
     )
     {
         $isRemovedText = ($isRemoved) ? 'true' : 'false';
-        $search = strtoupper($search);
+        $upperSearch = strtoupper($search);
+
         $dql = "SELECT um, m, u FROM Claroline\CoreBundle\Entity\UserMessage um
             JOIN um.user u
             JOIN um.message m
@@ -135,7 +136,7 @@ class MessageRepository extends NestedTreeRepository
             ORDER BY m.date DESC";
 
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('search', "%{$search}%");
+        $query->setParameter('search', "%{$upperSearch}%");
         $query->setFirstResult($offset)
             ->setMaxResults($limit);
         $paginator = new Paginator($query, true);

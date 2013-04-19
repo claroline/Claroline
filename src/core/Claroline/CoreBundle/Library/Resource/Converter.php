@@ -108,7 +108,7 @@ class Converter
             for ($j = 0, $rolesCount = count($roles); $j < $rolesCount; $j++) {
                 $rolesString .= "{$this->translator->trans($roles[$j]->getTranslationKey(), array(), 'platform')}";
                 if ($j <= $rolesCount - 2) {
-                    $rolesString .=' ,';
+                    $rolesString .= ' ,';
                 }
             }
 
@@ -136,7 +136,7 @@ class Converter
             for ($j = 0, $rolesCount = count($roles); $j < $rolesCount; $j++) {
                 $rolesString .= "{$this->translator->trans($roles[$j]->getTranslationKey(), array(), 'platform')}";
                 if ($j <= $rolesCount - 2) {
-                    $rolesString .=' ,';
+                    $rolesString .= ' ,';
                 }
             }
 

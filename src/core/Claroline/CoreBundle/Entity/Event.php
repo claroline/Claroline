@@ -25,12 +25,12 @@ class Event
     private $title;
 
     /**
-     * @ORM\Column(name="start", type="integer",nullable=true)
+     * @ORM\Column(name="start_date", type="integer",nullable=true)
      */
     private $start;
 
     /**
-     * @ORM\Column(name="end", type="integer" , nullable=true)
+     * @ORM\Column(name="end_date", type="integer" , nullable=true)
      */
     private $end;
 
@@ -57,7 +57,7 @@ class Event
     /**
      * @ORM\Column(name="allday", type="boolean" , nullable=true)
      */
-    private $allDay = true;
+    private $allDay;
 
      /**
      * @ORM\Column(name="priority", type="string" , nullable=true)

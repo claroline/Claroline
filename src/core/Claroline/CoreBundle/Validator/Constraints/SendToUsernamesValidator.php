@@ -13,7 +13,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 class SendToUsernamesValidator extends ConstraintValidator
 {
     private $em;
-    
+
     /**
      * @DI\InjectParams({
      *     "em" = @DI\Inject("doctrine.orm.entity_manager")
@@ -37,8 +37,6 @@ class SendToUsernamesValidator extends ConstraintValidator
                 $this->context->addViolation($constraint->message, array('{{ username }}' => $username));
             }
         }
-
-        return;
     }
 }
 

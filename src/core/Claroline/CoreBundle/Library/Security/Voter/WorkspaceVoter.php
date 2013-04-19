@@ -73,7 +73,14 @@ class WorkspaceVoter implements VoterInterface
         $manager = $this->em->getRepository('ClarolineCoreBundle:Role')->findManagerRole($workspace);
 
         if ($action === 'DELETE') {
-            return $token->getUser()->hasRole($manager->getName()) ? true : false;
+            $roles = $this->ut->getRoles($token);
+            foreach ($roles as $role) {
+                if ($role === $manager->getName()) {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         $tools = $this->em
@@ -81,7 +88,6 @@ class WorkspaceVoter implements VoterInterface
             ->findByRolesAndWorkspace($this->ut->getRoles($token), $workspace, true);
 
         foreach ($tools as $tool) {
-
             if ($tool->getName() === $action) {
                 return true;
             }

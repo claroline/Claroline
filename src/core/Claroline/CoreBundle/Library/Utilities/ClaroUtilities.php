@@ -80,8 +80,10 @@ class ClaroUtilities
             's' => $secs % 60
             );
 
-        foreach($bit as $k => $v) {
-            if($v > 0)$ret[] = $v . $k;
+        foreach ($bit as $k => $v) {
+            if ($v > 0) {
+                $ret[] = $v . $k;
+            }
         }
 
         return join(' ', $ret);

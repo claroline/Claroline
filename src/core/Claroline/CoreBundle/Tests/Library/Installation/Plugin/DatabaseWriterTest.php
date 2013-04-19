@@ -98,6 +98,7 @@ class DatabaseWriterTest extends FunctionalTestCase
             SELECT rt FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
             JOIN rt.plugin p
             WHERE p.bundleName = 'WithCustomResources'
+            ORDER BY rt.name
         ";
         $pluginResourceTypes = $this->em->createQuery($dql)->getResult();
 
@@ -128,7 +129,7 @@ class DatabaseWriterTest extends FunctionalTestCase
         $this->assertEquals($resourceIcon[0]->getIconType()->getIconType(), 'type');
     }
 
-    public function testCustomActionsArePersited()
+    public function testCustomActionsArePersisted()
     {
         $ds = DIRECTORY_SEPARATOR;
         require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}"
@@ -212,7 +213,7 @@ class DatabaseWriterTest extends FunctionalTestCase
         $resourceA->setMimeType('foo/bar');
 
         $manager = $this->container->get('claroline.resource.manager');
-        $manager->create($resourceA, $this->getDirectory('user')->getId(), 'ResourceA', $this->getUser('user'));
+        $manager->create($resourceA, $this->getDirectory('user')->getId(), 'resourceA', $this->getUser('user'));
         $resource = $this->em
             ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->findOneByName('resourceA');
