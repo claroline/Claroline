@@ -23,11 +23,11 @@ class ResourceRightsRepository extends EntityRepository
 
         $dql = '
             SELECT
-                MAX (rrw.canEdit) as canEdit,
-                MAX (rrw.canOpen) as canOpen,
-                MAX (rrw.canDelete) as canDelete,
-                MAX (rrw.canCopy) as canCopy,
-                MAX (rrw.canExport) as canExport
+                MAX (CASE rrw.canEdit WHEN true THEN 1 ELSE 0 END) as canEdit,
+                MAX (CASE rrw.canOpen WHEN true THEN 1 ELSE 0 END) as canOpen,
+                MAX (CASE rrw.canDelete WHEN true THEN 1 ELSE 0 END) as canDelete,
+                MAX (CASE rrw.canCopy WHEN true THEN 1 ELSE 0 END) as canCopy,
+                MAX (CASE rrw.canExport WHEN true THEN 1 ELSE 0 END) as canExport
             FROM Claroline\CoreBundle\Entity\Resource\ResourceRights rrw
             JOIN rrw.role role
             JOIN rrw.resource resource

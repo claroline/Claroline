@@ -38,9 +38,9 @@ class CalendarControllerTest extends FunctionalTestCase
                     'description' => 'ghhkkgf',
                     'allDay' => true,
                     'priority' => '#01A9DB'
-                   ),
-                  'date' => 'Thu Jan 24 2013 00:00:00 GMT+0100'
-                )
+                ),
+                'date' => 'Thu Jan 24 2013 00:00:00 GMT+0100'
+            )
         );
         $status = $this->client->request('GET', "/workspaces/tool/calendar/{$workspaceId}/show");
         $status = $this->client->getResponse()->getStatusCode();
@@ -57,15 +57,15 @@ class CalendarControllerTest extends FunctionalTestCase
             array(
                 'calendar_form' => array(
                     'title' => 'foo',
-                   'end' => '22-02-2013',
+                    'end' => '22-02-2013',
                     'description' => 'ghhkkgf',
                     'allDay' => true,
                     'priority' => '#01A9DB'
-                   ),
-                  'date' => 'Thu Jan 24 2013 00:00:00 GMT+0100'
-                )
+                ),
+                'date' => 'Thu Jan 24 2013 00:00:00 GMT+0100'
+            )
         );
-            
+
         $status = $this->client->getResponse()->getStatusCode();
         $this->assertEquals(200, $status);
     }
@@ -83,9 +83,9 @@ class CalendarControllerTest extends FunctionalTestCase
                     'description' => 'ghhkkgf',
                     'end' => '22-02-2013',
                     'allDay' => true
-                   ),
-                  'date' => 'Thu Jan 24 2013 00:00:00 GMT+0100'
-                )
+                ),
+                'date' => 'Thu Jan 24 2013 00:00:00 GMT+0100'
+            )
         );
 
         $data = $this->client->getResponse()->getContent();
@@ -94,8 +94,8 @@ class CalendarControllerTest extends FunctionalTestCase
             'POST',
             "/workspaces/tool/calendar/{$workspaceId}/delete",
             array(
-                    'id' => $data['id']
-                )
+                'id' => $data['id']
+            )
         );
 
         $status = $this->client->getResponse()->getStatusCode();
@@ -116,9 +116,9 @@ class CalendarControllerTest extends FunctionalTestCase
                     'description' => 'ghhkkgf',
                     'end' => '22-02-2013',
                     'allDay' => true
-                   ),
-                  'date' => 'Thu Jan 24 2013 00:00:00 GMT+0100'
-                )
+                ),
+                'date' => 'Thu Jan 24 2013 00:00:00 GMT+0100'
+            )
         );
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $dataForm = array(
@@ -163,14 +163,14 @@ class CalendarControllerTest extends FunctionalTestCase
             "/workspaces/tool/calendar/{$workspaceId}/update",
             array(
                 'calendar_form' => array(
-                'title' => 'foo',
-                'description' => 'ghhkkgf',
-                'end' => '22-02-2013',
-                'allDay' => true,
-                'priority' => '#01A9DB'
+                    'title' => 'foo',
+                    'description' => 'ghhkkgf',
+                    'end' => '22-02-2013',
+                    'allDay' => true,
+                    'priority' => '#01A9DB'
                 ),
                 'id' => $content['id']
-                )
+            )
         );
         $status = $this->client->getResponse()->getStatusCode();
         $this->assertEquals(200, $status);

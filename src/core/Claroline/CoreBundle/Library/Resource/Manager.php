@@ -359,7 +359,7 @@ class Manager
                     $content .= "{$unknown}, ";
                 }
                 $content .= "were not found";
-                
+
                 throw new \Exception($content);
             }
 
