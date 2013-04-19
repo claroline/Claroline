@@ -5,23 +5,24 @@
  * PHPMD, PHPCS and PHPCPD to be installed and reachable via the command-line.
  */
 
-$rootDirectory = realpath(__DIR__ . "/../..");
+$rootDirectory = realpath(__DIR__ . '/../..');
+$target = "{$rootDirectory}/src" . (isset($argv[1]) ? "/{$argv[1]}" : '');
 
 echo "\n********************************************************************************";
 echo "\n******************************** Mess detector *********************************";
 echo "\n********************************************************************************\n\n";
-system("phpmd {$rootDirectory}/src text {$rootDirectory}/app/build/tools/phpmd.xml");
+system("phpmd {$target} text {$rootDirectory}/app/build/tools/phpmd.xml");
 echo "\n********************************************************************************";
 echo "\n******************************** Code sniffer **********************************";
 echo "\n********************************************************************************\n\n";
-system("phpcs --extensions=php --standard={$rootDirectory}/app/build/tools/phpcs.xml {$rootDirectory}/src");
+system("phpcs --extensions=php --standard={$rootDirectory}/app/build/tools/phpcs.xml {$target}");
 echo "\n********************************************************************************";
 echo "\n***************************** Copy/paste detector ******************************";
 echo "\n********************************************************************************\n\n";
-system("phpcpd {$rootDirectory}/src");
+system("phpcpd {$target}");
 echo "\n********************************************************************************";
 echo "\n*********************************** JSHint *************************************";
 echo "\n********************************************************************************\n\n";
-system("jshint --config {$rootDirectory}/app/build/tools/jshint.json {$rootDirectory}/src");
+system("jshint --config {$rootDirectory}/app/build/tools/jshint.json {$target}");
 echo "\n********************************************************************************";
 echo "\n********************************************************************************\n\n";
