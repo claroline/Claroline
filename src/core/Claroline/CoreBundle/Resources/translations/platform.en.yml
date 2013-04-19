@@ -248,6 +248,7 @@ validate: Validate
 view: View
 visible: Visible
 visitor: Visitor
+warning_workspace_impersonation: You are connectecd as %role% from the workspace %workspace.
 widget_settings: 'Widget settings'
 widgets: Widgets
 workspace: Workspace

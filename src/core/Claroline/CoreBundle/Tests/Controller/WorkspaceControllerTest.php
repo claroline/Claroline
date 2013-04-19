@@ -267,7 +267,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $crawler = $this->client->request('GET', "/workspaces");
         $this->assertEquals(1, $crawler->filter('.row-workspace')->count());
     }
-/*
+
     public function testUserCanCreateWorkspaceTag()
     {
         $this->loadUserData(array('user' => 'user'));
@@ -534,5 +534,5 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
             ->findOneAdminByWorkspaceAndTag($pws, $tag);
         $this->assertNotNull($relWsTag);
-    }*/
+    }
 }

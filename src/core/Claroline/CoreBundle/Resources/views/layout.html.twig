@@ -30,7 +30,11 @@
             {% render controller('ClarolineCoreBundle:Layout:topBar') %}
             {% endif %}
         {% endif %}
+
         <div id="grid" class="container container-fluid">
+            {% if has_role('ROLE_USURPATE_WORKSPACE_ROLE') %}
+                {% render controller('ClarolineCoreBundle:Layout:renderWarningImpersonation') %}
+            {% endif %}
             {% block sectionHeader %}
             &nbsp;
             {% endblock %}

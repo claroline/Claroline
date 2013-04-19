@@ -202,7 +202,7 @@ class ParametersControllerTest extends FunctionalTestCase
         $this->markTestSkipped('No event can be caught.');
         $this->registerStubPlugins(array('Valid\WithWidgets\ValidWithWidgets'));
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $newWidget =  $em->getRepository('ClarolineCoreBundle:Widget\Widget')
+        $newWidget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
             ->findOneByName('claroline_testwidget1');
         $pwuId = $this->getUser('john')->getPersonalWorkspace()->getId();
         $this->logUser($this->getUser('john'));
@@ -240,7 +240,7 @@ class ParametersControllerTest extends FunctionalTestCase
         $this->logUser($this->getUser('john'));
         $crawler = $this->client->request('GET', "/workspaces/{$pwuId}/widgets");
         $this->assertEquals(++$countVisibleWidgets, count($crawler->filter('.widget')));
-        $newWidget =  $em->getRepository('ClarolineCoreBundle:Widget\Widget')
+        $newWidget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
             ->findOneByName('claroline_testwidget1');
         $baseConfig = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
             ->findOneBy(array('widget' => $newWidget, 'isDesktop' => false));
@@ -444,8 +444,10 @@ class ParametersControllerTest extends FunctionalTestCase
         $roleCollaborator = $em->getRepository('ClarolineCoreBundle:Role')
             ->findCollaboratorRole($this->getWorkspace('john'));
 
-        $countCheckedTools = $crawler->filter("td[data-role-id={$roleCollaborator->getId()}] input:checked[type='checkbox']");
-        $countUncheckedTools = $crawler->filter("td[data-role-id={$roleCollaborator->getId()}] input:not(:checked[type='checkbox'])");
+        $countCheckedTools = $crawler
+            ->filter("td[data-role-id={$roleCollaborator->getId()}] input:checked[type='checkbox']");
+        $countUncheckedTools = $crawler
+            ->filter("td[data-role-id={$roleCollaborator->getId()}] input:not(:checked[type='checkbox'])");
 
         $this->assertEquals(3, count($countCheckedTools));
         $this->assertEquals(5, count($countUncheckedTools));
@@ -469,21 +471,20 @@ class ParametersControllerTest extends FunctionalTestCase
 
     public function testWorkspaceResourceRightsCreationForm()
     {
+        $this->logUser($this->getUser('john'));
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $managerRole = $em->getRepository('ClarolineCoreBundle:Role')->findManagerRole($this->getWorkspace('john'));
+        $wsId = $this->getWorkspace('john')->getId();
 
-         $this->logUser($this->getUser('john'));
-         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-         $managerRole = $em->getRepository('ClarolineCoreBundle:Role')->findManagerRole($this->getWorkspace('john'));
-         $wsId = $this->getWorkspace('john')->getId();
-
-         $crawler = $this->client->request(
+        $crawler = $this->client->request(
             'GET',
             "/workspaces/tool/properties/{$wsId}/resource/rights/form/role/{$managerRole->getId()}"
-         );
+        );
 
-         $this->assertEquals(
-             5,
-             count($crawler->filter('input:checked[type="checkbox"]'))
-         );
+        $this->assertEquals(
+            5,
+            count($crawler->filter('input:checked[type="checkbox"]'))
+        );
     }
 
     public function testWorkspaceResourceRightsCreationFormAfterPluginInstall()
@@ -501,8 +502,8 @@ class ParametersControllerTest extends FunctionalTestCase
         $managerRole = $em->getRepository('ClarolineCoreBundle:Role')->findManagerRole($this->getWorkspace('john'));
         $wsId = $this->getWorkspace('john')->getId();
         $crawler = $this->client->request(
-           'GET',
-           "/workspaces/tool/properties/{$wsId}/resource/rights/form/role/{$managerRole->getId()}"
+            'GET',
+            "/workspaces/tool/properties/{$wsId}/resource/rights/form/role/{$managerRole->getId()}"
         );
         var_dump($this->client->getResponse()->getContent());
         $this->assertEquals(
@@ -517,8 +518,8 @@ class ParametersControllerTest extends FunctionalTestCase
         $this->logUser($this->getUser('john'));
         $wsId = $this->getWorkspace('john')->getId();
         $crawler = $this->client->request(
-           'GET',
-           "/workspaces/tool/properties/{$wsId}/form/export"
+            'GET',
+            "/workspaces/tool/properties/{$wsId}/form/export"
         );
         $this->assertEquals(1, count($crawler->filter('#workspace_template_form')));
     }
@@ -527,8 +528,8 @@ class ParametersControllerTest extends FunctionalTestCase
     {
         $this->logUser($this->getUser('john'));
         $crawler = $this->client->request(
-           'GET',
-           "/desktop/tool/properties/widget/properties"
+            'GET',
+            "/desktop/tool/properties/widget/properties"
         );
 
         $this->assertEquals(1, count($crawler->filter('#widget-table')));

@@ -158,7 +158,6 @@ class DirectoryListener implements ContainerAwareInterface
      */
     public function onImportTemplate(ImportResourceTemplateEvent $event)
     {
-        var_dump($event->getParent()->getId());
         $config = $event->getConfig();
         $manager = $this->container->get('claroline.resource.manager');
         $directory = new Directory();
