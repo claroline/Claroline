@@ -8,17 +8,17 @@ use Claroline\CoreBundle\Entity\Role;
 abstract class AbstractRoleSubject
 {
     protected $roles;
+    protected $rolesStringAsArray;
 
     public function __construct()
     {
         $this->roles = new ArrayCollection();
+        $this->rolesStringAsArray = array();
     }
 
     /**
      * Adds a role to the subject role collection. This method effectively add
-     * the role only if it isn't in the collection yet, and if it isn't the ancestor
-     * of an already stored role (ex: given a hierarchy ROLE_A -> ROLE_B, adding the
-     * role ROLE_A to a subject who already has the role ROLE_B won't have any effect).
+     * the role only if it isn't in the collection yet.
      *
      * @param Role $role
      */
@@ -44,18 +44,6 @@ abstract class AbstractRoleSubject
     /**
      * Returns the subject's roles as an ArrayCollection of Role objects.
      *
-     * By default, this method will only return the actual stored roles,
-     * which are always the leaf nodes of a hierarchy, if any. For example,
-     * given a hierarchy :
-     *
-     *  ROLE_A
-     *      ROLE_B
-     *          ROLE_C,
-     *
-     * if the current subject has ROLE_C, the returned collection will only
-     * include ROLE_C. But if the first parameter is set to true, the collection
-     * will also contain the ancestors of ROLE_C, i.e. ROLE_B and ROLE_A.
-     *
      * @param boolean $includeAncestorRoles
      *
      * @return ArrayCollection[Role]
@@ -66,8 +54,7 @@ abstract class AbstractRoleSubject
     }
 
     /**
-     * Checks if the subject has a given role. This method will explore
-     * role hierarchies if necessary.
+     * Checks if the subject has a given role.
      *
      * @param string $roleName
      *
@@ -87,6 +74,10 @@ abstract class AbstractRoleSubject
      */
     public function getRoles()
     {
+        if (count($this->rolesStringAsArray) > 0) {
+            return $this->rolesStringAsArray;
+        }
+
         $roleNames = array();
 
         foreach ($this->getOwnedRoles(true) as $role) {

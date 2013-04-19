@@ -80,7 +80,6 @@ home: Accueil
 id: Id
 informations: Informations
 instructions: Consignes
-The username {{ username }} does not exist.: L'utilisateur {{ username }} n'existe pas.
 last_name: Nom
 link: Lien
 list_groups: 'Lister les groupes'
@@ -208,7 +207,7 @@ settings: Paramètres
 show: Voir
 show_as_admin: 'Voir comme admin'
 show_as_user: 'Voir comme utilisateur'
-show_as: 'Voir comme'
+show_as: 'Voir en tant que'
 show_profile: 'Voir le profile'
 steal_session: 'Voler la session'
 switch: Echanger
@@ -219,6 +218,8 @@ text_form_name: Nom
 text_form_shareType: Redistribution
 text_form_text: Texte
 to: Jusque
+tool_form_name : "Nom"
+tool_form_displayName : "Nom affiché"
 to_message: A
 today: 'Aujourd''hui'
 tool: Outil
@@ -248,6 +249,7 @@ validate: Valider
 view: Voir
 visible: Visible
 visitor: Visiteur
+warning_workspace_impersonation: Vous êtes connectés en tant que %role% du workspace %workspace%.
 widget_settings: 'Paramètres des widgets'
 widgets: Widgets
 workspace: 'Espace d''activités'

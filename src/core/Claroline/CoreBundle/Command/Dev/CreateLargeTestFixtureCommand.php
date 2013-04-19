@@ -22,12 +22,36 @@ class CreateLargeTestFixtureCommand extends ContainerAwareCommand
             ->setDescription('Fills the database with a large amount of data.');
         $this->setDefinition(
             array(
-                new InputArgument('number_user', InputArgument::REQUIRED, 'The number of user.'),
-                new InputArgument('number_workspace', InputArgument::REQUIRED, 'The number of workspace.'),
-                new InputArgument('number_directory', InputArgument::REQUIRED, 'The number of directory per level.'),
-                new InputArgument('number_file', InputArgument::REQUIRED, 'The number of file per level (recommanded: 5).'),
-                new InputArgument('depth', InputArgument::REQUIRED, 'The depth of the data tree(s) (recommanded: 2).'),
-                new InputArgument('number_roots', InputArgument::REQUIRED, 'The number of roots.')
+                new InputArgument(
+                    'number_user',
+                    InputArgument::REQUIRED,
+                    'The number of user.'
+                ),
+                new InputArgument(
+                    'number_workspace',
+                    InputArgument::REQUIRED,
+                    'The number of workspace.'
+                ),
+                new InputArgument(
+                    'number_directory',
+                    InputArgument::REQUIRED,
+                    'The number of directory per level.'
+                ),
+                new InputArgument(
+                    'number_file',
+                    InputArgument::REQUIRED,
+                    'The number of file per level (recommanded: 5).'
+                ),
+                new InputArgument(
+                    'depth',
+                    InputArgument::REQUIRED,
+                    'The depth of the data tree(s) (recommanded: 2).'
+                ),
+                new InputArgument(
+                    'number_roots',
+                    InputArgument::REQUIRED,
+                    'The number of roots.'
+                )
             )
         );
     }

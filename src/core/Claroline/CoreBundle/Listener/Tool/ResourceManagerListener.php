@@ -156,10 +156,12 @@ class ResourceManagerListener
                 $dataResources = $newEvent->getConfig();
 
                 if ($dataResources === null) {
-                    throw new \Exception("The event resource_{$resource['type']}_to_template did not return any config");
+                    throw new \Exception(
+                        "The event resource_{$resource['type']}_to_template did not return any config"
+                    );
                 }
 
-               foreach ($roles as $role) {
+                foreach ($roles as $role) {
                     $perms = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
                         ->findMaximumRights(array($role->getName()), $root);
                     $perms['canCreate'] = array();

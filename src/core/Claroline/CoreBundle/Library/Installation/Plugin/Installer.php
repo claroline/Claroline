@@ -5,10 +5,13 @@ namespace Claroline\CoreBundle\Library\Installation\Plugin;
 use \RuntimeException;
 use \LogicException;
 use Symfony\Component\HttpKernel\KernelInterface;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * This class is used to perform the (un-)installation of a plugin. It uses
  * several dedicated components to load, validate and register the plugin.
+ *
+ * @DI\Service("claroline.plugin.installer")
  */
 class Installer
 {
@@ -26,6 +29,14 @@ class Installer
      * @param Migrator          $migrator
      * @param Recorder          $recorder
      * @param KernelInterface   $kernel
+     *
+     * @DI\InjectParams({
+     *     "loader" = @DI\Inject("claroline.plugin.loader"),
+     *     "validator" = @DI\Inject("claroline.plugin.validator"),
+     *     "migrator" = @DI\Inject("claroline.plugin.migrator"),
+     *     "recorder" = @DI\Inject("claroline.plugin.recorder"),
+     *     "kernel" = @DI\Inject("kernel")
+     * })
      */
     public function __construct(
         Loader $loader,

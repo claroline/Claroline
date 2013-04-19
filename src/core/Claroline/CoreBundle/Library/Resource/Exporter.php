@@ -9,19 +9,30 @@ use Claroline\CoreBundle\Library\Resource\Utilities;
 use Claroline\CoreBundle\Library\Event\DownloadResourceEvent;
 use Claroline\CoreBundle\Library\Event\ResourceLogEvent;
 use Symfony\Component\Security\Core\SecurityContext;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.resource.exporter")
+ */
 class Exporter
 {
-
-    /* @var EntityManager */
+    /** @var EntityManager */
     private $em;
-    /* @var EventDispatcher */
+    /** @var EventDispatcher */
     private $ed;
-    /* @var Utilities */
+    /** @var Utilities */
     private $ut;
-    /* @var SecurityContext */
+    /** @var SecurityContext */
     private $sc;
 
+    /**
+     * @DI\InjectParams({
+     *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "ed" = @DI\Inject("event_dispatcher"),
+     *     "ut" = @DI\Inject("claroline.resource.utilities"),
+     *     "sc" = @DI\Inject("security.context")
+     * })
+     */
     public function __construct(EntityManager $em, EventDispatcher $ed, Utilities $ut, SecurityContext $sc)
     {
         $this->em = $em;

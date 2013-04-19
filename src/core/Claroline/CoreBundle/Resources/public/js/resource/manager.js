@@ -910,11 +910,6 @@
         parameters.pickerCallback = parameters.pickerCallback || function () {};
         parameters.appPath = parameters.appPath || '';
         parameters.webPath = parameters.webPath || '';
-        $('body').ajaxError(function (event, jqXHR) {
-            if (jqXHR.status !== 0 && jqXHR.readyState !== 0) {
-                alert('Error ' + jqXHR.status + ' : ' + jqXHR.statusText);
-            }
-        });
         manager.Controller.initialize(parameters);
     };
 

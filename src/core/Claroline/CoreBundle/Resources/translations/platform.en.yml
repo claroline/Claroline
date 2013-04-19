@@ -80,7 +80,6 @@ home: Home
 id: Id
 informations: Informations
 instructions: Instructions
-invalid_{{ username }}: The user {{ username }} does not exist.
 last_name: 'Last name'
 link: Link
 list_groups: 'List groups'
@@ -222,6 +221,8 @@ to_message: To
 today: Today
 tool: Tool
 tools: Tools
+tool_form_name : "tool name"
+tool_form_displayName : "Displayed tool name"
 trash : Trash
 type: Type
 type_s: Type(s)
@@ -247,6 +248,7 @@ validate: Validate
 view: View
 visible: Visible
 visitor: Visitor
+warning_workspace_impersonation: You are connectecd as %role% from the workspace %workspace.
 widget_settings: 'Widget settings'
 widgets: Widgets
 workspace: Workspace

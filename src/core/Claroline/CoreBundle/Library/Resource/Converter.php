@@ -6,7 +6,11 @@ use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Library\Security\Utilities as SecurityUtilities;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.resource.converter")
+ */
 class Converter
 {
     /* @var EntityManager */
@@ -14,6 +18,13 @@ class Converter
     private $ut;
     private $translator;
 
+    /**
+     * @DI\InjectParams({
+     *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "ut" = @DI\Inject("claroline.security.utilities"),
+     *     "translator" = @DI\Inject("translator")
+     * })
+     */
     public function __construct(EntityManager $em, SecurityUtilities $ut, $translator)
     {
         $this->em = $em;
@@ -97,7 +108,7 @@ class Converter
             for ($j = 0, $rolesCount = count($roles); $j < $rolesCount; $j++) {
                 $rolesString .= "{$this->translator->trans($roles[$j]->getTranslationKey(), array(), 'platform')}";
                 if ($j <= $rolesCount - 2) {
-                    $rolesString .=' ,';
+                    $rolesString .= ' ,';
                 }
             }
 
@@ -125,7 +136,7 @@ class Converter
             for ($j = 0, $rolesCount = count($roles); $j < $rolesCount; $j++) {
                 $rolesString .= "{$this->translator->trans($roles[$j]->getTranslationKey(), array(), 'platform')}";
                 if ($j <= $rolesCount - 2) {
-                    $rolesString .=' ,';
+                    $rolesString .= ' ,';
                 }
             }
 

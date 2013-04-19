@@ -169,6 +169,11 @@ class DesktopParametersController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $user = $this->get('security.context')->getToken()->getUser();
+        $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
+            ->find($toolId);
+        if ($tool->getName() === 'parameters') {
+            throw new \Exception('You cannot remove the parameter tool from the desktop.');
+        }
         $desktopTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
             ->findOneBy(array('user' => $user, 'tool' => $toolId));
         $em->remove($desktopTool);
