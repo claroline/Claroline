@@ -1,4 +1,4 @@
-{% if log.getDetails().receiver_user is defined %}
+{% if log.getDetails().receiverUser is defined %}
     <h4>{{ ('log_receiver_user')|trans({}, 'platform') }}</h4>
 
     {% if log.getReceiver() and log.getDoer() and log.getReceiver().getId() == log.getDoer().getId() %}
@@ -9,9 +9,9 @@
     {% else %}
         <dl class="dl-horizontal">
             <dt>{{ ('last_name')|trans({}, 'platform') }}</dt>
-            <dd>{{ log.getDetails().receiver_user.first_name }}</dd>
+            <dd>{{ log.getDetails().receiverUser.firstName }}</dd>
             <dt>{{ ('first_name')|trans({}, 'platform') }}</dt>
-            <dd>{{ log.getDetails().receiver_user.last_name }}</dd>
+            <dd>{{ log.getDetails().receiverUser.lastName }}</dd>
         </dl>
     {% endif %}
 {% endif %}

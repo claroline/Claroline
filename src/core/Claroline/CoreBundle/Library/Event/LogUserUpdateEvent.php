@@ -18,10 +18,10 @@ class LogUserUpdateEvent extends LogGenericEvent
         parent::__construct(
             self::ACTION,
             array(
-                'receiver_user' => array(
-                    'first_name' => $receiver->getFirstName(),
-                    'last_name' => $receiver->getLastName(),
-                    'change_set' => $changeSet
+                'receiverUser' => array(
+                    'firstName' => $receiver->getFirstName(),
+                    'lastName' => $receiver->getLastName(),
+                    'changeSet' => $changeSet
                 )
             ),
             $receiver

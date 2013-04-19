@@ -14,9 +14,9 @@ class LogUserCreateEvent extends LogGenericEvent
         parent::__construct(
             self::ACTION,
             array(
-                'receiver_user' => array(
-                    'last_name' => $receiver->getLastName(),
-                    'first_name' => $receiver->getFirstName()
+                'receiverUser' => array(
+                    'lastName' => $receiver->getLastName(),
+                    'firstName' => $receiver->getFirstName()
                 )
             ),
             $receiver

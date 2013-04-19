@@ -20,7 +20,7 @@ class LogWorkspaceRoleUpdateEvent extends LogGenericEvent
             array(
                 'role' => array(
                     'name' => $role->getName(),
-                    'change_set' => $changeSet
+                    'changeSet' => $changeSet
                 ),
                 'workspace' => array(
                     'name' => $role->getWorkspace()->getName()

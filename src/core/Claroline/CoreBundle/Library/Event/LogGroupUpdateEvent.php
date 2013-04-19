@@ -18,9 +18,9 @@ class LogGroupUpdateEvent extends LogGenericEvent
         parent::__construct(
             self::ACTION,
             array(
-                'receiver_group' => array(
+                'receiverGroup' => array(
                     'name' => $receiverGroup->getName(),
-                    'change_set' => $changeSet
+                    'changeSet' => $changeSet
                 )
             ),
             null,

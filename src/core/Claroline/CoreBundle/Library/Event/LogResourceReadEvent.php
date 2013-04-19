@@ -22,8 +22,8 @@ class LogResourceReadEvent extends LogGenericEvent implements LogNotRepeatable
                     'name' => $resource->getWorkspace()->getName()
                 ),
                 'owner' => array(
-                    'last_name' => $resource->getCreator()->getLastName(),
-                    'first_name' => $resource->getCreator()->getFirstName()
+                    'lastName' => $resource->getCreator()->getLastName(),
+                    'firstName' => $resource->getCreator()->getFirstName()
                 )
             ),
             null,

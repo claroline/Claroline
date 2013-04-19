@@ -158,6 +158,8 @@ log_old_workspace: 'Old workspace'
 log_has_not_changed: 'Has not changed'
 log_copy_source: 'Copy source'
 log_workspace_source: 'Workspace source'
+firstName: First name
+lastName: Last name
 can_open: 'Right to open'
 can_copy: 'Right to copy'
 can_delete: 'Right to delete'

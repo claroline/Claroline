@@ -16,9 +16,9 @@
     {% else %}
         <dl class="dl-horizontal">
             <dt>{{ ('last_name')|trans({}, 'platform') }}</dt>
-            <dd>{{ log.getDetails().owner.first_name }}</dd>
+            <dd>{{ log.getDetails().owner.firstName }}</dd>
             <dt>{{ ('first_name')|trans({}, 'platform') }}</dt>
-            <dd>{{ log.getDetails().owner.last_name }}</dd>
+            <dd>{{ log.getDetails().owner.lastName }}</dd>
         </dl>
     {% endif %}
 {% endif %}

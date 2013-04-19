@@ -22,14 +22,14 @@ class LogWorkspaceRoleSubscribeEvent extends LogGenericEvent
         );
 
         if ($receiver !== null) {
-            $details['receiver_user'] = array(
-                'first_name' => $receiver->getFirstName(),
-                'last_name' => $receiver->getLastName()
+            $details['receiverUser'] = array(
+                'firstName' => $receiver->getFirstName(),
+                'lastName' => $receiver->getLastName()
             );
         }
 
         if ($receiverGroup !== null) {
-            $details['receiver_group'] = array(
+            $details['receiverGroup'] = array(
                 'name' => $receiverGroup->getName()
             );
         }

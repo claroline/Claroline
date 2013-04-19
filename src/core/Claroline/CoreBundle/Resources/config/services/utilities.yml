@@ -18,10 +18,5 @@ services:
         arguments:
           - "@kernel"
 
-    claroline.utilities.caml_case_to_underscore__filter_extension:
-        class: Claroline\CoreBundle\Library\Twig\CamlCaseToUnderscoreFilterExtension
-        tags:
-            - { name: twig.extension }
-
     claroline.utilities.misc:
         class: Claroline\CoreBundle\Library\Utilities\ClaroUtilities
