@@ -25,12 +25,12 @@ class Event
     private $title;
 
     /**
-     * @ORM\Column(name="start", type="integer",nullable=true)
+     * @ORM\Column(name="start_date", type="integer",nullable=true)
      */
     private $start;
 
     /**
-     * @ORM\Column(name="end", type="integer" , nullable=true)
+     * @ORM\Column(name="end_date", type="integer" , nullable=true)
      */
     private $end;
 

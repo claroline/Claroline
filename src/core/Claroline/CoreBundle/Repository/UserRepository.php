@@ -127,50 +127,31 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
     public function findWorkspaceOutsidersByName($search, AbstractWorkspace $workspace, $offset = null, $limit = null)
     {
-        $search = strtoupper($search);
+        $upperSearch = strtoupper($search);
 
         $dql = "
             SELECT u, ws, r FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.personalWorkspace ws
-            LEFT JOIN u.roles r WITH r IN (
-                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE."
-            )
-            WHERE UPPER(u.lastName) LIKE :search
-            AND u NOT IN
+            LEFT JOIN u.personalWorkspace ws
+            LEFT JOIN u.roles r
+            WITH r IN (SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE.")
+            WHERE u NOT IN
             (
-            SELECT user_1 FROM Claroline\CoreBundle\Entity\User user_1
-            LEFT JOIN user_1.roles role_1
-            WITH role_1 IN (
-                SELECT pr2 from Claroline\CoreBundle\Entity\Role pr2 WHERE pr2.roleType = ".Role::WS_ROLE."
+                SELECT us FROM Claroline\CoreBundle\Entity\User us
+                LEFT JOIN us.roles wr WITH wr IN (
+                    SELECT pr2 from Claroline\CoreBundle\Entity\Role pr2 WHERE pr2.roleType = ".Role::WS_ROLE."
+                )
+                LEFT JOIN wr.workspace w
+                WHERE w.id = :id
             )
-            JOIN role_1.workspace workspace_1
-            WHERE workspace_1.id = :id
-            )
-            OR UPPER(u.firstName) LIKE :search
-            AND u NOT IN
-            (
-            SELECT user_2 FROM Claroline\CoreBundle\Entity\User user_2
-            LEFT JOIN user_2.roles role_2 WITH role_2 IN (
-                SELECT pr3 from Claroline\CoreBundle\Entity\Role pr3 WHERE pr3.roleType = ".Role::WS_ROLE."
-            )
-            JOIN role_2.workspace workspace_2
-            WHERE workspace_2.id = :id
-            )
-            OR UPPER(u.username) LIKE :search
-            AND u NOT IN
-            (
-            SELECT user_3 FROM Claroline\CoreBundle\Entity\User user_3
-            LEFT JOIN user_3.roles role_3 WITH role_3 IN (
-                SELECT pr4 from Claroline\CoreBundle\Entity\Role pr4 WHERE pr4.roleType = ".Role::WS_ROLE."
-            )
-            JOIN role_3.workspace workspace_3
-            WHERE workspace_3.id = :id
+            AND ( UPPER(u.firstName) LIKE :search
+                OR UPPER(u.lastName) LIKE :search
+                OR UPPER(u.username) LIKE :search
             )
         ";
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('id', $workspace->getId())
-            ->setParameter('search', "%{$search}%")
+            ->setParameter('search', "%{$upperSearch}%")
             ->setFirstResult($offset)
             ->setMaxResults($limit);
 
@@ -241,16 +222,19 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      */
     public function findByName($search, $offset = null, $limit = null)
     {
+        $upperSearch = strtoupper($search);
+
         $dql = "
             SELECT u, r, pws FROM Claroline\CoreBundle\Entity\User u
             JOIN u.roles r
             JOIN u.personalWorkspace pws
             WHERE UPPER(u.lastName) LIKE :search
             OR UPPER(u.firstName) LIKE :search
-            OR UPPER(u.username) LIKE :search";
+            OR UPPER(u.username) LIKE :search
+        ";
 
         $query = $this->_em->createQuery($dql)
-              ->setParameter('search', "%{$search}%")
+              ->setParameter('search', "%{$upperSearch}%")
               ->setFirstResult($offset)
               ->setMaxResults($limit);
 
@@ -282,6 +266,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
     public function findByNameAndGroup($search, Group $group, $offset = null, $limit = null)
     {
+        $upperSearch = strtoupper($search);
+
         $dql = "
             SELECT DISTINCT u, g, pw, r from Claroline\CoreBundle\Entity\User u
             JOIN u.groups g
@@ -293,10 +279,11 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             AND (UPPER(u.username) LIKE :search
             OR UPPER(u.lastName) LIKE :search
             OR UPPER(u.firstName) LIKE :search)
-        ORDER BY u.id";
+            ORDER BY u.id
+        ";
 
         $query = $this->_em->createQuery($dql)
-            ->setParameter('search', "%{$search}%")
+            ->setParameter('search', "%{$upperSearch}%")
             ->setParameter('groupId', $group->getId())
             ->setFirstResult($offset)
             ->setMaxResults($limit);
@@ -329,6 +316,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
     public function findByWorkspaceAndName(AbstractWorkspace $workspace, $search, $offset = null, $limit = null)
     {
+        $upperSearch = strtoupper($search);
+
         $dql = "
             SELECT u, r, ws FROM Claroline\CoreBundle\Entity\User u
             JOIN u.roles r WITH r IN (
@@ -345,7 +334,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaceId', $workspace->getId())
-              ->setParameter('search', "%{$search}%")
+              ->setParameter('search', "%{$upperSearch}%")
               ->setFirstResult($offset)
               ->setMaxResults($limit);
 

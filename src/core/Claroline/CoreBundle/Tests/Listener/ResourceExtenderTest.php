@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Tests\Stub\Entity\SpecificResource1;
 use Claroline\CoreBundle\Tests\Stub\Entity\SpecificResource2;
+use Claroline\CoreBundle\Entity\Plugin;
 
 class ResourceExtenderTest extends FunctionalTestCase
 {
@@ -55,23 +56,27 @@ class ResourceExtenderTest extends FunctionalTestCase
      * the discriminator map : this is an issue only if resource types are added
      * and resources are retrieved via the entity manager in the same script
      * invocation, which is unlikely to happen in a production context)
+     *
+     * TODO : escape triple '\' for postgresql support
      */
     private function registerSpecificResourceTypes()
     {
+        $plugin = new Plugin();
+        $plugin->setVendorName('test');
+        $plugin->setBundleName('Test');
+        $plugin->setHasOptions(false);
+        $plugin->setIcon('no_icon');
+        $this->em->persist($plugin);
+        $this->em->flush();
+
         $conn = $this->em->getConnection();
 
-        // Insert a fake extension plugin
-        $sql = "INSERT INTO claro_plugin ( vendor_name, short_name)"
-            . " VALUES ( 'test', 'Test')";
-        $conn->exec($sql);
-        $pluginId = $conn->lastInsertId();
-
         // Insert two specific resource types (see test/Stub/Entity)
-        $sql = "INSERT INTO claro_resource_type (plugin_id, class, name, is_browsable)"
-            . " VALUES ({$pluginId}, 'Claroline\\\CoreBundle\\\Tests\\\Stub\\\Entity\\\SpecificResource1',"
-            . " 'SpecificResource1', false),"
-            . " ({$pluginId}, 'Claroline\\\CoreBundle\\\Tests\\\Stub\\\Entity\\\SpecificResource2',"
-            . " 'SpecificResource2', false)";
+        $sql = "INSERT INTO claro_resource_type (plugin_id, class, name, is_browsable, is_exportable)"
+            . " VALUES ({$plugin->getId()}, 'Claroline\\\CoreBundle\\\Tests\\\Stub\\\Entity\\\SpecificResource1',"
+            . " 'SpecificResource1', false, false),"
+            . " ({$plugin->getId()}, 'Claroline\\\CoreBundle\\\Tests\\\Stub\\\Entity\\\SpecificResource2',"
+            . " 'SpecificResource2', false, false)";
         $conn->exec($sql);
     }
 

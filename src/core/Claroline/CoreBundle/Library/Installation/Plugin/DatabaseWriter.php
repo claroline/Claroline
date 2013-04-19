@@ -44,7 +44,6 @@ class DatabaseWriter
         Filesystem $fileSystem,
         $kernelRootDir,
         $templateDir
-
     )
     {
         $this->em = $em;

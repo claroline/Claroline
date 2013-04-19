@@ -44,7 +44,7 @@ class WorkspaceCalendarController extends Controller
 
             if ($form->isValid()) {
 
-                 $date = explode('(', $postData['date']);
+                $date = explode('(', $postData['date']);
                 $event->setStart($date[0]);
 
                 // the end date has to be bigger

@@ -217,7 +217,9 @@ class IconCreator
         $file->move($this->container->getParameter('claroline.param.thumbnails_directory'), $hashName);
         //entity creation
         $icon = new ResourceIcon();
-        $icon->setIconLocation("{$this->container->getParameter('claroline.param.thumbnails_directory')}{$ds}{$hashName}");
+        $icon->setIconLocation(
+            "{$this->container->getParameter('claroline.param.thumbnails_directory')}{$ds}{$hashName}"
+        );
         $icon->setRelativeUrl("thumbnails/{$hashName}");
         $customType = $this->em
             ->getRepository('ClarolineCoreBundle:Resource\IconType')

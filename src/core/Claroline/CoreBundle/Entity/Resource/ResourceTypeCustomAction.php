@@ -23,7 +23,7 @@ class ResourceTypeCustomAction
     protected $action;
 
     /**
-     * @ORM\Column(type="string", length=255, name="async")
+     * @ORM\Column(type="boolean", name="async")
      */
     protected $isAsync;
 
