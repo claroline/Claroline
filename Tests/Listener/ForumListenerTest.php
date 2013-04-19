@@ -25,7 +25,8 @@ class ForumListenerTest extends FunctionalTestCase
             ->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         $this->resetTemplate();
         parent::tearDown();
     }
