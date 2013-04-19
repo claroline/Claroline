@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Listener;
 
 use Claroline\CoreBundle\Library\Security\Token\ViewAsToken;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -47,11 +48,19 @@ class ViewAsListener
                     $this->securityContext->setToken($token);
                 }
             } else {
-                $workspaceId = $request->attributes->get('workspaceId');
+                $workspaceId = substr($viewAs, strripos($viewAs, '_') + 1);
                 if ($this->securityContext->isGranted('ROLE_WS_MANAGER_'.$workspaceId)) {
+                    $role = $this->em->getRepository('ClarolineCoreBundle:Role')->findOneByName($viewAs);
+
+                    if ($role === null) {
+                        throw new \Exception("The role {$viewAs} does not exists");
+                    }
+
                     $token = new ViewAsToken(array('ROLE_USER', $viewAs, 'ROLE_USURPATE_WORKSPACE_ROLE'));
                     $token->setUser($user);
                     $this->securityContext->setToken($token);
+                } else {
+                    throw new AccessDeniedHttpException();
                 }
             }
         }
