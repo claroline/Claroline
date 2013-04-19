@@ -65,9 +65,9 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
             "    resourceType.name as type,{$eol}" .
             "    resourceType.isBrowsable as is_browsable,{$eol}" .
             "    icon.relativeUrl as large_icon,{$eol}" .
-            "    MAX (rights.canExport) as can_export,{$eol}" .
-            "    MAX (rights.canDelete) as can_delete,{$eol}" .
-            "    MAX (rights.canEdit) as can_edit{$eol}" .
+            "    MAX (CASE rights.canExport WHEN true THEN 1 ELSE 0 END) as can_export,{$eol}" .
+            "    MAX (CASE rights.canDelete WHEN true THEN 1 ELSE 0 END) as can_delete,{$eol}" .
+            "    MAX (CASE rights.canEdit WHEN true THEN 1 ELSE 0 END) as can_edit{$eol}" .
             "FROM Claroline\CoreBundle\Entity\Resource\AbstractResource resource{$eol}" .
             "JOIN resource.creator creator{$eol}" .
             "JOIN resource.resourceType resourceType{$eol}" .

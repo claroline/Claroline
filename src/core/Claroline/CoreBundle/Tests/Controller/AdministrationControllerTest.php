@@ -143,7 +143,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $grpAId = $this->getGroup('group_a')->getId();
         $adminId = $this->getUser('admin')->getId();
         $this->client->request(
-            'PUT',
+            'POST',
             "/admin/group/{$grpAId}/users?userIds[]={$adminId}"
         );
         $this->client->request('GET', "/admin/group/{$grpAId}/users/0");
@@ -157,7 +157,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $grpAId = $this->getGroup('group_a')->getId();
         $adminId = $this->getUser('admin')->getId();
         $this->client->request(
-            'PUT',
+            'POST',
             "/admin/group/{$grpAId}/users?userIds[]={$adminId}"
         );
 
