@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Library\Event;
 
-class LogResourceReadEvent extends LogGenericEvent implements NotRepeatableLog
+class LogResourceReadEvent extends LogGenericEvent implements LogNotRepeatable
 {
     const ACTION = 'resource_read';
 
@@ -37,6 +37,6 @@ class LogResourceReadEvent extends LogGenericEvent implements NotRepeatableLog
 
     public function getLogSignature()
     {
-        return $this->resource->getId();
+        return self::ACTION.'_'.$this->resource->getId();
     }
 }

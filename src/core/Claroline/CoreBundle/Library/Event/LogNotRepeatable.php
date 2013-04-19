@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Library\Event;
 
-interface NotRepeatableLog
+interface LogNotRepeatable
 {
     function getLogSignature();
 }
