@@ -70,6 +70,21 @@ claro_workspace_tool_properties:
     prefix: workspaces/tool/properties
     type: annotation
 
+claro_workspace_tool_widgets_properties:
+    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceWidgetParametersController.php"
+    prefix: workspaces/tool/properties
+    type: annotation
+
+claro_workspace_tool_tools_properties:
+    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceToolsParametersController.php"
+    prefix: workspaces/tool/properties
+    type: annotation
+
+claro_workspace_tool_resources_properties:
+    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceResourceParametersController.php"
+    prefix: workspaces/tool/properties
+    type: annotation
+
 claro_workspace_tool_user:
     resource: "@ClarolineCoreBundle/Controller/Tool/UserController.php"
     prefix: workspaces/tool/user_management

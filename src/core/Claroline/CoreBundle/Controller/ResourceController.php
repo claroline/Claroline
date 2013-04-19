@@ -468,7 +468,7 @@ class ResourceController extends Controller
     public function filterAction($directoryId)
     {
         $queryParameters = $this->container->get('request')->query->all();
-        $criteria = $this->buildSearchArray($queryParameters);
+        $criteria = $this->get('claroline.resource.manager')->buildSearchArray($queryParameters);
         $criteria['roots'] = isset($criteria['roots']) ? $criteria['roots'] : array();
         $resourceRepo = $this->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
@@ -559,23 +559,6 @@ class ResourceController extends Controller
         }
 
         return $resource;
-    }
-
-    private function buildSearchArray($queryParameters)
-    {
-        $allowedStringCriteria = array('name', 'dateFrom', 'dateTo');
-        $allowedArrayCriteria = array('roots', 'types');
-        $criteria = array();
-
-        foreach ($queryParameters as $parameter => $value) {
-            if (in_array($parameter, $allowedStringCriteria) && is_string($value)) {
-                $criteria[$parameter] = $value;
-            } elseif (in_array($parameter, $allowedArrayCriteria) && is_array($value)) {
-                $criteria[$parameter] = $value;
-            }
-        }
-
-        return $criteria;
     }
 
     /**
