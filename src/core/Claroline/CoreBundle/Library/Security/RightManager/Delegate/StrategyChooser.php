@@ -5,7 +5,11 @@ namespace Claroline\CoreBundle\Library\Security\RightManager\Delegate;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Library\Security\SecurityException;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.security.right_manager.strategy_chooser")
+ */
 class StrategyChooser
 {
     /** @var TargetDelegateInterface */
@@ -20,6 +24,14 @@ class StrategyChooser
     /** @var SubjectDelegateInterface */
     private $roleDelegate;
 
+    /**
+     * @DI\InjectParams({
+     *     "entityDelegate" = @DI\Inject("claroline.security.right_manager.delegate.entity"),
+     *     "classDelegate" = @DI\Inject("claroline.security.right_manager.delegate.class"),
+     *     "userDelegate" = @DI\Inject("claroline.security.right_manager.delegate.user"),
+     *     "roleDelegate" = @DI\Inject("claroline.security.right_manager.delegate.role")
+     * })
+     */
     public function __construct($entityDelegate, $classDelegate, $userDelegate, $roleDelegate)
     {
         $this->entityDelegate = $entityDelegate;

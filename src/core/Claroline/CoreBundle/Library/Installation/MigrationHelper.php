@@ -3,7 +3,11 @@
 namespace Claroline\CoreBundle\Library\Installation;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.install.migration_helper", public=false)
+ */
 class MigrationHelper
 {
     public function getTablePrefixForBundle(Bundle $bundle)

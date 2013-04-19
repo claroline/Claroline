@@ -8,7 +8,11 @@ use Symfony\Component\Security\Acl\Exception\NoAceFoundException;
 use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Claroline\CoreBundle\Library\Security\RightManager\Delegate\StrategyChooser;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.security.right_manager")
+ */
 class RightManager implements RightManagerInterface
 {
     /** @var AclProvider */
@@ -23,6 +27,12 @@ class RightManager implements RightManagerInterface
     /** @var SubjectDelegateInterface */
     private $currentSubjectStrategy;
 
+    /**
+     * @DI\InjectParams({
+     *     "aclProvider" = @DI\Inject("security.acl.provider"),
+     *     "strategyChooser" = @DI\Inject("claroline.security.right_manager.strategy_chooser")
+     * })
+     */
     public function __construct(AclProvider $aclProvider, StrategyChooser $strategyChooser)
     {
         $this->aclProvider = $aclProvider;

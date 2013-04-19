@@ -1,18 +1,24 @@
 <?php
 
-namespace Claroline\CoreBundle\Twig;
+namespace Claroline\CoreBundle\Library\Twig;
 
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+
+/**
+ * @DI\Service
+ * @DI\Tag("twig.extension")
+ */
 class HomeExtension extends \Twig_Extension
 {
     protected $translator;
 
     /**
-     * Get the injected services.
-     *
-     * @param Symfony\Component\Translation\Translator $translator The Translator service.
-     *
+     * @DI\InjectParams({
+     *     "em" = @DI\Inject("translator")
+     * })
      */
-    public function __construct($translator)
+    public function __construct(Translator $translator)
     {
         $this->translator = $translator;
     }

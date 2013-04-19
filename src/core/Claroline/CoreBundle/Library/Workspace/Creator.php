@@ -11,7 +11,11 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole;
 use Claroline\CoreBundle\Entity\Tool\WorkspaceOrderedTool;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.workspace.creator")
+ */
 class Creator
 {
     private $entityManager;
@@ -20,6 +24,14 @@ class Creator
     private $ed;
     private $translator;
 
+    /**
+     * @DI\InjectParams({
+     *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "rm" = @DI\Inject("claroline.resource.manager"),
+     *     "ed" = @DI\Inject("event_dispatcher"),
+     *     "translator" = @DI\Inject("translator")
+     * })
+     */
     public function __construct(EntityManager $em, Manager $rm, $ed, $translator)
     {
         $this->entityManager = $em;
@@ -151,6 +163,9 @@ class Creator
             $tool = $this->entityManager
                 ->getRepository('ClarolineCoreBundle:Tool\Tool')
                 ->findOneBy(array('name' => $name));
+            if (!$tool->isDisplayableInWorkspace()) {
+                throw new \Exception('The tool ' .$name. 'is not displayable in a workspace');
+            }
             $wot = new WorkspaceOrderedTool();
             $wot->setWorkspace($workspace);
             $wot->setName(
@@ -195,6 +210,5 @@ class Creator
         $wtr->setRole($role);
         $wtr->setWorkspaceOrderedTool($wot);
         $this->entityManager->persist($wtr);
-//        $this->entityManager->flush();
     }
 }
