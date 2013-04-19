@@ -14,6 +14,7 @@ class ForumListenerTest extends FunctionalTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->addResourceTypeToTemplate('claroline_forum');
         $this->loadPlatformRoleData();
         $this->loadUserData(array('user' => 'user', 'ws_creator' => 'ws_creator', 'admin' => 'admin'));
         $this->client->followRedirects();
@@ -22,6 +23,12 @@ class ForumListenerTest extends FunctionalTestCase
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
+    }
+
+    public function tearDown()
+    {
+        $this->resetTemplate();
+        parent::tearDown();
     }
 
     public function testForumFormCreation()
