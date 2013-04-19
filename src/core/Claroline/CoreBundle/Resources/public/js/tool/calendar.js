@@ -9,6 +9,23 @@
         var clickedDate = null,
             id = null,
             url = null;
+
+        $('.filter').click(function (e) {
+            $('#calendar').fullCalendar('removeEvents', function (eventObject) {
+                var reg = new RegExp('[:]+', 'g');
+                var title = eventObject.title.split(reg);
+                console.debug(title);
+                if (title[0] !== $(e.target).attr('name'))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            });
+        });
+
         var dayClickWorkspace = function (date) {
             clickedDate = date;
             $('#deleteBtn').hide();
@@ -52,17 +69,20 @@
                         if (xhr.status === 200) {
                             $('#myModal').modal('hide');
                             $('#save').removeAttr('disabled');
-                            $('#calendar').fullCalendar('renderEvent',
+                            if (data.allDay === false)
                             {
-                                title: data.title,
-                                start: data.start,
-                                end: data.end,
-                                allDay: data.allDay,
-                                color: data.color
-                            },
-                            true // make the event 'stick'
-                            );
-                            $('#calendar').fullCalendar('unselect');
+                                $('#calendar').fullCalendar('renderEvent',
+                                {
+                                    title: data.title,
+                                    start: data.start,
+                                    end: data.end,
+                                    allDay: data.allDay,
+                                    color: data.color
+                                },
+                                true // make the event 'stick'
+                                );
+                                $('#calendar').fullCalendar('unselect');
+                            }
                         }
                     },
                     'error': function (xhr, textStatus) {
@@ -97,11 +117,12 @@
                 'data': data,
                 'processData': false,
                 'contentType': false,
-                'success': function (xhr) {
+                'success': function (data, textStatus, xhr) {
+                    console.debug(xhr);
                     if (xhr.status === 200)  {
                         $('#myModal').modal('hide');
                         $('#updateBtn').removeAttr('disabled');
-                        $('#calendar').fullCalendar('rerenderEvents');
+                        $('#calendar').fullCalendar('refetchEvents');
                     }
                 }
             });
@@ -116,7 +137,7 @@
                 'data': {
                     'id': id
                 },
-                'success': function (xhr) {
+                'success': function (data, textStatus, xhr) {
                     if (xhr.status === 200) {
                         $('#myModal').modal('hide');
                         $('#deleteBtn').removeAttr('disabled');
