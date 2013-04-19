@@ -7,7 +7,7 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
-use Claroline\CoreBundle\Library\Event\CreateLogListItemEvent;
+use Claroline\CoreBundle\Library\Event\LogCreateDelegateViewEvent;
 use Claroline\CoreBundle\Library\Event\LogResourceChildUpdateEvent;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
@@ -71,9 +71,9 @@ class LogWidgetListener
         $views = array();
 
         foreach ($logs as $log) {
-            if ($log->getAction() === LogResourceChildUpdateEvent::ACTION ) {
+            if ($log->getAction() === LogResourceChildUpdateEvent::ACTION) {
                 $eventName = 'create_log_list_item_'.$log->getResourceType()->getName();
-                $event = new CreateLogListItemEvent($log);
+                $event = new LogCreateDelegateViewEvent($log);
                 $this->ed->dispatch($eventName, $event);
 
                 if ($event->getResponseContent() === "") {

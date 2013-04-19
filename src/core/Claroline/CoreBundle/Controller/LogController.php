@@ -4,9 +4,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use Claroline\CoreBundle\Library\Event\CreateLogListItemEvent;
-use Claroline\CoreBundle\Library\Event\CreateLogDetailsEvent;
-use Claroline\CoreBundle\Library\Event\LogUserUpdateEvent;
+use Claroline\CoreBundle\Library\Event\LogCreateDelegateViewEvent;
 use Claroline\CoreBundle\Library\Event\LogResourceChildUpdateEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
@@ -34,17 +32,17 @@ class LogController extends Controller
         $log = $em->getRepository('ClarolineCoreBundle:Logger\Log')->find($logId);
 
         if ($log->getAction() === LogResourceChildUpdateEvent::ACTION ) {
-            $detailsEventName = 'create_log_details_'.$log->getResourceType()->getName();
-            $detailsEvent = new CreateLogDetailsEvent($log);
-            $this->container->get('event_dispatcher')->dispatch($detailsEventName, $detailsEvent);
+            $eventName = 'create_log_details_'.$log->getResourceType()->getName();
+            $event = new LogCreateDelegateViewEvent($log);
+            $this->container->get('event_dispatcher')->dispatch($eventName, $event);
 
-            if ($detailsEvent->getResponseContent() === "") {
+            if ($event->getResponseContent() === "") {
                 throw new \Exception(
-                    "Event '{$detailsEventName}' didn't receive any response."
+                    "Event '{$eventName}' didn't receive any response."
                 );
             }
 
-            return new Response($detailsEvent->getResponseContent());
+            return new Response($event->getResponseContent());
         }
 
         return $this->render(

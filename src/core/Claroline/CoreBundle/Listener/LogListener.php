@@ -7,7 +7,7 @@ use Claroline\CoreBundle\Library\Event\LogGroupDeleteEvent;
 use Claroline\CoreBundle\Library\Event\LogResourceDeleteEvent;
 use Claroline\CoreBundle\Library\Event\LogUserDeleteEvent;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleDeleteEvent;
-use Claroline\CoreBundle\Library\Event\NotRepeatableLog;
+use Claroline\CoreBundle\Library\Event\LogNotRepeatable;
 use Claroline\CoreBundle\Entity\Logger\Log;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -212,7 +212,7 @@ class LogListener
      */
     public function onLog(LogGenericEvent $event)
     {
-        if (!($event instanceof NotRepeatableLog) or !$this->isARepeat($event)) {
+        if (!($event instanceof LogNotRepeatable) or !$this->isARepeat($event)) {
             $this->createLog($event);
         }
     }

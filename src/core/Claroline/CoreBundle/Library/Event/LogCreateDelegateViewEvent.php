@@ -7,7 +7,7 @@ use Symfony\Component\EventDispatcher\Event;
 /**
  * 
  */
-class CreateLogListItemEvent extends Event
+class LogCreateDelegateViewEvent extends Event
 {
     private $responseContent = '';
     private $log;

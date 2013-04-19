@@ -136,7 +136,7 @@ log_ws_role_subscribe_group_sentence: '%doer% a inscrit %receiver_group% au rôl
 log_ws_role_unsubscribe_group_sentence: '%doer% a désinscrit %receiver_group% du rôle %role% dans %workspace%'
 log_ws_role_change_right_sentence: '%doer% a modifié les droits du rôle %role% pour %resource%'
 log_workspace_create_sentence: '%doer% a créé l''espace de travail %workspace%'
-log_ws_tool_read_sentence: '%doer% a couvert l''outil %tool% dans %workspace%'
+log_ws_tool_read_sentence: '%doer% a ouvert l''outil %tool% dans %workspace%'
 log_see_details: 'voir le détail'
 log_doer: 'Auteur de l''action'
 log_receiver_user: 'Utilisateur cible de l''action'

@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Library\Event;
 
-class LogWorkspaceToolReadEvent extends LogGenericEvent implements NotRepeatableLog
+class LogWorkspaceToolReadEvent extends LogGenericEvent implements LogNotRepeatable
 {
     const ACTION = 'ws_tool_read';
 
@@ -30,6 +30,6 @@ class LogWorkspaceToolReadEvent extends LogGenericEvent implements NotRepeatable
 
     public function getLogSignature()
     {
-        return $this->workspace->getId().'_'.$this->toolName;
+        return self::ACTION.'_'.$this->workspace->getId().'_'.$this->toolName;
     }
 }
