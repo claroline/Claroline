@@ -16,9 +16,9 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class AjaxAuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
 {
-   /**
-    * {@inheritDoc}
-    */
+    /**
+     * {@inheritDoc}
+     */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
         if ($request->isXmlHttpRequest()) {

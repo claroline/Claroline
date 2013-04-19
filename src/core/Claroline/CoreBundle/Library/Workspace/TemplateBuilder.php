@@ -57,9 +57,16 @@ class TemplateBuilder
 
     public function removeWidget($name)
     {
-        $key = array_search(array('name' => $name, 'is_visible' => true), $this->config['tools']['home']['widget']);
+        $key = array_search(
+            array('name' => $name, 'is_visible' => true),
+            $this->config['tools']['home']['widget']
+        );
+
         if (!$key) {
-            $key = array_search(array('name' => $name, 'is_visible' => false), $this->config['tools']['home']['widget']);
+            $key = array_search(
+                array('name' => $name, 'is_visible' => false),
+                $this->config['tools']['home']['widget']
+            );
         }
 
         unset($this->config['tools']['home']['widget'][$key]);
@@ -112,7 +119,8 @@ class TemplateBuilder
         }
     }
 
-    public static function getDefaultConfig() {
+    public static function getDefaultConfig()
+    {
         return array(
             'root_perms' =>
             array(

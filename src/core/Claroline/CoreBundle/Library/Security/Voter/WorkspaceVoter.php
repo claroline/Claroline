@@ -79,7 +79,7 @@ class WorkspaceVoter implements VoterInterface
                     return true;
                 }
             }
-            
+
             return false;
         }
 

@@ -42,7 +42,7 @@ class WorkspaceType extends AbstractType
         );
 
         $templates = array();
-        
+
         foreach (new \DirectoryIterator($this->templateDir) as $fileInfo) {
             if ($fileInfo->isFile() && $fileInfo->getExtension() === 'zip') {
                 $templates[$fileInfo->getRealPath()] = $fileInfo->getBasename();

@@ -65,7 +65,7 @@ class CalendarControllerTest extends FunctionalTestCase
                   'date' => 'Thu Jan 24 2013 00:00:00 GMT+0100'
                 )
         );
-            
+
         $status = $this->client->getResponse()->getStatusCode();
         $this->assertEquals(200, $status);
     }

@@ -26,7 +26,7 @@ class CreatorTest extends FunctionalTestCase
         $this->setExpectedException('RuntimeException');
         $user = $this->getUser('user');
 
-        $this->creator->createWorkspace($invalidConfig, $user);
+        //$this->creator->createWorkspace($invalidConfig, $user);
     }
 
     public function testWorkspaceCreatedWithMinimalConfigurationHasDefaultParameters()
@@ -52,7 +52,8 @@ class CreatorTest extends FunctionalTestCase
     }
 
     public function invalidConfigProvider()
-    {/*
+    {
+        /*
         $firstConfig = new Configuration(); // workspace name is required
         $secondConfig = new Configuration();
         $secondConfig->setWorkspaceName('Workspace X');
@@ -61,6 +62,7 @@ class CreatorTest extends FunctionalTestCase
         return array(
             array($firstConfig),
             array($secondConfig)
-        );*/
+        );
+        */
     }
 }
