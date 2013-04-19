@@ -96,14 +96,14 @@ class ResourceRightsController extends Controller
                 $changeSet = $unitOfWork->getEntityChangeSet($roleRight);
 
                 if (count($changeSet) > 0) {
-                    $editedResourceRightsWithChangeSet[] = array('resource_rights' => $roleRight, 'change_set' => $changeSet);
+                    $editedResourceRightsWithChangeSet[] = array('resourceRights' => $roleRight, 'changeSet' => $changeSet);
                 }
             }
         }
 
         foreach ($editedResourceRightsWithChangeSet as $roleRightWithChangeSet) {
-            $roleRight = $roleRightWithChangeSet['resource_rights'];
-            $changeSet = $roleRightWithChangeSet['change_set'];
+            $roleRight = $roleRightWithChangeSet['resourceRights'];
+            $changeSet = $roleRightWithChangeSet['changeSet'];
 
             $log = new LogWorkspaceRoleChangeRightEvent($roleRight->getRole(), $roleRight->getResource(), $changeSet);
             $this->get('event_dispatcher')->dispatch('log', $log);
@@ -226,8 +226,8 @@ class ResourceRightsController extends Controller
             }
             if (count($createRights) > 0) {
                 $editedResourceRightsWithChangeSet[] = array(
-                    'resource_rights' => $resourceRights,
-                    'change_set' => array('can_create' => $createRights)
+                    'resourceRights' => $resourceRights,
+                    'changeSet' => array('can_create' => $createRights)
                 );
             }
         }
@@ -244,8 +244,8 @@ class ResourceRightsController extends Controller
         );
 
         foreach ($editedResourceRightsWithChangeSet as $roleRightWithChangeSet) {
-            $roleRight = $roleRightWithChangeSet['resource_rights'];
-            $changeSet = $roleRightWithChangeSet['change_set'];
+            $roleRight = $roleRightWithChangeSet['resourceRights'];
+            $changeSet = $roleRightWithChangeSet['changeSet'];
 
             $log = new LogWorkspaceRoleChangeRightEvent($roleRight->getRole(), $roleRight->getResource(), $changeSet);
             $this->get('event_dispatcher')->dispatch('log', $log);

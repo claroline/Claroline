@@ -20,7 +20,7 @@ class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent
             array(
                 'role' => array(
                     'name' => $role->getTranslationKey(),
-                    'change_set' => $changeSet
+                    'changeSet' => $changeSet
                 ),
                 'workspace' => array(
                     'name' => $resource->getWorkspace()->getName()

@@ -35,8 +35,8 @@ class LogResourceChildUpdateEvent extends LogGenericEvent
                     'name' => $resource->getWorkspace()->getName()
                 ),
                 'owner' => array(
-                    'last_name' => $resource->getCreator()->getLastName(),
-                    'first_name' => $resource->getCreator()->getFirstName()
+                    'lastName' => $resource->getCreator()->getLastName(),
+                    'firstName' => $resource->getCreator()->getFirstName()
                 ),
                 'child' => $childDetails
             ),

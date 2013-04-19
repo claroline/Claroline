@@ -27,14 +27,14 @@ class LogResourceUpdateEvent extends LogGenericEvent
                 'resource' => array(
                     'name' => $resource->getName(),
                     'path' => $resource->getPathForDisplay(),
-                    'change_set' => $changeSet
+                    'changeSet' => $changeSet
                 ),
                 'workspace' => array(
                     'name' => $resource->getWorkspace()->getName()
                 ),
                 'owner' => array(
-                    'last_name' => $resource->getCreator()->getLastName(),
-                    'first_name' => $resource->getCreator()->getFirstName()
+                    'lastName' => $resource->getCreator()->getLastName(),
+                    'firstName' => $resource->getCreator()->getFirstName()
                 )
             ),
             null,

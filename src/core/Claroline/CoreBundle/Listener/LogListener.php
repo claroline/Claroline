@@ -129,9 +129,9 @@ class LogListener
 
         if ($doer !== null) {
             $details['doer'] = array(
-                'first_name' => $doer->getFirstName(),
-                'last_name' => $doer->getLastName(),
-                'session_id' => $sessionId
+                'firstName' => $doer->getFirstName(),
+                'lastName' => $doer->getLastName(),
+                'sessionId' => $sessionId
             );
 
             if (count($log->getDoerPlatformRoles()) > 0) {
@@ -139,14 +139,14 @@ class LogListener
                 foreach ($log->getDoerPlatformRoles() as $platformRole) {
                     $doerPlatformRolesDetails[] = $platformRole->getTranslationKey();   
                 }
-                $details['doer']['platform_roles'] = $doerPlatformRolesDetails;
+                $details['doer']['platformRoles'] = $doerPlatformRolesDetails;
             }
             if (count($log->getDoerWorkspaceRoles()) > 0) {
                 $doerWorkspaceRolesDetails = array();
                 foreach ($log->getDoerWorkspaceRoles() as $workspaceRole) {
                     $doerWorkspaceRolesDetails[] = $workspaceRole->getTranslationKey();   
                 }
-                $details['doer']['workspace_roles'] = $doerWorkspaceRolesDetails;
+                $details['doer']['workspaceRoles'] = $doerWorkspaceRolesDetails;
             }
         }
         $log->setDetails($details);
