@@ -75,7 +75,7 @@ class LayoutController extends Controller
                 $workspaces = array();
 
                 foreach ($wsLogs as $wsLog) {
-                    $workspaces[] = $wsLog[0]->getWorkspace();
+                    $workspaces[] = $wsLog['workspace'];
                 }
             }
         } else {
