@@ -57,7 +57,7 @@ class Event
     /**
      * @ORM\Column(name="allday", type="boolean" , nullable=true)
      */
-    private $allDay = true;
+    private $allDay;
 
      /**
      * @ORM\Column(name="priority", type="string" , nullable=true)
