@@ -12,7 +12,7 @@ class EventRepository extends EntityRepository
     public function findByUser(User $user , $allDay)
     {
         $dql = "
-            SELECT e 
+            SELECT e
             FROM Claroline\CoreBundle\Entity\Event e
             JOIN e.workspace ws
             WITH ws in (
@@ -34,28 +34,13 @@ class EventRepository extends EntityRepository
     public function findByWorkspaceId($workspaceId,$allDay)
     {
         $dql = "
-            SELECT e 
+            SELECT e
             FROM Claroline\CoreBundle\Entity\Event e
             WHERE e.workspace = :workspaceId
             AND e.allDay = :allDay
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaceId', $workspaceId);
-        $query->setParameter('allDay', $allDay);
-
-        return $query->getResult();
-    }
-
-    public function findByUserId()
-    {
-        $dql = "
-            SELECT e 
-            FROM Claroline\CoreBundle\Entity\Event e
-            WHERE e.user = :userId
-            AND e.allDay = :allDay
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('userId', $userId);
         $query->setParameter('allDay', $allDay);
 
         return $query->getResult();

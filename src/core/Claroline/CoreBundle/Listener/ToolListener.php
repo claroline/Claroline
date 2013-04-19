@@ -174,10 +174,10 @@ class ToolListener
         $event = new Event();
         $formBuilder = $this->container->get('form.factory')->createBuilder(new CalendarType(), $event, array());
         $em = $this->container-> get('doctrine.orm.entity_manager');
-        $usr = $this->container-> get('security.context')-> getToken()-> getUser();
         $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findAll();
         $cours = array();
-        foreach ($listEvents as $event ) {
+
+        foreach ($listEvents as $event) {
             $cours[] = $event->getWorkspace()->getName();
         }
 

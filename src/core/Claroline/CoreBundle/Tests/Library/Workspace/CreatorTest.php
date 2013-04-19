@@ -24,9 +24,6 @@ class CreatorTest extends FunctionalTestCase
     {
         $this->markTestSkipped('How to set params to a data provider ?');
         $this->setExpectedException('RuntimeException');
-        $user = $this->getUser('user');
-
-        //$this->creator->createWorkspace($invalidConfig, $user);
     }
 
     public function testWorkspaceCreatedWithMinimalConfigurationHasDefaultParameters()
