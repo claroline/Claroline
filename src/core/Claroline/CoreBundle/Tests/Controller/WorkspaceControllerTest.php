@@ -267,7 +267,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $crawler = $this->client->request('GET', "/workspaces");
         $this->assertEquals(1, $crawler->filter('.row-workspace')->count());
     }
-    /*
+
     public function testUserCanCreateWorkspaceTag()
     {
         $this->loadUserData(array('user' => 'user'));
@@ -397,7 +397,6 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->loadUserData(array('admin' => 'admin'));
         $this->logUser($this->getUser('admin'));
         $pws = $this->getUser('admin')->getPersonalWorkspace();
-        $userId = $this->getUser('admin')->getId();
         $workspaceId = $pws->getId();
         $crawler = $this->client->request("GET", "/workspaces/tag/admin/createform");
         $form = $crawler->filter('button[type=submit]')->form();
@@ -536,5 +535,4 @@ class WorkspaceControllerTest extends FunctionalTestCase
             ->findOneAdminByWorkspaceAndTag($pws, $tag);
         $this->assertNotNull($relWsTag);
     }
-    */
 }

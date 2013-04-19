@@ -5,15 +5,24 @@ namespace Claroline\CoreBundle\Library\Twig;
 use Twig_Extension;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Claroline\CoreBundle\Library\Resource\Mode;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Adds the isPathMode var to the twig Globals. It's used by the
- * activity player to remove the resource context.s
+ * activity player to remove the resource context.
+ *
+ * @DI\Service
+ * @DI\Tag("twig.extension")
  */
 class ResourceModeExtension extends Twig_Extension
 {
     private $generator;
 
+    /**
+     * @DI\InjectParams({
+     *     "generator" = @DI\Inject("router")
+     * })
+     */
     public function __construct(UrlGeneratorInterface $generator)
     {
         $this->generator = $generator;
