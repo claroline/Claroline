@@ -1,0 +1,23 @@
+ujm_interactiongraphic_AjoutImg:
+    pattern:  /AjoutImg
+    defaults: { _controller: "UJMExoBundle:WSRest:postDocumentAdd" }
+    requirements: { _method: post }
+    
+ujm_interactiongraphic_create:
+    pattern:  /create
+    defaults: { _controller: "UJMExoBundle:InteractionGraphic:create" }
+    requirements: { _method: post }
+
+ujm_interactiongraphic_DisplayPic:
+    pattern:  /DisplayPic
+    defaults: { _controller: "UJMExoBundle:InteractionGraphic:displayPic" }
+    requirements:
+      _method: POST
+
+ujm_interactiongraphic_response:
+    pattern: /testGraphic
+    defaults: { _controller: "UJMExoBundle:InteractionGraphic:responseGraphic" }
+
+ujm_interactiongraphic_SavePic:
+    pattern:  /SavePic
+    defaults: { _controller: "UJMExoBundle:InteractionGraphic:savePic" }

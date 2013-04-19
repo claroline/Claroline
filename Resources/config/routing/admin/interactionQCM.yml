@@ -1,0 +1,14 @@
+ujm_interactionqcm_create:
+    pattern:  /create
+    defaults: { _controller: "UJMExoBundle:InteractionQCM:create" }
+    requirements: { _method: post }
+    
+ujm_interactionqcm_response:
+    pattern: /testQCM
+    defaults: { _controller: "UJMExoBundle:InteractionQCM:responseQcm" }
+    requirements: { _method: post }
+
+ujm_interactionqcm_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "UJMExoBundle:InteractionQCM:update" }
+    requirements: { _method: post }

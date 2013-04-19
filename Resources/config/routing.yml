@@ -1,131 +1,31 @@
-ujm_category_create_pop:
-    pattern: /category/create_pop
-    defaults: { _controller: UJMExoBundle:Category:createPop }
-    requirements:
-      _method: POST
-    
-ujm_category_new_pop:
-    pattern:  /category/new_pop
-    defaults: { _controller: UJMExoBundle:Category:newPop }
-    
-ujm_exercise_edit:
-    pattern:  /{id}/edit
-    defaults: { _controller: "UJMExoBundle:Exercise:edit" }
-    
-ujm_exercise_import_question:
-    pattern: /{exoID}/import
-    defaults: { _controller: "UJMExoBundle:Exercise:importQuestion" }
-    
-ujm_exercise_open:
-   pattern: /open/{exerciseId}
-   defaults: { _controller: UJMExoBundle:Exercise:open }
-   
-ujm_exercise_paper:
-    pattern:  /{id}/paper
-    defaults: { _controller: "UJMExoBundle:Exercise:exercisePaper" }
+admin_category:
+    resource: "routing/admin/category.yml"
+    prefix:   /admin/category
 
-ujm_exercise_paper_nav:
-    pattern:  /paper/nav/
-    defaults: { _controller: "UJMExoBundle:Exercise:exercisePaperNav" }
-    requirements: { _method: post }
+admin_exercise:
+    resource: "routing/admin/exercise.yml"
+    prefix:   /admin/exercise
+    
+admin_interaction_graphic:
+    resource: "routing/admin/interactionGraphic.yml"
+    prefix:   /admin/interactiongraphic
+    
+admin_interaction_qcm:
+    resource: "routing/admin/interactionQCM.yml"
+    prefix:   /admin/interactionqcm
+    
+admin_question:
+    resource: "routing/admin/question.yml"
+    prefix:   /admin/question
+    
+all_exercise:
+    resource: "routing/all/exercise.yml"
+    prefix:   /all/exercise
 
-ujm_exercise_questions:
-    pattern:  /{id}/questions
-    defaults: { _controller: "UJMExoBundle:Exercise:showQuestions" }   
-    
-ujm_exercise_question_delete:
-    pattern:  /{exoID}/{qid}/delete
-    defaults: { _controller: "UJMExoBundle:Exercise:deleteQuestion" }
-    requirements: { _method: post }
-    
-ujm_exercise_update:
-    pattern:  /{id}/update
-    defaults: { _controller: "UJMExoBundle:Exercise:update" }
-    requirements: { _method: post }
-    
-ujm_exercise_validate_import:
-    pattern: /{exoID}/{qid}/import
-    defaults: { _controller: "UJMExoBundle:Exercise:importValidate" }
-   
-ujm_interactionqcm_create:
-    pattern:  /interactionqcm/create
-    defaults: { _controller: "UJMExoBundle:InteractionQCM:create" }
-    requirements: { _method: post }
-    
-ujm_interactionqcm_response:
-    pattern: /testQCM
-    defaults: { _controller: "UJMExoBundle:InteractionQCM:responseQcm" }
-    requirements: { _method: post }
+all_hint:
+    resource: "routing/all/hint.yml"
+    prefix:   /all/hint
 
-ujm_interactionqcm_update:
-    pattern:  /{id}/qcm/update
-    defaults: { _controller: "UJMExoBundle:InteractionQCM:update" }
-    requirements: { _method: post }
-    
-ujm_paper_list:
-    pattern:  /paper/list/{exoID}
-    defaults: { _controller: "UJMExoBundle:Paper:index" }
-
-ujm_paper_show:
-    pattern:  /{id}/show
-    defaults: { _controller: "UJMExoBundle:Paper:show" }
-   
-ujm_question_index:
-    pattern: /question/index
-    defaults: { _controller: UJMExoBundle:Question:index }
-    
-ujm_question_show:
-    pattern:  /{id}/question/show
-    defaults: { _controller: "UJMExoBundle:Question:show" }
-    
-ujm_question_new:
-    pattern:  /question/new/{exoID}
-    defaults: { _controller: UJMExoBundle:Question:new, exoID: -1 }
-    
-ujm_question_edit:
-    pattern:  /{id}/question/edit
-    defaults: { _controller: "UJMExoBundle:Question:edit" }
-    
-ujm_question_delete:
-    pattern:  /{id}/question/delete
-    defaults: { _controller: "UJMExoBundle:Question:delete" }
-    requirements: { _method: post }
-    
-ujm_question_dispaly_form_type:
-    pattern: /question/choixFormType
-    defaults: { _controller: UJMExoBundle:Question:choixFormType }
-    requirements:
-      _method: POST
-      
-ujm_question_show:
-    pattern:  /question/show/{id}
-    defaults: { _controller: "UJMExoBundle:Question:show" }
-      
-ujm_interactiongraphic_create:
-    pattern:  /question/InteractionGraphic/create
-    defaults: { _controller: "UJMExoBundle:InteractionGraphic:create" }
-    requirements: { _method: post }
-    
-ujm_interactiongraphic_AjoutImg:
-    pattern:  /question/InteractionGraphic/AjoutImg
-    defaults: { _controller: "UJMExoBundle:WSRest:postDocumentAdd" }
-    requirements: { _method: post }
-    
-ujm_interactiongraphic_SavePic:
-    pattern:  /question/InteractionGraphic/SavePic
-    defaults: { _controller: "UJMExoBundle:InteractionGraphic:savePic" }
-    
-ujm_interactiongraphic_DisplayPic:
-    pattern:  /question/InteractionGraphic/DisplayPic
-    defaults: { _controller: "UJMExoBundle:InteractionGraphic:displayPic" }
-    requirements:
-      _method: POST
-
-ujm_hint_show:
-    pattern:  /question/hint/show
-    defaults: { _controller: "UJMExoBundle:Hint:show" }
-    requirements: { _method: post }
-
-ujm_interactiongraphic_response:
-    pattern: /testGraphic
-    defaults: { _controller: "UJMExoBundle:InteractionGraphic:responseGraphic" }
+all_paper:
+    resource: "routing/all/paper.yml"
+    prefix:   /all/paper

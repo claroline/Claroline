@@ -1,0 +1,30 @@
+ujm_question_index:
+    pattern: /index
+    defaults: { _controller: UJMExoBundle:Question:index }
+    
+ujm_question_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "UJMExoBundle:Question:show" }
+    
+ujm_question_new:
+    pattern:  /new/{exoID}
+    defaults: { _controller: UJMExoBundle:Question:new, exoID: -1 }
+    
+ujm_question_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "UJMExoBundle:Question:edit" }
+    
+ujm_question_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "UJMExoBundle:Question:delete" }
+    requirements: { _method: post }
+    
+ujm_question_dispaly_form_type:
+    pattern: /choixFormType
+    defaults: { _controller: UJMExoBundle:Question:choixFormType }
+    requirements:
+      _method: POST
+      
+ujm_question_show:
+    pattern:  /show/{id}
+    defaults: { _controller: "UJMExoBundle:Question:show" }
