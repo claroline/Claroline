@@ -133,4 +133,19 @@ class Subject
     {
         $this->creator = $creator;
     }
+
+    public function getCreator()
+    {
+        return $this->creator;
+    }
+
+    public function getCreationDate()
+    {
+        return $this->creationDate;
+    }
+
+    public function getMessages()
+    {
+        return $this->messages;
+    }
 }

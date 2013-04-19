@@ -131,9 +131,9 @@ class ForumListener extends ContainerAware
         $datas = $em->getRepository('ClarolineForumBundle:Forum')->findSubjects($resource);
 
         foreach ($datas as $data) {
-            $subjects['title'] = $data['title'];
+            $subjects['title'] = $data->getTitle();
             $message = $em->getRepository('ClarolineForumBundle:Message')
-                ->findInitialBySubject($data['id']);
+                ->findInitialBySubject($data->getId());
             $subjects['initial_message'] = $message->getContent();
             $subjectsData[] = $subjects;
         }
