@@ -1,4 +1,4 @@
-function whichImg(shape, color, i, x, y, rx, ry, prefix) {
+function whichImg(shape, color, i, x, y, rx, ry, prefix,size) {
     if (shape == 'circle') {
         switch (color) {
         case 'white' :
@@ -69,9 +69,9 @@ function whichImg(shape, color, i, x, y, rx, ry, prefix) {
         }
     }
     
-    document.getElementById('ra' + i).style.left = String(document.getElementById('AnswerImage').offsetLeft + x - 10) + 'px';
-    document.getElementById('ra' + i).style.top = String(document.getElementById('AnswerImage').offsetTop + y - 10) + 'px';
+    document.getElementById('ra' + i).style.left = String(document.getElementById('AnswerImage').offsetLeft + x - (size/2) - 10) + 'px';
+    document.getElementById('ra' + i).style.top = String(document.getElementById('AnswerImage').offsetTop + y - (size/2)) + 'px';
 
-    document.getElementById('cursor' + i).style.left = String(document.getElementById('AnswerImage').offsetLeft + rx - 10) + 'px';
+    document.getElementById('cursor' + i).style.left = String(document.getElementById('AnswerImage').offsetLeft + rx - 20) + 'px';
     document.getElementById('cursor' + i).style.top = String(document.getElementById('AnswerImage').offsetTop + ry - 10) + 'px';
 }

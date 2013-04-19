@@ -1,7 +1,7 @@
 // :::::::::::::::::::::::::::::::::::::::::: Declaration variables :::::::::::::::::::::::::::::::::::::::::::::::::::
 var allow = false; // To know if answer zone is selected before resize
 var answerImg = document.getElementById('AnswerImage'); // The background answer image
-var AnswerZones; // Tab contains all informations of Coords
+var AnswerZones = []; // Tab contains all informations of Coords
 var cible; // The selected answer zones
 var el = document.getElementById('movable'); // To get the shape and the color of the answer zone
 var imgx; // Coord x of the answer zone
@@ -38,6 +38,11 @@ document.getElementById('Consignes').style.display = "block";
 
 // :::::::::::::::::::::::::::::::::::::::::: Functions :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+function DisplayInstruction() {
+    document.getElementById('Instructions').style.display = "block";
+    document.getElementById('Consignes').style.display = "none";
+}
+
 // Get the url's picture matching to the label in the list
 function sendData(select,path,prefx) {
     //"use strict";
@@ -67,8 +72,6 @@ function LoadPic(path,prefx) {
 
     // New picture load, initialization var :
     value = 0;
-    AnswerZones = [];
-    document.getElementById('coordsZone').value = 0;
     
     for (j = 0 ; j < indice ; j++) {
         if(document.getElementById('img' + j)){
@@ -87,7 +90,7 @@ function Verifier(noTitle, noQuestion, noImg, noAnswerZone) {
     var titleOk = false; // Question has a title
     var zoneOk = false; // Answer zones are defined
 
-    // No title
+//     No title
     if (document.InterGraphForm.ujm_exobundle_interactiongraphictype_interaction_question_title.value === '') {
         alert(noTitle);
         return false;
@@ -112,18 +115,40 @@ function Verifier(noTitle, noQuestion, noImg, noAnswerZone) {
     }
 
     // No answer zone
-    if (document.getElementById('coordsZone').value == 0 && imgOk === true && titleOk === true && questionOk === true) {
-        alert(noAnswerZone);
-        return false;
-    } else {
+//    if (document.getElementById('coordsZone').value == 0 && imgOk === true && titleOk === true && questionOk === true) {
+//        alert(noAnswerZone);
+//        return false;
+//    } else {
         zoneOk = true;
-    }
+//    }
 
     // Submit if required fields not empty
     if (imgOk === true && zoneOk === true && titleOk === true && questionOk === true) {
         document.getElementById('imgwidth').value = answerImg.width; // Pass width of the image to the controller
         document.getElementById('imgheight').value = answerImg.height; // Pass height of the image to the controller
         
+        for (j = 0 ; j < indice ; j++) {
+        
+            var imgN = 'img' + j;
+            var selectedZone = document.getElementById(imgN);
+            
+            if(selectedZone){
+            
+                imgx = parseInt(selectedZone.style.left.substr(0, selectedZone.style.left.indexOf('p'))) + (selectedZone.width/2);
+                imgx -= answerImg.offsetLeft;
+
+                imgy = parseInt(selectedZone.style.top.substr(0, selectedZone.style.top.indexOf('p'))) + (selectedZone.height/2);
+                imgy -= answerImg.offsetTop;
+
+                var val = selectedZone.src + ';' + imgx + '_' + imgy + '-' + document.getElementById('points').value +
+                    '~' + selectedZone.width;
+
+                AnswerZones.push(val);
+            }
+        }
+    
+        document.getElementById('coordsZone').value = AnswerZones;
+
         document.getElementById('InterGraphForm').submit();
     }
 }
@@ -237,19 +262,6 @@ function  ResizePointer(sens) {
     }
     
     cible.height += cible.width * (cible.height / cible.height);
-
-    for (var i = 0, c = AnswerZones.length; i < c; i++) {
-        x = cible.style.left.substr(0, cible.style.left.indexOf('p'))- answerImg.offsetLeft + 10;
-        y = cible.style.top.substr(0, cible.style.top.indexOf('p')) - answerImg.offsetTop + 10;
-        var coord = x +'_' + y;
-
-        if (coord == AnswerZones[i].substring(AnswerZones[i].indexOf(';')+1, AnswerZones[i].indexOf('-'))){
-            AnswerZones[i] = AnswerZones[i].replace(AnswerZones[i].substr(AnswerZones[i].indexOf('~')+1),cible.width);
-            break;
-        }
-    }
-    
-    document.getElementById('coordsZone').value = AnswerZones;
 }
 
 function MouseSens(event) {
@@ -411,39 +423,18 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
             img.src = el.src;
             
             document.body.appendChild(img);
-
-            // Add the new answer zone informations to the tab in order to send it to the controller
-            imgx = parseInt(img.style.left.substr(0, img.style.left.indexOf('p')));
-                imgx -= answerImg.offsetLeft - 10;
-                
-            imgy = parseInt(img.style.top.substr(0, img.style.top.indexOf('p')));
-                imgy -= answerImg.offsetTop - 10;
-                
-            var val = img.src + ';' + imgx + '_' + imgy + '-' + document.getElementById('points').value + '~' + img.width;
-
-            AnswerZones.push(val);
         }
         pressCTRL = false;
-
-        // Send the answer zones informations to the controller
-        document.getElementById('coordsZone').value = AnswerZones;
     }
 
     // To delete an answer zone
     if (pressS === true) {
 
-        document.getElementById('coordsZone').value = AnswerZones;
-
         for (j = 0 ; j < indice ; j++) {
             if (e.target.id == 'img' + j) {
                 var image = document.getElementById(e.target.id);
                 image.parentNode.removeChild(image);
-                    AnswerZones.splice(j, 1);
-
-                    if (j === 0 && AnswerZones.length < 1) {
-                        document.getElementById('coordsZone').value = 0;
-                    }
-                    break;
+                break;
             }
         }
         pressS = false;
@@ -460,8 +451,3 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
         moving = false;
     }
 }, false);
-
-function DisplayInstruction() {
-    document.getElementById('Instructions').style.display = "block";
-    document.getElementById('Consignes').style.display = "none";
-}
