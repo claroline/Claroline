@@ -38,11 +38,13 @@ class PlatformInstallCommand extends ContainerAwareCommand
     {
         $kernel = $this->getApplication()->getKernel();
         $environment = $kernel->getEnvironment();
+        $fileSystem = new Filesystem();
         $output->writeln("Generating default {$environment} template...");
         $defaultPath = $this->getContainer()->getParameter('claroline.param.templates_directory').'default.zip';
         TemplateBuilder::buildDefault($defaultPath);
 
         if ($environment == 'test') {
+            //default test archive
             $arch = new \ZipArchive();
             $arch->open($defaultPath);
             $content = $arch->getFromName('config.yml');
@@ -52,6 +54,21 @@ class PlatformInstallCommand extends ContainerAwareCommand
                 $content
             );
             $arch->close();
+            //filled with resources test archive
+            $complexArchive = "{$this->getContainer()->getParameter('claroline.param.templates_directory')}complex.zip";
+            $fileSystem->copy(
+                "{$this->getContainer()->getParameter('claroline.param.templates_directory')}default.zip",
+                $complexArchive
+            );
+            $archive = new \ZipArchive();
+            $res = $archive->open($complexArchive);
+            $tmpFile = tempnam(sys_get_temp_dir(), 'tmp');
+            $templateBuilder = new TemplateBuilder(TemplateBuilder::getDefaultConfig());
+            $templateBuilder->setArchive($archive)
+                ->addFile($tmpFile, 'empty', 'empty.txt', 1, 2)
+                ->addDirectory('main dir', 3)
+                ->addFile($tmpFile, 'empty2', 'empty2.txt', 3, 4)
+                ->write();
         }
 
         $output->writeln('Installing the platform...');
@@ -95,7 +112,6 @@ class PlatformInstallCommand extends ContainerAwareCommand
         );
         $assetCommand->run($assetInput, $output);
 
-        $fileSystem = new Filesystem();
         $fileSystem->copy(
             "{$kernel->getRootDir()}/../vendor/jms/twig-js/twig.js",
             "{$kernel->getRootDir()}/../web/twig.js"
