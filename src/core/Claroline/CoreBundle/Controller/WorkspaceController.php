@@ -76,8 +76,9 @@ class WorkspaceController extends Controller
         }
 
         $em = $this->get('doctrine.orm.entity_manager');
-        $user = $this->get('security.context')->getToken()->getUser();
-        $roles = $user->getRoles();
+        $token = $this->get('security.context')->getToken();
+        $user = $token->getUser();
+        $roles = $this->get('claroline.security.utilities')->getRoles($token);
 
         $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)
             ->findByRoles($roles);
