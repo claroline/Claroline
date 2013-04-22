@@ -300,6 +300,7 @@ class ResourceManagerListener
                 }
             }
         }
+        
         return $createdResources;
     }
 
