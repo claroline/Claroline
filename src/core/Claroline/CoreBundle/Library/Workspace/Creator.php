@@ -8,7 +8,6 @@ use Claroline\CoreBundle\Library\Resource\Manager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole;
 use Claroline\CoreBundle\Entity\Tool\WorkspaceOrderedTool;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -60,21 +59,7 @@ class Creator
         $this->entityManager->persist($workspace);
         $this->entityManager->flush();
         $this->initBaseRoles($workspace, $config);
-
-        $rootDir = new Directory();
-        $rootDir->setName("{$workspace->getName()} - {$workspace->getCode()}");
-        $rootDir->setCreator($manager);
-        $directoryType = $this->entityManager
-            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-            ->findOneBy(array('name' => 'directory'));
-        $directoryIcon = $this->entityManager
-            ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
-            ->findOneBy(array('type' => 'directory', 'iconType' => 1));
-        $rootDir->setIcon($directoryIcon);
-        $rootDir->setResourceType($directoryType);
-        $rootDir->setWorkspace($workspace);
-        $this->manager->setResourceRights($rootDir, $config->getPermsRootConfiguration());
-        $this->entityManager->persist($rootDir);
+        $rootDir = $this->manager->createRootDir($workspace, $manager, $config->getPermsRootConfiguration());
         $this->entityManager->flush();
         $extractPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('claro_ws_tmp_', true);
         $archive = new \ZipArchive();
