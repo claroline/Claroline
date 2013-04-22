@@ -1,0 +1,23 @@
+{% extends "ClarolineCoreBundle:Home/graph:default.html.twig" %}
+
+{% block content %}
+
+    {% if content["player"] is defined %}
+        <iframe src="{{ content["player"] }}"
+            width="426"
+            height="356"
+            frameborder="0"
+            marginwidth="0"
+            marginheight="0"
+            scrolling="no"
+            allowfullscreen
+            webkitallowfullscreen
+            mozallowfullscreen></iframe>
+    {% else %}
+        <a href="{{ content["url"] }}" target="_blank">
+            <img src="{{ content["image"] }}" width="100%">
+        </a>
+        {% endif %}
+
+{% endblock %}
+
