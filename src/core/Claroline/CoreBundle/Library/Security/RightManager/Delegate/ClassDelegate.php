@@ -5,7 +5,11 @@ namespace Claroline\CoreBundle\Library\Security\RightManager\Delegate;
 use Symfony\Component\Security\Acl\Domain\Acl;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
 use Claroline\CoreBundle\Library\Security\Acl\ClassIdentity;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.security.right_manager.delegate.class")
+ */
 class ClassDelegate implements TargetDelegateInterface
 {
     public function getAces(Acl $acl)

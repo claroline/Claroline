@@ -6,7 +6,11 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
 use Claroline\CoreBundle\Library\Security\SecurityException;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.security.right_manager.delegate.role")
+ */
 class RoleDelegate implements SubjectDelegateInterface
 {
     /** @var EntityManager */
@@ -15,6 +19,11 @@ class RoleDelegate implements SubjectDelegateInterface
     /** @var EntityRepository */
     private $roleRepository;
 
+    /**
+     * @DI\InjectParams({
+     *     "em" = @DI\Inject("doctrine.orm.entity_manager")
+     * })
+     */
     public function __construct(EntityManager $em)
     {
         $this->em = $em;

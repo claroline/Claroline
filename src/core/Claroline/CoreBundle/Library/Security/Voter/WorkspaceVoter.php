@@ -10,13 +10,25 @@ use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Translation\Translator;
 use Doctrine\ORM\EntityManager;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service
+ * @DI\Tag("security.voter")
+ */
 class WorkspaceVoter implements VoterInterface
 {
     private $em;
     private $translator;
     private $ut;
 
+    /**
+     * @DI\InjectParams({
+     *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "translator" = @DI\Inject("translator"),
+     *     "ut" = @DI\Inject("claroline.security.utilities")
+     * })
+     */
     public function __construct(EntityManager $em, Translator $translator, Utilities $ut)
     {
         $this->em = $em;
@@ -61,7 +73,14 @@ class WorkspaceVoter implements VoterInterface
         $manager = $this->em->getRepository('ClarolineCoreBundle:Role')->findManagerRole($workspace);
 
         if ($action === 'DELETE') {
-            return $token->getUser()->hasRole($manager->getName()) ? true : false;
+            $roles = $this->ut->getRoles($token);
+            foreach ($roles as $role) {
+                if ($role === $manager->getName()) {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         $tools = $this->em
@@ -69,7 +88,6 @@ class WorkspaceVoter implements VoterInterface
             ->findByRolesAndWorkspace($this->ut->getRoles($token), $workspace, true);
 
         foreach ($tools as $tool) {
-
             if ($tool->getName() === $action) {
                 return true;
             }

@@ -75,7 +75,7 @@ class LayoutController extends Controller
                 $workspaces = array();
 
                 foreach ($wsLogs as $wsLog) {
-                    $workspaces[] = $wsLog[0]->getWorkspace();
+                    $workspaces[] = $wsLog['workspace'];
                 }
             }
         } else {
@@ -112,6 +112,35 @@ class LayoutController extends Controller
                 'isInAWorkspace' => $isInAWorkspace,
                 'currentWorkspace' => $currentWs
             )
+        );
+    }
+
+    /**
+     * Renders the warning bar when a workspace role is impersonated.
+     *
+     * @return Response
+     */
+    public function renderWarningImpersonationAction()
+    {
+        $token = $this->get('security.context')->getToken();
+        $roles = $this->get('claroline.security.utilities')->getRoles($token);
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        foreach ($roles as $role) {
+            if (strstr($role, 'ROLE_WS')) {
+                $impersonatedRole = $role;
+            }
+        }
+
+        $workspaceId = substr($impersonatedRole, strripos($impersonatedRole, '_') + 1);
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
+            ->find($workspaceId);
+        $roleEntity = $em->getRepository('ClarolineCoreBundle:Role')
+            ->findOneByName($impersonatedRole);
+
+        return $this->render(
+            'ClarolineCoreBundle:Layout:impersonation_alert.html.twig',
+            array('workspace' => $workspace->getName(), 'role' => $roleEntity->getTranslationKey())
         );
     }
 

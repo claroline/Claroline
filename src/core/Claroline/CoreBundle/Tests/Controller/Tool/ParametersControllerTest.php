@@ -79,6 +79,44 @@ class ParametersControllerTest extends FunctionalTestCase
         );
     }
 
+    public function testWorkspaceAddToolFromInstalledPlugin()
+    {
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $workspaceOrderedTools = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
+            ->findBy(array('workspace' => $this->getWorkspace('john')));
+        $countOldOrderedTools = count($workspaceOrderedTools);
+        $managerRole = $em->getRepository('ClarolineCoreBundle:Role')->findManagerRole($this->getWorkspace('john'));
+        $this->registerStubPlugins(array('Valid\WithTools\ValidWithTools'));
+        $toolA = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneByName('toolA');
+        $this->logUser($this->getUser('john'));
+        $position = $countOldOrderedTools + 1;
+        $this->client->request(
+            'POST',
+            "/workspaces/tool/properties/add/tool/{$toolA->getId()}/" .
+            "position/{$position}/workspace/{$this->getWorkspace('john')->getId()}/role/{$managerRole->getId()}"
+        );
+        $workspaceOrderedTools = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
+            ->findBy(array('workspace' => $this->getWorkspace('john')));
+        $countNewOrderedTools = count($workspaceOrderedTools);
+        $this->assertEquals(1, $countNewOrderedTools - $countOldOrderedTools);
+
+        $this->resetTemplate();
+    }
+
+    public function testWorkspaceToolFromInstalledPluginInToolsConfigurationPage()
+    {
+        $this->registerStubPlugins(array('Valid\WithTools\ValidWithTools'));
+        $this->logUser($this->getUser('john'));
+        $wsId = $this->getWorkspace('john')->getId();
+        $crawler = $this->client->request(
+            'GET',
+            "/workspaces/tool/properties/{$wsId}/tools"
+        );
+        $items = $crawler->filter('td:contains("toolA")');
+        $this->assertEquals(count($items), 1);
+        $this->resetTemplate();
+    }
+
     public function testMoveDesktopTool()
     {
         $toolRepo = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool');
@@ -150,13 +188,31 @@ class ParametersControllerTest extends FunctionalTestCase
         $this->resetTemplate();
     }
 
-    public function testDisplayWidgetConfigurationFormPage()
+    public function testViewWidgetPropertiesIsProtected()
     {
-        $this->markTestSkipped("event is not catched");
-        $this->registerStubPlugins(array('Valid\WithWidgets\ValidWithWidgets'));
-        $this->resetTemplate();
+        $this->loadUserData(array('alfred' => 'user'));
+        $pwuId = $this->getUser('john')->getPersonalWorkspace()->getId();
+        $this->logUser($this->getUser('alfred'));
+        $this->client->request('GET', "/workspaces/tool/properties/{$pwuId}/widget");
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
+    public function testDisplayWidgetConfigurationFormPage()
+    {
+        $this->markTestSkipped('No event can be caught.');
+        $this->registerStubPlugins(array('Valid\WithWidgets\ValidWithWidgets'));
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $newWidget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
+            ->findOneByName('claroline_testwidget1');
+        $pwuId = $this->getUser('john')->getPersonalWorkspace()->getId();
+        $this->logUser($this->getUser('john'));
+        $this->client->request(
+            'GET',
+            "/workspaces/tool/properties/{$pwuId}/widget/{$newWidget->getId()}/configuration"
+        );
+
+        $this->resetTemplate();
+    }
 
     public function testWorkspaceManagerCanInvertWidgetVisible()
     {
@@ -184,7 +240,36 @@ class ParametersControllerTest extends FunctionalTestCase
         $this->logUser($this->getUser('john'));
         $crawler = $this->client->request('GET', "/workspaces/{$pwuId}/widgets");
         $this->assertEquals(++$countVisibleWidgets, count($crawler->filter('.widget')));
+        $newWidget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
+            ->findOneByName('claroline_testwidget1');
+        $baseConfig = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+            ->findOneBy(array('widget' => $newWidget, 'isDesktop' => false));
+        //try to create a new DisplayConfig entity
+        $this->client->request(
+            'POST',
+            "/workspaces/tool/properties/{$pwuId}/widget/{$newWidget->getId()}/baseconfig"
+            . "/{$baseConfig->getId()}/invertvisible"
+        );
+        $crawler = $this->client->request('GET', "/workspaces/{$pwuId}/widgets");
+        $this->assertEquals(--$countVisibleWidgets, count($crawler->filter('.widget')));
+
         $this->resetTemplate();
+    }
+
+    public function testWorkspaceWidgetVisibleInversionIsProtected()
+    {
+        $this->loadUserData(array('alfred' => 'user'));
+        $pwuId = $this->getUser('john')->getPersonalWorkspace()->getId();
+        $this->logUser($this->getUser('alfred'));
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+            ->findAll();
+        $this->client->request(
+            'POST',
+            "/workspaces/tool/properties/{$pwuId}/widget/{$configs[0]->getWidget()->getId()}/baseconfig"
+            . "/{$configs[0]->getId()}/invertvisible"
+        );
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testDesktopManagerCanInvertWidgetVisible()
@@ -218,21 +303,6 @@ class ParametersControllerTest extends FunctionalTestCase
         $this->logUser($this->getUser('john'));
         $crawler = $this->client->request('GET', '/desktop/tool/open/home');
         $this->assertEquals(++$countVisibleWidgets, count($crawler->filter('.widget')));
-    }
-
-    private function registerStubPlugins(array $pluginFqcns)
-    {
-        $container = $this->client->getContainer();
-        $dbWriter = $container->get('claroline.plugin.recorder_database_writer');
-        $pluginDirectory = $container->getParameter('claroline.param.stub_plugin_directory');
-        $loader = new Loader($pluginDirectory);
-        $validator = $container->get('claroline.plugin.validator');
-
-        foreach ($pluginFqcns as $pluginFqcn) {
-            $plugin = $loader->load($pluginFqcn);
-            $validator->validate($plugin);
-            $dbWriter->insert($plugin, $validator->getPluginConfiguration());
-        }
     }
 
     public function testWSCreatorCanEditWS()
@@ -362,14 +432,128 @@ class ParametersControllerTest extends FunctionalTestCase
         );
     }
 
-    private function resetTemplate()
+    public function testWorkspaceToolsRolesDisplaysTheCorrectTableAction()
     {
-        $container = $this->client->getContainer();
-        $yml = $container->getParameter('claroline.workspace_template.directory').'config.yml';
-        $archpath = $container->getParameter('claroline.workspace_template.directory').'default.zip';
-        $archive = new \ZipArchive();
-        $archive->open($archpath, \ZipArchive::OVERWRITE);
-        $archive->addFile($yml, 'config.yml');
-        $archive->close();
+        $this->logUser($this->getUser('john'));
+        $wsId = $this->getWorkspace('john')->getId();
+        $crawler = $this->client->request(
+            'GET',
+            "/workspaces/tool/properties/{$wsId}/tools"
+        );
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $roleCollaborator = $em->getRepository('ClarolineCoreBundle:Role')
+            ->findCollaboratorRole($this->getWorkspace('john'));
+
+        $countCheckedTools = $crawler
+            ->filter("td[data-role-id={$roleCollaborator->getId()}] input:checked[type='checkbox']");
+        $countUncheckedTools = $crawler
+            ->filter("td[data-role-id={$roleCollaborator->getId()}] input:not(:checked[type='checkbox'])");
+
+        $this->assertEquals(3, count($countCheckedTools));
+        $this->assertEquals(5, count($countUncheckedTools));
+    }
+
+    public function testWorkspaceResourceRightsForm()
+    {
+        $this->logUser($this->getUser('john'));
+        $wsId = $this->getWorkspace('john')->getId();
+
+        $crawler = $this->client->request(
+            'GET',
+            "/workspaces/tool/properties/{$wsId}/resource/rights/form"
+        );
+
+        $checkedPerms = $crawler->filter("tr[data-name='collaborator'] input:checked[type='checkbox']");
+        $uncheckedPerms = $crawler->filter("tr[data-name='collaborator'] input:not(:checked[type='checkbox'])");
+        $this->assertEquals(2, count($checkedPerms));
+        $this->assertEquals(3, count($uncheckedPerms));
+    }
+
+    public function testWorkspaceResourceRightsCreationForm()
+    {
+        $this->logUser($this->getUser('john'));
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $managerRole = $em->getRepository('ClarolineCoreBundle:Role')->findManagerRole($this->getWorkspace('john'));
+        $wsId = $this->getWorkspace('john')->getId();
+
+        $crawler = $this->client->request(
+            'GET',
+            "/workspaces/tool/properties/{$wsId}/resource/rights/form/role/{$managerRole->getId()}"
+        );
+
+        $this->assertEquals(
+            5,
+            count($crawler->filter('input:checked[type="checkbox"]'))
+        );
+    }
+
+    public function testWorkspaceResourceRightsCreationFormAfterPluginInstall()
+    {
+        $this->markTestSkipped('new entity namespace = ?');
+        $pluginFqcn = 'Valid\WithCustomResources\ValidWithCustomResources';
+        $ds = DIRECTORY_SEPARATOR;
+        require_once __DIR__."{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}"
+            . "WithCustomResources{$ds}Entity{$ds}ResourceA.php";
+        require_once __DIR__."{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}"
+            . "WithCustomResources{$ds}Entity{$ds}ResourceB.php";
+        $this->registerStubPlugins(array($pluginFqcn));
+        $this->logUser($this->getUser('john'));
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $managerRole = $em->getRepository('ClarolineCoreBundle:Role')->findManagerRole($this->getWorkspace('john'));
+        $wsId = $this->getWorkspace('john')->getId();
+        $crawler = $this->client->request(
+            'GET',
+            "/workspaces/tool/properties/{$wsId}/resource/rights/form/role/{$managerRole->getId()}"
+        );
+        var_dump($this->client->getResponse()->getContent());
+        $this->assertEquals(
+            1,
+            count($crawler->filter('input:not(:checked[type="checkbox"])'))
+        );
+        $this->resetTemplate();
+    }
+
+    public function testWorkspaceExportForm()
+    {
+        $this->logUser($this->getUser('john'));
+        $wsId = $this->getWorkspace('john')->getId();
+        $crawler = $this->client->request(
+            'GET',
+            "/workspaces/tool/properties/{$wsId}/form/export"
+        );
+        $this->assertEquals(1, count($crawler->filter('#workspace_template_form')));
+    }
+
+    public function testDesktopWidgetProperties()
+    {
+        $this->logUser($this->getUser('john'));
+        $crawler = $this->client->request(
+            'GET',
+            "/desktop/tool/properties/widget/properties"
+        );
+
+        $this->assertEquals(1, count($crawler->filter('#widget-table')));
+    }
+
+    public function testDesktopConfigureToolsPage()
+    {
+        $this->logUser($this->getUser('john'));
+        $crawler = $this->client->request(
+            'GET',
+            "desktop/tool/properties/tools"
+        );
+        $this->assertEquals(3, count($crawler->filter('input:checked[type="checkbox"]')));
+    }
+
+    public function testRemoveParametersFromDesktop()
+    {
+        $this->logUser($this->getUser('john'));
+        $tool = $this->client->getContainer()->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneByName('parameters');
+        $this->client->request(
+            'POST',
+            "desktop/tool/properties/remove/tool/{$tool->getId()}"
+        );
+        $this->assertContains('remove the parameter', $this->client->getResponse()->getContent());
     }
 }

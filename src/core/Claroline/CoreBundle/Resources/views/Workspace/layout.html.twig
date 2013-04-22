@@ -13,6 +13,24 @@
                 <li class="disabled">
                     <a><b>{{ workspace.getName() }} </b><em>({{ workspace.getCode() }})</em></a>
                 </li>
+                {% if is_granted('ROLE_WS_MANAGER_' ~ workspace.getId()) %}
+                <li>
+
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse">
+                            <i class="icon-eye-open"></i>
+                            {{ 'show_as'|trans({}, 'platform') }}
+                            <i class="icon-chevron-down pull-right"></i>
+                        </a>
+
+                    <div id="collapse" class="accordion-body collapse">
+                        {% for role in workspace.getRoles() %}
+                            <div class="accordion-inner">
+                                <a href="?view_as={{ role.getName() }}">{{ role.getTranslationKey()|trans({}, 'platform') }}</a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </li>
+                {% endif %}
                 {% render controller("ClarolineCoreBundle:Workspace:renderToolList", {'workspaceId': workspace.getId()}) %}
             </ul>
         </div>

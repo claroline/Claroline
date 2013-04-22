@@ -8,7 +8,11 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Workspace\Creator as WsCreator;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Tool\DesktopTool;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.user.creator")
+ */
 class Creator
 {
     private $em;
@@ -17,6 +21,15 @@ class Creator
     private $wsCreator;
     private $personalWsTemplateFile;
 
+    /**
+     * @DI\InjectParams({
+     *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "trans" = @DI\Inject("translator"),
+     *     "ch" = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "wsCreator" = @DI\Inject("claroline.workspace.creator"),
+     *     "personalWsTemplateFile" = @DI\Inject("%claroline.param.templates_directory%")
+     * })
+     */
     public function __construct(
         EntityManager $em,
         Translator $trans,

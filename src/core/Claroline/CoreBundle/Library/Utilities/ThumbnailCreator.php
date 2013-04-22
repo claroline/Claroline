@@ -3,9 +3,20 @@
 namespace Claroline\CoreBundle\Library\Utilities;
 
 use Claroline\CoreBundle\Library\Resource\Utilities;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.utilities.thumbnail_creator")
+ */
 class ThumbnailCreator
 {
+    /**
+     * @DI\InjectParams({
+     *     "kernelRootDir" = @DI\Inject("%kernel.root_dir%"),
+     *     "thumbnailDirectory" = @DI\Inject("%claroline.param.thumbnails_directory%"),
+     *     "utilities" = @DI\Inject("claroline.resource.utilities")
+     * })
+     */
     public function __construct($kernelRootDir, $thumbnailDirectory, Utilities $utilities)
     {
         $ds = DIRECTORY_SEPARATOR;
