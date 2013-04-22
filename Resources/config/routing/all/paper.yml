@@ -1,0 +1,7 @@
+ujm_paper_list:
+    pattern:  /list/{exoID}
+    defaults: { _controller: "UJMExoBundle:Paper:index" }
+
+ujm_paper_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "UJMExoBundle:Paper:show" }

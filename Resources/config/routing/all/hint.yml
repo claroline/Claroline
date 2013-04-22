@@ -1,0 +1,4 @@
+ujm_hint_show:
+    pattern:  /show
+    defaults: { _controller: "UJMExoBundle:Hint:show" }
+    requirements: { _method: post }

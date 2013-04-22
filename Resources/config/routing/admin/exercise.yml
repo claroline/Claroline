@@ -1,0 +1,25 @@
+ujm_exercise_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "UJMExoBundle:Exercise:edit" }
+    
+ujm_exercise_import_question:
+    pattern: /{exoID}/import
+    defaults: { _controller: "UJMExoBundle:Exercise:importQuestion" }
+
+ujm_exercise_questions:
+    pattern:  /{id}/questions
+    defaults: { _controller: "UJMExoBundle:Exercise:showQuestions" }   
+    
+ujm_exercise_question_delete:
+    pattern:  /{exoID}/{qid}/delete
+    defaults: { _controller: "UJMExoBundle:Exercise:deleteQuestion" }
+    requirements: { _method: post }
+    
+ujm_exercise_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "UJMExoBundle:Exercise:update" }
+    requirements: { _method: post }
+    
+ujm_exercise_validate_import:
+    pattern: /{exoID}/{qid}/import
+    defaults: { _controller: "UJMExoBundle:Exercise:importValidate" }

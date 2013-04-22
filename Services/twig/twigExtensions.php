@@ -65,6 +65,7 @@ class TwigExtensions extends \Twig_Extension
         return array(
             'regexTwig'            => new \Twig_Function_Method($this, 'regexTwig'),
             'getInterTwig'         => new \Twig_Function_Method($this, 'getInterTwig'),
+            'getCoordsGraphTwig'   => new \Twig_Function_Method($this, 'getCoordsGraphTwig'),
         );
 
     }
@@ -91,7 +92,12 @@ class TwigExtensions extends \Twig_Extension
             break;
 
             case "InteractionGraphic":
-
+                $interG = $this->doctrine
+                               ->getEntityManager()
+                               ->getRepository('UJMExoBundle:InteractionGraphic')
+                               ->getInteractionGraphic($interId);
+                $inter['question'] = $interG[0];
+                //$inter['maxScore'] = $this->getQCMScoreMax($interQCM[0]);
             break;
 
             case "InteractionHole":
@@ -104,6 +110,15 @@ class TwigExtensions extends \Twig_Extension
         }
 
         return $inter;
+    }
+    
+    public function getCoordsGraphTwig($interGraphId)
+    {
+        $coords = $this->doctrine
+                       ->getEntityManager()
+                       ->getRepository('UJMExoBundle:Coords')
+                       ->findBy(array('interactionGraphic' => $interGraphId));
+        return $coords[0];
     }
 
     private function getQCMScoreMax($interQCM)
@@ -121,5 +136,5 @@ class TwigExtensions extends \Twig_Extension
 
         return $scoreMax;
     }
-
+   
 }
