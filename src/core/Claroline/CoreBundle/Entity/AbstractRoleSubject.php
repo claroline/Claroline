@@ -24,7 +24,7 @@ abstract class AbstractRoleSubject
      */
     public function addRole(Role $role)
     {
-        $roles = $this->getOwnedRoles();
+        $roles = $this->getEntityRoles();
 
         if (!$roles->contains($role)) {
             $this->roles->add($role);
@@ -48,7 +48,7 @@ abstract class AbstractRoleSubject
      *
      * @return ArrayCollection[Role]
      */
-    public function getOwnedRoles()
+    public function getEntityRoles()
     {
         return $this->roles;
     }
@@ -80,7 +80,7 @@ abstract class AbstractRoleSubject
 
         $roleNames = array();
 
-        foreach ($this->getOwnedRoles(true) as $role) {
+        foreach ($this->getEntityRoles(true) as $role) {
             $roleNames[] = $role->getName();
         }
 

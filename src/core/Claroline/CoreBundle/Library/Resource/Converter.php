@@ -103,7 +103,7 @@ class Converter
             $content[$i]['id'] = $groups[$i]->getId();
             $content[$i]['name'] = $groups[$i]->getName();
             $rolesString = '';
-            $roles = $groups[$i]->getOwnedRoles();
+            $roles = $groups[$i]->getEntityRoles();
 
             for ($j = 0, $rolesCount = count($roles); $j < $rolesCount; $j++) {
                 $rolesString .= "{$this->translator->trans($roles[$j]->getTranslationKey(), array(), 'platform')}";
@@ -131,7 +131,7 @@ class Converter
             $content[$i]['administrativeCode'] = $users[$i]->getAdministrativeCode();
 
             $rolesString = '';
-            $roles = $users[$i]->getOwnedRoles();
+            $roles = $users[$i]->getEntityRoles();
 
             for ($j = 0, $rolesCount = count($roles); $j < $rolesCount; $j++) {
                 $rolesString .= "{$this->translator->trans($roles[$j]->getTranslationKey(), array(), 'platform')}";
