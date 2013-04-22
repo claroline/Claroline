@@ -45,6 +45,7 @@ dashboard: 'Tableau de bord'
 date: Date
 delete: Supprimer
 desktop: Bureau
+desktop_tools: Outils du bureau
 directory: Répertoire
 directory_form_name: Nom
 directory_form_shareType: Redistribution
