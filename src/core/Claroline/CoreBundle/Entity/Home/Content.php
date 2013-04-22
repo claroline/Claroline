@@ -44,7 +44,7 @@ class Content
     /**
      * @var string
      *
-     * @ORM\Column(name="generated_content", type="string", length=255, nullable=true)
+     * @ORM\Column(name="generated_content", type="text", nullable=true)
      */
     private $generatedContent;
 

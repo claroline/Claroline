@@ -359,7 +359,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
 
     public function getPlatformRole()
     {
-        $roles = $this->getOwnedRoles();
+        $roles = $this->getEntityRoles();
 
         foreach ($roles as $role) {
             if ($role->getRoleType() != Role::WS_ROLE) {
@@ -375,7 +375,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      */
     public function setPlatformRole($platformRole)
     {
-        $roles = $this->getOwnedRoles();
+        $roles = $this->getEntityRoles();
 
         foreach ($roles as $role) {
             if ($role->getRoleType() != Role::WS_ROLE) {
