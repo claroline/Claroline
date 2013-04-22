@@ -942,7 +942,7 @@ class Version20120119000000 extends BundleMigration
         $this->addId($table);
         $table->addColumn('title', 'string', array('length' => 255));
         $table->addColumn('content', 'text');
-        $table->addColumn('generated_content', 'string', array('notnull' => false, 'length' => 255));
+        $table->addColumn('generated_content', 'text', array('notnull' => false));
         $table->addColumn('created', 'datetime');
         $table->addColumn('modified', 'datetime');
 
