@@ -31,9 +31,9 @@ root_perms:
             -
                 name: activity
             -
-                name: claroline_example
-            -
                 name: claroline_site
+            -
+                name: claroline_example
             -
                 name: claroline_forum
             -
@@ -47,21 +47,21 @@ tools:
                 name: core_resource_logger
                 is_visible: true
             -
-                name: claroline_rssreader
+                name: claroline_mywidget1
                 is_visible: true
             -
-                name: claroline_mywidget1
+                name: claroline_rssreader
                 is_visible: true
         files: {  }
     resource_manager:
         root_id: 28
         resources: {  }
         files: {  }
+    Imavia:
+        files: {  }
     claroline_mytool:
         files: {  }
     ujm_questions:
-        files: {  }
-    Imavia:
         files: {  }
 roles:
     ROLE_WS_VISITOR: visitor
@@ -97,6 +97,11 @@ tools_infos:
         perms:
             - ROLE_WS_MANAGER
         name: Utilisateurs
+    Imavia:
+        perms:
+            - ROLE_WS_COLLABORATOR
+            - ROLE_WS_MANAGER
+        name: Imavia
     claroline_mytool:
         perms:
             - ROLE_WS_COLLABORATOR
@@ -107,9 +112,4 @@ tools_infos:
             - ROLE_WS_COLLABORATOR
             - ROLE_WS_MANAGER
         name: ujm_questions
-    Imavia:
-        perms:
-            - ROLE_WS_COLLABORATOR
-            - ROLE_WS_MANAGER
-        name: Imavia
 name: default
