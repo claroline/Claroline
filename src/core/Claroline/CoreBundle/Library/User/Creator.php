@@ -29,7 +29,7 @@ class Creator
      *     "trans" = @DI\Inject("translator"),
      *     "ch" = @DI\Inject("claroline.config.platform_config_handler"),
      *     "wsCreator" = @DI\Inject("claroline.workspace.creator"),
-     *     "personalWsTemplateFile" = @DI\Inject("%claroline.param.templates_directory%")
+     *     "personalWsTemplateFile" = @DI\Inject("%claroline.param.templates_directory%"),
      *     "ed"  = @DI\Inject("event_dispatcher")
      * })
      */
