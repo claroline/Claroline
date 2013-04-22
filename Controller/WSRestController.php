@@ -93,7 +93,7 @@ class WSRestController extends Controller
             }
 
             return $this->render(
-                'UJMExoBundle:InteractionGraphic:page.html.twig', 
+                'UJMExoBundle:InteractionGraphic:page.html.twig',
                 array(
                     'idDoc' => $document->getId(),
                     'label' => $document->getLabel()

@@ -1,7 +1,6 @@
 // :::::::::::::::::::::::::::::::::::::::::: Declaration variables :::::::::::::::::::::::::::::::::::::::::::::::::::
 var allow = false; // To know if answer zone is selected before resize
 var answerImg = document.getElementById('AnswerImage'); // The background answer image
-var AnswerZones = []; // Tab contains all informations of Coords
 var cible; // The selected answer zones
 var el = document.getElementById('movable'); // To get the shape and the color of the answer zone
 var imgx; // Coord x of the answer zone
@@ -143,12 +142,10 @@ function Verifier(noTitle, noQuestion, noImg, noAnswerZone) {
                 var val = selectedZone.src + ';' + imgx + '_' + imgy + '-' + document.getElementById('points').value +
                     '~' + selectedZone.width;
 
-                AnswerZones.push(val);
+                document.getElementById('coordsZone').value += val+',';
             }
         }
     
-        document.getElementById('coordsZone').value = AnswerZones;
-
         document.getElementById('InterGraphForm').submit();
     }
 }

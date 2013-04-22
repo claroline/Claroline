@@ -108,11 +108,17 @@ class ExerciseController extends Controller
 
         $editForm    = $this->createForm(new ExerciseType(), $entity);
 
-        $formHandler = new ExerciseHandler($editForm, $this->get('request'), $this->getDoctrine()->getEntityManager(),
-            $this->container->get('security.context')->getToken()->getUser(), 'update');
+        $formHandler = new ExerciseHandler(
+            $editForm, $this->get('request'), $this->getDoctrine()->getEntityManager(),
+            $this->container->get('security.context')->getToken()->getUser(), 'update'
+        );
 
         if ($formHandler->process()) {
-            return $this->redirect($this->generateUrl('claro_resource_open', array('resourceType' => $exercise->getResourceType()->getName(), 'resourceId' => $id)));
+            return $this->redirect(
+                $this->generateUrl('claro_resource_open', array(
+                    'resourceType' => $exercise->getResourceType()->getName(), 'resourceId' => $id)
+                )
+            );
         }
 
         return $this->render(
@@ -319,7 +325,7 @@ class ExerciseController extends Controller
         $subscription = $this->controlSubscription($id);
         $em = $this->getDoctrine()->getEntityManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($id);
-        
+
         $workspace = $exercise->getWorkspace();
 
         if ($this->controlDate($subscription, $exercise) === true) {
@@ -474,7 +480,8 @@ class ExerciseController extends Controller
      * Finds and displays the question selectionned by the User in an assesment
      *
      */
-    private function displayQuestion($numQuestionToDisplayed, $interactionToDisplay,
+    private function displayQuestion(
+        $numQuestionToDisplayed, $interactionToDisplay,
         $typeInterToDisplayed, $dispButtonInterrupt, $workspace
     ) {
         $em = $this->getDoctrine()->getEntityManager();

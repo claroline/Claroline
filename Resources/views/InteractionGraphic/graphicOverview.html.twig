@@ -15,7 +15,7 @@
     
     <p>Score : {{ score }}/{{ total }}.<br/>
        
-        {% if score == 0 %} 
+        {% if score == 0 and penalty == 0 %} 
             Aucune bonne réponse.
         {% elseif penalty == 0 %}
             Indices non vus, pas de pénalité.

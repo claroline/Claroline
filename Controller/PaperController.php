@@ -80,7 +80,7 @@ class PaperController extends Controller
         }
 
         return $this->render(
-            'UJMExoBundle:Paper:index.html.twig', 
+            'UJMExoBundle:Paper:index.html.twig',
             array(
                 'workspace' => $workspace,
                 'papers'    => $papers,
@@ -108,9 +108,13 @@ class PaperController extends Controller
             return $this->redirect($this->generateUrl('exercise_show', array('id' => $paper->getExercise()->getId())));
 
         } else if (($subscription[0]->getAdmin() == 1) || (($user->getId() == $paper->getUser()->getId()) &&
-                  (($paper->getExercise()->getCorrectionMode() == 1) || (($paper->getExercise()->getCorrectionMode() == 3) &&
-                  ($paper->getExercise()->getDateCorrection()->format('Y-m-d H:i:s') <= date("Y-m-d H:i:s"))) || (($paper->getExercise()->getCorrectionMode() == 2) &&
-                  ($paper->getExercise()->getMaxAttemps() <= $this->container->get('UJM_Exo.exerciseServices')->getNbPaper($user->getId(), $paper->getExercise()->getId())))))) {
+            (($paper->getExercise()->getCorrectionMode() == 1) || 
+            (($paper->getExercise()->getCorrectionMode() == 3) &&
+            ($paper->getExercise()->getDateCorrection()->format('Y-m-d H:i:s') <= date("Y-m-d H:i:s"))) || 
+            (($paper->getExercise()->getCorrectionMode() == 2) &&
+            ($paper->getExercise()->getMaxAttemps() <= $this->container->get('UJM_Exo.exerciseServices')->getNbPaper(
+                $user->getId(), $paper->getExercise()->getId())))))
+        ) {
 
             $display = 'all';
 
@@ -122,26 +126,26 @@ class PaperController extends Controller
         }
 
         $interactions = $this->getDoctrine()
-                             ->getEntityManager()
-                             ->getRepository('UJMExoBundle:Interaction')
-                             ->getPaperInteraction($em, str_replace(';', '\',\'', substr($paper->getOrdreQuestion(), 0, -1)));
+            ->getEntityManager()
+            ->getRepository('UJMExoBundle:Interaction')
+            ->getPaperInteraction($em, str_replace(';', '\',\'', substr($paper->getOrdreQuestion(), 0, -1)));
 
         $interactions = $this->orderInteractions($interactions, $paper->getOrdreQuestion());
 
         $responses = $this->getDoctrine()
-                          ->getEntityManager()
-                          ->getRepository('UJMExoBundle:Response')
-                          ->getPaperResponses($paper->getUser()->getId(), $id);
+            ->getEntityManager()
+            ->getRepository('UJMExoBundle:Response')
+            ->getPaperResponses($paper->getUser()->getId(), $id);
 
         $responses = $this->orderResponses($responses, $paper->getOrdreQuestion());
 
         $hintViewed = $this->getDoctrine()
-                           ->getEntityManager()
-                           ->getRepository('UJMExoBundle:LinkHintPaper')
-                           ->getHintViewed($paper->getId());
+            ->getEntityManager()
+            ->getRepository('UJMExoBundle:LinkHintPaper')
+            ->getHintViewed($paper->getId());
 
         return $this->render(
-            'UJMExoBundle:Paper:show.html.twig', 
+            'UJMExoBundle:Paper:show.html.twig',
             array(
                 'workspace'    => $worspace,
                 'exoId'        => $paper->getExercise()->getId(),
