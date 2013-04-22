@@ -19,14 +19,18 @@ class AjaxAuthenticationListener
 
     /**
      * @DI\InjectParams({
-     *     "context" = @DI\Inject("security.context")
+     *     "context" = @DI\Inject("security.context"),
+     *     "templating" = @DI\Inject("templating"),
+     *     "session"= @DI\Inject("session")
      * })
      *
      * @param SecurityContextInterface $context
      */
-    public function __construct(SecurityContextInterface $context)
+    public function __construct(SecurityContextInterface $context, $templating, $session)
     {
         $this->securityContext = $context;
+        $this->templating = $templating;
+        $this->session = $session;
     }
 
     /**
@@ -37,9 +41,11 @@ class AjaxAuthenticationListener
     public function onCoreException(GetResponseForExceptionEvent $event)
     {
         $exception = $event->getException();
+        $request = $event->getRequest();
 
         // TODO : find a better way to handle security errors on ajax requests...
         // (see http://stackoverflow.com/questions/8607212/symfony2-ajax-login)
+        /*
         if ($event->getRequest()->isXmlHttpRequest()
             && ($exception instanceof AccessDeniedHttpException || $exception instanceof AuthenticationException)) {
             $msg = $this->securityContext->getToken() instanceof AnonymousToken ?
@@ -47,6 +53,22 @@ class AjaxAuthenticationListener
                 . ' : refresh the page to proceed to authentication' :
                 'Not allowed';
             $event->setResponse(new Response($msg, 403));
+        }
+         * */
+
+        if ($request->isXmlHttpRequest()
+            && get_class($exception) == 'Symfony\Component\Security\Core\Exception\AccessDeniedException') {
+            $form = $this->templating->render(
+                'ClarolineCoreBundle:Authentication:login_ajax_form.html.twig'
+            );
+
+            //@see https://github.com/gillest/HackSessionBundle
+            if (!$request->hasPreviousSession()) {
+                $request->cookies->set(session_name(), 'tmp');
+                $request->setSession($this->session);
+            }
+
+            $event->setResponse(new Response($form, 403));
         }
     }
 }

@@ -16,9 +16,9 @@ class HomeController extends Controller
      * This method require claroline.common.home_service.
      *
      * @route(
-     *     "/content/{id}/{type}", 
-     *     requirements={"id" = "\d+"}, 
-     *     name="claroline_get_content_by_id_and_type", 
+     *     "/content/{id}/{type}",
+     *     requirements={"id" = "\d+"},
+     *     name="claroline_get_content_by_id_and_type",
      *     defaults={"type" = "home"})
      *
      * @param \String $id The id of the content.
@@ -215,6 +215,83 @@ class HomeController extends Controller
 
                 $response = "true";
             }
+        }
+
+        return new Response($response);
+    }
+
+        /**
+     * Reorder contents in types. This method is used by ajax.
+     * The response is the word true in a string in success, otherwise false.
+     *
+     * @param \String $type The type of the content.
+     * @param \String $a The id of the content 1.
+     * @param \String $b The id of the content 2.
+     *
+     * @route(
+     *     "/content/reorder/{type}/{a}/{b}",
+     *     requirements={"a" = "\d+"},
+     *     name="claroline_content_reorder")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function reorderAction($type, $a, $b)
+    {
+        $response = "false";
+
+        $manager = $this->getDoctrine()->getManager();
+
+        $a = $manager->getRepository("ClarolineCoreBundle:Home\Content")->find($a);
+        $b = $manager->getRepository("ClarolineCoreBundle:Home\Content")->find($b);
+
+        $type = $manager->getRepository("ClarolineCoreBundle:Home\Type")->findOneBy(array('name' => $type));
+
+        if ($this->get('security.context')->isGranted('ROLE_ADMIN') and $a and $type) {
+            $a = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(
+                array(
+                    'type' => $type,
+                    'content' => $a
+                )
+            );
+
+            $a->detach();
+
+            if ($b) {
+                $b = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(
+                    array(
+                        'type' => $type,
+                        'content' => $b
+                    )
+                );
+
+                $a->setBack($b->getBack());
+                $a->setNext($b);
+
+                if ($b->getBack()) {
+                    $b->getBack()->setNext($a);
+                }
+
+                $b->setBack($a);
+            } else {
+                $b = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(
+                    array(
+                        'type' => $type,
+                        'next' => null
+                    )
+                );
+
+                $a->setNext($b->getNext());
+                $a->setBack($b);
+
+                $b->setNext($a);
+            }
+
+            $manager->persist($a);
+            $manager->persist($b);
+
+            $manager->flush();
+
+            $response = "true";
         }
 
         return new Response($response);

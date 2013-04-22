@@ -26,22 +26,5 @@ class AjaxAuthenticationListenerTest extends FunctionalTestCase
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
         );
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals('Not allowed', $this->client->getResponse()->getContent());
-    }
-
-    public function testAnonymousUserIsInvitedToAuthenticateOnAuthenticationException()
-    {
-        $this->client->request(
-            'GET',
-            "/workspaces/{$this->getWorkspace('john')->getId()}/open/tool/home",
-            array(),
-            array(),
-            array('HTTP_X-Requested-With' => 'XMLHttpRequest')
-        );
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-        $this->assertContains(
-            'refresh the page to proceed to authentication',
-            $this->client->getResponse()->getContent()
-        );
     }
 }

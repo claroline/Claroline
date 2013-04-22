@@ -319,6 +319,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $this->loadUserData(array('user' => 'user', 'ws_creator' => 'ws_creator'));
         $this->loadWorkspaceData(array('ws_a' => 'ws_creator'));
         $pwcId = $this->getUser('ws_creator')->getPersonalWorkspace()->getId();
+        $this->logUser($this->getUser('user'));
         $this->client->request(
             'GET', "/workspaces/tool/user_management/{$pwcId}/users/0/registered",
             array(),

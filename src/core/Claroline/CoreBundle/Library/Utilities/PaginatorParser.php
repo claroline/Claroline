@@ -3,7 +3,11 @@
 namespace Claroline\CoreBundle\Library\Utilities;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.utilities.paginator_parser")
+ */
 class PaginatorParser
 {
     /**
@@ -13,7 +17,7 @@ class PaginatorParser
      *
      * @return array
      */
-    public function paginatorToArray (Paginator $paginator)
+    public function paginatorToArray(Paginator $paginator)
     {
         $items = array();
 

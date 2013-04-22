@@ -242,31 +242,4 @@
 
         $('body').append(html);
     };
-
-    var ajaxAuthenticationErrorHandler = function (callBack) {
-        $.ajax({
-            type: 'GET',
-            url: Routing.generate('claro_security_login'),
-            cache: false,
-            success: function (data) {
-                createModal();
-                $('#modal-body').append(data);
-                $('#bootstrap-modal').modal('show');
-                $('#login-form').submit(function (e) {
-                    e.preventDefault();
-                    $.ajax({
-                        type: 'POST',
-                        url: Routing.generate('claro_security_login_check'),
-                        cache: false,
-                        data: $('#login-form').serialize(),
-                        success: function () {
-                            $('#bootstrap-modal').modal('hide');
-                            $('#bootstrap-modal').remove();
-                            callBack();
-                        }
-                    });
-                });
-            }
-        });
-    };
 })();

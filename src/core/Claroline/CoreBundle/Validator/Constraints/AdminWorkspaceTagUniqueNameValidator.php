@@ -5,9 +5,25 @@ namespace Claroline\CoreBundle\Validator\Constraints;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Doctrine\ORM\EntityManager;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Validator("admin_workspace_tag_unique_name_validator")
+ */
 class AdminWorkspaceTagUniqueNameValidator extends ConstraintValidator
 {
+    private $em;
+
+    /**
+     * @DI\InjectParams({
+     *     "em" = @DI\Inject("doctrine.orm.entity_manager")
+     * })
+     */
+    public function setEntityManager(EntityManager $em)
+    {
+        $this->em = $em;
+    }
+
     public function isValid($value, Constraint $constraint)
     {
         $name = trim($value);
@@ -20,10 +36,5 @@ class AdminWorkspaceTagUniqueNameValidator extends ConstraintValidator
         }
 
         return true;
-    }
-
-    public function setEntityManager(EntityManager $em)
-    {
-        $this->em = $em;
     }
 }

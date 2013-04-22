@@ -65,8 +65,28 @@ claro_workspace:
     prefix: workspaces
     type: annotation
 
+claro_workspace_tag:
+    resource: "@ClarolineCoreBundle/Controller/WorkspaceTagController.php"
+    prefix: workspaces
+    type: annotation
+
 claro_workspace_tool_properties:
     resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceParametersController.php"
+    prefix: workspaces/tool/properties
+    type: annotation
+
+claro_workspace_tool_widgets_properties:
+    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceWidgetParametersController.php"
+    prefix: workspaces/tool/properties
+    type: annotation
+
+claro_workspace_tool_tools_properties:
+    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceToolsParametersController.php"
+    prefix: workspaces/tool/properties
+    type: annotation
+
+claro_workspace_tool_resources_properties:
+    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceResourceParametersController.php"
     prefix: workspaces/tool/properties
     type: annotation
 

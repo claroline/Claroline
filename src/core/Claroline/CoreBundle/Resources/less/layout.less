@@ -147,7 +147,7 @@ footer {
 .widget a.accordion-toggle:hover
 {
     background:@grayLighter;
-    text-decoration:none;    
+    text-decoration:none;
 }
 
 .notification-date {
@@ -171,7 +171,7 @@ footer {
     -webkit-border-bottom-left-radius: 0;
        -moz-border-radius-bottomleft: 0;
             border-bottom-left-radius: 0;
-    
+
     -webkit-border-bottom-right-radius: 0;
        -moz-border-radius-bottomright: 0;
             border-bottom-right-radius: 0;
@@ -192,7 +192,7 @@ footer {
 .section-content .navbar
 {
     padding:0;
-    margin:0;    
+    margin:0;
 }
 
 .section-content .navbar .navbar-inner
@@ -263,13 +263,13 @@ footer {
     display:block;
 }
 
-.resource-manager .resources 
-{     
+.resource-manager .resources
+{
     margin: 0;
     padding: 0 0 10px 0;
 }
 
-.resource-thumbnail 
+.resource-thumbnail
 {
     display:inline-block;
     margin: 10px 0 0 10px;
@@ -391,14 +391,14 @@ footer {
     background-position: center center;
     background-size:auto 100% ;
     background-repeat:no-repeat;
-    
+
     padding:0px;
     margin:5px 0 5px 15%;
     cursor:pointer;
 }
 
 .resource-thumbnail .checkbox {
-    float:left;    
+    float:left;
 }
 
 .resource-thumbnail input[type=checkbox] {
@@ -430,7 +430,7 @@ footer {
 
 .resource-rights-form
 {
-    margin:0 10px 10px 10px; 
+    margin:0 10px 10px 10px;
 }
 
 .resource-rights-form input.pull-right
@@ -507,21 +507,14 @@ footer {
 /********/
 
 /* Disable link */
-a.dropdown-menu-item-disabled,
-a.dropdown-menu-item-disabled:visited ,
-a.dropdown-menu-item-disabled:active,
-a.dropdown-menu-item-disabled:hover {
-  color: #999 ;
-  cursor: default;
-}
 
 a.dropdown-menu-item-disabled,
 a.dropdown-menu-item-disabled:visited ,
 a.dropdown-menu-item-disabled:active,
 a.dropdown-menu-item-disabled:hover {
-    color: #999 ;
+    color: #999 !important;
     cursor: default;
-    background-color: white;
+    background-color: @white;
 }
 
 /**********/
@@ -617,7 +610,7 @@ form legend
 
 @media (min-width: 767px)
 {
-	.content.row-fluid [class*="span"] 
+	.content.row-fluid [class*="span"]
     {
 		margin-left: 0;
 		margin-right: 1%;
@@ -684,7 +677,7 @@ form legend
 	}
 
 
-	.content.row-fluid 
+	.content.row-fluid
 	{
 		/*border:1px solid lime;*/
 	}

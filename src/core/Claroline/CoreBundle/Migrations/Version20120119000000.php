@@ -854,8 +854,8 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable('claro_event');
         $this->addId($table);
         $table->addColumn('title', 'string', array('notnull' => true, 'length' => 50));
-        $table->addColumn('start', 'integer', array('notnull' => false));
-        $table->addColumn('end', 'integer', array('notnull' => false));
+        $table->addColumn('start_date', 'integer', array('notnull' => false));
+        $table->addColumn('end_date', 'integer', array('notnull' => false));
         $table->addColumn('description', 'string', array('notnull' => false, 'length' => 255));
         $table->addColumn('workspace_id', 'integer', array('notnull' => true));
         $table->addColumn('user_id', 'integer', array('notnull' => true));
@@ -882,7 +882,7 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable('claro_tools');
         $this->addId($table);
         $table->addColumn('name', 'string');
-        $table->addColumn('display_name', 'string',array('notnull' => false));
+        $table->addColumn('display_name', 'string', array('notnull' => false));
         $table->addColumn('class', 'string');
         $table->addColumn('is_displayable_in_workspace', 'boolean');
         $table->addColumn('is_displayable_in_desktop', 'boolean');

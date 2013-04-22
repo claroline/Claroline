@@ -15,9 +15,9 @@ if (!file_exists($file = __DIR__ . '/../app/config/local/plugin/routing.yml')) {
     touch($file);
 }
 
-if (!is_writable(__DIR__.'../app/logs')) {
-    echo "<strong>Change the permission to write in the log folder</strong>";
-}
+// if (!is_writable(__DIR__.'../app/logs')) {
+//     echo "<strong>Change the permission to write in the log folder</strong>";
+// }
 $kernel = new AppKernel('install', true); // put second parameter to false when development is done
 $kernel->loadClassCache();
 $kernel->handle(Request::createFromGlobals())->send();

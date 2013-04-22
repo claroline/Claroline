@@ -64,9 +64,9 @@ class ResourceQueryBuilder
             $this->leftJoinRights = true;
             $this->selectClause .=
                 ",{$eol}" .
-                "    MAX (rights.canExport) as can_export,{$eol}" .
-                "    MAX (rights.canDelete) as can_delete,{$eol}" .
-                "    MAX (rights.canEdit) as can_edit";
+                "    MAX (CASE rights.canExport WHEN true THEN 1 ELSE 0 END) as can_export,{$eol}" .
+                "    MAX (CASE rights.canDelete WHEN true THEN 1 ELSE 0 END) as can_delete,{$eol}" .
+                "    MAX (CASE rights.canEdit WHEN true THEN 1 ELSE 0 END) as can_edit";
         }
 
         $this->selectClause .= $eol;
@@ -327,6 +327,18 @@ class ResourceQueryBuilder
     }
 
     /**
+     * Orders resources by name.
+     *
+     * @return Claroline\CoreBundle\Repository\ResourceQueryBuilder
+     */
+    public function orderByName()
+    {
+        $this->orderClause = 'ORDER BY resource.name' . PHP_EOL;
+
+        return $this;
+    }
+
+    /**
      * Groups resources by id.
      *
      * @return ResourceQueryBuilder
@@ -334,6 +346,19 @@ class ResourceQueryBuilder
     public function groupById()
     {
         $this->groupByClause = 'GROUP BY resource.id' . PHP_EOL;
+
+        return $this;
+    }
+
+    public function groupByResourceUserTypeAndIcon()
+    {
+        $this->groupByClause = '
+            GROUP BY resource.id,
+                     creator.username,
+                     resourceType.name,
+                     resourceType.isBrowsable,
+                     icon.relativeUrl
+        ' . PHP_EOL;
 
         return $this;
     }

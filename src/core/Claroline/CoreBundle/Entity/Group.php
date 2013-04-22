@@ -102,7 +102,7 @@ class Group extends AbstractRoleSubject
 
     public function getPlatformRole()
     {
-        $roles = $this->getOwnedRoles();
+        $roles = $this->getEntityRoles();
 
         foreach ($roles as $role) {
             if ($role->getRoleType() != Role::WS_ROLE) {
@@ -113,7 +113,7 @@ class Group extends AbstractRoleSubject
 
     public function setPlatformRole($platformRole)
     {
-        $roles = $this->getOwnedRoles();
+        $roles = $this->getEntityRoles();
 
         foreach ($roles as $role) {
             if ($role->getRoleType() != Role::WS_ROLE) {

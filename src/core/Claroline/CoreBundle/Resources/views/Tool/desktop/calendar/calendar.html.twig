@@ -20,9 +20,10 @@
         </li>
     </ul>
     <div id="selectWorkspace">
-        {% for e in listEvents %}
-                {{ e.workspace.getName()}}
-        {% endfor %}
+        {% for c in cours %}
+                {{c}}
+                 <input type="checkbox" name="{{c}}"  class="filter" />
+        {% endfor %} 
     </div>
     <div id='calendar' class="span9"></div>
     <div  id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -53,12 +54,12 @@
             <li style="color:#848484"> {{ 'low'|trans({}, 'calendar') }} </li>
         </ul>
         <h4> <u>{{'task'|trans({}, 'calendar') }} </u></h4>
-        {% for e in listEvents %}
+        {% for e in listEvents if e.allDay == 1 %}
         <div class="border">
             <button type="button" class="delete-task close" data-event-id="{{e.id}}" data-dismiss="alert">&times;</button>
            <h5 data-event-title="{{e.title}}"> {{ e.title }}</h5>
            <ul>
-                <li data-event-start="{{ e.start}}"> {{ e.start}} </li>
+                <li data-event-start="{{ e.start|date("d/m/Y") }}"> {{ e.start|date("d/m/Y")}} </li>
                 <li > {{ e.end|date("d/m/Y") }} </li>
                 <li>{{ e.description }}</li>
                 <li class="hidden"> {{e.priority}}</li>

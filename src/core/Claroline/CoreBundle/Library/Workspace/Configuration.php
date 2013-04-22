@@ -26,40 +26,33 @@ class Configuration
     private $permsRootConfig;
     private $templateFile;
 
-    //@todo refactoring __construct/fromTemplate because the ziparchive is opened
-    //@todo templateFile must come from the parameter claroline.workspace_template.directory
-    //twice with fromtemplate.
-    public function __construct()
+    public function __construct($template)
     {
+        $this->templateFile = $template;
         $this->workspaceType = self::TYPE_SIMPLE;
-        $ds = DIRECTORY_SEPARATOR;
-        $this->templateFile = __DIR__."{$ds}..{$ds}..{$ds}..{$ds}..{$ds}..{$ds}..{$ds}templates{$ds}default.zip";
         $archive = new \ZipArchive();
-        $archive->open($this->templateFile);
-        $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
-        $this->setCreatorRole($parsedFile['creator_role']);
-        $this->setRoles($parsedFile['roles']);
-        $this->setToolsPermissions($parsedFile['tools_infos']);
-        $this->setToolsConfiguration($parsedFile['tools']);
-        $this->setPermsRootConfiguration($parsedFile['root_perms']);
-        $this->setArchive($this->templateFile);
+
+        if (true === $code = $archive->open($template)) {
+            $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
+            $archive->close();
+            $this->setCreatorRole($parsedFile['creator_role']);
+            $this->setRoles($parsedFile['roles']);
+            $this->setToolsPermissions($parsedFile['tools_infos']);
+            $this->setToolsConfiguration($parsedFile['tools']);
+            $this->setPermsRootConfiguration($parsedFile['root_perms']);
+        } else {
+            throw new \Exception(
+                "Couldn't open template archive '{$template}' (error {$code})"
+            );
+        }
     }
 
+    /**
+     * @todo this method is useless (constructor should be enough now)
+     */
     public static function fromTemplate($templateFile)
     {
-        $archive = new \ZipArchive();
-        $archive->open($templateFile);
-        $config = new Configuration();
-        $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
-        $archive->close();
-        $config->setCreatorRole($parsedFile['creator_role']);
-        $config->setRoles($parsedFile['roles']);
-        $config->setToolsPermissions($parsedFile['tools_infos']);
-        $config->setToolsConfiguration($parsedFile['tools']);
-        $config->setPermsRootConfiguration($parsedFile['root_perms']);
-        $config->setArchive($templateFile);
-
-        return $config;
+        return new self($templateFile);
     }
 
     public function setWorkspaceType($type)

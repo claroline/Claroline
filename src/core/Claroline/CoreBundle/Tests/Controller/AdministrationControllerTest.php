@@ -143,7 +143,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $grpAId = $this->getGroup('group_a')->getId();
         $adminId = $this->getUser('admin')->getId();
         $this->client->request(
-            'PUT',
+            'POST',
             "/admin/group/{$grpAId}/users?userIds[]={$adminId}"
         );
         $this->client->request('GET', "/admin/group/{$grpAId}/users/0");
@@ -157,7 +157,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $grpAId = $this->getGroup('group_a')->getId();
         $adminId = $this->getUser('admin')->getId();
         $this->client->request(
-            'PUT',
+            'POST',
             "/admin/group/{$grpAId}/users?userIds[]={$adminId}"
         );
 
@@ -406,32 +406,6 @@ class AdministrationControllerTest extends FunctionalTestCase
             ->findOneBy(array('name' => 'claroline_rssreader'));
         $crawler = $this->client->request('GET', "/admin/widget/{$widget->getId()}/configuration/desktop");
         $this->assertEquals(count($crawler->filter('#rss_form')), 1);
-    }
-
-    private function registerStubPlugins(array $pluginFqcns)
-    {
-        $container = $this->client->getContainer();
-        $dbWriter = $container->get('claroline.plugin.recorder_database_writer');
-        $pluginDirectory = $container->getParameter('claroline.param.stub_plugin_directory');
-        $loader = new Loader($pluginDirectory);
-        $validator = $container->get('claroline.plugin.validator');
-
-        foreach ($pluginFqcns as $pluginFqcn) {
-            $plugin = $loader->load($pluginFqcn);
-            $validator->validate($plugin);
-            $dbWriter->insert($plugin, $validator->getPluginConfiguration());
-        }
-    }
-
-    private function resetTemplate()
-    {
-        $container = $this->client->getContainer();
-        $yml = $container->getParameter('claroline.workspace_template.directory').'config.yml';
-        $archpath = $container->getParameter('claroline.workspace_template.directory').'default.zip';
-        $archive = new \ZipArchive();
-        $archive->open($archpath, \ZipArchive::OVERWRITE);
-        $archive->addFile($yml, 'config.yml');
-        $archive->close();
     }
 
     private function getUser($username)

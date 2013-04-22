@@ -267,7 +267,25 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $crawler = $this->client->request('GET', "/workspaces");
         $this->assertEquals(1, $crawler->filter('.row-workspace')->count());
     }
-    /*
+
+    public function testCreateWorkspaceGrantAccessToWorkspace()
+    {
+        $this->loadUserData(array('ws_creator' => 'ws_creator'));
+        $crawler = $this->logUser($this->getFixtureReference('user/ws_creator'));
+        $link = $crawler->filter('#link-create-ws-form')->link();
+        $crawler = $this->client->click($link);
+        $form = $crawler->filter('button[type=submit]')->form();
+        $form['workspace_form[name]'] = 'first_new_workspace';
+        $form['workspace_form[type]'] = 'simple';
+        $form['workspace_form[code]'] = 'a_code';
+        $this->client->submit($form);
+        $ws = $this->client->getContainer()->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
+            ->findOneByName('first_new_workspace');
+        $this->client->request('GET', "/workspaces/{$ws->getId()}/open/tool/home");
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+    }
+
     public function testUserCanCreateWorkspaceTag()
     {
         $this->loadUserData(array('user' => 'user'));
@@ -397,7 +415,6 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->loadUserData(array('admin' => 'admin'));
         $this->logUser($this->getUser('admin'));
         $pws = $this->getUser('admin')->getPersonalWorkspace();
-        $userId = $this->getUser('admin')->getId();
         $workspaceId = $pws->getId();
         $crawler = $this->client->request("GET", "/workspaces/tag/admin/createform");
         $form = $crawler->filter('button[type=submit]')->form();
@@ -536,5 +553,4 @@ class WorkspaceControllerTest extends FunctionalTestCase
             ->findOneAdminByWorkspaceAndTag($pws, $tag);
         $this->assertNotNull($relWsTag);
     }
-    */
 }
