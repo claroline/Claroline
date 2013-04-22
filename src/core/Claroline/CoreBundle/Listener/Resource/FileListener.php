@@ -140,7 +140,9 @@ class FileListener implements ContainerAwareInterface
     {
         $file = $event->getResource();
         $hash = $file->getHashName();
-        $event->setItem($this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR . $hash);
+        $event->setItem(
+            $this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR . $hash
+        );
         $event->stopPropagation();
     }
 

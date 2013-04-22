@@ -2,6 +2,11 @@
 
 namespace Claroline\CoreBundle\Library\Home;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
+/**
+ * @DI\Service("claroline.common.home_service")
+ */
 class HomeService
 {
     /**

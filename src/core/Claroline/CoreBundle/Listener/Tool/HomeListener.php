@@ -31,7 +31,7 @@ class HomeListener
         $this->wm = $wm;
     }
 
-   /**
+    /**
      * @DI\Observe("open_tool_desktop_home")
      *
      * @param DisplayToolEvent $event
@@ -99,7 +99,7 @@ class HomeListener
                 $content .= "{$unknown}, ";
             }
 
-            $content.= "were not found";
+            $content .= "were not found";
 
             throw new \Exception($content);
         }

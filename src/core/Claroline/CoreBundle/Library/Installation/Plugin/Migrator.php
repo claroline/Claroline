@@ -4,9 +4,12 @@ namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Claroline\CoreBundle\Library\Installation\BundleMigrator;
 use Claroline\CoreBundle\Library\PluginBundle;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * The migrator is used to create/update/drop the plugin database tables.
+ *
+ * @DI\Service("claroline.plugin.migrator")
  */
 class Migrator
 {
@@ -16,6 +19,10 @@ class Migrator
      * Constructor.
      *
      * @param BundleMigrator $migrator
+     *
+     * @DI\InjectParams({
+     *     "migrator" = @DI\Inject("claroline.install.bundle_migrator")
+     * })
      */
     public function __construct(BundleMigrator $migrator)
     {

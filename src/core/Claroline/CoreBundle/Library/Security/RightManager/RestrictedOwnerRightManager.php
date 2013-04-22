@@ -5,12 +5,21 @@ namespace Claroline\CoreBundle\Library\Security\RightManager;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Claroline\CoreBundle\Library\Security\SecurityException;
 use Claroline\CoreBundle\Entity\User;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.security.restricted_owner_right_manager")
+ */
 class RestrictedOwnerRightManager implements RightManagerInterface
 {
     /** @var RightManagerInterface */
     private $baseManager;
 
+    /**
+     * @DI\InjectParams({
+     *     "baseManager" = @DI\Inject("claroline.security.right_manager")
+     * })
+     */
     public function __construct($baseManager)
     {
         $this->baseManager = $baseManager;

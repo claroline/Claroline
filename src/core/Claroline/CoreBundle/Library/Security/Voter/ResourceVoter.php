@@ -12,9 +12,13 @@ use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\EntityManager;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * This voter is involved in access decisions for AbstractResource instances.
+ *
+ * @DI\Service
+ * @DI\Tag("security.voter")
  */
 class ResourceVoter implements VoterInterface
 {
@@ -25,6 +29,13 @@ class ResourceVoter implements VoterInterface
     private $ut;
     private $fromResourceRightsToOwnerRights;
 
+    /**
+     * @DI\InjectParams({
+     *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "translator" = @DI\Inject("translator"),
+     *     "ut" = @DI\Inject("claroline.security.utilities")
+     * })
+     */
     public function __construct(EntityManager $em, Translator $translator, Utilities $ut)
     {
         $this->em = $em;

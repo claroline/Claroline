@@ -14,7 +14,11 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Library\Event\ResourceLogEvent;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.resource.manager")
+ */
 class Manager
 {
     /** @var EntityManager */
@@ -34,6 +38,10 @@ class Manager
      * Constructor.
      *
      * @param ContainerInterface $container
+     *
+     * @DI\InjectParams({
+     *     "container" = @DI\Inject("service_container")
+     * })
      */
     public function __construct(ContainerInterface $container)
     {
@@ -359,7 +367,7 @@ class Manager
                     $content .= "{$unknown}, ";
                 }
                 $content .= "were not found";
-                
+
                 throw new \Exception($content);
             }
 
@@ -473,5 +481,30 @@ class Manager
         }
 
         return $resource;
+    }
+
+    /**
+     * Builds an array used by the query builder from the query parameters.
+     * @see filterAction from ResourceController
+     *
+     * @param array $queryParameters
+     *
+     * @return array
+     */
+    public function buildSearchArray($queryParameters)
+    {
+        $allowedStringCriteria = array('name', 'dateFrom', 'dateTo');
+        $allowedArrayCriteria = array('roots', 'types');
+        $criteria = array();
+
+        foreach ($queryParameters as $parameter => $value) {
+            if (in_array($parameter, $allowedStringCriteria) && is_string($value)) {
+                $criteria[$parameter] = $value;
+            } elseif (in_array($parameter, $allowedArrayCriteria) && is_array($value)) {
+                $criteria[$parameter] = $value;
+            }
+        }
+
+        return $criteria;
     }
 }

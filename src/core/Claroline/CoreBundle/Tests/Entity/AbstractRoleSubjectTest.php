@@ -20,13 +20,13 @@ class AbstractRoleSubjectTest extends FixtureTestCase
         $roleA = $this->getRole('role_a');
         $user = $this->getUser('user');
         $user->addRole($roleA);
-        $this->assertEquals(3, count($user->getOwnedRoles()));
+        $this->assertEquals(3, count($user->getEntityRoles()));
         $user->removeRole($roleA);
-        $this->assertEquals(2, count($user->getOwnedRoles()));
+        $this->assertEquals(2, count($user->getEntityRoles()));
         $this->loadGroupData(array('group_a' => array()));
         $groupA = $this->getGroup(('group_a'));
         $groupA->removeRole($this->getRole('group_a'));
-        $this->assertEquals(0, count($groupA->getOwnedRoles()));
+        $this->assertEquals(0, count($groupA->getEntityRoles()));
     }
 
     public function testAddAlreadyOwnedRoleDoesntAddNewRole()
