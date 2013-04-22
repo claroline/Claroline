@@ -203,12 +203,12 @@ class exerciseServices
                         ->getRepository('UJMExoBundle:LinkHintPaper')
                         ->getLHP($hint->getId(), $paperID);
             if (count($lhp) > 0) {
-                $signe = substr($hint->getPenality(), 0, 1);
+                $signe = substr($hint->getPenalty(), 0, 1);
 
                 if ($signe == '-') {
-                    $penalty += substr($hint->getPenality(), 1);
+                    $penalty += substr($hint->getPenalty(), 1);
                 } else {
-                    $penalty += $hint->getPenality();
+                    $penalty += $hint->getPenalty();
                 }
             }
         }

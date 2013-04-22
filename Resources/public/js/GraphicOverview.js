@@ -69,9 +69,18 @@ function whichImg(shape, color, i, x, y, rx, ry, prefix,size) {
         }
     }
     
-    document.getElementById('ra' + i).style.left = String(document.getElementById('AnswerImage').offsetLeft + x - (size/2) - 10) + 'px';
-    document.getElementById('ra' + i).style.top = String(document.getElementById('AnswerImage').offsetTop + y - (size/2)) + 'px';
-
-    document.getElementById('cursor' + i).style.left = String(document.getElementById('AnswerImage').offsetLeft + rx - 20) + 'px';
-    document.getElementById('cursor' + i).style.top = String(document.getElementById('AnswerImage').offsetTop + ry - 10) + 'px';
+    
+    document.getElementById('ra' + i).style.left = String(document.getElementById('AnswerImage').offsetLeft +
+        parseInt(x) - (size/2) - 10) + 'px';
+    document.getElementById('ra' + i).style.top = String(document.getElementById('AnswerImage').offsetTop +
+        parseInt(y) - (size/2)) + 'px';
+    
+    if(rx != 'a' && ry != 'a'){
+        document.getElementById('cursor' + i).style.left = String(document.getElementById('AnswerImage').offsetLeft +
+            parseInt(rx) - 20) + 'px';
+        document.getElementById('cursor' + i).style.top = String(document.getElementById('AnswerImage').offsetTop +
+            parseInt(ry) - 10) + 'px';
+    } else {
+        document.getElementById('cursor' + i).style.visibility = 'hidden';
+    }
 }

@@ -153,13 +153,13 @@
         <input type="hidden" id="graphId" name="graphId" value="{{ interactionToDisplayed.id }}"/>
         <table>
             {% set nbr_hint = 1 %}
-            {% for hint in interactionToDisplayed.interaction.hints %}              
-                <tr>
-                    <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}', '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }}', '{{nbr_hint}}')">{{ "Hint" | trans }} {{nbr_hint}} </a></td>
-                    <td id="div_hint{{nbr_hint}}"></td>
-                </tr>
-                {% set nbr_hint = nbr_hint + 1 %}
-            {% endfor %}
+                {% for hint in interactionToDisplayed.interaction.hints %}
+                    <tr>
+                        <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}', '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }}', '{{nbr_hint}}', '{{paper}}')">{{ "Hint" | trans }} {{nbr_hint}} </a></td>
+                        <td id="div_hint{{nbr_hint}}"></td>
+                    </tr>
+                    {% set nbr_hint = nbr_hint + 1 %}
+                {% endfor %}
         </table><br/>
         
         <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}" />

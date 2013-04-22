@@ -28,7 +28,7 @@ function submitForm(numQuestionToDisplayed, interactionType) {
     document.getElementById("formResponse").submit();
 }
 
-function finish(interactionType, interactionType) {
+function finish(interactionType) {
     document.getElementById("numQuestionToDisplayed").value = 'finish';
     
     if (interactionType == 'InteractionGraphic') {
@@ -50,18 +50,19 @@ function interupt(interactionType) {
 
 function recordGraph(noAnswerZone, notAll) {
 
-    var item = getTaille(tempCoords);
+    var taille = document.getElementById('nbpointer').value;
 
-    if (item == 0) {
-        alert(noAnswerZone);
-        return false;
-    } else if (item < (taille - 1)) {
-        alert(notAll);
-        return false;
-    } else {
-        for (var cur in tempCoords) {
-            document.getElementById('answers').value += tempCoords[cur] + ';';
+    for (var x = 1 ; x < taille ; x++) {
+        var label = 'cursor' + x;
+
+        if (!tempCoords[label]) {
+            tempCoords[label] = 'a-a';
+
         }
+    }
+
+    for (var cur in tempCoords) {
+        document.getElementById('answers').value += tempCoords[cur] + ';';
     }
 }
 

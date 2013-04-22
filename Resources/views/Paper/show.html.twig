@@ -117,7 +117,7 @@
             </div>
             {% for hv in hintViewed %}
                 {% if( hv.hint.interaction.id == interaction.id ) %}
-                    {{ "Penalty" | trans }}: {{ hv.hint.penality }}<br/>
+                    {{ "Penalty" | trans }}: {{ hv.hint.penalty }}<br/>
                 {% endif %}
             {% endfor %}
             {{ "Mark" | trans }}: {{ responses[i].mark }}/{{ interInfo['maxScore'] }}<br/>
@@ -127,10 +127,12 @@
         </div>
 
     {% elseif(interaction.type == 'InteractionGraphic') %}
-                    
+
         {% set interInfo = getInterTwig(interaction.id, 'InteractionGraphic') %}
         {% set interG =  interInfo['question'] %}
         {% set coords =  getCoordsGraphTwig(interG.id) %}
+        {% set maxScore = 0 %}
+
         {% if (display == 'all') %}
             <div>
         {% else %}
@@ -153,37 +155,39 @@
 
             <p><img src="{{asset (interG.document.url)}}" width="{{ interG.width }}" height="{{ interG.height }}" alt="AnswerImage" id="AnswerImage"/></p>
 
-            <p>Score : {#{ score }}/{{ total }#}.<br/>
-
-                <!--{#% if score == 0 %#} 
-                    Aucune bonne réponse.
-                {#% elseif penalty == 0 %#}
-                    Indices non vus, pas de pénalité.
-                {#% else %#}
-                    Points bonne réponse : {#{ point }#} avec : -{#{ penalty }#} de pénalité pour indices vus.
-                {#% endif %#}-->
-            </p>
-
-            {%set i = 0 %}    
+            {% set repco = responses[i].response|split(';') %}
+            {%set x = 0 %}    
 
             {% for c in coords %} 
 
-                {% set numb = coords[i].value|split(',') %}
-                {% set repco = responses[i]|split('-') %}
+                {% set maxScore = maxScore + coords[x].scoreCoords %}
+                {% set numb = coords[x].value|split(',') %}
+                {% set repcoX = repco[x]|split('-') %}
 
-                <img src="/Claroline/web/bundles/ujmexo/images/graphic/circlew.png" alt="RightAnswer{{i}}" id="ra{{i}}"
-                     style="position: absolute; z-index: 2;" width="{{ coords[i].size }}"/><br/>
+                <img src="/Claroline/web/bundles/ujmexo/images/graphic/circlew.png" alt="RightAnswer{{x}}" id="ra{{x}}"
+                    style="position: absolute; z-index: 2;" width="{{ coords[x].size }}"/><br/>
 
-                <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{i}}" id="cursor{{i}}" 
+                <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{x}}" id="cursor{{x}}" 
                      style="position: absolute; z-index: 7;"/>
 
-                <script type="text/javascript">whichImg('{{coords[i].shape}}', '{{coords[i].color}}', {{i}}, 
-                    {{ numb[0] }}, {{ numb[1] }}, {{repco[0]}},{{repco[1]}}, '{{ asset('bundles/ujmexo/images/graphic/') }}',
-                    '{{ coords[i].size }}')</script>
+                <script type="text/javascript">whichImg('{{coords[x].shape}}', '{{coords[x].color}}', {{x}}, 
+                    '{{ numb[0] }}', '{{ numb[1] }}', '{{repcoX[0]}}', '{{repcoX[1]}}', '{{ asset('bundles/ujmexo/images/graphic/') }}',
+                    '{{ coords[x].size }}')</script>      
 
-                {%set i=i+1%}
+                {%set x=x+1%}
 
             {% endfor %}
+                    
+            {% for hv in hintViewed %}
+                {% if( hv.hint.interaction.id == interaction.id ) %}
+                    {{ "Penalty" | trans }}: {{ hv.hint.penalty }}<br/>
+                {% endif %}
+            {% endfor %}
+            {{ "Mark" | trans }}: {{ responses[i].mark }}/{{ maxScore }}
+            {% set exoMark = exoMark + responses[i].mark %}
+            {% set exoScoreMax = exoScoreMax + maxScore %}
+            <br/>
+            <hr/>
         </div>
 
     {% elseif(interaction.type == 'InteractionHole') %}

@@ -97,7 +97,6 @@ class TwigExtensions extends \Twig_Extension
                                ->getRepository('UJMExoBundle:InteractionGraphic')
                                ->getInteractionGraphic($interId);
                 $inter['question'] = $interG[0];
-                //$inter['maxScore'] = $this->getQCMScoreMax($interQCM[0]);
             break;
 
             case "InteractionHole":
@@ -118,7 +117,7 @@ class TwigExtensions extends \Twig_Extension
                        ->getEntityManager()
                        ->getRepository('UJMExoBundle:Coords')
                        ->findBy(array('interactionGraphic' => $interGraphId));
-        return $coords[0];
+        return $coords;
     }
 
     private function getQCMScoreMax($interQCM)
@@ -136,5 +135,5 @@ class TwigExtensions extends \Twig_Extension
 
         return $scoreMax;
     }
-   
+       
 }
