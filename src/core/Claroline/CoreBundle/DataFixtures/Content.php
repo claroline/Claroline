@@ -22,27 +22,42 @@ class Contents extends AbstractFixture implements OrderedFixtureInterface
 
         $texts = array(
             "http://fr.slideshare.net/batier/claroline-connect",
-            "Cet espace de démonstration propose un aperçu des diverses fonctionnalités de ce LMS (Learning Management System) résolument tourné vers les usages d'aujourd'hui et les technologies de demain, tout en respectant les objectifs fondamentaux du projet Claroline: simplicité d'utilisation, souplesse de mise en oeuvre et stabilité du code.
+            "Cet espace de démonstration propose un aperçu des diverses fonctionnalités de ce LMS
+            (Learning Management System) résolument tourné vers les usages d'aujourd'hui et les technologies de demain,
+            tout en respectant les objectifs fondamentaux du projet Claroline: simplicité d'utilisation, souplesse de
+            mise en oeuvre et stabilité du code.
 
-La volonté des auteurs est aussi de permettre l'utilisation du logiciel par le plus grand nombre, d'où le choix d'une licence Open Source pour sa diffusion.
+            La volonté des auteurs est aussi de permettre l'utilisation du logiciel par le plus grand nombre,
+            d'où le choix d'une licence Open Source pour sa diffusion.
 
-Conçue pour satisfaire le monde de l’enseignement, de la formation mais aussi de l'entreprise, la plateforme ClarolineConnect© (dont la version Bêta sortira en septembre 2013), permet aux utilisateurs une plus grande ouverture vers le web et les outils collaboratifs.
+            Conçue pour satisfaire le monde de l’enseignement, de la formation mais aussi de l'entreprise,
+            la plateforme ClarolineConnect© (dont la version Bêta sortira en septembre 2013), permet aux
+            utilisateurs une plus grande ouverture vers le web et les outils collaboratifs.
 
-Davantage centrée sur l'utilisateur, ClarolineConnect© propose des outils d’apprentissage performants en intégrant des fonctions de type réseau social ainsi que des outils communautaires et interactifs (wiki, forum, blog ...).
+            Davantage centrée sur l'utilisateur, ClarolineConnect© propose des outils d’apprentissage
+            performants en intégrant des fonctions de type réseau social ainsi que des outils communautaires
+            et interactifs (wiki, forum, blog ...).
 
-Libre d'élaborer son environnement personnel d'apprentissage ou de construire un dispositif pédagogique au moyen d'outils variés et adaptés au contexte, dans un environnement ultra-personnalisable, l'utilisateur pourra partager, gérer, stocker, diffuser l'information tout en disposant d'un haut niveau de suivi des activités.
+            Libre d'élaborer son environnement personnel d'apprentissage ou de construire un dispositif
+            pédagogique au moyen d'outils variés et adaptés au contexte, dans un environnement
+            ultra-personnalisable, l'utilisateur pourra partager, gérer, stocker, diffuser l'information
+            tout en disposant d'un haut niveau de suivi des activités.
 
-Interconnectée avec son environnement, la nouvelle plateforme ClarolineConnect©, actualisée sur le plan ergonomique, permettra à l'ensemble des utilisateurs de travailler davantage ensemble, avec un accès à plus de technologies et de fonctionnalités, tout en conservant la simplicité d'usage, la souplesse de mise en oeuvre et la stabilité du code.",
-"http://www.youtube.com/watch?v=4mlWeQed0_I",
-"Administrateur:
+            Interconnectée avec son environnement, la nouvelle plateforme ClarolineConnect©, actualisée
+            sur le plan ergonomique, permettra à l'ensemble des utilisateurs de travailler davantage
+            ensemble, avec un accès à plus de technologies et de fonctionnalités, tout en conservant
+            la simplicité d'usage, la souplesse de mise en oeuvre et la stabilité du code.",
 
-Nom d'utilisateur: JohnDoe
-Mot de passe: JohnDoe
+            "http://www.youtube.com/watch?v=4mlWeQed0_I",
+            "Administrateur:
 
-Professeur:
+            Nom d'utilisateur: JohnDoe
+            Mot de passe: JohnDoe
 
-Nom d'utilisateur: JaneDoe
-Mot de passe: JaneDoe"
+            Professeur:
+
+            Nom d'utilisateur: JaneDoe
+            Mot de passe: JaneDoe"
         );
 
         $generated = array(

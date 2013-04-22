@@ -61,7 +61,7 @@ class PlatformInstallCommand extends ContainerAwareCommand
                 $complexArchive
             );
             $archive = new \ZipArchive();
-            $res = $archive->open($complexArchive);
+            $archive->open($complexArchive);
             $tmpFile = tempnam(sys_get_temp_dir(), 'tmp');
             $templateBuilder = new TemplateBuilder(TemplateBuilder::getDefaultConfig());
             $templateBuilder->setArchive($archive)
