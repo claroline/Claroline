@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
-use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
+use Symfony\Component\Yaml\Yaml;
 
 class DatabaseWriterTest extends FunctionalTestCase
 {
@@ -98,6 +98,7 @@ class DatabaseWriterTest extends FunctionalTestCase
             SELECT rt FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
             JOIN rt.plugin p
             WHERE p.bundleName = 'WithCustomResources'
+            ORDER BY rt.name
         ";
         $pluginResourceTypes = $this->em->createQuery($dql)->getResult();
 
@@ -128,7 +129,7 @@ class DatabaseWriterTest extends FunctionalTestCase
         $this->assertEquals($resourceIcon[0]->getIconType()->getIconType(), 'type');
     }
 
-    public function testCustomActionsArePersited()
+    public function testCustomActionsArePersisted()
     {
         $ds = DIRECTORY_SEPARATOR;
         require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}"
@@ -212,7 +213,7 @@ class DatabaseWriterTest extends FunctionalTestCase
         $resourceA->setMimeType('foo/bar');
 
         $manager = $this->container->get('claroline.resource.manager');
-        $manager->create($resourceA, $this->getDirectory('user')->getId(), 'ResourceA', $this->getUser('user'));
+        $manager->create($resourceA, $this->getDirectory('user')->getId(), 'resourceA', $this->getUser('user'));
         $resource = $this->em
             ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->findOneByName('resourceA');
@@ -226,22 +227,89 @@ class DatabaseWriterTest extends FunctionalTestCase
         $this->resetTemplate(array('Valid\WithFileExtension\ValidWithFileExtension'));
     }
 
+    public function testInsertTheDeleteToolUpdateDefaultTemplate()
+    {
+        $container = $this->client->getContainer();
+        $archive = new \ZipArchive();
+        $archpath = $container->getParameter('claroline.param.templates_directory').'default.zip';
+        $archive->open($archpath);
+        $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
+        $oldTools = count($parsedFile['tools_infos']);
+        $archive->close();
+        $pluginFqcn = 'Valid\WithTools\ValidWithTools';
+        $plugin = $this->loader->load($pluginFqcn);
+        $this->validator->validate($plugin);
+        $this->dbWriter->insert($plugin, $this->validator->getPluginConfiguration());
+        $archive->open($archpath);
+        $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
+        $newTools = count($parsedFile['tools_infos']);
+        $archive->close();
+        $this->assertEquals(1, $newTools - $oldTools);
+        $this->dbWriter->delete($pluginFqcn);
+        $archive->open($archpath);
+        $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
+        $endTools = count($parsedFile['tools_infos']);
+        $archive->close();
+        $this->assertEquals(0, $oldTools - $endTools);
+    }
+
+    public function testInsertThenDeleteWidgetUpdateTemplate()
+    {
+        $container = $this->client->getContainer();
+        $archive = new \ZipArchive();
+        $archpath = $container->getParameter('claroline.param.templates_directory').'default.zip';
+        $archive->open($archpath);
+        $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
+        $oldWidget = count($parsedFile['tools']['home']['widget']);
+        $archive->close();
+        $pluginFqcn = 'Valid\WithWidgets\ValidWithWidgets';
+        $plugin = $this->loader->load($pluginFqcn);
+        $this->validator->validate($plugin);
+        $this->dbWriter->insert($plugin, $this->validator->getPluginConfiguration());
+        $archive->open($archpath);
+        $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
+        $newWidget = count($parsedFile['tools']['home']['widget']);
+        $archive->close();
+        $this->assertEquals(4, $newWidget - $oldWidget);
+        $this->dbWriter->delete($pluginFqcn);
+        $archive->open($archpath);
+        $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
+        $endWidget = count($parsedFile['tools']['home']['widget']);
+        $archive->close();
+        $this->assertEquals(0, $oldWidget - $endWidget);
+    }
+
+    public function testInsertThenDeleteResourceTypeUpdateTemplate()
+    {
+        $container = $this->client->getContainer();
+        $archive = new \ZipArchive();
+        $archpath = $container->getParameter('claroline.param.templates_directory').'default.zip';
+        $archive->open($archpath);
+        $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
+        $oldResources = count($parsedFile['root_perms']['ROLE_WS_MANAGER']['canCreate']);
+        $archive->close();
+        $pluginFqcn = 'Valid\WithCustomResources\ValidWithCustomResources';
+        $plugin = $this->loader->load($pluginFqcn);
+        $this->validator->validate($plugin);
+        $this->dbWriter->insert($plugin, $this->validator->getPluginConfiguration());
+        $archive->open($archpath);
+        $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
+        $newResources = count($parsedFile['root_perms']['ROLE_WS_MANAGER']['canCreate']);
+        $archive->close();
+        $this->assertEquals(2, $newResources - $oldResources);
+        $this->dbWriter->delete($pluginFqcn);
+        $archive->open($archpath);
+        $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
+        $endResources = count($parsedFile['root_perms']['ROLE_WS_MANAGER']['canCreate']);
+        $archive->close();
+        $this->assertEquals(0, $oldResources - $endResources);
+    }
+
     public function pluginProvider()
     {
         return array(
             array('Valid\Simple\ValidSimple'),
             array('Valid\Custom\ValidCustom')
         );
-    }
-
-    private function resetTemplate()
-    {
-        $container = $this->client->getContainer();
-        $yml = $container->getParameter('claroline.workspace_template.directory').'config.yml';
-        $archpath = $container->getParameter('claroline.workspace_template.directory').'default.zip';
-        $archive = new \ZipArchive();
-        $archive->open($archpath, \ZipArchive::OVERWRITE);
-        $archive->addFile($yml, 'config.yml');
-        $archive->close();
     }
 }

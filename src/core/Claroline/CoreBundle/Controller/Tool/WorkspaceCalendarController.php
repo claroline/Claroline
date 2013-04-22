@@ -44,7 +44,7 @@ class WorkspaceCalendarController extends Controller
 
             if ($form->isValid()) {
 
-                 $date = explode('(', $postData['date']);
+                $date = explode('(', $postData['date']);
                 $event->setStart($date[0]);
 
                 // the end date has to be bigger
@@ -59,6 +59,7 @@ class WorkspaceCalendarController extends Controller
                         'start' => $event->getStart()->getTimestamp(),
                         'end' => $event->getEnd()->getTimestamp(),
                         'color' => $event->getPriority(),
+                        'allDay' => $event->getAllDay()
                     );
 
                     return new Response(
@@ -148,6 +149,7 @@ class WorkspaceCalendarController extends Controller
         $repository = $em->getRepository('ClarolineCoreBundle:Event');
         $request = $this->get('request');
         $postData = $request->request->all();
+        var_dump($postData);
         $event = $repository->find($postData['id']);
         $em->remove($event);
         $em->flush();
@@ -164,7 +166,7 @@ class WorkspaceCalendarController extends Controller
      *     "/{workspaceId}/show",
      *     name="claro_workspace_agenda_show"
      * )
-     * @Method("GET")
+     * @Method({"GET","POST"})
      *
      * @param integer $workspaceId
      *

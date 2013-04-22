@@ -1,5 +1,0 @@
-services:
-  claroline.widget.manager:
-    class: Claroline\CoreBundle\Library\Widget\Manager
-    arguments:
-          - "@doctrine.orm.entity_manager"

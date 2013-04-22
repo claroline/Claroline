@@ -1,7 +1,11 @@
 <?php
 
 namespace Claroline\CoreBundle\Library\Utilities;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.utilities.lipsum_generator")
+ */
 class LipsumGenerator
 {
     /**

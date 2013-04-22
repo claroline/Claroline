@@ -12,7 +12,7 @@ framework:
     translator:      { fallback: en }
     default_locale: %locale%
     session: ~
-     #   cookie_lifetime: 10
+      #cookie_lifetime: 15
 
 # Twig Configuration
 twig:

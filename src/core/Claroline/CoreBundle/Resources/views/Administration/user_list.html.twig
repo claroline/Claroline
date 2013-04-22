@@ -7,7 +7,7 @@
         <td>{{ user.getMail() }}</td>
         <td>
             <div>
-                {% for role in user.getOwnedRoles() %}
+                {% for role in user.getEntityRoles() %}
                     {{ role.getTranslationKey()|trans({}, 'platform')  }}
                     {% if not loop.last %}, {% endif %}
                 {% endfor %}

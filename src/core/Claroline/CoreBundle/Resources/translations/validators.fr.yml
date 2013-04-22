@@ -1,0 +1,3 @@
+The user {{ username }} does not exist.: L'utilisateur {{ username }} n'existe pas.
+The name {{ name }} is already in use.: Le nom {{ name }} est déjà utilisé.
+'The code {{ code }} is already assigned to another workspace.': Le code {{ code }} est déjà attribué à un autre workspace.

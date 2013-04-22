@@ -4,12 +4,22 @@ namespace Claroline\CoreBundle\Library\Installation\Core;
 
 use Symfony\Component\HttpKernel\Kernel;
 use Claroline\CoreBundle\Library\Installation\BundleMigrator;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.install.core_installer")
+ */
 class Installer
 {
     private $kernel;
     private $migrator;
 
+    /**
+     * @DI\InjectParams({
+     *     "kernel" = @DI\Inject("kernel"),
+     *     "migrator" = @DI\Inject("claroline.install.bundle_migrator")
+     * })
+     */
     public function __construct(Kernel $kernel, BundleMigrator $migrator)
     {
         $this->kernel = $kernel;

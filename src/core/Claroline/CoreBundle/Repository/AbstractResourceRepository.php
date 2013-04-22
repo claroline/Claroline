@@ -84,7 +84,8 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
         if (in_array('ROLE_ADMIN', $roles)) {
             $builder->selectAsArray()
-                ->whereParentIs($parent);
+                ->whereParentIs($parent)
+                ->orderByName();
             $query = $this->_em->createQuery($builder->getDql());
             $query->setParameters($builder->getParameters());
             $items = $query->iterate(null, AbstractQuery::HYDRATE_ARRAY);
@@ -100,7 +101,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
                 ->whereParentIs($parent)
                 ->whereRoleIn($roles)
                 ->whereCanOpen()
-                ->groupById();
+                ->groupByResourceUserTypeAndIcon();
             $query = $this->_em->createQuery($builder->getDql());
             $query->setParameters($builder->getParameters());
             $children = $this->executeQuery($query);
@@ -223,9 +224,12 @@ class AbstractResourceRepository extends MaterializedPathRepository
         if ($asArray) {
             $resources = $query->getArrayResult();
             // Add a field "pathfordisplay" in each entity (as array) of the given array.
-            foreach ($resources as &$resource) {
-                $resource['pathfordisplay'] = AbstractResource::convertPathForDisplay($resource['path']);
-                unset($resource['path']);
+            foreach ($resources as $resource) {
+
+                if (isset($resource['path'])) {
+                    $resource['pathfordisplay'] = AbstractResource::convertPathForDisplay($resource['path']);
+                    unset($resource['path']);
+                }
             }
 
             return $resources;

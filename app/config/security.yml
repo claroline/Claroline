@@ -16,13 +16,17 @@ security:
             security: false
         main:
             pattern: ^/
-            form_login: ~
+            form_login:
+              failure_handler: claroline.security.ajax_authentication_failure_handler
             anonymous: ~
             logout: true
             switch_user: { role: ROLE_ADMIN, parameter: _switch }
 
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/desktop, roles: ROLE_USER }
+        - { path: ^/message, roles: ROLE_USER }
+        - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/desktop, roles: ROLE_USER }
         #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
 

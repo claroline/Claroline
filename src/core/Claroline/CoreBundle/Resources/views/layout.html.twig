@@ -30,7 +30,11 @@
             {% render controller('ClarolineCoreBundle:Layout:topBar') %}
             {% endif %}
         {% endif %}
+
         <div id="grid" class="container container-fluid">
+            {% if has_role('ROLE_USURPATE_WORKSPACE_ROLE') %}
+                {% render controller('ClarolineCoreBundle:Layout:renderWarningImpersonation') %}
+            {% endif %}
             {% block sectionHeader %}
             &nbsp;
             {% endblock %}
@@ -44,6 +48,14 @@
     {% if not is_path_mode %}
         {% render controller('ClarolineCoreBundle:Layout:footer') %}
     {% endif %}
+    <div id="ajax-login-modal" class="modal hide fade">
+        <div class="modal-header">
+        </div>
+        <div class="modal-body" id="ajax-login-modal-body">
+            <div id="ajax-login-validation-box-body">
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block javascripts %}
@@ -53,4 +65,7 @@
     <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/js/bootstrap.js')}}"></script>
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/utilities.js') }}"></script>
+    {% render controller("ClarolineCoreBundle:Layout:javascriptInit") %}
 {% endblock %}
+
+

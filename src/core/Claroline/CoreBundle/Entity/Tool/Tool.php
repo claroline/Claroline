@@ -98,7 +98,7 @@ class Tool
     {
         return $this->name;
     }
-    
+
     public function setDisplayName($displayName)
     {
         $this->displayName = $displayName;
@@ -108,7 +108,7 @@ class Tool
     {
         return $this->displayName;
     }
-    
+
     public function setClass($class)
     {
         $this->class = $class;
@@ -137,16 +137,6 @@ class Tool
     public function isDesktopRequired()
     {
         return $this->isDesktopRequired;
-    }
-
-    public function setDisplayability($display)
-    {
-        $this->displayability = $display;
-    }
-
-    public function getDisplayability()
-    {
-        return $this->displayability;
     }
 
     public function setVisible($bool)

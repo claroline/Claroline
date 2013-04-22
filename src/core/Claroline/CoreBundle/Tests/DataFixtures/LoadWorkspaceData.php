@@ -42,9 +42,10 @@ class LoadWorkspaceData extends AbstractFixture implements ContainerAwareInterfa
     public function load(ObjectManager $manager)
     {
         $workspaceCreator = $this->container->get('claroline.workspace.creator');
+        $personalWsTemplateFile = $this->container->getParameter('claroline.param.templates_directory')."default.zip";
 
         foreach ($this->workspaces as $name => $username) {
-            $config = new Configuration();
+            $config = new Configuration($personalWsTemplateFile);
             $config->setWorkspaceName($name);
             $config->setWorkspaceCode(substr($name, 0, 1) . self::$codeDiscrCount);
             $config->setWorkspaceType(Configuration::TYPE_SIMPLE);

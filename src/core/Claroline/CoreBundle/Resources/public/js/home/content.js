@@ -336,5 +336,31 @@
         }
     });
 
+    $(".content.row-fluid").sortable({
+        items: "> .content-element",
+        cancel: "a.btn.dropdown-toggle",
+        cursor: "move"
+    });
+
+    $(".content.row-fluid").on("sortupdate", function (event, ui) {
+        if (this === ui.item.parent()[0]) {
+            var a = $(ui.item).data("id");
+            var b = $(ui.item).next().data("id");
+            var type = $(ui.item).data("type");
+
+            if (a && type)
+            {
+                $.ajax(asset + "content/reorder/" + type + "/" + a + "/" + b)
+                .error(
+                        function ()
+                        {
+                            modal("content/error");
+                        }
+                    )
+                ;
+            }
+        }
+    });
+
 }());
 

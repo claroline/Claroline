@@ -5,11 +5,14 @@ namespace Claroline\CoreBundle\Library\Installation\Plugin;
 use \InvalidArgumentException;
 use \RuntimeException;
 use Symfony\Component\Yaml\Yaml;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * This class is used to (un-)register the namespace, the bundle name and the
  * routing resources of a plugin in the application configuration files,
  * in order to have it correctly instantiated by the kernel.
+ *
+ * @DI\Service("claroline.plugin.recorder_configuration_file_writer")
  */
 class ConfigurationFileWriter
 {
@@ -25,6 +28,13 @@ class ConfigurationFileWriter
      * @param string $pluginBundlesFile
      * @param string $pluginRoutingFile
      * @param Yaml   $yamlHandler
+     *
+     * @DI\InjectParams({
+     *     "pluginNamespacesFile" = @DI\Inject("%claroline.param.plugin_namespaces_file%"),
+     *     "pluginBundlesFile" = @DI\Inject("%claroline.param.plugin_bundles_file%"),
+     *     "pluginRoutingFile" = @DI\Inject("%claroline.param.plugin_routing_file%"),
+     *     "yamlHandler" = @DI\Inject("symfony.yaml")
+     * })
      */
     public function __construct(
         $pluginNamespacesFile,
