@@ -50,7 +50,9 @@ class LayoutController extends Controller
         $currentWs = null;
         $isInAWorkspace = false;
 
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $token = $this->get('security.context')->getToken();
+        $user = $token->getUser();
+        $roles = $this->get('claroline.security.utilities')->getRoles($token);
         $em = $this->get('doctrine.orm.entity_manager');
         $wsRepo = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
 
@@ -69,7 +71,7 @@ class LayoutController extends Controller
             $username = $user->getFirstName() . ' ' . $user->getLastName();
             $personalWs = $user->getPersonalWorkspace();
             $wsLogs = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceLog')
-                ->findLatestWorkspaceByUser($user);
+                ->findLatestWorkspaceByUser($user, $roles);
 
             if (!empty($wsLogs)) {
                 $workspaces = array();
