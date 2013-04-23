@@ -80,7 +80,7 @@ class LogWidgetListener
         $roles = $this->utils->getRoles($token);
 
         $logs = $this->em->getRepository('ClarolineCoreBundle:Logger\Log')
-            ->findLastLogs($token->getUser(), $workspace);
+            ->findLastLogs($token->getUser(), $roles, $workspace);
         $views = array();
 
         foreach ($logs as $log) {
