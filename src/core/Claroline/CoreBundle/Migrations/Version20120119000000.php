@@ -31,7 +31,9 @@ class Version20120119000000 extends BundleMigration
         $this->createUserMessageTable($schema);
         $this->createLinkTable($schema);
         $this->createResourceTypeCustomActionsTable($schema);
-        $this->createResourceLogTable($schema);
+        $this->createLogTable($schema);
+        $this->createLogDoerPlatformRolesTable($schema);
+        $this->createLogDoerWorkspaceRolesTable($schema);
         $this->createWidgetTable($schema);
         $this->createAdminWidgetConfig($schema);
         $this->createResourceLinkTable($schema);
@@ -79,7 +81,9 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_message');
         $schema->dropTable('claro_license');
         $schema->dropTable('claro_resource_type_custom_action');
-        $schema->dropTable('claro_resource_log');
+        $schema->dropTable('claro_log');
+        $schema->dropTable('claro_log_doer_platform_roles');
+        $schema->dropTable('claro_log_doer_workspace_roles');
         $schema->dropTable('claro_widget');
         $schema->dropTable('claro_widget_display');
         $schema->dropTable('claro_resource_link');
@@ -555,32 +559,119 @@ class Version20120119000000 extends BundleMigration
         $this->storeTable($table);
     }
 
-    private function createResourceLogTable(Schema $schema)
+    private function createLogTable(Schema $schema)
     {
-        $table = $schema->createTable('claro_resource_log');
+        $table = $schema->createTable('claro_log');
         $this->addId($table);
-        $table->addColumn('resource_id', 'integer', array('notnull' => false));
-        $table->addColumn('path', 'string');
-        $table->addColumn('resource_type_id', 'integer');
-        $table->addColumn('workspace_id', 'integer');
-        $table->addColumn('creator_id', 'integer', array('notnull' => false));
-        $table->addColumn('updator_id', 'integer', array('notnull' => false));
-        $table->addColumn('url', 'string', array('notnull' => false));
         $table->addColumn('action', 'string');
-        $table->addColumn('log_descr', 'string', array('notnull' => false));
         $table->addColumn('date_log', 'datetime');
+        $table->addColumn('details', 'json_array', array('notnull' => false));
+        $table->addColumn('doer_type', 'string');
+        $table->addColumn('doer_ip', 'string', array('notnull' => false));
+        $table->addColumn('tool_name', 'string', array('notnull' => false));
+        $table->addColumn('child_type', 'string', array('notnull' => false));
+        $table->addColumn('child_action', 'string', array('notnull' => false));
+
+        $table->addColumn('doer_id', 'integer', array('notnull' => false));
+        $table->addColumn('receiver_id', 'integer', array('notnull' => false));
+        $table->addColumn('receiver_group_id', 'integer', array('notnull' => false));
+        $table->addColumn('owner_id', 'integer', array('notnull' => false));
+        $table->addColumn('workspace_id', 'integer', array('notnull' => false));
+        $table->addColumn('resource_id', 'integer', array('notnull' => false));
+        $table->addColumn('resource_type_id', 'integer', array('notnull' => false));
+        $table->addColumn('role_id', 'integer', array('notnull' => false));
 
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_user'),
-            array('creator_id'),
+            array('doer_id'),
             array('id'),
             array('onDelete' => 'SET NULL')
         );
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_user'),
-            array('updator_id'),
+            array('receiver_id'),
             array('id'),
             array('onDelete' => 'SET NULL')
+        );
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_group'),
+            array('receiver_group_id'),
+            array('id'),
+            array('onDelete' => 'SET NULL')
+        );
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_user'),
+            array('owner_id'),
+            array('id'),
+            array('onDelete' => 'SET NULL')
+        );
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_workspace'),
+            array('workspace_id'),
+            array('id'),
+            array('onDelete' => 'SET NULL')
+        );
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_resource'),
+            array('resource_id'),
+            array('id'),
+            array('onDelete' => 'SET NULL')
+        );
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_resource_type'),
+            array('resource_type_id'),
+            array('id'),
+            array('onDelete' => 'SET NULL')
+        );
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_role'),
+            array('role_id'),
+            array('id'),
+            array('onDelete' => 'SET NULL')
+        );
+
+        $this->storeTable($table);
+    }
+
+    private function createLogDoerPlatformRolesTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_log_doer_platform_roles');
+
+        $table->addColumn('log_id', 'integer', array('notnull' => true));
+        $table->addColumn('role_id', 'integer', array('notnull' => true));
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_log'),
+            array('log_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_role'),
+            array('role_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+
+        $this->storeTable($table);
+    }
+
+    private function createLogDoerWorkspaceRolesTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_log_doer_workspace_roles');
+
+        $table->addColumn('log_id', 'integer', array('notnull' => true));
+        $table->addColumn('role_id', 'integer', array('notnull' => true));
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_log'),
+            array('log_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_role'),
+            array('role_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
         );
 
         $this->storeTable($table);

@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Library\Workspace;
 
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\Event\ImportToolEvent;
+use Claroline\CoreBundle\Library\Event\LogWorkspaceCreateEvent;
 use Claroline\CoreBundle\Library\Resource\Manager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
@@ -86,6 +87,9 @@ class Creator
             $this->entityManager->flush();
         }
         $archive->close();
+
+        $log = new LogWorkspaceCreateEvent($workspace);
+        $this->ed->dispatch('log', $log);
 
         return $workspace;
     }

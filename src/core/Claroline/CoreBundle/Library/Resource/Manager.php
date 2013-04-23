@@ -13,7 +13,10 @@ use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Library\Event\ResourceLogEvent;
+use Claroline\CoreBundle\Library\Event\LogResourceCreateEvent;
+use Claroline\CoreBundle\Library\Event\LogResourceMoveEvent;
+use Claroline\CoreBundle\Library\Event\LogResourceDeleteEvent;
+use Claroline\CoreBundle\Library\Event\LogResourceCopyEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -119,8 +122,8 @@ class Manager
         }
 
         if ($autolog) {
-            $event = new ResourceLogEvent($resource, ResourceLogEvent::CREATE_ACTION);
-            $this->ed->dispatch('log_resource', $event);
+            $log = new LogResourceCreateEvent($resource);
+            $this->ed->dispatch('log', $log);
         }
 
         return $resource;
@@ -134,6 +137,7 @@ class Manager
      */
     public function move(AbstractResource $child, AbstractResource $parent)
     {
+        $oldParent = $child->getParent();
         $child->setWorkspace($parent->getWorkspace());
         $child->setParent($parent);
         $rename = $this->ut->getUniqueName($child, $parent);
@@ -148,11 +152,8 @@ class Manager
             $this->cloneParentRights($parent, $child);
             $this->em->flush();
 
-            $event = new ResourceLogEvent(
-                $child,
-                ResourceLogEvent::MOVE_ACTION
-            );
-            $this->ed->dispatch('log_resource', $event);
+            $log = new LogResourceMoveEvent($child, $oldParent);
+            $this->ed->dispatch('log', $log);
 
             return $child;
         } catch (UnexpectedValueException $e) {
@@ -168,17 +169,17 @@ class Manager
     public function delete(AbstractResource $resource)
     {
         if (get_class($resource) == 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
-            $logEvent = new ResourceLogEvent($resource, ResourceLogEvent::DELETE_ACTION);
-            $this->ed->dispatch('log_resource', $logEvent);
+            // $logEvent = new ResourceLogEvent($resource, ResourceLogEvent::DELETE_ACTION);
+            // $this->ed->dispatch('log_resource', $logEvent);
             $this->em->remove($resource);
         } else {
             if ($resource->getResourceType()->getName() !== 'directory') {
                 $eventName = 'delete_'.$resource->getResourceType()->getName();
                 $event = new DeleteResourceEvent($resource);
                 $this->ed->dispatch($eventName, $event);
-                $logEvent = new ResourceLogEvent($resource, ResourceLogEvent::DELETE_ACTION);
-                $this->ed->dispatch('log_resource', $logEvent);
 
+                $log = new LogResourceDeleteEvent($resource);
+                $this->ed->dispatch('log', $log);
             } else {
                 $this->deleteDirectory($resource);
             }
@@ -221,12 +222,8 @@ class Manager
                 }
             }
 
-            $logevent = new ResourceLogEvent(
-                $resource,
-                ResourceLogEvent::COPY_ACTION
-            );
-
-            $this->ed->dispatch('log_resource', $logevent);
+            $log = new LogResourceCopyEvent($copy, $resource);
+            $this->ed->dispatch('log', $log);
         }
 
         $this->em->persist($copy);
@@ -313,24 +310,30 @@ class Manager
      */
     private function deleteDirectory(AbstractResource $resource)
     {
+        $logger = $this->container->get('logger');
         if ($resource->getParent() === null) {
             throw new \LogicException('Root directory cannot be removed');
         }
 
         $children = $this->em
             ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->getChildren($resource, false);
+            ->getChildren($resource, false, 'path', 'DESC');
+
+        $logger->info('Try to delete '.$resource->getName());
         foreach ($children as $child) {
+            $logger->info('Try to delete child '.$child->getName());
             $event = new DeleteResourceEvent($child);
             $this->ed->dispatch("delete_{$child->getResourceType()->getName()}", $event);
-            $logEvent = new ResourceLogEvent($child, ResourceLogEvent::DELETE_ACTION);
-            $this->ed->dispatch('log_resource', $logEvent);
-            $this->em->flush();
+
+            $logChild = new LogResourceDeleteEvent($child);
+            $this->ed->dispatch('log', $logChild);
         }
 
         $this->em->remove($resource);
-        $logEvent = new ResourceLogEvent($resource, ResourceLogEvent::DELETE_ACTION);
-        $this->ed->dispatch('log_resource', $logEvent);
+        $this->em->flush();
+
+        $log = new LogResourceDeleteEvent($resource);
+        $this->ed->dispatch('log', $log);
     }
 
     /**
