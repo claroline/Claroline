@@ -63,7 +63,15 @@ class LayoutController extends Controller
                 $isInAWorkspace = true;
             }
         }
+        /*
+        $token = $this->get('security.context')->getToken();
+        $roles = $this->get('claroline.security.utilities')->getRoles($token);
 
+        if (!in_array('ROLE_ANONYMOUS', $roles)) {
+            $isLogged = true;
+        }
+         *
+         */
         if ($user instanceof User) {
             $isLogged = true;
             $countUnreadMessages = $em->getRepository('ClarolineCoreBundle:Message')
@@ -127,6 +135,7 @@ class LayoutController extends Controller
         $token = $this->get('security.context')->getToken();
         $roles = $this->get('claroline.security.utilities')->getRoles($token);
         $em = $this->get('doctrine.orm.entity_manager');
+        $impersonatedRole = null;
 
         foreach ($roles as $role) {
             if (strstr($role, 'ROLE_WS')) {
@@ -134,15 +143,20 @@ class LayoutController extends Controller
             }
         }
 
-        $workspaceId = substr($impersonatedRole, strripos($impersonatedRole, '_') + 1);
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
-            ->find($workspaceId);
-        $roleEntity = $em->getRepository('ClarolineCoreBundle:Role')
-            ->findOneByName($impersonatedRole);
+        if ($impersonatedRole === null) {
+            $roleName = 'ROLE_ANONYMOUS';
+        } else {
+            $workspaceId = substr($impersonatedRole, strripos($impersonatedRole, '_') + 1);
+            $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
+                ->find($workspaceId);
+            $roleEntity = $em->getRepository('ClarolineCoreBundle:Role')
+                ->findOneByName($impersonatedRole);
+            $roleName = $roleEntity->getTranslationKey();
+        }
 
         return $this->render(
             'ClarolineCoreBundle:Layout:impersonation_alert.html.twig',
-            array('workspace' => $workspace->getName(), 'role' => $roleEntity->getTranslationKey())
+            array('workspace' => $workspace->getName(), 'role' => $roleName)
         );
     }
 
