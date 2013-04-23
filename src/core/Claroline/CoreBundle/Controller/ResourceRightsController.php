@@ -86,7 +86,7 @@ class ResourceRightsController extends Controller
                 $roleRight = $roleRights[$j];
                 foreach ($permissions as $permission) {
                     $i === 0 && $referenceRights[$j][$permission]
-                        = isset($parameters['roleRights'][$roleRight->getId()][$permission]);
+                        = isset($parameters['roles'][$roleRight->getRole()->getId()][$permission]);
                     $setter = 'setCan' . ucfirst($permission);
                     $roleRight->{$setter}($referenceRights[$j][$permission]);
                 }
@@ -194,7 +194,7 @@ class ResourceRightsController extends Controller
             $resourceRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
                 ->findOneBy(array('resource' => $targetResource, 'role' => $roleId));
             $oldResourceTypes = $resourceRights->getCreatableResourceTypes();
-            $resourceRights->setCreatableResourceTypes($resourceTypes); 
+            $resourceRights->setCreatableResourceTypes($resourceTypes);
 
             $addedResourceTypes = array();
             $removedResourceTypes = array();
@@ -257,7 +257,7 @@ class ResourceRightsController extends Controller
     private function isInResourceTypes($resourceType, $resourceTypes) {
         foreach ($resourceTypes as $current) {
             if ($resourceType->getId() == $current->getId()) {
-                
+
                 return true;
             }
         }

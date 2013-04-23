@@ -280,7 +280,7 @@ class WorkspaceController extends Controller
 
         $log = new LogWorkspaceToolReadEvent($workspace, $toolName);
         $this->get('event_dispatcher')->dispatch('log', $log);
-
+        
         return new Response($event->getContent());
     }
 
