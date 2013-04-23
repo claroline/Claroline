@@ -47,11 +47,23 @@ class WorkspaceController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)->findNonPersonal();
         $tags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findByUser(null);
+            ->findNonEmptyAdminTags();
+        $relTagWorkspace = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
+            ->findByAdmin();
+
+        $tagWorkspaces = array();
+
+        foreach ($relTagWorkspace as $tagWs) {
+
+            if (empty($tagWorkspaces[$tagWs['tag_id']])) {
+                $tagWorkspaces[$tagWs['tag_id']] = array();
+            }
+            $tagWorkspaces[$tagWs['tag_id']][] = $tagWs['rel_ws_tag'];
+        }
 
         return $this->render(
             'ClarolineCoreBundle:Workspace:list.html.twig',
-            array('workspaces' => $workspaces, 'tags' => $tags)
+            array('workspaces' => $workspaces, 'tags' => $tags, 'tagWorkspaces' => $tagWorkspaces)
         );
     }
 
