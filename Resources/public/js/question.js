@@ -1,6 +1,6 @@
 function cherche_type_ajax(exoID, displayFormType) {
     //"use strict";
-    
+
     var indice_type = $("#menu_type_question option:selected").index();
 
     $.ajax({
@@ -16,7 +16,7 @@ function cherche_type_ajax(exoID, displayFormType) {
 
 function cherche_type(warningChangeTypeQ, exoID, displayFormType) {
     //"use strict";
-    
+
     if (($("#formulaire_interactions").find("div").length) > 0) {
         if (confirm(warningChangeTypeQ)) {
             cherche_type_ajax(exoID, displayFormType);

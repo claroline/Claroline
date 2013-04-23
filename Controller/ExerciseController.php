@@ -115,7 +115,8 @@ class ExerciseController extends Controller
 
         if ($formHandler->process()) {
             return $this->redirect(
-                $this->generateUrl('claro_resource_open', array(
+                $this->generateUrl(
+                    'claro_resource_open', array(
                     'resourceType' => $exercise->getResourceType()->getName(), 'resourceId' => $id)
                 )
             );
@@ -482,8 +483,8 @@ class ExerciseController extends Controller
      */
     private function displayQuestion(
         $numQuestionToDisplayed, $interactionToDisplay,
-        $typeInterToDisplayed, $dispButtonInterrupt, $workspace
-    ) {
+        $typeInterToDisplayed, $dispButtonInterrupt, $workspace) 
+    {
         $em = $this->getDoctrine()->getEntityManager();
         $session = $this->getRequest()->getSession();
         $tabOrderInter = $session->get('tabOrderInter');

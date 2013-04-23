@@ -108,12 +108,13 @@ class PaperController extends Controller
             return $this->redirect($this->generateUrl('exercise_show', array('id' => $paper->getExercise()->getId())));
 
         } else if (($subscription[0]->getAdmin() == 1) || (($user->getId() == $paper->getUser()->getId()) &&
-            (($paper->getExercise()->getCorrectionMode() == 1) || 
+            (($paper->getExercise()->getCorrectionMode() == 1) ||
             (($paper->getExercise()->getCorrectionMode() == 3) &&
-            ($paper->getExercise()->getDateCorrection()->format('Y-m-d H:i:s') <= date("Y-m-d H:i:s"))) || 
+            ($paper->getExercise()->getDateCorrection()->format('Y-m-d H:i:s') <= date("Y-m-d H:i:s"))) ||
             (($paper->getExercise()->getCorrectionMode() == 2) &&
             ($paper->getExercise()->getMaxAttemps() <= $this->container->get('UJM_Exo.exerciseServices')->getNbPaper(
-                $user->getId(), $paper->getExercise()->getId())))))
+                $user->getId(), $paper->getExercise()->getId()))))
+            )
         ) {
 
             $display = 'all';

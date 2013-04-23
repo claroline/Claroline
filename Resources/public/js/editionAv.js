@@ -45,7 +45,7 @@ function editionAv() {
 
     function hidePopup() {
         //"use strict";
-        
+
         if (popup === true) {
             $('#overlayEffect').fadeOut('slow');
             $('#popupContainer').fadeOut('slow');

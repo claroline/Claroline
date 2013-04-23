@@ -138,7 +138,7 @@ class InteractionGraphicController extends Controller
         $interGraph->setWidth($width);
 
         $coords = $this->get('request')->get('coordsZone'); // Get the answer zones
-        
+
         $coord = preg_split('[,]', $coords);
         $lengthCoord = count($coord) - 1;
 

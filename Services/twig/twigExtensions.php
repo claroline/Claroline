@@ -110,13 +110,14 @@ class TwigExtensions extends \Twig_Extension
 
         return $inter;
     }
-    
+
     public function getCoordsGraphTwig($interGraphId)
     {
         $coords = $this->doctrine
                        ->getEntityManager()
                        ->getRepository('UJMExoBundle:Coords')
                        ->findBy(array('interactionGraphic' => $interGraphId));
+        
         return $coords;
     }
 
@@ -135,5 +136,4 @@ class TwigExtensions extends \Twig_Extension
 
         return $scoreMax;
     }
-       
 }

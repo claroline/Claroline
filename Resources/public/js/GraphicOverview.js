@@ -71,11 +71,11 @@ function whichImg(shape, color, i, x, y, rx, ry, prefix, size, id) {
     }
 
     document.getElementById(id + 'ra' + i).style.left = String(parseInt(document.getElementById('hidInter0').value) +
-        parseInt(x) - (size/2) - 10) + 'px';
+        parseInt(x) - (size / 2) - 10) + 'px';
     document.getElementById(id + 'ra' + i).style.top = String(document.getElementById('AnswerImage' + id).offsetTop +
-        parseInt(y) - (size/2)) + 'px';
+        parseInt(y) - (size / 2)) + 'px';
 
-    if(rx != 'a' && ry != 'a'){
+    if (rx != 'a' && ry != 'a') {
         document.getElementById(id + 'cursor' + i).style.left = String(parseInt(document.getElementById('hidInter0').value)
             + parseInt(rx) - 20) + 'px';
         document.getElementById(id + 'cursor' + i).style.top = String(document.getElementById('AnswerImage' + id).offsetTop

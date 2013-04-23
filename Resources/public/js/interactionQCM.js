@@ -249,7 +249,7 @@ function choiceCSSEdit(sourceImageDel, nbResponses) {
         row.contents('td:nth-child(3)').children('div').last().html(text);
     });
 
-    
+
     //ajout colonne ordre
     if ($('#ujm_exobundle_interactionqcmtype_shuffle').is(':checked') === false) {
         $('#newTable .ligne_choice').each(function (index) {
@@ -439,19 +439,19 @@ function addFormChoice(multipleResponse, uniqueResponse, add, responseNumber, re
         .remove()
         .end()
         .append('<option selected="selected" value="1">' + multipleResponse + '</option>\n\
-                <option value="2">' + uniqueResponse + '</option>')
+                <option value="2">' + uniqueResponse + '</option>');
 
     $('#ujm_exobundle_interactionqcmtype_choices').before('<a href="#" id="add_choice"><img src="' + sourceImageAdd +
         '">' + add + '</a>');
 
     $('#ujm_exobundle_interactionqcmtype_choices').after('<table style="border: 1px solid black;" id="newTable"><tr> <th>'
-        + response + '</th> <th>'+point+'</th> <th>' + comment + '</th> <th>'+expectedResponse+'</th> <th>' + order + 
-        '</th> <th>' + ChoicepositionForce + '</th> <th>------</th> </tr></table>');
+        + response + '</th> <th>' + point + '</th> <th>' + comment + '</th> <th>' + expectedResponse + '</th> <th>' +
+        order + '</th> <th>' + ChoicepositionForce + '</th> <th>------</th> </tr></table>');
     $('#add_choice').css({
         'display': 'block',
         'color': 'green',
         'float': 'right'
-        });
+    });
 
     if ($('#newTable').children('.ligne_choice').length === 0) {
         addChoice(source_image_del);

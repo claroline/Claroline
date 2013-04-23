@@ -32,18 +32,18 @@ if (navigator.browserLanguage) {
     var language = navigator.language; // FIrefox
 }
 
-document.getElementById('Instructions').style.display = "none";
-document.getElementById('Consignes').style.display = "block";
+document.getElementById('Instructions').style.display = 'none';
+document.getElementById('Consignes').style.display = 'block';
 
 // :::::::::::::::::::::::::::::::::::::::::: Functions :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 function DisplayInstruction() {
-    document.getElementById('Instructions').style.display = "block";
-    document.getElementById('Consignes').style.display = "none";
+    document.getElementById('Instructions').style.display = 'block';
+    document.getElementById('Consignes').style.display = 'none';
 }
 
 // Get the url's picture matching to the label in the list
-function sendData(select,path,prefx) {
+function sendData(select, path, prefx) {
     //"use strict";
 
     // Send the label of the picture to get the adress in order to display it
@@ -51,7 +51,8 @@ function sendData(select,path,prefx) {
         type: 'POST',
         url: path,
         data: {
-            value : select, prefix : prefx
+            value : select,
+            prefix : prefx
         },
         cache: false,
         success: function (data) {
@@ -61,19 +62,19 @@ function sendData(select,path,prefx) {
 }
 
 // Display the selected picture
-function LoadPic(path,prefx) {
+function LoadPic(path, prefx) {
     //"use strict";
 
     var list = document.InterGraphForm.ujm_exobundle_interactiongraphictype_document; // List of all the user's pictures
     var select = list.options[list.selectedIndex].innerHTML; // Label of the selected picture
 
-    sendData(select,path,prefx);
+    sendData(select, path, prefx);
 
     // New picture load, initialization var :
     value = 0;
-    
+
     for (j = 0 ; j < indice ; j++) {
-        if(document.getElementById('img' + j)){
+        if (document.getElementById('img' + j)) {
             document.getElementById('img' + j).parentNode.removeChild(document.getElementById('img' + j));
         }
     }
@@ -118,34 +119,36 @@ function Verifier(noTitle, noQuestion, noImg, noAnswerZone) {
 //        alert(noAnswerZone);
 //        return false;
 //    } else {
-        zoneOk = true;
+    zoneOk = true;
 //    }
 
     // Submit if required fields not empty
     if (imgOk === true && zoneOk === true && titleOk === true && questionOk === true) {
         document.getElementById('imgwidth').value = answerImg.width; // Pass width of the image to the controller
         document.getElementById('imgheight').value = answerImg.height; // Pass height of the image to the controller
-        
+
         for (j = 0 ; j < indice ; j++) {
-        
+
             var imgN = 'img' + j;
             var selectedZone = document.getElementById(imgN);
-            
-            if(selectedZone){
-            
-                imgx = parseInt(selectedZone.style.left.substr(0, selectedZone.style.left.indexOf('p'))) + (selectedZone.width/2);
+
+            if (selectedZone) {
+
+                imgx = parseInt(selectedZone.style.left.substr(0, selectedZone.style.left.indexOf('p')))
+                    + (selectedZone.width / 2);
                 imgx -= answerImg.offsetLeft;
 
-                imgy = parseInt(selectedZone.style.top.substr(0, selectedZone.style.top.indexOf('p'))) + (selectedZone.height/2);
+                imgy = parseInt(selectedZone.style.top.substr(0, selectedZone.style.top.indexOf('p')))
+                    + (selectedZone.height / 2);
                 imgy -= answerImg.offsetTop;
 
                 var val = selectedZone.src + ';' + imgx + '_' + imgy + '-' + document.getElementById('points').value +
                     '~' + selectedZone.width;
 
-                document.getElementById('coordsZone').value += val+',';
+                document.getElementById('coordsZone').value += val + ',';
             }
         }
-    
+
         document.getElementById('InterGraphForm').submit();
     }
 }
@@ -157,70 +160,70 @@ function changezone(prefix) {
     if (document.getElementById('shape').value === 'circle') {
         switch (document.getElementById('color').value) {
         case 'white' :
-            el.src = prefix+'circlew.png';
+            el.src = prefix + 'circlew.png';
             break;
 
         case 'red' :
-            el.src = prefix+'circler.png';
+            el.src = prefix + 'circler.png';
             break;
 
         case 'blue' :
-            el.src = prefix+'circleb.png';
+            el.src = prefix + 'circleb.png';
             break;
 
         case 'purple' :
-            el.src = prefix+'circlep.png';
+            el.src = prefix + 'circlep.png';
             break;
 
         case 'green' :
-            el.src = prefix+'circleg.png';
+            el.src = prefix + 'circleg.png';
             break;
 
         case 'orange' :
-            el.src = prefix+'circleo.png';
+            el.src = prefix + 'circleo.png';
             break;
 
         case 'yellow' :
-            el.src = prefix+'circley.png';
+            el.src = prefix + 'circley.png';
             break;
 
         default :
-            el.src = prefix+'circlew.png';
+            el.src = prefix + 'circlew.png';
             break;
         }
 
     } else if (document.getElementById('shape').value === 'rect') {
         switch (document.getElementById('color').value) {
         case 'white' :
-            el.src = prefix+'rectanglew.jpg';
+            el.src = prefix + 'rectanglew.jpg';
             break;
 
         case 'red' :
-            el.src = prefix+'rectangler.jpg';
+            el.src = prefix + 'rectangler.jpg';
             break;
 
         case 'blue' :
-            el.src = prefix+'rectangleb.jpg';
+            el.src = prefix + 'rectangleb.jpg';
             break;
 
         case 'purple' :
-            el.src = prefix+'rectanglep.jpg';
+            el.src = prefix + 'rectanglep.jpg';
             break;
 
         case 'green' :
-            el.src = prefix+'rectangleg.jpg';
+            el.src = prefix + 'rectangleg.jpg';
             break;
 
         case 'orange' :
-            el.src = prefix+'rectangleo.jpg';
+            el.src = prefix + 'rectangleo.jpg';
             break;
 
         case 'yellow' :
-            el.src = prefix+'rectangley.jpg';
+            el.src = prefix + 'rectangley.jpg';
             break;
 
         default :
-            el.src = prefix+'rectanglew.jpg';
+            el.src = prefix + 'rectanglew.jpg';
         }
     }
 }
@@ -247,7 +250,7 @@ function  ResizeImg(sens) {
 
 function  ResizePointer(sens) {
     //"use strict";
-    
+
     if (sens === 'gauche') {
         cible.width -= 5;
     } else if (sens === 'droite') {
@@ -257,7 +260,7 @@ function  ResizePointer(sens) {
     if(cible.width < 10){
         cible.width = 10;
     }
-    
+
     cible.height += cible.width * (cible.height / cible.height);
 }
 
@@ -320,7 +323,7 @@ document.addEventListener('keydown', function (e) {
         pressS = true;
         //document.body.style.cursor='suppr';
     }
-    
+
     if (e.keyCode === 18) { // Touch ALT down
         pressALT = true;
     }
@@ -343,7 +346,7 @@ document.addEventListener('keyup', function (e) {
         pressS = false;
         //document.body.style.cursor='default';
     }
-    
+
     if (e.keyCode === 18) { // Touch ALT up
         pressALT = false;
     }
@@ -353,16 +356,16 @@ document.addEventListener('mousemove', function (event) { // To resize the selec
     //"use strict";
 
     // Moving answer zone
-    if (cible && resizing == false){
+    if (cible && resizing == false) {
         MoveAnswerZone(event);
         moving = true;
     }
-    
+
     // Resizing answer image
     if (pressMAJ === true) {
         ResizeImg(MouseSens(event));
     }
-    
+
     // Resizing answer zone
     if (pressALT === true && allow === true) {
         ResizePointer(MouseSens(event));
@@ -372,7 +375,7 @@ document.addEventListener('mousemove', function (event) { // To resize the selec
 
 document.addEventListener('click', function (e) { // To add/delete answer zones
     //"use strict";
-    
+
     // Get the clicked answer zone
     for (j = 0 ; j < indice ; j++) {
         if (e.target.id == 'img' + j) {
@@ -383,7 +386,7 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
             }
         }
     }
-    
+
     // To add an answer zone
     if (pressCTRL === true) {
 
@@ -397,9 +400,9 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
         }
 
         // If out of the image
-        if ((mousex + 10) > (answerImg.offsetLeft + answerImg.width) || (mousex - 10) < (answerImg.offsetLeft) || 
+        if ((mousex + 10) > (answerImg.offsetLeft + answerImg.width) || (mousex - 10) < (answerImg.offsetLeft) ||
             (mousey + 10) > (answerImg.offsetTop + answerImg.height) || (mousey - 10) < (answerImg.offsetTop)) {
-            
+
             if (language.indexOf('fr') > -1) {
                 alert('Vous devez mettre la zone de reponse complète DANS l\'image ...');
             } else {
@@ -407,18 +410,18 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
             }
             document.body.style.cursor = 'default';
         } else {
- 
+
             var img = new Image();
-    
+
             img.style.position = 'absolute';
             img.style.left = String(mousex - 10) + 'px';
             img.style.top = String(mousey - 10) + 'px';
-            
+
             img.id = 'img'+indice;
             indice++;
-            
+
             img.src = el.src;
-            
+
             document.body.appendChild(img);
         }
         pressCTRL = false;
@@ -436,12 +439,12 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
         }
         pressS = false;
     }
-    
+
     document.onmousedown = function () { // Restart selection
         resizing = false; // Stop resizing && allow moving
         return true;
-    } 
-    
+    }
+
     // To stop moving
     if (moving === true && allow === true) {
         cible = null;

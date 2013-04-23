@@ -19,36 +19,36 @@ function show_hint(idHint, path_hint_show, confirm_hint, nbr_hint, paper) {
 }
 
 function submitForm(numQuestionToDisplayed, interactionType) {
-    document.getElementById("numQuestionToDisplayed").value = numQuestionToDisplayed;
-    
+    document.getElementById('numQuestionToDisplayed').value = numQuestionToDisplayed;
+
     if (interactionType == 'InteractionGraphic') {
-        recordGraph('eza','vwx');
+        recordGraph();
     }
-    
-    document.getElementById("formResponse").submit();
+
+    document.getElementById('formResponse').submit();
 }
 
 function finish(interactionType) {
-    document.getElementById("numQuestionToDisplayed").value = 'finish';
-    
+    document.getElementById('numQuestionToDisplayed').value = 'finish';
+
     if (interactionType == 'InteractionGraphic') {
-        recordGraph('eza','vwx');
+        recordGraph();
     }
-    
-    document.getElementById("formResponse").submit();
+
+    document.getElementById('formResponse').submit();
 }
 
 function interupt(interactionType) {
-    document.getElementById("numQuestionToDisplayed").value = 'interupt';
-    
+    document.getElementById('numQuestionToDisplayed').value = 'interupt';
+
     if (interactionType == 'InteractionGraphic') {
-        recordGraph('eza','vwx');
+        recordGraph();
     }
-    
-    document.getElementById("formResponse").submit();
+
+    document.getElementById('formResponse').submit();
 }
 
-function recordGraph(noAnswerZone, notAll) {
+function recordGraph() {
 
     var taille = document.getElementById('nbpointer').value;
 
@@ -57,7 +57,6 @@ function recordGraph(noAnswerZone, notAll) {
 
         if (!tempCoords[label]) {
             tempCoords[label] = 'a-a';
-
         }
     }
 

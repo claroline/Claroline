@@ -237,7 +237,7 @@ class exerciseServices
 
                 $valid = $rightCoords[$i]->getSize() / 2;
 
-                if ((($xa) < ($xr + $valid)) && (($xa) > ($xr - $valid)) && (($ya) < ($yr + $valid)) && 
+                if ((($xa) < ($xr + $valid)) && (($xa) > ($xr - $valid)) && (($ya) < ($yr + $valid)) &&
                     (($ya) > ($yr - $valid))
                 ) {
                     if ($this->alreadyDone($rightCoords[$i], $verif, $z)) {
