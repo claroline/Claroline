@@ -78,7 +78,7 @@ class LayoutController extends Controller
                 ->countUnread($user);
             $username = $user->getFirstName() . ' ' . $user->getLastName();
             $personalWs = $user->getPersonalWorkspace();
-            $wsLogs = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceLog')
+            $wsLogs = $em->getRepository('ClarolineCoreBundle:Logger\Log')
                 ->findLatestWorkspaceByUser($user, $roles);
 
             if (!empty($wsLogs)) {
