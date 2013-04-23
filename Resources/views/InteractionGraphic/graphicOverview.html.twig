@@ -8,43 +8,45 @@
     {% block title %} Correction {% endblock %}
 
 {% block section_content %}
-    
-    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/GraphicOverview.js') }}"></script>
-    
-    <p><img src="{{asset (doc.url)}}" width="{{ interG.width }}" height="{{ interG.height }}" alt="AnswerImage" id="AnswerImage1"/></p>
-    
-    <p>Score : {{ score }}/{{ total }}.<br/>
-       
-        {% if score == 0 and penalty == 0 %} 
-            Aucune bonne réponse.
-        {% elseif penalty == 0 %}
-            Indices non vus, pas de pénalité.
-        {% else %}
-            Points bonne réponse : {{ point }} avec : -{{ penalty }} de pénalité pour indices vus.
-        {% endif %}
-    </p>
-    
-    {%set i = 0 %}    
-    
-    {% for c in coords %} 
-  
-        {% set numb = coords[i].value|split(',') %}
-        {% set repco = rep[i]|split('-') %}
+    <div id='divInter0'>
+        <input type="hidden" id='hidInter0' value="" />
+        <script type="text/javascript">document.getElementById("hidInter0").value = document.getElementById('divInter0').offsetLeft;</script>
+        <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/GraphicOverview.js') }}"></script>
 
-        <img src="/Claroline/web/bundles/ujmexo/images/graphic/circlew.png" alt="RightAnswer{{i}}" id="1ra{{i}}"
-             style="position: absolute; z-index: 2;" width="{{ coords[i].size }}"/><br/>
-        
-        <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{i}}" id="1cursor{{i}}" 
-             style="position: absolute; z-index: 7;"/>
+        <p><img src="{{asset (doc.url)}}" width="{{ interG.width }}" height="{{ interG.height }}" alt="AnswerImage" id="AnswerImage1"/></p>
 
-        <script type="text/javascript">whichImg('{{coords[i].shape}}', '{{coords[i].color}}', {{i}}, 
-            {{ numb[0] }}, {{ numb[1] }}, {{repco[0]}},{{repco[1]}}, '{{ asset('bundles/ujmexo/images/graphic/') }}',
-            '{{ coords[i].size }}',1)</script>
-           
-        {%set i=i+1%}
+        <p>Score : {{ score }}/{{ total }}.<br/>
 
-    {% endfor %}
+            {% if score == 0 and penalty == 0 %} 
+                Aucune bonne réponse.
+            {% elseif penalty == 0 %}
+                Indices non vus, pas de pénalité.
+            {% else %}
+                Points bonne réponse : {{ point }} avec : -{{ penalty }} de pénalité pour indices vus.
+            {% endif %}
+        </p>
 
-<a href="{{ path('ujm_question_index') }}">{{ "Question list" | trans }}</a>
+        {%set i = 0 %}    
 
+        {% for c in coords %} 
+
+            {% set numb = coords[i].value|split(',') %}
+            {% set repco = rep[i]|split('-') %}
+
+            <img src="/Claroline/web/bundles/ujmexo/images/graphic/circlew.png" alt="RightAnswer{{i}}" id="1ra{{i}}"
+                 style="position: absolute; z-index: 2;" width="{{ coords[i].size }}"/><br/>
+
+            <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{i}}" id="1cursor{{i}}" 
+                 style="position: absolute; z-index: 7;"/>
+
+            <script type="text/javascript">whichImg('{{coords[i].shape}}', '{{coords[i].color}}', {{i}}, 
+                {{ numb[0] }}, {{ numb[1] }}, {{repco[0]}},{{repco[1]}}, '{{ asset('bundles/ujmexo/images/graphic/') }}',
+                '{{ coords[i].size }}',1)</script>
+
+            {%set i=i+1%}
+
+        {% endfor %}
+
+    <a href="{{ path('ujm_question_index') }}">{{ "Question list" | trans }}</a>
+</div>
 {% endblock %}

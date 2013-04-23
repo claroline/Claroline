@@ -67,5 +67,5 @@ function recordGraph(noAnswerZone, notAll) {
 }
 
 function displayAnswersGraph(response) {
-    alert(response);
+    //alert(response);
 }
