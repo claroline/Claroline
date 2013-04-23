@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Entity\User;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Actions of this controller are not routed. They're intended to be rendered
@@ -63,16 +64,12 @@ class LayoutController extends Controller
                 $isInAWorkspace = true;
             }
         }
-        /*
-        $token = $this->get('security.context')->getToken();
-        $roles = $this->get('claroline.security.utilities')->getRoles($token);
 
         if (!in_array('ROLE_ANONYMOUS', $roles)) {
             $isLogged = true;
         }
-         *
-         */
-        if ($user instanceof User) {
+
+        if ($isLogged) {
             $isLogged = true;
             $countUnreadMessages = $em->getRepository('ClarolineCoreBundle:Message')
                 ->countUnread($user);
