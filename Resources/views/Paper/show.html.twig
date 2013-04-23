@@ -35,106 +35,120 @@
 
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
-        {% block stylesheets %}
-            {{ parent() }}
-            <link href="{{ asset('bundles/ujmexo/css/paper.css') }}" type="text/css" rel="stylesheet" />
-        {% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/ujmexo/css/paper.css') }}" type="text/css" rel="stylesheet"/>
+{% endblock %}
 
-    {% block title %} Correction {% endblock %}
-
-
+{% block title %} Correction {% endblock %}
 
 {% block section_content %}
 
-{% set i = 0 %}
-{% set exoMark = 0 %}
-{% set exoScoreMax = 0 %}
-{#{ dump(interactions) }#}
-{% for interaction in interactions %}
-    <div id='divInter{{ i }}'>
-        <input type="hidden" id='hidInter{{ i }}' value="" />
-        <script type="text/javascript">document.getElementById("hidInter{{ i }}").value = document.getElementById('divInter{{ i }}').offsetLeft;</script>
+    {% set i = 0 %}
+    {% set exoMark = 0 %}
+    {% set exoScoreMax = 0 %}
+    {#{ dump(interactions) }#}
+    {% for interaction in interactions %}
+        <div id='divInter{{ i }}'>
+        <input type="hidden" id="hidInter{{ i }}" value=""/>
+        <script type="text/javascript">
+            document.getElementById('hidInter{{ i }}').value = document.getElementById('divInter{{ i }}').offsetLeft;
+        </script>
+
+<!--------------------------------------------------- QCM ------------------------------------------------------------->
+
         {% if( interaction.type == 'InteractionQCM') %}
+
             {% set interInfo = getInterTwig(interaction.id, 'InteractionQCM') %}
             {% set interQCM =  interInfo['question'] %}
+
             {% if (display == 'all') %}
                 <div>
             {% else %}
                 <div style="display:none;">
             {% endif %}
 
-                <div name="title">
-                    {{ interQCM.interaction.question.title}}
-                </div>
+            <div name="title">
+                {{ interQCM.interaction.question.title }}
+            </div>
 
-                <div name="description">
-                    {{ interQCM.interaction.question.description|raw}}
-                </div>
+            <div name="description">
+                {{ interQCM.interaction.question.description|raw }}
+            </div>
 
-                <div name="invite">
-                    {{ interQCM.interaction.invite|raw}}
-                </div>
+            <div name="invite">
+                {{ interQCM.interaction.invite|raw }}
+            </div>
 
-                <table border="1">
+            <table border="1">
+                <tr>
+                    <th>{{ "Your answer" | trans }}</th>
+                    <th>{{ "Expected answer" | trans }}</th>
+                    <th>{{ "Choice" | trans }}</th>
+                    <th>{{ "Feedback" | trans }}</th>
+                </tr>
+
+                {% for choice in interQCM.choices %}
                     <tr>
-                        <th>{{ "Your answer" | trans }}</th>
-                        <th>{{ "Expected answer" | trans }}</th>
-                        <th>{{ "Choice" | trans }}</th>
-                        <th>{{ "Feedback" | trans }}</th>
-                    </tr>
-
-                    {% for choice in interQCM.choices %}
-                        <tr>
-                            <td>
-                                {% if regexTwig('/' ~ choice.id ~ ';/', responses[i].response) > 0 %}
-                                    {# choice checked by student #}
-                                    {% if choice.rightResponse %}
-                                        <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
-                                    {% else %}
-                                        <img src="{{ asset('bundles/ujmexo/images/checkbox_on_red.gif') }}">
-                                    {% endif %}
-                                {% else %}
-                                    <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
-                                {% endif %}
-                            </td>
-                            <td>
+                        <td>
+                            {% if regexTwig('/' ~ choice.id ~ ';/', responses[i].response) > 0 %}
+                                {# choice checked by student #}
                                 {% if choice.rightResponse %}
                                     <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
                                 {% else %}
-                                    <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
+                                    <img src="{{ asset('bundles/ujmexo/images/checkbox_on_red.gif') }}">
                                 {% endif %}
-                            </td>
-                            <td>
-                                {{ choice.label|raw }}
-                            </td>
-                            <td>
-                                {{ choice.feedback|raw }}
-                            </td>
-                        </tr>
-                    {% endfor %}
-
-                </table>
-                <div name="feddback">
-                    {{ "Comment" | trans }}: 
-                    {{ interQCM.interaction.feedback|raw}}
-                </div>
-                {% for hv in hintViewed %}
-                    {% if( hv.hint.interaction.id == interaction.id ) %}
-                        {{ "Penalty" | trans }}: {{ hv.hint.penalty }}<br/>
-                    {% endif %}
+                            {% else %}
+                                <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if choice.rightResponse %}
+                                <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
+                            {% else %}
+                                <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ choice.label|raw }}
+                        </td>
+                        <td>
+                            {{ choice.feedback|raw }}
+                        </td>
+                    </tr>
                 {% endfor %}
-                {{ "Mark" | trans }}: {{ responses[i].mark }}/{{ interInfo['maxScore'] }}<br/>
-                {% set exoMark = exoMark + responses[i].mark %}
-                {% set exoScoreMax = exoScoreMax + interInfo['maxScore'] %}
-                <hr/>
+
+            </table>
+
+            <div name="feddback">
+                {{ "Comment" | trans }}:
+                {{ interQCM.interaction.feedback|raw }}
             </div>
+
+            {% for hv in hintViewed %}
+                {% if( hv.hint.interaction.id == interaction.id ) %}
+                    {{ "Penalty" | trans }}: {{ hv.hint.penalty }}<br/>
+                {% endif %}
+            {% endfor %}
+
+            {{ "Mark" | trans }}: {{ responses[i].mark }}/{{ interInfo['maxScore'] }}<br/>
+            {% set exoMark = exoMark + responses[i].mark %}
+            {% set exoScoreMax = exoScoreMax + interInfo['maxScore'] %}
+            <hr/>
         </div>
+    </div>
 
-    {% elseif(interaction.type == 'InteractionGraphic') %}
+<!------------------------------------------------- Graphic ----------------------------------------------------------->
 
-        <div id='divInter{{ i }}'>
-            <input type="hidden" id='hidInter{{ i }}' value="" />
-            <script type="text/javascript">document.getElementById("hidInter{{ i }}").value = document.getElementById('divInter{{ i }}').offsetLeft;</script>
+        {% elseif(interaction.type == 'InteractionGraphic') %}
+
+            <div id="divInter{{ i }}">
+            <input type="hidden" id="hidInter{{ i }}" value=""/>
+
+            <script type="text/javascript">
+                document.getElementById('hidInter{{ i }}').value = document.getElementById('divInter{{ i }}').offsetLeft;
+            </script>
+
             {% set interInfo = getInterTwig(interaction.id, 'InteractionGraphic') %}
             {% set interG =  interInfo['question'] %}
             {% set coords =  getCoordsGraphTwig(interG.id) %}
@@ -146,71 +160,79 @@
                 <div style="display:none;">
             {% endif %}
 
-                <div name="title">
-                    {{ interG.interaction.question.title}}
-                </div>
-
-                <div name="description">
-                    {{ interG.interaction.question.description|raw}}
-                </div>
-
-                <div name="invite">
-                    {{ interG.interaction.invite|raw}}
-                </div>
-
-                <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/GraphicOverview.js') }}"></script>
-
-                <img src="{{asset (interG.document.url)}}" width="{{ interG.width }}" height="{{ interG.height }}" 
-                        alt="AnswerImage" id="AnswerImage{{ interaction.id }}"/>
-
-                {% set repco = responses[i].response|split(';') %}
-                {%set x = 0 %}    
-
-                {% for c in coords %} 
-
-                    {% set maxScore = maxScore + coords[x].scoreCoords %}
-                    {% set numb = coords[x].value|split(',') %}
-                    {% set repcoX = repco[x]|split('-') %}
-
-                    <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" alt="RightAnswer{{x}}" id="{{ interaction.id }}ra{{x}}"
-                         style="position: absolute; z-index: 2;" width="{{ coords[x].size }}"/><br/>
-
-                    <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{x}}" id="{{ interaction.id }}cursor{{x}}" 
-                         style="position: absolute; z-index: 7;"/>
-
-                    <script type="text/javascript">whichImg('{{coords[x].shape}}', '{{coords[x].color}}', {{x}}, 
-                        '{{ numb[0] }}', '{{ numb[1] }}', '{{repcoX[0]}}', '{{repcoX[1]}}', '{{ asset('bundles/ujmexo/images/graphic/') }}',
-                        '{{ coords[x].size }}', '{{interaction.id}}')</script>      
-
-                    {%set x=x+1%}
-
-                {% endfor %}
-
-                {% for hv in hintViewed %}
-                    {% if( hv.hint.interaction.id == interaction.id ) %}
-                        {{ "Penalty" | trans }}: {{ hv.hint.penalty }}<br/>
-                    {% endif %}
-                {% endfor %}
-                {{ "Mark" | trans }}: {{ responses[i].mark }}/{{ maxScore }}
-                {% set exoMark = exoMark + responses[i].mark %}
-                {% set exoScoreMax = exoScoreMax + maxScore %}
-                <br/>
-                <hr/>
+            <div name="title">
+                {{ interG.interaction.question.title }}
             </div>
+
+            <div name="description">
+                {{ interG.interaction.question.description|raw }}
+            </div>
+
+            <div name="invite">
+                {{ interG.interaction.invite|raw }}
+            </div>
+
+            <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/GraphicOverview.js') }}"></script>
+
+            <img src="{{asset (interG.document.url)}}" width="{{ interG.width }}" height="{{ interG.height }}"
+                alt="AnswerImage" id="AnswerImage{{ interaction.id }}"/>
+
+            {% set repco = responses[i].response|split(';') %}
+            {% set x = 0 %}
+
+            {% for c in coords %}
+
+                {% set maxScore = maxScore + coords[x].scoreCoords %}
+                {% set numb = coords[x].value|split(',') %}
+                {% set repcoX = repco[x]|split('-') %}
+
+                <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" id="{{ interaction.id }}ra{{ x }}"
+                     alt="RightAnswer{{ x }}" style="position: absolute; z-index: 2;" width="{{ coords[x].size }}"/><br/>
+
+                <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" id="{{ interaction.id }}cursor{{ x }}"
+                     alt="AnswerZone{{ x }}" style="position: absolute; z-index: 7;"/>
+
+                <script type="text/javascript">
+                    whichImg('{{coords[x].shape}}', '{{coords[x].color}}', {{x}}, '{{ numb[0] }}', '{{ numb[1] }}',
+                    '{{repcoX[0]}}', '{{repcoX[1]}}', '{{ asset('bundles/ujmexo/images/graphic/') }}',
+                    '{{ coords[x].size }}', '{{interaction.id}}')
+                </script>
+
+                {% set x = x + 1 %}
+
+            {% endfor %}
+
+            {% for hv in hintViewed %}
+                {% if( hv.hint.interaction.id == interaction.id ) %}
+                    {{ "Penalty" | trans }}: {{ hv.hint.penalty }}<br/>
+                {% endif %}
+            {% endfor %}
+
+            {{ "Mark" | trans }}: {{ responses[i].mark }}/{{ maxScore }}
+            {% set exoMark = exoMark + responses[i].mark %}
+            {% set exoScoreMax = exoScoreMax + maxScore %}
+            <br/>
+            <hr/>
         </div>
+    </div>
 
-    {% elseif(interaction.type == 'InteractionHole') %}
+<!--------------------------------------------------- Hole ------------------------------------------------------------>
 
-    {% elseif(interaction.type == 'InteractionOpen') %}
+        {% elseif(interaction.type == 'InteractionHole') %}
 
-    {% endif %}
+<!--------------------------------------------------- Open ------------------------------------------------------------>
 
-    {% set i = i+1 %}
-{% endfor %}
+        {% elseif(interaction.type == 'InteractionOpen') %}
+
+        {% endif %}
+
+        {% set i = i + 1 %}
+    {% endfor %}
 
 {% set scoreFinal = exoMark / exoScoreMax %}
 {% set scoreFinal = scoreFinal * 20 %}
 <div>{{ scoreFinal }} / 20</div>
 <br/>
 <a href="{{ path('ujm_exercise_open', { 'exerciseId': exoId }) }}">Back</a>
+
 {% endblock %}

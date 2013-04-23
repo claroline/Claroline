@@ -76,10 +76,10 @@ function whichImg(shape, color, i, x, y, rx, ry, prefix, size, id) {
         parseInt(y) - (size/2)) + 'px';
 
     if(rx != 'a' && ry != 'a'){
-        document.getElementById(id + 'cursor' + i).style.left = String(parseInt(document.getElementById('hidInter0').value) +
-            parseInt(rx) - 20) + 'px';
-        document.getElementById(id + 'cursor' + i).style.top = String(document.getElementById('AnswerImage' + id).offsetTop +
-            parseInt(ry) - 10) + 'px';
+        document.getElementById(id + 'cursor' + i).style.left = String(parseInt(document.getElementById('hidInter0').value)
+            + parseInt(rx) - 20) + 'px';
+        document.getElementById(id + 'cursor' + i).style.top = String(document.getElementById('AnswerImage' + id).offsetTop
+            + parseInt(ry) - 10) + 'px';
     } else {
         document.getElementById(id + 'cursor' + i).style.visibility = 'hidden';
     }

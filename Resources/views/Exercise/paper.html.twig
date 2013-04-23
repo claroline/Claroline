@@ -41,156 +41,171 @@
 
 {% block title %} {{ "Paper" | trans }} {% endblock %}
 
-
 {% block section_content %}
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
 
-<script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
+    {% set indexMax = 1 %}
+    <table>
+        <tr>
+        {% for interactionID in tabOrderInter %}
+            {% if loop.index != numQ %}
+                <td>
+                    <a href="#" onClick="submitForm({{ loop.index }}, '{{ interactionType }}');">{{ loop.index }}</a>
+                    {% set indexMax = loop.index %}
+                </td>
+            {% else %}
+                <td>
+                    {{ loop.index }}
+                    {% set indexMax = loop.index %}
+                </td>
+            {% endif %}
+        {% endfor %}
+        </tr>
+    </table>
 
-{% set indexMax = 1 %}
-<table>
-<tr>
-{% for interactionID in tabOrderInter %}
-    {% if loop.index != numQ %}
-        <td>
-            <a href="#" onClick="submitForm({{ loop.index }}, '{{ interactionType }}');">{{ loop.index }}</a>
-            {% set indexMax = loop.index %}
-        </td>
-    {% else %}
-        <td>
-            {{ loop.index }}
-            {% set indexMax = loop.index %}
-        </td>
-    {% endif %}
-{% endfor %}
-</tr>
-</table>
+    <form class="well" action="{{ path('ujm_exercise_paper_nav') }}" method="post" name="formResponse" id="formResponse">
+        <input type="hidden" name="numQuestionToDisplayed" id="numQuestionToDisplayed" value=""/>
 
-<form class="well" action="{{ path('ujm_exercise_paper_nav') }}" method="post" name="formResponse" id="formResponse">
-    <input type="hidden" name="numQuestionToDisplayed" id="numQuestionToDisplayed" value="" />
-    
-    <!---------QCM----------------------------->
-    
-    {% if interactionType == 'InteractionQCM' %}
-        <h1> Q : {{ interactionToDisplayed.interaction.question.title }} ?</h1>
-        <input type="hidden" name="interactionQCMToValidated" value={{ interactionToDisplayed.id }} />
-        <input type="hidden" name="interactionToValidated" value={{ interactionToDisplayed.interaction.id }} />
-        <input type="hidden" name="typeInteraction" value="InteractionQCM" />
+<!--------------------------------------------------- QCM ------------------------------------------------------------->
 
-        {% if interactionToDisplayed.interaction.question.description != null %}
-            <div name="description">
-                <p>{{ interactionToDisplayed.interaction.question.description|raw }}<p/>
+        {% if interactionType == 'InteractionQCM' %}
+            <h1> Q : {{ interactionToDisplayed.interaction.question.title }} ?</h1>
+
+            <input type="hidden" name="interactionQCMToValidated" value={{ interactionToDisplayed.id }}/>
+            <input type="hidden" name="interactionToValidated" value={{ interactionToDisplayed.interaction.id }}/>
+            <input type="hidden" name="typeInteraction" value="InteractionQCM"/>
+
+            {% if interactionToDisplayed.interaction.question.description != null %}
+                <div name="description">
+                    <p>{{ interactionToDisplayed.interaction.question.description|raw }}<p/>
+                </div>
+            {% endif %}
+
+            <div name="question">
+                <p>{{ interactionToDisplayed.interaction.invite|raw }}<p/>
             </div>
-        {% endif %}
 
-        <div name="question">
-            <p>{{ interactionToDisplayed.interaction.invite|raw }}<p/>
-        </div>
+            <p>
+                <table>
+                    {% for choice in interactionToDisplayed.choices %}
+                        {% set checked = "" %}
+                        <tr>
+                            <td>{{ choice.label|raw }}</td>
+                            {% if regexTwig('/' ~ choice.id ~ ';/', response) > 0 %}
+                                {% set checked = "checked" %}
+                            {% endif %}
+                            {% if interactionToDisplayed.typeQCM.id == 2 %}
+                                <td><INPUT type="radio" name="choice" value="{{ choice.id }}" {{ checked }}/></td>
+                            {% else %}
+                                <td><INPUT type="checkbox" name="choice[]" value="{{ choice.id }}" {{ checked }}/></td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </table>
 
-        <p>
-            <table>
-                {% for choice in interactionToDisplayed.choices %}
-                    {% set checked = "" %}
-                    <tr>
-                        <td>{{ choice.label|raw }}</td>
-                        {% if regexTwig('/' ~ choice.id ~ ';/', response) > 0 %}
-                            {% set checked = "checked" %}
-                        {% endif %}
-                        {% if interactionToDisplayed.typeQCM.id == 2 %}
-                            <td><INPUT type="radio" name="choice" value="{{ choice.id }}" {{ checked }} /></td>
-                        {% else %}
-                            <td><INPUT type="checkbox" name="choice[]" value="{{ choice.id }}" {{ checked }} /></td>
-                        {% endif %}
-                    </tr>
-                {% endfor %}
-            </table>
+                <table>
+                    {% set nbr_hint = 1 %}
+                    {% for hint in interactionToDisplayed.interaction.hints %}
+                        <tr>
+                            <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}',
+                                    '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }}', '{{nbr_hint}}',
+                                    '{{paper}}')">{{ "Hint" | trans }} {{nbr_hint}}</a>
+                            </td>
+                            <td id="div_hint{{nbr_hint}}"></td>
+                        </tr>
+                        {% set nbr_hint = nbr_hint + 1 %}
+                    {% endfor %}
+                </table>
+
+                <input type="hidden" name="testQCM" value="testQCM" />
+                <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
+            </p>
+
+<!------------------------------------------------- Graphic ----------------------------------------------------------->
+
+        {% elseif interactionType == 'InteractionGraphic' %}
+
+            <h1> Question : {{ interactionToDisplayed.interaction.question.title }} </h1>
+
+            <input type="hidden" name="interactionToValidated" value={{ interactionToDisplayed.interaction.id }}/>
+            <input type="hidden" name="typeInteraction" value="InteractionGraphic"/>
+
+            <div name="description">
+                <p>{{ interactionToDisplayed.interaction.question.description|raw }}</p>
+            </div>
+
+            <h3 name="question">
+                <p>{{ interactionToDisplayed.interaction.invite|raw }}</p>
+            </h3>
+
+            <h5>{{ "consignes" | trans }} :</h5>
+            <h6 id="ref"><em>{{ "position" | trans }}<br/>{{ "selection" | trans }}<br/>{{ "raz" | trans }}<br/>
+                {{ "onlyOnce" | trans }}</em>
+            </h6>
+
+            <p id="ContainerCursor">
+                {% set i = 1 %}
+                {% for coords in listCoords %}
+                    {% set place = 350 + i * 25 %}
+                    <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{ i }}"
+                         id="cursor{{ i }}" style="position: absolute; left: {{ place }}px;"/>
+                    {% set i = i + 1 %}
+               {% endfor %}
+            </p><p>
+                <img src="{{ asset(interactionToDisplayed.document.url) }}" alt="AnswerImg" id="AnswerImg"
+                     width="{{ interactionToDisplayed.width }}" height="{{ interactionToDisplayed.height }}"
+                     style="margin-top: 30px" onload="displayAnswersGraph('{{ response }}')"/>
+            </p>
+
+            <input type="hidden" id="nbpointer" name="nbpointer" value="{{ i }}"/>
+            <input type="hidden" id="answers" name="answers" value=""/>
+            <input type="hidden" id="graphId" name="graphId" value="{{ interactionToDisplayed.id }}"/>
 
             <table>
                 {% set nbr_hint = 1 %}
-                {% for hint in interactionToDisplayed.interaction.hints %}
-                    <tr>
-                        <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}', '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }}', '{{nbr_hint}}', '{{paper}}')">{{ "Hint" | trans }} {{nbr_hint}} </a></td>
-                        <td id="div_hint{{nbr_hint}}"></td>
-                    </tr>
-                    {% set nbr_hint = nbr_hint + 1 %}
-                {% endfor %}
-            </table>
+                    {% for hint in interactionToDisplayed.interaction.hints %}
+                        <tr>
+                            <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}',
+                                    '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }}', '{{nbr_hint}}',
+                                    '{{paper}}')">{{ "Hint" | trans }} {{nbr_hint}}</a>
+                            </td>
+                            <td id="div_hint{{nbr_hint}}"></td>
+                        </tr>
+                        {% set nbr_hint = nbr_hint + 1 %}
+                    {% endfor %}
+            </table><br/>
 
-            <input type="hidden" name="testQCM" value="testQCM" />
-            <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}" />
-        </p>
-    
-    <!---------Graphic----------------------------->
+            <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
 
-    {% elseif interactionType == 'InteractionGraphic' %}
-        <h1> Question : {{ interactionToDisplayed.interaction.question.title }} </h1>
-        <input type="hidden" name="interactionToValidated" value={{ interactionToDisplayed.interaction.id }} />
-        <input type="hidden" name="typeInteraction" value="InteractionGraphic" />
-        
-        <div name="description">
-            <p>{{ interactionToDisplayed.interaction.question.description|raw }}</p>
-        </div>
+<!-------------------------------------------------- Hole ------------------------------------------------------------->
 
-        <h3 name="question">
-            <p>{{ interactionToDisplayed.interaction.invite|raw }}</p>
-        </h3>
-
-        <h5>{{ "consignes" | trans }} :</h5>
-        <h6 id="ref"><em>{{ "position" | trans }}<br/>{{ "selection" | trans }}<br/>{{ "raz" | trans }}<br/>{{ "onlyOnce" | trans }}</em></h6>
-
-        <p id="ContainerCursor">{%set i=1%}
-            {% for coords in listCoords %} {%set place = 350+i*25%}
-                <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{i}}" id="cursor{{i}}" 
-                     style="position: absolute; left: {{ place }}px;"/>{%set i=i+1%}
-           {% endfor %}
-        </p><p>
-            <img src="{{ asset(interactionToDisplayed.document.url) }}" alt="AnswerImg" id="AnswerImg" 
-                 width="{{ interactionToDisplayed.width }}" height="{{ interactionToDisplayed.height }}" 
-                 style="margin-top: 30px" onload="displayAnswersGraph('{{ response }}')"/>
-        </p>
-        
-        <input type="hidden" id="nbpointer" name="nbpointer" value="{{ i }}"/>
-        <input type="hidden" id="answers" name="answers" value=""/>
-        <input type="hidden" id="graphId" name="graphId" value="{{ interactionToDisplayed.id }}"/>
-        <table>
-            {% set nbr_hint = 1 %}
-                {% for hint in interactionToDisplayed.interaction.hints %}
-                    <tr>
-                        <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}', '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }}', '{{nbr_hint}}', '{{paper}}')">{{ "Hint" | trans }} {{nbr_hint}} </a></td>
-                        <td id="div_hint{{nbr_hint}}"></td>
-                    </tr>
-                    {% set nbr_hint = nbr_hint + 1 %}
-                {% endfor %}
-        </table><br/>
-        
-        <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}" />
-        
-    {% elseif interactionType == 'InteractionHole' %}
-    {% endif %}
-</form>
-
-<table>
-    <tr>
-        {% if numQ != 1 %}
-            <td> <a href="#" onClick="submitForm(1, '{{ interactionType }}');"> << </a> </td>
-            <td> <a href="#" onClick="submitForm({{ numQ-1 }}, '{{ interactionType }}');"> < </a> </td>
-        {% else %}
-            <td> << </td>
-            <td> < </td>
+        {% elseif interactionType == 'InteractionHole' %}
         {% endif %}
-        {% if numQ != indexMax %}
-            <td> <a href="#" onClick="submitForm({{ numQ+1 }}, '{{ interactionType }}');"> > </a> </td>
-            <td> <a href="#" onClick="submitForm({{ indexMax }}, '{{ interactionType }}');"> >> </a> </td>
-        {% else %}
-            <td> > </td>
-            <td> >> </td>
-        {% endif %}
-        {% if dispButtonInterrupt %}
-            <td> <input type="button" value="{{ "Interupt" | trans }}" onClick="interupt('{{ interactionType }}')" /> </td>
-        {% endif %}
-        <td> <input type="button" value="{{ "Finish" | trans }}" onClick="finish('{{ interactionType }}')" /> </td>
-    </tr>
-</table>
+    </form>
 
+    <table>
+        <tr>
+            {% if numQ != 1 %}
+                <td> <a href="#" onClick="submitForm(1, '{{ interactionType }}');"> << </a></td>
+                <td> <a href="#" onClick="submitForm({{ numQ-1 }}, '{{ interactionType }}');"> < </a></td>
+            {% else %}
+                <td> << </td>
+                <td> < </td>
+            {% endif %}
+            {% if numQ != indexMax %}
+                <td> <a href="#" onClick="submitForm({{ numQ+1 }}, '{{ interactionType }}');"> > </a></td>
+                <td> <a href="#" onClick="submitForm({{ indexMax }}, '{{ interactionType }}');"> >> </a></td>
+            {% else %}
+                <td> > </td>
+                <td> >> </td>
+            {% endif %}
+            {% if dispButtonInterrupt %}
+                <td><input type="button" value="{{ "Interupt" | trans }}" onClick="interupt('{{ interactionType }}')"/>
+                </td>
+            {% endif %}
+            <td><input type="button" value="{{ "Finish" | trans }}" onClick="finish('{{ interactionType }}')"/></td>
+        </tr>
+    </table>
 {% endblock %}
 
 {% block javascripts %}
