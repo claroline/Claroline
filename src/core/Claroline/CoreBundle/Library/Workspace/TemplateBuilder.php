@@ -309,7 +309,7 @@ class TemplateBuilder
 
     private function findDirectory(array $directoriesArray, $searchId)
     {
-        foreach($directoriesArray as $directory) {
+        foreach ($directoriesArray as $directory) {
             if ($searchId == $directory['id']) {
                 return $directory;
             }
