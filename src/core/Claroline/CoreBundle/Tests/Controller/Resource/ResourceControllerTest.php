@@ -263,19 +263,19 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(1, count($postEvents) - count($preEvents));
     }
 
-    /**
-     * @todo Move this test in a resource manager test case (controller isn't involved)
-     */
+
     public function testCreateActionLogsEventWithResourceManager()
     {
-        $this->logUser($this->getUser('user'));
-        $user = $this->client->getContainer()->get('security.context')->getToken()->getUser();
+        $user = $this->getUser('user');
+        $this->logUser($user);
         $logRepo = $this->em->getRepository('ClarolineCoreBundle:Logger\Log');
         $preEvents = $logRepo->findAll();
-        $manager = $this->client->getContainer()->get('claroline.resource.manager');
-        $directory = new Directory();
-        $directory->setName('dir');
-        $manager->create($directory, $this->pwr->getId(), 'directory', $user);
+        $this->client->request(
+            'POST',
+            "/resource/create/directory/{$this->pwr->getId()}",
+            array('directory_form' => array()),
+            array('directory_form' => array('name' => 'name'))
+        );
         $postEvents = $logRepo->findAll();
         $this->assertEquals(1, count($postEvents) - count($preEvents));
     }
