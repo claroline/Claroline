@@ -140,7 +140,7 @@ class InteractionGraphicController extends Controller
         $coords = $this->get('request')->get('coordsZone'); // Get the answer zones
         
         $coord = preg_split('[,]', $coords);
-        $lengthCoord = count($coord);
+        $lengthCoord = count($coord) - 1;
 
         for ($i = 0; $i < $lengthCoord; $i++) {
 
@@ -156,9 +156,8 @@ class InteractionGraphicController extends Controller
 
             ${'shape'.$i} = $this->getShape(${'url'.$i});
             ${'color'.$i} = $this->getColor(${'url'.$i});
-        }
 
-        for ($i = 0; $i < $lengthCoord; $i++) {
+            
             ${'co'.$i} = new Coords();
 
             ${'co'.$i}->setValue(${'value'.$i});

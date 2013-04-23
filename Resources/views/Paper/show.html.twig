@@ -150,10 +150,11 @@
             <div name="invite">
                 {{ interG.interaction.invite|raw}}
             </div>
-                    
+
             <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/GraphicOverview.js') }}"></script>
 
-            <p><img src="{{asset (interG.document.url)}}" width="{{ interG.width }}" height="{{ interG.height }}" alt="AnswerImage" id="AnswerImage"/></p>
+            <img src="{{asset (interG.document.url)}}" width="{{ interG.width }}" height="{{ interG.height }}" 
+                    alt="AnswerImage" id="AnswerImage{{ interaction.id }}"/>
 
             {% set repco = responses[i].response|split(';') %}
             {%set x = 0 %}    
@@ -164,15 +165,15 @@
                 {% set numb = coords[x].value|split(',') %}
                 {% set repcoX = repco[x]|split('-') %}
 
-                <img src="/Claroline/web/bundles/ujmexo/images/graphic/circlew.png" alt="RightAnswer{{x}}" id="ra{{x}}"
-                    style="position: absolute; z-index: 2;" width="{{ coords[x].size }}"/><br/>
+                <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" alt="RightAnswer{{x}}" id="{{ interaction.id }}ra{{x}}"
+                     style="position: absolute; z-index: 2;" width="{{ coords[x].size }}"/><br/>
 
-                <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{x}}" id="cursor{{x}}" 
+                <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{x}}" id="{{ interaction.id }}cursor{{x}}" 
                      style="position: absolute; z-index: 7;"/>
 
                 <script type="text/javascript">whichImg('{{coords[x].shape}}', '{{coords[x].color}}', {{x}}, 
                     '{{ numb[0] }}', '{{ numb[1] }}', '{{repcoX[0]}}', '{{repcoX[1]}}', '{{ asset('bundles/ujmexo/images/graphic/') }}',
-                    '{{ coords[x].size }}')</script>      
+                    '{{ coords[x].size }}', '{{interaction.id}}')</script>      
 
                 {%set x=x+1%}
 

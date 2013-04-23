@@ -11,7 +11,7 @@
     
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/GraphicOverview.js') }}"></script>
     
-    <p><img src="{{asset (doc.url)}}" width="{{ interG.width }}" height="{{ interG.height }}" alt="AnswerImage" id="AnswerImage"/></p>
+    <p><img src="{{asset (doc.url)}}" width="{{ interG.width }}" height="{{ interG.height }}" alt="AnswerImage" id="AnswerImage1"/></p>
     
     <p>Score : {{ score }}/{{ total }}.<br/>
        
@@ -31,15 +31,15 @@
         {% set numb = coords[i].value|split(',') %}
         {% set repco = rep[i]|split('-') %}
 
-        <img src="/Claroline/web/bundles/ujmexo/images/graphic/circlew.png" alt="RightAnswer{{i}}" id="ra{{i}}"
+        <img src="/Claroline/web/bundles/ujmexo/images/graphic/circlew.png" alt="RightAnswer{{i}}" id="1ra{{i}}"
              style="position: absolute; z-index: 2;" width="{{ coords[i].size }}"/><br/>
         
-        <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{i}}" id="cursor{{i}}" 
+        <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{i}}" id="1cursor{{i}}" 
              style="position: absolute; z-index: 7;"/>
 
         <script type="text/javascript">whichImg('{{coords[i].shape}}', '{{coords[i].color}}', {{i}}, 
             {{ numb[0] }}, {{ numb[1] }}, {{repco[0]}},{{repco[1]}}, '{{ asset('bundles/ujmexo/images/graphic/') }}',
-            '{{ coords[i].size }}')</script>
+            '{{ coords[i].size }}',1)</script>
            
         {%set i=i+1%}
 
