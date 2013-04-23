@@ -1,0 +1,61 @@
+{% if log.getDetails().role.changeSet is defined  and log.getDetails().role.changeSet|length > 0 %}
+    <div>
+        <h4>{{ ('log_change_set')|trans({}, 'platform') }}</h4>
+        <h5>{{ ('log_old_values')|trans({}, 'platform') }}</h4>
+        <dl class="dl-horizontal">
+            {% for key, values in log.getDetails().role.changeSet %}
+                {% if key == 'can_create'%}
+                    {% for type, rights in values %}
+                        {% set type = type|trans({}, 'platform') %}
+                        <dt>{{ 'can_create'|trans({'%type%': type}, 'platform') }}</dt>
+                        <dd>
+                            {% if rights[0] %}
+                                {{ ('yes')|trans({}, 'platform') }}
+                            {% else %}
+                                {{ ('no')|trans({}, 'platform') }}
+                            {% endif %}
+                        </dd>
+                    {% endfor %}
+                {% else %}
+                    <dt>{{ key|trans({}, 'platform') }}</dt>
+                    <dd>
+                        {% if values[0] %}
+                            {{ ('yes')|trans({}, 'platform') }}
+                        {% else %}
+                            {{ ('no')|trans({}, 'platform') }}
+                        {% endif %}
+                    </dd>
+                {% endif %}
+            {% endfor %}
+        </dl>
+
+        <h5>{{ ('log_new_values')|trans({}, 'platform') }}</h4>
+        <dl class="dl-horizontal">
+            {% for key, values in log.getDetails().role.changeSet %}
+                {% if key == 'can_create'%}
+                    {% for type, rights in values %}
+                        {% set type = type|trans({}, 'platform') %}
+                        <dt>{{ 'can_create'|trans({'%type%': type}, 'platform') }}</dt>
+                        <dd>
+                            {% if rights[1] %}
+                                {{ ('yes')|trans({}, 'platform') }}
+                            {% else %}
+                                {{ ('no')|trans({}, 'platform') }}
+                            {% endif %}
+                        </dd>
+                    {% endfor %}
+                {% else %}
+                    <dt>{{ key|trans({}, 'platform') }}</dt>
+                    <dd>
+                        {% if values[1] %}
+                            {{ ('yes')|trans({}, 'platform') }}
+                        {% else %}
+                            {{ ('no')|trans({}, 'platform') }}
+                        {% endif %}
+                    </dd>
+                {% endif %}
+            {% endfor %}
+        </dl>
+  
+    </div>
+{% endif %}

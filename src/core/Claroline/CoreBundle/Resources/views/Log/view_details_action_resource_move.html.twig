@@ -1,0 +1,32 @@
+{% if log.getDetails().source is defined %}
+    <div>
+        <h4>{{ ('log_old_folder')|trans({}, 'platform') }}</h4>
+
+        <dl class="dl-horizontal">
+            {% if log.getDetails().source.resource.id == log.getResource().getParent().getId() %}
+                <dt></dt>
+                <dd>{{ ('log_has_not_changed')|trans({}, 'platform') }}</dd>
+            {% else %}
+                <dt>{{ ('name')|trans({}, 'platform') }}</dt>
+                <dd>{{ log.getDetails().source.resource.name }}</dd>
+                <dt>{{ ('path')|trans({}, 'platform') }}</dt>
+                <dd>{{ log.getDetails().source.resource.path }}</dd>
+            {% endif %}
+        </dl>
+    </div>
+    <div>
+        <h4>{{ ('log_old_workspace')|trans({}, 'platform') }}</h4>
+
+        {% if log.getDetails().source.workspace.id == log.getWorkspace().getId() %}
+            <dl class="dl-horizontal">
+                <dt></dt>
+                <dd>{{ ('log_has_not_changed')|trans({}, 'platform') }}</dd>
+            </dl>
+        {% else %}
+            <dl class="dl-horizontal">
+                <dt>{{ ('name')|trans({}, 'platform') }}</dt>
+                <dd>{{ log.getDetails().source.workspace.name }}</dd>
+            </dl>
+        {% endif %}
+    </div>
+{% endif %}

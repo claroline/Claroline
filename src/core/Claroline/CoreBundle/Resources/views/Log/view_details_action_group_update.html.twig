@@ -1,0 +1,37 @@
+{% if log.getDetails().receiverGroup.changeSet is defined and log.getDetails().receiverGroup.changeSet|length > 0 %}
+    <div>
+        <h4>{{ ('log_change_set')|trans({}, 'platform') }}</h4>
+        <h5>{{ ('log_old_values')|trans({}, 'platform') }}</h4>
+        <dl class="dl-horizontal">
+            {% for key, values in log.getDetails().receiverGroup.changeSet %}
+                {% if key != 'password' %}
+                    <dt>{{ key|trans({}, 'platform') }}</dt>
+                    {% if values[0] %}
+                        {% if key != 'platformRole' %}
+                            <dd>{{ values[0] }}</dd>
+                        {% else %}
+                            <dd>{{ values[0]|trans({}, 'platform') }}</dd>
+                        {% endif %}
+                    {% else %}
+                        <dd>...</dd>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </dl>
+        <h5>{{ ('log_new_values')|trans({}, 'platform') }}</h4>
+        <dl class="dl-horizontal">
+            {% for key, values in log.getDetails().receiverGroup.changeSet %}
+                <dt>{{ key|trans({}, 'platform') }}</dt> 
+                {% if values[1] %}
+                    {% if key != 'platformRole' %}
+                        <dd>{{ values[1] }}</dd>
+                    {% else %}
+                        <dd>{{ values[1]|trans({}, 'platform') }}</dd>
+                    {% endif %}
+                {% else %}
+                    <dd>...</dd>
+                {% endif %}
+            {% endfor %}
+        </dl>
+    </div>
+{% endif %}

@@ -1,0 +1,17 @@
+<strong>
+    {% if log.getDetails().doer is defined %}
+        <strong>
+            {% if log.getDoer() != null %}
+                <a href="{{ path('claro_profile_view', {'userId': log.getDoer().getId()}) }}">
+                    {{ log.getDetails().doer.firstName }} {{ log.getDetails().doer.lastName }}
+                </a>
+            {% else %}
+                <em>{{ log.getDetails().doer.firstName }} {{ log.getDetails().doer.lastName }}</em>
+            {% endif %}
+        </strong>
+    {% elseif log.getDoerType == 'platform' %}
+        {{ ('log_default_user')|trans({}, 'platform') }}
+    {% elseif log.getDoerType == 'anonymous' %}
+        {{ ('anonymous')|trans({}, 'platform') }}
+    {% endif %}
+</strong>
