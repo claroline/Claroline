@@ -1,4 +1,5 @@
 <?php
+
 namespace Claroline\CoreBundle\Repository;
 
 use Claroline\CoreBundle\Entity\User;
@@ -94,6 +95,33 @@ class RelWorkspaceTagRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaceId', $workspace->getId());
         $query->setParameter('user', $user);
+
+        return $query->getResult();
+    }
+
+    public function findByUser(User $user)
+    {
+        $dql = "
+            SELECT t.id AS tag_id, rwt AS rel_ws_tag
+            FROM Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag rwt
+            JOIN rwt.tag t
+            WHERE t.user = :user
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+
+        return $query->getResult();
+    }
+
+    public function findByAdmin()
+    {
+        $dql = "
+            SELECT t.id AS tag_id, rwt AS rel_ws_tag
+            FROM Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag rwt
+            JOIN rwt.tag t
+            WHERE t.user IS NULL
+        ";
+        $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
     }

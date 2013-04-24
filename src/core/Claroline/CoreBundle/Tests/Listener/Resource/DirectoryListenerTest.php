@@ -32,12 +32,12 @@ class DirectoryListenerTest extends FunctionalTestCase
     public function testUserCanCreateDirectory()
     {
         $this->logUser($this->getUser('user'));
-        $rootDir = new Directory;
-        $rootDir->setName('root_dir');
-        $this->client
-            ->getContainer()
-            ->get('claroline.resource.manager')
-            ->create($rootDir, $this->getDirectory('user')->getId(), 'directory');
+        $this->client->request(
+            'POST',
+            "/resource/create/directory/{$this->getDirectory('user')->getId()}",
+            array('directory_form' => array()),
+            array('directory_form' => array('name' => 'name'))
+        );
         $this->client->request('GET', "/resource/directory/{$this->getDirectory('user')->getId()}");
         $dir = json_decode($this->client->getResponse()->getContent());
         $this->assertObjectHasAttribute('resources', $dir);

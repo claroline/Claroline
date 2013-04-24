@@ -11,6 +11,12 @@ use Claroline\CoreBundle\Form\GroupType;
 use Claroline\CoreBundle\Form\GroupSettingsType;
 use Claroline\CoreBundle\Form\PlatformParametersType;
 use Claroline\CoreBundle\Library\Event\PluginOptionsEvent;
+use Claroline\CoreBundle\Library\Event\LogUserDeleteEvent;
+use Claroline\CoreBundle\Library\Event\LogGroupCreateEvent;
+use Claroline\CoreBundle\Library\Event\LogGroupAddUserEvent;
+use Claroline\CoreBundle\Library\Event\LogGroupRemoveUserEvent;
+use Claroline\CoreBundle\Library\Event\LogGroupDeleteEvent;
+use Claroline\CoreBundle\Library\Event\LogGroupUpdateEvent;
 use Claroline\CoreBundle\Library\Configuration\UnwritableException;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Symfony\Component\Form\FormError;
@@ -125,7 +131,12 @@ class AdministrationController extends Controller
             foreach ($params['ids'] as $userId) {
                 $user = $em->getRepository('ClarolineCoreBundle:User')
                     ->find($userId);
+
                 $em->remove($user);
+                $em->flush();
+
+                $log = new LogUserDeleteEvent($user);
+                $this->get('event_dispatcher')->dispatch('log', $log);
             }
 
             $em->flush();
@@ -385,6 +396,9 @@ class AdministrationController extends Controller
             $em->persist($group);
             $em->flush();
 
+            $log = new LogGroupCreateEvent($group);
+            $this->get('event_dispatcher')->dispatch('log', $log);
+
             return $this->redirect($this->generateUrl('claro_admin_group_list'));
         }
 
@@ -566,6 +580,16 @@ class AdministrationController extends Controller
 
         $em->persist($group);
         $em->flush();
+
+        foreach ($users as $user) {
+            $log = new LogGroupAddUserEvent($group, $user);
+            $this->get('event_dispatcher')->dispatch('log', $log);
+        }
+
+        $content = $this->renderView(
+            'ClarolineCoreBundle:model:users.json.twig',
+            array('users' => $users)
+        );
         $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
         $response->headers->set('Content-Type', 'application/json');
 
@@ -594,16 +618,24 @@ class AdministrationController extends Controller
         $group = $em->getRepository('ClarolineCoreBundle:Group')
             ->find($groupId);
 
+        $users = array();
         if (isset($params['userIds'])) {
             foreach ($params['userIds'] as $userId) {
                 $user = $em->getRepository('ClarolineCoreBundle:User')
                     ->find($userId);
                 $group->removeUser($user);
                 $em->persist($group);
+
+                $users[] = $user;
             }
         }
 
         $em->flush();
+
+        foreach ($users as $user) {
+            $log = new LogGroupRemoveUserEvent($group, $user);
+            $this->get('event_dispatcher')->dispatch('log', $log);
+        }
 
         return new Response('user removed', 204);
     }
@@ -634,6 +666,9 @@ class AdministrationController extends Controller
         }
 
         $em->flush();
+
+        $log = new LogGroupDeleteEvent($group);
+        $this->get('event_dispatcher')->dispatch('log', $log);
 
         return new Response('groups removed', 204);
     }
@@ -683,13 +718,30 @@ class AdministrationController extends Controller
         $em = $this->getDoctrine()->getManager();
         $group = $em->getRepository('ClarolineCoreBundle:Group')
             ->find($groupId);
+
+        $oldPlatformRoleTransactionKey = $group->getPlatformRole()->getTranslationKey();
+
         $form = $this->createForm(new GroupSettingsType(), $group);
         $form->bind($request);
 
         if ($form->isValid()) {
             $group = $form->getData();
+
+            $unitOfWork = $em->getUnitOfWork();
+            $unitOfWork->computeChangeSets();
+            $changeSet = $unitOfWork->getEntityChangeSet($group);
+
+            //The changeSet don't manage manyToMany
+            $newPlatformRoleTransactionKey = $group->getPlatformRole()->getTranslationKey();
+            if ($oldPlatformRoleTransactionKey !== $newPlatformRoleTransactionKey) {
+                $changeSet['platformRole'] = array($oldPlatformRoleTransactionKey, $newPlatformRoleTransactionKey);
+            }
+
             $em->persist($group);
             $em->flush();
+
+            $log = new LogGroupUpdateEvent($group, $changeSet);
+            $this->get('event_dispatcher')->dispatch('log', $log);
 
             return $this->redirect($this->generateUrl('claro_admin_group_list'));
         }

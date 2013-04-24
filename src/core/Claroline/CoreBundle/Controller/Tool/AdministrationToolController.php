@@ -17,7 +17,7 @@ class AdministrationToolController extends Controller
      *     "/tool/show",
      *     name="claro_admin_tool_show"
      * )
-     * 
+     *
      * chanche the desktop tool name.
      * @return Response
      */
@@ -33,7 +33,7 @@ class AdministrationToolController extends Controller
         }
 
         return $this->render(
-            'ClarolineCoreBundle:Administration:modify.html.twig',
+            'ClarolineCoreBundle:Administration:desktop_tool_names.html.twig',
             array(
                 'forms' => $forms,
                 'tools' => $tools
