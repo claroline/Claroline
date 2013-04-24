@@ -15,7 +15,7 @@
                 {{ permissions.getRole().getTranslationKey()|trans({}, 'platform') }}
             </td>
             <td>
-                <input name="roleRights[{{ permissions.getId() }}][delete]" type="checkbox"
+                <input name="roles[{{ permissions.getRole().getId() }}][delete]" type="checkbox"
                 {% if (permissions.canDelete()) and (resource.isDeletable()) %}
                     checked
                 {% else %}
@@ -26,12 +26,12 @@
                 />
             </td>
             <td>
-                <input name="roleRights[{{ permissions.getId() }}][open]" type="checkbox"
+                <input name="roles[{{ permissions.getRole().getId() }}][open]" type="checkbox"
                 {% if permissions.canOpen() %} checked {% endif %}
                 />
             </td>
             <td>
-                <input name="roleRights[{{ permissions.getId() }}][edit]" type="checkbox"
+                <input name="roles[{{ permissions.getRole().getId() }}][edit]" type="checkbox"
                 {% if (permissions.canEdit()) and (resource.isEditable()) %}
                     checked
                 {% else %}
@@ -42,7 +42,7 @@
                 />
             </td>
             <td>
-                <input name="roleRights[{{ permissions.getId() }}][copy]" type="checkbox"
+                <input name="roles[{{ permissions.getRole().getId() }}][copy]" type="checkbox"
                 {% if permissions.canCopy() and (resource.isCopiable()) %}
                     checked
                 {% else %}
@@ -53,7 +53,7 @@
                 />
             </td>
             <td>
-                <input name="roleRights[{{ permissions.getId() }}][export]" type="checkbox"
+                <input name="roles[{{ permissions.getRole().getId() }}][export]" type="checkbox"
                 {% if permissions.canExport() and (resource.isExportable()) %}
                     checked
                 {% else %}

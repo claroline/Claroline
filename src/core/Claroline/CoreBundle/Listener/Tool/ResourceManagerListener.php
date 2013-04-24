@@ -289,7 +289,6 @@ class ResourceManagerListener
     private function loadDirectories($config, $createdResources, $root, $user)
     {
         if (isset($config['directory'])) {
-
             foreach ($config['directory'] as $resource) {
                 $newEvent = new ImportResourceTemplateEvent($resource, $root, $user);
                 $this->ed->dispatch("resource_{$resource['type']}_from_template", $newEvent);
@@ -301,7 +300,7 @@ class ResourceManagerListener
                 }
             }
         }
-
+        
         return $createdResources;
     }
 

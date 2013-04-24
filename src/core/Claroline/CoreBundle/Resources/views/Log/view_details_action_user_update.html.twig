@@ -1,0 +1,51 @@
+{% if log.getDetails().receiverUser.changeSet is defined  and log.getDetails().receiverUser.changeSet|length > 0 %}
+    <div>
+        <h4>{{ ('log_change_set')|trans({}, 'platform') }}</h4>
+        <h5>{{ ('log_old_values')|trans({}, 'platform') }}</h5>
+        <dl class="dl-horizontal">
+            {% for key, values in log.getDetails().receiverUser.changeSet %}
+                 {% if key == 'roles'%}
+                    {% for role, rights in values %}
+                        <dt>{{ role|trans({}, 'platform') }}</dt>
+                        <dd>
+                            {% if rights[0] %}
+                                {{ ('yes')|trans({}, 'platform') }}
+                            {% else %}
+                                {{ ('no')|trans({}, 'platform') }}
+                            {% endif %}
+                        </dd>
+                    {% endfor %}
+                {% elseif key != 'password' %}
+                    <dt>{{ key|trans({}, 'platform') }}</dt>
+                    <dd>
+                        {% if values[0] %}
+                            {{ values[0] }}
+                        {% else %}
+                            ...
+                        {% endif %}
+                    </dd>
+                {% endif %}
+            {% endfor %}
+        </dl>
+        <h5>{{ ('log_new_values')|trans({}, 'platform') }}</h5>
+        <dl class="dl-horizontal">
+            {% for key, values in log.getDetails().receiverUser.changeSet %}
+                {% if key == 'roles'%}
+                    {% for role, rights in values %}
+                        <dt>{{ role|trans({}, 'platform') }}</dt>
+                        <dd>
+                            {% if rights[1] %}
+                                {{ ('yes')|trans({}, 'platform') }}
+                            {% else %}
+                                {{ ('no')|trans({}, 'platform') }}
+                            {% endif %}
+                        </dd>
+                    {% endfor %}
+                {% elseif key != 'password' %}
+                    <dt>{{ key|trans({}, 'platform') }}</dt>
+                    <dd>{{ values[1] }}</dd>
+                {% endif %}
+            {% endfor %}
+        </dl>
+    </div>
+{% endif %}
