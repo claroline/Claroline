@@ -444,13 +444,15 @@ class ParametersControllerTest extends FunctionalTestCase
         $roleCollaborator = $em->getRepository('ClarolineCoreBundle:Role')
             ->findCollaboratorRole($this->getWorkspace('john'));
 
-        $countCheckedTools = $crawler
+        $tools = $crawler
+            ->filter("td[data-role-id={$roleCollaborator->getId()}]");
+        $checkedTools = $crawler
             ->filter("td[data-role-id={$roleCollaborator->getId()}] input:checked[type='checkbox']");
-        $countUncheckedTools = $crawler
+        $uncheckedTools = $crawler
             ->filter("td[data-role-id={$roleCollaborator->getId()}] input:not(:checked[type='checkbox'])");
 
-        $this->assertEquals(3, count($countCheckedTools));
-        $this->assertEquals(5, count($countUncheckedTools));
+        $this->assertEquals(3, count($checkedTools));
+        $this->assertEquals(count($tools) - count($checkedTools), count($uncheckedTools));
     }
 
     public function testWorkspaceResourceRightsForm()
