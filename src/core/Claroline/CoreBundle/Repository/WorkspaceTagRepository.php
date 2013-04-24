@@ -33,4 +33,31 @@ class WorkspaceTagRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+
+    public function findNonEmptyAdminTagsByWorspaces(array $workspaces)
+    {
+        $dql = "
+            SELECT DISTINCT t
+            FROM Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag rwt
+            INNER JOIN Claroline\CoreBundle\Entity\Workspace\WorkspaceTag t WITH t = rwt.tag
+            INNER JOIN Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w WITH w = rwt.workspace
+            WHERE t.user IS NULL
+            AND (
+        ";
+
+        $index = 0;
+        $eol = PHP_EOL;
+
+        foreach ($workspaces as $workspace) {
+            $dql .= $index > 0 ? '    OR ' : '    ';
+            $dql .= "w.id = {$workspace->getId()}{$eol}";
+            $index++;
+        }
+        $dql .= ")";
+
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
 }
