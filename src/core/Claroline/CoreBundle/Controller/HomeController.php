@@ -173,44 +173,36 @@ class HomeController extends Controller
 
         $manager = $this->getDoctrine()->getManager();
 
-        $content = $manager->getRepository("ClarolineCoreBundle:Home\Content")->findOneBy(
-            array('id' => $id)
-        );
+        $content = $manager->getRepository("ClarolineCoreBundle:Home\Content")->findOneBy(array('id' => $id));
 
-        if ($this->get('security.context')->isGranted('ROLE_ADMIN') and $content) {
-            if (isset($_POST['title'])) {
-                $content->setTitle($_POST['title']);
-            }
+        if ($content) {
 
-            if (isset($_POST['text'])) {
-                $content->setContent($_POST['text']);
-            }
+            $request = $this->get('request');
 
-            if (isset($_POST['generated_content'])) {
-                $content->setGeneratedContent($_POST['generated_content']);
-            }
+            $content->setTitle($request->get('title'));
+            $content->setContent($request->get('text'));
+            $content->setGeneratedContent($request->get('generated_content'));
 
-            if (isset($_POST['size']) and isset($_POST['type'])) {
+            if ($request->get('size') and $request->get('type')) {
                 $type = $manager->getRepository("ClarolineCoreBundle:Home\Type")->findOneBy(
-                    array('name' => $_POST['type'])
+                    array('name' => $request->get('type'))
                 );
 
                 $contentType = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(
                     array('content' => $content, 'type' => $type)
                 );
 
-                if ($contentType) {
-                    $contentType->setSize($_POST['size']);
-                    $manager->persist($contentType);
-                }
+                $contentType->setSize($request->get('size'));
+                $manager->persist($contentType);
             }
 
-            if (isset($_POST['title']) or
-                isset($_POST['text']) or
-                isset($_POST['generated_content']) or
-                (isset($_POST['size']) and isset($_POST['type']))) {
-
-                    $content->setModified();
+            if (
+                $request->get('title') or
+                $request->get('text') or
+                $request->get('generated_content') or
+                ($request->get('size') and $request->get('type'))
+            ) {
+                $content->setModified();
 
                 $manager->persist($content);
                 $manager->flush();
