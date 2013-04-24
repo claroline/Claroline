@@ -97,17 +97,20 @@ class LayoutController extends Controller
             }
 
             $loginTarget = $this->get('router')->generate('claro_desktop_open');
-            $tags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-                ->findNonEmptyAdminTagsByWorspaces($workspaces);
-            $relTagsWorkspaces = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-                ->findByAdminAndWorkspaces($workspaces);
 
-            foreach ($relTagsWorkspaces as $tagsWs) {
+            if (count($workspaces) > 0) {
+                $tags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+                    ->findNonEmptyAdminTagsByWorspaces($workspaces);
+                $relTagsWorkspaces = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
+                    ->findByAdminAndWorkspaces($workspaces);
 
-                if (empty($tagsWorkspaces[$tagsWs['tag_id']])) {
-                    $tagsWorkspaces[$tagsWs['tag_id']] = array();
+                foreach ($relTagsWorkspaces as $tagsWs) {
+
+                    if (empty($tagsWorkspaces[$tagsWs['tag_id']])) {
+                        $tagsWorkspaces[$tagsWs['tag_id']] = array();
+                    }
+                    $tagsWorkspaces[$tagsWs['tag_id']][] = $tagsWs['rel_ws_tag'];
                 }
-                $tagsWorkspaces[$tagsWs['tag_id']][] = $tagsWs['rel_ws_tag'];
             }
         }
 

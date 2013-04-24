@@ -128,6 +128,10 @@ class RelWorkspaceTagRepository extends EntityRepository
 
     public function findByAdminAndWorkspaces(array $workspaces)
     {
+        if (count($workspaces) === 0) {
+            throw new \InvalidArgumentException("Array argument cannot be empty");
+        }
+
         $dql = "
             SELECT t.id AS tag_id, rwt AS rel_ws_tag
             FROM Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag rwt

@@ -37,6 +37,10 @@ class WorkspaceTagRepository extends EntityRepository
 
     public function findNonEmptyAdminTagsByWorspaces(array $workspaces)
     {
+        if (count($workspaces) === 0) {
+            throw new \InvalidArgumentException("Array argument cannot be empty");
+        }
+
         $dql = "
             SELECT DISTINCT t
             FROM Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag rwt
