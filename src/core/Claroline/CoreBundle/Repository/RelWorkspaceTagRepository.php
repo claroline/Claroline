@@ -125,4 +125,34 @@ class RelWorkspaceTagRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function findByAdminAndWorkspaces(array $workspaces)
+    {
+        if (count($workspaces) === 0) {
+            throw new \InvalidArgumentException("Array argument cannot be empty");
+        }
+
+        $dql = "
+            SELECT t.id AS tag_id, rwt AS rel_ws_tag
+            FROM Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag rwt
+            JOIN rwt.tag t
+            JOIN rwt.workspace w
+            WHERE t.user IS NULL
+            AND (
+        ";
+
+        $index = 0;
+        $eol = PHP_EOL;
+
+        foreach ($workspaces as $workspace) {
+            $dql .= $index > 0 ? '    OR ' : '    ';
+            $dql .= "w.id = {$workspace->getId()}{$eol}";
+            $index++;
+        }
+        $dql .= ")";
+
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
 }

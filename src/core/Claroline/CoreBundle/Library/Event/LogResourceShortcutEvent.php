@@ -26,7 +26,7 @@ class LogResourceShortcutEvent extends LogGenericEvent
                 'owner' => array(
                     'lastName' => $resource->getCreator()->getLastName(),
                     'firstName' => $resource->getCreator()->getFirstName()
-                )
+                ),
                 'source' => array(
                     'resource' => array(
                         'id' => $source->getId(),
