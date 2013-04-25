@@ -155,7 +155,7 @@
             .done(
                 function (data)
                 {
-                    if (!isNaN(data))
+                    if (!isNaN(data) && data !== "")
                     {
                         $.ajax(asset + "content/" + data + "/" + type)
                         .done(
