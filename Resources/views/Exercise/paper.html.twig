@@ -71,8 +71,8 @@
         {% if interactionType == 'InteractionQCM' %}
             <h1> Q : {{ interactionToDisplayed.interaction.question.title }} ?</h1>
 
-            <input type="hidden" name="interactionQCMToValidated" value={{ interactionToDisplayed.id }}/>
-            <input type="hidden" name="interactionToValidated" value={{ interactionToDisplayed.interaction.id }}/>
+            <input type="hidden" name="interactionQCMToValidated" value="{{ interactionToDisplayed.id }}"/>
+            <input type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
             <input type="hidden" name="typeInteraction" value="InteractionQCM"/>
 
             {% if interactionToDisplayed.interaction.question.description != null %}
@@ -127,7 +127,7 @@
 
             <h1> Question : {{ interactionToDisplayed.interaction.question.title }} </h1>
 
-            <input type="hidden" name="interactionToValidated" value={{ interactionToDisplayed.interaction.id }}/>
+            <input type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
             <input type="hidden" name="typeInteraction" value="InteractionGraphic"/>
 
             <div name="description">
