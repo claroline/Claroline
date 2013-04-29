@@ -277,7 +277,7 @@ class ForumController extends Controller
             array(
                 'subjectId' => $subjectId,
                 'form' => $form->createView(),
-                'workspace' => $subject->getWorkspace()
+                'workspace' => $subject->getForum()->getWorkspace()
             )
         );
     }
