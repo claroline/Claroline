@@ -81,14 +81,16 @@ class GraphService
         $this->crawler->filter("body p")->each(
             function ($node, $i) {
                 if (strlen($this->graph["description"]) < 100) {
-                    $this->graph["description"] .= trim((new Crawler($node))->text())." ";
+                    $crawler = new Crawler($node);
+                    $this->graph["description"] .= trim($crawler->text()) . " ";
                 }
             }
         );
 
         $this->crawler->filter("img")->each(
             function ($node, $i) {
-                $this->graph["images"][$i] = (new Crawler($node))->attr("src");
+                $crawler = new Crawler($node);
+                $this->graph["images"][$i] = $crawler->attr("src");
             }
         );
     }
