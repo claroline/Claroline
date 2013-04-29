@@ -3,12 +3,8 @@
 
     var asset = $("#asset").html(); //global
 
-    if (asset) {
-        asset = asset + "app_dev.php/";
-    }
-    else
-    {
-        asset = "?/";
+    if (!asset) {
+        asset = "./";
     }
 
     /**
