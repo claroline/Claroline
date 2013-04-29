@@ -15,7 +15,6 @@ use Claroline\CoreBundle\Library\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Library\Event\LogResourceReadEvent;
-use Claroline\CoreBundle\Library\Event\LogResourceCreateEvent;
 use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
