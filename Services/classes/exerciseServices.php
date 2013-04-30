@@ -232,22 +232,22 @@ class exerciseServices
 
         for ($i = 0; $i < $max - 1; $i++) {
             for ($j = 0; $j < $max - 1; $j++) {
-                list($xa,$ya) = explode("-", $coords[$j]);
-                list($xr,$yr) = explode(",", $rightCoords[$i]->getValue());
+                list($xa,$ya) = explode("-", $coords[$j]); // Answers of the student
+                list($xr,$yr) = explode(",", $rightCoords[$i]->getValue()); // Right answers
 
-                $valid = $rightCoords[$i]->getSize() / 2;
+                $valid = $rightCoords[$i]->getSize() / 2; // Size of the answer zone
 
                 if ((($xa) < ($xr + $valid)) && (($xa) > ($xr - $valid)) && (($ya) < ($yr + $valid)) &&
                     (($ya) > ($yr - $valid))
-                ) {
-                    if ($this->alreadyDone($rightCoords[$i], $verif, $z)) {
-                        $point += $rightCoords[$i]->getScoreCoords();
-                        $verif[$z] = $rightCoords[$i];
+                ) { // If answer student is in right answer
+                    if ($this->alreadyDone($rightCoords[$i]->getValue(), $verif, $z)) { // Not many answers in one right
+                        $point += $rightCoords[$i]->getScoreCoords(); // Score of the student without penalty
+                        $verif[$z] = $rightCoords[$i]->getValue();
                         $z++;
                     }
                 }
             }
-            $total += $rightCoords[$i]->getScoreCoords();
+            $total += $rightCoords[$i]->getScoreCoords(); // Score max
         }
 
         $interG = $em->getRepository('UJMExoBundle:InteractionGraphic')->find($graphId);
@@ -257,7 +257,7 @@ class exerciseServices
 
         $session = $request->getSession();
 
-        if ($paperID == 0) {
+        if ($paperID == 0) { // Not assessment
             if ($session->get('penalties')) {
                 foreach ($session->get('penalties') as $penal) {
 
@@ -275,8 +275,8 @@ class exerciseServices
             $penalty = $this->getPenalty($interG->getInteraction(), $paperID);
         }
 
-        $score = $point - $penalty;
-        if ($score < 0) {
+        $score = $point - $penalty; // Score of the student with penalty
+        if ($score < 0) { // Not negatif score
             $score = 0;
         }
 
@@ -300,7 +300,7 @@ class exerciseServices
         $resu = true;
 
         for ($v = 0; $v < $z; $v++) {
-            if ($coor == $verif[$v]) {
+            if ($coor == $verif[$v]) { // if already placed at this right place
                 $resu = false;
                 break;
             } else {

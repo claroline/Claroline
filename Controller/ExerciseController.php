@@ -483,8 +483,8 @@ class ExerciseController extends Controller
      */
     private function displayQuestion(
         $numQuestionToDisplayed, $interactionToDisplay,
-        $typeInterToDisplayed, $dispButtonInterrupt, $workspace) 
-    {
+        $typeInterToDisplayed, $dispButtonInterrupt, $workspace
+    ) {
         $em = $this->getDoctrine()->getEntityManager();
         $session = $this->getRequest()->getSession();
         $tabOrderInter = $session->get('tabOrderInter');

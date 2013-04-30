@@ -53,6 +53,16 @@
         </script>
         <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/GraphicOverview.js') }}"></script>
 
+        <h1>Question : {{ interG.interaction.question.title }}</h1>
+
+            <div>
+                <p>{{ interG.interaction.question.description }}</p>
+            </div>
+
+            <h3>
+                <p>{{ interG.interaction.invite }}</p>
+            </h3>
+        
         <p><img src="{{asset (doc.url)}}" width="{{ interG.width }}" height="{{ interG.height }}" 
                 alt="AnswerImage" id="AnswerImage1"/></p>
 

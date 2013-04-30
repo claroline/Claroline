@@ -139,8 +139,8 @@ class InteractionGraphicController extends Controller
 
         $coords = $this->get('request')->get('coordsZone'); // Get the answer zones
 
-        $coord = preg_split('[,]', $coords);
-        $lengthCoord = count($coord) - 1;
+        $coord = preg_split('[,]', $coords); // Split the coordonates of answers
+        $lengthCoord = count($coord) - 1; // Number of answer zones
 
         for ($i = 0; $i < $lengthCoord; $i++) {
 
@@ -149,7 +149,7 @@ class InteractionGraphicController extends Controller
 
             $data = str_replace($before, $after, $coord[$i]);
 
-            list(${'url'.$i}, ${'value'.$i}, ${'point'.$i}, ${'size'.$i}) = explode(",", $data);
+            list(${'url'.$i}, ${'value'.$i}, ${'point'.$i}, ${'size'.$i}) = explode(",", $data); // Split informations
 
             ${'value'.$i} = str_replace("_", ",", ${'value'.$i});
             ${'url'.$i} = substr(${'url'.$i}, strrpos(${'url'.$i}, '/bundles'));
@@ -157,7 +157,6 @@ class InteractionGraphicController extends Controller
             ${'shape'.$i} = $this->getShape(${'url'.$i});
             ${'color'.$i} = $this->getColor(${'url'.$i});
 
-            
             ${'co'.$i} = new Coords();
 
             ${'co'.$i}->setValue(${'value'.$i});
@@ -392,6 +391,10 @@ class InteractionGraphicController extends Controller
         }
     }
 
+    /**
+     * Fired when compose an exercise
+     *
+     */
     public function responseGraphicAction()
     {
 

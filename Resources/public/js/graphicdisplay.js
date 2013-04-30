@@ -7,20 +7,21 @@ var out = false; // To know if is out the image
 var ox = containerCursor.offsetLeft; // Top left of the cursor's container
 var ref = document.getElementById('ref'); // The instructions div to get it position and place pointers after
 var taille = document.getElementById('nbpointer').value; // Number of pointers + 1
-var tempCoords = {};
+var tempCoords = {}; // The coordonates of the answer zones
 var validGraphic = document.getElementById('ValidGraphic'); // The form to validate
 var x; // Mouse x position
 var y; // Mouse y position
 var j; // For for instruction
 var longueur = ref.scrollHeight + 10; // height of the div "Instructions"
 
-document.addEventListener('click', function (e) {
+document.addEventListener('click', function (e) { // First click, get the selected answer zone
     //"use strict";
     for (j = 1 ; j < taille ; j++) {
         if (e.target.id == 'cursor' + j && drag == false) {
             cible = e.target;
             document.body.style.cursor = 'pointer';
 
+            // If move answer zone, must delete old coordonates into the tab
             var w = cible.offsetLeft - answerImg.offsetLeft + 10;
             var c = cible.offsetTop - answerImg.offsetTop + 10;
             var temp = w + '-' + c;
@@ -34,8 +35,7 @@ document.addEventListener('click', function (e) {
     }
 }, false);
 
-
-document.addEventListener('click', function (e) {
+document.addEventListener('click', function (e) { // Second click, place the selected answer zone
     //"use strict";
     if (drag === true) {
 
@@ -83,7 +83,7 @@ document.addEventListener('mousemove', function (e) {
     }
 }, false);
 
-document.addEventListener('keydown', function (e) {
+document.addEventListener('keydown', function (e) { // Reset all the pointers
     //"use strict";
     if (e.keyCode === 67) {
         for (var x = 1 ; x < taille ; x++) {
@@ -96,16 +96,7 @@ document.addEventListener('keydown', function (e) {
     }
 }, false);
 
-window.addEventListener('load', function (e) {
-    //"use strict";
-    for (var x = 1 ; x < taille ; x++) {
-        cur = 'cursor' + x;
-        document.getElementById(cur).style.left = String(ox + x * 25) + 'px';
-        document.getElementById(cur).style.top = String(ref.offsetTop + longueur) + 'px';
-    }
-}, false);
-
-function getTaille(tab) {
+function getTaille(tab) { // Get the number of answer zones
 
     var i = 0;
 
@@ -115,7 +106,7 @@ function getTaille(tab) {
     return i;
 }
 
-function NoEmptyAnswer(noAnswerZone, notAll) {
+function NoEmptyAnswer(noAnswerZone, notAll) { // Verify before submit that student placed all answer zones
 
     var item = getTaille(tempCoords);
 
@@ -126,7 +117,7 @@ function NoEmptyAnswer(noAnswerZone, notAll) {
         alert(notAll);
         return false;
     } else {
-        for (var cur in tempCoords) {
+        for (cur in tempCoords) {
             document.getElementById('answers').value += tempCoords[cur] + ';';
         }
         validGraphic.submit();
