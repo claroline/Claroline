@@ -81,7 +81,9 @@ class Content
      */
     public function setTitle($title)
     {
-        $this->title = $title;
+        if ($title !== null) {
+            $this->title = $title;
+        }
 
         return $this;
     }
@@ -104,7 +106,9 @@ class Content
      */
     public function setContent($content)
     {
-        $this->content = $content;
+        if ($content !== null) {
+            $this->content = $content;
+        }
 
         return $this;
     }
@@ -177,7 +181,9 @@ class Content
      */
     public function setGeneratedContent($generatedContent)
     {
-        $this->generatedContent = $generatedContent;
+        if ($generatedContent !== null) {
+            $this->generatedContent = $generatedContent;
+        }
 
         return $this;
     }

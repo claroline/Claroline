@@ -10,6 +10,7 @@ use Claroline\CoreBundle\Form\ResourcePropertiesType;
 use Claroline\CoreBundle\Form\ResourceNameType;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Claroline\CoreBundle\Library\Event\LogResourceUpdateEvent;
 
 
 class ResourcePropertiesController extends Controller
@@ -68,11 +69,18 @@ class ResourcePropertiesController extends Controller
         $form->bind($request);
 
         if ($form->isValid()) {
+            $unitOfWork = $em->getUnitOfWork();
+            $unitOfWork->computeChangeSets();
+            $changeSet = $unitOfWork->getEntityChangeSet($resource);
+
             $em->persist($resource);
             $em->flush();
             $content = json_encode(array($resource->getName()));
             $response = new Response($content);
             $response->headers->set('Content-Type', 'application/json');
+
+            $log = new LogResourceUpdateEvent($resource, $changeSet);
+            $this->get('event_dispatcher')->dispatch('log', $log);
 
             return $response;
         }
@@ -156,6 +164,22 @@ class ResourcePropertiesController extends Controller
             }
 
             $resource->setName($data->getName());
+
+            $unitOfWork = $em->getUnitOfWork();
+            $unitOfWork->computeChangeSets();
+            $changeSet = $unitOfWork->getEntityChangeSet($resource);
+
+            if (array_key_exists('icon', $changeSet)) {
+                $icons = $changeSet['icon'];
+                if ($icons[0] != null) {
+                    $icons[0] = $icons[0]->getRelativeUrl();
+                }
+                if ($icons[1] != null) {
+                    $icons[1] = $icons[1]->getRelativeUrl();
+                }
+                $changeSet['icon'] = $icons;
+            }
+
             $em->persist($resource);
             $em->flush();
             $content = "{";
@@ -170,6 +194,9 @@ class ResourcePropertiesController extends Controller
             $content .= '}';
             $response = new Response($content);
             $response->headers->set('Content-Type', 'application/json');
+
+            $log = new LogResourceUpdateEvent($resource, $changeSet);
+            $this->get('event_dispatcher')->dispatch('log', $log);
 
             return $response;
         }

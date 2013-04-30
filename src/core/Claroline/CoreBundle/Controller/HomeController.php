@@ -5,7 +5,6 @@ namespace Claroline\CoreBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Entity\Home\Content;
-use Claroline\CoreBundle\Entity\Home\Type;
 use Claroline\CoreBundle\Entity\Home\Content2Type;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -136,22 +135,20 @@ class HomeController extends Controller
                 array('name' => $_POST['type'])
             );
 
-            if ($type) {
-                $first = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(
-                    array('back' => null, 'type' => $type)
-                );
+            $first = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(
+                array('back' => null, 'type' => $type)
+            );
 
-                $contentType = new Content2Type($first);
+            $contentType = new Content2Type($first);
 
-                $contentType->setContent($content);
-                $contentType->setType($type);
+            $contentType->setContent($content);
+            $contentType->setType($type);
 
-                $manager->persist($contentType);
+            $manager->persist($contentType);
 
-                $manager->flush();
+            $manager->flush();
 
-                $response = $content->getId();
-            }
+            $response = $content->getId();
         }
 
         return new Response($response);
@@ -171,46 +168,38 @@ class HomeController extends Controller
     {
         $response = "false";
 
-        $manager = $this->getDoctrine()->getManager();
+        if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
 
-        $content = $manager->getRepository("ClarolineCoreBundle:Home\Content")->findOneBy(
-            array('id' => $id)
-        );
+            $manager = $this->getDoctrine()->getManager();
 
-        if ($this->get('security.context')->isGranted('ROLE_ADMIN') and $content) {
-            if (isset($_POST['title'])) {
-                $content->setTitle($_POST['title']);
-            }
+            $content = $manager->getRepository("ClarolineCoreBundle:Home\Content")->findOneBy(array('id' => $id));
 
-            if (isset($_POST['text'])) {
-                $content->setContent($_POST['text']);
-            }
+            $request = $this->get('request');
 
-            if (isset($_POST['generated_content'])) {
-                $content->setGeneratedContent($_POST['generated_content']);
-            }
+            $content->setTitle($request->get('title'));
+            $content->setContent($request->get('text'));
+            $content->setGeneratedContent($request->get('generated_content'));
 
-            if (isset($_POST['size']) and isset($_POST['type'])) {
+            if ($request->get('size') and $request->get('type')) {
                 $type = $manager->getRepository("ClarolineCoreBundle:Home\Type")->findOneBy(
-                    array('name' => $_POST['type'])
+                    array('name' => $request->get('type'))
                 );
 
                 $contentType = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(
                     array('content' => $content, 'type' => $type)
                 );
 
-                if ($contentType) {
-                    $contentType->setSize($_POST['size']);
-                    $manager->persist($contentType);
-                }
+                $contentType->setSize($request->get('size'));
+                $manager->persist($contentType);
             }
 
-            if (isset($_POST['title']) or
-                isset($_POST['text']) or
-                isset($_POST['generated_content']) or
-                (isset($_POST['size']) and isset($_POST['type']))) {
-
-                    $content->setModified();
+            if (
+                $request->get('title') or
+                $request->get('text') or
+                $request->get('generated_content') or
+                ($request->get('size') and $request->get('type'))
+            ) {
+                $content->setModified();
 
                 $manager->persist($content);
                 $manager->flush();
@@ -249,6 +238,7 @@ class HomeController extends Controller
         $type = $manager->getRepository("ClarolineCoreBundle:Home\Type")->findOneBy(array('name' => $type));
 
         if ($this->get('security.context')->isGranted('ROLE_ADMIN') and $a and $type) {
+
             $a = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(
                 array(
                     'type' => $type,
@@ -274,6 +264,7 @@ class HomeController extends Controller
                 }
 
                 $b->setBack($a);
+
             } else {
                 $b = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(
                     array(
@@ -324,16 +315,8 @@ class HomeController extends Controller
             );
 
             foreach ($contentTypes as $contentType) {
-                $back = $contentType->getBack();
-                $next = $contentType->getNext();
 
-                if ($back) {
-                    $back->setNext($contentType->getNext());
-                }
-
-                if ($next) {
-                    $next->setBack($contentType->getBack());
-                }
+                $contentType->detach();
 
                 $manager->remove($contentType);
             }
@@ -365,18 +348,21 @@ class HomeController extends Controller
         }
 
         if ($this->get('security.context')->isGranted('ROLE_ADMIN') and $content) {
+
             return $this->render(
                 'ClarolineCoreBundle:Home:creator.html.twig',
                 array('content' => $content, 'type' => $type)
             );
+
         } else if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
+
             return $this->render(
                 'ClarolineCoreBundle:Home:creator.html.twig',
                 array('type' => $type)
             );
-        } else {
-            return new Response();
         }
+
+        return new Response();
     }
 
     /**
@@ -391,13 +377,14 @@ class HomeController extends Controller
     public function menuAction($id, $size, $type)
     {
         if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
+
             return $this->render(
                 'ClarolineCoreBundle:Home:menu.html.twig',
                 array('id' => $id, 'size' => $size, 'type' => $type)
             );
-        } else {
-            return new Response("");
         }
+
+        return new Response();
     }
 
     /**
@@ -494,9 +481,9 @@ class HomeController extends Controller
                 }
 
                 return $content;
-            } else {
-                return " "; // Not yet content
             }
+
+            return " "; // Not yet content
         }
 
         return null; // type does not exists

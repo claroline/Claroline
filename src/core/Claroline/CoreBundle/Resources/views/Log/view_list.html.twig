@@ -1,0 +1,14 @@
+<ul>
+    {% for log in logs %}
+    <li>
+        {% if listItemViews[log.getId()] is defined %}
+            {% include 'ClarolineCoreBundle:Log:view_list_item.html.twig' with {'listItemView': listItemViews[log.getId()]} %}
+        {% else %}
+            {% include 'ClarolineCoreBundle:Log:view_list_item.html.twig' %}
+        {% endif %}
+        {% if log.getDetails() %}
+            <a href="{{ path( 'claro_log_view_details', { 'logId': log.getId() } ) }}">({{ ('log_see_details')|trans({}, 'platform') }})</a>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>

@@ -3,12 +3,8 @@
 
     var asset = $("#asset").html(); //global
 
-    if (asset) {
-        asset = asset + "app_dev.php/";
-    }
-    else
-    {
-        asset = "?/";
+    if (!asset) {
+        asset = "./";
     }
 
     /**
@@ -155,7 +151,7 @@
             .done(
                 function (data)
                 {
-                    if (!isNaN(data))
+                    if (!isNaN(data) && data !== "")
                     {
                         $.ajax(asset + "content/" + data + "/" + type)
                         .done(

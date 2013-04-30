@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleChangeRightEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class ResourceRightsController extends Controller
@@ -76,17 +77,36 @@ class ResourceRightsController extends Controller
             $resourceRepo->findDescendants($resource, true) :
             array($resource);
 
+        $editedResourceRightsWithChangeSet = array();
         for ($i = 0, $targetCount = count($targetResources); $i < $targetCount; ++$i) {
-            $roleRights = $rightsRepo->findNonAdminRights($targetResources[$i]);
+            $targetResource = $targetResources[$i];
+            $roleRights = $rightsRepo->findNonAdminRights($targetResource);
 
             for ($j = 0, $rightsCount = count($roleRights); $j < $rightsCount; ++$j) {
+                $roleRight = $roleRights[$j];
                 foreach ($permissions as $permission) {
                     $i === 0 && $referenceRights[$j][$permission]
-                        = isset($parameters['roleRights'][$roleRights[$j]->getId()][$permission]);
+                        = isset($parameters['roles'][$roleRight->getRole()->getId()][$permission]);
                     $setter = 'setCan' . ucfirst($permission);
-                    $roleRights[$j]->{$setter}($referenceRights[$j][$permission]);
+                    $roleRight->{$setter}($referenceRights[$j][$permission]);
+                }
+
+                $unitOfWork = $em->getUnitOfWork();
+                $unitOfWork->computeChangeSets();
+                $changeSet = $unitOfWork->getEntityChangeSet($roleRight);
+
+                if (count($changeSet) > 0) {
+                    $editedResourceRightsWithChangeSet[] = array('resourceRights' => $roleRight, 'changeSet' => $changeSet);
                 }
             }
+        }
+
+        foreach ($editedResourceRightsWithChangeSet as $roleRightWithChangeSet) {
+            $roleRight = $roleRightWithChangeSet['resourceRights'];
+            $changeSet = $roleRightWithChangeSet['changeSet'];
+
+            $log = new LogWorkspaceRoleChangeRightEvent($roleRight->getRole(), $roleRight->getResource(), $changeSet);
+            $this->get('event_dispatcher')->dispatch('log', $log);
         }
 
         $em->flush();
@@ -173,7 +193,43 @@ class ResourceRightsController extends Controller
         foreach ($targetResources as $targetResource) {
             $resourceRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
                 ->findOneBy(array('resource' => $targetResource, 'role' => $roleId));
+            $oldResourceTypes = $resourceRights->getCreatableResourceTypes();
             $resourceRights->setCreatableResourceTypes($resourceTypes);
+
+            $addedResourceTypes = array();
+            $removedResourceTypes = array();
+
+            //Detect added
+            foreach ($resourceRights->getCreatableResourceTypes() as $resourceType) {
+                if (!$this->isInResourceTypes($resourceType, $oldResourceTypes)) {
+                    $addedResourceTypes[] = $resourceType;
+                }
+            }
+
+            //Detect removed
+            foreach ($oldResourceTypes as $resourceType) {
+                if (!$this->isInResourceTypes($resourceType, $resourceRights->getCreatableResourceTypes())) {
+                    $removedResourceTypes[] = $resourceType;
+                }
+            }
+
+            $createRights = array();
+            if (count($addedResourceTypes) > 0) {
+                foreach ($addedResourceTypes as $resourceType) {
+                    $createRights[$resourceType->getName()] = array(false, true);
+                }
+            }
+            if (count($removedResourceTypes) > 0) {
+                foreach ($removedResourceTypes as $resourceType) {
+                    $createRights[$resourceType->getName()] = array(true, false);
+                }
+            }
+            if (count($createRights) > 0) {
+                $editedResourceRightsWithChangeSet[] = array(
+                    'resourceRights' => $resourceRights,
+                    'changeSet' => array('can_create' => $createRights)
+                );
+            }
         }
 
         $em->flush();
@@ -187,7 +243,26 @@ class ResourceRightsController extends Controller
             )
         );
 
+        foreach ($editedResourceRightsWithChangeSet as $roleRightWithChangeSet) {
+            $roleRight = $roleRightWithChangeSet['resourceRights'];
+            $changeSet = $roleRightWithChangeSet['changeSet'];
+
+            $log = new LogWorkspaceRoleChangeRightEvent($roleRight->getRole(), $roleRight->getResource(), $changeSet);
+            $this->get('event_dispatcher')->dispatch('log', $log);
+        }
+
         return $response;
+    }
+
+    private function isInResourceTypes($resourceType, $resourceTypes) {
+        foreach ($resourceTypes as $current) {
+            if ($resourceType->getId() == $current->getId()) {
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

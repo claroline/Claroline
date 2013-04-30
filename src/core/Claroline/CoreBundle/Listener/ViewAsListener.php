@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -49,16 +50,25 @@ class ViewAsListener
                 }
             } else {
                 $workspaceId = substr($viewAs, strripos($viewAs, '_') + 1);
+                $baseRole = substr($viewAs, 0, strripos($viewAs, '_'));
+
                 if ($this->securityContext->isGranted('ROLE_WS_MANAGER_'.$workspaceId)) {
-                    $role = $this->em->getRepository('ClarolineCoreBundle:Role')->findOneByName($viewAs);
 
-                    if ($role === null) {
-                        throw new \Exception("The role {$viewAs} does not exists");
+                    if ($baseRole === 'ROLE_ANONYMOUS') {
+                        throw new \Exception('No implementation yet');
+                        $token = new AnonymousToken('main', '.anon', array('ROLE_ANONYMOUS', 'ROLE_USURPATE_WORKSPACE_ROLE'));
+                        $this->securityContext->setToken($token);
+                    } else {
+                        $role = $this->em->getRepository('ClarolineCoreBundle:Role')->findOneByName($viewAs);
+
+                        if ($role === null) {
+                            throw new \Exception("The role {$viewAs} does not exists");
+                        }
+
+                        $token = new ViewAsToken(array('ROLE_USER', $viewAs, 'ROLE_USURPATE_WORKSPACE_ROLE'));
+                        $token->setUser($user);
+                        $this->securityContext->setToken($token);
                     }
-
-                    $token = new ViewAsToken(array('ROLE_USER', $viewAs, 'ROLE_USURPATE_WORKSPACE_ROLE'));
-                    $token->setUser($user);
-                    $this->securityContext->setToken($token);
                 } else {
                     throw new AccessDeniedHttpException();
                 }

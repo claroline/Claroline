@@ -1,5 +1,4 @@
-{% macro showTag(tag) %}
-{% if tag.getRelWorkspaceTagList() is not empty %}
+{% macro showTag(tag, tagWs) %}
     <div class="accordion" id="accordion-{{ tag.getId() }}">
         <div class="accordion-group">
             <div class="accordion-heading">
@@ -16,7 +15,7 @@
             <div id="collapse-{{ tag.getId() }}" class="accordion-body collapse">
                 <div class="accordion-inner">
                     <ul>
-                        {% for relWorkspaceTag in tag.getRelWorkspaceTagList() %}
+                        {% for relWorkspaceTag in tagWs %}
                         {% set workspace = relWorkspaceTag.getWorkspace() %}
                         <li class="row-workspace row-workspace-id-{{ workspace.getId() }}">
                             <i class="icon-book"></i>
@@ -34,7 +33,6 @@
             </div>
         </div>
     </div>
-{% endif %}
 {% endmacro %}
 
 {% from _self import showTag %}
@@ -67,7 +65,7 @@
                     <i class="icon-chevron-down pull-right"></i>
                 </a>
             </div>
-            <div id="collapse-all" class="accordion-body collapse">
+            <div id="collapse-all" class="accordion-body collapse {% if tags|length == 0 %}in{% endif %}">
                 <div class="accordion-inner">
                     <ul>
                         {% for workspace in workspaces %}
@@ -89,10 +87,7 @@
     </div>
 
     {% for tag in tags %}
-    {{ showTag(tag) }}
+    {{ showTag(tag, tagWorkspaces[tag.id]) }}
     {% endfor %}
 
 {% endblock %}
-
-
-
