@@ -46,8 +46,8 @@ class ResourceRightsControllerTest extends FunctionalTestCase
             'POST',
             "/resource/{$this->getDirectory('dir1')->getId()}/rights/edit",
             array(
-                'roleRights' => array(
-                    $userRights->getId() => array(
+                'roles' => array(
+                    $userRights->getRole()->getId() => array(
                         'open' => 'on',
                         'edit' => 'on'
                     )
@@ -67,8 +67,8 @@ class ResourceRightsControllerTest extends FunctionalTestCase
             'POST',
             "/resource/{$this->getDirectory('dir1')->getId()}/rights/edit",
             array(
-                'roleRights' => array(
-                    $userRights->getId() => array(
+                'roles' => array(
+                    $userRights->getRole()->getId() => array(
                         'delete' => 'on',
                         'export' => 'on',
                         'copy' => 'on'

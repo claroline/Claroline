@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Workspace\Creator as WsCreator;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Tool\DesktopTool;
+use Claroline\CoreBundle\Library\Event\LogUserCreateEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -20,6 +21,7 @@ class Creator
     private $ch;
     private $wsCreator;
     private $personalWsTemplateFile;
+    private $ed;
 
     /**
      * @DI\InjectParams({
@@ -27,7 +29,8 @@ class Creator
      *     "trans" = @DI\Inject("translator"),
      *     "ch" = @DI\Inject("claroline.config.platform_config_handler"),
      *     "wsCreator" = @DI\Inject("claroline.workspace.creator"),
-     *     "personalWsTemplateFile" = @DI\Inject("%claroline.param.templates_directory%")
+     *     "personalWsTemplateFile" = @DI\Inject("%claroline.param.templates_directory%"),
+     *     "ed"  = @DI\Inject("event_dispatcher")
      * })
      */
     public function __construct(
@@ -35,7 +38,8 @@ class Creator
         Translator $trans,
         PlatformConfigurationHandler $ch,
         WsCreator $wsCreator,
-        $personalWsTemplateFile
+        $personalWsTemplateFile,
+        $ed
     )
     {
         $this->em = $em;
@@ -43,6 +47,7 @@ class Creator
         $this->ch = $ch;
         $this->wsCreator = $wsCreator;
         $this->personalWsTemplateFile = $personalWsTemplateFile."default.zip";
+        $this->ed = $ed;
     }
 
     /**
@@ -86,6 +91,10 @@ class Creator
         }
 
         $this->em->flush();
+
+        // Log user creation
+        $log = new LogUserCreateEvent($user);
+        $this->ed->dispatch('log', $log);
 
         return $user;
     }

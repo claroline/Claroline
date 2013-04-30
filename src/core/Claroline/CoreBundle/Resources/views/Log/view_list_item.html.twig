@@ -1,0 +1,14 @@
+<span class="notification-date">
+    {% if log.getDateLog()|date('d-m-Y') == ''|date('d-m-Y') %}
+        {{ 'today'|trans({}, 'platform') ~ ', ' }}
+    {% else %}
+        {{ log.getDateLog()|date('d-m-Y') ~ ', ' }}
+    {% endif %}
+    {{ log.getDateLog()|date('H:i') }}
+</span> :
+
+{% if listItemView is defined and listItemView != null %}
+    {{ listItemView|raw }}
+{% else %}
+    {% include 'ClarolineCoreBundle:Log:view_list_item_template_default.html.twig' %}
+{% endif %}

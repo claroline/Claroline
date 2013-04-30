@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkspaceTagRepository")
  * @ORM\Table(name="claro_workspace_tag")
  * @DoctrineAssert\UniqueEntity({"name", "user"})
  */
@@ -32,19 +32,6 @@ class WorkspaceTag
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
      */
     protected $user;
-
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag",
-     *     mappedBy="tag"
-     * )
-     */
-    protected $relWorkspaceTagList;
-
-    public function __construct()
-    {
-        $this->relWorkspaceTagList = new ArrayCollection();
-    }
 
     public function getId()
     {
@@ -74,10 +61,5 @@ class WorkspaceTag
     public function setUser($user)
     {
         $this->user = $user;
-    }
-
-    public function getRelWorkspaceTagList()
-    {
-        return $this->relWorkspaceTagList;
     }
 }

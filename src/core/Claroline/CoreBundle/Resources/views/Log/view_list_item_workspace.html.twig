@@ -1,0 +1,9 @@
+{% if log.getDetails().workspace is defined %}
+    <strong>
+        {% if log.getWorkspace() != null %}
+            <a href="{{ path('claro_workspace_open', { 'workspaceId': log.getWorkspace().getId() }) }}"> {{ log.getDetails().workspace.name }}</a>
+        {% else %}
+            <em>{{ log.getDetails().workspace.name }}</em>
+        {% endif %}
+    </strong>
+{% endif %}

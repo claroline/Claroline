@@ -16,7 +16,7 @@
                 placeholder="{{ "Create" | trans({}, 'home') }} {{ "a content" | trans({}, 'home') }}..."
                 >{% if content is defined %}{{ content.content }}{% endif %}</textarea>
             <div class="generated">
-                {% if content.generatedContent is defined %}
+                {% if content.generatedContent is defined and content.generatedContent != "" %}
                     <button type="button" class="close">×</button>
                     <div class="generated-content">
                         {{ content.generatedContent | raw }}
