@@ -144,12 +144,16 @@ class InteractionGraphicController extends Controller
 
         for ($i = 0; $i < $lengthCoord; $i++) {
 
-            $before = array(";", "-","~");
-            $after = array(",", ",",",");
+            $inter = preg_split('[;]', $coord[$i]);
 
-            $data = str_replace($before, $after, $coord[$i]);
+            $before = array("-","~");
+            $after = array(",",",");
 
-            list(${'url'.$i}, ${'value'.$i}, ${'point'.$i}, ${'size'.$i}) = explode(",", $data); // Split informations
+            $data = str_replace($before, $after, $inter[1]);
+
+            list(${'value'.$i}, ${'point'.$i}, ${'size'.$i}) = explode(",", $data); // Split informations
+
+            ${'url'.$i} = $inter[0];
 
             ${'value'.$i} = str_replace("_", ",", ${'value'.$i});
             ${'url'.$i} = substr(${'url'.$i}, strrpos(${'url'.$i}, '/bundles'));

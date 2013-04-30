@@ -90,6 +90,18 @@ function Verifier(noTitle, noQuestion, noImg, noAnswerZone) {
     var questionOk = false; // Question is asked
     var titleOk = false; // Question has a title
     var zoneOk = false; // Answer zones are defined
+    var empty = false;
+
+    for (j = 0 ; j < indice ; j++) {
+
+        var nom = 'img' + j;
+        var choix = document.getElementById(nom);
+
+        if (choix) {
+            empty = true;
+            break;
+        }
+    }
 
 //     No title
     if (document.InterGraphForm.ujm_exobundle_interactiongraphictype_interaction_question_title.value === '') {
@@ -116,12 +128,12 @@ function Verifier(noTitle, noQuestion, noImg, noAnswerZone) {
     }
 
     // No answer zone
-//    if (document.getElementById('coordsZone').value == 0 && imgOk === true && titleOk === true && questionOk === true) {
-//        alert(noAnswerZone);
-//        return false;
-//    } else {
-    zoneOk = true;
-//    }
+    if (empty == false && imgOk === true && titleOk === true && questionOk === true) {
+        alert(noAnswerZone);
+        return false;
+    } else {
+        zoneOk = true;
+    }
 
     // Submit if required fields not empty
     if (imgOk === true && zoneOk === true && titleOk === true && questionOk === true) {

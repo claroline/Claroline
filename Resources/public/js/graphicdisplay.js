@@ -96,30 +96,16 @@ document.addEventListener('keydown', function (e) { // Reset all the pointers
     }
 }, false);
 
-function getTaille(tab) { // Get the number of answer zones
+function NoEmptyAnswer() { // Verify before submit that student placed all answer zones
 
-    var i = 0;
+    for (var x = 1 ; x < taille ; x++) {
 
-    for (var id in tab) {
-        i++;
-    }
-    return i;
-}
+        var cur = 'cursor' + x;
 
-function NoEmptyAnswer(noAnswerZone, notAll) { // Verify before submit that student placed all answer zones
-
-    var item = getTaille(tempCoords);
-
-    if (item == 0) {
-        alert(noAnswerZone);
-        return false;
-    } else if (item < (taille - 1)) {
-        alert(notAll);
-        return false;
-    } else {
-        for (cur in tempCoords) {
-            document.getElementById('answers').value += tempCoords[cur] + ';';
+        if (!tempCoords[cur]) {
+            tempCoords[cur] = 'a-a';
         }
-        validGraphic.submit();
+        document.getElementById('answers').value += tempCoords[cur] + ';';
     }
+    validGraphic.submit();
 }
