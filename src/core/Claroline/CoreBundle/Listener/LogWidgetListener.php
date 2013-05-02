@@ -4,7 +4,6 @@ namespace  Claroline\CoreBundle\Listener;
 
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Library\Event\LogCreateDelegateViewEvent;
@@ -16,14 +15,14 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
  */
 class LogWidgetListener
 {
-    private $em;
+    private $logManager;
     private $securityContext;
     private $twig;
     private $ed;
 
     /**
      * @DI\InjectParams({
-     *     "em"         = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "logManager"         = @DI\Inject("claroline.log.manager"),
      *     "context"    = @DI\Inject("security.context"),
      *     "twig"       = @DI\Inject("templating"),
      *     "ed"         = @DI\Inject("event_dispatcher")
@@ -33,9 +32,9 @@ class LogWidgetListener
      * @param SecurityContextInterface  $context
      * @param TwigEngine                $twig
      */
-    public function __construct(EntityManager $em, SecurityContextInterface $context, TwigEngine $twig, $ed)
+    public function __construct($logManager, SecurityContextInterface $context, TwigEngine $twig, $ed)
     {
-        $this->em = $em;
+        $this->logManager = $logManager;
         $this->securityContext = $context;
         $this->twig = $twig;
         $this->ed = $ed;
@@ -48,7 +47,11 @@ class LogWidgetListener
      */
     public function onWorkspaceDisplay(DisplayWidgetEvent $event)
     {
-        $event->setContent($this->renderLogs($event->getWorkspace()));
+        $view = $this->twig->render(
+            'ClarolineCoreBundle:Log:view_short_list.html.twig',
+            $this->logManager->getWorkspaceWidgetList($event->getWorkspace(), 5)
+        );
+        $event->setContent($view);
         $event->stopPropagation();
     }
 
@@ -59,39 +62,11 @@ class LogWidgetListener
      */
     public function onDesktopDisplay(DisplayWidgetEvent $event)
     {
-        $event->setContent($this->renderLogs());
-        $event->stopPropagation();
-    }
-
-    private function renderLogs(AbstractWorkspace $workspace = null)
-    {
-        $logs = $this->em->getRepository('ClarolineCoreBundle:Logger\Log')
-            ->findLastLogs($this->securityContext->getToken()->getUser(), $workspace);
-
-        $views = array();
-
-        foreach ($logs as $log) {
-            if ($log->getAction() === LogResourceChildUpdateEvent::ACTION) {
-                $eventName = 'create_log_list_item_'.$log->getResourceType()->getName();
-                $event = new LogCreateDelegateViewEvent($log);
-                $this->ed->dispatch($eventName, $event);
-
-                if ($event->getResponseContent() === "") {
-                    throw new \Exception(
-                        "Event '{$eventName}' didn't receive any response."
-                    );
-                }
-
-                $views[$log->getId().''] = $event->getResponseContent();
-            }
-        }
-
-        return $this->twig->render(
-            'ClarolineCoreBundle:Log:view_list.html.twig',
-            array(
-                'logs' => $logs,
-                'listItemViews' => $views
-            )
+        $view = $this->twig->render(
+            'ClarolineCoreBundle:Log:view_short_list.html.twig',
+            $this->logManager->getWorkspaceWidgetList(null, 5)
         );
+        $event->setContent($view);
+        $event->stopPropagation();
     }
 }
