@@ -1,14 +1,10 @@
 (function () {
     "use strict";
 
-    var asset = $("#asset").html(); //global
+    var homePath = $("#homePath").html(); //global
 
-    if (asset) {
-        asset = asset + "app_dev.php/";
-    }
-    else
-    {
-        asset = "?/";
+    if (!homePath) {
+        homePath = "./";
     }
 
     /**
@@ -34,10 +30,12 @@
 
     function modal(url, id, element)
     {
+        $(".modal").modal("hide");
+
         id = typeof(id) !== "undefined" ? id : null;
         element = typeof(element) !== "undefined" ? element : null;
 
-        $.ajax(asset + url)
+        $.ajax(homePath + url)
             .done(
                     function (data)
                     {
@@ -88,6 +86,33 @@
         $(obj).css("height", ((lines + 1) * lineheight) + "px");
     }
 
+
+     /**
+     * Verify if a string is a valid url.
+     *
+     * @param [String] url The url to verify.
+     *
+     * @TODO allow http://fr.wikipedia.org/wiki/Wikip%C3%A9dia:Accueil_principal
+     *
+     * @return this function returns true in success, otherwise false
+     */
+    function isurl(url) {
+        var pattern = new RegExp(
+            "^(https?:\\/\\/)?" + // protocol
+            "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+            "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+            "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+            "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+            "(\\#[-a-z\\d_]*)?$", "i" // fragment locator
+            );
+
+        if (pattern.test(url)) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * Create and update an element by POST method with ajax.
      *
@@ -104,6 +129,7 @@
         var title = creatorElement.getElementsByTagName("input")[0];
         var text = creatorElement.getElementsByTagName("textarea")[0];
         var type = $(creatorElement).data("type");
+        var generatedContent = "";
         var path = null;
 
         if (id) {
@@ -112,55 +138,90 @@
             path = "content/create";
         }
 
+        if ($(creatorElement).find(".generated-content").html()) {
+            generatedContent = $(creatorElement).find(".generated-content").html();
+        }
+
         if (text.value !== "" || title.value !== "") {
 
-            $.post(asset + path, { "title": title.value, "text": text.value, "type": type })
-                .done(
-                    function (data)
+            $.post(homePath + path, {
+                "title": title.value,
+                "text": text.value,
+                "generated_content": generatedContent,
+                "type": type
+            })
+            .done(
+                function (data)
+                {
+                    if (!isNaN(data) && data !== "")
                     {
-                        if (!isNaN(data))
-                        {
-                            $.ajax(asset + "content/" + data + "/" + type)
+                        $.ajax(homePath + "content/" + data + "/" + type)
+                        .done(
+                            function (data)
+                            {
+                                $(creatorElement).next().prepend(data);
+                            }
+                            )
+                        ;
+
+                        title.value = "";
+                        text.value = "";
+                        resize(text);
+                        $(creatorElement).find(".generated").html("");
+                    }
+                    else if (data === "true")
+                    {
+                        $.ajax(homePath + "content/" + id + "/" + type)
                             .done(
                                 function (data)
                                 {
-                                    $(creatorElement).next().prepend(data);
+                                    $(creatorElement).replaceWith(data);
                                 }
-                                )
-                            ;
+                            )
+                        ;
 
-                            title.value = "";
-                            text.value = "";
-                            resize(text);
-                        }
-                        else if (data === "true")
-                        {
-                            $.ajax(asset + "content/" + id + "/" + type)
-                                .done(
-                                    function (data)
-                                    {
-                                        $(creatorElement).replaceWith(data);
-                                    }
-                                    )
-                                ;
-
-                        }
-                        else
-                        {
-                            modal("content/error");
-                        }
                     }
+                    else
+                    {
+                        modal("content/error");
+                    }
+                }
             )
-                .error(
-                        function ()
-                        {
-                            modal("content/error");
-                        }
-                      )
-                ;
+            .error(
+                function ()
+                {
+                    modal("content/error");
+                }
+            );
 
         }
     }
+
+    /**
+     * Get content from a external url and put it in a creator of contents.
+     *
+     * @param [HTML obj] textarea The textarea of the creator of contents.
+     */
+    function generatedContent(textarea)
+    {
+        $.post(homePath + "content/graph", { "generated_content_url": textarea.value })
+            .done(
+                function (data)
+                {
+                    if (data !== "false") {
+                        $(textarea).parent().find(".generated").html(data);
+                    }
+                }
+             )
+            .error(
+                function ()
+                {
+                    modal("content/error");
+                }
+            )
+        ;
+    }
+
 
     /** DOM events **/
 
@@ -192,7 +253,7 @@
         var element = $("#sizes").data("element");
 
         if (id && type && element) {
-            $.post(asset + "content/update/" + id, { "size": size, "type": type })
+            $.post(homePath + "content/update/" + id, { "size": size, "type": type })
         .done(
             function (data)
             {
@@ -233,7 +294,7 @@
         var id = $(element).data("id");
 
         if (id && element) {
-            $.ajax(asset + "content/delete/" + id)
+            $.ajax(homePath + "content/delete/" + id)
         .done(
             function (data)
             {
@@ -263,7 +324,7 @@
 
         if (id && type && element)
         {
-            $.ajax(asset + "content/creator/" + type + "/" + id)
+            $.ajax(homePath + "content/creator/" + type + "/" + id)
             .done(
                 function (data)
                 {
@@ -305,7 +366,7 @@
 
         if (id && type && element)
         {
-            $.ajax(asset + "content/" + id + "/" + type)
+            $.ajax(homePath + "content/" + id + "/" + type)
             .done(
                 function (data)
                 {
@@ -333,12 +394,19 @@
                 resize(this);
             }
 
+            if (isurl(this.value) && event.keyCode === 86) {
+                generatedContent(this);
+            }
         }
+    });
+
+    $("body").on("click", ".generated .close", function (event) {
+        $(event.target).parent().html("");
     });
 
     $(".content.row-fluid").sortable({
         items: "> .content-element",
-        cancel: "a.btn.dropdown-toggle",
+        cancel: "input,textarea,button,select,option,a.btn.dropdown-toggle,.dropdown-menu",
         cursor: "move"
     });
 
@@ -350,7 +418,7 @@
 
             if (a && type)
             {
-                $.ajax(asset + "content/reorder/" + type + "/" + a + "/" + b)
+                $.ajax(homePath + "content/reorder/" + type + "/" + a + "/" + b)
                 .error(
                         function ()
                         {

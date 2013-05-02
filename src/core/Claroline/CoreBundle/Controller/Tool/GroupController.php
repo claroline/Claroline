@@ -293,12 +293,7 @@ class GroupController extends Controller
         foreach ($groups as $group) {
             $log = new LogWorkspaceRoleSubscribeEvent($role, null, $group);
             $this->get('event_dispatcher')->dispatch('log', $log);
-        } 
-
-        $content = $this->renderView(
-            'ClarolineCoreBundle:Tool\workspace\group_management:group.json.twig',
-            array('groups' => $groups)
-        );
+        }
 
         $response = new Response($this->get('claroline.resource.converter')->jsonEncodeGroups($groups));
         $response->headers->set('Content-Type', 'application/json');

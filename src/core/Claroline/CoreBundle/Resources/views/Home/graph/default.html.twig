@@ -1,0 +1,28 @@
+{% spaceless %}
+    <button type="button" class="close">×</button>
+    <div class="generated-content">
+        {% block title %}
+            <h4><a href="{{ content["url"] }}" target="_blank">{{ content["title"] }}</a></h4>
+        {% endblock %}
+
+        {% block content %}
+            {% if content["images"][0] is defined or content["image"] is defined %}
+                <a href="{{ content["url"] }}" target="_blank">
+                    {% if content["image"] is defined %}
+                        <img src="{{ content["image"] }}">
+                    {% else %}
+                        <img src="{{ content["images"][0] }}">
+
+                    {% endif %}
+                </a>
+            {% endif %}
+        {% endblock %}
+
+        {% block description %}
+            {% if content["description"] is defined %}
+                <p>{{ content["description"] }}</p>
+            {% endif %}
+        {% endblock %}
+        <div class="clear"></div>
+    </div>
+{% endspaceless %}

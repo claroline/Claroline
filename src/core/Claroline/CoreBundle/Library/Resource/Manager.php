@@ -510,4 +510,24 @@ class Manager
 
         return $criteria;
     }
+
+    public function createRootDir(AbstractWorkspace $workspace, User $user, array $configPermsRootDir)
+    {
+        $rootDir = new Directory();
+        $rootDir->setName("{$workspace->getName()} - {$workspace->getCode()}");
+        $rootDir->setCreator($user);
+        $directoryType = $this->em
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+            ->findOneBy(array('name' => 'directory'));
+        $directoryIcon = $this->em
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
+            ->findOneBy(array('type' => 'directory', 'iconType' => 1));
+        $rootDir->setIcon($directoryIcon);
+        $rootDir->setResourceType($directoryType);
+        $rootDir->setWorkspace($workspace);
+        $this->setResourceRights($rootDir, $configPermsRootDir);
+        $this->em->persist($rootDir);
+
+        return $rootDir;
+    }
 }
