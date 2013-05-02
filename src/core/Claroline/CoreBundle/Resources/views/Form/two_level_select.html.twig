@@ -1,0 +1,64 @@
+{% extends 'form_div_layout.html.twig' %} 
+
+{% block twolevelselect_widget %}
+    {% spaceless %} 
+        {{ block('choice_widget') }}
+        <script type="text/javascript">
+            $(document).ready(function () {
+                var firstLevelOptions = "";
+                var firstLevelOptionsHtml = [];
+                var secondLevelOptionsHtml = [];
+                
+                var onClickFirstLevel = function (elt) {
+                    if (elt.hasClass('first-level')) {
+                        $("#{{ form.vars['id'] }}").html(firstLevelOptionsHtml[elt.val()]);
+                        $("#{{ form.vars['id'] }}").val(elt.val());
+                        $("#{{ form.vars['id'] }}").attr('readonly', true);
+                    } else {
+                        $("#{{ form.vars['id'] }}").html(secondLevelOptionsHtml[elt.val()]);
+                        $("#{{ form.vars['id'] }}_first_level").val(elt.val());
+                        $("#{{ form.vars['id'] }}").attr('readonly', false);
+                    }
+                };
+
+                $("#{{ form.vars['id'] }} > option").each(function(index, element){
+                    $(element).addClass("first-level");
+                    firstLevelOptions += element.outerHTML;
+                    $(element).removeClass("first-level");
+                    firstLevelOptionsHtml[$(this).val()] = element.outerHTML; 
+                });
+                $("#{{ form.vars['id'] }} > optgroup").each(function (index) {
+                    firstLevelOptions += "<option class='second-level' value='group_"+index+"'>"+$(this).attr("label")+"</option>";
+                    secondLevelOptionsHtml["group_"+index] = $(this).html(); 
+                });
+                $("#{{ form.vars['id'] }}").before("<select id='{{ form.vars['id'] }}_first_level' class='input-medium'>"+firstLevelOptions+"</select> <span> : </<span> ");
+                $("#{{ form.vars['id'] }}").css("margin-left", "5px");
+                $("#{{ form.vars['id'] }}").empty();
+                $("#{{ form.vars['id'] }}").attr('readonly', true);
+                $("#{{ form.vars['id'] }}_first_level").on('change', function () {
+                    onClickFirstLevel($(this).find('option[value="'+$(this).val()+'"]'));
+                });
+
+                var defaultValue = "{{ form.vars['value']|raw }}";
+                if (defaultValue) {
+                    var firstElement = firstLevelOptionsHtml[defaultValue];
+                    if (firstElement) {
+                        //Its a first level
+                        onClickFirstLevel($("#{{ form.vars['id'] }}_first_level option[value='"+defaultValue+"']"));
+                    } else {
+                        //Its a second level
+                        for (var key in secondLevelOptionsHtml) {
+                            var secondLevelElement = secondLevelOptionsHtml[key];
+                            if (secondLevelElement.indexOf(defaultValue) > -1) {
+                                onClickFirstLevel($("#{{ form.vars['id'] }}_first_level option[value='"+key+"']"));
+                                $("#{{ form.vars['id'] }}").val(defaultValue);
+                            }
+                        }
+                    }
+                } else {
+                    onClickFirstLevel($("#{{ form.vars['id'] }}_first_level option:first-child"));
+                }
+            });
+        </script>
+    {% endspaceless %} 
+{% endblock %} 

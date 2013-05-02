@@ -22,6 +22,8 @@ use Claroline\CoreBundle\Repository\UserRepository;
 use Symfony\Component\Form\FormError;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Claroline\CoreBundle\Form\AdminLogFilterType;
+
 
 /**
  * Controller of the platform administration section (users, groups,
@@ -900,5 +902,36 @@ class AdministrationController extends Controller
         }
 
         return $themes;
+    }
+
+    /**
+     * @Route(
+     *     "/logs/",
+     *     name="claro_admin_logs_show",
+     *     defaults={"page" = 1}
+     * )
+     * @Route(
+     *     "/logs/{page}",
+     *     name="claro_admin_logs_show_paginated",
+     *     requirements={"page" = "\d+"},
+     *     defaults={"page" = 1}
+     * )
+     *
+     * @Method("GET")
+     *
+     * Displays logs list using filter parameteres and page number
+     *
+     * @param $page int The requested page number.
+     *
+     * @return Response
+     *
+     * @throws \Exception
+     */
+    public function logListAction($page)
+    {
+        return $this->render(
+            'ClarolineCoreBundle:Administration:log_list.html.twig',
+            $this->get('claroline.log.manager')->getAdminList($page)
+        );
     }
 }

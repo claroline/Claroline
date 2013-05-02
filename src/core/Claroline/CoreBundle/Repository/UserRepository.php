@@ -210,6 +210,31 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         }
     }
 
+    protected function findByNameQuery($search, $offset = null, $limit = null)
+    {
+        $upperSearch = strtoupper($search);
+        $upperSearch = trim($upperSearch);
+        $upperSearch = preg_replace('/\s+/', ' ',$upperSearch);
+
+        $dql = "
+            SELECT u, r, pws FROM Claroline\CoreBundle\Entity\User u
+            JOIN u.roles r
+            JOIN u.personalWorkspace pws
+            WHERE UPPER(u.lastName) LIKE :search
+            OR UPPER(u.firstName) LIKE :search
+            OR UPPER(u.username) LIKE :search
+            OR CONCAT(UPPER(u.firstName), ' ', UPPER(u.lastName)) LIKE :search
+            OR CONCAT(UPPER(u.lastName), ' ', UPPER(u.firstName)) LIKE :search
+        ";
+
+        $query = $this->_em->createQuery($dql)
+              ->setParameter('search', "%{$upperSearch}%")
+              ->setFirstResult($offset)
+              ->setMaxResults($limit);
+
+        return $query;
+    }
+
     /**
      * Search users whose firstname, lastname or username
      * match $search.
@@ -222,23 +247,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      */
     public function findByName($search, $offset = null, $limit = null)
     {
-        $upperSearch = strtoupper($search);
-
-        $dql = "
-            SELECT u, r, pws FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.roles r
-            JOIN u.personalWorkspace pws
-            WHERE UPPER(u.lastName) LIKE :search
-            OR UPPER(u.firstName) LIKE :search
-            OR UPPER(u.username) LIKE :search
-        ";
-
-        $query = $this->_em->createQuery($dql)
-              ->setParameter('search', "%{$upperSearch}%")
-              ->setFirstResult($offset)
-              ->setMaxResults($limit);
-
-        $paginator = new Paginator($query, true);
+        $paginator = new Paginator($this->findByNameQuery($search, $offset, $limit), true);
 
         return $paginator;
     }
@@ -423,5 +432,35 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query = $this->_em->createQuery($dql);
 
         return $query->getSingleScalarResult();
+    }
+
+    /**
+     * extractQuery
+     *
+     * @param array $params
+     * @return Query
+     */
+    public function extractQuery($params)
+    {
+        $search = $params['search'];
+        if ($search !== null) {
+
+            return $this->findByNameQuery($search, 0, 10);
+        }
+
+        return null;
+    }
+
+    /**
+     * extract
+     *
+     * @param array $params
+     * @return DoctrineCollection
+     */
+    public function extract($params)
+    {
+        $query = $this->extractQuery($params);
+        
+        return is_null($query) ? array() : $query->getResult();
     }
 }
