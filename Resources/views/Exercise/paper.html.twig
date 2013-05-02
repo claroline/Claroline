@@ -146,9 +146,8 @@
             <p id="ContainerCursor">
                 {% set i = 1 %}
                 {% for coords in listCoords %}
-                    {% set place = 670 + i * 25 %}
                     <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{ i }}"
-                         id="cursor{{ i }}" style="position: absolute; left: {{ place }}px;"/>
+                         id="cursor{{ i }}" style="position: absolute;"/>
                     {% set i = i + 1 %}
                {% endfor %}
             </p><p>

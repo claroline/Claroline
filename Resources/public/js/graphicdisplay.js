@@ -47,7 +47,7 @@ document.addEventListener('click', function (e) { // Second click, place the sel
         // Out of the image
         if ((t1) > (t3) || (t1) < (answerImg.offsetLeft - 10) || (t2) > (t4) || (t2) < (answerImg.offsetTop - 10)) {
             // Replace the cursor at its initial place
-            cible.style.left = String(ox + (cible.id.substr(6)) * 25) + 'px';
+            cible.style.left = String(ox - 20 + (cible.id.substr(6)) * 37) + 'px';
             cible.style.top = String(ref.offsetTop + longueur) + 'px';
             out = true;
         }
@@ -88,7 +88,7 @@ document.addEventListener('keydown', function (e) { // Reset all the pointers
     if (e.keyCode === 67) {
         for (var x = 1 ; x < taille ; x++) {
             cur = 'cursor' + x;
-            document.getElementById(cur).style.left = String(ox + x * 25) + 'px';
+            document.getElementById(cur).style.left = String(ox - 20 + x * 37) + 'px';
             document.getElementById(cur).style.top = String(ref.offsetTop + longueur) + 'px';
         }
 

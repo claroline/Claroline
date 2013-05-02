@@ -10,6 +10,7 @@ var j; // For for instruction
 var mousex; // Position x of the mouse
 var mousey; // position y of the mouse
 var moving = false; // If move answer zones
+var score = {}; // The score of coords
 var pressMAJ; // If key MAJ pressed or not
 var pressCTRL; // If key CTRL pressed or not
 var pressALT; // If key ALT pressed or not
@@ -80,6 +81,7 @@ function LoadPic(path, prefx) {
         }
     }
     indice = 0;
+    point = {};
 }
 
 // Submit form without an empty field
@@ -156,8 +158,7 @@ function Verifier(noTitle, noQuestion, noImg, noAnswerZone) {
                 imgy -= answerImg.offsetTop; // Position y answer zone
 
                 // Concatenate informations of the answer zones 
-                var val = selectedZone.src + ';' + imgx + '_' + imgy + '-' + document.getElementById('points').value +
-                    '~' + selectedZone.width;
+                var val = selectedZone.src + ';' + imgx + '_' + imgy + '-' + point[imgN] + '~' + selectedZone.width;
 
                 // And send it to the controller
                 document.getElementById('coordsZone').value += val + ',';
@@ -438,6 +439,8 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
             img.src = el.src;
 
             document.body.appendChild(img);
+
+            point[img.id] = document.getElementById('points').value;
         }
         pressCTRL = false;
     }

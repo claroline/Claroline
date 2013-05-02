@@ -85,7 +85,7 @@ function displayAnswersGraph(response) { // Place the already placed answer zone
         var cur = 'cursor' + x;
 
         document.getElementById(cur).style.left = String(parseInt(document.getElementById('AnswerImg').offsetLeft) +
-            parseInt(xy[0]) - 20) + 'px';
+            parseInt(xy[0]) - 10) + 'px';
         document.getElementById(cur).style.top = String(parseInt(document.getElementById('AnswerImg').offsetTop) +
             parseInt(xy[1]) - 10) + 'px';
     }
