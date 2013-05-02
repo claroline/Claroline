@@ -39,7 +39,7 @@
                 {{ form_widget(form) }}
             </form>
             <a href="{{ path('claro_workspace_agenda_show', {workspaceId: workspace.getId()}) }}" id="link"></a>
-            <a href="{{ path('claro_workspace_agenda_move', {workspaceId: workspace.getId()}) }}" id="move"></a>
+            <a href="{{ path('claro_workspace_agenda_move') }}" id="move"></a>
             <a href="{{ path('claro_workspace_agenda_delete', {workspaceId: workspace.getId()}) }}" id="delete"></a>
             <a href="{{ path('claro_workspace_agenda_update', {workspaceId: workspace.getId()}) }}" id="update"></a>
         </div>

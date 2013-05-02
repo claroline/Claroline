@@ -11,19 +11,23 @@
             url = null;
 
         $('.filter').click(function (e) {
-            $('#calendar').fullCalendar('removeEvents', function (eventObject) {
-                var reg = new RegExp('[:]+', 'g');
-                var title = eventObject.title.split(reg);
-                console.debug(title);
-                if (title[0] !== $(e.target).attr('name'))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            });
+            if ($(e.target).is('checked'))
+            {
+                $('#calendar').fullCalendar('removeEvents', function (eventObject) {
+                    var reg = new RegExp('[:]+', 'g');
+                    var title = eventObject.title.split(reg);
+                    if (title[0] !== $(e.target).attr('name'))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        $('#calendar').fullCalendar('refetchEvents');
+                        return false;
+                    }
+                });
+            }
+
         });
 
         var dayClickWorkspace = function (date) {
@@ -251,7 +255,7 @@
             header: {
                 left: 'prev,next today',
                 center: 'title',
-                right: 'month,basicWeek,basicDay'
+                right: 'month,agendaWeek,agendaDay'
             },
             monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet',
                 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
@@ -262,7 +266,9 @@
             editable: true,
             events: $('a#link').attr('href'),
             timeFormat: 'H(:mm)',
-            agenda: 'h:mm{ - h:mm}',
+            agenda: 'h:mm{ - h:mm}', // 5:00 - 6:30
+            // for all other views
+            '': 'h(:mm)t',            // 7p
             allDayText: 'all-day',
             allDaySlot: true,
             eventDrop: function (event, dayDelta, minuteDelta) {
