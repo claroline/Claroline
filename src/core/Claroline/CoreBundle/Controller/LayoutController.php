@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Entity\User;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Actions of this controller are not routed. They're intended to be rendered
@@ -49,8 +50,12 @@ class LayoutController extends Controller
         $personalWs = null;
         $currentWs = null;
         $isInAWorkspace = false;
+        $tags = null;
+        $tagsWorkspaces = array();
 
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $token = $this->get('security.context')->getToken();
+        $user = $token->getUser();
+        $roles = $this->get('claroline.security.utilities')->getRoles($token);
         $em = $this->get('doctrine.orm.entity_manager');
         $wsRepo = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
 
@@ -62,14 +67,18 @@ class LayoutController extends Controller
             }
         }
 
-        if ($user instanceof User) {
+        if (!in_array('ROLE_ANONYMOUS', $roles)) {
+            $isLogged = true;
+        }
+
+        if ($isLogged) {
             $isLogged = true;
             $countUnreadMessages = $em->getRepository('ClarolineCoreBundle:Message')
                 ->countUnread($user);
             $username = $user->getFirstName() . ' ' . $user->getLastName();
             $personalWs = $user->getPersonalWorkspace();
-            $wsLogs = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceLog')
-                ->findLatestWorkspaceByUser($user);
+            $wsLogs = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
+                ->findLatestWorkspaceByUser($user, $roles);
 
             if (!empty($wsLogs)) {
                 $workspaces = array();
@@ -88,6 +97,21 @@ class LayoutController extends Controller
             }
 
             $loginTarget = $this->get('router')->generate('claro_desktop_open');
+
+            if (count($workspaces) > 0) {
+                $tags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+                    ->findNonEmptyAdminTagsByWorspaces($workspaces);
+                $relTagsWorkspaces = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
+                    ->findByAdminAndWorkspaces($workspaces);
+
+                foreach ($relTagsWorkspaces as $tagsWs) {
+
+                    if (empty($tagsWorkspaces[$tagsWs['tag_id']])) {
+                        $tagsWorkspaces[$tagsWs['tag_id']] = array();
+                    }
+                    $tagsWorkspaces[$tagsWs['tag_id']][] = $tagsWs['rel_ws_tag'];
+                }
+            }
         }
 
         $isImpersonated = false;
@@ -110,7 +134,9 @@ class LayoutController extends Controller
                 'personalWs' => $personalWs,
                 "isImpersonated" => $isImpersonated,
                 'isInAWorkspace' => $isInAWorkspace,
-                'currentWorkspace' => $currentWs
+                'currentWorkspace' => $currentWs,
+                'tags' => $tags,
+                'tagsWorkspaces' => $tagsWorkspaces
             )
         );
     }
@@ -125,6 +151,7 @@ class LayoutController extends Controller
         $token = $this->get('security.context')->getToken();
         $roles = $this->get('claroline.security.utilities')->getRoles($token);
         $em = $this->get('doctrine.orm.entity_manager');
+        $impersonatedRole = null;
 
         foreach ($roles as $role) {
             if (strstr($role, 'ROLE_WS')) {
@@ -132,15 +159,20 @@ class LayoutController extends Controller
             }
         }
 
-        $workspaceId = substr($impersonatedRole, strripos($impersonatedRole, '_') + 1);
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
-            ->find($workspaceId);
-        $roleEntity = $em->getRepository('ClarolineCoreBundle:Role')
-            ->findOneByName($impersonatedRole);
+        if ($impersonatedRole === null) {
+            $roleName = 'ROLE_ANONYMOUS';
+        } else {
+            $workspaceId = substr($impersonatedRole, strripos($impersonatedRole, '_') + 1);
+            $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
+                ->find($workspaceId);
+            $roleEntity = $em->getRepository('ClarolineCoreBundle:Role')
+                ->findOneByName($impersonatedRole);
+            $roleName = $roleEntity->getTranslationKey();
+        }
 
         return $this->render(
             'ClarolineCoreBundle:Layout:impersonation_alert.html.twig',
-            array('workspace' => $workspace->getName(), 'role' => $roleEntity->getTranslationKey())
+            array('workspace' => $workspace->getName(), 'role' => $roleName)
         );
     }
 

@@ -102,4 +102,38 @@ class WorkspaceRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function findLatestWorkspaceByUser(User $user, array $roles, $size = 5)
+    {
+        $dql = "
+            SELECT DISTINCT w AS workspace, MAX(l.dateLog) AS max_date
+            FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            INNER JOIN Claroline\CoreBundle\Entity\Logger\Log l WITH l.workspace = w
+            JOIN l.doer u
+            JOIN w.roles r
+            WHERE l.action = 'ws_tool_read'
+            AND u.id = :userId
+            AND (
+        ";
+
+        $index = 0;
+        $eol = PHP_EOL;
+
+        foreach ($roles as $role) {
+            $dql .= $index > 0 ? '    OR ' : '    ';
+            $dql .= "r.name = '{$role}'{$eol}";
+            $index++;
+        }
+        $dql .= ")";
+        $dql .= "
+            GROUP BY w.id
+            ORDER BY max_date DESC
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setMaxResults($size);
+        $query->setParameter('userId', $user->getId());
+
+        return $query->getResult();
+    }
 }

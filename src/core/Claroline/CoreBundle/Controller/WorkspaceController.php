@@ -47,11 +47,23 @@ class WorkspaceController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)->findNonPersonal();
         $tags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findByUser(null);
+            ->findNonEmptyAdminTags();
+        $relTagWorkspace = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
+            ->findByAdmin();
+
+        $tagWorkspaces = array();
+
+        foreach ($relTagWorkspace as $tagWs) {
+
+            if (empty($tagWorkspaces[$tagWs['tag_id']])) {
+                $tagWorkspaces[$tagWs['tag_id']] = array();
+            }
+            $tagWorkspaces[$tagWs['tag_id']][] = $tagWs['rel_ws_tag'];
+        }
 
         return $this->render(
             'ClarolineCoreBundle:Workspace:list.html.twig',
-            array('workspaces' => $workspaces, 'tags' => $tags)
+            array('workspaces' => $workspaces, 'tags' => $tags, 'tagWorkspaces' => $tagWorkspaces)
         );
     }
 
@@ -76,20 +88,34 @@ class WorkspaceController extends Controller
         }
 
         $em = $this->get('doctrine.orm.entity_manager');
-        $user = $this->get('security.context')->getToken()->getUser();
-        $roles = $user->getRoles();
+        $token = $this->get('security.context')->getToken();
+        $user = $token->getUser();
+        $roles = $this->get('claroline.security.utilities')->getRoles($token);
 
         $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)
             ->findByRoles($roles);
         $tags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findBy(array('user' => $user->getId()));
+            ->findNonEmptyTagsByUser($user);
+        $relTagWorkspace = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
+            ->findByUser($user);
+
+        $tagWorkspaces = array();
+
+        foreach ($relTagWorkspace as $tagWs) {
+
+            if (empty($tagWorkspaces[$tagWs['tag_id']])) {
+                $tagWorkspaces[$tagWs['tag_id']] = array();
+            }
+            $tagWorkspaces[$tagWs['tag_id']][] = $tagWs['rel_ws_tag'];
+        }
 
         return $this->render(
             'ClarolineCoreBundle:Workspace:list_my_workspaces.html.twig',
             array(
                 'user' => $user,
                 'workspaces' => $workspaces,
-                'tags' => $tags
+                'tags' => $tags,
+                'tagWorkspaces' => $tagWorkspaces
             )
         );
     }
@@ -279,7 +305,7 @@ class WorkspaceController extends Controller
 
         $log = new LogWorkspaceToolReadEvent($workspace, $toolName);
         $this->get('event_dispatcher')->dispatch('log', $log);
-
+        
         return new Response($event->getContent());
     }
 

@@ -51,11 +51,17 @@ footer {
 @media (max-width: 767px) {
     /* // Compensates for the 20px body padding set in bootstrap "responsive-767px-max.less"
        // (makes the footer fill the whole screen width). */
+
+    .creator .navbar.navbar-static-top
+    {
+        margin:0 !important;
+    }
+
     footer {
         margin-left: -20px;
         margin-right: -20px;
-        padding-left: 20px;
-        padding-right: 20px;
+        padding-left: 20px !important;
+        padding-right: 20px !important;
     }
 
     .tool-list {
@@ -68,6 +74,10 @@ footer {
 
     .workspace-toolbox-item {
         display: inline-block;
+    }
+
+    #top_bar {
+        margin-bottom:0 !important;
     }
 }
 
@@ -136,12 +146,7 @@ footer {
 
 .widget a.accordion-toggle
 {
-    -webkit-border-top-left-radius: 4px;
-       -moz-border-radius-topleft: 4px;
-            border-top-left-radius: 4px;
-    -webkit-border-top-right-radius: 4px;
-       -moz-border-radius-topright: 4px;
-            border-top-right-radius: 4px;
+    .border-top-radius(5px);
 }
 
 .widget a.accordion-toggle:hover
@@ -168,13 +173,7 @@ footer {
 {
     margin: 0;
 
-    -webkit-border-bottom-left-radius: 0;
-       -moz-border-radius-bottomleft: 0;
-            border-bottom-left-radius: 0;
-
-    -webkit-border-bottom-right-radius: 0;
-       -moz-border-radius-bottomright: 0;
-            border-bottom-right-radius: 0;
+    .border-bottom-radius(0);
 }
 
 .section-content .navbar .navbar-inner a.disabled
@@ -449,18 +448,7 @@ footer {
 .workspace-left-toolbox {
     margin-bottom: 18px;
     border: 1px solid @grayLighter;
-    -webkit-border-bottom-left-radius: 5px;
-        -moz-border-radius-bottomleft: 5px;
-            border-bottom-left-radius: 5px;
-    -webkit-border-bottom-right-radius: 5px;
-        -moz-border-radius-bottomright: 5px;
-            border-bottom-right-radius: 5px;
-    -webkit-border-top-left-radius: 5px;
-        -moz-border-radius-topleft: 5px;
-            border-top-left-radius: 5px;
-    -webkit-border-top-right-radius: 5x;
-        -moz-border-radius-topright: 5px;
-            border-top-right-radius: 5px;
+    .border-radius(5px);
     zoom: 1;
 }
 
@@ -488,18 +476,7 @@ footer {
 .user-information {
     border: 1px solid @grayLighter;
     padding: 5px;
-    -webkit-border-bottom-left-radius: 5px;
-        -moz-border-radius-bottomleft: 5px;
-            border-bottom-left-radius: 5px;
-    -webkit-border-bottom-right-radius: 5px;
-        -moz-border-radius-bottomright: 5px;
-            border-bottom-right-radius: 5px;
-    -webkit-border-top-left-radius: 5px;
-        -moz-border-radius-topleft: 5px;
-            border-top-left-radius: 5px;
-    -webkit-border-top-right-radius: 5x;
-        -moz-border-radius-topright: 5px;
-            border-top-right-radius: 5px;
+    .border-radius(5px);
 }
 
 /********/
@@ -735,19 +712,31 @@ form legend
 {
     border:0 !important;
     margin:0 !important;
-    width:99%;
-    max-width:99%;
+    width:100%;
+    max-width:100%;
+    .box-sizing(border-box);
 }
 
-.creator .navbar
+.content-title
+{
+    height:30px !important;
+}
+
+.creator .navbar.navbar-static-top
 {
     border-top:1px solid darken(@grayLighter, 5%);
+}
+
+.creator .navbar.navbar-static-top, .creator .navbar.navbar-static-top .navbar-inner
+{
+    .border-bottom-radius(5px);
 }
 
 .creator textarea
 {
     overflow:hidden;
     .transition(all .2s linear);
+    resize: none;
 }
 
 #sizes a.border
@@ -766,6 +755,52 @@ form legend
 .align-right
 {
     text-align:right;
+}
+
+.creator .generated
+{
+    background:@grayLighter;
+    padding:0;
+    margin:0;
+}
+
+.generated, .generated .generated-content
+{
+    height:auto;
+}
+
+.generated .close
+{
+    margin:10px;
+}
+
+.generated .generated-content
+{
+    margin:0;
+    padding:10px;
+}
+
+.content-element .generated .generated-content
+{
+    margin:0;
+    padding:0 0 10px 0;
+}
+
+.generated .generated-content h4
+{
+    margin-top:0;
+}
+
+.generated .generated-content .clear
+{
+    clear:both;
+}
+
+.generated .generated-content iframe,
+.generated .generated-content img
+{
+    float:left;
+    margin:0 10px 5px 0;
 }
 
 /** ----------- CSS3 ----------------- **/

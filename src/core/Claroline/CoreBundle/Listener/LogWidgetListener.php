@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Library\Event\LogCreateDelegateViewEvent;
 use Claroline\CoreBundle\Library\Event\LogResourceChildUpdateEvent;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Library\Security\Utilities;
 
 /**
  * @DI\Service
@@ -18,6 +19,7 @@ class LogWidgetListener
     private $logManager;
     private $securityContext;
     private $twig;
+    private $utils;
     private $ed;
 
     /**
@@ -25,6 +27,7 @@ class LogWidgetListener
      *     "logManager"         = @DI\Inject("claroline.log.manager"),
      *     "context"    = @DI\Inject("security.context"),
      *     "twig"       = @DI\Inject("templating"),
+     *     "utils"      = @DI\Inject("claroline.security.utilities"),
      *     "ed"         = @DI\Inject("event_dispatcher")
      * })
      *
@@ -37,6 +40,7 @@ class LogWidgetListener
         $this->logManager = $logManager;
         $this->securityContext = $context;
         $this->twig = $twig;
+        $this->utils = $utils;
         $this->ed = $ed;
     }
 

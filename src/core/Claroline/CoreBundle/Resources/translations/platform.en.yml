@@ -47,6 +47,7 @@ dashboard: Dashboard
 date: Date
 delete: Delete
 desktop: Desktop
+desktop_tools: Desktop tools
 directory: Directory
 directory_form_name: Name
 directory_form_shareType: Sharable

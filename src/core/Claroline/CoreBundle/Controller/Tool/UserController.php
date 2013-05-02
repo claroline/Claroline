@@ -260,12 +260,8 @@ class UserController extends Controller
         foreach ($users as $user) {
             $log = new LogWorkspaceRoleSubscribeEvent($role, $user);
             $this->get('event_dispatcher')->dispatch('log', $log);
-        }        
+        }
 
-        $content = $this->renderView(
-            'ClarolineCoreBundle:model:users.json.twig',
-            array('users' => $users)
-        );
         $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
         $response->headers->set('Content-Type', 'application/json');
 

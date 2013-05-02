@@ -28,3 +28,6 @@
 [submodule "src/plugin/ICAP/ReferenceBundle"]
 	path = src/plugin/ICAP/ReferenceBundle
 	url = https://github.com/iCAPLyon1/ReferenceBundle.git
+[submodule "src/plugin/Claroline/ScormBundle"]
+	path = src/plugin/Claroline/ScormBundle
+	url = https://github.com/claroline/ScormBundle.git
