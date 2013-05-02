@@ -1,10 +1,10 @@
 (function () {
     "use strict";
 
-    var asset = $("#asset").html(); //global
+    var homePath = $("#homePath").html(); //global
 
-    if (!asset) {
-        asset = "./";
+    if (!homePath) {
+        homePath = "./";
     }
 
     /**
@@ -30,10 +30,12 @@
 
     function modal(url, id, element)
     {
+        $(".modal").modal("hide");
+
         id = typeof(id) !== "undefined" ? id : null;
         element = typeof(element) !== "undefined" ? element : null;
 
-        $.ajax(asset + url)
+        $.ajax(homePath + url)
             .done(
                     function (data)
                     {
@@ -142,7 +144,7 @@
 
         if (text.value !== "" || title.value !== "") {
 
-            $.post(asset + path, {
+            $.post(homePath + path, {
                 "title": title.value,
                 "text": text.value,
                 "generated_content": generatedContent,
@@ -153,7 +155,7 @@
                 {
                     if (!isNaN(data) && data !== "")
                     {
-                        $.ajax(asset + "content/" + data + "/" + type)
+                        $.ajax(homePath + "content/" + data + "/" + type)
                         .done(
                             function (data)
                             {
@@ -169,7 +171,7 @@
                     }
                     else if (data === "true")
                     {
-                        $.ajax(asset + "content/" + id + "/" + type)
+                        $.ajax(homePath + "content/" + id + "/" + type)
                             .done(
                                 function (data)
                                 {
@@ -202,7 +204,7 @@
      */
     function generatedContent(textarea)
     {
-        $.post(asset + "content/graph", { "generated_content_url": textarea.value })
+        $.post(homePath + "content/graph", { "generated_content_url": textarea.value })
             .done(
                 function (data)
                 {
@@ -251,7 +253,7 @@
         var element = $("#sizes").data("element");
 
         if (id && type && element) {
-            $.post(asset + "content/update/" + id, { "size": size, "type": type })
+            $.post(homePath + "content/update/" + id, { "size": size, "type": type })
         .done(
             function (data)
             {
@@ -292,7 +294,7 @@
         var id = $(element).data("id");
 
         if (id && element) {
-            $.ajax(asset + "content/delete/" + id)
+            $.ajax(homePath + "content/delete/" + id)
         .done(
             function (data)
             {
@@ -322,7 +324,7 @@
 
         if (id && type && element)
         {
-            $.ajax(asset + "content/creator/" + type + "/" + id)
+            $.ajax(homePath + "content/creator/" + type + "/" + id)
             .done(
                 function (data)
                 {
@@ -364,7 +366,7 @@
 
         if (id && type && element)
         {
-            $.ajax(asset + "content/" + id + "/" + type)
+            $.ajax(homePath + "content/" + id + "/" + type)
             .done(
                 function (data)
                 {
@@ -416,7 +418,7 @@
 
             if (a && type)
             {
-                $.ajax(asset + "content/reorder/" + type + "/" + a + "/" + b)
+                $.ajax(homePath + "content/reorder/" + type + "/" + a + "/" + b)
                 .error(
                         function ()
                         {
