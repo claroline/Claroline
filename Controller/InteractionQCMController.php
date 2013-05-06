@@ -230,7 +230,6 @@ class InteractionQCMController extends Controller
 
         $form->bindRequest($request);
 
-        if ($form->isValid()) {
             $em = $this->getDoctrine()->getEntityManager();
             $entity = $em->getRepository('UJMExoBundle:InteractionQCM')->find($id);
 
@@ -240,9 +239,8 @@ class InteractionQCMController extends Controller
 
             $em->remove($entity);
             $em->flush();
-        }
 
-        return $this->redirect($this->generateUrl('question'));
+        return $this->redirect($this->generateUrl('ujm_question_index'));
     }
 
     private function createDeleteForm($id)

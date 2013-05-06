@@ -393,6 +393,16 @@ class QuestionController extends Controller
                     );
 
                 case "InteractionGraphic":
+                    $interactionGraph = $this->getDoctrine()
+                        ->getEntityManager()
+                        ->getRepository('UJMExoBundle:InteractionGraphic')
+                        ->getInteractionGraphic($interaction[0]->getId());
+
+                    return $this->forward(
+                        'UJMExoBundle:InteractionGraphic:delete', array(
+                            'id' => $interactionGraph[0]->getId()
+                        )
+                    );
 
                     break;
 

@@ -288,7 +288,6 @@ class InteractionGraphicController extends Controller
 
         $form->bindRequest($request);
 
-        if ($form->isValid()) {
             $em = $this->getDoctrine()->getEntityManager();
             $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->find($id);
 
@@ -298,9 +297,8 @@ class InteractionGraphicController extends Controller
 
             $em->remove($entity);
             $em->flush();
-        }
 
-        return $this->redirect($this->generateUrl('interactiongraphic'));
+        return $this->redirect($this->generateUrl('ujm_question_index'));
     }
 
     private function createDeleteForm($id)

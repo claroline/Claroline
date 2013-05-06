@@ -26,6 +26,11 @@ var xPrecedent = 0; // Mouse x before move
 var y = 0; // Mouse y after move
 var yPrecedent = 0; // Mouse y before move
 
+
+var newx;
+var newy;
+
+
 // Display alert into navigator language
 if (navigator.browserLanguage) {
     var language = navigator.browserLanguage; // IE
@@ -99,6 +104,7 @@ function Verifier(noTitle, noQuestion, noImg, noAnswerZone) {
         var nom = 'img' + j;
         var choix = document.getElementById(nom);
 
+        // If at least one answer zone exist
         if (choix) {
             empty = true;
             break;
@@ -258,19 +264,51 @@ function  ResizeImg(sens) {
     var ratio = answerImg.height / answerImg.width;
     scaley = scalex * ratio; // New picture height proportional to width
 
-    if (scalex > 27 && scaley > 27) { // Not resize too small or negativ
-        answerImg.width = scalex;
-        answerImg.height = scaley;
+    if (scalex > 70 && scaley > 70) { // Not resize too small or negativ
+        if (scalex < 810 && scaley < 810) {
+
+            for (j = 0 ; j < indice ; j++) {
+                var imgN = 'img' + j;
+                var selectedZone = document.getElementById(imgN);
+
+                if (selectedZone) {
+
+                    var left = parseInt(selectedZone.style.left.substr(0, selectedZone.style.left.indexOf('p')));
+                    var top = parseInt(selectedZone.style.top.substr(0, selectedZone.style.top.indexOf('p')));
+
+                    newx = scalex * (left - answerImg.offsetLeft) / answerImg.width;
+                    newy = scaley * (top - answerImg.offsetTop) / answerImg.height;
+
+                    if (left < answerImg.offsetLeft || top < answerImg.offsetTop ||
+                        left > (answerImg.offsetLeft + answerImg.width)
+                        || top > (answerImg.offsetTop + answerImg.height)) {
+
+                        newx = newy = 10;
+                    }
+
+                    selectedZone.style.left = String(newx + answerImg.offsetLeft) + 'px';
+                    selectedZone.style.top = String(newy + answerImg.offsetTop) + 'px';
+
+                    var size = scalex / answerImg.width;
+                    cible = selectedZone;
+                    resizing = true;
+                    ResizePointer(sens, size);
+                }
+            }
+            answerImg.width = scalex;
+            answerImg.height = scaley;
+        }
     }
+    cible = null;
 }
 
-function  ResizePointer(sens) {
+function  ResizePointer(sens, diam) {
     //"use strict";
 
-    if (sens === 'gauche') {
-        cible.width -= 5;
-    } else if (sens === 'droite') {
-        cible.width += 5;
+    if (sens == 'gauche') {
+        cible.width -= diam;
+    } else if (sens == 'droite') {
+        cible.width += diam;
     }
 
     if (cible.width < 10) { // Not too small or negatif
@@ -384,7 +422,7 @@ document.addEventListener('mousemove', function (event) { // To resize/moving an
 
     // Resizing answer zone
     if (pressALT === true && allow === true) {
-        ResizePointer(MouseSens(event));
+        ResizePointer(MouseSens(event),5);
         resizing = true;
     }
 });

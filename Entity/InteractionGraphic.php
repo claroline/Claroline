@@ -71,7 +71,7 @@ class InteractionGraphic
     private $height;
 
      /**
-     * @ORM\OneToOne(targetEntity="UJM\ExoBundle\Entity\Interaction")
+     * @ORM\OneToOne(targetEntity="UJM\ExoBundle\Entity\Interaction", cascade={"remove"})
      */
     private $interaction;
 
