@@ -627,22 +627,6 @@
                 callback = _.bind(callback, this);
                 this.dispatcher.on(event, callback);
             }, this);
-            this.stackedRequests = 0;
-            $.ajaxSetup({
-                headers: {'X_Requested_With': 'XMLHttpRequest'},
-                context: this,
-                beforeSend: function () {
-                    this.stackedRequests++;
-                    $('.please-wait').show();
-                },
-                complete: function () {
-                    this.stackedRequests--;
-
-                    if (this.stackedRequests === 0) {
-                        $('.please-wait').hide();
-                    }
-                }
-            });
 
             if (!parameters.isPickerOnly) {
                 this.displayResources = _.bind(this.displayResources, this);
