@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Listener;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Entity\Event;
@@ -44,7 +45,15 @@ class ToolListener
      */
     public function onDisplayWorkspaceUserManagement(DisplayToolEvent $event)
     {
-        $event->setContent($this->usersManagement($event->getWorkspace()->getId()));
+        $workspaceId = $event->getWorkspace()->getId();
+
+        $route = $this->container->get('router')->generate(
+            'claro_workspace_registered_user_list',
+            array('workspaceId' => $workspaceId)
+        );
+
+        $redirectResponse = new RedirectResponse($route);
+        $event->setContent(($redirectResponse->getContent()));
     }
 
     /**
@@ -54,7 +63,15 @@ class ToolListener
      */
     public function onDisplayWorkspaceGroupManagement(DisplayToolEvent $event)
     {
-        $event->setContent($this->groupsManagement($event->getWorkspace()->getId()));
+        $workspaceId = $event->getWorkspace()->getId();
+
+        $route = $this->container->get('router')->generate(
+            'claro_workspace_registered_group_list',
+            array('workspaceId' => $workspaceId)
+        );
+
+        $redirectResponse = new RedirectResponse($route);
+        $event->setContent(($redirectResponse->getContent()));
     }
 
     /**
@@ -101,42 +118,6 @@ class ToolListener
 
         return $this->container->get('templating')->render(
             'ClarolineCoreBundle:Tool\workspace\parameters:parameters.html.twig',
-            array('workspace' => $workspace)
-        );
-    }
-
-    /**
-     * Renders the users management page with its layout.
-     *
-     * @param integer $workspaceId the workspace id
-     *
-     * @return string
-     */
-    public function usersManagement($workspaceId)
-    {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-
-        return $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Tool\workspace\user_management:user_management.html.twig',
-            array('workspace' => $workspace)
-        );
-    }
-
-    /**
-     * Renders the groups management page with its layout.
-     *
-     * @param integer $workspaceId the workspace id
-     *
-     * @return Response
-     */
-    public function groupsManagement($workspaceId)
-    {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-
-        return $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Tool\workspace\group_management:group_management.html.twig',
             array('workspace' => $workspace)
         );
     }
