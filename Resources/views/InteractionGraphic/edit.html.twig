@@ -1,0 +1,203 @@
+{#
+ # ExoOnLine
+ # Copyright or © or Copr. Université Jean Monnet (France), 2012
+ # dsi.dev@univ-st-etienne.fr
+ #
+ # This software is a computer program whose purpose is to [describe
+ # functionalities and technical features of your software].
+ #
+ # This software is governed by the CeCILL license under French law and
+ # abiding by the rules of distribution of free software.  You can  use,
+ # modify and/ or redistribute the software under the terms of the CeCILL
+ # license as circulated by CEA, CNRS and INRIA at the following URL
+ # "http://www.cecill.info".
+ #
+ # As a counterpart to the access to the source code and  rights to copy,
+ # modify and redistribute granted by the license, users are provided only
+ # with a limited warranty  and the software's author,  the holder of the
+ # economic rights,  and the successive licensors  have only  limited
+ # liability.
+ #
+ # In this respect, the user's attention is drawn to the risks associated
+ # with loading,  using,  modifying and/or developing or reproducing the
+ # software by the user in light of its specific status of free software,
+ # that may mean  that it is complicated to manipulate,  and  that  also
+ # therefore means  that it is reserved for developers  and  experienced
+ # professionals having in-depth computer knowledge. Users are therefore
+ # encouraged to load and test the software's suitability as regards their
+ # requirements in conditions enabling the security of their systems and/or
+ # data to be ensured and,  more generally, to use and operate it in the
+ # same conditions as regards security.
+ #
+ # The fact that you are presently reading this means that you have had
+ # knowledge of the CeCILL license and that you accept its terms.
+#}
+
+{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/ujmexo/css/new_QI.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+
+{% block title %} {{ "Edit a question" | trans }} {% endblock %}
+
+{% block section_content %}
+
+    <h1>InteractionGraphic Edition</h1>
+    
+    <form class="well label_bold" action="{{ path('ujm_interactiongraphic_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
+        {#{ form_widget(edit_form) }#}
+       
+{# ------------------------------------------------- Question description ---------------------------------------------------------------------------- #} 
+            
+    <p> 
+        {{ form_row(edit_form.interaction.question.title) }} 
+    </p><p>              
+        {{ form_row(edit_form.interaction.question.category) }}
+
+        {# link to category #}
+        <a href="#" style="margin: 5px 5px 5px 5px;" id="lien_category">{{ "Create a new category" | trans }}</a> 
+
+    </p><p>            
+        {{ form_row(edit_form.interaction.question.description) }}
+    </p><p>                
+        {{ form_row(edit_form.interaction.question.model) }}
+    </p><p>                       
+        {{ form_row(edit_form.interaction.invite) }}
+    </p><p>                
+        {{ form_row(edit_form.interaction.feedBack) }}
+    </p><p>              
+        {{ form_row(edit_form.interaction.hints) }}         
+    </p>
+            
+       
+{# ------------------------------------------------- Lien nouvelle image ---------------------------------------------------------------------------- #}            
+   
+    <p><a href="{{ path('ujm_interactiongraphic_SavePic') }}" onclick="window.open(this.href, 'NewPic', 
+        'height=167, width=287, top=300, left=570, toolbar=no, menubar=no, location=no, resizable=yes, scrollbars=no, status=no'
+    ); return false;" style="float: right; margin-right: 42%">{{ "Add a new picture ..." | trans }}</a>
+            
+{# ------------------------------------------------- Champs Liste images ---------------------------------------------------------------------------- #} 
+            
+        {{ form_row(edit_form.document) }}   
+    </p>  
+ 
+{# ------------------------------------------------- Boutton affichage image ---------------------------------------------------------------------------- #}
+    
+    <p><input id="LoadImg" type="button" value="{{ "Select" | trans }}" onclick="LoadPic('{{ path('ujm_interactiongraphic_DisplayPic') }}',
+            '{{ asset('bundles') }}')"/></p>
+ 
+{# ------------------------------------------------- Zone affichage image ---------------------------------------------------------------------------- #}    
+    
+    <a onclick="DisplayInstruction()" id="Consignes" 
+       onmouseover="document.body.style.cursor = 'pointer';"
+       onmouseout="document.body.style.cursor = 'default';"
+    >Instructions</a>
+            
+              
+<p id="Instructions">{{ "Redimmension" | trans }}<br/>{{ "Selection" | trans }}<br/>{{ "PlaceZone" | trans }}<br/>
+        {{ "Resize" | trans }}<br/>{{ "Effacer" | trans }}</p>
+
+    <img src="{{ asset(entity.document.url) }}" width="{{entity.width}}" height="{{entity.height}}" id="AnswerImage"/>
+    
+    {% set i = 1 %}{% set allInfo = '' %}
+    {% for p in position %}
+        <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" alt="AnswerZone{{ i }}" id="cursor{{ i }}" 
+             style="position: absolute;" width="{{ p.size }}"/>
+    
+{% set allInfo = p.shape~';'~p.color~';'~asset('bundles/ujmexo/images/graphic/')~';'~p.value~';'~p.size~'^'~allInfo %}
+
+        {% set i = i + 1 %}
+   {% endfor %}
+        
+    <input type="hidden" id="info" name="info" value="{{i}}~{{allInfo}}"/>
+
+    <input type="hidden" id="imgwidth" name="imgwidth" value="0"/>
+    <input type="hidden" id="imgheight" name="imgheight" value="0"/>
+    <input type="hidden" id="coordsZone" name="coordsZone" value=""/>
+    
+    <input type="hidden" name="exercise" value="{{ entity.id }}" />
+    
+{# ------------------------------------------------- tableau zone de reponse ---------------------------------------------------------------------------- #}    
+    
+    <table>
+        <tr>
+            <th>{{ "Zone de réponse" | trans }}</th>
+            <th>{{ "Forme" | trans }}</th>
+            <th>{{ "Couleur" | trans }}</th>
+            <th>{{ "Points" | trans }}</th>
+        </tr>
+
+        <tr>
+            <td>
+                <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" id="movable" style="margin-left: 40px;"/>
+            </td>
+
+            <td>
+                <select id="shape" name="shape" size="1" style="width:100px" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}')">
+                    <option value="circle"  selected>{{ "cercle" | trans }}</option>
+                    <option value="rect" >{{ "rectangle" | trans }}</option>
+                </select>
+            </td>
+
+            <td>
+                <select id="color" name="color" size="1" style="width:70px" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}')">
+                    <option value="white"    style="background-color:#FFFFFF;"selected> &nbsp;&nbsp;&nbsp; </option>
+                    <option value="red"      style="background-color:#FF0000;">         &nbsp;&nbsp;&nbsp; </option>
+                    <option value="blue"     style="background-color:#002FFF;">         &nbsp;&nbsp;&nbsp; </option> 
+                    <option value="purple"   style="background-color:#8B008B;">         &nbsp;&nbsp;&nbsp; </option>
+                    <option value="green"    style="background-color:#008600;">         &nbsp;&nbsp;&nbsp; </option>
+                    <option value="orange"   style="background-color:#FF7A00;">         &nbsp;&nbsp;&nbsp; </option>
+                    <option value="yellow"   style="background-color:#FFFF09;">         &nbsp;&nbsp;&nbsp; </option>
+                </select>
+            </td>
+
+            <td>
+                <input type="TEXT" id="points" name="points" value="1" style="width:20px" maxlength="2">
+            </td>
+        </tr>
+    </table>    
+ 
+{# ------------------------------------------------- Boutton validation formulaire ---------------------------------------------------------------------------- #}    
+    <div style="visibility: hidden;">{{ form_rest(edit_form) }}</div>
+    {{ form_errors(edit_form) }}
+    
+    
+    <p>
+            <button type="submit" id="button_submit">{{ "Edit" | trans }}</button>
+        </p>
+    </form>
+    
+{# ------------------------------------------------- Div category ---------------------------------------------------------------------------- #}
+
+<div id="listeCategory">
+    <div id="popupCategory" class="hiddenCat"> <a id="closeCategory" class="hiddenCat" title="close popup">{{ "close" | trans }}</a><h1>{{ "Create a new category" | trans }}</h1><div id="div_input_category"></div></div><div id="overlayEffect_cat"> </div>
+</div>
+
+{{ tinymce_init() }}
+
+{% endblock %}
+
+{# ------------------------------------------------- Javascript ---------------------------------------------------------------------------- #}
+    
+{% block javascripts %}
+{{ parent() }}
+
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/hint.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/category_pop.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/editionAv.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphic.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/GraphicEdit.js') }}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            linkCategory('{{ path('ujm_category_new_pop') }}');
+            hintCSSEdit();
+            editionAv();
+            addFormHintEdit('{{ "add hint" | trans }}',  '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');    
+        });
+    </script>
+{% endblock %}
+    
+    		

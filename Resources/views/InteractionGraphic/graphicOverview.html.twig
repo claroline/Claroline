@@ -44,15 +44,6 @@
 
 {% block section_content %}
     
-    <div id='divInter0'>
-        
-        <input type="hidden" id='hidInter0' value="" />
-        
-        <script type="text/javascript">
-            document.getElementById("hidInter0").value = document.getElementById('divInter0').offsetLeft;
-        </script>
-        <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/GraphicOverview.js') }}"></script>
-
         <h1>Question : {{ interG.interaction.question.title }}</h1>
 
             <div>
@@ -77,7 +68,7 @@
             {% endif %}
         </p>
 
-        {%set i = 0 %}    
+        {%set i = 0 %}{% set allInfo = '' %}
 
         {% for c in coords %} 
 
@@ -90,15 +81,18 @@
             <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{i}}" id="1cursor{{i}}" 
                  style="position: absolute; z-index: 7;"/>
 
-            <script type="text/javascript">
-                whichImg('{{coords[i].shape}}', '{{coords[i].color}}', {{i}}, '{{ numb[0] }}', '{{ numb[1] }}', '{{repco[0]}}'
-                ,'{{repco[1]}}', '{{ asset('bundles/ujmexo/images/graphic/') }}', '{{ coords[i].size }}',1)
-            </script>
+            {% set allInfo = coords[i].shape~';'~coords[i].color~';'~asset('bundles/ujmexo/images/graphic/')~';'
+                            ~numb[0]~';'~numb[1]~';'~repco[0]~';'~repco[1]~';'~coords[i].size~'^'~allInfo %}
 
             {%set i=i+1%}
 
         {% endfor %}
+            
+            <input type="hidden" id="info" name="info" value="{{i}}~{{allInfo}}"/>
 
         <a href="{{ path('ujm_question_index') }}">{{ "Question list" | trans }}</a>
     </div>
+    
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/GraphicOverview.js') }}"></script>
+    
 {% endblock %}

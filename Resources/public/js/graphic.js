@@ -10,7 +10,7 @@ var j; // For for instruction
 var mousex; // Position x of the mouse
 var mousey; // position y of the mouse
 var moving = false; // If move answer zones
-var score = {}; // The score of coords
+var point = {}; // The score of coords
 var pressMAJ; // If key MAJ pressed or not
 var pressCTRL; // If key CTRL pressed or not
 var pressALT; // If key ALT pressed or not
@@ -422,7 +422,7 @@ document.addEventListener('mousemove', function (event) { // To resize/moving an
 
     // Resizing answer zone
     if (pressALT === true && allow === true) {
-        ResizePointer(MouseSens(event),5);
+        ResizePointer(MouseSens(event), 5);
         resizing = true;
     }
 });

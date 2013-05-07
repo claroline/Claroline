@@ -21,3 +21,8 @@ ujm_interactiongraphic_response:
 ujm_interactiongraphic_SavePic:
     pattern:  /SavePic
     defaults: { _controller: "UJMExoBundle:InteractionGraphic:savePic" }
+    
+ujm_interactiongraphic_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "UJMExoBundle:InteractionGraphic:update" }
+    requirements: { _method: post }
