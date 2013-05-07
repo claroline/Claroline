@@ -175,9 +175,4 @@ class LayoutController extends Controller
             array('workspace' => $workspace->getName(), 'role' => $roleName)
         );
     }
-
-    public function javascriptInitAction()
-    {
-        return $this->render('ClarolineCoreBundle:Layout:javascript.js.twig');
-    }
 }

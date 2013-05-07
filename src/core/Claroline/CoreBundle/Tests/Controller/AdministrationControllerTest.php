@@ -32,10 +32,9 @@ class AdministrationControllerTest extends FunctionalTestCase
 
     public function testAdmincanViewGroups()
     {
-
         $this->loadGroupData(array ('group_a' => array('john', 'admin')));
         $crawler = $this->logUser($this->getUser('admin'));
-        $crawler = $this->client->request('GET', '/admin/groups/0');
+        $crawler = $this->client->request('GET', '/admin/groups/page');
         $this->assertEquals(1, $crawler->filter('.row-group')->count());
     }
 
@@ -43,14 +42,14 @@ class AdministrationControllerTest extends FunctionalTestCase
     {
         $this->loadGroupData(array('group_A' => array('john', 'admin')));
         $crawler = $this->logUser($this->getUser('admin'));
-        $crawler = $this->client->request('GET', '/admin/groups/search/A/0');
+        $crawler = $this->client->request('GET', '/admin/groups/page/1/search/A');
         $this->assertEquals(1, $crawler->filter('.row-group')->count());
     }
 
     public function testAdminCanSearchUsers()
     {
         $crawler = $this->logUser($this->getUser('admin'));
-        $crawler = $this->client->request('GET', '/admin/users/search/john/0');
+        $crawler = $this->client->request('GET', '/admin/users/page/1/search/john');
         $this->assertEquals(1, $crawler->filter('.row-user')->count());
     }
 
@@ -58,8 +57,8 @@ class AdministrationControllerTest extends FunctionalTestCase
     {
         $this->loadGroupData(array('group_a' => array('john')));
         $this->logUser($this->getUser('admin'));
-        $this->client->request('GET', "admin/group/{$this->getGroup('group_a')->getId()}/users/0");
-        $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));
+        $crawler = $this->client->request('GET', "/admin/group/{$this->getGroup('group_a')->getId()}/users/page");
+        $this->assertEquals(1, $crawler->filter('.row-user')->count());
     }
 
     public function testAdminCanCreateUser()
@@ -80,7 +79,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $user = $this->getUser('tototata');
         $repositoryWs = $user->getPersonalWorkspace();
         $this->assertEquals(1, count($repositoryWs));
-        $crawler = $this->client->request('GET', '/admin/users/0');
+        $crawler = $this->client->request('GET', '/admin/users/page');
         $this->assertEquals(3, $crawler->filter('.row-user')->count());
     }
 
@@ -97,10 +96,10 @@ class AdministrationControllerTest extends FunctionalTestCase
     public function testmultiDeleteUsers()
     {
         $this->logUser($this->getUser('admin'));
-        $crawler = $this->client->request('GET', '/admin/users/0');
+        $crawler = $this->client->request('GET', '/admin/users/page');
         $this->assertEquals(2, $crawler->filter('.row-user')->count());
         $this->client->request('DELETE', "/admin/users?ids[]={$this->getUser('john')->getId()}");
-        $crawler = $this->client->request('GET', '/admin/users/0');
+        $crawler = $this->client->request('GET', '/admin/users/page');
         $this->assertEquals(1, $crawler->filter('.row-user')->count());
     }
 
@@ -122,7 +121,7 @@ class AdministrationControllerTest extends FunctionalTestCase
         $form = $crawler->filter('button[type=submit]')->form();
         $form['group_form[name]'] = 'Group D';
         $this->client->submit($form);
-        $crawler = $this->client->request('GET', '/admin/groups/0');
+        $crawler = $this->client->request('GET', '/admin/groups/page');
         $this->assertEquals(2, $crawler->filter('.row-group')->count());
     }
 
@@ -146,8 +145,8 @@ class AdministrationControllerTest extends FunctionalTestCase
             'POST',
             "/admin/group/{$grpAId}/users?userIds[]={$adminId}"
         );
-        $this->client->request('GET', "/admin/group/{$grpAId}/users/0");
-        $this->assertEquals(2, count(json_decode($this->client->getResponse()->getContent())));
+        $crawler = $this->client->request('GET', "/admin/group/{$this->getGroup('group_a')->getId()}/users/page");
+        $this->assertEquals(2, $crawler->filter('.row-user')->count());
     }
 
     public function testAdminCanMultiDeleteUsersFromGroup()
@@ -165,20 +164,20 @@ class AdministrationControllerTest extends FunctionalTestCase
             'DELETE',
             "/admin/group/{$grpAId}/users?userIds[]={$adminId}"
         );
-        $this->client->request('GET', "/admin/group/{$grpAId}/users/0");
-        $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));
+        $crawler = $this->client->request('GET', "/admin/group/{$this->getGroup('group_a')->getId()}/users/page");
+        $this->assertEquals(1, $crawler->filter('.row-user')->count());
     }
 
     public function testPaginatedGrouplessUsersAction()
     {
         $this->loadGroupData(array('group_a' => array('john')));
-         $this->logUser($this->getUser('admin'));
-         $grpAId = $this->getGroup('group_a')->getId();
-         $this->client->request(
-             'GET',
-             "/admin/group/{$grpAId}/unregistered/users/0"
-         );
-         $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));
+        $this->logUser($this->getUser('admin'));
+        $grpAId = $this->getGroup('group_a')->getId();
+        $crawler = $this->client->request(
+            'GET',
+            "/admin/group/add/{$grpAId}/page"
+        );
+        $this->assertEquals(1, $crawler->filter('.row-user')->count());
     }
 
     public function testSearchPaginatedGrouplessUsersAction()
@@ -186,41 +185,22 @@ class AdministrationControllerTest extends FunctionalTestCase
         $this->loadGroupData(array('group_a' => array('john')));
         $this->logUser($this->getUser('admin'));
         $grpAId = $this->getGroup('group_a')->getId();
-        $this->client->request(
+        $crawler = $this->client->request(
             'GET',
-            "/admin/group/{$grpAId}/unregistered/users/0/search/admin"
+            "admin/group/add/{$grpAId}/page/1/search/admin"
         );
-        $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));
+        $this->assertEquals(1, $crawler->filter('.row-user')->count());
     }
 
     public function testSearchPaginatedUserOfGroups()
     {
         $this->loadGroupData(array('group_a' => array('john')));
         $this->logUser($this->getUser('admin'));
-        $this->client->request(
+        $crawler = $this->client->request(
             'GET',
-            "/admin/group/{$this->getGroup('group_a')->getId()}/search/john/users/0"
+            "admin/group/{$this->getGroup('group_a')->getId()}/users/page/1/search/john"
         );
-        $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));
-    }
-
-    public function testAddUserToGroupLayoutAction()
-    {
-        $this->loadGroupData(array('group_a' => array('john')));
-        $this->logUser($this->getUser('admin'));
-        $this->client->request(
-            'GET',
-            "/admin/group/add/{$this->getGroup('group_a')->getId()}"
-        );
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testUserGroupListLayout()
-    {
-        $this->loadGroupData(array('group_a' => array('john', 'admin')));
-        $this->logUser($this->getUser('admin'));
-        $this->client->request('GET', "/admin/group/{$this->getGroup('group_a')->getId()}");
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(1, $crawler->filter('.row-user')->count());
     }
 
     public function testMultiDeleteGroups()
@@ -231,7 +211,7 @@ class AdministrationControllerTest extends FunctionalTestCase
             'DELETE',
             "/admin/groups?ids[]={$this->getGroup('group_a')->getId()}"
         );
-        $crawler = $this->client->request('GET', '/admin/groups/0');
+        $crawler = $this->client->request('GET', '/admin/groups/page');
         $this->assertEquals(0, $crawler->filter('.row-group')->count());
     }
 
