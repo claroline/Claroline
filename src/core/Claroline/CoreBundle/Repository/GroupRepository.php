@@ -103,42 +103,30 @@ class GroupRepository extends EntityRepository
     }
 
     /**
-     * Returns the groups of the platform according to the limit and the offset
-     *
-     * @param integer $offset
-     * @param integer $limit
-     *
-     * @return \Doctrine\ORM\Tools\Pagination\Paginator
+     * Returns the groups of the platform
      */
-    public function findAll($offset = null, $limit = null)
+    public function findAll($getQuery = false)
     {
-        if ($offset !== null && $limit !== null) {
+        if ($getQuery) {
             $dql = "
                 SELECT g, r FROM Claroline\CoreBundle\Entity\Group g
                   LEFT JOIN g.roles r";
 
-             $query = $this->_em->createQuery($dql)
-                ->setFirstResult($offset)
-                ->setMaxResults($limit);
-
-            $paginator = new Paginator($query, true);
-
-            return $paginator;
+             return $this->_em->createQuery($dql);
         }
 
         return parent::findAll();
     }
 
     /**
-     * Search the groups of the platform according to the limit and the offset
+     * Search the groups of the platform
      *
      * @param string  $search
-     * @param integer $offset
-     * @param integer $limit
+     * @param boolean $getQuery
      *
      * @return \Doctrine\ORM\Tools\Pagination\Paginator
      */
-    public function findByName($search, $offset, $limit)
+    public function findByName($search, $getQuery = false)
     {
         $search = strtoupper($search);
 
@@ -151,12 +139,8 @@ class GroupRepository extends EntityRepository
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('search', "%{$search}%");
-        $query->setFirstResult($offset);
-        $query->setMaxResults($limit);
 
-        $paginator = new Paginator($query, true);
-
-        return $paginator;
+        return ($getQuery) ? $query: $query->getResult();
     }
 
     public function findByWorkspace(AbstractWorkspace $workspace, $offset, $limit)
