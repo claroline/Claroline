@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Group;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -388,6 +389,19 @@ class UserRepository extends EntityRepository implements UserProviderInterface
               ->setParameter('search', "%{$search}%");
 
         return ($getQuery) ? $query: $query->getResult();
+    }
+
+    public function findAllExcept(User $excludedUser)
+    {
+        $dql = '
+            SELECT u FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.id <> :userId
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('userId', $excludedUser->getId());
+
+        return $query->getResult();
     }
 
     public function count()
