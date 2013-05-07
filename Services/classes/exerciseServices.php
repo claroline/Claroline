@@ -237,10 +237,12 @@ class exerciseServices
 
                 $valid = $rightCoords[$i]->getSize() / 2; // Size of the answer zone
 
+                // If answer student is in right answer
                 if ((($xa) < ($xr + $valid)) && (($xa) > ($xr - $valid)) && (($ya) < ($yr + $valid)) &&
                     (($ya) > ($yr - $valid))
-                ) { // If answer student is in right answer
-                    if ($this->alreadyDone($rightCoords[$i]->getValue(), $verif, $z)) { // Not many answers in one right
+                ) {
+                    // Not many answers in one right
+                    if ($this->alreadyDone($rightCoords[$i]->getValue(), $verif, $z)) {
                         $point += $rightCoords[$i]->getScoreCoords(); // Score of the student without penalty
                         $verif[$z] = $rightCoords[$i]->getValue();
                         $z++;
@@ -257,7 +259,8 @@ class exerciseServices
 
         $session = $request->getSession();
 
-        if ($paperID == 0) { // Not assessment
+        // Not assessment
+        if ($paperID == 0) {
             if ($session->get('penalties')) {
                 foreach ($session->get('penalties') as $penal) {
 
@@ -276,7 +279,9 @@ class exerciseServices
         }
 
         $score = $point - $penalty; // Score of the student with penalty
-        if ($score < 0) { // Not negatif score
+        
+        // Not negatif score
+        if ($score < 0) {
             $score = 0;
         }
 
@@ -300,7 +305,8 @@ class exerciseServices
         $resu = true;
 
         for ($v = 0; $v < $z; $v++) {
-            if ($coor == $verif[$v]) { // if already placed at this right place
+            // if already placed at this right place
+            if ($coor == $verif[$v]) {
                 $resu = false;
                 break;
             } else {

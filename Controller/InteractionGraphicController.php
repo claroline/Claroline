@@ -223,7 +223,7 @@ class InteractionGraphicController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
 
         $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->find($id);
-
+        
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find InteractionGraphic entity.');
         }
@@ -249,7 +249,7 @@ class InteractionGraphicController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
 
         $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->find($id);
-
+        
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find InteractionGraphic entity.');
         }
@@ -288,15 +288,15 @@ class InteractionGraphicController extends Controller
 
         $form->bindRequest($request);
 
-            $em = $this->getDoctrine()->getEntityManager();
-            $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->find($id);
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->find($id);
 
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find InteractionGraphic entity.');
-            }
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find InteractionGraphic entity.');
+        }
 
-            $em->remove($entity);
-            $em->flush();
+        $em->remove($entity);
+        $em->flush();
 
         return $this->redirect($this->generateUrl('ujm_question_index'));
     }

@@ -117,7 +117,7 @@ class TwigExtensions extends \Twig_Extension
                        ->getEntityManager()
                        ->getRepository('UJMExoBundle:Coords')
                        ->findBy(array('interactionGraphic' => $interGraphId));
-        
+
         return $coords;
     }
 

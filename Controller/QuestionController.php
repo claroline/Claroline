@@ -277,7 +277,34 @@ class QuestionController extends Controller
                     );
 
                 case "InteractionGraphic":
-
+                    $interactionGraph = $this->getDoctrine()
+                        ->getEntityManager()
+                        ->getRepository('UJMExoBundle:InteractionGraphic')
+                        ->getInteractionGraphic($interaction[0]->getId());
+                    
+                    $position = $em->getRepository('UJMExoBundle:Coords')->findBy(array(
+                        'interactionGraphic' => $interactionGraph[0]->getId())
+                    );
+                    
+                    $editForm = $this->createForm(
+                        new InteractionGraphicType(
+                            $this->container->get('security.context')
+                                ->getToken()->getUser()
+                        ), $interactionGraph[0]
+                    );
+                    
+                    $deleteForm = $this->createDeleteForm($interactionGraph[0]->getId());
+                    
+                    return $this->render(
+                        'UJMExoBundle:InteractionGraphic:edit.html.twig', array(
+                        'entity'      => $interactionGraph[0],
+                        'edit_form'   => $editForm->createView(),
+                        'delete_form' => $deleteForm->createView(),
+                        'nbResponses' => $nbResponses,
+                        'position'    => $position
+                        )
+                    );
+                    
                     break;
 
                 case "InteractionHole":
@@ -403,8 +430,6 @@ class QuestionController extends Controller
                             'id' => $interactionGraph[0]->getId()
                         )
                     );
-
-                    break;
 
                 case "InteractionHole":
                     $interactionHole = $this->getDoctrine()

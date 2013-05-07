@@ -230,15 +230,15 @@ class InteractionQCMController extends Controller
 
         $form->bindRequest($request);
 
-            $em = $this->getDoctrine()->getEntityManager();
-            $entity = $em->getRepository('UJMExoBundle:InteractionQCM')->find($id);
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository('UJMExoBundle:InteractionQCM')->find($id);
 
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find InteractionQCM entity.');
-            }
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find InteractionQCM entity.');
+        }
 
-            $em->remove($entity);
-            $em->flush();
+        $em->remove($entity);
+        $em->flush();
 
         return $this->redirect($this->generateUrl('ujm_question_index'));
     }
