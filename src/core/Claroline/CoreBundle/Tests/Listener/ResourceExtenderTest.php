@@ -56,8 +56,6 @@ class ResourceExtenderTest extends FunctionalTestCase
      * the discriminator map : this is an issue only if resource types are added
      * and resources are retrieved via the entity manager in the same script
      * invocation, which is unlikely to happen in a production context)
-     *
-     * TODO : escape triple '\' for postgresql support
      */
     private function registerSpecificResourceTypes()
     {
@@ -72,10 +70,12 @@ class ResourceExtenderTest extends FunctionalTestCase
         $conn = $this->em->getConnection();
 
         // Insert two specific resource types (see test/Stub/Entity)
+        $firstFqcn = $conn->quote('Claroline\CoreBundle\Tests\Stub\Entity\SpecificResource1');
+        $secondFqcn = $conn->quote('Claroline\CoreBundle\Tests\Stub\Entity\SpecificResource2');
         $sql = "INSERT INTO claro_resource_type (plugin_id, class, name, is_browsable, is_exportable)"
-            . " VALUES ({$plugin->getId()}, 'Claroline\\\CoreBundle\\\Tests\\\Stub\\\Entity\\\SpecificResource1',"
+            . " VALUES ({$plugin->getId()}, {$firstFqcn},"
             . " 'SpecificResource1', false, false),"
-            . " ({$plugin->getId()}, 'Claroline\\\CoreBundle\\\Tests\\\Stub\\\Entity\\\SpecificResource2',"
+            . " ({$plugin->getId()}, {$secondFqcn},"
             . " 'SpecificResource2', false, false)";
         $conn->exec($sql);
     }

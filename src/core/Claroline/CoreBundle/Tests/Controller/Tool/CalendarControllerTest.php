@@ -128,7 +128,7 @@ class CalendarControllerTest extends FunctionalTestCase
         );
         $this->client->request(
             'POST',
-            "/workspaces/tool/calendar/{$workspaceId}/move",
+            "/workspaces/tool/calendar/move",
             $dataForm
         );
 
