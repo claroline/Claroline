@@ -126,7 +126,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
     }
 
-    public function findWorkspaceOutsidersByName($search, AbstractWorkspace $workspace, $offset = null, $limit = null)
+    public function findWorkspaceOutsidersByName(AbstractWorkspace $workspace, $search, $getQuery = false)
     {
         $upperSearch = strtoupper($search);
 
@@ -152,16 +152,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('id', $workspace->getId())
-            ->setParameter('search', "%{$upperSearch}%")
-            ->setFirstResult($offset)
-            ->setMaxResults($limit);
+            ->setParameter('search', "%{$upperSearch}%");
 
-        $paginator = new Paginator($query, true);
-
-        return $paginator;
+        return ($getQuery) ? $query: $query->getResult();
     }
 
-    public function findWorkspaceOutsiders(AbstractWorkspace $workspace, $offset = null, $limit = null)
+    public function findWorkspaceOutsiders(AbstractWorkspace $workspace, $getQuery = false)
     {
         $dql = "
             SELECT u, ws, r FROM Claroline\CoreBundle\Entity\User u
@@ -181,11 +177,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('id', $workspace->getId());
-        $query->setMaxResults($limit);
-        $query->setFirstResult($offset);
-        $paginator = new Paginator($query, true);
 
-        return $paginator;
+        return ($getQuery) ? $query: $query->getResult();
     }
 
     public function findAll($getQuery = false)
@@ -275,7 +268,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return ($getQuery) ? $query: $query->getResult();
     }
 
-    public function findByWorkspace(AbstractWorkspace $workspace, $offset = null, $limit = null)
+    public function findByWorkspace(AbstractWorkspace $workspace, $getQuery = false)
     {
         $dql = "
             SELECT wr, u, ws from Claroline\CoreBundle\Entity\User u
@@ -288,15 +281,11 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaceId', $workspace->getId());
-        $query->setFirstResult($offset);
-        $query->setMaxResults($limit);
 
-        $paginator = new Paginator($query, true);
-
-        return $paginator;
+        return ($getQuery) ? $query: $query->getResult();
     }
 
-    public function findByWorkspaceAndName(AbstractWorkspace $workspace, $search, $offset = null, $limit = null)
+    public function findByWorkspaceAndName(AbstractWorkspace $workspace, $search, $getQuery = false)
     {
         $upperSearch = strtoupper($search);
 
@@ -316,13 +305,9 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaceId', $workspace->getId())
-              ->setParameter('search', "%{$upperSearch}%")
-              ->setFirstResult($offset)
-              ->setMaxResults($limit);
+              ->setParameter('search', "%{$upperSearch}%");
 
-        $paginator = new Paginator($query, true);
-
-        return $paginator;
+        return ($getQuery) ? $query: $query->getResult();
     }
 
     /**

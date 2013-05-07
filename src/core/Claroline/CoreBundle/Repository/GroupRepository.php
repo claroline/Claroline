@@ -9,7 +9,7 @@ use Claroline\CoreBundle\Entity\Role;
 
 class GroupRepository extends EntityRepository
 {
-    public function findWorkspaceOutsider(AbstractWorkspace $workspace, $offset, $limit)
+    public function findWorkspaceOutsiders(AbstractWorkspace $workspace, $getQuery = false)
     {
         $dql = "
             SELECT g, r FROM Claroline\CoreBundle\Entity\Group g
@@ -30,14 +30,11 @@ class GroupRepository extends EntityRepository
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('id', $workspace->getId());
-        $query->setMaxResults($limit);
-        $query->setFirstResult($offset);
-        $paginator = new Paginator($query, true);
 
-        return $paginator;
+        return ($getQuery) ? $query: $query->getResult();
     }
 
-    public function findWorkspaceOutsiderByName(AbstractWorkspace $workspace, $search, $offset, $limit)
+    public function findWorkspaceOutsidersByName(AbstractWorkspace $workspace, $search, $getQuery = false)
     {
         $search = strtoupper($search);
 
@@ -61,16 +58,12 @@ class GroupRepository extends EntityRepository
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('id', $workspace->getId())
-            ->setParameter('search', "%{$search}%")
-            ->setFirstResult($offset)
-            ->setMaxResults($limit);
+            ->setParameter('search', "%{$search}%");
 
-        $paginator = new Paginator($query, true);
-
-        return $paginator;
+        return ($getQuery) ? $query: $query->getResult();
     }
 
-    public function findByWorkspaceAndName(AbstractWorkspace $workspace, $search, $offset, $limit)
+    public function findByWorkspaceAndName(AbstractWorkspace $workspace, $search, $getQuery = false)
     {
         $search = strtoupper($search);
 
@@ -93,13 +86,9 @@ class GroupRepository extends EntityRepository
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('id', $workspace->getId())
-            ->setParameter('search', "%{$search}%")
-            ->setFirstResult($offset)
-            ->setMaxResults($limit);
+            ->setParameter('search', "%{$search}%");
 
-        $paginator = new Paginator($query, true);
-
-        return $paginator;
+        return ($getQuery) ? $query: $query->getResult();
     }
 
     /**
@@ -143,7 +132,7 @@ class GroupRepository extends EntityRepository
         return ($getQuery) ? $query: $query->getResult();
     }
 
-    public function findByWorkspace(AbstractWorkspace $workspace, $offset, $limit)
+    public function findByWorkspace(AbstractWorkspace $workspace, $getQuery = false)
     {
         $dql = "
             SELECT g, wr
@@ -157,11 +146,7 @@ class GroupRepository extends EntityRepository
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaceId', $workspace->getId());
-        $query->setFirstResult($offset);
-        $query->setMaxResults($limit);
 
-        $paginator = new Paginator($query, true);
-
-        return $paginator;
+        return ($getQuery) ? $query: $query->getResult();
     }
 }
