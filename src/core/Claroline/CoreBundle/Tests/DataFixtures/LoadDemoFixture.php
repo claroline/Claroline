@@ -3,10 +3,13 @@
 namespace Claroline\CoreBundle\Tests\DataFixtures;
 
 use Doctrine\Common\DataFixtures\ReferenceRepository;
-use Claroline\CoreBundle\Library\Fixtures\LoggableFixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\DataFixtures\AbstractFixture;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Claroline\CoreBundle\Library\Fixtures\LoggableFixture;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\ForumBundle\Tests\DataFixtures\LoadForumData;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadUserData;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadGroupData;
@@ -96,10 +99,11 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
             )
         );
 
-        $this->addUsersToWorkspace($this->getReference('workspace/Cours 1'));
-        $this->addUsersToWorkspace($this->getReference('workspace/Cours 2'));
-        $this->addUsersToWorkspace($this->getReference('workspace/Cours 3'));
-        $this->addUsersToWorkspace($this->getReference('workspace/Cours 4'));
+        $jane = $this->getReference('user/Jane Doe');
+        $this->addUsersToWorkspace($this->getReference('workspace/Cours 1'), $jane);
+        $this->addUsersToWorkspace($this->getReference('workspace/Cours 2'), $jane);
+        $this->addUsersToWorkspace($this->getReference('workspace/Cours 3'), $jane);
+        $this->addUsersToWorkspace($this->getReference('workspace/Cours 4'), $jane);
 
         $this->loadFixture(
             new LoadDirectoryData(
@@ -164,7 +168,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         $this->createActivities();
     }
 
-    private function loadFixture($fixture)
+    private function loadFixture(AbstractFixture $fixture)
     {
         $fixture->setReferenceRepository($this->referenceRepo);
         $fixture->setContainer($this->getContainer());
@@ -182,9 +186,9 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         $this->addReference('role/admin', $adminRole);
     }
 
-    private function addUsersToWorkspace($workspace)
+    private function addUsersToWorkspace(AbstractWorkspace $workspace, User $excludedUser)
     {
-        $users = $this->manager->getRepository('ClarolineCoreBundle:User')->findAll();
+        $users = $this->manager->getRepository('ClarolineCoreBundle:User')->findAllExcept($excludedUser);
         $groups = $this->manager->getRepository('ClarolineCoreBundle:Group')->findAll();
         $userKeys = array_rand($users, self::USER_PER_WORKSPACE);
         $groupsKey = array_rand($groups, self::GROUP_PER_WORKSPACE);
