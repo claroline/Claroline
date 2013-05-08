@@ -169,24 +169,6 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testDisplayUnregisteredUserList()
-    {
-        $this->loadUserData(array('user' => 'user'));
-        $pwuId = $this->getUser('user')->getPersonalWorkspace()->getId();
-        $this->logUser($this->getUser('user'));
-        $this->client->request('GET', "/workspaces/tool/user_management/{$pwuId}/users/unregistered");
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testUserCantAccessUnregisteredUserList()
-    {
-        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $pwaId = $this->getUser('admin')->getPersonalWorkspace()->getId();
-        $this->logUser($this->getUser('user'));
-        $this->client->request('GET', "/workspaces/tool/user_management/{$pwaId}/users/unregistered");
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
     public function testDisplayUserParameters()
     {
         $this->loadUserData(array('user' => 'user'));
@@ -206,24 +188,6 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $userId = $this->getUser('user')->getId();
         $this->logUser($this->getUser('user'));
         $this->client->request('GET', "/workspaces/tool/user_management/{$pwaId}/user/{$userId}");
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testDisplayGroupManagement()
-    {
-        $this->loadUserData(array('user' => 'user'));
-        $pwuId = $this->getUser('user')->getPersonalWorkspace()->getId();
-        $this->logUser($this->getUser('user'));
-        $this->client->request('GET', "/workspaces/{$pwuId}/open/tool/group_management");
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testUserCantAccessUnregisteredGroupManagement()
-    {
-        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $pwaId = $this->getUser('admin')->getPersonalWorkspace()->getId();
-        $this->logUser($this->getUser('user'));
-        $this->client->request('GET', "/workspaces/{$pwaId}/open/tool/group_management");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 

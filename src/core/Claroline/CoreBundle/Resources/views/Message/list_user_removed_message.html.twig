@@ -1,8 +1,0 @@
-{% for userMessage in userMessages %}
-    <tr class="row-user-message">
-        <td>{{ userMessage.getMessage().getDate()|date('d-m-Y') }}</td>
-        <td>{{ userMessage.getMessage().getSenderUsername() }}</td>
-        <td><a href="{{ path('claro_message_show', {'messageId': userMessage.getMessage().getId()}) }}">{{ userMessage.getMessage().getObject() }}</a></td>
-        <td><input class="chk-delete" value="{{ userMessage.getId() }}" type="checkbox"></input></td>
-    </tr>
-{% endfor %}
