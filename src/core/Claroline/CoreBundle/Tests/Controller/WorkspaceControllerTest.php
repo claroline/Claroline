@@ -191,24 +191,6 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testDisplayUnregisteredGroupList()
-    {
-        $this->loadUserData(array('user' => 'user'));
-        $this->logUser($this->getUser('user'));
-        $pwuId = $this->getUser('user')->getPersonalWorkspace()->getId();
-        $this->client->request('GET', "/workspaces/tool/group_management/{$pwuId}/groups/unregistered");
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testUserCantAccessUnregisteredGroupList()
-    {
-        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $this->logUser($this->getUser('user'));
-        $pwaId = $this->getUser('admin')->getPersonalWorkspace()->getId();
-        $this->client->request('GET', "/workspaces/tool/group_management/{$pwaId}/groups/unregistered");
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
     public function testWSCreatorCantCreateTwoWSWithSameCode()
     {
         $this->loadUserData(array('ws_creator' => 'ws_creator'));
