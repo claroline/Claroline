@@ -1,10 +1,8 @@
 (function () {
     var stackedRequests = 0;
     var env = $('#sf-environement').attr('data-env');
-    
+
     $.ajaxSetup({
-        headers: {'X_Requested_With': 'XMLHttpRequest'},
-        context: this,
         beforeSend: function () {
             stackedRequests++;
             $('.please-wait').show();
