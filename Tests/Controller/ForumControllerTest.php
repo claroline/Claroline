@@ -20,7 +20,7 @@ class ForumControllerTest extends FunctionalTestCase
             ->findCollaboratorRole($this->getWorkspace('user'));
         $this->client->followRedirects();
     }
-/*
+
     public function testSubjects()
     {
         $this->loadFixture(new LoadOptionsData());
@@ -39,7 +39,7 @@ class ForumControllerTest extends FunctionalTestCase
         );
         $this->assertEquals(1, count($crawler->filter('.row-subject')));
     }
-*/
+
     public function testMessages()
     {
         $this->loadFixture(new LoadOptionsData());
