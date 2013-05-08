@@ -46,14 +46,10 @@ class ToolListener
     public function onDisplayWorkspaceUserManagement(DisplayToolEvent $event)
     {
         $workspaceId = $event->getWorkspace()->getId();
-
-        $route = $this->container->get('router')->generate(
-            'claro_workspace_registered_user_list',
-            array('workspaceId' => $workspaceId)
-        );
-
-        $redirectResponse = new RedirectResponse($route);
-        $event->setContent(($redirectResponse->getContent()));
+        $httpKernel = $this->container->get('http_kernel');
+        $response = $httpKernel->forward('ClarolineCoreBundle:Tool\User:registeredUsersList',
+            array('workspaceId' => $workspaceId, 'page' => 1, 'search' => ''));
+        $event->setContent(($response->getContent()));
     }
 
     /**
@@ -64,14 +60,10 @@ class ToolListener
     public function onDisplayWorkspaceGroupManagement(DisplayToolEvent $event)
     {
         $workspaceId = $event->getWorkspace()->getId();
-
-        $route = $this->container->get('router')->generate(
-            'claro_workspace_registered_group_list',
-            array('workspaceId' => $workspaceId)
-        );
-
-        $redirectResponse = new RedirectResponse($route);
-        $event->setContent(($redirectResponse->getContent()));
+        $httpKernel = $this->container->get('http_kernel');
+        $response = $httpKernel->forward('ClarolineCoreBundle:Tool\Group:registeredGroupsList',
+            array('workspaceId' => $workspaceId, 'page' => 1, 'search' => ''));
+        $event->setContent(($response->getContent()));
     }
 
     /**
