@@ -7,6 +7,7 @@ use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Form\MessageType;
 use Claroline\ForumBundle\Form\SubjectType;
 use Claroline\ForumBundle\Form\ForumOptionsType;
+use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -35,6 +36,7 @@ class ForumController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $forum = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($forumId);
+        $this->checkAccess($forum);
         $limits = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
         $limit = $limits[0]->getSubjects();
         $query = $em->getRepository('ClarolineForumBundle:Forum')->findSubjects($forum, true);
@@ -64,9 +66,11 @@ class ForumController extends Controller
      */
     public function forumSubjectCreationFormAction($forumId)
     {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $forum = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($forumId);
+        $this->checkAccess($forum);
         $formSubject = $this->get('form.factory')->create(new SubjectType());
-        $workspace = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+        $workspace = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($forumId)
             ->getWorkspace();
 
@@ -99,6 +103,7 @@ class ForumController extends Controller
         $form->bindRequest($this->get('request'));
         $em = $this->getDoctrine()->getManager();
         $forum = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($forumId);
+        $this->checkAccess($forum);
 
         if ($form->isValid()) {
             $user = $this->get('security.context')->getToken()->getUser();
@@ -150,6 +155,8 @@ class ForumController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $subject = $em->getRepository('ClarolineForumBundle:Subject')->find($subjectId);
+        $forum = $subject->getForum();
+        $this->checkAccess($forum);
         $limits = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
         $limit = $limits[0]->getMessages();
         $query = $em->getRepository('ClarolineForumBundle:Message')->findBySubject($subject, true);
@@ -183,6 +190,8 @@ class ForumController extends Controller
         $form = $this->get('form.factory')->create(new MessageType());
         $em = $this->getDoctrine()->getManager();
         $subject = $em->getRepository('ClarolineForumBundle:Subject')->find($subjectId);
+        $forum = $subject->getForum();
+        $this->checkAccess($forum);
 
         return $this->render(
             'ClarolineForumBundle::message_form.html.twig',
@@ -210,6 +219,8 @@ class ForumController extends Controller
         $form->bindRequest($this->get('request'));
         $em = $this->getDoctrine()->getManager();
         $subject = $em->getRepository('ClarolineForumBundle:Subject')->find($subjectId);
+        $forum = $subject->getForum();
+        $this->checkAccess($forum);
 
         if ($form->isValid()) {
             $message = $form->getData();
@@ -261,5 +272,14 @@ class ForumController extends Controller
             'ClarolineForumBundle::plugin_options_form.html.twig',
             array('form' => $form->createView())
         );
+    }
+
+    private function checkAccess($forum)
+    {
+        $collection = new ResourceCollection(array($forum));
+
+        if (!$this->get('security.context')->isGranted('OPEN', $collection)) {
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
+        }
     }
 }
