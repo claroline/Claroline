@@ -92,7 +92,12 @@
                         <td>{{ user.lastname }}</td>
                         <td>{{ user.firstname }}</td>
                         <td>{{ user.mail }}</td>
-                        <td>{% for role in user.roles %} {{ role }}, {% endfor %}</td>
+                        <td>{% for role in user.getEntityRoles() %}
+                            {% if role.getWorkspace() == workspace %}
+                                {{ role.getTranslationKey()|trans({}, 'platform') }} {% if not loop.last %},{% endif %}
+                            {% endif %}
+                            {% endfor %}
+                        </td>
                         <td>
                             <button href="#" data-user-id="{{ user.id }}" class="button-parameters-user btn btn-secondary">{{ 'parameters'|trans({}, 'platform') }}</button>
                         </td>

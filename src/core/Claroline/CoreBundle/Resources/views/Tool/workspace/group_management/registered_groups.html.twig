@@ -83,7 +83,13 @@
                 {% for group in pager.currentPageResults %}
                 <tr class="row-group" data-group-id={{ group.id }}>
                     <td align="center">{{ group.name }}</td>
-                    <td align="center">{% for role in group.roles %} {{ role }}, {% endfor %}</td>
+                    <td align="center">
+                    {% for role in group.getEntityRoles() %}
+                        {% if role.getWorkspace() == workspace %}
+                            {{ role.getTranslationKey()|trans({}, 'platform') }} {% if not loop.last %},{% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    </td>
                     <td>
                         <button class="btn btn-secondary button-parameters-group">{{ 'parameters'|trans({}, 'platform') }}</button>
                     </td>
