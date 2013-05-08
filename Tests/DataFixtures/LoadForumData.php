@@ -53,9 +53,6 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
         }
 
         $collaborators = $em->getRepository('ClarolineCoreBundle:User')->findByWorkspace($root->getWorkspace());
-        $collaborators = $this->getContainer()
-            ->get('claroline.utilities.paginator_parser')
-            ->paginatorToArray($collaborators);
         $maxOffset = count($collaborators);
         $this->log("collaborators found: ".count($collaborators));
         $maxOffset--;
