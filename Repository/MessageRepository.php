@@ -7,7 +7,7 @@ use Claroline\ForumBundle\Entity\Subject;
 
 class MessageRepository extends EntityRepository
 {
-    public function findBySubject($subject, $offset = null, $limit = null)
+    public function findBySubject($subject, $getQuery = false)
     {
         $dql = "
             SELECT m, u FROM Claroline\ForumBundle\Entity\Message m
@@ -17,11 +17,7 @@ class MessageRepository extends EntityRepository
 
         $query = $this->_em->createQuery($dql);
 
-        $query->getResult();
-        $query->setMaxResults($limit);
-        $query->setFirstResult($offset);
-
-        return $query->getResult();
+        return ($getQuery) ? $query: $query->getResult();
     }
 
     public function findInitialBySubject($subjectId)

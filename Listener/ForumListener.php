@@ -64,7 +64,7 @@ class ForumListener extends ContainerAware
     {
         $route = $this->container
             ->get('router')
-            ->generate('claro_forum_open', array('resourceId' => $event->getResource()->getId()));
+            ->generate('claro_forum_subjects', array('forumId' => $event->getResource()->getId()));
         $event->setResponse(new RedirectResponse($route));
         $event->stopPropagation();
     }
