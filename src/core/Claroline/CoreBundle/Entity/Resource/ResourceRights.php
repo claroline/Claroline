@@ -41,14 +41,6 @@ class ResourceRights
     private $resource;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
-     *     cascade={"persist"}
-     * )
-     */
-    private $workspace;
-
-    /**
      * @ORM\Column(type="boolean", name="can_delete")
      */
     protected $canDelete;
@@ -118,16 +110,6 @@ class ResourceRights
     public function setResource(AbstractResource $resource)
     {
         $this->resource = $resource;
-    }
-
-    public function setWorkspace(AbstractWorkspace $workspace)
-    {
-        $this->workspace = $workspace;
-    }
-
-    public function getWorkspace()
-    {
-        return $this->workspace;
     }
 
     public function canDelete()
