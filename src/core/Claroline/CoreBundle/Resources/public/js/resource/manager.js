@@ -485,7 +485,6 @@
                             type: 'POST',
                             processData: false,
                             contentType: false,
-                            context: this,
                             success: function (form) {
                                 this.views.form.render(
                                     form,
@@ -628,6 +627,12 @@
                 callback = _.bind(callback, this);
                 this.dispatcher.on(event, callback);
             }, this);
+            this.stackedRequests = 0;
+            $.ajaxSetup({
+                headers: {'X_Requested_With': 'XMLHttpRequest'},
+                context: this
+            });
+
             if (!parameters.isPickerOnly) {
                 this.displayResources = _.bind(this.displayResources, this);
                 this.router = new manager.Router(this.parameters.directoryId, this.displayResources);
@@ -643,7 +648,6 @@
             view = view && view === 'picker' ? view : 'main';
             var isSearchMode = searchParameters ? true : false;
             $.ajax({
-                context: this,
                 url: this.parameters.appPath + '/resource/' +
                     (isSearchMode ? 'filter' : 'directory') +
                     '/' + directoryId,
@@ -698,7 +702,6 @@
                 }
 
                 $.ajax({
-                    context: this,
                     url: this.parameters.appPath + urlMap[type],
                     success: function (form) {
                         this.views.form.render(form, resource.id, type);
@@ -713,7 +716,6 @@
         },
         create: function (formAction, formData, parentDirectoryId) {
             $.ajax({
-                context: this,
                 url: formAction,
                 data: formData,
                 type: 'POST',
@@ -730,7 +732,6 @@
         },
         createShortcut: function (resourceIds, parentId) {
             $.ajax({
-                context: this,
                 url: this.parameters.appPath + '/resource/shortcut/' +  parentId + '/create',
                 data: {ids: resourceIds},
                 success: function (data) {
@@ -740,7 +741,6 @@
         },
         remove: function (resourceIds) {
             $.ajax({
-                context: this,
                 url: this.parameters.appPath + '/resource/delete',
                 data: {ids: resourceIds},
                 success: function () {
@@ -750,7 +750,6 @@
         },
         copy: function (resourceIds, directoryId) {
             $.ajax({
-                context: this,
                 url: this.parameters.appPath + '/resource/copy/' + directoryId,
                 data: {ids: resourceIds},
                 success: function (data, textStatus, jqXHR) {
@@ -762,7 +761,6 @@
         },
         move: function (resourceIds, newParentDirectoryId) {
             $.ajax({
-                context: this,
                 url: this.parameters.appPath + '/resource/move/' + newParentDirectoryId,
                 data: {ids: resourceIds},
                 success: function (data) {
@@ -772,7 +770,6 @@
         },
         rename: function (formAction, formData, resourceId) {
             $.ajax({
-                context: this,
                 url: formAction,
                 data: formData,
                 type: 'POST',
@@ -793,7 +790,6 @@
         },
         editProperties: function (formAction, formData, resourceId) {
             $.ajax({
-                context: this,
                 url: formAction,
                 data: formData,
                 type: 'POST',
@@ -830,7 +826,6 @@
         },
         editRights: function (formAction, formData) {
             $.ajax({
-                context: this,
                 url: formAction,
                 data: formData,
                 type: 'POST',
@@ -843,7 +838,6 @@
         },
         editCreationRights: function (action, formData) {
             $.ajax({
-                context: this,
                 url: action,
                 data: formData,
                 type: 'POST',
