@@ -80,10 +80,8 @@ class ResourceRightsRepository extends EntityRepository
             FROM Claroline\CoreBundle\Entity\Resource\ResourceRights rights
             JOIN rights.resource resource
             JOIN rights.role role
-            JOIN rights.workspace workspace
             WHERE resource.id = {$resource->getId()}
             AND role.name != 'ROLE_ADMIN'
-            AND resource.workspace = workspace
             ORDER BY role.name
         ";
 

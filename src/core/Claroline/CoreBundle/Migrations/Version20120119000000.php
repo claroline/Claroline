@@ -772,7 +772,6 @@ class Version20120119000000 extends BundleMigration
         $this->addId($table);
         $table->addColumn('resource_id', 'integer');
         $table->addColumn('role_id', 'integer');
-        $table->addColumn('workspace_id', 'integer');
         $table->addColumn('can_delete', 'boolean');
         $table->addColumn('can_open', 'boolean');
         $table->addColumn('can_edit', 'boolean');
@@ -791,14 +790,8 @@ class Version20120119000000 extends BundleMigration
             array('id'),
             array('onDelete' => 'CASCADE')
         );
-        $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_workspace'),
-            array('workspace_id'),
-            array('id'),
-            array('onDelete' => 'CASCADE')
-        );
 
-        $table->addUniqueIndex(array('resource_id', 'role_id', 'workspace_id'));
+        $table->addUniqueIndex(array('resource_id', 'role_id'));
 
         $this->storeTable($table);
     }
