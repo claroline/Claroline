@@ -5,10 +5,13 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\CoreBundle\Entity\Message;
 use Claroline\CoreBundle\Entity\UserMessage;
 use Claroline\CoreBundle\Form\MessageType;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class MessageController extends Controller
 {
@@ -171,103 +174,124 @@ class MessageController extends Controller
 
     /**
      * @Route(
-     *     "/list/received",
-     *     name="claro_message_list_received_layout"
+     *     "/received/page/{page}",
+     *     name="claro_message_list_received",
+     *     options={"expose"=true},
+     *     defaults={"page"=1, "search"=""}
      * )
      *
-     * Displays the layout of the received message list.
+     * @Method("GET")
+     *
+     * @Route(
+     *     "/received/page/{page}/search/{search}",
+     *     name="claro_message_list_received_search",
+     *     options={"expose"=true},
+     *     defaults={"page"=1}
+     * )
+     *
+     * @Method("GET")
+     *
+     * @Template()
+     *
+     * Displays received message list.
      *
      * @return Response
      */
-    public function listReceivedLayoutAction()
+    public function listReceivedAction($page, $search)
     {
-        return $this->render('ClarolineCoreBundle:Message:list_received_layout.html.twig');
+        $user = $this->get('security.context')->getToken()->getUser();
+        $repo = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Message');
+        $query = ($search == "") ?
+            $repo->findReceivedByUser($user, false, true):
+            $repo->findReceivedByUserAndObjectAndUsername($user, $search, false, true);
+        $adapter = new DoctrineORMAdapter($query);
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage(20);
+        $pager->setCurrentPage($page);
+
+        return array('pager' => $pager, 'search' => $search);
     }
 
     /**
      * @Route(
-     *     "/list/sent",
-     *     name="claro_message_list_sent_layout"
+     *     "/sent/page/{page}",
+     *     name="claro_message_list_sent",
+     *     options={"expose"=true},
+     *     defaults={"page"=1, "search"=""}
      * )
+     *
+     * @Method("GET")
+     *
+     * @Route(
+     *     "/sent/page/{page}/search/{search}",
+     *     name="claro_message_list_sent_search",
+     *     options={"expose"=true},
+     *     defaults={"page"=1}
+     * )
+     *
+     * @Method("GET")
+     *
+     * @Template()
+     *
      *
      * Displays the layout of the sent message list.
      *
      * @return Response
      */
-    public function listSentLayoutAction()
-    {
-        return $this->render('ClarolineCoreBundle:Message:list_sent_layout.html.twig');
-    }
-
-    /**
-     * @Route(
-     *     "/list/received/{offset}",
-     *     name="claro_message_list_received",
-     *     options={"expose"=true}
-     * )
-     *
-     * Displays a partial list of received message for the current user.
-     * This method is called with ajax and append the result in the layout.
-     *
-     * @param offset the offset
-     *
-     * @return Response
-     */
-    public function listReceivedAction($offset)
+    public function listSentAction($page, $search)
     {
         $user = $this->get('security.context')->getToken()->getUser();
-        $em = $this->get('doctrine.orm.entity_manager');
-        $userMessages = $em->getRepository('ClarolineCoreBundle:Message')
-            ->findReceivedByUser($user, false, $offset, self::MESSAGE_PER_PAGE);
+        $repo = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Message');
+        $query = ($search == "") ?
+            $repo->findSentByUser($user, false, true):
+            $repo->findSentByUserAndObjectAndUsername($user, $search, false, true);
+        $adapter = new DoctrineORMAdapter($query);
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage(20);
+        $pager->setCurrentPage($page);
 
-        return $this->render(
-            'ClarolineCoreBundle:Message:list_user_message.html.twig',
-            array('userMessages' => $userMessages)
-        );
+        return array('pager' => $pager, 'search' => $search);
     }
 
     /**
      * @Route(
-     *     "/list/sent/{offset}",
-     *     name="claro_message_list_sent",
-     *     options={"expose"=true}
+     *     "/removed/page/{page}",
+     *     name="claro_message_list_removed",
+     *     options={"expose"=true},
+     *     defaults={"page"=1, "search"=""}
      * )
      *
-     * Displays a partial list of sent message for the current user.
-     * This method is called with ajax and append the result in the layout.
+     * @Method("GET")
      *
-     * @param offset the offset
+     * @Route(
+     *     "/removed/page/{page}/search/{search}",
+     *     name="claro_message_list_removed_search",
+     *     options={"expose"=true},
+     *     defaults={"page"=1}
+     * )
+     *
+     * @Method("GET")
+     *
+     * @Template()
+     *
+     *
+     * Displays the layout of the sent message list.
      *
      * @return Response
      */
-    public function listSentAction($offset)
+    public function listRemovedAction($page, $search)
     {
         $user = $this->get('security.context')->getToken()->getUser();
-        $em = $this->get('doctrine.orm.entity_manager');
-        $userMessages = $em->getRepository('ClarolineCoreBundle:Message')
-            ->findSentByUser($user, false, $offset, self::MESSAGE_PER_PAGE);
+        $repo = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Message');
+        $query = ($search == "") ?
+            $repo->findRemovedByUser($user, true):
+            $repo->findRemovedByUserAndObjectAndUsername($user, $search, true);
+        $adapter = new DoctrineORMAdapter($query);
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage(20);
+        $pager->setCurrentPage($page);
 
-        return $this->render(
-            'ClarolineCoreBundle:Message:list_message.html.twig',
-            array('userMessages' => $userMessages)
-        );
-    }
-
-    /**
-     * @Route(
-     *     "/list/removed",
-     *     name="claro_message_list_removed_layout"
-     * )
-     *
-     * Displays the layout of the removed message list.
-     *
-     * @return Response
-     */
-    public function listRemovedLayoutAction()
-    {
-        return $this->render(
-            'ClarolineCoreBundle:Message:list_removed_layout.html.twig'
-        );
+        return array('pager' => $pager, 'search' => $search);
     }
 
     /**
@@ -446,117 +470,6 @@ class MessageController extends Controller
         }
 
         return new Response('success', 204);
-    }
-
-    /**
-     * @Route(
-     *     "/list/received/search/{search}/offset/{offset}",
-     *     name="claro_message_list_received_search",
-     *     options={"expose"=true}
-     * )
-     *
-     * Displays a partial list of received message for the current user.
-     * This method is called with ajax and append the result in the layout.
-     *
-     * @param string  $search the search string (will search the object or the username)
-     * @param integer $offset the offset
-     *
-     * @return Response
-     */
-    public function listSearchReceivedAction($search, $offset)
-    {
-        $user = $this->get('security.context')->getToken()->getUser();
-        $em = $this->get('doctrine.orm.entity_manager');
-        $userMessages = $em->getRepository('ClarolineCoreBundle:Message')
-            ->findReceivedByUserAndObjectAndUsername($user, $search, false, $offset, self::MESSAGE_PER_PAGE);
-
-        return $this->render(
-            'ClarolineCoreBundle:Message:list_user_message.html.twig',
-            array('userMessages' => $userMessages)
-        );
-    }
-
-    /**
-     * @Route(
-     *     "/list/sent/search/{search}/offset/{offset}",
-     *     name="claro_message_list_sent_search",
-     *     options={"expose"=true}
-     * )
-     *
-     * Displays a partial list of sent message for the current user.
-     * This method is called with ajax and append the result in the layout.
-     *
-     * @param string  $search the search string (will search the object or the username)
-     * @param integer $offset the offset
-     *
-     * @return Response
-     */
-    public function listSearchSentAction($search, $offset)
-    {
-        $user = $this->get('security.context')->getToken()->getUser();
-        $em = $this->get('doctrine.orm.entity_manager');
-        $userMessages = $em->getRepository('ClarolineCoreBundle:Message')
-            ->findSentByUserAndObjectAndUsername($user, $search, false, $offset, self::MESSAGE_PER_PAGE);
-
-        return $this->render(
-            'ClarolineCoreBundle:Message:list_message.html.twig',
-            array('userMessages' => $userMessages)
-        );
-    }
-
-    /**
-     * @Route(
-     *     "/list/removed/{offset}",
-     *     name="claro_message_list_removed",
-     *     options={"expose"=true}
-     * )
-     *
-     * Displays a partial list of removed message for the current user.
-     * This method is called with ajax and append the result in the layout.
-     *
-     * @param offset the offset
-     *
-     * @return Response
-     */
-    public function listRemovedAction($offset)
-    {
-        $user = $this->get('security.context')->getToken()->getUser();
-        $em = $this->get('doctrine.orm.entity_manager');
-        $userMessages = $em->getRepository('ClarolineCoreBundle:Message')
-            ->findRemovedByUser($user, $offset, self::MESSAGE_PER_PAGE);
-
-        return $this->render(
-            'ClarolineCoreBundle:Message:list_user_removed_message.html.twig',
-            array('userMessages' => $userMessages)
-        );
-    }
-
-    /**
-     * @Route(
-     *     "/list/removed/search/{search}/offset/{offset}",
-     *     name="claro_message_list_removed_search",
-     *     options={"expose"=true}
-     * )
-     *
-     * Displays a partial list of removed message for the current user.
-     * This method is called with ajax and append the result in the layout.
-     *
-     * @param string  $search the search string (will search the object or the username)
-     * @param integer $offset the offset
-     *
-     * @return Response
-     */
-    public function listRemovedSearchAction($search, $offset)
-    {
-        $user = $this->get('security.context')->getToken()->getUser();
-        $em = $this->get('doctrine.orm.entity_manager');
-        $userMessages = $em->getRepository('ClarolineCoreBundle:Message')
-            ->findRemovedByUserAndObjectAndUsername($user, $search, $offset, self::MESSAGE_PER_PAGE);
-
-        return $this->render(
-            'ClarolineCoreBundle:Message:list_user_removed_message.html.twig',
-            array('userMessages' => $userMessages)
-        );
     }
 
     /**

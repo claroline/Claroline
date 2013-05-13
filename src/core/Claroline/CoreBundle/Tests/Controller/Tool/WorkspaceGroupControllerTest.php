@@ -27,14 +27,11 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
 
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($jsonResponse));
-        $this->client->request(
+        $crawler = $this->client->request(
             'GET',
-            "/workspaces/tool/group_management/{$pwu}/groups/0/registered",
-            array(),
-            array(),
-            array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+            "/workspaces/tool/group_management/{$pwu}/groups/registered/page"
         );
-        $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));
+        $this->assertEquals(1, count($crawler->filter('.row-group')));
     }
 
     public function testMultiAddGroupIsProtected()
@@ -63,26 +60,21 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $this->logUser($this->getUser('ws_creator'));
         $wsAId = $this->getWorkspace('ws_a')->getId();
 
-        $this->client->request(
-            'GET', "/workspaces/tool/group_management/{$wsAId}/groups/0/registered",
-            array(),
-            array(),
-            array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+        $crawler = $this->client->request(
+            'GET',
+            "/workspaces/tool/group_management/{$wsAId}/groups/registered/page"
         );
-        $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));
+        $this->assertEquals(1, count($crawler->filter('.row-group')));
         $grAId = $this->getGroup('group_a')->getId();
         $this->client->request(
             'DELETE',
             "/workspaces/tool/group_management/{$wsAId}/groups?ids[]={$grAId}"
         );
-        $this->client->request(
+        $crawler = $this->client->request(
             'GET',
-            "/workspaces/tool/group_management/{$wsAId}/groups/0/registered",
-            array(),
-            array(),
-            array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+            "/workspaces/tool/group_management/{$wsAId}/groups/registered/page"
         );
-        $this->assertEquals(0, count(json_decode($this->client->getResponse()->getContent())));
+        $this->assertEquals(0, count($crawler->filter('.row-group')));
     }
 
     public function testMultiDeleteGroupFromWorkspaceIsProtected()
@@ -159,22 +151,11 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
             array('form' => array('role' => $em->getRepository('ClarolineCoreBundle:Role')
                 ->findManagerRole($this->getWorkspace('ws_a'))->getId()))
         );
-        $this->client->request(
+        $crawler = $this->client->request(
             'GET',
-            "/workspaces/tool/group_management/{$wsAId}/groups/0/registered",
-            array(),
-            array(),
-            array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+            "/workspaces/tool/group_management/{$wsAId}/groups/registered/page"
         );
-        $groups = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(1, count($groups));
-        $managerRole = $this->client->getContainer()
-            ->get('translator')
-            ->trans('manager', array(), 'platform');
-
-        foreach ($groups as $group) {
-            $this->assertContains($managerRole, $group->roles);
-        }
+        $this->assertEquals(1, count($crawler->filter('.row-group')));
     }
 
     public function testLastGroupManagerCantBeEdited()
@@ -226,16 +207,11 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $this->loadGroupData(array('group_a' => array('user')));
         $this->logUser($this->getUser('user'));
         $pwuId = $this->getUser('user')->getPersonalWorkspace()->getId();
-        $this->client->request(
+        $crawler = $this->client->request(
             'GET',
-            "/workspaces/tool/group_management/{$pwuId}/groups/0/unregistered",
-            array(),
-            array(),
-            array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+            "/workspaces/tool/group_management/{$pwuId}/groups/unregistered/page"
         );
-        $response = $this->client->getResponse()->getContent();
-        $groups = json_decode($response);
-        $this->assertEquals(1, count($groups));
+        $this->assertEquals(1, count($crawler->filter('.row-group')));
     }
 
     public function testLimitedGroupListIsProtected()
@@ -243,51 +219,9 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->logUser($this->getUser('user'));
         $pwaId = $this->getUser('admin')->getPersonalWorkspace()->getId();
-        $this->client->request(
+        $crawler = $this->client->request(
             'GET',
-            "/workspaces/tool/group_management/{$pwaId}/groups/0/unregistered",
-            array(),
-            array(),
-            array('HTTP_X-Requested-With' => 'XMLHttpRequest')
-        );
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testPaginatedGroupsOfWorkspace()
-    {
-        $this->loadUserData(
-            array(
-                'user' => 'user',
-                'user_2' => 'user',
-                'ws_creator' => 'ws_creator'
-            )
-        );
-        $this->loadGroupData(array('group_a' => array('user', 'user_2')));
-        $this->loadWorkspaceData(array('ws_a' => 'ws_creator'));
-        $this->addGroupAToWsA();
-        $this->logUser($this->getUser('ws_creator'));
-        $wsAId = $this->getWorkspace('ws_a')->getId();
-        $this->client->request(
-            'GET',
-            "/workspaces/tool/group_management/{$wsAId}/groups/0/registered",
-            array(),
-            array(),
-            array('HTTP_X-Requested-With' => 'XMLHttpRequest')
-        );
-        $this->assertEquals(1, count(json_decode($this->client->getResponse()->getContent())));
-    }
-
-    public function testPaginatedGroupsOfWorkspaceIsProtected()
-    {
-        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $this->logUser($this->getUser('user'));
-        $pwaId = $this->getUser('admin')->getPersonalWorkspace()->getId();
-        $this->client->request(
-            'GET',
-            "/workspaces/tool/group_management/{$pwaId}/groups/0/registered",
-            array(),
-            array(),
-            array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+            "/workspaces/tool/group_management/{$pwaId}/groups/unregistered/page"
         );
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
@@ -298,32 +232,11 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $this->loadGroupData(array('group_a' => array('user', 'user_2')));
         $this->logUser($this->getUser('user'));
         $pwuId = $this->getUser('user')->getPersonalWorkspace()->getId();
-        $this->client->request(
+        $crawler = $this->client->request(
             'GET',
-            "/workspaces/tool/group_management/{$pwuId}/group/search/a/unregistered/0",
-            array(),
-            array(),
-            array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+            "/workspaces/tool/group_management/{$pwuId}/groups/unregistered/page/1/search/a"
         );
-
-        $response = $this->client->getResponse()->getContent();
-        $groups = json_decode($response);
-        $this->assertEquals(1, count($groups));
-    }
-
-    public function testSearchUnregisteredGroupsByNameWithAjaxIsProtected()
-    {
-        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $this->logUser($this->getUser('user'));
-        $pwaId = $this->getUser('admin')->getPersonalWorkspace()->getId();
-        $this->client->request(
-            'GET',
-            "/workspaces/tool/group_management/{$pwaId}/group/search/a/unregistered/0",
-            array(),
-            array(),
-            array('HTTP_X-Requested-With' => 'XMLHttpRequest')
-        );
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(1, count($crawler->filter('.row-group')));
     }
 
     public function testSearchRegisteredGroupsByNameWithAjax()
@@ -341,30 +254,12 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
             array(),
             array('HTTP_X-Requested-With' => 'XMLHttpRequest')
         );
-        $this->client->request(
-            'GET', "/workspaces/tool/group_management/{$wsAId}/group/search/group/registered/0",
-            array(),
-            array(),
-            array('HTTP_X-Requested-With' => 'XMLHttpRequest')
-        );
-        $response = $this->client->getResponse()->getContent();
-        $groups = json_decode($response);
-        $this->assertEquals(1, count($groups));
-    }
-
-    public function testSearchRegisteredGroupsByNameWithAjaxIsProtected()
-    {
-        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $this->logUser($this->getUser('user'));
-        $pwaId = $this->getUser('admin')->getPersonalWorkspace()->getId();
-        $this->client->request(
+        $crawler = $this->client->request(
             'GET',
-            "/workspaces/tool/group_management/{$pwaId}/group/search/group/registered/0",
-            array(),
-            array(),
-            array('HTTP_X-Requested-With' => 'XMLHttpRequest')
+            "/workspaces/tool/group_management/{$wsAId}/groups/registered/page/1/search/a"
         );
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+
+        $this->assertEquals(1, count($crawler->filter('.row-group')));
     }
 
     private function addGroupAToWsA()

@@ -8,6 +8,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleSubscribeEvent;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleUnsubscribeEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -23,27 +25,79 @@ class UserController extends Controller
 
     /**
      * @Route(
-     *     "/{workspaceId}/users/unregistered",
-     *     name="claro_workspace_unregistered_users_list",
-     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$" }
+     *     "/{workspaceId}/users/registered/page/{page}",
+     *     name="claro_workspace_registered_user_list",
+     *     defaults={"page"=1, "search"=""},
+     *     options = {"expose"=true}
      * )
+     *
      * @Method("GET")
      *
-     * Renders the unregistered user list layout for a workspace.
+     * @Route(
+     *     "/{workspaceId}/users/registered/page/{page}/search/{search}",
+     *     name="claro_workspace_registered_user_list_search",
+     *     defaults={"page"=1},
+     *     options = {"expose"=true}
+     * )
      *
-     * @param integer $workspaceId the workspace id
-     *
-     * @return Response
+     * @Method("GET")
      */
-    public function unregiseredUsersListAction($workspaceId)
+    public function registeredUsersListAction($workspaceId, $page, $search)
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+        $this->checkRegistration($workspace);
+        $repo = $em->getRepository('ClarolineCoreBundle:User');
+        $query = ($search == "") ?
+            $repo->findByWorkspace($workspace, true):
+            $repo->findByWorkspaceAndName($workspace, $search, true);
+        $adapter = new DoctrineORMAdapter($query);
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage(20);
+        $pager->setCurrentPage($page);
+
+        return $this->render(
+            'ClarolineCoreBundle:Tool\workspace\user_management:registered_users.html.twig',
+            array('workspace' => $workspace, 'pager' => $pager, 'search' => $search)
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/{workspaceId}/users/unregistered/page/{page}",
+     *     name="claro_workspace_unregistered_user_list",
+     *     defaults={"page"=1, "search"=""},
+     *     options = {"expose"=true}
+     * )
+     *
+     * @Method("GET")
+     *
+     * @Route(
+     *     "/{workspaceId}/users/unregistered/page/{page}/search/{search}",
+     *     name="claro_workspace_unregistered_user_list_search",
+     *     defaults={"page"=1},
+     *     options = {"expose"=true}
+     * )
+     *
+     * @Method("GET")
+     */
+    public function unregiseredUsersListAction($workspaceId, $page, $search)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkRegistration($workspace);
+        $repo = $em->getRepository('ClarolineCoreBundle:User');
+        $query = ($search == "") ?
+            $repo->findWorkspaceOutsiders($workspace, true):
+            $repo->findWorkspaceOutsidersByName($workspace, $search, true);
+        $adapter = new DoctrineORMAdapter($query);
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage(20);
+        $pager->setCurrentPage($page);
 
         return $this->render(
-            'ClarolineCoreBundle:Tool\workspace\user_management:unregistered_user_list_layout.html.twig',
-            array('workspace' => $workspace)
+            'ClarolineCoreBundle:Tool\workspace\user_management:unregistered_users.html.twig',
+            array('workspace' => $workspace, 'pager' => $pager, 'search' => $search)
         );
     }
 
@@ -136,88 +190,6 @@ class UserController extends Controller
 
     /**
      * @Route(
-     *     "/{workspaceId}/user/search/{search}/registered/{offset}",
-     *     name="claro_workspace_search_registered_users",
-     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$", "offset"="^(?=.*[0-9].*$)\d*$"},
-     *     options={"expose"=true}
-     * )
-     * @Method("GET")
-     *
-     * Returns a partial json representation of the registered users of a workspace.
-     * It'll search every users whose name match $search.
-     *
-     * @param string  $search      the search string
-     * @param integer $workspaceId the workspace id
-     * @param integer $offset      the offset
-     *
-     * @return Response
-     */
-    public function searchRegisteredUsersAction($search, $workspaceId, $offset)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
-            ->find($workspaceId);
-        $this->checkRegistration($workspace);
-        // TODO: quick fix (force doctrine to reload only the concerned roles
-        // -- otherwise all the roles loaded by the security context are returned)
-        $em->detach($this->get('security.context')->getToken()->getUser());
-        $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')
-            ->findByWorkspaceAndName(
-                $workspace,
-                $search,
-                $offset,
-                self::NUMBER_USER_PER_ITERATION
-            );
-        $users = $this->paginatorToArray($paginatorUsers);
-        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
-    }
-
-    /**
-     * @Route(
-     *     "/{workspaceId}/user/search/{search}/unregistered/{offset}",
-     *     name="claro_workspace_search_unregistered_users",
-     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$", "offset"="^(?=.*[0-9].*$)\d*$" },
-     *     options={"expose"=true}
-     * )
-     * @Method("GET")
-     *
-     * Returns a partial json representation of the unregistered users of a workspace.
-     * It'll search every users whose name match $search.
-     *
-     * @param string  $search      the search string
-     * @param integer $workspaceId the workspace id
-     * @param integer $offset      the offset
-     *
-     * @return Response
-     */
-    public function searchUnregisteredUsersAction($search, $workspaceId, $offset)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
-            ->find($workspaceId);
-        $this->checkRegistration($workspace);
-        // TODO: quick fix (force doctrine to reload only the concerned roles -
-        // - otherwise all the roles loaded by the security context are returned)
-        $em->detach($this->get('security.context')->getToken()->getUser());
-        $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')
-            ->findWorkspaceOutsidersByName(
-                $search,
-                $workspace,
-                $offset,
-                self::NUMBER_USER_PER_ITERATION
-            );
-        $users = $this->paginatorToArray($paginatorUsers);
-        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
-    }
-
-    /**
-     * @Route(
      *     "/{workspaceId}/add/user",
      *     name="claro_workspace_multiadd_user",
      *     options={"expose"=true},
@@ -262,82 +234,6 @@ class UserController extends Controller
             $this->get('event_dispatcher')->dispatch('log', $log);
         }
 
-        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
-    }
-
-    /**
-     * @Route(
-     *     "/{workspaceId}/users/{offset}/registered",
-     *     name="claro_workspace_registered_users_paginated",
-     *     options={"expose"=true},
-     *     requirements={"workspaceId"="^(?=.*[0-9].*$)\d*$", "offset"="^(?=.*[0-9].*$)\d*$"}
-     * )
-     * @Method("GET")
-     *
-     * Returns a partial json representation of the registered users of a workspace.
-     *
-     * @param integer $workspaceId the workspace id
-     * @param integer $offset      the offset
-     *
-     * @return Response
-     */
-    public function registeredUsersAction($workspaceId, $offset)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
-            ->find($workspaceId);
-        $this->checkRegistration($workspace);
-        // TODO: quick fix (force doctrine to reload only the concerned roles
-        // -- otherwise all the roles loaded by the security context are returned)
-        $em->detach($this->get('security.context')->getToken()->getUser());
-        $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')
-            ->findByWorkspace(
-                $workspace,
-                $offset,
-                self::NUMBER_USER_PER_ITERATION
-            );
-        $users = $this->paginatorToArray($paginatorUsers);
-        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
-    }
-
-    /**
-     * @Route(
-     *     "/{workspaceId}/users/{offset}/unregistered",
-     *     name="claro_workspace_unregistered_users_paginated",
-     *     options={"expose"=true},
-     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$", "offset"="^(?=.*[0-9].*$)\d*$" }
-     * )
-     * @Method("GET")
-     *
-     * Returns a partial json representation of the unregistered users of a workspace.
-     *
-     * @param integer $workspaceId the workspace id
-     * @param integer $offset      the offset
-     *
-     * @return Response
-     */
-    public function unregisteredUsersAction($workspaceId, $offset)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
-            ->find($workspaceId);
-        $this->checkRegistration($workspace);
-        // TODO: quick fix (force doctrine to reload only the concerned roles
-        // -- otherwise all the roles loaded by the security context are returned)
-        $em->detach($this->get('security.context')->getToken()->getUser());
-        $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')
-            ->findWorkspaceOutsiders(
-                $workspace,
-                $offset,
-                self::NUMBER_USER_PER_ITERATION
-            );
-        $users = $this->paginatorToArray($paginatorUsers);
         $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
         $response->headers->set('Content-Type', 'application/json');
 

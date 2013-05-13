@@ -18,12 +18,12 @@ use Claroline\CoreBundle\Library\Event\LogGroupRemoveUserEvent;
 use Claroline\CoreBundle\Library\Event\LogGroupDeleteEvent;
 use Claroline\CoreBundle\Library\Event\LogGroupUpdateEvent;
 use Claroline\CoreBundle\Library\Configuration\UnwritableException;
-use Claroline\CoreBundle\Repository\UserRepository;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
 use Symfony\Component\Form\FormError;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Claroline\CoreBundle\Form\AdminLogFilterType;
-
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * Controller of the platform administration section (users, groups,
@@ -149,209 +149,142 @@ class AdministrationController extends Controller
 
     /**
      * @Route(
-     *     "users",
-     *     name="claro_admin_user_list"
+     *     "users/page/{page}",
+     *     name="claro_admin_user_list",
+           defaults={"page"=1, "search"=""},
+     *     options = {"expose"=true}
      * )
      * @Method("GET")
+     *
+     * @Route(
+     *     "users/page/{page}/search/{search}",
+     *     name="claro_admin_user_list_search",
+     *     defaults={"page"=1},
+     *     options = {"expose"=true}
+     * )
+     * @Method("GET")
+     *
+     * @Template()
      *
      * Displays the platform user list.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function userListAction()
+    public function userListAction($page, $search)
     {
-        return $this->render('ClarolineCoreBundle:Administration:user_list_main.html.twig');
+        $repo = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:User');
+        $query = ($search == "") ? $repo->findAll(true): $repo->findByName($search, true);
+        $adapter = new DoctrineORMAdapter($query);
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage(20);
+        $pager->setCurrentPage($page);
+
+        return array('pager' => $pager, 'search' => $search);
     }
 
     /**
      * @Route(
-     *     "/users/{offset}",
-     *     name="claro_admin_paginated_user_list",
-     *     requirements={"offset"="^(?=.*[0-9].*$)\d*$"},
-     *     options={"expose"=true}
-     * )
-     * @Method("GET")
-     *
-     * Returns the platform users.
-     *
-     * @param $offset
-     *
-     * @return Response
-     */
-    public function usersAction($offset)
-    {
-        $em = $this->getDoctrine()->getManager();
-        // TODO: quick fix (force doctrine to reload only the concerned roles
-        // -- otherwise all the roles loaded by the security context are returned)
-        $em->detach($this->get('security.context')->getToken()->getUser());
-        $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')
-            ->findAll($offset, self::USER_PER_PAGE);
-        $users = $this->paginatorToArray($paginatorUsers);
-        $content = $this->renderView(
-            "ClarolineCoreBundle:Administration:user_list.html.twig",
-            array('users' => $users)
-        );
-        $response = new Response($content);
-
-        return $response;
-    }
-
-    /**
-     * @Route(
-     *     "/users/search/{search}/{offset}",
-     *     name="claro_admin_paginated_search_user_list",
-     *     requirements={"offset"="^(?=.*[0-9].*$)\d*$"},
-     *     options={"expose"=true}
-     * )
-     * @Method("GET")
-     *
-     * Returns the platform users whose name, username or lastname matche $search.
-     *
-     * @param integer $offset
-     * @param string $search
-     *
-     * @return Response
-     */
-    public function searchUsersAction($offset, $search)
-    {
-        $em = $this->getDoctrine()->getManager();
-        // TODO: quick fix (force doctrine to reload only the concerned roles
-        // -- otherwise all the roles loaded by the security context are returned)
-        $em->detach($this->get('security.context')->getToken()->getUser());
-        $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')
-            ->findByName($search, $offset, self::USER_PER_PAGE, UserRepository::PLATEFORM_ROLE);
-        $users = $this->paginatorToArray($paginatorUsers);
-        $content = $this->renderView(
-            "ClarolineCoreBundle:Administration:user_list.html.twig",
-            array('users' => $users)
-        );
-
-        $response = new Response($content);
-
-        return $response;
-    }
-
-    /**
-     * @Route(
-     *     "/group/{groupId}/users/{offset}",
-     *     name="claro_admin_paginated_group_user_list",
+     *     "/groups/page/{page}",
+     *     name="claro_admin_group_list",
      *     options={"expose"=true},
-     *     requirements={"groupId"="^(?=.*[1-9].*$)\d*$", "offset"="^(?=.*[0-9].*$)\d*$"}
+     *     defaults={"page"=1, "search"=""}
      * )
      * @Method("GET")
      *
-     * Returns the group users.
-     *
-     * @param integer $groupId
-     * @param string $offset
-     *
-     * @return Response
-     */
-    // Doesn't work yet due to a sql error from the repository
-    public function usersOfGroupAction($groupId, $offset)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $group = $em->find('ClarolineCoreBundle:Group', $groupId);
-        $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')
-            ->findByGroup($group, $offset, self::USER_PER_PAGE);
-        $users = $this->paginatorToArray($paginatorUsers);
-        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
-    }
-
-    /**
      * @Route(
-     *     "/group/{groupId}/search/{search}/users/{offset}",
-     *     name="claro_admin_paginated_search_group_user_list",
-     *     requirements={"groupId"="^(?=.*[1-9].*$)\d*$", "offset"="^(?=.*[0-9].*$)\d*$"},
-     *     options={"expose"=true}
+     *     "groups/page/{page}/search/{search}",
+     *     name="claro_admin_group_list_search",
+     *     defaults={"page"=1},
+     *     options = {"expose"=true}
      * )
      * @Method("GET")
      *
-     * Returns the group users whose name or username or lastname matches $search.
-     *
-     * @param integer $groupId
-     * @param integer $offset
-     * @param string $search
-     *
-     * @return Response
-     */
-    // Doesn't work yet due to a sql error from the repository
-    public function searchUsersOfGroupAction($groupId, $offset, $search)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $group = $em->find('ClarolineCoreBundle:Group', $groupId);
-        $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')
-            ->findByNameAndGroup($search, $group, $offset, self::USER_PER_PAGE);
-        $users = $this->paginatorToArray($paginatorUsers);
-        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
-    }
-
-    /**
-     * @Route(
-     *     "/groups/{offset}",
-     *     name="claro_admin_paginated_group_list",
-     *     options={"expose"=true},
-     *     requirements={"offset"="^(?=.*[0-9].*$)\d*$"}
-     * )
-     * @Method("GET")
+     * @Template()
      *
      * Returns the platform group list.
-     *
-     * @param integer $offset the offset.
-     *
-     * @return Response.
      */
-    public function groupsAction($offset)
+    public function groupListAction($page, $search)
     {
-        $em = $this->getDoctrine()->getManager();
-        $paginatorGroups = $em->getRepository('ClarolineCoreBundle:Group')
-            ->findAll($offset, self::GROUP_PER_PAGE);
-        $groups = $this->paginatorToArray($paginatorGroups);
-        $content = $this->renderView(
-            "ClarolineCoreBundle:Administration:group_list.html.twig",
-            array('groups' => $groups)
-        );
-        $response = new Response($content);
+        $repo = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Group');
+        $query = ($search == "") ? $repo->findAll(true): $repo->findByName($search, true);
+        $adapter = new DoctrineORMAdapter($query);
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage(20);
+        $pager->setCurrentPage($page);
 
-        return $response;
+        return array('pager' => $pager, 'search' => $search);
     }
 
     /**
      * @Route(
-     *     "/groups/search/{search}/{offset}",
-     *     name="claro_admin_paginated_search_group_list",
-     *     requirements={"offset"="^(?=.*[0-9].*$)\d*$"},
-     *     options={"expose"=true}
+     *     "/group/{groupId}/users/page/{page}",
+     *     name="claro_admin_user_of_group_list",
+     *     options={"expose"=true},
+     *     defaults={"page"=1, "search"=""}
      * )
      * @Method("GET")
      *
-     * Returns the platform group list whose names match $search.
+     * @Route(
+     *     "/group/{groupId}/users/page/{page}/search/{search}",
+     *     name="claro_admin_user_of_group_list_search",
+     *     options={"expose"=true},
+     *     defaults={"page"=1}
+     * )
+     * @Method("GET")
      *
-     * @param $offset the $offset.
-     * @param $search the searched name.
+     * @Template()
      *
-     * @return Response.
+     * Returns the users of a group.
      */
-
-    public function searchGroupsAction($offset, $search)
+    public function usersOfGroupListAction($groupId, $page, $search)
     {
-        $em = $this->getDoctrine()->getManager();
-        $paginatorGroups = $em->getRepository('ClarolineCoreBundle:Group')
-            ->findByName($search, $offset, self::GROUP_PER_PAGE);
-        $groups = $this->paginatorToArray($paginatorGroups);
-        $content = $this->renderView(
-            "ClarolineCoreBundle:Administration:group_list.html.twig",
-            array('groups' => $groups)
-        );
-        $response = new Response($content);
+        $em = $this->get('doctrine.orm.entity_manager');
+        $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
+        $repo = $em->getRepository('ClarolineCoreBundle:User');
+        $query = ($search == "") ?
+            $repo->findByGroup($group, true):
+            $repo->findByNameAndGroup($search, $group, true);
+        $adapter = new DoctrineORMAdapter($query);
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage(20);
+        $pager->setCurrentPage($page);
 
-        return $response;
+        return array('pager' => $pager, 'search' => $search, 'group' => $group);
+    }
+
+    /**
+     * @Route(
+     *     "/group/add/{groupId}/page/{page}",
+     *     name="claro_admin_outside_of_group_user_list",
+     *     options={"expose"=true},
+     *     defaults={"page"=1, "search"=""}
+     * )
+     * @Method("GET")
+     *
+     * @Route(
+     *     "/group/add/{groupId}/page/{page}/search/{search}",
+     *     name="claro_admin_outside_of_group_user_list_search",
+     *     options={"expose"=true},
+     *     defaults={"page"=1}
+     * )
+     * @Method("GET")
+     *
+     * @Template()
+     *
+     * Displays the user list with a control allowing to add them to a group.
+     */
+    public function outsideOfGroupUserListAction($groupId, $page, $search)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
+        $repo = $em->getRepository('ClarolineCoreBundle:User');
+        $query = ($search == "") ?
+            $repo->findGroupOutsiders($group, true):
+            $repo->findGroupOutsidersByName($group, $search, true);
+        $adapter = new DoctrineORMAdapter($query);
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage(20);
+        $pager->setCurrentPage($page);
+
+        return array('pager' => $pager, 'search' => $search, 'group' => $group);
     }
 
     /**
@@ -412,141 +345,6 @@ class AdministrationController extends Controller
 
     /**
      * @Route(
-     *     "/groups",
-     *     name="claro_admin_group_list"
-     * )
-     * @Method("GET")
-     *
-     * Displays the platform group list.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function groupListAction()
-    {
-        $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery('SELECT COUNT(g.id) FROM Claroline\CoreBundle\Entity\Group g');
-        $count = $query->getSingleScalarResult();
-        $pages = ceil($count / self::USER_PER_PAGE);
-
-        return $this->render(
-            'ClarolineCoreBundle:Administration:group_list_main.html.twig',
-            array('pages' => $pages)
-        );
-    }
-
-    /**
-     * @Route(
-     *     "/group/{groupId}",
-     *     name="claro_admin_group_user_list",
-     *     requirements={"groupId"="^(?=.*[0-9].*$)\d*$"}
-     * )
-     * @Method("GET")
-     *
-     * Displays the users of a group.
-     *
-     * @param integer $groupId
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function groupUserListAction($groupId)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
-
-        return $this->render(
-            'ClarolineCoreBundle:Administration:group_user_list_main.html.twig',
-            array('group' => $group)
-        );
-    }
-
-    /**
-     * @Route(
-     *     "/group/add/{groupId}",
-     *     name="claro_admin_user_list_addable_to_group",
-     *     requirements={"groupId"="^(?=.*[0-9].*$)\d*$"},
-     *     options={"expose"=true}
-     * )
-     * @Method("GET")
-     *
-     * Displays the user list with a control allowing to add them to a group.
-     *
-     * @param integer $groupId
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function addUserToGroupLayoutAction($groupId)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
-
-        return $this->render(
-            'ClarolineCoreBundle:Administration:add_user_to_group_main.html.twig',
-            array('group' => $group)
-        );
-    }
-
-    /**
-     * @Route(
-     *     "/group/{groupId}/unregistered/users/{offset}",
-     *     name="claro_admin_groupless_users",
-     *     requirements={"groupId"="^(?=.*[0-9].*$)\d*$", "offset"="^(?=.*[0-9].*$)\d*$"},
-     *     options={"expose"=true}
-     * )
-     * @Method("GET")
-     *
-     * Returns a list of users not registered to the Group $group.
-     *
-     * @param integer $groupId
-     * @param integer $offset
-     *
-     * @return Response
-     */
-    public function grouplessUsersAction($groupId, $offset)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $group = $em->find('ClarolineCoreBundle:Group', $groupId);
-        $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')
-            ->findGroupOutsiders($group, $offset, self::USER_PER_PAGE);
-        $users = $this->paginatorToArray($paginatorUsers);
-        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
-    }
-
-    /**
-     * @Route(
-     *     "/group/{groupId}/unregistered/users/{offset}/search/{search}",
-     *     name="claro_admin_search_groupless_users",
-     *     requirements={"offset"="^(?=.*[0-9].*$)\d*$", "groupId"="^(?=.*[1-9].*$)\d*$"},
-     *     options={"expose"=true}
-     * )
-     * @Method("GET")
-     *
-     * Returns a list of users not registered to the Group $group whose username, firstname
-     * or lastname matches $search.
-     *
-     * @param integer search
-     * @param integer $group
-     * @param integer $offset
-     *
-     * @return Response
-     */
-    public function searchGrouplessUsersAction($groupId, $search, $offset)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $group = $em->find('ClarolineCoreBundle:Group', $groupId);
-        $paginatorUsers = $em->getRepository('ClarolineCoreBundle:User')
-            ->findGroupOutsidersByName($group, $search, $offset, self::USER_PER_PAGE);
-        $users = $this->paginatorToArray($paginatorUsers);
-        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
-    }
-
-    /**
-     * @Route(
      *     "/group/{groupId}/users",
      *     name="claro_admin_multiadd_user_to_group",
      *     requirements={"groupId"="^(?=.*[0-9].*$)\d*$"},
@@ -588,14 +386,7 @@ class AdministrationController extends Controller
             $this->get('event_dispatcher')->dispatch('log', $log);
         }
 
-        $content = $this->renderView(
-            'ClarolineCoreBundle:model:users.json.twig',
-            array('users' => $users)
-        );
-        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeUsers($users));
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
+        return new Response('success', 204);
     }
 
     /**
