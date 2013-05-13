@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Group;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -125,7 +126,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
     }
 
-    public function findWorkspaceOutsidersByName($search, AbstractWorkspace $workspace, $offset = null, $limit = null)
+    public function findWorkspaceOutsidersByName(AbstractWorkspace $workspace, $search, $getQuery = false)
     {
         $upperSearch = strtoupper($search);
 
@@ -151,16 +152,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('id', $workspace->getId())
-            ->setParameter('search', "%{$upperSearch}%")
-            ->setFirstResult($offset)
-            ->setMaxResults($limit);
+            ->setParameter('search', "%{$upperSearch}%");
 
-        $paginator = new Paginator($query, true);
-
-        return $paginator;
+        return ($getQuery) ? $query: $query->getResult();
     }
 
-    public function findWorkspaceOutsiders(AbstractWorkspace $workspace, $offset = null, $limit = null)
+    public function findWorkspaceOutsiders(AbstractWorkspace $workspace, $getQuery = false)
     {
         $dql = "
             SELECT u, ws, r FROM Claroline\CoreBundle\Entity\User u
@@ -180,16 +177,13 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('id', $workspace->getId());
-        $query->setMaxResults($limit);
-        $query->setFirstResult($offset);
-        $paginator = new Paginator($query, true);
 
-        return $paginator;
+        return ($getQuery) ? $query: $query->getResult();
     }
 
-    public function findAll($offset = null, $limit = null)
+    public function findAll($getQuery = false)
     {
-        if ($offset !== null || $limit != null) {
+        if ($getQuery) {
             $dql = 'SELECT u, r, pws from Claroline\CoreBundle\Entity\User u
                         JOIN u.roles r WITH r IN (
                         SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = '.Role::BASE_ROLE.'
@@ -199,18 +193,21 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             //the join on role is required because this method is only fired in the administration
             //and we only want the platform roles of a user.
 
-            $query = $this->_em->createQuery($dql)
-                ->setFirstResult($offset)
-                ->setMaxResults($limit);
-            $paginator = new Paginator($query, true);
+            return $this->_em->createQuery($dql);
 
-            return $paginator;
-        } else {
-            return parent::findAll();
         }
+
+        return parent::findAll();
     }
 
-    protected function findByNameQuery($search, $offset = null, $limit = null)
+    /**
+     * Search users whose firstname, lastname or username
+     * match $search.
+     *
+     * @param string $search
+     * @param boolean $getQuery
+     */
+    public function findByName($search, $getQuery = false)
     {
         $upperSearch = strtoupper($search);
         $upperSearch = trim($upperSearch);
@@ -228,31 +225,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         ";
 
         $query = $this->_em->createQuery($dql)
-              ->setParameter('search', "%{$upperSearch}%")
-              ->setFirstResult($offset)
-              ->setMaxResults($limit);
+              ->setParameter('search', "%{$upperSearch}%");
 
-        return $query;
+        return ($getQuery) ? $query: $query->getResult();
     }
 
-    /**
-     * Search users whose firstname, lastname or username
-     * match $search.
-     *
-     * @param string $search
-     * @param integer $offset
-     * @param integer $limit
-     *
-     * @return \Doctrine\ORM\Tools\Pagination\Paginator
-     */
-    public function findByName($search, $offset = null, $limit = null)
-    {
-        $paginator = new Paginator($this->findByNameQuery($search, $offset, $limit), true);
-
-        return $paginator;
-    }
-
-    public function findByGroup(Group $group, $offset = null, $limit = null)
+    public function findByGroup(Group $group, $getQuery = false)
     {
         $dql = "
             SELECT DISTINCT u, g, pw, r from Claroline\CoreBundle\Entity\User u
@@ -265,15 +243,11 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('groupId', $group->getId());
-        $query->setFirstResult($offset);
-        $query->setMaxResults($limit);
 
-        $paginator = new Paginator($query, true);
-
-        return $paginator;
+        return ($getQuery) ? $query: $query->getResult();
     }
 
-    public function findByNameAndGroup($search, Group $group, $offset = null, $limit = null)
+    public function findByNameAndGroup($search, Group $group, $getQuery = false)
     {
         $upperSearch = strtoupper($search);
 
@@ -293,16 +267,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         $query = $this->_em->createQuery($dql)
             ->setParameter('search', "%{$upperSearch}%")
-            ->setParameter('groupId', $group->getId())
-            ->setFirstResult($offset)
-            ->setMaxResults($limit);
+            ->setParameter('groupId', $group->getId());
 
-        $paginator = new Paginator($query, true);
-
-        return $paginator;
+        return ($getQuery) ? $query: $query->getResult();
     }
 
-    public function findByWorkspace(AbstractWorkspace $workspace, $offset = null, $limit = null)
+    public function findByWorkspace(AbstractWorkspace $workspace, $getQuery = false)
     {
         $dql = "
             SELECT wr, u, ws from Claroline\CoreBundle\Entity\User u
@@ -315,15 +285,11 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaceId', $workspace->getId());
-        $query->setFirstResult($offset);
-        $query->setMaxResults($limit);
 
-        $paginator = new Paginator($query, true);
-
-        return $paginator;
+        return ($getQuery) ? $query: $query->getResult();
     }
 
-    public function findByWorkspaceAndName(AbstractWorkspace $workspace, $search, $offset = null, $limit = null)
+    public function findByWorkspaceAndName(AbstractWorkspace $workspace, $search, $getQuery = false)
     {
         $upperSearch = strtoupper($search);
 
@@ -343,13 +309,9 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaceId', $workspace->getId())
-              ->setParameter('search', "%{$upperSearch}%")
-              ->setFirstResult($offset)
-              ->setMaxResults($limit);
+              ->setParameter('search', "%{$upperSearch}%");
 
-        $paginator = new Paginator($query, true);
-
-        return $paginator;
+        return ($getQuery) ? $query: $query->getResult();
     }
 
     /**
@@ -361,7 +323,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      *
      * @return \Doctrine\ORM\Tools\Pagination\Paginator
      */
-    public function findGroupOutsiders(Group $group, $offset = null, $limit = null)
+    public function findGroupOutsiders(Group $group, $getQuery = false)
     {
         $dql = "
             SELECT DISTINCT u, ws, r FROM Claroline\CoreBundle\Entity\User u
@@ -377,16 +339,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         ";
 
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('groupId', $group->getId())
-              ->setFirstResult($offset)
-              ->setMaxResults($limit);
+        $query->setParameter('groupId', $group->getId());
 
-        $paginator = new Paginator($query, true);
-
-        return $paginator;
+        return ($getQuery) ? $query: $query->getResult();
     }
 
-    public function findGroupOutsidersByName(Group $group, $search, $offset = null, $limit = null)
+    public function findGroupOutsidersByName(Group $group, $search, $getQuery = false)
     {
         $search = strtoupper($search);
 
@@ -417,13 +375,22 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('groupId', $group->getId())
-              ->setParameter('search', "%{$search}%")
-              ->setFirstResult($offset)
-              ->setMaxResults($limit);
+              ->setParameter('search', "%{$search}%");
 
-        $paginator = new Paginator($query, true);
+        return ($getQuery) ? $query: $query->getResult();
+    }
 
-        return $paginator;
+    public function findAllExcept(User $excludedUser)
+    {
+        $dql = '
+            SELECT u FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.id <> :userId
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('userId', $excludedUser->getId());
+
+        return $query->getResult();
     }
 
     public function count()

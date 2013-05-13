@@ -249,7 +249,6 @@ class Manager
             $rc->setRole($resourceRight->getRole());
             $rc->setResource($children);
             $rc->setRightsFrom($resourceRight);
-            $rc->setWorkspace($resourceRight->getWorkspace());
 
             if ($children->getResourceType()->getName() === 'directory') {
                 $rc->setCreatableResourceTypes($resourceRight->getCreatableResourceTypes()->toArray());
@@ -383,7 +382,6 @@ class Manager
                 $permissions['canExport'],
                 $role,
                 $resource,
-                $workspace,
                 $resourceTypes
             );
         }
@@ -392,7 +390,6 @@ class Manager
             false, false, false, false, false,
             $roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
             $resource,
-            $workspace,
             array()
         );
 
@@ -402,7 +399,6 @@ class Manager
             true, true, true, true, true,
             $roleRepo->findOneBy(array('name' => 'ROLE_ADMIN')),
             $resource,
-            $workspace,
             $resourceTypes
         );
     }
@@ -429,7 +425,6 @@ class Manager
         $canExport,
         Role $role,
         AbstractResource $resource,
-        AbstractWorkspace $workspace,
         array $resourceTypes
     )
     {
@@ -441,7 +436,6 @@ class Manager
         $rights->setCanExport($canExport);
         $rights->setRole($role);
         $rights->setResource($resource);
-        $rights->setWorkspace($workspace);
         $rights->setCreatableResourceTypes($resourceTypes);
         $this->em->persist($rights);
     }
