@@ -7,4 +7,8 @@
     <div class="text-center">
         <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.id, 'toolName': 'logs'}) }}"> {{ 'See all'|trans({}, 'platform') }} </a>
     </div>
+{% else %}
+    <div class="text-center">
+        <a href="{{ path('claro_desktop_open_tool', {'toolName': 'logs'}) }}"> {{ 'See all'|trans({}, 'platform') }} </a>
+    </div>
 {% endif %}

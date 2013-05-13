@@ -27,7 +27,6 @@ class LogWidgetListener
      *     "logManager"         = @DI\Inject("claroline.log.manager"),
      *     "context"    = @DI\Inject("security.context"),
      *     "twig"       = @DI\Inject("templating"),
-     *     "utils"      = @DI\Inject("claroline.security.utilities"),
      *     "ed"         = @DI\Inject("event_dispatcher")
      * })
      *
@@ -40,7 +39,6 @@ class LogWidgetListener
         $this->logManager = $logManager;
         $this->securityContext = $context;
         $this->twig = $twig;
-        $this->utils = $utils;
         $this->ed = $ed;
     }
 
