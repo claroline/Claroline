@@ -23,6 +23,25 @@ class LogRepository extends EntityRepository
 
     private function addActionFilterToQueryBuilder($qb, $action, $actionsRestriction)
     {
+        if ($action == "'resource_all'") {
+            $action = "'resource_create', 'resource_delete', 'resource_update', 'resource_child_update'";
+        } else if ($action == "'ws_role_all'") {
+            $action = "'ws_role_create',
+                'ws_role_delete',
+                'ws_role_update',
+                'ws_role_change_right',
+                'ws_role_subscribe_user',
+                'ws_role_unsubscribe_user',
+                'ws_role_subscribe_group',
+                'ws_role_unsubscribe_group'";
+        } else if ($action == "'group_all'") {
+            $action = "'group_add_user', 'group_create', 'group_delete', 'group_remove_user', 'group_update'";
+        } else if ($action == "'user_all'") {
+            $action = "'user_create', 'user_delete', 'user_login', 'user_update'";
+        } else if ($action == "'workspace_all'") {
+            $action = "'workspace_create', 'workspace_delete', 'workspace_update'";
+        }
+
         if ($action === null or $action == 'all') {
             $qb->andWhere("log.action IN (".$this->actionsRestrictionToString($actionsRestriction).")");
         } else {

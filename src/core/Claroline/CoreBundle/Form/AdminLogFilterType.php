@@ -19,7 +19,7 @@ class AdminLogFilterType extends AbstractType
                     'choices' => array(
                         'all' => 'all',
                         'group' => array(
-                            "'group_add_user', 'group_create', 'group_delete', 'group_remove_user', 'group_update'" => 'all',
+                            "'group_all'" => 'all',
                             "'group_create'" => 'log_create',
                             "'group_delete'" => 'log_delete',
                             "'group_update'" => 'log_update',
@@ -27,14 +27,14 @@ class AdminLogFilterType extends AbstractType
                             "'group_remove_user'" => 'log_remove_user'
                         ),
                         'user' => array(
-                            "'user_create', 'user_delete', 'user_login', 'user_update'" => 'all',
+                            "'user_all'" => 'all',
                             "'user_create'" => 'log_create',
                             "'user_delete'" => 'log_delete',
                             "'user_update'" => 'log_update',
                             "'user_login'" => 'log_login'
                         ),
                         'workspace' => array(
-                            "'workspace_create', 'workspace_delete', 'workspace_update'" => 'all',
+                            "'workspace_all'" => 'all',
                             "'workspace_create'" => 'log_create',
                             "'workspace_delete'" => 'log_delete',
                             "'workspace_update'" => 'log_update'
