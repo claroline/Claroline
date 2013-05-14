@@ -210,6 +210,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     public function findByName($search, $getQuery = false)
     {
         $upperSearch = strtoupper($search);
+        $upperSearch = trim($upperSearch);
+        $upperSearch = preg_replace('/\s+/', ' ',$upperSearch);
 
         $dql = "
             SELECT u, r, pws FROM Claroline\CoreBundle\Entity\User u
@@ -218,6 +220,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             WHERE UPPER(u.lastName) LIKE :search
             OR UPPER(u.firstName) LIKE :search
             OR UPPER(u.username) LIKE :search
+            OR CONCAT(UPPER(u.firstName), ' ', UPPER(u.lastName)) LIKE :search
+            OR CONCAT(UPPER(u.lastName), ' ', UPPER(u.firstName)) LIKE :search
         ";
 
         $query = $this->_em->createQuery($dql)
@@ -395,5 +399,35 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query = $this->_em->createQuery($dql);
 
         return $query->getSingleScalarResult();
+    }
+
+    /**
+     * extractQuery
+     *
+     * @param array $params
+     * @return Query
+     */
+    public function extractQuery($params)
+    {
+        $search = $params['search'];
+        if ($search !== null) {
+
+            return $this->findByNameQuery($search, 0, 10);
+        }
+
+        return null;
+    }
+
+    /**
+     * extract
+     *
+     * @param array $params
+     * @return DoctrineCollection
+     */
+    public function extract($params)
+    {
+        $query = $this->extractQuery($params);
+        
+        return is_null($query) ? array() : $query->getResult();
     }
 }

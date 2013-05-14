@@ -77,3 +77,22 @@ stof_doctrine_extensions:
 
 parameters:
   security.authentication.listener.anonymous.class: Claroline\CoreBundle\Listener\AnonymousAuthenticationListener
+
+twig:
+    globals:
+        chosenRangeKeys: %chosenRangeKeys%
+    form:
+        resources:
+            - 'ClarolineCoreBundle:Form:date_range.html.twig'
+            - 'ClarolineCoreBundle:Form:two_level_select.html.twig'
+            - 'ClarolineCoreBundle:Form:simple_auto_complete.html.twig'
+
+idci_exporter:
+    entities:
+        user:
+            class: "Claroline\\CoreBundle\\Entity\\User"
+            formats:
+                jsonp:
+                    transformer:
+                        options:
+                            template_name_format: "export.json.twig"
