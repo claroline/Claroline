@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Role;
 
 class ResourceRightsRepository extends EntityRepository
 {
@@ -86,5 +87,10 @@ class ResourceRightsRepository extends EntityRepository
         ";
 
         return $this->_em->createQuery($dql)->getResult();
+    }
+
+    public function findByRole(Role $role)
+    {
+
     }
 }

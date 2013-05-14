@@ -16,11 +16,11 @@
                 {% if is_granted('ROLE_WS_MANAGER_' ~ workspace.getId()) %}
                 <li>
 
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse">
-                            <i class="icon-eye-open"></i>
-                            {{ 'show_as'|trans({}, 'platform') }}
-                            <i class="icon-chevron-down pull-right"></i>
-                        </a>
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse">
+                        <i class="icon-eye-open"></i>
+                        {{ 'show_as'|trans({}, 'platform') }}
+                        <i class="icon-chevron-down pull-right"></i>
+                    </a>
 
                     <div id="collapse" class="accordion-body collapse">
                          {% if has_role_access_to_workspace('ROLE_ANONYMOUS', workspace.getId()) %}
