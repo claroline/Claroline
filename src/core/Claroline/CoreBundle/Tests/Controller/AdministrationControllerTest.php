@@ -3,8 +3,6 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
-use Claroline\CoreBundle\Library\Installation\Plugin\Loader;
-use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
 
 class AdministrationControllerTest extends FunctionalTestCase
 {
@@ -14,19 +12,19 @@ class AdministrationControllerTest extends FunctionalTestCase
     protected function setUp()
     {
         parent::setUp();
+        $this->resetTemplate();
         $this->loadPlatformRolesFixture();
         $this->loadUserData(array('john' => 'user','admin' => 'admin'));
         $this->configHandler = $this->client
             ->getContainer()
             ->get('claroline.config.platform_config_handler');
-        $this->client->followRedirects();
+        $this->client->followRedirects();/**/
 
     }
 
     protected function tearDown()
     {
         parent::tearDown();
-
         $this->configHandler->eraseTestConfiguration();
     }
 
