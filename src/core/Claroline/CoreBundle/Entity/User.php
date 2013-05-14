@@ -363,7 +363,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $roles = $this->getEntityRoles();
 
         foreach ($roles as $role) {
-            if ($role->getRoleType() != Role::WS_ROLE) {
+            if ($role->getType() != Role::WS_ROLE) {
                 return $role;
             }
         }
@@ -379,7 +379,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $roles = $this->getEntityRoles();
 
         foreach ($roles as $role) {
-            if ($role->getRoleType() != Role::WS_ROLE) {
+            if ($role->getType() != Role::WS_ROLE) {
                 $removedRole = $role;
             }
         }
