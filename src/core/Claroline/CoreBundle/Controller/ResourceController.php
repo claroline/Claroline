@@ -558,6 +558,33 @@ class ResourceController extends Controller
         return $response;
     }
 
+    /**
+     * @Route(
+     *     "/search/role/code/{code}",
+     *     name="claro_resource_find_role_by_code",
+     *     options={"expose"=true}
+     * )
+     */
+    public function findRoleByWorkspaceCodeAction($code)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $roles = $em->getRepository('ClarolineCoreBundle:Role')->findByWorkspaceCode($code);
+        $arWorkspace = array();
+        foreach ($roles as $role) {
+            $arWorkspace[$role->getWorkspace()->getCode()][$role->getName()] = array(
+                'name' => $role->getName(),
+                'translation_key' => $role->getTranslationKey(),
+                'id' => $role->getId(),
+                'workspace' => $role->getWorkspace()->getName()
+            );
+        }
+
+        $response = new Response(json_encode($arWorkspace));
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
     private function getResource($resource)
     {
         if (get_class($resource) === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {

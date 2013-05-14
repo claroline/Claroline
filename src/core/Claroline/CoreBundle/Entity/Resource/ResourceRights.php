@@ -29,7 +29,7 @@ class ResourceRights
      *     inversedBy="resourceRights"
      * )
      */
-    private $role;
+    protected $role;
 
     /**
      * @ORM\ManyToOne(
@@ -38,7 +38,7 @@ class ResourceRights
      *     cascade={"persist"}
      * )
      */
-    private $resource;
+    protected $resource;
 
     /**
      * @ORM\Column(type="boolean", name="can_delete")
@@ -169,6 +169,36 @@ class ResourceRights
         $this->setCanDelete($originalRights->canDelete());
         $this->setCanCopy($originalRights->canCopy());
         $this->setCanExport($originalRights->canExport());
+    }
+
+    //required by the form builder
+    public function getCanOpen()
+    {
+        return $this->canOpen;
+    }
+
+    //required by the form builder
+    public function getCanDelete()
+    {
+        return $this->canDelete;
+    }
+
+    //required by the form builder
+    public function getCanExport()
+    {
+        return $this->canExport;
+    }
+
+    //required by the form builder
+    public function getCanEdit()
+    {
+        return $this->canEdit;
+    }
+
+    //required by the form builder
+    public function getCanCopy()
+    {
+        return $this->canCopy;
     }
 
     public function getCreatableResourceTypes()

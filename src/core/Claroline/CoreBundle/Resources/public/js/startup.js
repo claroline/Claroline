@@ -67,4 +67,9 @@
             ajaxServerErrorHandler(jqXHR.responseText);
         }
     });
+
+    //Change this to a compile-time function.
+    Twig.setFunction('path', function(route, parameters){
+        return Routing.generate(route, parameters);
+    })
 })();

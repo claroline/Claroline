@@ -2,20 +2,23 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Claroline\CoreBundle\Entity\Resource\ResourceRights;
+use Claroline\CoreBundle\Form\ResourceRightType;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleChangeRightEvent;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleChangeRightEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class ResourceRightsController extends Controller
 {
     /**
      * @Route(
-     *     "/{resourceId}/rights/form",
+     *     "/{resourceId}/rights/form/role/{roleId}",
      *     name="claro_resource_right_form",
-     *     options={"expose"=true}
+     *     options={"expose"=true},
+     *     defaults={"roleId"=null}
      * )
      *
      * Displays the resource rights form.
@@ -26,15 +29,37 @@ class ResourceRightsController extends Controller
      *
      * @throws AccessDeniedException if the current user is not allowed to edit the resource
      */
-    public function rightFormAction($resourceId)
+    public function rightFormAction($resourceId, $roleId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($resourceId);
         $collection = new ResourceCollection(array($resource));
         $this->checkAccess('EDIT', $collection);
-        $roleRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
-            ->findNonAdminRights($resource);
+
+        if ($roleId == null) {
+            $roleRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
+                ->findNonAdminRights($resource);
+        } else {
+            $resourceRight = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
+                ->findOneBy(array('role' => $roleId, 'resource' => $resourceId));
+
+            if ($resourceRight == null) {
+                 $form = $this->createForm(new ResourceRightType(), new ResourceRights());
+
+                 return $this->render(
+                     'ClarolineCoreBundle:Resource:resource_rights_form_creation.html.twig',
+                     array('form' => $form->createView(), 'resourceId' => $resourceId, 'roleId' => $roleId)
+                 );
+            } else {
+                $form = $this->createForm(new ResourceRightType(), $resourceRight);
+
+                return $this->render(
+                    'ClarolineCoreBundle:Resource:resource_rights_form_edit.html.twig',
+                    array('form' => $form->createView(), 'resourceRightId' => $resourceRight->getId())
+                );
+            }
+        }
 
         $template = $resource->getResourceType()->getName() === 'directory' ?
             'ClarolineCoreBundle:Resource:rights_form_directory.html.twig' :
@@ -49,7 +74,7 @@ class ResourceRightsController extends Controller
     /**
      * @Route(
      *     "/{resourceId}/rights/edit",
-     *     name="claro_resource_right_edit",
+     *     name="claro_resource_rights_edit",
      *     options={"expose"=true}
      * )
      *
@@ -112,6 +137,63 @@ class ResourceRightsController extends Controller
         $em->flush();
 
         return new Response('success');
+    }
+
+    /**
+     * @Route(
+     *     "/{resourceId}/role/{roleId}/right/create",
+     *     name="claro_resource_right_create"
+     * )
+     */
+    public function createRightAction($roleId, $resourceId)
+    {
+        $request = $this->get('request');
+        $em = $this->get('doctrine.orm.entity_manager');
+        $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+            ->find($resourceId);
+        $collection = new ResourceCollection(array($resource));
+        $this->checkAccess('EDIT', $collection);
+        $form = $this->get('form.factory')->create(new ResourceRightType(), new ResourceRights());
+        $form->bind($request);
+
+        if ($form->isValid()) {
+            $resourceRight = $form->getData();
+            $resourceRight->setRole($em->getRepository('ClarolineCoreBundle:Role')->find($roleId));
+            $resourceRight->setResource(
+                $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($resourceId)
+            );
+            $em->persist($resourceRight);
+            $em->flush();
+
+            return new Response("success");
+        }
+    }
+
+    /**
+     * @Route(
+     *     "/right/{resourceRightId}/edit",
+     *     name="claro_resource_right_edit"
+     * )
+     */
+    public function editRightAction($resourceRightId)
+    {
+        $request = $this->get('request');
+        $em = $this->get('doctrine.orm.entity_manager');
+        $resourceRight = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')->find($resourceRightId);
+        $resource = $resourceRight->getResource();
+        $collection = new ResourceCollection(array($resource));
+        $this->checkAccess('EDIT', $collection);
+        $form = $this->get('form.factory')->create(new ResourceRightType, $resourceRight);
+        $form->bind($request);
+
+        if ($form->isValid()) {
+            $resourceRight = $form->getData();
+            $em->persist($resourceRight);
+            $em->flush();
+
+            return new Response("success");
+        }
+
     }
 
     /**
