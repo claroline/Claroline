@@ -732,8 +732,8 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable('claro_activity');
         $this->addId($table);
         $table->addColumn('instruction', 'string', array('length' => 2055));
-        $table->addColumn('date_beginning', 'datetime', array('notnull' => false));
-        $table->addColumn('date_end', 'datetime', array('notnull' => false));
+        $table->addColumn('start_date', 'datetime', array('notnull' => false));
+        $table->addColumn('end_date', 'datetime', array('notnull' => false));
 
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_resource'),
