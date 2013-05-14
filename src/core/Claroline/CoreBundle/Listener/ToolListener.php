@@ -77,6 +77,26 @@ class ToolListener
     }
 
     /**
+     * @DI\Observe("open_tool_workspace_logs")
+     *
+     * @param DisplayToolEvent $event
+     */
+    public function onDisplayWorkspaceLogs(DisplayToolEvent $event)
+    {
+        $event->setContent($this->workspaceLogs($event->getWorkspace()->getId()));
+    }
+
+    /**
+     * @DI\Observe("open_tool_desktop_logs")
+     *
+     * @param DisplayToolEvent $event
+     */
+    public function onDisplayDesktopLogs(DisplayToolEvent $event)
+    {
+        $event->setContent($this->desktopLogs());
+    }
+
+    /**
      * @DI\Observe("open_tool_desktop_parameters")
      *
      * @param DisplayToolEvent $event
@@ -140,6 +160,25 @@ class ToolListener
                 'listEvents' => $listEvents )
         );
 
+    }
+
+    public function workspaceLogs($workspaceId)
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+
+        return $this->container->get('templating')->render(
+            'ClarolineCoreBundle:Tool/workspace/logs:log_list.html.twig',
+            $this->container->get('claroline.log.manager')->getWorkspaceList($workspace, 1)
+        );
+    }
+
+    public function desktopLogs()
+    {
+        return $this->container->get('templating')->render(
+            'ClarolineCoreBundle:Tool/desktop/logs:log_list.html.twig',
+            $this->container->get('claroline.log.manager')->getDesktopList(1)
+        );
     }
 
     public function desktopCalendar()

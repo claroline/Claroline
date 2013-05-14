@@ -13,6 +13,11 @@
     <![endif]-->
 {% endblock %}
 
+{% block javascripts_header %}
+    {{ parent() }}
+    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-1.7.1.min.js') }}'></script>
+{% endblock %}
+
 {% block favicon %}
     <link rel="shortcut icon" href="{{ asset('bundles/clarolinecore/images/ico/favicon.ico') }}"/>
     <link rel="apple-touch-icon" href="{{ asset('bundles/clarolinecore/images/ico/apple-touch-icon.png')}}"/>
@@ -60,7 +65,6 @@
 
 {% block javascripts %}
     <script type="text/javascript" src='{{ asset('twig.js') }}'></script>
-    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-1.7.1.min.js') }}'></script>
     <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/js/bootstrap.js')}}"></script>
