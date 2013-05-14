@@ -60,6 +60,11 @@ claro_desktop_tool_properties:
     prefix: desktop/tool/properties
     type: annotation
 
+claro_desktop_tool_logs:
+    resource: "@ClarolineCoreBundle/Controller/Tool/DesktopLogController.php"
+    prefix: desktop/tool/logs
+    type: annotation
+
 claro_workspace:
     resource: "@ClarolineCoreBundle/Controller/WorkspaceController.php"
     prefix: workspaces
@@ -103,6 +108,11 @@ claro_workspace_tool_group:
 claro_workspace_tool_calendar:
     resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceCalendarController.php"
     prefix: workspaces/tool/calendar
+    type: annotation
+
+claro_workspace_tool_logs:
+    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceLogController.php"
+    prefix: workspaces/tool/logs
     type: annotation
 
 claro_admin:
@@ -163,3 +173,6 @@ claro_install:
     type: annotation
     prefix: install
 
+idci_exporter:
+    resource: "../../vendor/idci/exporter-bundle/IDCI/Bundle/ExporterBundle/Controller"
+    type:     annotation
