@@ -97,32 +97,66 @@ class ResourceRightsController extends Controller
         $this->checkAccess('EDIT', new ResourceCollection(array($resource)));
         $parameters = $this->get('request')->request->all();
         $permissions = array('open', 'copy', 'delete', 'edit', 'export');
-        $referenceRights = array();
-        $targetResources = isset($parameters['isRecursive']) ?
-            $resourceRepo->findDescendants($resource, true) :
-            array($resource);
-
         $editedResourceRightsWithChangeSet = array();
-        for ($i = 0, $targetCount = count($targetResources); $i < $targetCount; ++$i) {
-            $targetResource = $targetResources[$i];
-            $roleRights = $rightsRepo->findNonAdminRights($targetResource);
+        $rootRoleRights = $rightsRepo->findNonAdminRights($resource);
 
-            for ($j = 0, $rightsCount = count($roleRights); $j < $rightsCount; ++$j) {
-                $roleRight = $roleRights[$j];
-                foreach ($permissions as $permission) {
-                    $i === 0 && $referenceRights[$j][$permission]
-                        = isset($parameters['roles'][$roleRight->getRole()->getId()][$permission]);
+        if (isset($parameters['isRecursive'])){
+            $existingRights = $rightsRepo->findRecursiveByResource($resource);
+            $missingRights = array();
+            $resources = $resourceRepo->findDescendants($resource, true);
+            $roles = array();
+
+            foreach ($rootRoleRights as $rootRoleRight) {
+                $roles[] = $rootRoleRight->getRole();
+            }
+
+            $toFind = array();
+
+            foreach ($resources as $resource) {
+                foreach ($roles as $role) {
+                    $toFind[] = array('resource' => $resource, 'role' => $role);
+                }
+            }
+
+            $found = false;
+            foreach ($toFind as $item) {
+                foreach ($existingRights as $existingRight) {
+                    if ($item['resource'] == $existingRight->getResource()
+                        && $item['role'] == $existingRight->getRole()) {
+                        $found = true;
+                    }
+                }
+
+                if (!$found) {
+                    $newRight = new ResourceRights();
+                    $newRight->setResource($item['resource']);
+                    $newRight->setRole($item['role']);
+                    $missingRights[] = $newRight;
+                }
+
+                $found = false;
+            }
+
+            $finalRights = array_merge($missingRights, $existingRights);
+        } else {
+            $finalRights = $rootRoleRights;
+        }
+
+        foreach ($finalRights as $finalRight) {
+            foreach ($permissions as $permission) {
+                if ($finalRight->getRole()->getName() !== 'ROLE_ADMIN') {
                     $setter = 'setCan' . ucfirst($permission);
-                    $roleRight->{$setter}($referenceRights[$j][$permission]);
+                    $finalRight->{$setter}(isset($parameters['roles'][$finalRight->getRole()->getId()][$permission]));
+                    $em->persist($finalRight);
                 }
+            }
 
-                $unitOfWork = $em->getUnitOfWork();
-                $unitOfWork->computeChangeSets();
-                $changeSet = $unitOfWork->getEntityChangeSet($roleRight);
+            $unitOfWork = $em->getUnitOfWork();
+            $unitOfWork->computeChangeSets();
+            $changeSet = $unitOfWork->getEntityChangeSet($finalRight);
 
-                if (count($changeSet) > 0) {
-                    $editedResourceRightsWithChangeSet[] = array('resourceRights' => $roleRight, 'changeSet' => $changeSet);
-                }
+            if (count($changeSet) > 0) {
+                $editedResourceRightsWithChangeSet[] = array('resourceRights' => $finalRight, 'changeSet' => $changeSet);
             }
         }
 
