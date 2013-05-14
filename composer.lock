@@ -1,5 +1,9 @@
 {
-    "hash": "02d2408e0f283a533a93dd547fed2d6a",
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+    ],
+    "hash": "3e8360569f36445680ae9832054071ff",
     "packages": [
         {
             "name": "claroline/front-end-bundle",
@@ -995,6 +999,55 @@
                 "uploadable"
             ],
             "time": "2013-03-12 10:18:58"
+        },
+        {
+            "name": "idci/exporter-bundle",
+            "version": "dev-master",
+            "target-dir": "IDCI/Bundle/ExporterBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/IDCI-Consulting/ExporterBundle.git",
+                "reference": "56aa9499692ecc4fd8250bdea162cd683209a65b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/IDCI-Consulting/ExporterBundle/zipball/56aa9499692ecc4fd8250bdea162cd683209a65b",
+                "reference": "56aa9499692ecc4fd8250bdea162cd683209a65b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "symfony/framework-bundle": ">=2.1,<2.3-dev",
+                "twig/twig": "*"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-0": {
+                    "IDCI\\Bundle\\ExporterBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Gabriel Bondaz",
+                    "email": "gabriel.bondaz@idci-consulting.fr",
+                    "homepage": "http://www.idci-consulting.fr",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Symfony ExporterBundle",
+            "keywords": [
+                "csv",
+                "exporter",
+                "ics",
+                "json",
+                "twig",
+                "xml"
+            ],
+            "time": "2013-04-18 12:32:27"
         },
         {
             "name": "jdorn/sql-formatter",
@@ -2409,12 +2462,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Twig.git",
-                "reference": "ba67e2cf8e2ca6cada1de5a316a724df648c52ac"
+                "reference": "7b298c2d1fa32b2d3ddb7e3b6b3deb56b16b3527"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Twig/zipball/ba67e2cf8e2ca6cada1de5a316a724df648c52ac",
-                "reference": "ba67e2cf8e2ca6cada1de5a316a724df648c52ac",
+                "url": "https://api.github.com/repos/fabpot/Twig/zipball/7b298c2d1fa32b2d3ddb7e3b6b3deb56b16b3527",
+                "reference": "7b298c2d1fa32b2d3ddb7e3b6b3deb56b16b3527",
                 "shasum": ""
             },
             "require": {
@@ -2423,7 +2476,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.12-dev"
+                    "dev-master": "1.13-dev"
                 }
             },
             "autoload": {
@@ -2450,7 +2503,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2013-03-10 07:23:01"
+            "time": "2013-05-14 05:05:22"
         },
         {
             "name": "white-october/pagerfanta-bundle",
@@ -2517,7 +2570,8 @@
         "stfalcon/tinymce-bundle": 20,
         "claroline/front-end-bundle": 20,
         "jms/twig-js-bundle": 20,
-        "white-october/pagerfanta-bundle": 20
+        "white-october/pagerfanta-bundle": 20,
+        "idci/exporter-bundle": 20
     },
     "platform": {
         "php": ">=5.3.3"

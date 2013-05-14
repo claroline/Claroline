@@ -86,6 +86,8 @@ class Converter
      * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
      *
      * @return array
+     *
+     * @todo this method shouldn't wrap the converted resource in an additional array
      */
     public function toJson(AbstractResource $resource, TokenInterface $token)
     {

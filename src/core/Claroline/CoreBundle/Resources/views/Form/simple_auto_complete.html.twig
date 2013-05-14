@@ -1,0 +1,46 @@
+{% extends 'form_div_layout.html.twig' %} 
+
+{% block simpleautocomplete_widget %} 
+    {% spaceless %}
+        {% block simpleautocomplete_assets %}
+            <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/css/common/jquery-ui-bootstrap/jquery-ui-1.9.2.custom.css') }}'/>
+            <script src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
+        {% endblock %}
+        <div class="input-append">
+            {{ block('field_widget') }}
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                var path = '{{ path('exporter_api', {'entity_reference': 'user', '_format': 'json'}) }}';
+                $( "#{{ form.vars['id'] }}" ).after('<a id="{{ form.vars['id'] }}_clear" class="btn"><i class="icon-remove"></i></a>');
+                $( "#{{ form.vars['id'] }}_clear" ).on('click', function(){
+                    $( "#{{ form.vars['id'] }}" ).val('');
+                });
+                $( "#{{ form.vars['id'] }}" ).autocomplete({
+                    source: function( request, response ) {
+                        $.ajax({
+                            url: path,
+                            dataType: 'jsonp',
+                            contentType: "application/json; charset=utf-8",
+                            data: {
+                                search: request.term
+                            },
+                            complete: function( data ) {
+                                if (data.status == 200) {
+                                    var result = eval(data.responseText);
+                                    response(
+                                        $.map( 
+                                            result, function( item ) {
+                                                return { label: item.label, value: item.label };
+                                            }
+                                        )
+                                    );
+                                }
+                            }
+                        });
+                    }
+                });
+            });          
+        </script>
+    {% endspaceless %} 
+{% endblock %}

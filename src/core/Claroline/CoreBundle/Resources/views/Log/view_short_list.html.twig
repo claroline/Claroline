@@ -1,0 +1,14 @@
+
+{% if chartData|length > 0 %}
+    {% include 'ClarolineCoreBundle:Log:count_by_day_chart.html.twig' %}
+{% endif %}
+{% include 'ClarolineCoreBundle:Log:view_list.html.twig' %}
+{% if workspace is defined and workspace != null %}
+    <div class="text-center">
+        <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.id, 'toolName': 'logs'}) }}"> {{ 'See all'|trans({}, 'platform') }} </a>
+    </div>
+{% else %}
+    <div class="text-center">
+        <a href="{{ path('claro_desktop_open_tool', {'toolName': 'logs'}) }}"> {{ 'See all'|trans({}, 'platform') }} </a>
+    </div>
+{% endif %}
