@@ -14,3 +14,4 @@ high : "high"
 medium : "medium"
 low : "low"
 no event found : 'no event found'
+tasks: Tasks
