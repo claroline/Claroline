@@ -308,8 +308,8 @@ class Version20120119000000 extends BundleMigration
 
         $this->addId($table);
         $table->addColumn('license_id', 'integer', array('notnull' => false));
-        $table->addColumn('created', 'datetime');
-        $table->addColumn('updated', 'datetime');
+        $table->addColumn('creation_date', 'datetime');
+        $table->addColumn('modification_date', 'datetime');
         $table->addColumn('resource_type_id', 'integer', array('notnull' => false));
         $table->addColumn('user_id', 'integer', array('notnull' => true));
         $table->addColumn('icon_id', 'integer', array('notnull' => true));
