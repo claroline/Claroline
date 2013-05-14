@@ -25,11 +25,8 @@ var x = 0; // Mouse x after move
 var xPrecedent = 0; // Mouse x before move
 var y = 0; // Mouse y after move
 var yPrecedent = 0; // Mouse y before move
-
-
-var newx;
-var newy;
-
+var newx; // new width of the image after resize
+var newy; // new height of the image after resize
 
 // Display alert into navigator language
 if (navigator.browserLanguage) {
@@ -69,10 +66,9 @@ function sendData(select, path, prefx) {
 }
 
 // Display the selected picture
-function LoadPic(path, prefx) {
+function LoadPic(path, prefx, iddoc) {
     //"use strict";
-
-    var list = document.InterGraphForm.ujm_exobundle_interactiongraphictype_document; // List of all the user's pictures
+    var list = document.getElementById(iddoc.id);// List of all the user's pictures
     var select = list.options[list.selectedIndex].innerHTML; // Label of the selected picture
 
     sendData(select, path, prefx);
@@ -90,7 +86,7 @@ function LoadPic(path, prefx) {
 }
 
 // Submit form without an empty field
-function Verifier(noTitle, noQuestion, noImg, noAnswerZone) {
+function Verifier(noTitle, noQuestion, noImg, noAnswerZone ,questiontitle, invite) {
     //"use strict";
 
     var imgOk = false; // Image is upload
@@ -112,7 +108,7 @@ function Verifier(noTitle, noQuestion, noImg, noAnswerZone) {
     }
 
 //     No title
-    if (document.InterGraphForm.ujm_exobundle_interactiongraphictype_interaction_question_title.value === '') {
+    if (document.getElementById(questiontitle).value == '') {
         alert(noTitle);
         return false;
     } else {
@@ -120,7 +116,7 @@ function Verifier(noTitle, noQuestion, noImg, noAnswerZone) {
     }
 
     // No question asked
-    if (document.InterGraphForm.ujm_exobundle_interactiongraphictype_interaction_invite.value === '' && titleOk === true) {
+    if (tinyMCE.get(invite).getContent() == '' && titleOk == true) {
         alert(noQuestion);
         return false;
     } else {
@@ -128,7 +124,7 @@ function Verifier(noTitle, noQuestion, noImg, noAnswerZone) {
     }
 
     // No picture load
-    if (document.getElementById('AnswerImage').src.indexOf('users_document') == -1 && titleOk === true && questionOk === true) {
+    if (document.getElementById('AnswerImage').src.indexOf('users_document') == -1 && titleOk == true && questionOk == true) {
         alert(noImg);
         return false;
     } else {
@@ -136,7 +132,7 @@ function Verifier(noTitle, noQuestion, noImg, noAnswerZone) {
     }
 
     // No answer zone
-    if (empty == false && imgOk === true && titleOk === true && questionOk === true) {
+    if (empty == false && imgOk == true && titleOk == true && questionOk == true) {
         alert(noAnswerZone);
         return false;
     } else {
@@ -144,7 +140,7 @@ function Verifier(noTitle, noQuestion, noImg, noAnswerZone) {
     }
 
     // Submit if required fields not empty
-    if (imgOk === true && zoneOk === true && titleOk === true && questionOk === true) {
+    if (imgOk == true && zoneOk == true && titleOk == true && questionOk == true) {
         document.getElementById('imgwidth').value = answerImg.width; // Pass width of the image to the controller
         document.getElementById('imgheight').value = answerImg.height; // Pass height of the image to the controller
 

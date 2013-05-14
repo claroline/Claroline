@@ -46,9 +46,9 @@
 
     <h1>InteractionGraphic Edition</h1>
     
-    <form class="well label_bold" action="{{ path('ujm_interactiongraphic_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
+    <form class="well label_bold" id="InterGraphForm" action="{{ path('ujm_interactiongraphic_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
         {#{ form_widget(edit_form) }#}
-       
+      
 {# ------------------------------------------------- Question description ---------------------------------------------------------------------------- #} 
             
     <p> 
@@ -86,7 +86,7 @@
 {# ------------------------------------------------- Boutton affichage image ---------------------------------------------------------------------------- #}
     
     <p><input id="LoadImg" type="button" value="{{ "Select" | trans }}" onclick="LoadPic('{{ path('ujm_interactiongraphic_DisplayPic') }}',
-            '{{ asset('bundles') }}')"/></p>
+            '{{ asset('bundles') }}', {{ edit_form.document.vars.id }})"/></p>
  
 {# ------------------------------------------------- Zone affichage image ---------------------------------------------------------------------------- #}    
     
@@ -101,12 +101,12 @@
 
     <img src="{{ asset(entity.document.url) }}" width="{{entity.width}}" height="{{entity.height}}" id="AnswerImage"/>
     
-    {% set i = 1 %}{% set allInfo = '' %}
+    {% set i = 0 %}{% set allInfo = '' %}
     {% for p in position %}
-        <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" alt="AnswerZone{{ i }}" id="cursor{{ i }}" 
+        <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" alt="AnswerZone{{ i }}" id="img{{ i }}" 
              style="position: absolute;" width="{{ p.size }}"/>
     
-{% set allInfo = p.shape~';'~p.color~';'~asset('bundles/ujmexo/images/graphic/')~';'~p.value~';'~p.size~'^'~allInfo %}
+{% set allInfo = p.shape~';'~p.color~';'~asset('bundles/ujmexo/images/graphic/')~';'~p.value~';'~p.size~';'~p.scoreCoords~'^'~allInfo %}
 
         {% set i = i + 1 %}
    {% endfor %}
@@ -159,14 +159,18 @@
         </tr>
     </table>    
  
-{# ------------------------------------------------- Boutton validation formulaire ---------------------------------------------------------------------------- #}    
+{# ------------------------------------------------- Boutton validation formulaire ---------------------------------------------------------------------------- #}
+
     <div style="visibility: hidden;">{{ form_rest(edit_form) }}</div>
     {{ form_errors(edit_form) }}
     
     
     <p>
-            <button type="submit" id="button_submit">{{ "Edit" | trans }}</button>
-        </p>
+        <button type="submit" id="button_submit" 
+            onclick="Verifier('{{ "noTitle" | trans }}', '{{ "noQuestion" | trans }}','{{ "noImg" | trans }}',
+            '{{ "noAnswerZone" | trans }}', '{{ edit_form.interaction.question.title.vars.id }}',
+            '{{ edit_form.interaction.invite.vars.id }}');return false;">{{ "Edit" | trans }}</button>
+    </p>
     </form>
     
 {# ------------------------------------------------- Div category ---------------------------------------------------------------------------- #}
@@ -199,5 +203,3 @@
         });
     </script>
 {% endblock %}
-    
-    		

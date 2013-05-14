@@ -32,7 +32,11 @@
  # The fact that you are presently reading this means that you have had
  # knowledge of the CeCILL license and that you accept its terms.
 #}
+
+
 {#{form.interaction.question.description.vars.id }#}
+
+
 <h1>InteractionGraphic creation</h1>
 
 <form class="well label_bold" name="InterGraphForm" id="InterGraphForm" action="{{ path('ujm_interactiongraphic_create') }}" method="post" {{ form_enctype(form) }}>
@@ -73,7 +77,7 @@
 {# ------------------------------------------------- Boutton affichage image ---------------------------------------------------------------------------- #}
     
     <p><input id="LoadImg" type="button" value="{{ "Select" | trans }}" onclick="LoadPic('{{ path('ujm_interactiongraphic_DisplayPic') }}',
-            '{{ asset('bundles') }}')"/></p>
+            '{{ asset('bundles') }}', {{ form.document.vars.id }})"/></p>
  
 {# ------------------------------------------------- Zone affichage image ---------------------------------------------------------------------------- #}    
     
@@ -137,7 +141,9 @@
     <div style="visibility: hidden;">{{ form_rest(form) }}</div>
     {{ form_errors(form) }}
     <p>
-        <button type="submit" onclick="Verifier('{{ "noTitle" | trans }}', '{{ "noQuestion" | trans }}','{{ "noImg" | trans }}', '{{ "noAnswerZone" | trans }}');return false;">{{ "Create" | trans }}</button>
+        <button type="submit" onclick="Verifier('{{ "noTitle" | trans }}', '{{ "noQuestion" | trans }}','{{ "noImg" | trans }}',
+            '{{ "noAnswerZone" | trans }}', '{{ form.interaction.question.title.vars.id }}',
+            '{{ form.interaction.invite.vars.id }}');return false;">{{ "Create" | trans }}</button>
     </p>
 </form>
 
