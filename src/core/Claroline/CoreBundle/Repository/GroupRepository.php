@@ -19,7 +19,7 @@ class GroupRepository extends EntityRepository
             (
                 SELECT gr FROM Claroline\CoreBundle\Entity\Group gr
                 LEFT JOIN gr.roles wr WITH wr IN (
-                    SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE."
+                    SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ".Role::WS_ROLE."
                 )
                 JOIN wr.workspace w
                 WHERE w.id = :id
@@ -47,7 +47,7 @@ class GroupRepository extends EntityRepository
             (
                 SELECT gr FROM Claroline\CoreBundle\Entity\Group gr
                 JOIN gr.roles wr WITH wr IN (
-                    SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE."
+                    SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ".Role::WS_ROLE."
                 )
                 JOIN wr.workspace w
                 WHERE w.id = :id
@@ -75,7 +75,7 @@ class GroupRepository extends EntityRepository
             (
                 SELECT gr FROM Claroline\CoreBundle\Entity\Group gr
                 JOIN gr.roles wr WITH wr IN (
-                    SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE."
+                    SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ".Role::WS_ROLE."
                 )
                 JOIN wr.workspace w
                 WHERE w.id = :id
@@ -138,7 +138,7 @@ class GroupRepository extends EntityRepository
             SELECT g, wr
             FROM Claroline\CoreBundle\Entity\Group g
             LEFT JOIN g.roles wr WITH wr IN (
-                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.roleType = ".Role::WS_ROLE."
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ".Role::WS_ROLE."
             )
             LEFT JOIN wr.workspace w
             WHERE w.id = :workspaceId

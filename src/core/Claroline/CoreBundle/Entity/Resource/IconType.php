@@ -25,22 +25,22 @@ class IconType
     protected $id;
 
     /**
-     * @ORM\Column(type="string", name="icon_type")
+     * @ORM\Column(type="string", name="type")
      */
-    protected $iconType;
+    protected $type;
 
     public function getId()
     {
         return $this->id;
     }
 
-    public function setIconType($iconType)
+    public function setType($type)
     {
-        $this->iconType = $iconType;
+        $this->type = $type;
     }
 
-    public function getIconType()
+    public function getType()
     {
-        return $this->iconType;
+        return $this->type;
     }
 }
