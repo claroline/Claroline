@@ -2,17 +2,14 @@
     var stackedRequests = 0;
     var env = $('#sf-environement').attr('data-env');
 
-    $.ajaxSetup({
-        beforeSend: function () {
-            stackedRequests++;
-            $('.please-wait').show();
-        },
-        complete: function () {
-            stackedRequests--;
+    $('body').bind('ajaxSend', function(){
+        stackedRequests++;
+        $('.please-wait').show();
+    }).bind('ajaxComplete', function(){
+        stackedRequests--;
 
-            if (stackedRequests === 0) {
-                $('.please-wait').hide();
-            }
+        if (stackedRequests === 0) {
+            $('.please-wait').hide();
         }
     });
 
