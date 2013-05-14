@@ -552,7 +552,7 @@ class Version20120119000000 extends BundleMigration
     {
         $table = $schema->createTable('claro_resource_icon_type');
         $this->addId($table);
-        $table->addColumn('icon_type', 'text');
+        $table->addColumn('type', 'text');
 
         $this->storeTable($table);
     }

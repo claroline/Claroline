@@ -51,7 +51,7 @@ class RoleRepository extends EntityRepository
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
             JOIN r.users u
-            WHERE u.id = {$user->getId()} AND r.roleType != " . Role::WS_ROLE;
+            WHERE u.id = {$user->getId()} AND r.type != " . Role::WS_ROLE;
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
