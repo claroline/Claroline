@@ -101,6 +101,6 @@ class ExerciseListener extends ContainerAware
     public function onDisplayDesktop(DisplayToolEvent $event)
     {
         $response = $this->container->get('http_kernel')->forward('UJMExoBundle:Question:index', array());
-        $event->setContent($response);
+        $event->setContent($response->getContent());
     }
 }
