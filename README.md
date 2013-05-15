@@ -21,7 +21,7 @@ Quick start
 - Create an *app/config/local/parameters.yml* file according to *app/config/local/parameters.yml.dist*
   (currently only db settings are required)
 - Use the automatic install script : `php app/dev/raw_install`
-- Make the *app/cache*, *app/logs*, *app/config/local*, *files*, *workspaces*, *test* and
+- Make the *app/cache*, *app/logs*, *app/config/local*, *files*, *templates*, *test* and
   *src/core/Claroline/CoreBundle/Resources/public/css/themes* directories (and their children)
   writable from the command line and the webserver (for further explanation on common permissions
   issues and solutions with Symfony, read [this][6])
