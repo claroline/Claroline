@@ -22,7 +22,7 @@ class DateRangeToTextTransformer implements DataTransformerInterface
     {
         $startDate = time();
         $endDate = time();
-        if($dateArray != null) {
+        if ($dateArray != null) {
             if (array_key_exists(0, $dateArray)) {
                 $startDate = $dateArray[0];
             }
@@ -33,7 +33,7 @@ class DateRangeToTextTransformer implements DataTransformerInterface
 
             return null;
         }
-        
+
         $format = $this->translator->trans('date_range.format', array(), 'platform');
         $outputValue = date($format, $startDate).' - '.date($format, $endDate);
         if ($startDate == $endDate) {

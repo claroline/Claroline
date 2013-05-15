@@ -1,0 +1,11 @@
+{% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
+<form novalidate="novalidate"
+      action="{{ path('claro_resource_right_create', {'resourceId':resourceId, 'roleId':roleId}) }}"
+      method="post" {{ form_enctype(form) }}
+      class="form-horizontal form-right-resource">
+   {{ form_errors(form) }}
+   {{ form_widget(form) }}
+    <div class="form-actions">
+        <button id="submit-right-form-button" type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+    </div>
+</form>

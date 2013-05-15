@@ -7,6 +7,7 @@
 {% block createCell %}
     <td>
         <a data-resource-id="{{ resource.getId() }}"
+           class="res-creation-options"
            href="{{ path('claro_resource_right_creation_form', {'resourceId': resource.getId(), 'roleId': permissions.getRole().getId() }) }}">
             {{ 'options'|trans({}, 'platform') }}
         </a>

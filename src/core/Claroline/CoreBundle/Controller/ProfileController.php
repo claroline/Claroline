@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Form\ProfileType;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Event\LogUserUpdateEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
@@ -12,10 +13,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
  */
 class ProfileController extends Controller
 {
-    private function isInRoles($role, $roles) {
+    private function isInRoles($role, $roles)
+    {
         foreach ($roles as $current) {
             if ($role->getId() == $current->getId()) {
-                
                 return true;
             }
         }
@@ -59,8 +60,6 @@ class ProfileController extends Controller
      */
     public function updateAction()
     {
-        
-
         $request = $this->get('request');
         $user = $this->get('security.context')->getToken()->getUser();
         $roles = $this->get('doctrine.orm.entity_manager')
@@ -77,22 +76,9 @@ class ProfileController extends Controller
             $unitOfWork = $em->getUnitOfWork();
             $unitOfWork->computeChangeSets();
             $changeSet = $unitOfWork->getEntityChangeSet($user);
-
             $newRoles = $form->get('platformRoles')->getData();
-            $userRole = $this->get('doctrine.orm.entity_manager')
-                ->getRepository('ClarolineCoreBundle:Role')
-                ->findOneByName('ROLE_USER');
-
-            foreach ($roles as $role) {
-                if ($role !== $userRole) {
-                    $user->removeRole($role);
-                }
-            }
-            foreach ($newRoles as $role) {
-                $user->addRole($role);
-            }
-
-            $em = $this->getDoctrine()->getManager();
+            $user = $this->resetRoles($user);
+            $user = $this->addRoles($user, $newRoles);
             $em->persist($user);
             $em->flush();
             $this->get('security.context')->getToken()->setUser($user);
@@ -105,7 +91,7 @@ class ProfileController extends Controller
             //Detect added
             foreach ($newRoles as $role) {
                 if (!$this->isInRoles($role, $roles)) {
-                   $rolesChangeSet[$role->getTranslationKey()] = array(false, true);
+                    $rolesChangeSet[$role->getTranslationKey()] = array(false, true);
                 }
             }
             //Detect removed
@@ -117,7 +103,6 @@ class ProfileController extends Controller
             if (count($rolesChangeSet) > 0) {
                 $changeSet['roles'] = $rolesChangeSet;
             }
-
 
             $log = new LogUserUpdateEvent($user, $changeSet);
             $this->get('event_dispatcher')->dispatch('log', $log);
@@ -152,5 +137,33 @@ class ProfileController extends Controller
             'ClarolineCoreBundle:Profile:profile.html.twig',
             array('user' => $user)
         );
+    }
+
+    private function addRoles(User $user, $newRoles)
+    {
+        foreach ($newRoles as $role) {
+            $user->addRole($role);
+        }
+
+        return $user;
+    }
+
+    private function resetRoles(User $user)
+    {
+        $userRole = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Role')
+            ->findOneByName('ROLE_USER');
+
+        $roles = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Role')
+            ->findPlatformRoles($user);
+
+        foreach ($roles as $role) {
+            if ($role !== $userRole) {
+                $user->removeRole($role);
+            }
+        }
+
+        return $user;
     }
 }

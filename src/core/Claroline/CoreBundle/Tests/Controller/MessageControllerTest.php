@@ -36,7 +36,7 @@ class MessageControllerTest extends FunctionalTestCase
         $parameters = $this->client->getRequest()->query->all();
         $this->assertEquals($parameters['ids'][0], $this->getUser('user')->getId());
     }
- 
+
     public function testSendMessage()
     {
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));

@@ -209,7 +209,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('name', 'string', array('length' => 255));
         $table->addColumn('translation_key', 'string', array('length' => 255, 'notnull' => false));
         $table->addColumn('is_read_only', 'boolean', array('notnull' => true));
-        $table->addColumn('role_type', 'integer', array('notnull' => false));
+        $table->addColumn('type', 'integer', array('notnull' => false));
         $table->addColumn('workspace_id', 'integer', array('notnull' => false));
 
         $table->addForeignKeyConstraint(
@@ -308,8 +308,8 @@ class Version20120119000000 extends BundleMigration
 
         $this->addId($table);
         $table->addColumn('license_id', 'integer', array('notnull' => false));
-        $table->addColumn('created', 'datetime');
-        $table->addColumn('updated', 'datetime');
+        $table->addColumn('creation_date', 'datetime');
+        $table->addColumn('modification_date', 'datetime');
         $table->addColumn('resource_type_id', 'integer', array('notnull' => false));
         $table->addColumn('user_id', 'integer', array('notnull' => true));
         $table->addColumn('icon_id', 'integer', array('notnull' => true));
@@ -552,7 +552,7 @@ class Version20120119000000 extends BundleMigration
     {
         $table = $schema->createTable('claro_resource_icon_type');
         $this->addId($table);
-        $table->addColumn('icon_type', 'text');
+        $table->addColumn('type', 'text');
 
         $this->storeTable($table);
     }
@@ -732,8 +732,8 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable('claro_activity');
         $this->addId($table);
         $table->addColumn('instruction', 'string', array('length' => 2055));
-        $table->addColumn('date_beginning', 'datetime', array('notnull' => false));
-        $table->addColumn('date_end', 'datetime', array('notnull' => false));
+        $table->addColumn('start_date', 'datetime', array('notnull' => false));
+        $table->addColumn('end_date', 'datetime', array('notnull' => false));
 
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_resource'),

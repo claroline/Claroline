@@ -21,6 +21,7 @@ admin_form_username : 'Nom d''utilisateur'
 admin_logs: 'Suivi plateforme'
 admin_tags_management: 'Gestion des Tags administrateur'
 admin_workspace_tag_form_name: Nom
+advanced: Avancé
 agenda: Agenda
 all: Tous
 all_my_workspaces: 'Tous mes espaces d''activités'
@@ -313,6 +314,7 @@ resources_rights_form_canEdit: Editer
 resources_rights_form_canOpen: Ouvrir
 resources_rights_form_canShare: Partager
 resources_rights_form_canView: Voir
+resources_rights_form_canExport: Exporter
 restore : Restaurer
 results: Résultats
 rights: Droits

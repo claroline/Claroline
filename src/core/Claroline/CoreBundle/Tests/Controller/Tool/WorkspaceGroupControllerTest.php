@@ -219,7 +219,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->logUser($this->getUser('user'));
         $pwaId = $this->getUser('admin')->getPersonalWorkspace()->getId();
-        $crawler = $this->client->request(
+        $this->client->request(
             'GET',
             "/workspaces/tool/group_management/{$pwaId}/groups/unregistered/page"
         );

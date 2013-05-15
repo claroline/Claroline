@@ -42,7 +42,7 @@ class LoadResourceImagesData extends AbstractFixture implements ContainerAwareIn
 
         foreach ($iconsType as $type) {
             $iconType = new IconType();
-            $iconType->setIconType($type);
+            $iconType->setType($type);
             $manager->persist($iconType);
             switch($type) {
                 case 'type':
