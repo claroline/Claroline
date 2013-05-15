@@ -101,4 +101,17 @@ class ResourceRightsRepository extends EntityRepository
 
         return $this->_em->createQuery($dql)->getResult();
     }
+
+    public function findRecursiveByResourceAndRole(AbstractResource $resource, Role $role)
+    {
+        $dql = "
+            SELECT rights, role, resource
+            FROM Claroline\CoreBundle\Entity\Resource\ResourceRights rights
+            JOIN rights.resource resource
+            JOIN rights.role role
+            WHERE resource.path LIKE '{$resource->getPath()}%' AND role.name = '{$role->getName()}'
+        ";
+
+        return $this->_em->createQuery($dql)->getResult();
+    }
 }
