@@ -219,17 +219,17 @@ class exerciseServices
     public function responseGraphic($request, $paperID = 0)
     {
         $point = 0;
-        $answers = $request->request->get('answers');
-        $graphId = $request->request->get('graphId');
-        $max = $request->request->get('nbpointer');
+        $answers = $request->request->get('answers'); // Answer of the student
+        $graphId = $request->request->get('graphId'); // Id of the graphic interaction
+        $max = $request->request->get('nbpointer'); // Number of answer zones
         $em = $this->doctrine->getEntityManager();
         $rightCoords = $em->getRepository('UJMExoBundle:Coords')->findBy(array('interactionGraphic' => $graphId));
         $verif = array();
         $z = 0;
 
-        $coords = preg_split('[;]', $answers);
+        $coords = preg_split('[;]', $answers); // Divide the answer zones into cells
         $total = 0;
-
+     
         for ($i = 0; $i < $max - 1; $i++) {
             for ($j = 0; $j < $max - 1; $j++) {
                 list($xa,$ya) = explode("-", $coords[$j]); // Answers of the student
@@ -241,10 +241,10 @@ class exerciseServices
                 if ((($xa) < ($xr + $valid)) && (($xa) > ($xr - $valid)) && (($ya) < ($yr + $valid)) &&
                     (($ya) > ($yr - $valid))
                 ) {
-                    // Not many answers in one right
+                    // Not get points twice for one answer
                     if ($this->alreadyDone($rightCoords[$i]->getValue(), $verif, $z)) {
                         $point += $rightCoords[$i]->getScoreCoords(); // Score of the student without penalty
-                        $verif[$z] = $rightCoords[$i]->getValue();
+                        $verif[$z] = $rightCoords[$i]->getValue(); // Add this answer zone to already answered zones
                         $z++;
                     }
                 }
@@ -264,7 +264,7 @@ class exerciseServices
             if ($session->get('penalties')) {
                 foreach ($session->get('penalties') as $penal) {
 
-                    $signe = substr($penal, 0, 1);
+                    $signe = substr($penal, 0, 1); // In order to manage the symbol of the penalty
 
                     if ($signe == '-') {
                         $penalty += substr($penal, 1);
@@ -286,20 +286,21 @@ class exerciseServices
         }
 
         $res = array(
-            'point' => $point,
-            'penalty' => $penalty,
-            'interG' => $interG,
-            'coords' => $rightCoords,
-            'doc' => $doc,
-            'total' => $total,
-            'rep' => $coords,
-            'score' => $score,
-            'response' => $answers
+            'point' => $point, // Score of the student without penalty
+            'penalty' => $penalty, // Penalty (hints)
+            'interG' => $interG, // The entity interaction graphic (for the id ...)
+            'coords' => $rightCoords, // The coordonates of the right answer zones
+            'doc' => $doc, // The answer picture (label, src ...)
+            'total' => $total, // Score max if all answers right and no penalty
+            'rep' => $coords, // Coordonates of the answer zones of the student's answer
+            'score' => $score, // Score of the student (right answer - penalty)
+            'response' => $answers // The student's answer (with all the informations of the coordonates)
         );
 
         return $res;
     }
 
+    // Check if the suggested answer zone isn't already right in order not to have points twice
     public function alreadyDone($coor, $verif, $z)
     {
         $resu = true;
@@ -313,7 +314,6 @@ class exerciseServices
                 $resu = true;
             }
         }
-
         return $resu;
     }
 }

@@ -44,8 +44,6 @@ use UJM\ExoBundle\Form\InteractionGraphicType;
 use UJM\ExoBundle\Entity\Coords;
 use UJM\ExoBundle\Entity\ExerciseQuestion;
 
-//use UJM\ExoBundle\Entity\Document;
-
 /**
  * InteractionGraphic controller.
  *
@@ -139,20 +137,21 @@ class InteractionGraphicController extends Controller
 
         $coords = $this->get('request')->get('coordsZone'); // Get the answer zones
 
-        $coord = preg_split('[,]', $coords); // Split the coordonates of answers
+        $coord = preg_split('[,]', $coords); // Split all informations of one answer zones into a cell
         $lengthCoord = count($coord) - 1; // Number of answer zones
 
         for ($i = 0; $i < $lengthCoord; $i++) {
 
-            $inter = preg_split('[;]', $coord[$i]);
+            $inter = preg_split('[;]', $coord[$i]); // Divide the src of the answer zone and the other informations
 
             $before = array("-","~");
             $after = array(",",",");
 
-            $data = str_replace($before, $after, $inter[1]);
+            $data = str_replace($before, $after, $inter[1]); // replace separation punctuation of the informations ...
 
-            list(${'value'.$i}, ${'point'.$i}, ${'size'.$i}) = explode(",", $data); // Split informations
+            list(${'value'.$i}, ${'point'.$i}, ${'size'.$i}) = explode(",", $data); //... in order to split informations
 
+            // And persist it into the Database
             ${'url'.$i} = $inter[0];
 
             ${'value'.$i} = str_replace("_", ",", ${'value'.$i});
@@ -183,11 +182,11 @@ class InteractionGraphicController extends Controller
             }
             $em->flush();
 
-            if ($exoID != -1) {
+            if ($exoID != -1) { // To associate the question to an exercise
                 $exo = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
                 $eq = new ExerciseQuestion($exo, $interGraph->getInteraction()->getQuestion());
 
-                $dql = 'SELECT max(eq.ordre) FROM UJM\ExoBundle\Entity\ExerciseQuestion eq '
+                $dql = 'SELECT max(eq.ordre) FROM UJM\ExoBundle\Entity\ExerciseQuestion eq'
                     . 'WHERE eq.exercise='.$exoID;
                 $query = $em->createQuery($dql);
                 $maxOrdre = $query->getResult();
@@ -309,7 +308,7 @@ class InteractionGraphicController extends Controller
     }
 
     /**
-     * Display the twig view to add a new picture to the user document.
+     * Display the twig view to add a new picture to the user's document.
      *
      */
     public function savePicAction()
@@ -327,8 +326,8 @@ class InteractionGraphicController extends Controller
         $request = $this->container->get('request');
 
         if ($request->isXmlHttpRequest()) {
-            $label = $request->request->get('value');
-            $prefix = $request->request->get('prefix');
+            $label = $request->request->get('value'); // Name of the picture
+            $prefix = $request->request->get('prefix'); // Beginning of the src of the picture
 
             // If the sended label isn't empty, get the matching adress
             if ($label) {
@@ -337,15 +336,15 @@ class InteractionGraphicController extends Controller
                     ->getRepository('UJMExoBundle:Document');
 
                 $pic = $repository->findOneBy(array('label' => $label));
-                $sufix = substr($pic->getUrl(), 9);
+                $suffix = substr($pic->getUrl(), 9); // Get the end of the src of the picture
             } else {
-                $sufix = ""; // Else don't display anything
+                $suffix = ""; // Else don't display anything
             }
         }
 
-        $url = $prefix . $sufix;
+        $url = $prefix . $suffix; // Concatenate the beginning and the end of the src of the picture
 
-        return new Response($url);
+        return new Response($url); // Send back the src if the picture
     }
 
     /**
@@ -354,12 +353,13 @@ class InteractionGraphicController extends Controller
      */
     public function getShape($url)
     {
+        // Recover the shape of an answer zone thanks to its src
         $temp = strrpos($url, 'graphic/') + 8;
-        $chaine = substr($url, $temp, 1);
+        $chain = substr($url, $temp, 1);
 
-        if ($chaine == "r") {
+        if ($chain == "r") {
             return "rectangle";
-        } else if ($chaine == "c") {
+        } else if ($chain == "c") {
             return "circle";
         }
     }
@@ -370,10 +370,11 @@ class InteractionGraphicController extends Controller
      */
     public function getColor($url)
     {
+        // Recover the color of an answer zone thanks to its src
         $temp = strrpos($url, '.') - 1;
-        $chaine = substr($url, $temp, 1);
+        $chain = substr($url, $temp, 1);
 
-        switch ($chaine) {
+        switch ($chain) {
             case "w" :
                 return "white";
             case "g" :
@@ -407,14 +408,14 @@ class InteractionGraphicController extends Controller
         return $this->render(
             'UJMExoBundle:InteractionGraphic:graphicOverview.html.twig',
             array(
-                'point' => $res['point'],
-                'penalty' => $res['penalty'],
-                'interG' => $res['interG'],
-                'coords' => $res['coords'],
-                'doc' => $res['doc'],
-                'total' => $res['total'],
-                'rep' => $res['rep'],
-                'score' => $res['score']
+                'point' => $res['point'], // Score of the student without penalty
+                'penalty' => $res['penalty'], // Penalty (hints)
+                'interG' => $res['interG'], // The entity interaction graphic (for the id ...)
+                'coords' => $res['coords'], // The coordonates of the right answer zones
+                'doc' => $res['doc'], // The answer picture (label, src ...)
+                'total' => $res['total'], // Score max if all answers right and no penalty
+                'rep' => $res['rep'], // Coordonates of the answer zones of the student's answer
+                'score' => $res['score'] // Score of the student (right answer - penalty)
             )
         );
     }
