@@ -315,6 +315,7 @@ resources_rights_form_canOpen: Open
 resources_rights_form_canShare: Share
 resources_rights_form_canView: See
 resources_rights_form_canExport: Export
+resources_rights_form_isRecursive: Apply changes to current and sub directories
 restore : Restore
 results: Results
 rights: Rights

@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Form\ResourceRightType;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleChangeRightEvent;
@@ -46,14 +47,14 @@ class ResourceRightsController extends Controller
                 ->findOneBy(array('role' => $roleId, 'resource' => $resourceId));
 
             if ($resourceRight == null) {
-                 $form = $this->createForm(new ResourceRightType(), new ResourceRights());
+                 $form = $this->createForm(new ResourceRightType($resource), new ResourceRights());
 
                  return $this->render(
                      'ClarolineCoreBundle:Resource:resource_rights_form_creation.html.twig',
                      array('form' => $form->createView(), 'resourceId' => $resourceId, 'roleId' => $roleId)
                  );
             } else {
-                $form = $this->createForm(new ResourceRightType(), $resourceRight);
+                $form = $this->createForm(new ResourceRightType($resource), $resourceRight);
 
                 return $this->render(
                     'ClarolineCoreBundle:Resource:resource_rights_form_edit.html.twig',
@@ -147,20 +148,39 @@ class ResourceRightsController extends Controller
     {
         $request = $this->get('request');
         $em = $this->get('doctrine.orm.entity_manager');
-        $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->find($resourceId);
+        $resourceRepo = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
+        $resource = $resourceRepo->find($resourceId);
         $collection = new ResourceCollection(array($resource));
         $this->checkAccess('EDIT', $collection);
-        $form = $this->get('form.factory')->create(new ResourceRightType(), new ResourceRights());
+        $role = $em->getRepository('ClarolineCoreBundle:Role')->find($roleId);
+        $form = $this->get('form.factory')->create(new ResourceRightType($resource), new ResourceRights());
         $form->bind($request);
+        $resourceRights = array();
 
         if ($form->isValid()) {
-            $resourceRight = $form->getData();
-            $resourceRight->setRole($em->getRepository('ClarolineCoreBundle:Role')->find($roleId));
-            $resourceRight->setResource(
-                $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($resourceId)
-            );
-            $em->persist($resourceRight);
+            $isRecursive = $form->get('isRecursive')->getData();
+
+            if ($isRecursive) {
+                $resourceRights = $this->findAndCreateMissingDescendants($role, $resource);
+            } else {
+                $resourceRight = new ResourceRights();
+                $resourceRight->setRole($role);
+                $resourceRight->setResource(
+                    $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($resourceId)
+                );
+                $resourceRights[] = $resourceRight;
+            }
+
+            foreach ($resourceRights as $resourceRight) {
+                $resourceRight->setCanCopy($form->get('canCopy')->getData());
+                $resourceRight->setCanOpen($form->get('canOpen')->getData());
+                $resourceRight->setCanDelete($form->get('canDelete')->getData());
+                $resourceRight->setCanEdit($form->get('canEdit')->getData());
+                $resourceRight->setCanExport($form->get('canExport')->getData());
+
+                $em->persist($resourceRight);
+            }
+
             $em->flush();
 
             return new Response("success");
@@ -424,6 +444,35 @@ class ResourceRightsController extends Controller
         }
 
         return $addedResourceTypes;
+    }
+
+    private function findAndCreateMissingDescendants(Role $role, AbstractResource $resource)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $resourceRepo = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
+        $alreadyExistings = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
+            ->findRecursiveByResourceAndRole($resource, $role);
+        $descendants = $resourceRepo->findDescendants($resource, true);
+        $finalRights = array();
+
+        foreach ($descendants as $descendant) {
+            $found = false;
+            foreach ($alreadyExistings as $existingRight) {
+                if ($existingRight->getResource() === $descendant) {
+                    $finalRights[] = $existingRight;
+                    $found = true;
+                }
+            }
+
+            if (!$found) {
+                $resourceRight = new ResourceRights();
+                $resourceRight->setRole($role);
+                $resourceRight->setResource($descendant);
+                $finalRights[] = $resourceRight;
+            }
+        }
+
+        return $finalRights;
     }
 
     /**

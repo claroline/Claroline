@@ -315,6 +315,7 @@ resources_rights_form_canOpen: Ouvrir
 resources_rights_form_canShare: Partager
 resources_rights_form_canView: Voir
 resources_rights_form_canExport: Exporter
+resources_rights_form_isRecursive: Appliquer au contenu du répertoire et aux sous-répertoires
 restore : Restaurer
 results: Résultats
 rights: Droits

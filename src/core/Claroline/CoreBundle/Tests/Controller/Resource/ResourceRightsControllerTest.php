@@ -226,6 +226,72 @@ class ResourceRightsControllerTest extends FunctionalTestCase
         $this->assertEquals(1, $postRecursive - $preRecursive);
     }
 
+    public function testRecursiveRightCreationCreatesMissingRights()
+    {
+        $this->loadUserData(array('jane' => 'user'));
+        $this->loadDirectoryData('john', array('john/dir1', 'john/dir1/dir2'));
+        $this->logUser($this->getUser('john'));
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $directoryId = $this->getDirectory('dir1')->getId();
+        $role = $em->getRepository('ClarolineCoreBundle:Role')
+            ->findManagerRole($this->getWorkspace('jane'));
+        $resourceRightsRepo = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
+        $preRecursive = count($resourceRightsRepo->findRecursiveByResource($this->getDirectory('dir1')));
+        $this->client->request(
+            'POST',
+            "/resource/{$directoryId}/role/{$role->getId()}/right/create",
+            array('resources_rights_form' => array(
+                'canOpen' => true,
+                'canEdit' => true,
+                'canDelete' => true,
+                'canCopy' => true,
+                'canExport' => true,
+                'isRecursive' => true
+            ))
+        );
+
+        $postRecursive = count($resourceRightsRepo->findRecursiveByResource($this->getDirectory('dir1')));
+        $this->assertEquals(2, $postRecursive - $preRecursive);
+    }
+
+    public function testRecursiveRightCreationOverridesExistingRights()
+    {
+        $this->loadUserData(array('jane' => 'user'));
+        $this->loadDirectoryData('john', array('john/dir1', 'john/dir1/dir2'));
+        $this->logUser($this->getUser('john'));
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $role = $em->getRepository('ClarolineCoreBundle:Role')
+            ->findManagerRole($this->getWorkspace('jane'));
+
+        $this->client->request(
+            'POST',
+            "/resource/{$this->getDirectory('dir2')->getId()}/role/{$role->getId()}/right/create",
+            array('resources_rights_form' => array(
+                'canOpen' => true,
+                'canEdit' => true,
+                'canDelete' => true,
+                'canCopy' => true,
+                'canExport' => true,
+                'isRecursive' => false
+            ))
+        );
+
+        $this->client->request(
+            'POST',
+            "/resource/{$this->getDirectory('dir1')->getId()}/role/{$role->getId()}/right/create",
+            array('resources_rights_form' => array(
+                'isRecursive' => true
+            ))
+        );
+            var_dump($this->client->getResponse()->getContent());
+        $this->assertRolePermissionsOnResource(
+            $role,
+            $this->getDirectory('dir1'),
+            array('delete' => false, 'open' => false, 'export' => false, 'copy' => false, 'edit' => false),
+            array('delete' => false, 'open' => false, 'export' => false, 'copy' => false, 'edit' => false)
+        );
+    }
+
     private function assertRolePermissionsOnResource(
         Role $role,
         AbstractResource $resource,
@@ -238,9 +304,11 @@ class ResourceRightsControllerTest extends FunctionalTestCase
             ->findDescendants($resource, true);
 
         for ($i = 0, $resourceCount = count($resources); $i < $resourceCount; ++$i) {
+            var_dump($resource->getName());
             $expectedPermissions = $i === 0 ? $expectedPermissionsOnResource : $expectedPermissionsOnDescendants;
             $resourceRights = $rightsRepo->findOneBy(array('resource' => $resources[$i], 'role' => $role));
             $this->em->refresh($resourceRights);
+                        var_dump('open:'. $resourceRights->canDelete());
             $this->assertEquals($expectedPermissions['open'], $resourceRights->canOpen());
             $this->assertEquals($expectedPermissions['delete'], $resourceRights->canDelete());
             $this->assertEquals($expectedPermissions['export'], $resourceRights->canExport());

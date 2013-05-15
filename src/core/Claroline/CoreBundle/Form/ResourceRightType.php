@@ -2,12 +2,21 @@
 
 namespace Claroline\CoreBundle\Form;
 
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ResourceRightType extends AbstractType
 {
+    private $hasRecustiveOption;
+
+    public function __construct(AbstractResource $resource) {
+        $this->hasRecustiveOption = false;
+        if ($resource instanceof \Claroline\CoreBundle\Entity\Resource\Directory) {
+            $this->hasRecustiveOption = true;
+        }
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -16,6 +25,12 @@ class ResourceRightType extends AbstractType
         $builder->add('canDelete', 'checkbox');
         $builder->add('canCopy', 'checkbox');
         $builder->add('canExport', 'checkbox');
+
+        if ($this->hasRecustiveOption) {
+            $builder->add('isRecursive', 'checkbox', array('mapped' => false));
+        } else {
+            $builder->add('isRecursive', 'hidden', array('data' => false, 'mapped' => false));
+        }
     }
 
     public function getName()
