@@ -1,7 +1,7 @@
 <div class="tab-content accordion">
     <div class="accordion-group">
     {% for key, value in widgets %}
-        <div class="accordion-heading">
+        <div class="accordion-heading widget">
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{ value | length }}">
                 <i class="icon-cogs"></i>
                 {{ key|trans({}, 'widget') }}
