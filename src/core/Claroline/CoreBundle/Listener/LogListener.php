@@ -153,6 +153,14 @@ class LogListener
 
         $this->em->persist($log);
         $this->em->flush();
+
+        // if ($log->getAction() == 'ws_role_subscribe_user' or $log->getAction() == 'ws_role_unsubscribe_user') {
+        //     var_dump('Log create : '.$log->getAction().
+        //         ', doer: '.$log->getDoer()->getId().
+        //         ', receiver: '.$log->getReceiver()->getId().
+        //         ', role: '.$log->getRole()->getName().
+        //         ', workspace: '.$log->getWorkspace()->getId());
+        // }
     }
 
     /**

@@ -6,25 +6,35 @@ use Doctrine\ORM\EntityRepository;
 
 class LogRepository extends EntityRepository
 {
-    public function findAdminLogsQuery($actionsRestriction)
-    {
-        $qb = $this
-            ->createQueryBuilder('log')
-            ->orderBy('log.dateLog', 'DESC');
-        $qb = $this->addActionFilterToQueryBuilder($qb, null, $actionsRestriction);
 
-        return $qb->getQuery();
-    }
-
-    public function findAdminLogs($actionsRestriction)
+    private function actionsRestrictionToString($actionsRestriction)
     {
-        return $this->findAdminLogsQuery($actionsRestriction)->getResult();
+        $s = "";
+        $first = true;
+        foreach ($actionsRestriction as $action) {
+            if ($first) {
+                $first = false;
+                $s .= "'".$action."'";
+            } else {
+                $s .= ", '".$action."'";
+            }
+        }
+
+        return $s;
     }
 
     private function addActionFilterToQueryBuilder($qb, $action, $actionsRestriction)
     {
         if ($action == "'resource_all'") {
-            $action = "'resource_create', 'resource_delete', 'resource_update', 'resource_child_update'";
+            $action = "'resource_create',
+            'resource_move',
+            'resource_read',
+            'resource_export',
+            'resource_delete',
+            'resource_update',
+            'resource_shortcut',
+            'resource_child_update',
+            ";
         } else if ($action == "'ws_role_all'") {
             $action = "'ws_role_create',
                 'ws_role_delete',
@@ -214,19 +224,100 @@ class LogRepository extends EntityRepository
         return $this->findFilteredLogsQuery($action, $range, $userSearch, $actionsRestriction, $workspaceIds)->getResult();
     }
 
-    private function actionsRestrictionToString($actionsRestriction)
+    public function findAdminLogsQuery($actionsRestriction)
     {
-        $s = "";
-        $first = true;
-        foreach ($actionsRestriction as $action) {
-            if ($first) {
-                $first = false;
-                $s .= "'".$action."'";
-            } else {
-                $s .= ", '".$action."'";
-            }
+        $qb = $this
+            ->createQueryBuilder('log')
+            ->orderBy('log.dateLog', 'DESC');
+        $qb = $this->addActionFilterToQueryBuilder($qb, null, $actionsRestriction);
+
+        return $qb->getQuery();
+    }
+
+    public function findAdminLogs($actionsRestriction)
+    {
+        return $this->findAdminLogsQuery($actionsRestriction)->getResult();
+    }
+
+    //findByUserIdAndActionAndAfterDate
+    public function findByUserIdAndActionAndAfterDate($userId, $action, $date, $resourceId = null, $workspaceId = null, $receiverId = null, $roleId = null, $groupId = null)
+    {
+        // var_dump($userId);
+        // var_dump($action);
+        // var_dump($date);
+        // if ($resourceId) {
+        //     var_dump($resourceId);
+        // }
+        // if ($workspaceId) {
+        //     var_dump($workspaceId);
+        // }
+        // if ($receiverId) {
+        //     var_dump($receiverId);
+        // }
+        // if ($roleId) {
+        //     var_dump($roleId);
+        // }
+        // if ($groupId) {
+        //     var_dump($groupId);
+        // }
+
+        $qb = $this
+            ->createQueryBuilder('log')
+            ->orderBy('log.dateLog', 'DESC')
+            ->leftJoin('log.doer', 'doer')
+            
+            ->andWhere('log.action = :action')
+            ->setParameter('action', $action)
+            
+            ->andWhere('doer.id = :userId')
+            ->setParameter('userId', $userId)
+
+            ->andWhere('log.dateLog >= :date')
+            ->setParameter('date', $date);
+
+        if ($resourceId !== null) {
+            $qb
+                ->leftJoin('log.resource', 'resource')
+                ->andWhere('resource.id = :resourceId')
+                ->setParameter('resourceId', $resourceId);
         }
 
-        return $s;
+        if ($workspaceId !== null) {
+            $qb
+                ->leftJoin('log.workspace', 'workspace')
+                ->andWhere('workspace.id = :workspaceId')
+                ->setParameter('workspaceId', $workspaceId);
+        }
+
+        if ($receiverId !== null) {
+            $qb
+                ->leftJoin('log.receiver', 'receiver')
+                ->andWhere('receiver.id = :receiverId')
+                ->setParameter('receiverId', $receiverId);
+        }
+
+        if ($roleId !== null) {
+            $qb
+                ->leftJoin('log.role', 'role')
+                ->andWhere('role.id = :roleId')
+                ->setParameter('roleId', $roleId);
+        }
+
+        if ($groupId !== null) {
+            $qb
+                ->leftJoin('log.receiverGroup', 'receiverGroup')
+                ->andWhere('receiverGroup.id = :groupId')
+                ->setParameter('groupId', $groupId);
+        }
+
+        $q = $qb->getQuery();
+        $logs = $q->getResult();
+
+        // foreach ($logs as $log) {
+        //     //var_dump($log->getDetails()['resource']['name']);
+        //     //var_dump($log->getDetails()['role']['name']);
+        // }
+
+        return $logs;
     }
 }

@@ -22,8 +22,13 @@ class WorkspaceLogFilterType extends AbstractType
                         'resource' => array(
                             "'resource_all'" => 'all',
                             "'resource_create'" => 'log_create',
+                            "'resource_read'" => 'log_read',
+                            "'resource_export'" => 'log_export',
                             "'resource_delete'" => 'log_delete',
                             "'resource_update'" => 'log_update',
+                            "'resource_move'" => 'log_move',
+                            "'resource_copy'" => 'log_copy',
+                            "'resource_shortcut'" => 'log_shortcut',
                             "'resource_child_update'" => 'log_child_update'
                         ),
                         'role' => array(
