@@ -1,9 +1,9 @@
 <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="{{ asset('bundles/clarolinecore/js/common/jqplot/excanvas.min.js') }}"></script><![endif]-->
-<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/common/jqplot/jquery.jqplot.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/common/jqplot/plugins/jqplot.canvasTextRenderer.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/common/jqplot/plugins/jqplot.dateAxisRenderer.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/common/jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/common/jqplot/plugins/jqplot.canvasAxisLabelRenderer.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/jquery.jqplot.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasTextRenderer.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.dateAxisRenderer.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasAxisLabelRenderer.min.js') }}"></script>
 
 <style type="text/css">
     .line-chart {
@@ -30,7 +30,7 @@
 
 
             var actionsPlot = $.jqplot(
-                'actions_line_chart', 
+                'actions_line_chart',
                 [chartData],
                 {
                     title: {show: false},
@@ -42,7 +42,7 @@
                     },
                     axesDefaults: {
                         labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
-                        tickRenderer: $.jqplot.CanvasAxisTickRenderer 
+                        tickRenderer: $.jqplot.CanvasAxisTickRenderer
                     },
                     axes: {
                         xaxis: {
@@ -77,6 +77,6 @@
                 }
             );
         }
-        
+
     });
 </script>
