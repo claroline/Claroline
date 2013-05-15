@@ -1,12 +1,12 @@
-{% extends 'form_div_layout.html.twig' %} 
+{% extends 'form_div_layout.html.twig' %}
 
-{% block daterange_widget %} 
-    {% spaceless %} 
+{% block daterange_widget %}
+    {% spaceless %}
         {{ block('field_widget') }}
         {% block daterange_assets %}
             <link rel="stylesheet" type="text/css" media="all" href="{{ asset('bundles/clarolinecore/css/common/daterangepicker.css') }}" />
-            <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/common/date.js') }}"></script>
-            <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/common/daterangepicker.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('bundles/frontend/date.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/daterangepicker.js') }}"></script>
         {% endblock %}
         <script type="text/javascript">
 
@@ -101,10 +101,10 @@
 
             var chosenRangeKeys = {{ chosenRangeKeys|raw }};
             //var chosenRangeKeys = ['this_week', 'last_year', 'last_school_year'];
-            
+
             for (var i in chosenRangeKeys) {
                 var key = chosenRangeKeys[i];
-                var range = possibleRanges[key];    
+                var range = possibleRanges[key];
                 ranges[range.label] = range.value;
             };
 
@@ -127,5 +127,5 @@
                 });
             });
         </script>
-    {% endspaceless %} 
+    {% endspaceless %}
 {% endblock %}
