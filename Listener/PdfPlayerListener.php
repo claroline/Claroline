@@ -18,7 +18,8 @@ class PdfPlayerListener extends ContainerAware
             array(
                 'workspace' => $event->getResource()->getWorkspace(),
                 'path' => $path,
-                'pdf' => $event->getResource()
+                'pdf' => $event->getResource(),
+                '_resource' => $event->getResource()
             )
         );
         $response = new Response($content);
