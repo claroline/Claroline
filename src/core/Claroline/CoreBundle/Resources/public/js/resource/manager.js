@@ -481,7 +481,7 @@
 
                     if (event.currentTarget.getAttribute('data-toggle') !== 'tab') {
                         $.ajax({
-                            context: this,
+//                            context: this,
                             url: event.currentTarget.getAttribute('href'),
                             type: 'POST',
                             processData: false,
@@ -683,10 +683,10 @@
                 this.dispatcher.on(event, callback);
             }, this);
             this.stackedRequests = 0;
-//            $.ajaxSetup({
-//                headers: {'X_Requested_With': 'XMLHttpRequest'},
-//                context: this
-//            });
+            $.ajaxSetup({
+                headers: {'X_Requested_With': 'XMLHttpRequest'},
+                context: this
+            });
 
             if (!parameters.isPickerOnly) {
                 this.displayResources = _.bind(this.displayResources, this);

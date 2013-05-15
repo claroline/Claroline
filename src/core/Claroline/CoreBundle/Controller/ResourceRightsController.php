@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Form\ResourceRightType;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleChangeRightEvent;
@@ -98,49 +99,10 @@ class ResourceRightsController extends Controller
         $parameters = $this->get('request')->request->all();
         $permissions = array('open', 'copy', 'delete', 'edit', 'export');
         $editedResourceRightsWithChangeSet = array();
-        $rootRoleRights = $rightsRepo->findNonAdminRights($resource);
 
-        if (isset($parameters['isRecursive'])){
-            $existingRights = $rightsRepo->findRecursiveByResource($resource);
-            $missingRights = array();
-            $resources = $resourceRepo->findDescendants($resource, true);
-            $roles = array();
-
-            foreach ($rootRoleRights as $rootRoleRight) {
-                $roles[] = $rootRoleRight->getRole();
-            }
-
-            $toFind = array();
-
-            foreach ($resources as $resource) {
-                foreach ($roles as $role) {
-                    $toFind[] = array('resource' => $resource, 'role' => $role);
-                }
-            }
-
-            $found = false;
-            foreach ($toFind as $item) {
-                foreach ($existingRights as $existingRight) {
-                    if ($item['resource'] == $existingRight->getResource()
-                        && $item['role'] == $existingRight->getRole()) {
-                        $found = true;
-                    }
-                }
-
-                if (!$found) {
-                    $newRight = new ResourceRights();
-                    $newRight->setResource($item['resource']);
-                    $newRight->setRole($item['role']);
-                    $missingRights[] = $newRight;
-                }
-
-                $found = false;
-            }
-
-            $finalRights = array_merge($missingRights, $existingRights);
-        } else {
-            $finalRights = $rootRoleRights;
-        }
+        $finalRights = isset($parameters['isRecursive']) ?
+            $this->findChildrenRights($resource):
+            $finalRights = $rightsRepo->findNonAdminRights($resource);
 
         foreach ($finalRights as $finalRight) {
             foreach ($permissions as $permission) {
@@ -156,7 +118,9 @@ class ResourceRightsController extends Controller
             $changeSet = $unitOfWork->getEntityChangeSet($finalRight);
 
             if (count($changeSet) > 0) {
-                $editedResourceRightsWithChangeSet[] = array('resourceRights' => $finalRight, 'changeSet' => $changeSet);
+                $editedResourceRightsWithChangeSet[] = array(
+                    'resourceRights' => $finalRight, 'changeSet' => $changeSet
+                );
             }
         }
 
@@ -306,49 +270,7 @@ class ResourceRightsController extends Controller
         $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findByIds($resourceTypeIds);
 
-        foreach ($targetResources as $targetResource) {
-            $resourceRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
-                ->findOneBy(array('resource' => $targetResource, 'role' => $roleId));
-            $oldResourceTypes = $resourceRights->getCreatableResourceTypes();
-            $resourceRights->setCreatableResourceTypes($resourceTypes);
-
-            $addedResourceTypes = array();
-            $removedResourceTypes = array();
-
-            //Detect added
-            foreach ($resourceRights->getCreatableResourceTypes() as $resourceType) {
-                if (!$this->isInResourceTypes($resourceType, $oldResourceTypes)) {
-                    $addedResourceTypes[] = $resourceType;
-                }
-            }
-
-            //Detect removed
-            foreach ($oldResourceTypes as $resourceType) {
-                if (!$this->isInResourceTypes($resourceType, $resourceRights->getCreatableResourceTypes())) {
-                    $removedResourceTypes[] = $resourceType;
-                }
-            }
-
-            $createRights = array();
-            if (count($addedResourceTypes) > 0) {
-                foreach ($addedResourceTypes as $resourceType) {
-                    $createRights[$resourceType->getName()] = array(false, true);
-                }
-            }
-            if (count($removedResourceTypes) > 0) {
-                foreach ($removedResourceTypes as $resourceType) {
-                    $createRights[$resourceType->getName()] = array(true, false);
-                }
-            }
-            if (count($createRights) > 0) {
-                $editedResourceRightsWithChangeSet[] = array(
-                    'resourceRights' => $resourceRights,
-                    'changeSet' => array('can_create' => $createRights)
-                );
-            }
-        }
-
-        $em->flush();
+        $editedResourceRightsWithChangeSet = $this->setNewCreationTypes($targetResources, $resourceTypes, $roleId);
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -370,7 +292,8 @@ class ResourceRightsController extends Controller
         return $response;
     }
 
-    private function isInResourceTypes($resourceType, $resourceTypes) {
+    private function isInResourceTypes($resourceType, $resourceTypes)
+    {
         foreach ($resourceTypes as $current) {
             if ($resourceType->getId() == $current->getId()) {
 
@@ -379,6 +302,128 @@ class ResourceRightsController extends Controller
         }
 
         return false;
+    }
+
+    /**
+     * Find (and create if missing) resourcerights form every children.
+     */
+    private function findChildrenRights(AbstractResource $resource)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $resourceRepo = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
+        $rightsRepo = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
+        $rootRoleRights = $rightsRepo->findNonAdminRights($resource);
+        $existingRights = $rightsRepo->findRecursiveByResource($resource);
+        $missingRights = array();
+        $resources = $resourceRepo->findDescendants($resource, true);
+        $roles = array();
+
+        foreach ($rootRoleRights as $rootRoleRight) {
+            $roles[] = $rootRoleRight->getRole();
+        }
+
+        $toFind = array();
+
+        foreach ($resources as $resource) {
+            foreach ($roles as $role) {
+                $toFind[] = array('resource' => $resource, 'role' => $role);
+            }
+        }
+
+        $found = false;
+        foreach ($toFind as $item) {
+            foreach ($existingRights as $existingRight) {
+                if ($item['resource'] == $existingRight->getResource()
+                    && $item['role'] == $existingRight->getRole()) {
+                    $found = true;
+                }
+            }
+
+            if (!$found) {
+                $newRight = new ResourceRights();
+                $newRight->setResource($item['resource']);
+                $newRight->setRole($item['role']);
+                $missingRights[] = $newRight;
+            }
+
+            $found = false;
+        }
+
+        return array_merge($missingRights, $existingRights);
+    }
+
+    /**
+     * Sets new creation types to an array of resource for the role $roleId.
+     * Returns the changeset.
+     *
+     * @param array $targetResources
+     * @param array $resourceTypes
+     * @param type $roleId
+     *
+     * @return array
+     */
+    private function setNewCreationTypes(array $targetResources, array $resourceTypes, $roleId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        foreach ($targetResources as $targetResource) {
+            $resourceRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
+                ->findOneBy(array('resource' => $targetResource, 'role' => $roleId));
+            $oldResourceTypes = $resourceRights->getCreatableResourceTypes();
+            $resourceRights->setCreatableResourceTypes($resourceTypes);
+            $addedResourceTypes = $this->findResourceTypesAdded($resourceRights, $oldResourceTypes);
+            $removedResourceTypes = $this->findResourceTypesRemoved($resourceRights, $oldResourceTypes);
+            $createRights = array();
+
+            if (count($addedResourceTypes) > 0) {
+                foreach ($addedResourceTypes as $resourceType) {
+                    $createRights[$resourceType->getName()] = array(false, true);
+                }
+            }
+
+            if (count($removedResourceTypes) > 0) {
+                foreach ($removedResourceTypes as $resourceType) {
+                    $createRights[$resourceType->getName()] = array(true, false);
+                }
+            }
+
+            if (count($createRights) > 0) {
+                $editedResourceRightsWithChangeSet[] = array(
+                    'resourceRights' => $resourceRights,
+                    'changeSet' => array('can_create' => $createRights)
+                );
+            }
+        }
+
+        $em->flush();
+
+        return $editedResourceRightsWithChangeSet;
+    }
+
+    private function findResourceTypesRemoved($resourceRights, $oldResourceTypes)
+    {
+        $removedResourceTypes = array();
+
+        foreach ($oldResourceTypes as $resourceType) {
+            if (!$this->isInResourceTypes($resourceType, $resourceRights->getCreatableResourceTypes())) {
+                $removedResourceTypes[] = $resourceType;
+            }
+        }
+
+        return $removedResourceTypes;
+    }
+
+    private function findResourceTypesAdded($resourceRights, $oldResourceTypes)
+    {
+        $addedResourceTypes = array();
+
+        foreach ($resourceRights->getCreatableResourceTypes() as $resourceType) {
+            if (!$this->isInResourceTypes($resourceType, $oldResourceTypes)) {
+                $addedResourceTypes[] = $resourceType;
+            }
+        }
+
+        return $addedResourceTypes;
     }
 
     /**
