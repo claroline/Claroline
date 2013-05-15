@@ -12,6 +12,7 @@ use Claroline\CoreBundle\Entity\Resource\Directory;
 class ResourceControllerTest extends FunctionalTestCase
 {
     private $resourceRepository;
+    private $logRepository;
     private $pwr;
 
     public function setUp()
@@ -21,6 +22,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->client->followRedirects();
         $this->resourceRepository = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
+        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Logger\Log');
         $this->pwr = $this->getDirectory('user');
     }
 
@@ -47,6 +49,8 @@ class ResourceControllerTest extends FunctionalTestCase
 
     public function testMove()
     {
+        $now = new \DateTime();
+
         $this->loadFileData('user', 'user', array('file.txt'));
         $this->loadDirectoryData('user', array('user/container'));
         $this->createBigTree('user');
@@ -62,10 +66,15 @@ class ResourceControllerTest extends FunctionalTestCase
         $dir = json_decode($this->client->getResponse()->getContent());
         $this->assertObjectHasAttribute('resources', $dir);
         $this->assertEquals(2, count($dir->resources));
+
+        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'resource_move', $now, $loneFile->getId());
+        $this->assertEquals(1, count($logs));
     }
 
     public function testCopy()
     {
+        $now = new \DateTime();
+
         $this->loadFileData('user', 'user', array('file.txt'));
         $this->createBigTree('user');
         $this->logUser($this->getUser('user'));
@@ -80,6 +89,9 @@ class ResourceControllerTest extends FunctionalTestCase
         $dir = json_decode($this->client->getResponse()->getContent());
         $this->assertObjectHasAttribute('resources', $dir);
         $this->assertEquals(4, count($dir->resources));
+
+        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'resource_copy', $now);
+        $this->assertEquals(6, count($logs));
     }
 
     public function testGetEveryInstancesIdsFromExportArray()
@@ -109,16 +121,23 @@ class ResourceControllerTest extends FunctionalTestCase
 
     public function testExport()
     {
+        $now = new \DateTime();
+
         $this->logUser($this->getUser('user'));
         ob_start();
         $this->client->request('GET', "/resource/export?ids[]={$this->pwr->getId()}");
         ob_end_clean();
         $headers = $this->client->getResponse()->headers;
         $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=archive'));
+
+        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'resource_export', $now, $this->pwr->getId());
+        $this->assertEquals(1, count($logs));
     }
 
     public function testMultiExportThrowsAnExceptionWithoutParameters()
     {
+        $now = new \DateTime();
+
         $this->logUser($this->getUser('user'));
         $crawler = $this->client->request('GET', "/resource/export");
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
@@ -126,6 +145,9 @@ class ResourceControllerTest extends FunctionalTestCase
             1,
             count($crawler->filter('html:contains("You must select some resources to export.")'))
         );
+
+        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'resource_export', $now);
+        $this->assertEquals(0, count($logs));
     }
 
     public function testCustomActionThrowExceptionOnUknownAction()
@@ -198,6 +220,8 @@ class ResourceControllerTest extends FunctionalTestCase
 
     public function testDelete()
     {
+        $now = new \DateTime();
+
         $this->createBigTree('user');
         $this->loadFileData('user', 'user', array('file.txt'));
         $this->logUser($this->getUser('user'));
@@ -214,14 +238,22 @@ class ResourceControllerTest extends FunctionalTestCase
         $dir = json_decode($this->client->getResponse()->getContent());
         $this->assertObjectHasAttribute('resources', $dir);
         $this->assertEquals(0, count($dir->resources));
+
+        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'resource_delete', $now);
+        $this->assertEquals(6, count($logs));
     }
 
     public function testDeleteRootThrowsAnException()
     {
+        $now = new \DateTime();
+
         $this->logUser($this->getUser('user'));
         $crawler = $this->client->request('GET', "/resource/delete?ids[]={$this->pwr->getId()}");
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, count($crawler->filter('html:contains("Root directory cannot be removed")')));
+
+        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'resource_delete', $now);
+        $this->assertEquals(0, count($logs));
     }
 
     public function testCustomActionLogsEvent()
@@ -246,6 +278,8 @@ class ResourceControllerTest extends FunctionalTestCase
 
     public function testOpenActionLogsEvent()
     {
+        $now = new \DateTime();
+
         $this->loadFileData('user', 'user', array('file.txt'));
         $file = $this->getFile('file.txt');
         $this->logUser($this->getUser('user'));
@@ -261,11 +295,15 @@ class ResourceControllerTest extends FunctionalTestCase
             ->getRepository('ClarolineCoreBundle:Logger\Log')
             ->findAll();
         $this->assertEquals(1, count($postEvents) - count($preEvents));
-    }
 
+        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'resource_read', $now, $file->getId());
+        $this->assertEquals(1, count($logs));
+    }
 
     public function testCreateActionLogsEventWithResourceManager()
     {
+        $now = new \DateTime();
+
         $user = $this->getUser('user');
         $this->logUser($user);
         $logRepo = $this->em->getRepository('ClarolineCoreBundle:Logger\Log');
@@ -278,10 +316,15 @@ class ResourceControllerTest extends FunctionalTestCase
         );
         $postEvents = $logRepo->findAll();
         $this->assertEquals(1, count($postEvents) - count($preEvents));
+
+        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'resource_create', $now);
+        $this->assertEquals(1, count($logs));
     }
 
     public function testMultiDeleteActionLogsEvent()
     {
+        $now = new \DateTime();
+
         $this->createBigTree('user');
         $this->loadFileData('user', 'user', array('file.txt'));
         $treeRoot = $this->getDirectory('treeRoot');
@@ -306,10 +349,15 @@ class ResourceControllerTest extends FunctionalTestCase
             ->getRepository('ClarolineCoreBundle:Logger\Log')
             ->findAll();
         $this->assertEquals(6, count($postEvents) - count($preEvents));
+
+        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'resource_delete', $now);
+        $this->assertEquals(6, count($logs));
     }
 
     public function testMultiMoveLogsEvent()
     {
+        $now = new \DateTime();
+
         $this->createBigTree('user');
         $this->loadFileData('user', 'user', array('file.txt'));
         $this->loadDirectoryData('user', array('user/container'));
@@ -332,10 +380,15 @@ class ResourceControllerTest extends FunctionalTestCase
             ->getRepository('ClarolineCoreBundle:Logger\Log')
             ->findAll();
         $this->assertEquals(2, count($postEvents) - count($preEvents));
+
+        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'resource_move', $now);
+        $this->assertEquals(2, count($logs));
     }
 
     public function testMultiExportLogsEvent()
     {
+        $now = new \DateTime();
+
         $this->createBigTree('user');
         $this->loadFileData('user', 'user', array('file.txt'));
         $treeRoot = $this->getDirectory('treeRoot');
@@ -358,6 +411,9 @@ class ResourceControllerTest extends FunctionalTestCase
             ->getRepository('ClarolineCoreBundle:Logger\Log')
             ->findAll();
         $this->assertEquals(5, count($postEvents) - count($preEvents));
+
+        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'resource_export', $now);
+        $this->assertEquals(5, count($logs));
     }
 
     public function testCreateShortcutAction()
@@ -458,18 +514,28 @@ class ResourceControllerTest extends FunctionalTestCase
 
     public function testOpenDirectoryThrowsAnExceptionIfDirectoryDoesntExist()
     {
+        $now = new \DateTime();
+
         $this->logUser($this->getUser('user'));
         $this->client->request('GET', "/resource/directory/123456");
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
+
+        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'resource_read', $now, 123456);
+        $this->assertEquals(0, count($logs));
     }
 
     public function testOpenDirectoryThrowsAnExceptionIfResourceIsNotADirectory()
     {
+        $now = new \DateTime();
+
         $this->loadFileData('user', 'user', array('Bar'));
         $file = $this->getFile('Bar');
         $this->logUser($this->getUser('user'));
         $this->client->request('GET', "/resource/directory/{$file->getId()}");
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
+
+        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'resource_read', $now, $file->getId());
+        $this->assertEquals(0, count($logs));
     }
 
     private function createBigTree($userReferenceName)

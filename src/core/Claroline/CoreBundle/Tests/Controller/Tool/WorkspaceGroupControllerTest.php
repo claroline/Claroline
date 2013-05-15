@@ -6,36 +6,49 @@ use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 
 class WorkspaceGroupControllerTest extends FunctionalTestCase
 {
+    private $logRepository;
+
     protected function setUp()
     {
         parent::setUp();
         $this->client->followRedirects();
         $this->loadPlatformRoleData();
+        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Logger\Log');
     }
 
     public function testMultiAddGroup()
     {
+        $now = new \DateTime();
+
         $this->loadUserData(array('user' => 'user', 'user_2' => 'user'));
         $this->loadGroupData(array('group_a' => array('user', 'user_2')));
         $groupAId = $this->getGroup('group_a')->getId();
-        $pwu = $this->getUser('user')->getPersonalWorkspace()->getId();
+        $pwuId = $this->getUser('user')->getPersonalWorkspace()->getId();
         $this->logUser($this->getUser('user'));
         $this->client->request(
             'PUT',
-            "/workspaces/tool/group_management/{$pwu}/add/group?ids[]={$groupAId}"
+            "/workspaces/tool/group_management/{$pwuId}/add/group?ids[]={$groupAId}"
         );
 
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($jsonResponse));
         $crawler = $this->client->request(
             'GET',
-            "/workspaces/tool/group_management/{$pwu}/groups/registered/page"
+            "/workspaces/tool/group_management/{$pwuId}/groups/registered/page"
         );
         $this->assertEquals(1, count($crawler->filter('.row-group')));
+
+        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'ws_role_subscribe_group', $now, null, $pwuId, null, null, $groupAId);
+        $this->assertEquals(1, count($logs));
     }
 
+    /**
+     * @group debug
+     */
     public function testMultiAddGroupIsProtected()
     {
+        $now = new \DateTime();
+
         $this->loadUserData(array('user' => 'user', 'user_2' => 'user'));
         $pwu = $this->getUser('user')->getPersonalWorkspace()->getId();
         $this->logUser($this->getUser('user_2'));
@@ -44,6 +57,8 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
             "/workspaces/tool/group_management/{$pwu}/add/group?ids[]=1"
         );
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+
+        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'ws_role_subscribe_group', $now, null, $pwuId, null, null, $groupAId);
     }
 
     //222222222222222222222222

@@ -8,11 +8,14 @@ use Claroline\CoreBundle\Entity\Role;
 
 class ResourceRightsControllerTest extends FunctionalTestCase
 {
+    private $logRepository;
+
     public function setUp()
     {
         parent::setUp();
         $this->loadPlatformRoleData();
         $this->loadUserData(array('john' => 'user'));
+        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Logger\Log');
     }
 
     public function testDisplayRightsForm()
@@ -26,6 +29,8 @@ class ResourceRightsControllerTest extends FunctionalTestCase
 
     public function testSubmitRightsForm()
     {
+        $now = new \DateTime();
+
         $this->loadDirectoryData('john', array('john/dir1'));
         $this->loadFileData('john', 'dir1', array('test.pdf'));
         $this->logUser($this->getUser('john'));
@@ -102,6 +107,9 @@ class ResourceRightsControllerTest extends FunctionalTestCase
                 );
             }
         }
+
+        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('john')->getId(), 'ws_role_change_right', $now, $this->getDirectory('dir1')->getId());
+        $this->assertEquals(3, count($logs));
     }
 
     public function testDisplayCreationRightForm()
@@ -121,6 +129,8 @@ class ResourceRightsControllerTest extends FunctionalTestCase
 
     public function testSubmitRightsCreationForm()
     {
+        $now = new \DateTime();
+
         $this->loadDirectoryData('john', array('john/dir1', 'john/dir1/dir2'));
         $rightsRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
         $directoryId = $this->getDirectory('dir1')->getId();
@@ -184,6 +194,9 @@ class ResourceRightsControllerTest extends FunctionalTestCase
             array($resourceTypes[0], $resourceTypes[1]), // only the first dir should be changed
             $secondDirCreatableTypes->getCreatableResourceTypes()->toArray()
         );
+
+        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('john')->getId(), 'ws_role_change_right', $now, $directoryId);
+        $this->assertEquals(2, count($logs));
     }
 
     private function assertRolePermissionsOnResource(
