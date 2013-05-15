@@ -154,7 +154,7 @@ class HomeListener
     public function workspaceHome($workspaceId)
     {
         $workspace = $this->em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-        
+
         return $this->templating->render(
             'ClarolineCoreBundle:Tool\workspace\home:home.html.twig',
             array('workspace' => $workspace)

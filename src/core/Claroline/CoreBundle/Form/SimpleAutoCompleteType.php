@@ -14,7 +14,7 @@ use JMS\DiExtraBundle\Annotation as DI;
  * @DI\FormType(alias = "simpleautocomplete")
  */
 class SimpleAutoCompleteType extends AbstractType
-{   
+{
     public function getParent()
     {
         return 'text';

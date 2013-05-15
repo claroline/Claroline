@@ -5,25 +5,22 @@ namespace Claroline\CoreBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Claroline\CoreBundle\Validator\Constraints\AdminWorkspaceTagUniqueName;
-use Claroline\CoreBundle\Form\DataTransformer\DateRangeToTextTransformer;
-use JMS\DiExtraBundle\Annotation as DI;
 
-
-/**
- * @DI\Service("claroline.form.twolevelselect")
- * @DI\FormType(alias = "twolevelselect")
- */
-class TwoLevelSelectType extends AbstractType
+class ResourceRightType extends AbstractType
 {
-    public function getParent()
+
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        return 'choice';
+        $builder->add('canOpen', 'checkbox');
+        $builder->add('canEdit', 'checkbox');
+        $builder->add('canDelete', 'checkbox');
+        $builder->add('canCopy', 'checkbox');
+        $builder->add('canExport', 'checkbox');
     }
 
     public function getName()
     {
-        return 'twolevelselect';
+        return 'resources_rights_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -32,7 +29,7 @@ class TwoLevelSelectType extends AbstractType
         ->setDefaults(
             array(
                 'translation_domain' => 'platform'
-            )
+                )
         );
     }
 }

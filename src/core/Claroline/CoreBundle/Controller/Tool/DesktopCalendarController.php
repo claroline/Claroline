@@ -37,7 +37,7 @@ class DesktopCalendarController extends Controller
             array('Content-Type' => 'application/json')
         );
     }
-    
+
     private function convertEventoArray($listEvents)
     {
         $data = array();

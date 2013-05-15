@@ -49,16 +49,16 @@ abstract class AbstractResource
     protected $license;
 
     /**
-     * @ORM\Column(type="datetime", name="created")
+     * @ORM\Column(type="datetime", name="creation_date")
      * @Gedmo\Timestampable(on="create")
      */
     protected $creationDate;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", name="modification_date")
      * @Gedmo\Timestampable(on="update")
      */
-    protected $updated;
+    protected $modificationDate;
 
     /**
      * @ORM\ManyToOne(
@@ -274,7 +274,7 @@ abstract class AbstractResource
      */
     public function getModificationDate()
     {
-        return $this->updated;
+        return $this->modificationDate;
     }
 
     /**
