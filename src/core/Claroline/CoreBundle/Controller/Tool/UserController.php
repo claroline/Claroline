@@ -175,6 +175,13 @@ class UserController extends Controller
                 array('workspaceId' => $workspaceId, 'toolName' => 'user_management')
             );
 
+            $log = new LogWorkspaceRoleUnsubscribeEvent($role, $user);
+            $this->get('event_dispatcher')->dispatch('log', $log);
+
+            $log = new LogWorkspaceRoleSubscribeEvent($newRole, $user);
+            $this->get('event_dispatcher')->dispatch('log', $log);
+            $em->flush();
+
             return new RedirectResponse($route);
         }
 
