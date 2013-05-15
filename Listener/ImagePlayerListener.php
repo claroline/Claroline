@@ -18,7 +18,8 @@ class ImagePlayerListener extends ContainerAware
             array(
                 'workspace' => $event->getResource()->getWorkspace(),
                 'path' => $path,
-                'image' => $event->getResource()
+                'image' => $event->getResource(),
+                '_resource' => $event->getResource()
             )
         );
         $response = new Response($content);
