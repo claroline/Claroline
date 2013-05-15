@@ -1,8 +1,4 @@
 {
-    "_readme": [
-        "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
-    ],
     "hash": "3e8360569f36445680ae9832054071ff",
     "packages": [
         {
@@ -1472,12 +1468,12 @@
             "target-dir": "JMS/TwigJsBundle",
             "source": {
                 "type": "git",
-                "url": "https://github.com/schmittjoh/JMSTwigJsBundle.git",
+                "url": "https://github.com/schmittjoh/JMSTwigJsBundle",
                 "reference": "7c0abe67b56ff4c91fb231d3848d61cfece95929"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/JMSTwigJsBundle/zipball/7c0abe67b56ff4c91fb231d3848d61cfece95929",
+                "url": "https://github.com/schmittjoh/JMSTwigJsBundle/archive/7c0abe67b56ff4c91fb231d3848d61cfece95929.zip",
                 "reference": "7c0abe67b56ff4c91fb231d3848d61cfece95929",
                 "shasum": ""
             },
@@ -1500,7 +1496,7 @@
                 {
                     "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -2462,12 +2458,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Twig.git",
-                "reference": "7b298c2d1fa32b2d3ddb7e3b6b3deb56b16b3527"
+                "reference": "ba67e2cf8e2ca6cada1de5a316a724df648c52ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Twig/zipball/7b298c2d1fa32b2d3ddb7e3b6b3deb56b16b3527",
-                "reference": "7b298c2d1fa32b2d3ddb7e3b6b3deb56b16b3527",
+                "url": "https://api.github.com/repos/fabpot/Twig/zipball/ba67e2cf8e2ca6cada1de5a316a724df648c52ac",
+                "reference": "ba67e2cf8e2ca6cada1de5a316a724df648c52ac",
                 "shasum": ""
             },
             "require": {
@@ -2476,7 +2472,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.13-dev"
+                    "dev-master": "1.12-dev"
                 }
             },
             "autoload": {
@@ -2503,7 +2499,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2013-05-14 05:05:22"
+            "time": "2013-03-10 07:23:01"
         },
         {
             "name": "white-october/pagerfanta-bundle",

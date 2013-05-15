@@ -585,6 +585,18 @@ class ResourceController extends Controller
         return $response;
     }
 
+    public function renderBreadcrumbAction($resourceId) {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($resourceId);
+        $ancestors = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findAncestors($resource);
+        $workspace = $resource->getWorkspace();
+
+        return $this->render(
+            'ClarolineCoreBundle:Resource:breadcrumb.html.twig',
+            array('ancestors' => $ancestors, 'workspace' => $workspace)
+        );
+    }
+
     private function getResource($resource)
     {
         if (get_class($resource) === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
