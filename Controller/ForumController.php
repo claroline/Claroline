@@ -49,7 +49,8 @@ class ForumController extends Controller
             'ClarolineForumBundle::index.html.twig', array(
                 'forum' => $forum,
                 'pager' => $pager,
-                'workspace' => $forum->getWorkspace()
+                'workspace' => $forum->getWorkspace(),
+                '_resource' => $forum
             )
         );
     }
@@ -79,7 +80,8 @@ class ForumController extends Controller
             array(
                 'form' => $formSubject->createView(),
                 'forumId' => $forumId,
-                'workspace' => $workspace
+                'workspace' => $workspace,
+                '_resource' => $forum
             )
         );
     }
@@ -123,7 +125,7 @@ class ForumController extends Controller
                 $em->flush();
 
                 return new RedirectResponse(
-                    $this->generateUrl('claro_forum_subjects', array('forumId' => $forum->getId()))
+                    $this->generateUrl('claro_forum_subjects', array('forumId' => $forum->getId(), '_resource' => $forum))
                 );
             }
         }
@@ -137,7 +139,8 @@ class ForumController extends Controller
             array(
                 'form' => $form->createView(),
                 'forumId' => $forum->getId(),
-                'workspace' => $forum->getWorkspace()
+                'workspace' => $forum->getWorkspace(),
+                '_resource' => $forum
             )
         );
     }
@@ -170,7 +173,8 @@ class ForumController extends Controller
             array(
                 'subject' => $subject,
                 'workspace' => $subject->getForum()->getWorkspace(),
-                'pager' => $pager
+                'pager' => $pager,
+                '_resource' => $forum
             )
         );
     }
@@ -198,7 +202,8 @@ class ForumController extends Controller
             array(
                 'subjectId' => $subjectId,
                 'form' => $form->createView(),
-                'workspace' => $subject->getForum()->getWorkspace()
+                'workspace' => $subject->getForum()->getWorkspace(),
+                '_resource' => $forum
             )
         );
     }
@@ -240,7 +245,8 @@ class ForumController extends Controller
             array(
                 'subjectId' => $subjectId,
                 'form' => $form->createView(),
-                'workspace' => $subject->getForum()->getWorkspace()
+                'workspace' => $subject->getForum()->getWorkspace(),
+                '_resource' => $resource
             )
         );
     }
@@ -270,7 +276,7 @@ class ForumController extends Controller
 
         return $this->render(
             'ClarolineForumBundle::plugin_options_form.html.twig',
-            array('form' => $form->createView())
+            array('form' => $form->createView(), '_resource' => $forum)
         );
     }
 

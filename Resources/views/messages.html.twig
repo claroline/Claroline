@@ -17,22 +17,7 @@
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
 {% block section_content %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{{ _path('claro_forum_subjects', {'forumId': subject.getForum().getId()}) }}">
-                {{ subject.getForum().getName() }}
-            </a>
-        </li>
-        <span class="divider"> / </span>
-        <li>
-            <a href="{{ _path('claro_forum_messages', {'subjectId': subject.getId()}) }}">{{ subject.getTitle() }}</a>
-        </li>
-    </ul>
-    <p>
-        <a href='{{ _path('claro_forum_message_form', {'subjectId': subject.getId()}) }}'
-            <button class="btn"> {{ 'new_message'|trans({}, 'forum') }} </button>
-        </a>
-    </p>
+    <div><h5>{{ subject.getTitle() }}</h5></div>
     <div>
         {{ renderPager(subject.getId(), pager) }}
     </div>
@@ -62,6 +47,9 @@
         {% endfor %}
         </tbody>
     </table>
+    <a href='{{ _path('claro_forum_message_form', {'subjectId': subject.getId()}) }}'
+        <button class="btn"> {{ 'new_message'|trans({}, 'forum') }} </button>
+    </a>
     <div>
         {{ renderPager(subject.getId(), pager) }}
     </div>
