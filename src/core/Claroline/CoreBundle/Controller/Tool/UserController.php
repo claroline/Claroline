@@ -266,7 +266,7 @@ class UserController extends Controller
             ->findByWorkspace($workspace);
         $params = $this->get('request')->query->all();
 
-        $users= array();
+        $users = array();
         $rolesForUsers = array();
         if (isset($params['ids'])) {
             $this->checkRemoveManagerRoleIsValid($params['ids'], $workspace);

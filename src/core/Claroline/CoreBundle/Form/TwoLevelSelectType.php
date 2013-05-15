@@ -15,8 +15,7 @@ use JMS\DiExtraBundle\Annotation as DI;
  * @DI\FormType(alias = "twolevelselect")
  */
 class TwoLevelSelectType extends AbstractType
-{   
-
+{
     public function getParent()
     {
         return 'choice';

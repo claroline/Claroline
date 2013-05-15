@@ -270,9 +270,6 @@ class ResourceController extends Controller
             );
         }
 
-        $ri = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->find($resourceId);
-
         //TODO waiting for define CustomActions
         // $logevent = new ResourceLogEvent($ri, $action);
         // $this->get('event_dispatcher')->dispatch('log_resource', $logevent);
@@ -585,7 +582,8 @@ class ResourceController extends Controller
         return $response;
     }
 
-    public function renderBreadcrumbAction($resourceId) {
+    public function renderBreadcrumbAction($resourceId)
+    {
         $em = $this->get('doctrine.orm.entity_manager');
         $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($resourceId);
         $ancestors = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findAncestors($resource);

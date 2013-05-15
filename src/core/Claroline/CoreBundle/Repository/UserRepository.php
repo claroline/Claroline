@@ -211,7 +211,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     {
         $upperSearch = strtoupper($search);
         $upperSearch = trim($upperSearch);
-        $upperSearch = preg_replace('/\s+/', ' ',$upperSearch);
+        $upperSearch = preg_replace('/\s+/', ' ', $upperSearch);
 
         $dql = "
             SELECT u, r, pws FROM Claroline\CoreBundle\Entity\User u
@@ -427,7 +427,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     public function extract($params)
     {
         $query = $this->extractQuery($params);
-        
+
         return is_null($query) ? array() : $query->getResult();
     }
 }
