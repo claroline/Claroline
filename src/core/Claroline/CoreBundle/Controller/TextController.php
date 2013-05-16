@@ -183,7 +183,8 @@ class TextController extends Controller
             array(
                 'differences' => $differences,
                 'original' => $revisions[$size]->getContent(),
-                'workspace' => $text->getWorkspace()
+                'workspace' => $text->getWorkspace(),
+                '_resource' => $text
             )
         );
     }
@@ -211,7 +212,8 @@ class TextController extends Controller
             array(
                 'text' => $textRepo->getLastRevision($text)->getContent(),
                 'textId' => $textId,
-                'workspace' => $text->getWorkspace()
+                'workspace' => $text->getWorkspace(),
+                '_resource' => $text
             )
         );
     }
@@ -248,7 +250,7 @@ class TextController extends Controller
 
         $route = $this->get('router')->generate(
             'claro_resource_open',
-            array('resourceType' => 'text', 'resourceId' => $textId)
+            array('resourceType' => 'text', 'resourceId' => $textId, '_resource' => $text)
         );
 
         return new RedirectResponse($route);

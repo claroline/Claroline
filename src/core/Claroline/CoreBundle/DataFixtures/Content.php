@@ -23,9 +23,9 @@ class Contents extends AbstractFixture implements OrderedFixtureInterface
         $texts = array(
             "http://fr.slideshare.net/batier/claroline-connect",
             "Cet espace de démonstration propose un aperçu des diverses fonctionnalités de ce LMS
-            (Learning Management System) résolument tourné vers les usages d'aujourd'hui et les technologies de demain,
-            tout en respectant les objectifs fondamentaux du projet Claroline: simplicité d'utilisation, souplesse de
-            mise en oeuvre et stabilité du code.
+            (Learning Management System) résolument tourné vers les usages d'aujourd'hui et
+            les technologies de demain,tout en respectant les objectifs fondamentaux du projet Claroline:
+            simplicité d'utilisation, souplesse de mise en oeuvre et stabilité du code.
 
             La volonté des auteurs est aussi de permettre l'utilisation du logiciel par le plus grand nombre,
             d'où le choix d'une licence Open Source pour sa diffusion.
@@ -61,9 +61,19 @@ class Contents extends AbstractFixture implements OrderedFixtureInterface
         );
 
         $generated = array(
-            '<h4><a href="http://fr.slideshare.net/batier/claroline-connect" target="_blank">Claroline connect</a></h4><iframe src="https://fr.slideshare.net/slideshow/embed_code/17676401" width="426" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" allowfullscreen="" webkitallowfullscreen="" mozallowfullscreen=""></iframe><p>Merci à Marcel Lebrun pour la co construction de cette présentation!</p><div class="clear"></div>',
+            '<h4><a href="http://fr.slideshare.net/batier/claroline-connect" target="_blank">
+            Claroline connect</a></h4><iframe src="https://fr.slideshare.net/slideshow/embed_code/17676401"
+            width="426" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" allowfullscreen=""
+            webkitallowfullscreen="" mozallowfullscreen=""></iframe><p>Merci à Marcel Lebrun pour la co construction
+            de cette présentation!</p><div class="clear"></div>',
             '',
-            '<h4><a href="http://www.youtube.com/watch?v=4mlWeQed0_I" target="_blank">Le mariage entre Claroline et Spiral connect : Causerie avec Marcel Lebrun</a></h4><iframe src="https://www.youtube.com/embed/4mlWeQed0_I" width="426" height="240" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" allowfullscreen="" webkitallowfullscreen="" mozallowfullscreen=""></iframe><p>Vous nous avez souvent entendu parler ici de plate forme. Marcel et moi, nous avons travaillé autour du développement de Claroline et de Spiral. Et nous avio...</p><div class="clear"></div>',
+            '<h4><a href="http://www.youtube.com/watch?v=4mlWeQed0_I" target="_blank">
+            Le mariage entre Claroline et Spiral connect : Causerie avec Marcel Lebrun</a></h4>
+            <iframe src="https://www.youtube.com/embed/4mlWeQed0_I" width="426" height="240"
+            frameborder="0" marginwidth="0" marginheight="0" scrolling="no" allowfullscreen=""
+            webkitallowfullscreen="" mozallowfullscreen=""></iframe>
+            <p>Vous nous avez souvent entendu parler ici de plate forme. Marcel et moi, nous avons travaillé
+            autour du développement de Claroline et de Spiral. Et nous avio...</p><div class="clear"></div>',
             ''
         );
 

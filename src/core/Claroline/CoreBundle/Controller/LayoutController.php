@@ -77,16 +77,7 @@ class LayoutController extends Controller
                 ->countUnread($user);
             $username = $user->getFirstName() . ' ' . $user->getLastName();
             $personalWs = $user->getPersonalWorkspace();
-            $wsLogs = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
-                ->findLatestWorkspaceByUser($user, $roles);
-
-            if (!empty($wsLogs)) {
-                $workspaces = array();
-
-                foreach ($wsLogs as $wsLog) {
-                    $workspaces[] = $wsLog['workspace'];
-                }
-            }
+            $workspaces = $this->findWorkspacesFromLogs();
         } else {
             $username = $this->get('translator')->trans('anonymous', array(), 'platform');
             $workspaces = $wsRepo->findByAnonymous();
@@ -114,14 +105,6 @@ class LayoutController extends Controller
             }
         }
 
-        $isImpersonated = false;
-
-        foreach ($this->container->get('security.context')->getToken()->getRoles() as $role) {
-            if ($role instanceof \Symfony\Component\Security\Core\Role\SwitchUserRole) {
-                $isImpersonated = true;
-            }
-        }
-
         return $this->render(
             'ClarolineCoreBundle:Layout:top_bar.html.twig',
             array(
@@ -132,7 +115,7 @@ class LayoutController extends Controller
                 'login_target' => $loginTarget,
                 'workspaces' => $workspaces,
                 'personalWs' => $personalWs,
-                "isImpersonated" => $isImpersonated,
+                "isImpersonated" => $this->isImpersonated(),
                 'isInAWorkspace' => $isInAWorkspace,
                 'currentWorkspace' => $currentWs,
                 'tags' => $tags,
@@ -174,5 +157,35 @@ class LayoutController extends Controller
             'ClarolineCoreBundle:Layout:impersonation_alert.html.twig',
             array('workspace' => $workspace->getName(), 'role' => $roleName)
         );
+    }
+
+    private function isImpersonated()
+    {
+        foreach ($this->container->get('security.context')->getToken()->getRoles() as $role) {
+            if ($role instanceof \Symfony\Component\Security\Core\Role\SwitchUserRole) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function findWorkspacesFromLogs()
+    {
+        $token = $this->get('security.context')->getToken();
+        $user = $token->getUser();
+        $roles = $this->get('claroline.security.utilities')->getRoles($token);
+        $em = $this->get('doctrine.orm.entity_manager');
+        $wsLogs = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
+            ->findLatestWorkspaceByUser($user, $roles);
+        $workspaces = array();
+
+        if (!empty($wsLogs)) {
+            foreach ($wsLogs as $wsLog) {
+                $workspaces[] = $wsLog['workspace'];
+            }
+        }
+
+        return $workspaces;
     }
 }

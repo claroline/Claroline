@@ -220,7 +220,7 @@ class GroupController extends Controller
             ->findByWorkspace($workspace);
         $params = $this->get('request')->query->all();
 
-        $groups= array();
+        $groups = array();
         $rolesForGroups = array();
         if (isset($params['ids'])) {
             $this->checkRemoveManagerRoleIsValid($params['ids'], $workspace);

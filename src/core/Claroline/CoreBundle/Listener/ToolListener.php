@@ -47,8 +47,10 @@ class ToolListener
     {
         $workspaceId = $event->getWorkspace()->getId();
         $httpKernel = $this->container->get('http_kernel');
-        $response = $httpKernel->forward('ClarolineCoreBundle:Tool\User:registeredUsersList',
-            array('workspaceId' => $workspaceId, 'page' => 1, 'search' => ''));
+        $response = $httpKernel->forward(
+            'ClarolineCoreBundle:Tool\User:registeredUsersList',
+            array('workspaceId' => $workspaceId, 'page' => 1, 'search' => '')
+        );
         $event->setContent(($response->getContent()));
     }
 
@@ -61,8 +63,10 @@ class ToolListener
     {
         $workspaceId = $event->getWorkspace()->getId();
         $httpKernel = $this->container->get('http_kernel');
-        $response = $httpKernel->forward('ClarolineCoreBundle:Tool\Group:registeredGroupsList',
-            array('workspaceId' => $workspaceId, 'page' => 1, 'search' => ''));
+        $response = $httpKernel->forward(
+            'ClarolineCoreBundle:Tool\Group:registeredGroupsList',
+            array('workspaceId' => $workspaceId, 'page' => 1, 'search' => '')
+        );
         $event->setContent(($response->getContent()));
     }
 

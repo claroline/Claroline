@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Role;
 
 class ResourceRightsRepository extends EntityRepository
 {
@@ -83,6 +84,32 @@ class ResourceRightsRepository extends EntityRepository
             WHERE resource.id = {$resource->getId()}
             AND role.name != 'ROLE_ADMIN'
             ORDER BY role.name
+        ";
+
+        return $this->_em->createQuery($dql)->getResult();
+    }
+
+    public function findRecursiveByResource(AbstractResource $resource)
+    {
+        $dql = "
+            SELECT rights, role, resource
+            FROM Claroline\CoreBundle\Entity\Resource\ResourceRights rights
+            JOIN rights.resource resource
+            JOIN rights.role role
+            WHERE resource.path LIKE '{$resource->getPath()}%'
+        ";
+
+        return $this->_em->createQuery($dql)->getResult();
+    }
+
+    public function findRecursiveByResourceAndRole(AbstractResource $resource, Role $role)
+    {
+        $dql = "
+            SELECT rights, role, resource
+            FROM Claroline\CoreBundle\Entity\Resource\ResourceRights rights
+            JOIN rights.resource resource
+            JOIN rights.role role
+            WHERE resource.path LIKE '{$resource->getPath()}%' AND role.name = '{$role->getName()}'
         ";
 
         return $this->_em->createQuery($dql)->getResult();

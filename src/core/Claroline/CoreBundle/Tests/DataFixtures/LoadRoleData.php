@@ -39,7 +39,7 @@ class LoadRoleData extends AbstractFixture implements ContainerAwareInterface
             $entityRole = new Role();
             $entityRole->setName('ROLE_'.$role);
             $entityRole->setTranslationKey($role);
-            $entityRole->setRoleType(Role::CUSTOM_ROLE);
+            $entityRole->setType(Role::CUSTOM_ROLE);
             $manager->persist($entityRole);
             $this->addReference('role/'.$role, $entityRole);
         }

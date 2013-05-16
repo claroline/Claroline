@@ -10,11 +10,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class IconType
 {
-    const TYPE = 1;
-    const GENERATED = 2;
-    const BASIC_MIME_TYPE = 3;
-    const COMPLETE_MIME_TYPE = 4;
-    const DEFAULT_ICON = 5;
+    const TYPE = 1; //resource type
+    const GENERATED = 2; //generated (ie png)
+    const BASIC_MIME_TYPE = 3; //ie video
+    const COMPLETE_MIME_TYPE = 4; //ie video/mp4
+    const DEFAULT_ICON = 5; //default
     const CUSTOM_ICON = 6; //defined by the user
 
     /**
@@ -25,22 +25,22 @@ class IconType
     protected $id;
 
     /**
-     * @ORM\Column(type="string", name="icon_type")
+     * @ORM\Column(type="string", name="type")
      */
-    protected $iconType;
+    protected $type;
 
     public function getId()
     {
         return $this->id;
     }
 
-    public function setIconType($iconType)
+    public function setType($type)
     {
-        $this->iconType = $iconType;
+        $this->type = $type;
     }
 
-    public function getIconType()
+    public function getType()
     {
-        return $this->iconType;
+        return $this->type;
     }
 }

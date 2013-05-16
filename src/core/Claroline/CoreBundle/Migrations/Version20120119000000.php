@@ -42,7 +42,6 @@ class Version20120119000000 extends BundleMigration
         $this->createResourceRightsTable($schema);
         $this->createListTypeCreationTable($schema);
         $this->createEventTable($schema);
-        $this->createResourceOwnerCreationRightsTable($schema);
         $this->createToolTable($schema);
         $this->createUserDesktopToolTable($schema);
         $this->createWorkspaceOrderToolTable($schema);
@@ -209,7 +208,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('name', 'string', array('length' => 255));
         $table->addColumn('translation_key', 'string', array('length' => 255, 'notnull' => false));
         $table->addColumn('is_read_only', 'boolean', array('notnull' => true));
-        $table->addColumn('role_type', 'integer', array('notnull' => false));
+        $table->addColumn('type', 'integer', array('notnull' => false));
         $table->addColumn('workspace_id', 'integer', array('notnull' => false));
 
         $table->addForeignKeyConstraint(
@@ -308,8 +307,8 @@ class Version20120119000000 extends BundleMigration
 
         $this->addId($table);
         $table->addColumn('license_id', 'integer', array('notnull' => false));
-        $table->addColumn('created', 'datetime');
-        $table->addColumn('updated', 'datetime');
+        $table->addColumn('creation_date', 'datetime');
+        $table->addColumn('modification_date', 'datetime');
         $table->addColumn('resource_type_id', 'integer', array('notnull' => false));
         $table->addColumn('user_id', 'integer', array('notnull' => true));
         $table->addColumn('icon_id', 'integer', array('notnull' => true));
@@ -318,11 +317,6 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('parent_id', 'integer', array('notnull' => false));
         $table->addColumn('lvl', 'integer', array('notnull' => false));
         $table->addColumn('workspace_id', 'integer');
-        $table->addColumn('is_sharable', 'boolean');
-        $table->addColumn('is_editable', 'boolean');
-        $table->addColumn('is_deletable', 'boolean');
-        $table->addColumn('is_copiable', 'boolean');
-        $table->addColumn('is_exportable', 'boolean');
 
         $this->addDiscriminator($table);
 
@@ -552,7 +546,7 @@ class Version20120119000000 extends BundleMigration
     {
         $table = $schema->createTable('claro_resource_icon_type');
         $this->addId($table);
-        $table->addColumn('icon_type', 'text');
+        $table->addColumn('type', 'text');
 
         $this->storeTable($table);
     }
@@ -732,8 +726,8 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable('claro_activity');
         $this->addId($table);
         $table->addColumn('instruction', 'string', array('length' => 2055));
-        $table->addColumn('date_beginning', 'datetime', array('notnull' => false));
-        $table->addColumn('date_end', 'datetime', array('notnull' => false));
+        $table->addColumn('start_date', 'datetime', array('notnull' => false));
+        $table->addColumn('end_date', 'datetime', array('notnull' => false));
 
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_resource'),
@@ -817,29 +811,7 @@ class Version20120119000000 extends BundleMigration
             array('onDelete' => 'CASCADE')
         );
     }
-
-    private function createResourceOwnerCreationRightsTable(Schema $schema)
-    {
-        $table = $schema->createTable('claro_resource_owner_creation_rights');
-        $this->addId($table);
-        $table->addColumn('resource_id', 'integer');
-        $table->addColumn('resource_type_id', 'integer');
-        $table->addUniqueIndex(array('resource_type_id', 'resource_id'));
-
-        $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_resource'),
-            array('resource_id'),
-            array('id'),
-            array('onDelete' => 'CASCADE')
-        );
-        $table->addForeignKeyConstraint(
-            $schema->getTable('claro_resource_type'),
-            array('resource_type_id'),
-            array('id'),
-            array('onDelete' => 'CASCADE')
-        );
-    }
-
+    
     private function createEventTable(Schema $schema)
     {
         $table = $schema->createTable('claro_event');

@@ -483,10 +483,6 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
     {
         $this->loadUserData(array('user' => 'user', 'user_2' => 'user'));
         $this->logUser($this->getUser('user'));
-        $users = $this->client->getContainer()
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:User')
-            ->findAll();
         $pwuId = $this->getUser('user')->getPersonalWorkspace()->getId();
         $crawler = $this->client->request(
             'GET',
@@ -501,7 +497,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $this->loadWorkspaceData(array('ws_a' => 'ws_creator'));
         $this->logUser($this->getUser('user'));
         $wsAId = $this->getWorkspace('ws_a')->getId();
-        $crawler = $this->client->request(
+        $this->client->request(
             'GET',
             "/workspaces/tool/user_management/{$wsAId}/users/unregistered/page"
         );
@@ -536,7 +532,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $this->loadUserData(array('user' => 'user', 'ws_creator' => 'ws_creator'));
         $this->logUser($this->getUser('user'));
         $pwcId = $this->getUser('ws_creator')->getPersonalWorkspace()->getId();
-        $crawler = $this->client->request(
+        $this->client->request(
             'GET',
             "/workspaces/tool/user_management/{$pwcId}/users/unregistered/page/1/search/doe"
         );
@@ -560,7 +556,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->logUser($this->getUser('user'));
         $pwaId = $this->getUser('admin')->getPersonalWorkspace()->getId();
-        $crawler = $this->client->request(
+        $this->client->request(
             'GET',
             "/workspaces/tool/user_management/{$pwaId}/users/registered/page/1/search/doe"
         );
