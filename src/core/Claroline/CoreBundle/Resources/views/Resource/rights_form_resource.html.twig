@@ -26,12 +26,8 @@
                     </td>
                     <td>
                         <input name="roles[{{ permissions.getRole().getId() }}][delete]" type="checkbox"
-                        {% if (permissions.canDelete()) and (resource.isDeletable()) %}
+                        {% if (permissions.canDelete()) %}
                             checked
-                        {% else %}
-                            {% if resource.isDeletable == false %}
-                                disabled
-                            {% endif %}
                         {% endif %}
                         />
                     </td>
@@ -42,34 +38,22 @@
                     </td>
                     <td>
                         <input name="roles[{{ permissions.getRole().getId() }}][edit]" type="checkbox"
-                        {% if (permissions.canEdit()) and (resource.isEditable()) %}
+                        {% if (permissions.canEdit()) %}
                             checked
-                        {% else %}
-                            {% if resource.isEditable() == false %}
-                                disabled
-                            {% endif %}
                         {% endif %}
                         />
                     </td>
                     <td>
                         <input name="roles[{{ permissions.getRole().getId() }}][copy]" type="checkbox"
-                        {% if permissions.canCopy() and (resource.isCopiable()) %}
+                        {% if (permissions.canCopy()) %}
                             checked
-                        {% else %}
-                            {% if resource.isCopiable() == false %}
-                                disabled
-                            {% endif %}
                         {% endif %}
                         />
                     </td>
                     <td>
                         <input name="roles[{{ permissions.getRole().getId() }}][export]" type="checkbox"
-                        {% if permissions.canExport() and (resource.isExportable()) %}
+                        {% if (permissions.canExport()) %}
                             checked
-                        {% else %}
-                            {% if resource.isExportable() == false %}
-                                disabled
-                            {% endif %}
                         {% endif %}
                         />
                     </td>
