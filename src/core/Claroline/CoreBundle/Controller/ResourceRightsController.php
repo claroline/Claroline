@@ -198,15 +198,32 @@ class ResourceRightsController extends Controller
         $request = $this->get('request');
         $em = $this->get('doctrine.orm.entity_manager');
         $resourceRight = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')->find($resourceRightId);
+        $role = $resourceRight->getRole();
         $resource = $resourceRight->getResource();
         $collection = new ResourceCollection(array($resource));
         $this->checkAccess('EDIT', $collection);
-        $form = $this->get('form.factory')->create(new ResourceRightType, $resourceRight);
+        $form = $this->get('form.factory')->create(new ResourceRightType($resource), $resourceRight);
         $form->bind($request);
 
         if ($form->isValid()) {
-            $resourceRight = $form->getData();
-            $em->persist($resourceRight);
+
+            $isRecursive = $form->get('isRecursive')->getData();
+            if ($isRecursive) {
+                $resourceRights = $this->findAndCreateMissingDescendants($role, $resource);
+            } else {
+                $resourceRights[] = $resourceRight;
+            }
+
+            foreach ($resourceRights as $resourceRight) {
+                $resourceRight->setCanCopy($form->get('canCopy')->getData());
+                $resourceRight->setCanOpen($form->get('canOpen')->getData());
+                $resourceRight->setCanDelete($form->get('canDelete')->getData());
+                $resourceRight->setCanEdit($form->get('canEdit')->getData());
+                $resourceRight->setCanExport($form->get('canExport')->getData());
+
+                $em->persist($resourceRight);
+            }
+
             $em->flush();
 
             return new Response("success");
