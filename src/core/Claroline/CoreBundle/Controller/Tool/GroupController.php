@@ -174,6 +174,13 @@ class GroupController extends Controller
                 array('workspaceId' => $workspaceId, 'toolName' => 'group_management')
             );
 
+            $log = new LogWorkspaceRoleUnsubscribeEvent($role, null, $group);
+            $this->get('event_dispatcher')->dispatch('log', $log);
+
+            $log = new LogWorkspaceRoleSubscribeEvent($newRole, null, $group);
+            $this->get('event_dispatcher')->dispatch('log', $log);
+            $em->flush();
+
             return new RedirectResponse($route);
         }
 

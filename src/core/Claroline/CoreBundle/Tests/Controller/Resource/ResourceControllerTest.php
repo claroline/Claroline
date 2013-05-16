@@ -67,7 +67,12 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertObjectHasAttribute('resources', $dir);
         $this->assertEquals(2, count($dir->resources));
 
-        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'resource_move', $now, $loneFile->getId());
+        $logs = $this->logRepository->findActionAfterDate(
+            'resource_move',
+            $now,
+            $this->getUser('user')->getId(),
+            $loneFile->getId()
+        );
         $this->assertEquals(1, count($logs));
     }
 
@@ -90,7 +95,11 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertObjectHasAttribute('resources', $dir);
         $this->assertEquals(4, count($dir->resources));
 
-        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'resource_copy', $now);
+        $logs = $this->logRepository->findActionAfterDate(
+            'resource_copy',
+            $now,
+            $this->getUser('user')->getId()
+        );
         $this->assertEquals(6, count($logs));
     }
 
@@ -130,7 +139,12 @@ class ResourceControllerTest extends FunctionalTestCase
         $headers = $this->client->getResponse()->headers;
         $this->assertTrue($headers->contains('Content-Disposition', 'attachment; filename=archive'));
 
-        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'resource_export', $now, $this->pwr->getId());
+        $logs = $this->logRepository->findActionAfterDate(
+            'resource_export',
+            $now,
+            $this->getUser('user')->getId(),
+            $this->pwr->getId()
+        );
         $this->assertEquals(1, count($logs));
     }
 
@@ -146,7 +160,11 @@ class ResourceControllerTest extends FunctionalTestCase
             count($crawler->filter('html:contains("You must select some resources to export.")'))
         );
 
-        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'resource_export', $now);
+        $logs = $this->logRepository->findActionAfterDate(
+            'resource_export',
+            $now,
+            $this->getUser('user')->getId()
+        );
         $this->assertEquals(0, count($logs));
     }
 
@@ -239,7 +257,11 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertObjectHasAttribute('resources', $dir);
         $this->assertEquals(0, count($dir->resources));
 
-        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'resource_delete', $now);
+        $logs = $this->logRepository->findActionAfterDate(
+            'resource_delete',
+            $now,
+            $this->getUser('user')->getId()
+        );
         $this->assertEquals(6, count($logs));
     }
 
@@ -252,7 +274,11 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, count($crawler->filter('html:contains("Root directory cannot be removed")')));
 
-        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'resource_delete', $now);
+        $logs = $this->logRepository->findActionAfterDate(
+            'resource_delete',
+            $now,
+            $this->getUser('user')->getId()
+        );
         $this->assertEquals(0, count($logs));
     }
 
@@ -296,7 +322,12 @@ class ResourceControllerTest extends FunctionalTestCase
             ->findAll();
         $this->assertEquals(1, count($postEvents) - count($preEvents));
 
-        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'resource_read', $now, $file->getId());
+        $logs = $this->logRepository->findActionAfterDate(
+            'resource_read',
+            $now,
+            $this->getUser('user')->getId(),
+            $file->getId()
+        );
         $this->assertEquals(1, count($logs));
     }
 
@@ -317,7 +348,11 @@ class ResourceControllerTest extends FunctionalTestCase
         $postEvents = $logRepo->findAll();
         $this->assertEquals(1, count($postEvents) - count($preEvents));
 
-        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'resource_create', $now);
+        $logs = $this->logRepository->findActionAfterDate(
+            'resource_create',
+            $now,
+            $this->getUser('user')->getId()
+        );
         $this->assertEquals(1, count($logs));
     }
 
@@ -350,7 +385,11 @@ class ResourceControllerTest extends FunctionalTestCase
             ->findAll();
         $this->assertEquals(6, count($postEvents) - count($preEvents));
 
-        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'resource_delete', $now);
+        $logs = $this->logRepository->findActionAfterDate(
+            'resource_delete',
+            $now,
+            $this->getUser('user')->getId()
+        );
         $this->assertEquals(6, count($logs));
     }
 
@@ -381,7 +420,11 @@ class ResourceControllerTest extends FunctionalTestCase
             ->findAll();
         $this->assertEquals(2, count($postEvents) - count($preEvents));
 
-        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'resource_move', $now);
+        $logs = $this->logRepository->findActionAfterDate(
+            'resource_move',
+            $now,
+            $this->getUser('user')->getId()
+        );
         $this->assertEquals(2, count($logs));
     }
 
@@ -412,7 +455,11 @@ class ResourceControllerTest extends FunctionalTestCase
             ->findAll();
         $this->assertEquals(5, count($postEvents) - count($preEvents));
 
-        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'resource_export', $now);
+        $logs = $this->logRepository->findActionAfterDate(
+            'resource_export',
+            $now,
+            $this->getUser('user')->getId()
+        );
         $this->assertEquals(5, count($logs));
     }
 
@@ -520,7 +567,12 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->client->request('GET', "/resource/directory/123456");
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
 
-        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'resource_read', $now, 123456);
+        $logs = $this->logRepository->findActionAfterDate(
+            'resource_read',
+            $now,
+            $this->getUser('user')->getId(),
+            123456
+        );
         $this->assertEquals(0, count($logs));
     }
 
@@ -534,7 +586,12 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->client->request('GET', "/resource/directory/{$file->getId()}");
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
 
-        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'resource_read', $now, $file->getId());
+        $logs = $this->logRepository->findActionAfterDate(
+            'resource_read',
+            $now,
+            $this->getUser('user')->getId(),
+            $file->getId()
+        );
         $this->assertEquals(0, count($logs));
     }
 

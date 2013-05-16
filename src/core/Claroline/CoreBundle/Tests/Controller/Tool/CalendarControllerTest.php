@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 
 class CalendarControllerTest extends FunctionalTestCase
 {
+    private $logRepository;
 
     protected function setUp()
     {
@@ -13,15 +14,31 @@ class CalendarControllerTest extends FunctionalTestCase
         $this->loadPlatformRoleData();
         $this->loadUserData(array('ws_creator' => 'ws_creator'));
         $this->loadWorkspaceData(array('ws_a' => 'ws_creator'));
+        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Logger\Log');
     }
 
     public function testWorkspaceUserCanSeeTheAgenda()
     {
+        $now = new \DateTime();
+
         $workspaceId = $this->getWorkspace('ws_a')->getId();
         $this->logUser($this->getUser('ws_creator'));
         $this->client->request('GET', "/workspaces/{$workspaceId}/open/tool/calendar");
         $status = $this->client->getResponse()->getStatusCode();
         $this->assertEquals(200, $status);
+
+        $logs = $this->logRepository->findActionAfterDate(
+            'ws_tool_read',
+            $now,
+            $this->getUser('ws_creator')->getId(),
+            null,
+            $workspaceId,
+            null,
+            null,
+            null,
+            'calendar'
+        );
+        $this->assertEquals(1, count($logs));
     }
 
     public function testShowWorkspaceCalendar()
