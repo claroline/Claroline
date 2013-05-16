@@ -11,6 +11,8 @@ class AdministrationControllerTest extends FunctionalTestCase
     /** @var Claroline\CoreBundle\Library\Testing\PlatformTestConfigurationHandler */
     private $configHandler;
 
+    private $logRepository;
+
     protected function setUp()
     {
         parent::setUp();
@@ -20,7 +22,7 @@ class AdministrationControllerTest extends FunctionalTestCase
             ->getContainer()
             ->get('claroline.config.platform_config_handler');
         $this->client->followRedirects();
-
+        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Logger\Log');
     }
 
     protected function tearDown()
@@ -63,6 +65,8 @@ class AdministrationControllerTest extends FunctionalTestCase
 
     public function testAdminCanCreateUser()
     {
+        $now = new \DateTime();
+
         $crawler = $this->logUser($this->getUser('admin'));
         $link = $crawler->filter('#link-administration')->link();
         $crawler = $this->client->click($link);
@@ -81,6 +85,16 @@ class AdministrationControllerTest extends FunctionalTestCase
         $this->assertEquals(1, count($repositoryWs));
         $crawler = $this->client->request('GET', '/admin/users/page');
         $this->assertEquals(3, $crawler->filter('.row-user')->count());
+
+        $logs = $this->logRepository->findActionAfterDate(
+            'user_create',
+            $now,
+            $this->getUser('admin')->getId(),
+            null,
+            null,
+            $user->getId()
+        );
+        $this->assertEquals(1, count($logs));
     }
 
     public function testUserCreationFormIsDisplayedWithErrors()
@@ -95,23 +109,43 @@ class AdministrationControllerTest extends FunctionalTestCase
 
     public function testmultiDeleteUsers()
     {
+        $now = new \DateTime();
+
         $this->logUser($this->getUser('admin'));
         $crawler = $this->client->request('GET', '/admin/users/page');
         $this->assertEquals(2, $crawler->filter('.row-user')->count());
         $this->client->request('DELETE', "/admin/users?ids[]={$this->getUser('john')->getId()}");
         $crawler = $this->client->request('GET', '/admin/users/page');
         $this->assertEquals(1, $crawler->filter('.row-user')->count());
+
+        $logs = $this->logRepository->findActionAfterDate(
+            'user_delete',
+            $now,
+            $this->getUser('admin')->getId()
+        );
+        $this->assertEquals(1, count($logs));
     }
 
     public function testUserCannotDeleteUsers()
     {
+        $now = new \DateTime();
+
         $this->logUser($this->getUser('john'));
         $this->client->request('DELETE', "/admin/users?ids[]={$this->getUser('john')->getId()}");
         $this->assertEquals($this->client->getResponse()->getStatusCode(), 403);
+
+        $logs = $this->logRepository->findActionAfterDate(
+            'user_delete',
+            $now,
+            $this->getUser('john')->getId()
+        );
+        $this->assertEquals(0, count($logs));
     }
 
     public function testAdminCanCreateGroups()
     {
+        $now = new \DateTime();
+
         $this->loadGroupData(array('group_a' => array('john', 'admin')));
         $crawler = $this->logUser($this->getUser('admin'));
         $link = $crawler->filter('#link-administration')->link();
@@ -123,6 +157,13 @@ class AdministrationControllerTest extends FunctionalTestCase
         $this->client->submit($form);
         $crawler = $this->client->request('GET', '/admin/groups/page');
         $this->assertEquals(2, $crawler->filter('.row-group')->count());
+
+        $logs = $this->logRepository->findActionAfterDate(
+            'group_create',
+            $now,
+            $this->getUser('admin')->getId()
+        );
+        $this->assertEquals(1, count($logs));
     }
 
     public function testGroupCreationFormIsDisplayedWithErrors()
@@ -137,26 +178,42 @@ class AdministrationControllerTest extends FunctionalTestCase
 
     public function testAdminCanMultiAddUserToGroup()
     {
-        $this->loadGroupData(array('group_a' => array('john', 'admin')));
+        $now = new \DateTime();
+
+        $this->loadGroupData(array('group_a' => array('john')));
         $this->logUser($this->getUser('admin'));
         $grpAId = $this->getGroup('group_a')->getId();
         $adminId = $this->getUser('admin')->getId();
         $this->client->request(
-            'POST',
+            'PUT',
             "/admin/group/{$grpAId}/users?userIds[]={$adminId}"
         );
         $crawler = $this->client->request('GET', "/admin/group/{$this->getGroup('group_a')->getId()}/users/page");
         $this->assertEquals(2, $crawler->filter('.row-user')->count());
+
+        $logs = $this->logRepository->findActionAfterDate(
+            'group_add_user',
+            $now,
+            $adminId,
+            null,
+            null,
+            $adminId,
+            null,
+            $grpAId
+        );
+        $this->assertEquals(1, count($logs));
     }
 
     public function testAdminCanMultiDeleteUsersFromGroup()
     {
-        $this->loadGroupData(array('group_a' => array('john', 'admin')));
+        $now = new \DateTime();
+
+        $this->loadGroupData(array('group_a' => array('john')));
         $this->logUser($this->getUser('admin'));
         $grpAId = $this->getGroup('group_a')->getId();
         $adminId = $this->getUser('admin')->getId();
         $this->client->request(
-            'POST',
+            'PUT',
             "/admin/group/{$grpAId}/users?userIds[]={$adminId}"
         );
 
@@ -166,6 +223,30 @@ class AdministrationControllerTest extends FunctionalTestCase
         );
         $crawler = $this->client->request('GET', "/admin/group/{$this->getGroup('group_a')->getId()}/users/page");
         $this->assertEquals(1, $crawler->filter('.row-user')->count());
+
+        $addLogs = $this->logRepository->findActionAfterDate(
+            'group_add_user',
+            $now,
+            $adminId,
+            null,
+            null,
+            $adminId,
+            null,
+            $grpAId
+        );
+        $this->assertEquals(1, count($addLogs));
+
+        $removeLogs = $this->logRepository->findActionAfterDate(
+            'group_remove_user',
+            $now,
+            $adminId,
+            null,
+            null,
+            $adminId,
+            null,
+            $grpAId
+        );
+        $this->assertEquals(1, count($removeLogs));
     }
 
     public function testPaginatedGrouplessUsersAction()
@@ -205,6 +286,8 @@ class AdministrationControllerTest extends FunctionalTestCase
 
     public function testMultiDeleteGroups()
     {
+        $now = new \DateTime();
+
         $this->loadGroupData(array('group_a' => array('john', 'admin')));
         $this->logUser($this->getUser('admin'));
         $this->client->request(
@@ -213,10 +296,19 @@ class AdministrationControllerTest extends FunctionalTestCase
         );
         $crawler = $this->client->request('GET', '/admin/groups/page');
         $this->assertEquals(0, $crawler->filter('.row-group')->count());
+
+        $logs = $this->logRepository->findActionAfterDate(
+            'group_delete',
+            $now,
+            $this->getUser('admin')->getId()
+        );
+        $this->assertEquals(1, count($logs));
     }
 
     public function testAdminCanEditGroupSettings()
     {
+        $now = new \DateTime();
+
         $this->loadGroupData(array('group_a' => array('john', 'admin')));
         $this->logUser($this->getUser('admin'));
         $adminRoleId = $this->getRole('admin')->getId();
@@ -233,10 +325,24 @@ class AdministrationControllerTest extends FunctionalTestCase
         );
         $selected = $crawler->filter("option[value={$adminRoleId}]")->attr('selected');
         $this->assertEquals('selected', $selected);
+
+        $logs = $this->logRepository->findActionAfterDate(
+            'group_update',
+            $now,
+            $this->getUser('admin')->getId(),
+            null,
+            null,
+            null,
+            null,
+            $this->getGroup('group_a')->getId()
+        );
+        $this->assertEquals(1, count($logs));
     }
 
     public function testGroupSettingsFormWithErrorsIsRendered()
     {
+        $now = new \DateTime();
+
         $this->loadGroupData(array('group_a' => array('john', 'admin')));
         $this->logUser($this->getUser('admin'));
         $crawler = $this->client->request(
@@ -247,6 +353,18 @@ class AdministrationControllerTest extends FunctionalTestCase
         $form['group_form[name]'] = '';
         $crawler = $this->client->submit($form);
         $this->assertEquals(1, count($crawler->filter('#group_form')));
+
+        $logs = $this->logRepository->findActionAfterDate(
+            'group_update',
+            $now,
+            $this->getUser('admin')->getId(),
+            null,
+            null,
+            null,
+            null,
+            $this->getGroup('group_a')->getId()
+        );
+        $this->assertEquals(0, count($logs));
     }
 
     public function testEditSelfRegistrationParameter()

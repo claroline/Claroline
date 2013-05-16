@@ -46,10 +46,24 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $crawler = $this->client->request('GET', "/workspaces/tool/user_management/{$wsAId}/users/registered/page");
         $this->assertEquals(1, $crawler->filter('.row-user')->count());
 
-        $addLogs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('ws_creator')->getId(), 'ws_role_subscribe_user', $now, null, $wsAId, $userId);
+        $addLogs = $this->logRepository->findActionAfterDate(
+            'ws_role_subscribe_user',
+            $now,
+            $this->getUser('ws_creator')->getId(),
+            null,
+            $wsAId,
+            $userId
+        );
         $this->assertEquals(1, count($addLogs));
 
-        $removeLogs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('ws_creator')->getId(), 'ws_role_unsubscribe_user', $now, null, $wsAId, $userId);
+        $removeLogs = $this->logRepository->findActionAfterDate(
+            'ws_role_unsubscribe_user',
+            $now,
+            $this->getUser('ws_creator')->getId(),
+            null,
+            $wsAId,
+            $userId
+        );
         $this->assertEquals(1, count($removeLogs));
     }
 
@@ -66,7 +80,14 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         );
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
 
-        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user_2')->getId(), 'ws_role_subscribe_user', $now, null, $pwu, 1);
+        $logs = $this->logRepository->findActionAfterDate(
+            'ws_role_subscribe_user',
+            $now,
+            $this->getUser('user_2')->getId(),
+            null,
+            $pwu,
+            1
+        );
         $this->assertEquals(0, count($logs));
     }
 
@@ -101,7 +122,14 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, count($crawler->filter('html:contains("every managers")')));
 
-        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($creatorId, 'ws_role_unsubscribe_user', $now, null, $wsAId, $creatorId);
+        $logs = $this->logRepository->findActionAfterDate(
+            'ws_role_unsubscribe_user',
+            $now,
+            $creatorId,
+            null,
+            $wsAId,
+            $creatorId
+        );
         $this->assertEquals(0, count($logs));
     }
 
@@ -126,10 +154,24 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         );
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
 
-        $addLogs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('ws_creator')->getId(), 'ws_role_subscribe_user', $now, null, $wsAId, $userId);
+        $addLogs = $this->logRepository->findActionAfterDate(
+            'ws_role_subscribe_user',
+            $now,
+            $this->getUser('ws_creator')->getId(),
+            null,
+            $wsAId,
+            $userId
+        );
         $this->assertEquals(1, count($addLogs));
 
-        $removeLogs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'ws_role_unsubscribe_user', $now, null, $wsAId, $creatorId);
+        $removeLogs = $this->logRepository->findActionAfterDate(
+            'ws_role_unsubscribe_user',
+            $now,
+            $this->getUser('user')->getId(),
+            null,
+            $wsAId,
+            $creatorId
+        );
         $this->assertEquals(0, count($removeLogs));
     }
 
@@ -161,16 +203,45 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, count($crawler->filter('html:contains("personal workspace")')));
 
-        $addLogs = $this->logRepository->findByUserIdAndActionAndAfterDate($userId, 'ws_role_subscribe_user', $now, null, $pwu->getId(), $creatorId);
+        $addLogs = $this->logRepository->findActionAfterDate(
+            'ws_role_subscribe_user',
+            $now,
+            $userId,
+            null,
+            $pwu->getId(),
+            $creatorId
+        );
         $this->assertEquals(2, count($addLogs));
 
-        $addManagerLogs = $this->logRepository->findByUserIdAndActionAndAfterDate($userId, 'ws_role_subscribe_user', $now, null, $pwu->getId(), $creatorId, $managerRoleId);
+        $addManagerLogs = $this->logRepository->findActionAfterDate(
+            'ws_role_subscribe_user',
+            $now,
+            $userId,
+            null,
+            $pwu->getId(),
+            $creatorId,
+            $managerRoleId
+        );
         $this->assertEquals(1, count($addManagerLogs));
 
-        $removeWsCreatorLogs = $this->logRepository->findByUserIdAndActionAndAfterDate($userId, 'ws_role_unsubscribe_user', $now, null, $pwu->getId(), $creatorId);
+        $removeWsCreatorLogs = $this->logRepository->findActionAfterDate(
+            'ws_role_unsubscribe_user',
+            $now,
+            $userId,
+            null,
+            $pwu->getId(),
+            $creatorId
+        );
         $this->assertEquals(1, count($removeWsCreatorLogs));
 
-        $removeUserLogs = $this->logRepository->findByUserIdAndActionAndAfterDate($userId, 'ws_role_unsubscribe_user', $now, null, $pwu->getId(), $userId);
+        $removeUserLogs = $this->logRepository->findActionAfterDate(
+            'ws_role_unsubscribe_user',
+            $now,
+            $userId,
+            null,
+            $pwu->getId(),
+            $userId
+        );
         $this->assertEquals(0, count($removeUserLogs));
     }
 
@@ -206,13 +277,35 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
-        $addLogs = $this->logRepository->findByUserIdAndActionAndAfterDate($userId, 'ws_role_subscribe_user', $now, null, $pwu->getId(), $creatorId);
+        $addLogs = $this->logRepository->findActionAfterDate(
+            'ws_role_subscribe_user',
+            $now,
+            $userId,
+            null,
+            $pwu->getId(),
+            $creatorId
+        );
         $this->assertEquals(2, count($addLogs));
 
-        $addManagerLogs = $this->logRepository->findByUserIdAndActionAndAfterDate($userId, 'ws_role_subscribe_user', $now, null, $pwu->getId(), $creatorId, $managerRoleId);
+        $addManagerLogs = $this->logRepository->findActionAfterDate(
+            'ws_role_subscribe_user',
+            $now,
+            $userId,
+            null,
+            $pwu->getId(),
+            $creatorId,
+            $managerRoleId
+        );
         $this->assertEquals(1, count($addManagerLogs));
 
-        $removeWsCreatorLogs = $this->logRepository->findByUserIdAndActionAndAfterDate($userId, 'ws_role_unsubscribe_user', $now, null, $pwu->getId(), $creatorId);
+        $removeWsCreatorLogs = $this->logRepository->findActionAfterDate(
+            'ws_role_unsubscribe_user',
+            $now,
+            $userId,
+            null,
+            $pwu->getId(),
+            $creatorId
+        );
         $this->assertEquals(1, count($removeWsCreatorLogs));
         /*
         $this->client->request(
@@ -264,13 +357,35 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         );
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
 
-        $addLogs = $this->logRepository->findByUserIdAndActionAndAfterDate($creatorId, 'ws_role_subscribe_user', $now, null, $pwcId, $userId);
+        $addLogs = $this->logRepository->findActionAfterDate(
+            'ws_role_subscribe_user',
+            $now,
+            $creatorId,
+            null,
+            $pwcId,
+            $userId
+        );
         $this->assertEquals(1, count($addLogs));
 
-        $failedAddLogs = $this->logRepository->findByUserIdAndActionAndAfterDate($userId, 'ws_role_subscribe_user', $now, null, $pwcId, $creatorId, $visitorRoleId);
+        $failedAddLogs = $this->logRepository->findActionAfterDate(
+            'ws_role_subscribe_user',
+            $now,
+            $userId,
+            null,
+            $pwcId,
+            $creatorId,
+            $visitorRoleId
+        );
         $this->assertEquals(0, count($failedAddLogs));
 
-        $failedRemoveLogs = $this->logRepository->findByUserIdAndActionAndAfterDate($userId, 'ws_role_unsubscribe_user', $now, null, $pwcId, $creatorId);
+        $failedRemoveLogs = $this->logRepository->findActionAfterDate(
+            'ws_role_unsubscribe_user',
+            $now,
+            $userId,
+            null,
+            $pwcId,
+            $creatorId
+        );
         $this->assertEquals(0, count($failedRemoveLogs));
     }
 
@@ -295,10 +410,25 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, count($crawler->filter('html:contains("every managers")')));
 
-        $failedAddLogs = $this->logRepository->findByUserIdAndActionAndAfterDate($creatorId, 'ws_role_subscribe_user', $now, null, $wsAId, $creatorId, $visitorRoleId);
+        $failedAddLogs = $this->logRepository->findActionAfterDate(
+            'ws_role_subscribe_user',
+            $now,
+            $creatorId,
+            null,
+            $wsAId,
+            $creatorId,
+            $visitorRoleId
+        );
         $this->assertEquals(0, count($failedAddLogs));
 
-        $failedRemoveLogs = $this->logRepository->findByUserIdAndActionAndAfterDate($creatorId, 'ws_role_unsubscribe_user', $now, null, $wsAId, $creatorId);
+        $failedRemoveLogs = $this->logRepository->findActionAfterDate(
+            'ws_role_unsubscribe_user',
+            $now,
+            $creatorId,
+            null,
+            $wsAId,
+            $creatorId
+        );
         $this->assertEquals(0, count($failedRemoveLogs));
     }
 
@@ -322,10 +452,25 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, count($crawler->filter('html:contains("personal workspace")')));
 
-        $failedAddLogs = $this->logRepository->findByUserIdAndActionAndAfterDate($userId, 'ws_role_subscribe_user', $now, null, $pwu->getId(), $userId, $visitorRoleId);
+        $failedAddLogs = $this->logRepository->findActionAfterDate(
+            'ws_role_subscribe_user',
+            $now,
+            $userId,
+            null,
+            $pwu->getId(),
+            $userId,
+            $visitorRoleId
+        );
         $this->assertEquals(0, count($failedAddLogs));
 
-        $failedRemoveLogs = $this->logRepository->findByUserIdAndActionAndAfterDate($userId, 'ws_role_unsubscribe_user', $now, null, $pwu->getId(), $userId);
+        $failedRemoveLogs = $this->logRepository->findActionAfterDate(
+            'ws_role_unsubscribe_user',
+            $now,
+            $userId,
+            null,
+            $pwu->getId(),
+            $userId
+        );
         $this->assertEquals(0, count($failedRemoveLogs));
     }
 

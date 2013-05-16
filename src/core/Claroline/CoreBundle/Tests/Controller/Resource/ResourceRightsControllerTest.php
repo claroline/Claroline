@@ -108,7 +108,12 @@ class ResourceRightsControllerTest extends FunctionalTestCase
             }
         }
 
-        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('john')->getId(), 'ws_role_change_right', $now, $this->getDirectory('dir1')->getId());
+        $logs = $this->logRepository->findActionAfterDate(
+            'ws_role_change_right',
+            $now,
+            $this->getUser('john')->getId(),
+            $this->getDirectory('dir1')->getId()
+        );
         $this->assertEquals(3, count($logs));
     }
 
@@ -195,7 +200,12 @@ class ResourceRightsControllerTest extends FunctionalTestCase
             $secondDirCreatableTypes->getCreatableResourceTypes()->toArray()
         );
 
-        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('john')->getId(), 'ws_role_change_right', $now, $directoryId);
+        $logs = $this->logRepository->findActionAfterDate(
+            'ws_role_change_right',
+            $now,
+            $this->getUser('john')->getId(),
+            $directoryId
+        );
         $this->assertEquals(2, count($logs));
     }
 

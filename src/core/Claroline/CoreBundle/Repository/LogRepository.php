@@ -239,41 +239,35 @@ class LogRepository extends EntityRepository
         return $this->findAdminLogsQuery($actionsRestriction)->getResult();
     }
 
-    //findByUserIdAndActionAndAfterDate
-    public function findByUserIdAndActionAndAfterDate($userId, $action, $date, $resourceId = null, $workspaceId = null, $receiverId = null, $roleId = null, $groupId = null)
+    public function findActionAfterDate(
+        $action,
+        $date,
+        $doerId = null,
+        $resourceId = null,
+        $workspaceId = null,
+        $receiverId = null,
+        $roleId = null,
+        $groupId = null,
+        $toolName = null,
+        $userType = null
+    )
     {
-        // var_dump($userId);
-        // var_dump($action);
-        // var_dump($date);
-        // if ($resourceId) {
-        //     var_dump($resourceId);
-        // }
-        // if ($workspaceId) {
-        //     var_dump($workspaceId);
-        // }
-        // if ($receiverId) {
-        //     var_dump($receiverId);
-        // }
-        // if ($roleId) {
-        //     var_dump($roleId);
-        // }
-        // if ($groupId) {
-        //     var_dump($groupId);
-        // }
-
         $qb = $this
             ->createQueryBuilder('log')
             ->orderBy('log.dateLog', 'DESC')
-            ->leftJoin('log.doer', 'doer')
             
             ->andWhere('log.action = :action')
             ->setParameter('action', $action)
-            
-            ->andWhere('doer.id = :userId')
-            ->setParameter('userId', $userId)
 
             ->andWhere('log.dateLog >= :date')
             ->setParameter('date', $date);
+
+        if ($doerId !== null) {
+            $qb
+                ->leftJoin('log.doer', 'doer')
+                ->andWhere('doer.id = :doerId')
+                ->setParameter('doerId', $doerId);
+        }
 
         if ($resourceId !== null) {
             $qb
@@ -310,13 +304,14 @@ class LogRepository extends EntityRepository
                 ->setParameter('groupId', $groupId);
         }
 
+        if ($toolName !== null) {
+            $qb
+                ->andWhere('log.toolName = :toolName')
+                ->setParameter('toolName', $toolName);
+        }
+
         $q = $qb->getQuery();
         $logs = $q->getResult();
-
-        // foreach ($logs as $log) {
-        //     //var_dump($log->getDetails()['resource']['name']);
-        //     //var_dump($log->getDetails()['role']['name']);
-        // }
 
         return $logs;
     }

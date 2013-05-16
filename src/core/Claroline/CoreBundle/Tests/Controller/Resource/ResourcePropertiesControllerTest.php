@@ -73,7 +73,12 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('new_name', $jsonResponse->name);
 
-        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'resource_update', $now, $dir->getId());
+        $logs = $this->logRepository->findActionAfterDate(
+            'resource_update',
+            $now,
+            $this->getUser('user')->getId(),
+            $dir->getId()
+        );
         $this->assertEquals(1, count($logs));
     }
 
@@ -108,7 +113,12 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
         $name = str_replace("thumbnails/", "", $jsonResponse->icon);
         $this->assertContains($name, $images);
 
-        $logs = $this->logRepository->findByUserIdAndActionAndAfterDate($this->getUser('user')->getId(), 'resource_update', $now, $dir->getId());
+        $logs = $this->logRepository->findActionAfterDate(
+            'resource_update',
+            $now,
+            $this->getUser('user')->getId(),
+            $dir->getId()
+        );
         $this->assertEquals(1, count($logs));
     }
 
