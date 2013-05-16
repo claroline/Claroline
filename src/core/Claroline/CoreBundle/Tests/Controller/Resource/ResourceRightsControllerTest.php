@@ -22,7 +22,7 @@ class ResourceRightsControllerTest extends FunctionalTestCase
     {
         $this->loadFileData('john', 'john', array('test.pdf'));
         $this->logUser($this->getUser('john'));
-        $crawler = $this->client->request('GET', "/resource/{$this->getFile('test.pdf')->getId()}/rights/form");
+        $crawler = $this->client->request('GET', "/resource/{$this->getFile('test.pdf')->getId()}/rights/form/role");
         // admin rights shouldn't be displayed
         $this->assertEquals(4, count($crawler->filter('.role-permissions')));
     }
@@ -207,6 +207,202 @@ class ResourceRightsControllerTest extends FunctionalTestCase
             $directoryId
         );
         $this->assertEquals(2, count($logs));
+    }
+
+    public function testAddRightToRoleOutsideWorkspace()
+    {
+        $this->loadUserData(array('jane' => 'user'));
+        $this->loadDirectoryData('john', array('john/dir1', 'john/dir1/dir2'));
+        $this->logUser($this->getUser('john'));
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $directoryId = $this->getDirectory('dir1')->getId();
+        $role = $em->getRepository('ClarolineCoreBundle:Role')
+            ->findManagerRole($this->getWorkspace('jane'));
+        $this->client->request(
+            'POST',
+            "/resource/{$directoryId}/role/{$role->getId()}/right/create",
+            array('resources_rights_form' => array(
+                'canOpen' => true,
+                'canEdit' => true,
+                'canDelete' => true,
+                'canCopy' => true,
+                'canExport' => true,
+            ))
+        );
+
+        $resourceRightsRepo = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
+        $rights = $resourceRightsRepo->findNonAdminRights($this->getDirectory('dir1'));
+        $this->assertEquals(5, count($rights));
+        //tesing the recursivity
+        $preRecursive = count($resourceRightsRepo->findRecursiveByResource($this->getDirectory('dir1')));
+
+        $this->client->request(
+            'POST',
+            "/resource/{$this->getDirectory('dir1')->getId()}/rights/edit",
+            array(
+                'roles' => array(),
+                'isRecursive' => 'on'
+            )
+        );
+
+        $postRecursive = count($resourceRightsRepo->findRecursiveByResource($this->getDirectory('dir1')));
+        $this->assertEquals(1, $postRecursive - $preRecursive);
+    }
+
+    public function testRecursiveRightCreationCreatesMissingRights()
+    {
+        $this->loadUserData(array('jane' => 'user'));
+        $this->loadDirectoryData('john', array('john/dir1', 'john/dir1/dir2'));
+        $this->logUser($this->getUser('john'));
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $directoryId = $this->getDirectory('dir1')->getId();
+        $role = $em->getRepository('ClarolineCoreBundle:Role')
+            ->findManagerRole($this->getWorkspace('jane'));
+        $resourceRightsRepo = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
+        $preRecursive = count($resourceRightsRepo->findRecursiveByResource($this->getDirectory('dir1')));
+        $this->client->request(
+            'POST',
+            "/resource/{$directoryId}/role/{$role->getId()}/right/create",
+            array('resources_rights_form' => array(
+                'canOpen' => true,
+                'canEdit' => true,
+                'canDelete' => true,
+                'canCopy' => true,
+                'canExport' => true,
+                'isRecursive' => true
+            ))
+        );
+
+        $postRecursive = count($resourceRightsRepo->findRecursiveByResource($this->getDirectory('dir1')));
+        $this->assertEquals(2, $postRecursive - $preRecursive);
+    }
+
+    public function testRecursiveRightCreationOverridesExistingRights()
+    {
+        $this->loadUserData(array('jane' => 'user'));
+        $this->loadDirectoryData('john', array('john/dir1', 'john/dir1/dir2'));
+        $this->logUser($this->getUser('john'));
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $role = $em->getRepository('ClarolineCoreBundle:Role')
+            ->findManagerRole($this->getWorkspace('jane'));
+
+        $this->client->request(
+            'POST',
+            "/resource/{$this->getDirectory('dir2')->getId()}/role/{$role->getId()}/right/create",
+            array('resources_rights_form' => array(
+                'canOpen' => true,
+                'canEdit' => true,
+                'canDelete' => true,
+                'canCopy' => true,
+                'canExport' => true,
+            ))
+        );
+
+        $this->client->request(
+            'POST',
+            "/resource/{$this->getDirectory('dir1')->getId()}/role/{$role->getId()}/right/create",
+            array('resources_rights_form' => array(
+                'isRecursive' => true
+            ))
+        );
+
+        $this->assertRolePermissionsOnResource(
+            $role,
+            $this->getDirectory('dir1'),
+            array('delete' => false, 'open' => false, 'export' => false, 'copy' => false, 'edit' => false),
+            array('delete' => false, 'open' => false, 'export' => false, 'copy' => false, 'edit' => false)
+        );
+    }
+
+    public function testRecursiveRightEditionOverridedExistingRights()
+    {
+        $this->loadUserData(array('jane' => 'user'));
+        $this->loadDirectoryData('john', array('john/dir1', 'john/dir1/dir2'));
+        $this->logUser($this->getUser('john'));
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $role = $em->getRepository('ClarolineCoreBundle:Role')
+            ->findManagerRole($this->getWorkspace('jane'));
+
+        $this->client->request(
+            'POST',
+            "/resource/{$this->getDirectory('dir1')->getId()}/role/{$role->getId()}/right/create",
+            array('resources_rights_form' => array(
+                'canOpen' => true,
+                'canEdit' => true,
+                'canDelete' => true,
+                'canCopy' => true,
+                'canExport' => true,
+                'isRecursive' => true
+            ))
+        );
+
+        $resourceRightId = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
+            ->findOneBy(array('role' => $role, 'resource' => $this->getDirectory('dir1')))->getId();
+
+        $this->client->request(
+            'POST',
+            "/resource/right/{$resourceRightId}/edit",
+            array('resources_rights_form' => array(
+                'canOpen' => true,
+                'canEdit' => true,
+                'canCopy' => true,
+                'canExport' => true,
+                'isRecursive' => true
+            ))
+        );
+
+        $this->assertRolePermissionsOnResource(
+            $role,
+            $this->getDirectory('dir1'),
+            array('delete' => false, 'open' => true, 'export' => true, 'copy' => true, 'edit' => true),
+            array('delete' => false, 'open' => true, 'export' => true, 'copy' => true, 'edit' => true)
+        );
+    }
+
+    public function testRecursiveRightEditionCreatesMissingRights()
+    {
+        $this->loadUserData(array('jane' => 'user'));
+        $this->loadDirectoryData('john', array('john/dir1', 'john/dir1/dir2'));
+        $this->logUser($this->getUser('john'));
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $role = $em->getRepository('ClarolineCoreBundle:Role')
+            ->findManagerRole($this->getWorkspace('jane'));
+
+        $this->client->request(
+            'POST',
+            "/resource/{$this->getDirectory('dir1')->getId()}/role/{$role->getId()}/right/create",
+            array('resources_rights_form' => array(
+                'canOpen' => true,
+                'canEdit' => true,
+                'canDelete' => true,
+                'canCopy' => true,
+                'canExport' => true,
+            ))
+        );
+
+        $resourceRightsRepo = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
+        $preRecursive = count($resourceRightsRepo->findRecursiveByResource($this->getDirectory('dir1')));
+        $resourceRightId = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
+            ->findOneBy(array('role' => $role, 'resource' => $this->getDirectory('dir1')))->getId();
+
+       var_dump('r2');
+       $this->client->request(
+            'POST',
+            "/resource/right/{$resourceRightId}/edit",
+            array('resources_rights_form' => array(
+                'isRecursive' => true
+            ))
+        );
+
+        $postRecursive = count($resourceRightsRepo->findRecursiveByResource($this->getDirectory('dir1')));
+        $this->assertEquals(1, $postRecursive - $preRecursive);
+
+        $this->assertRolePermissionsOnResource(
+            $role,
+            $this->getDirectory('dir1'),
+            array('delete' => false, 'open' => false, 'export' => false, 'copy' => false, 'edit' => false),
+            array('delete' => false, 'open' => false, 'export' => false, 'copy' => false, 'edit' => false)
+        );
     }
 
     private function assertRolePermissionsOnResource(

@@ -15,7 +15,7 @@ use JMS\DiExtraBundle\Annotation as DI;
  * @DI\FormType(alias = "daterange")
  */
 class DateRangeType extends AbstractType
-{   
+{
     protected $translator;
 
     /**

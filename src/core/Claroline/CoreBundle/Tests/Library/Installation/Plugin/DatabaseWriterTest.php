@@ -126,7 +126,7 @@ class DatabaseWriterTest extends FunctionalTestCase
 
         $resourceIcon = $this->em->createQuery($dql)->getResult();
         $this->assertEquals(1, count($resourceIcon));
-        $this->assertEquals($resourceIcon[0]->getIconType()->getIconType(), 'type');
+        $this->assertEquals($resourceIcon[0]->getIconType()->getType(), 'type');
     }
 
     public function testCustomActionsArePersisted()

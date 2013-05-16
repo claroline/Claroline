@@ -17,6 +17,7 @@
                 this.parameters = parameters;
                 this.dispatcher = dispatcher;
                 this.currentDirectory = {id: parameters.directoryId};
+                this.directoryHistory = [];
 
                 if (parameters.isPickerMode) {
                     this.el.className = 'picker resource-manager modal hide';
@@ -35,7 +36,26 @@
             },
             render: function (resources, path, creatableTypes, isSearchMode, searchParameters) {
                 this.currentDirectory = _.last(path);
-                this.subViews.breadcrumbs.render(path);
+
+                if (this.directoryHistory.length === 0) {
+                    this.directoryHistory = path;
+                } else {
+                    var index = -1;
+
+                    for (var i = 0; i < this.directoryHistory.length; i++) {
+                        if (this.directoryHistory[i].id == this.currentDirectory.id) {
+                            index = i;
+                        }
+                    }
+
+                    if (index == -1) {
+                        this.directoryHistory.push(this.currentDirectory);
+                    } else {
+                        this.directoryHistory.splice(index+1);
+                    }
+                }
+
+                this.subViews.breadcrumbs.render(this.directoryHistory);
                 this.subViews.actions.render(this.currentDirectory, creatableTypes, isSearchMode, searchParameters);
                 this.subViews.resources.render(resources, isSearchMode, this.currentDirectory.id);
 
@@ -467,7 +487,7 @@
         Form: Backbone.View.extend({
             className: 'resource-form modal hide',
             events: {
-                'submit form': function (event) {
+                'click #submit-default-rights-form-button': function (event) {
                     event.preventDefault();
                     var form = $(this.el).find('form')[0];
                     this.dispatcher.trigger(this.eventOnSubmit, {
@@ -476,16 +496,16 @@
                         resourceId: this.targetResourceId
                     });
                 },
-                'click a': function (event) {
+                'click .res-creation-options': function (event) {
                     event.preventDefault();
 
                     if (event.currentTarget.getAttribute('data-toggle') !== 'tab') {
                         $.ajax({
+//                            context: this,
                             url: event.currentTarget.getAttribute('href'),
                             type: 'POST',
                             processData: false,
                             contentType: false,
-                            context: this,
                             success: function (form) {
                                 this.views.form.render(
                                     form,
@@ -495,6 +515,60 @@
                             }
                         });
                     }
+                },
+                'click .search-role-btn':function (event) {
+                    event.preventDefault();
+                    var search = $('#role-search-text').val();
+                    $.ajax({
+                        url: Routing.generate('claro_resource_find_role_by_code', {'code': search}),
+                        type: 'GET',
+                        context: this,
+                        processData: false,
+                        contentType: false,
+                        success: function (workspaces) {
+                            $('#form-right-wrapper').empty();
+                            $('#role-list').append(Twig.render(resourceRightsRoles, {'workspaces': workspaces, 'resourceId': this.targetResourceId}));
+                        }
+                    })
+                },
+                'click .role-item':function (event) {
+                    event.preventDefault();
+                    $.ajax({
+                        context: this,
+                        url: event.currentTarget.getAttribute('href'),
+                        type: 'POST',
+                        processData: false,
+                        contentType: false,
+                        success: function (form) {
+                            $('#role-list').empty();
+                            $('#form-right-wrapper').append(form);
+                        }
+                    })
+                },
+                'click #submit-right-form-button': function(event) {
+                    event.preventDefault();
+                    var form = $(this.el).find('form')[1]
+                    var data = new FormData(form);
+                    $.ajax({
+                        url: form.getAttribute('action'),
+                        context: this,
+                        data: data,
+                        type: 'POST',
+                        processData: false,
+                        contentType: false,
+                        success: function () {
+                            $('#form-right-wrapper').empty();
+                        }
+                    });
+                },
+                'submit form': function (event) {
+                    event.preventDefault();
+                    var form = $(this.el).find('form')[0];
+                    this.dispatcher.trigger(this.eventOnSubmit, {
+                        action: form.getAttribute('action'),
+                        data: new FormData(form),
+                        resourceId: this.targetResourceId
+                    });
                 }
             },
             initialize: function (dispatcher) {
@@ -628,6 +702,12 @@
                 callback = _.bind(callback, this);
                 this.dispatcher.on(event, callback);
             }, this);
+            this.stackedRequests = 0;
+            $.ajaxSetup({
+                headers: {'X_Requested_With': 'XMLHttpRequest'},
+                context: this
+            });
+
             if (!parameters.isPickerOnly) {
                 this.displayResources = _.bind(this.displayResources, this);
                 this.router = new manager.Router(this.parameters.directoryId, this.displayResources);
@@ -686,7 +766,7 @@
                     'create': '/resource/form/' + resource.type,
                     'rename': '/resource/rename/form/' + resource.id,
                     'edit-properties': '/resource/properties/form/' + resource.id,
-                    'edit-rights': '/resource/' + resource.id + '/rights/form'
+                    'edit-rights': '/resource/' + resource.id + '/rights/form/role'
                 };
 
                 if (!urlMap[type]) {

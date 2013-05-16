@@ -28,14 +28,14 @@ class Activity extends AbstractResource
     protected $resourcesActivities;
 
     /**
-     * @ORM\Column(type="datetime", name="date_beginning")
+     * @ORM\Column(type="datetime", name="start_date")
      */
-    protected $dateBeginning;
+    protected $startDate;
 
     /**
-     * @ORM\Column(type="datetime", name="date_end")
+     * @ORM\Column(type="datetime", name="end_date")
      */
-    protected $dateEnd;
+    protected $endDate;
 
     public function __construct()
     {
@@ -75,23 +75,23 @@ class Activity extends AbstractResource
         return $this->resourcesActivities;
     }
 
-    public function setDateBeginning($date)
+    public function setStartDate($date)
     {
-        $this->dateBeginning = $date;
+        $this->startDate = $date;
     }
 
-    public function getDateBeginning()
+    public function getStartDate()
     {
-        return $this->dateBeginning;
+        return $this->startDate;
     }
 
-    public function setDateEnd($date)
+    public function setEndDate($date)
     {
-        $this->dateEnd = $date;
+        $this->endDate = $date;
     }
 
-    public function getDateEnd()
+    public function getEndDate()
     {
-        return $this->dateEnd;
+        return $this->endDate;
     }
 }
