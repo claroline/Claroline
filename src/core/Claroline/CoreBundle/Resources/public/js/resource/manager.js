@@ -17,6 +17,7 @@
                 this.parameters = parameters;
                 this.dispatcher = dispatcher;
                 this.currentDirectory = {id: parameters.directoryId};
+                this.directoryHistory = [];
 
                 if (parameters.isPickerMode) {
                     this.el.className = 'picker resource-manager modal hide';
@@ -35,7 +36,26 @@
             },
             render: function (resources, path, creatableTypes, isSearchMode, searchParameters) {
                 this.currentDirectory = _.last(path);
-                this.subViews.breadcrumbs.render(path);
+
+                if (this.directoryHistory.length === 0) {
+                    this.directoryHistory = path;
+                } else {
+                    var index = -1;
+
+                    for (var i = 0; i < this.directoryHistory.length; i++) {
+                        if (this.directoryHistory[i].id == this.currentDirectory.id) {
+                            index = i;
+                        }
+                    }
+
+                    if (index == -1) {
+                        this.directoryHistory.push(this.currentDirectory);
+                    } else {
+                        this.directoryHistory.splice(index+1);
+                    }
+                }
+
+                this.subViews.breadcrumbs.render(this.directoryHistory);
                 this.subViews.actions.render(this.currentDirectory, creatableTypes, isSearchMode, searchParameters);
                 this.subViews.resources.render(resources, isSearchMode, this.currentDirectory.id);
 
