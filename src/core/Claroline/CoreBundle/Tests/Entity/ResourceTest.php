@@ -26,15 +26,6 @@ class ResourceTest extends FixtureTestCase
         );
         $resource->setWorkspace($this->getUser('admin')->getPersonalWorkspace());
         $resource->setCreator($this->getUser('admin'));
-        $resource->setOwnerRights(
-            array(
-                'sharable' => true,
-                'editable' => true,
-                'exportable' => true,
-                'deletable' => true,
-                'copiable' => true
-            )
-        );
         $this->getEntityManager()->persist($resource);
         $this->getEntityManager()->flush();
         $creationTime = new \DateTime();
@@ -60,15 +51,6 @@ class ResourceTest extends FixtureTestCase
         );
         $resource->setWorkspace($this->getUser('admin')->getPersonalWorkspace());
         $resource->setCreator($this->getUser('admin'));
-        $resource->setOwnerRights(
-            array(
-                'sharable' => true,
-                'editable' => true,
-                'exportable' => true,
-                'deletable' => true,
-                'copiable' => true
-            )
-        );
         $this->getEntityManager()->persist($resource);
         $this->getEntityManager()->flush();
 
