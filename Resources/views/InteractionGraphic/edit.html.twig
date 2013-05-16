@@ -1,6 +1,6 @@
 {#
  # ExoOnLine
- # Copyright or © or Copr. Université Jean Monnet (France), 2012
+ # Copyright or Â© or Copr. UniversitÃ© Jean Monnet (France), 2012
  # dsi.dev@univ-st-etienne.fr
  #
  # This software is a computer program whose purpose is to [describe
@@ -90,14 +90,14 @@
  
 {# ------------------------------------------------- Zone affichage image ---------------------------------------------------------------------------- #}    
     
-    <a onclick="DisplayInstruction()" id="Consignes" 
+    <a onclick="DisplayInstruction()" id="Order" 
        onmouseover="document.body.style.cursor = 'pointer';"
        onmouseout="document.body.style.cursor = 'default';"
     >Instructions</a>
             
               
-<p id="Instructions">{{ "Redimmension" | trans }}<br/>{{ "Selection" | trans }}<br/>{{ "PlaceZone" | trans }}<br/>
-        {{ "Resize" | trans }}<br/>{{ "Effacer" | trans }}</p>
+    <p id="Instructions">{{ "ResizeZone" | trans }}<br/>{{ "SelectZone" | trans }}<br/>{{ "PlaceZone" | trans }}<br/>
+        {{ "Resize" | trans }}<br/>{{ "Erase" | trans }}</p>
 
     <img src="{{ asset(entity.document.url) }}" width="{{entity.width}}" height="{{entity.height}}" id="AnswerImage"/>
     
@@ -123,9 +123,9 @@
     
     <table>
         <tr>
-            <th>{{ "Zone de réponse" | trans }}</th>
-            <th>{{ "Forme" | trans }}</th>
-            <th>{{ "Couleur" | trans }}</th>
+           <th>{{ "Answer zone" | trans }}</th>
+            <th>{{ "Shape" | trans }}</th>
+            <th>{{ "Color" | trans }}</th>
             <th>{{ "Points" | trans }}</th>
         </tr>
 
@@ -167,7 +167,7 @@
     
     <p>
         <button type="submit" id="button_submit" 
-            onclick="Verifier('{{ "noTitle" | trans }}', '{{ "noQuestion" | trans }}','{{ "noImg" | trans }}',
+            onclick="Check('{{ "noTitle" | trans }}', '{{ "noQuestion" | trans }}','{{ "noImg" | trans }}',
             '{{ "noAnswerZone" | trans }}', '{{ edit_form.interaction.question.title.vars.id }}',
             '{{ edit_form.interaction.invite.vars.id }}');return false;">{{ "Edit" | trans }}</button>
     </p>

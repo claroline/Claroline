@@ -73,7 +73,7 @@
         {% for c in coords %} 
 
             {% set numb = coords[i].value|split(',') %}
-            {% set repco = rep[i]|split('-') %}
+            {% set respcoo = rep[i]|split('-') %}
 
             <img src="/Claroline/web/bundles/ujmexo/images/graphic/circlew.png" alt="RightAnswer{{i}}" id="1ra{{i}}"
                  style="position: absolute; z-index: 2;" width="{{ coords[i].size }}"/><br/>
@@ -82,7 +82,7 @@
                  style="position: absolute; z-index: 7;"/>
 
             {% set allInfo = coords[i].shape~';'~coords[i].color~';'~asset('bundles/ujmexo/images/graphic/')~';'
-                            ~numb[0]~';'~numb[1]~';'~repco[0]~';'~repco[1]~';'~coords[i].size~'^'~allInfo %}
+                            ~numb[0]~';'~numb[1]~';'~respcoo[0]~';'~respcoo[1]~';'~coords[i].size~'^'~allInfo %}
 
             {%set i = i + 1%}
 

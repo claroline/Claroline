@@ -1,29 +1,29 @@
 var answerImg = document.getElementById('AnswerImg'); // The question image
-var cible; // The selected pointer
+var target; // The selected pointer
 var containerCursor = document.getElementById('ContainerCursor'); // Container to display the cursor
 var cur; // Cursor with a defined number
 var drag = false; // Allow or not to move the pointer
 var out = false; // To know if is out the image
 var ox = containerCursor.offsetLeft; // Top left of the cursor's container
 var ref = document.getElementById('ref'); // The instructions div to get it position and place pointers after
-var taille = document.getElementById('nbpointer').value; // Number of pointers + 1
+var size = document.getElementById('nbpointer').value; // Number of pointers + 1
 var tempCoords = {}; // The coordonates of the answer zones
 var validGraphic = document.getElementById('ValidGraphic'); // The form to validate
 var x; // Mouse x position
 var y; // Mouse y position
 var j; // For for instruction
-var longueur = ref.scrollHeight + 10; // height of the div "Instructions"
+var length = ref.scrollHeight + 10; // height of the div "Instructions"
 
 document.addEventListener('click', function (e) { // First click, get the selected answer zone
-    //"use strict";
-    for (j = 1 ; j < taille ; j++) {
+
+    for (j = 1 ; j < size ; j++) {
         if (e.target.id == 'cursor' + j && drag == false) {
-            cible = e.target;
+            target = e.target;
             document.body.style.cursor = 'pointer';
 
             // If move answer zone, must delete old coordonates into the tab
-            var w = cible.offsetLeft - answerImg.offsetLeft + 10;
-            var c = cible.offsetTop - answerImg.offsetTop + 10;
+            var w = target.offsetLeft - answerImg.offsetLeft + 10;
+            var c = target.offsetTop - answerImg.offsetTop + 10;
             var temp = w + '-' + c;
 
             for (var ci in tempCoords) {
@@ -36,8 +36,8 @@ document.addEventListener('click', function (e) { // First click, get the select
 }, false);
 
 document.addEventListener('click', function (e) { // Second click, place the selected answer zone
-    //"use strict";
-    if (drag === true) {
+
+    if (drag == true) {
 
         var t1 = x - 10; // Position x of the mouse
         var t2 = y - 10; // Position y of the mouse
@@ -47,17 +47,17 @@ document.addEventListener('click', function (e) { // Second click, place the sel
         // Out of the image
         if ((t1) > (t3) || (t1) < (answerImg.offsetLeft - 10) || (t2) > (t4) || (t2) < (answerImg.offsetTop - 10)) {
             // Replace the cursor at its initial place
-            cible.style.left = String(ox - 20 + (cible.id.substr(6)) * 37) + 'px';
-            cible.style.top = String(ref.offsetTop + longueur) + 'px';
+            target.style.left = String(ox - 20 + (target.id.substr(6)) * 37) + 'px';
+            target.style.top = String(ref.offsetTop + length) + 'px';
             out = true;
         }
 
         if (out == false) {
-            var contain = (cible.offsetLeft - answerImg.offsetLeft + 10) + '-' + (cible.offsetTop - answerImg.offsetTop + 10);
-            tempCoords[cible.id] = contain;
+            var contain = (target.offsetLeft - answerImg.offsetLeft + 10) + '-' + (target.offsetTop - answerImg.offsetTop + 10);
+            tempCoords[target.id] = contain;
         }
 
-        cible = null;
+        target = null;
         drag = false;
         out = false;
         document.body.style.cursor = 'default';
@@ -65,9 +65,9 @@ document.addEventListener('click', function (e) { // Second click, place the sel
 }, false);
 
 document.addEventListener('mousemove', function (e) {
-    //"use strict";
-    if (cible) {
-        // Position de la souris dans la fenetre :
+
+    if (target) {
+        // Position of the mouse into the window
         if (e.x != undefined && e.y != undefined) { // IE
             x = e.layerX;
             y = e.layerY;
@@ -76,20 +76,20 @@ document.addEventListener('mousemove', function (e) {
             y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
         }
 
-        cible.style.left = String(x - 10) + 'px';
-        cible.style.top = String(y - 10) + 'px';
+        target.style.left = String(x - 10) + 'px';
+        target.style.top = String(y - 10) + 'px';
 
         drag = true;
     }
 }, false);
 
 document.addEventListener('keydown', function (e) { // Reset all the pointers
-    //"use strict";
-    if (e.keyCode === 67) {
-        for (var x = 1 ; x < taille ; x++) {
-            cur = 'cursor' + x;
-            document.getElementById(cur).style.left = String(ox - 20 + x * 37) + 'px';
-            document.getElementById(cur).style.top = String(ref.offsetTop + longueur) + 'px';
+
+    if (e.keyCode == 67) { // Press c
+        for (var h = 1 ; h < size ; h++) {
+            cur = 'cursor' + h;
+            document.getElementById(cur).style.left = String(ox - 20 + h * 37) + 'px';
+            document.getElementById(cur).style.top = String(ref.offsetTop + length) + 'px';
         }
 
         tempCoords = {};
@@ -98,14 +98,17 @@ document.addEventListener('keydown', function (e) { // Reset all the pointers
 
 function NoEmptyAnswer() { // Verify before submit that student placed all answer zones
 
-    for (var x = 1 ; x < taille ; x++) {
+    for (var h = 1 ; h < size ; h++) {
 
-        var cur = 'cursor' + x;
+        var cur = 'cursor' + h;
 
+        // If answer zone not placed, default value
         if (!tempCoords[cur]) {
             tempCoords[cur] = 'a-a';
         }
+        // Concatenate the answer zones informations to send it to the controller
         document.getElementById('answers').value += tempCoords[cur] + ';';
     }
+    // Submit the form
     validGraphic.submit();
 }

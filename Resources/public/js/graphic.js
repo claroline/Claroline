@@ -1,15 +1,17 @@
 // :::::::::::::::::::::::::::::::::::::::::: Declaration variables :::::::::::::::::::::::::::::::::::::::::::::::::::
 var allow = false; // To know if answer zone is selected before resize
 var answerImg = document.getElementById('AnswerImage'); // The background answer image
-var cible; // The selected answer zones
+var target; // The selected answer zones
 var el = document.getElementById('movable'); // To get the shape and the color of the answer zone
 var imgx; // Coord x of the answer zone
 var imgy; // Coord y of the answer zone
-var indice = 0; // Number of answer zone
+var grade = 0; // Number of answer zone
 var j; // For for instruction
 var mousex; // Position x of the mouse
 var mousey; // position y of the mouse
 var moving = false; // If move answer zones
+var newx; // new width of the image after resize
+var newy; // new height of the image after resize
 var point = {}; // The score of coords
 var pressMAJ; // If key MAJ pressed or not
 var pressCTRL; // If key CTRL pressed or not
@@ -17,16 +19,13 @@ var pressALT; // If key ALT pressed or not
 var pressS; // If key s pressed or not
 var resizing = false; // If resize answer zone
 var result; // src of the answer image
-var sens; // Move of the mouse
+var direction; // Move of the mouse
 var scalex = 0; // Width of the image after resize
 var scaley = 0; // Height of the image after resize
 var value = 0; // Size of the resizing
 var x = 0; // Mouse x after move
-var xPrecedent = 0; // Mouse x before move
+var xPrev = 0; // Mouse x before move
 var y = 0; // Mouse y after move
-var yPrecedent = 0; // Mouse y before move
-var newx; // new width of the image after resize
-var newy; // new height of the image after resize
 
 // Display alert into navigator language
 if (navigator.browserLanguage) {
@@ -37,18 +36,17 @@ if (navigator.browserLanguage) {
 
 // Instructions aren't displayed (by default) for more visibility
 document.getElementById('Instructions').style.display = 'none';
-document.getElementById('Consignes').style.display = 'block';
+document.getElementById('Order').style.display = 'block';
 
 // :::::::::::::::::::::::::::::::::::::::::: Functions :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 function DisplayInstruction() { // If click, instructions are displayed
     document.getElementById('Instructions').style.display = 'block';
-    document.getElementById('Consignes').style.display = 'none';
+    document.getElementById('Order').style.display = 'none';
 }
 
 // Get the url's picture matching to the label in the list
 function sendData(select, path, prefx) {
-    //"use strict";
 
     // Send the label of the picture to get the adress in order to display it
     $.ajax({
@@ -67,7 +65,7 @@ function sendData(select, path, prefx) {
 
 // Display the selected picture
 function LoadPic(path, prefx, iddoc) {
-    //"use strict";
+
     var list = document.getElementById(iddoc.id);// List of all the user's pictures
     var select = list.options[list.selectedIndex].innerHTML; // Label of the selected picture
 
@@ -76,38 +74,37 @@ function LoadPic(path, prefx, iddoc) {
     // New picture load, initialization var and remove previous answer zones :
     value = 0;
 
-    for (j = 0 ; j < indice ; j++) {
+    for (j = 0 ; j < grade ; j++) {
         if (document.getElementById('img' + j)) {
             document.getElementById('img' + j).parentNode.removeChild(document.getElementById('img' + j));
         }
     }
-    indice = 0;
+    grade = 0;
     point = {};
 }
 
 // Submit form without an empty field
-function Verifier(noTitle, noQuestion, noImg, noAnswerZone ,questiontitle, invite) {
-    //"use strict";
+function Check(noTitle, noQuestion, noImg, noAnswerZone, questiontitle, invite) {
 
     var imgOk = false; // Image is upload
     var questionOk = false; // Question is asked
     var titleOk = false; // Question has a title
     var zoneOk = false; // Answer zones are defined
-    var empty = false;
+    var empty = false; // Answer zone aren't defined
 
-    for (j = 0 ; j < indice ; j++) {
+    for (j = 0 ; j < grade ; j++) {
 
-        var nom = 'img' + j;
-        var choix = document.getElementById(nom);
+        var name = 'img' + j;
+        var choice = document.getElementById(name);
 
         // If at least one answer zone exist
-        if (choix) {
+        if (choice) {
             empty = true;
             break;
         }
     }
 
-//     No title
+    // No title
     if (document.getElementById(questiontitle).value == '') {
         alert(noTitle);
         return false;
@@ -144,12 +141,12 @@ function Verifier(noTitle, noQuestion, noImg, noAnswerZone ,questiontitle, invit
         document.getElementById('imgwidth').value = answerImg.width; // Pass width of the image to the controller
         document.getElementById('imgheight').value = answerImg.height; // Pass height of the image to the controller
 
-        for (j = 0 ; j < indice ; j++) {
+        for (j = 0 ; j < grade ; j++) {
 
             var imgN = 'img' + j;
-            var selectedZone = document.getElementById(imgN);
+            var selectedZone = document.getElementById(imgN); // An answer zone
 
-            if (selectedZone) {
+            if (selectedZone) { // If at least one answer zone is defined
 
                 imgx = parseInt(selectedZone.style.left.substr(0, selectedZone.style.left.indexOf('p'))) +
                     (selectedZone.width / 2);
@@ -159,21 +156,20 @@ function Verifier(noTitle, noQuestion, noImg, noAnswerZone ,questiontitle, invit
                     (selectedZone.height / 2);
                 imgy -= answerImg.offsetTop; // Position y answer zone
 
-                // Concatenate informations of the answer zones 
+                // Concatenate informations of the answer zones
                 var val = selectedZone.src + ';' + imgx + '_' + imgy + '-' + point[imgN] + '~' + selectedZone.width;
 
                 // And send it to the controller
                 document.getElementById('coordsZone').value += val + ',';
             }
         }
-
+        // Then submit the form
         document.getElementById('InterGraphForm').submit();
     }
 }
 
 // Change the shape and the color of the answer zone
 function changezone(prefix) {
-    //"use strict";
 
     if (document.getElementById('shape').value === 'circle') {
         switch (document.getElementById('color').value) {
@@ -246,12 +242,12 @@ function changezone(prefix) {
     }
 }
 
-function  ResizeImg(sens) {
-    //"use strict";
+// Resize the answer image
+function  ResizeImg(direction) {
 
-    if (sens === 'gauche') {
+    if (direction === 'gauche') {
         value -= 5;
-    } else if (sens === 'droite') {
+    } else if (direction === 'droite') {
         value += 5;
     }
 
@@ -260,64 +256,80 @@ function  ResizeImg(sens) {
     var ratio = answerImg.height / answerImg.width;
     scaley = scalex * ratio; // New picture height proportional to width
 
-    if (scalex > 70 && scaley > 70) { // Not resize too small or negativ
-        if (scalex < 810 && scaley < 810) {
+    if (scalex > 70 && scaley > 70) { // Not resize too small or negative
+        if (scalex < 810 && scaley < 810) { // Not resize too big or out window
 
-            for (j = 0 ; j < indice ; j++) {
+            for (j = 0 ; j < grade ; j++) {
                 var imgN = 'img' + j;
-                var selectedZone = document.getElementById(imgN);
+                var selectedZone = document.getElementById(imgN); // An answer zone
 
-                if (selectedZone) {
+                if (selectedZone) { // If at least one answer zone is defined
 
+                    // Position x & y of the current selected answer zone
                     var left = parseInt(selectedZone.style.left.substr(0, selectedZone.style.left.indexOf('p')));
                     var top = parseInt(selectedZone.style.top.substr(0, selectedZone.style.top.indexOf('p')));
 
+                    // New x & y after the resizing of the image
                     newx = scalex * (left - answerImg.offsetLeft) / answerImg.width;
                     newy = scaley * (top - answerImg.offsetTop) / answerImg.height;
 
+                    // If out the image
                     if (left < answerImg.offsetLeft || top < answerImg.offsetTop ||
-                        left > (answerImg.offsetLeft + answerImg.width)
-                        || top > (answerImg.offsetTop + answerImg.height)) {
+                        left > (answerImg.offsetLeft + answerImg.width) ||
+                        top > (answerImg.offsetTop + answerImg.height)) {
 
-                        newx = newy = 10;
+                        newx = newy = 10; // Default value
                     }
 
+                    // Place the answer zone to its new position
                     selectedZone.style.left = String(newx + answerImg.offsetLeft) + 'px';
                     selectedZone.style.top = String(newy + answerImg.offsetTop) + 'px';
 
+                    // Calculate the size of the answer zone proportionally to the new size of the answer image
                     var size = scalex / answerImg.width;
-                    cible = selectedZone;
+
+                    // Select the answer zone to resize
+                    target = selectedZone;
+
+                    // Disable moving answer zone and enable resizing it
                     resizing = true;
-                    ResizePointer(sens, size);
+
+                    // Resize the answer zone
+                    ResizePointer(direction, size);
                 }
             }
+            // Resize the answer image
             answerImg.width = scalex;
             answerImg.height = scaley;
         }
     }
-    cible = null;
+    // Unselect the answer zone
+    target = null;
 }
 
-function  ResizePointer(sens, diam) {
-    //"use strict";
+// Resize the answer zones
+function  ResizePointer(direction, diam) {
 
-    if (sens == 'gauche') {
-        cible.width -= diam;
-    } else if (sens == 'droite') {
-        cible.width += diam;
+    if (direction == 'gauche') {
+        target.width -= diam;
+    } else if (direction == 'droite') {
+        target.width += diam;
     }
 
-    if (cible.width < 10) { // Not too small or negatif
-        cible.width = 10;
+    if (target.width < 10) { // Not too small or negative
+        target.width = 10;
     }
 
-    cible.height += cible.width * cible.height / cible.height; // Proportional width/height
+    target.height += target.width * target.height / target.height; // Resize with proportional width/height
 }
 
-function MouseSens(event) {
-    xPrecedent = x;
-    yPrecedent = y;
+// Get the mouse direction
+function MouseDirection(event) {
 
+    // Old position of the mouse
+    xPrev = x;
+
+    // Get current position of the mouse
     if (event.x !== undefined && event.y !== undefined) { // IE
         x = event.layerX;
         y = event.layerY;
@@ -329,15 +341,16 @@ function MouseSens(event) {
     x -= answerImg.offsetLeft; // MouseX position
     y -= answerImg.offsetTop;  // MouseY position
 
-    if (x < xPrecedent) { // Gauche
-        sens = 'gauche';
-    } else if (x > xPrecedent) { // Droite
-        sens = 'droite';
+    if (x < xPrev) { // Gauche
+        direction = 'gauche';
+    } else if (x > xPrev) { // Droite
+        direction = 'droite';
     }
 
-    return sens;
+    return direction;
 }
 
+// Move the answer zones
 function MoveAnswerZone(e) {
 
     // Get mouse position
@@ -350,14 +363,13 @@ function MoveAnswerZone(e) {
     }
 
     // Move answer zone to mouse position (cursor center)
-    cible.style.left = String(x - (cible.width / 2)) + 'px';
-    cible.style.top = String(y - (cible.height / 2)) + 'px';
+    target.style.left = String(x - (target.width / 2)) + 'px';
+    target.style.top = String(y - (target.height / 2)) + 'px';
 }
 
 // :::::::::::::::::::::::::::::::::::::::::: EventListener :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 document.addEventListener('keydown', function (e) {
-    //"use strict";
 
     if (e.keyCode === 16) { // Touch MAJ down
         pressMAJ = true;
@@ -380,7 +392,6 @@ document.addEventListener('keydown', function (e) {
 }, false);
 
 document.addEventListener('keyup', function (e) {
-    //"use strict";
 
     if (e.keyCode === 16) { // Touch MAJ up
         pressMAJ = false;
@@ -403,33 +414,31 @@ document.addEventListener('keyup', function (e) {
 }, false);
 
 document.addEventListener('mousemove', function (event) { // To resize/moving answer zones/image
-    //"use strict";
 
     // Moving answer zone
-    if (cible && resizing == false) {
+    if (target && resizing == false) {
         MoveAnswerZone(event);
         moving = true;
     }
 
     // Resizing answer image
     if (pressMAJ === true) {
-        ResizeImg(MouseSens(event));
+        ResizeImg(MouseDirection(event));
     }
 
     // Resizing answer zone
     if (pressALT === true && allow === true) {
-        ResizePointer(MouseSens(event), 5);
+        ResizePointer(MouseDirection(event), 5);
         resizing = true;
     }
 });
 
 document.addEventListener('click', function (e) { // To add/delete answer zones
-    //"use strict";
 
     // Get the clicked answer zone
-    for (j = 0 ; j < indice ; j++) {
+    for (j = 0 ; j < grade ; j++) {
         if (e.target.id == 'img' + j) {
-            cible = e.target;
+            target = e.target;
             allow = true;
             document.onmousedown = function () { // Stop selection during move/resize
                 return false;
@@ -440,7 +449,7 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
     // To add an answer zone
     if (pressCTRL === true) {
 
-        // Position de la souris dans la fenetre :
+        // Position of the mouse into the window
         if (e.x !== undefined && e.y !== undefined) { // IE
             mousex = e.layerX;
             mousey = e.layerY;
@@ -467,8 +476,8 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
             img.style.left = String(mousex - 10) + 'px';
             img.style.top = String(mousey - 10) + 'px';
 
-            img.id = 'img' + indice;
-            indice++;
+            img.id = 'img' + grade;
+            grade++;
 
             img.src = el.src;
 
@@ -482,7 +491,7 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
     // To delete an answer zone
     if (pressS === true) {
 
-        for (j = 0 ; j < indice ; j++) {
+        for (j = 0 ; j < grade ; j++) {
             if (e.target.id == 'img' + j) {
                 var image = document.getElementById(e.target.id);
                 image.parentNode.removeChild(image);
@@ -499,7 +508,7 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
 
     // To stop moving
     if (moving === true && allow === true) {
-        cible = null;
+        target = null;
         moving = false;
     }
 }, false);

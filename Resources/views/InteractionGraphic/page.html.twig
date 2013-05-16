@@ -38,7 +38,7 @@
 {% endblock %}
 
 <form class="well label_bold" id="uploadForm" enctype="multipart/form-data" onsubmit="DisplayMessage()"
-      method="post" action="{{ path('ujm_interactiongraphic_AjoutImg') }}">
+      method="post" action="{{ path('ujm_interactiongraphic_AddImg') }}">
     
     <label for="label">{{ "Picture name" | trans }}</label>
     <input type="text" id='label' name='label' required="true"/><br/>

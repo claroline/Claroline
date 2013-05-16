@@ -81,13 +81,13 @@
  
 {# ------------------------------------------------- Zone affichage image ---------------------------------------------------------------------------- #}    
     
-    <a onclick="DisplayInstruction()" id="Consignes" 
+    <a onclick="DisplayInstruction()" id="Order" 
        onmouseover="document.body.style.cursor = 'pointer';"
        onmouseout="document.body.style.cursor = 'default';"
     >Instructions</a>
               
-    <p id="Instructions">{{ "Redimmension" | trans }}<br/>{{ "Selection" | trans }}<br/>{{ "PlaceZone" | trans }}<br/>
-        {{ "Resize" | trans }}<br/>{{ "Effacer" | trans }}</p>
+    <p id="Instructions">{{ "ResizeZone" | trans }}<br/>{{ "SelectZone" | trans }}<br/>{{ "PlaceZone" | trans }}<br/>
+        {{ "Resize" | trans }}<br/>{{ "Erase" | trans }}</p>
 
     <img src="" width="" height="" id="AnswerImage"/>
 
@@ -101,9 +101,9 @@
     
     <table>
         <tr>
-            <th>{{ "Zone de réponse" | trans }}</th>
-            <th>{{ "Forme" | trans }}</th>
-            <th>{{ "Couleur" | trans }}</th>
+            <th>{{ "Answer zone" | trans }}</th>
+            <th>{{ "Shape" | trans }}</th>
+            <th>{{ "Color" | trans }}</th>
             <th>{{ "Points" | trans }}</th>
         </tr>
 
@@ -141,7 +141,7 @@
     <div style="visibility: hidden;">{{ form_rest(form) }}</div>
     {{ form_errors(form) }}
     <p>
-        <button type="submit" onclick="Verifier('{{ "noTitle" | trans }}', '{{ "noQuestion" | trans }}','{{ "noImg" | trans }}',
+        <button type="submit" onclick="Check('{{ "noTitle" | trans }}', '{{ "noQuestion" | trans }}','{{ "noImg" | trans }}',
             '{{ "noAnswerZone" | trans }}', '{{ form.interaction.question.title.vars.id }}',
             '{{ form.interaction.invite.vars.id }}');return false;">{{ "Create" | trans }}</button>
     </p>

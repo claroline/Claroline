@@ -237,19 +237,19 @@ Picture name: Nom de l'image
 Upload !: Télécharger !
 Uploading ...: Chargement en cours...
 Select: Sélectionner
-Redimmension: Pour redimmensionner l'image, appuyez sur la touche MAJ et déplacez la souris.
+ResizeZone: Pour redimmensionner l'image, appuyez sur la touche MAJ et déplacez la souris.
 PlaceZone: Pour déplacer une zone de réponse, selecionnez-la en cliquant dessus et disposez-la en recliquant à l'endroit voulu.
 Resize: Pour redimmensionner la zone de réponse, selection la en cliquant dessus puis appuyez sur Alt en bougeant la souris.
-Selection: Pour définir une zone de réponse, maintenez la touche CTRL enfoncée et cliquez sur l'image à l'endroit où vous voulez la placer.
-Effacer: Pour effacer une zone de réponse, maintenez la touche s enfoncée et cliquez sur la zone de réponse à effacer.
+SelectZone: Pour définir une zone de réponse, maintenez la touche CTRL enfoncée et cliquez sur l'image à l'endroit où vous voulez la placer.
+Erase: Pour effacer une zone de réponse, maintenez la touche s enfoncée et cliquez sur la zone de réponse à effacer.
 unsupport: Désolé, votre navigateur ne supporte pas Canvas. Mettez-vous à jour.
-Zone de réponse: Zone de réponse
-Forme: Forme
-Couleur: Couleur
+Answer zone: Zone de réponse
+Shape: Forme
+Color: Couleur
 Points: Points
 cercle: cercle
 rectangle: rectangle
-consignes: Consignes
+Order: Consignes
 position: => Positionner le(s) pointeur(s) ci-dessous (croix rouge) sur l'image. La position du centre du pointeur défini votre réponse.
 selection: => Cliquez sur un pointeurs pour le sélectionner et cliquez ensuite sur l'image pour définir votre zone de réponse.
 raz: => Pour remettre à zéro tous les pointeurs, appuyez sur "c".

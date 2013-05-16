@@ -1,16 +1,16 @@
-window.onload = function() {
+window.onload = function () {
     var infos = document.getElementById('info').value;
     var i = infos.substr(0, infos.indexOf('~'));
     infos = infos.substr(infos.indexOf('~') + 1);
     var info = infos.split('^');
 
     for (var x = 0 ; x < i ; x++) {
-        var contenu = info[x].split(';');
-        position(contenu[0], contenu[1], x, contenu[2], contenu[3], contenu[4], contenu[5]);
+        var content = info[x].split(';');
+        position(content[0], content[1], x, content[2], content[3], content[4], content[5]);
     }
-}
+};
 
-function position(shape, color, i, prefix, value, size,points) {
+function position(shape, color, i, prefix, value, size, points) {
 
     // Set the shape/color of the answer zone
     if (shape == 'circle') {
@@ -92,7 +92,7 @@ function position(shape, color, i, prefix, value, size,points) {
     document.getElementById('img' + i).style.top = String(document.getElementById('AnswerImage').offsetTop +
         parseInt(y) - (size / 2)) + 'px';
 
-    indice++;
-    var nom = 'img'+i;
-    point[nom] = points;
+    grade++;
+    var name = 'img' + i;
+    point[name] = points;
 }

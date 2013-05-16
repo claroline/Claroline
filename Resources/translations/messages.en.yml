@@ -236,19 +236,19 @@ Picture name: Picture name
 Upload !: Upload !
 Uploading ...: Uploading ...
 Select: Select
-Redimmension: To  re-size the picture, press MAJ key and move your mouse.
+ResizeZone: To  re-size the picture, press MAJ key and move your mouse.
 PlaceZone: To move an answer zone, select it by clicking on it and click again to place it.
 Resize: To resize the answer zone, select it by clicking, then press Alt and move your mouse.
-Selection: To define an answer zone, press CTRL key and click on the picture where it should be placed.
-Effacer: To erase an answer zone, press s key and click on the erasable answer zone.
+SelectZone: To define an answer zone, press CTRL key and click on the picture where it should be placed.
+Erase: To erase an answer zone, press s key and click on the erasable answer zone.
 unsupport: Your browser doesn't accept canvas. Please, update.
-Zone de réponse: Answer zone
-Forme: Shape
-Couleur: Color
+Answer zone: Answer zone
+Shape: Shape
+Color: Color
 Points: Points
 cercle: circle
 rectangle: rectangle
-consignes: Instructions
+Order: Instructions
 position: => Place pointers below (red cross) on the picture. The pointer's center defines your answer.
 selection: => Click on a pointer to select it and click again on the picture to define your answer.
 raz: => To reset pointers, press "c".

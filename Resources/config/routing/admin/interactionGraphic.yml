@@ -1,4 +1,4 @@
-ujm_interactiongraphic_AjoutImg:
+ujm_interactiongraphic_AddImg:
     pattern:  /AjoutImg
     defaults: { _controller: "UJMExoBundle:WSRest:postDocumentAdd" }
     requirements: { _method: post }
