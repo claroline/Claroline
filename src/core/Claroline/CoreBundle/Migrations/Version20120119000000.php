@@ -557,6 +557,7 @@ class Version20120119000000 extends BundleMigration
         $this->addId($table);
         $table->addColumn('action', 'string');
         $table->addColumn('date_log', 'datetime');
+        $table->addColumn('short_date_log', 'date');
         $table->addColumn('details', 'json_array', array('notnull' => false));
         $table->addColumn('doer_type', 'string');
         $table->addColumn('doer_ip', 'string', array('notnull' => false));
