@@ -7,7 +7,7 @@ use Claroline\CoreBundle\Library\Event\LogGroupDeleteEvent;
 use Claroline\CoreBundle\Library\Event\LogResourceDeleteEvent;
 use Claroline\CoreBundle\Library\Event\LogUserDeleteEvent;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleDeleteEvent;
-use Claroline\CoreBundle\Library\Event\LogNotRepeatable;
+use Claroline\CoreBundle\Library\Event\LogNotRepeatableInterface;
 use Claroline\CoreBundle\Entity\Logger\Log;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -90,7 +90,12 @@ class LogListener
         if ($event->getAction() !== LogGroupDeleteEvent::ACTION) {
             $log->setReceiverGroup($event->getReceiverGroup());
         }
-        if (!($event->getAction() === LogResourceDeleteEvent::ACTION && $event->getResource() === $event->getWorkspace())) {
+        if (
+            !(
+                $event->getAction() === LogResourceDeleteEvent::ACTION &&
+                $event->getResource() === $event->getWorkspace()
+            )
+        ) {
             //Prevent delete workspace case
             $log->setWorkspace($event->getWorkspace());
         }
@@ -137,14 +142,14 @@ class LogListener
             if (count($log->getDoerPlatformRoles()) > 0) {
                 $doerPlatformRolesDetails = array();
                 foreach ($log->getDoerPlatformRoles() as $platformRole) {
-                    $doerPlatformRolesDetails[] = $platformRole->getTranslationKey();   
+                    $doerPlatformRolesDetails[] = $platformRole->getTranslationKey();
                 }
                 $details['doer']['platformRoles'] = $doerPlatformRolesDetails;
             }
             if (count($log->getDoerWorkspaceRoles()) > 0) {
                 $doerWorkspaceRolesDetails = array();
                 foreach ($log->getDoerWorkspaceRoles() as $workspaceRole) {
-                    $doerWorkspaceRolesDetails[] = $workspaceRole->getTranslationKey();   
+                    $doerWorkspaceRolesDetails[] = $workspaceRole->getTranslationKey();
                 }
                 $details['doer']['workspaceRoles'] = $doerWorkspaceRolesDetails;
             }
@@ -159,7 +164,7 @@ class LogListener
      * Is a repeat if the session contains a same logSignature for the same action category
      */
     private function isARepeat(LogGenericEvent $event)
-    {   
+    {
         if ($this->container->get('security.context')->getToken() === null) {
             //Only if have a user session;
 
@@ -212,7 +217,7 @@ class LogListener
      */
     public function onLog(LogGenericEvent $event)
     {
-        if (!($event instanceof LogNotRepeatable) or !$this->isARepeat($event)) {
+        if (!($event instanceof LogNotRepeatableInterface) or !$this->isARepeat($event)) {
             $this->createLog($event);
         }
     }

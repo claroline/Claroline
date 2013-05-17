@@ -812,7 +812,7 @@ class Version20120119000000 extends BundleMigration
             array('onDelete' => 'CASCADE')
         );
     }
-    
+
     private function createEventTable(Schema $schema)
     {
         $table = $schema->createTable('claro_event');
