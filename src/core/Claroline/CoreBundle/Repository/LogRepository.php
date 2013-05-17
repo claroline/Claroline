@@ -136,8 +136,8 @@ class LogRepository extends EntityRepository
     {
         $qb = $this
             ->createQueryBuilder('log')
-            ->select('SUBSTRING(log.dateLog, 1, 10) AS shortDate, count(log) as total')
-            ->orderBy('log.dateLog', 'ASC')
+            ->select('log.shortDateLog as shortDate, count(log) as total, log.dateLog as longDate')
+            ->orderBy('longDate', 'ASC')
             ->groupBy('shortDate');
 
         $qb = $this->addActionFilterToQueryBuilder($qb, $action, $actionsRestriction);
@@ -157,41 +157,31 @@ class LogRepository extends EntityRepository
             $lastDay = null;
             $endDay = null;
             if ($range !== null and count($range) == 2) {
-                $startDate = new \DateTime();
-                $startDate->setTimestamp($range[0]);
-                $lastDay = $startDate->format('Y-m-d');
+                $lastDay = new \DateTime();
+                $lastDay->setTimestamp($range[0]);
 
-                $endDate = new \DateTime();
-                $endDate->setTimestamp($range[1]);
-                $endDay = $endDate->format('Y-m-d');
+                $endDay = new \DateTime();
+                $endDay->setTimestamp($range[1]);
             }
 
             foreach ($result as $line) {
                 if ($lastDay !== null) {
-                    while (strtotime($lastDay) < strtotime($line['shortDate'])) {
-                        $chartData[] = array($lastDay, 0);
-
-                        $date = new \DateTime($lastDay);
-                        $date->add(new \DateInterval('P1D')); // P1D means a period of 1 day
-                        $lastDay = $date->format('Y-m-d');
+                    while ($lastDay->getTimestamp() < $line['shortDate']->getTimestamp()) {
+                        $chartData[] = array($lastDay->getTimestamp(), 0);
+                        $lastDay->add(new \DateInterval('P1D')); // P1D means a period of 1 day
                     }
                 } else {
                     $lastDay =  $line['shortDate'];
                 }
+                $lastDay->add(new \DateInterval('P1D')); // P1D means a period of 1 day
 
-                $date = new \DateTime($lastDay);
-                $date->add(new \DateInterval('P1D')); // P1D means a period of 1 day
-                $lastDay = $date->format('Y-m-d');
-
-                $chartData[] = array($line['shortDate'], intval($line['total']));
+                $chartData[] = array($line['shortDate']->getTimestamp(), intval($line['total']));
             }
 
-            while (strtotime($lastDay) <= strtotime($endDay)) {
-                $chartData[] = array($lastDay, 0);
+            while ($lastDay->getTimestamp() <= $endDay->getTimestamp()) {
+                $chartData[] = array($lastDay->getTimestamp(), 0);
 
-                $date = new \DateTime($lastDay);
-                $date->add(new \DateInterval('P1D')); // P1D means a period of 1 day
-                $lastDay = $date->format('Y-m-d');
+                $lastDay->add(new \DateInterval('P1D')); // P1D means a period of 1 day
             }
         }
 
