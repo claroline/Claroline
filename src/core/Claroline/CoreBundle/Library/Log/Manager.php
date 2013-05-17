@@ -96,7 +96,7 @@ class Manager
 
     protected function getDefaultRange()
     {
-        //By default last thirty days : 
+        //By default last thirty days :
         $startDate = new \DateTime('now');
         $startDate->setTime(0, 0, 0);
         $startDate->sub(new \DateInterval('P29D')); // P29D means a period of 29 days
@@ -152,20 +152,37 @@ class Manager
         $logs = array();
         if ($workspace) {
             if ($this->isAllowedToViewLogs($workspace)) {
-                $query = $repository->findFilteredLogsQuery(null, null, null, $actionsRestriction, array($workspace->getId()), $maxResult);
+                $query = $repository->findFilteredLogsQuery(
+                    null,
+                    null,
+                    null,
+                    $actionsRestriction,
+                    array($workspace->getId()),
+                    $maxResult
+                );
                 $logs = $query->getResult();
             }
         } else {
             $loggedUser = $token = $this->container->get('security.context')->getToken()->getUser();
             $workspaceRepository = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
-            $workspaceIdsResult = $workspaceRepository->findIdsByUserAndRoleNames($loggedUser, array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'));
+            $workspaceIdsResult = $workspaceRepository->findIdsByUserAndRoleNames(
+                $loggedUser,
+                array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER')
+            );
 
             $workspaceIds = array();
             foreach ($workspaceIdsResult as $line) {
                 $workspaceIds[] = $line['id'];
             }
 
-            $query = $repository->findFilteredLogsQuery(null, null, null, $actionsRestriction, $workspaceIds, $maxResult);
+            $query = $repository->findFilteredLogsQuery(
+                null,
+                null,
+                null,
+                $actionsRestriction,
+                $workspaceIds,
+                $maxResult
+            );
             $logs = $query->getResult();
         }
 
@@ -174,7 +191,13 @@ class Manager
         if ($workspace !== null) {
             $range = $this->getDefaultRange();
 
-            $chartData = $repository->countByDayFilteredLogs(null, $range, null, $actionsRestriction, array($workspace->getId()));
+            $chartData = $repository->countByDayFilteredLogs(
+                null,
+                $range,
+                null,
+                $actionsRestriction,
+                array($workspace->getId())
+            );
         }
 
         //List item delegation
@@ -190,7 +213,14 @@ class Manager
 
     public function getAdminList($page, $maxResult = -1)
     {
-        return $this->getList($page, $this->getAdminActionRestriction(), new AdminLogFilterType(), 'admin_log_filter_form', null, $maxResult);
+        return $this->getList(
+            $page,
+            $this->getAdminActionRestriction(),
+            new AdminLogFilterType(),
+            'admin_log_filter_form',
+            null,
+            $maxResult
+        );
     }
 
     public function getDesktopList($page, $maxResult = -1)
@@ -206,24 +236,38 @@ class Manager
             $workspaceIds = array($workspace->getId());
         }
 
-        $params = $this->getList($page, $this->getWorkspaceActionRestriction(), new WorkspaceLogFilterType(), 'workspace_log_filter_form', $workspaceIds, $maxResult);
+        $params = $this->getList(
+            $page,
+            $this->getWorkspaceActionRestriction(),
+            new WorkspaceLogFilterType(),
+            'workspace_log_filter_form',
+            $workspaceIds,
+            $maxResult
+        );
         $params['workspace'] = $workspace;
 
-       return $params;
+        return $params;
     }
 
-    public function getList($page, $actionsRestriction, $logFilterFormType, $QueryParamName, $workspaceIds = null, $maxResult = -1)
+    public function getList(
+        $page,
+        $actionsRestriction,
+        $logFilterFormType,
+        $queryParamName,
+        $workspaceIds = null,
+        $maxResult = -1
+    )
     {
         $request = $this->container->get('request');
         $data = $request->query->all();
-        
+
         $action = null;
         $range = null;
         $userSearch = null;
         $dateRangeToTextTransformer = new DateRangeToTextTransformer($this->container->get('translator'));
 
-        if(array_key_exists($QueryParamName, $data)) {
-            $data = $data[$QueryParamName];
+        if (array_key_exists($queryParamName, $data)) {
+            $data = $data[$queryParamName];
             $action = $data['action'];
             $range = $dateRangeToTextTransformer->reverseTransform($data['range']);
             $userSearch = $data['user'];
@@ -254,7 +298,14 @@ class Manager
         $em = $this->container->get('doctrine.orm.entity_manager');
         $repository = $em->getRepository('ClarolineCoreBundle:Logger\Log');
 
-        $query = $repository->findFilteredLogsQuery($action, $range, $userSearch, $actionsRestriction, $workspaceIds, $maxResult);
+        $query = $repository->findFilteredLogsQuery(
+            $action,
+            $range,
+            $userSearch,
+            $actionsRestriction,
+            $workspaceIds,
+            $maxResult
+        );
 
         $adapter = new DoctrineORMAdapter($query);
         $pager   = new PagerFanta($adapter);
@@ -266,7 +317,13 @@ class Manager
             throw new NotFoundHttpException();
         }
 
-        $chartData = $repository->countByDayFilteredLogs($action, $range, $userSearch, $actionsRestriction, $workspaceIds);
+        $chartData = $repository->countByDayFilteredLogs(
+            $action,
+            $range,
+            $userSearch,
+            $actionsRestriction,
+            $workspaceIds
+        );
 
         //List item delegation
         $views = $this->renderLogs($pager->getCurrentPageResults());

@@ -87,16 +87,16 @@ class LogRepository extends EntityRepository
         if ($userSearch !== null && $userSearch != '') {
             $upperUserSearch = strtoupper($userSearch);
             $upperUserSearch = trim($upperUserSearch);
-            $upperUserSearch = preg_replace('/\s+/', ' ',$upperUserSearch);
+            $upperUserSearch = preg_replace('/\s+/', ' ', $upperUserSearch);
 
             $qb->leftJoin('log.doer', 'doer');
             $qb->andWhere(
                 $qb->expr()->orx(
-                   $qb->expr()->like('UPPER(doer.lastName)', ':userSearch'),
-                   $qb->expr()->like('UPPER(doer.firstName)', ':userSearch'),
-                   $qb->expr()->like('UPPER(doer.username)', ':userSearch'),
-                   $qb->expr()->like("CONCAT(UPPER(doer.firstName), ' ', UPPER(doer.lastName))", ':userSearch'),
-                   $qb->expr()->like("CONCAT(UPPER(doer.lastName), ' ', UPPER(doer.firstName))", ':userSearch')
+                    $qb->expr()->like('UPPER(doer.lastName)', ':userSearch'),
+                    $qb->expr()->like('UPPER(doer.firstName)', ':userSearch'),
+                    $qb->expr()->like('UPPER(doer.username)', ':userSearch'),
+                    $qb->expr()->like("CONCAT(UPPER(doer.firstName), ' ', UPPER(doer.lastName))", ':userSearch'),
+                    $qb->expr()->like("CONCAT(UPPER(doer.lastName), ' ', UPPER(doer.firstName))", ':userSearch')
                 )
             );
 
@@ -110,7 +110,7 @@ class LogRepository extends EntityRepository
     {
         if ($workspaceIds !== null and count($workspaceIds) > 0) {
             $qb->leftJoin('log.workspace', 'workspace');
-            if(count($workspaceIds) == 1) {
+            if (count($workspaceIds) == 1) {
                 $qb->andWhere("workspace.id = :workspaceId");
                 $qb->setParameter('workspaceId', $workspaceIds[0]);
             } else {
@@ -171,7 +171,7 @@ class LogRepository extends EntityRepository
                         $lastDay->add(new \DateInterval('P1D')); // P1D means a period of 1 day
                     }
                 } else {
-                    $lastDay =  $line['shortDate'];
+                    $lastDay = $line['shortDate'];
                 }
                 $lastDay->add(new \DateInterval('P1D')); // P1D means a period of 1 day
 
@@ -188,7 +188,14 @@ class LogRepository extends EntityRepository
         return $chartData;
     }
 
-    public function findFilteredLogsQuery($action, $range, $userSearch, $actionsRestriction, $workspaceIds = null, $maxResult = -1)
+    public function findFilteredLogsQuery(
+        $action,
+        $range,
+        $userSearch,
+        $actionsRestriction,
+        $workspaceIds = null,
+        $maxResult = -1
+    )
     {
         $qb = $this
             ->createQueryBuilder('log')
@@ -211,7 +218,13 @@ class LogRepository extends EntityRepository
 
     public function findFilteredLogs($action, $range, $userSearch, $actionsRestriction, $workspaceIds)
     {
-        return $this->findFilteredLogsQuery($action, $range, $userSearch, $actionsRestriction, $workspaceIds)->getResult();
+        return $this->findFilteredLogsQuery(
+            $action,
+            $range,
+            $userSearch,
+            $actionsRestriction,
+            $workspaceIds
+        )->getResult();
     }
 
     public function findAdminLogsQuery($actionsRestriction)
@@ -245,7 +258,7 @@ class LogRepository extends EntityRepository
         $qb = $this
             ->createQueryBuilder('log')
             ->orderBy('log.dateLog', 'DESC')
-            
+
             ->andWhere('log.action = :action')
             ->setParameter('action', $action)
 

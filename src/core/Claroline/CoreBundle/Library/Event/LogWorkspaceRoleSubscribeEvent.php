@@ -40,7 +40,7 @@ class LogWorkspaceRoleSubscribeEvent extends LogGenericEvent
         }
         parent::__construct(
             $action,
-            $details,   
+            $details,
             $receiver,
             $receiverGroup,
             null,

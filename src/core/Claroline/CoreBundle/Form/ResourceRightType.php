@@ -11,7 +11,8 @@ class ResourceRightType extends AbstractType
 {
     private $hasRecustiveOption;
 
-    public function __construct(AbstractResource $resource) {
+    public function __construct(AbstractResource $resource)
+    {
         $this->hasRecustiveOption = false;
         if ($resource instanceof \Claroline\CoreBundle\Entity\Resource\Directory) {
             $this->hasRecustiveOption = true;
