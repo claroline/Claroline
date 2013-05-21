@@ -1,0 +1,47 @@
+<div class="creator" data-type="{{ type }}" {% if content is defined %}data-id="{{ content.id }}"{% endif %}>
+    <div class="content row-fluid">
+        <div class="border span12">
+            <input
+            type="text"
+            placeholder="{{ "Optional title" | trans({}, 'home') }}..."
+            class="content-title"
+            {% if content is defined %}value="{{ content.title }}"{% endif %}
+            >
+        </div>
+    </div>
+    <div class=" content row-fluid">
+        <div class="border span12">
+            <textarea
+                class="content-text"
+                placeholder="{{ "Create" | trans({}, 'home') }} {{ "a content" | trans({}, 'home') }}..."
+                >{% if content is defined %}{{ content.content }}{% endif %}</textarea>
+            <div class="generated">
+                {% if content.generatedContent is defined and content.generatedContent != "" %}
+                    <button type="button" class="close">×</button>
+                    <div class="generated-content">
+                        {{ content.generatedContent | raw }}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="navbar navbar-static-top">
+                <div class="navbar-inner">
+                    <ul class="nav">
+                        <li><a href="#"><i class="icon-picture"></i> {{ "Add Pictures" | trans({}, 'home') }}</a></li>
+                        <li><a href="#"><i class="icon-paper-clip"></i> {{ "Add Files" | trans({}, 'home') }}</a></li>
+                        <li class="divider-vertical"></li>
+                    </ul>
+                    <ul class="nav pull-right">
+                        {% if content is defined %}
+                        <li><div><a class="cancel-button btn">{{ 'Cancel' | trans({}, 'home') }}</a></div></li>
+                        <li>&nbsp;&nbsp;</li>
+                        <li><div><a class="edit-button btn btn-primary">{{ 'Edit' | trans({}, 'home') }}</a></div></li>
+                        {% else %}
+                        <li><div><a class="creator-button btn btn-primary">{{ 'Create' | trans({}, 'home') }}</a></div></li>
+                        {% endif %}
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

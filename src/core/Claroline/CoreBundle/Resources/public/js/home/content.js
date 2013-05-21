@@ -129,8 +129,10 @@
         var title = creatorElement.getElementsByTagName("input")[0];
         var text = creatorElement.getElementsByTagName("textarea")[0];
         var type = $(creatorElement).data("type");
+        var father = $(creatorElement).data("father");
         var generatedContent = "";
-        var path = null;
+        var path = "";
+        var contentPath = "";
 
         if (id) {
             path = "content/update/" + id;
@@ -142,57 +144,86 @@
             generatedContent = $(creatorElement).find(".generated-content").html();
         }
 
-        if (text.value !== "" || title.value !== "") {
-
-            $.post(homePath + path, {
-                "title": title.value,
-                "text": text.value,
-                "generated_content": generatedContent,
-                "type": type
-            })
-            .done(
-                function (data)
+        if (text.value !== "" || title.value !== "")
+        {
+            $.post(homePath + path,
                 {
-                    if (!isNaN(data) && data !== "")
+                    "title": title.value,
+                    "text": text.value,
+                    "generated": generatedContent,
+                    "type": type,
+                    "father": father
+                }
+            )
+                .done(
+                    function (data)
                     {
-                        $.ajax(homePath + "content/" + data + "/" + type)
-                        .done(
-                            function (data)
-                            {
-                                $(creatorElement).next().prepend(data);
-                            }
-                            )
-                        ;
+                        if (!isNaN(data) && data !== "")
+                        {
+                            contentPath = "content/" + data + "/" + type;
 
-                        title.value = "";
-                        text.value = "";
-                        resize(text);
-                        $(creatorElement).find(".generated").html("");
-                    }
-                    else if (data === "true")
-                    {
-                        $.ajax(homePath + "content/" + id + "/" + type)
-                            .done(
-                                function (data)
+                            var insertElement = function (content) {
+                                $(creatorElement).next().prepend(content);
+                            };
+
+                            if (father) {
+                                contentPath = "content/" + data + "/" + type + "/" + father;
+                                creatorElement = parentByClassName(creatorElement, "creator" + father);
+
+                                insertElement = function (content)
                                 {
-                                    $(creatorElement).replaceWith(data);
-                                }
-                            )
-                        ;
+                                    $(creatorElement).after(content);
+                                    $(creatorElement).find(".collapse").collapse("hide");
+                                };
 
+                            }
+
+                            $.ajax(homePath + contentPath)
+                                .done(
+                                        function (data)
+                                        {
+                                            insertElement(data);
+                                        }
+                                )
+                            ;
+
+                            title.value = "";
+                            text.value = "";
+                            resize(text);
+                            $(creatorElement).find(".generated").html("");
+                        }
+                        else if (data === "true")
+                        {
+                            contentPath = "content/" + id + "/" + type;
+
+                            if (father) {
+                                creatorElement = parentByClassName(creatorElement, "creator" + father);
+                                contentPath = "content/" + id + "/" + type + "/" + father;
+                            }
+
+                            $.ajax(homePath + contentPath)
+                                 .done(
+                                    function (data)
+                                    {
+                                        $(creatorElement).replaceWith(data);
+                                    }
+                                )
+                            ;
+
+                        }
+                        else
+                        {
+                            modal("content/error");
+                        }
                     }
-                    else
+                )
+                .error(
+                    function ()
                     {
                         modal("content/error");
                     }
-                }
-            )
-            .error(
-                function ()
-                {
-                    modal("content/error");
-                }
-            );
+                  )
+            ;
 
         }
     }
@@ -226,14 +257,15 @@
     /** DOM events **/
 
     $("body").on("mouseenter", ".content-element", function () {
-        $(".content-menu").addClass("hide"); // prevent some errors with the drop dawn
-        $(this).find(".content-menu").removeClass("hide");
+        $(".content-menu").first().addClass("hide"); // prevent some errors with the drop dawn
+        $(this).find(".content-menu").first().removeClass("hide");
 
     });
 
     $("body").on("mouseleave", ".content-element", function () {
-        if (!$(this).find(".content-menu").hasClass("open")) {
-            $(this).find(".content-menu").addClass("hide");
+        if (!$(this).find(".content-menu").first().hasClass("open"))
+        {
+            $(this).find(".content-menu").first().addClass("hide");
         }
     });
 
@@ -282,6 +314,36 @@
         }
     });
 
+    $("body").on("click", ".content-region", function (event) {
+        var element = parentByClassName(event.target, "content-element");
+        var id = $(element).data("id");
+
+        modal("content/region/" + id, "regions", element);
+    });
+
+
+    $("body").on("click", "#regions a.border", function (event) {
+        var name = $(event.target).data("region");
+        var id = $("#regions .modal-body").data("id");
+
+        if (id && name)
+        {
+            $.ajax(homePath + "region/" + name + "/" + id)
+                .done(
+                    function ()
+                    {
+                        location.reload();
+                    }
+                )
+                .error(
+                    function ()
+                    {
+                        modal("content/error");
+                    }
+                )
+            ;
+        }
+    });
 
     $("body").on("click", ".content-delete", function (event) {
         var element = parentByClassName(event.target, "content-element");
@@ -321,25 +383,32 @@
         var element = parentByClassName(event.target, "content-element");
         var id = $(element).data("id");
         var type = $(element).data("type");
+        var father = $(element).data("father");
 
         if (id && type && element)
         {
-            $.ajax(homePath + "content/creator/" + type + "/" + id)
-            .done(
-                function (data)
-                {
-                    $(element).replaceWith(data);
+            var contentPath = "content/creator/" + type + "/" + id;
 
-                    $(".creator textarea").each(function () {
-                        resize(this);
-                    });
-                }
+            if (father) {
+                contentPath = "content/creator/" + type + "/" + id + "/" + father;
+            }
+
+            $.ajax(homePath + contentPath)
+                .done(
+                    function (data)
+                    {
+                        $(element).replaceWith(data);
+
+                        $(".creator textarea").each(function () {
+                            resize(this);
+                        });
+                    }
                 )
-            .error(
-                function ()
-                {
-                    modal("content/error");
-                }
+                .error(
+                    function ()
+                    {
+                        modal("content/error");
+                    }
                 )
             ;
         }
@@ -363,21 +432,29 @@
         var element = parentByClassName(event.target, "creator");
         var id = $(element).data("id");
         var type = $(element).data("type");
+        var father = $(element).data("father");
 
         if (id && type && element)
         {
-            $.ajax(homePath + "content/" + id + "/" + type)
-            .done(
-                function (data)
-                {
-                    $(element).replaceWith(data);
-                }
+            var contentPath = "content/" + id + "/" + type;
+
+            if (father) {
+                element = parentByClassName(element, "creator" + father);
+                contentPath = "content/" + id + "/" + type + "/" + father;
+            }
+
+            $.ajax(homePath + contentPath)
+                .done(
+                    function (data)
+                    {
+                        $(element).replaceWith(data);
+                    }
                 )
-            .error(
-                function ()
-                {
-                    modal("content/error");
-                }
+                .error(
+                    function ()
+                    {
+                        modal("content/error");
+                    }
                 )
             ;
         }

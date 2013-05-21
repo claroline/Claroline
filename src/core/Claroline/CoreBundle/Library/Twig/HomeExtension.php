@@ -15,12 +15,14 @@ class HomeExtension extends \Twig_Extension
 
     /**
      * @DI\InjectParams({
-     *     "em" = @DI\Inject("translator")
+     *     "translator" = @DI\Inject("translator"),
+     *     "router" = @DI\Inject("router")
      * })
      */
-    public function __construct(Translator $translator)
+    public function __construct(Translator $translator, \Symfony\Bundle\FrameworkBundle\Routing\Router $router)
     {
         $this->translator = $translator;
+        $this->router = $router;
     }
 
     /**
@@ -32,6 +34,8 @@ class HomeExtension extends \Twig_Extension
     {
         return array(
             'timeAgo' => new \Twig_Filter_Method($this, 'timeAgo'),
+            'homeLink' => new \Twig_Filter_Method($this, 'homeLink'),
+            'activeLink' => new \Twig_Filter_Method($this, 'activeLink')
         );
     }
 
@@ -95,6 +99,32 @@ class HomeExtension extends \Twig_Extension
         );
     }
 
+    public function homeLink($link)
+    {
+        if (!(strpos($link, "http://") === 0 or
+            strpos($link, "https://") === 0 or
+            strpos($link, "ftp://") === 0 or
+            strpos($link, "www.") === 0)
+        ) {
+            $home = $this->router->generate('claro_index').$link;
+
+            $home = str_replace("//", "/", $home);
+
+            return $home;
+        }
+
+        return $link;
+    }
+
+    public function activeLink($link)
+    {
+        if ($_SERVER['PATH_INFO'] == $link) {
+            return " active";
+        }
+
+        return "";
+    }
+
     /**
      * Get the name of the twig extention.
      *
@@ -103,6 +133,7 @@ class HomeExtension extends \Twig_Extension
     public function getName()
     {
         return 'home_extension';
+
     }
 }
 
