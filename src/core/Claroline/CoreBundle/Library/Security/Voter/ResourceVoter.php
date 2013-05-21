@@ -43,13 +43,6 @@ class ResourceVoter implements VoterInterface
         $this->translator = $translator;
         $this->validAttributes = array('MOVE', 'COPY', 'DELETE', 'EXPORT', 'CREATE', 'EDIT', 'OPEN');
         $this->ut = $ut;
-        $this->fromResourceRightsToOwnerRights = array(
-            'DELETE' => 'isDeletable',
-            'EDIT' => 'isEditable',
-            'COPY' => 'isCopiable',
-            'EXPORT' => 'isExportable',
-            'OPEN' => 'isSharable'
-        );
     }
 
     public function vote(TokenInterface $token, $object, array $attributes)
@@ -180,12 +173,6 @@ class ResourceVoter implements VoterInterface
      */
     private function canDo(AbstractResource $resource, TokenInterface $token, $action)
     {
-        $method = $this->fromResourceRightsToOwnerRights[$action];
-
-        if (!$resource->$method()) {
-            return false;
-        }
-
         $rights = $this->em
             ->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
             ->findMaximumRights($this->ut->getRoles($token), $resource);

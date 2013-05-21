@@ -27,7 +27,8 @@ class AppKernel extends Kernel
             new Claroline\CoreBundle\ClarolineCoreBundle(),
             new Claroline\Bundle\FrontEndBundle\FrontEndBundle(),
             new Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle(),
-            new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle()
+            new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
+            new IDCI\Bundle\ExporterBundle\IDCIExporterBundle(),
         );
 
         if (file_exists(__DIR__ . '/config/local/plugin/bundles')) {

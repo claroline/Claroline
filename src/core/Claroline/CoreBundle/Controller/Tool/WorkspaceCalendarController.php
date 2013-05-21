@@ -42,7 +42,7 @@ class WorkspaceCalendarController extends Controller
             $postData = $request->request->all();
             $form->bind($request);
             if ($form->isValid()) {
-                
+
                 $date = explode('(', $postData['date']);
                 $event->setStart($date[0]);
 
@@ -206,7 +206,7 @@ class WorkspaceCalendarController extends Controller
      */
     public function moveAction()
     {
-        
+
         $request = $this->get('request');
         $postData = $request->request->all();
         $em = $this->get('doctrine.orm.entity_manager');

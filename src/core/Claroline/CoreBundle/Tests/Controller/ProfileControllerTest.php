@@ -6,15 +6,20 @@ use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 
 class ProfileControllerTest extends FunctionalTestCase
 {
+    private $logRepository;
+
     public function setUp()
     {
         parent::setUp();
         $this->loadPlatformRolesFixture();
         $this->client->followRedirects();
+        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Logger\Log');
     }
 
     public function testLoggedUserCanEditHisProfile()
     {
+        $now = new \DateTime();
+
         $this->loadUserData(array('user' => 'user'));
         $user = $this->getUser('user');
         $this->logUser($user);
@@ -41,6 +46,16 @@ class ProfileControllerTest extends FunctionalTestCase
         $user->setPlainPassword('new_password');
         $crawler = $this->logUser($user);
         $this->assertEquals(0, $crawler->filter('#login-error')->count());
+
+        $logs = $this->logRepository->findActionAfterDate(
+            'user_update',
+            $now,
+            $user->getId(),
+            null,
+            null,
+            $user->getId()
+        );
+        $this->assertEquals(1, count($logs));
     }
 
     public function testPublicProfileCanBeSeenByOtherUsers()

@@ -1,14 +1,53 @@
-<span class="notification-date">
+<div class="span2">
     {% if log.getDateLog()|date('d-m-Y') == ''|date('d-m-Y') %}
         {{ 'today'|trans({}, 'platform') ~ ', ' }}
     {% else %}
         {{ log.getDateLog()|date('d-m-Y') ~ ', ' }}
     {% endif %}
     {{ log.getDateLog()|date('H:i') }}
-</span> :
+</div>
 
-{% if listItemView is defined and listItemView != null %}
-    {{ listItemView|raw }}
-{% else %}
-    {% include 'ClarolineCoreBundle:Log:view_list_item_template_default.html.twig' %}
-{% endif %}
+<div class="span2">
+    {% include 'ClarolineCoreBundle:Log:view_list_item_label.html.twig' %}
+</div>
+
+<div class="span2">
+    {% include 'ClarolineCoreBundle:Log:view_list_item_doer.html.twig' %}
+</div>
+
+<div class='span6'>
+    {% if listItemView is defined and listItemView != null %}
+        {{ listItemView|raw }}
+    {% else %}
+        {% set resource %}
+            {% include 'ClarolineCoreBundle:Log:view_list_item_resource.html.twig' %}
+        {% endset %}
+        {% set receiver_user %}
+            {% include 'ClarolineCoreBundle:Log:view_list_item_receiver_user.html.twig' %}
+        {% endset %}
+        {% set receiver_group %}
+            {% include 'ClarolineCoreBundle:Log:view_list_item_receiver_group.html.twig' %}
+        {% endset %}
+        {% set role %}
+            {% include 'ClarolineCoreBundle:Log:view_list_item_role.html.twig' %}
+        {% endset %}
+        {% set workspace %}
+            {% include 'ClarolineCoreBundle:Log:view_list_item_workspace.html.twig' %}
+        {% endset %}
+        {% set tool %}
+            {% include 'ClarolineCoreBundle:Log:view_list_item_tool.html.twig' %}
+        {% endset %}
+
+        {{ ('log_' ~ log.getAction() ~ '_sentence')|trans(
+            {
+                '%resource%': resource,
+                '%receiver_user%': receiver_user,
+                '%receiver_group%': receiver_group,
+                '%role%': role,
+                '%workspace%': workspace,
+                '%tool%': tool
+            },
+            'platform'
+        )|raw }}
+    {% endif %}
+</div>
