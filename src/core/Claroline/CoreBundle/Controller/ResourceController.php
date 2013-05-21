@@ -86,6 +86,19 @@ class ResourceController extends Controller
                 $this->get('claroline.resource.converter')
                     ->toJson($resource, $this->get('security.context')->getToken())
             );
+        } elseif (count($event->getResources()) > 0) {
+            $resources = $event->getResources();
+            $manager = $this->get('claroline.resource.manager');
+            $resourcesArray = array();
+            $token = $this->get('security.context')->getToken();
+
+            foreach ($resources as $resource) {
+                $createdResource = $manager->create($resource, $parentId, $resourceType);
+                $resourcesArray[] = $this->get('claroline.resource.converter')
+                    ->toArray($createdResource, $token);
+            }
+            $json = json_encode($resourcesArray);
+            $response->setContent($json);
         } else {
             if ($event->getErrorFormContent() != null) {
                 $response->setContent($event->getErrorFormContent());
