@@ -19,13 +19,16 @@
                         {% set workspace = relWorkspaceTag.getWorkspace() %}
                         <li class="row-workspace row-workspace-id-{{ workspace.getId() }}">
                             <i class="icon-book"></i>
+                            {% set granted = is_granted('home', workspace) %}
+                            {% if granted == true %}
                             <a href="{{ path('claro_workspace_open',
                                {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
                                id="link-home-{{ workspace.getId() }}"
                             >
-                               {{ workspace.getName() }}
-                               <span class="workspace-code">({{ workspace.getCode() }})</span>
-                            </a>
+                            {% endif %}
+                            {{ workspace.getName() }}
+                            <span class="workspace-code">({{ workspace.getCode() }})</span>
+                            {% if granted %}</a>{% endif %}
                         </li>
                         {% endfor %}
                     </ul>
@@ -71,13 +74,16 @@
                         {% for workspace in workspaces %}
                         <li class="row-workspace row-workspace-id-{{ workspace.getId() }}">
                             <i class="icon-book"></i>
-                            <a  href="{{ path('claro_workspace_open',
-                                {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
-                                id="link-home-{{ workspace.getId() }}"
+                            {% set granted = is_granted('home', workspace) %}
+                            {% if granted == true %}
+                            <a href="{{ path('claro_workspace_open',
+                               {'workspaceId': workspace.getId()}) }}"
+                               id="link-home-{{ workspace.getId() }}"
                             >
-                               {{ workspace.getName() }}
-                               <span class="workspace-code">({{ workspace.getCode() }})</span>
-                            </a>
+                            {% endif %}
+                            {{ workspace.getName() }}
+                            <span class="workspace-code">({{ workspace.getCode() }})</span>
+                            {% if granted%}</a>{% endif %}
                         </li>
                         {% endfor %}
                     </ul>
