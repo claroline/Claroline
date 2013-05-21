@@ -6,16 +6,21 @@ use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 
 class TextControllerTest extends FunctionalTestCase
 {
+    private $logRepository;
+
     protected function setUp()
     {
         parent::setUp();
         $this->loadPlatformRolesFixture();
         $this->loadUserData(array('user' => 'user'));
         $this->client->followRedirects();
+        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Logger\Log');
     }
 
     public function testEditByRefAction()
     {
+        $now = new \DateTime();
+
         $this->logUser($this->getUser('user'));
         $text = $this->addText('This is a text', 'hello world', $this->getDirectory('user')->getId());
         $crawler = $this->client->request('GET', "/text/form/edit/{$text->id}");
@@ -29,6 +34,14 @@ class TextControllerTest extends FunctionalTestCase
         $text = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($textId);
         $revisions = $text->getRevisions();
         $this->assertEquals(2, count($revisions));
+
+        $logs = $this->logRepository->findActionAfterDate(
+            'resource_create',
+            $now,
+            $this->getUser('user')->getId(),
+            $text->getId()
+        );
+        $this->assertEquals(1, count($logs));
     }
 
     private function addText($name, $text, $parentId)

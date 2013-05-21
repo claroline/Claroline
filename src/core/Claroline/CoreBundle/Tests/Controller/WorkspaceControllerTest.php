@@ -6,11 +6,14 @@ use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 
 class WorkspaceControllerTest extends FunctionalTestCase
 {
+    private $logRepository;
+
     protected function setUp()
     {
         parent::setUp();
         $this->client->followRedirects();
         $this->loadPlatformRolesFixture();
+        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Logger\Log');
     }
 
     public function testWSCreatorcanViewHisWorkspaces()
@@ -35,6 +38,8 @@ class WorkspaceControllerTest extends FunctionalTestCase
 
     public function testWSCreatorCanCreateWS()
     {
+        $now = new \DateTime();
+
         $this->loadUserData(array('ws_creator' => 'ws_creator'));
         $crawler = $this->logUser($this->getUser('ws_creator'));
         $link = $crawler->filter('#link-create-ws-form')->link();
@@ -46,10 +51,22 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->client->submit($form);
         $crawler = $this->client->request('GET', "/workspaces");
         $this->assertEquals(1, $crawler->filter('.row-workspace')->count());
+
+        $logs = $this->logRepository->findActionAfterDate(
+            'workspace_create',
+            $now,
+            $this->getUser('ws_creator')->getId()
+        );
+        $this->assertEquals(1, count($logs));
     }
 
+    /**
+     * @group debug
+     */
     public function testWSCreatorCanDeleteHisWS()
     {
+        // $now = new \DateTime();
+
         $this->loadUserData(array('ws_creator' => 'ws_creator'));
         $this->loadWorkspaceData(
             array(
@@ -72,6 +89,13 @@ class WorkspaceControllerTest extends FunctionalTestCase
         );
 
         $this->assertEquals(4, $crawler->filter('.row-workspace')->count());
+
+        // $logs = $this->logRepository->findActionAfterDate(
+        //     'workspace_delete',
+        //     $now,
+        //     $this->getUser('ws_creator')->getId()
+        // );
+        // $this->assertEquals(1, count($logs));
     }
 
     public function testWSManagercanViewHisWS()

@@ -50,9 +50,11 @@
             </div>
         </div>
     </div>
-    {% if not is_path_mode %}
-        {% render controller('ClarolineCoreBundle:Layout:footer') %}
-    {% endif %}
+    {% block footer %}
+        {% if not is_path_mode %}
+            {% render controller('ClarolineCoreBundle:Layout:footer') %}
+        {% endif %}
+    {% endblock%}
     <div id="ajax-login-modal" class="modal hide fade">
         <div class="modal-header">
         </div>
