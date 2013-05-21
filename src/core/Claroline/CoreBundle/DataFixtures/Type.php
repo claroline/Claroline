@@ -11,7 +11,7 @@ class Types extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        $fixtures = array('home', 'menu', 'users', 'html', 'todo');
+        $fixtures = array('home', 'menu', 'opengraph', 'todo');
 
         foreach ($fixtures as $i => $fixture) {
             $types[$i] = new Type();

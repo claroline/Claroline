@@ -99,8 +99,11 @@
 
             var ranges = {};
 
-            var chosenRangeKeys = {{ chosenRangeKeys|raw }};
-            //var chosenRangeKeys = ['this_week', 'last_year', 'last_school_year'];
+            {% if chosenRangeKeys is defined %}
+                var chosenRangeKeys = {{ chosenRangeKeys|raw }};
+            {% else %}
+                var chosenRangeKeys = ['yesterday', 'last_seven_days', 'this_month', 'last_month'];
+            {% endif %}
 
             for (var i in chosenRangeKeys) {
                 var key = chosenRangeKeys[i];
