@@ -8,11 +8,17 @@ scoData["cmi.core.credit"] = document.getElementById("twig-scorm-data").getAttri
 scoData["cmi.core.score.raw"] = document.getElementById("twig-scorm-data").getAttribute("score-raw");
 scoData["cmi.core.score.max"] = document.getElementById("twig-scorm-data").getAttribute("score-max");
 scoData["cmi.core.score.min"] = document.getElementById("twig-scorm-data").getAttribute("score-min");
-scoData["cmi.core.total_time"] = document.getElementById("twig-scorm-data").getAttribute("total-time");
-scoData["cmi.core.total_time"] = "" + (scoData["cmi.core.total_time"] / 144000) + ":" +
-    (scoData["cmi.core.total_time"] / 6000) + ":" +
-    (scoData["cmi.core.total_time"] / 100) + "." +
-    (scoData["cmi.core.total_time"] % 100);
+
+var totalTime = document.getElementById("twig-scorm-data").getAttribute("total-time");
+var totalTimeHour = totalTime / 144000;
+totalTime %= 144000;
+var totalTimeMinte = totalTime / 6000;
+totalTime %= 6000;
+var totalTimeSecond = totalTime / 100;
+totalTime %= 100;
+
+scoData["cmi.core.total_time"] = "" + totalTimeHour + ":" + totalTimeMinte + ":" +
+    totalTimeSecond + "." + totalTime;
 scoData["cmi.core.entry"] = document.getElementById("twig-scorm-data").getAttribute("entry");
 scoData["cmi.suspend_data"] = document.getElementById("twig-scorm-data").getAttribute("suspend-data");
 scoData["cmi.launch_data"] = document.getElementById("twig-scorm-data").getAttribute("launch-data");
