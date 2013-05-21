@@ -11,19 +11,43 @@
             url = null;
 
         $('.filter').click(function (e) {
-            $('#calendar').fullCalendar('removeEvents', function (eventObject) {
-                var reg = new RegExp('[:]+', 'g');
-                var title = eventObject.title.split(reg);
-                console.debug(title);
-                if (title[0] !== $(e.target).attr('name'))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+            var numberOfChecked = $('.filter:checkbox:checked').length;
+            var totalCheckboxes = $('.filter:checkbox').length;
+            var selected =  new Array();
+            $('.filter:checkbox:checked').each(function() {
+                selected.push($(this).attr('name'));
             });
+            //if all checkboxes or none checkboxes are checked display all events
+            if((totalCheckboxes - numberOfChecked == 0) || (numberOfChecked == 0))
+            {
+               $('#calendar').fullCalendar('clientEvents', function (eventObject) {
+                    eventObject.visible = true;
+                });
+                $('#calendar').fullCalendar( 'rerenderEvents' );
+            }
+            else
+            {
+                console.debug(selected);
+                for (var i = 0; i < selected.length; i++) {
+                    $('#calendar').fullCalendar('clientEvents', function (eventObject) {
+                        var reg = new RegExp('[:]+', 'g');
+                        var title = eventObject.title.split(reg);
+                        if ( selected.indexOf(title[0]) < 0)
+                        {
+                            eventObject.visible = false ;
+                            return true;
+                        }
+                        else
+                        {
+                            eventObject.visible = true ;
+                            return false;
+                        }
+                    });
+                    //console.debug($('#calendar').fullCalendar('clientEvents'));
+                    $('#calendar').fullCalendar( 'rerenderEvents' );
+                };
+
+            }
         });
 
         var dayClickWorkspace = function (date) {
@@ -251,7 +275,7 @@
             header: {
                 left: 'prev,next today',
                 center: 'title',
-                right: 'month,basicWeek,basicDay'
+                right: 'month,agendaWeek,agendaDay'
             },
             monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet',
                 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
@@ -262,7 +286,9 @@
             editable: true,
             events: $('a#link').attr('href'),
             timeFormat: 'H(:mm)',
-            agenda: 'h:mm{ - h:mm}',
+            agenda: 'h:mm{ - h:mm}', // 5:00 - 6:30
+            // for all other views
+            '': 'h(:mm)t',            // 7p
             allDayText: 'all-day',
             allDaySlot: true,
             eventDrop: function (event, dayDelta, minuteDelta) {
@@ -272,8 +298,11 @@
             eventClick:  function (calEvent) {
                 modifiedEvent(calEvent);
             },
-            eventRender: function () {
-
+            eventRender: function (event,element) {
+                if(event.visible == false)
+                {
+                    return false;
+                }
             },
             eventResize: function (event, dayDelta, minuteDelta, revertFunc) {
                 $.ajax({

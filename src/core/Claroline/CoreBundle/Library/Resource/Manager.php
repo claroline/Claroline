@@ -249,7 +249,6 @@ class Manager
             $rc->setRole($resourceRight->getRole());
             $rc->setResource($children);
             $rc->setRightsFrom($resourceRight);
-            $rc->setWorkspace($resourceRight->getWorkspace());
 
             if ($children->getResourceType()->getName() === 'directory') {
                 $rc->setCreatableResourceTypes($resourceRight->getCreatableResourceTypes()->toArray());
@@ -257,8 +256,6 @@ class Manager
 
             $this->em->persist($rc);
         }
-
-        $children->setOwnerRights($parent->getOwnerRights());
 
         $this->em->persist($children);
     }
@@ -350,7 +347,6 @@ class Manager
         $roleRepo = $this->em->getRepository('ClarolineCoreBundle:Role');
         $resourceTypeRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType');
         $workspace = $resource->getWorkspace();
-        $this->setResourceOwnerRights(true, true, true, true, true, $resource);
 
         foreach ($rights as $role => $permissions) {
             $resourceTypes = array();
@@ -383,7 +379,6 @@ class Manager
                 $permissions['canExport'],
                 $role,
                 $resource,
-                $workspace,
                 $resourceTypes
             );
         }
@@ -392,7 +387,6 @@ class Manager
             false, false, false, false, false,
             $roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
             $resource,
-            $workspace,
             array()
         );
 
@@ -402,7 +396,6 @@ class Manager
             true, true, true, true, true,
             $roleRepo->findOneBy(array('name' => 'ROLE_ADMIN')),
             $resource,
-            $workspace,
             $resourceTypes
         );
     }
@@ -429,7 +422,6 @@ class Manager
         $canExport,
         Role $role,
         AbstractResource $resource,
-        AbstractWorkspace $workspace,
         array $resourceTypes
     )
     {
@@ -441,49 +433,8 @@ class Manager
         $rights->setCanExport($canExport);
         $rights->setRole($role);
         $rights->setResource($resource);
-        $rights->setWorkspace($workspace);
         $rights->setCreatableResourceTypes($resourceTypes);
         $this->em->persist($rights);
-    }
-
-    /**
-     * Sets the resource owner rights.
-     *
-     * @param boolean $isSharable
-     * @param boolean $isEditable
-     * @param boolean $isDeletable
-     * @param boolean $isExportable
-     * @param boolean $isCopiable
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
-     *
-     * @return \Claroline\CoreBundle\Entity\Resource\AbstractResource
-     */
-    public function setResourceOwnerRights(
-        $isSharable,
-        $isEditable,
-        $isDeletable,
-        $isExportable,
-        $isCopiable,
-        AbstractResource $resource
-    )
-    {
-        $resource->setSharable($isSharable);
-        $resource->setEditable($isEditable);
-        $resource->setDeletable($isDeletable);
-        $resource->setExportable($isExportable);
-        $resource->setCopiable($isCopiable);
-
-        if ($resource instanceof Directory) {
-            $resourceTypes = $this->em
-                ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-                ->findAll();
-
-            foreach ($resourceTypes as $resourceType) {
-                $resource->addResourceTypeCreation($resourceType);
-            }
-        }
-
-        return $resource;
     }
 
     /**

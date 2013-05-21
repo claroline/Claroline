@@ -283,9 +283,6 @@ class ResourceController extends Controller
             );
         }
 
-        $ri = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->find($resourceId);
-
         //TODO waiting for define CustomActions
         // $logevent = new ResourceLogEvent($ri, $action);
         // $this->get('event_dispatcher')->dispatch('log_resource', $logevent);
@@ -569,6 +566,46 @@ class ResourceController extends Controller
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
+    }
+
+    /**
+     * @Route(
+     *     "/search/role/code/{code}",
+     *     name="claro_resource_find_role_by_code",
+     *     options={"expose"=true}
+     * )
+     */
+    public function findRoleByWorkspaceCodeAction($code)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $roles = $em->getRepository('ClarolineCoreBundle:Role')->findByWorkspaceCode($code);
+        $arWorkspace = array();
+        foreach ($roles as $role) {
+            $arWorkspace[$role->getWorkspace()->getCode()][$role->getName()] = array(
+                'name' => $role->getName(),
+                'translation_key' => $role->getTranslationKey(),
+                'id' => $role->getId(),
+                'workspace' => $role->getWorkspace()->getName()
+            );
+        }
+
+        $response = new Response(json_encode($arWorkspace));
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    public function renderBreadcrumbAction($resourceId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($resourceId);
+        $ancestors = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findAncestors($resource);
+        $workspace = $resource->getWorkspace();
+
+        return $this->render(
+            'ClarolineCoreBundle:Resource:breadcrumb.html.twig',
+            array('ancestors' => $ancestors, 'workspace' => $workspace)
+        );
     }
 
     private function getResource($resource)

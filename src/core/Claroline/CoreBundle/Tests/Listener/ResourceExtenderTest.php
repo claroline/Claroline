@@ -56,8 +56,6 @@ class ResourceExtenderTest extends FunctionalTestCase
      * the discriminator map : this is an issue only if resource types are added
      * and resources are retrieved via the entity manager in the same script
      * invocation, which is unlikely to happen in a production context)
-     *
-     * TODO : escape triple '\' for postgresql support
      */
     private function registerSpecificResourceTypes()
     {
@@ -72,10 +70,12 @@ class ResourceExtenderTest extends FunctionalTestCase
         $conn = $this->em->getConnection();
 
         // Insert two specific resource types (see test/Stub/Entity)
+        $firstFqcn = $conn->quote('Claroline\CoreBundle\Tests\Stub\Entity\SpecificResource1');
+        $secondFqcn = $conn->quote('Claroline\CoreBundle\Tests\Stub\Entity\SpecificResource2');
         $sql = "INSERT INTO claro_resource_type (plugin_id, class, name, is_browsable, is_exportable)"
-            . " VALUES ({$plugin->getId()}, 'Claroline\\\CoreBundle\\\Tests\\\Stub\\\Entity\\\SpecificResource1',"
+            . " VALUES ({$plugin->getId()}, {$firstFqcn},"
             . " 'SpecificResource1', false, false),"
-            . " ({$plugin->getId()}, 'Claroline\\\CoreBundle\\\Tests\\\Stub\\\Entity\\\SpecificResource2',"
+            . " ({$plugin->getId()}, {$secondFqcn},"
             . " 'SpecificResource2', false, false)";
         $conn->exec($sql);
     }
@@ -96,15 +96,6 @@ class ResourceExtenderTest extends FunctionalTestCase
         $firstRes->setWorkspace($this->getUser('user')->getPersonalWorkspace());
         $firstRes->setName('name');
         $firstRes->setIcon($defaultIcon);
-        $firstRes->setOwnerRights(
-            array(
-                'sharable' => true,
-                'editable' => true,
-                'exportable' => true,
-                'deletable' => true,
-                'copiable' => true
-            )
-        );
 
         $secondRes = new SpecificResource2();
         $secondRes->setSomeField('Test');
@@ -112,15 +103,6 @@ class ResourceExtenderTest extends FunctionalTestCase
         $secondRes->setWorkspace($this->getUser('ws_creator')->getPersonalWorkspace());
         $secondRes->setName('name');
         $secondRes->setIcon($defaultIcon);
-        $secondRes->setOwnerRights(
-            array(
-                'sharable' => true,
-                'editable' => true,
-                'exportable' => true,
-                'deletable' => true,
-                'copiable' => true
-            )
-        );
 
         $thirdRes = new SpecificResource2();
         $thirdRes->setSomeField('Test');
@@ -128,15 +110,6 @@ class ResourceExtenderTest extends FunctionalTestCase
         $thirdRes->setWorkspace($this->getUser('admin')->getPersonalWorkspace());
         $thirdRes->setName('name');
         $thirdRes->setIcon($defaultIcon);
-        $thirdRes->setOwnerRights(
-            array(
-                'sharable' => true,
-                'editable' => true,
-                'exportable' => true,
-                'deletable' => true,
-                'copiable' => true
-            )
-        );
 
         $fourthRes = new Directory();
         $fourthRes->setName('Test');
@@ -144,15 +117,6 @@ class ResourceExtenderTest extends FunctionalTestCase
         $fourthRes->setWorkspace($this->getUser('user')->getPersonalWorkspace());
         $fourthRes->setName('name');
         $fourthRes->setIcon($defaultIcon);
-        $fourthRes->setOwnerRights(
-            array(
-                'sharable' => true,
-                'editable' => true,
-                'exportable' => true,
-                'deletable' => true,
-                'copiable' => true
-            )
-        );
 
         $this->em->persist($firstRes);
         $this->em->persist($secondRes);
