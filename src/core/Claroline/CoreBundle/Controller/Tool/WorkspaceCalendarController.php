@@ -76,8 +76,12 @@ class WorkspaceCalendarController extends Controller
             } else {
                 $error = $form->getErrors();
                 foreach ($error as $value) {
-                    echo $value;
                  }
+                 return new Response(
+                        json_encode(array('greeting' => 'form invalid')),
+                        400,
+                        array('Content-Type' => 'application/json')
+                    );
             }
         }
     }
@@ -185,7 +189,6 @@ class WorkspaceCalendarController extends Controller
                 $data[$key]['start'] = $object->getStart()->getTimestamp();
                 $data[$key]['end'] = $object->getEnd()->getTimestamp();
                 $data[$key]['color'] = $object->getPriority();
-
         }
 
         return new Response(

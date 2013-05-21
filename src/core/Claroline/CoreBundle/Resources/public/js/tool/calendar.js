@@ -11,23 +11,43 @@
             url = null;
 
         $('.filter').click(function (e) {
-            if ($(e.target).is('checked'))
+            var numberOfChecked = $('.filter:checkbox:checked').length;
+            var totalCheckboxes = $('.filter:checkbox').length;
+            var selected =  new Array();
+            $('.filter:checkbox:checked').each(function() {
+                selected.push($(this).attr('name'));
+            });
+            //if all checkboxes or none checkboxes are checked display all events
+            if((totalCheckboxes - numberOfChecked == 0) || (numberOfChecked == 0))
             {
-                $('#calendar').fullCalendar('removeEvents', function (eventObject) {
-                    var reg = new RegExp('[:]+', 'g');
-                    var title = eventObject.title.split(reg);
-                    if (title[0] !== $(e.target).attr('name'))
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        $('#calendar').fullCalendar('refetchEvents');
-                        return false;
-                    }
+               $('#calendar').fullCalendar('clientEvents', function (eventObject) {
+                    eventObject.visible = true;
                 });
+                $('#calendar').fullCalendar( 'rerenderEvents' );
             }
+            else
+            {
+                console.debug(selected);
+                for (var i = 0; i < selected.length; i++) {
+                    $('#calendar').fullCalendar('clientEvents', function (eventObject) {
+                        var reg = new RegExp('[:]+', 'g');
+                        var title = eventObject.title.split(reg);
+                        if ( selected.indexOf(title[0]) < 0)
+                        {
+                            eventObject.visible = false ;
+                            return true;
+                        }
+                        else
+                        {
+                            eventObject.visible = true ;
+                            return false;
+                        }
+                    });
+                    //console.debug($('#calendar').fullCalendar('clientEvents'));
+                    $('#calendar').fullCalendar( 'rerenderEvents' );
+                };
 
+            }
         });
 
         var dayClickWorkspace = function (date) {
@@ -278,8 +298,11 @@
             eventClick:  function (calEvent) {
                 modifiedEvent(calEvent);
             },
-            eventRender: function () {
-
+            eventRender: function (event,element) {
+                if(event.visible == false)
+                {
+                    return false;
+                }
             },
             eventResize: function (event, dayDelta, minuteDelta, revertFunc) {
                 $.ajax({

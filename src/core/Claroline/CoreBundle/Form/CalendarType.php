@@ -36,7 +36,16 @@ class CalendarType extends AbstractType
                 'label' => 'all day ?',
                 )
             )
-            ->add('description', 'textarea')
+            ->add(
+                'description', 
+                'textarea',
+                array(
+                    'attr' => array(
+                        'class'=> 'tinymce',
+                        'data-theme' => 'simple'
+                        )
+                    )
+            )
             ->add(
                 'priority',
                 'choice',
