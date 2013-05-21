@@ -9,17 +9,16 @@ class TemplateBuilder
     private $config;
     private $archive;
 
-    public function __construct($config = null)
+    public function __construct(\ZipArchive $archive, $config = null)
     {
+        $this->archive = $archive;
         $this->config = $config;
     }
 
     public static function fromTemplate($defaultPath)
     {
-        $builder = new TemplateBuilder();
-        $archive = new \ZipArchive();
-        $archive->open($defaultPath);
-        $builder->setArchive($archive);
+        $archive = self::createArchive($defaultPath);
+        $builder = new TemplateBuilder($archive);
         $builder->setConfig(Yaml::parse($archive->getFromName('config.yml')));
 
         return $builder;
@@ -153,39 +152,18 @@ class TemplateBuilder
         return $this->config;
     }
 
-    public function setArchive(\ZipArchive $archive)
-    {
-        $this->archive = $archive;
-
-        return $this;
-    }
-
-    public function getArchive()
-    {
-        return $this->archive;
-    }
-
     public static function buildDefault($defaultPath)
     {
-        $archive = new \ZipArchive();
-
-        if (true === $code = $archive->open($defaultPath, \ZipArchive::CREATE)) {
-            $archive->addFromString('config.yml', Yaml::dump(TemplateBuilder::getDefaultConfig(), 10));
-            $archive->close();
-        } else {
-            throw new \Exception(
-                "Couldn't open template archive '{$defaultPath}' (error {$code})"
-            );
-        }
+        $archive = self::createArchive($defaultPath);
+        $archive->addFromString('config.yml', Yaml::dump(TemplateBuilder::getDefaultConfig(), 10));
+        $archive->close();
     }
 
     public static function getDefaultConfig()
     {
         return array(
-            'root_perms' =>
-            array(
-                'ROLE_WS_VISITOR' =>
-                array(
+            'root_perms' => array(
+                'ROLE_WS_VISITOR' => array(
                     'canEdit' => '0',
                     'canOpen' => '0',
                     'canDelete' => '0',
@@ -193,8 +171,7 @@ class TemplateBuilder
                     'canExport' => '0',
                     'canCreate' => array()
                 ),
-                'ROLE_WS_COLLABORATOR' =>
-                array(
+                'ROLE_WS_COLLABORATOR' => array(
                     'canEdit' => '0',
                     'canOpen' => '1',
                     'canDelete' => '0',
@@ -202,15 +179,13 @@ class TemplateBuilder
                     'canExport' => '1',
                     'canCreate' => array()
                 ),
-                'ROLE_WS_MANAGER' =>
-                array(
+                'ROLE_WS_MANAGER' => array(
                     'canEdit' => '1',
                     'canOpen' => '1',
                     'canDelete' => '1',
                     'canCopy' => '1',
                     'canExport' => '1',
-                    'canCreate' =>
-                    array(
+                    'canCreate' => array(
                         0 => array('name' => 'file'),
                         1 => array('name' => 'directory'),
                         2 => array('name' => 'text'),
@@ -219,66 +194,66 @@ class TemplateBuilder
                     )
                 )
             ),
-            'tools' =>
-            array(
-                'home' =>
-                array(
-                    'widget' =>
-                    array(
-                        0 =>
-                        array(
+            'tools' => array(
+                'home' => array(
+                    'widget' => array(
+                        0 => array(
                             'name' => 'core_resource_logger',
                             'is_visible' => true,
-                        ),
+                        )
                     ),
-                    'files' => array(),
+                    'files' => array()
                 ),
-                'resource_manager' =>
-                array(
+                'resource_manager' => array(
                     'root_id' => 1,
                     'resources' => array(),
-                    'files' => array(),
+                    'files' => array()
                 ),
             ),
-            'roles' =>
-            array(
+            'roles' => array(
                 'ROLE_WS_VISITOR' => 'visitor',
                 'ROLE_WS_COLLABORATOR' => 'collaborator',
-                'ROLE_WS_MANAGER' => 'manager',
+                'ROLE_WS_MANAGER' => 'manager'
             ),
             'creator_role' => 'ROLE_WS_MANAGER',
-            'tools_infos' =>
-            array(
-                'home' =>
-                array(
-                    'perms' =>
-                    array(
+            'tools_infos' => array(
+                'home' => array(
+                    'perms' => array(
                         0 => 'ROLE_WS_VISITOR',
                         1 => 'ROLE_WS_COLLABORATOR',
                         2 => 'ROLE_WS_MANAGER',
                     ),
-                    'name' => 'Accueil',
+                    'name' => 'Accueil'
                 ),
-                'resource_manager' =>
-                array('perms' => array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'), 'name' => 'Ressources'),
-                'calendar' =>
-                array('perms' => array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'), 'name' => 'Calendrier'),
-                'parameters' =>
-                array('perms' => array('ROLE_WS_MANAGER'), 'name' => 'Paramètres'),
-                'group_management' =>
-                array('perms' => array('ROLE_WS_MANAGER'), 'name' => 'Groupes'),
-                'user_management' =>
-                array('perms' => array('ROLE_WS_MANAGER'), 'name' => 'Utilisateurs'),
+                'resource_manager' => array(
+                    'perms' => array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'),
+                    'name' => 'Ressources'
+                ),
+                'calendar' => array(
+                    'perms' => array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'),
+                    'name' => 'Calendrier'
+                ),
+                'parameters' => array(
+                    'perms' => array('ROLE_WS_MANAGER'),
+                    'name' => 'Paramètres'
+                ),
+                'group_management' => array(
+                    'perms' => array('ROLE_WS_MANAGER'),
+                    'name' => 'Groupes'
+                ),
+                'user_management' => array(
+                    'perms' => array('ROLE_WS_MANAGER'),
+                    'name' => 'Utilisateurs'
+                )
             ),
-            'name' => 'default',
+            'name' => 'default'
         );
     }
 
     public function getDefaultResourcePerms()
     {
         return array(
-            'ROLE_WS_VISITOR' =>
-            array(
+            'ROLE_WS_VISITOR' => array(
                 'canEdit' => '0',
                 'canOpen' => '0',
                 'canDelete' => '0',
@@ -286,8 +261,7 @@ class TemplateBuilder
                 'canExport' => '0',
                 'canCreate' => array()
             ),
-            'ROLE_WS_COLLABORATOR' =>
-            array(
+            'ROLE_WS_COLLABORATOR' => array(
                 'canEdit' => '0',
                 'canOpen' => '1',
                 'canDelete' => '0',
@@ -295,8 +269,7 @@ class TemplateBuilder
                 'canExport' => '1',
                 'canCreate' => array()
             ),
-            'ROLE_WS_MANAGER' =>
-            array(
+            'ROLE_WS_MANAGER' => array(
                 'canEdit' => '1',
                 'canOpen' => '1',
                 'canDelete' => '1',
@@ -315,5 +288,18 @@ class TemplateBuilder
             }
             $this->findDirectory($directory['children'], $searchId);
         }
+    }
+
+    private static function createArchive($path)
+    {
+        $archive = new \ZipArchive();
+
+        if (true !== $code = $archive->open($path, \ZipArchive::CREATE)) {
+            throw new \Exception(
+                "Couldn't open template archive '{$defaultPath}' (error {$code})"
+            );
+        }
+
+        return $archive;
     }
 }

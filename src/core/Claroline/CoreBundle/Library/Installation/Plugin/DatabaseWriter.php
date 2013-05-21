@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\CoreBundle\Library\Resource\IconCreator;
 use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
@@ -29,8 +30,9 @@ class DatabaseWriter
     private $im;
     private $fileSystem;
     private $kernelRootDir;
-    private $templateBuilder;
     private $templateDir;
+    private $templateBuilder;
+    private $modifyTemplate = false;
 
     /**
      * Constructor.
@@ -38,30 +40,31 @@ class DatabaseWriter
      * @param SymfonyValidator  $validator
      * @param EntityManager     $em
      * @param IconCreator       $im
-     * @param string            $kernelRootDir
+     * @param KernelInterface   $kernel
      * @param string            $templateDir
      *
      * @DI\InjectParams({
-     *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "im" = @DI\Inject("claroline.resource.icon_creator"),
-     *     "fileSystem" = @DI\Inject("filesystem"),
-     *     "kernelRootDir" = @DI\Inject("%kernel.root_dir%"),
-     *     "templateDir" = @DI\Inject("%claroline.param.templates_directory%")
+     *     "em"             = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "im"             = @DI\Inject("claroline.resource.icon_creator"),
+     *     "fileSystem"     = @DI\Inject("filesystem"),
+     *     "kernel"         = @DI\Inject("kernel"),
+     *     "templateDir"    = @DI\Inject("%claroline.param.templates_directory%")
      * })
      */
     public function __construct(
         EntityManager $em,
         IconCreator $im,
         Filesystem $fileSystem,
-        $kernelRootDir,
+        KernelInterface $kernel,
         $templateDir
     )
     {
         $this->em = $em;
         $this->im = $im;
         $this->fileSystem = $fileSystem;
-        $this->kernelRootDir = $kernelRootDir;
+        $this->kernelRootDir = $kernel->getRootDir();
         $this->templateDir = $templateDir;
+        $this->modifyTemplate = $kernel->getEnvironment() !== 'test';
     }
 
     /**
@@ -71,7 +74,10 @@ class DatabaseWriter
      */
     public function insert(PluginBundle $plugin, array $pluginConfiguration)
     {
-        $this->templateBuilder = TemplateBuilder::fromTemplate($this->templateDir."default.zip");
+        if ($this->modifyTemplate) {
+            $this->templateBuilder = TemplateBuilder::fromTemplate("{$this->templateDir}default.zip");
+        }
+
         $pluginEntity = new Plugin();
         $pluginEntity->setVendorName($plugin->getVendorName());
         $pluginEntity->setBundleName($plugin->getBundleName());
@@ -91,7 +97,10 @@ class DatabaseWriter
         $this->em->persist($pluginEntity);
         $this->persistConfiguration($pluginConfiguration, $pluginEntity, $plugin);
         $this->em->flush();
-        $this->templateBuilder->write();
+
+        if ($this->modifyTemplate) {
+            $this->templateBuilder->write();
+        }
     }
 
     /**
@@ -101,7 +110,6 @@ class DatabaseWriter
      */
     public function delete($pluginFqcn)
     {
-        $this->templateBuilder = TemplateBuilder::fromTemplate($this->templateDir."default.zip");
         $plugin = $this->getPluginEntity($pluginFqcn);
         // code below is for "re-parenting" the resources which depend on one
         // of the resource types the plugin might have declared
@@ -123,30 +131,35 @@ class DatabaseWriter
             }
         }
 
-        foreach ($resourceTypes as $resourceType) {
-            $this->templateBuilder->removeResourceType($resourceType->getName());
-        }
+        if ($this->modifyTemplate) {
+            $templateBuilder = TemplateBuilder::fromTemplate("{$this->templateDir}default.zip");
 
-        $tools = $this->em
-            ->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->findByPlugin($plugin->getGeneratedId());
+            foreach ($resourceTypes as $resourceType) {
+                $this->templateBuilder->removeResourceType($resourceType->getName());
+            }
 
-        foreach ($tools as $tool) {
-            $this->templateBuilder->removeTool($tool->getName());
-        }
+            $tools = $this->em
+                ->getRepository('ClarolineCoreBundle:Tool\Tool')
+                ->findByPlugin($plugin->getGeneratedId());
 
-        $widgets = $this->em
-            ->getRepository('ClarolineCoreBundle:Widget\Widget')
-            ->findByPlugin($plugin->getGeneratedId());
+            foreach ($tools as $tool) {
+                $this->templateBuilder->removeTool($tool->getName());
+            }
 
-        foreach ($widgets as $widget) {
-            $this->templateBuilder->removeWidget($widget->getName());
+            $widgets = $this->em
+                ->getRepository('ClarolineCoreBundle:Widget\Widget')
+                ->findByPlugin($plugin->getGeneratedId());
+
+            foreach ($widgets as $widget) {
+                $this->templateBuilder->removeWidget($widget->getName());
+            }
+
+            $templateBuilder->write();
         }
 
         // deletion of other plugin db dependencies is made via a cascade mechanism
         $this->em->remove($plugin);
         $this->em->flush();
-        $this->templateBuilder->write();
     }
 
     /**
@@ -257,7 +270,10 @@ class DatabaseWriter
         $this->em->persist($resourceType);
         $this->persistCustomAction($resource['actions'], $resourceType);
         $this->persistIcons($resource, $resourceType, $plugin);
-        $this->templateBuilder->addResourceType($resource['name'], 'ROLE_WS_MANAGER');
+
+        if ($this->modifyTemplate) {
+            $this->templateBuilder->addResourceType($resource['name'], 'ROLE_WS_MANAGER');
+        }
 
         return $resourceType;
     }
@@ -302,7 +318,9 @@ class DatabaseWriter
         $this->em->persist($dWidgetConfig);
         $this->em->flush();
 
-        $this->templateBuilder->addWidget($widget['name']);
+        if ($this->modifyTemplate) {
+            $this->templateBuilder->addWidget($widget['name']);
+        }
     }
 
     private function persistTool($tool, $pluginEntity)
@@ -329,7 +347,7 @@ class DatabaseWriter
         $this->em->persist($toolEntity);
         $this->em->flush();
 
-        if ($tool['is_displayable_in_workspace']) {
+        if ($tool['is_displayable_in_workspace'] && $this->modifyTemplate) {
             $this->templateBuilder->addTool($tool['name'], $tool['name']);
         }
     }

@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Installs the platform, optionaly with plugins and data fixtures.
@@ -40,32 +41,22 @@ class PlatformInstallCommand extends ContainerAwareCommand
         $environment = $kernel->getEnvironment();
         $fileSystem = new Filesystem();
         $output->writeln("Generating default {$environment} template...");
-        $defaultPath = $this->getContainer()->getParameter('claroline.param.templates_directory').'default.zip';
+        $templateDirectory = $this->getContainer()->getParameter('claroline.param.templates_directory');
+        $defaultPath = "{$templateDirectory}default.zip";
         TemplateBuilder::buildDefault($defaultPath);
 
-        if ($environment == 'test') {
-            //default test archive
-            $arch = new \ZipArchive();
-            $arch->open($defaultPath);
-            $content = $arch->getFromName('config.yml');
-            $configPath = "{$this->getContainer()->getParameter('claroline.param.templates_directory')}config.yml";
-            file_put_contents(
-                $configPath,
-                $content
-            );
-            $arch->close();
-            //filled with resources test archive
-            $complexArchive = "{$this->getContainer()->getParameter('claroline.param.templates_directory')}complex.zip";
-            $fileSystem->copy(
-                "{$this->getContainer()->getParameter('claroline.param.templates_directory')}default.zip",
-                $complexArchive
-            );
+        if ($environment === 'test') {
+            // save a copy of the original default config
+            $configPath = "{$templateDirectory}config.yml";
+            file_put_contents($configPath, Yaml::dump(TemplateBuilder::getDefaultConfig(), 10));
+            // create a test template with additional resources
+            $complexArchive = "{$templateDirectory}complex.zip";
+            $fileSystem->copy("{$templateDirectory}default.zip", $complexArchive);
             $archive = new \ZipArchive();
             $archive->open($complexArchive);
             $tmpFile = tempnam(sys_get_temp_dir(), 'tmp');
-            $templateBuilder = new TemplateBuilder(TemplateBuilder::getDefaultConfig());
-            $templateBuilder->setArchive($archive)
-                ->addFile($tmpFile, 'empty', 'empty.txt', 1, 2)
+            $templateBuilder = new TemplateBuilder($archive, TemplateBuilder::getDefaultConfig());
+            $templateBuilder->addFile($tmpFile, 'empty', 'empty.txt', 1, 2)
                 ->addDirectory('main dir', 3)
                 ->addFile($tmpFile, 'empty2', 'empty2.txt', 3, 4)
                 ->write();
