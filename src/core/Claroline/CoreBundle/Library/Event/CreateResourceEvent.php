@@ -13,10 +13,12 @@ class CreateResourceEvent extends Event
     private $resource;
     private $formContent;
     private $resourceType;
+    private $resources;
 
     public function __construct($resourceType = null)
     {
         $this->resourceType = $resourceType;
+        $this->resources = array();
     }
 
     /**
@@ -70,5 +72,15 @@ class CreateResourceEvent extends Event
     public function getResourceType()
     {
         return $this->resourceType;
+    }
+
+    public function getResources()
+    {
+        return $this->resources;
+    }
+
+    public function setResources(array $resources)
+    {
+        $this->resources = $resources;
     }
 }
