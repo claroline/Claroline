@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Listener;
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Library\Event\ExportToolEvent;
 use Claroline\CoreBundle\Listener\Tool\HomeListener;
-use Claroline\CoreBundle\Listener\Tool\ResourceManagerListener;
+use Claroline\CoreBundle\Listener\Tool\ImportExportResourceListener;
 
 class ToolListenerTest extends FunctionalTestCase
 {
@@ -41,10 +41,9 @@ class ToolListenerTest extends FunctionalTestCase
         $this->loadFileData('user', 'user', array('foo.txt', 'bar.txt'));
         $this->loadDirectoryData('user', array('user/container'));
         $event = new ExportToolEvent($this->getWorkspace('user'));
-        $listener = new ResourceManagerListener(
+        $listener = new ImportExportResourceListener(
             $this->client->getContainer()->get('doctrine.orm.entity_manager'),
             $this->client->getContainer()->get('event_dispatcher'),
-            $this->client->getContainer()->get('templating'),
             $this->client->getContainer()->get('claroline.resource.manager')
         );
         $listener->onExportResource($event);
