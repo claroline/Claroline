@@ -57,12 +57,11 @@ class MessageRepository extends NestedTreeRepository
      *
      * @param \Claroline\CoreBundle\Entity\User $user
      * @param boolean $isRemoved
-     * @param integer $offset
-     * @param integer $limit
+     * @param boolean $getQuery
      *
      * @return \Doctrine\ORM\Tools\Pagination\Paginator
      */
-    public function findReceivedByUser(User $user, $isRemoved = false, $offset = null, $limit = null)
+    public function findReceivedByUser(User $user, $isRemoved = false, $getQuery = false)
     {
         $isRemovedText = ($isRemoved) ? 'true' : 'false';
         $dql = "SELECT um, m, u FROM Claroline\CoreBundle\Entity\UserMessage um
@@ -74,14 +73,12 @@ class MessageRepository extends NestedTreeRepository
             ORDER BY m.date DESC";
 
         $query = $this->_em->createQuery($dql);
-        $query->setFirstResult($offset)
-            ->setMaxResults($limit);
-        $paginator = new Paginator($query, true);
 
-        return $paginator;
+        return ($getQuery) ? $query: $query->getResult();
+
     }
 
-    public function findSentByUser(User $user, $isRemoved = false, $offset = null, $limit = null)
+    public function findSentByUser(User $user, $isRemoved = false, $getQuery = false)
     {
         $isRemovedText = ($isRemoved) ? 'true' : 'false';
         $dql = "SELECT um, m, u FROM Claroline\CoreBundle\Entity\UserMessage um
@@ -93,11 +90,8 @@ class MessageRepository extends NestedTreeRepository
             ORDER BY m.date DESC";
 
         $query = $this->_em->createQuery($dql);
-        $query->setFirstResult($offset)
-            ->setMaxResults($limit);
-        $paginator = new Paginator($query, true);
 
-        return $paginator;
+        return ($getQuery) ? $query: $query->getResult();
     }
 
     /**
@@ -106,8 +100,7 @@ class MessageRepository extends NestedTreeRepository
      * @param string $search
      * @param \Claroline\CoreBundle\Entity\User $user
      * @param boolean $isRemoved
-     * @param integer $offset
-     * @param integer $limit
+     * @param boolean $getQuery
      *
      * @return \Doctrine\ORM\Tools\Pagination\Paginator
      */
@@ -115,8 +108,7 @@ class MessageRepository extends NestedTreeRepository
         User $user,
         $search,
         $isRemoved = false,
-        $offset = null,
-        $limit = null
+        $getQuery = false
     )
     {
         $isRemovedText = ($isRemoved) ? 'true' : 'false';
@@ -137,19 +129,15 @@ class MessageRepository extends NestedTreeRepository
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('search', "%{$upperSearch}%");
-        $query->setFirstResult($offset)
-            ->setMaxResults($limit);
-        $paginator = new Paginator($query, true);
 
-        return $paginator;
+        return ($getQuery) ? $query: $query->getResult();
     }
 
     public function findSentByUserAndObjectAndUsername(
         User $user,
         $search,
         $isRemoved = false,
-        $offset = null,
-        $limit = null
+        $getQuery = false
     )
     {
         $isRemovedText = ($isRemoved) ? 'true' : 'false';
@@ -169,14 +157,11 @@ class MessageRepository extends NestedTreeRepository
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('search', "%{$search}%");
-        $query->setFirstResult($offset)
-            ->setMaxResults($limit);
-        $paginator = new Paginator($query, true);
 
-        return $paginator;
+        return ($getQuery) ? $query: $query->getResult();
     }
 
-    public function findRemovedByUser(User $user, $offset = null, $limit = null)
+    public function findRemovedByUser(User $user, $getQuery = false)
     {
         $dql = "SELECT um, u, m FROM Claroline\CoreBundle\Entity\UserMessage um
             JOIN um.user u
@@ -186,11 +171,8 @@ class MessageRepository extends NestedTreeRepository
             ORDER BY m.date DESC";
 
         $query = $this->_em->createQuery($dql);
-        $query->setFirstResult($offset)
-            ->setMaxResults($limit);
-        $paginator = new Paginator($query, true);
 
-        return $paginator;
+        return ($getQuery) ? $query: $query->getResult();
     }
 
     /**
@@ -198,17 +180,11 @@ class MessageRepository extends NestedTreeRepository
      *
      * @param string $search
      * @param \Claroline\CoreBundle\Entity\User $user
-     * @param integer $offset
-     * @param integer $limit
+     * @param boolean $getQuery
      *
      * @return \Doctrine\ORM\Tools\Pagination\Paginator
      */
-    public function findRemovedByUserAndObjectAndUsername(
-        User $user,
-        $search,
-        $offset = null,
-        $limit = null
-    )
+    public function findRemovedByUserAndObjectAndUsername(User $user, $search, $getQuery = false)
     {
         $search = strtoupper($search);
 
@@ -224,11 +200,8 @@ class MessageRepository extends NestedTreeRepository
             ORDER BY m.date DESC";
 
         $query = $this->_em->createQuery($dql);
-        $query->setFirstResult($offset)
-            ->setMaxResults($limit);
         $query->setParameter('search', "%{$search}%");
-        $paginator = new Paginator($query, true);
 
-        return $paginator;
+        return ($getQuery) ? $query: $query->getResult();
     }
 }

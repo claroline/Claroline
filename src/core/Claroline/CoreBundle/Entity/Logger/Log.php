@@ -35,6 +35,12 @@ class Log
     protected $dateLog;
 
     /**
+     * @ORM\Column(type="date", name="short_date_log", nullable=false)
+     * @Gedmo\Timestampable(on="create")
+     */
+    protected $shortDateLog;
+
+    /**
      * @ORM\Column(type="json_array", name="details", nullable=true)
      */
     protected $details;

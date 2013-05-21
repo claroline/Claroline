@@ -1,0 +1,20 @@
+{% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+
+{% block section_content %}
+    {% set filterFormAction = path('claro_desktop_logs_show') %}
+    {% set pagination %}
+        {{ 
+            pagerfanta(
+                pager, 
+                'twitter_bootstrap_translated', 
+                {
+                    'proximity' : 1, 
+                    'routeName': 'claro_desktop_logs_show_paginated',
+                    'routeParams': {'filter': filter}
+                }
+            )
+        }}
+    {% endset %}
+
+    {% include 'ClarolineCoreBundle:Log:tool_view_list.html.twig' with {'filterFormAction': filterFormAction, 'pagination': pagination} %}
+{% endblock %}

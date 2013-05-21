@@ -5,12 +5,17 @@
 {% set themePath = 'bundles/clarolinecore/css/themes/' ~ config.getParameter('theme') %}
 
 {% block stylesheets %}
-    <link rel='stylesheet' type='text/css' href='{{ asset(themePath ~ '/bootstrap.css') }}'/>
+    <link rel='stylesheet' type='text/css' href='{{ asset(themePath ~ '/bootstrap.css') }}' class="maincss"/>
     <link rel='stylesheet' type='text/css' href='{{ asset(themePath ~ '/bootstrap-responsive.css') }}'/>
     <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/css/font-awesome.css') }}'/>
     <!--[if IE 7]>
         <link rel="stylesheet" href='{{ asset('bundles/clarolinecore/css/font-awesome-ie7.min.css') }}'>
     <![endif]-->
+{% endblock %}
+
+{% block javascripts_header %}
+    {{ parent() }}
+    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-1.7.1.min.js') }}'></script>
 {% endblock %}
 
 {% block favicon %}
@@ -19,6 +24,7 @@
 {% endblock %}
 
 {% block layout %}
+    <div id="sf-environement" data-env="{{ app.environment }}"></div>
     <div id="wrapper">
         <div class="please-wait">
             <span class="label label-warning"> {{ 'please_wait'|trans({}, 'platform') }} </span>
@@ -43,7 +49,6 @@
                 {% block content %}{% endblock %}
             </div>
         </div>
-        <div class="modal hide"></div>
     </div>
     {% if not is_path_mode %}
         {% render controller('ClarolineCoreBundle:Layout:footer') %}
@@ -60,12 +65,11 @@
 
 {% block javascripts %}
     <script type="text/javascript" src='{{ asset('twig.js') }}'></script>
-    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-1.7.1.min.js') }}'></script>
     <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/js/bootstrap.js')}}"></script>
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/utilities.js') }}"></script>
-    {% render controller("ClarolineCoreBundle:Layout:javascriptInit") %}
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/startup.js') }}"></script>
 {% endblock %}
 
 

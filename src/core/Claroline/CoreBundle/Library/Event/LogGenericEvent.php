@@ -7,7 +7,7 @@ use Symfony\Component\EventDispatcher\Event;
 class LogGenericEvent extends Event
 {
     protected $action;
-    
+
     protected $details;
     protected $receiver;
     protected $receiverGroup;
@@ -33,7 +33,8 @@ class LogGenericEvent extends Event
         $owner = null,
         $toolName = null,
         $childType = null,
-        $childAction = null)
+        $childAction = null
+    )
     {
         $this->action = $action;
         $this->details = $details;
@@ -131,7 +132,8 @@ class LogGenericEvent extends Event
 
     /**
      * Returns the sub entity's action name in case of indirect resource update 
-     * (creation/delete/update of plugin's sub entities; e.g. In a forum we can have thread creation, post publication etc.)
+     * (creation/delete/update of plugin's sub entities; e.g. 
+     * In a forum we can have thread creation, post publication etc.)
      */
     public function getChildAction()
     {

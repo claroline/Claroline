@@ -41,7 +41,6 @@ class WorkspaceCalendarController extends Controller
             // get the value not send by the built in form
             $postData = $request->request->all();
             $form->bind($request);
-
             if ($form->isValid()) {
 
                 $date = explode('(', $postData['date']);
@@ -77,8 +76,12 @@ class WorkspaceCalendarController extends Controller
             } else {
                 $error = $form->getErrors();
                 foreach ($error as $value) {
-                    echo $value;
                  }
+                 return new Response(
+                        json_encode(array('greeting' => 'form invalid')),
+                        400,
+                        array('Content-Type' => 'application/json')
+                    );
             }
         }
     }
@@ -149,7 +152,6 @@ class WorkspaceCalendarController extends Controller
         $repository = $em->getRepository('ClarolineCoreBundle:Event');
         $request = $this->get('request');
         $postData = $request->request->all();
-        var_dump($postData);
         $event = $repository->find($postData['id']);
         $em->remove($event);
         $em->flush();
@@ -187,7 +189,6 @@ class WorkspaceCalendarController extends Controller
                 $data[$key]['start'] = $object->getStart()->getTimestamp();
                 $data[$key]['end'] = $object->getEnd()->getTimestamp();
                 $data[$key]['color'] = $object->getPriority();
-
         }
 
         return new Response(
@@ -199,19 +200,19 @@ class WorkspaceCalendarController extends Controller
 
     /**
      * @Route(
-     *     "/{workspaceId}/move",
+     *     "/move",
      *     name="claro_workspace_agenda_move"
      * )
      */
-    public function moveAction($workspaceId)
+    public function moveAction()
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $this->checkUserIsAllowed('calendar', $workspace);
+
         $request = $this->get('request');
         $postData = $request->request->all();
+        $em = $this->get('doctrine.orm.entity_manager');
         $repository = $em->getRepository('ClarolineCoreBundle:Event');
         $event = $repository->find($postData['id']);
+        $this->checkUserIsAllowed('calendar', $event->getWorkspace());
         // timestamp 1h = 3600
         $newStartDate = $event->getStart()->getTimestamp() + ((3600 * 24) * $postData['dayDelta']);
         $dateStart = new \DateTime(date('d-m-Y', $newStartDate));
