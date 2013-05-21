@@ -252,7 +252,9 @@ class LogRepository extends EntityRepository
         $roleId = null,
         $groupId = null,
         $toolName = null,
-        $userType = null
+        $userType = null,
+        $childType = null,
+        $childAction = null
     )
     {
         $qb = $this
@@ -311,6 +313,18 @@ class LogRepository extends EntityRepository
             $qb
                 ->andWhere('log.toolName = :toolName')
                 ->setParameter('toolName', $toolName);
+        }
+
+        if ($childType !== null) {
+            $qb
+                ->andWhere('log.childType = :childType')
+                ->setParameter('childType', $childType);
+        }
+
+        if ($childAction !== null) {
+            $qb
+                ->andWhere('log.childAction = :childAction')
+                ->setParameter('childAction', $childAction);
         }
 
         $q = $qb->getQuery();
