@@ -245,4 +245,30 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
         return $query->getSingleScalarResult();
     }
+
+    public function findResourcesByIds(array $ids)
+    {
+        $dql = "SELECT resource from Claroline\CoreBundle\Entity\Resource\AbstractResource resource WHERE";
+
+        for ($i = 1, $size = count($ids); $i <= $size; $i++) {
+            $dql .= " resource.id = {$ids[$i-1]}";
+            if ($i !== $size ) {
+                $dql .= " OR ";
+            }
+        }
+
+        $query = $this->_em->createQuery($dql);
+        $results = $query->getResult();
+        $orderedResult = array();
+
+        foreach ($ids as $id) {
+            foreach ($results as $res) {
+                if ($res->getId() == $id) {
+                    $orderedResult[] = $res;
+                }
+            }
+        }
+
+        return $orderedResult;
+    }
 }

@@ -17,7 +17,6 @@
                 this.parameters = parameters;
                 this.dispatcher = dispatcher;
                 this.currentDirectory = {id: parameters.directoryId};
-                this.directoryHistory = [];
 
                 if (parameters.isPickerMode) {
                     this.el.className = 'picker resource-manager modal hide';
@@ -33,31 +32,32 @@
                     actions: new manager.Views.Actions(parameters, dispatcher),
                     resources: new manager.Views.Resources(parameters, dispatcher)
                 };
+
             },
             render: function (resources, path, creatableTypes, isSearchMode, searchParameters) {
                 this.currentDirectory = _.last(path);
 
-                if (this.directoryHistory.length === 0) {
-                    this.directoryHistory = path;
+                if (this.parameters.directoryHistory.length === 0) {
+                    this.parameters.directoryHistory = path;
                 } else {
                     var index = -1;
 
-                    for (var i = 0; i < this.directoryHistory.length; i++) {
-                        if (this.directoryHistory[i].id == this.currentDirectory.id) {
+                    for (var i = 0; i < this.parameters.directoryHistory.length; i++) {
+                        if (this.parameters.directoryHistory[i].id == this.currentDirectory.id) {
                             index = i;
                         }
                     }
 
                     if (index == -1) {
-                        this.directoryHistory.push(this.currentDirectory);
+                        this.parameters.directoryHistory.push(this.currentDirectory);
                     } else {
-                        this.directoryHistory.splice(index+1);
+                        this.parameters.directoryHistory.splice(index+1);
                     }
                 }
 
-                this.subViews.breadcrumbs.render(this.directoryHistory);
+                this.subViews.breadcrumbs.render(this.parameters.directoryHistory);
                 this.subViews.actions.render(this.currentDirectory, creatableTypes, isSearchMode, searchParameters);
-                this.subViews.resources.render(resources, isSearchMode, this.currentDirectory.id);
+                this.subViews.resources.render(resources, isSearchMode, this.currentDirectory.id, this.directoryHistory);
 
                 if (!this.subViews.areAppended) {
                     this.wrapper.append(
@@ -439,7 +439,8 @@
                 this.dispatcher.trigger('resource-click', {
                     resourceId: event.currentTarget.getAttribute('data-id'),
                     resourceType: event.currentTarget.getAttribute('data-type'),
-                    isPickerMode: this.parameters.isPickerMode
+                    isPickerMode: this.parameters.isPickerMode,
+                    directoryHistory: this.parameters.directoryHistory
                 });
             },
             dispatchCheck: function (event) {
@@ -600,7 +601,7 @@
                 var searchParameters = null;
 
                 if (queryString) {
-                    searchParameters = {};
+                    //searchParameters = {};
                     var parameters = decodeURIComponent(queryString.substr(1)).split('&');
                     _.each(parameters, function (parameter) {
                         parameter = parameter.split('=');
@@ -661,7 +662,7 @@
                     if (event.resourceType === 'directory') {
                         this.router.navigate('resources/' + event.resourceId, {trigger: true});
                     } else {
-                        this.open(event.resourceType, event.resourceId);
+                        this.open(event.resourceType, event.resourceId, event.directoryHistory);
                     }
                 }
             },
@@ -905,8 +906,22 @@
         download: function (resourceIds) {
             window.location = this.parameters.appPath + '/resource/export?' + $.param({ids: resourceIds});
         },
-        open: function (resourceType, resourceId) {
-            window.location = this.parameters.appPath + '/resource/open/' + resourceType + '/' + resourceId;
+        open: function (resourceType, resourceId, directoryHistory) {
+//            Claroline.Utilities.removeURLParam('_breadcrumbs[]');
+            var _path = '';
+            for (var i = 0; i < directoryHistory.length; i++) {
+                if ( i === 0) {
+                    _path += '?';
+                } else {
+                    _path += '&';
+                }
+                _path += '_breadcrumbs[]=' + directoryHistory[i].id;
+            }
+            console.debug('preopen')
+            console.debug(this.parameters.appPath);
+            console.debug(directoryHistory);
+            console.debug('preopen');
+            window.location = this.parameters.appPath + '/resource/open/' + resourceType + '/' + resourceId + _path;
         },
         editRights: function (formAction, formData) {
             $.ajax({
@@ -978,6 +993,7 @@
     manager.initialize = function (parameters) {
         parameters = parameters || {};
         parameters.directoryId = parameters.directoryId || 0;
+        parameters.directoryHistory = parameters.directoryHistory || [];
         parameters.parentElement = parameters.parentElement || $('body');
         parameters.resourceTypes = parameters.resourceTypes || {};
         parameters.isPickerOnly = parameters.isPickerOnly || false;
@@ -985,6 +1001,7 @@
         parameters.pickerCallback = parameters.pickerCallback || function () {};
         parameters.appPath = parameters.appPath || '';
         parameters.webPath = parameters.webPath || '';
+        console.debug(parameters.directoryHistory);
         manager.Controller.initialize(parameters);
     };
 

@@ -11,7 +11,7 @@ use JMS\DiExtraBundle\Annotation as DI;
  * Adds the isPathMode var to the twig Globals. It's used by the
  * activity player to remove the resource context.
  *
- * @DI\Service
+ * @DI\Service()
  * @DI\Tag("twig.extension")
  */
 class ResourceModeExtension extends Twig_Extension
@@ -20,11 +20,14 @@ class ResourceModeExtension extends Twig_Extension
 
     /**
      * @DI\InjectParams({
-     *     "generator" = @DI\Inject("router")
+     *     "generator" = @DI\Inject("router"),
+     *     "container" = @DI\Inject("service_container")
      * })
      */
-    public function __construct(UrlGeneratorInterface $generator)
+
+    public function __construct(UrlGeneratorInterface $generator, $container)
     {
+        $this->container = $container;
         $this->generator = $generator;
     }
 
@@ -51,12 +54,18 @@ class ResourceModeExtension extends Twig_Extension
 
     public function getPath($name, $parameters = array())
     {
-        return $this->appendMode($this->generator->generate($name, $parameters, false));
+        $path = $this->appendMode($this->generator->generate($name, $parameters, false));
+        $path = $this->appendBreadcrumbs($path);
+
+        return $path;
     }
 
     public function getUrl($name, $parameters = array())
     {
-        return $this->appendMode($this->generator->generate($name, $parameters, true));
+        $url = $this->appendMode($this->generator->generate($name, $parameters, true));
+        $url = $this->appendBreadcrumbs($url);
+
+        return $url;
     }
 
     /**
@@ -72,5 +81,25 @@ class ResourceModeExtension extends Twig_Extension
     private function appendMode($path)
     {
         return $path . (Mode::$isPathMode ? '?_mode=path' : '');
+    }
+
+    private function appendBreadcrumbs($path)
+    {
+        $breadcrumbs = $this->container->get('request')->query->get('_breadcrumbs', array());
+
+        if ($breadcrumbs != null) {
+            $toAppend = '';
+            for ($i = 0, $size = count($breadcrumbs); $i < $size; $i++) {
+                if ($i === 0) {
+                    $toAppend .= '?';
+                } else {
+                    $toAppend .= '&';
+                }
+                $toAppend .= '_breadcrumbs[]='. $breadcrumbs[$i];
+            }
+            $path .= $toAppend;
+        }
+
+        return $path;
     }
 }
