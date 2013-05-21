@@ -1,4 +1,5 @@
 window.onload = function () {
+    
     var infos = document.getElementById('info').value;
     var i = infos.substr(0, infos.indexOf('~'));
     infos = infos.substr(infos.indexOf('~') + 1);
@@ -86,12 +87,9 @@ function position(shape, color, i, prefix, value, size, points) {
     var x = value.substr(0, value.indexOf(','));
     var y = value.substr(value.indexOf(',') + 1);
 
-    // Place the answer zones
-    document.getElementById('img' + i).style.left = String(parseInt(document.getElementById('AnswerImage').offsetLeft) +
-        parseInt(x) - (size / 2)) + 'px';
-    document.getElementById('img' + i).style.top = String(document.getElementById('AnswerImage').offsetTop +
-        parseInt(y) - (size / 2)) + 'px';
-
+    document.getElementById('img' + i).style.left = String(parseInt(x) - (size / 2)) + 'px';
+    document.getElementById('img' + i).style.top = String(parseInt(y) - (size / 2)) + 'px';
+    
     grade++;
     var name = 'img' + i;
     point[name] = points;

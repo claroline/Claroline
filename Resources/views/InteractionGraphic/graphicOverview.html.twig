@@ -47,47 +47,48 @@
         <h1>Question : {{ interG.interaction.question.title }}</h1>
 
             <div>
-                <p>{{ interG.interaction.question.description }}</p>
+                <p>{{ interG.interaction.question.description|raw }}</p>
             </div>
 
             <h3>
-                <p>{{ interG.interaction.invite }}</p>
+                <p>{{ interG.interaction.invite|raw }}</p>
             </h3>
         
-        <p><img src="{{asset (doc.url)}}" width="{{ interG.width }}" height="{{ interG.height }}" 
-                alt="AnswerImage" id="AnswerImage1"/></p>
+        <div style="position: relative;">
+            <p><img src="{{asset (doc.url)}}" width="{{ interG.width }}" height="{{ interG.height }}" 
+                    alt="AnswerImage" id="AnswerImage1"/></p>
 
-        <p>Score : {{ score }}/{{ total }}.<br/>
+            <p>Score : {{ score }}/{{ total }}.<br/>
 
-            {% if score == 0 and penalty == 0 %} 
-                Aucune bonne réponse.
-            {% elseif penalty == 0 %}
-                Indices non vus, pas de pénalité.
-            {% else %}
-                Points bonne réponse : {{ point }} avec : -{{ penalty }} de pénalité pour indices vus.
-            {% endif %}
-        </p>
+                {% if score == 0 and penalty == 0 %} 
+                    Aucune bonne réponse.
+                {% elseif penalty == 0 %}
+                    Indices non vus, pas de pénalité.
+                {% else %}
+                    Points bonne réponse : {{ point }} avec : -{{ penalty }} de pénalité pour indices vus.
+                {% endif %}
+            </p>
 
-        {%set i = 0 %}{% set allInfo = '' %}
+            {%set i = 0 %}{% set allInfo = '' %}
 
-        {% for c in coords %} 
+            {% for c in coords %} 
 
-            {% set numb = coords[i].value|split(',') %}
-            {% set respcoo = rep[i]|split('-') %}
+                {% set numb = coords[i].value|split(',') %}
+                {% set respcoo = rep[i]|split('-') %}
 
-            <img src="/Claroline/web/bundles/ujmexo/images/graphic/circlew.png" alt="RightAnswer{{i}}" id="1ra{{i}}"
-                 style="position: absolute; z-index: 2;" width="{{ coords[i].size }}"/><br/>
+                <img src="/Claroline/web/bundles/ujmexo/images/graphic/circlew.png" alt="RightAnswer{{i}}" id="1ra{{i}}"
+                     style="position: absolute; z-index: 2;" width="{{ coords[i].size }}"/><br/>
 
-            <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{i}}" id="1cursor{{i}}" 
-                 style="position: absolute; z-index: 7;"/>
+                <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{i}}" id="1cursor{{i}}" 
+                     style="position: absolute; z-index: 7;"/>
 
-            {% set allInfo = coords[i].shape~';'~coords[i].color~';'~asset('bundles/ujmexo/images/graphic/')~';'
-                            ~numb[0]~';'~numb[1]~';'~respcoo[0]~';'~respcoo[1]~';'~coords[i].size~'^'~allInfo %}
+                {% set allInfo = coords[i].shape~';'~coords[i].color~';'~asset('bundles/ujmexo/images/graphic/')~';'
+                                ~numb[0]~';'~numb[1]~';'~respcoo[0]~';'~respcoo[1]~';'~coords[i].size~'^'~allInfo %}
 
-            {%set i = i + 1%}
+                {%set i = i + 1%}
 
-        {% endfor %}
-            
+            {% endfor %}
+        </div>
             <input type="hidden" id="info" name="info" value="{{i}}~{{allInfo}}"/>
 
         <a href="{{ path('ujm_question_index') }}">{{ "Question list" | trans }}</a>

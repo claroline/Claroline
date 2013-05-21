@@ -1,6 +1,6 @@
 {#
  # ExoOnLine
- # Copyright or Â© or Copr. UniversitÃ© Jean Monnet (France), 2012
+ # Copyright or Ã‚Â© or Copr. UniversitÃƒÂ© Jean Monnet (France), 2012
  # dsi.dev@univ-st-etienne.fr
  #
  # This software is a computer program whose purpose is to [describe
@@ -99,17 +99,22 @@
     <p id="Instructions">{{ "ResizeZone" | trans }}<br/>{{ "SelectZone" | trans }}<br/>{{ "PlaceZone" | trans }}<br/>
         {{ "Resize" | trans }}<br/>{{ "Erase" | trans }}</p>
 
-    <img src="{{ asset(entity.document.url) }}" width="{{entity.width}}" height="{{entity.height}}" id="AnswerImage"/>
-    
-    {% set i = 0 %}{% set allInfo = '' %}
-    {% for p in position %}
-        <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" alt="AnswerZone{{ i }}" id="img{{ i }}" 
-             style="position: absolute;" width="{{ p.size }}"/>
-    
-{% set allInfo = p.shape~';'~p.color~';'~asset('bundles/ujmexo/images/graphic/')~';'~p.value~';'~p.size~';'~p.scoreCoords~'^'~allInfo %}
+    <div style="position: relative;">
+        <img src="{{ asset(entity.document.url) }}" width="{{entity.width}}" height="{{entity.height}}"
+             id="AnswerImage"/>
 
-        {% set i = i + 1 %}
-   {% endfor %}
+        {% set i = 0 %}{% set allInfo = '' %}
+        {% for p in position %}
+            <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" alt="AnswerZone{{ i }}" id="img{{ i }}" 
+                 style="position: absolute;" width="{{ p.size }}"/>
+
+    {% set allInfo = p.shape~';'~p.color~';'~asset('bundles/ujmexo/images/graphic/')~';'~p.value~';'~p.size~';'~p.scoreCoords~'^'~allInfo %}
+
+            {% set i = i + 1 %}
+       {% endfor %}
+    </div>
+
+        
         
     <input type="hidden" id="info" name="info" value="{{i}}~{{allInfo}}"/>
 
@@ -179,8 +184,8 @@
     <div id="popupCategory" class="hiddenCat"> <a id="closeCategory" class="hiddenCat" title="close popup">{{ "close" | trans }}</a><h1>{{ "Create a new category" | trans }}</h1><div id="div_input_category"></div></div><div id="overlayEffect_cat"> </div>
 </div>
 
-{{ tinymce_init() }}
-
+    {{ tinymce_init() }}
+   
 {% endblock %}
 
 {# ------------------------------------------------- Javascript ---------------------------------------------------------------------------- #}
@@ -191,7 +196,7 @@
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/hint.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/category_pop.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/editionAv.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphic.js') }}"></script>
+     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphic.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/GraphicEdit.js') }}"></script>
 
     <script type="text/javascript">
@@ -199,7 +204,8 @@
             linkCategory('{{ path('ujm_category_new_pop') }}');
             hintCSSEdit();
             editionAv();
-            addFormHintEdit('{{ "add hint" | trans }}',  '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');    
+            addFormHintEdit('{{ "add hint" | trans }}',  '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');
         });
     </script>
 {% endblock %}
+        

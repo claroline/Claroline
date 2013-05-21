@@ -1,16 +1,3 @@
-//function loading() {
-//    var infos = document.getElementById('info').value;
-//    var i = infos.substr(0, infos.indexOf('~'));
-//    infos = infos.substr(infos.indexOf('~') + 1);
-//
-//    var info = infos.split('^');
-//
-//    for (var x = 0 ; x < i ; x++) {
-//        var content = info[x].split(';');
-//        whichImg(content[0], content[1], x, content[3], content[4], content[5], content[6], content[2], content[7], 1);
-//    }
-//}
-
 window.onload = function () {
     var infos = document.getElementById('info').value;
     var i = infos.substr(0, infos.indexOf('~'));
@@ -97,16 +84,12 @@ function whichImg(shape, color, i, x, y, rx, ry, prefix, size, id) {
     }
 
     // Place the right answer zones
-    document.getElementById(id + 'ra' + i).style.left = String(parseInt(document.getElementById('AnswerImage' + id).offsetLeft) +
-        parseInt(x) - (size / 2)) + 'px';
-    document.getElementById(id + 'ra' + i).style.top = String(document.getElementById('AnswerImage' + id).offsetTop +
-        parseInt(y) - (size / 2)) + 'px';
+    document.getElementById(id + 'ra' + i).style.left = String(parseInt(x) - (size / 2)) + 'px';
+    document.getElementById(id + 'ra' + i).style.top = String(parseInt(y) - (size / 2)) + 'px';
 
     if (rx != 'a' && ry != 'a') { // Place student answer zones if defined
-        document.getElementById(id + 'cursor' + i).style.left = String(parseInt(document.getElementById('AnswerImage' + id).offsetLeft) +
-            parseInt(rx) - 10) + 'px';
-        document.getElementById(id + 'cursor' + i).style.top = String(document.getElementById('AnswerImage' + id).offsetTop +
-            parseInt(ry) - 10) + 'px';
+        document.getElementById(id + 'cursor' + i).style.left = String(parseInt(rx) - 10) + 'px';
+        document.getElementById(id + 'cursor' + i).style.top = String(parseInt(ry) - 10) + 'px';
     } else { // Else don't display the unplaced answer zone of the student
         document.getElementById(id + 'cursor' + i).style.visibility = 'hidden';
     }
