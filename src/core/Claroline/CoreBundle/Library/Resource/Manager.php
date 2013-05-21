@@ -10,6 +10,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
+use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
@@ -480,5 +481,33 @@ class Manager
         $this->em->persist($rootDir);
 
         return $rootDir;
+    }
+
+    public function makeShortcut(AbstractResource $resource, Directory $parent, User $creator)
+    {
+        $shortcut = new ResourceShortcut();
+        $shortcut->setParent($parent);
+        $shortcut->setCreator($creator);
+        $shortcut->setIcon($resource->getIcon()->getShortcutIcon());
+        $shortcut->setName($resource->getName());
+        $shortcut->setName($this->ut->getUniqueName($shortcut, $parent));
+        $shortcut->setWorkspace($parent->getWorkspace());
+        $shortcut->setResourceType($resource->getResourceType());
+
+        if (get_class($resource) !== 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
+            $shortcut->setResource($resource);
+        } else {
+            $shortcut->setResource($resource->getResource());
+        }
+
+        $this->cloneParentRights($shortcut->getParent(), $shortcut);
+        $this->em->persist($shortcut);
+
+        return $shortcut;
+    }
+
+    public function checkAncestors(array $ancestors)
+    {
+        //must check if the ancestors are a valid path
     }
 }
