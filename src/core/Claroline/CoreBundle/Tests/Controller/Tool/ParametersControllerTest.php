@@ -19,12 +19,13 @@ class ParametersControllerTest extends FunctionalTestCase
         $repo = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool');
         $baseDisplayedTools = $repo->findByUser($this->getUser('john'), true);
         $nbBaseDisplayedTools = count($baseDisplayedTools);
-        $home = $repo->findOneBy(array('name' => 'calendar'));
+        $calendar = $repo->findOneBy(array('name' => 'calendar'));
+        $calendarPosition = $nbBaseDisplayedTools + 1;
         $this->logUser($this->getUser('john'));
 
         $this->client->request(
             'POST',
-            "/desktop/tool/properties/add/tool/{$home->getId()}/position/4"
+            "/desktop/tool/properties/add/tool/{$calendar->getId()}/position/{$calendarPosition}"
         );
 
         $this->assertEquals(
@@ -34,7 +35,7 @@ class ParametersControllerTest extends FunctionalTestCase
 
         $this->client->request(
             'POST',
-            "/desktop/tool/properties/remove/tool/{$home->getId()}"
+            "/desktop/tool/properties/remove/tool/{$calendar->getId()}"
         );
 
         $this->assertEquals(
@@ -539,12 +540,14 @@ class ParametersControllerTest extends FunctionalTestCase
 
     public function testDesktopConfigureToolsPage()
     {
+        $repo = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool');
+        $activeTools = $repo->findByUser($this->getUser('john'), true);
         $this->logUser($this->getUser('john'));
         $crawler = $this->client->request(
             'GET',
-            "desktop/tool/properties/tools"
+            'desktop/tool/properties/tools'
         );
-        $this->assertEquals(3, count($crawler->filter('input:checked[type="checkbox"]')));
+        $this->assertEquals(count($activeTools), count($crawler->filter('input:checked[type="checkbox"]')));
     }
 
     public function testRemoveParametersFromDesktop()

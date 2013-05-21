@@ -17,7 +17,6 @@ class RoleRepository extends EntityRepository
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
             JOIN r.workspace ws
             WHERE ws.id = {$workspace->getId()}
-            AND r.name != 'ROLE_ADMIN'
         ";
 
         $query = $this->_em->createQuery($dql);
@@ -52,7 +51,7 @@ class RoleRepository extends EntityRepository
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
             JOIN r.users u
-            WHERE u.id = {$user->getId()} AND r.roleType != " . Role::WS_ROLE;
+            WHERE u.id = {$user->getId()} AND r.type != " . Role::WS_ROLE;
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
@@ -134,6 +133,22 @@ class RoleRepository extends EntityRepository
             AND r.name != 'ROLE_ADMIN'";
 
         $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
+
+    public function findByWorkspaceCode($workspaceCode)
+    {
+        $upperSearch = strtoupper($workspaceCode);
+
+        $dql = "
+            SELECT DISTINCT r FROM Claroline\CoreBundle\Entity\Role r
+            JOIN r.workspace ws
+            WHERE UPPER(ws.code) LIKE :code
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('code', '%'.$upperSearch.'%');
 
         return $query->getResult();
     }

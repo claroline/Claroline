@@ -1,0 +1,87 @@
+<!--[if lt IE 9]><script language="javascript" type="text/javascript" src="{{ asset('bundles/clarolinecore/js/common/jqplot/excanvas.min.js') }}"></script><![endif]-->
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/jquery.jqplot.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.cursor.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasTextRenderer.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.dateAxisRenderer.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasAxisLabelRenderer.min.js') }}"></script>
+
+<style type="text/css">
+    .line-chart {
+        height: 150px;
+        width: 80%;
+        margin: 0 10%;
+    }
+</style>
+
+<div id="actions_line_chart" class="line-chart"></div>
+<script type="text/javascript">
+    var chartData = {{ chartData|json_encode|raw }};
+    $(document).ready(function(){
+        if (chartData.length>0) {
+            var step = Math.ceil(chartData.length/8);
+            console.log(step);
+            var ticks = [];
+            if(chartData.length>1){
+                for(var i=0; i<chartData.length-1; i+=step){
+                    ticks.push(chartData[i][0]);
+                }
+                ticks.push(chartData[chartData.length-1][0]);
+            }
+
+
+            var actionsPlot = $.jqplot(
+                'actions_line_chart',
+                [chartData],
+                {
+                    title: {show: false},
+                    grid: {
+                        drawBorder: true,
+                        borderWidth: 1.0,
+                        shadow: false,
+                        background: 'transparent'
+                    },
+                    axesDefaults: {
+                        labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                        tickRenderer: $.jqplot.CanvasAxisTickRenderer
+                    },
+                    axes: {
+                        xaxis: {
+                            renderer: $.jqplot.DateAxisRenderer,
+                            tickOptions: {
+                                formatString:'{{ 'jqplot_date_output_format'|trans({}, 'platform') }}',
+                                showGridline: false,
+                                showMark: false,
+                                angle: -45,
+                                fontSize: '13px'
+                            },
+                            ticks: ticks
+                        },
+                        yaxis: {
+                            min:0,
+                            showTickMarks: true,
+                            numberTicks: 5
+                        }
+                    },
+                    cursor: {
+                        show: true,
+                        zoom: true, 
+                        showTooltip: false
+                    },
+                    seriesDefaults: {
+                        showMarker:((chartData.length<10)?true:false),
+                        markerOptions:{shadow:false},
+                        shadow:false,
+                        showLine:true,
+                        useNegativeColors: false,
+                        fill: true,
+                        lineWidth: 1.5,
+                        fillAndStroke: true,
+                        fillAlpha: 0.2,
+                        rendererOptions:{highlightMouseOver: true, highlightMouseDown: true}
+                    }
+                }
+            );
+        }
+    });
+</script>

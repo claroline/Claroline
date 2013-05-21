@@ -8,6 +8,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleSubscribeEvent;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleUnsubscribeEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -17,6 +19,84 @@ class GroupController extends Controller
 {
     const ABSTRACT_WS_CLASS = 'ClarolineCoreBundle:Workspace\AbstractWorkspace';
     const NUMBER_GROUP_PER_ITERATION = 25;
+
+        /**
+     * @Route(
+     *     "/{workspaceId}/groups/registered/page/{page}",
+     *     name="claro_workspace_registered_group_list",
+     *     defaults={"page"=1, "search"=""},
+     *     options = {"expose"=true}
+     * )
+     *
+     * @Method("GET")
+     *
+     * @Route(
+     *     "/{workspaceId}/groups/registered/page/{page}/search/{search}",
+     *     name="claro_workspace_registered_group_list_search",
+     *     defaults={"page"=1},
+     *     options = {"expose"=true}
+     * )
+     *
+     * @Method("GET")
+     */
+    public function registeredGroupsListAction($workspaceId, $page, $search)
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+        $this->checkRegistration($workspace);
+        $repo = $em->getRepository('ClarolineCoreBundle:Group');
+        $query = ($search == "") ?
+            $repo->findByWorkspace($workspace, true):
+            $repo->findByWorkspaceAndName($workspace, $search, true);
+        $adapter = new DoctrineORMAdapter($query);
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage(20);
+        $pager->setCurrentPage($page);
+
+        return $this->render(
+            'ClarolineCoreBundle:Tool\workspace\group_management:registered_groups.html.twig',
+            array('workspace' => $workspace, 'pager' => $pager, 'search' => $search)
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/{workspaceId}/groups/unregistered/page/{page}",
+     *     name="claro_workspace_unregistered_group_list",
+     *     defaults={"page"=1, "search"=""},
+     *     options = {"expose"=true}
+     * )
+     *
+     * @Method("GET")
+     *
+     * @Route(
+     *     "/{workspaceId}/groups/unregistered/page/{page}/search/{search}",
+     *     name="claro_workspace_unregistered_group_list_search",
+     *     defaults={"page"=1},
+     *     options = {"expose"=true}
+     * )
+     *
+     * @Method("GET")
+     */
+    public function unregiseredGroupsListAction($workspaceId, $page, $search)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+        $this->checkRegistration($workspace);
+        $repo = $em->getRepository('ClarolineCoreBundle:Group');
+        $query = ($search == "") ?
+            $repo->findWorkspaceOutsiders($workspace, true):
+            $repo->findWorkspaceOutsidersByName($workspace, $search, true);
+        $adapter = new DoctrineORMAdapter($query);
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage(20);
+        $pager->setCurrentPage($page);
+
+        return $this->render(
+            'ClarolineCoreBundle:Tool\workspace\group_management:unregistered_groups.html.twig',
+            array('workspace' => $workspace, 'pager' => $pager, 'search' => $search)
+        );
+    }
 
     /**
      * @Route(
@@ -94,6 +174,13 @@ class GroupController extends Controller
                 array('workspaceId' => $workspaceId, 'toolName' => 'group_management')
             );
 
+            $log = new LogWorkspaceRoleUnsubscribeEvent($role, null, $group);
+            $this->get('event_dispatcher')->dispatch('log', $log);
+
+            $log = new LogWorkspaceRoleSubscribeEvent($newRole, null, $group);
+            $this->get('event_dispatcher')->dispatch('log', $log);
+            $em->flush();
+
             return new RedirectResponse($route);
         }
 
@@ -104,32 +191,6 @@ class GroupController extends Controller
                 'group' => $group,
                 'form' => $form->createView()
             )
-        );
-    }
-
-    /**
-     * @Route(
-     *     "/{workspaceId}/groups/unregistered",
-     *     name="claro_workspace_unregistered_groups_list",
-     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
-     * )
-     * @Method("GET")
-     *
-     * Renders the unregistered group list layout for a workspace.
-     *
-     * @param integer $workspaceId workspace id
-     *
-     * @return Response
-     */
-    public function unregiseredGroupsListAction($workspaceId)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $this->checkRegistration($workspace);
-
-        return $this->render(
-            'ClarolineCoreBundle:Tool\workspace\group_management:unregistered_group_list_layout.html.twig',
-            array('workspace' => $workspace)
         );
     }
 
@@ -159,7 +220,7 @@ class GroupController extends Controller
             ->findByWorkspace($workspace);
         $params = $this->get('request')->query->all();
 
-        $groups= array();
+        $groups = array();
         $rolesForGroups = array();
         if (isset($params['ids'])) {
             $this->checkRemoveManagerRoleIsValid($params['ids'], $workspace);
@@ -190,68 +251,6 @@ class GroupController extends Controller
         $em->flush();
 
         return new Response("success", 204);
-    }
-
-    /**
-     * @Route(
-     *     "/{workspaceId}/groups/{offset}/unregistered",
-     *     name="claro_workspace_unregistered_groups_paginated",
-     *     options={"expose"=true},
-     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$", "offset"="^(?=.*[0-9].*$)\d*$"}
-     * )
-     * @Method("GET")
-     *
-     * Returns a partial json representation of the unregistered groups of a workspace.
-     *
-     * @param integer $workspaceId the workspace id
-     * @param integer $offset      the offset
-     *
-     * @return Response
-     */
-    public function unregisteredGroupsAction($workspaceId, $offset)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
-            ->find($workspaceId);
-        $this->checkRegistration($workspace);
-        $paginatorGroups = $em->getRepository('ClarolineCoreBundle:Group')
-            ->findWorkspaceOutsider($workspace, $offset, self::NUMBER_GROUP_PER_ITERATION);
-        $groups = $this->paginatorToArray($paginatorGroups);
-        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeGroups($groups));
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
-    }
-
-    /**
-     * @Route(
-     *     "/{workspaceId}/groups/{offset}/registered",
-     *     name="claro_workspace_registered_groups_paginated",
-     *     options={"expose"=true},
-     *     requirements={"workspaceId"="(?=.*[0-9].*$)\d*$", "offset"="(?=.*[0-9].*$)\d*$"}
-     * )
-     * @Method("GET")
-     *
-     * Returns a partial json representation of the registered groups of a workspace.
-     *
-     * @param integer $workspaceId the workspace id
-     * @param integer $offset      the offset
-     *
-     * @return Response
-     */
-    public function registeredGroupsAction($workspaceId, $offset)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
-            ->find($workspaceId);
-        $this->checkRegistration($workspace);
-        $paginatorGroups = $em->getRepository('ClarolineCoreBundle:Group')
-            ->findByWorkspace($workspace, $offset, self::NUMBER_GROUP_PER_ITERATION);
-        $groups = $this->paginatorToArray($paginatorGroups);
-        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeGroups($groups));
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
     }
 
     /**
@@ -295,82 +294,6 @@ class GroupController extends Controller
             $this->get('event_dispatcher')->dispatch('log', $log);
         }
 
-        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeGroups($groups));
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
-    }
-
-    /**
-     * @Route(
-     *     "/{workspaceId}/group/search/{search}/unregistered/{offset}",
-     *     name="claro_workspace_search_unregistered_groups",
-     *     requirements={"workspaceId"="^(?=.*[0-9].*$)\d*$"},
-     *     options={"expose"=true}
-     * )
-     * @Method("GET")
-     *
-     * Returns a partial json representation of the unregistered groups of a workspace.
-     * It'll search every groups whose name match $search.
-     *
-     * @param string  $search      the search string
-     * @param integer $workspaceId the workspace id
-     * @param integer $offset      the offset
-     *
-     * @return Response
-     */
-    public function searchUnregisteredGroupsAction($search, $workspaceId, $offset)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
-            ->find($workspaceId);
-        $this->checkRegistration($workspace);
-        $paginatorGroups = $em->getRepository('ClarolineCoreBundle:Group')
-            ->findWorkspaceOutsiderByName(
-                $workspace,
-                $search,
-                $offset,
-                self::NUMBER_GROUP_PER_ITERATION
-            );
-        $groups = $this->paginatorToArray($paginatorGroups);
-        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeGroups($groups));
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
-    }
-
-    /**
-     * @Route(
-     *     "/{workspaceId}/group/search/{search}/registered/{offset}",
-     *     name="claro_workspace_search_registered_groups",
-     *     requirements={"workspaceId"="^(?=.*[0-9].*$)\d*$"},
-     *     options={"expose"=true}
-     * )
-     * @Method("GET")
-     *
-     * Returns a partial json representation of the registered groups of a workspace.
-     * It'll search every groups whose name match $search.
-     *
-     * @param string  $search      the search string
-     * @param integer $workspaceId the workspace id
-     * @param integer $offset      the offset
-     *
-     * @return Response
-     */
-    public function searchRegisteredGroupsAction($search, $workspaceId, $offset)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
-            ->find($workspaceId);
-        $this->checkRegistration($workspace);
-        $paginatorGroups = $em->getRepository('ClarolineCoreBundle:Group')
-            ->findByWorkspaceAndName(
-                $workspace,
-                $search,
-                $offset,
-                self::NUMBER_GROUP_PER_ITERATION
-            );
-        $groups = $this->paginatorToArray($paginatorGroups);
         $response = new Response($this->get('claroline.resource.converter')->jsonEncodeGroups($groups));
         $response->headers->set('Content-Type', 'application/json');
 

@@ -198,7 +198,7 @@ class DatabaseWriter
             ->findOneBy(array('iconType' => IconType::DEFAULT_ICON));
         $defaultIconType = $this->em
             ->getRepository('ClarolineCoreBundle:Resource\IconType')
-            ->findOneBy(array('iconType' => 'type'));
+            ->findOneBy(array('type' => 'type'));
         $resourceIcon->setIconType($defaultIconType);
         $resourceIcon->setType($resourceType->getName());
         $ds = DIRECTORY_SEPARATOR;

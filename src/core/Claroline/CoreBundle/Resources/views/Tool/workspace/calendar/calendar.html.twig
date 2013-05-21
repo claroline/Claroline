@@ -9,10 +9,10 @@
     <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.css') }}'/>
     <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css') }}'/>
     <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.print.css') }}' media='print' />
-    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}" type="text/javascript"></script>
 {% endblock %}
 
 {% block section_content %}
+{{ tinymce_init() }}
     <ul class="breadcrumb">
         <li>
             <a href="#">
@@ -20,11 +20,6 @@
             </a>
         </li>
     </ul>
-    <div> <strong>Couleur</strong>
-    <span style="color:#FF0000">  {{ 'high'|trans({}, 'calendar') }} </span>
-    <span style="color:#01A9DB"> {{ 'medium'|trans({}, 'calendar') }} </span>
-    <span style="color:#848484"> {{ 'low'|trans({}, 'calendar') }} </span> 
-    </div>
     <div id='calendar' class="span9"></div>
     <div  id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
@@ -32,7 +27,7 @@
             <h3 id="myModalLabel"> {{ 'Nouvelle entrée'|trans({}, 'calendar') }}</h3>
         </div>
         <div class="modal-body">
-            <button class="btn btn-danger" id="deleteBtn" > 
+            <button class="btn btn-danger" id="deleteBtn" >
                 {{ 'delete'|trans({}, 'platform') }}
             </button>
             <form method="post" action="{{ path('claro_workspace_agenda_add_event', {workspaceId: workspace.getId()}) }}" id="myForm" {{ form_enctype(form) }}>
@@ -49,9 +44,8 @@
              <button class="btn btn-info" id="updateBtn" > {{ 'update'|trans({}, 'calendar') }}</button>
         </div>
     </div>
-
-    <div class="span2">
-        <h4> <u>{{'task'|trans({}, 'calendar') }} </u></h4>
+    <div class="span3">
+        <h4> <u>{{'tasks'|trans({}, 'calendar') }} </u></h4>
         {% for e in listEvents  %}
         <div class="border">
             <button type="button" class="delete-task close" data-event-id="{{e.id}}" data-dismiss="alert">&times;</button>
@@ -67,8 +61,13 @@
         {% else %}
         <li>{{ 'no event found'|trans({}, 'calendar') }}</li>
         {% endfor %}
+        <h4><u>Priorité</u></h4>
+        <div>
+            <span style="color:#FF0000">  {{ 'high'|trans({}, 'calendar') }} </span>
+            <span style="color:#01A9DB"> {{ 'medium'|trans({}, 'calendar') }} </span>
+            <span style="color:#848484"> {{ 'low'|trans({}, 'calendar') }} </span>
+        </div>
     </div>
-
 {% endblock %}
 
 {% block javascripts %}
@@ -76,11 +75,10 @@
     <script type='text/javascript' src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}' ></script>
     <script type='text/javascript' src='{{ asset(calendarPath ~ 'js/fullcalendar.js') }}' ></script>
     <script type='text/javascript'src='{{ asset('bundles/clarolinecore/js/tool/calendar.js') }}'></script>
+
     <script type='text/javascript'>
         $(function () {
             Claroline.Calendar.initialize('workspace');
         });
     </script>
-
 {% endblock javascripts %}
-

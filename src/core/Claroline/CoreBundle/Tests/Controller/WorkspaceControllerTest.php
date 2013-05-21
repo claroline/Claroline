@@ -6,11 +6,14 @@ use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 
 class WorkspaceControllerTest extends FunctionalTestCase
 {
+    private $logRepository;
+
     protected function setUp()
     {
         parent::setUp();
         $this->client->followRedirects();
         $this->loadPlatformRolesFixture();
+        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Logger\Log');
     }
 
     public function testWSCreatorcanViewHisWorkspaces()
@@ -35,6 +38,8 @@ class WorkspaceControllerTest extends FunctionalTestCase
 
     public function testWSCreatorCanCreateWS()
     {
+        $now = new \DateTime();
+
         $this->loadUserData(array('ws_creator' => 'ws_creator'));
         $crawler = $this->logUser($this->getUser('ws_creator'));
         $link = $crawler->filter('#link-create-ws-form')->link();
@@ -46,10 +51,22 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->client->submit($form);
         $crawler = $this->client->request('GET', "/workspaces");
         $this->assertEquals(1, $crawler->filter('.row-workspace')->count());
+
+        $logs = $this->logRepository->findActionAfterDate(
+            'workspace_create',
+            $now,
+            $this->getUser('ws_creator')->getId()
+        );
+        $this->assertEquals(1, count($logs));
     }
 
+    /**
+     * @group debug
+     */
     public function testWSCreatorCanDeleteHisWS()
     {
+        // $now = new \DateTime();
+
         $this->loadUserData(array('ws_creator' => 'ws_creator'));
         $this->loadWorkspaceData(
             array(
@@ -72,6 +89,13 @@ class WorkspaceControllerTest extends FunctionalTestCase
         );
 
         $this->assertEquals(4, $crawler->filter('.row-workspace')->count());
+
+        // $logs = $this->logRepository->findActionAfterDate(
+        //     'workspace_delete',
+        //     $now,
+        //     $this->getUser('ws_creator')->getId()
+        // );
+        // $this->assertEquals(1, count($logs));
     }
 
     public function testWSManagercanViewHisWS()
@@ -169,24 +193,6 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testDisplayUnregisteredUserList()
-    {
-        $this->loadUserData(array('user' => 'user'));
-        $pwuId = $this->getUser('user')->getPersonalWorkspace()->getId();
-        $this->logUser($this->getUser('user'));
-        $this->client->request('GET', "/workspaces/tool/user_management/{$pwuId}/users/unregistered");
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testUserCantAccessUnregisteredUserList()
-    {
-        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $pwaId = $this->getUser('admin')->getPersonalWorkspace()->getId();
-        $this->logUser($this->getUser('user'));
-        $this->client->request('GET', "/workspaces/tool/user_management/{$pwaId}/users/unregistered");
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
     public function testDisplayUserParameters()
     {
         $this->loadUserData(array('user' => 'user'));
@@ -206,42 +212,6 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $userId = $this->getUser('user')->getId();
         $this->logUser($this->getUser('user'));
         $this->client->request('GET', "/workspaces/tool/user_management/{$pwaId}/user/{$userId}");
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testDisplayGroupManagement()
-    {
-        $this->loadUserData(array('user' => 'user'));
-        $pwuId = $this->getUser('user')->getPersonalWorkspace()->getId();
-        $this->logUser($this->getUser('user'));
-        $this->client->request('GET', "/workspaces/{$pwuId}/open/tool/group_management");
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testUserCantAccessUnregisteredGroupManagement()
-    {
-        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $pwaId = $this->getUser('admin')->getPersonalWorkspace()->getId();
-        $this->logUser($this->getUser('user'));
-        $this->client->request('GET', "/workspaces/{$pwaId}/open/tool/group_management");
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testDisplayUnregisteredGroupList()
-    {
-        $this->loadUserData(array('user' => 'user'));
-        $this->logUser($this->getUser('user'));
-        $pwuId = $this->getUser('user')->getPersonalWorkspace()->getId();
-        $this->client->request('GET', "/workspaces/tool/group_management/{$pwuId}/groups/unregistered");
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testUserCantAccessUnregisteredGroupList()
-    {
-        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $this->logUser($this->getUser('user'));
-        $pwaId = $this->getUser('admin')->getPersonalWorkspace()->getId();
-        $this->client->request('GET', "/workspaces/tool/group_management/{$pwaId}/groups/unregistered");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 

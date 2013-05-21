@@ -199,7 +199,8 @@ class ActivityListener implements ContainerAwareInterface
                     'resourceTypes' => $resourceTypes,
                     'activity' => $activity,
                     'workspace' => $activity->getWorkspace(),
-                    'resourceActivities' => $resourceActivities
+                    'resourceActivities' => $resourceActivities,
+                    '_resource' => $activity
                 )
             );
         } else {
