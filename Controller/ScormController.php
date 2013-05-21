@@ -40,7 +40,6 @@ class ScormController extends Controller
         $entry = $datasArray[12];
         $exitMode = $datasArray[13];
 
-
         if ($this->get('security.context')->getToken()->getUser()->getId() !== intval($studentId)) {
             throw new AccessDeniedException();
         }
@@ -79,7 +78,6 @@ class ScormController extends Controller
 
         $totalTimeInHundredth += $sessionTimeInHundredth;
 
-
         $em = $this->get('doctrine.orm.entity_manager');
         $user = $em->getRepository('ClarolineCoreBundle:User')
             ->findOneById(intval($studentId));
@@ -110,6 +108,6 @@ class ScormController extends Controller
         $em->persist($scormInfo);
         $em->flush();
 
-        return new Response('','204');
+        return new Response('', '204');
     }
 }

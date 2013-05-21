@@ -98,8 +98,14 @@ class ScormListener extends ContainerAware
                         if (!is_null($ref)) {
                             $identifierRef = $ref->nodeValue;
                             $title = $item->getElementsByTagName('title')->item(0)->nodeValue;
-                            $launchDatas = $item->getElementsByTagNameNS($item->lookupNamespaceUri('adlcp'), 'datafromlms');
-                            $masteryScores = $item->getElementsByTagNameNS($item->lookupNamespaceUri('adlcp'), 'masteryscore');
+                            $launchDatas = $item->getElementsByTagNameNS(
+                                $item->lookupNamespaceUri('adlcp'),
+                                'datafromlms'
+                            );
+                            $masteryScores = $item->getElementsByTagNameNS(
+                                $item->lookupNamespaceUri('adlcp'),
+                                'masteryscore'
+                            );
 
                             if ($launchDatas->length > 0) {
                                 $launchData = $launchDatas->item(0)->nodeValue;
@@ -116,11 +122,17 @@ class ScormListener extends ContainerAware
                             foreach ($scoResources as $scoResource) {
                                 $identifier = $scoResource->attributes->getNamedItem('identifier');
                                 $href = $scoResource->attributes->getNamedItem('href');
-                                $scormType = $scoResource->attributes->getNamedItemNS($scoResource->lookupNamespaceUri('adlcp'), 'scormtype');
+                                $scormType = $scoResource->attributes->getNamedItemNS(
+                                    $scoResource->lookupNamespaceUri('adlcp'),
+                                    'scormtype'
+                                );
 
                                 // For compatibility with Raptivity scorm 1.2 package
                                 if (is_null($scormType)) {
-                                    $scormType = $scoResource->attributes->getNamedItemNS($scoResource->lookupNamespaceUri('adlcp'), 'scormType');
+                                    $scormType = $scoResource->attributes->getNamedItemNS(
+                                        $scoResource->lookupNamespaceUri('adlcp'),
+                                        'scormType'
+                                    );
                                 }
 
                                 if (!is_null($identifier)
