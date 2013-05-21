@@ -29,6 +29,7 @@
         $(function() {
             Claroline.ResourceManager.initialize({
                 "directoryId": "{{ directoryId }}",
+                "directoryHistory": {{ jsonPath|raw }},
                 "parentElement": $('div.section-content'),
                 "isPickerMultiSelectAllowed": true,
                 "appPath": "{{ app.request.getBaseUrl() }}",

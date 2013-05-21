@@ -45,9 +45,18 @@
 
     <div class="span9 section-content border">
         {% block breadcrumb %}
+            <div id="resource-breadcrumb">
             {% if _resource is defined %}
-                {% render controller("ClarolineCoreBundle:Resource:renderBreadcrumb", {'resourceId': _resource.getId()}) %}
+                <div id="twig-resource-attributes"
+                     data-resource-id="{{ _resource.getId() }}"
+                     data-resource-name="{{ _resource.getName() }}"
+                     data-workspace-id="{{ workspace.getId() }}">
+                </div>
+                {% render controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
+                    {'workspaceId': workspace.getId(), 'resourceId': _resource.getId(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})
+                %}
             {% endif %}
+            </div>
         {% endblock %}
         {% block section_content %}{% endblock %}
     </div>
