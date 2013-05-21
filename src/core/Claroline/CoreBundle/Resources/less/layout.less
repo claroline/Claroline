@@ -19,11 +19,20 @@ html, body {
     padding-bottom: @navbarHeight; /* Reserves a space for the footer */
 }
 
-@media (min-width: 768px) {
+@media (min-width: 980px) {
     /* Ensures the navbar doesn't hide the top content (only necessary on large screens)*/
     #grid {
         padding-top: @navbarHeight;
     }
+}
+
+@media (max-width: 980px) {
+     #top_bar {
+        margin-bottom:0 !important;
+    }
+}
+
+@media (min-width: 768px) {
 
     .tool-list {
         #grid > .fluid > .span(1);
@@ -74,10 +83,6 @@ footer {
 
     .workspace-toolbox-item {
         display: inline-block;
-    }
-
-    #top_bar {
-        margin-bottom:0 !important;
     }
 }
 
@@ -483,6 +488,18 @@ footer {
 /* MENU */
 /********/
 
+.dropdown-menu a
+{
+    cursor:pointer;
+    background:@white !important;
+}
+
+.dropdown-menu a:hover
+{
+    color:@white !important;
+    background:@dropdownLinkBackgroundHover !important;
+}
+
 /* Disable link */
 
 a.dropdown-menu-item-disabled,
@@ -680,22 +697,6 @@ form legend
     margin-bottom:0;
 }
 
-.content-size.dropdown-menu, .content-size.dropdown-menu li
-{
-    width:50px !important;
-    min-width:50px !important;
-    max-width:50px !important;
-}
-
-.content-size.dropdown-menu
-{
-    left:-35% !important;
-}
-
-.content-size.dropdown-menu li a
-{
-}
-
 .float-right-top
 {
     position:absolute;
@@ -739,13 +740,34 @@ form legend
     resize: none;
 }
 
-#sizes a.border
+.creator-collapse
+{
+    border:1px solid #ddd;
+    padding:10px 10px 0 10px;
+}
+
+#regions a.border
+{
+    text-align:center;
+}
+
+#sizes a.border, #regions a.border
 {
     cursor:pointer;
+}
+
+#sizes a.border
+{
     padding:5px;
 }
 
-#sizes a.border:hover, #sizes a.border.active
+#regions a.border
+{
+    padding:20px 5px 20px 5px;
+}
+
+#sizes a.border:hover, #sizes a.border.active,
+#regions a.border:hover, #regions a.border.active
 {
     background:@linkColor;
     color:@white;
@@ -802,36 +824,3 @@ form legend
     float:left;
     margin:0 10px 5px 0;
 }
-
-/** ----------- CSS3 ----------------- **/
-
-@-webkit-keyframes fadein
-{
-	0%{ opacity:0; }
-	50%, 100%{ opacity:1; }
-}
-
-@-moz-keyframes fadein
-{
-	0%{ opacity:0; }
-	50%, 100%{ opacity:1; }
-}
-
-@-ms-keyframes fadein
-{
-	0%{ opacity:0; }
-	50%, 100%{ opacity:1; }
-}
-
-@-o-keyframes fadein
-{
-	0%{ opacity:0; }
-	50%, 100%{ opacity:1; }
-}
-
-@keyframes fadein
-{
-	0%{ opacity:0; }
-	50%, 100%{ opacity:1; }
-}
-

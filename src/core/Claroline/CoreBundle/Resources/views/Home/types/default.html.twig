@@ -1,0 +1,22 @@
+{% if content != null %}
+
+<div class="content-element border {{ size }} relative" data-id="{{ content.id }}" data-type="{{ type }}">
+    {{ menu | raw }}
+    <div class="margin">
+        {% if content.title != "" %}
+            <h3 class="sub-section-header">{{ content.title }}</h3>
+        {% endif %}
+        <p class="text">{{ content.content | nl2br}}</p>
+        {% if content.generatedcontent != "" and content.generatedcontent != null %}
+        <div class="generated">
+            <div class="generated-content">
+                {{ content.generatedcontent | raw }}
+            </div>
+        </div>
+        {% endif %}
+        <i class="muted">{{ content.created | timeAgo }}</i>
+    </div>
+
+</div>
+
+{% endif %}
