@@ -1,0 +1,33 @@
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/clarolinescorm/js/scorm_api.js') }}" type="text/javascript"></script>
+{% endblock %}
+
+{% block section_content %}
+
+<div class="wrapper">
+    <div id="twig-scorm-data"
+         student-id="{{scormInfo.getUser().getId()}}"
+         scorm-id="{{scormInfo.getScorm().getId()}}"
+         student-name="{{scormInfo.getUser().getFirstName()}}, {{scormInfo.getUser().getLastName()}}"
+         scorm-id="{{scormInfo.getScorm().getId()}}"
+         score-raw="{% if scormInfo.getScoreRaw() > -1 %}{{scormInfo.getScoreRaw()}}{% endif %}"
+         score-min="{% if scormInfo.getScoreMin() > -1 %}{{scormInfo.getScoreMin()}}{% endif %}"
+         score-max="{% if scormInfo.getScoreMax() > -1 %}{{scormInfo.getScoreMax()}}{% endif %}"
+         total-time="{{scormInfo.getTotalTime()}}"
+         credit="{{scormInfo.getCredit()}}"
+         lesson-status="{{scormInfo.getLessonStatus()}}"
+         lesson-location="{{scormInfo.getLessonLocation()}}"
+         exit="{{scormInfo.getExitMode()}}"
+         entry="{{scormInfo.getEntry()}}"
+         lesson-mode=""{{scormInfo.getLessonMode()}}
+         suspend-data="{{scormInfo.getSuspendData()}}"
+         launch-data="{{ scormInfo.getScorm().getLaunchData()}}"
+    >
+    </div>
+    <iframe name="API" height="500px" width="100%" src="{{ scormUrl }}"></iframe>
+</div>
+
+{% endblock %}
