@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Tests\DataFixtures\LoadTextData;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadWorkspaceData;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadMessagesData;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadActivityData;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadShortcutData;
 
 class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
 {
@@ -166,6 +167,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
 
         $this->createForums();
         $this->createActivities();
+        $this->createShortcuts();
     }
 
     private function loadFixture(AbstractFixture $fixture)
@@ -300,7 +302,25 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         );
 
         $this->loadFixture(
-            new LoadForumData('Forum doc', 'JaneDoe', 5, 5, $this->getReference('directory/Docs'))
+            new LoadForumData('Forum doc', 'JaneDoe', 5, 5, $this->getReference('directory/Premier semestre'))
+        );
+    }
+
+    public function createShortcuts()
+    {
+        $this->loadFixture(
+            new LoadShortcutData(
+                $this->getReference('directory/Docs'),
+                'Activities',
+                'Jane Doe'
+            )
+        );
+        $this->loadFixture(
+            new LoadShortcutData(
+                $this->getReference('directory/Premier semestre'),
+                'Activities',
+                'Jane Doe'
+            )
         );
     }
 
