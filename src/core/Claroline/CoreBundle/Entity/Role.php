@@ -83,9 +83,9 @@ class Role implements RoleInterface
     protected $groups;
 
     /**
-     * @ORM\Column(name="role_type", type="integer")
+     * @ORM\Column(name="type", type="integer")
      */
-    protected $roleType;
+    protected $type;
 
     /**
      * @ORM\OneToMany(
@@ -206,14 +206,14 @@ class Role implements RoleInterface
         }
     }
 
-    public function setRoleType($roleType)
+    public function setType($type)
     {
-        $this->roleType = $roleType;
+        $this->type = $type;
     }
 
-    public function getRoleType()
+    public function getType()
     {
-        return $this->roleType;
+        return $this->type;
     }
 
     public function addResourceRights(ResourceRights $rc)

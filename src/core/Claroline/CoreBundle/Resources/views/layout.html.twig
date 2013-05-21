@@ -13,12 +13,18 @@
     <![endif]-->
 {% endblock %}
 
+{% block javascripts_header %}
+    {{ parent() }}
+    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-1.7.1.min.js') }}'></script>
+{% endblock %}
+
 {% block favicon %}
     <link rel="shortcut icon" href="{{ asset('bundles/clarolinecore/images/ico/favicon.ico') }}"/>
     <link rel="apple-touch-icon" href="{{ asset('bundles/clarolinecore/images/ico/apple-touch-icon.png')}}"/>
 {% endblock %}
 
 {% block layout %}
+    <div id="sf-environement" data-env="{{ app.environment }}"></div>
     <div id="wrapper">
         <div class="please-wait">
             <span class="label label-warning"> {{ 'please_wait'|trans({}, 'platform') }} </span>
@@ -43,7 +49,6 @@
                 {% block content %}{% endblock %}
             </div>
         </div>
-        <div class="modal hide"></div>
     </div>
     {% block footer %}
         {% if not is_path_mode %}
@@ -62,12 +67,11 @@
 
 {% block javascripts %}
     <script type="text/javascript" src='{{ asset('twig.js') }}'></script>
-    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-1.7.1.min.js') }}'></script>
     <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/js/bootstrap.js')}}"></script>
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/utilities.js') }}"></script>
-    {% render controller("ClarolineCoreBundle:Layout:javascriptInit") %}
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/startup.js') }}"></script>
 {% endblock %}
 
 

@@ -1,0 +1,20 @@
+{% set icon_class = 'icon-file' %}
+
+{% if 'workspace_' in log.getAction() %}
+    {% set icon_class = 'icon-book' %}
+{% endif %}
+
+{% if 'user_' in log.getAction() %}
+    {% set icon_class = 'icon-user' %}
+{% endif %}
+
+{% if 'group_' in log.getAction() %}
+    {% set icon_class = 'icon-group' %}
+{% endif %}
+
+{% if 'ws_role_' in log.getAction() %}
+    {% set icon_class = 'icon-circle-blank' %}
+{% endif %}
+
+<i class='{{icon_class}}'></i>
+

@@ -1,0 +1,134 @@
+{% extends 'form_div_layout.html.twig' %}
+
+{% block daterange_widget %}
+    {% spaceless %}
+        {{ block('field_widget') }}
+        {% block daterange_assets %}
+            <link rel="stylesheet" type="text/css" media="all" href="{{ asset('bundles/clarolinecore/css/common/daterangepicker.css') }}" />
+            <script type="text/javascript" src="{{ asset('bundles/frontend/date.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/daterangepicker.js') }}"></script>
+        {% endblock %}
+        <script type="text/javascript">
+
+            var possibleRanges = {
+                'today': {
+                    'value': [
+                        'today',
+                        'today'
+                    ],
+                    'label': '{{ 'date_range.today'|trans({}, 'platform') }}'
+                },
+                'yesterday': {
+                    'value': [
+                        'yesterday',
+                        'yesterday'
+                    ],
+                    'label': '{{ 'date_range.yesterday'|trans({}, 'platform') }}'
+                },
+                'this_week': {
+                    'value': [
+                        Date.today().moveToDayOfWeek({{ 'date_range.first_day'|trans({}, 'platform')|raw }}).add({ days: -7}),
+                        Date.today().moveToDayOfWeek({{ 'date_range.first_day'|trans({}, 'platform')|raw }}).add({ days: -1})
+                    ],
+                    'label': '{{ 'date_range.this_week'|trans({}, 'platform') }}'
+                },
+                'last_week': {
+                    'value': [
+                        Date.today().moveToDayOfWeek({{ 'date_range.first_day'|trans({}, 'platform')|raw }}).add({ days: -14}),
+                        Date.today().moveToDayOfWeek({{ 'date_range.first_day'|trans({}, 'platform')|raw }}).add({ days: -8})
+                    ],
+                    'label': '{{ 'date_range.last_week'|trans({}, 'platform') }}'
+                },
+                'this_month': {
+                    'value': [
+                        Date.today().moveToFirstDayOfMonth(),
+                        Date.today().moveToLastDayOfMonth()
+                    ],
+                    'label': '{{ 'date_range.this_month'|trans({}, 'platform') }}'
+                },
+                'last_month': {
+                    'value': [
+                        Date.today().moveToFirstDayOfMonth().add({ months: -1 }),
+                        Date.today().moveToFirstDayOfMonth().add({ days: -1 })
+                    ],
+                    'label': '{{ 'date_range.last_month'|trans({}, 'platform') }}'
+                },
+                'this_year': {
+                    'value': [
+                        Date.today().moveToMonth(0).moveToFirstDayOfMonth().add({ years: -1 }),
+                        Date.today().moveToMonth(0).moveToFirstDayOfMonth().add({ days: -1 })
+                    ],
+                    'label': '{{ 'date_range.this_year'|trans({}, 'platform') }}'
+                },
+                'last_year': {
+                    'value': [
+                        Date.today().moveToMonth(0).moveToFirstDayOfMonth().add({ years: -2 }),
+                        Date.today().moveToMonth(0).moveToFirstDayOfMonth().add({ years: -1, days: -1 })
+                    ],
+                    'label': '{{ 'date_range.last_year'|trans({}, 'platform') }}'
+                },
+                'this_school_year': {
+                    'value': [
+                        Date.today().moveToMonth(8).moveToFirstDayOfMonth().add({ years: -1 }),
+                        Date.today().moveToMonth(8).moveToFirstDayOfMonth().add({ days: -1 })
+                    ],
+                    'label': '{{ 'date_range.this_school_year'|trans({}, 'platform') }}'
+                },
+                'last_school_year': {
+                    'value': [
+                        Date.today().moveToMonth(8).moveToFirstDayOfMonth().add({ years: -2 }),
+                        Date.today().moveToMonth(8).moveToFirstDayOfMonth().add({ years: -1, days: -1 })
+                    ],
+                    'label': '{{ 'date_range.last_school_year'|trans({}, 'platform') }}'
+                },
+                'last_seven_days': {
+                    'value': [
+                        Date.today().add({ days: -6 }),
+                        'today'
+                    ],
+                    'label': '{{ 'date_range.last_seven_days'|trans({}, 'platform') }}'
+                },
+                'last_thirty_days': {
+                    'value': [
+                        Date.today().add({ days: -29 }),
+                        'today'
+                    ],
+                    'label': '{{ 'date_range.last_thirty_days'|trans({}, 'platform') }}'
+                }
+            };
+
+            var ranges = {};
+
+            {% if chosenRangeKeys is defined %}
+                var chosenRangeKeys = {{ chosenRangeKeys|raw }};
+            {% else %}
+                var chosenRangeKeys = ['yesterday', 'last_seven_days', 'this_month', 'last_month'];
+            {% endif %}
+
+            for (var i in chosenRangeKeys) {
+                var key = chosenRangeKeys[i];
+                var range = possibleRanges[key];
+                ranges[range.label] = range.value;
+            };
+
+            $(document).ready(function() {
+                $("#{{ form.vars['id'] }}").daterangepicker({
+                    format: "{{ 'date_range.js_format'|trans({}, 'platform') }}",
+                    ranges: ranges,
+                    clearClass: 'btn hide',
+                    locale: {
+                        applyLabel: "{{ 'date_range.apply'|trans({}, 'platform') }}",
+                        clearLabel: "{{ 'date_range.clear'|trans({}, 'platform') }}",
+                        fromLabel: "{{ 'date_range.from'|trans({}, 'platform') }}",
+                        toLabel: "{{ 'date_range.to'|trans({}, 'platform') }}",
+                        weekLabel: "{{ 'date_range.week'|trans({}, 'platform') }}",
+                        customRangeLabel: "{{ 'date_range.custom_range'|trans({}, 'platform') }}",
+                        daysOfWeek: {{ 'date_range.day_names'|trans({}, 'platform')|raw }},
+                        monthNames: {{ 'date_range.month_names'|trans({}, 'platform')|raw }},
+                        firstDay: {{ 'date_range.first_day'|trans({}, 'platform')|raw }}
+                    }
+                });
+            });
+        </script>
+    {% endspaceless %}
+{% endblock %}

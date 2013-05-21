@@ -12,7 +12,8 @@ class LogCreateDelegateViewEvent extends Event
     private $responseContent = '';
     private $log;
 
-    public function __construct($log) {
+    public function __construct($log)
+    {
         $this->log = $log;
     }
 

@@ -1,0 +1,19 @@
+<div>
+    <ul class="breadcrumb">
+        {% for resource in ancestors %}
+        <li {% if loop.last %} class="active" {% endif %}>
+            {% if not loop.last %}
+            <a href="{{ path('claro_workspace_open_tool',
+                {'toolName': 'resource_manager', 'workspaceId': workspace.getId() }) }}#resources/{{ resource.id }}">
+                {{ resource.name }}
+            </a>
+            {% else %}
+                {{ resource.name }}
+            {% endif %}
+            {% if not loop.last %}
+                <span class="divider"> / </span>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</div>

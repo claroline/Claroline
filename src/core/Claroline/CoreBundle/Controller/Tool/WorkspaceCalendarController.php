@@ -42,7 +42,7 @@ class WorkspaceCalendarController extends Controller
             $postData = $request->request->all();
             $form->bind($request);
             if ($form->isValid()) {
-                
+
                 $date = explode('(', $postData['date']);
                 $event->setStart($date[0]);
 
@@ -76,8 +76,12 @@ class WorkspaceCalendarController extends Controller
             } else {
                 $error = $form->getErrors();
                 foreach ($error as $value) {
-                    echo $value;
                  }
+                 return new Response(
+                        json_encode(array('greeting' => 'form invalid')),
+                        400,
+                        array('Content-Type' => 'application/json')
+                    );
             }
         }
     }
@@ -185,7 +189,6 @@ class WorkspaceCalendarController extends Controller
                 $data[$key]['start'] = $object->getStart()->getTimestamp();
                 $data[$key]['end'] = $object->getEnd()->getTimestamp();
                 $data[$key]['color'] = $object->getPriority();
-
         }
 
         return new Response(
@@ -203,7 +206,7 @@ class WorkspaceCalendarController extends Controller
      */
     public function moveAction()
     {
-        
+
         $request = $this->get('request');
         $postData = $request->request->all();
         $em = $this->get('doctrine.orm.entity_manager');

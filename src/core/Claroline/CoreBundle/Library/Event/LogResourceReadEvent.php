@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Library\Event;
 
-class LogResourceReadEvent extends LogGenericEvent implements LogNotRepeatable
+class LogResourceReadEvent extends LogGenericEvent implements LogNotRepeatableInterface
 {
     const ACTION = 'resource_read';
 

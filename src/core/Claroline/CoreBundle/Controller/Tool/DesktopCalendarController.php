@@ -37,7 +37,7 @@ class DesktopCalendarController extends Controller
             array('Content-Type' => 'application/json')
         );
     }
-    
+
     private function convertEventoArray($listEvents)
     {
         $data = array();
@@ -49,6 +49,7 @@ class DesktopCalendarController extends Controller
             $data[$key]['start'] = $object->getStart()->getTimestamp();
             $data[$key]['end'] = $object->getEnd()->getTimestamp();
             $data[$key]['color'] = $object->getPriority();
+            $data[$key]['visible'] = TRUE;
         }
 
         return($data);

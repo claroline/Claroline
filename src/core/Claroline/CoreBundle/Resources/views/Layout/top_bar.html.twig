@@ -31,8 +31,8 @@
 
                         {% endif %}
 
-                        <li{% if app.request.requesturi == path('claro_message_list_received_layout') %} class="active"{% endif %}>
-                        <a href="{{ path('claro_message_list_received_layout') }}" id="link-messages"
+                        <li{% if app.request.requesturi == path('claro_message_list_received') %} class="active"{% endif %}>
+                        <a href="{{ path('claro_message_list_received') }}" id="link-messages"
                             title="{{ 'new_message_alert'|trans({'%count%': countUnreadMessages}, 'platform')}}">
                             <i class="icon-envelope"></i> <span class="text">{{ 'messages'|trans({}, 'platform') }}</span>
                             {% if countUnreadMessages > 0 %}&nbsp;<span class="badge badge-important">{{ countUnreadMessages }}</span>{% endif %}
