@@ -1,0 +1,52 @@
+{% if father is defined and content is not defined %}
+    <li class="creator{{ father }}">
+        <a  data-toggle="collapse" data-target=".creator{{ father }} .collapse">
+            <i class="icon-plus"></i>{{ "Add a link here" | trans({}, 'home') }}
+        </a>
+
+        <div class="collapse">
+            <div class="creator-collapse">
+{% elseif father is defined and content is defined %}
+    <li class="creator{{ father }}">
+        <div>
+            <div class="creator-collapse">
+{% endif %}
+
+<div class="creator" data-type="{{ type }}" {% if content is defined %}data-id="{{ content.id }}"{% endif %} {% if father is defined %}data-father="{{ father }}"{% endif %}>
+    <div class="content row-fluid">
+        <div class="border span12">
+            <input
+            type="text"
+            placeholder="{% if father is defined %}{{ "Link title" | trans({}, 'home') }}{% else %}{{ "Menu title" | trans({}, 'home') }}{% endif %}..."
+            class="content-title"
+            {% if content is defined %}value="{{ content.title }}"{% endif %}
+            >
+        </div>
+    </div>
+    <div class=" content row-fluid">
+        <div class="border span12">
+            <textarea
+                class="content-text"
+                placeholder="{{ "Link address" | trans({}, 'home') }}..."
+                >{% if content is defined %}{{ content.content }}{% endif %}</textarea>
+            <div class="navbar navbar-static-top">
+                <div class="navbar-inner">
+                    <ul class="nav pull-right">
+                        {% if content is defined %}
+                        <li><div><a class="cancel-button btn">{{ 'Cancel' | trans({}, 'home') }}</a></div></li>
+                        <li>&nbsp;&nbsp;</li>
+                        <li><div><a class="edit-button btn btn-primary">{{ 'Edit' | trans({}, 'home') }}</a></div></li>
+                        {% else %}
+                        <li><div><a class="creator-button btn btn-primary">{{ 'Create' | trans({}, 'home') }}</a></div></li>
+                        {% endif %}
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if father is defined %}
+    </div></div></li>
+{% endif %}

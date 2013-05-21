@@ -10,6 +10,8 @@ class RegistrationControllerTest extends FunctionalTestCase
     /** @var Claroline\CoreBundle\Library\Testing\PlatformTestConfigurationHandler */
     private $configHandler;
 
+    private $logRepository;
+
     protected function setUp()
     {
         parent::setUp();
@@ -20,6 +22,7 @@ class RegistrationControllerTest extends FunctionalTestCase
             ->getContainer()
             ->get('claroline.config.platform_config_handler');
         $this->configHandler->eraseTestConfiguration();
+        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Logger\Log');
     }
 
     protected function tearDown()
@@ -30,13 +33,24 @@ class RegistrationControllerTest extends FunctionalTestCase
 
     public function testUserCannotBeRegisteredByUnauthorizedUser()
     {
+        $now = new \DateTime();
+
         $this->logUser($this->getUser('user'));
         $this->client->request('GET', '/register/form');
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+
+        $logs = $this->logRepository->findActionAfterDate(
+            'user_create',
+            $now,
+            $this->getUser('user')->getId()
+        );
+        $this->assertEquals(0, count($logs));
     }
 
     public function testUserCanBeRegisteredByAuthorizedUser()
     {
+        $now = new \DateTime();
+
         $rm = $this->client->getContainer()->get('claroline.security.right_manager');
         $user = $this->getUser('user');
         $rm->addRight('Claroline\CoreBundle\Entity\User', $user, MaskBuilder::MASK_CREATE);
@@ -44,10 +58,22 @@ class RegistrationControllerTest extends FunctionalTestCase
         $this->registerUser('Bill', 'Doe', 'bdoe', '123');
         $crawler = $this->logUser($this->getUser('bdoe'));
         $this->assertEquals(0, $crawler->filter('#login-error')->count());
+
+        $logs = $this->logRepository->findActionAfterDate(
+            'user_create',
+            $now,
+            $this->getUser('user')->getId(),
+            null,
+            null,
+            $this->getUser('bdoe')->getId()
+        );
+        $this->assertEquals(1, count($logs));
     }
 
     public function testAnonymousUserCanRegisterHimselfOnlyIfOptionIsEnabled()
     {
+        $now = new \DateTime();
+
         $this->configHandler->setParameter('allow_self_registration', false);
         $this->client->request('GET', '/register/form');
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
@@ -55,15 +81,45 @@ class RegistrationControllerTest extends FunctionalTestCase
         $this->registerUser('Bill', 'Doe', 'bdoe', '123');
         $crawler = $this->logUser($this->getUser('bdoe'));
         $this->assertEquals(0, $crawler->filter('#login-error')->count());
+
+        $logs = $this->logRepository->findActionAfterDate(
+            'user_create',
+            $now,
+            null,
+            null,
+            null,
+            $this->getUser('bdoe')->getId(),
+            null,
+            null,
+            null,
+            'anonymous'
+        );
+        $this->assertEquals(1, count($logs));
     }
 
     public function testSelfRegisteredUserHasOneRepository()
     {
+        $now = new \DateTime();
+
         $this->configHandler->setParameter('allow_self_registration', true);
         $this->registerUser('Bill', 'Doe', 'bdoe', '123');
         $user = $this->getUser('bdoe');
         $repositoryWs = $user->getPersonalWorkspace();
         $this->assertEquals(1, count($repositoryWs));
+
+        $logs = $this->logRepository->findActionAfterDate(
+            'user_create',
+            $now,
+            null,
+            null,
+            null,
+            $this->getUser('bdoe')->getId(),
+            null,
+            null,
+            null,
+            'anonymous'
+        );
+        $this->assertEquals(1, count($logs));
     }
 
     private function registerUser($firstName, $lastName, $username, $password)

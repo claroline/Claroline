@@ -1,5 +1,6 @@
 <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="{{ asset('bundles/clarolinecore/js/common/jqplot/excanvas.min.js') }}"></script><![endif]-->
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/jquery.jqplot.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.cursor.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasTextRenderer.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.dateAxisRenderer.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js') }}"></script>
@@ -58,25 +59,29 @@
                         },
                         yaxis: {
                             min:0,
-                            showTickMarks : true,
-                            numberTicks : 5
+                            showTickMarks: true,
+                            numberTicks: 5
                         }
                     },
-                    seriesDefaults:{
+                    cursor: {
+                        show: true,
+                        zoom: true, 
+                        showTooltip: false
+                    },
+                    seriesDefaults: {
                         showMarker:((chartData.length<10)?true:false),
                         markerOptions:{shadow:false},
                         shadow:false,
                         showLine:true,
-                        useNegativeColors : false,
-                        fill : true,
+                        useNegativeColors: false,
+                        fill: true,
                         lineWidth: 1.5,
-                        fillAndStroke : true,
+                        fillAndStroke: true,
                         fillAlpha: 0.2,
-                        rendererOptions:{highlightMouseOver : true,highlightMouseDown : true}
+                        rendererOptions:{highlightMouseOver: true, highlightMouseDown: true}
                     }
                 }
             );
         }
-
     });
 </script>

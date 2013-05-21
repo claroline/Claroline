@@ -1,59 +1,59 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 {% set themePath = 'bundles/clarolinecore/css/themes/' ~ config.getParameter('theme') %}
 {% block javascripts %}
-{{ parent() }}
-<script src='{{ asset('bundles/frontend/jquery/plugin/tinymce/js/tinymce/tinymce.min.js') }}' type='text/javascript'></script> 
-<script src='{{ asset('bundles/clarolinecore/js/tinymce/message_config.js') }}' type='text/javascript'></script> 
+    {{ parent() }}
+        {{ tinymce_init() }}
 {% endblock %}
 {% block content %}
 
-<div class="user-information span2">
-    <div>
-        <img src="{{ asset('bundles/clarolinecore/images/workspaces/tools/user_small.png') }}"/>
+    <div class="user-information span2">
+        <div>
+            <img src="{{ asset('bundles/clarolinecore/images/workspaces/tools/user_small.png') }}"/>
+        </div>
+        <div>
+            {{ message.getUser().getUsername() }}
+        </div>
+        <div>
+            {{ message.getDate()|date('m/d/Y H:i:s') }}
+        </div>
     </div>
-    <div>
-        {{ message.getUser().getUsername() }}
-    </div>
-    <div>
-        {{ message.getDate()|date('m/d/Y H:i:s') }}
-    </div>
-</div>
-<div class="message-content span9">
-    <div class="accordion" id="accordion">
-    {% for ancestor in ancestors %}
-        <div class="accordion-group message-show">
-            <div class="accordion-heading">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ ancestor.getId() }}">
-                     {{ 'object'|trans({}, 'platform') }}: {{ ancestor.getObject()|raw }} | {{ 'from_message'|trans({}, 'platform') }}:  {{ ancestor.getUser().getUsername() }}
-                </a>
-            </div>
-            <div id="collapse{{ ancestor.getId() }}" class="accordion-body collapse {% if loop.last %}in{% endif %}">
-                <div class="accordion-inner">
-                    {{ ancestor.getContent()|raw }}
+    <div class="message-content span9">
+        <div class="accordion" id="accordion">
+            {% for ancestor in ancestors %}
+                <div class="accordion-group message-show">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ ancestor.getId() }}">
+                            {{ 'object'|trans({}, 'platform') }}: {{ ancestor.getObject()|raw }} | {{ 'from_message'|trans({}, 'platform') }}:  {{ ancestor.getUser().getUsername() }}
+                        </a>
+                    </div>
+                    <div id="collapse{{ ancestor.getId() }}" class="accordion-body collapse {% if loop.last %}in{% endif %}">
+                        <div class="accordion-inner">
+                            {{ ancestor.getContent()|raw }}
+                        </div>
+                    </div>
                 </div>
-            </div>
-         </div>
-    {% endfor %}
-    </div>
+            {% endfor %}
+        </div>
 
+        <div>
+            {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
+            <h4>{{ 'fast_answer'|trans({}, 'platform') }}</h4>
+            <form novalidate="novalidate"
+                action="{{ path('claro_message_send', {'parentId': message.getId()}) }}"
+                method="post" {{ form_enctype(form) }}
+                id="generic-form"
+                class="form-horizontal">
+                {{ form_widget(form) }}
+                {{ form_widget(form.content, { 'attr': {'class': 'tinymce' }} ) }}
+                {{ form_rest(form) }}
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <div>
-    {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
-        <h4>{{ 'fast_answer'|trans({}, 'platform') }}</h4>
-        <form novalidate="novalidate"
-              action="{{ path('claro_message_send', {'parentId': message.getId()}) }}"
-              method="post" {{ form_enctype(form) }}
-              id="generic-form"
-              class="form-horizontal">
-           {{ form_widget(form) }}
-           {{ form_rest(form) }}
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-            </div>
-        </form>
-    </div>
-</div>
-<div>
 
-</div>
+    </div>
 
 {% endblock %}

@@ -449,19 +449,22 @@ class AdministrationController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $params = $this->get('request')->query->all();
+        $groups = array();
 
         if (isset($params['ids'])) {
             foreach ($params['ids'] as $groupId) {
                 $group = $em->getRepository('ClarolineCoreBundle:Group')
                     ->find($groupId);
                 $em->remove($group);
+                $groups[] = $group;
             }
         }
 
+        foreach ($groups as $deletedGroup) {
+            $log = new LogGroupDeleteEvent($deletedGroup);
+            $this->get('event_dispatcher')->dispatch('log', $log);
+        }
         $em->flush();
-
-        $log = new LogGroupDeleteEvent($group);
-        $this->get('event_dispatcher')->dispatch('log', $log);
 
         return new Response('groups removed', 204);
     }
