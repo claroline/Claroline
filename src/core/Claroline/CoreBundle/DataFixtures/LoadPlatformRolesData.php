@@ -27,22 +27,22 @@ class LoadPlatformRolesData extends AbstractFixture implements OrderedFixtureInt
         $userRole = new Role();
         $userRole->setName(PlatformRoles::USER);
         $userRole->setTranslationKey('user');
-        $userRole->setRoleType(Role::BASE_ROLE);
+        $userRole->setType(Role::BASE_ROLE);
 
         $creatorRole = new Role();
         $creatorRole->setName(PlatformRoles::WS_CREATOR);
         $creatorRole->setTranslationKey('ws_creator');
-        $creatorRole->setRoleType(Role::BASE_ROLE);
+        $creatorRole->setType(Role::BASE_ROLE);
 
         $adminRole = new Role();
         $adminRole->setName(PlatformRoles::ADMIN);
         $adminRole->setTranslationKey('admin');
-        $adminRole->setRoleType(Role::BASE_ROLE);
+        $adminRole->setType(Role::BASE_ROLE);
 
         $anonymousRole = new Role();
         $anonymousRole->setName(PlatformRoles::ANONYMOUS);
         $anonymousRole->setTranslationKey('anonymous');
-        $anonymousRole->setRoleType(Role::BASE_ROLE);
+        $anonymousRole->setType(Role::BASE_ROLE);
 
         $manager->persist($anonymousRole);
         $manager->persist($userRole);

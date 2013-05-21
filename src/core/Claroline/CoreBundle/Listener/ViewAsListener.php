@@ -56,8 +56,6 @@ class ViewAsListener
 
                     if ($baseRole === 'ROLE_ANONYMOUS') {
                         throw new \Exception('No implementation yet');
-                        $token = new AnonymousToken('main', '.anon', array('ROLE_ANONYMOUS', 'ROLE_USURPATE_WORKSPACE_ROLE'));
-                        $this->securityContext->setToken($token);
                     } else {
                         $role = $this->em->getRepository('ClarolineCoreBundle:Role')->findOneByName($viewAs);
 

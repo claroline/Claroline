@@ -135,7 +135,8 @@ class TextListener implements ContainerAwareInterface
             array(
                 'text' => $textRepo->getLastRevision($text)->getContent(),
                 'textId' => $event->getResource()->getId(),
-                'workspace' => $text->getWorkspace()
+                'workspace' => $text->getWorkspace(),
+                '_resource' => $text
             )
         );
         $response = new Response($content);

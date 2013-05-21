@@ -216,7 +216,7 @@ class ResourcePropertiesController extends Controller
     {
         $icon = $resource->getIcon();
 
-        if ($icon->getIconType()->getIconType() == IconType::CUSTOM_ICON) {
+        if ($icon->getIconType()->getType() == IconType::CUSTOM_ICON) {
             $pathName = $this->container->getParameter('claroline.param.thumbnails_directory')
                 . DIRECTORY_SEPARATOR . $icon->getIconLocation();
             if (file_exists($pathName)) {

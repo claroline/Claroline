@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ResourcePropertiesControllerTest extends FunctionalTestCase
 {
+    private $logRepository;
+
     public function setUp()
     {
         parent::setUp();
@@ -14,6 +16,7 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->client->followRedirects();
         $this->thumbsDir = $this->client->getContainer()->getParameter('claroline.param.thumbnails_directory');
+        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Logger\Log');
     }
 
     public function tearDown()
@@ -58,6 +61,8 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
 
     public function testRename()
     {
+        $now = new \DateTime();
+
         $this->loadDirectoryData('user', array('user/testDir'));
         $dir = $this->getDirectory('testDir');
         $this->logUser($this->getUser('user'));
@@ -67,10 +72,20 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
         );
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('new_name', $jsonResponse->name);
+
+        $logs = $this->logRepository->findActionAfterDate(
+            'resource_update',
+            $now,
+            $this->getUser('user')->getId(),
+            $dir->getId()
+        );
+        $this->assertEquals(1, count($logs));
     }
 
     public function testChangeIcon()
     {
+        $now = new \DateTime();
+
         $this->loadDirectoryData('user', array('user/testDir'));
         $dir = $this->getDirectory('testDir');
         $ds = DIRECTORY_SEPARATOR;
@@ -97,6 +112,14 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
         $this->assertEquals(2, count($images));
         $name = str_replace("thumbnails/", "", $jsonResponse->icon);
         $this->assertContains($name, $images);
+
+        $logs = $this->logRepository->findActionAfterDate(
+            'resource_update',
+            $now,
+            $this->getUser('user')->getId(),
+            $dir->getId()
+        );
+        $this->assertEquals(1, count($logs));
     }
 
     public function testEditShortcutIcon()

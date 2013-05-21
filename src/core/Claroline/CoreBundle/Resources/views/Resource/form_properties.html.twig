@@ -5,27 +5,14 @@
       id="resource-properties-form"
       class="form-horizontal">
 
-    <ul class="nav nav-tabs" id="myTab">
-        <li class="active"><a href="#general" data-toggle="tab">{{ 'general'|trans({}, 'platform') }}</a></li>
-        <li><a href="#permissions" data-toggle="tab">{{ 'permissions'|trans({}, 'platform') }}</a></li>
-    </ul>
-    {{ form_errors(form) }}
     <div class="tab-content">
-        <div class="tab-pane active" id="general">
-            {{ form_row(form.name) }}
-            {{ form_row(form.userIcon) }}
-            {{ form_row(form.creationDate) }}
-            {{ form_row(form.resourceType) }}
-            {{ form_row(form.creator) }}
-        </div>
-        <div class="tab-pane" id="permissions">
-            {{ form_row(form.sharable) }}
-            {{ form_row(form.copiable) }}
-            {{ form_row(form.editable) }}
-            {{ form_row(form.deletable) }}
-            {{ form_row(form.exportable) }}
-        </div>
+        {{ form_errors(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.userIcon) }}
+        {{ form_row(form.creationDate) }}
+        {{ form_row(form.resourceType) }}
+        {{ form_row(form.creator) }}
+        {{ form_rest(form) }}
+        <input type="submit" value="{{ 'ok'|trans({}, 'platform') }}"/>
     </div>
-    {{ form_rest(form) }}
-    <input type="submit" value="{{ 'ok'|trans({}, 'platform') }}"/>
 </form>

@@ -96,15 +96,6 @@ class ResourceExtenderTest extends FunctionalTestCase
         $firstRes->setWorkspace($this->getUser('user')->getPersonalWorkspace());
         $firstRes->setName('name');
         $firstRes->setIcon($defaultIcon);
-        $firstRes->setOwnerRights(
-            array(
-                'sharable' => true,
-                'editable' => true,
-                'exportable' => true,
-                'deletable' => true,
-                'copiable' => true
-            )
-        );
 
         $secondRes = new SpecificResource2();
         $secondRes->setSomeField('Test');
@@ -112,15 +103,6 @@ class ResourceExtenderTest extends FunctionalTestCase
         $secondRes->setWorkspace($this->getUser('ws_creator')->getPersonalWorkspace());
         $secondRes->setName('name');
         $secondRes->setIcon($defaultIcon);
-        $secondRes->setOwnerRights(
-            array(
-                'sharable' => true,
-                'editable' => true,
-                'exportable' => true,
-                'deletable' => true,
-                'copiable' => true
-            )
-        );
 
         $thirdRes = new SpecificResource2();
         $thirdRes->setSomeField('Test');
@@ -128,15 +110,6 @@ class ResourceExtenderTest extends FunctionalTestCase
         $thirdRes->setWorkspace($this->getUser('admin')->getPersonalWorkspace());
         $thirdRes->setName('name');
         $thirdRes->setIcon($defaultIcon);
-        $thirdRes->setOwnerRights(
-            array(
-                'sharable' => true,
-                'editable' => true,
-                'exportable' => true,
-                'deletable' => true,
-                'copiable' => true
-            )
-        );
 
         $fourthRes = new Directory();
         $fourthRes->setName('Test');
@@ -144,15 +117,6 @@ class ResourceExtenderTest extends FunctionalTestCase
         $fourthRes->setWorkspace($this->getUser('user')->getPersonalWorkspace());
         $fourthRes->setName('name');
         $fourthRes->setIcon($defaultIcon);
-        $fourthRes->setOwnerRights(
-            array(
-                'sharable' => true,
-                'editable' => true,
-                'exportable' => true,
-                'deletable' => true,
-                'copiable' => true
-            )
-        );
 
         $this->em->persist($firstRes);
         $this->em->persist($secondRes);

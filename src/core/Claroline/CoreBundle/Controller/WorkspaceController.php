@@ -11,6 +11,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceToolReadEvent;
+use Claroline\CoreBundle\Library\Event\LogWorkspaceDeleteEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
@@ -219,6 +220,9 @@ class WorkspaceController extends Controller
         $em->remove($workspace);
         $em->flush();
 
+        $log = new LogWorkspaceDeleteEvent($workspace);
+        $this->get('event_dispatcher')->dispatch('log', $log);
+
         return new Response('success', 204);
     }
 
@@ -305,7 +309,7 @@ class WorkspaceController extends Controller
 
         $log = new LogWorkspaceToolReadEvent($workspace, $toolName);
         $this->get('event_dispatcher')->dispatch('log', $log);
-        
+
         return new Response($event->getContent());
     }
 

@@ -26,7 +26,8 @@
         "stfalcon/tinymce-bundle": "dev-master",
         "claroline/front-end-bundle": "dev-master",
         "jms/twig-js-bundle": "dev-master",
-        "white-october/pagerfanta-bundle": "dev-master"
+        "white-october/pagerfanta-bundle": "dev-master",
+        "idci/exporter-bundle": "dev-master"
     },
     "repositories": [
         {

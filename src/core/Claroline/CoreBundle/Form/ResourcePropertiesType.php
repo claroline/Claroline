@@ -44,12 +44,6 @@ class ResourcePropertiesType extends AbstractType
                 'disabled' => true
             )
         );
-        $builder->add('sharable');
-        $builder->add('copiable');
-        $builder->add('editable');
-        $builder->add('deletable');
-        $builder->add('exportable');
-
     }
 
     public function getName()

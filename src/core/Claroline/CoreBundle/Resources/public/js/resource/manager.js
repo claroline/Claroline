@@ -17,6 +17,7 @@
                 this.parameters = parameters;
                 this.dispatcher = dispatcher;
                 this.currentDirectory = {id: parameters.directoryId};
+                this.directoryHistory = [];
 
                 if (parameters.isPickerMode) {
                     this.el.className = 'picker resource-manager modal hide';
@@ -35,7 +36,26 @@
             },
             render: function (resources, path, creatableTypes, isSearchMode, searchParameters) {
                 this.currentDirectory = _.last(path);
-                this.subViews.breadcrumbs.render(path);
+
+                if (this.directoryHistory.length === 0) {
+                    this.directoryHistory = path;
+                } else {
+                    var index = -1;
+
+                    for (var i = 0; i < this.directoryHistory.length; i++) {
+                        if (this.directoryHistory[i].id == this.currentDirectory.id) {
+                            index = i;
+                        }
+                    }
+
+                    if (index == -1) {
+                        this.directoryHistory.push(this.currentDirectory);
+                    } else {
+                        this.directoryHistory.splice(index+1);
+                    }
+                }
+
+                this.subViews.breadcrumbs.render(this.directoryHistory);
                 this.subViews.actions.render(this.currentDirectory, creatableTypes, isSearchMode, searchParameters);
                 this.subViews.resources.render(resources, isSearchMode, this.currentDirectory.id);
 
@@ -467,7 +487,7 @@
         Form: Backbone.View.extend({
             className: 'resource-form modal hide',
             events: {
-                'submit form': function (event) {
+                'click #submit-default-rights-form-button': function (event) {
                     event.preventDefault();
                     var form = $(this.el).find('form')[0];
                     this.dispatcher.trigger(this.eventOnSubmit, {
@@ -476,11 +496,12 @@
                         resourceId: this.targetResourceId
                     });
                 },
-                'click a': function (event) {
+                'click .res-creation-options': function (event) {
                     event.preventDefault();
 
                     if (event.currentTarget.getAttribute('data-toggle') !== 'tab') {
                         $.ajax({
+//                            context: this,
                             url: event.currentTarget.getAttribute('href'),
                             type: 'POST',
                             processData: false,
@@ -494,6 +515,60 @@
                             }
                         });
                     }
+                },
+                'click .search-role-btn':function (event) {
+                    event.preventDefault();
+                    var search = $('#role-search-text').val();
+                    $.ajax({
+                        url: Routing.generate('claro_resource_find_role_by_code', {'code': search}),
+                        type: 'GET',
+                        context: this,
+                        processData: false,
+                        contentType: false,
+                        success: function (workspaces) {
+                            $('#form-right-wrapper').empty();
+                            $('#role-list').append(Twig.render(resourceRightsRoles, {'workspaces': workspaces, 'resourceId': this.targetResourceId}));
+                        }
+                    })
+                },
+                'click .role-item':function (event) {
+                    event.preventDefault();
+                    $.ajax({
+                        context: this,
+                        url: event.currentTarget.getAttribute('href'),
+                        type: 'POST',
+                        processData: false,
+                        contentType: false,
+                        success: function (form) {
+                            $('#role-list').empty();
+                            $('#form-right-wrapper').append(form);
+                        }
+                    })
+                },
+                'click #submit-right-form-button': function(event) {
+                    event.preventDefault();
+                    var form = $(this.el).find('form')[1]
+                    var data = new FormData(form);
+                    $.ajax({
+                        url: form.getAttribute('action'),
+                        context: this,
+                        data: data,
+                        type: 'POST',
+                        processData: false,
+                        contentType: false,
+                        success: function () {
+                            $('#form-right-wrapper').empty();
+                        }
+                    });
+                },
+                'submit form': function (event) {
+                    event.preventDefault();
+                    var form = $(this.el).find('form')[0];
+                    this.dispatcher.trigger(this.eventOnSubmit, {
+                        action: form.getAttribute('action'),
+                        data: new FormData(form),
+                        resourceId: this.targetResourceId
+                    });
                 }
             },
             initialize: function (dispatcher) {
@@ -630,18 +705,7 @@
             this.stackedRequests = 0;
             $.ajaxSetup({
                 headers: {'X_Requested_With': 'XMLHttpRequest'},
-                context: this,
-                beforeSend: function () {
-                    this.stackedRequests++;
-                    $('.please-wait').show();
-                },
-                complete: function () {
-                    this.stackedRequests--;
-
-                    if (this.stackedRequests === 0) {
-                        $('.please-wait').hide();
-                    }
-                }
+                context: this
             });
 
             if (!parameters.isPickerOnly) {
@@ -659,6 +723,7 @@
             view = view && view === 'picker' ? view : 'main';
             var isSearchMode = searchParameters ? true : false;
             $.ajax({
+                context: this,
                 url: this.parameters.appPath + '/resource/' +
                     (isSearchMode ? 'filter' : 'directory') +
                     '/' + directoryId,
@@ -701,7 +766,7 @@
                     'create': '/resource/form/' + resource.type,
                     'rename': '/resource/rename/form/' + resource.id,
                     'edit-properties': '/resource/properties/form/' + resource.id,
-                    'edit-rights': '/resource/' + resource.id + '/rights/form'
+                    'edit-rights': '/resource/' + resource.id + '/rights/form/role'
                 };
 
                 if (!urlMap[type]) {
@@ -713,6 +778,7 @@
                 }
 
                 $.ajax({
+                    context: this,
                     url: this.parameters.appPath + urlMap[type],
                     success: function (form) {
                         this.views.form.render(form, resource.id, type);
@@ -727,6 +793,7 @@
         },
         create: function (formAction, formData, parentDirectoryId) {
             $.ajax({
+                context: this,
                 url: formAction,
                 data: formData,
                 type: 'POST',
@@ -743,6 +810,7 @@
         },
         createShortcut: function (resourceIds, parentId) {
             $.ajax({
+                context: this,
                 url: this.parameters.appPath + '/resource/shortcut/' +  parentId + '/create',
                 data: {ids: resourceIds},
                 success: function (data) {
@@ -752,6 +820,7 @@
         },
         remove: function (resourceIds) {
             $.ajax({
+                context: this,
                 url: this.parameters.appPath + '/resource/delete',
                 data: {ids: resourceIds},
                 success: function () {
@@ -761,6 +830,7 @@
         },
         copy: function (resourceIds, directoryId) {
             $.ajax({
+                context: this,
                 url: this.parameters.appPath + '/resource/copy/' + directoryId,
                 data: {ids: resourceIds},
                 success: function (data, textStatus, jqXHR) {
@@ -772,6 +842,7 @@
         },
         move: function (resourceIds, newParentDirectoryId) {
             $.ajax({
+                context: this,
                 url: this.parameters.appPath + '/resource/move/' + newParentDirectoryId,
                 data: {ids: resourceIds},
                 success: function (data) {
@@ -781,6 +852,7 @@
         },
         rename: function (formAction, formData, resourceId) {
             $.ajax({
+                context: this,
                 url: formAction,
                 data: formData,
                 type: 'POST',
@@ -801,6 +873,7 @@
         },
         editProperties: function (formAction, formData, resourceId) {
             $.ajax({
+                context: this,
                 url: formAction,
                 data: formData,
                 type: 'POST',
@@ -837,6 +910,7 @@
         },
         editRights: function (formAction, formData) {
             $.ajax({
+                context: this,
                 url: formAction,
                 data: formData,
                 type: 'POST',
@@ -849,6 +923,7 @@
         },
         editCreationRights: function (action, formData) {
             $.ajax({
+                context: this,
                 url: action,
                 data: formData,
                 type: 'POST',

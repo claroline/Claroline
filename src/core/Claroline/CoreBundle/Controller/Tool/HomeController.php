@@ -26,7 +26,7 @@ class HomeController extends Controller
     }
 
     /**
-     / @Route(
+     * @Route(
      *     "/info",
      *     name="claro_tool_desktop_info"
      * )
