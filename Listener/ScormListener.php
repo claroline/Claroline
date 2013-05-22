@@ -155,7 +155,12 @@ class ScormListener extends ContainerAware
                             }
                         }
                     }
-                    $event->setResources($resources);
+
+                    if (count($resources) === 1) {
+                        $event->setResource($resources[0]);
+                    } else {
+                        $event->setResources($resources);
+                    }
                     $this->unzipTmpFile($hashName);
                 } else {
                     throw new \Exception("File imsmanifest.xml must be in the root directory of the archive");
