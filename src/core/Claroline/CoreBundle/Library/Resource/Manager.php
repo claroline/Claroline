@@ -506,8 +506,42 @@ class Manager
         return $shortcut;
     }
 
-    public function checkAncestors(array $ancestors)
+    public function isPathValid(array $ancestors)
     {
-        //must check if the ancestors are a valid path
+        $continue = true;
+        
+        for ($i = 0, $size = count($ancestors); $i < $size; $i++) {
+            echo ($ancestors[$i]->getName(). ' / ');
+
+            if (isset($ancestors[$i+1])) {
+                if ($ancestors[$i+1]->getParent() == $ancestors[$i]) {
+                    $continue = true;
+                } else {
+                    if ($this->hasLinkTo($ancestors[$i], $ancestors[$i+1])) {
+                        $continue = true;
+                    } else {
+                        $continue = false;
+                    }
+                }
+            }
+
+            if (!$continue) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private function hasLinkTo(Directory $parent, Directory $target) {
+        $shortcuts = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceShortcut')
+            ->findBy(array('parent' => $parent));
+
+        foreach ($shortcuts as $shortcut) {
+            if ($shortcut->getResource() == $target) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
