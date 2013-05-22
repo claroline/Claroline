@@ -351,4 +351,9 @@ class DatabaseWriter
             $this->templateBuilder->addTool($tool['name'], $tool['name']);
         }
     }
+
+    public function setModifyTemplate($bool)
+    {
+        $this->modifyTemplate = $bool;
+    }
 }
