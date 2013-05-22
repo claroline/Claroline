@@ -2,6 +2,11 @@
 
 namespace Claroline\CoreBundle\Listener\Tool;
 
+use Claroline\CoreBundle\Library\Event\ExportToolEvent;
+use Claroline\CoreBundle\Library\Event\ExportResourceTemplateEvent;
+use Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent;
+use Claroline\CoreBundle\Library\Event\ImportToolEvent;
+
 class ImportExportResourceListener
 {
     /**
