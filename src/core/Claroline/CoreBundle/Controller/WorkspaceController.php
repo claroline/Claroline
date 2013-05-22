@@ -217,11 +217,10 @@ class WorkspaceController extends Controller
             throw new AccessDeniedHttpException();
         }
 
-        $em->remove($workspace);
-        $em->flush();
-
         $log = new LogWorkspaceDeleteEvent($workspace);
         $this->get('event_dispatcher')->dispatch('log', $log);
+        $em->remove($workspace);
+        $em->flush();
 
         return new Response('success', 204);
     }
