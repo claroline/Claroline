@@ -58,6 +58,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         $this->manager = $manager;
         $this->setReferenceRepository($this->referenceRepo);
         $this->setReferences($manager);
+        $this->setRssReader($manager);
         $this->createUsers();
         $this->createGroups();
         //main users
@@ -322,6 +323,16 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
                 'Jane Doe'
             )
         );
+    }
+
+    public function setRssReader(ObjectManager $manager)
+    {
+        $rssConfig = new \Claroline\RssReaderBundle\Entity\Config();
+        $rssConfig->setUrl('http://www.lesoir.be/feed/Actualit%C3%A9/Vie%20du%20net/destination_principale_block');
+        $rssConfig->setDefault(true);
+        $rssConfig->setDesktop(true);
+        $manager->persist($rssConfig);
+        $manager->flush();
     }
 
     private function getFirstNames()
