@@ -378,7 +378,6 @@ class AdministrationControllerTest extends FunctionalTestCase
         $form['platform_parameters_form[selfRegistration]'] = true;
         $this->client->submit($form);
         $crawler = $this->client->request('GET', '/logout');
-        var_dump($this->client->getResponse()->getContent());
         $this->assertEquals(1, $crawler->filter("#link-registration")->count());
     }
 
