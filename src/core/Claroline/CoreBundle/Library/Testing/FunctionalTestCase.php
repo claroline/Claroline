@@ -40,6 +40,7 @@ abstract class FunctionalTestCase extends FixtureTestCase
     {
         $container = $this->client->getContainer();
         $dbWriter = $container->get('claroline.plugin.recorder_database_writer');
+        $dbWriter->setModifyTemplate(true);
         $pluginDirectory = $container->getParameter('claroline.param.stub_plugin_directory');
         $loader = new Loader($pluginDirectory);
         $validator = $container->get('claroline.plugin.validator');
