@@ -6,7 +6,11 @@ use Claroline\CoreBundle\Library\Event\ExportToolEvent;
 use Claroline\CoreBundle\Library\Event\ExportResourceTemplateEvent;
 use Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent;
 use Claroline\CoreBundle\Library\Event\ImportToolEvent;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service
+ */
 class ImportExportResourceListener
 {
     /**

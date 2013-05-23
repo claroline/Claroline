@@ -581,14 +581,19 @@ class ResourceController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($resourceId);
+
         if ($_breadcrumbs != null) {
         $ancestors = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->findResourcesByIds($_breadcrumbs);
         } else {
             $ancestors = array();
         }
+
         array_push($ancestors, $resource);
-        $this->get('claroline.resource.manager')->checkAncestors($ancestors);
+
+        if (!$this->get('claroline.resource.manager')->isPathValid($ancestors)) {
+            throw new \Exception('Breadcrumbs invalid');
+        };
 
         return $this->render(
             'ClarolineCoreBundle:Resource:breadcrumbs.html.twig',
