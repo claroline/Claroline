@@ -62,6 +62,7 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
     public function testRename()
     {
         $now = new \DateTime();
+        $now->setDate(0, 0, 0);
 
         $this->loadDirectoryData('user', array('user/testDir'));
         $dir = $this->getDirectory('testDir');
@@ -75,7 +76,7 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
         $this->assertEquals('new_name', $jsonResponse->name);
 
         $logs = $this->logRepository->findActionAfterDate(
-            'resource_update',
+            'resource_update_rename',
             $now,
             $this->getUser('user')->getId(),
             $dir->getId()
