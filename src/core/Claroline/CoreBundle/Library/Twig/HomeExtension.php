@@ -118,8 +118,8 @@ class HomeExtension extends \Twig_Extension
 
     public function activeLink($link)
     {
-        if ($_SERVER['PATH_INFO'] == $link) {
-            return " active";
+        if (isset($_SERVER['PATH_INFO']) && ($_SERVER['PATH_INFO'] == $link)) {
+            return "active";
         }
 
         return "";

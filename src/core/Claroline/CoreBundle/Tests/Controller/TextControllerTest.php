@@ -24,6 +24,7 @@ class TextControllerTest extends FunctionalTestCase
         $this->logUser($this->getUser('user'));
         $text = $this->addText('This is a text', 'hello world', $this->getDirectory('user')->getId());
         $crawler = $this->client->request('GET', "/text/form/edit/{$text->id}");
+        var_dump($this->client->getResponse()->getContent());
         $form = $crawler->filter('button[type=submit]')->form();
         $crawler = $this->client->submit($form, array('content' => 'the answer is 42'));
         $crawler = $this->client->request('GET', "/resource/open/text/{$text->id}");

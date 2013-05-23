@@ -10,6 +10,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
+use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
@@ -480,5 +481,67 @@ class Manager
         $this->em->persist($rootDir);
 
         return $rootDir;
+    }
+
+    public function makeShortcut(AbstractResource $resource, Directory $parent, User $creator)
+    {
+        $shortcut = new ResourceShortcut();
+        $shortcut->setParent($parent);
+        $shortcut->setCreator($creator);
+        $shortcut->setIcon($resource->getIcon()->getShortcutIcon());
+        $shortcut->setName($resource->getName());
+        $shortcut->setName($this->ut->getUniqueName($shortcut, $parent));
+        $shortcut->setWorkspace($parent->getWorkspace());
+        $shortcut->setResourceType($resource->getResourceType());
+
+        if (get_class($resource) !== 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
+            $shortcut->setResource($resource);
+        } else {
+            $shortcut->setResource($resource->getResource());
+        }
+
+        $this->cloneParentRights($shortcut->getParent(), $shortcut);
+        $this->em->persist($shortcut);
+
+        return $shortcut;
+    }
+
+    public function isPathValid(array $ancestors)
+    {
+        $continue = true;
+        
+        for ($i = 0, $size = count($ancestors); $i < $size; $i++) {
+            echo ($ancestors[$i]->getName(). ' / ');
+
+            if (isset($ancestors[$i+1])) {
+                if ($ancestors[$i+1]->getParent() == $ancestors[$i]) {
+                    $continue = true;
+                } else {
+                    if ($this->hasLinkTo($ancestors[$i], $ancestors[$i+1])) {
+                        $continue = true;
+                    } else {
+                        $continue = false;
+                    }
+                }
+            }
+
+            if (!$continue) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private function hasLinkTo(Directory $parent, Directory $target) {
+        $shortcuts = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceShortcut')
+            ->findBy(array('parent' => $parent));
+
+        foreach ($shortcuts as $shortcut) {
+            if ($shortcut->getResource() == $target) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
