@@ -681,7 +681,7 @@ class AdministrationController extends Controller
      *
      *  @return array with a list of the themes availables.
      */
-    private function getThemes($path = "/../Resources/less/themes/")
+    private function getThemes($path = "/../Resources/views/less/")
     {
         $themes = array();
 

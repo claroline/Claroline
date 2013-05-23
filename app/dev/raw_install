@@ -16,7 +16,8 @@ $rootDirectory = realpath(__DIR__ . "/../..");
 
 $start = time();
 
-function refreshFile($file) {
+function refreshFile($file)
+{
     file_put_contents($file, '');
 }
 
@@ -32,7 +33,6 @@ system("composer install");
 system("php {$rootDirectory}/app/console claroline:requirements", $returnCode);
 
 if ($returnCode === 0) {
-    system("php {$rootDirectory}/app/console claroline:themes:compile");
 
     system("php {$rootDirectory}/app/console doctrine:database:drop --force --env=dev");
     system("php {$rootDirectory}/app/console doctrine:database:create --env=dev");
@@ -65,8 +65,10 @@ $bit = array(
     's' => $secs % 60
     );
 
-foreach($bit as $k => $v) {
-    if($v > 0)$ret[] = $v . $k;
+foreach ($bit as $k => $v) {
+    if ($v > 0) {
+        $ret[] = $v . $k;
+    }
 }
 
 $duration = join(' ', $ret);
