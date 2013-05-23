@@ -1,0 +1,101 @@
+/* Additional style rules */
+footer {
+    background-color: @navbarBackground;
+    color: @navbarText;
+}
+
+#footer-content {
+    padding: 11px;
+    text-align: center;
+    max-height: 100%;
+}
+
+form fieldset>div:first-of-type {
+    padding-top: 20px;
+}
+
+#login-form, #login-error {
+    width: 420px;
+    margin: auto;
+    padding: 10px;
+    border-radius: 3px;
+}
+
+#login-form {
+    margin-top: 12px;
+    background-color: @formActionsBackground;
+}
+
+h2.section-header {
+    margin: 20px auto;
+}
+
+h3.sub-section-header {
+    height: 30px;
+    margin-bottom: 16px;
+    border-bottom: solid @grayLighter 1px;
+}
+
+form {
+    max-width: 600px;
+}
+
+/* WIDGETS */
+.widget {
+    margin: 0 10px 22px 10px;
+}
+
+.widget a
+{
+    -webkit-border-top-left-radius: 4px;
+        -moz-border-radius-topleft: 4px;
+            border-top-left-radius: 4px;
+    -webkit-border-top-right-radius: 4px;
+        -moz-border-radius-topright: 4px;
+            border-top-right-radius: 4px;
+}
+
+.widget a:hover
+{
+    background:@grayLighter;
+    text-decoration:none;    
+}
+
+/*body
+{
+	padding-top:40px;
+}*/
+
+.brand
+{
+	background:transparent url(../../../images/logo/claroline-logo-bulles-22x25.png) 20px 5px no-repeat;
+	padding-left:50px !important;
+	
+}
+
+.navbar-fixed-top .container
+{
+	padding: 0 20px 0 20px;
+}
+
+.navbar-fixed-top .nav-collapse
+{
+	height:auto;
+}
+
+div.border {
+    border:1px solid @widgetBorder;
+    .border-radius( 5px );
+    margin-bottom:10px;
+}
+
+.nav.nav-tabs.nav-stacked li a i
+{
+    font-size:50px;
+    margin:15px;
+}
+
+.nav.nav-tabs.nav-stacked li a span, .nav.nav-tabs.nav-stacked li a i.icon-chevron-right
+{
+    display:none;    
+}
