@@ -3,7 +3,7 @@
 {% block content %}
 
     {% if content["player"] is defined or content["video"] is defined %}
-        <iframe src="{% if content["player"] is defined %}{{ content["player"] }}{% else %}{{ content["video"] }}{% endif %}"
+        <iframe src="{% if content["player"] is defined %}{{ content["player"] }}{% else %}{{ content["video"] }}{% endif %}?wmode=opaque"
             width="426"
             height="240"
             frameborder="0"
