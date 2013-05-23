@@ -208,7 +208,7 @@ class TemplateBuilder
                     'root_id' => 1,
                     'resources' => array(),
                     'files' => array()
-                ),
+                )
             ),
             'roles' => array(
                 'ROLE_WS_VISITOR' => 'visitor',
@@ -244,7 +244,11 @@ class TemplateBuilder
                 'user_management' => array(
                     'perms' => array('ROLE_WS_MANAGER'),
                     'name' => 'Utilisateurs'
-                )
+                ),
+                'logs' => array(
+                    'perms' => array('ROLE_WS_MANAGER'),
+                    'name' => 'Suivi'
+                ),
             ),
             'name' => 'default'
         );
