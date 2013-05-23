@@ -274,7 +274,8 @@ function  ResizeImg(direction) {
                     newy = scaley * (top - answerImg.offsetTop) / answerImg.height;
 
                     // If out the image
-                    if (left < answerImg.offsetLeft || top < answerImg.offsetTop ||
+                    if (left < answerImg.offsetLeft - document.getElementById('Answer').offsetLeft || top <
+                        answerImg.offsetTop - document.getElementById('Answer').offsetLeft ||
                         left > (answerImg.offsetLeft + answerImg.width) ||
                         top > (answerImg.offsetTop + answerImg.height)) {
 
@@ -334,8 +335,8 @@ function MouseDirection(event) {
         x = event.layerX;
         y = event.layerY;
     } else { // Firefox
-        x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-        y = event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+        x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - document.getElementById('Answer').offsetLeft;
+        y = event.clientY + document.body.scrollTop + document.documentElement.scrollTop - document.getElementById('Answer').offsetTop;
     }
 
     x -= answerImg.offsetLeft; // MouseX position
@@ -358,10 +359,10 @@ function MoveAnswerZone(e) {
         x = e.layerX;
         y = e.layerY;
     } else { // Firefox
-        x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-        y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+        x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - document.getElementById('Answer').offsetLeft;
+        y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - document.getElementById('Answer').offsetTop;
     }
-
+    
     // Move answer zone to mouse position (cursor center)
     target.style.left = String(x - (target.width / 2)) + 'px';
     target.style.top = String(y - (target.height / 2)) + 'px';
@@ -454,8 +455,8 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
             mousex = e.layerX;
             mousey = e.layerY;
         } else { // Firefox
-            mousex = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-            mousey = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+            mousex = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - document.getElementById('Answer').offsetLeft;
+            mousey = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - document.getElementById('Answer').offsetTop;
         }
 
         // If out of the image
@@ -473,8 +474,8 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
             var img = new Image();
 
             img.style.position = 'absolute';
-            img.style.left = String(mousex - 10) + 'px';
-            img.style.top = String(mousey - 10) + 'px';
+            img.style.left = String(mousex - 10 + document.getElementById('Answer').offsetLeft) + 'px';
+            img.style.top = String(mousey - 10 + document.getElementById('Answer').offsetTop) + 'px';
 
             img.id = 'img' + grade;
             grade++;

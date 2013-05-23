@@ -99,7 +99,6 @@ class exerciseServices
             $session->remove('penalties');
         } else {
             $penalty = $this->getPenalty($interQCM->getInteraction(), $paperID);
-
         }
 
         $score = $this->qcmMark($interQCM, $response, $allChoices, $penalty);
@@ -229,7 +228,7 @@ class exerciseServices
 
         $coords = preg_split('[;]', $answers); // Divide the answer zones into cells
         $total = 0;
-     
+
         for ($i = 0; $i < $max - 1; $i++) {
             for ($j = 0; $j < $max - 1; $j++) {
                 list($xa,$ya) = explode("-", $coords[$j]); // Answers of the student
@@ -279,7 +278,7 @@ class exerciseServices
         }
 
         $score = $point - $penalty; // Score of the student with penalty
-        
+
         // Not negatif score
         if ($score < 0) {
             $score = 0;
@@ -314,6 +313,7 @@ class exerciseServices
                 $resu = true;
             }
         }
+
         return $resu;
     }
 }

@@ -182,7 +182,8 @@ class InteractionGraphicController extends Controller
             }
             $em->flush();
 
-            if ($exoID != -1) { // To associate the question to an exercise
+            // To associate the question to an exercise
+            if ($exoID != -1) {
                 $exo = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
                 $eq = new ExerciseQuestion($exo, $interGraph->getInteraction()->getQuestion());
 
@@ -222,7 +223,7 @@ class InteractionGraphicController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
 
         $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->find($id);
-        
+
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find InteractionGraphic entity.');
         }
@@ -248,7 +249,7 @@ class InteractionGraphicController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
 
         $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->find($id);
-        
+
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find InteractionGraphic entity.');
         }
