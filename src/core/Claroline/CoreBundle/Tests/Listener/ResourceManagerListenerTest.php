@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Listener\Tool;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
-use Claroline\CoreBundle\Listener\Tool\ResourceManagerListener;
+use Claroline\CoreBundle\Listener\Tool\ImportExportResourceListener;
 use Claroline\CoreBundle\Library\Event\ImportToolEvent;
 use Symfony\Component\Yaml\Yaml;
 
@@ -13,10 +13,9 @@ class ResourceManagerListenerTest extends FunctionalTestCase
     {
         $this->loadPlatformRoleData();
         $this->loadUserData(array('user' => 'user'));
-        $listener = new ResourceManagerListener(
+        $listener = new ImportExportResourceListener(
             $this->client->getContainer()->get('doctrine.orm.entity_manager'),
             $this->client->getContainer()->get('event_dispatcher'),
-            $this->client->getContainer()->get('templating'),
             $this->client->getContainer()->get('claroline.resource.manager')
         );
 
