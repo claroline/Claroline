@@ -70,6 +70,7 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
             'POST', "/resource/properties/edit/{$dir->getId()}",
             array('resource_properties_form' => array('name' => 'new_name'))
         );
+
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('new_name', $jsonResponse->name);
 
