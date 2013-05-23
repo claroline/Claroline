@@ -2,15 +2,17 @@
 
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 
-{% set themePath = 'bundles/clarolinecore/css/themes/' ~ config.getParameter('theme') %}
-
 {% block stylesheets %}
-    <link rel='stylesheet' type='text/css' href='{{ asset(themePath ~ '/bootstrap.css') }}' class="maincss"/>
-    <link rel='stylesheet' type='text/css' href='{{ asset(themePath ~ '/bootstrap-responsive.css') }}'/>
-    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/css/font-awesome.css') }}'/>
-    <!--[if IE 7]>
-        <link rel="stylesheet" href='{{ asset('bundles/clarolinecore/css/font-awesome-ie7.min.css') }}'>
-    <![endif]-->
+    {% include "ClarolineCoreBundle:less:" ~ config.getParameter('theme') ~ "/theme.html.twig" %}
+    {% stylesheets debug=false filter='lessphp'  output='bundles/clarolinecore/css/font-awesome.css'
+    '../vendor/fortawesome/fontawesome/less/font-awesome.less'
+    %}<link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
+    {% image debug=false output='bundles/clarolinecore/font/FontAwesome.otf' '../vendor/fortawesome/fontawesome/font/FontAwesome.otf' %}{% endimage %}
+    {% image debug=false output='bundles/clarolinecore/font/fontawesome-webfont.eot' '../vendor/fortawesome/fontawesome/font/fontawesome-webfont.eot' %}{% endimage %}
+    {% image debug=false output='bundles/clarolinecore/font/fontawesome-webfont.svg' '../vendor/fortawesome/fontawesome/font/fontawesome-webfont.svg' %}{% endimage %}
+    {% image debug=false output='bundles/clarolinecore/font/fontawesome-webfont.ttf' '../vendor/fortawesome/fontawesome/font/fontawesome-webfont.ttf' %}{% endimage %}
+    {% image debug=false output='bundles/clarolinecore/font/fontawesome-webfont.woff' '../vendor/fortawesome/fontawesome/font/fontawesome-webfont.woff' %}{% endimage %}
 {% endblock %}
 
 {% block javascripts_header %}
@@ -50,7 +52,7 @@
             </div>
         </div>
     </div>
-    {% block footer %}
+   {% block footer %}
         {% if not is_path_mode %}
             {% render controller('ClarolineCoreBundle:Layout:footer') %}
         {% endif %}
@@ -66,10 +68,25 @@
 {% endblock %}
 
 {% block javascripts %}
+    {% javascripts debug=false  output='bundles/clarolinecore/js/bootstrap.js'
+        '../vendor/twitter/bootstrap/js/bootstrap-affix.js'
+        '../vendor/twitter/bootstrap/js/bootstrap-alert.js'
+        '../vendor/twitter/bootstrap/js/bootstrap-button.js'
+        '../vendor/twitter/bootstrap/js/bootstrap-carousel.js'
+        '../vendor/twitter/bootstrap/js/bootstrap-collapse.js'
+        '../vendor/twitter/bootstrap/js/bootstrap-dropdown.js'
+        '../vendor/twitter/bootstrap/js/bootstrap-modal.js'
+        '../vendor/twitter/bootstrap/js/bootstrap-scrollspy.js'
+        '../vendor/twitter/bootstrap/js/bootstrap-tab.js'
+        '../vendor/twitter/bootstrap/js/bootstrap-tooltip.js'
+        '../vendor/twitter/bootstrap/js/bootstrap-popover.js'
+        '../vendor/twitter/bootstrap/js/bootstrap-transition.js'
+        '../vendor/twitter/bootstrap/js/bootstrap-typeahead.js'
+        %}<script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
     <script type="text/javascript" src='{{ asset('twig.js') }}'></script>
     <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/twitter-bootstrap/docs/assets/js/bootstrap.js')}}"></script>
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/utilities.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/startup.js') }}"></script>
 {% endblock %}

@@ -27,9 +27,23 @@
         "claroline/front-end-bundle": "dev-master",
         "jms/twig-js-bundle": "dev-master",
         "white-october/pagerfanta-bundle": "dev-master",
-        "idci/exporter-bundle": "dev-master"
+        "idci/exporter-bundle": "dev-master",
+        "leafo/lessphp": "0.3.9",
+        "twitter/bootstrap": "2.3.1",
+        "fortawesome/fontawesome": "3.0.2"
     },
     "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "fortawesome/fontawesome",
+                "version": "3.0.2",
+                "dist": {
+                    "url": "https://github.com/FortAwesome/Font-Awesome/zipball/master",
+                    "type": "zip"
+                }
+            }
+        },
         {
             "type": "vcs",
             "url": "http://github.com/mikey179/vfsStream"
