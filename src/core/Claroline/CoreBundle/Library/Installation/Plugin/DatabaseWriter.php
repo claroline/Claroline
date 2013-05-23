@@ -132,8 +132,7 @@ class DatabaseWriter
         }
 
         if ($this->modifyTemplate) {
-            $templateBuilder = TemplateBuilder::fromTemplate("{$this->templateDir}default.zip");
-
+            $this->templateBuilder = TemplateBuilder::fromTemplate("{$this->templateDir}default.zip");
             foreach ($resourceTypes as $resourceType) {
                 $this->templateBuilder->removeResourceType($resourceType->getName());
             }
@@ -146,6 +145,8 @@ class DatabaseWriter
                 $this->templateBuilder->removeTool($tool->getName());
             }
 
+            $config = $this->templateBuilder->getConfig();
+
             $widgets = $this->em
                 ->getRepository('ClarolineCoreBundle:Widget\Widget')
                 ->findByPlugin($plugin->getGeneratedId());
@@ -154,7 +155,8 @@ class DatabaseWriter
                 $this->templateBuilder->removeWidget($widget->getName());
             }
 
-            $templateBuilder->write();
+            $config = $this->templateBuilder->getConfig();
+            $this->templateBuilder->write();
         }
 
         // deletion of other plugin db dependencies is made via a cascade mechanism
