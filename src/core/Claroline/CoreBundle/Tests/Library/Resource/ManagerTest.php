@@ -148,6 +148,47 @@ class ManagerTest extends FixtureTestCase
 
     public function testIsPathValid()
     {
+        $this->loadDirectoryData('user', array('user/dir1/dir2/dir3'));
+        $this->loadDirectoryData('user', array('user/dir4/dir5/dir6'));
 
+        $validAncestorsWithoutLinks = array(
+            $this->getDirectory('user'),
+            $this->getDirectory('dir1'),
+            $this->getDirectory('dir2'),
+            $this->getDirectory('dir3')
+        );
+        $this->assertTrue($this->manager->isPathValid($validAncestorsWithoutLinks));
+
+        $invalidAncestorsWithoutLinks = array(
+            $this->getDirectory('user'),
+            $this->getDirectory('dir4'),
+            $this->getDirectory('dir2')
+        );
+        $this->assertFalse($this->manager->isPathValid($invalidAncestorsWithoutLinks));
+
+        $this->loadShortcutData(
+            $this->getDirectory('dir5'),
+            'dir1',
+            'user',
+            'shortcut'
+        );
+
+        $validWithLinks = array(
+            $this->getDirectory('user'),
+            $this->getDirectory('dir1'),
+            $this->getDirectory('dir5'),
+            $this->getDirectory('dir6'),
+        );
+
+        $this->assertTrue($this->manager->isPathValid($validWithLinks));
+
+        $invalidWithLinks = array(
+            $this->getDirectory('user'),
+            $this->getDirectory('dir1'),
+            $this->getDirectory('dir5'),
+            $this->getDirectory('dir3'),
+        );
+
+        $this->assertFalse($this->manager->isPathValid($invalidWithLinks));
     }
 }

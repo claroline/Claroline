@@ -516,7 +516,6 @@ class Manager
         $continue = true;
 
         for ($i = 0, $size = count($ancestors); $i < $size; $i++) {
-            echo ($ancestors[$i]->getName(). ' / ');
 
             if (isset($ancestors[$i+1])) {
                 if ($ancestors[$i+1]->getParent() == $ancestors[$i]) {
