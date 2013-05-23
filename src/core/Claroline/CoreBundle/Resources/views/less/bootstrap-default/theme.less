@@ -1,0 +1,110 @@
+/* Additional style rules */
+body
+{
+    background:#fff url(../../../images/themes/bootstrap-default/bg2.jpg) repeat-x;
+}
+
+footer {
+    background-color: @grayLighter;
+    color: lighten(@gray, 20%);
+    text-shadow: 1px 1px @white;
+    padding:0;
+    width:100%;
+}
+
+#footer-content {
+    padding: 10px;
+    text-align: center;
+    max-height: 100%;
+}
+
+#login-form, #login-error {
+    width: 420px;
+    margin: auto;
+    padding: 10px;
+    border-radius: 3px;
+}
+
+#login-form {
+    margin-top: 12px;
+    background-color: @formActionsBackground;
+}
+
+h2.section-header {
+    margin: 20px auto;
+}
+
+h3.sub-section-header {
+    min-height: 30px;
+    margin-bottom: 16px;
+    border-bottom: solid @grayLighter 1px;
+}
+
+.brand
+{
+	background:transparent url(../../../images/logo/claroline-logo-bulles-22x25.png) 20px 5px no-repeat;
+	padding-left:50px !important;
+
+}
+
+/** NAVBAR **/
+
+.navbar.navbar-inverse.navbar-fixed-top
+{
+    background:#222 url(../../../images/themes/bootstrap-default/bg.jpg) repeat;
+    border-bottom:3px solid @orange;
+    .box-shadow(0 1px 3px rgba(0,0,0,.25))
+}
+
+.navbar.navbar-inverse.navbar-fixed-top .navbar-inner
+{
+    background:transparent;
+    /*.#translucent > .background(@color: @white, @alpha: 1)*/
+}
+
+.navbar-fixed-top .container
+{
+	padding: 0 20px 0 20px;
+}
+
+.navbar-fixed-top .nav-collapse
+{
+	height:auto;
+}
+
+/** tools **/
+
+.nav.nav-tabs.nav-stacked li.active a
+{
+    background:@linkColor;
+    color:@white;
+}
+
+.nav.nav-tabs.nav-stacked li.disabled a
+{
+    color:@grayDark;
+    background:@grayLighter;
+}
+
+/** content **/
+
+.section-content .navbar .navbar-inner a
+{
+    color:@navbarLinkColorActive;
+}
+
+.section-content .navbar .navbar-inner .dropdown-menu a:hover, .section-content .navbar .navbar-inner li.active a
+{
+    color:@white;
+}
+
+.nav.nav-tabs.nav-stacked
+{
+   .border-radius(5px);
+}
+
+.nav.nav-tabs.nav-stacked, .border
+{
+    background-color:@white;
+    .box-shadow(0 1px 10px rgba(0,0,0,.2));
+}
