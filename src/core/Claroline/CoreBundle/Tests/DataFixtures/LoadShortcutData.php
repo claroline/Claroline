@@ -16,11 +16,12 @@ class LoadShortcutData extends AbstractFixture implements ContainerAwareInterfac
      *
      * @param array $roles
      */
-    public function __construct(AbstractResource $target, $directory, $creator)
+    public function __construct(AbstractResource $target, $directory, $creator, $referenceName = '')
     {
         $this->creator = $creator;
         $this->directory = $directory;
         $this->target = $target;
+        $this->referenceName = $referenceName;
     }
 
     /**
@@ -37,11 +38,16 @@ class LoadShortcutData extends AbstractFixture implements ContainerAwareInterfac
     public function load(ObjectManager $manager)
     {
         $resourceManager = $this->container->get('claroline.resource.manager');
-        $resourceManager->makeShortcut(
+        $shortcut = $resourceManager->makeShortcut(
             $this->target,
             $this->getReference('directory/'.$this->directory),
             $this->getReference('user/'.$this->creator)
         );
+
+        if ($this->referenceName !== '') {
+            $this->addReference("shortcut/{$this->referenceName}", $shortcut);
+        }
+        
         $manager->flush();
     }
 }

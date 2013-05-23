@@ -101,6 +101,10 @@ class Manager
         $resource->setName($rename);
         $resource->setCreator($user);
 
+        if ($parent !== null) {
+            $this->setLastPosition($parent, $resource);
+        }
+
         if ($resource->getUserIcon() === null) {
             $resource = $this->ic->setResourceIcon($resource);
         } else {
@@ -113,7 +117,7 @@ class Manager
 
         $this->em->persist($resource);
         if ($rights === null) {
-            $this->cloneParentRights($parent, $resource);
+            $this->cloneRights($parent, $resource);
         } else {
             $this->setResourceRights($resource, $rights);
         }
@@ -138,21 +142,17 @@ class Manager
      */
     public function move(AbstractResource $child, AbstractResource $parent)
     {
+        $this->removePosition($child);
+        $this->setLastPosition($parent, $child);
         $oldParent = $child->getParent();
-        $child->setWorkspace($parent->getWorkspace());
         $child->setParent($parent);
         $rename = $this->ut->getUniqueName($child, $parent);
         $child->setName($rename);
         $rights = $child->getRights();
+        $this->em->persist($child);
 
-        foreach ($rights as $right) {
-            $this->em->remove($right);
-        }
         try {
             $this->em->flush();
-            $this->cloneParentRights($parent, $child);
-            $this->em->flush();
-
             $log = new LogResourceMoveEvent($child, $oldParent);
             $this->ed->dispatch('log', $log);
 
@@ -169,6 +169,8 @@ class Manager
      */
     public function delete(AbstractResource $resource)
     {
+        $this->removePosition($resource);
+
         if (get_class($resource) == 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
             // $logEvent = new ResourceLogEvent($resource, ResourceLogEvent::DELETE_ACTION);
             // $this->ed->dispatch('log_resource', $logEvent);
@@ -195,7 +197,7 @@ class Manager
      * @param AbstractResource $resource
      * @param AbstractResource $parent
      */
-    public function copy(AbstractResource $resource, AbstractResource $parent)
+    public function copy(AbstractResource $resource, AbstractResource $parent, User $user)
     {
         if (get_class($resource) == 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
             $copy = new \Claroline\CoreBundle\Entity\Resource\ResourceShortcut();
@@ -204,22 +206,22 @@ class Manager
             $copy->setResource($resource->getResource());
             $copy->setIcon($resource->getIcon());
             $copy->setResourceType($resource->getResourceType());
-            $copy->setCreator($this->sc->getToken()->getUser());
+            $copy->setCreator($user);
             $copy->setName($resource->getName());
             $rename = $this->ut->getUniqueName($resource, $parent);
             $copy->setName($rename);
         } else {
-            $copy = $this->createCopy($resource);
+            $copy = $this->createCopy($resource, $user);
             $copy->setParent($parent);
             $copy->setWorkspace($parent->getWorkspace());
             $copy->setName($resource->getName());
             $copy->setName($this->ut->getUniqueName($copy, $parent));
-            $this->cloneParentRights($parent, $copy);
+            $this->cloneRights($resource, $copy);
             $this->em->flush();
 
             if ($resource->getResourceType()->getName() == 'directory') {
                 foreach ($resource->getChildren() as $child) {
-                    $this->copy($child, $copy);
+                    $this->copy($child, $copy, $user);
                 }
             }
 
@@ -227,6 +229,7 @@ class Manager
             $this->ed->dispatch('log', $log);
         }
 
+        $this->setLastPosition($parent, $copy);
         $this->em->persist($copy);
         $this->em->flush();
 
@@ -234,31 +237,31 @@ class Manager
     }
 
     /**
-     * Copies the resource rights from $parent to $children.
+     * Copies the resource rights from $resource to $target.
      *
-     * @param AbstractResource $parent
-     * @param AbstractResource $children
+     * @param AbstractResource $resource
+     * @param AbstractResource $target
      *
      */
-    public function cloneParentRights(AbstractResource $parent, AbstractResource $children)
+    public function cloneRights(AbstractResource $resource, AbstractResource $target)
     {
         $resourceRights = $this->em
             ->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
-            ->findBy(array('resource' => $parent));
+            ->findBy(array('resource' => $resource));
         foreach ($resourceRights as $resourceRight) {
             $rc = new ResourceRights();
             $rc->setRole($resourceRight->getRole());
-            $rc->setResource($children);
+            $rc->setResource($target);
             $rc->setRightsFrom($resourceRight);
 
-            if ($children->getResourceType()->getName() === 'directory') {
+            if ($target->getResourceType()->getName() === 'directory') {
                 $rc->setCreatableResourceTypes($resourceRight->getCreatableResourceTypes()->toArray());
             }
 
             $this->em->persist($rc);
         }
 
-        $this->em->persist($children);
+        $this->em->persist($target);
     }
 
     /**
@@ -268,10 +271,8 @@ class Manager
      *
      * @return AbstractResource
      */
-    private function createCopy(AbstractResource $originalResource)
+    private function createCopy(AbstractResource $originalResource, User $user)
     {
-        $user = $this->sc->getToken()->getUser();
-
         if ($originalResource->getResourceType()->getName() === 'directory') {
             $resourceCopy = new Directory();
             $dirType = $this->em
@@ -494,13 +495,17 @@ class Manager
         $shortcut->setWorkspace($parent->getWorkspace());
         $shortcut->setResourceType($resource->getResourceType());
 
+        if ($parent !== null) {
+            $this->setLastPosition($parent, $shortcut);
+        }
+
         if (get_class($resource) !== 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
             $shortcut->setResource($resource);
         } else {
             $shortcut->setResource($resource->getResource());
         }
 
-        $this->cloneParentRights($shortcut->getParent(), $shortcut);
+        $this->cloneRights($shortcut->getParent(), $shortcut);
         $this->em->persist($shortcut);
 
         return $shortcut;
@@ -509,7 +514,7 @@ class Manager
     public function isPathValid(array $ancestors)
     {
         $continue = true;
-        
+
         for ($i = 0, $size = count($ancestors); $i < $size; $i++) {
             echo ($ancestors[$i]->getName(). ' / ');
 
@@ -543,5 +548,90 @@ class Manager
         }
 
         return false;
+    }
+
+    /**
+     * Set the $resource at the last position of the $parent.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $parent
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     */
+    public function setLastPosition(AbstractResource $parent, AbstractResource $resource)
+    {
+        $lastChild = $this->em
+            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+            ->findOneBy(array('parent' => $parent, 'next' => null));
+        if ($lastChild !== null) {
+            $resource->setPrevious($lastChild);
+            $lastChild->setNext($resource);
+            $this->em->persist($lastChild);
+        } else {
+            $resource->setPrevious();
+        }
+        $resource->setNext();
+
+        $this->em->persist($resource);
+    }
+
+    /**
+     * Remove the $resource from the chained list.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     */
+    public function removePosition(AbstractResource $resource)
+    {
+        $next = $resource->getNext();
+        $previous = $resource->getPrevious();
+
+        if ($next != null) {
+            if ($previous !== null) {
+                $next->setPrevious($previous);
+            } else {
+                $next->setPrevious();
+            }
+            $this->em->persist($next);
+        }
+
+        if ($previous !== null) {
+            if ($next !== null) {
+                $previous->setNext($next);
+            } else {
+                $previous->setNext();
+            }
+            $this->em->persist($previous);
+        }
+    }
+
+    /**
+     * Insert the resource $resource before the target $target.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $target
+     */
+    public function insertBefore(AbstractResource $resource, AbstractResource $next = null)
+    {
+        $resource->setNext($next);
+        $savePrevious = $resource->getPrevious();
+
+        if ($next !== null) {
+            $previous = $next->getPrevious();
+            $next->setPrevious($resource);
+            $this->em->persist($next);
+        } else {
+            $previous = $this->em
+                ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+                ->findOneBy(array('parent' => $resource->getParent(), 'next' => null));
+        }
+
+        $resource->setPrevious($previous);
+
+        if ($previous !== null) {
+            $previous->setNext($resource);
+            $previous->setPrevious($savePrevious);
+            $this->em->persist($previous);
+        }
+
+        $this->em->persist($resource);
+        $this->em->flush();
     }
 }
