@@ -12,4 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Directory extends AbstractResource
 {
+    public function hasChildren()
+    {
+        return (count($this->children) > 0) ? true: false;
+    }
 }

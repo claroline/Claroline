@@ -455,7 +455,7 @@ class ResourceController extends Controller
         $this->checkAccess('COPY', $collection);
 
         foreach ($resources as $resource) {
-            $newNode = $this->get('claroline.resource.manager')->copy($resource, $parent);
+            $newNode = $this->get('claroline.resource.manager')->copy($resource, $parent, $token->getUser());
             $em->persist($newNode);
             $em->flush();
             $em->refresh($parent);
