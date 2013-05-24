@@ -139,7 +139,7 @@ class WorkspaceController extends Controller
         }
 
         $form = $this->get('form.factory')
-            ->create(new WorkspaceType($this->container->getParameter('claroline.param.templates_directory')));
+            ->create(new WorkspaceType());
 
         return $this->render(
             'ClarolineCoreBundle:Workspace:form.html.twig',
@@ -167,14 +167,17 @@ class WorkspaceController extends Controller
         }
 
         $form = $this->get('form.factory')
-            ->create(new WorkspaceType($this->container->getParameter('claroline.param.templates_directory')));
+            ->create(new WorkspaceType());
         $form->bind($this->getRequest());
+
+        $templateDir = $this->container->getParameter('claroline.param.templates_directory');
+        $ds = DIRECTORY_SEPARATOR;
 
         if ($form->isValid()) {
             $type = $form->get('type')->getData() == 'simple' ?
                 Configuration::TYPE_SIMPLE :
                 Configuration::TYPE_AGGREGATOR;
-            $config = Configuration::fromTemplate($form->get('template')->getData());
+            $config = Configuration::fromTemplate($templateDir.$ds.$form->get('template')->getData()->getHash());
             $config->setWorkspaceType($type);
             $config->setWorkspaceName($form->get('name')->getData());
             $config->setWorkspaceCode($form->get('code')->getData());

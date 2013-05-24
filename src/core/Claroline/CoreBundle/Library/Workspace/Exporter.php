@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Library\Workspace;
 
+use Claroline\CoreBundle\Entity\Workspace\Template;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Library\Event\ExportToolEvent;
@@ -21,14 +22,16 @@ class Exporter
      * @DI\InjectParams({
      *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
      *     "ed" = @DI\Inject("event_dispatcher"),
-     *     "templateDir" = @DI\Inject("%claroline.param.templates_directory%")
+     *     "templateDir" = @DI\Inject("%claroline.param.templates_directory%"),
+     *     "utils" = @DI\Inject("claroline.resource.utilities")
      * })
      */
-    public function __construct(EntityManager $em, $ed, $templateDir)
+    public function __construct(EntityManager $em, $ed, $templateDir, $utils)
     {
         $this->em = $em;
         $this->ed = $ed;
         $this->templateDir = $templateDir;
+        $this->utils = $utils;
     }
 
     public function export(AbstractWorkspace $workspace, $configName)
@@ -38,7 +41,11 @@ class Exporter
         }
 
         $archive = new \ZipArchive();
-        $pathArch = $this->templateDir."{$configName}.zip";
+        $hash = $this->utils->generateGuid();
+        $pathArch = $this->templateDir."{$hash}.zip";
+        $template = new Template();
+        $template->setHash("{$hash}.zip");
+        $template->setName($configName);
         $archive->open($pathArch, \ZipArchive::CREATE);
         $arTools = array();
         $description = array();
@@ -104,6 +111,8 @@ class Exporter
         $yaml = Yaml::dump($description, 10);
         $archive->addFromString('config.yml', $yaml);
         $archive->close();
+        $this->em->persist($template);
+        $this->em->flush();
     }
 }
 
