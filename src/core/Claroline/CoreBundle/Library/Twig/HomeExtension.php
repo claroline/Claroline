@@ -11,18 +11,16 @@ use Symfony\Bundle\FrameworkBundle\Translation\Translator;
  */
 class HomeExtension extends \Twig_Extension
 {
-    protected $translator;
+    protected $container;
 
     /**
      * @DI\InjectParams({
-     *     "translator" = @DI\Inject("translator"),
-     *     "router" = @DI\Inject("router")
+     *     "container" = @DI\Inject("service_container")
      * })
      */
-    public function __construct(Translator $translator, \Symfony\Bundle\FrameworkBundle\Routing\Router $router)
+    public function __construct($container)
     {
-        $this->translator = $translator;
-        $this->router = $router;
+        $this->container = $container;
     }
 
     /**
@@ -82,7 +80,7 @@ class HomeExtension extends \Twig_Extension
             }
 
             if ($i > 0) {
-                return $this->translator->transChoice(
+                return $this->container->get("translator")->transChoice(
                     "%count% ".$translation["singular"][$format]." ago|%count% ".$translation["plural"][$format]." ago",
                     $i,
                     array('%count%' => $i),
@@ -91,7 +89,7 @@ class HomeExtension extends \Twig_Extension
             }
         }
 
-        return $this->translator->transChoice(
+        return $this->container->get("translator")->transChoice(
             "%count% second ago|%count% seconds ago",
             1,
             array('%count%' => 1),
@@ -106,7 +104,7 @@ class HomeExtension extends \Twig_Extension
             strpos($link, "ftp://") === 0 or
             strpos($link, "www.") === 0)
         ) {
-            $home = $this->router->generate('claro_index').$link;
+            $home = $this->container->get("router")->generate('claro_index').$link;
 
             $home = str_replace("//", "/", $home);
 
