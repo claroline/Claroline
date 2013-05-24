@@ -188,7 +188,7 @@ class InteractionGraphicController extends Controller
                 $eq = new ExerciseQuestion($exo, $interGraph->getInteraction()->getQuestion());
 
                 $dql = 'SELECT max(eq.ordre) FROM UJM\ExoBundle\Entity\ExerciseQuestion eq'
-                    . 'WHERE eq.exercise='.$exoID;
+                    . ' WHERE eq.exercise='.$exoID;
                 $query = $em->createQuery($dql);
                 $maxOrdre = $query->getResult();
 
