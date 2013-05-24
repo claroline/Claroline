@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "2284902f1de244c0f49bcd160038d8e5",
+    "hash": "fe04613647442405d6e0909ec82241a4",
     "packages": [
         {
             "name": "claroline/front-end-bundle",
@@ -880,7 +880,7 @@
         },
         {
             "name": "fortawesome/fontawesome",
-            "version": "3.0.2",
+            "version": "dev-master",
             "dist": {
                 "type": "zip",
                 "url": "https://github.com/FortAwesome/Font-Awesome/zipball/master",
@@ -949,12 +949,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/l3pp4rd/DoctrineExtensions.git",
-                "reference": "845e69090a1ff293c906db986b86bd48b2e6b494"
+                "reference": "7a09a4ba73213dc890f9b828f5ff9f52bc38b740"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/l3pp4rd/DoctrineExtensions/zipball/845e69090a1ff293c906db986b86bd48b2e6b494",
-                "reference": "845e69090a1ff293c906db986b86bd48b2e6b494",
+                "url": "https://api.github.com/repos/l3pp4rd/DoctrineExtensions/zipball/7a09a4ba73213dc890f9b828f5ff9f52bc38b740",
+                "reference": "7a09a4ba73213dc890f9b828f5ff9f52bc38b740",
                 "shasum": ""
             },
             "require": {
@@ -1021,7 +1021,7 @@
                 "tree",
                 "uploadable"
             ],
-            "time": "2013-05-22 21:24:21"
+            "time": "2013-05-24 05:41:03"
         },
         {
             "name": "idci/exporter-bundle",
@@ -2528,12 +2528,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Twig.git",
-                "reference": "ba88c755579c06e7ccb5ee73c6e27e88a1fed114"
+                "reference": "693956586776108847a447e86b4e5e92ee0a20be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Twig/zipball/ba88c755579c06e7ccb5ee73c6e27e88a1fed114",
-                "reference": "ba88c755579c06e7ccb5ee73c6e27e88a1fed114",
+                "url": "https://api.github.com/repos/fabpot/Twig/zipball/693956586776108847a447e86b4e5e92ee0a20be",
+                "reference": "693956586776108847a447e86b4e5e92ee0a20be",
                 "shasum": ""
             },
             "require": {
@@ -2569,7 +2569,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2013-05-17 10:06:31"
+            "time": "2013-05-23 16:28:53"
         },
         {
             "name": "twitter/bootstrap",
@@ -2664,7 +2664,8 @@
         "claroline/front-end-bundle": 20,
         "jms/twig-js-bundle": 20,
         "white-october/pagerfanta-bundle": 20,
-        "idci/exporter-bundle": 20
+        "idci/exporter-bundle": 20,
+        "fortawesome/fontawesome": 20
     },
     "platform": {
         "php": ">=5.3.3"
