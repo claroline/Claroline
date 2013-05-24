@@ -502,7 +502,6 @@
 
                     if (event.currentTarget.getAttribute('data-toggle') !== 'tab') {
                         $.ajax({
-//                            context: this,
                             url: event.currentTarget.getAttribute('href'),
                             type: 'POST',
                             processData: false,
@@ -557,8 +556,9 @@
                         type: 'POST',
                         processData: false,
                         contentType: false,
-                        success: function () {
+                        success: function (newrow) {
                             $('#form-right-wrapper').empty();
+                            $('#perms-table').append(newrow);
                         }
                     });
                 },
