@@ -191,7 +191,21 @@ class ResourceRightsController extends Controller
 
             $em->flush();
 
-            return new Response("success");
+            $isDir = ($resource->getResourceType()->getName() === 'directory') ? true: false;
+
+            return $this->render(
+                'ClarolineCoreBundle:Resource:rights_form_row.html.twig',
+                array(
+                    'canCopy' => $form->get('canCopy')->getData(),
+                    'canOpen' => $form->get('canOpen')->getData(),
+                    'canDelete' => $form->get('canDelete')->getData(),
+                    'canEdit' => $form->get('canEdit')->getData(),
+                    'canExport' => $form->get('canExport')->getData(),
+                    'isDirectory' => $isDir,
+                    'role' => $role,
+                    'resource' => $resource
+                )
+            );
         }
     }
 
