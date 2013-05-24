@@ -324,6 +324,8 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('parent_id', 'integer', array('notnull' => false));
         $table->addColumn('lvl', 'integer', array('notnull' => false));
         $table->addColumn('workspace_id', 'integer');
+        $table->addColumn('previous_id', 'integer', array('notnull' => false));
+        $table->addColumn('next_id', 'integer', array('notnull' => false));
 
         $this->addDiscriminator($table);
 
