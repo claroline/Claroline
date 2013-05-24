@@ -67,7 +67,7 @@ class ExerciseController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($id);
         $this->checkAccess($exercise);
-        
+
         $workspace = $exercise->getWorkspace();
 
         $exoAdmin = $this->isExerciseAdmin($id);
@@ -141,46 +141,35 @@ class ExerciseController extends Controller
     public function openAction($exerciseId)
     {
         $user = $this->container->get('security.context')->getToken()->getUser();
-        
+
         $em = $this->getDoctrine()->getEntityManager();
         $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($exerciseId);
         $this->checkAccess($exercise);
-        
+
         $allowToCompose = 0;
         $exoAdmin = $this->isExerciseAdmin($exerciseId);
 
-        //if (count($subscription) > 0) {
+        $workspace = $exercise->getWorkspace();
 
-            
-            $workspace = $exercise->getWorkspace();
+        if (!$exercise) {
+            throw $this->createNotFoundException('Unable to find Exercise entity.');
+        }
 
-            if (!$exercise) {
-                throw $this->createNotFoundException('Unable to find Exercise entity.');
-            }
+        if ( ($this->controlDate($exoAdmin, $exercise) === true)
+            && ($this->controlMaxAttemps($exercise, $user, $exoAdmin) === true)
+        ) {
+            $allowToCompose = 1;
+        }
 
-            //$deleteForm = $this->createDeleteForm($id);
-
-            if ( ($this->controlDate($exoAdmin, $exercise) === true)
-                && ($this->controlMaxAttemps($exercise, $user, $exoAdmin) === true)
-            ) {
-                $allowToCompose = 1;
-            }
-
-            return $this->render(
-                'UJMExoBundle:Exercise:show.html.twig',
-                array(
-                    'workspace'      => $workspace,
-                    'entity'         => $exercise,
-                    //'delete_form'    => $deleteForm->createView(),
-                    'exoAdmin'       => $exoAdmin,
-                    'allowToCompose' => $allowToCompose
-                )
-            );
-        /*} else {
-            $url = $this->container->get('request')->headers->get('referer');
-
-            return new RedirectResponse($url);
-        }*/
+        return $this->render(
+            'UJMExoBundle:Exercise:show.html.twig',
+            array(
+                'workspace'      => $workspace,
+                'entity'         => $exercise,
+                'exoAdmin'       => $exoAdmin,
+                'allowToCompose' => $allowToCompose
+            )
+        );
     }
 
     /**
@@ -192,7 +181,7 @@ class ExerciseController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($id);
         $this->checkAccess($exercise);
-        
+
         $workspace = $exercise->getWorkspace();
 
         $exoAdmin = $this->isExerciseAdmin($id);
@@ -237,7 +226,7 @@ class ExerciseController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($exoID);
         $this->checkAccess($exercise);
-        
+
         $workspace = $exercise->getWorkspace();
 
         $user = $this->container->get('security.context')->getToken()->getUser();
@@ -307,7 +296,7 @@ class ExerciseController extends Controller
      */
     public function deleteQuestionAction($exoID, $qid)
     {
-        
+
         $em = $this->getDoctrine()->getEntityManager();
         $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($exoID);
         $this->checkAccess($exercise);
@@ -626,14 +615,13 @@ class ExerciseController extends Controller
             ->getEntityManager()
             ->getRepository('UJMExoBundle:Subscription')
             ->getControlExerciseEnroll($user->getId(), $exoID);
-        
+
         if (count($subscription) > 0) {
             return $subscription[0]->getAdmin();;
-        }
-        else {
+        } else {
             return 0;
         }
-            
+
     }
 
     /**
@@ -669,7 +657,7 @@ class ExerciseController extends Controller
             return true;
         }
     }
-    
+
     private function checkAccess($exo)
     {
         $collection = new ResourceCollection(array($exo));
