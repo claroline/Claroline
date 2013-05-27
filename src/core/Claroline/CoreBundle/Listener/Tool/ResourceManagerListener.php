@@ -69,9 +69,11 @@ class ResourceManagerListener
     {
         $breadcrumbsIds = $this->request->query->get('_breadcrumbs');
         if ($breadcrumbsIds != null) {
-        $ancestors = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->findResourcesByIds($breadcrumbsIds);
-        $this->manager->checkAncestors($ancestors);
+            $ancestors = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+                ->findResourcesByIds($breadcrumbsIds);
+            if (!$this->manager->isPathValid($ancestors)) {
+                throw new \Exception('Breadcrumbs invalid');
+            };
         } else {
             $ancestors = array();
         }

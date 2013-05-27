@@ -378,7 +378,6 @@ class AdministrationControllerTest extends FunctionalTestCase
         $form['platform_parameters_form[selfRegistration]'] = true;
         $this->client->submit($form);
         $crawler = $this->client->request('GET', '/logout');
-        var_dump($this->client->getResponse()->getContent());
         $this->assertEquals(1, $crawler->filter("#link-registration")->count());
     }
 
@@ -471,16 +470,16 @@ class AdministrationControllerTest extends FunctionalTestCase
     {
         $this->registerStubPlugins(
             array(
-                'Valid\Simple\ValidSimple',
                 'Valid\WithWidgets\ValidWithWidgets'
             )
         );
+
         $this->logUser($this->getUser('admin'));
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
             ->findBy(array('isVisible' => true, 'isDesktop' => true));
         $crawler = $this->client->request('GET', '/desktop/tool/open/home');
-        $this->assertEquals(count($crawler->filter('.widget')), count($configs));
+        $this->assertEquals(count($crawler->filter('.widget')), 8);
         $this->resetTemplate();
     }
 

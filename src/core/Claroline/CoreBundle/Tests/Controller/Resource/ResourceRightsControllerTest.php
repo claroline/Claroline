@@ -137,6 +137,7 @@ class ResourceRightsControllerTest extends FunctionalTestCase
         $now = new \DateTime();
 
         $this->loadDirectoryData('john', array('john/dir1', 'john/dir1/dir2'));
+        $this->loadUserData(array('jane' => 'user'));
         $rightsRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
         $directoryId = $this->getDirectory('dir1')->getId();
         $collaboratorRoleId = $this->em->getRepository('ClarolineCoreBundle:Role')
@@ -207,6 +208,41 @@ class ResourceRightsControllerTest extends FunctionalTestCase
             $directoryId
         );
         $this->assertEquals(2, count($logs));
+
+        //Testing the recusrsivity for a role oustide the workspace. The role must be created aswell.
+        $janeCollaboratorRoleId = $this->em->getRepository('ClarolineCoreBundle:Role')
+            ->findCollaboratorRole($this->getWorkspace('jane'))
+            ->getId();
+
+        $this->client->request(
+            'POST',
+            "/resource/{$directoryId}/role/{$janeCollaboratorRoleId}/right/creation/edit",
+            array(
+                'resourceTypes' => array(
+                    $resourceTypes[0]->getId() => 'on',
+                    $resourceTypes[1]->getId() => 'on'
+                ),
+                'isRecursive' => 'on'
+            )
+        );
+
+        $this->em->clear();
+
+        $firstDirCreatableTypes = $rightsRepo->findOneBy(
+            array('resource' => $this->getDirectory('dir1'), 'role' => $janeCollaboratorRoleId)
+        );
+        $secondDirCreatableTypes = $rightsRepo->findOneBy(
+            array('resource' => $this->getDirectory('dir2'), 'role' => $janeCollaboratorRoleId)
+        );
+        $this->assertEquals(
+            array($resourceTypes[0], $resourceTypes[1]),
+            $firstDirCreatableTypes->getCreatableResourceTypes()->toArray()
+        );
+
+        $this->assertEquals(
+            array($resourceTypes[0], $resourceTypes[1]),
+            $secondDirCreatableTypes->getCreatableResourceTypes()->toArray()
+        );
     }
 
     public function testAddRightToRoleOutsideWorkspace()
@@ -385,7 +421,6 @@ class ResourceRightsControllerTest extends FunctionalTestCase
         $resourceRightId = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
             ->findOneBy(array('role' => $role, 'resource' => $this->getDirectory('dir1')))->getId();
 
-       var_dump('r2');
        $this->client->request(
             'POST',
             "/resource/right/{$resourceRightId}/edit",

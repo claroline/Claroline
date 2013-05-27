@@ -167,6 +167,24 @@ abstract class AbstractResource
     //Used by some forms.
     protected $userIcon;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
+     *     cascade={"persist"})
+     * @ORM\JoinColumn(name="next_id", referencedColumnName="id")
+     */
+    protected $next;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
+     *     cascade={"persist"})
+     * @ORM\JoinColumn(name="previous_id", referencedColumnName="id")
+     */
+    protected $previous;
+
+    public function __construct()
+    {
+        $this->rights = new ArrayCollection();
+    }
 
     /**
      * Returns the resource id.
@@ -442,5 +460,34 @@ abstract class AbstractResource
     public function getRights()
     {
         return $this->rights;
+    }
+
+    public function setNext(AbstractResource $next = null)
+    {
+        $this->next = $next;
+    }
+
+    public function getNext()
+    {
+        return $this->next;
+    }
+
+    public function setPrevious(AbstractResource $previous = null)
+    {
+        $this->previous = $previous;
+    }
+
+    public function getPrevious()
+    {
+        return $this->previous;
+    }
+
+    public function __toString()
+    {
+        if ($this->previous == null) {
+            return 'previous is null';
+        } else {
+            return $this->previous->getName();
+        }
     }
 }
