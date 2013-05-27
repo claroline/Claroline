@@ -37,6 +37,7 @@
             render: function (resources, path, creatableTypes, isSearchMode, searchParameters) {
                 this.currentDirectory = _.last(path);
 
+                // if directoryHistory is empty
                 if (this.parameters.directoryHistory.length === 0) {
                     this.parameters.directoryHistory = path;
                 } else {
@@ -48,10 +49,26 @@
                         }
                     }
 
-                    if (index == -1) {
-                        this.parameters.directoryHistory.push(this.currentDirectory);
+                    var directoriesToAdd = path.length - this.parameters.directoryHistory.length;
+                    // compare path & directoryHistory
+                    if (directoriesToAdd > 1) {
+                        // if path > directoryHistory, it mush come from the search
+                        //add the missing directories to the breadcrumbs
+                        var pathLength = path.length;
+                        var missingDirectories = directoriesToAdd;
+
+                        while (missingDirectories > 0) {
+                            this.parameters.directoryHistory.push(path[pathLength - missingDirectories]);
+                            missingDirectories--;
+                        }
+
                     } else {
-                        this.parameters.directoryHistory.splice(index+1);
+                        if (index == -1) {
+                        //if the directory isn't in the breadcrumbs yet'
+                            this.parameters.directoryHistory.push(this.currentDirectory);
+                        } else {
+                            this.parameters.directoryHistory.splice(index+1);
+                        }
                     }
                 }
 
@@ -502,7 +519,6 @@
 
                     if (event.currentTarget.getAttribute('data-toggle') !== 'tab') {
                         $.ajax({
-//                            context: this,
                             url: event.currentTarget.getAttribute('href'),
                             type: 'POST',
                             processData: false,
@@ -557,8 +573,9 @@
                         type: 'POST',
                         processData: false,
                         contentType: false,
-                        success: function () {
+                        success: function (newrow) {
                             $('#form-right-wrapper').empty();
+                            $('#perms-table').append(newrow);
                         }
                     });
                 },
@@ -907,7 +924,6 @@
             window.location = this.parameters.appPath + '/resource/export?' + $.param({ids: resourceIds});
         },
         open: function (resourceType, resourceId, directoryHistory) {
-//            Claroline.Utilities.removeURLParam('_breadcrumbs[]');
             var _path = '';
             for (var i = 0; i < directoryHistory.length; i++) {
                 if ( i === 0) {
@@ -917,10 +933,7 @@
                 }
                 _path += '_breadcrumbs[]=' + directoryHistory[i].id;
             }
-            console.debug('preopen')
-            console.debug(this.parameters.appPath);
-            console.debug(directoryHistory);
-            console.debug('preopen');
+            
             window.location = this.parameters.appPath + '/resource/open/' + resourceType + '/' + resourceId + _path;
         },
         editRights: function (formAction, formData) {

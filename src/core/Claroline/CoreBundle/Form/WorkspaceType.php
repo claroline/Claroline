@@ -10,13 +10,6 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class WorkspaceType extends AbstractType
 {
-    private $templateDir;
-
-    public function __construct($templateDir)
-    {
-        $this->templateDir = $templateDir;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text', array('required' => true));
@@ -41,22 +34,12 @@ class WorkspaceType extends AbstractType
             )
         );
 
-        $templates = array();
-
-        foreach (new \DirectoryIterator($this->templateDir) as $fileInfo) {
-            if ($fileInfo->isFile() && $fileInfo->getExtension() === 'zip') {
-                $templates[$fileInfo->getRealPath()] = $fileInfo->getBasename();
-            }
-        }
-
         $builder->add(
             'template',
-            'choice',
+            'entity',
             array(
-                'choices' => $templates,
-                'multiple' => false,
-                'required' => true,
-                'mapped' => false
+                'class' => 'ClarolineCoreBundle:Workspace\Template',
+                'property' => 'name'
             )
         );
     }
