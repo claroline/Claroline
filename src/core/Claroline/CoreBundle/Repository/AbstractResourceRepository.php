@@ -248,8 +248,6 @@ class AbstractResourceRepository extends MaterializedPathRepository
      */
     public function sort(array $resources)
     {
-        return $resources;
-
         $sorted = array();
         //set the 1st item.
         foreach ($resources as $resource) {
