@@ -582,11 +582,16 @@ class ResourceController extends Controller
         $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($resourceId);
 
         $ancestors = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->findResourcesByIds($_breadcrumbs);
+            ->findAncestors($resource);
 
-        if (count($ancestors) === 0) {
-            $ancestors = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-                ->findAncestors($resource);
+        $breadcrumbsAncestors = array();
+        if (count($_breadcrumbs) > 0) {
+            $breadcrumbsAncestors = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+                ->findResourcesByIds($_breadcrumbs);
+        }
+
+        if (count($ancestors) > count($breadcrumbsAncestors)) {
+
             $_breadcrumbs = array();
             foreach ($ancestors as $ancestor) {
                 $_breadcrumbs[] = $ancestor['id'];
@@ -605,6 +610,32 @@ class ResourceController extends Controller
             'ClarolineCoreBundle:Resource:breadcrumbs.html.twig',
             array('ancestors' => $ancestors, 'workspaceId' => $workspaceId)
         );
+    }
+
+    /**
+     * @Route(
+     *     "/sort/{resourceId}/next/{nextId}",
+     *     name="claro_resource_insert_before",
+     *     options={"expose"=true}
+     * )
+     *
+     * @param type $resourceId
+     * @param type $nextId
+     */
+    public function insertBefore($resourceId, $nextId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $repo = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
+        $resource = $repo->find($resourceId);
+        $next = $repo->find($nextId);
+
+        if ($next !== null) {
+            $this->get('claroline.resource.manager')->insertBefore($resource, $next);
+        } else {
+            $this->get('claroline.resource.manager')->insertBefore($resource);
+        }
+
+        return new Response('success', 204);
     }
 
     private function getResource($resource)
