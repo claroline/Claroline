@@ -320,13 +320,14 @@ class ExerciseController extends Controller
      */
     public function exercisePaperAction($id)
     {
-        //$response = '';
+
         $user = $this->container->get('security.context')->getToken()->getUser();
         $uid = $user->getId();
 
-        $exoAdmin = $this->isExerciseAdmin($exercise);
         $em = $this->getDoctrine()->getEntityManager();
         $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($id);
+
+        $exoAdmin = $this->isExerciseAdmin($id);
         $this->checkAccess($exercise);
 
         $workspace = $exercise->getWorkspace();
@@ -617,7 +618,7 @@ class ExerciseController extends Controller
             ->getControlExerciseEnroll($user->getId(), $exoID);
 
         if (count($subscription) > 0) {
-            return $subscription[0]->getAdmin();;
+            return $subscription[0]->getAdmin();
         } else {
             return 0;
         }

@@ -246,9 +246,9 @@ function changezone(prefix) {
 function  ResizeImg(direction) {
 
     if (direction === 'gauche') {
-        value -= 5;
+        value -= 10;
     } else if (direction === 'droite') {
-        value += 5;
+        value += 10;
     }
 
     scalex = answerImg.width + value; // New picture width
@@ -311,17 +311,20 @@ function  ResizeImg(direction) {
 // Resize the answer zones
 function  ResizePointer(direction, diam) {
 
-    if (direction == 'gauche') {
-        target.width -= diam;
-    } else if (direction == 'droite') {
-        target.width += diam;
-    }
+    if (target != null) {
+        
+        if (direction == 'gauche') {
+            target.width -= diam;
+        } else if (direction == 'droite') {
+            target.width += diam;
+        }
 
-    if (target.width < 10) { // Not too small or negative
-        target.width = 10;
-    }
+        if (target.width < 10) { // Not too small or negative
+            target.width = 10;
+        }
 
-    target.height += target.width * target.height / target.height; // Resize with proportional width/height
+        target.height += target.width * target.height / target.height; // Resize with proportional width/height
+    }
 }
 
 // Get the mouse direction
@@ -354,18 +357,21 @@ function MouseDirection(event) {
 // Move the answer zones
 function MoveAnswerZone(e) {
 
-    // Get mouse position
-    if (e.x != undefined && e.y != undefined) { // IE
-        x = e.layerX;
-        y = e.layerY;
-    } else { // Firefox
-        x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - document.getElementById('Answer').offsetLeft;
-        y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - document.getElementById('Answer').offsetTop;
+    if (target != null) {
+        
+        // Get mouse position
+        if (e.x != undefined && e.y != undefined) { // IE
+            x = e.layerX;
+            y = e.layerY;
+        } else { // Firefox
+            x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - document.getElementById('Answer').offsetLeft;
+            y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - document.getElementById('Answer').offsetTop;
+        }
+
+        // Move answer zone to mouse position (cursor center)
+        target.style.left = String(x - (target.width / 2)) + 'px';
+        target.style.top = String(y - (target.height / 2)) + 'px';
     }
-    
-    // Move answer zone to mouse position (cursor center)
-    target.style.left = String(x - (target.width / 2)) + 'px';
-    target.style.top = String(y - (target.height / 2)) + 'px';
 }
 
 // :::::::::::::::::::::::::::::::::::::::::: EventListener :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -429,7 +435,7 @@ document.addEventListener('mousemove', function (event) { // To resize/moving an
 
     // Resizing answer zone
     if (pressALT === true && allow === true) {
-        ResizePointer(MouseDirection(event), 5);
+        ResizePointer(MouseDirection(event), 10);
         resizing = true;
     }
 });
@@ -474,15 +480,15 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
             var img = new Image();
 
             img.style.position = 'absolute';
-            img.style.left = String(mousex - 10 + document.getElementById('Answer').offsetLeft) + 'px';
-            img.style.top = String(mousey - 10 + document.getElementById('Answer').offsetTop) + 'px';
+            img.style.left = String(mousex - 10) + 'px';
+            img.style.top = String(mousey - 10) + 'px';
 
             img.id = 'img' + grade;
             grade++;
 
             img.src = el.src;
 
-            document.body.appendChild(img);
+            document.getElementById('Answer').appendChild(img);
 
             point[img.id] = document.getElementById('points').value;
         }

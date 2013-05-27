@@ -142,13 +142,6 @@
 
         {% elseif(interaction.type == 'InteractionGraphic') %}
 
-            <div id="divInter{{ i }}">
-            <input type="hidden" id="hidInter{{ i }}" value=""/>
-
-            <script type="text/javascript">
-                document.getElementById('hidInter{{ i }}').value = document.getElementById('divInter{{ i }}').offsetLeft;
-            </script>
-
             {% set interInfo = getInterTwig(interaction.id, 'InteractionGraphic') %}
             {% set interG =  interInfo['question'] %}
             {% set coords =  getCoordsGraphTwig(interG.id) %}
@@ -173,35 +166,36 @@
             </div>
 
             <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/GraphicOverview.js') }}"></script>
+            
+            <div style="position: relative;" id="Answer">
+                <img src="{{asset (interG.document.url)}}" width="{{ interG.width }}" height="{{ interG.height }}"
+                    alt="AnswerImage" id="AnswerImage{{ interaction.id }}"/>
 
-            <img src="{{asset (interG.document.url)}}" width="{{ interG.width }}" height="{{ interG.height }}"
-                alt="AnswerImage" id="AnswerImage{{ interaction.id }}"/>
+                {% set repco = responses[i].response|split(';') %}
+                {% set x = 0 %}
 
-            {% set repco = responses[i].response|split(';') %}
-            {% set x = 0 %}
+                {% for c in coords %}
 
-            {% for c in coords %}
+                    {% set maxScore = maxScore + coords[x].scoreCoords %}
+                    {% set numb = coords[x].value|split(',') %}
+                    {% set repcoX = repco[x]|split('-') %}
 
-                {% set maxScore = maxScore + coords[x].scoreCoords %}
-                {% set numb = coords[x].value|split(',') %}
-                {% set repcoX = repco[x]|split('-') %}
+                    <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" id="{{ interaction.id }}ra{{ x }}"
+                         alt="RightAnswer{{ x }}" style="position: absolute; z-index: 2;" width="{{ coords[x].size }}"/><br/>
 
-                <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" id="{{ interaction.id }}ra{{ x }}"
-                     alt="RightAnswer{{ x }}" style="position: absolute; z-index: 2;" width="{{ coords[x].size }}"/><br/>
+                    <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" id="{{ interaction.id }}cursor{{ x }}"
+                         alt="AnswerZone{{ x }}" style="position: absolute; z-index: 7;"/>
 
-                <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" id="{{ interaction.id }}cursor{{ x }}"
-                     alt="AnswerZone{{ x }}" style="position: absolute; z-index: 7;"/>
+                    <script type="text/javascript">
+                        whichImg('{{coords[x].shape}}', '{{coords[x].color}}', {{x}}, '{{ numb[0] }}', '{{ numb[1] }}',
+                        '{{repcoX[0]}}', '{{repcoX[1]}}', '{{ asset('bundles/ujmexo/images/graphic/') }}',
+                        '{{ coords[x].size }}', '{{interaction.id}}')
+                    </script>
 
-                <script type="text/javascript">
-                    whichImg('{{coords[x].shape}}', '{{coords[x].color}}', {{x}}, '{{ numb[0] }}', '{{ numb[1] }}',
-                    '{{repcoX[0]}}', '{{repcoX[1]}}', '{{ asset('bundles/ujmexo/images/graphic/') }}',
-                    '{{ coords[x].size }}', '{{interaction.id}}')
-                </script>
-
-                {% set x = x + 1 %}
-
-            {% endfor %}
-
+                    {% set x = x + 1 %}
+                {% endfor %}
+            </div>
+            
             {% for hv in hintViewed %}
                 {% if( hv.hint.interaction.id == interaction.id ) %}
                     {{ "Penalty" | trans }}: {{ hv.hint.penalty }}<br/>
