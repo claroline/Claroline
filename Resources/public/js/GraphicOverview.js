@@ -83,6 +83,8 @@ function whichImg(shape, color, i, x, y, rx, ry, prefix, size, id) {
         }
     }
 
+    document.getElementById(id + 'ra' + i).width = size;
+
     // Place the right answer zones
     document.getElementById(id + 'ra' + i).style.left = String(parseInt(x) - (size / 2)) + 'px';
     document.getElementById(id + 'ra' + i).style.top = String(parseInt(y) - (size / 2)) + 'px';

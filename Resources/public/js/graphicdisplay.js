@@ -5,14 +5,25 @@ var cur; // Cursor with a defined number
 var drag = false; // Allow or not to move the pointer
 var out = false; // To know if is out the image
 var ox = containerCursor.offsetLeft; // Top left of the cursor's container
-var ref = document.getElementById('ref'); // The instructions div to get it position and place pointers after
 var size = document.getElementById('nbpointer').value; // Number of pointers + 1
 var tempCoords = {}; // The coordonates of the answer zones
 var validGraphic = document.getElementById('ValidGraphic'); // The form to validate
 var x; // Mouse x position
 var y; // Mouse y position
 var j; // For for instruction
-var length = ref.scrollHeight + 10; // height of the div "Instructions"
+var length = 2;
+
+window.onload = function () {
+
+    if (document.getElementById('PositionInit').value == 'true' || document.getElementById('cursor1').style.left == '') {
+    
+        for (var h = 1 ; h < size ; h++) {
+            cur = 'cursor' + h;
+            document.getElementById(cur).style.left = String(ox - 20 + h * 37) + 'px';
+            document.getElementById(cur).style.top = String(length) + 'px';
+        }
+    }
+};
 
 document.addEventListener('click', function (e) { // First click, get the selected answer zone
 
@@ -48,7 +59,7 @@ document.addEventListener('click', function (e) { // Second click, place the sel
         if ((t1) > (t3) || (t1) < (answerImg.offsetLeft - 10) || (t2) > (t4) || (t2) < (answerImg.offsetTop - 10)) {
             // Replace the cursor at its initial place
             target.style.left = String(ox - 20 + (target.id.substr(6)) * 37) + 'px';
-            target.style.top = String(ref.offsetTop + length) + 'px';
+            target.style.top = String(length) + 'px';
             out = true;
         }
 
@@ -72,8 +83,8 @@ document.addEventListener('mousemove', function (e) {
             x = e.layerX;
             y = e.layerY;
         } else { // Firefox
-            x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-            y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+            x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - document.getElementById('Answer').offsetLeft;
+            y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - document.getElementById('Answer').offsetTop;
         }
 
         target.style.left = String(x - 10) + 'px';
@@ -89,7 +100,7 @@ document.addEventListener('keydown', function (e) { // Reset all the pointers
         for (var h = 1 ; h < size ; h++) {
             cur = 'cursor' + h;
             document.getElementById(cur).style.left = String(ox - 20 + h * 37) + 'px';
-            document.getElementById(cur).style.top = String(ref.offsetTop + length) + 'px';
+            document.getElementById(cur).style.top = String(length) + 'px';
         }
 
         tempCoords = {};

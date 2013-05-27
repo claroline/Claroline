@@ -139,26 +139,29 @@
             </h3>
 
             <h5>{{ "consignes" | trans }} :</h5>
-            <h6 id="ref"><em>{{ "position" | trans }}<br/>{{ "selection" | trans }}<br/>{{ "raz" | trans }}<br/>
+            <h6><em>{{ "position" | trans }}<br/>{{ "selection" | trans }}<br/>{{ "raz" | trans }}<br/>
                 {{ "onlyOnce" | trans }}</em>
             </h6>
 
-            <p id="ContainerCursor">
-                {% set i = 1 %}
-                {% for coords in listCoords %}
-                    <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{ i }}"
-                         id="cursor{{ i }}" style="position: absolute;"/>
-                    {% set i = i + 1 %}
-               {% endfor %}
-            </p><p>
-                <img src="{{ asset(interactionToDisplayed.document.url) }}" alt="AnswerImg" id="AnswerImg"
-                     width="{{ interactionToDisplayed.width }}" height="{{ interactionToDisplayed.height }}"
-                     style="margin-top: 30px" onload="displayAnswersGraph('{{ response }}')"/>
-            </p>
-
+            <div style="position: relative;" id="Answer">
+                <p id="ContainerCursor">
+                    {% set i = 1 %}
+                    {% for coords in listCoords %}
+                        <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{ i }}"
+                             id="cursor{{ i }}" style="position: absolute;"/>
+                        {% set i = i + 1 %}
+                   {% endfor %}
+                </p><p>
+                    <img src="{{ asset(interactionToDisplayed.document.url) }}" alt="AnswerImg" id="AnswerImg"
+                         width="{{ interactionToDisplayed.width }}" height="{{ interactionToDisplayed.height }}"
+                         style="margin-top: 30px" onload="displayAnswersGraph('{{ response }}')"/>
+                </p>
+            </div>
+            
             <input type="hidden" id="nbpointer" name="nbpointer" value="{{ i }}"/>
             <input type="hidden" id="answers" name="answers" value=""/>
             <input type="hidden" id="graphId" name="graphId" value="{{ interactionToDisplayed.id }}"/>
+            <input type="hidden" id="PositionInit" name="PositionInit" value="false"/>
 
             <table>
                 {% set nbr_hint = 1 %}
