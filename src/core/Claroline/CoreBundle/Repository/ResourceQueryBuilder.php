@@ -58,6 +58,8 @@ class ResourceQueryBuilder
             "    creator.username as creator_username,{$eol}" .
             "    resourceType.name as type,{$eol}" .
             "    resourceType.isBrowsable as is_browsable,{$eol}" .
+            "    previous.id as previous_id,{$eol}" .
+            "    next.id as next_id,{$eol}" .
             "    icon.relativeUrl as large_icon";
 
         if ($withMaxPermissions) {
@@ -380,6 +382,8 @@ class ResourceQueryBuilder
         $joinRelatives = $this->joinSingleRelatives ?
             "JOIN resource.creator creator{$eol}" .
             "JOIN resource.resourceType resourceType{$eol}" .
+            "LEFT JOIN resource.next next{$eol}" .
+            "LEFT JOIN resource.previous previous{$eol}" .
             "JOIN resource.icon icon{$eol}" :
             '';
         $joinRights = $this->leftJoinRights ?
