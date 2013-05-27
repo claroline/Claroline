@@ -59,13 +59,7 @@
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
-                            <li class="
-                                {% if workspaces is empty %}
-                                    disabled
-                                {% else %}
-                                    dropdown-submenu
-                                {% endif %}
-                            ">
+                            <li class="{% if workspaces is empty %}disabled{% else %}dropdown-submenu{% endif %}">
                                 <a href="#" class="disabled">{{ 'history'|trans({}, 'platform') }}</a>
                                 {% if not workspaces is empty %}
                                     <ul class="dropdown-menu">
