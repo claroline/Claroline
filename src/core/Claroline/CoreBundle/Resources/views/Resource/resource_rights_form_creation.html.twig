@@ -1,10 +1,17 @@
 {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
 <form novalidate="novalidate"
-      action="{{ path('claro_resource_right_create', {'resourceId':resourceId, 'roleId':roleId}) }}"
+      action="{{ path('claro_resource_right_create', {'resourceId':resource.getId(), 'roleId':roleId}) }}"
       method="post" {{ form_enctype(form) }}
       class="form-horizontal form-right-resource">
    {{ form_errors(form) }}
    {{ form_widget(form) }}
+    {% if resource.getResourceType().getName() == 'directory' %}
+        <a data-resource-id="{{ resourceId }}"
+           class="res-creation-options"
+           href="{{ path('claro_resource_right_creation_form', {'resourceId': resource.getId(), 'roleId': roleId}) }}">
+            {{ 'options'|trans({}, 'platform') }}
+        </a>
+    {% endif %}
     <div class="form-actions">
         <button id="submit-right-form-button" type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
     </div>

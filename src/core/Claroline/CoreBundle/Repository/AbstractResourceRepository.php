@@ -223,16 +223,17 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
         if ($asArray) {
             $resources = $query->getArrayResult();
+            $return = $resources;
             // Add a field "pathfordisplay" in each entity (as array) of the given array.
-            foreach ($resources as $resource) {
+            foreach ($resources as $key => $resource) {
 
                 if (isset($resource['path'])) {
-                    $resource['pathfordisplay'] = AbstractResource::convertPathForDisplay($resource['path']);
-                    unset($resource['path']);
+                    $return[$key]['path_for_display'] = AbstractResource::convertPathForDisplay($resource['path']);
+
                 }
             }
 
-            return $resources;
+            return $return;
         }
 
         return $query->getResult();

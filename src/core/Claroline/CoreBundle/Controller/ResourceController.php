@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Library\Event\CreateResourceEvent;
@@ -455,7 +454,7 @@ class ResourceController extends Controller
         $this->checkAccess('COPY', $collection);
 
         foreach ($resources as $resource) {
-            $newNode = $this->get('claroline.resource.manager')->copy($resource, $parent);
+            $newNode = $this->get('claroline.resource.manager')->copy($resource, $parent, $token->getUser());
             $em->persist($newNode);
             $em->flush();
             $em->refresh($parent);
@@ -581,14 +580,26 @@ class ResourceController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($resourceId);
-        if ($_breadcrumbs != null) {
+
         $ancestors = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->findResourcesByIds($_breadcrumbs);
+
+        if (count($ancestors) === 0) {
+            $ancestors = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+                ->findAncestors($resource);
+            $_breadcrumbs = array();
+            foreach ($ancestors as $ancestor) {
+                $_breadcrumbs[] = $ancestor['id'];
+            }
+            $ancestors = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+                ->findResourcesByIds($_breadcrumbs);
         } else {
-            $ancestors = array();
+            array_push($ancestors, $resource);
         }
-        array_push($ancestors, $resource);
-        $this->get('claroline.resource.manager')->checkAncestors($ancestors);
+
+        if (!$this->get('claroline.resource.manager')->isPathValid($ancestors)) {
+            throw new \Exception('Breadcrumbs invalid');
+        };
 
         return $this->render(
             'ClarolineCoreBundle:Resource:breadcrumbs.html.twig',

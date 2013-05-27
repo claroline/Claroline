@@ -43,6 +43,7 @@ class ResourceRightsController extends Controller
             $roleRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
                 ->findNonAdminRights($resource);
         } else {
+            //if a role is specified, display the single role form.
             $resourceRight = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
                 ->findOneBy(array('role' => $roleId, 'resource' => $resourceId));
 
@@ -51,14 +52,19 @@ class ResourceRightsController extends Controller
 
                  return $this->render(
                      'ClarolineCoreBundle:Resource:resource_rights_form_creation.html.twig',
-                     array('form' => $form->createView(), 'resourceId' => $resourceId, 'roleId' => $roleId)
+                     array('form' => $form->createView(), 'resource' => $resource, 'roleId' => $roleId)
                  );
             } else {
                 $form = $this->createForm(new ResourceRightType($resource), $resourceRight);
 
                 return $this->render(
                     'ClarolineCoreBundle:Resource:resource_rights_form_edit.html.twig',
-                    array('form' => $form->createView(), 'resourceRightId' => $resourceRight->getId())
+                    array(
+                        'form' => $form->createView(),
+                        'resourceRightId' => $resourceRight->getId(),
+                        'resource' => $resource,
+                        'roleId' => $roleId
+                    )
                 );
             }
         }
@@ -80,7 +86,7 @@ class ResourceRightsController extends Controller
      *     options={"expose"=true}
      * )
      *
-     * Handles the submission of the resource rights form. Expects an array of permissions
+     * Handles the submission of the resource multiple rights form. Expects an array of permissions
      * by role to be passed by POST method. Permissions are set to false when not passed
      * in the request.
      *
@@ -143,6 +149,8 @@ class ResourceRightsController extends Controller
      *     "/{resourceId}/role/{roleId}/right/create",
      *     name="claro_resource_right_create"
      * )
+     *
+     * Handles the submission of the signle right form.
      */
     public function createRightAction($roleId, $resourceId)
     {
@@ -183,7 +191,21 @@ class ResourceRightsController extends Controller
 
             $em->flush();
 
-            return new Response("success");
+            $isDir = ($resource->getResourceType()->getName() === 'directory') ? true: false;
+
+            return $this->render(
+                'ClarolineCoreBundle:Resource:rights_form_row.html.twig',
+                array(
+                    'canCopy' => $form->get('canCopy')->getData(),
+                    'canOpen' => $form->get('canOpen')->getData(),
+                    'canDelete' => $form->get('canDelete')->getData(),
+                    'canEdit' => $form->get('canEdit')->getData(),
+                    'canExport' => $form->get('canExport')->getData(),
+                    'isDirectory' => $isDir,
+                    'role' => $role,
+                    'resource' => $resource
+                )
+            );
         }
     }
 
@@ -298,7 +320,7 @@ class ResourceRightsController extends Controller
         $this->checkAccess('EDIT', $collection);
         $parameters = $this->get('request')->request->all();
         $targetResources = isset($parameters['isRecursive']) ?
-            $resourceRepo->findDescendants($resource, true) :
+            $resourceRepo->findDescendants($resource, true, 'directory') :
             array($resource);
         $resourceTypeIds = isset($parameters['resourceTypes']) ?
             array_keys($parameters['resourceTypes']) :
@@ -402,10 +424,24 @@ class ResourceRightsController extends Controller
     private function setNewCreationTypes(array $targetResources, array $resourceTypes, $roleId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
+        $role = $em->getRepository('ClarolineCoreBundle:Role')->find($roleId);
 
         foreach ($targetResources as $targetResource) {
             $resourceRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
                 ->findOneBy(array('resource' => $targetResource, 'role' => $roleId));
+
+            if ($resourceRights == null) {
+                $resourceRights = new ResourceRights();
+                $resourceRights->setResource($targetResource);
+                $resourceRights->setRole($role);
+                $resourceRights->setCanCopy(false);
+                $resourceRights->setCanDelete(false);
+                $resourceRights->setCanEdit(false);
+                $resourceRights->setCanExport(false);
+                $resourceRights->setCanOpen(false);
+                $em->persist($resourceRights);
+            }
+
             $oldResourceTypes = $resourceRights->getCreatableResourceTypes();
             $resourceRights->setCreatableResourceTypes($resourceTypes);
             $addedResourceTypes = $this->findResourceTypesAdded($resourceRights, $oldResourceTypes);
