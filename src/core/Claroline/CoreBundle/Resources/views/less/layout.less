@@ -19,6 +19,11 @@ html, body {
     padding-bottom: @navbarHeight; /* Reserves a space for the footer */
 }
 
+
+/************/
+/*  @media  */
+/************/
+
 @media (min-width: 980px) {
     /* Ensures the navbar doesn't hide the top content (only necessary on large screens)*/
     #grid {
@@ -30,6 +35,12 @@ html, body {
      #top_bar {
         margin-bottom:0 !important;
     }
+
+    .dropdown-submenu .dropdown-menu
+    {
+        padding-left:20px;
+    }
+
 }
 
 @media (min-width: 768px) {
@@ -49,36 +60,6 @@ html, body {
         text-align: center;
     }
 }
-
-footer {
-    width: 100%;
-    position: relative;
-    height: @navbarHeight;
-    margin: -@navbarHeight 0 0 0; /* Puts the footer in the grid with a negative margin */
-    background-color: @grayLighter;
-    color: lighten(@gray, 20%);
-    text-shadow: 1px 1px @white;
-    padding:0;
-}
-
-#footer-content {
-    padding: 10px;
-    text-align: center;
-    max-height: 100%;
-}
-
-#login-form, #login-error {
-    width: 420px;
-    margin: auto;
-    padding: 10px;
-    border-radius: 3px;
-}
-
-#login-form {
-    margin-top: 12px;
-    background-color: @formActionsBackground;
-}
-
 
 @media (max-width: 767px) {
     /* // Compensates for the 20px body padding set in bootstrap "responsive-767px-max.less"
@@ -109,60 +90,42 @@ footer {
     }
 }
 
-/***********/
-/*  HOME   */
-/***********/
+/************/
+/*  Footer  */
+/************/
 
-.homespans .border
-{
-       height:auto;
-       position:relative;
-       padding-bottom:60px;
+footer {
+    width: 100%;
+    position: relative;
+    height: @navbarHeight;
+    margin: -@navbarHeight 0 0 0; /* Puts the footer in the grid with a negative margin */
+    background-color: @grayLighter;
+    color: lighten(@gray, 20%);
+    text-shadow: 1px 1px @white;
+    padding:0;
 }
 
-.homespans table th
-{
-    text-align:left;
+#footer-content {
+    padding: 10px;
+    text-align: center;
+    max-height: 100%;
 }
 
-.homespans .border .btn
-{
-    position:absolute;
-    bottom:10px;
+/************/
+/*  Login   */
+/************/
+
+#login-form, #login-error {
+    width: 420px;
+    margin: auto;
+    padding: 10px;
+    border-radius: 3px;
 }
 
-.homeicons
-{
-    height:150px;
-    color:@orange;
-    font-size:150px;
-    text-align:center;
-    text-shadow: 4px 4px 3px rgba(0,0,0,.1);
-    white-space:nowrap;
-    margin:0 0 10px 0;
+#login-form {
+    margin-top: 12px;
+    background-color: @formActionsBackground;
 }
-
-.homeicons .size1
-{
-    font-size:150px;
-    position:relative;
-    left:20px;
-}
-
-.homeicons .size2
-{
-    font-size:120px;
-    position:relative;
-    left:-10px
-}
-
-.homeicons .size3
-{
-    font-size:80px;
-    position:relative;
-    left:-40px
-}
-
 
 /***********/
 /* WIDGETS */
@@ -313,7 +276,9 @@ footer {
     position:relative;
 }
 
-/** ZOOM **/
+/************/
+/**  ZOOM  **/
+/************/
 
 /** In this case is not posible to use css3 scale property **/
 
@@ -522,28 +487,10 @@ footer {
 .dropdown-menu a
 {
     cursor:pointer;
-    background:@white !important;
-}
-
-.dropdown-menu a:hover
-{
-    color:@white !important;
-    background:@dropdownLinkBackgroundHover !important;
-}
-
-/* Disable link */
-
-a.dropdown-menu-item-disabled,
-a.dropdown-menu-item-disabled:visited ,
-a.dropdown-menu-item-disabled:active,
-a.dropdown-menu-item-disabled:hover {
-    color: #999 !important;
-    cursor: default;
-    background-color: @white;
 }
 
 /**********/
-/* Tabs */
+/*  Tabs  */
 /**********/
 
 .tabs.nav.nav-tabs
@@ -556,10 +503,6 @@ a.dropdown-menu-item-disabled:hover {
 /********/
 /* MISC */
 /********/
-
-.icon-new-msg {
-    color: red !important;
-}
 
 .please-wait {
     width:100%;
@@ -629,92 +572,31 @@ form legend
 }
 
 
-
-/************ HOME ****************/
-
+/**********************/
+/***      HOME      ***/
+/**********************/
 
 @media (min-width: 767px)
 {
-	.content.row-fluid [class*="span"]
+	@contentSpanIterations: 12;
+    @contentSpanMargin: 1;
+
+    .content.row-fluid [class*="span"]
     {
 		margin-left: 0;
-		margin-right: 1%;
+		margin-right: unit(@contentSpanMargin, "%");
 	}
 
-	.content.row-fluid .span1
-	{
-		width:7.33%;
-	}
+    .contentSpan (@index) when (@index >= 1) {
 
-    .content.row-fluid .span2
-	{
-		width:15.66%;
-	}
+        (~".content.row-fluid .span@{index}") {
+            width:unit(((@index * 100 / @contentSpanIterations) - @contentSpanMargin), "%");
+        }
 
-    .content.row-fluid .span3
-	{
-		width:24%;
-	}
+        .contentSpan(@index - 1);
+    }
 
-    .content.row-fluid .span4
-	{
-		width:32.33%;
-	}
-
-    .content.row-fluid .span5
-	{
-		width:40.66%;
-	}
-
-    .content.row-fluid .span6
-	{
-		width:49%;
-	}
-
-    .content.row-fluid .span7
-	{
-		width:57.33%;
-	}
-
-    .content.row-fluid .span8
-	{
-		width:65.66%;
-	}
-
-    .content.row-fluid .span9
-	{
-		width:74%;
-	}
-
-    .content.row-fluid .span10
-	{
-		width:82.33%;
-	}
-
-    .content.row-fluid .span11
-	{
-		width:90.66%;
-	}
-
-    .content.row-fluid .span12
-	{
-		width:99%;
-	}
-
-
-	.content.row-fluid
-	{
-		/*border:1px solid lime;*/
-	}
-}
-
-.content-element
-{
-    -webkit-animation: fadein 2s 0s 1 alternate ease-in-out;
-	-moz-animation: fadein 2s 0s 1 alternate ease-in-out;
-	-ms-animation: fadein 2s 0s 1 alternate ease-in-out;
-	-o-animation: fadein 2s 0s 1 alternate ease-in-out;
-	animation: fadein 2s 0s 1 alternate ease-in-out;
+    .contentSpan (@contentSpanIterations);
 }
 
 .content-element .text
