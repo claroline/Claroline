@@ -33,7 +33,8 @@ class HomeExtension extends \Twig_Extension
         return array(
             'timeAgo' => new \Twig_Filter_Method($this, 'timeAgo'),
             'homeLink' => new \Twig_Filter_Method($this, 'homeLink'),
-            'activeLink' => new \Twig_Filter_Method($this, 'activeLink')
+            'activeLink' => new \Twig_Filter_Method($this, 'activeLink'),
+            'compareRoute' => new \Twig_Filter_Method($this, 'compareRoute')
         );
     }
 
@@ -121,6 +122,17 @@ class HomeExtension extends \Twig_Extension
         ) {
 
             return " active"; //the white space is nedded
+        }
+
+        return "";
+    }
+
+    public function compareRoute($link, $return = " class='active'")
+    {
+        if ((strpos($_SERVER['REQUEST_URI'], $link) === 0) or
+            (isset($_SERVER['PATH_INFO']) and strpos($_SERVER['PATH_INFO'], $link) === 0)
+        ) {
+            return $return;
         }
 
         return "";
