@@ -32,7 +32,6 @@
                     actions: new manager.Views.Actions(parameters, dispatcher),
                     resources: new manager.Views.Resources(parameters, dispatcher)
                 };
-
             },
             render: function (resources, path, creatableTypes, isSearchMode, searchParameters) {
                 this.currentDirectory = _.last(path);
@@ -370,7 +369,8 @@
             }
         }),
         Thumbnail: Backbone.View.extend({
-            className: 'resource-thumbnail resource zoom100',
+            className: 'resource-thumbnail resource zoom100 ui-state-default',
+            tagName: 'li',
             events: {
                 'click .resource-menu-action': function (event) {
                     event.preventDefault();
@@ -407,10 +407,12 @@
         }),
         Resources: Backbone.View.extend({
             className: 'resources',
+            tagName: 'ul',
+            attributes: {'id': 'sortable'},
             events: {
-                'click .resource-thumbnail .resource-element': 'dispatchClick',
+                'dblclick .resource-thumbnail .resource-element': 'dispatchOpen',
                 'click .resource-thumbnail input[type=checkbox]': 'dispatchCheck',
-                'click .results table a.resource-link': 'dispatchClick',
+                'click .results table a.resource-link': 'dispatchOpen',
                 'click .results table input[type=checkbox]': 'dispatchCheck'
             },
             initialize: function (parameters, dispatcher) {
@@ -451,7 +453,7 @@
                     this.$('#' + resourceIds[i]).remove();
                 }
             },
-            dispatchClick: function (event) {
+            dispatchOpen: function (event) {
                 event.preventDefault();
                 this.dispatcher.trigger('resource-click', {
                     resourceId: event.currentTarget.getAttribute('data-id'),
@@ -767,6 +769,32 @@
                         this.parameters.parentElement.append(this.views[view].el);
                         this.views[view].isAppended = true;
                     }
+                    $('#sortable').sortable({
+                        update: function (event, ui) {
+                            var ids = $('#sortable').sortable('toArray');
+                            var moved = ui.item.attr('id');
+                            var indexMoved = 0;
+
+                            for (var i = 0; i < ids.length; i++) {
+                                if (ids[i] === moved) {
+                                    indexMoved = i;
+                                }
+                            }
+
+                            var nextId = 0;
+
+                            if (indexMoved + 1 !== ids.length) {
+                                nextId = ids[indexMoved + 1];
+                            }
+
+                            $.ajax({
+                                url: Routing.generate(
+                                    'claro_resource_insert_before',
+                                    {'resourceId': moved, 'nextId': nextId}
+                                )
+                            });
+                        }
+                    });
                 }
             });
         },
@@ -933,7 +961,7 @@
                 }
                 _path += '_breadcrumbs[]=' + directoryHistory[i].id;
             }
-            
+
             window.location = this.parameters.appPath + '/resource/open/' + resourceType + '/' + resourceId + _path;
         },
         editRights: function (formAction, formData) {
@@ -1014,10 +1042,8 @@
         parameters.pickerCallback = parameters.pickerCallback || function () {};
         parameters.appPath = parameters.appPath || '';
         parameters.webPath = parameters.webPath || '';
-        console.debug(parameters.directoryHistory);
         manager.Controller.initialize(parameters);
     };
-
     /**
      * Opens or closes the resource picker, depending on the "action" parameter.
      *

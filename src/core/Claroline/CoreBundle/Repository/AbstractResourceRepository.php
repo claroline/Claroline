@@ -107,7 +107,9 @@ class AbstractResourceRepository extends MaterializedPathRepository
             $children = $this->executeQuery($query);
         }
 
-        return $children;
+        //sort children by next & previous
+
+        return $this->sort($children);
     }
 
     /**
@@ -205,40 +207,6 @@ class AbstractResourceRepository extends MaterializedPathRepository
         return $this->executeQuery($query);
     }
 
-    /**
-     * Executes a DQL query and returns resources as entities or arrays.
-     * If it returns arrays, it add a "pathfordisplay" field in each item.
-     *
-     * @param Query   $query    The query to execute
-     * @param integer $offset   First row to start with
-     * @param integer $numrows  Maximum number of rows to return
-     * @param boolean $asArray  Whether the resources must be returned as arrays or as objects
-     *
-     * @return array[AbstractResource|array]
-     */
-    private function executeQuery($query, $offset = null, $numrows = null, $asArray = true)
-    {
-        $query->setFirstResult($offset);
-        $query->setMaxResults($numrows);
-
-        if ($asArray) {
-            $resources = $query->getArrayResult();
-            $return = $resources;
-            // Add a field "pathfordisplay" in each entity (as array) of the given array.
-            foreach ($resources as $key => $resource) {
-
-                if (isset($resource['path'])) {
-                    $return[$key]['path_for_display'] = AbstractResource::convertPathForDisplay($resource['path']);
-
-                }
-            }
-
-            return $return;
-        }
-
-        return $query->getResult();
-    }
-
     public function count()
     {
         $dql = "SELECT COUNT(w) FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w";
@@ -271,5 +239,72 @@ class AbstractResourceRepository extends MaterializedPathRepository
         }
 
         return $orderedResult;
+    }
+
+    /**
+     * Sort a resource (linked list)
+     * @param array $resources
+     * @return array
+     */
+    public function sort(array $resources)
+    {
+        return $resources;
+
+        $sorted = array();
+        //set the 1st item.
+        foreach ($resources as $resource) {
+            if ($resource['previous_id'] == null) {
+                $sorted[] = $resource;
+            }
+        }
+
+        $loop = 0;
+        while (count($sorted) < count($resources)) {
+            $loop++;
+            foreach ($resources as $resource) {
+                if ($sorted[count($sorted) -1]['id'] == $resource['previous_id']) {
+                    $sorted[] = $resource;
+                }
+            }
+            if ($loop > 100) {
+                throw new \Exception('More than 100 items in a directory or infinite loop detected');
+            }
+        }
+
+        return $sorted;
+    }
+
+    /**
+     * Executes a DQL query and returns resources as entities or arrays.
+     * If it returns arrays, it add a "pathfordisplay" field in each item.
+     *
+     * @param Query   $query    The query to execute
+     * @param integer $offset   First row to start with
+     * @param integer $numrows  Maximum number of rows to return
+     * @param boolean $asArray  Whether the resources must be returned as arrays or as objects
+     *
+     * @return array[AbstractResource|array]
+     */
+    private function executeQuery($query, $offset = null, $numrows = null, $asArray = true)
+    {
+        $query->setFirstResult($offset);
+        $query->setMaxResults($numrows);
+
+        if ($asArray) {
+            $resources = $query->getArrayResult();
+            $return = $resources;
+            // Add a field "pathfordisplay" in each entity (as array) of the given array.
+            foreach ($resources as $key => $resource) {
+
+                if (isset($resource['path'])) {
+                    $return[$key]['path_for_display'] = AbstractResource::convertPathForDisplay($resource['path']);
+
+                }
+            }
+
+            return $return;
+        }
+
+        return $query->getResult();
     }
 }
