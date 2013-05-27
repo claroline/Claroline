@@ -1,5 +1,5 @@
 {% for toolWithTranslation in toolsWithTranslation %}
-    <li{% if path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': toolWithTranslation['tool'].getName()}) == app.request.requesturi %} class="active"{% endif %}>
+<li{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': toolWithTranslation['tool'].getName()}) | compareRoute | raw }}>
     <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': toolWithTranslation['tool'].getName()}) }}">
         <i class="{{ toolWithTranslation['tool'].getClass() }}"></i>
         <span>{{ toolWithTranslation['name'] }}</span>

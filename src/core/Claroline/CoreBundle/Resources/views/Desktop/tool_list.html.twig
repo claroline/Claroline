@@ -1,5 +1,5 @@
 {% for tool in tools %}
-    <li{% if path('claro_desktop_open_tool', {'toolName': tool.getName() }) == app.request.requesturi %} class="active"{% endif %}>
+<li{{ path('claro_desktop_open_tool', {'toolName': tool.getName() }) | compareRoute | raw }}>
     <a href="{{ path('claro_desktop_open_tool', {'toolName': tool.getName() }) }}"
         id="{{ tool.getName() }}-link"
         data-original-title="{{ tool.getName()|trans({}, 'tools') }}"

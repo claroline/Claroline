@@ -47,12 +47,12 @@
                     <li class="divider-vertical"></li>
 
                     {% if isLogged %}
-                    <li class="dropdown">
+                    <li class="dropdown{{ "/workspaces/" | compareRoute(" active") | raw }}">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             <i class="icon-book"></i>
                             {% if isInAWorkspace %}
                             {{ currentWorkspace.getName() }}
-                            <span class="workspace-code"> ({{ currentWorkspace.getCode() }})</span>
+                            <span class="workspace-code">({{ currentWorkspace.getCode() }})</span>
                             {% else %}
                             {{ 'workspaces'|trans({}, 'platform') }}
                             {% endif %}
@@ -109,7 +109,7 @@
                             <i class="icon-book"></i>
                             {% if isInAWorkspace %}
                             {{ currentWorkspace.getName() }}
-                            <span class="workspace-code"> ({{ currentWorkspace.getCode() }})</span>
+                            <span class="workspace-code">({{ currentWorkspace.getCode() }})</span>
                             {% else %}
                             {{ 'workspaces'|trans({}, 'platform') }}
                             {% endif %}
