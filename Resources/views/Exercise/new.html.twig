@@ -33,39 +33,21 @@
  # knowledge of the CeCILL license and that you accept its terms.
 #}
 
-{#
-{% extends 'UJMExoBundle::layout.html.twig' %}
-
-{% block title %} Nom du Cours{% endblock %}
-#}
-
 {% block content %}
-{{ tinymce_init() }}
 <h1>Exercise creation</h1>
 
-{#<form action="{{ path('exercise_create') }}" method="post" {{ form_enctype(form) }} class="well label_bold">#}
 <form action="{{ path('claro_resource_create', {resourceType: 'ujm_exercise', parentId: '_resourceId'}) }}"
       method="post" {{ form_enctype(form) }}
       class="well label_bold">
-    {{ form_widget(form) }}
+    {#{ form_widget(form) }#}
+    {{ form_row(form.title) }}
+    <div style='display: none'>
+        {{ form_rest(form) }}
+    </div>
+
     <p>
         <button type="submit">Create</button>
     </p>
 </form>
 
 {% endblock %}
-{#
-{% block stylesheets %}
-{{ parent() }}
-<link rel="stylesheet" href="{{ asset('bundles/ujmexo/js/jquery-ui-1.9.2.custom/development-bundle/themes/smoothness/minified/jquery-ui.min.css') }}"/>
-<link rel="stylesheet" href="{{ asset('bundles/ujmexo/js/jquery-ui-1.9.2.custom/development-bundle/themes/jquery-ui-timepicker-addon.css') }}"/>
-{% endblock %}
-
-{% block javascripts %}
-{{ parent() }}
-<script src="{{ asset('bundles/ujmexo/js/jquery-ui-1.9.2.custom/development-bundle/ui/minified/jquery-ui.custom.min.js') }}"></script>
-<script src="{{ asset('bundles/ujmexo/js/jquery-ui-1.9.2.custom/development-bundle/ui/jquery-ui-timepicker-addon.js') }}"></script>
-<script src="{{ asset('bundles/ujmexo/js/jquery-ui-1.9.2.custom/development-bundle/ui/jquery-ui-sliderAccess.js') }}"></script>
-<script src="{{ asset('bundles/ujmexo/js/dateTimePicker.js') }}"></script>
-{% endblock %}
-#}
