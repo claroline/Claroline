@@ -26,7 +26,24 @@
     {% endif %}
 {% endmacro %}
 
+{% macro displayControls(workspaceId) %}
+    {% if app.user %}
+        <button id="delete-user-button"
+                class="btn btn-secondary delete-users-button">
+            <i class="icon-trash"></i>
+            {{ 'delete'|trans({}, 'platform') }}
+        </button>
+        <a class="btn btn-secondary"
+           href="{{ path('claro_workspace_unregistered_user_list', {'workspaceId': workspaceId}) }}"
+           id="add-user-link">
+            <i class="icon-plus"></i>
+            {{ 'add_user'|trans({}, 'platform') }}
+        </a>
+    {% endif %}
+{% endmacro %}
+
 {% from _self import renderPager %}
+{% from _self import displayControls %}
 
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
@@ -56,13 +73,10 @@
     {{ macros.flashBox() }}
     <div class="margin">
         <div id="twig-attributes"
-            data-workspaceId="{{workspace.getId()}}">
+             data-workspaceId="{{ workspace.getId() }}">
         </div>
-
         <div class="search-bar">
-            <button id="delete-user-button" class="btn btn-secondary delete-users-button"><i class="icon-trash"></i> {{ 'delete'|trans({}, 'platform') }}</button>
-            <a class="btn btn-secondary" href="{{ path('claro_workspace_unregistered_user_list', {'workspaceId': workspace.getId()}) }}" id="add-user-link"><i class="icon-plus"></i> {{ 'add_user'|trans({}, 'platform') }}</a>
-
+            {{ displayControls(workspace.getId()) }}
             <div class="input-append pull-right">
                 <input class="input-medium" type="text" id="search-user-txt"  placeholder="{{ 'search'|trans({}, 'platform') }}">
                 <button class="filter btn" type="button" id="search-user-button">
@@ -81,8 +95,10 @@
                     <td>{{ 'first_name'|trans({}, 'platform') }}</td>
                     <td>{{ 'mail'|trans({}, 'platform') }}</td>
                     <td>{{ 'role'|trans({}, 'platform') }}</td>
-                    <td>{{ 'parameters'|trans({}, 'platform') }}</td>
-                    <td></td>
+                    {% if app.user %}
+                        <td>{{ 'parameters'|trans({}, 'platform') }}</td>
+                        <td></td>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody id="user-table-body">
@@ -98,12 +114,14 @@
                             {% endif %}
                             {% endfor %}
                         </td>
-                        <td>
-                            <button href="#" data-user-id="{{ user.id }}" class="button-parameters-user btn btn-secondary">{{ 'parameters'|trans({}, 'platform') }}</button>
-                        </td>
-                        <td>
-                            <input type="checkbox" value="{{ user.id }}" class="chk-delete-user" align="center"></input>
-                        </td>
+                        {% if app.user %}
+                            <td>
+                                <button href="#" data-user-id="{{ user.id }}" class="button-parameters-user btn btn-secondary">{{ 'parameters'|trans({}, 'platform') }}</button>
+                            </td>
+                            <td>
+                                <input type="checkbox" value="{{ user.id }}" class="chk-delete-user" align="center"></input>
+                            </td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
             </tbody>
@@ -111,11 +129,7 @@
         </div>
             {{ renderPager(search, workspace.getId(), pager) }}
         <div>
-
-        <button id="delete-user-button" class="btn btn-secondary delete-users-button"><i class="icon-trash"></i> {{ 'delete'|trans({}, 'platform') }}</button>
-        <a class="btn btn-secondary" href="{{ path('claro_workspace_unregistered_user_list', {'workspaceId': workspace.getId()}) }}" id="add-user-link"><i class="icon-plus"></i> {{ 'add_user'|trans({}, 'platform') }}</a>
-
-
+        {{ displayControls(workspace.getId()) }}
         <div id="validation-box" class="modal hide fade">
             <div class="modal-header">
             </div>
@@ -129,4 +143,3 @@
         </div>
     </div>
 {% endblock %}
-

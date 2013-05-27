@@ -117,25 +117,23 @@ class HomeExtension extends \Twig_Extension
 
     public function activeLink($link)
     {
-        if ((isset($_SERVER['PATH_INFO']) and $_SERVER['PATH_INFO'] == $link) or
-            (!isset($_SERVER['PATH_INFO']) and $link == "/")
-        ) {
+        if ((isset($_SERVER['PATH_INFO']) && $_SERVER['PATH_INFO'] === $link)
+            || (!isset($_SERVER['PATH_INFO']) && $link == '/')) {
 
-            return " active"; //the white space is nedded
+            return ' active'; //the white space is nedded
         }
 
-        return "";
+        return '';
     }
 
     public function compareRoute($link, $return = " class='active'")
     {
-        if ((strpos($_SERVER['REQUEST_URI'], $link) === 0) or
-            (isset($_SERVER['PATH_INFO']) and strpos($_SERVER['PATH_INFO'], $link) === 0)
-        ) {
+        if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], $link) === 0
+            || isset($_SERVER['PATH_INFO']) && strpos($_SERVER['PATH_INFO'], $link) === 0) {
             return $return;
         }
 
-        return "";
+        return '';
     }
 
     /**
