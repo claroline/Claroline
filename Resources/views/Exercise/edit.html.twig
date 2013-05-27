@@ -59,14 +59,12 @@
 
 {% block stylesheets %}
 {{ parent() }}
-<link rel="stylesheet" href="{{ asset('bundles/ujmexo/js/jquery-ui-1.9.2.custom/development-bundle/themes/smoothness/minified/jquery-ui.min.css') }}"/>
-<link rel="stylesheet" href="{{ asset('bundles/ujmexo/js/jquery-ui-1.9.2.custom/development-bundle/themes/jquery-ui-timepicker-addon.css') }}"/>
 {% endblock %}
 
 {% block javascripts %}
 {{ parent() }}
-<script src="{{ asset('bundles/ujmexo/js/jquery-ui-1.9.2.custom/development-bundle/ui/minified/jquery-ui.custom.min.js') }}"></script>
-<script src="{{ asset('bundles/ujmexo/js/jquery-ui-1.9.2.custom/development-bundle/ui/jquery-ui-timepicker-addon.js') }}"></script>
-<script src="{{ asset('bundles/ujmexo/js/jquery-ui-1.9.2.custom/development-bundle/ui/jquery-ui-sliderAccess.js') }}"></script>
-<script src="{{ asset('bundles/ujmexo/js/dateTimePicker.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}" type="text/javascript"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/js/jquery-ui-1.9.2.custom.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/activity/index.js') }}"></script>
+    <script src="{{ asset('bundles/ujmexo/js/dateTimePicker.js') }}"></script>
 {% endblock %}

@@ -124,7 +124,7 @@ class ExerciseType extends AbstractType
                 'widget' => 'single_text',
                 'input' => 'datetime',
                 'format' => 'dd/MM/yyyy HH:mm',
-                'attr' => array('class' => 'date'),
+                'attr' => array('class' => 'datepicker'),
                 'label' => 'Start date'
                 )
             )
@@ -138,7 +138,7 @@ class ExerciseType extends AbstractType
                     'widget' => 'single_text',
                     'input' => 'datetime',
                     'format' => 'dd/MM/yyyy HH:mm',
-                    'attr' => array('class' => 'date'),
+                    'attr' => array('class' => 'datepicker'),
                     'label' => 'end_date'
                 )
             )
