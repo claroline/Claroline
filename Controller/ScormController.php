@@ -6,6 +6,7 @@ use Claroline\ScormBundle\Entity\ScormInfo;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Claroline\CoreBundle\Library\Event\LogGenericEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
@@ -44,38 +45,8 @@ class ScormController extends Controller
             throw new AccessDeniedException();
         }
 
-        // Convert sessionTime & totalTime to integer (hundredth of second)
-        // Then compute the new totalTime value by adding it the sessionTime
-        $sessionTimeInArray = explode(':', $sessionTime);
-        $sessionTimeInArraySec = explode('.', $sessionTimeInArray[2]);
-        $sessionTimeInHundredth = 0;
-
-        if (isset($sessionTimeInArraySec[1])) {
-
-            if (strlen($sessionTimeInArraySec[1]) === 1) {
-                $sessionTimeInArraySec[1] .= "0";
-            }
-            $sessionTimeInHundredth = intval($sessionTimeInArraySec[1]);
-        }
-        $sessionTimeInHundredth += intval($sessionTimeInArraySec[0]) * 100;
-        $sessionTimeInHundredth += intval($sessionTimeInArray[1]) * 6000;
-        $sessionTimeInHundredth += intval($sessionTimeInArray[0]) * 144000;
-
-        $totalTimeInArray = explode(':', $totalTime);
-        $totalTimeInArraySec = explode('.', $totalTimeInArray[2]);
-        $totalTimeInHundredth = 0;
-
-        if (isset($totalTimeInArraySec[1])) {
-
-            if (strlen($totalTimeInArraySec[1]) === 1) {
-                $totalTimeInArraySec[1] .= "0";
-            }
-            $totalTimeInHundredth = intval($totalTimeInArraySec[1]);
-        }
-        $totalTimeInHundredth += intval($totalTimeInArraySec[0]) * 100;
-        $totalTimeInHundredth += intval($totalTimeInArray[1]) * 6000;
-        $totalTimeInHundredth += intval($totalTimeInArray[0]) * 144000;
-
+        $sessionTimeInHundredth = $this->convertTimeInHundredth($sessionTime);
+        $totalTimeInHundredth = $this->convertTimeInHundredth($totalTime);
         $totalTimeInHundredth += $sessionTimeInHundredth;
 
         $em = $this->get('doctrine.orm.entity_manager');
@@ -108,6 +79,50 @@ class ScormController extends Controller
         $em->persist($scormInfo);
         $em->flush();
 
+        $details = array();
+        $details['scoreRaw'] = $scormInfo->getScoreRaw();
+        $details['scoreMin'] = $scormInfo->getScoreMin();
+        $details['scoreMax'] = $scormInfo->getScoreMax();
+        $details['lessonStatus'] = $scormInfo->getLessonStatus();
+        $details['sessionTime'] = $scormInfo->getSessionTime();
+        $details['totalTime'] = $scormInfo->getTotalTime();
+        $details['suspendData'] = $scormInfo->getSuspendData();
+        $details['exitMode'] = $scormInfo->getExitMode();
+        $details['credit'] = $scormInfo->getCredit();
+        $details['lessonMode'] = $scormInfo->getLessonMode();
+
+        $log = new LogGenericEvent(
+            "resource_scorm_result",
+            $details, null, null,
+            $scorm, null, $scorm->getWorkspace(),
+            $user, null, null, null
+        );
+        $this->get('event_dispatcher')->dispatch('log', $log);
+
         return new Response('', '204');
+    }
+
+    /**
+     * Convert time (HHHH:MM:SS.hh) to integer (hundredth of second)
+     *
+     * @param string $time
+     */
+    private function convertTimeInHundredth($time) {
+        $timeInArray = explode(':', $time);
+        $timeInArraySec = explode('.', $timeInArray[2]);
+        $timeInHundredth = 0;
+
+        if (isset($timeInArraySec[1])) {
+
+            if (strlen($timeInArraySec[1]) === 1) {
+                $timeInArraySec[1] .= "0";
+            }
+            $timeInHundredth = intval($timeInArraySec[1]);
+        }
+        $timeInHundredth += intval($timeInArraySec[0]) * 100;
+        $timeInHundredth += intval($timeInArray[1]) * 6000;
+        $timeInHundredth += intval($timeInArray[0]) * 144000;
+
+        return $timeInHundredth;
     }
 }

@@ -244,7 +244,7 @@ function LMSSetValue(argName, argValue)
 
             return "true";
         case "cmi.core.session_time" :
-            // regexp to check format
+            // regex to check format
             // hhhh:mm:ss.ss
             var re = /^[0-9]{2,4}:[0-9]{2}:[0-9]{2}(.[0-9]{1,2})?$/;
 
@@ -253,7 +253,7 @@ function LMSSetValue(argName, argValue)
 
                 return "false";
             }
-            // check that minuts and second are 0 <= x < 60
+            // check that minute and second are 0 <= x < 60
             var timeArray = argValue.split(":");
 
             if (timeArray[1] < 0 || timeArray[1] >= 60 || timeArray[2] < 0 || timeArray[2] >= 60) {
