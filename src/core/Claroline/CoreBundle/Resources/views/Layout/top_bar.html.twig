@@ -10,12 +10,12 @@
                 Claroline
             </a>
 
-            <div class="nav-collapse collapse in">
+            <div class="nav-collapse collapse">
 
                 {% if isLogged %}
 
                     <ul class="nav">
-                        <li{% if "desktop/tool/open" in app.request.requesturi %} class="active"{% endif %}>
+                        <li{{ "/desktop/tool/open/home" | compareRoute | raw }}>
                         <a href="{{ path('claro_desktop_open') }}" id="link-desktop">
                             <i class="icon-briefcase"></i> {{ 'desktop'|trans({}, 'platform') }}
                         </a>
@@ -23,15 +23,15 @@
 
                         {% if is_granted('ROLE_ADMIN') %}
 
-                            <li{% if app.request.requesturi == path('claro_admin_index') %} class="active"{% endif %}>
+                            <li{{ path('claro_admin_index') | compareRoute | raw }}>
                             <a href="{{ path('claro_admin_index') }}" id="link-administration">
-                                <i class='icon-cog'></i>{{ 'administration'|trans({}, 'platform') }}
+                                <i class='icon-cog'></i> {{ 'administration'|trans({}, 'platform') }}
                             </a>
                             </li>
 
                         {% endif %}
 
-                        <li{% if app.request.requesturi == path('claro_message_list_received') %} class="active"{% endif %}>
+                        <li{{ path('claro_message_list_received') | compareRoute | raw }}>
                         <a href="{{ path('claro_message_list_received') }}" id="link-messages"
                             title="{{ 'new_message_alert'|trans({'%count%': countUnreadMessages}, 'platform')}}">
                             <i class="icon-envelope"></i> <span class="text">{{ 'messages'|trans({}, 'platform') }}</span>
@@ -47,7 +47,7 @@
                     <li class="divider-vertical"></li>
 
                     {% if isLogged %}
-                    <li class="dropdown">
+                    <li class="dropdown{{ "/workspaces/" | compareRoute(" active") | raw }}">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             <i class="icon-book"></i>
                             {% if isInAWorkspace %}
@@ -59,14 +59,8 @@
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
-                            <li class="
-                                {% if workspaces is empty %}
-                                    disabled
-                                {% else %}
-                                    dropdown-submenu
-                                {% endif %}
-                            ">
-                                <a href="#" class="disabled">{{ 'history'|trans({}, 'platform') }}</a>
+                            <li class="{% if workspaces is empty %}disabled{% else %}dropdown-submenu{% endif %}">
+                                <a>{{ 'history'|trans({}, 'platform') }}</a>
                                 {% if not workspaces is empty %}
                                     <ul class="dropdown-menu">
                                     {% for workspace in workspaces %}
@@ -160,9 +154,7 @@
                     <li class="dropdown">
 
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="icon-user"></i>
-                        {{ username }}
-                        <b class="caret"></b>
+                        <i class="icon-user"></i> {{ username }}<b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu">
                         {% if isLogged %}
