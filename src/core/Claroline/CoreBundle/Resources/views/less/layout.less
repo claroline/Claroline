@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 // This less file contains only global layout rules (mainly for navbar, grid and //
-// footer positionning). It is included at the end of "bootstrap.less.pre". Keep //
-// it short and design-neutral.                                                  //
+// footer positionning). It is included at the end of "common.less". Keep it     //
+// short and design-neutral.                                                     //
 ///////////////////////////////////////////////////////////////////////////////////
 
 html, body {
@@ -55,7 +55,30 @@ footer {
     position: relative;
     height: @navbarHeight;
     margin: -@navbarHeight 0 0 0; /* Puts the footer in the grid with a negative margin */
+    background-color: @grayLighter;
+    color: lighten(@gray, 20%);
+    text-shadow: 1px 1px @white;
+    padding:0;
 }
+
+#footer-content {
+    padding: 10px;
+    text-align: center;
+    max-height: 100%;
+}
+
+#login-form, #login-error {
+    width: 420px;
+    margin: auto;
+    padding: 10px;
+    border-radius: 3px;
+}
+
+#login-form {
+    margin-top: 12px;
+    background-color: @formActionsBackground;
+}
+
 
 @media (max-width: 767px) {
     /* // Compensates for the 20px body padding set in bootstrap "responsive-767px-max.less"
@@ -185,11 +208,15 @@ footer {
     .border-bottom-radius(0);
 }
 
+.navbar-fixed-top .container
+{
+	padding: 0 20px 0 20px;
+}
+
 .section-content .navbar .navbar-inner a.disabled
 {
     color:@grayLight;
 }
-
 
 .resource-manager .actions .btn,
 .resource-manager .actions select {
