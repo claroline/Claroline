@@ -521,6 +521,7 @@ class Manager
                 if ($ancestors[$i+1]->getParent() == $ancestors[$i]) {
                     $continue = true;
                 } else {
+                    var_dump($ancestors[$i+1]->getName());
                     if ($this->hasLinkTo($ancestors[$i], $ancestors[$i+1])) {
                         $continue = true;
                     } else {
@@ -608,15 +609,27 @@ class Manager
      * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $target
      */
     public function insertBefore(AbstractResource $resource, AbstractResource $next = null)
-    {
+    {   /*
+        if ($resource->getParent() !== $next->getParent()) {
+            throw new \Exception('Both sorted resources must be located in the same directory');
+        }*/
+
+        if ($resource->getParent() === null) {
+            throw new \Exception('The root directories cannot be sorted');
+        }
+
         $resource->setNext($next);
+//                var_dump('resource next is '.$resource->getNext()->getName());
         $savePrevious = $resource->getPrevious();
 
         if ($next !== null) {
             $previous = $next->getPrevious();
             $next->setPrevious($resource);
+//            var_dump('next name ='.$next->getName());
+//            var_dump('next previous = '.$next->getPrevious()->getName());
             $this->em->persist($next);
         } else {
+//            var_dump('next is null');
             $previous = $this->em
                 ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
                 ->findOneBy(array('parent' => $resource->getParent(), 'next' => null));
@@ -624,11 +637,19 @@ class Manager
 
         $resource->setPrevious($previous);
 
+//        if ($resource->getPrevious()!== null) {
+//             var_dump($resource->getPrevious()->getName());
+//        } else {
+//            var_dump('resource previous is null');
+//        }
+
         if ($previous !== null) {
             $previous->setNext($resource);
             $previous->setPrevious($savePrevious);
             $this->em->persist($previous);
         }
+
+//        var_dump('resource next is '.$resource->getNext()->getName());
 
         $this->em->persist($resource);
         $this->em->flush();

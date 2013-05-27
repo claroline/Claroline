@@ -38,6 +38,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $jsonResponse = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($jsonResponse));
         $crawler = $this->client->request('GET', "/workspaces/tool/user_management/{$wsAId}/users/registered/page");
+
         $this->assertEquals(2, $crawler->filter('.row-user')->count());
         $this->client->request(
             'DELETE',
@@ -563,4 +564,38 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
+    //555555555555555555555555555555555555
+    //+++++++++++++++++++++++++++++++++++/
+    // TEST ANONYMOUS USER RESTRICTIONS +/
+    //+++++++++++++++++++++++++++++++++++/
+
+    public function testAnonymousAccessToUserToolIsReadonly()
+    {
+        $this->loadUserData(array('john' => 'user'));
+        $wId = $this->getUser('john')->getPersonalWorkspace()->getId();
+        $tId = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool')
+            ->findOneByName('user_management')
+            ->getId();
+        $rId = $this->em->getRepository('ClarolineCoreBundle:Role')
+            ->findOneByName('ROLE_ANONYMOUS')
+            ->getId();
+        $this->logUser($this->getUser('john'));
+        $this->client->request(
+            'POST',
+            "/workspaces/tool/properties/add/tool/{$tId}/position/1/workspace/{$wId}/role/{$rId}"
+        );
+        $this->client->request('GET', '/logout');
+
+        $this->client->request(
+            'GET',
+            "/workspaces/tool/user_management/{$wId}/users/registered/page"
+        );
+        $this->assertNotContains('login-form', $this->client->getResponse()->getContent());
+        $this->client->request(
+            'GET',
+            "/workspaces/tool/user_management/{$wId}/users/unregistered/page"
+        );
+        $this->assertContains('login-form', $this->client->getResponse()->getContent());
+        // todo : also test add/remove/edit routes
+    }
 }
