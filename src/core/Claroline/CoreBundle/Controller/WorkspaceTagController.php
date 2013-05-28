@@ -371,7 +371,7 @@ class WorkspaceTagController extends Controller
             throw new \RuntimeException('User, Workspace or Tag cannot be null');
         }
 
-        if ($user->getId() !== $workspaceTag->getUser()->getId() || $user->getId() !== $userId) {
+        if ($user->getId() !== $workspaceTag->getUser()->getId() || $user->getId() !== (int) $userId) {
             throw new AccessDeniedHttpException();
         }
 
