@@ -62,8 +62,6 @@ class ResourceManagerListener
      * @param integer $workspaceId
      *
      * @return string
-     *
-     * @throws AccessDeniedHttpException
      */
     public function resourceWorkspace($workspaceId)
     {
