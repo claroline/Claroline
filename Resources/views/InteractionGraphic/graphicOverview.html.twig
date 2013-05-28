@@ -68,7 +68,13 @@
                     Points bonne réponse : {{ point }} avec : -{{ penalty }} de pénalité pour indices vus.
                 {% endif %}
             </p>
-
+            
+            {% if interG.interaction.feedback is defined %}
+            <div>
+                <p>{{ interG.interaction.feedback|raw }}</p>
+            </div>
+            {% endif %}
+            
             {%set i = 0 %}{% set allInfo = '' %}
 
             {% for c in coords %} 
@@ -95,13 +101,3 @@
     
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/GraphicOverview.js') }}"></script>
   {% endblock %}
-    
-    {#% block javascripts %}
-{{ parent() }}
-
-    <script type="text/javascript">
-        $('body').ready(function() {
-      loading();
-});
-        </script>
-{% endblock %#}
