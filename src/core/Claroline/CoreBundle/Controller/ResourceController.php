@@ -377,9 +377,12 @@ class ResourceController extends Controller
 
         if ($directoryId === 0) {
             $resources = $resourceRepo->findWorkspaceRootsByUser($user);
+            $isRoot = true;
+            $workspaceId = 0;
         } else {
+            $isRoot = false;
             $directory = $this->getResource($resourceRepo->find($directoryId));
-
+            $workspaceId = $directory->getWorkspace()->getId();
             if (null === $directory || !$directory instanceof Directory) {
                 throw new Exception("Cannot find any directory with id '{$directoryId}'");
             }
@@ -412,7 +415,9 @@ class ResourceController extends Controller
                     'path' => $path,
                     'creatableTypes' => $creatableTypes,
                     'resources' => $resources,
-                    'canChangePosition' => $canChangePosition
+                    'canChangePosition' => $canChangePosition,
+                    'workspace_id' => $workspaceId,
+                    'is_root' => $isRoot
                 )
             )
         );
@@ -591,30 +596,34 @@ class ResourceController extends Controller
             ->findAncestors($resource);
 
         $breadcrumbsAncestors = array();
+
         if (count($_breadcrumbs) > 0) {
             $breadcrumbsAncestors = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
                 ->findResourcesByIds($_breadcrumbs);
+            $breadcrumbsAncestors[] = $resource;
         }
 
         if (count($ancestors) > count($breadcrumbsAncestors)) {
 
             $_breadcrumbs = array();
+
             foreach ($ancestors as $ancestor) {
                 $_breadcrumbs[] = $ancestor['id'];
             }
-            $ancestors = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+
+            $breadcrumbsAncestors = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
                 ->findResourcesByIds($_breadcrumbs);
-        } else {
-            array_push($ancestors, $resource);
         }
 
-        if (!$this->get('claroline.resource.manager')->isPathValid($ancestors)) {
+        if (!$this->get('claroline.resource.manager')->isPathValid($breadcrumbsAncestors)) {
             throw new \Exception('Breadcrumbs invalid');
         };
 
+        $_workspace = $this->get('request')->query->get('_workspace');
+
         return $this->render(
             'ClarolineCoreBundle:Resource:breadcrumbs.html.twig',
-            array('ancestors' => $ancestors, 'workspaceId' => $workspaceId)
+            array('ancestors' => $breadcrumbsAncestors, 'workspaceId' => $workspaceId, '_workspace' => $_workspace)
         );
     }
 

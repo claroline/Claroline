@@ -29,6 +29,7 @@
     <script type="text/javascript">
         $(function() {
             Claroline.ResourceManager.initialize({
+                "_workspace" : {{ workspace.getId() }},
                 "directoryId": "{{ directoryId }}",
                 "directoryHistory": {{ jsonPath|raw }},
                 "parentElement": $('div.section-content'),
