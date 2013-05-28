@@ -2,14 +2,14 @@
 
 namespace Claroline\CoreBundle\Listener;
 
-use Claroline\CoreBundle\Library\Security\Token\ViewAsToken;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Library\Security\Token\ViewAsToken;
 
 /**
  * @DI\Service
@@ -68,7 +68,7 @@ class ViewAsListener
                         $this->securityContext->setToken($token);
                     }
                 } else {
-                    throw new AccessDeniedHttpException();
+                    throw new AccessDeniedException();
                 }
             }
         }
