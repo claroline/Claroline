@@ -417,6 +417,7 @@
             },
             initialize: function (parameters, dispatcher) {
                 this.parameters = parameters;
+                console.debug(parameters);
                 this.dispatcher = dispatcher;
                 this.directoryId = parameters.directoryId;
             },
@@ -749,6 +750,7 @@
                     '/' + directoryId,
                 data: searchParameters || {},
                 success: function (data) {
+
                     if (isSearchMode) {
                         data.creatableTypes = {};
                     }
@@ -769,6 +771,7 @@
                         this.parameters.parentElement.append(this.views[view].el);
                         this.views[view].isAppended = true;
                     }
+
                     $('#sortable').sortable({
                         update: function (event, ui) {
                             var ids = $('#sortable').sortable('toArray');
@@ -795,6 +798,11 @@
                             });
                         }
                     });
+
+                    if (!data.canChangePosition) {
+                        $('#sortable').sortable('disable');
+                    } else {
+                        $('#sortable').sortable('enable');                   }
                 }
             });
         },
