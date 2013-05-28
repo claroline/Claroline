@@ -119,7 +119,7 @@ footer {
     width: 420px;
     margin: auto;
     padding: 10px;
-    border-radius: 3px;
+    .border-radius(@baseBorderRadius);
 }
 
 #login-form {
@@ -251,7 +251,7 @@ footer {
     .box-shadow(0 1px 3px rgba(0,0,0,.25));
     margin:5px;
     padding:5px;
-    .border-radius(5px);
+    .border-radius(@baseBorderRadius);
 }
 
 .resource-manager .filters label
@@ -449,7 +449,7 @@ footer {
 .workspace-left-toolbox {
     margin-bottom: 18px;
     border: 1px solid @grayLighter;
-    .border-radius(5px);
+    .border-radius(@baseBorderRadius);
     zoom: 1;
 }
 
@@ -477,7 +477,7 @@ footer {
 .user-information {
     border: 1px solid @grayLighter;
     padding: 5px;
-    .border-radius(5px);
+    .border-radius(@baseBorderRadius);
 }
 
 /********/
@@ -487,6 +487,34 @@ footer {
 .dropdown-menu a
 {
     cursor:pointer;
+}
+
+/** fix dropdowns colors inside an active link **/
+
+.content-element .btn.dropdown-toggle
+{
+    color:@gray !important;
+    background:@grayLighter !important;
+}
+
+.content-element .dropdown-menu a
+{
+    color:@dropdownLinkColor !important;
+    background:@dropdownBackground !important;
+}
+
+.content-element .dropdown-menu a:hover
+{
+    /*#gradient > .vertical(@dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%));*/
+    color:@dropdownLinkColorHover !important;
+    background-color: mix(@dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%), 60%) !important;
+    background-image: -moz-linear-gradient(top, @dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%)) !important; // FF 3.6+
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@dropdownLinkBackgroundHover), to(darken(@dropdownLinkBackgroundHover, 5%))) !important; // Safari 4+, Chrome 2+
+    background-image: -webkit-linear-gradient(top, @dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%)) !important; // Safari 5.1+, Chrome 10+
+    background-image: -o-linear-gradient(top, @dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%)) !important; // Opera 11.10
+    background-image: linear-gradient(to bottom, @dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%)) !important; // Standard, IE10
+    background-repeat: repeat-x;
+    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",argb(@dropdownLinkBackgroundHover),argb(darken(@dropdownLinkBackgroundHover, 5%)))); // IE9 and down
 }
 
 /**********/
@@ -522,7 +550,7 @@ footer {
 
 .border {
     border:1px solid #ddd;
-    .border-radius( 5px );
+    .border-radius(@baseBorderRadius);
     margin-bottom:10px;
 }
 
@@ -643,7 +671,7 @@ form legend
 
 .creator .navbar.navbar-static-top, .creator .navbar.navbar-static-top .navbar-inner
 {
-    .border-bottom-radius(5px);
+    .border-bottom-radius(@baseBorderRadius);
 }
 
 .creator textarea
