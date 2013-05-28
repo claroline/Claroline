@@ -148,8 +148,6 @@ class HomeListener
      * @param integer $workspaceId
      *
      * @return Response
-     *
-     * @throws AccessDeniedHttpException
      */
     public function workspaceHome($workspaceId)
     {

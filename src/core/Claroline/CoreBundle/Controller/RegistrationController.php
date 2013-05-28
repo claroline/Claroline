@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\BaseProfileType;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
@@ -79,7 +79,7 @@ class RegistrationController extends Controller
      *
      * @return Respone
      *
-     * @throws AccessDeniedHttpException
+     * @throws AccessDeniedException
      */
     private function checkAccess()
     {
@@ -95,6 +95,6 @@ class RegistrationController extends Controller
             return;
         }
 
-        throw new AccessDeniedHttpException();
+        throw new AccessDeniedException();
     }
 }

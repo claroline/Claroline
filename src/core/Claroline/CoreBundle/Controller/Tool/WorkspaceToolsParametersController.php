@@ -3,15 +3,16 @@
 namespace Claroline\CoreBundle\Controller\Tool;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Claroline\CoreBundle\Entity\Tool\WorkspaceOrderedTool;
-use Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Response;
-use Claroline\CoreBundle\Form\WorkspaceOrderToolEditType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Claroline\CoreBundle\Controller\Tool\AbstractParametersController;
+use Claroline\CoreBundle\Entity\Tool\WorkspaceOrderedTool;
+use Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole;
+use Claroline\CoreBundle\Form\WorkspaceOrderToolEditType;
 
-class WorkspaceToolsParametersController extends Controller
+
+class WorkspaceToolsParametersController extends AbstractParametersController
 {
     /**
      * @Route(
@@ -24,11 +25,7 @@ class WorkspaceToolsParametersController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-
-        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
-            throw new AccessDeniedHttpException();
-        }
-
+        $this->checkAccess($workspace);
         $wsRoles = $em->getRepository('ClarolineCoreBundle:Role')->findByWorkspace($workspace);
         $anonRole = $em->getRepository('ClarolineCoreBundle:Role')->findBy(array('name' => 'ROLE_ANONYMOUS'));
         $wsRoles = array_merge($wsRoles, $anonRole);
@@ -110,11 +107,7 @@ class WorkspaceToolsParametersController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-
-        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
-            throw new AccessDeniedHttpException();
-        }
-
+        $this->checkAccess($workspace);
         $wot = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
             ->findOneBy(array('workspace' => $workspaceId, 'tool' => $toolId));
 
@@ -149,15 +142,15 @@ class WorkspaceToolsParametersController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-
-        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
-            throw new AccessDeniedHttpException();
-        }
-
+        $this->checkAccess($workspace);
         $role = $em->getRepository('ClarolineCoreBundle:Role')->find($roleId);
         $wot = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
             ->findOneBy(array('workspace' => $workspaceId, 'tool' => $toolId));
         $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId);
+
+        if ($tool->getName() === 'parameters' && $role->getName() === 'ROLE_ANONYMOUS') {
+            throw new \Exception('Anonymous users cannot access the parameters tool');
+        }
 
         if ($wot === null) {
             $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId);
@@ -201,13 +194,8 @@ class WorkspaceToolsParametersController extends Controller
 
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-
-        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
-            throw new AccessDeniedHttpException();
-        }
-
+        $this->checkAccess($workspace);
         $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId);
-
         $movingTool = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
            ->findOneBy(array('tool' => $tool, 'workspace' => $workspace));
 
@@ -247,7 +235,7 @@ class WorkspaceToolsParametersController extends Controller
         return new Response('success');
     }
 
-        /**
+    /**
      * @Route(
      *     "/{workspaceId}/tools/{workspaceOrderToolId}/editform",
      *     name="claro_workspace_order_tool_edit_form"
@@ -263,13 +251,8 @@ class WorkspaceToolsParametersController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-
-        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
-            throw new AccessDeniedHttpException();
-        }
-
+        $this->checkAccess($workspace);
         $wot = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')->find($workspaceOrderToolId);
-
         $form = $this->createForm(new WorkspaceOrderToolEditType(), $wot);
 
         return $this->render(
@@ -294,13 +277,8 @@ class WorkspaceToolsParametersController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-
-        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
-            throw new AccessDeniedHttpException();
-        }
-
+        $this->checkAccess($workspace);
         $wot = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')->find($workspaceOrderToolId);
-
         $form = $this->createForm(new WorkspaceOrderToolEditType(), $wot);
         $request = $this->getRequest();
         $form->bind($request);

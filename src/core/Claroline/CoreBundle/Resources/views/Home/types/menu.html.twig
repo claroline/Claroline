@@ -28,10 +28,11 @@
                 {% if father is defined and ((region is defined and (region != 'header' and region != 'footer')) or region is not defined) %}
                     <i class="icon-chevron-right pull-right"></i>
                 {% endif %}
-                {% if (region is defined and region != 'header' and region != 'footer') or region is not defined %}
-                    {{ menu | raw }}
-                {% endif %}
+
             </a>
+            {% if (region is defined and region != 'header' and region != 'footer') or region is not defined %}
+                {{ menu | raw }}
+            {% endif %}
         </li>
     {% endif %}
 
