@@ -49,11 +49,6 @@
     {% set exoScoreMax = 0 %}
     {#{ dump(interactions) }#}
     {% for interaction in interactions %}
-        <div id='divInter{{ i }}'>
-        <input type="hidden" id="hidInter{{ i }}" value=""/>
-        <script type="text/javascript">
-            document.getElementById('hidInter{{ i }}').value = document.getElementById('divInter{{ i }}').offsetLeft;
-        </script>
 
 <!--------------------------------------------------- QCM ------------------------------------------------------------->
 
@@ -196,16 +191,33 @@
                 {% endfor %}
             </div>
             
-            {% for hv in hintViewed %}
-                {% if( hv.hint.interaction.id == interaction.id ) %}
-                    {{ "Penalty" | trans }}: {{ hv.hint.penalty }}<br/>
-                {% endif %}
-            {% endfor %}
-
-            {{ "Mark" | trans }}: {{ responses[i].mark }}/{{ maxScore }}
+            {{ "Mark" | trans }}: {{ responses[i].mark }}/{{ maxScore }} <br/>
             {% set exoMark = exoMark + responses[i].mark %}
             {% set exoScoreMax = exoScoreMax + maxScore %}
+            
+            {% set point = responses[i].mark + hv.hint.penalty %}
+            
+            {% if responses[i].mark == 0 and hv.hint.penalty == 0 %} 
+                    Aucune bonne réponse.
+                {% elseif hv.hint.penalty == 0 %}
+                    Indices non vus, pas de pénalité.
+                {% else %}
+                    Points bonne réponse : {{ point }} avec : -
+                    
+                    {% for hv in hintViewed %}
+                        {% if( hv.hint.interaction.id == interaction.id ) %}
+                            {{ "Penalty" | trans }}: {{ hv.hint.penalty }}<br/>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    de pénalité pour indices vus.
+                {% endif %}
             <br/>
+            {% if interG.interaction.feedback is defined %}
+                <div>
+                    <p>{{ interG.interaction.feedback|raw }}</p>
+                </div>
+            {% endif %}
             <hr/>
         </div>
     </div>

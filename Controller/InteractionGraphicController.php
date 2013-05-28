@@ -138,37 +138,10 @@ class InteractionGraphicController extends Controller
         $coords = $this->get('request')->get('coordsZone'); // Get the answer zones
 
         $coord = preg_split('[,]', $coords); // Split all informations of one answer zones into a cell
+        
         $lengthCoord = count($coord) - 1; // Number of answer zones
-
-        for ($i = 0; $i < $lengthCoord; $i++) {
-
-            $inter = preg_split('[;]', $coord[$i]); // Divide the src of the answer zone and the other informations
-
-            $before = array("-","~");
-            $after = array(",",",");
-
-            $data = str_replace($before, $after, $inter[1]); // replace separation punctuation of the informations ...
-
-            list(${'value'.$i}, ${'point'.$i}, ${'size'.$i}) = explode(",", $data); //... in order to split informations
-
-            // And persist it into the Database
-            ${'url'.$i} = $inter[0];
-
-            ${'value'.$i} = str_replace("_", ",", ${'value'.$i});
-            ${'url'.$i} = substr(${'url'.$i}, strrpos(${'url'.$i}, '/bundles'));
-
-            ${'shape'.$i} = $this->getShape(${'url'.$i});
-            ${'color'.$i} = $this->getColor(${'url'.$i});
-
-            ${'co'.$i} = new Coords();
-
-            ${'co'.$i}->setValue(${'value'.$i});
-            ${'co'.$i}->setShape(${'shape'.$i});
-            ${'co'.$i}->setColor(${'color'.$i});
-            ${'co'.$i}->setScoreCoords(${'point'.$i});
-            ${'co'.$i}->setInteractionGraphic($interGraph);
-            ${'co'.$i}->setSize(${'size'.$i});
-        }
+        
+        $allCoords = $this->PersitNewCoords($coord, $interGraph, $lengthCoord);
 
         if ($form->isValid()) {
 
@@ -178,7 +151,7 @@ class InteractionGraphicController extends Controller
             $em->persist($interGraph->getInteraction());
 
             for ($i = 0; $i < $lengthCoord; $i++) {
-                $em->persist(${'co'.$i});
+                $em->persist($allCoords[$i]);
             }
             $em->flush();
 
@@ -228,7 +201,12 @@ class InteractionGraphicController extends Controller
             throw $this->createNotFoundException('Unable to find InteractionGraphic entity.');
         }
 
-        $editForm = $this->createForm(new InteractionGraphicType(), $entity);
+        $editForm = $this->createForm(
+            new InteractionGraphicType(
+                $this->container->get('security.context')->getToken()->getUser()
+            ), $entity
+        );
+        
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render(
@@ -246,6 +224,8 @@ class InteractionGraphicController extends Controller
      */
     public function updateAction($id)
     {
+        $originalHints=array();
+        
         $em = $this->getDoctrine()->getEntityManager();
 
         $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->find($id);
@@ -254,18 +234,79 @@ class InteractionGraphicController extends Controller
             throw $this->createNotFoundException('Unable to find InteractionGraphic entity.');
         }
 
-        $editForm = $this->createForm(new InteractionGraphicType(), $entity);
+        $editForm = $this->createForm(
+            new InteractionGraphicType(
+                $this->container->get('security.context')->getToken()->getUser()
+            ), $entity
+        );
+       
+        foreach ($entity->getInteraction()->getHints() as $hint) {
+            $originalHints[] = $hint;
+        }
+        
         $deleteForm = $this->createDeleteForm($id);
 
         $request = $this->getRequest();
 
         $editForm->bindRequest($request);
+        
+        
+        
+        $width = $this->get('request')->get('imgwidth'); // Get the width of the image
+        $height = $this->get('request')->get('imgheight'); // Get the height of the image
+
+        $entity->setHeight($height);
+        $entity->setWidth($width);
+
+        $CoordsToDel = $em->getRepository('UJMExoBundle:Coords')->findBy(array('interactionGraphic' => $entity->getId()));
+
+        $coords = $this->get('request')->get('coordsZone'); // Get the answer zones
+
+        $coord = preg_split('[,]', $coords); // Split all informations of one answer zones into a cell
+        
+        $lengthCoord = count($coord) - 1; // Number of answer zones
+        
+        $allCoords = $this->PersitNewCoords($coord, $entity, $lengthCoord);
 
         if ($editForm->isValid()) {
+
+            foreach ($entity->getInteraction()->getHints() as $hint) {
+                foreach ($originalHints as $key => $toDel) {
+                    if ($toDel->getId() == $hint->getId()) {
+                        unset($originalHints[$key]);
+                    }
+                }
+            }
+
+            // remove the relationship between the hint and the interactionGraphic
+            foreach ($originalHints as $hint) {
+                // remove the Hint from the interactionGraphic
+                $entity->getInteraction()->getHints()->removeElement($hint);
+
+                // if you wanted to delete the Hint entirely, you can also do that
+                $em->remove($hint);
+            }
+
+            //Persit all the  hints of entity Interaction
+            foreach ($entity->getInteraction()->getHints() as $hint) {
+                $entity->getInteraction()->addHint($hint);
+                $em->persist($hint);
+            }
+            
+            foreach ($CoordsToDel as $ctd) {
+
+            // if you wanted to delete the Hint entirely, you can also do that
+            $em->remove($ctd);
+        }
+            
+            for ($i = 0; $i < $lengthCoord; $i++) {
+                $em->persist($allCoords[$i]);
+            }
+
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('interactiongraphic_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('ujm_question_index'));
         }
 
         return $this->render(
@@ -306,6 +347,44 @@ class InteractionGraphicController extends Controller
         return $this->createFormBuilder(array('id' => $id))
             ->add('id', 'hidden')
             ->getForm();
+    }
+    
+    public function PersitNewCoords ($coord, $interGraph, $lengthCoord)
+    {
+        $result = array();
+        for ($i = 0; $i < $lengthCoord; $i++) {
+
+            $inter = preg_split('[;]', $coord[$i]); // Divide the src of the answer zone and the other informations
+
+            $before = array("-","~");
+            $after = array(",",",");
+
+            $data = str_replace($before, $after, $inter[1]); // replace separation punctuation of the informations ...
+
+            list(${'value'.$i}, ${'point'.$i}, ${'size'.$i}) = explode(",", $data); //... in order to split informations
+
+            // And persist it into the Database
+            ${'url'.$i} = $inter[0];
+
+            ${'value'.$i} = str_replace("_", ",", ${'value'.$i});
+            ${'url'.$i} = substr(${'url'.$i}, strrpos(${'url'.$i}, '/bundles'));
+
+            ${'shape'.$i} = $this->getShape(${'url'.$i});
+            ${'color'.$i} = $this->getColor(${'url'.$i});
+
+            ${'co'.$i} = new Coords();
+
+            ${'co'.$i}->setValue(${'value'.$i});
+            ${'co'.$i}->setShape(${'shape'.$i});
+            ${'co'.$i}->setColor(${'color'.$i});
+            ${'co'.$i}->setScoreCoords(${'point'.$i});
+            ${'co'.$i}->setInteractionGraphic($interGraph);
+            ${'co'.$i}->setSize(${'size'.$i});
+            
+            $result[$i]=${'co'.$i};
+        }
+        
+        return $result;
     }
 
     /**

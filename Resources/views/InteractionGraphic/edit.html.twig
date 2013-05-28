@@ -70,8 +70,7 @@
     </p><p>              
         {{ form_row(edit_form.interaction.hints) }}         
     </p>
-            
-       
+
 {# ------------------------------------------------- Lien nouvelle image ---------------------------------------------------------------------------- #}            
    
     <p><a href="{{ path('ujm_interactiongraphic_SavePic') }}" onclick="window.open(this.href, 'NewPic', 
@@ -106,7 +105,7 @@
         {% set i = 0 %}{% set allInfo = '' %}
         {% for p in position %}
             <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" alt="AnswerZone{{ i }}" id="img{{ i }}" 
-                 style="position: absolute;" width="{{ p.size }}"/>
+                 style="position: absolute;"/>
 
     {% set allInfo = p.shape~';'~p.color~';'~asset('bundles/ujmexo/images/graphic/')~';'~p.value~';'~p.size~';'~p.scoreCoords~'^'~allInfo %}
 

@@ -454,7 +454,7 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
     }
 
     // To add an answer zone
-    if (pressCTRL === true) {
+    if (pressCTRL == true) {
 
         // Position of the mouse into the window
         if (e.x !== undefined && e.y !== undefined) { // IE

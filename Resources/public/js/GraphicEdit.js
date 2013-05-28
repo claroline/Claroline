@@ -87,6 +87,8 @@ function position(shape, color, i, prefix, value, size, points) {
     var x = value.substr(0, value.indexOf(','));
     var y = value.substr(value.indexOf(',') + 1);
 
+    document.getElementById('img' + i).width = size;
+
     document.getElementById('img' + i).style.left = String(parseInt(x) - (size / 2)) + 'px';
     document.getElementById('img' + i).style.top = String(parseInt(y) - (size / 2)) + 'px';
     
