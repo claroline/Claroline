@@ -2,17 +2,16 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Claroline\CoreBundle\Form\WorkspaceEditType;
-use Claroline\CoreBundle\Form\WorkspaceTemplateType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Claroline\CoreBundle\Controller\Tool\AbstractParametersController;
+use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
+use Claroline\CoreBundle\Form\WorkspaceEditType;
+use Claroline\CoreBundle\Form\WorkspaceTemplateType;
 
-class WorkspaceParametersController extends Controller
+class WorkspaceParametersController extends AbstractParametersController
 {
     /**
      * @Route(
@@ -24,18 +23,12 @@ class WorkspaceParametersController extends Controller
      * @param integer $workspaceId
      *
      * @return Response
-     *
-     * @throws AccessDeniedHttpException
      */
     public function workspaceExportFormAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-
-        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
-            throw new AccessDeniedHttpException();
-        }
-
+        $this->checkAccess($workspace);
         $form = $this->get('form.factory')->create(new WorkspaceTemplateType());
 
         return $this->render(
@@ -56,18 +49,12 @@ class WorkspaceParametersController extends Controller
      * @param integer $workspaceId
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     *
-     * @throws AccessDeniedHttpException
      */
     public function workspaceExportAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-
-        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
-            throw new AccessDeniedHttpException();
-        }
-
+        $this->checkAccess($workspace);
         $request = $this->getRequest();
         $form = $this->createForm(new WorkspaceTemplateType());
         $form->bind($request);
@@ -106,11 +93,7 @@ class WorkspaceParametersController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-
-        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
-            throw new AccessDeniedHttpException();
-        }
-
+        $this->checkAccess($workspace);
         $form = $this->createForm(new WorkspaceEditType(), $workspace);
 
         return $this->render(
@@ -137,7 +120,7 @@ class WorkspaceParametersController extends Controller
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
         if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
-            throw new AccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
 
         $wsRegisteredName = $workspace->getName();
