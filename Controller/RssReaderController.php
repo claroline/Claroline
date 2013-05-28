@@ -3,12 +3,12 @@
 namespace Claroline\RssReaderBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Claroline\RssReaderBundle\Form\ConfigType;
-use Claroline\RssReaderBundle\Entity\Config;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Claroline\RssReaderBundle\Form\ConfigType;
+use Claroline\RssReaderBundle\Entity\Config;
 
 class RssReaderController extends Controller
 {
@@ -126,14 +126,14 @@ class RssReaderController extends Controller
         return new RedirectResponse($this->generateUrl('claro_admin_widgets'));
     }
 
-    private function checkAccess($rssConfig)
+    private function checkAccess(Config $rssConfig)
     {
-        if ($rssConfig->getWorkspace() !== null) {
-            if (!$this->get('security.context')->isGranted('parameters', $rssConfig->getWorkspace())) {
-                throw new AccessDeniedHttpException();
-            }
-        } elseif ($this->get('security.context')->getToken()->getUser() !== $rssConfig->getUser()) {
-            throw new AccessDeniedHttpException();
+        $security = $this->get('security.context');
+        $workspace = $rssConfig->getWorkspace();
+
+        if ($workspace !== null && !$security->isGranted('parameters', $workspace)
+            || $security->getToken()->getUser() !== $rssConfig->getUser()) {
+            throw new AccessDeniedException();
         }
     }
 }
