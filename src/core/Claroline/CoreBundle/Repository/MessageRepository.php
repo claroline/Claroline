@@ -40,9 +40,11 @@ class MessageRepository extends NestedTreeRepository
         $dql = "SELECT Count(m) FROM Claroline\CoreBundle\Entity\Message m
             JOIN m.userMessages um
             JOIN um.user u
+            JOIN m.user creator
             WHERE u.id = {$user->getId()}
             AND um.isRead = false
-            AND um.isRemoved = false"
+            AND um.isRemoved = false
+            AND creator.id != {$user->getId()}"
            ;
 
         $query = $this->_em->createQuery($dql);

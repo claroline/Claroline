@@ -373,6 +373,7 @@ class ResourceController extends Controller
         $directoryId = (integer) $directoryId;
         $currentRoles = $this->get('claroline.security.utilities')
             ->getRoles($this->get('security.context')->getToken());
+        $canChangePosition = false;
 
         if ($directoryId === 0) {
             $resources = $resourceRepo->findWorkspaceRootsByUser($user);
@@ -381,6 +382,10 @@ class ResourceController extends Controller
 
             if (null === $directory || !$directory instanceof Directory) {
                 throw new Exception("Cannot find any directory with id '{$directoryId}'");
+            }
+
+            if ($user == $directory->getCreator()) {
+                $canChangePosition = true;
             }
 
             $path = $resourceRepo->findAncestors($directory);
@@ -406,7 +411,8 @@ class ResourceController extends Controller
                 array(
                     'path' => $path,
                     'creatableTypes' => $creatableTypes,
-                    'resources' => $resources
+                    'resources' => $resources,
+                    'canChangePosition' => $canChangePosition
                 )
             )
         );
@@ -627,6 +633,12 @@ class ResourceController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $repo = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
         $resource = $repo->find($resourceId);
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        if ($user !== $resource->getParent()->getCreator()) {
+            throw new AccessDeniedException();
+        }
+
         $next = $repo->find($nextId);
 
         if ($next !== null) {
