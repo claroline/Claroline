@@ -99,7 +99,7 @@ There is a Voter wich will determine wich user can access wich tool in a workspa
 When you must know if a user has access to a tool, you can use
 
         if (!$this->get('security.context')->isGranted($toolName, $workspace)) {
-            throw new AccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
 
 *Where $toolName is your tool name and $workspace is the current workspace.*

@@ -7,20 +7,21 @@ use LogicException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
-use Pagerfanta\Pagerfanta;
-use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleSubscribeEvent;
-use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleUnsubscribeEvent;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleSubscribeEvent;
+use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleUnsubscribeEvent;
 
 class GroupController extends Controller
 {
     const ABSTRACT_WS_CLASS = 'ClarolineCoreBundle:Workspace\AbstractWorkspace';
     const NUMBER_GROUP_PER_ITERATION = 25;
 
-        /**
+    /**
      * @Route(
      *     "/{workspaceId}/groups/registered/page/{page}",
      *     name="claro_workspace_registered_group_list",
@@ -82,7 +83,7 @@ class GroupController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $this->checkRegistration($workspace);
+        $this->checkRegistration($workspace, false);
         $repo = $em->getRepository('ClarolineCoreBundle:Group');
         $query = ($search == "") ?
             $repo->findWorkspaceOutsiders($workspace, true):
@@ -127,7 +128,7 @@ class GroupController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
             ->find($workspaceId);
-        $this->checkRegistration($workspace);
+        $this->checkRegistration($workspace, false);
         $group = $em->getRepository('ClarolineCoreBundle:Group')
             ->find($groupId);
         $roleRepo = $em->getRepository('ClarolineCoreBundle:Role');
@@ -215,7 +216,7 @@ class GroupController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
             ->find($workspaceId);
-        $this->checkRegistration($workspace);
+        $this->checkRegistration($workspace, false);
         $roles = $em->getRepository('ClarolineCoreBundle:Role')
             ->findByWorkspace($workspace);
         $params = $this->get('request')->query->all();
@@ -275,7 +276,7 @@ class GroupController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
             ->find($workspaceId);
-        $this->checkRegistration($workspace);
+        $this->checkRegistration($workspace, false);
         $role = $em->getRepository('ClarolineCoreBundle:Role')
                         ->findCollaboratorRole($workspace);
         $groups = array();
@@ -339,16 +340,20 @@ class GroupController extends Controller
     }
 
     /**
-     * Checks if the current user can see a workspace.
+     * Checks if the current user has access to the group management tool.
      *
      * @param AbstractWorkspace $workspace
+     * @param boolean           $allowAnonymous
      *
-     * @throws AccessDeniedHttpException
+     * @throws AccessDeniedException
      */
-    private function checkRegistration($workspace)
+    private function checkRegistration(AbstractWorkspace $workspace, $allowAnonymous = true)
     {
-        if (!$this->get('security.context')->isGranted('group_management', $workspace)) {
-            throw new AccessDeniedHttpException();
+        $security = $this->get('security.context');
+
+        if (($security->getToken()->getUser() === 'anon.' && !$allowAnonymous)
+            || !$security->isGranted('group_management', $workspace)) {
+            throw new AccessDeniedException();
         }
     }
 

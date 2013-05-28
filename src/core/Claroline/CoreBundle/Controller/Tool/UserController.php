@@ -18,9 +18,6 @@ use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleUnsubscribeEvent;
 
 class UserController extends Controller
 {
-    /*******************/
-    /* USER MANAGEMENT */
-    /*******************/
     const ABSTRACT_WS_CLASS = 'ClarolineCoreBundle:Workspace\AbstractWorkspace';
     const NUMBER_USER_PER_ITERATION = 25;
 
@@ -354,7 +351,7 @@ class UserController extends Controller
      *
      * @param AbstractWorkspace $workspace
      *
-     * @throws AccessDeniedHttpException
+     * @throws AccessDeniedException
      */
     private function checkRegistration(AbstractWorkspace $workspace, $allowAnonymous = true)
     {

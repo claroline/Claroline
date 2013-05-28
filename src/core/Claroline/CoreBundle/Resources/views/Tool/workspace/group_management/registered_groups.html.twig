@@ -26,7 +26,24 @@
     {% endif %}
 {% endmacro %}
 
+{% macro displayControls(workspaceId) %}
+    {% if app.user %}
+        <button id="delete-group-button"
+                class="btn btn-secondary delete-groups-button">
+            <i class="icon-trash"></i>
+            {{ 'delete'|trans({}, 'platform') }}
+        </button>
+        <a class="btn btn-secondary"
+           href="{{ path('claro_workspace_unregistered_group_list', {'workspaceId': workspaceId}) }}"
+           id="add-user-link">
+            <i class="icon-plus"></i>
+            {{ 'add_group'|trans({}, 'platform') }}
+        </a>
+    {% endif %}
+{% endmacro %}
+
 {% from _self import renderPager %}
+{% from _self import displayControls %}
 
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
@@ -59,9 +76,7 @@
         </div>
 
         <div class="search-bar">
-            <button id="delete-group-button" class="btn btn-secondary delete-groups-button"><i class="icon-trash"></i> {{ 'delete'|trans({}, 'platform') }}</button>
-            <a class="btn btn-secondary" href="{{ path('claro_workspace_unregistered_group_list', {'workspaceId': workspace.getId()}) }}" id="add-group-link"><i class="icon-plus"></i> {{ 'add_group'|trans({}, 'platform') }}</a>
-
+            {{ displayControls(workspace.getId()) }}
             <div class="input-append pull-right">
                 <input class="input-medium" type="text" id="search-group-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
                 <button class="filter btn" type="button" id="search-group-button">
@@ -76,8 +91,10 @@
             <thead>
                 <th>{{ 'name'|trans({}, 'platform') }}</th>
                 <th>{{ 'role'|trans({}, 'platform') }}</th>
-                <th>{{ 'parameters'|trans({}, 'platform') }}</th>
-                <th></th>
+                {% if app.user %}
+                    <th>{{ 'parameters'|trans({}, 'platform') }}</th>
+                    <th></th>
+                {% endif %}
             </thead>
             <tbody id="group-table-body">
                 {% for group in pager.currentPageResults %}
@@ -90,12 +107,14 @@
                         {% endif %}
                     {% endfor %}
                     </td>
-                    <td>
-                        <button class="btn btn-secondary button-parameters-group">{{ 'parameters'|trans({}, 'platform') }}</button>
-                    </td>
-                    <td>
-                        <input type="checkbox" class="chk-group" value="{{ group.id }}"></input>
-                    </td>
+                    {% if app.user %}
+                        <td>
+                            <button class="btn btn-secondary button-parameters-group">{{ 'parameters'|trans({}, 'platform') }}</button>
+                        </td>
+                        <td>
+                            <input type="checkbox" class="chk-group" value="{{ group.id }}"></input>
+                        </td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>
@@ -103,9 +122,7 @@
         </div>
             {{ renderPager(search, workspace.getId(), pager) }}
         <div>
-        <button id="delete-group-button" class="btn btn-secondary delete-groups-button"><i class="icon-trash"></i> {{ 'delete'|trans({}, 'platform') }}</button>
-        <a class="btn btn-secondary" href="{{ path('claro_workspace_unregistered_group_list', {'workspaceId': workspace.getId()}) }}" id="add-group-link"><i class="icon-plus"></i> {{ 'add_group'|trans({}, 'platform') }}</a>
-
+        {{ displayControls(workspace.getId()) }}
     </div>
     <!-------------- modal box ------------------------------------------------>
     <div id="validation-box" class="modal hide fade">

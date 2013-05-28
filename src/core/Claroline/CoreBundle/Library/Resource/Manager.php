@@ -618,38 +618,39 @@ class Manager
             throw new \Exception('The root directories cannot be sorted');
         }
 
-        $resource->setNext($next);
-//                var_dump('resource next is '.$resource->getNext()->getName());
-        $savePrevious = $resource->getPrevious();
+        $oldNext = $resource->getNext();
+        $oldPrevious = $resource->getPrevious();
 
         if ($next !== null) {
-            $previous = $next->getPrevious();
-            $next->setPrevious($resource);
-//            var_dump('next name ='.$next->getName());
-//            var_dump('next previous = '.$next->getPrevious()->getName());
-            $this->em->persist($next);
+            $newPrevious = $next->getPrevious();
         } else {
-//            var_dump('next is null');
-            $previous = $this->em
+            $newPrevious = $this->em
                 ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
                 ->findOneBy(array('parent' => $resource->getParent(), 'next' => null));
         }
 
-        $resource->setPrevious($previous);
+        $resource->setNext($next);
+        $resource->setPrevious($newPrevious);
 
-//        if ($resource->getPrevious()!== null) {
-//             var_dump($resource->getPrevious()->getName());
-//        } else {
-//            var_dump('resource previous is null');
-//        }
-
-        if ($previous !== null) {
-            $previous->setNext($resource);
-            $previous->setPrevious($savePrevious);
-            $this->em->persist($previous);
+        if ($newPrevious !== null) {
+            $newPrevious->setNext($resource);
+            $this->em->persist($newPrevious);
         }
 
-//        var_dump('resource next is '.$resource->getNext()->getName());
+        if ($oldPrevious !== null) {
+            $oldPrevious->setNext($oldNext);
+            $this->em->persist($oldPrevious);
+        }
+
+        if ($oldNext !== null) {
+            $oldNext->setPrevious($oldPrevious);
+            $this->em->persist($oldNext);
+        }
+
+        if ($next !== null) {
+            $next->setPrevious($resource);
+            $this->em->persist($next);
+        }
 
         $this->em->persist($resource);
         $this->em->flush();
