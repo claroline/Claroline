@@ -382,10 +382,12 @@ class ResourceController extends Controller
         } else {
             $isRoot = false;
             $directory = $this->getResource($resourceRepo->find($directoryId));
-            $workspaceId = $directory->getWorkspace()->getId();
+
             if (null === $directory || !$directory instanceof Directory) {
                 throw new Exception("Cannot find any directory with id '{$directoryId}'");
             }
+
+            $workspaceId = $directory->getWorkspace()->getId();
 
             if ($user == $directory->getCreator()) {
                 $canChangePosition = true;
