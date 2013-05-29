@@ -3,13 +3,16 @@
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 
 {% block stylesheets %}
-
-    {% include config.getParameter('theme') | getThemePath %}
+    {% if config.getParameter('theme')|getThemePath != '' %}
+        {% include config.getParameter('theme')|getThemePath %}
+    {% endif %}
 
     {% stylesheets debug=false filter='lessphp'  output='bundles/clarolinecore/css/font-awesome.css'
     '../vendor/fortawesome/fontawesome/build/assets/font-awesome/less/font-awesome.less'
-    %}<link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
     {% endstylesheets %}
+
     {% image debug=false output='bundles/clarolinecore/font/FontAwesome.otf'
         '../vendor/fortawesome/fontawesome/build/assets/font-awesome/font/FontAwesome.otf' %}
     {% endimage %}
