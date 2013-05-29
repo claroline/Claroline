@@ -239,7 +239,7 @@ Select: Select
 ResizeZone: To  re-size the picture, place your mouse ove rthe image and use the wheel. You can also press MAJ key and move your mouse.
 PlaceZone: To move an answer zone, select it by clicking on it and click again to place it.
 Resize: To resize the answer zone, select it by clicking, then press Alt and move your mouse.
-SelectZone: To define an answer zone, press CTRL key and click on the picture where it should be placed.
+SelectZone: To define an answer zone, click on it and place it by re-clicking to the selected place on the image. You can also press CTRL key and click on the picture where it should be placed.
 Erase: To erase an answer zone, press s key and click on the erasable answer zone.
 unsupport: Your browser doesn't accept canvas. Please, update.
 Answer zone: Answer zone

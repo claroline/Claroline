@@ -40,6 +40,9 @@ if (navigator.browserLanguage) {
 document.getElementById('Instructions').style.display = 'none';
 document.getElementById('Order').style.display = 'block';
 
+el.style.left = '45px';
+el.style.top = '28px';
+
 // :::::::::::::::::::::::::::::::::::::::::: Functions :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 function DisplayInstruction() { // If click, instructions are displayed
@@ -370,18 +373,28 @@ function MoveAnswerZone(e) {
             y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - document.getElementById('Answer').offsetTop;
         }
 
-        // If out of the image
-        if ((x + 10) > (answerImg.offsetLeft + answerImg.width) || (x - 10) < (answerImg.offsetLeft) ||
-            (y + 10) > (answerImg.offsetTop + answerImg.height) || (y - 10) < (answerImg.offsetTop)) {
+        if (target.id != 'movable') {
+            // If out of the image
+            if ((x + 10) > (answerImg.offsetLeft + answerImg.width) || (x - 10) < (answerImg.offsetLeft) ||
+                (y + 10) > (answerImg.offsetTop + answerImg.height) || (y - 10) < (answerImg.offsetTop)) {
 
-            target = null;
-            moving = false;
+                target = null;
+                moving = false;
+            } else {
+
+                // Move answer zone to mouse position (cursor center)
+                target.style.left = String(x - (target.width / 2)) + 'px';
+                target.style.top = String(y - (target.height / 2)) + 'px';
+           }
         } else {
-
+            x +=  document.getElementById('Answer').offsetLeft  - document.getElementById('AnswerArray').offsetLeft;
+            y +=  document.getElementById('Answer').offsetTop  - document.getElementById('AnswerArray').offsetTop;
             // Move answer zone to mouse position (cursor center)
             target.style.left = String(x - (target.width / 2)) + 'px';
             target.style.top = String(y - (target.height / 2)) + 'px';
-       }
+            
+            pressCTRL = true;
+        }
     }
 }
 
@@ -472,6 +485,14 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
             };
         }
     }
+    
+    if (e.target.id == 'movable') {
+        target = e.target;
+        allow = true;
+        document.onmousedown = function () { // Stop selection during move/resize
+            return false;
+        };
+    }
 
     // To add an answer zone
     if (pressCTRL == true) {
@@ -495,6 +516,8 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
                 alert('You must put all the answer zone INSIDE the picture ...');
             }
             document.body.style.cursor = 'default';
+            el.style.left = '45px';
+            el.style.top = '28px';
         } else {
 
             var img = new Image();
@@ -511,6 +534,11 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
             document.getElementById('Answer').appendChild(img);
 
             point[img.id] = document.getElementById('points').value;
+            
+            if (target.id == 'movable') {
+                el.style.left = '45px';
+                el.style.top = '28px';
+            }
         }
         pressCTRL = false;
     }
