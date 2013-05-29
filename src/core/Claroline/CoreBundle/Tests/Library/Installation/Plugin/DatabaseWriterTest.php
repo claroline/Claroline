@@ -307,6 +307,17 @@ class DatabaseWriterTest extends FunctionalTestCase
         $this->assertEquals(0, $oldResources - $endResources);
     }
 
+    public function testAddTheme()
+    {
+        $pluginFqcn = 'Valid\WithTheme\ValidWithTheme';
+        $plugin = $this->loader->load($pluginFqcn);
+        $this->validator->validate($plugin);
+        $this->dbWriter->insert($plugin, $this->validator->getPluginConfiguration());
+        $dql = "SELECT t FROM Claroline\CoreBundle\Entity\Theme\Theme t";
+        $themes = $this->em->createQuery($dql)->getResult();
+        $this->assertEquals(1, count($themes));
+    }
+
     public function pluginProvider()
     {
         return array(
