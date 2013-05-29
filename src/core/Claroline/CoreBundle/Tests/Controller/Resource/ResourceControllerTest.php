@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
-use Claroline\CoreBundle\Entity\Resource\Directory;
 
 /**
  * @todo Test the exception if a directory id parameter doesn't match any directory.
