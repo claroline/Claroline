@@ -12,6 +12,9 @@ use Claroline\CoreBundle\Entity\Home\Content2Region;
 use Symfony\Component\HttpFoundation\Response;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
+/**
+ * @TODO Finish de doc
+ */
 class HomeController extends Controller
 {
     /**
@@ -27,6 +30,7 @@ class HomeController extends Controller
      * @param \String $id The id of the content.
      * @param \String $type The type of the content, this parameter is optional, but this parameter could be usefull
      *                      because the contents can have different twigs templates and sizes by their type.
+     * @param \Integer $father The id of father content.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      * @see Claroline\CoreBundle\Library\Home\HomeService()
