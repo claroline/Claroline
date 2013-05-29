@@ -170,7 +170,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
      *
      * @return array[array] An array of resources represented as arrays
      */
-    public function findByCriteria(array $criteria, array $roles = null)
+    public function findByCriteria(array $criteria, array $roles = null, $isRecursive = false)
     {
         $builder = new ResourceQueryBuilder();
         $builder->selectAsArray();
@@ -200,11 +200,21 @@ class AbstractResourceRepository extends MaterializedPathRepository
             }
         }
 
-        $dql = $builder->orderByPath()->getDql();
-        $query = $this->_em->createQuery($dql);
-        $query->setParameters($builder->getParameters());
+        if (!$isRecursive) {
+            $dql = $builder->orderByPath()->getDql();
+            $query = $this->_em->createQuery($dql);
+            $query->setParameters($builder->getParameters());
+            $resources = $query->getResult();
 
-        return $this->executeQuery($query);
+            return $resources;
+        } else {
+            $dql = $builder->getShortcuts()->getDql();
+            $query = $this->_em->createQuery($dql);
+            $query->setParameters($builder->getParameters());
+            $resources = $query->getResult();
+
+            return $resources;
+        }
     }
 
     public function count()
