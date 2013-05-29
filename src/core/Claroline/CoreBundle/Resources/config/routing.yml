@@ -9,6 +9,12 @@ claro_index:
     resource: "@ClarolineCoreBundle/Controller/HomeController.php"
     type: annotation
 
+claro_theme:
+    resource: "@ClarolineCoreBundle/Controller/ThemeController.php"
+    prefix: /admin/theme
+    type: annotation
+
+
 claro_content_error:
     pattern: /content/error
     defaults:
