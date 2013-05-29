@@ -7,6 +7,7 @@ var imgx; // Coord x of the answer zone
 var imgy; // Coord y of the answer zone
 var grade = 0; // Number of answer zone
 var j; // For for instruction
+var maxZ = 0; // To put the selected answer zone on top
 var mousex; // Position x of the mouse
 var mousey; // position y of the mouse
 var moving = false; // If move answer zones
@@ -20,6 +21,7 @@ var pressS; // If key s pressed or not
 var resizing = false; // If resize answer zone
 var result; // src of the answer image
 var direction; // Move of the mouse
+var selectAnswer; // to Resize the selected answer zone with the mouse wheel
 var scalex = 0; // Width of the image after resize
 var scaley = 0; // Height of the image after resize
 var value = 0; // Size of the resizing
@@ -312,7 +314,7 @@ function  ResizeImg(direction) {
 function  ResizePointer(direction, diam) {
 
     if (target != null) {
-        
+
         if (direction == 'gauche') {
             target.width -= diam;
         } else if (direction == 'droite') {
@@ -358,7 +360,7 @@ function MouseDirection(event) {
 function MoveAnswerZone(e) {
 
     if (target != null) {
-        
+
         // Get mouse position
         if (e.x != undefined && e.y != undefined) { // IE
             x = e.layerX;
@@ -368,9 +370,18 @@ function MoveAnswerZone(e) {
             y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - document.getElementById('Answer').offsetTop;
         }
 
-        // Move answer zone to mouse position (cursor center)
-        target.style.left = String(x - (target.width / 2)) + 'px';
-        target.style.top = String(y - (target.height / 2)) + 'px';
+        // If out of the image
+        if ((x + 10) > (answerImg.offsetLeft + answerImg.width) || (x - 10) < (answerImg.offsetLeft) ||
+            (y + 10) > (answerImg.offsetTop + answerImg.height) || (y - 10) < (answerImg.offsetTop)) {
+
+            target = null;
+            moving = false;
+        } else {
+
+            // Move answer zone to mouse position (cursor center)
+            target.style.left = String(x - (target.width / 2)) + 'px';
+            target.style.top = String(y - (target.height / 2)) + 'px';
+       }
     }
 }
 
@@ -438,6 +449,13 @@ document.addEventListener('mousemove', function (event) { // To resize/moving an
         ResizePointer(MouseDirection(event), 10);
         resizing = true;
     }
+    
+    for (j = 0 ; j < grade ; j++) {
+        if (event.target.id == 'img' + j) {
+            selectAnswer = document.getElementById(event.target.id);
+            selectAnswer.addEventListener("DOMMouseScroll", MouseWheelCoords, false);
+        }
+    }
 });
 
 document.addEventListener('click', function (e) { // To add/delete answer zones
@@ -447,6 +465,8 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
         if (e.target.id == 'img' + j) {
             target = e.target;
             allow = true;
+            maxZ++;
+            target.style.zIndex = maxZ;
             document.onmousedown = function () { // Stop selection during move/resize
                 return false;
             };
@@ -519,3 +539,76 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
         moving = false;
     }
 }, false);
+
+if (answerImg.addEventListener) {
+    answerImg.addEventListener("mousewheel", MouseWheelHandler, false);
+    answerImg.addEventListener("DOMMouseScroll", MouseWheelHandler, false);
+} else {
+    answerImg.attachEvent("onmousewheel", MouseWheelHandler);
+}
+
+function MouseWheelHandler(e) {
+
+    // cross-browser wheel delta
+    var e = window.event || e;
+    var delta = -(Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail))));
+
+    var finalWidth = answerImg.width + delta * 10;
+    var finalHeight = answerImg.height + delta * 10;
+    var rax = finalWidth/answerImg.width;
+    var ray = finalHeight/answerImg.height;
+
+    if (finalWidth > 70 && finalWidth < 800) {
+        answerImg.width = finalWidth;
+    }
+    
+    for (j = 0 ; j < grade ; j++) {
+        var imgN = 'img' + j;
+        var selectedZone = document.getElementById(imgN); // An answer zone
+
+        if (selectedZone) { // If at least one answer zone is defined
+
+            // Position x & y of the current selected answer zone
+            var left = parseInt(selectedZone.style.left.substr(0, selectedZone.style.left.indexOf('p')));
+            var top = parseInt(selectedZone.style.top.substr(0, selectedZone.style.top.indexOf('p')));
+            
+            left = left * rax;
+            top = top * ray;
+
+            // Calculate the size of the answer zone proportionally to the new size of the answer image
+            var size = delta * 2 * rax;
+
+            selectedZone.style.left = String(left + size/2) + 'px';
+            selectedZone.style.top = String(top + size/2) + 'px';
+
+            // Select the answer zone to resize
+            target = selectedZone;
+
+            // Disable moving answer zone and enable resizing it
+            resizing = true;
+
+            // Resize the answer zone
+            ResizePointer(direction, size);
+        }
+    }
+    
+    e.preventDefault();
+
+    return false;
+}
+
+function MouseWheelCoords(e) {
+
+    // cross-browser wheel delta
+    var e = window.event || e;
+    var delta = -(Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail))));
+
+    var finalWidth = selectAnswer.width + delta * 10;
+
+    if (finalWidth > 10 && finalWidth < answerImg.width/2) {
+        selectAnswer.width = finalWidth;
+    }
+
+    e.preventDefault();
+    return false;
+}

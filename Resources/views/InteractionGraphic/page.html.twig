@@ -42,7 +42,7 @@
     
     <label for="label">{{ "Picture name" | trans }}</label>
     <input type="text" id='label' name='label' required="true"/><br/>
-    <input id="picture" name="picture" type="file" required="true"/>
+    <input id="picture" name="picture" type="file" required="true" accept="image/*"/>
     <br /><br />
     <input id="uploadSubmit" type="submit" value="{{ "Upload !" | trans }}"/><p id="Result">{{ "Uploading ..." | trans }}</p>
 </form>
@@ -55,6 +55,14 @@
     // Display or not the button to upload
     list.style.display = "none";
     button.style.display = "block";
+
+
+    window.onload = function () {
+        window.resizeTo(
+            document.getElementById('picture').offsetLeft + document.getElementById('picture').width + 50,
+            document.getElementById('uploadSubmit').offsetTop + document.getElementById('uploadSubmit').height + 100
+        );
+    };
 
     function ChangeList(idDoc, label) {
 
