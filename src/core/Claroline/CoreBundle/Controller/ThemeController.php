@@ -16,31 +16,42 @@ class ThemeController extends Controller
      * @route("/compile", name="claroline_admin_theme_compile")
      *
      */
-    public function compileThemes()
+    public function compileAction()
     {
-        $webPath = $this->container->get('templating.helper.assets')->getUrl("");
-        $webPath = substr($webPath, 0, -1);
+        $this->compileTheme("ClarolineCoreBundle:less:bootstrap-default/theme.html.twig");
 
-        $webPath = "./";
+        return new Response("Done!");
+    }
+
+    /**
+     * Compile Less Themes that are defined in a twig file with lessphp filter
+     *
+     * @param mixed $template An strig or an array of routes to the template the following syntax:
+     *                        "ClarolineCoreBundle:less:bootstrap-default/theme.html.twig"
+     */
+    private function compileTheme($template)
+    {
+        $webPath = "./"; //@TODO Find something better
 
         $twig = $this->container->get("twig");
         $twigLoader = $this->container->get("twig.loader");
-        $template = "ClarolineCoreBundle:less:bootstrap-default/theme.html.twig";
 
-        $am = $this->container->get("assetic.asset_manager");
+        $assetic = $this->container->get("assetic.asset_manager");
 
         // enable loading assets from twig templates
-        $am->setLoader('twig', new TwigFormulaLoader($twig));
+        $assetic->setLoader('twig', new TwigFormulaLoader($twig));
 
-        // loop through all your templates
-        //foreach ($templates as $template) {
+        if (is_array($template)) {
+            foreach ($template as $templateName) {
+                $resource = new TwigResource($twigLoader, $templateName);
+                $assetic->addResource($resource, 'twig');
+            }
+        } else {
             $resource = new TwigResource($twigLoader, $template);
-            $am->addResource($resource, 'twig');
-        //}
+            $assetic->addResource($resource, 'twig');
+        }
 
         $writer = new AssetWriter($webPath);
-        $writer->writeManagerAssets($am);
-
-        return new Response("test");
+        $writer->writeManagerAssets($assetic);
     }
 }
