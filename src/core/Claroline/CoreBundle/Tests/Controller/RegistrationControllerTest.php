@@ -75,8 +75,8 @@ class RegistrationControllerTest extends FunctionalTestCase
         $now = new \DateTime();
 
         $this->configHandler->setParameter('allow_self_registration', false);
-        $this->client->request('GET', '/register/form');
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        $crawler = $this->client->request('GET', '/register/form');
+        $this->assertEquals(1, $crawler->filter('#login-form')->count());
         $this->configHandler->setParameter('allow_self_registration', true);
         $this->registerUser('Bill', 'Doe', 'bdoe', '123');
         $crawler = $this->logUser($this->getUser('bdoe'));

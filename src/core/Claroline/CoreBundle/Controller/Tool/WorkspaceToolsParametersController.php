@@ -148,6 +148,10 @@ class WorkspaceToolsParametersController extends AbstractParametersController
             ->findOneBy(array('workspace' => $workspaceId, 'tool' => $toolId));
         $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId);
 
+        if ($tool->getName() === 'parameters' && $role->getName() === 'ROLE_ANONYMOUS') {
+            throw new \Exception('Anonymous users cannot access the parameters tool');
+        }
+
         if ($wot === null) {
             $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId);
             $wot = new WorkspaceOrderedTool();

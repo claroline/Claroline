@@ -44,10 +44,15 @@
                         {% for key, isVisible in toolPermission['visibility'] %}
                             <td data-tool-id="{{ toolPermission['tool'].getTool().getId() }}" data-role-id="{{ key }}">
                                 <input type="checkbox"
-                                class="chk-tool-visible"
-                                value="1"
-                                {% if toolPermission['tool'].getTool().isDesktopRequired() %} disabled {% endif %}
-                                {% if isVisible %} checked {% endif %}
+                                       class="chk-tool-visible"
+                                       value="1"
+                                    {% if toolPermission['tool'].getTool().isDesktopRequired()
+                                        or (toolPermission['tool'].getTool().getName() == 'parameters' and loop.last) %}
+                                       disabled
+                                    {% endif %}
+                                    {% if isVisible %}
+                                       checked
+                                    {% endif %}
                                 />
                             </td>
                         {% endfor %}
