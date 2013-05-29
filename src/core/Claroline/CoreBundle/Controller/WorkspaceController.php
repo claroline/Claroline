@@ -206,15 +206,23 @@ class WorkspaceController extends Controller
     /**
      * Renders the left tool bar. Not routed.
      *
+<<<<<<< HEAD
+     * @param $_workspace
+=======
      * @param integer $workspaceId
+>>>>>>> 482a7aaec4b2fd8f626969bfa25a83deb27ad8e1
      *
      * @return Response
      */
-    public function renderToolListAction($workspaceId)
+    public function renderToolListAction($_workspace)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
-            ->find($workspaceId);
+            ->find($_workspace);
+
+        if (!$this->get('security.context')->isGranted('OPEN', $workspace)) {
+            throw new AccessDeniedException();
+        }
 
         $currentRoles = $this->get('claroline.security.utilities')
             ->getRoles($this->get('security.context')->getToken());

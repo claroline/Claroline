@@ -521,7 +521,6 @@ class Manager
                 if ($ancestors[$i+1]->getParent() == $ancestors[$i]) {
                     $continue = true;
                 } else {
-                    var_dump($ancestors[$i+1]->getName());
                     if ($this->hasLinkTo($ancestors[$i], $ancestors[$i+1])) {
                         $continue = true;
                     } else {

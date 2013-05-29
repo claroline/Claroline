@@ -33,7 +33,15 @@
                     resources: new manager.Views.Resources(parameters, dispatcher)
                 };
             },
-            render: function (resources, path, creatableTypes, isSearchMode, searchParameters) {
+            render: function (resources, path, creatableTypes, isSearchMode, searchParameters, isRoot, workspaceId) {
+                if (isRoot) {
+                    this.parameters._workspace = undefined;
+                } else {
+                    if (this.parameters._workspace == undefined) {
+                        this.parameters._workspace = workspaceId;
+                    }
+                }
+
                 this.currentDirectory = _.last(path);
 
                 // if directoryHistory is empty
@@ -417,7 +425,6 @@
             },
             initialize: function (parameters, dispatcher) {
                 this.parameters = parameters;
-                console.debug(parameters);
                 this.dispatcher = dispatcher;
                 this.directoryId = parameters.directoryId;
             },
@@ -456,11 +463,13 @@
             },
             dispatchOpen: function (event) {
                 event.preventDefault();
+                console.debug(this.parameters);
                 this.dispatcher.trigger('resource-click', {
                     resourceId: event.currentTarget.getAttribute('data-id'),
                     resourceType: event.currentTarget.getAttribute('data-type'),
                     isPickerMode: this.parameters.isPickerMode,
-                    directoryHistory: this.parameters.directoryHistory
+                    directoryHistory: this.parameters.directoryHistory,
+                    workspaceId: this.parameters._workspace
                 });
             },
             dispatchCheck: function (event) {
@@ -674,6 +683,8 @@
                 }
             },
             'resource-click': function (event) {
+                console.debug(event);
+
                 if (event.isPickerMode) {
                     if (event.resourceType === 'directory') {
                         this.displayResources(event.resourceId, 'picker');
@@ -682,7 +693,7 @@
                     if (event.resourceType === 'directory') {
                         this.router.navigate('resources/' + event.resourceId, {trigger: true});
                     } else {
-                        this.open(event.resourceType, event.resourceId, event.directoryHistory);
+                        this.open(event.resourceType, event.resourceId, event.directoryHistory, event.workspaceId);
                     }
                 }
             },
@@ -743,6 +754,7 @@
             directoryId = directoryId || 0;
             view = view && view === 'picker' ? view : 'main';
             var isSearchMode = searchParameters ? true : false;
+
             $.ajax({
                 context: this,
                 url: this.parameters.appPath + '/resource/' +
@@ -764,7 +776,9 @@
                         data.path,
                         data.creatableTypes,
                         isSearchMode,
-                        searchParameters
+                        searchParameters,
+                        data.is_root,
+                        data.workspace_id
                     );
 
                     if (!this.views[view].isAppended) {
@@ -959,7 +973,7 @@
         download: function (resourceIds) {
             window.location = this.parameters.appPath + '/resource/export?' + $.param({ids: resourceIds});
         },
-        open: function (resourceType, resourceId, directoryHistory) {
+        open: function (resourceType, resourceId, directoryHistory, workspaceId) {
             var _path = '';
             for (var i = 0; i < directoryHistory.length; i++) {
                 if ( i === 0) {
@@ -970,7 +984,8 @@
                 _path += '_breadcrumbs[]=' + directoryHistory[i].id;
             }
 
-            window.location = this.parameters.appPath + '/resource/open/' + resourceType + '/' + resourceId + _path;
+            window.location = this.parameters.appPath + '/resource/open/' + resourceType + '/'
+                + resourceId + _path + '&_workspace=' + workspaceId;
         },
         editRights: function (formAction, formData) {
             $.ajax({
@@ -1050,6 +1065,7 @@
         parameters.pickerCallback = parameters.pickerCallback || function () {};
         parameters.appPath = parameters.appPath || '';
         parameters.webPath = parameters.webPath || '';
+        parameters._workspace = parameters._workspace;
         manager.Controller.initialize(parameters);
     };
     /**
