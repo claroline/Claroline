@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\CoreBundle\Library\Resource\IconCreator;
 use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
 use Claroline\CoreBundle\Entity\Plugin;
+use Claroline\CoreBundle\Entity\Theme\Theme;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Entity\Resource\IconType;
@@ -202,6 +203,10 @@ class DatabaseWriter
         foreach ($processedConfiguration['tools'] as $tool) {
             $this->persistTool($tool, $pluginEntity);
         }
+
+        foreach ($processedConfiguration['themes'] as $theme) {
+            $this->persistTheme($theme, $pluginEntity);
+        }
     }
 
     private function persistIcons(array $resource, ResourceType $resourceType, PluginBundle $plugin)
@@ -352,6 +357,15 @@ class DatabaseWriter
         if ($tool['is_displayable_in_workspace'] && $this->modifyTemplate) {
             $this->templateBuilder->addTool($tool['name'], $tool['name']);
         }
+    }
+
+    private function persistTheme($theme, $pluginEntity)
+    {
+        $themeEntity = new Theme();
+        $themeEntity->setName($theme['name']);
+        $themeEntity->setPath($theme['path']);
+        $themeEntity->setPlugin($pluginEntity);
+        $this->em->persist($themeEntity);
     }
 
     public function setModifyTemplate($bool)

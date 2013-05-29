@@ -41,6 +41,12 @@ class Theme
      */
     private $path;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
+     * @ORM\JoinColumn(name="plugin_id", referencedColumnName="id")
+     */
+    protected $plugin;
+
 
     /**
      * Get id
@@ -96,5 +102,15 @@ class Theme
     public function getPath()
     {
         return $this->path;
+    }
+
+    public function setPlugin($plugin)
+    {
+        $this->plugin = $plugin;
+    }
+
+    public function getPlugin()
+    {
+        return $this->plugin;
     }
 }
