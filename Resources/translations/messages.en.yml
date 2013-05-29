@@ -258,3 +258,4 @@ noImg: You must upload a picture !
 noAnswerZone: There is no answer zone ...
 notAll: All the answers zones haven\'t been placed !
 onlyOnce: => The rights answers count only once.
+wrong: The input value is wrong.

@@ -259,3 +259,4 @@ noImg: Vous devez télécharger une image !
 noAnswerZone: Vous n\'avez mis aucune zone de réponse ...
 notAll: Toutes les zones de réponses n\'ont pas été placées !
 onlyOnce: => Les bonnes réponses ne sont comptabilisées qu'une seule fois.
+wrong: La valeur saisie est incorrecte.

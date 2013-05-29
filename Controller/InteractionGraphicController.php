@@ -250,8 +250,6 @@ class InteractionGraphicController extends Controller
 
         $editForm->bindRequest($request);
         
-        
-        
         $width = $this->get('request')->get('imgwidth'); // Get the width of the image
         $height = $this->get('request')->get('imgheight'); // Get the height of the image
 
@@ -362,6 +360,8 @@ class InteractionGraphicController extends Controller
             $data = str_replace($before, $after, $inter[1]); // replace separation punctuation of the informations ...
 
             list(${'value'.$i}, ${'point'.$i}, ${'size'.$i}) = explode(",", $data); //... in order to split informations
+
+            ${'point'.$i} = str_replace('/', '.', ${'point'.$i});
 
             // And persist it into the Database
             ${'url'.$i} = $inter[0];

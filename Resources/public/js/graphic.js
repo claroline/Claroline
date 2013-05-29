@@ -88,6 +88,16 @@ function LoadPic(path, prefx, iddoc) {
     point = {};
 }
 
+function CheckScore(message) {
+
+    if (/^\d+(?:[.,]\d+)?$/.test(document.getElementById('points').value) == false) {
+        alert(message);
+        el.style.visibility = 'hidden';
+    } else {
+        el.style.visibility = 'visible';
+    }
+}
+
 // Submit form without an empty field
 function Check(noTitle, noQuestion, noImg, noAnswerZone, questiontitle, invite) {
 
@@ -533,7 +543,9 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
 
             document.getElementById('Answer').appendChild(img);
 
-            point[img.id] = document.getElementById('points').value;
+            var score = document.getElementById('points').value.replace(/[.,]/,"/");
+
+            point[img.id] = score;
             
             if (target.id == 'movable') {
                 el.style.left = '45px';
