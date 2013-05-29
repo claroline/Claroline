@@ -54,6 +54,7 @@ class ResourceModeExtension extends Twig_Extension
 
     public function getPath($name, $parameters = array())
     {
+        $this->hasBreadcrumbs = false;
         $path = $this->appendMode($this->generator->generate($name, $parameters, false));
         $path = $this->appendBreadcrumbs($path);
         $path = $this->appendWorkspace($path);
@@ -63,6 +64,7 @@ class ResourceModeExtension extends Twig_Extension
 
     public function getUrl($name, $parameters = array())
     {
+        $this->hasBreadcrumbs = false;
         $url = $this->appendMode($this->generator->generate($name, $parameters, true));
         $url = $this->appendBreadcrumbs($url);
         $url = $this->appendWorkspace($url);
@@ -100,6 +102,7 @@ class ResourceModeExtension extends Twig_Extension
                 $toAppend .= '_breadcrumbs[]='. $breadcrumbs[$i];
             }
             $path .= $toAppend;
+            $this->hasBreadcrumbs = true;
         }
 
         return $path;
@@ -111,11 +114,13 @@ class ResourceModeExtension extends Twig_Extension
 
 
         if ($workspace !== null) {
-            if (count($this->container->get('request')->query->all()) > 0) {
+            if ($this->hasBreadcrumbs) {
                 return $path . "&_workspace={$workspace}";
             } else {
                 return $path . "?_workspace={$workspace}";
             }
         }
+
+        return $path;
     }
 }
