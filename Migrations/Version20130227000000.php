@@ -40,6 +40,7 @@ class Version20130227000000 extends BundleMigration
         $this->createInteractionQcmTable($schema);
         $this->createCoordsTable($schema);
         $this->createChoiceTable($schema);
+        $this->createShareTable($schema);
     }
 
     public function down(Schema $schema)
@@ -75,6 +76,7 @@ class Version20130227000000 extends BundleMigration
         $schema->dropTable('ujm_group');
         $schema->dropTable('ujm_subscription');
         $schema->dropTable('ujm_exercise');
+        $schema->dropTable('ujm_share');
     }
 
     private function createExerciseTable(Schema $schema)
@@ -657,5 +659,26 @@ class Version20130227000000 extends BundleMigration
             array('id'),
             array('onDelete' => 'CASCADE')
         );
+    }
+    
+    private function createShareTable(Schema $schema)
+    {
+        $table = $schema->createTable('ujm_share');
+        $table->addColumn('allowToModify', 'boolean');
+        $table->addColumn('user_id', 'integer');
+        $table->addColumn('question_id', 'integer');
+        $table->addForeignKeyConstraint(
+            $schema->getTable('claro_user'),
+            array('user_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('ujm_question'),
+            array('question_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+        $table->setPrimaryKey(array('user_id', 'question_id'));
     }
 }
