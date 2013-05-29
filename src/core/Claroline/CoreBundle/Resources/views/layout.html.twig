@@ -4,7 +4,7 @@
 
 {% block stylesheets %}
 
-    {% include config.getParameter('theme') | getThemePath %}
+    {% include config.getParameter('theme') %}
 
     {% stylesheets debug=false filter='lessphp'  output='bundles/clarolinecore/css/font-awesome.css'
     '../vendor/fortawesome/fontawesome/build/assets/font-awesome/less/font-awesome.less'

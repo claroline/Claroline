@@ -14,7 +14,7 @@ class Themes extends AbstractFixture implements OrderedFixtureInterface
         $names = array('bootstrap-default', 'bootswatch-cyborg', 'claroline', 'visual');
         $path = array(
             'ClarolineCoreBundle:less:bootstrap-default/theme.html.twig',
-            'ClarolineCoreBundle:less:bootstrap-cyborg/theme.html.twig',
+            'ClarolineCoreBundle:less:bootswatch-cyborg/theme.html.twig',
             'ClarolineCoreBundle:less:claroline/theme.html.twig',
             'ClarolineCoreBundle:less:visual/theme.html.twig'
         );
