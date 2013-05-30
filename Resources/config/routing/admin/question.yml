@@ -25,6 +25,16 @@ ujm_question_dispaly_form_type:
     requirements:
       _method: POST
       
+ujm_question_share:
+  pattern: /share/{questionID}
+  defaults: { _controller: "UJMExoBundle:Question:share" }
+  
+ujm_question_share_search_user:
+  pattern: /share/search/user
+  defaults: { _controller: "UJMExoBundle:Question:search" }
+  requirements:
+      _method: POST
+      
 ujm_question_show:
     pattern:  /show/{id}
     defaults: { _controller: "UJMExoBundle:Question:show" }

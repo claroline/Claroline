@@ -56,6 +56,9 @@
                 <td>{{ interaction.invite|raw }}</td>
                 <td>
                     <ul>
+                        <li>
+                            <a href="{{ path('ujm_question_share', { 'questionID': interaction.question.id }) }}">{{ "Share" | trans }}</a>
+                        </li>
                         {% if(questionWithResponse[i] == 0) %}
                             <li>
                                 <a href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}">{{ "Edit" | trans }}</a>

@@ -40,6 +40,9 @@ namespace UJM\ExoBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormBuilder;
 
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
+
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Form\QuestionType;
 
@@ -549,6 +552,34 @@ class QuestionController extends Controller
                 }
             }
         }
+    }
+
+    public function shareAction($questionID)
+    {
+        
+        return $this->render(
+                        'UJMExoBundle:Question:share.html.twig', array(
+                        'questionID' => $questionID
+                        )
+                        );
+    }
+    
+    public function searchAction()
+    {
+        $request = $this->container->get('request');
+        $search = $request->request->get('search');
+        
+        if ($search != '')
+        {
+            $em = $this->getDoctrine()->getEntityManager();
+            $userList = $em->getRepository('ClarolineCoreBundle:User')->findByName($search);
+        }
+        
+        return $this->render(
+                        'UJMExoBundle:Question:search.html.twig', array(
+                        'userList' => $userList
+                        )
+                        );
     }
 
     /**

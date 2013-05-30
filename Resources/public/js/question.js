@@ -25,3 +25,20 @@ function cherche_type(warningChangeTypeQ, exoID, displayFormType) {
         cherche_type_ajax(exoID, displayFormType);
     }
 }
+
+function search_user_ajax(ujm_question_share_search_user) {
+    //"use strict";
+    //alert($("#search-user-txt").val());
+
+    var search = $("#search-user-txt").val();
+
+    $.ajax({
+        type: "POST",
+        url: ujm_question_share_search_user,
+        data: { search: search },
+        cache: false,
+        success: function (data) {
+            $("#searchUserList").html(data);
+        }
+    });
+}
