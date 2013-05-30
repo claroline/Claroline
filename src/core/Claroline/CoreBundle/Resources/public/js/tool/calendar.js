@@ -62,13 +62,13 @@
             var  currentDate = new Date();
             var pickedDate = new Date(date);
             $('#calendar_form_start').val(date.getDate() + '/' +
-                (date.getMonth() + 1) + '/' + date.getFullYear());
+                (date.getMonth() + 1) + '/' + date.getFullYear() +' '+date.getHours()+':'+pickedDate.getMinutes());
             if (pickedDate > currentDate) {
                 $('#calendar_form_end').val(pickedDate.getDate() + '/' +
-                    (pickedDate.getMonth() + 1) + '/' + pickedDate.getFullYear());
+                    (pickedDate.getMonth() + 1) + '/' + pickedDate.getFullYear()+' '+pickedDate.getHours()+':'+pickedDate.getMinutes());
             } else {
                 $('#calendar_form_end').val(currentDate.getDate() + '/' +
-                    (currentDate.getMonth() + 1) + '/' + currentDate.getFullYear());
+                    (currentDate.getMonth() + 1) + '/' + currentDate.getFullYear()+' '+pickedDate.getHours()+':'+pickedDate.getMinutes());
             }
             $('#myModal').modal();
         };
