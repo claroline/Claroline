@@ -85,11 +85,11 @@
 {# ------------------------------------------------- Boutton affichage image ---------------------------------------------------------------------------- #}
     
     <p><input id="LoadImg" type="button" value="{{ "Select" | trans }}" onclick="LoadPic('{{ path('ujm_interactiongraphic_DisplayPic') }}',
-            '{{ asset('bundles') }}', {{ edit_form.document.vars.id }})"/></p>
+            '{{ asset('bundles') }}', {{ edit_form.document.vars.id }});"/></p>
  
 {# ------------------------------------------------- Zone affichage image ---------------------------------------------------------------------------- #}    
     
-    <a onclick="DisplayInstruction()" id="Order" 
+    <a onclick="DisplayInstruction();" id="Order" 
        onmouseover="document.body.style.cursor = 'pointer';"
        onmouseout="document.body.style.cursor = 'default';"
     >Instructions</a>
@@ -131,14 +131,14 @@
                 </td>
 
                 <td>
-                    <select id="shape" name="shape" size="1" style="width:100px" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}')">
+                    <select id="shape" name="shape" size="1" style="width:100px" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}');">
                         <option value="circle"  selected>{{ "cercle" | trans }}</option>
                         <option value="rect" >{{ "rectangle" | trans }}</option>
                     </select>
                 </td>
 
                 <td>
-                    <select id="color" name="color" size="1" style="width:70px" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}')">
+                    <select id="color" name="color" size="1" style="width:70px" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}');">
                         <option value="white"    style="background-color:#FFFFFF;"selected> &nbsp;&nbsp;&nbsp; </option>
                         <option value="red"      style="background-color:#FF0000;">         &nbsp;&nbsp;&nbsp; </option>
                         <option value="blue"     style="background-color:#002FFF;">         &nbsp;&nbsp;&nbsp; </option> 
@@ -150,7 +150,7 @@
                 </td>
 
                 <td>
-                    <input type="TEXT" id="points" name="points" value="1" style="width:50px; text-align: end" onblur="CheckScore('{{ "wrong" | trans }}')">
+                    <input type="TEXT" id="points" name="points" value="1" style="width:50px; text-align: end" onblur="CheckScore('{{ "wrong" | trans }}');">
                 </td>
             </tr>
         </table>    
@@ -163,6 +163,8 @@
     <input type="hidden" id="coordsZone" name="coordsZone" value=""/>
     
     <input type="hidden" name="exercise" value="{{ entity.id }}" />
+    
+    <input type="hidden" id="message" name="message" value="{{ "inside" | trans }}"/>
         
 {# ------------------------------------------------- Boutton validation formulaire ---------------------------------------------------------------------------- #}
 

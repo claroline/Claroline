@@ -37,11 +37,11 @@
     <link href="{{ asset('bundles/ujmexo/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css"/>
 {% endblock %}
 
-<form class="well label_bold" id="uploadForm" enctype="multipart/form-data" onsubmit="DisplayMessage()"
+<form class="well label_bold" id="uploadForm" enctype="multipart/form-data" onsubmit="DisplayMessage();"
       method="post" action="{{ path('ujm_interactiongraphic_AddImg') }}">
     
     <label for="label">{{ "Picture name" | trans }}</label>
-    <input type="text" id='label' name='label' required="true" onblur="ValidName()"/><br/>
+    <input type="text" id='label' name='label' required="true" onblur="ValidName('{{ "wrong" | trans }}');"/><br/>
     <input id="picture" name="picture" type="file" required="true" accept="image/*"/>
     <br /><br />
     <input id="uploadSubmit" type="submit" value="{{ "Upload !" | trans }}"/><p id="Result">{{ "Uploading ..." | trans }}</p>
@@ -52,11 +52,15 @@
     var button = document.getElementById('uploadSubmit'); // The submit button to hide it or not when uploading
     var list = document.getElementById('Result'); // The uploading text when submit button is hide
 
+    var allowclose = true; // Allow the pop up to be closed
+    var inputselected = false; // If the input is selected, the pop up cannot be closed
+
     // Display or not the button to upload
     list.style.display = "none";
     button.style.display = "block";
 
 
+    // Resize the pop up to show all the component
     window.onload = function () {
         window.resizeTo(
             document.getElementById('picture').offsetLeft + document.getElementById('picture').width + 50,
@@ -64,6 +68,7 @@
         );
     };
 
+    // Put the new image into the drop-down list
     function ChangeList(idDoc, label) {
 
         list.style.display = "none";
@@ -79,19 +84,41 @@
         }
     }
 
+    // Display the loading message
     function DisplayMessage() {
         list.style.display = "block";
         button.style.display = "none";
     }
 
-    function ValidName() {
+    // To check if the label of the image is valid
+    function ValidName(message) {
         if (/^[a-z0-9_ !?éèà]+$/gi.test(document.getElementById('label').value) == false) {
-            alert('valeur incorrecte !');
+            alert(message);
             document.getElementById('uploadSubmit').disabled = true;
         } else {
             document.getElementById('uploadSubmit').disabled = false;
         }
     }
+
+    // To close the window if its loose focus
+    window.onblur = function () {
+        if (allowclose == true) {
+            window.close();
+        }
+    };
+    
+    // If input file selected, cannot close the pop up
+    document.getElementById('picture').onblur = function () {
+        allowclose = false;
+        inputselected = true;
+    };
+    
+    // If input file unselected, can close the pop up
+    window.onclick = function () {
+        if (inputselected == true) {
+            allowclose = true;
+        }
+    };
 </script>
 
 {% if idDoc is defined %}

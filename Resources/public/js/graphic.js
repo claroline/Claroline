@@ -658,7 +658,7 @@ function MouseWheelCoords(e) {
 
     var finalWidth = selectAnswer.width + delta * 10;
 
-    if (finalWidth > 10 && finalWidth < answerImg.width/2) {
+    if (finalWidth > 5 && finalWidth < answerImg.width/2) {
         selectAnswer.width = finalWidth;
     }
 
