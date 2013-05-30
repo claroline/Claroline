@@ -21,6 +21,18 @@ class ResourceQueryBuilder
     private $orderClause;
     private $groupByClause;
     private $parameters = array();
+    private $fromClause;
+    private $joinRelativesClause;
+
+    public function __construct() {
+        $eol = PHP_EOL;
+        $this->fromClause = "FROM Claroline\CoreBundle\Entity\Resource\AbstractResource resource{$eol}";
+        $this->joinRelativesClause = "JOIN resource.creator creator{$eol}" .
+            "JOIN resource.resourceType resourceType{$eol}" .
+            "LEFT JOIN resource.next next{$eol}" .
+            "LEFT JOIN resource.previous previous{$eol}" .
+            "JOIN resource.icon icon{$eol}";
+    }
 
     /**
      * Selects resources as entities.
@@ -58,6 +70,8 @@ class ResourceQueryBuilder
             "    creator.username as creator_username,{$eol}" .
             "    resourceType.name as type,{$eol}" .
             "    resourceType.isBrowsable as is_browsable,{$eol}" .
+            "    previous.id as previous_id,{$eol}" .
+            "    next.id as next_id,{$eol}" .
             "    icon.relativeUrl as large_icon";
 
         if ($withMaxPermissions) {
@@ -303,6 +317,17 @@ class ResourceQueryBuilder
     }
 
     /**
+     * @return \Claroline\CoreBundle\Repository\ResourceQueryBuilder
+     */
+    public function getShortcuts()
+    {
+        $eol = PHP_EOL;
+        $this->setFrom('Claroline\CoreBundle\Entity\Resource\ResourceShortcut');
+        $this->selectClause .= ", IDENTITY(resource.resource) as target_id{$eol}";
+        return $this;
+    }
+
+    /**
      * Filters the resources that don't have a parent (roots).
      *
      * @return Claroline\CoreBundle\Repository\ResourceQueryBuilder
@@ -377,18 +402,14 @@ class ResourceQueryBuilder
         }
 
         $eol = PHP_EOL;
-        $joinRelatives = $this->joinSingleRelatives ?
-            "JOIN resource.creator creator{$eol}" .
-            "JOIN resource.resourceType resourceType{$eol}" .
-            "JOIN resource.icon icon{$eol}" :
-            '';
+        $joinRelatives = $this->joinSingleRelatives ? $this->joinRelativesClause: '';
         $joinRights = $this->leftJoinRights ?
             "LEFT JOIN resource.rights rights{$eol}" .
             "JOIN rights.role rightRole{$eol}" :
             '';
         $dql =
             $this->selectClause .
-            "FROM Claroline\CoreBundle\Entity\Resource\AbstractResource resource{$eol}" .
+            $this->fromClause.
             $joinRelatives .
             $joinRights .
             $this->whereClause .
@@ -420,5 +441,16 @@ class ResourceQueryBuilder
         } else {
             $this->whereClause = $this->whereClause . "AND {$clause}" . PHP_EOL;
         }
+    }
+
+    public function addJoinClause($clause) {
+        $this->joinRelativesClause .= $clause . PHP_EOL;
+    }
+
+    public function setFrom($class)
+    {
+        $eol = PHP_EOL;
+        $from = "FROM {$class} resource{$eol}";
+        $this->fromClause = $from;
     }
 }

@@ -21,9 +21,11 @@ class DatabaseWriterTest extends FunctionalTestCase
         parent::setUp();
         $this->container = $this->client->getContainer();
         $this->dbWriter = $this->container->get('claroline.plugin.recorder_database_writer');
+        $this->dbWriter->setModifyTemplate(true);
         $pluginDirectory = $this->container->getParameter('claroline.param.stub_plugin_directory');
         $this->loader = new Loader($pluginDirectory);
         $this->validator = $this->container->get('claroline.plugin.validator');
+        $this->resetTemplate();
     }
 
     /**
@@ -303,6 +305,17 @@ class DatabaseWriterTest extends FunctionalTestCase
         $endResources = count($parsedFile['root_perms']['ROLE_WS_MANAGER']['canCreate']);
         $archive->close();
         $this->assertEquals(0, $oldResources - $endResources);
+    }
+
+    public function testAddTheme()
+    {
+        $themeRepo = $this->em->getRepository('ClarolineCoreBundle:Theme\Theme');
+        $origThemes = $themeRepo->findAll();
+        $plugin = $this->loader->load('Valid\WithTheme\ValidWithTheme');
+        $this->validator->validate($plugin);
+        $this->dbWriter->insert($plugin, $this->validator->getPluginConfiguration());
+        $themes = $themeRepo->findAll();
+        $this->assertEquals(count($origThemes) + 1, count($themes));
     }
 
     public function pluginProvider()

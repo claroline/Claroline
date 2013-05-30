@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Library\Event\CreateResourceEvent;
@@ -86,6 +85,19 @@ class ResourceController extends Controller
                 $this->get('claroline.resource.converter')
                     ->toJson($resource, $this->get('security.context')->getToken())
             );
+        } elseif (count($event->getResources()) > 0) {
+            $resources = $event->getResources();
+            $manager = $this->get('claroline.resource.manager');
+            $resourcesArray = array();
+            $token = $this->get('security.context')->getToken();
+
+            foreach ($resources as $resource) {
+                $createdResource = $manager->create($resource, $parentId, $resourceType);
+                $resourcesArray[] = $this->get('claroline.resource.converter')
+                    ->toArray($createdResource, $token);
+            }
+            $json = json_encode($resourcesArray);
+            $response->setContent($json);
         } else {
             if ($event->getErrorFormContent() != null) {
                 $response->setContent($event->getErrorFormContent());
@@ -361,14 +373,24 @@ class ResourceController extends Controller
         $directoryId = (integer) $directoryId;
         $currentRoles = $this->get('claroline.security.utilities')
             ->getRoles($this->get('security.context')->getToken());
+        $canChangePosition = false;
 
         if ($directoryId === 0) {
             $resources = $resourceRepo->findWorkspaceRootsByUser($user);
+            $isRoot = true;
+            $workspaceId = 0;
         } else {
+            $isRoot = false;
             $directory = $this->getResource($resourceRepo->find($directoryId));
 
             if (null === $directory || !$directory instanceof Directory) {
                 throw new Exception("Cannot find any directory with id '{$directoryId}'");
+            }
+
+            $workspaceId = $directory->getWorkspace()->getId();
+
+            if ($user == $directory->getCreator()) {
+                $canChangePosition = true;
             }
 
             $path = $resourceRepo->findAncestors($directory);
@@ -394,7 +416,10 @@ class ResourceController extends Controller
                 array(
                     'path' => $path,
                     'creatableTypes' => $creatableTypes,
-                    'resources' => $resources
+                    'resources' => $resources,
+                    'canChangePosition' => $canChangePosition,
+                    'workspace_id' => $workspaceId,
+                    'is_root' => $isRoot
                 )
             )
         );
@@ -442,7 +467,7 @@ class ResourceController extends Controller
         $this->checkAccess('COPY', $collection);
 
         foreach ($resources as $resource) {
-            $newNode = $this->get('claroline.resource.manager')->copy($resource, $parent);
+            $newNode = $this->get('claroline.resource.manager')->copy($resource, $parent, $token->getUser());
             $em->persist($newNode);
             $em->flush();
             $em->refresh($parent);
@@ -520,26 +545,8 @@ class ResourceController extends Controller
 
         foreach ($ids as $resourceId) {
             $resource = $repo->find($resourceId);
-            $shortcut = new ResourceShortcut();
-            $shortcut->setParent($parent);
             $creator = $this->get('security.context')->getToken()->getUser();
-            $shortcut->setCreator($creator);
-            $shortcut->setIcon($resource->getIcon()->getShortcutIcon());
-            $shortcut->setName($resource->getName());
-            $shortcut->setName($this->get('claroline.resource.utilities')->getUniqueName($shortcut, $parent));
-            $shortcut->setWorkspace($parent->getWorkspace());
-            $shortcut->setResourceType($resource->getResourceType());
-
-            if (get_class($resource) !== 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
-                $shortcut->setResource($resource);
-            } else {
-                $shortcut->setResource($resource->getResource());
-            }
-
-            $this->get('claroline.resource.manager')->cloneParentRights($shortcut->getParent(), $shortcut);
-            //$this->get('claroline.resource.manager')->cloneParentRights($shortcut->getParent(), $resource);
-
-            $em->persist($shortcut);
+            $shortcut = $this->get('claroline.resource.manager')->makeShortcut($resource, $parent, $creator);
             $em->flush();
             $em->refresh($parent);
 
@@ -582,17 +589,76 @@ class ResourceController extends Controller
         return $response;
     }
 
-    public function renderBreadcrumbAction($resourceId)
+    public function renderBreadcrumbsAction($resourceId, $workspaceId, $_breadcrumbs)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($resourceId);
-        $ancestors = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findAncestors($resource);
-        $workspace = $resource->getWorkspace();
+
+        $ancestors = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+            ->findAncestors($resource);
+
+        $breadcrumbsAncestors = array();
+
+        if (count($_breadcrumbs) > 0) {
+            $breadcrumbsAncestors = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+                ->findResourcesByIds($_breadcrumbs);
+            $breadcrumbsAncestors[] = $resource;
+        }
+
+        if (count($ancestors) > count($breadcrumbsAncestors)) {
+
+            $_breadcrumbs = array();
+
+            foreach ($ancestors as $ancestor) {
+                $_breadcrumbs[] = $ancestor['id'];
+            }
+
+            $breadcrumbsAncestors = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+                ->findResourcesByIds($_breadcrumbs);
+        }
+
+        if (!$this->get('claroline.resource.manager')->isPathValid($breadcrumbsAncestors)) {
+            throw new \Exception('Breadcrumbs invalid');
+        };
+
+        $_workspace = $this->get('request')->query->get('_workspace');
 
         return $this->render(
-            'ClarolineCoreBundle:Resource:breadcrumb.html.twig',
-            array('ancestors' => $ancestors, 'workspace' => $workspace)
+            'ClarolineCoreBundle:Resource:breadcrumbs.html.twig',
+            array('ancestors' => $breadcrumbsAncestors, 'workspaceId' => $workspaceId, '_workspace' => $_workspace)
         );
+    }
+
+    /**
+     * @Route(
+     *     "/sort/{resourceId}/next/{nextId}",
+     *     name="claro_resource_insert_before",
+     *     options={"expose"=true}
+     * )
+     *
+     * @param type $resourceId
+     * @param type $nextId
+     */
+    public function insertBefore($resourceId, $nextId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $repo = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
+        $resource = $repo->find($resourceId);
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        if ($user !== $resource->getParent()->getCreator()) {
+            throw new AccessDeniedException();
+        }
+
+        $next = $repo->find($nextId);
+
+        if ($next !== null) {
+            $this->get('claroline.resource.manager')->insertBefore($resource, $next);
+        } else {
+            $this->get('claroline.resource.manager')->insertBefore($resource);
+        }
+
+        return new Response('success', 204);
     }
 
     private function getResource($resource)

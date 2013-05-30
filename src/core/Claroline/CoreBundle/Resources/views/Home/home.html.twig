@@ -1,0 +1,52 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block content %}
+
+    <div id="homePath" class="hide">{{ path("claro_index") }}</div>
+
+    {% if region['header'] is defined %}
+        <div class="row-fluid">
+            {{  region['header'] | raw }}
+        </div>
+    {% endif %}
+
+    <div class="row-fluid">
+        {% if region['left'] is defined %}
+        <div class="span3">
+            {{ region['left'] | raw }}
+        </div>
+        {% endif %}
+
+        <div class="{% if region['left'] is defined and region['right'] is defined %}span6{% elseif region['left'] is defined or region['rigth'] is defined %}span9{% else %}span12{% endif %}">
+            {% if region['content'] is defined %}
+                {{ region['content'] | raw }}
+            {% endif %}
+
+            {{ content | raw }}
+        </div>
+
+        {% if region['right'] is defined %}
+        <div class="span3">
+            {{ region['right'] | raw }}
+        </div>
+        {% endif %}
+
+    </div>
+
+    {% if region['footer'] is defined %}
+        <hr>
+        <div class="row-fluid">
+            {{  region['footer'] | raw }}
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    {% if is_granted('ROLE_ADMIN') %}
+        <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/js/jquery-ui-1.9.2.custom.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/home/content.js') }}"></script>
+    {% endif %}
+{% endblock %}

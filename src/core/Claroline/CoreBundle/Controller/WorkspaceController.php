@@ -2,18 +2,18 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Claroline\CoreBundle\Form\WorkspaceType;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Claroline\CoreBundle\Form\WorkspaceType;
+use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceToolReadEvent;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceDeleteEvent;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 /**
  * This controller is able to:
@@ -35,23 +35,17 @@ class WorkspaceController extends Controller
      *
      * Renders the workspace list page with its claroline layout.
      *
-     * @throws AccessDeniedHttpException
-     *
      * @return Response
      */
     public function listAction()
     {
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            throw new AccessDeniedHttpException();
-        }
-
+        $this->assertIsGranted('ROLE_USER');
         $em = $this->get('doctrine.orm.entity_manager');
         $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)->findNonPersonal();
         $tags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
             ->findNonEmptyAdminTags();
         $relTagWorkspace = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
             ->findByAdmin();
-
         $tagWorkspaces = array();
 
         foreach ($relTagWorkspace as $tagWs) {
@@ -78,16 +72,11 @@ class WorkspaceController extends Controller
      *
      * Renders the registered workspace list for a user.
      *
-     * @throws AccessDeniedHttpException
-     *
      * @return Response
      */
     public function listWorkspacesByUserAction()
     {
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            throw new AccessDeniedHttpException();
-        }
-
+        $this->assertIsGranted('ROLE_USER');
         $em = $this->get('doctrine.orm.entity_manager');
         $token = $this->get('security.context')->getToken();
         $user = $token->getUser();
@@ -134,12 +123,9 @@ class WorkspaceController extends Controller
      */
     public function creationFormAction()
     {
-        if (false === $this->get('security.context')->isGranted('ROLE_WS_CREATOR')) {
-            throw new AccessDeniedHttpException();
-        }
-
+        $this->assertIsGranted('ROLE_WS_CREATOR');
         $form = $this->get('form.factory')
-            ->create(new WorkspaceType($this->container->getParameter('claroline.param.templates_directory')));
+            ->create(new WorkspaceType());
 
         return $this->render(
             'ClarolineCoreBundle:Workspace:form.html.twig',
@@ -157,24 +143,22 @@ class WorkspaceController extends Controller
      * @Method("POST")
      *
      * @return RedirectResponse
-     *
-     * @throws AccessDeniedHttpException
      */
     public function createAction()
     {
-        if (false === $this->get('security.context')->isGranted('ROLE_WS_CREATOR')) {
-            throw new AccessDeniedHttpException();
-        }
-
+        $this->assertIsGranted('ROLE_WS_CREATOR');
         $form = $this->get('form.factory')
-            ->create(new WorkspaceType($this->container->getParameter('claroline.param.templates_directory')));
+            ->create(new WorkspaceType());
         $form->bind($this->getRequest());
+
+        $templateDir = $this->container->getParameter('claroline.param.templates_directory');
+        $ds = DIRECTORY_SEPARATOR;
 
         if ($form->isValid()) {
             $type = $form->get('type')->getData() == 'simple' ?
                 Configuration::TYPE_SIMPLE :
                 Configuration::TYPE_AGGREGATOR;
-            $config = Configuration::fromTemplate($form->get('template')->getData());
+            $config = Configuration::fromTemplate($templateDir.$ds.$form->get('template')->getData()->getHash());
             $config->setWorkspaceType($type);
             $config->setWorkspaceName($form->get('name')->getData());
             $config->setWorkspaceCode($form->get('code')->getData());
@@ -204,24 +188,17 @@ class WorkspaceController extends Controller
      *
      * @param integer $workspaceId
      *
-     * @return RedirectResponse
-     *
-     * @throws AccessDeniedHttpException
+     * @return Response
      */
     public function deleteAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-
-        if (false === $this->get('security.context')->isGranted("DELETE", $workspace)) {
-            throw new AccessDeniedHttpException();
-        }
-
-        $em->remove($workspace);
-        $em->flush();
-
+        $this->assertIsGranted('DELETE', $workspace);
         $log = new LogWorkspaceDeleteEvent($workspace);
         $this->get('event_dispatcher')->dispatch('log', $log);
+        $em->remove($workspace);
+        $em->flush();
 
         return new Response('success', 204);
     }
@@ -229,15 +206,23 @@ class WorkspaceController extends Controller
     /**
      * Renders the left tool bar. Not routed.
      *
-     * @param type $workspaceId
+<<<<<<< HEAD
+     * @param $_workspace
+=======
+     * @param integer $workspaceId
+>>>>>>> 482a7aaec4b2fd8f626969bfa25a83deb27ad8e1
      *
      * @return Response
      */
-    public function renderToolListAction($workspaceId)
+    public function renderToolListAction($_workspace)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
-            ->find($workspaceId);
+            ->find($_workspace);
+
+        if (!$this->get('security.context')->isGranted('OPEN', $workspace)) {
+            throw new AccessDeniedException();
+        }
 
         $currentRoles = $this->get('claroline.security.utilities')
             ->getRoles($this->get('security.context')->getToken());
@@ -252,6 +237,7 @@ class WorkspaceController extends Controller
         foreach ($tools as $tool) {
             $toolWithTranslation['tool'] = $tool;
             $found = false;
+
             foreach ($workspaceOrderTools as $workspaceOrderedTool) {
                 if ($workspaceOrderedTool->getTool() === $tool) {
                     $toolWithTranslation['name'] = $workspaceOrderedTool->getName();
@@ -292,11 +278,7 @@ class WorkspaceController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
             ->find($workspaceId);
-
-        if (false === $this->get('security.context')->isGranted($toolName, $workspace)) {
-            throw new AccessDeniedHttpException();
-        }
-
+        $this->assertIsGranted($toolName, $workspace);
         $event = new DisplayToolEvent($workspace);
         $eventName = 'open_tool_workspace_'.$toolName;
         $this->get('event_dispatcher')->dispatch($eventName, $event);
@@ -313,7 +295,6 @@ class WorkspaceController extends Controller
         return new Response($event->getContent());
     }
 
-    //todo dql for this
     /**
      * @Route(
      *     "/{workspaceId}/widgets",
@@ -323,12 +304,16 @@ class WorkspaceController extends Controller
      *
      * Display registered widgets.
      *
-     * @param $workspaceId the workspace id
+     * @param integer $workspaceId
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @todo Reduce the number of sql queries for this action (-> dql)
      */
     public function widgetsAction($workspaceId)
     {
+        // No right checking is done : security is delegated to each widget renderer
+        // Is that a good idea ?
         $responsesString = '';
         $configs = $this->get('claroline.widget.manager')
             ->generateWorkspaceDisplayConfig($workspaceId);
@@ -383,7 +368,7 @@ class WorkspaceController extends Controller
             $isAdmin = $this->get('security.context')->getToken()->getUser()->hasRole('ROLE_ADMIN');
 
             if ($foundRole === null && !$isAdmin) {
-                throw new AccessDeniedHttpException('No role found in that workspace');
+                throw new AccessDeniedException('No role found in that workspace');
             }
 
             if ($isAdmin) {
@@ -402,7 +387,7 @@ class WorkspaceController extends Controller
         }
 
         if ($openedTool == null) {
-            throw new AccessDeniedHttpException("No tool found for role {$foundRole}");
+            throw new AccessDeniedException("No tool found for role {$foundRole}");
         }
 
         $route = $this->get('router')->generate(
@@ -411,5 +396,12 @@ class WorkspaceController extends Controller
         );
 
         return new RedirectResponse($route);
+    }
+
+    private function assertIsGranted($attributes, $object = null)
+    {
+        if (false === $this->get('security.context')->isGranted($attributes, $object)) {
+            throw new AccessDeniedException();
+        }
     }
 }

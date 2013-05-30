@@ -107,7 +107,9 @@ class AbstractResourceRepository extends MaterializedPathRepository
             $children = $this->executeQuery($query);
         }
 
-        return $children;
+        //sort children by next & previous
+
+        return $this->sort($children);
     }
 
     /**
@@ -168,7 +170,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
      *
      * @return array[array] An array of resources represented as arrays
      */
-    public function findByCriteria(array $criteria, array $roles = null)
+    public function findByCriteria(array $criteria, array $roles = null, $isRecursive = false)
     {
         $builder = new ResourceQueryBuilder();
         $builder->selectAsArray();
@@ -198,11 +200,86 @@ class AbstractResourceRepository extends MaterializedPathRepository
             }
         }
 
-        $dql = $builder->orderByPath()->getDql();
-        $query = $this->_em->createQuery($dql);
-        $query->setParameters($builder->getParameters());
+        if (!$isRecursive) {
+            $dql = $builder->orderByPath()->getDql();
+            $query = $this->_em->createQuery($dql);
+            $query->setParameters($builder->getParameters());
+            $resources = $query->getResult();
 
-        return $this->executeQuery($query);
+            return $resources;
+        } else {
+            $dql = $builder->getShortcuts()->getDql();
+            $query = $this->_em->createQuery($dql);
+            $query->setParameters($builder->getParameters());
+            $resources = $query->getResult();
+
+            return $resources;
+        }
+    }
+
+    public function count()
+    {
+        $dql = "SELECT COUNT(w) FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w";
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getSingleScalarResult();
+    }
+
+    public function findResourcesByIds(array $ids)
+    {
+        $dql = "SELECT resource from Claroline\CoreBundle\Entity\Resource\AbstractResource resource WHERE";
+
+        for ($i = 1, $size = count($ids); $i <= $size; $i++) {
+            $dql .= " resource.id = {$ids[$i-1]}";
+            if ($i !== $size ) {
+                $dql .= " OR ";
+            }
+        }
+
+        $query = $this->_em->createQuery($dql);
+        $results = $query->getResult();
+        $orderedResult = array();
+
+        foreach ($ids as $id) {
+            foreach ($results as $res) {
+                if ($res->getId() == $id) {
+                    $orderedResult[] = $res;
+                }
+            }
+        }
+
+        return $orderedResult;
+    }
+
+    /**
+     * Sort a resource (linked list)
+     * @param array $resources
+     * @return array
+     */
+    public function sort(array $resources)
+    {
+        $sorted = array();
+        //set the 1st item.
+        foreach ($resources as $resource) {
+            if ($resource['previous_id'] == null) {
+                $sorted[] = $resource;
+            }
+        }
+
+        $loop = 0;
+        while (count($sorted) < count($resources)) {
+            $loop++;
+            foreach ($resources as $resource) {
+                if ($sorted[count($sorted) -1]['id'] == $resource['previous_id']) {
+                    $sorted[] = $resource;
+                }
+            }
+            if ($loop > 100) {
+                throw new \Exception('More than 100 items in a directory or infinite loop detected');
+            }
+        }
+
+        return $sorted;
     }
 
     /**
@@ -223,26 +300,19 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
         if ($asArray) {
             $resources = $query->getArrayResult();
+            $return = $resources;
             // Add a field "pathfordisplay" in each entity (as array) of the given array.
-            foreach ($resources as $resource) {
+            foreach ($resources as $key => $resource) {
 
                 if (isset($resource['path'])) {
-                    $resource['pathfordisplay'] = AbstractResource::convertPathForDisplay($resource['path']);
-                    unset($resource['path']);
+                    $return[$key]['path_for_display'] = AbstractResource::convertPathForDisplay($resource['path']);
+
                 }
             }
 
-            return $resources;
+            return $return;
         }
 
         return $query->getResult();
-    }
-
-    public function count()
-    {
-        $dql = "SELECT COUNT(w) FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w";
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getSingleScalarResult();
     }
 }

@@ -30,6 +30,7 @@ class Configuration implements ConfigurationInterface
         $this->addWidgetSection($pluginSection);
         $this->addResourceSection($pluginSection);
         $this->addToolSection($pluginSection);
+        $this->addThemeSection($pluginSection);
 
         return $treeBuilder;
     }
@@ -203,6 +204,20 @@ class Configuration implements ConfigurationInterface
                         ->booleanNode('is_displayable_in_desktop')->isRequired()->end()
                         ->scalarNode('class')->end()
                         ->scalarNode('is_exportable')->defaultValue(false)->end()
+                    ->end()
+                ->end()
+            ->end()
+        ->end()->end();
+    }
+
+    private function addThemeSection($pluginSection)
+    {
+        $pluginSection
+            ->arrayNode('themes')
+                ->prototype('array')
+                    ->children()
+                      ->scalarNode('name')->isRequired()->end()
+                      ->scalarNode('path')->isRequired()->end()
                     ->end()
                 ->end()
             ->end()

@@ -113,4 +113,34 @@
         console.log(title);
         return title;
     };
+
+    /* http://kcwebprogrammers.blogspot.be/2010/07/javascript-to-get-parameter-from-url.html */
+    utilities.getURLParam = function(name, asString) {
+            // get query string part of url into its own variable
+            var url = window.location.href;
+            var queryString = url.split("?");
+
+            // make array of all name/value pairs in query string
+            if (queryString[1] !== undefined) {
+            var params = queryString[1].split("&");
+                // loop through the parameters
+                var i = 0;
+                var result = [];
+                var string = "";
+                while (i < params.length) {
+                    // compare param name against arg passed in
+                    var paramItem = params[i].split("=");
+                    if (paramItem[0] == name) {
+                        // if they match, return the value
+                        result.push(paramItem[1]);
+                        string = string + name + "=" + paramItem[1] + "&";
+                    }
+                    i++;
+                }
+            return (asString) ? string: result;
+
+            }
+
+            return undefined;
+        }
 })();
