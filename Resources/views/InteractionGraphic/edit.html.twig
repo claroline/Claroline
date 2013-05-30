@@ -112,8 +112,49 @@
             {% set i = i + 1 %}
        {% endfor %}
     </div>
-
+    
+{# ------------------------------------------------- tableau zone de reponse ---------------------------------------------------------------------------- #} 
         
+    <div style="position: relative;" id="AnswerArray">
+        <table>
+            <tr>
+               <th>{{ "Answer zone" | trans }}</th>
+                <th>{{ "Shape" | trans }}</th>
+                <th>{{ "Color" | trans }}</th>
+                <th>{{ "Points" | trans }}</th>
+            </tr>
+
+            <tr>
+                <td>
+                    <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}"
+                         id="movable" style="position: absolute"/>
+                </td>
+
+                <td>
+                    <select id="shape" name="shape" size="1" style="width:100px" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}')">
+                        <option value="circle"  selected>{{ "cercle" | trans }}</option>
+                        <option value="rect" >{{ "rectangle" | trans }}</option>
+                    </select>
+                </td>
+
+                <td>
+                    <select id="color" name="color" size="1" style="width:70px" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}')">
+                        <option value="white"    style="background-color:#FFFFFF;"selected> &nbsp;&nbsp;&nbsp; </option>
+                        <option value="red"      style="background-color:#FF0000;">         &nbsp;&nbsp;&nbsp; </option>
+                        <option value="blue"     style="background-color:#002FFF;">         &nbsp;&nbsp;&nbsp; </option> 
+                        <option value="purple"   style="background-color:#8B008B;">         &nbsp;&nbsp;&nbsp; </option>
+                        <option value="green"    style="background-color:#008600;">         &nbsp;&nbsp;&nbsp; </option>
+                        <option value="orange"   style="background-color:#FF7A00;">         &nbsp;&nbsp;&nbsp; </option>
+                        <option value="yellow"   style="background-color:#FFFF09;">         &nbsp;&nbsp;&nbsp; </option>
+                    </select>
+                </td>
+
+                <td>
+                    <input type="TEXT" id="points" name="points" value="1" style="width:50px; text-align: end" onblur="CheckScore('{{ "wrong" | trans }}')">
+                </td>
+            </tr>
+        </table>    
+    </div>
         
     <input type="hidden" id="info" name="info" value="{{i}}~{{allInfo}}"/>
 
@@ -122,47 +163,7 @@
     <input type="hidden" id="coordsZone" name="coordsZone" value=""/>
     
     <input type="hidden" name="exercise" value="{{ entity.id }}" />
-    
-{# ------------------------------------------------- tableau zone de reponse ---------------------------------------------------------------------------- #}    
-    
-    <table>
-        <tr>
-           <th>{{ "Answer zone" | trans }}</th>
-            <th>{{ "Shape" | trans }}</th>
-            <th>{{ "Color" | trans }}</th>
-            <th>{{ "Points" | trans }}</th>
-        </tr>
-
-        <tr>
-            <td>
-                <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" id="movable" style="margin-left: 40px;"/>
-            </td>
-
-            <td>
-                <select id="shape" name="shape" size="1" style="width:100px" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}')">
-                    <option value="circle"  selected>{{ "cercle" | trans }}</option>
-                    <option value="rect" >{{ "rectangle" | trans }}</option>
-                </select>
-            </td>
-
-            <td>
-                <select id="color" name="color" size="1" style="width:70px" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}')">
-                    <option value="white"    style="background-color:#FFFFFF;"selected> &nbsp;&nbsp;&nbsp; </option>
-                    <option value="red"      style="background-color:#FF0000;">         &nbsp;&nbsp;&nbsp; </option>
-                    <option value="blue"     style="background-color:#002FFF;">         &nbsp;&nbsp;&nbsp; </option> 
-                    <option value="purple"   style="background-color:#8B008B;">         &nbsp;&nbsp;&nbsp; </option>
-                    <option value="green"    style="background-color:#008600;">         &nbsp;&nbsp;&nbsp; </option>
-                    <option value="orange"   style="background-color:#FF7A00;">         &nbsp;&nbsp;&nbsp; </option>
-                    <option value="yellow"   style="background-color:#FFFF09;">         &nbsp;&nbsp;&nbsp; </option>
-                </select>
-            </td>
-
-            <td>
-                <input type="TEXT" id="points" name="points" value="1" style="width:20px" maxlength="2">
-            </td>
-        </tr>
-    </table>    
- 
+        
 {# ------------------------------------------------- Boutton validation formulaire ---------------------------------------------------------------------------- #}
 
     <div style="visibility: hidden;">{{ form_rest(edit_form) }}</div>
