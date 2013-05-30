@@ -138,9 +138,9 @@ class InteractionGraphicController extends Controller
         $coords = $this->get('request')->get('coordsZone'); // Get the answer zones
 
         $coord = preg_split('[,]', $coords); // Split all informations of one answer zones into a cell
-        
+
         $lengthCoord = count($coord) - 1; // Number of answer zones
-        
+
         $allCoords = $this->PersitNewCoords($coord, $interGraph, $lengthCoord);
 
         if ($form->isValid()) {
@@ -206,7 +206,7 @@ class InteractionGraphicController extends Controller
                 $this->container->get('security.context')->getToken()->getUser()
             ), $entity
         );
-        
+
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render(
@@ -225,7 +225,7 @@ class InteractionGraphicController extends Controller
     public function updateAction($id)
     {
         $originalHints=array();
-        
+
         $em = $this->getDoctrine()->getEntityManager();
 
         $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->find($id);
@@ -239,17 +239,17 @@ class InteractionGraphicController extends Controller
                 $this->container->get('security.context')->getToken()->getUser()
             ), $entity
         );
-       
+
         foreach ($entity->getInteraction()->getHints() as $hint) {
             $originalHints[] = $hint;
         }
-        
+
         $deleteForm = $this->createDeleteForm($id);
 
         $request = $this->getRequest();
 
         $editForm->bindRequest($request);
-        
+
         $width = $this->get('request')->get('imgwidth'); // Get the width of the image
         $height = $this->get('request')->get('imgheight'); // Get the height of the image
 
@@ -261,9 +261,9 @@ class InteractionGraphicController extends Controller
         $coords = $this->get('request')->get('coordsZone'); // Get the answer zones
 
         $coord = preg_split('[,]', $coords); // Split all informations of one answer zones into a cell
-        
+
         $lengthCoord = count($coord) - 1; // Number of answer zones
-        
+
         $allCoords = $this->PersitNewCoords($coord, $entity, $lengthCoord);
 
         if ($editForm->isValid()) {
@@ -290,13 +290,13 @@ class InteractionGraphicController extends Controller
                 $entity->getInteraction()->addHint($hint);
                 $em->persist($hint);
             }
-            
+
             foreach ($CoordsToDel as $ctd) {
 
             // if you wanted to delete the Hint entirely, you can also do that
             $em->remove($ctd);
         }
-            
+
             for ($i = 0; $i < $lengthCoord; $i++) {
                 $em->persist($allCoords[$i]);
             }
@@ -361,7 +361,7 @@ class InteractionGraphicController extends Controller
 
             list(${'value'.$i}, ${'point'.$i}, ${'size'.$i}) = explode(",", $data); //... in order to split informations
 
-            ${'point'.$i} = str_replace('/', '.', ${'point'.$i});
+            ${'point'.$i} = str_replace('/', '.', ${'point'.$i}); // set the score to a correct value
 
             // And persist it into the Database
             ${'url'.$i} = $inter[0];

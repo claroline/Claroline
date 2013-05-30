@@ -29,17 +29,12 @@ var x = 0; // Mouse x after move
 var xPrev = 0; // Mouse x before move
 var y = 0; // Mouse y after move
 
-// Display alert into navigator language
-if (navigator.browserLanguage) {
-    var language = navigator.browserLanguage; // IE
-} else {
-    var language = navigator.language; // FIrefox
-}
 
 // Instructions aren't displayed (by default) for more visibility
 document.getElementById('Instructions').style.display = 'none';
 document.getElementById('Order').style.display = 'block';
 
+// Initialize reference answer zone position
 el.style.left = '45px';
 el.style.top = '28px';
 
@@ -88,13 +83,14 @@ function LoadPic(path, prefx, iddoc) {
     point = {};
 }
 
+// Check if the score is a correct number
 function CheckScore(message) {
 
     if (/^\d+(?:[.,]\d+)?$/.test(document.getElementById('points').value) == false) {
         alert(message);
-        el.style.visibility = 'hidden';
+        el.style.visibility = 'hidden'; // Answer zone not visible
     } else {
-        el.style.visibility = 'visible';
+        el.style.visibility = 'visible';// Answer zone visible
     }
 }
 
@@ -390,6 +386,7 @@ function MoveAnswerZone(e) {
 
                 target = null;
                 moving = false;
+
             } else {
 
                 // Move answer zone to mouse position (cursor center)
@@ -397,12 +394,14 @@ function MoveAnswerZone(e) {
                 target.style.top = String(y - (target.height / 2)) + 'px';
            }
         } else {
-            x +=  document.getElementById('Answer').offsetLeft  - document.getElementById('AnswerArray').offsetLeft;
-            y +=  document.getElementById('Answer').offsetTop  - document.getElementById('AnswerArray').offsetTop;
+
+            x +=  document.getElementById('Answer').offsetLeft - document.getElementById('AnswerArray').offsetLeft;
+            y +=  document.getElementById('Answer').offsetTop - document.getElementById('AnswerArray').offsetTop;
+
             // Move answer zone to mouse position (cursor center)
             target.style.left = String(x - (target.width / 2)) + 'px';
             target.style.top = String(y - (target.height / 2)) + 'px';
-            
+
             pressCTRL = true;
         }
     }
@@ -472,11 +471,19 @@ document.addEventListener('mousemove', function (event) { // To resize/moving an
         ResizePointer(MouseDirection(event), 10);
         resizing = true;
     }
-    
+
+    // Resize answer zones with mouse wheel
     for (j = 0 ; j < grade ; j++) {
         if (event.target.id == 'img' + j) {
             selectAnswer = document.getElementById(event.target.id);
-            selectAnswer.addEventListener("DOMMouseScroll", MouseWheelCoords, false);
+
+            // Add event listener depending on browser
+            if (selectAnswer.addEventListener) {
+                selectAnswer.addEventListener("mousewheel", MouseWheelCoords, false);
+                selectAnswer.addEventListener("DOMMouseScroll", MouseWheelCoords, false);
+            } else {
+                selectAnswer.attachEvent("onmousewheel", MouseWheelCoords);
+            }
         }
     }
 });
@@ -495,7 +502,8 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
             };
         }
     }
-    
+
+    // To add a new answer zone with drag & drop
     if (e.target.id == 'movable') {
         target = e.target;
         allow = true;
@@ -505,7 +513,7 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
     }
 
     // To add an answer zone
-    if (pressCTRL == true) {
+    if (pressCTRL == true && el.style.visibility != 'hidden') {
 
         // Position of the mouse into the window
         if (e.x !== undefined && e.y !== undefined) { // IE
@@ -520,14 +528,14 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
         if ((mousex + 10) > (answerImg.offsetLeft + answerImg.width) || (mousex - 10) < (answerImg.offsetLeft) ||
             (mousey + 10) > (answerImg.offsetTop + answerImg.height) || (mousey - 10) < (answerImg.offsetTop)) {
 
-            if (language.indexOf('fr') > -1) {
-                alert('Vous devez mettre la zone de reponse complète DANS l\'image ...');
-            } else {
-                alert('You must put all the answer zone INSIDE the picture ...');
-            }
+            alert(document.getElementById('message').value);
+
             document.body.style.cursor = 'default';
+
+            // Answer zone go back to its initial place
             el.style.left = '45px';
             el.style.top = '28px';
+
         } else {
 
             var img = new Image();
@@ -543,10 +551,12 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
 
             document.getElementById('Answer').appendChild(img);
 
-            var score = document.getElementById('points').value.replace(/[.,]/,"/");
+            // Alter symbol score in order to insert right score into the database
+            var score = document.getElementById('points').value.replace(/[.,]/, '/');
 
             point[img.id] = score;
-            
+
+            // If add a new answer zone, the reference image go back to its initial place
             if (target.id == 'movable') {
                 el.style.left = '45px';
                 el.style.top = '28px';
@@ -580,6 +590,7 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
     }
 }, false);
 
+// Resize image and answer zones with mouse wheel (for all browser)
 if (answerImg.addEventListener) {
     answerImg.addEventListener("mousewheel", MouseWheelHandler, false);
     answerImg.addEventListener("DOMMouseScroll", MouseWheelHandler, false);
@@ -593,6 +604,7 @@ function MouseWheelHandler(e) {
     var e = window.event || e;
     var delta = -(Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail))));
 
+    // New width/height
     var finalWidth = answerImg.width + delta * 10;
     var finalHeight = answerImg.height + delta * 10;
     var rax = finalWidth/answerImg.width;
@@ -601,7 +613,7 @@ function MouseWheelHandler(e) {
     if (finalWidth > 70 && finalWidth < 800) {
         answerImg.width = finalWidth;
     }
-    
+
     for (j = 0 ; j < grade ; j++) {
         var imgN = 'img' + j;
         var selectedZone = document.getElementById(imgN); // An answer zone
@@ -611,15 +623,15 @@ function MouseWheelHandler(e) {
             // Position x & y of the current selected answer zone
             var left = parseInt(selectedZone.style.left.substr(0, selectedZone.style.left.indexOf('p')));
             var top = parseInt(selectedZone.style.top.substr(0, selectedZone.style.top.indexOf('p')));
-            
+
             left = left * rax;
             top = top * ray;
 
             // Calculate the size of the answer zone proportionally to the new size of the answer image
             var size = delta * 2 * rax;
 
-            selectedZone.style.left = String(left + size/2) + 'px';
-            selectedZone.style.top = String(top + size/2) + 'px';
+            selectedZone.style.left = String(left + size / 2) + 'px';
+            selectedZone.style.top = String(top + size / 2) + 'px';
 
             // Select the answer zone to resize
             target = selectedZone;
@@ -631,7 +643,8 @@ function MouseWheelHandler(e) {
             ResizePointer(direction, size);
         }
     }
-    
+
+    // Prevent scrooling the page when resize
     e.preventDefault();
 
     return false;
@@ -650,5 +663,6 @@ function MouseWheelCoords(e) {
     }
 
     e.preventDefault();
+
     return false;
 }

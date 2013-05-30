@@ -140,7 +140,9 @@
     <input type="hidden" id="imgheight" name="imgheight" value="0"/>
     <input type="hidden" id="coordsZone" name="coordsZone" value=""/>
     
-    <input type="hidden" name="exercise" value="{{ exoID }}" />
+    <input type="hidden" name="exercise" value="{{ exoID }}"/>
+    
+    <input type="hidden" name="message" value="{{ "inside" | trans }}"/>
         
 {# ------------------------------------------------- Boutton validation formulaire ---------------------------------------------------------------------------- #}    
     <div style="visibility: hidden;">{{ form_rest(form) }}</div>
