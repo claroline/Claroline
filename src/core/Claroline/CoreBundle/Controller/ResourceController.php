@@ -515,7 +515,7 @@ class ResourceController extends Controller
 
         $token = $this->get('security.context')->getToken();
         $userRoles = $this->get('claroline.security.utilities')->getRoles($token);
-        $resources = $resourceRepo->findByCriteria($criteria, $userRoles);
+        $resources = $resourceRepo->findByCriteria($criteria, $userRoles, true);
         $response = new Response(json_encode(array('resources' => $resources, 'path' => $path)));
         $response->headers->set('Content-Type', 'application/json');
 
