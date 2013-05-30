@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Tests\DataFixtures\LoadTextData;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadWorkspaceData;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadMessagesData;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadActivityData;
+use Claroline\CoreBundle\Tests\DataFixtures\LoadShortcutData;
 
 class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
 {
@@ -57,6 +58,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         $this->manager = $manager;
         $this->setReferenceRepository($this->referenceRepo);
         $this->setReferences($manager);
+        $this->setRssReader($manager);
         $this->createUsers();
         $this->createGroups();
         //main users
@@ -166,6 +168,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
 
         $this->createForums();
         $this->createActivities();
+        $this->createShortcuts();
     }
 
     private function loadFixture(AbstractFixture $fixture)
@@ -300,8 +303,36 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         );
 
         $this->loadFixture(
-            new LoadForumData('Forum doc', 'JaneDoe', 5, 5, $this->getReference('directory/Docs'))
+            new LoadForumData('Forum doc', 'JaneDoe', 5, 5, $this->getReference('directory/Premier semestre'))
         );
+    }
+
+    public function createShortcuts()
+    {
+        $this->loadFixture(
+            new LoadShortcutData(
+                $this->getReference('directory/Docs'),
+                'Activities',
+                'Jane Doe'
+            )
+        );
+        $this->loadFixture(
+            new LoadShortcutData(
+                $this->getReference('directory/Premier semestre'),
+                'Activities',
+                'Jane Doe'
+            )
+        );
+    }
+
+    public function setRssReader(ObjectManager $manager)
+    {
+        $rssConfig = new \Claroline\RssReaderBundle\Entity\Config();
+        $rssConfig->setUrl('http://www.lesoir.be/feed/Actualit%C3%A9/Vie%20du%20net/destination_principale_block');
+        $rssConfig->setDefault(true);
+        $rssConfig->setDesktop(true);
+        $manager->persist($rssConfig);
+        $manager->flush();
     }
 
     private function getFirstNames()

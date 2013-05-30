@@ -11,16 +11,16 @@ use Symfony\Bundle\FrameworkBundle\Translation\Translator;
  */
 class HomeExtension extends \Twig_Extension
 {
-    protected $translator;
+    protected $container;
 
     /**
      * @DI\InjectParams({
-     *     "em" = @DI\Inject("translator")
+     *     "container" = @DI\Inject("service_container")
      * })
      */
-    public function __construct(Translator $translator)
+    public function __construct($container)
     {
-        $this->translator = $translator;
+        $this->container = $container;
     }
 
     /**
@@ -32,6 +32,9 @@ class HomeExtension extends \Twig_Extension
     {
         return array(
             'timeAgo' => new \Twig_Filter_Method($this, 'timeAgo'),
+            'homeLink' => new \Twig_Filter_Method($this, 'homeLink'),
+            'activeLink' => new \Twig_Filter_Method($this, 'activeLink'),
+            'compareRoute' => new \Twig_Filter_Method($this, 'compareRoute')
         );
     }
 
@@ -78,7 +81,7 @@ class HomeExtension extends \Twig_Extension
             }
 
             if ($i > 0) {
-                return $this->translator->transChoice(
+                return $this->container->get("translator")->transChoice(
                     "%count% ".$translation["singular"][$format]." ago|%count% ".$translation["plural"][$format]." ago",
                     $i,
                     array('%count%' => $i),
@@ -87,12 +90,50 @@ class HomeExtension extends \Twig_Extension
             }
         }
 
-        return $this->translator->transChoice(
+        return $this->container->get("translator")->transChoice(
             "%count% second ago|%count% seconds ago",
             1,
             array('%count%' => 1),
             "home"
         );
+    }
+
+    public function homeLink($link)
+    {
+        if (!(strpos($link, "http://") === 0 or
+            strpos($link, "https://") === 0 or
+            strpos($link, "ftp://") === 0 or
+            strpos($link, "www.") === 0)
+        ) {
+            $home = $this->container->get("router")->generate('claro_index').$link;
+
+            $home = str_replace("//", "/", $home);
+
+            return $home;
+        }
+
+        return $link;
+    }
+
+    public function activeLink($link)
+    {
+        if ((isset($_SERVER['PATH_INFO']) && $_SERVER['PATH_INFO'] === $link)
+            || (!isset($_SERVER['PATH_INFO']) && $link == '/')) {
+
+            return ' active'; //the white space is nedded
+        }
+
+        return '';
+    }
+
+    public function compareRoute($link, $return = " class='active'")
+    {
+        if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], $link) === 0
+            || isset($_SERVER['PATH_INFO']) && strpos($_SERVER['PATH_INFO'], $link) === 0) {
+            return $return;
+        }
+
+        return '';
     }
 
     /**
@@ -103,6 +144,7 @@ class HomeExtension extends \Twig_Extension
     public function getName()
     {
         return 'home_extension';
+
     }
 }
 

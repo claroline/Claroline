@@ -3,12 +3,13 @@
 namespace Claroline\CoreBundle\Controller\Tool;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Claroline\CoreBundle\Controller\Tool\AbstractParametersController;
 
-class WorkspaceResourceParametersController extends Controller
+class WorkspaceResourceParametersController extends AbstractParametersController
 {
     /**
      * @Route(
@@ -20,18 +21,12 @@ class WorkspaceResourceParametersController extends Controller
      * @param integer $workspaceId
      *
      * @return Response
-     *
-     * @throws AccessDeniedHttpException
      */
     public function workspaceResourceRightsFormAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-
-        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
-            throw new AccessDeniedHttpException();
-        }
-
+        $this->checkAccess($workspace);
         $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findWorkspaceRoot($workspace);
         $roleRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
             ->findNonAdminRights($resource);
@@ -53,18 +48,12 @@ class WorkspaceResourceParametersController extends Controller
      * @param integer $roleId
      *
      * @return Response
-     *
-     * @throws AccessDeniedHttpException
      */
     public function workspaceResourceRightsCreationFormAction($workspaceId, $roleId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-
-        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
-            throw new AccessDeniedHttpException();
-        }
-
+        $this->checkAccess($workspace);
         $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findWorkspaceRoot($workspace);
         $role = $em->getRepository('ClarolineCoreBundle:Role')
             ->find($roleId);

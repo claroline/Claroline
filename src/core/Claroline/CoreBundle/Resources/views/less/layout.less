@@ -1,0 +1,772 @@
+///////////////////////////////////////////////////////////////////////////////////
+// This less file contains only global layout rules (mainly for navbar, grid and //
+// footer positionning). It is included at the end of "common.less". Keep it     //
+// short and design-neutral.                                                     //
+///////////////////////////////////////////////////////////////////////////////////
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#wrapper {
+    min-height: 100%;
+}
+
+#grid {
+    /*overflow: auto;*/
+    padding-bottom: @navbarHeight; /* Reserves a space for the footer */
+}
+
+
+/************/
+/*  @media  */
+/************/
+
+@media (min-width: 980px) {
+    /* Ensures the navbar doesn't hide the top content (only necessary on large screens)*/
+    #grid {
+        padding-top: @navbarHeight;
+    }
+}
+
+@media (max-width: 980px) {
+     #top_bar {
+        margin-bottom:0 !important;
+    }
+
+    .dropdown-submenu .dropdown-menu
+    {
+        padding-left:20px;
+    }
+
+}
+
+@media (min-width: 768px) {
+
+    .tool-list {
+        #grid > .fluid > .span(1);
+        float: left;
+    }
+
+    .section-content {
+        #grid > .fluid >  .span(11);
+        float: right;
+    }
+
+    .workspace-toolbox-item {
+        display: block;
+        text-align: center;
+    }
+}
+
+@media (max-width: 767px) {
+    /* // Compensates for the 20px body padding set in bootstrap "responsive-767px-max.less"
+       // (makes the footer fill the whole screen width). */
+
+    .creator .navbar.navbar-static-top
+    {
+        margin:0 !important;
+    }
+
+    footer {
+        margin-left: -20px;
+        margin-right: -20px;
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+    }
+
+    .tool-list {
+        #grid > .fluid > .span(12);
+    }
+
+    .section-content {
+        #grid > .fluid > .span(12);
+    }
+
+    .workspace-toolbox-item {
+        display: inline-block;
+    }
+}
+
+/************/
+/*  Footer  */
+/************/
+
+footer {
+    width: 100%;
+    position: relative;
+    height: @navbarHeight;
+    margin: -@navbarHeight 0 0 0; /* Puts the footer in the grid with a negative margin */
+    background-color: @grayLighter;
+    color: lighten(@gray, 20%);
+    text-shadow: 1px 1px @white;
+    padding:0;
+}
+
+#footer-content {
+    padding: 10px;
+    text-align: center;
+    max-height: 100%;
+}
+
+/************/
+/*  Login   */
+/************/
+
+#login-form, #login-error {
+    width: 420px;
+    margin: auto;
+    padding: 10px;
+    .border-radius(@baseBorderRadius);
+}
+
+#login-form {
+    margin-top: 12px;
+    background-color: @formActionsBackground;
+}
+
+/***********/
+/* WIDGETS */
+/***********/
+
+.widget {
+    margin: 10px;
+}
+
+.widget .accordion-group
+{
+    margin: 0 0 10px 0;
+}
+
+.widget .accordion-toggle
+{
+    background:@grayLighter;
+}
+
+.widget .accordion-toggle:hover
+{
+    text-decoration:none;
+}
+
+.notification-date {
+    text-decoration: underline;
+    font-style: italic;
+}
+
+/*****************/
+/* RESOURCES MGR */
+/*****************/
+
+.breadcrumb
+{
+    margin-bottom:10px;
+}
+
+.resource-manager .breadcrumb
+{
+    margin: 0;
+
+    .border-bottom-radius(0);
+}
+
+.navbar-fixed-top .container
+{
+	padding: 0 20px 0 20px;
+}
+
+.section-content .navbar .navbar-inner a.disabled
+{
+    color:@grayLight;
+}
+
+.resource-manager .actions .btn,
+.resource-manager .actions select {
+    height: 30px;
+    margin: 0;
+}
+
+.section-content .navbar
+{
+    padding:0;
+    margin:0;
+}
+
+.section-content .navbar .navbar-inner
+{
+    padding-left:5px;
+    padding-right:5px;
+    margin:0;
+}
+
+.section-content .navbar .navbar-inner a
+{
+    cursor:pointer;
+}
+
+.section-content .navbar .input-append
+{
+    margin:5px 0 0 0;
+}
+
+.section-content .navbar .navbar-inner a.disabled .caret
+{
+    visibility:hidden;
+}
+
+.resource-manager .filters .row-fluid
+{
+    position:relative;
+}
+
+.filters-arrow-border
+{
+    border-color: transparent transparent @grayLight transparent;
+    border-style: solid;
+    border-width: 10px;
+    height:0;
+    width:0;
+    position:absolute;
+    top:-24px;
+    right:7px;
+}
+
+.filters-arrow
+{
+    border-color: transparent transparent @white transparent;
+    border-style: solid;
+    border-width: 10px;
+    height:0;
+    width:0;
+    position:absolute;
+    top:-23px;
+    right:7px;
+}
+
+.resource-manager .filters
+{
+    background:@white;
+    border:1px solid @grayLight;
+    .box-shadow(0 1px 3px rgba(0,0,0,.25));
+    margin:5px;
+    padding:5px;
+    .border-radius(@baseBorderRadius);
+}
+
+.resource-manager .filters label
+{
+    float:left;
+    padding:0 5px 0 0;
+    display:block;
+}
+
+.resource-manager .resources
+{
+    margin: 0;
+    padding: 0 0 10px 0;
+}
+
+.resource-thumbnail
+{
+    display:inline-block;
+    margin: 10px 0 0 10px;
+    padding:0;
+    vertical-align: top;
+    position:relative;
+}
+
+/************/
+/**  ZOOM  **/
+/************/
+
+/** In this case is not posible to use css3 scale property **/
+
+@resourceElementWidth: 71;
+@resourceElementHeight: 80;
+@resourceThumbnailWidth: 100;
+@resourceThumbnailHeight: 150;
+
+.resource-zoom(@width, @height, @percent)
+{
+    width:unit(round((@width * @percent)/ 100), px);
+    height:unit(round((@height * @percent) / 100), px);
+}
+
+.resource-thumbnail.zoom50
+{
+    .resource-zoom(@resourceThumbnailWidth, @resourceThumbnailHeight, 50);
+}
+
+.resource-thumbnail.zoom50 .resource-element
+{
+    .resource-zoom(@resourceElementWidth, @resourceElementHeight, 50);
+}
+
+.resource-thumbnail.zoom50 .resource-name
+{
+    font-size:7px;
+    line-height:10px;
+}
+
+.resource-thumbnail.zoom75
+{
+    .resource-zoom(@resourceThumbnailWidth, @resourceThumbnailHeight, 75);
+}
+
+.resource-thumbnail.zoom75 .resource-element
+{
+    .resource-zoom(@resourceElementWidth, @resourceElementHeight, 75);
+}
+
+.resource-thumbnail.zoom75 .resource-name
+{
+    font-size:10px;
+    line-height:15px;
+}
+
+.resource-thumbnail.zoom100
+{
+    .resource-zoom(@resourceThumbnailWidth, @resourceThumbnailHeight, 100);
+}
+
+.resource-thumbnail.zoom100 .resource-element
+{
+    .resource-zoom(@resourceElementWidth, @resourceElementHeight, 100);
+}
+
+.resource-thumbnail.zoom100 .resource-name
+{
+    font-size:12px;
+    line-height:18px;
+}
+
+.resource-thumbnail.zoom125
+{
+    .resource-zoom(@resourceThumbnailWidth, @resourceThumbnailHeight, 125);
+}
+
+.resource-thumbnail.zoom125 .resource-element
+{
+    .resource-zoom(@resourceElementWidth, @resourceElementHeight, 125);
+}
+
+.resource-thumbnail.zoom125 .resource-name
+{
+    font-size:16px;
+}
+
+.resource-thumbnail.zoom150
+{
+    .resource-zoom(@resourceThumbnailWidth, @resourceThumbnailHeight, 150);
+}
+
+.resource-thumbnail.zoom150 .resource-element
+{
+    .resource-zoom(@resourceElementWidth, @resourceElementHeight, 150);
+}
+
+.resource-thumbnail.zoom150 .resource-name
+{
+    font-size:18px;
+}
+
+.resource-thumbnail.zoom200
+{
+    .resource-zoom(@resourceThumbnailWidth, @resourceThumbnailHeight, 200);
+}
+
+.resource-thumbnail.zoom200 .resource-element
+{
+    .resource-zoom(@resourceElementWidth, @resourceElementHeight, 200);
+}
+
+.resource-thumbnail.zoom200 .resource-name
+{
+    font-size:20px;
+}
+
+.resource-thumbnail .resource-element
+{
+    background-position: center center;
+    background-size:auto 100% ;
+    background-repeat:no-repeat;
+
+    padding:0px;
+    margin:5px 0 5px 15%;
+    cursor:pointer;
+}
+
+.resource-thumbnail .checkbox {
+    float:left;
+}
+
+.resource-thumbnail input[type=checkbox] {
+    vertical-align: top;
+}
+
+.resource-thumbnail .resource-name {
+    display: block;
+    text-align: center;
+    overflow:hidden;
+    word-wrap: break-word;
+}
+
+.resource-thumbnail .dropdown-toggle {
+    color: #000;
+}
+
+.resource-manager .results {
+    padding-left: 20px;
+}
+
+.resource-manager .results table {
+    margin-top: 20px;
+}
+
+.resource-manager .results .checkbox-column {
+    width: 18px;
+}
+
+.resource-rights-form
+{
+    margin:0 10px 10px 10px;
+}
+
+.resource-rights-form input.pull-right
+{
+    margin-bottom:10px;
+}
+
+/**************/
+/* WORKSPACES */
+/**************/
+
+.workspace-toolbox-item {
+    margin: 6px;
+}
+
+.workspace-left-toolbox {
+    margin-bottom: 18px;
+    border: 1px solid @grayLighter;
+    .border-radius(@baseBorderRadius);
+    zoom: 1;
+}
+
+.workspace-code {
+    font-size: @baseFontSize - 3px;
+    font-style: italic;
+}
+
+/***********/
+/* PLUGINS */
+/***********/
+
+.plugin-item {
+    display: inline-block;
+}
+
+.plugin-figcaption {
+    text-align:center;
+}
+
+/************/
+/* MESSAGES */
+/************/
+
+.user-information {
+    border: 1px solid @grayLighter;
+    padding: 5px;
+    .border-radius(@baseBorderRadius);
+}
+
+/********/
+/* MENU */
+/********/
+
+.dropdown-menu a
+{
+    cursor:pointer;
+}
+
+/** fix dropdowns colors inside an active link **/
+
+.content-element .btn.dropdown-toggle
+{
+    color:@gray !important;
+    background:@grayLighter !important;
+}
+
+.content-element .dropdown-menu
+{
+    .border-radius(@baseBorderRadius);
+}
+
+.content-element .dropdown-menu a
+{
+    color:@dropdownLinkColor !important;
+    background:@dropdownBackground !important;
+}
+
+.content-element .dropdown-menu a:hover
+{
+    /*#gradient > .vertical(@dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%));*/
+    color:@dropdownLinkColorHover !important;
+    background-color: mix(@dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%), 60%) !important;
+    background-image: -moz-linear-gradient(top, @dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%)) !important; // FF 3.6+
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@dropdownLinkBackgroundHover), to(darken(@dropdownLinkBackgroundHover, 5%))) !important; // Safari 4+, Chrome 2+
+    background-image: -webkit-linear-gradient(top, @dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%)) !important; // Safari 5.1+, Chrome 10+
+    background-image: -o-linear-gradient(top, @dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%)) !important; // Opera 11.10
+    background-image: linear-gradient(to bottom, @dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%)) !important; // Standard, IE10
+    background-repeat: repeat-x;
+    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",argb(@dropdownLinkBackgroundHover),argb(darken(@dropdownLinkBackgroundHover, 5%)))); // IE9 and down
+}
+
+/**********/
+/*  Tabs  */
+/**********/
+
+.tabs.nav.nav-tabs
+{
+    margin-top:5px;
+    padding: 0 5px 0 5px;
+}
+
+
+/********/
+/* MISC */
+/********/
+
+.please-wait {
+    width:100%;
+    position: absolute;
+    z-index: 1050;
+    top: 10px;
+    display: none;
+    text-align:center;
+}
+
+.loading {
+    background: transparent url("../../../images/loading.gif") no-repeat;
+    width: 16px;
+    height: 16px;
+    margin: 0 0 10px 0;
+}
+
+.border {
+    border:1px solid #ddd;
+    .border-radius(@baseBorderRadius);
+    margin-bottom:10px;
+}
+
+.margin
+{
+    margin:0 10px 10px 10px;
+}
+
+.nav.nav-tabs.nav-stacked .icon-chevron-right.pull-right
+{
+    position:relative;
+    top:4px;
+}
+
+.sub-section-header
+{
+    margin:0;
+    padding:0 0 0 0;
+    font-size:21px;
+    overflow:auto;
+    height:auto;
+}
+
+.search-bar
+{
+    overflow:auto;margin-bottom:5px;
+}
+
+/*********/
+/* Forms */
+/*********/
+
+.section-content form
+{
+    margin: 0 10px;
+}
+
+.form-actions
+{
+    margin:11px 0;
+}
+
+form legend
+{
+    margin:0 0 10px 0;
+    font-weight:bold;
+}
+
+
+/**********************/
+/***      HOME      ***/
+/**********************/
+
+@media (min-width: 767px)
+{
+	@contentSpanIterations: 12;
+    @contentSpanMargin: 1;
+
+    .content.row-fluid [class*="span"]
+    {
+		margin-left: 0;
+		margin-right: unit(@contentSpanMargin, "%");
+	}
+
+    .contentSpan (@index) when (@index >= 1) {
+
+        (~".content.row-fluid .span@{index}") {
+            width:unit(((@index * 100 / @contentSpanIterations) - @contentSpanMargin), "%");
+        }
+
+        .contentSpan(@index - 1);
+    }
+
+    .contentSpan (@contentSpanIterations);
+}
+
+.content-element .text
+{
+    margin-top:10px;
+    margin-bottom:10px;
+}
+
+.content-element .sub-section-header
+{
+    margin-bottom:0;
+}
+
+.float-right-top
+{
+    position:absolute;
+    right:5px;
+    top:5px
+}
+
+.relative
+{
+    position:relative;
+}
+
+.content-title, .content-text
+{
+    border:0 !important;
+    margin:0 !important;
+    width:100%;
+    max-width:100%;
+    .box-sizing(border-box);
+}
+
+.content-title
+{
+    height:30px !important;
+}
+
+.creator .navbar.navbar-static-top
+{
+    border-top:1px solid darken(@grayLighter, 5%);
+}
+
+.creator .navbar.navbar-static-top, .creator .navbar.navbar-static-top .navbar-inner
+{
+    .border-bottom-radius(@baseBorderRadius);
+}
+
+.creator textarea
+{
+    overflow:hidden;
+    .transition(all .2s linear);
+    resize: none;
+}
+
+.creator-collapse
+{
+    border:1px solid #ddd;
+    padding:10px 10px 0 10px;
+}
+
+#regions a.border
+{
+    text-align:center;
+}
+
+#sizes a.border, #regions a.border
+{
+    cursor:pointer;
+}
+
+#sizes a.border
+{
+    padding:5px;
+}
+
+#regions a.border
+{
+    padding:20px 5px 20px 5px;
+}
+
+#sizes a.border:hover, #sizes a.border.active,
+#regions a.border:hover, #regions a.border.active
+{
+    background:@linkColor;
+    color:@white;
+    text-decoration:none;
+}
+
+.align-right
+{
+    text-align:right;
+}
+
+.creator .generated
+{
+    background:@grayLighter;
+    padding:0;
+    margin:0;
+}
+
+.generated, .generated .generated-content
+{
+    height:auto;
+}
+
+.generated .close
+{
+    margin:10px;
+}
+
+.generated .generated-content
+{
+    margin:0;
+    padding:10px;
+}
+
+.content-element .generated .generated-content
+{
+    margin:0;
+    padding:0 0 10px 0;
+}
+
+.generated .generated-content h4
+{
+    margin-top:0;
+}
+
+.generated .generated-content .clear
+{
+    clear:both;
+}
+
+.generated .generated-content iframe,
+.generated .generated-content img
+{
+    float:left;
+    margin:0 10px 5px 0;
+}

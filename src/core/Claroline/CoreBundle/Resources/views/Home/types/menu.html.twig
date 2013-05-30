@@ -1,0 +1,52 @@
+{% if content != null %}
+
+    {% if father is not defined %}
+        <div class="content-element relative {{ size }}" data-id="{{ content.id }}" data-type="{{ type }}">
+            {% if region is defined and region == "header" %}
+                <ul class="nav nav-tabs">
+            {% elseif region is defined and region == "footer" %}
+                <ul class="nav nav-pills">
+            {% else %}
+                <ul class="nav nav-tabs nav-stacked">
+            {% endif %}
+    {% endif %}
+
+    {% if content.title != "" and (father is defined or (region is not defined or (region is defined and region != 'footer' and region != 'header'))) %}
+    <li {% if father is defined %}
+            class="content-element relative{{ content.content | activeLink }}"
+            data-id="{{ content.id }}"
+            data-type="{{ type }}"
+            data-father="{{ father }}"
+        {% else %}
+            class="disabled"
+        {% endif %}>
+            <a {% if content.content is defined and content.content != "" %}href="{{ content.content | homeLink }}"{% endif %}>
+                {% if father is not defined %}<b>{% endif %}
+                {{ content.title }}
+                {% if father is not defined %}</b>{% endif %}
+
+                {% if father is defined and ((region is defined and (region != 'header' and region != 'footer')) or region is not defined) %}
+                    <i class="icon-chevron-right pull-right"></i>
+                {% endif %}
+
+            </a>
+            {% if (region is defined and region != 'header' and region != 'footer') or region is not defined %}
+                {{ menu | raw }}
+            {% endif %}
+        </li>
+    {% endif %}
+
+    {% if father is not defined %}
+
+            {% if region is defined %}
+                {% render controller("ClarolineCoreBundle:Home:type", { 'type': type, 'father': content.id, 'region': region }) %}
+            {% else %}
+                {% render controller("ClarolineCoreBundle:Home:type", { 'type': type, 'father': content.id }) %}
+            {% endif%}
+
+            </ul>
+        </div>
+
+    {% endif %}
+
+{% endif %}

@@ -53,6 +53,13 @@ class Converter
         $resourceArray['large_icon'] = $resource->getIcon()->getRelativeUrl();
         $resourceArray['path_for_display'] = $resource->getPathForDisplay();
 
+        if ($resource->getPrevious() !== null) {
+            $resourceArray['previous_id'] = $resource->getPrevious()->getId();
+        }
+        if ($resource->getNext() !== null) {
+            $resourceArray['next_id'] = $resource->getNext()->getId();
+        }
+
         $isAdmin = false;
 
         $roles = $this->ut->getRoles($token);

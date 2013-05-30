@@ -14,6 +14,8 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->client->followRedirects();
         $this->loadPlatformRolesFixture();
         $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Logger\Log');
+        $this->defaultTemplate = $this->em->getRepository('ClarolineCoreBundle:Workspace\Template')
+            ->findOneByName('default');
     }
 
     public function testWSCreatorcanViewHisWorkspaces()
@@ -48,6 +50,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $form['workspace_form[name]'] = 'new_workspace';
         $form['workspace_form[type]'] = 'simple';
         $form['workspace_form[code]'] = 'code';
+        $form['workspace_form[template]'] = $this->defaultTemplate->getId();
         $this->client->submit($form);
         $crawler = $this->client->request('GET', "/workspaces");
         $this->assertEquals(1, $crawler->filter('.row-workspace')->count());
@@ -225,6 +228,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $form['workspace_form[name]'] = 'first_new_workspace';
         $form['workspace_form[type]'] = 'simple';
         $form['workspace_form[code]'] = 'same_code';
+        $form['workspace_form[template]'] = $this->defaultTemplate->getId();
         $this->client->submit($form);
         $crawler = $this->client->request('GET', "/workspaces");
         $this->assertEquals(1, $crawler->filter('.row-workspace')->count());
@@ -233,6 +237,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $form['workspace_form[name]'] = 'second_new_workspace';
         $form['workspace_form[type]'] = 'simple';
         $form['workspace_form[code]'] = 'same_code';
+        $form['workspace_form[template]'] = $this->defaultTemplate->getId();
         $this->client->submit($form);
         $crawler = $this->client->request('GET', "/workspaces");
         $this->assertEquals(1, $crawler->filter('.row-workspace')->count());
@@ -248,6 +253,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $form['workspace_form[name]'] = 'first_new_workspace';
         $form['workspace_form[type]'] = 'simple';
         $form['workspace_form[code]'] = 'a_code';
+        $form['workspace_form[template]'] = $this->defaultTemplate->getId();
         $this->client->submit($form);
         $ws = $this->client->getContainer()->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')

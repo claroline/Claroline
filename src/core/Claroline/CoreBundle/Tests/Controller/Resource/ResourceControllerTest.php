@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
-use Claroline\CoreBundle\Entity\Resource\Directory;
 
 /**
  * @todo Test the exception if a directory id parameter doesn't match any directory.
@@ -89,7 +88,6 @@ class ResourceControllerTest extends FunctionalTestCase
             'GET',
             "/resource/copy/{$this->pwr->getId()}?ids[]={$treeRoot->getId()}&ids[]={$loneFile->getId()}"
         );
-
         $this->client->request('GET', "/resource/directory/{$this->pwr->getId()}");
         $dir = json_decode($this->client->getResponse()->getContent());
         $this->assertObjectHasAttribute('resources', $dir);

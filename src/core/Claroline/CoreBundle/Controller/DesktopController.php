@@ -78,6 +78,7 @@ class DesktopController extends Controller
      *
      * @param string $toolName
      *
+     * @throws \Exception
      * @return Response
      */
     public function openToolAction($toolName)

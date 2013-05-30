@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Controller\Tool;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\CoreBundle\Entity\Event;
 use Claroline\CoreBundle\Form\CalendarType;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
@@ -276,7 +276,7 @@ class WorkspaceCalendarController extends Controller
     private function checkUserIsAllowed($permission, AbstractWorkspace $workspace)
     {
         if (!$this->get('security.context')->isGranted($permission, $workspace)) {
-            throw new AccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
     }
 }

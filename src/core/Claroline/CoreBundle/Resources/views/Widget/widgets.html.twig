@@ -1,18 +1,18 @@
-<div class="tab-content accordion">
-    <div class="accordion-group">
+<div class="accordion widget">
     {% for key, value in widgets %}
-        <div class="accordion-heading widget">
-            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{ value | length }}">
-                <i class="icon-cogs"></i>
-                {{ key|trans({}, 'widget') }}
-                <i class="icon-chevron-down pull-right"></i>
-            </a>
-        </div>
-        <div id="collapse{{ value | length }}" class="accordion-body collapse in">
-            <div class="accordion-inner">
-                {{ value|raw }}
+        <div class="accordion-group widget">
+            <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{ value | length }}">
+                    <i class="icon-cogs"></i>
+                    {{ key|trans({}, 'widget') }}
+                    <i class="icon-chevron-down pull-right"></i>
+                </a>
+            </div>
+            <div id="collapse{{ value | length }}" class="accordion-body collapse in">
+                <div class="accordion-inner">
+                    {{ value|raw }}
+                </div>
             </div>
         </div>
     {% endfor %}
-    </div>
 </div>
