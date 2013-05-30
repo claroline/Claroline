@@ -689,7 +689,7 @@ class AdministrationController extends Controller
         $themes = $manager->getRepository("ClarolineCoreBundle:Theme\Theme")->findAll();
 
         foreach ($themes as $theme) {
-            $tmp[] = $theme->getName();
+            $tmp[$theme->getPath()] = $theme->getName();
         }
 
         return $tmp;

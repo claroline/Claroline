@@ -363,7 +363,8 @@ class DatabaseWriter
     {
         $themeEntity = new Theme();
         $themeEntity->setName($theme['name']);
-        $themeEntity->setPath($theme['path']);
+        $themeEntity->setPath($pluginEntity->getVendorName().$pluginEntity->getBundleName().":".$theme['path']);
+
         $themeEntity->setPlugin($pluginEntity);
         $this->em->persist($themeEntity);
     }

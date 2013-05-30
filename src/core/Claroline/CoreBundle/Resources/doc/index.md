@@ -18,7 +18,7 @@ Structure
     - [Players][8]
 - [Development tools][9]
 
-[1]: ../../../../README.md
+[1]: ../../../../../../README.md
 [2]: sections/overview.md
 [3]: sections/core.md
 [4]: sections/plugins.md

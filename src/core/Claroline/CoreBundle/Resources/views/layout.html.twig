@@ -3,8 +3,9 @@
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 
 {% block stylesheets %}
-    {% if config.getParameter('theme')|getThemePath != '' %}
-        {% include config.getParameter('theme')|getThemePath %}
+
+    {% if config.getParameter('theme') != '' %}
+        {% include config.getParameter('theme') %}
     {% endif %}
 
     {% stylesheets debug=false filter='lessphp'  output='bundles/clarolinecore/css/font-awesome.css'
