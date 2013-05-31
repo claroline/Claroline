@@ -114,19 +114,8 @@ class LogRepository extends EntityRepository
                 $qb->andWhere("workspace.id = :workspaceId");
                 $qb->setParameter('workspaceId', $workspaceIds[0]);
             } else {
-                $restriction = "";
-                $first = true;
-                foreach ($workspaceIds as $workspaceId) {
-                    if ($first) {
-                        $first = false;
-                        $restriction .= "'".$workspaceId."'";
-                    } else {
-                        $restriction .= ", '".$workspaceId."'";
-                    }
-                }
-                $qb->andWhere("workspace.id IN (".$restriction.")");
+                $qb->andWhere("workspace.id IN (:workspaceIds)")->setParameter('workspaceIds', $workspaceIds);
             }
-
         }
 
         return $qb;
@@ -136,8 +125,8 @@ class LogRepository extends EntityRepository
     {
         $qb = $this
             ->createQueryBuilder('log')
-            ->select('log.shortDateLog as shortDate, count(log) as total, log.dateLog as longDate')
-            ->orderBy('longDate', 'ASC')
+            ->select('log.shortDateLog as shortDate, count(log.id) as total')
+            ->orderBy('shortDate', 'ASC')
             ->groupBy('shortDate');
 
         $qb = $this->addActionFilterToQueryBuilder($qb, $action, $actionsRestriction);
@@ -151,6 +140,7 @@ class LogRepository extends EntityRepository
         $query = $qb->getQuery();
 
         $result = $query->getResult();
+
         $chartData = array();
         if (count($result) > 0) {
             //We send an array indexed by date dans contains count
