@@ -4,12 +4,12 @@ namespace Claroline\CoreBundle\Library\Twig;
 
 use Twig_Extension;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Claroline\CoreBundle\Library\Resource\Mode;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Library\Resource\ModeAccessor;
 
 /**
- * Adds the isPathMode var to the twig Globals. It's used by the
- * activity player to remove the resource context.
+ * Adds a "is_path_mode" global and two alternative functions for url generation.
  *
  * @DI\Service()
  * @DI\Tag("twig.extension")
@@ -17,18 +17,35 @@ use JMS\DiExtraBundle\Annotation as DI;
 class ResourceModeExtension extends Twig_Extension
 {
     private $generator;
+    private $writer;
+    private $accessor;
 
     /**
      * @DI\InjectParams({
-     *     "generator" = @DI\Inject("router"),
-     *     "container" = @DI\Inject("service_container")
+     *     "generator"  = @DI\Inject("router"),
+     *     "container"  = @DI\Inject("service_container"),
+     *     "accessor"   = @DI\Inject("claroline.resource.mode_accessor")
      * })
      */
-
-    public function __construct(UrlGeneratorInterface $generator, $container)
+    public function __construct(
+        UrlGeneratorInterface $generator,
+        ContainerInterface $container,
+        ModeAccessor $accessor
+    )
     {
-        $this->container = $container;
         $this->generator = $generator;
+        // QueryStringWriter cannot be injected directly as this service is refered
+        // from the twig service, which doesn't belong to the request scope
+        $this->writer = $container->get('claroline.resource.query_string_writer');
+        $this->accessor = $accessor;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return 'resource_mode_extension';
     }
 
     /**
@@ -37,7 +54,7 @@ class ResourceModeExtension extends Twig_Extension
     public function getGlobals()
     {
         return array(
-            'is_path_mode' => Mode::$isPathMode
+            'is_path_mode' => $this->accessor->isPathMode()
         );
     }
 
@@ -52,73 +69,38 @@ class ResourceModeExtension extends Twig_Extension
         );
     }
 
+    /**
+     * Generates a relative url for a given route. If query string parameters
+     * related to the resource context (mode, workspace, breadcrumbs) were passed
+     * in the current request, they will be appended to the generated url.
+     *
+     * @param string    $name       The route's name
+     * @param array     $parameters The route's parameters
+     * @return string
+     */
     public function getPath($name, $parameters = array())
     {
-        $this->hasBreadcrumbs = false;
-        $path = $this->appendMode($this->generator->generate($name, $parameters, false));
-        $path = $this->appendBreadcrumbs($path);
-        $path = $this->appendWorkspace($path);
-
-        return $path;
-    }
-
-    public function getUrl($name, $parameters = array())
-    {
-        $this->hasBreadcrumbs = false;
-        $url = $this->appendMode($this->generator->generate($name, $parameters, true));
-        $url = $this->appendBreadcrumbs($url);
-        $url = $this->appendWorkspace($url);
-
-        return $url;
+        return $this->appendMode($this->generator->generate($name, $parameters, false));
     }
 
     /**
-     * Returns the name of the extension.
+     * Generates an absolute url for a given route. If query string parameters
+     * related to the resource context (mode, workspace, breadcrumbs) were passed
+     * in the current request, they will be appended to the generated url.
      *
-     * @return string The extension name
+     * @param string    $name       The route's name
+     * @param array     $parameters The route's parameters
+     * @return string
      */
-    public function getName()
+    public function getUrl($name, $parameters = array())
     {
-        return 'resource_mode_extension';
+        return $this->appendMode($this->generator->generate($name, $parameters, true));
     }
 
     private function appendMode($path)
     {
-        return $path . (Mode::$isPathMode ? '?_mode=path' : '');
-    }
-
-    private function appendBreadcrumbs($path)
-    {
-        $breadcrumbs = $this->container->get('request')->query->get('_breadcrumbs', array());
-
-        if ($breadcrumbs != null) {
-            $toAppend = '';
-            for ($i = 0, $size = count($breadcrumbs); $i < $size; $i++) {
-                if ($i === 0) {
-                    $toAppend .= '?';
-                } else {
-                    $toAppend .= '&';
-                }
-                $toAppend .= '_breadcrumbs[]='. $breadcrumbs[$i];
-            }
-            $path .= $toAppend;
-            $this->hasBreadcrumbs = true;
-        }
-
-        return $path;
-    }
-
-    private function appendWorkspace($path)
-    {
-        $workspace = $this->container->get('request')->query->get('_workspace');
-
-
-        if ($workspace !== null) {
-            if ($this->hasBreadcrumbs) {
-                return $path . "&_workspace={$workspace}";
-            } else {
-                return $path . "?_workspace={$workspace}";
-            }
+        if ('' !== $query = $this->writer->getQueryString()) {
+            return "{$path}?{$query}";
         }
 
         return $path;
