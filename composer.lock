@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/FrontEndBundle.git",
-                "reference": "3eb08438fb79873f2a1d3deb595a2da624bb8477"
+                "reference": "a1ef26b675500f8048429457563eff3eed704cb5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/FrontEndBundle/zipball/3eb08438fb79873f2a1d3deb595a2da624bb8477",
-                "reference": "3eb08438fb79873f2a1d3deb595a2da624bb8477",
+                "url": "https://api.github.com/repos/claroline/FrontEndBundle/zipball/a1ef26b675500f8048429457563eff3eed704cb5",
+                "reference": "a1ef26b675500f8048429457563eff3eed704cb5",
                 "shasum": ""
             },
             "require": {
@@ -35,7 +35,7 @@
                 "source": "https://github.com/claroline/FrontEndBundle/tree/master",
                 "issues": "https://github.com/claroline/FrontEndBundle/issues"
             },
-            "time": "2013-05-23 13:08:29"
+            "time": "2013-05-29 07:44:23"
         },
         {
             "name": "doctrine/annotations",
