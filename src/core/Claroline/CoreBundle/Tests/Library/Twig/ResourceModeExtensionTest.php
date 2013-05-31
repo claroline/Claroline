@@ -14,14 +14,12 @@ class ResourceModeExtensionTest extends MockeryTestCase
     {
         parent::setUp();
         $writer = m::mock('Claroline\CoreBundle\Library\Resource\QueryStringWriter');
-        $container = m::mock('Symfony\Component\DependencyInjection\ContainerInterface');
         $accessor = m::mock('Claroline\CoreBundle\Library\Resource\ModeAccessor');
         $this->generator = m::mock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
 
-        $container->shouldReceive('get')->with('claroline.resource.query_string_writer')->andReturn($writer);
         $writer->shouldReceive('getQueryString')->andReturnValues(array('', 'a=1&b=2'));
 
-        $this->extension = new ResourceModeExtension($this->generator, $container, $accessor);
+        $this->extension = new ResourceModeExtension($this->generator, $writer, $accessor);
     }
 
     public function testPathFunction()
