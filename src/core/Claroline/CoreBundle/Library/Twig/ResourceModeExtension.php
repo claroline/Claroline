@@ -4,8 +4,8 @@ namespace Claroline\CoreBundle\Library\Twig;
 
 use Twig_Extension;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Library\Resource\QueryStringWriter;
 use Claroline\CoreBundle\Library\Resource\ModeAccessor;
 
 /**
@@ -23,20 +23,18 @@ class ResourceModeExtension extends Twig_Extension
     /**
      * @DI\InjectParams({
      *     "generator"  = @DI\Inject("router"),
-     *     "container"  = @DI\Inject("service_container"),
+     *     "writer"     = @DI\Inject("claroline.resource.query_string_writer"),
      *     "accessor"   = @DI\Inject("claroline.resource.mode_accessor")
      * })
      */
     public function __construct(
         UrlGeneratorInterface $generator,
-        ContainerInterface $container,
+        QueryStringWriter $writer,
         ModeAccessor $accessor
     )
     {
         $this->generator = $generator;
-        // QueryStringWriter cannot be injected directly as this service is refered
-        // from the twig service, which doesn't belong to the request scope
-        $this->writer = $container->get('claroline.resource.query_string_writer');
+        $this->writer = $writer;
         $this->accessor = $accessor;
     }
 
