@@ -163,4 +163,51 @@ class AbstractResourceRepositoryTest extends FixtureTestCase
         $this->setExpectedException('Claroline\CoreBundle\Repository\Exception\UnknownFilterException');
         $this->repo->findByCriteria(array('foo' => 'bar'));
     }
+
+    /*
+     * directory structure:
+     *
+     * jane/dir1/dir2/linkToDir3
+     * jane/dir1/dir2/linkToDir2 //testing infinite loops
+     * jane/dir3/dir4/linkToDir5 //follow links more than once
+     * jane/dir3/dir4/linkToDir1 //infinite loop again
+     * jane/dir5
+     *
+     * expected result: 4
+     */
+    public function testFindDirectoryShortcutTargets()
+    {
+        $this->loadUserData(array('jane' => 'user'));
+
+        $this->loadDirectoryData('jane', array('jane/dir1/dir2'));
+        $this->loadDirectoryData('jane', array('jane/dir3/dir4'));
+        $this->loadDirectoryData('jane', array('jane/dir5'));
+
+        $this->loadShortcutData(
+            $this->getDirectory('dir3'),
+            'dir2',
+            'jane'
+        );
+
+        $this->loadShortcutData(
+            $this->getDirectory('dir2'),
+            'dir2',
+            'jane'
+        );
+
+        $this->loadShortcutData(
+            $this->getDirectory('dir5'),
+            'dir4',
+            'jane'
+        );
+
+        $this->loadShortcutData(
+            $this->getDirectory('dir1'),
+            'dir4',
+            'jane'
+        );
+
+        $shortcuts = $this->repo->findRecursiveDirectoryShortcuts(array(), null, array());
+        $this->assertEquals(4, count($shortcuts));
+    }
 }

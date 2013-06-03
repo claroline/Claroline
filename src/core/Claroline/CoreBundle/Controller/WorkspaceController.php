@@ -206,11 +206,7 @@ class WorkspaceController extends Controller
     /**
      * Renders the left tool bar. Not routed.
      *
-<<<<<<< HEAD
      * @param $_workspace
-=======
-     * @param integer $workspaceId
->>>>>>> 482a7aaec4b2fd8f626969bfa25a83deb27ad8e1
      *
      * @return Response
      */
