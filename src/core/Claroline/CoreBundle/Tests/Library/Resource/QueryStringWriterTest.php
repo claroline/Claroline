@@ -1,0 +1,62 @@
+<?php
+
+namespace Claroline\CoreBundle\Library\Resource;
+
+use \Mockery as m;
+use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+
+class QueryStringWriterTest extends MockeryTestCase
+{
+    private $accessor;
+    private $container;
+    private $query;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->accessor = m::mock('Claroline\CoreBundle\Library\Resource\ModeAccessor');
+        $this->container = m::mock('Symfony\Component\DependencyInjection\ContainerInterface');
+        $this->query = m::mock('Symfony\Component\HttpFoundation\ParameterBag');
+        $request = m::mock('Symfony\Component\HttpFoundation\Request');
+        $request->query = $this->query;
+        $this->container->shouldReceive('get')->with('request')->andReturn($request);
+    }
+
+    public function testWriterReturnsAnEmptyStringIfNotInRequestScope()
+    {
+        $this->container->shouldReceive('isScopeActive')->with('request')->andReturn(false);
+        $writer = new QueryStringWriter($this->container, $this->accessor);
+        $this->assertEquals('', $writer->getQueryString());
+    }
+
+    public function testWriterReturnsAnEmptyStringIfNoParametersWerePassedInTheRequest()
+    {
+        $this->container->shouldReceive('isScopeActive')->with('request')->andReturn(true);
+        $this->accessor->shouldReceive('isPathMode')->andReturn(false);
+        $this->query->shouldReceive('get')->withAnyArgs()->andReturnNull();
+        $writer = new QueryStringWriter($this->container, $this->accessor);
+        $this->assertEquals('', $writer->getQueryString());
+    }
+
+    public function testWriterIsAwareOfPathModeFlag()
+    {
+        $this->container->shouldReceive('isScopeActive')->with('request')->andReturn(true);
+        $this->accessor->shouldReceive('isPathMode')->andReturn(true);
+        $this->query->shouldReceive('get')->withAnyArgs()->andReturnNull();
+        $writer = new QueryStringWriter($this->container, $this->accessor);
+        $this->assertEquals('_mode=path', $writer->getQueryString());
+    }
+
+    public function testWriterRetainsWorkspaceAndBreadcrumbsParameters()
+    {
+        $this->container->shouldReceive('isScopeActive')->with('request')->andReturn(true);
+        $this->accessor->shouldReceive('isPathMode')->andReturn(false);
+        $this->query->shouldReceive('get')->with('_breadcrumbs')->andReturn(array('123', '456'));
+        $this->query->shouldReceive('get')->with('_workspace')->andReturn('789');
+        $writer = new QueryStringWriter($this->container, $this->accessor);
+        $this->assertEquals(
+            '_breadcrumbs%5B0%5D=123&_breadcrumbs%5B1%5D=456&_workspace=789',
+            $writer->getQueryString()
+        );
+    }
+}
