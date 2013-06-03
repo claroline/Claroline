@@ -313,14 +313,14 @@ resource_properties_form_shareType: Redistribution
 resource_properties_form_userIcon: Icône
 resources: Ressources
 resources_rights: 'Droits des ressources'
-resources_rights_form_canCopy: Copier
-resources_rights_form_canDelete: Supprimer
-resources_rights_form_canEdit: Editer
-resources_rights_form_canOpen: Ouvrir
-resources_rights_form_canShare: Partager
-resources_rights_form_canView: Voir
-resources_rights_form_canExport: Exporter
-resources_rights_form_isRecursive: Appliquer au contenu du répertoire et aux sous-répertoires
+resource_right_form_canCopy: Copier
+resource_right_form_canDelete: Supprimer
+resource_right_form_canEdit: Editer
+resource_right_form_canOpen: Ouvrir
+resource_right_form_canShare: Partager
+resource_right_form_canView: Voir
+resource_right_form_canExport: Exporter
+resource_right_form_isRecursive: Appliquer au contenu du répertoire et aux sous-répertoires
 restore : Restaurer
 results: Résultats
 rights: Droits

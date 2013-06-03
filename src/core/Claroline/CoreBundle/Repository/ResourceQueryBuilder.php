@@ -331,6 +331,14 @@ class ResourceQueryBuilder
         return $this;
     }
 
+    public function whereNotShortcutDirectory()
+    {
+        $eol = PHP_EOL;
+        $this->addWhereClause("resource NOT INSTANCE OF Claroline\CoreBundle\Entity\Resource\ResourceShortcut{$eol}");
+
+        return $this;
+    }
+
     /**
      * Filters the resources that don't have a parent (roots).
      *
