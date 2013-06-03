@@ -29,7 +29,7 @@ refreshFile("{$rootDirectory}/app/logs/test.log");
 
 require_once __DIR__.'/delete_files';
 
-system("composer install");
+system('composer install --dev');
 system("php {$rootDirectory}/app/console claroline:requirements", $returnCode);
 
 if ($returnCode === 0) {

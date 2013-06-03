@@ -73,7 +73,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
             new LoadFileData('John Doe', 'Documents', array($this->filepath.'foo.txt'))
         );
         //teacher
-        $this->loadDemoResources();
+        $this->loadDemoResources($manager);
         $this->loadFixture(
             new LoadMessagesData(
                 array(
@@ -83,12 +83,14 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
             )
         );
 
+        $this->createUser($manager);
+
         $end = time();
         $duration = $this->container->get('claroline.utilities.misc')->timeElapsed($end - $start);
         $this->log("Time elapsed for the demo creation: " . $duration);
     }
 
-    public function loadDemoResources()
+    public function loadDemoResources(ObjectManager $manager)
     {
         $this->loadFixture(
             new LoadWorkspaceData(
@@ -140,6 +142,10 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         );
 
         $this->loadFixture(
+            new LoadTextData('Jane Doe', 'Travaux', 200, array('Instructions'))
+        );
+
+        $this->loadFixture(
             new LoadFileData('Jane Doe', 'Second semestre', array($this->filepath.'claronext.odt'))
         );
 
@@ -168,7 +174,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
 
         $this->createForums();
         $this->createActivities();
-        $this->createShortcuts();
+        $this->createShortcuts($manager);
     }
 
     private function loadFixture(AbstractFixture $fixture)
@@ -307,8 +313,11 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         );
     }
 
-    public function createShortcuts()
+    public function createShortcuts(ObjectManager $manager)
     {
+//        $collaboratorRole = $manager->getRepository('ClarolineCoreBundle:Role')
+//            ->findCollaboratorRole($this->getReference('user/Jane Doe')->getPersonalWorkspace());
+
         $this->loadFixture(
             new LoadShortcutData(
                 $this->getReference('directory/Docs'),
@@ -323,6 +332,17 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
                 'Jane Doe'
             )
         );
+        $this->loadFixture(
+            new LoadShortcutData(
+                $this->getReference('directory/Travaux'),
+                'Premier semestre',
+                'Jane Doe'
+            )
+        );
+
+        //grant access to Cours C1 and Premier semestre and sub resources and  Cours C2 Travaux
+        //to $collaboratorRole
+
     }
 
     public function setRssReader(ObjectManager $manager)
@@ -333,6 +353,21 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         $rssConfig->setDesktop(true);
         $manager->persist($rssConfig);
         $manager->flush();
+    }
+
+    public function createUser(ObjectManager $manager)
+    {
+        $this->loadFixture(
+            new LoadUserData(array('John Smith' => 'user'))
+        );
+
+        //grant user to personnal workspace Jane Doe.
+        $collaboratorRole = $manager->getRepository('ClarolineCoreBundle:Role')
+            ->findCollaboratorRole($this->getReference('user/Jane Doe')->getPersonalWorkspace());
+
+        $user = $this->getReference('user/John Smith');
+        $user->addRole($collaboratorRole);
+        $manager->persist($user);
     }
 
     private function getFirstNames()

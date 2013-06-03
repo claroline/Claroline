@@ -35,6 +35,7 @@
         <touch file="${appdir}/config/local/plugin/routing.yml"/>
         <exec executable="composer" failonerror="true">
             <arg value="install" />
+            <arg value="--dev" />
         </exec>
         <exec executable="php" failonerror="true">
             <arg path="${appdir}/console" />
