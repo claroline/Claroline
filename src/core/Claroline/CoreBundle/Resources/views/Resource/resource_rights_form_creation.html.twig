@@ -2,7 +2,8 @@
 <form novalidate="novalidate"
       action="{{ path('claro_resource_right_create', {'resourceId':resource.getId(), 'roleId':roleId}) }}"
       method="post" {{ form_enctype(form) }}
-      class="form-horizontal form-right-resource">
+      class="form-horizontal form-right-resource"
+      id="resource-right-form">
    {{ form_errors(form) }}
    {{ form_widget(form) }}
     {% if resource.getResourceType().getName() == 'directory' %}
