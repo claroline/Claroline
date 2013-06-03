@@ -19,7 +19,13 @@ admin_form_plainPassword_second : 'Répétez votre mot de passe'
 admin_form_mail : 'Adresse email'
 admin_form_username : 'Nom d''utilisateur'
 admin_logs: 'Suivi plateforme'
+admin_tag_children_list: 'Liste des enfants'
+admin_tag_potential_children_list: 'Liste des enfants potentiels'
+admin_tags_add_remove_children_to: 'Ajouter/Retirer des enfants au Tag'
+admin_tags_hierarchy: 'Hiérarchie des Tags administrateur'
+admin_tags_list: 'Liste des Tags administrateur'
 admin_tags_management: 'Gestion des Tags administrateur'
+admin_tags_organization: 'Organisation des Tags administrateur'
 admin_workspace_tag_form_name: Nom
 advanced: Avancé
 agenda: Agenda
@@ -258,6 +264,7 @@ object: Objet
 ok: Ok
 open: Ouvrir
 options: Options
+organize_admin_tags: 'Organiser les Tags administrateur'
 owner: Propriétaire
 owner_s: Propriétaire(s)
 parameters: Paramètres

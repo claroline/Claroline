@@ -48,6 +48,7 @@ class Version20120119000000 extends BundleMigration
         $this->createWorkspaceToolsRoleTable($schema);
         $this->createWorkspaceTagTable($schema);
         $this->createRelWorkspaceTagTable($schema);
+        $this->createWorkspaceTagHierarchyTable($schema);
         $this->createContentTable($schema);
         $this->createSubContentTable($schema);
         $this->createTypeTable($schema);
@@ -100,6 +101,7 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_user_desktop_tool');
         $schema->dropTable('claro_workspace_tag');
         $schema->dropTable('claro_rel_workspace_tag');
+        $schema->dropTable('claro_workspace_tag_hierarchy');
         $schema->dropTable('claro_content');
         $schema->dropTable('claro_sub_content');
         $schema->dropTable('claro_type');
@@ -1068,6 +1070,37 @@ class Version20120119000000 extends BundleMigration
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_workspace_tag'),
             array('tag_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+    }
+
+    private function createWorkspaceTagHierarchyTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_workspace_tag_hierarchy');
+        $this->addId($table);
+        $table->addColumn('user_id', 'integer', array('notnull' => false));
+        $table->addColumn('tag_id', 'integer');
+        $table->addColumn('parent_id', 'integer');
+        $table->addColumn('level', 'integer');
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_user'),
+            array('user_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_workspace_tag'),
+            array('tag_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_workspace_tag'),
+            array('parent_id'),
             array('id'),
             array('onDelete' => 'CASCADE')
         );

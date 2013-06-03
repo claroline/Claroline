@@ -7,7 +7,7 @@ use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceToolReadEvent;
@@ -42,7 +42,7 @@ class WorkspaceController extends Controller
     public function listAction()
     {
         if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            throw new AccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
 
         $em = $this->get('doctrine.orm.entity_manager');
@@ -54,6 +54,7 @@ class WorkspaceController extends Controller
 
         $tagWorkspaces = array();
 
+        // create an array: tagId => [associated_workspace_relation]
         foreach ($relTagWorkspace as $tagWs) {
 
             if (empty($tagWorkspaces[$tagWs['tag_id']])) {
@@ -62,10 +63,72 @@ class WorkspaceController extends Controller
             $tagWorkspaces[$tagWs['tag_id']][] = $tagWs['rel_ws_tag'];
         }
 
+        $tagsHierarchy = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTagHierarchy')
+            ->findByUser(null);
+        $rootTags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+            ->findAdminRootTags();
+        $hierarchy = array();
+
+        // create an array : tagId => [direct_children_id]
+        foreach ($tagsHierarchy as $tagHierarchy) {
+
+            if ($tagHierarchy->getLevel() === 1) {
+
+                if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
+                    !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
+
+                    $hierarchy[$tagHierarchy->getParent()->getId()] = array();
+                }
+                $hierarchy[$tagHierarchy->getParent()->getId()][] = $tagHierarchy->getTag();
+            }
+        }
+
+        // create an array indicating which tag is displayable
+        // a tag is displayable if it or one of his children contains is associated to a workspace
+        $displayable = array();
+        $allAdminTags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+            ->findByUser(null);
+
+        foreach ($allAdminTags as $adminTag) {
+            $adminTagId = $adminTag->getId();
+            $displayable[$adminTagId] = $this->isTagDisplayable($adminTagId, $tagWorkspaces, $hierarchy);
+        }
+
         return $this->render(
             'ClarolineCoreBundle:Workspace:list.html.twig',
-            array('workspaces' => $workspaces, 'tags' => $tags, 'tagWorkspaces' => $tagWorkspaces)
+            array(
+                'workspaces' => $workspaces,
+                'tags' => $tags,
+                'tagWorkspaces' => $tagWorkspaces,
+                'hierarchy' => $hierarchy,
+                'rootTags' => $rootTags,
+                'displayable' => $displayable
+            )
         );
+    }
+
+    private function isTagDisplayable($tagId, $tagWorkspaces, $hierarchy)
+    {
+        $displayable = false;
+        if (isset($tagWorkspaces[$tagId]) && count($tagWorkspaces[$tagId]) > 0) {
+            $displayable = true;
+        } else {
+
+            if (isset($hierarchy[$tagId]) && count($hierarchy[$tagId]) > 0) {
+                $children = $hierarchy[$tagId];
+
+                foreach ($children as $child) {
+
+                    $displayable = $this->isTagDisplayable($child->getId(), $tagWorkspaces, $hierarchy);
+
+                    if ($displayable) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $displayable;
     }
 
     /**
@@ -85,7 +148,7 @@ class WorkspaceController extends Controller
     public function listWorkspacesByUserAction()
     {
         if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            throw new AccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
 
         $em = $this->get('doctrine.orm.entity_manager');
@@ -135,7 +198,7 @@ class WorkspaceController extends Controller
     public function creationFormAction()
     {
         if (false === $this->get('security.context')->isGranted('ROLE_WS_CREATOR')) {
-            throw new AccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
 
         $form = $this->get('form.factory')
@@ -163,7 +226,7 @@ class WorkspaceController extends Controller
     public function createAction()
     {
         if (false === $this->get('security.context')->isGranted('ROLE_WS_CREATOR')) {
-            throw new AccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
 
         $form = $this->get('form.factory')
@@ -217,7 +280,7 @@ class WorkspaceController extends Controller
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
 
         if (false === $this->get('security.context')->isGranted("DELETE", $workspace)) {
-            throw new AccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
 
         $log = new LogWorkspaceDeleteEvent($workspace);
@@ -296,7 +359,7 @@ class WorkspaceController extends Controller
             ->find($workspaceId);
 
         if (false === $this->get('security.context')->isGranted($toolName, $workspace)) {
-            throw new AccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
 
         $event = new DisplayToolEvent($workspace);
@@ -385,7 +448,7 @@ class WorkspaceController extends Controller
             $isAdmin = $this->get('security.context')->getToken()->getUser()->hasRole('ROLE_ADMIN');
 
             if ($foundRole === null && !$isAdmin) {
-                throw new AccessDeniedHttpException('No role found in that workspace');
+                throw new AccessDeniedException('No role found in that workspace');
             }
 
             if ($isAdmin) {
@@ -404,7 +467,7 @@ class WorkspaceController extends Controller
         }
 
         if ($openedTool == null) {
-            throw new AccessDeniedHttpException("No tool found for role {$foundRole}");
+            throw new AccessDeniedException("No tool found for role {$foundRole}");
         }
 
         $route = $this->get('router')->generate(
