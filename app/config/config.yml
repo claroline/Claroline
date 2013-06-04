@@ -79,7 +79,13 @@ stof_doctrine_extensions:
             timestampable: true
 
 parameters:
-  security.authentication.listener.anonymous.class: Claroline\CoreBundle\Listener\AnonymousAuthenticationListener
+    security.authentication.listener.anonymous.class: Claroline\CoreBundle\Listener\AnonymousAuthenticationListener
+    templating.locator.class: Claroline\CoreBundle\Templating\Loader\TemplateLocator
+
+services:
+    templating.locator:
+        class: "%templating.locator.class%"
+        arguments: ["@file_locator", "%kernel.root_dir%/Resources", "@claroline.config.platform_config_handler"]
 
 twig:
     globals:

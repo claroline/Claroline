@@ -15,7 +15,7 @@
                 {% if isLogged %}
 
                     <ul class="nav">
-                        <li{{ "/desktop/tool/open/home" | compareRoute | raw }}>
+                        <li{{ "/desktop/tool/" | compareRoute | raw }}>
                         <a href="{{ path('claro_desktop_open') }}" id="link-desktop">
                             <i class="icon-briefcase"></i> {{ 'desktop'|trans({}, 'platform') }}
                         </a>
