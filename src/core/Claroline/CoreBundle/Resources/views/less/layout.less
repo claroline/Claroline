@@ -6,8 +6,6 @@
 
 html, body {
     height: 100%;
-    margin: 0;
-    padding: 0;
 }
 
 #wrapper {
@@ -45,16 +43,6 @@ html, body {
 
 @media (min-width: 768px) {
 
-    .tool-list {
-        #grid > .fluid > .span(1);
-        float: left;
-    }
-
-    .section-content {
-        #grid > .fluid >  .span(11);
-        float: right;
-    }
-
     .workspace-toolbox-item {
         display: block;
         text-align: center;
@@ -68,13 +56,6 @@ html, body {
     .creator .navbar.navbar-static-top
     {
         margin:0 !important;
-    }
-
-    footer {
-        margin-left: -20px;
-        margin-right: -20px;
-        padding-left: 20px !important;
-        padding-right: 20px !important;
     }
 
     .tool-list {
@@ -97,12 +78,12 @@ html, body {
 footer {
     width: 100%;
     position: relative;
+    margin: -@navbarHeight -20px 0 -20px; /* Puts the footer in the grid with a negative margin */
+    padding: 0 20px 0 20px;
     min-height: @navbarHeight;
-    margin: -@navbarHeight 0 0 0; /* Puts the footer in the grid with a negative margin */
     background-color: @grayLighter;
     color: lighten(@gray, 20%);
     text-shadow: 1px 1px @white;
-    padding:0;
 }
 
 #footer-content {
