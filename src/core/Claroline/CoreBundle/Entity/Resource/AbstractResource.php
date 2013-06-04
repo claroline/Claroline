@@ -481,13 +481,4 @@ abstract class AbstractResource
     {
         return $this->previous;
     }
-
-    public function __toString()
-    {
-        if ($this->previous == null) {
-            return 'previous is null';
-        } else {
-            return $this->previous->getName();
-        }
-    }
 }

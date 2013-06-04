@@ -74,14 +74,12 @@ class WorkspaceCalendarController extends Controller
                     );
                 }
             } else {
-                $error = $form->getErrors();
-                foreach ($error as $value) {
-                 }
+
                  return new Response(
-                        json_encode(array('greeting' => 'form invalid')),
-                        400,
-                        array('Content-Type' => 'application/json')
-                    );
+                     json_encode(array('greeting' => 'form invalid')),
+                     400,
+                     array('Content-Type' => 'application/json')
+                 );
             }
         }
     }

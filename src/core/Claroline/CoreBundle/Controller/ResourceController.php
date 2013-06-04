@@ -574,7 +574,7 @@ class ResourceController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $roles = $em->getRepository('ClarolineCoreBundle:Role')->findByWorkspaceCode($code);
         $arWorkspace = array();
-        
+
         foreach ($roles as $role) {
             $arWorkspace[$role->getWorkspace()->getCode()][$role->getName()] = array(
                 'name' => $role->getName(),
