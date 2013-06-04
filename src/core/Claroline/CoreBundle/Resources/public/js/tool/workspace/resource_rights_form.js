@@ -53,6 +53,7 @@
             contentType: false,
             success: function (workspaces) {
                 $('#form-right-wrapper').empty();
+                $('#role-list').empty();
                 $('#role-list').append(Twig.render(resourceRightsRoles,
                     {'workspaces': workspaces, 'resourceId': $('#data').attr('data-resource-id')})
                 );
