@@ -300,7 +300,7 @@ class TemplateBuilder
 
         if (true !== $code = $archive->open($path, \ZipArchive::CREATE)) {
             throw new \Exception(
-                "Couldn't open template archive '{$defaultPath}' (error {$code})"
+                "Couldn't open template archive '{$path}' (error {$code})"
             );
         }
 

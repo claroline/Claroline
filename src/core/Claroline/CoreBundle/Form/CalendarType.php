@@ -37,11 +37,11 @@ class CalendarType extends AbstractType
                 )
             )
             ->add(
-                'description', 
+                'description',
                 'textarea',
                 array(
                     'attr' => array(
-                        'class'=> 'tinymce',
+                        'class' => 'tinymce',
                         'data-theme' => 'simple'
                         )
                     )

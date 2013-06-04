@@ -421,7 +421,7 @@ class ResourceRightsControllerTest extends FunctionalTestCase
         $resourceRightId = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
             ->findOneBy(array('role' => $role, 'resource' => $this->getDirectory('dir1')))->getId();
 
-       $this->client->request(
+        $this->client->request(
             'POST',
             "/resource/right/{$resourceRightId}/edit",
             array('resources_rights_form' => array(

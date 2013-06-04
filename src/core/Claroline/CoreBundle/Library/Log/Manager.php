@@ -327,6 +327,7 @@ class Manager
 
         //List item delegation
         $views = $this->renderLogs($pager->getCurrentPageResults());
+        //$views = array();
 
         return array(
             'pager' => $pager,

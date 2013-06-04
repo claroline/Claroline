@@ -13,7 +13,7 @@ class ManagerTest extends FixtureTestCase
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->manager = $this->client->getContainer()->get('claroline.resource.manager');
     }
-/*
+
     public function testCreationSetResourceAsLast()
     {
         $this->loadFileData('user', 'user', array('file1.txt'));
@@ -119,7 +119,7 @@ class ManagerTest extends FixtureTestCase
         $this->assertEquals($first, $copy->getPrevious());
         $this->assertEquals(null, $copy->getNext());
     }
-*/
+
     public function testInsertBefore()
     {
         $this->loadFileData('user', 'user', array('file1.txt'));
@@ -147,7 +147,7 @@ class ManagerTest extends FixtureTestCase
         $this->assertEquals($first->getName(), $second->getPrevious()->getName());
         $this->assertEquals($third->getName(), $second->getNext()->getName());
     }
-/*
+
     public function testIsPathValid()
     {
         $this->loadDirectoryData('user', array('user/dir1/dir2/dir3'));
@@ -192,5 +192,5 @@ class ManagerTest extends FixtureTestCase
         );
 
         $this->assertFalse($this->manager->isPathValid($invalidWithLinks));
-    }*/
+    }
 }
