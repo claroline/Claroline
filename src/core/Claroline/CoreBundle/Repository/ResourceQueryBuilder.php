@@ -24,7 +24,8 @@ class ResourceQueryBuilder
     private $fromClause;
     private $joinRelativesClause;
 
-    public function __construct() {
+    public function __construct()
+    {
         $eol = PHP_EOL;
         $this->fromClause = "FROM Claroline\CoreBundle\Entity\Resource\AbstractResource resource{$eol}";
         $this->joinRelativesClause = "JOIN resource.creator creator{$eol}" .
@@ -455,7 +456,8 @@ class ResourceQueryBuilder
         }
     }
 
-    public function addJoinClause($clause) {
+    public function addJoinClause($clause)
+    {
         $this->joinRelativesClause .= $clause . PHP_EOL;
     }
 

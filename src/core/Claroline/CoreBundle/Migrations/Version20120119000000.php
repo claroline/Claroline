@@ -1168,7 +1168,7 @@ class Version20120119000000 extends BundleMigration
             array('id'),
             array('onDelete' => 'CASCADE')
         );
-        
+
         $this->storeTable($table);
     }
 

@@ -315,8 +315,11 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
 
     public function createShortcuts(ObjectManager $manager)
     {
-//        $collaboratorRole = $manager->getRepository('ClarolineCoreBundle:Role')
-//            ->findCollaboratorRole($this->getReference('user/Jane Doe')->getPersonalWorkspace());
+        /*
+         * $collaboratorRole = $manager->getRepository('ClarolineCoreBundle:Role')
+         *     ->findCollaboratorRole($this->getReference('user/Jane Doe')->getPersonalWorkspace());
+         *
+         */
 
         $this->loadFixture(
             new LoadShortcutData(

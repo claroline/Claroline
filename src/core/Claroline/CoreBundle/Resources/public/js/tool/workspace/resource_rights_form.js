@@ -1,7 +1,9 @@
+/* global resourceRightsRoles */
+
 (function () {
     'use strict';
 
-    var submitForm = function(formAction, formData) {
+    var submitForm = function (formAction, formData) {
         alert('presm');
         $.ajax({
             url: formAction,
@@ -15,7 +17,7 @@
                 {'toolName': 'parameters', 'workspaceId': $('#data').attr('data-workspace-id') });
             }
         });
-    }
+    };
 
     $('body').on('click', '#submit-default-rights-form-button', function (e) {
         var formAction = $(e.currentTarget.parentElement).attr('action');
@@ -51,9 +53,11 @@
             contentType: false,
             success: function (workspaces) {
                 $('#form-right-wrapper').empty();
-                $('#role-list').append(Twig.render(resourceRightsRoles, {'workspaces': workspaces, 'resourceId': $('#data').attr('data-resource-id')}));
+                $('#role-list').append(Twig.render(resourceRightsRoles,
+                    {'workspaces': workspaces, 'resourceId': $('#data').attr('data-resource-id')})
+                );
             }
-        })
+        });
     });
 
     $('.role-item').live('click', function (event) {
@@ -67,7 +71,7 @@
                 $('#role-list').empty();
                 $('#form-right-wrapper').append(form);
             }
-        })
+        });
     });
 
     $('.res-creation-options').live('click', function (event) {

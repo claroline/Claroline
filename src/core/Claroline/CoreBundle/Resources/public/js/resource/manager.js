@@ -4,6 +4,7 @@
 /* global ResourceManagerFilters */
 /* global ResourceManagerThumbnail */
 /* global ResourceManagerResults */
+/* global resourceRightsRoles */
 
 (function () {
     'use strict';
@@ -37,7 +38,7 @@
                 if (isRoot) {
                     this.parameters._workspace = undefined;
                 } else {
-                    if (this.parameters._workspace == undefined) {
+                    if (this.parameters._workspace === undefined) {
                         this.parameters._workspace = workspaceId;
                     }
                 }
@@ -51,7 +52,7 @@
                     var index = -1;
 
                     for (var i = 0; i < this.parameters.directoryHistory.length; i++) {
-                        if (this.parameters.directoryHistory[i].id == this.currentDirectory.id) {
+                        if (this.parameters.directoryHistory[i].id === this.currentDirectory.id) {
                             index = i;
                         }
                     }
@@ -70,18 +71,23 @@
                         }
 
                     } else {
-                        if (index == -1) {
+                        if (index === -1) {
                         //if the directory isn't in the breadcrumbs yet'
                             this.parameters.directoryHistory.push(this.currentDirectory);
                         } else {
-                            this.parameters.directoryHistory.splice(index+1);
+                            this.parameters.directoryHistory.splice(index + 1);
                         }
                     }
                 }
 
                 this.subViews.breadcrumbs.render(this.parameters.directoryHistory);
                 this.subViews.actions.render(this.currentDirectory, creatableTypes, isSearchMode, searchParameters);
-                this.subViews.resources.render(resources, isSearchMode, this.currentDirectory.id, this.directoryHistory);
+                this.subViews.resources.render(
+                    resources,
+                    isSearchMode,
+                    this.currentDirectory.id,
+                    this.directoryHistory
+                );
 
                 if (!this.subViews.areAppended) {
                     this.wrapper.append(
@@ -545,7 +551,7 @@
                         });
                     }
                 },
-                'click .search-role-btn':function (event) {
+                'click .search-role-btn': function (event) {
                     event.preventDefault();
                     var search = $('#role-search-text').val();
                     $.ajax({
@@ -556,11 +562,13 @@
                         contentType: false,
                         success: function (workspaces) {
                             $('#form-right-wrapper').empty();
-                            $('#role-list').append(Twig.render(resourceRightsRoles, {'workspaces': workspaces, 'resourceId': this.targetResourceId}));
+                            $('#role-list').append(Twig.render(resourceRightsRoles,
+                                {'workspaces': workspaces, 'resourceId': this.targetResourceId})
+                            );
                         }
-                    })
+                    });
                 },
-                'click .role-item':function (event) {
+                'click .role-item': function (event) {
                     event.preventDefault();
                     $.ajax({
                         context: this,
@@ -572,11 +580,11 @@
                             $('#role-list').empty();
                             $('#form-right-wrapper').append(form);
                         }
-                    })
+                    });
                 },
-                'click #submit-right-form-button': function(event) {
+                'click #submit-right-form-button': function (event) {
                     event.preventDefault();
-                    var form = $(this.el).find('form')[1]
+                    var form = $(this.el).find('form')[1];
                     var data = new FormData(form);
                     $.ajax({
                         url: form.getAttribute('action'),
@@ -816,7 +824,8 @@
                     if (!data.canChangePosition) {
                         $('#sortable').sortable('disable');
                     } else {
-                        $('#sortable').sortable('enable');                   }
+                        $('#sortable').sortable('enable');
+                    }
                 }
             });
         },
@@ -976,7 +985,7 @@
         open: function (resourceType, resourceId, directoryHistory, workspaceId) {
             var _path = '';
             for (var i = 0; i < directoryHistory.length; i++) {
-                if ( i === 0) {
+                if (i === 0) {
                     _path += '?';
                 } else {
                     _path += '&';
@@ -984,8 +993,8 @@
                 _path += '_breadcrumbs[]=' + directoryHistory[i].id;
             }
 
-            window.location = this.parameters.appPath + '/resource/open/' + resourceType + '/'
-                + resourceId + _path + '&_workspace=' + workspaceId;
+            window.location = this.parameters.appPath + '/resource/open/' + resourceType + '/' +
+                resourceId + _path + '&_workspace=' + workspaceId;
         },
         editRights: function (formAction, formData) {
             $.ajax({
