@@ -12,7 +12,6 @@
     style="background-image: url('{{ webRoot }}{{ resource.large_icon }}');"
     data-id="{{ resource.id }}"
     data-type="{{ resource.type }}"
-    data-type-id="{{ resource.resource_type_id }}"
     >
 
 </div>
