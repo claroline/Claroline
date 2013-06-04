@@ -315,11 +315,8 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
 
     public function createShortcuts(ObjectManager $manager)
     {
-        /*
-         * $collaboratorRole = $manager->getRepository('ClarolineCoreBundle:Role')
-         *     ->findCollaboratorRole($this->getReference('user/Jane Doe')->getPersonalWorkspace());
-         *
-         */
+        $collaboratorRole = $manager->getRepository('ClarolineCoreBundle:Role')
+         ->findCollaboratorRole($this->getReference('user/Jane Doe')->getPersonalWorkspace());
 
         $this->loadFixture(
             new LoadShortcutData(
@@ -343,9 +340,23 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
             )
         );
 
-        //grant access to Cours C1 and Premier semestre and sub resources and  Cours C2 Travaux
-        //to $collaboratorRole
+        $permissions = array(
+            'canOpen' => true,
+            'canDelete' => false,
+            'canEdit' => false,
+            'canExport' => false,
+            'canCopy' => false
+        );
 
+        $this->container->get('claroline.resource.manager')
+            ->createRight($permissions, true, $collaboratorRole, $this->getReference('directory/Docs')
+        );
+        $this->container->get('claroline.resource.manager')
+            ->createRight($permissions, true, $collaboratorRole, $this->getReference('directory/Premier semestre')
+        );
+        $this->container->get('claroline.resource.manager')
+            ->createRight($permissions, true, $collaboratorRole, $this->getReference('directory/Travaux')
+        );
     }
 
     public function setRssReader(ObjectManager $manager)
