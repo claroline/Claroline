@@ -150,7 +150,7 @@ class ResourceRightsController extends Controller
      *     name="claro_resource_right_create"
      * )
      *
-     * Handles the submission of the signle right form.
+     * Handles the submission of the single right form.
      */
     public function createRightAction($roleId, $resourceId)
     {

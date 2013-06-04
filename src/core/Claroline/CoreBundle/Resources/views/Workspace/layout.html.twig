@@ -25,9 +25,11 @@
                      data-resource-name="{{ _resource.getName() }}"
                      data-workspace-id="{{ workspaceId }}">
                 </div>
+                {% if not is_path_mode  %}
                 {% render controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
                     {'workspaceId': workspaceId, 'resourceId': _resource.getId(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})
                 %}
+                {% endif %}
             {% endif %}
             </div>
         {% endblock %}

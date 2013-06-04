@@ -45,7 +45,7 @@ class DesktopCalendarController extends Controller
             $data[$key]['start'] = $object->getStart()->getTimestamp();
             $data[$key]['end'] = $object->getEnd()->getTimestamp();
             $data[$key]['color'] = $object->getPriority();
-            $data[$key]['visible'] = TRUE;
+            $data[$key]['visible'] = true;
         }
 
         return($data);
