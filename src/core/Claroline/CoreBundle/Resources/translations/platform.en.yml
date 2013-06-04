@@ -67,6 +67,7 @@ file_form_shareType: Sharable
 file_form_shareType_0: Yes
 file_form_shareType_1: false
 files: Files
+filter: Filter
 find_workspaces: 'Find workspaces'
 first_name: 'First name'
 form_role: Role
@@ -253,6 +254,7 @@ my_workspaces: 'My workspaces'
 name: Name
 new_message_alert: 'You have %count% new message(s)'
 no_search_results: 'Your search hasn''t returned any result.'
+none: None
 note: Note
 object: Object
 ok: Ok

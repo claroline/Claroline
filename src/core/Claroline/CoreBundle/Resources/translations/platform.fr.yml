@@ -67,6 +67,7 @@ file_form_shareType: Redistribution
 file_form_shareType_0: Oui
 file_form_shareType_1: Non
 files: Fichiers
+filter: Filtrer
 find_workspaces: 'Tous les espaces'
 first_name: Prénom
 form_role: Rôle
@@ -254,6 +255,7 @@ name: Nom
 new_message_alert: 'Vous avez %count% nouveaux message(s)'
 no_search_results: 'Votre recherche n''a retourné aucun résultat.'
 note: Note
+none: Aucun
 object: Objet
 ok: Ok
 open: Ouvrir
