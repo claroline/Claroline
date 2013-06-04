@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Form\ResourceRightType;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleChangeRightEvent;
@@ -163,33 +162,15 @@ class ResourceRightsController extends Controller
         $role = $em->getRepository('ClarolineCoreBundle:Role')->find($roleId);
         $form = $this->get('form.factory')->create(new ResourceRightType($resource), new ResourceRights());
         $form->bind($request);
-        $resourceRights = array();
 
         if ($form->isValid()) {
             $isRecursive = $form->get('isRecursive')->getData();
-
-            if ($isRecursive) {
-                $resourceRights = $this->findAndCreateMissingDescendants($role, $resource);
-            } else {
-                $resourceRight = new ResourceRights();
-                $resourceRight->setRole($role);
-                $resourceRight->setResource(
-                    $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($resourceId)
-                );
-                $resourceRights[] = $resourceRight;
-            }
-
-            foreach ($resourceRights as $resourceRight) {
-                $resourceRight->setCanCopy($form->get('canCopy')->getData());
-                $resourceRight->setCanOpen($form->get('canOpen')->getData());
-                $resourceRight->setCanDelete($form->get('canDelete')->getData());
-                $resourceRight->setCanEdit($form->get('canEdit')->getData());
-                $resourceRight->setCanExport($form->get('canExport')->getData());
-
-                $em->persist($resourceRight);
-            }
-
-            $em->flush();
+            $permissions['canCopy'] = $form->get('canCopy')->getData();
+            $permissions['canDelete'] = $form->get('canDelete')->getData();
+            $permissions['canOpen'] = $form->get('canOpen')->getData();
+            $permissions['canEdit'] = $form->get('canEdit')->getData();
+            $permissions['canExport'] = $form->get('canExport')->getData();
+            $this->get('claroline.resource.manager')->createRight($permissions, $isRecursive, $role, $resource);
 
             $isDir = ($resource->getResourceType()->getName() === 'directory') ? true: false;
 
@@ -231,7 +212,8 @@ class ResourceRightsController extends Controller
 
             $isRecursive = $form->get('isRecursive')->getData();
             if ($isRecursive) {
-                $resourceRights = $this->findAndCreateMissingDescendants($role, $resource);
+                $resourceRights = $this->get('claroline.resource.manager')
+                    ->findAndCreateMissingDescendants($role, $resource);
             } else {
                 $resourceRights[] = $resourceRight;
             }
@@ -497,35 +479,6 @@ class ResourceRightsController extends Controller
         }
 
         return $addedResourceTypes;
-    }
-
-    private function findAndCreateMissingDescendants(Role $role, AbstractResource $resource)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $resourceRepo = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
-        $alreadyExistings = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
-            ->findRecursiveByResourceAndRole($resource, $role);
-        $descendants = $resourceRepo->findDescendants($resource, true);
-        $finalRights = array();
-
-        foreach ($descendants as $descendant) {
-            $found = false;
-            foreach ($alreadyExistings as $existingRight) {
-                if ($existingRight->getResource() === $descendant) {
-                    $finalRights[] = $existingRight;
-                    $found = true;
-                }
-            }
-
-            if (!$found) {
-                $resourceRight = new ResourceRights();
-                $resourceRight->setRole($role);
-                $resourceRight->setResource($descendant);
-                $finalRights[] = $resourceRight;
-            }
-        }
-
-        return $finalRights;
     }
 
     /**

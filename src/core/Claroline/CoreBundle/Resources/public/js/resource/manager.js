@@ -562,6 +562,7 @@
                         contentType: false,
                         success: function (workspaces) {
                             $('#form-right-wrapper').empty();
+                            $('#role-list').empty();
                             $('#role-list').append(Twig.render(resourceRightsRoles,
                                 {'workspaces': workspaces, 'resourceId': this.targetResourceId})
                             );
@@ -691,7 +692,6 @@
                 }
             },
             'resource-click': function (event) {
-                console.debug(event);
 
                 if (event.isPickerMode) {
                     if (event.resourceType === 'directory') {

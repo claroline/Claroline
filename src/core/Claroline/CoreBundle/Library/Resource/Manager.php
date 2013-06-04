@@ -372,70 +372,42 @@ class Manager
             }
 
             $role = $roleRepo->findOneBy(array('name' => $role.'_'.$workspace->getId()));
-            $this->createDefaultsResourcesRights(
-                $permissions['canDelete'],
-                $permissions['canOpen'],
-                $permissions['canEdit'],
-                $permissions['canCopy'],
-                $permissions['canExport'],
-                $role,
-                $resource,
-                $resourceTypes
-            );
+            $this->createRight($permissions, false, $role, $resource, $resourceTypes);
         }
 
-        $this->createDefaultsResourcesRights(
-            false, false, false, false, false,
+        $anonymousPerms = array(
+            'canCopy' => false,
+            'canDelete' => false,
+            'canOpen' => false,
+            'canExport' => false,
+            'canEdit' => false
+        );
+
+        $this->createRight(
+            $anonymousPerms,
+            false,
             $roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
             $resource,
             array()
         );
 
-        $resourceTypeRepo->findAll();
+        $resourceTypes = $resourceTypeRepo->findAll();
 
-        $this->createDefaultsResourcesRights(
-            true, true, true, true, true,
+        $adminPerms = array(
+            'canCopy' => true,
+            'canDelete' => true,
+            'canOpen' => true,
+            'canExport' => true,
+            'canEdit' => true
+        );
+
+        $this->createRight(
+            $adminPerms,
+            false,
             $roleRepo->findOneBy(array('name' => 'ROLE_ADMIN')),
             $resource,
             $resourceTypes
         );
-    }
-
-    /**
-     * Create default permissions for a role and a resource.
-     *
-     * @param boolean $canDelete
-     * @param boolean $canOpen
-     * @param boolean $canEdit
-     * @param boolean $canCopy
-     * @param boolean $canExport
-     * @param boolean $canCreate
-     * @param \Claroline\CoreBundle\Entity\Role $role
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
-     *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceRights
-     */
-    private function createDefaultsResourcesRights(
-        $canDelete,
-        $canOpen,
-        $canEdit,
-        $canCopy,
-        $canExport,
-        Role $role,
-        AbstractResource $resource,
-        array $resourceTypes
-    )
-    {
-        $rights = new ResourceRights();
-        $rights->setCanCopy($canCopy);
-        $rights->setCanDelete($canDelete);
-        $rights->setCanEdit($canEdit);
-        $rights->setCanOpen($canOpen);
-        $rights->setCanExport($canExport);
-        $rights->setRole($role);
-        $rights->setResource($resource);
-        $rights->setCreatableResourceTypes($resourceTypes);
-        $this->em->persist($rights);
     }
 
     /**
@@ -651,5 +623,80 @@ class Manager
 
         $this->em->persist($resource);
         $this->em->flush();
+    }
+
+    /**
+     * Create a new ResourceRight
+     *
+     * @param array $permissions
+     * @param boolean $isRecursive
+     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     */
+    public function createRight(
+        array $permissions,
+        $isRecursive,
+        Role $role,
+        AbstractResource $resource,
+        array $resourceTypes = array()
+    )
+    {
+        $resourceRights = array();
+
+        if ($isRecursive) {
+            $resourceRights = $this->findAndCreateMissingDescendants($role, $resource);
+        } else {
+                $resourceRight = new ResourceRights();
+                $resourceRight->setRole($role);
+                $resourceRight->setResource($resource);
+                $resourceRights[] = $resourceRight;
+        }
+
+        foreach ($resourceRights as $resourceRight) {
+            $resourceRight->setCanCopy($permissions['canCopy']);
+            $resourceRight->setCanOpen($permissions['canOpen']);
+            $resourceRight->setCanDelete($permissions['canDelete']);
+            $resourceRight->setCanEdit($permissions['canEdit']);
+            $resourceRight->setCanExport($permissions['canExport']);
+            $resourceRight->setCreatableResourceTypes($resourceTypes);
+
+            $this->em->persist($resourceRight);
+        }
+
+        $this->em->flush();
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceRights
+     */
+    public function findAndCreateMissingDescendants(Role $role, AbstractResource $resource)
+    {
+        $resourceRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
+        $alreadyExistings = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
+            ->findRecursiveByResourceAndRole($resource, $role);
+        $descendants = $resourceRepo->findDescendants($resource, true);
+        $finalRights = array();
+
+        foreach ($descendants as $descendant) {
+            $found = false;
+            foreach ($alreadyExistings as $existingRight) {
+                if ($existingRight->getResource() === $descendant) {
+                    $finalRights[] = $existingRight;
+                    $found = true;
+                }
+            }
+
+            if (!$found) {
+                $resourceRight = new ResourceRights();
+                $resourceRight->setRole($role);
+                $resourceRight->setResource($descendant);
+                $finalRights[] = $resourceRight;
+            }
+        }
+
+        return $finalRights;
     }
 }
