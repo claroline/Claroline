@@ -59,7 +59,7 @@
         var callBack = function(resources){
             console.debug(resources);
             $.ajax({
-            url: Routing.generate('claro_activity_add_resource', {'activityId':{{ activity.getId() }}, 'resourceId': _.keys(resources)[0]}),
+            url: Routing.generate('claro_activity_add_resource', {'activityId':{{ _resource.getId() }}, 'resourceId': _.keys(resources)[0]}),
             type: 'GET',
             success: function(resources){
                 var html = "";
@@ -87,9 +87,9 @@
     </script>
 {% endblock %}
 {% block section_content %}
-    <a href="{{ path('claro_activity_show_player', {'activityId': activity.getId()}) }}" class="btn btn-secondary pull-right"> {{ 'show_as_user'|trans({}, 'platform') }} </a>
+    <a href="{{ path('claro_activity_show_player', {'activityId': _resource.getId()}) }}" class="btn btn-secondary pull-right"> {{ 'show_as_user'|trans({}, 'platform') }} </a>
     <h3>
-        <b>{{ 'activity'|trans({}, 'resource') }} {{ activity.getName() }}</b>
+        <b>{{ 'activity'|trans({}, 'resource') }} {{ _resource.getName() }}</b>
     </h3>
     <div id="activity-instruction">
         <h4>{{ 'instructions'|trans({}, 'platform') }} :</h4>

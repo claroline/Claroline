@@ -310,19 +310,27 @@ Here is the method signature:
 
 ### Keeping the context
 
-AbstractResource has a mandatory relation to the AbstractWorkspace table.
-The Workspace indicate the context in wich your resource was placed.
-
-You can find the workspace using
-
-    $workspace = $resource->getWorkspace();
-
-Then your response must extends the workspace layout.
+Your response must extends the workspace layout.
 
     {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
-This layout requires the **workspace** parameter. Its value must be the $workspace
-you got from the instance.
+AbstractResource has a mandatory relation to the AbstractWorkspace table.
+The Workspace indicate the context in wich your resource was placed.
+A resource is usually opened through the resource manager. The resource manager will append
+the resource breadcrumbs to the url (_breadcrumbs[]=123&...) to keep track of wich path the user
+chosed to open the resource. If a breadcrumbs is present, the Claroline core will automatically
+find in wich workspace the resource was open (it's the root of the breadcrumbs).
+
+A fallback is needed if there is no breadcrumbs. That's why a _resource parameter
+is required for the template to work in these cases.
+
+    render('xxx', array('_resource' => $resource)
+
+### Redirection
+
+If you want to navigate inside a resource and keep the context (the breadcrumbs) and allow the navigation
+inside an activity. You must use the twig method _path. This method is a copy of the twig path method wich
+copy the breadcrumbs.
 
 ### Removing a Resource Plugin
 
