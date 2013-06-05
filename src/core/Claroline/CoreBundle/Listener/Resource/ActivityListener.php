@@ -197,8 +197,6 @@ class ActivityListener implements ContainerAwareInterface
                 'ClarolineCoreBundle:Activity:index.html.twig',
                 array(
                     'resourceTypes' => $resourceTypes,
-                    'activity' => $activity,
-                    'workspace' => $activity->getWorkspace(),
                     'resourceActivities' => $resourceActivities,
                     '_resource' => $activity
                 )
