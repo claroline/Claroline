@@ -28,6 +28,9 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
             "FROM Claroline\CoreBundle\Entity\Resource\AbstractResource resource{$eol}" .
             "JOIN resource.creator creator{$eol}" .
             "JOIN resource.resourceType resourceType{$eol}" .
+            "LEFT JOIN resource.next next{$eol}" .
+            "LEFT JOIN resource.previous previous{$eol}" .
+            "LEFT JOIN resource.parent parent{$eol}" .
             "JOIN resource.icon icon{$eol}";
         $this->assertEquals($expectedDql, $dql);
     }
@@ -43,15 +46,21 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
             "    resource.id as id,{$eol}" .
             "    resource.name as name,{$eol}" .
             "    resource.path as path,{$eol}" .
-            "    IDENTITY(resource.parent) as parent_id,{$eol}" .
+            "    parent.id as parent_id,{$eol}" .
             "    creator.username as creator_username,{$eol}" .
             "    resourceType.name as type,{$eol}" .
             "    resourceType.isBrowsable as is_browsable,{$eol}" .
+            "    previous.id as previous_id,{$eol}" .
+            "    next.id as next_id,{$eol}" .
             "    icon.relativeUrl as large_icon{$eol}" .
             "FROM Claroline\CoreBundle\Entity\Resource\AbstractResource resource{$eol}" .
             "JOIN resource.creator creator{$eol}" .
             "JOIN resource.resourceType resourceType{$eol}" .
+            "LEFT JOIN resource.next next{$eol}" .
+            "LEFT JOIN resource.previous previous{$eol}" .
+            "LEFT JOIN resource.parent parent{$eol}" .
             "JOIN resource.icon icon{$eol}";
+
         $this->assertEquals($expectedDql, $dql);
 
         $dql = $qb->selectAsArray(true)->getDql();
@@ -60,10 +69,12 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
             "    resource.id as id,{$eol}" .
             "    resource.name as name,{$eol}" .
             "    resource.path as path,{$eol}" .
-            "    IDENTITY(resource.parent) as parent_id,{$eol}" .
+            "    parent.id as parent_id,{$eol}" .
             "    creator.username as creator_username,{$eol}" .
             "    resourceType.name as type,{$eol}" .
             "    resourceType.isBrowsable as is_browsable,{$eol}" .
+            "    previous.id as previous_id,{$eol}" .
+            "    next.id as next_id,{$eol}" .
             "    icon.relativeUrl as large_icon,{$eol}" .
             "    MAX (CASE rights.canExport WHEN true THEN 1 ELSE 0 END) as can_export,{$eol}" .
             "    MAX (CASE rights.canDelete WHEN true THEN 1 ELSE 0 END) as can_delete,{$eol}" .
@@ -71,6 +82,9 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
             "FROM Claroline\CoreBundle\Entity\Resource\AbstractResource resource{$eol}" .
             "JOIN resource.creator creator{$eol}" .
             "JOIN resource.resourceType resourceType{$eol}" .
+            "LEFT JOIN resource.next next{$eol}" .
+            "LEFT JOIN resource.previous previous{$eol}" .
+            "LEFT JOIN resource.parent parent{$eol}" .
             "JOIN resource.icon icon{$eol}" .
             "LEFT JOIN resource.rights rights{$eol}" .
             "JOIN rights.role rightRole{$eol}";
@@ -118,6 +132,9 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
             "FROM Claroline\CoreBundle\Entity\Resource\AbstractResource resource{$eol}" .
             "JOIN resource.creator creator{$eol}" .
             "JOIN resource.resourceType resourceType{$eol}" .
+            "LEFT JOIN resource.next next{$eol}" .
+            "LEFT JOIN resource.previous previous{$eol}" .
+            "LEFT JOIN resource.parent parent{$eol}" .
             "JOIN resource.icon icon{$eol}" .
             "LEFT JOIN resource.rights rights{$eol}" .
             "JOIN rights.role rightRole{$eol}" .

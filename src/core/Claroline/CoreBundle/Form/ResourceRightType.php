@@ -36,7 +36,7 @@ class ResourceRightType extends AbstractType
 
     public function getName()
     {
-        return 'resources_rights_form';
+        return 'resource_right_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

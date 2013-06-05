@@ -2,24 +2,22 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
-use Doctrine\ORM\EntityRepository;
 use LogicException;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
-use Pagerfanta\Pagerfanta;
-use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleSubscribeEvent;
-use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleUnsubscribeEvent;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleSubscribeEvent;
+use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleUnsubscribeEvent;
 
 class UserController extends Controller
 {
-    /*******************/
-    /* USER MANAGEMENT */
-    /*******************/
     const ABSTRACT_WS_CLASS = 'ClarolineCoreBundle:Workspace\AbstractWorkspace';
     const NUMBER_USER_PER_ITERATION = 25;
 
@@ -85,7 +83,7 @@ class UserController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-        $this->checkRegistration($workspace);
+        $this->checkRegistration($workspace, false);
         $repo = $em->getRepository('ClarolineCoreBundle:User');
         $query = ($search == "") ?
             $repo->findWorkspaceOutsiders($workspace, true):
@@ -130,7 +128,7 @@ class UserController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
             ->find($workspaceId);
-        $this->checkRegistration($workspace);
+        $this->checkRegistration($workspace, false);
         $user = $em->getRepository('ClarolineCoreBundle:User')
             ->find($userId);
         $roleRepo = $em->getRepository('ClarolineCoreBundle:Role');
@@ -218,7 +216,7 @@ class UserController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
             ->find($workspaceId);
-        $this->checkRegistration($workspace);
+        $this->checkRegistration($workspace, false);
         $roleRepo = $em->getRepository('ClarolineCoreBundle:Role');
         $role = $roleRepo->findCollaboratorRole($workspace);
 
@@ -268,7 +266,7 @@ class UserController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
             ->find($workspaceId);
-        $this->checkRegistration($workspace);
+        $this->checkRegistration($workspace, false);
         $roles = $em->getRepository('ClarolineCoreBundle:Role')
             ->findByWorkspace($workspace);
         $params = $this->get('request')->query->all();
@@ -349,16 +347,19 @@ class UserController extends Controller
     }
 
     /**
-     * Checks if the current user can see a workspace.
+     * Checks if the current user has access to the user management tool.
      *
      * @param AbstractWorkspace $workspace
      *
-     * @throws AccessDeniedHttpException
+     * @throws AccessDeniedException
      */
-    private function checkRegistration($workspace)
+    private function checkRegistration(AbstractWorkspace $workspace, $allowAnonymous = true)
     {
-        if (!$this->get('security.context')->isGranted('user_management', $workspace)) {
-            throw new AccessDeniedHttpException();
+        $security = $this->get('security.context');
+
+        if (($security->getToken()->getUser() === 'anon.' && !$allowAnonymous)
+            || !$security->isGranted('user_management', $workspace)) {
+            throw new AccessDeniedException();
         }
     }
 

@@ -11,7 +11,6 @@ Requirements
         - [gd][1] (for simple icon creation)
         - [ffmpeg][2] (for video thumbnail creation)
 - A global installation of [composer][3] (for dependency management)
-- A global installation of [less][4] as a [node][5] module (for the less files compilation)
 
 Quick start
 -----------
@@ -24,7 +23,7 @@ Quick start
 - Make the *app/cache*, *app/logs*, *app/config/local*, *files*, *templates*, *test* and
   *src/core/Claroline/CoreBundle/Resources/public/css/themes* directories (and their children)
   writable from the command line and the webserver (for further explanation on common permissions
-  issues and solutions with Symfony, read [this][6])
+  issues and solutions with Symfony, read [this][5])
 - Open your browser and go to *[site]/web/app.php* (prod) or *[site]/web/app_dev.php* (dev)
 
 Quick update
@@ -59,7 +58,7 @@ Development tools
 Testing
 -------
 
-In order to run the test suite you must have [phpunit][7] installed on your system.
+In order to run the test suite you must have [phpunit][6] installed on your system.
 
 - Run the complete test suite with : `phpunit -c app`
 - Run the tests for a single directory with : `phpunit -c app src/core/Claroline/CoreBundle`
@@ -69,29 +68,28 @@ Build / Static analysis
 
 The *app/build/tools* directory gathers configuration files for various analysis and build tools
 (PHPMD, PHPCS, JSHint, Ant, etc.). You can install and use them locally (see their respective
-documentation for usage) or visit our continuous integration server [here][8].
+documentation for usage) or visit our continuous integration server [here][7].
 
 Miscellaneous
 -------------
 
 To have the core Less and TwigJs assets automatically processed and dumped when they have changed,
-you can run the provided [watchr][9] script :
+you can run the provided [watchr][8] script :
 
 `watchr src/core/Claroline/CoreBundle/Resources/watchr/refresh_assets.rb`
 
 Documentation
 =============
 
-For development documentation, see [Claroline/CoreBundle/Resources/doc/index.md][10].
+For development documentation, see [Claroline/CoreBundle/Resources/doc/index.md][9].
 
 
 [1]: http://www.php.net/manual/en/book.image.php
 [2]: http://ffmpeg-php.sourceforge.net/
 [3]: http://getcomposer.org/doc/00-intro.md
 [4]: http://lesscss.org/#-server-side-usage
-[5]: http://nodejs.org/
-[6]: http://symfony.com/doc/current/book/installation.html#configuration-and-setup
-[7]: http://www.phpunit.de/manual/current/en/index.html
-[8]: http://dev.claroline.net:8080/job/Claronext/
-[9]: https://github.com/mynyml/watchr
-[10]: src/core/Claroline/CoreBundle/Resources/doc/index.md
+[5]: http://symfony.com/doc/current/book/installation.html#configuration-and-setup
+[6]: http://www.phpunit.de/manual/current/en/index.html
+[7]: http://dev.claroline.net:8080/job/Claronext/
+[8]: https://github.com/mynyml/watchr
+[9]: src/core/Claroline/CoreBundle/Resources/doc/index.md

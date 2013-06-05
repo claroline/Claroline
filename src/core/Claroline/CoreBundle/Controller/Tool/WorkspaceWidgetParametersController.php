@@ -2,15 +2,14 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
-use Claroline\CoreBundle\Library\Event\ConfigureWidgetWorkspaceEvent;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
+use Claroline\CoreBundle\Controller\Tool\AbstractParametersController;
+use Claroline\CoreBundle\Library\Event\ConfigureWidgetWorkspaceEvent;
 
-class WorkspaceWidgetParametersController extends Controller
+class WorkspaceWidgetParametersController extends AbstractParametersController
 {
     /**
      * @Route(
@@ -29,11 +28,7 @@ class WorkspaceWidgetParametersController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-
-        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
-            throw new AccessDeniedHttpException();
-        }
-
+        $this->checkAccess($workspace);
         $configs = $this->get('claroline.widget.manager')
             ->generateWorkspaceDisplayConfig($workspaceId);
 
@@ -67,11 +62,7 @@ class WorkspaceWidgetParametersController extends Controller
         $em = $this->getDoctrine()->getManager();
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
             ->find($workspaceId);
-
-        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
-            throw new AccessDeniedHttpException();
-        }
-
+        $this->checkAccess($workspace);
         $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
             ->find($widgetId);
         $displayConfig = $em
@@ -119,16 +110,13 @@ class WorkspaceWidgetParametersController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
             ->find($workspaceId);
-
-        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
-            throw new AccessDeniedHttpException();
-        }
-
+        $this->checkAccess($workspace);
         $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
             ->find($widgetId);
         $event = new ConfigureWidgetWorkspaceEvent($workspace);
         $eventName = "widget_{$widget->getName()}_configuration_workspace";
         $this->get('event_dispatcher')->dispatch($eventName, $event);
+
         if ($event->getContent() !== '') {
             return $this->render(
                 'ClarolineCoreBundle:Tool\workspace\parameters:widget_configuration.html.twig',

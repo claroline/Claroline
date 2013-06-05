@@ -30,6 +30,7 @@ class Configuration implements ConfigurationInterface
         $this->addWidgetSection($pluginSection);
         $this->addResourceSection($pluginSection);
         $this->addToolSection($pluginSection);
+        $this->addThemeSection($pluginSection);
 
         return $treeBuilder;
     }
@@ -188,21 +189,35 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('name')
                           ->isRequired()
                             ->validate()
-                                    ->ifTrue(
-                                        function ($v) use ($tools) {
-                                            return !call_user_func_array(
-                                                __CLASS__ . '::isNameAlreadyExist',
-                                                array($v, $tools)
-                                            );
-                                        }
-                                    )
-                                    ->thenInvalid($pluginFqcn . " : the tool name already exists")
-                                ->end()
+                                ->ifTrue(
+                                    function ($v) use ($tools) {
+                                        return !call_user_func_array(
+                                            __CLASS__ . '::isNameAlreadyExist',
+                                            array($v, $tools)
+                                        );
+                                    }
+                                )
+                                ->thenInvalid($pluginFqcn . " : the tool name already exists")
+                            ->end()
                         ->end()
                         ->booleanNode('is_displayable_in_workspace')->isRequired()->end()
                         ->booleanNode('is_displayable_in_desktop')->isRequired()->end()
                         ->scalarNode('class')->end()
                         ->scalarNode('is_exportable')->defaultValue(false)->end()
+                    ->end()
+                ->end()
+            ->end()
+        ->end()->end();
+    }
+
+    private function addThemeSection($pluginSection)
+    {
+        $pluginSection
+            ->arrayNode('themes')
+                ->prototype('array')
+                    ->children()
+                      ->scalarNode('name')->isRequired()->end()
+                      ->scalarNode('path')->isRequired()->end()
                     ->end()
                 ->end()
             ->end()

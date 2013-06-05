@@ -10,6 +10,7 @@ class ParametersControllerTest extends FunctionalTestCase
     protected function setUp()
     {
         parent::setUp();
+        $this->resetTemplate();
         $this->loadPlatformRoleData();
         $this->loadUserData(array('john' => 'user'));
     }

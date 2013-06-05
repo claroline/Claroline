@@ -107,11 +107,13 @@ class AbstractResourceRepository extends MaterializedPathRepository
             $children = $this->executeQuery($query);
         }
 
-        return $children;
+        //sort children by next & previous
+
+        return $this->sort($children);
     }
 
     /**
-     * Returns the root directories a user has access to.
+     * Returns the root directories of workspaces a user is registered to.
      *
      * @param User $user
      *
@@ -125,6 +127,28 @@ class AbstractResourceRepository extends MaterializedPathRepository
             ->whereInUserWorkspace($user)
             ->orderByPath()
             ->getDql();
+        $query = $this->_em->createQuery($dql);
+        $query->setParameters($builder->getParameters());
+
+        return $this->executeQuery($query);
+    }
+
+    /**
+     * Returns the roots directories a user is granted access
+     *
+     * @param array $roles
+     *
+     * @return array[array] An array of resources represented as arrays
+     */
+    public function findWorkspaceRootsByRoles(array $roles)
+    {
+        $builder = new ResourceQueryBuilder();
+        $dql = $builder->selectAsArray()
+            ->whereParentIsNull()
+            ->whereRoleIn($roles)
+            ->whereCanOpen()
+            ->getDql();
+
         $query = $this->_em->createQuery($dql);
         $query->setParameters($builder->getParameters());
 
@@ -151,7 +175,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
             $currentPath = $currentPath . $parts[$i] . '-' . $parts[$i + 1] . '`';
             $ancestor['path'] = $currentPath;
             $ancestor['name'] = $parts[$i];
-            $ancestor['id'] = $parts[$i + 1];
+            $ancestor['id'] = (int)$parts[$i + 1];
             $ancestors[] = $ancestor;
         }
 
@@ -162,81 +186,42 @@ class AbstractResourceRepository extends MaterializedPathRepository
      * Returns the resources matching a set of given criterias. If an array
      * of roles is passed, only the resources that can be opended by any of
      * these roles are matched.
+     * WARNING: the recursive search is far from being optimized.
      *
-     * @param array $criteria   An array of search filters
-     * @param array $roles      An array of user's roles
+     * @param array $criteria      An array of search filters
+     * @param array $roles         An array of user's roles
+     * @param boolean $isRecursive Will the search follow links.
+     *
      *
      * @return array[array] An array of resources represented as arrays
      */
-    public function findByCriteria(array $criteria, array $roles = null)
+    public function findByCriteria(array $criteria, array $roles = null, $isRecursive = false)
     {
         $builder = new ResourceQueryBuilder();
         $builder->selectAsArray();
 
-        if ($roles) {
-            $builder->whereRoleIn($roles)
-                ->whereCanOpen();
-        }
+        if ($isRecursive) {
+            $shortcuts = $this->findRecursiveDirectoryShortcuts($criteria, $roles);
+            $additionnalRoots = array();
 
-        $filterMethodMap = array(
-            'types' => 'whereTypeIn',
-            'roots' => 'whereRootIn',
-            'dateFrom' => 'whereDateFrom',
-            'dateTo' => 'whereDateTo',
-            'name' => 'whereNameLike',
-            'isExportable' => 'whereIsExportable'
-        );
-        $allowedFilters = array_keys($filterMethodMap);
-
-        foreach ($criteria as $filter => $value) {
-            if ($value !== null) {
-                if (in_array($filter, $allowedFilters)) {
-                    $builder->{$filterMethodMap[$filter]}($value);
-                } else {
-                    throw new UnknownFilterException("Unknown filter '{$filter}'");
-                }
+            foreach ($shortcuts as $shortcut) {
+                $additionnalRoots[] = $shortcut['target_path'];
             }
+
+            $baseRoots = (count($criteria['roots']) > 0) ?
+                $criteria['roots']:
+                $this->findWorkspaceRootsPathByRoles($roles);
+            $finalRoots = array_merge($additionnalRoots, $baseRoots);
+            $criteria['roots'] = $finalRoots;
         }
 
+        $this->addFilters($builder, $criteria, $roles);
         $dql = $builder->orderByPath()->getDql();
         $query = $this->_em->createQuery($dql);
         $query->setParameters($builder->getParameters());
+        $resources = $query->getResult();
 
-        return $this->executeQuery($query);
-    }
-
-    /**
-     * Executes a DQL query and returns resources as entities or arrays.
-     * If it returns arrays, it add a "pathfordisplay" field in each item.
-     *
-     * @param Query   $query    The query to execute
-     * @param integer $offset   First row to start with
-     * @param integer $numrows  Maximum number of rows to return
-     * @param boolean $asArray  Whether the resources must be returned as arrays or as objects
-     *
-     * @return array[AbstractResource|array]
-     */
-    private function executeQuery($query, $offset = null, $numrows = null, $asArray = true)
-    {
-        $query->setFirstResult($offset);
-        $query->setMaxResults($numrows);
-
-        if ($asArray) {
-            $resources = $query->getArrayResult();
-            $return = $resources;
-            // Add a field "pathfordisplay" in each entity (as array) of the given array.
-            foreach ($resources as $key => $resource) {
-
-                if (isset($resource['path'])) {
-                    $return[$key]['path_for_display'] = AbstractResource::convertPathForDisplay($resource['path']);
-
-                }
-            }
-
-            return $return;
-        }
-
-        return $query->getResult();
+        return $resources;
     }
 
     public function count()
@@ -271,5 +256,135 @@ class AbstractResourceRepository extends MaterializedPathRepository
         }
 
         return $orderedResult;
+    }
+
+    /**
+     * Sort a resource (linked list)
+     * @param array $resources
+     * @return array
+     */
+    public function sort(array $resources)
+    {
+        $sorted = array();
+        //set the 1st item.
+        foreach ($resources as $resource) {
+            if ($resource['previous_id'] == null) {
+                $sorted[] = $resource;
+            }
+        }
+
+        $loop = 0;
+
+        while (count($sorted) < count($resources)) {
+            $loop++;
+            foreach ($resources as $resource) {
+                if ($sorted[count($sorted) - 1]['id'] == $resource['previous_id']) {
+                    $sorted[] = $resource;
+                }
+            }
+            if ($loop > 100) {
+                throw new \Exception('More than 100 items in a directory or infinite loop detected');
+            }
+        }
+
+        return $sorted;
+    }
+
+    private function addFilters(ResourceQueryBuilder $builder,  array $criteria, array $roles = null)
+    {
+        if ($roles) {
+            $builder->whereRoleIn($roles)
+                ->whereCanOpen();
+        }
+
+        $filterMethodMap = array(
+            'types' => 'whereTypeIn',
+            'roots' => 'whereRootIn',
+            'dateFrom' => 'whereDateFrom',
+            'dateTo' => 'whereDateTo',
+            'name' => 'whereNameLike',
+            'isExportable' => 'whereIsExportable'
+        );
+        $allowedFilters = array_keys($filterMethodMap);
+
+        foreach ($criteria as $filter => $value) {
+            if ($value !== null) {
+                if (in_array($filter, $allowedFilters)) {
+                    $builder->{$filterMethodMap[$filter]}($value);
+                } else {
+                    throw new UnknownFilterException("Unknown filter '{$filter}'");
+                }
+            }
+        }
+
+        return $builder;
+    }
+
+    public function findRecursiveDirectoryShortcuts(array $criteria, array $roles = null, $alreadyFound = array())
+    {
+        $builder = new ResourceQueryBuilder();
+        $builder->selectAsArray();
+        $this->addFilters($builder, $criteria, $roles);
+        $dql = $builder->getShortcuts()->getDql();
+        $query = $this->_em->createQuery($dql);
+        $query->setParameters($builder->getParameters());
+        $results = $query->getResult();
+
+        foreach ($results as $result) {
+            $criteria['roots'] = array($result['target_path']);
+            //Infinite loops are evil.
+            if (!in_array($result, $alreadyFound)) {
+                $results = array_merge($this->findRecursiveDirectoryShortcuts($criteria, $roles, $results), $results);
+                $results = array_map("unserialize", array_unique(array_map("serialize", $results)));
+            }
+        }
+
+        return $results;
+    }
+
+    private function findWorkspaceRootsPathByRoles(array $roles)
+    {
+        $roots = $this->findWorkspaceRootsByRoles($roles);
+        $paths = array();
+
+        foreach ($roots as $root) {
+            $paths[] = $root['path'];
+        }
+
+        return $paths;
+    }
+
+    /**
+     * Executes a DQL query and returns resources as entities or arrays.
+     * If it returns arrays, it add a "pathfordisplay" field in each item.
+     *
+     * @param Query   $query    The query to execute
+     * @param integer $offset   First row to start with
+     * @param integer $numrows  Maximum number of rows to return
+     * @param boolean $asArray  Whether the resources must be returned as arrays or as objects
+     *
+     * @return array[AbstractResource|array]
+     */
+    private function executeQuery($query, $offset = null, $numrows = null, $asArray = true)
+    {
+        $query->setFirstResult($offset);
+        $query->setMaxResults($numrows);
+
+        if ($asArray) {
+            $resources = $query->getArrayResult();
+            $return = $resources;
+            // Add a field "pathfordisplay" in each entity (as array) of the given array.
+            foreach ($resources as $key => $resource) {
+
+                if (isset($resource['path'])) {
+                    $return[$key]['path_for_display'] = AbstractResource::convertPathForDisplay($resource['path']);
+
+                }
+            }
+
+            return $return;
+        }
+
+        return $query->getResult();
     }
 }

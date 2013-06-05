@@ -25,38 +25,38 @@ class LogRepository extends EntityRepository
 
     private function addActionFilterToQueryBuilder($qb, $action, $actionsRestriction)
     {
-        if ($action == "'resource_all'") {
-            $action = "'resource_create',
-            'resource_move',
-            'resource_read',
-            'resource_export',
-            'resource_delete',
-            'resource_update',
-            'resource_shortcut',
-            'resource_child_update',
-            ";
-        } else if ($action == "'ws_role_all'") {
-            $action = "'ws_role_create',
+        if ($action == 'resource_all') {
+            $action = array('resource_create',
+                'resource_move',
+                'resource_read',
+                'resource_export',
+                'resource_delete',
+                'resource_update',
+                'resource_shortcut',
+                'resource_child_update');
+        } else if ($action == 'ws_role_all') {
+            $action = array('ws_role_create',
                 'ws_role_delete',
                 'ws_role_update',
                 'ws_role_change_right',
                 'ws_role_subscribe_user',
                 'ws_role_unsubscribe_user',
                 'ws_role_subscribe_group',
-                'ws_role_unsubscribe_group'";
-        } else if ($action == "'group_all'") {
-            $action = "'group_add_user', 'group_create', 'group_delete', 'group_remove_user', 'group_update'";
-        } else if ($action == "'user_all'") {
-            $action = "'user_create', 'user_delete', 'user_login', 'user_update'";
-        } else if ($action == "'workspace_all'") {
-            $action = "'workspace_create', 'workspace_delete', 'workspace_update'";
+                'ws_role_unsubscribe_group');
+        } else if ($action == 'group_all') {
+            $action = array('group_add_user', 'group_create', 'group_delete', 'group_remove_user', 'group_update');
+        } else if ($action == 'user_all') {
+            $action = array('user_create', 'user_delete', 'user_login', 'user_update');
+        } else if ($action == 'workspace_all') {
+            $action = array('workspace_create', 'workspace_delete', 'workspace_update');
+        } else if ($action == 'all' or $action === null) {
+            $action = $actionsRestriction;
+        } else {
+            $action = array($action);
         }
 
-        if ($action === null or $action == 'all') {
-            $qb->andWhere("log.action IN (".$this->actionsRestrictionToString($actionsRestriction).")");
-        } else {
-            $qb->andWhere("log.action IN (".$action.")");
-        }
+        $qb->andWhere("log.action IN (:action)");
+        $qb->setParameter('action', $action);
 
         return $qb;
     }
@@ -114,19 +114,8 @@ class LogRepository extends EntityRepository
                 $qb->andWhere("workspace.id = :workspaceId");
                 $qb->setParameter('workspaceId', $workspaceIds[0]);
             } else {
-                $restriction = "";
-                $first = true;
-                foreach ($workspaceIds as $workspaceId) {
-                    if ($first) {
-                        $first = false;
-                        $restriction .= "'".$workspaceId."'";
-                    } else {
-                        $restriction .= ", '".$workspaceId."'";
-                    }
-                }
-                $qb->andWhere("workspace.id IN (".$restriction.")");
+                $qb->andWhere("workspace.id IN (:workspaceIds)")->setParameter('workspaceIds', $workspaceIds);
             }
-
         }
 
         return $qb;
@@ -136,8 +125,8 @@ class LogRepository extends EntityRepository
     {
         $qb = $this
             ->createQueryBuilder('log')
-            ->select('log.shortDateLog as shortDate, count(log) as total, log.dateLog as longDate')
-            ->orderBy('longDate', 'ASC')
+            ->select('log.shortDateLog as shortDate, count(log.id) as total')
+            ->orderBy('shortDate', 'ASC')
             ->groupBy('shortDate');
 
         $qb = $this->addActionFilterToQueryBuilder($qb, $action, $actionsRestriction);
@@ -151,6 +140,7 @@ class LogRepository extends EntityRepository
         $query = $qb->getQuery();
 
         $result = $query->getResult();
+
         $chartData = array();
         if (count($result) > 0) {
             //We send an array indexed by date dans contains count

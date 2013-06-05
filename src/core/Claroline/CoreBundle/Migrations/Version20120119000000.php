@@ -56,6 +56,7 @@ class Version20120119000000 extends BundleMigration
         $this->createRegionTable($schema);
         $this->createContent2RegionTable($schema);
         $this->createWorkspaceTemplateTable($schema);
+        $this->createThemeTable($schema);
     }
 
     public function down(Schema $schema)
@@ -109,6 +110,7 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_region');
         $schema->dropTable('claro_content2region');
         $schema->dropTable('claro_workspace_template');
+        $schema->dropTable('claro_theme');
     }
 
     private function createUserTable(Schema $schema)
@@ -1182,6 +1184,25 @@ class Version20120119000000 extends BundleMigration
             array('id'),
             array('onDelete' => 'CASCADE')
         );
+    }
+
+    private function createThemeTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_theme');
+
+        $this->addId($table);
+        $table->addColumn('name', 'string', array('length' => 255));
+        $table->addColumn('path', 'string', array('length' => 255));
+        $table->addColumn('plugin_id', 'integer', array('notnull' => false));
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_plugin'),
+            array('plugin_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+
+        $this->storeTable($table);
     }
 
     private function createWorkspaceTemplateTable(Schema $schema)

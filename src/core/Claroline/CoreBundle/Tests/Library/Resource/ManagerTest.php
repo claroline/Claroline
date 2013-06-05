@@ -131,19 +131,21 @@ class ManagerTest extends FixtureTestCase
         $third = $this->getFile('file3.txt');
         $fourth = $this->getFile('file4.txt');
         $this->manager->insertBefore($first, $third);
-        $this->assertEquals($first, $second->getNext());
-        $this->assertEquals($first, $third->getPrevious());
-        $this->assertEquals($second, $first->getPrevious());
-        $this->assertEquals($third, $first->getNext());
+        $this->assertEquals($first->getName(), $second->getNext()->getName());
+        $this->assertEquals($first->getName(), $third->getPrevious()->getName());
+        $this->assertEquals($second->getName(), $first->getPrevious()->getName());
+        $this->assertEquals($third->getName(), $first->getNext()->getName());
         $this->assertEquals(null, $second->getPrevious());
         $this->manager->insertBefore($first);
-        $this->assertEquals($first, $fourth->getNext());
-        $this->assertEquals($fourth, $first->getPrevious());
+        $this->assertEquals($first->getName(), $fourth->getNext()->getName());
+        $this->assertEquals($fourth->getName(), $first->getPrevious()->getName());
         $this->assertEquals(null, $first->getNext());
+        $this->assertEquals($third->getName(), $second->getNext()->getName());
         $this->manager->insertBefore($first, $second);
         $this->assertEquals(null, $first->getPrevious());
-        $this->assertEquals($second, $first->getNext());
-        $this->assertEquals($first, $second->getPrevious());
+        $this->assertEquals($second->getName(), $first->getNext()->getName());
+        $this->assertEquals($first->getName(), $second->getPrevious()->getName());
+        $this->assertEquals($third->getName(), $second->getNext()->getName());
     }
 
     public function testIsPathValid()

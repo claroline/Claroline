@@ -32,6 +32,7 @@ class ResourceController extends Controller
      *
      * @param string $resourceType the resource type
      *
+     * @throws \Exception
      * @return Response
      */
     public function creationFormAction($resourceType)
@@ -61,6 +62,7 @@ class ResourceController extends Controller
      * @param string  $resourceType the resource type
      * @param integer $parentId     the parent id
      *
+     * @throws \Exception
      * @return Response
      */
     public function createAction($resourceType, $parentId)
@@ -202,6 +204,9 @@ class ResourceController extends Controller
      * of parameters which are the ids of the moved resources
      * (query string: "ids[]=1&ids[]=2" ...).
      *
+     * @param $newParentId
+     *
+     * @throws \RuntimeException
      * @return Response
      */
     public function moveAction($newParentId)
@@ -259,10 +264,11 @@ class ResourceController extends Controller
      * Handles any custom action (i.e. not defined in this controller) on a
      * resource of a given type.
      *
-     * @param string $resourceType the resource type
-     * @param string $action       the action
-     * @param integer $resourceId  the resourceId
+     * @param string  $resourceType the resource type
+     * @param string  $action       the action
+     * @param integer $resourceId   the resourceId
      *
+     * @throws \Exception
      * @return Response
      */
     public function customAction($resourceType, $action, $resourceId)
@@ -373,14 +379,24 @@ class ResourceController extends Controller
         $directoryId = (integer) $directoryId;
         $currentRoles = $this->get('claroline.security.utilities')
             ->getRoles($this->get('security.context')->getToken());
+        $canChangePosition = false;
 
         if ($directoryId === 0) {
             $resources = $resourceRepo->findWorkspaceRootsByUser($user);
+            $isRoot = true;
+            $workspaceId = 0;
         } else {
+            $isRoot = false;
             $directory = $this->getResource($resourceRepo->find($directoryId));
 
             if (null === $directory || !$directory instanceof Directory) {
                 throw new Exception("Cannot find any directory with id '{$directoryId}'");
+            }
+
+            $workspaceId = $directory->getWorkspace()->getId();
+
+            if ($user == $directory->getCreator()) {
+                $canChangePosition = true;
             }
 
             $path = $resourceRepo->findAncestors($directory);
@@ -406,7 +422,10 @@ class ResourceController extends Controller
                 array(
                     'path' => $path,
                     'creatableTypes' => $creatableTypes,
-                    'resources' => $resources
+                    'resources' => $resources,
+                    'canChangePosition' => $canChangePosition,
+                    'workspace_id' => $workspaceId,
+                    'is_root' => $isRoot
                 )
             )
         );
@@ -478,6 +497,7 @@ class ResourceController extends Controller
      *
      * @param integer $directoryId The id of the directory from which the search was started
      *
+     * @throws \Exception
      * @return Response
      */
     public function filterAction($directoryId)
@@ -502,7 +522,7 @@ class ResourceController extends Controller
 
         $token = $this->get('security.context')->getToken();
         $userRoles = $this->get('claroline.security.utilities')->getRoles($token);
-        $resources = $resourceRepo->findByCriteria($criteria, $userRoles);
+        $resources = $resourceRepo->findByCriteria($criteria, $userRoles, true);
         $response = new Response(json_encode(array('resources' => $resources, 'path' => $path)));
         $response->headers->set('Content-Type', 'application/json');
 
@@ -561,6 +581,7 @@ class ResourceController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $roles = $em->getRepository('ClarolineCoreBundle:Role')->findByWorkspaceCode($code);
         $arWorkspace = array();
+
         foreach ($roles as $role) {
             $arWorkspace[$role->getWorkspace()->getCode()][$role->getName()] = array(
                 'name' => $role->getName(),
@@ -582,29 +603,81 @@ class ResourceController extends Controller
         $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($resourceId);
 
         $ancestors = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->findResourcesByIds($_breadcrumbs);
+            ->findAncestors($resource);
 
-        if (count($ancestors) === 0) {
-            $ancestors = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-                ->findAncestors($resource);
+        $breadcrumbsAncestors = array();
+
+        if (count($_breadcrumbs) > 0) {
+            $breadcrumbsAncestors = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+                ->findResourcesByIds($_breadcrumbs);
+            $breadcrumbsAncestors[] = $resource;
+
+            if ($_breadcrumbs[0] != 0) {
+                $rootId = $_breadcrumbs[0];
+            } else {
+                $rootId = $_breadcrumbs[1];
+            }
+
+            $workspaceId = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+            ->find($rootId)->getWorkspace()->getId();
+        }
+
+        //this condition is wrong
+        if (count($breadcrumbsAncestors) === 0) {
+
             $_breadcrumbs = array();
+
             foreach ($ancestors as $ancestor) {
                 $_breadcrumbs[] = $ancestor['id'];
             }
-            $ancestors = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+
+            $breadcrumbsAncestors = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
                 ->findResourcesByIds($_breadcrumbs);
-        } else {
-            array_push($ancestors, $resource);
         }
 
-        if (!$this->get('claroline.resource.manager')->isPathValid($ancestors)) {
+        if (!$this->get('claroline.resource.manager')->isPathValid($breadcrumbsAncestors, false)) {
             throw new \Exception('Breadcrumbs invalid');
         };
 
         return $this->render(
             'ClarolineCoreBundle:Resource:breadcrumbs.html.twig',
-            array('ancestors' => $ancestors, 'workspaceId' => $workspaceId)
+            array('ancestors' => $breadcrumbsAncestors, 'workspaceId' => $workspaceId)
         );
+    }
+
+    /**
+     * @Route(
+     *     "/sort/{resourceId}/next/{nextId}",
+     *     name="claro_resource_insert_before",
+     *     options={"expose"=true}
+     * )
+     *
+     * @param type $resourceId
+     * @param type $nextId
+     *
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function insertBefore($resourceId, $nextId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $repo = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
+        $resource = $repo->find($resourceId);
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        if ($user !== $resource->getParent()->getCreator()) {
+            throw new AccessDeniedException();
+        }
+
+        $next = $repo->find($nextId);
+
+        if ($next !== null) {
+            $this->get('claroline.resource.manager')->insertBefore($resource, $next);
+        } else {
+            $this->get('claroline.resource.manager')->insertBefore($resource);
+        }
+
+        return new Response('success', 204);
     }
 
     private function getResource($resource)

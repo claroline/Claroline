@@ -1,4 +1,6 @@
 (function () {
+    'use strict';
+
     var env = $('#sf-environement').attr('data-env');
     var stackedRequests = 0;
     var ajaxServerErrorHandler = function (html) {
@@ -13,7 +15,7 @@
         $('#ajax-login-validation-box-body').append(form);
         $('#ajax-login-modal').modal('show');
         $('#login-form').submit(function (e) {
-            var $this = $(e.currentTarget)
+            var $this = $(e.currentTarget);
             var inputs = {};
             e.preventDefault();
 
@@ -37,7 +39,7 @@
                 }
             });
         });
-    }
+    };
 
     $('body').bind('ajaxSend', function () {
         stackedRequests++;
@@ -51,15 +53,15 @@
     });
 
     $(document).ajaxError(function (event, jqXHR) {
-        if (jqXHR.status == 403) {
+        if (jqXHR.status === 403) {
             ajaxAuthenticationErrorHandler(jqXHR.responseText);
-        } else if (jqXHR.status == 500) {
+        } else if (jqXHR.status === 500) {
             ajaxServerErrorHandler(jqXHR.responseText);
         }
     });
 
     //Change this to a compile-time function.
-    Twig.setFunction('path', function(route, parameters){
+    Twig.setFunction('path', function (route, parameters) {
         return Routing.generate(route, parameters);
-    })
+    });
 })();
