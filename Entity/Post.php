@@ -97,6 +97,7 @@ class Post implements TaggableInterface
      * @var User $author
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     * @ORM\Column(type="integer", name="user_id")
      */
     private $author;
 

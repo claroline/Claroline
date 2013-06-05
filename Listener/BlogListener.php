@@ -6,8 +6,10 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Library\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
 use ICAP\BlogBundle\Form;
 use ICAP\BlogBundle\Entity;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class BlogListener extends ContainerAware
 {
@@ -50,6 +52,21 @@ class BlogListener extends ContainerAware
             );
             $event->setErrorFormContent($content);
         }
+        $event->stopPropagation();
+    }
+
+    /**
+     * @param OpenResourceEvent $event
+     */
+    public function onOpen(OpenResourceEvent $event)
+    {
+        $route = $this->container
+            ->get('router')
+            ->generate(
+                'icap_blog_view',
+                array('blogId' => $event->getResource()->getId())
+            );
+        $event->setResponse(new RedirectResponse($route));
         $event->stopPropagation();
     }
 }

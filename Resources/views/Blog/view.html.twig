@@ -1,0 +1,40 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% trans_default_domain "icap_blog" %}
+
+{% block section_content %}
+    <p>
+        <a href="#">
+            <button class="btn">{{ 'new_article'|trans() }}</button>
+        </a>
+    </p>
+    {% for post in posts %}
+    <article>
+
+    </article>
+    {% else %}
+    <li>{{ 'no_article'|trans() }}</li>
+    {% endfor %}
+    {% if pager.haveToPaginate %}
+    <div>
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'icap_blog_view',
+                    'routeParams': {'blogId': _resource.getId()}
+                }
+            )
+        }}
+    </div>
+    {%  endif %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets %}
+        <link rel="stylesheet" type="text/css" href="{{ asset('bundles/icapblog/css/blog_view.css') }}"/>
+    {% endstylesheets %}
+{% endblock %}

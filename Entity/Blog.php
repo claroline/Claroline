@@ -16,13 +16,6 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 class Blog extends AbstractResource
 {
     /**
-     * @var string $name
-     *
-     * @ORM\Column(type="string")
-     */
-    protected $name;
-
-    /**
      * @var Post[]
      *
      * @ORM\OneToMany(
@@ -36,7 +29,6 @@ class Blog extends AbstractResource
     public function __construct()
     {
         $this->posts  = new ArrayCollection();
-        $this->author = new User();
     }
 
     /**
@@ -52,32 +44,10 @@ class Blog extends AbstractResource
     }
 
     /**
-     * @return Post[]
+     * @return \Doctrine\Common\Collections\Collection|Post[]
      */
     public function getPosts()
     {
         return $this->posts;
     }
-
-    /**
-     * @param string $name
-     *
-     * @return Blog
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-
 }
