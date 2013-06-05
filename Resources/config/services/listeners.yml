@@ -1,0 +1,8 @@
+services:
+  claroline.listener.blog_listener:
+    class: ICAP\BlogBundle\Listener\BlogListener
+    calls:
+      - [setContainer, ["@service_container"]]
+    tags:
+      - { name: kernel.event_listener, event: create_form_icap_blog, method: onCreateForm }
+      - { name: kernel.event_listener, event: create_icap_blog, method: onCreate }

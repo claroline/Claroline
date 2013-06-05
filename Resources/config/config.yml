@@ -1,0 +1,10 @@
+plugin:
+  has_options: true
+  icon: icap_blog_icon_mini.png
+
+  resources:
+    - class: ICAP\BlogBundle\Entity\Blog
+      name: icap_blog
+      is_browsable: false
+      is_exportable: false
+      icon: icap_blog_icon.png
