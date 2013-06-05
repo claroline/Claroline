@@ -32,6 +32,7 @@ class ResourceController extends Controller
      *
      * @param string $resourceType the resource type
      *
+     * @throws \Exception
      * @return Response
      */
     public function creationFormAction($resourceType)
@@ -61,6 +62,7 @@ class ResourceController extends Controller
      * @param string  $resourceType the resource type
      * @param integer $parentId     the parent id
      *
+     * @throws \Exception
      * @return Response
      */
     public function createAction($resourceType, $parentId)
@@ -202,6 +204,9 @@ class ResourceController extends Controller
      * of parameters which are the ids of the moved resources
      * (query string: "ids[]=1&ids[]=2" ...).
      *
+     * @param $newParentId
+     *
+     * @throws \RuntimeException
      * @return Response
      */
     public function moveAction($newParentId)
@@ -259,10 +264,11 @@ class ResourceController extends Controller
      * Handles any custom action (i.e. not defined in this controller) on a
      * resource of a given type.
      *
-     * @param string $resourceType the resource type
-     * @param string $action       the action
-     * @param integer $resourceId  the resourceId
+     * @param string  $resourceType the resource type
+     * @param string  $action       the action
+     * @param integer $resourceId   the resourceId
      *
+     * @throws \Exception
      * @return Response
      */
     public function customAction($resourceType, $action, $resourceId)
@@ -491,6 +497,7 @@ class ResourceController extends Controller
      *
      * @param integer $directoryId The id of the directory from which the search was started
      *
+     * @throws \Exception
      * @return Response
      */
     public function filterAction($directoryId)
@@ -647,6 +654,9 @@ class ResourceController extends Controller
      *
      * @param type $resourceId
      * @param type $nextId
+     *
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function insertBefore($resourceId, $nextId)
     {
