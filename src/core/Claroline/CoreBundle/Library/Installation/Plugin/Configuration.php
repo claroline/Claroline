@@ -189,16 +189,16 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('name')
                           ->isRequired()
                             ->validate()
-                                    ->ifTrue(
-                                        function ($v) use ($tools) {
-                                            return !call_user_func_array(
-                                                __CLASS__ . '::isNameAlreadyExist',
-                                                array($v, $tools)
-                                            );
-                                        }
-                                    )
-                                    ->thenInvalid($pluginFqcn . " : the tool name already exists")
-                                ->end()
+                                ->ifTrue(
+                                    function ($v) use ($tools) {
+                                        return !call_user_func_array(
+                                            __CLASS__ . '::isNameAlreadyExist',
+                                            array($v, $tools)
+                                        );
+                                    }
+                                )
+                                ->thenInvalid($pluginFqcn . " : the tool name already exists")
+                            ->end()
                         ->end()
                         ->booleanNode('is_displayable_in_workspace')->isRequired()->end()
                         ->booleanNode('is_displayable_in_desktop')->isRequired()->end()

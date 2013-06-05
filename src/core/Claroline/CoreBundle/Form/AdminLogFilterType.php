@@ -19,25 +19,25 @@ class AdminLogFilterType extends AbstractType
                     'choices' => array(
                         'all' => 'all',
                         'group' => array(
-                            "'group_all'" => 'all',
-                            "'group_create'" => 'log_create',
-                            "'group_delete'" => 'log_delete',
-                            "'group_update'" => 'log_update',
-                            "'group_add_user'" => 'log_add_user',
-                            "'group_remove_user'" => 'log_remove_user'
+                            'group_all' => 'all',
+                            'group_create' => 'log_create',
+                            'group_delete' => 'log_delete',
+                            'group_update' => 'log_update',
+                            'group_add_user' => 'log_add_user',
+                            'group_remove_user' => 'log_remove_user'
                         ),
                         'user' => array(
-                            "'user_all'" => 'all',
-                            "'user_create'" => 'log_create',
-                            "'user_delete'" => 'log_delete',
-                            "'user_update'" => 'log_update',
-                            "'user_login'" => 'log_login'
+                            'user_all' => 'all',
+                            'user_create' => 'log_create',
+                            'user_delete' => 'log_delete',
+                            'user_update' => 'log_update',
+                            'user_login' => 'log_login'
                         ),
                         'workspace' => array(
-                            "'workspace_all'" => 'all',
-                            "'workspace_create'" => 'log_create',
-                            "'workspace_delete'" => 'log_delete',
-                            "'workspace_update'" => 'log_update'
+                            'workspace_all' => 'all',
+                            'workspace_create' => 'log_create',
+                            'workspace_delete' => 'log_delete',
+                            'workspace_update' => 'log_update'
                         )
                     )
                 )
