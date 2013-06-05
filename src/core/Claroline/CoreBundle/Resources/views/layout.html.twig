@@ -3,11 +3,17 @@
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 
 {% block stylesheets %}
-    {% include "ClarolineCoreBundle:less:" ~ config.getParameter('theme') ~ "/theme.html.twig" %}
+
+    {% if config.getParameter('theme') != '' %}
+        {% include config.getParameter('theme') %}
+    {% endif %}
+
     {% stylesheets debug=false filter='lessphp'  output='bundles/clarolinecore/css/font-awesome.css'
     '../vendor/fortawesome/fontawesome/build/assets/font-awesome/less/font-awesome.less'
-    %}<link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
     {% endstylesheets %}
+
     {% image debug=false output='bundles/clarolinecore/font/FontAwesome.otf'
         '../vendor/fortawesome/fontawesome/build/assets/font-awesome/font/FontAwesome.otf' %}
     {% endimage %}
@@ -27,6 +33,7 @@
     {% image debug=false output='bundles/clarolinecore/font/fontawesome-webfont.woff'
         '../vendor/fortawesome/fontawesome/build/assets/font-awesome/font/fontawesome-webfont.woff' %}
     {% endimage %}
+
 {% endblock %}
 
 {% block javascripts_header %}

@@ -2,18 +2,18 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Claroline\CoreBundle\Form\WorkspaceType;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Claroline\CoreBundle\Form\WorkspaceType;
+use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceToolReadEvent;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceDeleteEvent;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 /**
  * This controller is able to:
@@ -35,23 +35,17 @@ class WorkspaceController extends Controller
      *
      * Renders the workspace list page with its claroline layout.
      *
-     * @throws AccessDeniedHttpException
-     *
      * @return Response
      */
     public function listAction()
     {
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            throw new AccessDeniedException();
-        }
-
+        $this->assertIsGranted('ROLE_USER');
         $em = $this->get('doctrine.orm.entity_manager');
         $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)->findNonPersonal();
         $tags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
             ->findNonEmptyAdminTags();
         $relTagWorkspace = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
             ->findByAdmin();
-
         $tagWorkspaces = array();
 
         // create an array: tagId => [associated_workspace_relation]
@@ -141,16 +135,11 @@ class WorkspaceController extends Controller
      *
      * Renders the registered workspace list for a user.
      *
-     * @throws AccessDeniedHttpException
-     *
      * @return Response
      */
     public function listWorkspacesByUserAction()
     {
-        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
-            throw new AccessDeniedException();
-        }
-
+        $this->assertIsGranted('ROLE_USER');
         $em = $this->get('doctrine.orm.entity_manager');
         $token = $this->get('security.context')->getToken();
         $user = $token->getUser();
@@ -197,10 +186,7 @@ class WorkspaceController extends Controller
      */
     public function creationFormAction()
     {
-        if (false === $this->get('security.context')->isGranted('ROLE_WS_CREATOR')) {
-            throw new AccessDeniedException();
-        }
-
+        $this->assertIsGranted('ROLE_WS_CREATOR');
         $form = $this->get('form.factory')
             ->create(new WorkspaceType());
 
@@ -220,15 +206,10 @@ class WorkspaceController extends Controller
      * @Method("POST")
      *
      * @return RedirectResponse
-     *
-     * @throws AccessDeniedHttpException
      */
     public function createAction()
     {
-        if (false === $this->get('security.context')->isGranted('ROLE_WS_CREATOR')) {
-            throw new AccessDeniedException();
-        }
-
+        $this->assertIsGranted('ROLE_WS_CREATOR');
         $form = $this->get('form.factory')
             ->create(new WorkspaceType());
         $form->bind($this->getRequest());
@@ -270,19 +251,13 @@ class WorkspaceController extends Controller
      *
      * @param integer $workspaceId
      *
-     * @return RedirectResponse
-     *
-     * @throws AccessDeniedHttpException
+     * @return Response
      */
     public function deleteAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
-
-        if (false === $this->get('security.context')->isGranted("DELETE", $workspace)) {
-            throw new AccessDeniedException();
-        }
-
+        $this->assertIsGranted('DELETE', $workspace);
         $log = new LogWorkspaceDeleteEvent($workspace);
         $this->get('event_dispatcher')->dispatch('log', $log);
         $em->remove($workspace);
@@ -294,15 +269,31 @@ class WorkspaceController extends Controller
     /**
      * Renders the left tool bar. Not routed.
      *
-     * @param type $workspaceId
+     * @param $_workspace
      *
      * @return Response
      */
-    public function renderToolListAction($workspaceId)
+    public function renderToolListAction($workspaceId, $_breadcrumbs)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
-            ->find($workspaceId);
+
+        if ($_breadcrumbs != null) {
+            //for manager.js, id = 0 => "no root".
+            if ($_breadcrumbs[0] != 0) {
+                $rootId = $_breadcrumbs[0];
+            } else {
+                $rootId = $_breadcrumbs[1];
+            }
+            $workspace = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+                ->find($rootId)->getWorkspace();
+        } else {
+            $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
+                ->find($workspaceId);
+        }
+
+        if (!$this->get('security.context')->isGranted('OPEN', $workspace)) {
+            throw new AccessDeniedException();
+        }
 
         $currentRoles = $this->get('claroline.security.utilities')
             ->getRoles($this->get('security.context')->getToken());
@@ -317,6 +308,7 @@ class WorkspaceController extends Controller
         foreach ($tools as $tool) {
             $toolWithTranslation['tool'] = $tool;
             $found = false;
+
             foreach ($workspaceOrderTools as $workspaceOrderedTool) {
                 if ($workspaceOrderedTool->getTool() === $tool) {
                     $toolWithTranslation['name'] = $workspaceOrderedTool->getName();
@@ -357,11 +349,7 @@ class WorkspaceController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
             ->find($workspaceId);
-
-        if (false === $this->get('security.context')->isGranted($toolName, $workspace)) {
-            throw new AccessDeniedException();
-        }
-
+        $this->assertIsGranted($toolName, $workspace);
         $event = new DisplayToolEvent($workspace);
         $eventName = 'open_tool_workspace_'.$toolName;
         $this->get('event_dispatcher')->dispatch($eventName, $event);
@@ -378,7 +366,6 @@ class WorkspaceController extends Controller
         return new Response($event->getContent());
     }
 
-    //todo dql for this
     /**
      * @Route(
      *     "/{workspaceId}/widgets",
@@ -388,12 +375,16 @@ class WorkspaceController extends Controller
      *
      * Display registered widgets.
      *
-     * @param $workspaceId the workspace id
+     * @param integer $workspaceId
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @todo Reduce the number of sql queries for this action (-> dql)
      */
     public function widgetsAction($workspaceId)
     {
+        // No right checking is done : security is delegated to each widget renderer
+        // Is that a good idea ?
         $responsesString = '';
         $configs = $this->get('claroline.widget.manager')
             ->generateWorkspaceDisplayConfig($workspaceId);
@@ -476,5 +467,12 @@ class WorkspaceController extends Controller
         );
 
         return new RedirectResponse($route);
+    }
+
+    private function assertIsGranted($attributes, $object = null)
+    {
+        if (false === $this->get('security.context')->isGranted($attributes, $object)) {
+            throw new AccessDeniedException();
+        }
     }
 }

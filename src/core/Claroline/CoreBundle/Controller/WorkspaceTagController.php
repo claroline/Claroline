@@ -12,7 +12,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-
+use JMS\SecurityExtraBundle\Annotation\Secure;
+use Claroline\CoreBundle\Form\WorkspaceTagType;
+use Claroline\CoreBundle\Form\AdminWorkspaceTagType;
+use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
+use Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag;
 
 class WorkspaceTagController extends Controller
 {
@@ -24,6 +28,7 @@ class WorkspaceTagController extends Controller
      *     name="claro_workspace_manage_tag"
      * )
      * @Method("GET")
+     * @Secure(roles="ROLE_USER")
      *
      * Display a table showing tags associated to user's workspaces
      *
@@ -34,7 +39,6 @@ class WorkspaceTagController extends Controller
         if (!$this->get('security.context')->isGranted('ROLE_USER')) {
             throw new AccessDeniedException();
         }
-
         $em = $this->get('doctrine.orm.entity_manager');
         $user = $this->get('security.context')->getToken()->getUser();
         $tags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
@@ -73,6 +77,7 @@ class WorkspaceTagController extends Controller
      *     name="claro_workspace_manage_admin_tag"
      * )
      * @Method("GET")
+     * @Secure(roles="ADMIN")
      *
      * Display a table showing tags associated to user's workspaces
      *
@@ -83,7 +88,6 @@ class WorkspaceTagController extends Controller
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
-
         $em = $this->get('doctrine.orm.entity_manager');
         $user = $this->get('security.context')->getToken()->getUser();
         $tags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
@@ -121,6 +125,7 @@ class WorkspaceTagController extends Controller
      *     name="claro_workspace_tag_create_form"
      * )
      * @Method("GET")
+     * @Secure(roles="ROLE_USER")
      *
      * Renders the Tag creation form
      *
@@ -131,7 +136,6 @@ class WorkspaceTagController extends Controller
         if (!$this->get('security.context')->isGranted('ROLE_USER')) {
             throw new AccessDeniedException();
         }
-
         $user = $this->get('security.context')->getToken()->getUser();
         $workspaceTag = new WorkspaceTag();
         $workspaceTag->setUser($user);
@@ -149,6 +153,7 @@ class WorkspaceTagController extends Controller
      *     name="claro_workspace_admin_tag_create_form"
      * )
      * @Method("GET")
+     * @Secure(roles="ROLE_ADMIN")
      *
      * Renders the Tag creation form
      *
@@ -159,7 +164,6 @@ class WorkspaceTagController extends Controller
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
-
         $workspaceTag = new WorkspaceTag();
         $workspaceTag->setUser(null);
         $form = $this->createForm(new AdminWorkspaceTagType(), $workspaceTag);
@@ -176,6 +180,7 @@ class WorkspaceTagController extends Controller
      *     name="claro_workspace_tag_create"
      * )
      * @Method("POST")
+     * @Secure(roles="ROLE_USER")
      *
      * Creates a new Tag
      *
@@ -188,7 +193,6 @@ class WorkspaceTagController extends Controller
         if (!$this->get('security.context')->isGranted('ROLE_USER')) {
             throw new AccessDeniedException();
         }
-
         $user = $this->get('security.context')->getToken()->getUser();
 
         if ($user->getId() != $userId) {
@@ -230,6 +234,7 @@ class WorkspaceTagController extends Controller
      *     name="claro_workspace_admin_tag_create"
      * )
      * @Method("POST")
+     * @Secure(roles="ROLE_ADMIN")
      *
      * Creates a new Tag
      *
@@ -240,7 +245,6 @@ class WorkspaceTagController extends Controller
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
-
         $em = $this->get('doctrine.orm.entity_manager');
         $workspaceTag = new WorkspaceTag();
         $workspaceTag->setUser(null);
@@ -277,6 +281,7 @@ class WorkspaceTagController extends Controller
      *     options={"expose"=true}
      * )
      * @Method("POST")
+     * @Secure(roles="ROLE_USER")
      *
      * Add Tag to Workspace
      *
@@ -291,7 +296,6 @@ class WorkspaceTagController extends Controller
         if (!$this->get('security.context')->isGranted('ROLE_USER')) {
             throw new AccessDeniedException();
         }
-
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
@@ -333,13 +337,14 @@ class WorkspaceTagController extends Controller
         return new Response('success', 204);
     }
 
-        /**
+    /**
      * @Route(
      *     "/workspace/{workspaceId}/tag/add/{tagName}",
      *     name="claro_workspace_admin_tag_add",
      *     options={"expose"=true}
      * )
      * @Method("POST")
+     * @Secure(roles="ROLE_ADMIN")
      *
      * Add Tag to Workspace
      *
@@ -353,7 +358,6 @@ class WorkspaceTagController extends Controller
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
-
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
@@ -399,6 +403,7 @@ class WorkspaceTagController extends Controller
      *     options={"expose"=true}
      * )
      * @Method("DELETE")
+     * @Secure(roles="ROLE_USER")
      *
      * Remove Tag from Workspace
      *
@@ -421,7 +426,7 @@ class WorkspaceTagController extends Controller
 
         if (!$this->get('security.context')->isGranted('ROLE_USER')
             || $user->getId() !== $workspaceTag->getUser()->getId()
-            || $user->getId() != $userId) {
+            || $user->getId() !== (int) $userId) {
             throw new AccessDeniedException();
         }
 
@@ -440,6 +445,7 @@ class WorkspaceTagController extends Controller
      *     options={"expose"=true}
      * )
      * @Method("DELETE")
+     * @Secure(roles="ROLE_ADMIN")
      *
      * Remove admin Tag from Workspace
      *

@@ -9,7 +9,10 @@ use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 
 /*
- * Copied from the Sf2 AnonymousAuthenticationListener
+ * Populates the anonymous token with a dedicated role.
+ *
+ * This listener is not directly defined as a service as it only serves as a
+ * replacement class for the Symfony original one (see app/config.yml).
  */
 class AnonymousAuthenticationListener implements ListenerInterface
 {

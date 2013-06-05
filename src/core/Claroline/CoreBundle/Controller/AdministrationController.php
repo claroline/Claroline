@@ -683,19 +683,16 @@ class AdministrationController extends Controller
      */
     private function getThemes($path = "/../Resources/views/less/")
     {
-        $themes = array();
+        $tmp = array();
 
-        if ($handle = opendir(__DIR__.$path)) {
-            while (false !== ($entry = readdir($handle))) {
-                if (strpos($entry, ".") !== 0) {
-                    $themes[$entry] = "$entry";
-                }
-            }
+        $manager = $this->getDoctrine()->getManager();
+        $themes = $manager->getRepository("ClarolineCoreBundle:Theme\Theme")->findAll();
 
-            closedir($handle);
+        foreach ($themes as $theme) {
+            $tmp[$theme->getPath()] = $theme->getName();
         }
 
-        return $themes;
+        return $tmp;
     }
 
     /**

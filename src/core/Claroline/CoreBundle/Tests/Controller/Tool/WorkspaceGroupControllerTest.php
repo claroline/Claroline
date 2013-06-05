@@ -347,17 +347,6 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
             $grAId
         );
         $this->assertEquals(0, count($removeGroupFromManager));
-
-        $addGroupToCollaboratorLogs = $this->logRepository->findActionAfterDate(
-            'ws_role_subscribe_group',
-            $now,
-            $adminId,
-            null,
-            $wsAId,
-            null,
-            $collaboratorRoleId,
-            $grAId
-        );
         $this->assertEquals(1, count($addGroupToManagerLogs));
     }
 
@@ -425,6 +414,41 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         );
 
         $this->assertEquals(1, count($crawler->filter('.row-group')));
+    }
+
+    //555555555555555555555555555555555555
+    //+++++++++++++++++++++++++++++++++++/
+    // TEST ANONYMOUS USER RESTRICTIONS +/
+    //+++++++++++++++++++++++++++++++++++/
+
+    public function testAnonymousAccessToUserToolIsReadonly()
+    {
+        $this->loadUserData(array('john' => 'user'));
+        $wId = $this->getUser('john')->getPersonalWorkspace()->getId();
+        $tId = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool')
+            ->findOneByName('group_management')
+            ->getId();
+        $rId = $this->em->getRepository('ClarolineCoreBundle:Role')
+            ->findOneByName('ROLE_ANONYMOUS')
+            ->getId();
+        $this->logUser($this->getUser('john'));
+        $this->client->request(
+            'POST',
+            "/workspaces/tool/properties/add/tool/{$tId}/position/1/workspace/{$wId}/role/{$rId}"
+        );
+        $this->client->request('GET', '/logout');
+
+        $this->client->request(
+            'GET',
+            "/workspaces/tool/group_management/{$wId}/groups/registered/page"
+        );
+        $this->assertNotContains('login-form', $this->client->getResponse()->getContent());
+        $this->client->request(
+            'GET',
+            "/workspaces/tool/group_management/{$wId}/groups/unregistered/page"
+        );
+        $this->assertContains('login-form', $this->client->getResponse()->getContent());
+        // todo : also test add/remove/edit routes
     }
 
     private function addGroupAToWsA()

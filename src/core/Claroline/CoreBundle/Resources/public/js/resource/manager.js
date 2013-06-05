@@ -4,6 +4,7 @@
 /* global ResourceManagerFilters */
 /* global ResourceManagerThumbnail */
 /* global ResourceManagerResults */
+/* global resourceRightsRoles */
 
 (function () {
     'use strict';
@@ -32,7 +33,6 @@
                     actions: new manager.Views.Actions(parameters, dispatcher),
                     resources: new manager.Views.Resources(parameters, dispatcher)
                 };
-
             },
             render: function (resources, path, creatableTypes, isSearchMode, searchParameters) {
                 this.currentDirectory = _.last(path);
@@ -44,7 +44,7 @@
                     var index = -1;
 
                     for (var i = 0; i < this.parameters.directoryHistory.length; i++) {
-                        if (this.parameters.directoryHistory[i].id == this.currentDirectory.id) {
+                        if (this.parameters.directoryHistory[i].id === this.currentDirectory.id) {
                             index = i;
                         }
                     }
@@ -63,18 +63,23 @@
                         }
 
                     } else {
-                        if (index == -1) {
+                        if (index === -1) {
                         //if the directory isn't in the breadcrumbs yet'
                             this.parameters.directoryHistory.push(this.currentDirectory);
                         } else {
-                            this.parameters.directoryHistory.splice(index+1);
+                            this.parameters.directoryHistory.splice(index + 1);
                         }
                     }
                 }
 
                 this.subViews.breadcrumbs.render(this.parameters.directoryHistory);
                 this.subViews.actions.render(this.currentDirectory, creatableTypes, isSearchMode, searchParameters);
-                this.subViews.resources.render(resources, isSearchMode, this.currentDirectory.id, this.directoryHistory);
+                this.subViews.resources.render(
+                    resources,
+                    isSearchMode,
+                    this.currentDirectory.id,
+                    this.directoryHistory
+                );
 
                 if (!this.subViews.areAppended) {
                     this.wrapper.append(
@@ -206,6 +211,9 @@
                     }
 
                     this.dispatcher.trigger('picker', {action: 'close'});
+                },
+                'click a.filter-result': function (event) {
+                    this.dispatcher.trigger('filter-result', {action: $(event.currentTarget).attr('data-type')});
                 }
             },
             filter: function () {
@@ -370,7 +378,8 @@
             }
         }),
         Thumbnail: Backbone.View.extend({
-            className: 'resource-thumbnail resource zoom100',
+            className: 'resource-thumbnail resource zoom100 ui-state-default',
+            tagName: 'li',
             events: {
                 'click .resource-menu-action': function (event) {
                     event.preventDefault();
@@ -407,10 +416,12 @@
         }),
         Resources: Backbone.View.extend({
             className: 'resources',
+            tagName: 'ul',
+            attributes: {'id': 'sortable'},
             events: {
-                'click .resource-thumbnail .resource-element': 'dispatchClick',
+                'dblclick .resource-thumbnail .resource-element': 'dispatchOpen',
                 'click .resource-thumbnail input[type=checkbox]': 'dispatchCheck',
-                'click .results table a.resource-link': 'dispatchClick',
+                'click .results table a.resource-link': 'dispatchOpen',
                 'click .results table input[type=checkbox]': 'dispatchCheck'
             },
             initialize: function (parameters, dispatcher) {
@@ -451,7 +462,7 @@
                     this.$('#' + resourceIds[i]).remove();
                 }
             },
-            dispatchClick: function (event) {
+            dispatchOpen: function (event) {
                 event.preventDefault();
                 this.dispatcher.trigger('resource-click', {
                     resourceId: event.currentTarget.getAttribute('data-id'),
@@ -533,7 +544,7 @@
                         });
                     }
                 },
-                'click .search-role-btn':function (event) {
+                'click .search-role-btn': function (event) {
                     event.preventDefault();
                     var search = $('#role-search-text').val();
                     $.ajax({
@@ -544,11 +555,14 @@
                         contentType: false,
                         success: function (workspaces) {
                             $('#form-right-wrapper').empty();
-                            $('#role-list').append(Twig.render(resourceRightsRoles, {'workspaces': workspaces, 'resourceId': this.targetResourceId}));
+                            $('#role-list').empty();
+                            $('#role-list').append(Twig.render(resourceRightsRoles,
+                                {'workspaces': workspaces, 'resourceId': this.targetResourceId})
+                            );
                         }
-                    })
+                    });
                 },
-                'click .role-item':function (event) {
+                'click .role-item': function (event) {
                     event.preventDefault();
                     $.ajax({
                         context: this,
@@ -560,11 +574,11 @@
                             $('#role-list').empty();
                             $('#form-right-wrapper').append(form);
                         }
-                    })
+                    });
                 },
-                'click #submit-right-form-button': function(event) {
+                'click #submit-right-form-button': function (event) {
                     event.preventDefault();
-                    var form = $(this.el).find('form')[1]
+                    var form = $(this.el).find('form')[1];
                     var data = new FormData(form);
                     $.ajax({
                         url: form.getAttribute('action'),
@@ -671,6 +685,7 @@
                 }
             },
             'resource-click': function (event) {
+
                 if (event.isPickerMode) {
                     if (event.resourceType === 'directory') {
                         this.displayResources(event.resourceId, 'picker');
@@ -705,6 +720,10 @@
             },
             'edit-rights-creation': function (event) {
                 this.editCreationRights(event.action, event.data);
+            },
+            'filter-result': function (event) {
+                this.setFilterState(event.action);
+                this.parameters.filterState = event.action;
             }
         },
         initialize: function (parameters) {
@@ -736,10 +755,21 @@
                 }
             }
         },
+        setFilterState: function(type) {
+            $('.resource-thumbnail').show();
+            if (type !== 'none') {
+                $.each($('.resource-element'), function(key, element) {
+                    if ($(element).attr('data-type') !== type && $(element).attr('data-type') !== 'directory') {
+                        $(element.parentElement).hide();
+                    }
+                });
+            }
+        },
         displayResources: function (directoryId, view, searchParameters) {
             directoryId = directoryId || 0;
             view = view && view === 'picker' ? view : 'main';
             var isSearchMode = searchParameters ? true : false;
+
             $.ajax({
                 context: this,
                 url: this.parameters.appPath + '/resource/' +
@@ -747,6 +777,7 @@
                     '/' + directoryId,
                 data: searchParameters || {},
                 success: function (data) {
+
                     if (isSearchMode) {
                         data.creatableTypes = {};
                     }
@@ -760,13 +791,50 @@
                         data.path,
                         data.creatableTypes,
                         isSearchMode,
-                        searchParameters
+                        searchParameters,
+                        data.is_root,
+                        data.workspace_id
                     );
 
                     if (!this.views[view].isAppended) {
                         this.parameters.parentElement.append(this.views[view].el);
                         this.views[view].isAppended = true;
                     }
+
+                    $('#sortable').sortable({
+                        update: function (event, ui) {
+                            var ids = $('#sortable').sortable('toArray');
+                            var moved = ui.item.attr('id');
+                            var indexMoved = 0;
+
+                            for (var i = 0; i < ids.length; i++) {
+                                if (ids[i] === moved) {
+                                    indexMoved = i;
+                                }
+                            }
+
+                            var nextId = 0;
+
+                            if (indexMoved + 1 !== ids.length) {
+                                nextId = ids[indexMoved + 1];
+                            }
+
+                            $.ajax({
+                                url: Routing.generate(
+                                    'claro_resource_insert_before',
+                                    {'resourceId': moved, 'nextId': nextId}
+                                )
+                            });
+                        }
+                    });
+
+                    if (!data.canChangePosition) {
+                        $('#sortable').sortable('disable');
+                    } else {
+                        $('#sortable').sortable('enable');
+                    }
+
+                    this.setFilterState(this.parameters.filterState);
                 }
             });
         },
@@ -926,15 +994,16 @@
         open: function (resourceType, resourceId, directoryHistory) {
             var _path = '';
             for (var i = 0; i < directoryHistory.length; i++) {
-                if ( i === 0) {
+                if (i === 0) {
                     _path += '?';
                 } else {
                     _path += '&';
                 }
                 _path += '_breadcrumbs[]=' + directoryHistory[i].id;
             }
-            
-            window.location = this.parameters.appPath + '/resource/open/' + resourceType + '/' + resourceId + _path;
+
+            window.location = this.parameters.appPath + '/resource/open/' + resourceType + '/' +
+                resourceId + _path;
         },
         editRights: function (formAction, formData) {
             $.ajax({
@@ -1014,10 +1083,9 @@
         parameters.pickerCallback = parameters.pickerCallback || function () {};
         parameters.appPath = parameters.appPath || '';
         parameters.webPath = parameters.webPath || '';
-        console.debug(parameters.directoryHistory);
+        parameters.filterState = parameters.filterState || 'none';
         manager.Controller.initialize(parameters);
     };
-
     /**
      * Opens or closes the resource picker, depending on the "action" parameter.
      *
