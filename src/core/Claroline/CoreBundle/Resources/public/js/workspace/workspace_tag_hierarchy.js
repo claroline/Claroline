@@ -5,13 +5,13 @@
 
     $('#admin-tag-hierarchy-children-button').click(function () {
         var possibleSelected = [];
-        $('input:checkbox[name=tag-possible-child]:checked').each(function() {
+        $('input:checkbox[name=tag-possible-child]:checked').each(function () {
             possibleSelected.push($(this).val());
         });
         var possibleSelectedString = possibleSelected.join();
 
         var selected = [];
-        $('input:checkbox[name=tag-child]').each(function() {
+        $('input:checkbox[name=tag-child]').each(function () {
 
             if (!$(this).is(':checked')) {
                 selected.push($(this).val());
@@ -27,7 +27,7 @@
                 ),
                 type: 'GET',
                 success: function () {
-                    $('input:checkbox[name=tag-child]').each(function() {
+                    $('input:checkbox[name=tag-child]').each(function () {
 
                         if (!$(this).is(':checked')) {
                             $(this).attr('checked', false);
@@ -48,7 +48,7 @@
                 ),
                 type: 'GET',
                 success: function () {
-                    $('input:checkbox[name=tag-possible-child]:checked').each(function() {
+                    $('input:checkbox[name=tag-possible-child]:checked').each(function () {
                         $(this).attr('checked', true);
                         $(this).attr('name', 'tag-child');
                         $('#children-list').append('<li>' + $(this).parent().html() + '</li>');

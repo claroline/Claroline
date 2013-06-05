@@ -13,10 +13,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use JMS\SecurityExtraBundle\Annotation\Secure;
-use Claroline\CoreBundle\Form\WorkspaceTagType;
-use Claroline\CoreBundle\Form\AdminWorkspaceTagType;
-use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
-use Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag;
 
 class WorkspaceTagController extends Controller
 {
@@ -715,6 +711,7 @@ class WorkspaceTagController extends Controller
 
             $em->flush();
         }
+
         return new Response('success', 204);
     }
 }
