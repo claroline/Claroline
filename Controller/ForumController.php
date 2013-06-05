@@ -47,9 +47,7 @@ class ForumController extends Controller
 
         return $this->render(
             'ClarolineForumBundle::index.html.twig', array(
-                'forum' => $forum,
                 'pager' => $pager,
-                'workspace' => $forum->getWorkspace(),
                 '_resource' => $forum
             )
         );
@@ -71,17 +69,12 @@ class ForumController extends Controller
         $forum = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($forumId);
         $this->checkAccess($forum);
         $formSubject = $this->get('form.factory')->create(new SubjectType());
-        $workspace = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->find($forumId)
-            ->getWorkspace();
 
         return $this->render(
             'ClarolineForumBundle::subject_form.html.twig',
             array(
-                'form' => $formSubject->createView(),
-                'forumId' => $forumId,
-                'workspace' => $workspace,
-                '_resource' => $forum
+                '_resource' => $forum,
+                'form' => $formSubject->createView()
             )
         );
     }
@@ -138,8 +131,6 @@ class ForumController extends Controller
             'ClarolineForumBundle::subject_form.html.twig',
             array(
                 'form' => $form->createView(),
-                'forumId' => $forum->getId(),
-                'workspace' => $forum->getWorkspace(),
                 '_resource' => $forum
             )
         );
@@ -172,7 +163,6 @@ class ForumController extends Controller
             'ClarolineForumBundle::messages.html.twig',
             array(
                 'subject' => $subject,
-                'workspace' => $subject->getForum()->getWorkspace(),
                 'pager' => $pager,
                 '_resource' => $forum
             )
@@ -202,7 +192,6 @@ class ForumController extends Controller
             array(
                 'subjectId' => $subjectId,
                 'form' => $form->createView(),
-                'workspace' => $subject->getForum()->getWorkspace(),
                 '_resource' => $forum
             )
         );
@@ -245,8 +234,7 @@ class ForumController extends Controller
             array(
                 'subjectId' => $subjectId,
                 'form' => $form->createView(),
-                'workspace' => $subject->getForum()->getWorkspace(),
-                '_resource' => $resource
+                '_resource' => $forum
             )
         );
     }
@@ -276,7 +264,7 @@ class ForumController extends Controller
 
         return $this->render(
             'ClarolineForumBundle::plugin_options_form.html.twig',
-            array('form' => $form->createView(), '_resource' => $forum)
+            array('form' => $form->createView())
         );
     }
 

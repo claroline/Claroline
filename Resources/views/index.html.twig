@@ -18,12 +18,12 @@
 
 {% block section_content %}
     <p>
-        <a href="{{ _path('claro_forum_form_subject_creation', {'forumId': forum.getId()}) }}">
+        <a href="{{ _path('claro_forum_form_subject_creation', {'forumId': _resource.getId()}) }}">
             <button class="btn">{{ 'new_subject'|trans({}, 'forum') }}</button>
         </a>
     </p>
     <div>
-        {{ renderPager(forum.getId(), pager) }}
+        {{ renderPager(_resource.getId(), pager) }}
     </div>
     <table id="subjects_table" class="table table-striped table-bordered table-condensed">
         <thead>
@@ -55,6 +55,6 @@
         </tbody>
     </table>
     <div>
-        {{ renderPager(forum.getId(), pager) }}
+        {{ renderPager(_resource.getId(), pager) }}
     </div>
 {% endblock %}

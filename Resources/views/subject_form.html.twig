@@ -13,7 +13,7 @@ tinyMCE.init({
 
 {% block section_content %}
     {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
-    <form novalidate="novalidate" action="{{ _path('claro_forum_create_subject', {'forumId':forumId}) }}" method="post" {{ form_enctype(form) }} id="subject_form">
+    <form novalidate="novalidate" action="{{ _path('claro_forum_create_subject', {'forumId':_resource.getId()}) }}" method="post" {{ form_enctype(form) }} id="subject_form">
        {{ form_widget(form) }}
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
