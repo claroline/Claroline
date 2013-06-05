@@ -175,7 +175,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
             $currentPath = $currentPath . $parts[$i] . '-' . $parts[$i + 1] . '`';
             $ancestor['path'] = $currentPath;
             $ancestor['name'] = $parts[$i];
-            $ancestor['id'] = $parts[$i + 1];
+            $ancestor['id'] = (int)$parts[$i + 1];
             $ancestors[] = $ancestor;
         }
 

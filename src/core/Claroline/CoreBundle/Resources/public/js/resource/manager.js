@@ -34,14 +34,7 @@
                     resources: new manager.Views.Resources(parameters, dispatcher)
                 };
             },
-            render: function (resources, path, creatableTypes, isSearchMode, searchParameters, isRoot, workspaceId, filterState) {
-                if (isRoot) {
-                    this.parameters._workspace = undefined;
-                } else {
-                    if (this.parameters._workspace === undefined) {
-                        this.parameters._workspace = workspaceId;
-                    }
-                }
+            render: function (resources, path, creatableTypes, isSearchMode, searchParameters) {
                 this.currentDirectory = _.last(path);
 
                 // if directoryHistory is empty
@@ -475,8 +468,7 @@
                     resourceId: event.currentTarget.getAttribute('data-id'),
                     resourceType: event.currentTarget.getAttribute('data-type'),
                     isPickerMode: this.parameters.isPickerMode,
-                    directoryHistory: this.parameters.directoryHistory,
-                    workspaceId: this.parameters._workspace
+                    directoryHistory: this.parameters.directoryHistory
                 });
             },
             dispatchCheck: function (event) {
@@ -702,7 +694,7 @@
                     if (event.resourceType === 'directory') {
                         this.router.navigate('resources/' + event.resourceId, {trigger: true});
                     } else {
-                        this.open(event.resourceType, event.resourceId, event.directoryHistory, event.workspaceId);
+                        this.open(event.resourceType, event.resourceId, event.directoryHistory);
                     }
                 }
             },
@@ -735,7 +727,6 @@
             }
         },
         initialize: function (parameters) {
-            console.debug(parameters);
             this.views = {};
             this.parameters = parameters;
             this.dispatcher = _.extend({}, Backbone.Events);
@@ -1000,7 +991,7 @@
         download: function (resourceIds) {
             window.location = this.parameters.appPath + '/resource/export?' + $.param({ids: resourceIds});
         },
-        open: function (resourceType, resourceId, directoryHistory, workspaceId) {
+        open: function (resourceType, resourceId, directoryHistory) {
             var _path = '';
             for (var i = 0; i < directoryHistory.length; i++) {
                 if (i === 0) {
@@ -1012,7 +1003,7 @@
             }
 
             window.location = this.parameters.appPath + '/resource/open/' + resourceType + '/' +
-                resourceId + _path + '&_workspace=' + workspaceId;
+                resourceId + _path;
         },
         editRights: function (formAction, formData) {
             $.ajax({
@@ -1092,7 +1083,6 @@
         parameters.pickerCallback = parameters.pickerCallback || function () {};
         parameters.appPath = parameters.appPath || '';
         parameters.webPath = parameters.webPath || '';
-        parameters._workspace = parameters._workspace;
         parameters.filterState = parameters.filterState || 'none';
         manager.Controller.initialize(parameters);
     };

@@ -604,9 +604,19 @@ class ResourceController extends Controller
             $breadcrumbsAncestors = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
                 ->findResourcesByIds($_breadcrumbs);
             $breadcrumbsAncestors[] = $resource;
+
+            if ($_breadcrumbs[0] != 0) {
+                $rootId = $_breadcrumbs[0];
+            } else {
+                $rootId = $_breadcrumbs[1];
+            }
+
+            $workspaceId = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+            ->find($rootId)->getWorkspace()->getId();
         }
 
-        if (count($ancestors) > count($breadcrumbsAncestors)) {
+        //this condition is wrong
+        if (count($breadcrumbsAncestors) === 0) {
 
             $_breadcrumbs = array();
 
@@ -618,15 +628,13 @@ class ResourceController extends Controller
                 ->findResourcesByIds($_breadcrumbs);
         }
 
-        if (!$this->get('claroline.resource.manager')->isPathValid($breadcrumbsAncestors)) {
+        if (!$this->get('claroline.resource.manager')->isPathValid($breadcrumbsAncestors, false)) {
             throw new \Exception('Breadcrumbs invalid');
         };
 
-        $_workspace = $this->get('request')->query->get('_workspace');
-
         return $this->render(
             'ClarolineCoreBundle:Resource:breadcrumbs.html.twig',
-            array('ancestors' => $breadcrumbsAncestors, 'workspaceId' => $workspaceId, '_workspace' => $_workspace)
+            array('ancestors' => $breadcrumbsAncestors, 'workspaceId' => $workspaceId)
         );
     }
 
