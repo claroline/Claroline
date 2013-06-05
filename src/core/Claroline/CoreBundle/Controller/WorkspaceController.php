@@ -210,11 +210,23 @@ class WorkspaceController extends Controller
      *
      * @return Response
      */
-    public function renderToolListAction($_workspace)
+    public function renderToolListAction($workspaceId, $_breadcrumbs)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
-            ->find($_workspace);
+
+        if ($_breadcrumbs != null) {
+            //for manager.js, id = 0 => "no root".
+            if ($_breadcrumbs[0] != 0) {
+                $rootId = $_breadcrumbs[0];
+            } else {
+                $rootId = $_breadcrumbs[1];
+            }
+            $workspace = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+                ->find($rootId)->getWorkspace();
+        } else {
+            $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
+                ->find($workspaceId);
+        }
 
         if (!$this->get('security.context')->isGranted('OPEN', $workspace)) {
             throw new AccessDeniedException();

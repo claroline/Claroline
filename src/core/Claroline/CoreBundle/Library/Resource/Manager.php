@@ -482,8 +482,27 @@ class Manager
         return $shortcut;
     }
 
-    public function isPathValid(array $ancestors)
+    /**
+     * Checks if a path is valid.
+     * If strict = false, the path may not exists in the database (every ancestor must be a directory).
+     *
+     * @param array $ancestors
+     * @param boolean $strict
+     *
+     * @return boolean
+     */
+    public function isPathValid(array $ancestors, $strict = true)
     {
+        if (!$strict) {
+            array_pop($ancestors);
+            foreach ($ancestors as $ancestor) {
+                if ($ancestor->getResourceType()->getName() !== 'directory') {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         $continue = true;
 
         for ($i = 0, $size = count($ancestors); $i < $size; $i++) {
