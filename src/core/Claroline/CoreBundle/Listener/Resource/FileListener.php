@@ -77,6 +77,8 @@ class FileListener implements ContainerAwareInterface
             $mimeType = $tmpFile->getClientMimeType();
             $hashName = $this->container->get('claroline.resource.utilities')->generateGuid() . "." . $extension;
             $tmpFile->move($this->container->getParameter('claroline.param.files_directory'), $hashName);
+            $ds = DIRECTORY_SEPARATOR;
+            copy($this->container->getParameter('claroline.param.files_directory').$ds.$hashName, $this->container->getParameter('claroline.param.image_directory').$ds.$hashName);
             $file->setSize($size);
             $file->setName($fileName);
             $file->setHashName($hashName);

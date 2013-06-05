@@ -27,7 +27,7 @@
             }
             else
             {
-                console.debug(selected);
+
                 for (var i = 0; i < selected.length; i++) {
                     $('#calendar').fullCalendar('clientEvents', function (eventObject) {
                         var reg = new RegExp('[:]+', 'g');
@@ -61,6 +61,7 @@
                 .removeAttr('selected');
             var  currentDate = new Date();
             var pickedDate = new Date(date);
+
             $('#calendar_form_start').val(date.getDate() + '/' +
                 (date.getMonth() + 1) + '/' + date.getFullYear() +' '+date.getHours()+':'+pickedDate.getMinutes());
             if (pickedDate > currentDate) {
@@ -81,7 +82,8 @@
             if ($('#calendar_form_title').val() !== '') {
                 $('#save').attr('disabled', 'disabled');
                 var data = new FormData($('#myForm')[0]);
-                data.append('date', new Date(clickedDate));
+                data.append('calendar_form_description','coucou');
+                console.debug(data);
                 var url = $('#myForm').attr('action');
                 $.ajax({
                     'url': url,
@@ -142,7 +144,6 @@
                 'processData': false,
                 'contentType': false,
                 'success': function (data, textStatus, xhr) {
-                    console.debug(xhr);
                     if (xhr.status === 200)  {
                         $('#myModal').modal('hide');
                         $('#updateBtn').removeAttr('disabled');
