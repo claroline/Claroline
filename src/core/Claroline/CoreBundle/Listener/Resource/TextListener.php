@@ -134,8 +134,6 @@ class TextListener implements ContainerAwareInterface
             'ClarolineCoreBundle:Text:index.html.twig',
             array(
                 'text' => $textRepo->getLastRevision($text)->getContent(),
-                'textId' => $event->getResource()->getId(),
-                'workspace' => $text->getWorkspace(),
                 '_resource' => $text
             )
         );

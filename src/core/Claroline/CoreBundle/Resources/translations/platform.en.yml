@@ -17,7 +17,13 @@ admin_form_plainPassword_second : 'Repeat your password'
 admin_form_mail : 'Email adress'
 admin_form_username : 'Username'
 admin_logs: 'Platform logs'
+admin_tag_children_list: 'Admin tag children list'
+admin_tag_potential_children_list: 'Admin tag potential children list'
+admin_tags_add_remove_children_to: 'Add/Remove children to'
+admin_tags_hierarchy: 'Admin tags hierarchy'
+admin_tags_list: 'Admin tags list'
 admin_tags_management: 'Admin tags management'
+admin_tags_organization: 'Admin tags organization'
 admin_workspace_tag_form_name: Name
 administration: Administration
 administrative_code: 'Administrative code'
@@ -67,6 +73,7 @@ file_form_shareType: Sharable
 file_form_shareType_0: Yes
 file_form_shareType_1: false
 files: Files
+filter: Filter
 find_workspaces: 'Find workspaces'
 first_name: 'First name'
 form_role: Role
@@ -253,11 +260,13 @@ my_workspaces: 'My workspaces'
 name: Name
 new_message_alert: 'You have %count% new message(s)'
 no_search_results: 'Your search hasn''t returned any result.'
+none: None
 note: Note
 object: Object
 ok: Ok
 open: Open
 options: Options
+organize_admin_tags: 'Organize admin tags'
 owner: Owner
 owner_s: Owner(s)
 parameters: Parameters
@@ -313,14 +322,14 @@ resource_properties_form_shareType: 'Share type'
 resource_properties_form_userIcon: Icon
 resources: Resources
 resources_rights: 'Resources rights'
-resources_rights_form_canCopy: Copy
-resources_rights_form_canDelete: Selete
-resources_rights_form_canEdit: Edit
-resources_rights_form_canOpen: Open
-resources_rights_form_canShare: Share
-resources_rights_form_canView: See
-resources_rights_form_canExport: Export
-resources_rights_form_isRecursive: Apply changes to current and sub directories
+resource_right_form_canCopy: Copy
+resource_right_form_canDelete: Selete
+resource_right_form_canEdit: Edit
+resource_right_form_canOpen: Open
+resource_right_form_canShare: Share
+resource_right_form_canView: See
+resource_right_form_canExport: Export
+resource_right_form_isRecursive: Apply changes to current and sub directories
 restore : Restore
 results: Results
 rights: Rights

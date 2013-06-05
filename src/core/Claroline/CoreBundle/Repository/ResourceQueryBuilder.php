@@ -24,13 +24,15 @@ class ResourceQueryBuilder
     private $fromClause;
     private $joinRelativesClause;
 
-    public function __construct() {
+    public function __construct()
+    {
         $eol = PHP_EOL;
         $this->fromClause = "FROM Claroline\CoreBundle\Entity\Resource\AbstractResource resource{$eol}";
         $this->joinRelativesClause = "JOIN resource.creator creator{$eol}" .
             "JOIN resource.resourceType resourceType{$eol}" .
             "LEFT JOIN resource.next next{$eol}" .
             "LEFT JOIN resource.previous previous{$eol}" .
+            "LEFT JOIN resource.parent parent{$eol}" .
             "JOIN resource.icon icon{$eol}";
     }
 
@@ -66,7 +68,7 @@ class ResourceQueryBuilder
             "    resource.id as id,{$eol}" .
             "    resource.name as name,{$eol}" .
             "    resource.path as path,{$eol}" .
-            "    IDENTITY(resource.parent) as parent_id,{$eol}" .
+            "    parent.id as parent_id,{$eol}" .
             "    creator.username as creator_username,{$eol}" .
             "    resourceType.name as type,{$eol}" .
             "    resourceType.isBrowsable as is_browsable,{$eol}" .
@@ -323,7 +325,18 @@ class ResourceQueryBuilder
     {
         $eol = PHP_EOL;
         $this->setFrom('Claroline\CoreBundle\Entity\Resource\ResourceShortcut');
-        $this->selectClause .= ", IDENTITY(resource.resource) as target_id{$eol}";
+        $this->addJoinClause('JOIN resource.resource target');
+        $this->selectClause .= ", target.id as target_id{$eol}";
+        $this->selectClause .= ", target.path as target_path{$eol}";
+
+        return $this;
+    }
+
+    public function whereNotShortcutDirectory()
+    {
+        $eol = PHP_EOL;
+        $this->addWhereClause("resource NOT INSTANCE OF Claroline\CoreBundle\Entity\Resource\ResourceShortcut{$eol}");
+
         return $this;
     }
 
@@ -443,7 +456,8 @@ class ResourceQueryBuilder
         }
     }
 
-    public function addJoinClause($clause) {
+    public function addJoinClause($clause)
+    {
         $this->joinRelativesClause .= $clause . PHP_EOL;
     }
 

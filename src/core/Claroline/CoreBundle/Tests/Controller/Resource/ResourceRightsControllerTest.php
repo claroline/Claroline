@@ -299,7 +299,7 @@ class ResourceRightsControllerTest extends FunctionalTestCase
         $this->client->request(
             'POST',
             "/resource/{$directoryId}/role/{$role->getId()}/right/create",
-            array('resources_rights_form' => array(
+            array('resource_right_form' => array(
                 'canOpen' => true,
                 'canEdit' => true,
                 'canDelete' => true,
@@ -325,7 +325,7 @@ class ResourceRightsControllerTest extends FunctionalTestCase
         $this->client->request(
             'POST',
             "/resource/{$this->getDirectory('dir2')->getId()}/role/{$role->getId()}/right/create",
-            array('resources_rights_form' => array(
+            array('resource_right_form' => array(
                 'canOpen' => true,
                 'canEdit' => true,
                 'canDelete' => true,
@@ -337,7 +337,7 @@ class ResourceRightsControllerTest extends FunctionalTestCase
         $this->client->request(
             'POST',
             "/resource/{$this->getDirectory('dir1')->getId()}/role/{$role->getId()}/right/create",
-            array('resources_rights_form' => array(
+            array('resource_right_form' => array(
                 'isRecursive' => true
             ))
         );
@@ -362,7 +362,7 @@ class ResourceRightsControllerTest extends FunctionalTestCase
         $this->client->request(
             'POST',
             "/resource/{$this->getDirectory('dir1')->getId()}/role/{$role->getId()}/right/create",
-            array('resources_rights_form' => array(
+            array('resource_right_form' => array(
                 'canOpen' => true,
                 'canEdit' => true,
                 'canDelete' => true,
@@ -378,7 +378,7 @@ class ResourceRightsControllerTest extends FunctionalTestCase
         $this->client->request(
             'POST',
             "/resource/right/{$resourceRightId}/edit",
-            array('resources_rights_form' => array(
+            array('resource_right_form' => array(
                 'canOpen' => true,
                 'canEdit' => true,
                 'canCopy' => true,
@@ -407,7 +407,7 @@ class ResourceRightsControllerTest extends FunctionalTestCase
         $this->client->request(
             'POST',
             "/resource/{$this->getDirectory('dir1')->getId()}/role/{$role->getId()}/right/create",
-            array('resources_rights_form' => array(
+            array('resource_right_form' => array(
                 'canOpen' => true,
                 'canEdit' => true,
                 'canDelete' => true,
@@ -421,10 +421,10 @@ class ResourceRightsControllerTest extends FunctionalTestCase
         $resourceRightId = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
             ->findOneBy(array('role' => $role, 'resource' => $this->getDirectory('dir1')))->getId();
 
-       $this->client->request(
+        $this->client->request(
             'POST',
             "/resource/right/{$resourceRightId}/edit",
-            array('resources_rights_form' => array(
+            array('resource_right_form' => array(
                 'isRecursive' => true
             ))
         );

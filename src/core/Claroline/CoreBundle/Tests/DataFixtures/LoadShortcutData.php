@@ -47,7 +47,7 @@ class LoadShortcutData extends AbstractFixture implements ContainerAwareInterfac
         if ($this->referenceName !== '') {
             $this->addReference("shortcut/{$this->referenceName}", $shortcut);
         }
-        
+
         $manager->flush();
     }
 }

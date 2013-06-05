@@ -73,12 +73,10 @@ class MessageType extends AbstractType
         }
 
         $builder->add('object', 'text', array('data' => $this->object, 'required' => true))
-                ->add('content', 'textarea', 
-                    array('required' => true,
-                        'attr' => array (
-                    'class'=> 'tinymce',
-                    'data-theme' => 'simple')
-                    )
+                ->add(
+                    'content',
+                    'textarea',
+                    array('required' => true, 'attr' => array ('class' => 'tinymce', 'data-theme' => 'medium'))
                 );
     }
 
