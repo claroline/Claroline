@@ -27,10 +27,9 @@ class Version20130530152255 extends BundleMigration
     public function down(Schema $schema)
     {
         $schema
-            ->dropTable('icap_blog_tag')
-            ->dropTable('icap_blog_comment')
-            ->dropTable('icap_blog_post')
-            ->dropTable('icap_blog')
+            ->dropTable('icap__blog_comment')
+            ->dropTable('icap__blog_post')
+            ->dropTable('icap__blog')
         ;
          //@TODO Remove associatedTag with posts
     }

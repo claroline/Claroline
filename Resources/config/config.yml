@@ -1,6 +1,6 @@
 plugin:
   has_options: true
-  icon: icap_blog_icon_mini.png
+  icon: icap_blog_icon.png
 
   resources:
     - class: ICAP\BlogBundle\Entity\Blog

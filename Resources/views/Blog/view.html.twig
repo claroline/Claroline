@@ -10,10 +10,10 @@
     </p>
     {% for post in posts %}
     <article>
-
+        {{ post.title }}
     </article>
     {% else %}
-    <li>{{ 'no_article'|trans() }}</li>
+    <span>{{ 'no_article'|trans() }}</span>
     {% endfor %}
     {% if pager.haveToPaginate %}
     <div>
