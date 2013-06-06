@@ -215,7 +215,7 @@ function choiceCSS(sourceImageDel) {
     }
 
     $('td:hidden').find('input').attr('value', '1');
-    
+
     if($('#ujm_exobundle_interactionqcmtype_typeQCM').val() == 2) {
         $('#newTable .ligne_choice').each(function (index) {
             $(this).contents('td:nth-child(5)').find('input').prop('type', 'radio');

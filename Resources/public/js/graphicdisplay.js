@@ -16,7 +16,7 @@ var length = 2;
 window.onload = function () {
 
     if (document.getElementById('PositionInit').value == 'true' || document.getElementById('cursor1').style.left == '') {
-    
+
         for (var h = 1 ; h < size ; h++) {
             cur = 'cursor' + h;
             document.getElementById(cur).style.left = String(ox - 20 + h * 37) + 'px';

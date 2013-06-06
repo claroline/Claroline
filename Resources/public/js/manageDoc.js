@@ -52,9 +52,9 @@ function sortDocument(type, path) {
 }
 
 function searchDoc(path){
-    
+
     var labelToFind = document.getElementById('labelToFind').value;
-    
+
     $.ajax({
         type: 'POST',
         url: path,

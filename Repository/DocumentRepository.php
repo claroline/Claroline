@@ -62,7 +62,7 @@ class DocumentRepository extends EntityRepository
             $dql = 'SELECT d FROM UJM\ExoBundle\Entity\Document d WHERE NOT
                 d.type= \'.png\' AND NOT d.type= \'.jpeg\' AND NOT d.type= \'.jpg\' AND NOT d.type= \'.gif\' AND NOT d.type= \'.bmp\'
                 AND NOT d.type= \'.avi\' AND NOT d.type= \'.mpeg\' AND NOT d.type= \'.wmv\' AND NOT d.type= \'.flv\' AND NOT d.type= \'.mov\'
-                AND NOT  d.type= \'.mp3\' AND NOT d.type= \'.wav\'';        
+                AND NOT  d.type= \'.mp3\' AND NOT d.type= \'.wav\'';
         }
 
         $query = $this->_em->createQuery($dql);
