@@ -17,7 +17,13 @@ admin_form_plainPassword_second : 'Repeat your password'
 admin_form_mail : 'Email adress'
 admin_form_username : 'Username'
 admin_logs: 'Platform logs'
+admin_tag_children_list: 'Admin tag children list'
+admin_tag_potential_children_list: 'Admin tag potential children list'
+admin_tags_add_remove_children_to: 'Add/Remove children to'
+admin_tags_hierarchy: 'Admin tags hierarchy'
+admin_tags_list: 'Admin tags list'
 admin_tags_management: 'Admin tags management'
+admin_tags_organization: 'Admin tags organization'
 admin_workspace_tag_form_name: Name
 administration: Administration
 administrative_code: 'Administrative code'
@@ -260,6 +266,7 @@ object: Object
 ok: Ok
 open: Open
 options: Options
+organize_admin_tags: 'Organize admin tags'
 owner: Owner
 owner_s: Owner(s)
 parameters: Parameters

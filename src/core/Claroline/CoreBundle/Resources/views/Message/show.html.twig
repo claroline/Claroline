@@ -2,10 +2,12 @@
 {% set themePath = 'bundles/clarolinecore/css/themes/' ~ config.getParameter('theme') %}
 {% block javascripts %}
     {{ parent() }}
-        {{ tinymce_init() }}
+    {% render controller('ClarolineCoreBundle:Tool\\WorkspaceResourceParameters:workspaceResourceTypes') 
+    %}
 {% endblock %}
 {% block content %}
-
+<a href="{{ path('claro_file_hashtag') }}" id="link">link </a>
+ {{ tinymce_init() }}
     <div class="user-information span2">
         <div>
             <img src="{{ asset('bundles/clarolinecore/images/workspaces/tools/user_small.png') }}"/>
@@ -34,7 +36,6 @@
                 </div>
             {% endfor %}
         </div>
-
         <div>
             {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
             <h4>{{ 'fast_answer'|trans({}, 'platform') }}</h4>
@@ -55,5 +56,4 @@
     <div>
 
     </div>
-
 {% endblock %}
