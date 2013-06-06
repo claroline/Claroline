@@ -19,7 +19,13 @@ admin_form_plainPassword_second : 'Répétez votre mot de passe'
 admin_form_mail : 'Adresse email'
 admin_form_username : 'Nom d''utilisateur'
 admin_logs: 'Suivi plateforme'
+admin_tag_children_list: 'Liste des enfants'
+admin_tag_potential_children_list: 'Liste des enfants potentiels'
+admin_tags_add_remove_children_to: 'Ajouter/Retirer des enfants au Tag'
+admin_tags_hierarchy: 'Hiérarchie des Tags administrateur'
+admin_tags_list: 'Liste des Tags administrateur'
 admin_tags_management: 'Gestion des Tags administrateur'
+admin_tags_organization: 'Organisation des Tags administrateur'
 admin_workspace_tag_form_name: Nom
 advanced: Avancé
 agenda: Agenda
@@ -67,6 +73,7 @@ file_form_shareType: Redistribution
 file_form_shareType_0: Oui
 file_form_shareType_1: Non
 files: Fichiers
+filter: Filtrer
 find_workspaces: 'Tous les espaces'
 first_name: Prénom
 form_role: Rôle
@@ -254,10 +261,13 @@ name: Nom
 new_message_alert: 'Vous avez %count% nouveaux message(s)'
 no_search_results: 'Votre recherche n''a retourné aucun résultat.'
 note: Note
+none: Aucun
 object: Objet
 ok: Ok
 open: Ouvrir
 options: Options
+organize_admin_tags: 'Organiser les Tags administrateur'
+organize_private_tags: 'Organiser les Tags personnels'
 owner: Propriétaire
 owner_s: Propriétaire(s)
 parameters: Paramètres
@@ -343,7 +353,13 @@ show_profile: 'Voir le profile'
 steal_session: 'Voler la session'
 switch: Echanger
 tag: Tag
+tag_children_list: 'Liste des enfants'
+tag_potential_children_list: 'Liste des enfants potentiels'
+tags_add_remove_children_to: 'Ajouter/Retirer des enfants au Tag'
+tags_hierarchy: 'Hiérarchie des Tags'
+tags_list: 'Liste des Tags'
 tags_management: 'Gestion des Tags'
+tags_organization: 'Organisation des Tags'
 teacher: Professeur
 text_form_name: Nom
 text_form_shareType: Redistribution

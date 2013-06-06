@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block section_content %}
-{{ tinymce_init() }}
+
     <ul class="breadcrumb">
         <li>
             <a href="#">
@@ -20,6 +20,7 @@
             </a>
         </li>
     </ul>
+    <a href="{{ path('claro_workspace_agenda_tiny', {workspaceId: workspace.getId()}) }}" > tiny</a>
     <div id='calendar' class="span9"></div>
     <div  id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">

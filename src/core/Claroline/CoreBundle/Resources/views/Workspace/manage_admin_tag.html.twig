@@ -19,20 +19,18 @@
     </ul>
 
     <h1>{{ 'admin_tags_management'|trans({}, 'platform') }}</h1>
+    <br>
 
     <div>
         <a href="{{ path('claro_workspace_admin_tag_create_form') }}">
             <button type="button" class="btn">{{ 'create_new_admin_tag'|trans({}, 'platform') }}</button>
         </a>
-        {#
-        <a href="#">
-            <button type="button" class="btn">{{ 'organize_tags'|trans({}, 'platform') }}</button>
+        <a href="{{ path('claro_workspace_organize_admin_tag') }}">
+            <button type="button" class="btn">{{ 'organize_admin_tags'|trans({}, 'platform') }}</button>
         </a>
-        #}
     </div>
 
     <br>
-
 
     <div>
         <table id="manage-tag-table" class="table table-striped table-bordered table-condensed">

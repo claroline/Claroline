@@ -10,42 +10,42 @@
             id = null,
             url = null;
 
-        $('.filter').click(function (e) {
+        $('.filter').click(function () {
             var numberOfChecked = $('.filter:checkbox:checked').length;
             var totalCheckboxes = $('.filter:checkbox').length;
             var selected =  new Array();
-            $('.filter:checkbox:checked').each(function() {
+            $('.filter:checkbox:checked').each(function () {
                 selected.push($(this).attr('name'));
             });
             //if all checkboxes or none checkboxes are checked display all events
-            if((totalCheckboxes - numberOfChecked == 0) || (numberOfChecked == 0))
+            if ((totalCheckboxes - numberOfChecked === 0) || (numberOfChecked === 0))
             {
-               $('#calendar').fullCalendar('clientEvents', function (eventObject) {
+                $('#calendar').fullCalendar('clientEvents', function (eventObject) {
                     eventObject.visible = true;
                 });
-                $('#calendar').fullCalendar( 'rerenderEvents' );
+                $('#calendar').fullCalendar('rerenderEvents');
             }
             else
             {
-                console.debug(selected);
+
                 for (var i = 0; i < selected.length; i++) {
                     $('#calendar').fullCalendar('clientEvents', function (eventObject) {
                         var reg = new RegExp('[:]+', 'g');
                         var title = eventObject.title.split(reg);
-                        if ( selected.indexOf(title[0]) < 0)
+                        if (selected.indexOf(title[0]) < 0)
                         {
-                            eventObject.visible = false ;
+                            eventObject.visible = false;
                             return true;
                         }
                         else
                         {
-                            eventObject.visible = true ;
+                            eventObject.visible = true;
                             return false;
                         }
                     });
                     //console.debug($('#calendar').fullCalendar('clientEvents'));
-                    $('#calendar').fullCalendar( 'rerenderEvents' );
-                };
+                    $('#calendar').fullCalendar('rerenderEvents');
+                }
 
             }
         });
@@ -61,14 +61,17 @@
                 .removeAttr('selected');
             var  currentDate = new Date();
             var pickedDate = new Date(date);
+
             $('#calendar_form_start').val(date.getDate() + '/' +
-                (date.getMonth() + 1) + '/' + date.getFullYear());
+                (date.getMonth() + 1) + '/' + date.getFullYear() + ' ' 
+                + date.getHours() + ':' + pickedDate.getMinutes());
             if (pickedDate > currentDate) {
                 $('#calendar_form_end').val(pickedDate.getDate() + '/' +
-                    (pickedDate.getMonth() + 1) + '/' + pickedDate.getFullYear());
+                    (pickedDate.getMonth() + 1) + '/' + pickedDate.getFullYear() + ' ' 
+                    + pickedDate.getHours() + ':' + pickedDate.getMinutes());
             } else {
                 $('#calendar_form_end').val(currentDate.getDate() + '/' +
-                    (currentDate.getMonth() + 1) + '/' + currentDate.getFullYear());
+                    (currentDate.getMonth() + 1) + '/' + currentDate.getFullYear() + ' ' + pickedDate.getHours() + ':' + pickedDate.getMinutes());
             }
             $('#myModal').modal();
         };
@@ -81,7 +84,7 @@
             if ($('#calendar_form_title').val() !== '') {
                 $('#save').attr('disabled', 'disabled');
                 var data = new FormData($('#myForm')[0]);
-                data.append('date', new Date(clickedDate));
+                console.debug(data);
                 var url = $('#myForm').attr('action');
                 $.ajax({
                     'url': url,
@@ -142,7 +145,6 @@
                 'processData': false,
                 'contentType': false,
                 'success': function (data, textStatus, xhr) {
-                    console.debug(xhr);
                     if (xhr.status === 200)  {
                         $('#myModal').modal('hide');
                         $('#updateBtn').removeAttr('disabled');
@@ -298,8 +300,8 @@
             eventClick:  function (calEvent) {
                 modifiedEvent(calEvent);
             },
-            eventRender: function (event,element) {
-                if(event.visible == false)
+            eventRender: function (event) {
+                if (event.visible === false)
                 {
                     return false;
                 }
