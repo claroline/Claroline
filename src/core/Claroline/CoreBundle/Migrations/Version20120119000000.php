@@ -868,6 +868,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('is_desktop_required', 'boolean');
         $table->addColumn('is_exportable', 'boolean');
         $table->addColumn('plugin_id', 'integer', array('notnull' => false));
+        $table->addColumn('has_options', 'boolean');
 
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_plugin'),
