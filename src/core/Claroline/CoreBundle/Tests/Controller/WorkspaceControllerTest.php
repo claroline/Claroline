@@ -261,272 +261,272 @@ class WorkspaceControllerTest extends FunctionalTestCase
         $this->client->request('GET', "/workspaces/{$ws->getId()}/open/tool/home");
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
-
-    public function testUserCanCreateWorkspaceTag()
-    {
-        $this->loadUserData(array('user' => 'user'));
-        $this->logUser($this->getUser('user'));
-        $crawler = $this->client->request('GET', '/workspaces/tag/createform');
-        $form = $crawler->filter('button[type=submit]')->form();
-        $form['workspace_tag_form[name]'] = 'tag';
-        $this->client->submit($form);
-        $form = $crawler->filter('button[type=submit]')->form();
-        $form['workspace_tag_form[name]'] = 'tag 2';
-        $this->client->submit($form);
-        $tags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findByUser($this->getUser('user'));
-        $this->assertEquals(2, count($tags));
-    }
-
-    public function testUserCantCreateTwoWorkspaceTagsWithSameName()
-    {
-        $this->loadUserData(array('user' => 'user'));
-        $this->logUser($this->getUser('user'));
-        $crawler = $this->client->request('GET', '/workspaces/tag/createform');
-        $form = $crawler->filter('button[type=submit]')->form();
-        $form['workspace_tag_form[name]'] = 'tag';
-        $this->client->submit($form);
-        $tags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findByUser($this->getUser('user'));
-        $this->assertEquals(1, count($tags));
-        $crawler = $this->client->request('GET', '/workspaces/tag/createform');
-        $form = $crawler->filter('button[type=submit]')->form();
-        $form['workspace_tag_form[name]'] = 'tag';
-        $this->client->submit($form);
-        $tags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findByUser($this->getUser('user'));
-        $this->assertEquals(1, count($tags));
-    }
-
-    public function testUserCanAssociateAndRemoveTagToWorkspace()
-    {
-        $this->loadUserData(array('user' => 'user'));
-        $this->logUser($this->getUser('user'));
-        $pws = $this->getUser('user')->getPersonalWorkspace();
-        $userId = $this->getUser('user')->getId();
-        $workspaceId = $pws->getId();
-        $crawler = $this->client->request("GET", "/workspaces/tag/createform");
-        $form = $crawler->filter('button[type=submit]')->form();
-        $form['workspace_tag_form[name]'] = 'tag';
-        $this->client->submit($form);
-
-        $tag = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findOneBy(array('user' => $userId, 'name' => 'tag'));
-
-        $this->client->request(
-            "POST",
-            "/workspaces/{$userId}/workspace/{$workspaceId}/tag/add/{$tag->getName()}"
-        );
-        $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findByWorkspaceAndUser($pws, $this->getUser('user'));
-        $this->assertEquals(1, count($relWsTag));
-
-        $this->client->request(
-            "DELETE",
-            "/workspaces/{$userId}/workspace/{$workspaceId}/tag/remove/{$tag->getId()}"
-        );
-        $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findByWorkspaceAndUser($pws, $this->getUser('user'));
-        $this->assertEquals(0, count($relWsTag));
-    }
-
-    public function testUserCanAssociateInexistingTagToWorkspace()
-    {
-        $this->loadUserData(array('user' => 'user'));
-        $this->logUser($this->getUser('user'));
-        $pws = $this->getUser('user')->getPersonalWorkspace();
-        $userId = $this->getUser('user')->getId();
-        $workspaceId = $pws->getId();
-
-        $this->client->request(
-            "POST",
-            "/workspaces/{$userId}/workspace/{$workspaceId}/tag/add/tag"
-        );
-        $tags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findByUser($this->getUser('user'));
-        $this->assertEquals(1, count($tags));
-        $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findOneByWorkspaceAndTagAndUser($pws, $tags[0], $this->getUser('user'));
-        $this->assertNotNull($relWsTag);
-    }
-
-    public function testAdminCanCreateWorkspaceTag()
-    {
-        $this->loadUserData(array('admin' => 'admin'));
-        $this->logUser($this->getUser('admin'));
-        $crawler = $this->client->request('GET', '/workspaces/tag/admin/createform');
-        $form = $crawler->filter('button[type=submit]')->form();
-        $form['admin_workspace_tag_form[name]'] = 'tag';
-        $this->client->submit($form);
-        $form = $crawler->filter('button[type=submit]')->form();
-        $form['admin_workspace_tag_form[name]'] = 'tag 2';
-        $this->client->submit($form);
-        $tags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findByUser(null);
-        $this->assertEquals(2, count($tags));
-    }
-
-    public function testAdminCantCreateTwoWorkspaceTagsWithSameName()
-    {
-        $this->loadUserData(array('admin' => 'admin'));
-        $this->logUser($this->getUser('admin'));
-        $crawler = $this->client->request('GET', '/workspaces/tag/admin/createform');
-        $form = $crawler->filter('button[type=submit]')->form();
-        $form['admin_workspace_tag_form[name]'] = 'tag';
-        $this->client->submit($form);
-        $tags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findByUser(null);
-        $this->assertEquals(1, count($tags));
-        $crawler = $this->client->request('GET', '/workspaces/tag/admin/createform');
-        $form = $crawler->filter('button[type=submit]')->form();
-        $form['admin_workspace_tag_form[name]'] = 'tag';
-        $this->client->submit($form);
-        $tags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findByUser(null);
-        $this->assertEquals(1, count($tags));
-    }
-
-    public function testAdminCanAssociateAndRemoveTagToWorkspace()
-    {
-        $this->loadUserData(array('admin' => 'admin'));
-        $this->logUser($this->getUser('admin'));
-        $pws = $this->getUser('admin')->getPersonalWorkspace();
-        $workspaceId = $pws->getId();
-        $crawler = $this->client->request("GET", "/workspaces/tag/admin/createform");
-        $form = $crawler->filter('button[type=submit]')->form();
-        $form['admin_workspace_tag_form[name]'] = 'tag';
-        $this->client->submit($form);
-
-        $tag = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findOneBy(array('user' => null, 'name' => 'tag'));
-
-        $this->client->request(
-            "POST",
-            "/workspaces/workspace/{$workspaceId}/tag/add/{$tag->getName()}"
-        );
-        $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findAdminByWorkspace($pws);
-        $this->assertEquals(1, count($relWsTag));
-
-        $this->client->request(
-            "DELETE",
-            "/workspaces/workspace/{$workspaceId}/tag/remove/{$tag->getId()}"
-        );
-        $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findAdminByWorkspace($pws);
-        $this->assertEquals(0, count($relWsTag));
-    }
-
-    public function testAdminCanAssociateInexistingTagToWorkspace()
-    {
-        $this->loadUserData(array('admin' => 'admin'));
-        $this->logUser($this->getUser('admin'));
-        $pws = $this->getUser('admin')->getPersonalWorkspace();
-        $workspaceId = $pws->getId();
-
-        $this->client->request(
-            "POST",
-            "/workspaces/workspace/{$workspaceId}/tag/add/tag"
-        );
-        $tags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findByUser(null);
-        $this->assertEquals(1, count($tags));
-        $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findOneAdminByWorkspaceAndTag($pws, $tags[0]);
-        $this->assertNotNull($relWsTag);
-    }
-
-    public function testUserAndAdminCanCreateTagWithTheSameName()
-    {
-        $this->loadUserData(array('admin' => 'admin'));
-        $this->logUser($this->getUser('admin'));
-        $userId = $this->getUser('admin')->getId();
-        $pws = $this->getUser('admin')->getPersonalWorkspace();
-        $workspaceId = $pws->getId();
-
-        $this->client->request(
-            "POST",
-            "/workspaces/{$userId}/workspace/{$workspaceId}/tag/add/tag"
-        );
-        $userTags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findByUser($this->getUser('admin'));
-        $this->assertEquals(1, count($userTags));
-        $userRelWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findOneByWorkspaceAndTagAndUser($pws, $userTags[0], $this->getUser('admin'));
-        $this->assertNotNull($userRelWsTag);
-
-        $this->client->request(
-            "POST",
-            "/workspaces/workspace/{$workspaceId}/tag/add/tag"
-        );
-        $adminTags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findByUser(null);
-        $this->assertEquals(1, count($adminTags));
-        $adminRelWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findOneAdminByWorkspaceAndTag($pws, $adminTags[0]);
-        $this->assertNotNull($adminRelWsTag);
-
-        $allRelWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findAllByWorkspaceAndUser($pws, $this->getUser('admin'));
-        $this->assertEquals(2, count($allRelWsTag));
-    }
-
-    public function testNonAdminCantAccessCreateAdminTagForm()
-    {
-        $this->setExpectedException('Exception');
-        $this->loadUserData(array('user' => 'user'));
-        $this->logUser($this->getUser('user'));
-        $crawler = $this->client->request('GET', '/workspaces/tag/admin/createform');
-        $crawler->filter('button[type=submit]')->form();
-    }
-
-    public function testNonAdminCantAssociateAdminTagToWorkspace()
-    {
-        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $this->logUser($this->getUser('admin'));
-        $crawler = $this->client->request('GET', '/workspaces/tag/admin/createform');
-        $form = $crawler->filter('button[type=submit]')->form();
-        $form['admin_workspace_tag_form[name]'] = 'tag';
-        $this->client->submit($form);
-        $tag = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findOneBy(array('user' => null, 'name' => 'tag'));
-        $this->assertNotNull($tag);
-
-        $this->logUser($this->getUser('user'));
-        $pws = $this->getUser('user')->getPersonalWorkspace();
-        $this->client->request(
-            "POST",
-            "/workspaces/workspace/{$pws->getId()}/tag/add/{$tag->getName()}"
-        );
-        $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findOneAdminByWorkspaceAndTag($pws, $tag);
-        $this->assertNull($relWsTag);
-    }
-
-    public function testNonAdminCantRemoveAdminTagFromWorkspace()
-    {
-        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $this->logUser($this->getUser('admin'));
-        $pws = $this->getUser('user')->getPersonalWorkspace();
-        $this->client->request(
-            "POST",
-            "/workspaces/workspace/{$pws->getId()}/tag/add/tag"
-        );
-        $tag = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findOneBy(array('user' => null, 'name' => 'tag'));
-        $this->assertNotNull($tag);
-
-        $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findOneAdminByWorkspaceAndTag($pws, $tag);
-        $this->assertNotNull($relWsTag);
-
-        $this->logUser($this->getUser('user'));
-        $this->client->request(
-            "DELETE",
-            "/workspaces/workspace/{$pws->getId()}/tag/remove/{$tag->getId()}"
-        );
-        $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findOneAdminByWorkspaceAndTag($pws, $tag);
-        $this->assertNotNull($relWsTag);
-    }
+//
+//    public function testUserCanCreateWorkspaceTag()
+//    {
+//        $this->loadUserData(array('user' => 'user'));
+//        $this->logUser($this->getUser('user'));
+//        $crawler = $this->client->request('GET', '/workspaces/tag/createform');
+//        $form = $crawler->filter('button[type=submit]')->form();
+//        $form['workspace_tag_form[name]'] = 'tag';
+//        $this->client->submit($form);
+//        $form = $crawler->filter('button[type=submit]')->form();
+//        $form['workspace_tag_form[name]'] = 'tag 2';
+//        $this->client->submit($form);
+//        $tags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+//            ->findByUser($this->getUser('user'));
+//        $this->assertEquals(2, count($tags));
+//    }
+//
+//    public function testUserCantCreateTwoWorkspaceTagsWithSameName()
+//    {
+//        $this->loadUserData(array('user' => 'user'));
+//        $this->logUser($this->getUser('user'));
+//        $crawler = $this->client->request('GET', '/workspaces/tag/createform');
+//        $form = $crawler->filter('button[type=submit]')->form();
+//        $form['workspace_tag_form[name]'] = 'tag';
+//        $this->client->submit($form);
+//        $tags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+//            ->findByUser($this->getUser('user'));
+//        $this->assertEquals(1, count($tags));
+//        $crawler = $this->client->request('GET', '/workspaces/tag/createform');
+//        $form = $crawler->filter('button[type=submit]')->form();
+//        $form['workspace_tag_form[name]'] = 'tag';
+//        $this->client->submit($form);
+//        $tags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+//            ->findByUser($this->getUser('user'));
+//        $this->assertEquals(1, count($tags));
+//    }
+//
+//    public function testUserCanAssociateAndRemoveTagToWorkspace()
+//    {
+//        $this->loadUserData(array('user' => 'user'));
+//        $this->logUser($this->getUser('user'));
+//        $pws = $this->getUser('user')->getPersonalWorkspace();
+//        $userId = $this->getUser('user')->getId();
+//        $workspaceId = $pws->getId();
+//        $crawler = $this->client->request("GET", "/workspaces/tag/createform");
+//        $form = $crawler->filter('button[type=submit]')->form();
+//        $form['workspace_tag_form[name]'] = 'tag';
+//        $this->client->submit($form);
+//
+//        $tag = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+//            ->findOneBy(array('user' => $userId, 'name' => 'tag'));
+//
+//        $this->client->request(
+//            "POST",
+//            "/workspaces/{$userId}/workspace/{$workspaceId}/tag/add/{$tag->getName()}"
+//        );
+//        $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
+//            ->findByWorkspaceAndUser($pws, $this->getUser('user'));
+//        $this->assertEquals(1, count($relWsTag));
+//
+//        $this->client->request(
+//            "DELETE",
+//            "/workspaces/{$userId}/workspace/{$workspaceId}/tag/remove/{$tag->getId()}"
+//        );
+//        $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
+//            ->findByWorkspaceAndUser($pws, $this->getUser('user'));
+//        $this->assertEquals(0, count($relWsTag));
+//    }
+//
+//    public function testUserCanAssociateInexistingTagToWorkspace()
+//    {
+//        $this->loadUserData(array('user' => 'user'));
+//        $this->logUser($this->getUser('user'));
+//        $pws = $this->getUser('user')->getPersonalWorkspace();
+//        $userId = $this->getUser('user')->getId();
+//        $workspaceId = $pws->getId();
+//
+//        $this->client->request(
+//            "POST",
+//            "/workspaces/{$userId}/workspace/{$workspaceId}/tag/add/tag"
+//        );
+//        $tags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+//            ->findByUser($this->getUser('user'));
+//        $this->assertEquals(1, count($tags));
+//        $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
+//            ->findOneByWorkspaceAndTagAndUser($pws, $tags[0], $this->getUser('user'));
+//        $this->assertNotNull($relWsTag);
+//    }
+//
+//    public function testAdminCanCreateWorkspaceTag()
+//    {
+//        $this->loadUserData(array('admin' => 'admin'));
+//        $this->logUser($this->getUser('admin'));
+//        $crawler = $this->client->request('GET', '/workspaces/tag/admin/createform');
+//        $form = $crawler->filter('button[type=submit]')->form();
+//        $form['admin_workspace_tag_form[name]'] = 'tag';
+//        $this->client->submit($form);
+//        $form = $crawler->filter('button[type=submit]')->form();
+//        $form['admin_workspace_tag_form[name]'] = 'tag 2';
+//        $this->client->submit($form);
+//        $tags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+//            ->findByUser(null);
+//        $this->assertEquals(2, count($tags));
+//    }
+//
+//    public function testAdminCantCreateTwoWorkspaceTagsWithSameName()
+//    {
+//        $this->loadUserData(array('admin' => 'admin'));
+//        $this->logUser($this->getUser('admin'));
+//        $crawler = $this->client->request('GET', '/workspaces/tag/admin/createform');
+//        $form = $crawler->filter('button[type=submit]')->form();
+//        $form['admin_workspace_tag_form[name]'] = 'tag';
+//        $this->client->submit($form);
+//        $tags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+//            ->findByUser(null);
+//        $this->assertEquals(1, count($tags));
+//        $crawler = $this->client->request('GET', '/workspaces/tag/admin/createform');
+//        $form = $crawler->filter('button[type=submit]')->form();
+//        $form['admin_workspace_tag_form[name]'] = 'tag';
+//        $this->client->submit($form);
+//        $tags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+//            ->findByUser(null);
+//        $this->assertEquals(1, count($tags));
+//    }
+//
+//    public function testAdminCanAssociateAndRemoveTagToWorkspace()
+//    {
+//        $this->loadUserData(array('admin' => 'admin'));
+//        $this->logUser($this->getUser('admin'));
+//        $pws = $this->getUser('admin')->getPersonalWorkspace();
+//        $workspaceId = $pws->getId();
+//        $crawler = $this->client->request("GET", "/workspaces/tag/admin/createform");
+//        $form = $crawler->filter('button[type=submit]')->form();
+//        $form['admin_workspace_tag_form[name]'] = 'tag';
+//        $this->client->submit($form);
+//
+//        $tag = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+//            ->findOneBy(array('user' => null, 'name' => 'tag'));
+//
+//        $this->client->request(
+//            "POST",
+//            "/workspaces/workspace/{$workspaceId}/tag/add/{$tag->getName()}"
+//        );
+//        $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
+//            ->findAdminByWorkspace($pws);
+//        $this->assertEquals(1, count($relWsTag));
+//
+//        $this->client->request(
+//            "DELETE",
+//            "/workspaces/workspace/{$workspaceId}/tag/remove/{$tag->getId()}"
+//        );
+//        $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
+//            ->findAdminByWorkspace($pws);
+//        $this->assertEquals(0, count($relWsTag));
+//    }
+//
+//    public function testAdminCanAssociateInexistingTagToWorkspace()
+//    {
+//        $this->loadUserData(array('admin' => 'admin'));
+//        $this->logUser($this->getUser('admin'));
+//        $pws = $this->getUser('admin')->getPersonalWorkspace();
+//        $workspaceId = $pws->getId();
+//
+//        $this->client->request(
+//            "POST",
+//            "/workspaces/workspace/{$workspaceId}/tag/add/tag"
+//        );
+//        $tags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+//            ->findByUser(null);
+//        $this->assertEquals(1, count($tags));
+//        $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
+//            ->findOneAdminByWorkspaceAndTag($pws, $tags[0]);
+//        $this->assertNotNull($relWsTag);
+//    }
+//
+//    public function testUserAndAdminCanCreateTagWithTheSameName()
+//    {
+//        $this->loadUserData(array('admin' => 'admin'));
+//        $this->logUser($this->getUser('admin'));
+//        $userId = $this->getUser('admin')->getId();
+//        $pws = $this->getUser('admin')->getPersonalWorkspace();
+//        $workspaceId = $pws->getId();
+//
+//        $this->client->request(
+//            "POST",
+//            "/workspaces/{$userId}/workspace/{$workspaceId}/tag/add/tag"
+//        );
+//        $userTags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+//            ->findByUser($this->getUser('admin'));
+//        $this->assertEquals(1, count($userTags));
+//        $userRelWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
+//            ->findOneByWorkspaceAndTagAndUser($pws, $userTags[0], $this->getUser('admin'));
+//        $this->assertNotNull($userRelWsTag);
+//
+//        $this->client->request(
+//            "POST",
+//            "/workspaces/workspace/{$workspaceId}/tag/add/tag"
+//        );
+//        $adminTags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+//            ->findByUser(null);
+//        $this->assertEquals(1, count($adminTags));
+//        $adminRelWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
+//            ->findOneAdminByWorkspaceAndTag($pws, $adminTags[0]);
+//        $this->assertNotNull($adminRelWsTag);
+//
+//        $allRelWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
+//            ->findAllByWorkspaceAndUser($pws, $this->getUser('admin'));
+//        $this->assertEquals(2, count($allRelWsTag));
+//    }
+//
+//    public function testNonAdminCantAccessCreateAdminTagForm()
+//    {
+//        $this->setExpectedException('Exception');
+//        $this->loadUserData(array('user' => 'user'));
+//        $this->logUser($this->getUser('user'));
+//        $crawler = $this->client->request('GET', '/workspaces/tag/admin/createform');
+//        $crawler->filter('button[type=submit]')->form();
+//    }
+//
+//    public function testNonAdminCantAssociateAdminTagToWorkspace()
+//    {
+//        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
+//        $this->logUser($this->getUser('admin'));
+//        $crawler = $this->client->request('GET', '/workspaces/tag/admin/createform');
+//        $form = $crawler->filter('button[type=submit]')->form();
+//        $form['admin_workspace_tag_form[name]'] = 'tag';
+//        $this->client->submit($form);
+//        $tag = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+//            ->findOneBy(array('user' => null, 'name' => 'tag'));
+//        $this->assertNotNull($tag);
+//
+//        $this->logUser($this->getUser('user'));
+//        $pws = $this->getUser('user')->getPersonalWorkspace();
+//        $this->client->request(
+//            "POST",
+//            "/workspaces/workspace/{$pws->getId()}/tag/add/{$tag->getName()}"
+//        );
+//        $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
+//            ->findOneAdminByWorkspaceAndTag($pws, $tag);
+//        $this->assertNull($relWsTag);
+//    }
+//
+//    public function testNonAdminCantRemoveAdminTagFromWorkspace()
+//    {
+//        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
+//        $this->logUser($this->getUser('admin'));
+//        $pws = $this->getUser('user')->getPersonalWorkspace();
+//        $this->client->request(
+//            "POST",
+//            "/workspaces/workspace/{$pws->getId()}/tag/add/tag"
+//        );
+//        $tag = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+//            ->findOneBy(array('user' => null, 'name' => 'tag'));
+//        $this->assertNotNull($tag);
+//
+//        $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
+//            ->findOneAdminByWorkspaceAndTag($pws, $tag);
+//        $this->assertNotNull($relWsTag);
+//
+//        $this->logUser($this->getUser('user'));
+//        $this->client->request(
+//            "DELETE",
+//            "/workspaces/workspace/{$pws->getId()}/tag/remove/{$tag->getId()}"
+//        );
+//        $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
+//            ->findOneAdminByWorkspaceAndTag($pws, $tag);
+//        $this->assertNotNull($relWsTag);
+//    }
 }

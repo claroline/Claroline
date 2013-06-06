@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 class ResourceRightsController extends Controller
 {
@@ -51,7 +52,11 @@ class ResourceRightsController extends Controller
 
                  return $this->render(
                      'ClarolineCoreBundle:Resource:resource_rights_form_creation.html.twig',
-                     array('form' => $form->createView(), 'resource' => $resource, 'roleId' => $roleId)
+                     array(
+                         'form' => $form->createView(),
+                         'resource' => $resource,
+                         'roleId' => $roleId,
+                     )
                  );
             } else {
                 $form = $this->createForm(new ResourceRightType($resource), $resourceRight);
@@ -62,7 +67,7 @@ class ResourceRightsController extends Controller
                         'form' => $form->createView(),
                         'resourceRightId' => $resourceRight->getId(),
                         'resource' => $resource,
-                        'roleId' => $roleId
+                        'roleId' => $roleId,
                     )
                 );
             }

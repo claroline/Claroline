@@ -440,6 +440,42 @@ class ResourceRightsControllerTest extends FunctionalTestCase
         );
     }
 
+    public function testWorkspaceResourceRightsForm()
+    {
+        $this->logUser($this->getUser('john'));
+        $wsId = $this->getWorkspace('john')->getId();
+        $tool = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool')
+            ->findOneByName('resource_manager');
+
+        $crawler = $this->client->request(
+            'GET',
+            "/workspaces/tool/properties/{$wsId}/tool/{$tool->getId()}/config"
+        );
+
+        $checkedPerms = $crawler->filter("tr[data-name='collaborator'] input:checked[type='checkbox']");
+        $uncheckedPerms = $crawler->filter("tr[data-name='collaborator'] input:not(:checked[type='checkbox'])");
+        $this->assertEquals(2, count($checkedPerms));
+        $this->assertEquals(3, count($uncheckedPerms));
+    }
+
+    public function testWorkspaceResourceRightsCreationForm()
+    {
+        $this->logUser($this->getUser('john'));
+        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $managerRole = $em->getRepository('ClarolineCoreBundle:Role')->findManagerRole($this->getWorkspace('john'));
+        $wsId = $this->getWorkspace('john')->getId();
+
+        $crawler = $this->client->request(
+            'GET',
+            "/resource/workspace/{$wsId}/rights/form/role/{$managerRole->getId()}"
+        );
+
+        $this->assertEquals(
+            5,
+            count($crawler->filter('input:checked[type="checkbox"]'))
+        );
+    }
+
     private function assertRolePermissionsOnResource(
         Role $role,
         AbstractResource $resource,

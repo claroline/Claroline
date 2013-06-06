@@ -9,42 +9,6 @@ use Claroline\CoreBundle\Controller\Tool\AbstractParametersController;
 
 class WorkspaceResourceParametersController extends AbstractParametersController
 {
-    /**
-     * @Route(
-     *     "/{workspaceId}/resource/rights/form/role/{roleId}",
-     *     name="claro_workspace_resource_rights_creation_form"
-     * )
-     * @Method("GET")
-     *
-     * @param integer $workspaceId
-     * @param integer $roleId
-     *
-     * @return Response
-     */
-    public function workspaceResourceRightsCreationFormAction($workspaceId, $roleId)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-        $this->checkAccess($workspace);
-        $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findWorkspaceRoot($workspace);
-        $role = $em->getRepository('ClarolineCoreBundle:Role')
-            ->find($roleId);
-        $config = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
-            ->findOneBy(array('resource' => $resource, 'role' => $role));
-        $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
-
-        return $this->render(
-            'ClarolineCoreBundle:Tool\workspace\parameters:resource_rights_creation.html.twig',
-            array(
-                'workspace' => $workspace,
-                'configs' => array($config),
-                'resourceTypes' => $resourceTypes,
-                'resourceId' => $resource->getId(),
-                'roleId' => $roleId
-            )
-        );
-    }
-
     public function workspaceResourceTypesAction()
     {
         $em = $this->get('doctrine.orm.entity_manager');
