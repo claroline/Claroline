@@ -78,7 +78,7 @@ class ThemeService
      * @param mixed $themes An array of Theme entities or an strig of the template with following syntax:
      *                        "ClarolineCoreBundle:less:bootstrap-default/theme.html.twig"
      */
-    public function compileTheme($themes, $webPath = "./")
+    public function compileTheme($themes, $webPath = ".")
     {
         //@TODO Find something better for web path
 
