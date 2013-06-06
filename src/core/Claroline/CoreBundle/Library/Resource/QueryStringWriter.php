@@ -38,7 +38,6 @@ class QueryStringWriter
      * - "_mode": indicates whether a resource should be rendered within a full page layout (default)
      *            or in a minimal "path" layout (used for activities / learning path)
      * - "_breadcrumbs": path of the directory in which the resource should be displayed
-     * - "_workspace": workspace in which the resource should be displayed
      *
      * @return string
      */
@@ -51,7 +50,7 @@ class QueryStringWriter
                 $parameters['_mode'] = 'path';
             }
 
-            foreach (array('_breadcrumbs', '_workspace') as $parameter) {
+            foreach (array('_breadcrumbs') as $parameter) {
                 if (null !== $value = $this->request->query->get($parameter)) {
                     $parameters[$parameter] = $value;
                 }

@@ -11,7 +11,7 @@
         mode : "textareas"
     });
     </script>
-    <form novalidate="validate" method="post" action="{{ path('claro_text_edit', {'textId':textId}) }}" id="edit_form">
+    <form novalidate="validate" method="post" action="{{ _path('claro_text_edit', {'textId':_resource.getId()}) }}" id="edit_form">
         <textarea name="content" cols="50" rows="15">{{ text|raw }}</textarea>
         <button type="submit" formnovalidate="formnovalidate" />
     </form>

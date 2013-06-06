@@ -20,6 +20,7 @@ vendor/*
 web/bundles/*
 web/twig.js
 web/js/*
+web/css/*
 web/HTMLPage/*
 files/*
 files/tmp/*

@@ -175,7 +175,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
             $currentPath = $currentPath . $parts[$i] . '-' . $parts[$i + 1] . '`';
             $ancestor['path'] = $currentPath;
             $ancestor['name'] = $parts[$i];
-            $ancestor['id'] = $parts[$i + 1];
+            $ancestor['id'] = (int)$parts[$i + 1];
             $ancestors[] = $ancestor;
         }
 
@@ -209,8 +209,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
             }
 
             $baseRoots = (count($criteria['roots']) > 0) ?
-                $criteria['roots']:
-                $this->findWorkspaceRootsPathByRoles($roles);
+                $criteria['roots']: array();
             $finalRoots = array_merge($additionnalRoots, $baseRoots);
             $criteria['roots'] = $finalRoots;
         }

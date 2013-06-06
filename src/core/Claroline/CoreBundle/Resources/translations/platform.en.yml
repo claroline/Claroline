@@ -17,7 +17,13 @@ admin_form_plainPassword_second : 'Repeat your password'
 admin_form_mail : 'Email adress'
 admin_form_username : 'Username'
 admin_logs: 'Platform logs'
+admin_tag_children_list: 'Admin tag children list'
+admin_tag_potential_children_list: 'Admin tag potential children list'
+admin_tags_add_remove_children_to: 'Add/Remove children to'
+admin_tags_hierarchy: 'Admin tags hierarchy'
+admin_tags_list: 'Admin tags list'
 admin_tags_management: 'Admin tags management'
+admin_tags_organization: 'Admin tags organization'
 admin_workspace_tag_form_name: Name
 administration: Administration
 administrative_code: 'Administrative code'
@@ -67,6 +73,7 @@ file_form_shareType: Sharable
 file_form_shareType_0: Yes
 file_form_shareType_1: false
 files: Files
+filter: Filter
 find_workspaces: 'Find workspaces'
 first_name: 'First name'
 form_role: Role
@@ -253,11 +260,14 @@ my_workspaces: 'My workspaces'
 name: Name
 new_message_alert: 'You have %count% new message(s)'
 no_search_results: 'Your search hasn''t returned any result.'
+none: None
 note: Note
 object: Object
 ok: Ok
 open: Open
 options: Options
+organize_admin_tags: 'Organize admin tags'
+organize_private_tags: 'Organize private tags'
 owner: Owner
 owner_s: Owner(s)
 parameters: Parameters
@@ -342,7 +352,13 @@ show_as: 'Show as'
 show_profile: 'Show profile'
 switch: Switch
 tag: Tag
+tag_children_list: 'Tag children list'
+tag_potential_children_list: 'Tag potential children list'
+tags_add_remove_children_to: 'Add/Remove children to'
+tags_hierarchy: 'Tags hierarchy'
+tags_list: 'Tags list'
 tags_management: 'Tags management'
+tags_organization: 'Tags organization'
 teacher: Teacher
 text_form_name: Name
 text_form_shareType: Sharable

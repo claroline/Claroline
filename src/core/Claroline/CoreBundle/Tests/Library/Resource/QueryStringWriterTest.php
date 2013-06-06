@@ -52,10 +52,9 @@ class QueryStringWriterTest extends MockeryTestCase
         $this->container->shouldReceive('isScopeActive')->with('request')->andReturn(true);
         $this->accessor->shouldReceive('isPathMode')->andReturn(false);
         $this->query->shouldReceive('get')->with('_breadcrumbs')->andReturn(array('123', '456'));
-        $this->query->shouldReceive('get')->with('_workspace')->andReturn('789');
         $writer = new QueryStringWriter($this->container, $this->accessor);
         $this->assertEquals(
-            '_breadcrumbs%5B0%5D=123&_breadcrumbs%5B1%5D=456&_workspace=789',
+            '_breadcrumbs%5B0%5D=123&_breadcrumbs%5B1%5D=456',
             $writer->getQueryString()
         );
     }
