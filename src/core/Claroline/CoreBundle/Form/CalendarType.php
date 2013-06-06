@@ -17,7 +17,7 @@ class CalendarType extends AbstractType
                 'start',
                 'date',
                 array(
-                    'format' => 'd-M-yyyy',
+                    'format' => 'd-M-yyyy ',
                     'widget' => 'single_text',
                     )
             )

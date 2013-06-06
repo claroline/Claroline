@@ -1,21 +1,27 @@
-{% macro showTag(tag, tagWs) %}
-    <div class="accordion" id="accordion-{{ tag.getId() }}">
+{% macro showTag(tagsList, tagWorkspaces, hierarchy, index, displayable) %}
+{% for tag in tagsList %}
+    {% if displayable[tag.getId()] %}
+    {% set currentIndex = index ~ "-" ~ tag.getId() %}
+    <div class="accordion" id="accordion-{{ index }}-{{ tag.getId() }}">
         <div class="accordion-group">
             <div class="accordion-heading">
                 <a  class="accordion-toggle"
                     data-toggle="collapse"
-                    data-parent="#accordion-{{ tag.getId() }}"
-                    href="#collapse-{{ tag.getId() }}"
+                    data-parent="#accordion-{{ currentIndex }}"
+                    href="#collapse-{{ currentIndex }}"
                 >
                     <i class="icon-align-justify"></i>
                     {{ tag.getName() }}
                     <i class="icon-chevron-down pull-right"></i>
                 </a>
             </div>
-            <div id="collapse-{{ tag.getId() }}" class="accordion-body collapse">
+            <div id="collapse-{{ currentIndex }}" class="accordion-body collapse">
                 <div class="accordion-inner">
+                    {% if hierarchy[tag.getId()]|length > 0 %}
+                    {{ _self.showTag(hierarchy[tag.getId()], tagWorkspaces, hierarchy, currentIndex, displayable) }}
+                    {% endif %}
                     <ul>
-                        {% for relWorkspaceTag in tagWs %}
+                        {% for relWorkspaceTag in tagWorkspaces[tag.id] %}
                         {% set workspace = relWorkspaceTag.getWorkspace() %}
                         <li class="row-workspace row-workspace-id-{{ workspace.getId() }}">
                             <i class="icon-book"></i>
@@ -36,6 +42,8 @@
             </div>
         </div>
     </div>
+    {% endif %}
+{% endfor %}
 {% endmacro %}
 
 {% from _self import showTag %}
@@ -92,8 +100,6 @@
         </div>
     </div>
 
-    {% for tag in tags %}
-    {{ showTag(tag, tagWorkspaces[tag.id]) }}
-    {% endfor %}
+    {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable) }}
 
 {% endblock %}
