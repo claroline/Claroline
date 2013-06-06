@@ -579,7 +579,7 @@ class ResourceController extends Controller
     public function findRoleByWorkspaceCodeAction($code)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $roles = $em->getRepository('ClarolineCoreBundle:Role')->findByWorkspaceCode($code);
+        $roles = $em->getRepository('ClarolineCoreBundle:Role')->findByWorkspaceCodeTag($code);
         $arWorkspace = array();
 
         foreach ($roles as $role) {
