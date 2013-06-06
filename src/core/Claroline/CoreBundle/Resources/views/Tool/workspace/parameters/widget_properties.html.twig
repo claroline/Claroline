@@ -13,13 +13,18 @@
             </a>
         </li>
         <span class="divider"> / </span>
+            <a href="{{ path('claro_workspace_tool_config',
+                {'workspace': workspace.getId(), 'tool': tool.getId()}) }}">
+                {{ 'home'|trans({}, 'platform') }}
+            </a>
+        <span class="divider"> / </span>
         <li>
             <a href="#">{{ 'widgets'|trans({}, 'platform') }}</a>
         </li>
     </ul>
-    
+
     <div class='margin'>
-        
+
         <table id="widget-table"  class="table table-striped table-bordered table-condensed">
             <thead>
                 <tr>

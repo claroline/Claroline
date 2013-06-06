@@ -34,7 +34,7 @@ class WorkspaceWidgetParametersController extends AbstractParametersController
 
         return $this->render(
             'ClarolineCoreBundle:Tool\workspace\parameters:widget_properties.html.twig',
-            array('workspace' => $workspace, 'configs' => $configs)
+            array('workspace' => $workspace, 'configs' => $configs, 'tool' => $this->getHomeTool())
         );
     }
 
@@ -120,10 +120,16 @@ class WorkspaceWidgetParametersController extends AbstractParametersController
         if ($event->getContent() !== '') {
             return $this->render(
                 'ClarolineCoreBundle:Tool\workspace\parameters:widget_configuration.html.twig',
-                array('content' => $event->getContent(), 'workspace' => $workspace)
+                array('content' => $event->getContent(), 'workspace' => $workspace, 'tool' => $this->getHomeTool())
             );
         }
 
         throw new \Exception("event {$eventName} didn't return any Response");
+    }
+
+    private function getHomeTool()
+    {
+        return $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Tool\Tool')
+            ->findOneByName('home');
     }
 }

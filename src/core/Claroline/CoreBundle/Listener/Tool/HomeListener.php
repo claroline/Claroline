@@ -8,7 +8,9 @@ use Claroline\CoreBundle\Library\Event\ImportWidgetConfigEvent;
 use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Library\Event\ExportToolEvent;
 use Claroline\CoreBundle\Library\Event\ImportToolEvent;
+use Claroline\CoreBundle\Library\Event\ConfigureWorkspaceToolEvent;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @DI\Service
@@ -49,6 +51,19 @@ class HomeListener
     public function onDisplayWorkspaceHome(DisplayToolEvent $event)
     {
         $event->setContent($this->workspaceHome($event->getWorkspace()->getId()));
+    }
+
+    /**
+     * @DI\Observe("configure_workspace_tool_home")
+     */
+    public function onWorkspaceConfigure(ConfigureWorkspaceToolEvent $event)
+    {
+        $content = $this->templating->render(
+            'ClarolineCoreBundle:Tool\workspace\home:configuration.html.twig',
+            array('workspace' => $event->getWorkspace(), 'tool' => $event->getTool())
+        );
+        $event->setContent($content);
+        $event->stopPropagation();
     }
 
     /**
