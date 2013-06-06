@@ -113,7 +113,7 @@ class Event
             return $this->end;
 
         } else {
-            $date = date('d-m-Y', $this->end);
+            $date = date('d-m-Y H:i', $this->end);
 
             return (new \Datetime($date));
         }
