@@ -3,39 +3,41 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-class FileControlller extends Controller 
+class FileControlller extends Controller
 {
 	/**
      * @Route(
-     *     "resource/file",
-     *     name="claro_file_hashtag"
+     *     "resource/img/{imageId}",
+     *     name="claro_file_get_image",
+     *     options={"expose"=true}
      * )
-     * @Method("POST")
+     * @Method("GET")
      *
      * @param integer $id
      *
      * @return Response
      */
-    public function hashtagAction()
+    public function getImg($imageId)
     {
-        $request = $this->get('request');
-        if ($request->getMethod() === 'POST') {
-            $postData = $request->request->all();
-            $em = $this->get('doctrine.orm.entity_manager');
-            $file = $em->getRepository('ClarolineCoreBundle:Resource\File')->find($postData['id']);
-            $ds = DIRECTORY_SEPARATOR;
+        $em = $this->get('doctrine.orm.entity_manager');
+        $file = $em->getRepository('ClarolineCoreBundle:Resource\File')->find($imageId);
+        $imgpath = $this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR
+            . $file->getHashName();
 
-           return new Response(
-               json_encode($file->getHashName()),
-               200,
-               array('Content-Type' => 'application/json')
-           );
-        }
-	}
+        $response = new StreamedResponse();
+        $response->setCallBack(
+            function () use ($imgpath) {
+                readfile($imgpath);
+            }
+        );
+
+        $response->headers->set('Content-Type', $file->getMimeType());
+
+        return $response;
+    }
 }
-?>
