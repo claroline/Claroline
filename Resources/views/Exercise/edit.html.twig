@@ -38,10 +38,70 @@
 {% block section_content %}
 
 {{ tinymce_init() }}
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="{{ asset('bundles/ujmexo/js/dateTimePicker.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
+
 <h1>Exercise edit</h1>
 
 <form action="{{ path('ujm_exercise_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
-    {{ form_widget(edit_form) }}
+    {#{ form_widget(edit_form) }#}
+        
+    {{ form_row(edit_form.title) }}
+        
+    {{ form_row(edit_form.description) }}
+        
+    {{ form_row(edit_form.shuffle) }}
+        
+    {{ form_row(edit_form.nbQuestion) }}
+        
+    {{ form_row(edit_form.duration) }}
+        
+    {{ form_row(edit_form.doprint) }}
+        
+    {{ form_row(edit_form.maxAttempts) }}
+        
+    {{ form_row(edit_form.correctionMode) }}
+        
+    <div class="input-append date picker">
+        {{ form_label(edit_form.dateCorrection) }}
+        {{ form_widget(edit_form.dateCorrection) }}
+        <span class="add-on">
+            <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+            </i>
+        </span>
+    </div>
+    <br/>
+    
+    {{ form_row(edit_form.markMode) }}
+        
+    <div class="input-append date picker">
+        {{ form_label(edit_form.start_date) }}
+        {{ form_widget(edit_form.start_date) }}
+        <span class="add-on">
+            <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+            </i>
+        </span>
+    </div>
+    <br/>
+    
+    {{ form_row(edit_form.useDateEnd) }}
+    
+    <div class="input-append date picker">
+        {{ form_label(edit_form.end_date) }}
+        {{ form_widget(edit_form.end_date) }}
+        <span class="add-on">
+            <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+            </i>
+        </span>
+    </div>
+    <br/>
+        
+    {{ form_row(edit_form.dispButtonInterrupt) }}
+    
+    {{ form_row(edit_form.lockAttempt) }}
+    
+    {{ form_rest(edit_form) }}
     <p>
         <button type="submit">{{ "Edit" | trans }}</button>
     </p>
@@ -59,12 +119,9 @@
 
 {% block stylesheets %}
 {{ parent() }}
+<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('bundles/frontend/jquery/plugin/datetimepicker/build/css/bootstrap-datetimepicker.min.css') }}">
 {% endblock %}
 
 {% block javascripts %}
-{{ parent() }}
-    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}" type="text/javascript"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/js/jquery-ui-1.9.2.custom.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/activity/index.js') }}"></script>
-    <script src="{{ asset('bundles/ujmexo/js/dateTimePicker.js') }}"></script>
+    {{ parent() }}
 {% endblock %}

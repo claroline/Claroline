@@ -105,9 +105,10 @@ class ExerciseType extends AbstractType
                 'dateCorrection', 'datetime', array(
                     'widget' => 'single_text',
                     'input' => 'datetime',
-                    'format' => 'dd/MM/yyyy HH:mm',
-                    'attr' => array('class' => 'date'),
-                    'label' => 'Correction date'
+                    'format' => 'dd/MM/yyyy hh:mm:ss',
+                    'attr' => array('data-format' => 'dd/MM/yyyy hh:mm:ss'),
+                    'label' => 'Correction date',
+                    'read_only' => true
                 )
             )
             ->add(
@@ -123,9 +124,10 @@ class ExerciseType extends AbstractType
                 'start_date', 'datetime', array(
                 'widget' => 'single_text',
                 'input' => 'datetime',
-                'format' => 'dd/MM/yyyy HH:mm',
-                'attr' => array('class' => 'datepicker'),
-                'label' => 'Start date'
+                'format' => 'dd/MM/yyyy hh:mm:ss',
+                'attr' => array('data-format' => 'dd/MM/yyyy hh:mm:ss'),
+                'label' => 'Start date',
+                'read_only' => true
                 )
             )
             ->add(
@@ -137,9 +139,10 @@ class ExerciseType extends AbstractType
                 'end_date', 'datetime', array(
                     'widget' => 'single_text',
                     'input' => 'datetime',
-                    'format' => 'dd/MM/yyyy HH:mm',
-                    'attr' => array('class' => 'datepicker'),
-                    'label' => 'end_date'
+                    'format' => 'dd/MM/yyyy hh:mm:ss',
+                    'attr' => array('data-format' => 'dd/MM/yyyy hh:mm:ss'),
+                    'label' => 'end_date',
+                    'read_only' => true
                 )
             )
             ->add(

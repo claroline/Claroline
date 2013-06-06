@@ -4,5 +4,5 @@
  */
 
 $(document).ready(function () {
-    $('.datepicker').datepicker();
+    $('.picker').datetimepicker();
 });
