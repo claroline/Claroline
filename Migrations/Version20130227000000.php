@@ -660,7 +660,7 @@ class Version20130227000000 extends BundleMigration
             array('onDelete' => 'CASCADE')
         );
     }
-    
+
     private function createShareTable(Schema $schema)
     {
         $table = $schema->createTable('ujm_share');
