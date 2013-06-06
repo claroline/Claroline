@@ -74,7 +74,7 @@
         list.style.display = "none";
         button.style.display = "block";
 
-        this_select = window.opener.document.InterGraphForm.ujm_exobundle_interactiongraphictype_document;
+        this_select = window.opener.InterGraphForm.ujm_exobundle_interactiongraphictype_document;
         this_select.options[this_select.length] = new Option(label, idDoc, true, true);
 
         for (var i = 0; i < this_select.options.length; i++) {
@@ -82,6 +82,8 @@
                 this_select.options[i].selected = true;
             }
         }
+        
+        window.close();
     }
 
     // Display the loading message
