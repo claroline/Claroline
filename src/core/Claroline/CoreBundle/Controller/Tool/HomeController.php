@@ -2,7 +2,11 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
+use Claroline\CoreBundle\Library\Event\ConfigureWidgetWorkspaceEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\Response;
+use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
@@ -43,7 +47,7 @@ class HomeController extends Controller
 
     /**
      * @Route(
-     *     "/{workspaceId}/widget",
+     *     "workspace/{workspaceId}/widget",
      *     name="claro_workspace_widget_properties"
      * )
      * @Method("GET")
@@ -58,19 +62,23 @@ class HomeController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-        $this->checkAccess($workspace);
+
+        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
+            throw new AccessDeniedException();
+        }
+
         $configs = $this->get('claroline.widget.manager')
             ->generateWorkspaceDisplayConfig($workspaceId);
 
         return $this->render(
-            'ClarolineCoreBundle:Tool\workspace\parameters:widget_properties.html.twig',
+            'ClarolineCoreBundle:Tool\workspace\home:widget_properties.html.twig',
             array('workspace' => $workspace, 'configs' => $configs, 'tool' => $this->getHomeTool())
         );
     }
 
     /**
      * @Route(
-     *     "/{workspaceId}/widget/{widgetId}/baseconfig/{displayConfigId}/invertvisible",
+     *     "workspace/{workspaceId}/widget/{widgetId}/baseconfig/{displayConfigId}/invertvisible",
      *     name="claro_workspace_widget_invertvisible",
      *     options={"expose"=true}
      * )
@@ -92,7 +100,11 @@ class HomeController extends Controller
         $em = $this->getDoctrine()->getManager();
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
             ->find($workspaceId);
-        $this->checkAccess($workspace);
+
+        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
+            throw new AccessDeniedException();
+        }
+
         $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
             ->find($widgetId);
         $displayConfig = $em
@@ -140,7 +152,11 @@ class HomeController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
             ->find($workspaceId);
-        $this->checkAccess($workspace);
+
+        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
+            throw new AccessDeniedException();
+        }
+
         $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
             ->find($widgetId);
         $event = new ConfigureWidgetWorkspaceEvent($workspace);
@@ -149,7 +165,7 @@ class HomeController extends Controller
 
         if ($event->getContent() !== '') {
             return $this->render(
-                'ClarolineCoreBundle:Tool\workspace\parameters:widget_configuration.html.twig',
+                'ClarolineCoreBundle:Tool\workspace\home:widget_configuration.html.twig',
                 array('content' => $event->getContent(), 'workspace' => $workspace, 'tool' => $this->getHomeTool())
             );
         }

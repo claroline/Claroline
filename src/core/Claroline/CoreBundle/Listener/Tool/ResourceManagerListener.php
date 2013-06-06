@@ -134,7 +134,7 @@ class ResourceManagerListener
             ->findNonAdminRights($resource);
 
         return $this->templating->render(
-            'ClarolineCoreBundle:Tool\workspace\parameters:resources_rights.html.twig',
+            'ClarolineCoreBundle:Tool\workspace\resource_manager:resources_rights.html.twig',
             array('workspace' => $workspace, 'resource' => $resource, 'roleRights' => $roleRights)
         );
     }
