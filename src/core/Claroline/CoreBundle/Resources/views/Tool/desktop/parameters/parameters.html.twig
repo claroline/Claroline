@@ -16,6 +16,12 @@
             <li class='li-user-parameters'>
             <a href="{{ path('claro_tool_properties') }}">{{ 'tools'|trans({}, 'platform') }}</a>
             </li>
-        </ul>    
+        </ul>
     </div>
+
+    <ul>
+        {% for tool in tools %}
+            <li> {{ tool.getName() }} </li>
+        {% endfor %}
+    </ul>
 {% endblock %}

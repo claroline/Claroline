@@ -7,7 +7,9 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Claroline\CoreBundle\Controller\Tool\AbstractParametersController;
-use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Library\Event\ConfigureWorkspaceToolEvent;
 use Claroline\CoreBundle\Form\WorkspaceEditType;
 use Claroline\CoreBundle\Form\WorkspaceTemplateType;
 
@@ -151,5 +153,34 @@ class WorkspaceParametersController extends AbstractParametersController
             'ClarolineCoreBundle:Tool\workspace\parameters:workspace_edit.html.twig',
             array('form' => $form->createView(), 'workspace' => $workspace)
         );
+    }
+
+    /**
+     * @Route(
+     *     "/{workspace}/tool/{tool}/config",
+     *     name="claro_workspace_tool_config"
+     * )
+     * @Method("GET")
+     *
+     * @param AbstractWorkspace $workspace
+     * @param Tool $tool
+     *
+     * @return Response
+     */
+    public function openWorkspaceToolConfig(AbstractWorkspace $workspace, Tool $tool)
+    {
+        $this->checkAccess($workspace);
+
+        $event = new ConfigureWorkspaceToolEvent($tool, $workspace);
+        $eventName = strtolower('configure_workspace_tool_' . $tool->getName());
+        $this->get('event_dispatcher')->dispatch($eventName, $event);
+
+        if (is_null($event->getContent())) {
+            throw new \Exception(
+                "Tool '{$tool->getName()}' didn't return any Response for tool event '{$eventName}'."
+            );
+        }
+
+        return new Response($event->getContent());
     }
 }
