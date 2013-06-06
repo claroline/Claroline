@@ -148,7 +148,6 @@ class CategoryController extends Controller
             //return new Response("oké");
             //$this->renderText('oké');
             return $this->redirect($this->generateUrl('category_show', array('id' => $entity->getId())));
-
         }
 
         return $this->render(
@@ -170,19 +169,18 @@ class CategoryController extends Controller
         if ($request->isXmlHttpRequest()) {
             $val = $request->request->get('value');
             $entity  = new Category();
-                $entity->setValue($val);
-                $entity->setUser($this->container->get('security.context')->getToken()->getUser());
-                $em = $this->getDoctrine()->getEntityManager();
-                $em->persist($entity);
-                $em->flush();
+            $entity->setValue($val);
+            $entity->setUser($this->container->get('security.context')->getToken()->getUser());
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->persist($entity);
+            $em->flush();
 
-                return new Response($entity->getId());
+            return new Response($entity->getId());
 
         } else {
 
             return 0;
         }
-
     }
 
     /**

@@ -35,7 +35,8 @@
 {% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
 
 {% block section_content %}
-    <h4>{{ "My questions" | trans }}</h4>
+    <h3>{{ "My questions" | trans }}</h3>
+    <hr/>
     <table class="records_list">
         <thead>
             <tr>
@@ -80,11 +81,17 @@
         {% endfor %}
         </tbody>
     </table>
-
+<hr/>
     <ul>
-        <li>
+        <li style="float: left;">
             <a href="{{ path('ujm_question_new') }}">
                 {{ "Create a new entry" | trans }}
+            </a>
+        </li>
+        
+        <li style="float: left; margin-left: 80px;">
+            <a href="{{ path('ujm_question_manage_doc') }}">
+                {{ "manageImg" | trans }}
             </a>
         </li>
     </ul>

@@ -57,7 +57,6 @@ use UJM\ExoBundle\Entity\Interaction;
 class ExerciseController extends Controller
 {
 
-
     /**
      * Displays a form to edit an existing Exercise entity.
      *
@@ -155,7 +154,7 @@ class ExerciseController extends Controller
             throw $this->createNotFoundException('Unable to find Exercise entity.');
         }
 
-        if ( ($this->controlDate($exoAdmin, $exercise) === true)
+        if (($this->controlDate($exoAdmin, $exercise) === true)
             && ($this->controlMaxAttemps($exercise, $user, $exoAdmin) === true)
         ) {
             $allowToCompose = 1;
@@ -296,7 +295,6 @@ class ExerciseController extends Controller
      */
     public function deleteQuestionAction($exoID, $qid)
     {
-
         $em = $this->getDoctrine()->getEntityManager();
         $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($exoID);
         $this->checkAccess($exercise);
@@ -320,7 +318,6 @@ class ExerciseController extends Controller
      */
     public function exercisePaperAction($id)
     {
-
         $user = $this->container->get('security.context')->getToken()->getUser();
         $uid = $user->getId();
 

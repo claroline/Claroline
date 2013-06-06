@@ -242,7 +242,6 @@ PlaceZone: To move an answer zone, select it by clicking on it and click again t
 Resize: To resize the answer zone, select it by clicking, then press Alt and move your mouse.
 SelectZone: To define an answer zone, click on it and place it by re-clicking to the selected place on the image. You can also press CTRL key and click on the picture where it should be placed.
 Erase: To erase an answer zone, press s key and click on the erasable answer zone.
-unsupport: Your browser doesn't accept canvas. Please, update.
 Answer zone: Answer zone
 Shape: Shape
 Color: Color
@@ -261,3 +260,22 @@ notAll: All the answers zones haven\'t been placed !
 onlyOnce: => The rights answers count only once.
 wrong: The input value is wrong.
 inside: You must put all the answer zone INSIDE the picture ...
+manageImg: Manage my documents ...
+Preview: Preview
+Label: Label
+waring: Are you sure you want to delete this document ?
+linkedDoc: Warning, the document you tried to delete is linked to questions !
+whichAction: Which action would you like to do ?
+doNothing: Do nothing and go back to my documents management ...
+seeDoc: See linked questions to this document.
+delDocQuestion: Delete this document and all the linked questions !
+creationDate: Creation date
+Linkpaper: Link to a test with answers ?
+no: no
+yes: yes
+docName: Document name ?
+addDoc: Add a document ...
+changeName: Change the name
+newName: New name ?
+change: Change !
+sort: Sort

@@ -115,7 +115,6 @@ class InteractionGraphicController extends Controller
      */
     public function createAction()
     {
-
         $user = $this->container->get('security.context')->getToken()->getUser();
 
         $interGraph = new InteractionGraphic();
@@ -346,7 +345,11 @@ class InteractionGraphicController extends Controller
             ->add('id', 'hidden')
             ->getForm();
     }
-    
+
+    /**
+     * Persist coordonates of the answer zones into the database.
+     *
+     */
     public function PersitNewCoords ($coord, $interGraph, $lengthCoord)
     {
         $result = array();
@@ -380,10 +383,10 @@ class InteractionGraphicController extends Controller
             ${'co'.$i}->setScoreCoords(${'point'.$i});
             ${'co'.$i}->setInteractionGraphic($interGraph);
             ${'co'.$i}->setSize(${'size'.$i});
-            
+
             $result[$i]=${'co'.$i};
         }
-        
+
         return $result;
     }
 
@@ -402,7 +405,6 @@ class InteractionGraphicController extends Controller
      */
     public function displayPicAction()
     {
-
         $request = $this->container->get('request');
 
         if ($request->isXmlHttpRequest()) {
@@ -480,7 +482,6 @@ class InteractionGraphicController extends Controller
      */
     public function responseGraphicAction()
     {
-
         $request = $this->container->get('request');
         $exerciseSer = $this->container->get('ujm.exercise_services');
         $res = $exerciseSer->responseGraphic($request);

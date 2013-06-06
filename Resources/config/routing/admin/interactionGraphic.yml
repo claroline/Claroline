@@ -1,5 +1,5 @@
 ujm_interactiongraphic_AddImg:
-    pattern:  /AjoutImg
+    pattern:  /AjoutImg/{redirection}
     defaults: { _controller: "UJMExoBundle:WSRest:postDocumentAdd" }
     requirements: { _method: post }
     
@@ -21,7 +21,7 @@ ujm_interactiongraphic_response:
 ujm_interactiongraphic_SavePic:
     pattern:  /SavePic
     defaults: { _controller: "UJMExoBundle:InteractionGraphic:savePic" }
-    
+
 ujm_interactiongraphic_update:
     pattern:  /{id}/update
     defaults: { _controller: "UJMExoBundle:InteractionGraphic:update" }

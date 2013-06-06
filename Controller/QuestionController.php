@@ -63,7 +63,6 @@ use UJM\ExoBundle\Entity\Interaction;
 use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Form\ResponseType;
 
-
 use UJM\ExoBundle\Repository\InteractionGraphicRepository;
 /**
  * Question controller.
@@ -95,8 +94,6 @@ class QuestionController extends Controller
                 $questionWithResponse[] = 0;
             }
         }
-
-        //var_dump($questionWithResponse);
 
         return $this->render(
             'UJMExoBundle:Question:index.html.twig', array(
@@ -190,7 +187,6 @@ class QuestionController extends Controller
         } else {
             return $this->redirect($this->generateUrl('question'));
         }
-
     }
 
     /**
@@ -219,7 +215,6 @@ class QuestionController extends Controller
             $em->flush();
 
             return $this->redirect($this->generateUrl('question_show', array('id' => $entity->getId())));
-
         }
 
         return $this->render(
@@ -259,7 +254,7 @@ class QuestionController extends Controller
                         ->getEntityManager()
                         ->getRepository('UJMExoBundle:InteractionQCM')
                         ->getInteractionQCM($interaction[0]->getId());
-                    //apel fonction qui trie
+                    //fired a sort function
                     $interactionQCM[0]->sortChoices();
 
                     $editForm = $this->createForm(
@@ -339,7 +334,6 @@ class QuestionController extends Controller
         } else {
             return $this->redirect($this->generateUrl('question'));
         }
-
     }
 
     /**
@@ -475,7 +469,7 @@ class QuestionController extends Controller
             $exoID = $request->request->get('exercise');
 
             if ($valType != 0) {
-                //index 1=Hole Question
+                //index 1 = Hole Question
                 if ($valType == 1) {
                     $entity = new InteractionHole();
                     $form   = $this->createForm(
@@ -494,7 +488,7 @@ class QuestionController extends Controller
                     );
                 }
 
-                //index 1=QCM Question
+                //index 1 = QCM Question
                 if ($valType == 2) {
                     $entity = new InteractionQCM();
                     $form   = $this->createForm(
@@ -513,7 +507,7 @@ class QuestionController extends Controller
                     );
                 }
 
-                //index 1=Graphic Question
+                //index 1 = Graphic Question
                 if ($valType == 3) {
                     $entity = new InteractionGraphic();
                     $form   = $this->createForm(
@@ -532,7 +526,7 @@ class QuestionController extends Controller
                     );
                 }
 
-                //index 1=Open Question
+                //index 1 = Open Question
                 if ($valType == 4) {
                     $entity = new InteractionOpen();
                     $form   = $this->createForm(
@@ -554,32 +548,38 @@ class QuestionController extends Controller
         }
     }
 
+    /**
+     * To share Question
+     *
+     */
     public function shareAction($questionID)
     {
-        
         return $this->render(
-                        'UJMExoBundle:Question:share.html.twig', array(
-                        'questionID' => $questionID
-                        )
-                        );
+            'UJMExoBundle:Question:share.html.twig', array(
+            'questionID' => $questionID
+            )
+        );
     }
-    
+
+    /**
+     * To search Question
+     *
+     */
     public function searchAction()
     {
         $request = $this->container->get('request');
         $search = $request->request->get('search');
-        
-        if ($search != '')
-        {
+
+        if ($search != '') {
             $em = $this->getDoctrine()->getEntityManager();
             $userList = $em->getRepository('ClarolineCoreBundle:User')->findByName($search);
         }
-        
+
         return $this->render(
-                        'UJMExoBundle:Question:search.html.twig', array(
-                        'userList' => $userList
-                        )
-                        );
+            'UJMExoBundle:Question:search.html.twig', array(
+            'userList' => $userList
+            )
+        );
     }
 
     /**
@@ -596,5 +596,176 @@ class QuestionController extends Controller
             ->getControlOwnerQuestion($user->getId(), $questionID);
 
         return $question;
+    }
+
+    /**
+     * To manage the User's documents
+     *
+     */
+    public function manageDocAction()
+    {
+        $user = $this->container->get('security.context')->getToken()->getUser();
+
+        $repository = $this->getDoctrine()
+            ->getManager()
+            ->getRepository('UJMExoBundle:Document');
+
+        $listDoc = $repository->findBy(array('user' => $user->getId()));
+
+        return $this->render('UJMExoBundle:Question:manageImg.html.twig', array(
+            'listDoc' => $listDoc
+            )
+        );
+    }
+
+    /**
+     * To delete a User's document
+     *
+     */
+    public function deleteDocAction($label)
+    {
+        $dontdisplay = 0;
+        $repositoryDoc = $this->getDoctrine()
+            ->getManager()
+            ->getRepository('UJMExoBundle:Document');
+
+        $listDoc = $repositoryDoc->findOneBy(array('label' => $label));
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->findBy(array('document' => $listDoc));
+
+        if (!$entity) {
+
+            $em->remove($listDoc);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('ujm_question_manage_doc'));
+
+        } else {
+
+            $questionWithResponse = array();
+
+            for ($i = 0; $i < count($entity); $i++) {
+
+                $response = $em->getRepository('UJMExoBundle:Response')->findBy(array('interaction' => $entity[$i]->getInteraction()->getId()));
+
+                if (count($response) > 0) {
+                    $questionWithResponse[] = 1;
+                    $dontdisplay = 1;
+                } else {
+                    $questionWithResponse[] = 0;
+                }
+            }
+
+            return $this->render('UJMExoBundle:Question:safeDelete.html.twig', array(
+                'listGraph' => $entity,
+                'label' => $label,
+                'questionWithResponse' => $questionWithResponse,
+                'dontdisplay' => $dontdisplay
+                )
+            );
+        }
+    }
+
+    /**
+     * To delete a User's document linked to questions but not to paper
+     *
+     */
+    public function deletelinkedDocAction($label)
+    {
+        $repositoryDoc = $this->getDoctrine()
+            ->getManager()
+            ->getRepository('UJMExoBundle:Document');
+
+        $listDoc = $repositoryDoc->findOneBy(array('label' => $label));
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->findBy(array('document' => $listDoc));
+
+        for ($i = 0; $i < count($entity); $i++) {
+            $em->remove($entity[$i]);
+        }
+
+        $em->remove($listDoc);
+        $em->flush();
+
+        return $this->redirect($this->generateUrl('ujm_question_manage_doc'));
+    }
+
+    /**
+     * To change the label of a document
+     *
+     */
+    public function updateNameAction()
+    {
+        $newlabel = $this->container->get('request')->request->get('newlabel');
+        $oldlabel = $this->get('request')->get('oldName');
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $alterDoc = $em->getRepository('UJMExoBundle:Document')->findOneBy(array('label' => $oldlabel));
+
+        $alterDoc->setLabel($newlabel);
+
+        $em->persist($alterDoc);
+        $em->flush();
+
+        return $this->redirect($this->generateUrl('ujm_question_manage_doc'));
+    }
+
+    /**
+     * To sort document by type
+     *
+     */
+    public function sortDocumentsAction()
+    {
+        $request = $this->container->get('request');
+        $user = $this->container->get('security.context')->getToken()->getUser();
+
+        if ($request->isXmlHttpRequest()) {
+            $type = $request->request->get('doctype');
+
+            if ($type) {
+                $repository = $this->getDoctrine()
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:Document');
+
+                if ($type == 'all') {
+                    $listDocSort = $repository->findBy(array('user' => $user->getId()));
+                } else {
+                    $listDocSort = $repository->findByType($type);
+                }
+            }
+        }
+
+        return $this->render('UJMExoBundle:Question:sortDoc.html.twig', array(
+            'listDoc' => $listDocSort
+            )
+        );
+    }
+
+    /**
+     * To search document with a defined label
+     *
+     */
+    public function searchDocAction()
+    {
+        $request = $this->container->get('request');
+
+        if ($request->isXmlHttpRequest()) {
+            $labelToFind = $request->request->get('labelToFind');
+
+            if ($labelToFind) {
+                $em = $this->getDoctrine()->getEntityManager();
+                $listFindDoc = $em->getRepository('UJMExoBundle:Document')->findByLabel($labelToFind);
+            }
+        }
+
+        return $this->render('UJMExoBundle:Question:sortDoc.html.twig', array(
+            'listDoc' => $listFindDoc
+            )
+        );
     }
 }

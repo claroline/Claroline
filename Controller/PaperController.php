@@ -123,7 +123,7 @@ class PaperController extends Controller
             $display = 'all';
 
         } else if (($user->getId() == $paper->getUser()->getId()) && ($paper->getExercise()->getMarkMode() == 2)) {
-            //si pas le droit à la correction mais que la note peut être affiché à la fin du test
+            // If not allowed to see correction but mark can be displayed at the end of the assessment
             $display = 'score';
         } else {
             return $this->redirect($this->generateUrl('exercise_show', array('id' => $paper->getExercise()->getId())));

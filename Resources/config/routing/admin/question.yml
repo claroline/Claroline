@@ -38,3 +38,33 @@ ujm_question_share_search_user:
 ujm_question_show:
     pattern:  /show/{id}
     defaults: { _controller: "UJMExoBundle:Question:show" }
+    
+ujm_question_manage_doc:
+    pattern:  /manageDoc
+    defaults: { _controller: "UJMExoBundle:Question:manageDoc" }
+    
+ujm_document_del:
+    pattern:  /deleteDoc/{label}
+    defaults: { _controller: "UJMExoBundle:Question:deleteDoc" }
+    
+ujm_document_del_linked:
+    pattern:  /deletelinkedDoc/{label}
+    defaults: { _controller: "UJMExoBundle:Question:deletelinkedDoc" }
+    
+ujm_question_name_update:
+    pattern: /update/name
+    defaults: { _controller: "UJMExoBundle:Question:updateName" }
+    requirements:
+        _method: POST
+      
+ujm_question_sortDocuments:
+    pattern: /sort
+    defaults: { _controller: "UJMExoBundle:Question:sortDocuments" }
+    requirements:
+        _method: POST
+        
+ujm_question_searchDocuments:
+    pattern: /search
+    defaults: { _controller: "UJMExoBundle:Question:searchDoc" }
+    requirements:
+        _method: POST

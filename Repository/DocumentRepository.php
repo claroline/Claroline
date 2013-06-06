@@ -47,4 +47,38 @@ use Doctrine\ORM\EntityRepository;
  */
 class DocumentRepository extends EntityRepository
 {
+    public function findByType($type)
+    {
+        if ($type == 'image') {
+            $dql = 'SELECT d FROM UJM\ExoBundle\Entity\Document d WHERE
+                d.type= \'.png\' OR d.type= \'.jpeg\' OR d.type= \'.jpg\' OR d.type= \'.gif\' OR d.type= \'.bmp\'';
+        } elseif ($type == 'video') {
+            $dql = 'SELECT d FROM UJM\ExoBundle\Entity\Document d WHERE
+                d.type= \'.avi\' OR d.type= \'.mpeg\' OR d.type= \'.wmv\' OR d.type= \'.flv\' OR d.type= \'.mov\'';
+        } elseif ($type == 'music') {
+            $dql = 'SELECT d FROM UJM\ExoBundle\Entity\Document d WHERE
+                d.type= \'.mp3\' OR d.type= \'.wav\'';
+        } elseif ($type == 'file') {
+            $dql = 'SELECT d FROM UJM\ExoBundle\Entity\Document d WHERE NOT
+                d.type= \'.png\' AND NOT d.type= \'.jpeg\' AND NOT d.type= \'.jpg\' AND NOT d.type= \'.gif\' AND NOT d.type= \'.bmp\'
+                AND NOT d.type= \'.avi\' AND NOT d.type= \'.mpeg\' AND NOT d.type= \'.wmv\' AND NOT d.type= \'.flv\' AND NOT d.type= \'.mov\'
+                AND NOT  d.type= \'.mp3\' AND NOT d.type= \'.wav\'';        
+        }
+
+        $query = $this->_em->createQuery($dql);
+        return $query->getResult();
+    }
+
+    public function findByLabel($labelToFind)
+    {
+        $dql = "
+            SELECT d FROM UJM\ExoBundle\Entity\Document d
+            WHERE UPPER(d.label) LIKE :search
+        ";
+
+        $query = $this->_em->createQuery($dql)
+            ->setParameter('search', "%{$labelToFind}%");
+
+        return $query->getResult();
+    }
 }

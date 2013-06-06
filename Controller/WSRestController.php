@@ -53,10 +53,11 @@ class WSRestController extends Controller
      * To add a document with the plugin advimage with tinyMCEBundle
      *
      */
-    public function postDocumentAddAction()
+    public function postDocumentAddAction($redirection)
     {
-        //on poste les données label,url, type, login
-        //le login permet de lier le doc à un user + de vérifier que le login correspond bien à l'user connecté
+        // We post the data label, url, type, login
+        // Login allow to link a doc and a user
+        // check also login matches to the connected user
 
         if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
             $userDir = './bundles/ujmexo/users_documents/'.$this->container->get('security.context')
@@ -92,13 +93,20 @@ class WSRestController extends Controller
                 $em->flush();
             }
 
-            return $this->render(
-                'UJMExoBundle:InteractionGraphic:page.html.twig',
-                array(
-                    'idDoc' => $document->getId(),
+            if ($redirection == 0) {
+                return $this->render(
+                    'UJMExoBundle:InteractionGraphic:page.html.twig',
+                    array(
+                        'idDoc' => $document->getId(),
+                        'label' => $document->getLabel()
+                    )
+                );
+            } else if ($redirection == 1) {
+                return $this->forward('UJMExoBundle:Question:manageDoc', array(
                     'label' => $document->getLabel()
-                )
-            );
+                    )
+                );
+            }
         } else {
             return 'Not authorized';
         }

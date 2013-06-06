@@ -243,7 +243,6 @@ PlaceZone: Pour déplacer une zone de réponse, selecionnez-la en cliquant dessu
 Resize: Pour redimmensionner la zone de réponse, selection la en cliquant dessus puis appuyez sur Alt en bougeant la souris.
 SelectZone: Pour définir une zone de réponse, selectionnez la en cliquant dessus puis déposez la en re-cliquant à l'endroit voulu sur l'image. Vous pouvez aussi maintenir la touche CTRL enfoncée et cliquez sur l'image à l'endroit où vous voulez la placer.
 Erase: Pour effacer une zone de réponse, maintenez la touche s enfoncée et cliquez sur la zone de réponse à effacer.
-unsupport: Désolé, votre navigateur ne supporte pas Canvas. Mettez-vous à jour.
 Answer zone: Zone de réponse
 Shape: Forme
 Color: Couleur
@@ -262,3 +261,22 @@ notAll: Toutes les zones de réponses n\'ont pas été placées !
 onlyOnce: => Les bonnes réponses ne sont comptabilisées qu'une seule fois.
 wrong: La valeur saisie est incorrecte.
 inside: Vous devez mettre la zone de reponse complète DANS l'image ...
+manageImg: Gérer mes documents ...
+Preview: Aperçu
+Label: Label
+waring: Êtes-vous sûr de vouloir supprimer ce document ?
+linkedDoc: Attention, le document que vous essayez de supprimer est lié à des questions !
+whichAction: Quelle action souhaitez-vous réaliser ?
+doNothing: Ne rien faire et revenir à la liste de mes documents ...
+seeDoc: Voir les questions liées à ce document.
+delDocQuestion: Supprimer ce document ainsi que toutes les questions qui y sont liées !
+creationDate: Date de création
+Linkpaper: Liées à un test avec des réponses ?
+no: non
+yes: oui
+docName: Nom du document ?
+addDoc: Ajouter un document ...
+changeName: Changer le nom
+newName: Nouveau nom ?
+change: Changer !
+sort: Trier

@@ -88,7 +88,7 @@ class HintController extends Controller
             $deleteForm = $this->createDeleteForm($id);
 
             if ($request->request->get('paper') == null) {
-                if ( !$session->get('penalties') ) {
+                if (!$session->get('penalties')) {
                     $penalties = array();
                     $session->set('penalties', $penalties);
                 }
