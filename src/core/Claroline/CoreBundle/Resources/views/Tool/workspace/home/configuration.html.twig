@@ -4,7 +4,7 @@
    {% spaceless %}
         <ul class="breadcrumb">
             <li>
-                <a href="#">{{ 'parameters'|trans({}, 'platform') }}</a>
+                <a href="{{ path('claro_workspace_open_tool', {'toolName': 'parameters', 'workspaceId': workspace.getId()}) }}">{{ 'parameters'|trans({}, 'platform') }}</a>
             </li>
             <span class="divider"> / </span>
             <li>

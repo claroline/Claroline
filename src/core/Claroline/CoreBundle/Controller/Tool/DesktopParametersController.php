@@ -4,115 +4,15 @@ namespace Claroline\CoreBundle\Controller\Tool;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Entity\Tool\DesktopTool;
+use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Library\Event\ConfigureWidgetDesktopEvent;
-use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
+use Claroline\CoreBundle\Library\Event\ConfigureDesktopToolEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 class DesktopParametersController extends Controller
 {
-    /**
-     * @Route(
-     *     "/widget/properties",
-     *     name="claro_widget_properties"
-     * )
-     *
-     * Displays the widget configuration page.
-     *
-     * @return Response
-     */
-    public function desktopWidgetPropertiesAction()
-    {
-        $user = $this->get('security.context')->getToken()->getUser();
-        $configs = $this->get('claroline.widget.manager')
-            ->generateDesktopDisplayConfig($user->getId());
-
-        return $this->render(
-            'ClarolineCoreBundle:Tool\desktop\parameters:widget_properties.html.twig',
-            array('configs' => $configs, 'user' => $user)
-        );
-    }
-
-    /**
-     * @Route(
-     *     "/config/{displayConfigId}/widget/{widgetId}/invertvisible",
-     *     name="claro_desktop_widget_invertvisible",
-     *     options={"expose"=true}
-     * )
-     * @Method("POST")
-     *
-     * Inverts the visibility boolean for a widget for the current user.
-     *
-     * @param integer $widgetId        the widget id
-     * @param integer $displayConfigId the display config id (the configuration entity for widgets)
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function desktopInvertVisibleUserWidgetAction($widgetId, $displayConfigId)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
-        $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
-            ->find($widgetId);
-        $displayConfig = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
-            ->findOneBy(array('user' => $user, 'widget' => $widget));
-
-        if ($displayConfig == null) {
-            $displayConfig = new DisplayConfig();
-            $baseConfig = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
-                ->find($displayConfigId);
-            $displayConfig->setParent($baseConfig);
-            $displayConfig->setWidget($widget);
-            $displayConfig->setUser($user);
-            $displayConfig->setVisible($baseConfig->isVisible());
-            $displayConfig->setLock(true);
-            $displayConfig->setDesktop(true);
-            $displayConfig->invertVisible();
-        } else {
-            $displayConfig->invertVisible();
-        }
-
-        $em->persist($displayConfig);
-        $em->flush();
-
-        return new Response('success');
-    }
-
-    /**
-     * @Route(
-     *     "widget/{widgetId}/configuration/desktop",
-     *     name="claro_desktop_widget_configuration",
-     *     options={"expose"=true}
-     * )
-     * @Method("GET")
-     *
-     * Asks a widget to display its configuration page.
-     *
-     * @param integer $widgetId the widget id
-     *
-     * @return Response
-     */
-    public function desktopConfigureWidgetAction($widgetId)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $user = $this->get('security.context')->getToken()->getUser();
-        $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
-            ->find($widgetId);
-        $event = new ConfigureWidgetDesktopEvent($user);
-        $eventName = "widget_{$widget->getName()}_configuration_desktop";
-        $this->get('event_dispatcher')->dispatch($eventName, $event);
-
-        if ($event->getContent() !== '') {
-            return $this->render(
-                'ClarolineCoreBundle:Tool\desktop\parameters:widget_configuration.html.twig',
-                array('content' => $event->getContent())
-            );
-        }
-
-        throw new \Exception("event $eventName didn't return any Response");
-    }
-
     /**
      * @Route(
      *     "/tools",
@@ -268,5 +168,31 @@ class DesktopParametersController extends Controller
         $em->flush();
 
         return new Response('<body>success</body>');
+    }
+
+    /**
+     * @Route(
+     *     "tool/{tool}/config",
+     *     name="claro_desktop_tool_config"
+     * )
+     * @Method("GET")
+     *
+     * @param Tool $tool
+     *
+     * @return Response
+     */
+    public function openDesktopToolConfig(Tool $tool)
+    {
+        $event = new ConfigureDesktopToolEvent($tool);
+        $eventName = strtolower('configure_desktop_tool_' . $tool->getName());
+        $this->get('event_dispatcher')->dispatch($eventName, $event);
+
+        if (is_null($event->getContent())) {
+            throw new \Exception(
+                "Tool '{$tool->getName()}' didn't return any Response for tool event '{$eventName}'."
+            );
+        }
+
+        return new Response($event->getContent());
     }
 }

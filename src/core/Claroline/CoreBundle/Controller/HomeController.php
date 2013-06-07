@@ -6,7 +6,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Entity\Home\Content;
 use Claroline\CoreBundle\Entity\Home\SubContent;
-use Claroline\CoreBundle\Entity\Home\Type;
 use Claroline\CoreBundle\Entity\Home\Content2Type;
 use Claroline\CoreBundle\Entity\Home\Content2Region;
 use Symfony\Component\HttpFoundation\Response;
