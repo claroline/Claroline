@@ -40,18 +40,20 @@ class BlogListener extends ContainerAware
         $form->bindRequest($request);
 
         if ($form->isValid()) {
-            $blog = $form->getData();
-            $event->setResource($blog);
-        } else {
-            $content = $this->container->get('templating')->render(
-                'ClarolineCoreBundle:Resource:create_form.html.twig',
-                array(
-                    'form' => $form->createView(),
-                    'resourceType' => 'icap_blog'
-                )
-            );
-            $event->setErrorFormContent($content);
+            $event->setResource($form->getData());
+            $event->stopPropagation();
+
+            return;
         }
+
+        $content = $this->container->get('templating')->render(
+            'ClarolineCoreBundle:Resource:create_form.html.twig',
+            array(
+                'form' => $form->createView(),
+                'resourceType' => 'icap_blog'
+            )
+        );
+        $event->setErrorFormContent($content);
         $event->stopPropagation();
     }
 
