@@ -8,8 +8,13 @@
             </a>
         </li>
         <span class="divider"> / </span>
+            <a href="{{ path('claro_workspace_tool_config',
+                {'workspace': workspace.getId(), 'tool': tool.getId()}) }}">
+                {{ 'home'|trans({}, 'platform') }}
+            </a>
+        <span class="divider"> / </span>
         <li>
-            <a href="{{ path('claro_workspace_tool_config', {'workspace': workspace.getId(), 'tool': tool.getId()}) }}">{{ 'widgets'|trans({}, 'platform') }}</a>
+            <a href="{{ path('claro_workspace_widget_properties', {'workspaceId':workspace.getId()}) }}">{{ 'widgets'|trans({}, 'platform') }}</a>
         </li>
         <span class="divider"> / </span>
         <li>

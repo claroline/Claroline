@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
+use Claroline\CoreBundle\Library\Event\ConfigureWidgetDesktopEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
@@ -171,6 +172,107 @@ class HomeController extends Controller
         }
 
         throw new \Exception("event {$eventName} didn't return any Response");
+    }
+
+    /**
+     * @Route(
+     *     "desktop/widget/properties",
+     *     name="claro_desktop_widget_properties"
+     * )
+     *
+     * Displays the widget configuration page.
+     *
+     * @return Response
+     */
+    public function desktopWidgetPropertiesAction()
+    {
+        $user = $this->get('security.context')->getToken()->getUser();
+        $configs = $this->get('claroline.widget.manager')
+            ->generateDesktopDisplayConfig($user->getId());
+
+        return $this->render(
+            'ClarolineCoreBundle:Tool\desktop\home:widget_properties.html.twig',
+            array('configs' => $configs, 'user' => $user, 'tool' => $this->getHomeTool())
+        );
+    }
+
+    /**
+     * @Route(
+     *     "desktop/config/{displayConfigId}/widget/{widgetId}/invertvisible",
+     *     name="claro_desktop_widget_invertvisible",
+     *     options={"expose"=true}
+     * )
+     * @Method("POST")
+     *
+     * Inverts the visibility boolean for a widget for the current user.
+     *
+     * @param integer $widgetId        the widget id
+     * @param integer $displayConfigId the display config id (the configuration entity for widgets)
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function desktopInvertVisibleUserWidgetAction($widgetId, $displayConfigId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
+        $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
+            ->find($widgetId);
+        $displayConfig = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+            ->findOneBy(array('user' => $user, 'widget' => $widget));
+
+        if ($displayConfig == null) {
+            $displayConfig = new DisplayConfig();
+            $baseConfig = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+                ->find($displayConfigId);
+            $displayConfig->setParent($baseConfig);
+            $displayConfig->setWidget($widget);
+            $displayConfig->setUser($user);
+            $displayConfig->setVisible($baseConfig->isVisible());
+            $displayConfig->setLock(true);
+            $displayConfig->setDesktop(true);
+            $displayConfig->invertVisible();
+        } else {
+            $displayConfig->invertVisible();
+        }
+
+        $em->persist($displayConfig);
+        $em->flush();
+
+        return new Response('success');
+    }
+
+    /**
+     * @Route(
+     *     "desktop/widget/{widgetId}/configuration/desktop",
+     *     name="claro_desktop_widget_configuration",
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     *
+     * Asks a widget to display its configuration page.
+     *
+     * @param integer $widgetId the widget id
+     *
+     * @return Response
+     */
+    public function desktopConfigureWidgetAction($widgetId)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $user = $this->get('security.context')->getToken()->getUser();
+        $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
+            ->find($widgetId);
+        $event = new ConfigureWidgetDesktopEvent($user);
+        $eventName = "widget_{$widget->getName()}_configuration_desktop";
+        $this->get('event_dispatcher')->dispatch($eventName, $event);
+
+        if ($event->getContent() !== '') {
+            return $this->render(
+                'ClarolineCoreBundle:Tool\desktop\home:widget_configuration.html.twig',
+                array('content' => $event->getContent(), 'tool' => $this->getHomeTool())
+            );
+        }
+
+        throw new \Exception("event $eventName didn't return any Response");
     }
 
     private function getHomeTool()

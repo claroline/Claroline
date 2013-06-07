@@ -3,32 +3,24 @@
 namespace Claroline\CoreBundle\Library\Event;
 
 use Claroline\CoreBundle\Entity\Tool\Tool;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Symfony\Component\EventDispatcher\Event;
 
-class ConfigureWorkspaceToolEvent extends Event
+class ConfigureDesktopToolEvent extends Event
 {
     private $content;
     private $tool;
-    private $workspace;
 
     /**
      * Constructor.
      */
-    public function __construct(Tool $tool, AbstractWorkspace $workspace)
+    public function __construct(Tool $tool)
     {
         $this->tool = $tool;
-        $this->workspace = $workspace;
     }
 
     public function getTool()
     {
         return $this->tool;
-    }
-
-    public function getWorkspace()
-    {
-        return $this->workspace;
     }
 
     public function setContent($content)

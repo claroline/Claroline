@@ -36,7 +36,7 @@ class DesktopControllerTest extends FunctionalTestCase
         $this->loadUserData(array('admin' => 'admin'));
         $this->logUser($this->getUser('admin'));
         $crawler = $this->client->request('GET', '/desktop/tool/open/parameters');
-        $this->assertEquals(2, count($crawler->filter('.li-user-parameters')));
+        $this->assertEquals(7, count($crawler->filter('.li-user-parameters')));
     }
 
     public function testOpenDesktopActionRedirectsToHomeByDefault()

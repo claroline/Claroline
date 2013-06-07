@@ -348,7 +348,6 @@ class ParametersControllerTest extends FunctionalTestCase
             'GET',
             "/workspaces/tool/properties/{$wsId}/resource/rights/form/role/{$managerRole->getId()}"
         );
-        var_dump($this->client->getResponse()->getContent());
         $this->assertEquals(
             1,
             count($crawler->filter('input:not(:checked[type="checkbox"])'))
@@ -367,17 +366,6 @@ class ParametersControllerTest extends FunctionalTestCase
         $this->assertEquals(1, count($crawler->filter('#workspace_template_form')));
     }
 
-    public function testDesktopWidgetProperties()
-    {
-        $this->logUser($this->getUser('john'));
-        $crawler = $this->client->request(
-            'GET',
-            "/desktop/tool/properties/widget/properties"
-        );
-
-        $this->assertEquals(1, count($crawler->filter('#widget-table')));
-    }
-
     public function testDesktopConfigureToolsPage()
     {
         $repo = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool');
@@ -385,7 +373,7 @@ class ParametersControllerTest extends FunctionalTestCase
         $this->logUser($this->getUser('john'));
         $crawler = $this->client->request(
             'GET',
-            'desktop/tool/properties/tools'
+            '/desktop/tool/properties/tools'
         );
         $this->assertEquals(count($activeTools), count($crawler->filter('input:checked[type="checkbox"]')));
     }

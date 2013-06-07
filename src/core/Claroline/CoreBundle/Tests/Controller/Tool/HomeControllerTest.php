@@ -123,7 +123,7 @@ class HomeControllerTest extends FunctionalTestCase
         $countVisibleWidgets = count($crawler->filter('.widget'));
         $this->client->request(
             'POST',
-            "/desktop/tool/properties/config/{$configs[0]->getId()}"
+            "/tool/home/desktop/config/{$configs[0]->getId()}"
             . "/widget/{$configs[0]->getWidget()->getId()}/invertvisible"
         );
         $crawler = $this->client->request('GET', '/desktop/tool/open/home');
@@ -139,5 +139,16 @@ class HomeControllerTest extends FunctionalTestCase
         $this->logUser($this->getUser('john'));
         $crawler = $this->client->request('GET', '/desktop/tool/open/home');
         $this->assertEquals(++$countVisibleWidgets, count($crawler->filter('.widget')));
+    }
+
+    public function testDesktopWidgetProperties()
+    {
+        $this->logUser($this->getUser('john'));
+        $crawler = $this->client->request(
+            'GET',
+            "/tool/home/desktop/widget/properties"
+        );
+
+        $this->assertEquals(1, count($crawler->filter('#widget-table')));
     }
 }
