@@ -389,4 +389,12 @@ class ParametersControllerTest extends FunctionalTestCase
         );
         $this->assertContains('remove the parameter', $this->client->getResponse()->getContent());
     }
+
+    public function testDesktopParametersAction()
+    {
+        $this->loadUserData(array('admin' => 'admin'));
+        $this->logUser($this->getUser('admin'));
+        $crawler = $this->client->request('GET', '/desktop/tool/open/parameters');
+        $this->assertEquals(3, count($crawler->filter('.li-user-parameters')));
+    }
 }
