@@ -32,6 +32,7 @@ class ResourceController extends Controller
      *
      * @param string $resourceType the resource type
      *
+     * @throws \Exception
      * @return Response
      */
     public function creationFormAction($resourceType)
@@ -61,6 +62,7 @@ class ResourceController extends Controller
      * @param string  $resourceType the resource type
      * @param integer $parentId     the parent id
      *
+     * @throws \Exception
      * @return Response
      */
     public function createAction($resourceType, $parentId)
@@ -202,6 +204,9 @@ class ResourceController extends Controller
      * of parameters which are the ids of the moved resources
      * (query string: "ids[]=1&ids[]=2" ...).
      *
+     * @param $newParentId
+     *
+     * @throws \RuntimeException
      * @return Response
      */
     public function moveAction($newParentId)
@@ -259,10 +264,11 @@ class ResourceController extends Controller
      * Handles any custom action (i.e. not defined in this controller) on a
      * resource of a given type.
      *
-     * @param string $resourceType the resource type
-     * @param string $action       the action
-     * @param integer $resourceId  the resourceId
+     * @param string  $resourceType the resource type
+     * @param string  $action       the action
+     * @param integer $resourceId   the resourceId
      *
+     * @throws \Exception
      * @return Response
      */
     public function customAction($resourceType, $action, $resourceId)
@@ -491,6 +497,7 @@ class ResourceController extends Controller
      *
      * @param integer $directoryId The id of the directory from which the search was started
      *
+     * @throws \Exception
      * @return Response
      */
     public function filterAction($directoryId)
@@ -572,8 +579,9 @@ class ResourceController extends Controller
     public function findRoleByWorkspaceCodeAction($code)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $roles = $em->getRepository('ClarolineCoreBundle:Role')->findByWorkspaceCode($code);
+        $roles = $em->getRepository('ClarolineCoreBundle:Role')->findByWorkspaceCodeTag($code);
         $arWorkspace = array();
+
         foreach ($roles as $role) {
             $arWorkspace[$role->getWorkspace()->getCode()][$role->getName()] = array(
                 'name' => $role->getName(),
@@ -603,9 +611,19 @@ class ResourceController extends Controller
             $breadcrumbsAncestors = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
                 ->findResourcesByIds($_breadcrumbs);
             $breadcrumbsAncestors[] = $resource;
+
+            if ($_breadcrumbs[0] != 0) {
+                $rootId = $_breadcrumbs[0];
+            } else {
+                $rootId = $_breadcrumbs[1];
+            }
+
+            $workspaceId = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+            ->find($rootId)->getWorkspace()->getId();
         }
 
-        if (count($ancestors) > count($breadcrumbsAncestors)) {
+        //this condition is wrong
+        if (count($breadcrumbsAncestors) === 0) {
 
             $_breadcrumbs = array();
 
@@ -617,15 +635,13 @@ class ResourceController extends Controller
                 ->findResourcesByIds($_breadcrumbs);
         }
 
-        if (!$this->get('claroline.resource.manager')->isPathValid($breadcrumbsAncestors)) {
+        if (!$this->get('claroline.resource.manager')->isPathValid($breadcrumbsAncestors, false)) {
             throw new \Exception('Breadcrumbs invalid');
         };
 
-        $_workspace = $this->get('request')->query->get('_workspace');
-
         return $this->render(
             'ClarolineCoreBundle:Resource:breadcrumbs.html.twig',
-            array('ancestors' => $breadcrumbsAncestors, 'workspaceId' => $workspaceId, '_workspace' => $_workspace)
+            array('ancestors' => $breadcrumbsAncestors, 'workspaceId' => $workspaceId)
         );
     }
 
@@ -638,6 +654,9 @@ class ResourceController extends Controller
      *
      * @param type $resourceId
      * @param type $nextId
+     *
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function insertBefore($resourceId, $nextId)
     {

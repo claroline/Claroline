@@ -347,17 +347,6 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
             $grAId
         );
         $this->assertEquals(0, count($removeGroupFromManager));
-
-        $addGroupToCollaboratorLogs = $this->logRepository->findActionAfterDate(
-            'ws_role_subscribe_group',
-            $now,
-            $adminId,
-            null,
-            $wsAId,
-            null,
-            $collaboratorRoleId,
-            $grAId
-        );
         $this->assertEquals(1, count($addGroupToManagerLogs));
     }
 

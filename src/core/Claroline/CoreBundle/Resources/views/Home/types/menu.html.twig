@@ -3,7 +3,7 @@
     {% if father is not defined %}
         <div class="content-element relative {{ size }}" data-id="{{ content.id }}" data-type="{{ type }}">
             {% if region is defined and region == "header" %}
-                <ul class="nav nav-tabs">
+                <ul class="nav nav-pills">
             {% elseif region is defined and region == "footer" %}
                 <ul class="nav nav-pills">
             {% else %}

@@ -17,7 +17,7 @@ class CalendarType extends AbstractType
                 'start',
                 'date',
                 array(
-                    'format' => 'd-M-yyyy',
+                    'format' => 'd-M-yyyy ',
                     'widget' => 'single_text',
                     )
             )
@@ -37,11 +37,11 @@ class CalendarType extends AbstractType
                 )
             )
             ->add(
-                'description', 
+                'description',
                 'textarea',
                 array(
                     'attr' => array(
-                        'class'=> 'tinymce',
+                        'class' => 'tinymce',
                         'data-theme' => 'simple'
                         )
                     )

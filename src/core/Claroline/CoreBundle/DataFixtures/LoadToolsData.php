@@ -28,7 +28,8 @@ class LoadToolsData extends AbstractFixture implements ContainerAwareInterface, 
             array('calendar', 'icon-calendar', false, false, true, true, false),
             array('logs', 'icon-list', false, false, true, true, false),
             array('user_management', 'icon-user', false, false, true, false, false),
-            array('group_management', 'icon-th-list', false,  false, true, false, false)
+            array('group_management', 'icon-th-list', false,  false, true, false, false),
+            array('workgroup', 'icon-user', false, false, true, false, false)
         );
 
         foreach ($tools as $tool) {
