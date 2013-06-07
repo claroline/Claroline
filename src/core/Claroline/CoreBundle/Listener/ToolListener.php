@@ -141,7 +141,7 @@ class ToolListener
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-        $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findBy(array('hasOptions' => true));
+        $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findBy(array('hasOptions' => true, 'isDisplayableInWorkspace' => true));
 
         return $this->container->get('templating')->render(
             'ClarolineCoreBundle:Tool\workspace\parameters:parameters.html.twig',
@@ -157,7 +157,7 @@ class ToolListener
     public function desktopParameters()
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findBy(array('hasOptions' => true));
+        $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findBy(array('hasOptions' => true, 'isDisplayableInDesktop' => true));
 
         return $this->container
             ->get('templating')
