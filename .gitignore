@@ -20,6 +20,7 @@ vendor/*
 web/bundles/*
 web/twig.js
 web/js/*
+web/css/*
 web/HTMLPage/*
 files/*
 files/tmp/*
@@ -29,6 +30,7 @@ test/thumbnails/*
 test/templates/*
 web/thumbnails/*
 test/files/tmp/*
+src/core/Claroline/CoreBundle/Resources/views/less-generated/*
 src/core/Claroline/CoreBundle/Resources/public/css/themes/*
 src/core/Claroline/CoreBundle/Resources/public/css/font-awesome.css
 src/core/Claroline/CoreBundle/Resources/public/font/*

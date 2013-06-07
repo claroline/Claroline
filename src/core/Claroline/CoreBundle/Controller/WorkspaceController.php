@@ -39,7 +39,6 @@ class WorkspaceController extends Controller
      */
     public function listAction()
     {
-        $this->assertIsGranted('ROLE_USER');
         $em = $this->get('doctrine.orm.entity_manager');
         $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)->findNonPersonal();
         $tags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
@@ -48,6 +47,7 @@ class WorkspaceController extends Controller
             ->findByAdmin();
         $tagWorkspaces = array();
 
+        // create an array: tagId => [associated_workspace_relation]
         foreach ($relTagWorkspace as $tagWs) {
 
             if (empty($tagWorkspaces[$tagWs['tag_id']])) {
@@ -56,10 +56,73 @@ class WorkspaceController extends Controller
             $tagWorkspaces[$tagWs['tag_id']][] = $tagWs['rel_ws_tag'];
         }
 
+        $tagsHierarchy = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTagHierarchy')
+            ->findAllAdmin();
+        $rootTags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+            ->findAdminRootTags();
+        $hierarchy = array();
+
+        // create an array : tagId => [direct_children_id]
+        foreach ($tagsHierarchy as $tagHierarchy) {
+
+            if ($tagHierarchy->getLevel() === 1) {
+
+                if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
+                    !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
+
+                    $hierarchy[$tagHierarchy->getParent()->getId()] = array();
+                }
+                $hierarchy[$tagHierarchy->getParent()->getId()][] = $tagHierarchy->getTag();
+            }
+        }
+
+        // create an array indicating which tag is displayable
+        // a tag is displayable if it or one of his children contains is associated to a workspace
+        $displayable = array();
+        $allAdminTags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+            ->findByUser(null);
+
+        foreach ($allAdminTags as $adminTag) {
+            $adminTagId = $adminTag->getId();
+            $displayable[$adminTagId] = $this->isTagDisplayable($adminTagId, $tagWorkspaces, $hierarchy);
+        }
+
         return $this->render(
             'ClarolineCoreBundle:Workspace:list.html.twig',
-            array('workspaces' => $workspaces, 'tags' => $tags, 'tagWorkspaces' => $tagWorkspaces)
+            array(
+                'workspaces' => $workspaces,
+                'tags' => $tags,
+                'tagWorkspaces' => $tagWorkspaces,
+                'hierarchy' => $hierarchy,
+                'rootTags' => $rootTags,
+                'displayable' => $displayable
+            )
         );
+    }
+
+    private function isTagDisplayable($tagId, $tagWorkspaces, $hierarchy)
+    {
+        $displayable = false;
+
+        if (isset($tagWorkspaces[$tagId]) && count($tagWorkspaces[$tagId]) > 0) {
+            $displayable = true;
+        } else {
+
+            if (isset($hierarchy[$tagId]) && count($hierarchy[$tagId]) > 0) {
+                $children = $hierarchy[$tagId];
+
+                foreach ($children as $child) {
+
+                    $displayable = $this->isTagDisplayable($child->getId(), $tagWorkspaces, $hierarchy);
+
+                    if ($displayable) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $displayable;
     }
 
     /**
@@ -98,6 +161,36 @@ class WorkspaceController extends Controller
             }
             $tagWorkspaces[$tagWs['tag_id']][] = $tagWs['rel_ws_tag'];
         }
+        $tagsHierarchy = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTagHierarchy')
+            ->findAllByUser($user);
+        $rootTags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+            ->findRootTags($user);
+        $hierarchy = array();
+
+        // create an array : tagId => [direct_children_id]
+        foreach ($tagsHierarchy as $tagHierarchy) {
+
+            if ($tagHierarchy->getLevel() === 1) {
+
+                if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
+                    !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
+
+                    $hierarchy[$tagHierarchy->getParent()->getId()] = array();
+                }
+                $hierarchy[$tagHierarchy->getParent()->getId()][] = $tagHierarchy->getTag();
+            }
+        }
+
+        // create an array indicating which tag is displayable
+        // a tag is displayable if it or one of his children contains is associated to a workspace
+        $displayable = array();
+        $allTags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+            ->findByUser($user);
+
+        foreach ($allTags as $oneTag) {
+            $oneTagId = $oneTag->getId();
+            $displayable[$oneTagId] = $this->isTagDisplayable($oneTagId, $tagWorkspaces, $hierarchy);
+        }
 
         return $this->render(
             'ClarolineCoreBundle:Workspace:list_my_workspaces.html.twig',
@@ -105,7 +198,10 @@ class WorkspaceController extends Controller
                 'user' => $user,
                 'workspaces' => $workspaces,
                 'tags' => $tags,
-                'tagWorkspaces' => $tagWorkspaces
+                'tagWorkspaces' => $tagWorkspaces,
+                'hierarchy' => $hierarchy,
+                'rootTags' => $rootTags,
+                'displayable' => $displayable
             )
         );
     }
@@ -210,11 +306,23 @@ class WorkspaceController extends Controller
      *
      * @return Response
      */
-    public function renderToolListAction($_workspace)
+    public function renderToolListAction($workspaceId, $_breadcrumbs)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
-            ->find($_workspace);
+
+        if ($_breadcrumbs != null) {
+            //for manager.js, id = 0 => "no root".
+            if ($_breadcrumbs[0] != 0) {
+                $rootId = $_breadcrumbs[0];
+            } else {
+                $rootId = $_breadcrumbs[1];
+            }
+            $workspace = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+                ->find($rootId)->getWorkspace();
+        } else {
+            $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
+                ->find($workspaceId);
+        }
 
         if (!$this->get('security.context')->isGranted('OPEN', $workspace)) {
             throw new AccessDeniedException();

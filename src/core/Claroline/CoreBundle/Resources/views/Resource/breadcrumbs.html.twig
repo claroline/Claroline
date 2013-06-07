@@ -17,10 +17,6 @@
         {% endif %}
     {% endfor %}
 
-    {% if _workspace %}
-        {% set url = url~"_workspace="~_workspace %}
-    {% endif %}
-
     {% set url = url~"#resources/"~resource.id %}
 
     {% if not loop.last %}<a href="{{ url}}">

@@ -211,8 +211,6 @@ class TextController extends Controller
             'ClarolineCoreBundle:Text:edit.html.twig',
             array(
                 'text' => $textRepo->getLastRevision($text)->getContent(),
-                'textId' => $textId,
-                'workspace' => $text->getWorkspace(),
                 '_resource' => $text
             )
         );
@@ -250,7 +248,7 @@ class TextController extends Controller
 
         $route = $this->get('router')->generate(
             'claro_resource_open',
-            array('resourceType' => 'text', 'resourceId' => $textId, '_resource' => $text)
+            array('resourceType' => 'text', 'resourceId' => $textId)
         );
 
         return new RedirectResponse($route);

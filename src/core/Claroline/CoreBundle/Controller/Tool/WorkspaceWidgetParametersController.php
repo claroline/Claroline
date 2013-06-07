@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -117,7 +116,7 @@ class WorkspaceWidgetParametersController extends AbstractParametersController
         $event = new ConfigureWidgetWorkspaceEvent($workspace);
         $eventName = "widget_{$widget->getName()}_configuration_workspace";
         $this->get('event_dispatcher')->dispatch($eventName, $event);
-        
+
         if ($event->getContent() !== '') {
             return $this->render(
                 'ClarolineCoreBundle:Tool\workspace\parameters:widget_configuration.html.twig',

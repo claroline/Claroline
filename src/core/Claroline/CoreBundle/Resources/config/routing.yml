@@ -179,6 +179,11 @@ claro_install:
     type: annotation
     prefix: install
 
+claro_file:
+    resource: "@ClarolineCoreBundle/Controller/FileControlller.php"
+    type: annotation
+    prefix: file
+
 idci_exporter:
     resource: "../../vendor/idci/exporter-bundle/IDCI/Bundle/ExporterBundle/Controller"
     type:     annotation

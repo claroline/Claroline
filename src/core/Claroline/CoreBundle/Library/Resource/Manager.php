@@ -148,7 +148,6 @@ class Manager
         $child->setParent($parent);
         $rename = $this->ut->getUniqueName($child, $parent);
         $child->setName($rename);
-        $rights = $child->getRights();
         $this->em->persist($child);
 
         try {
@@ -373,70 +372,42 @@ class Manager
             }
 
             $role = $roleRepo->findOneBy(array('name' => $role.'_'.$workspace->getId()));
-            $this->createDefaultsResourcesRights(
-                $permissions['canDelete'],
-                $permissions['canOpen'],
-                $permissions['canEdit'],
-                $permissions['canCopy'],
-                $permissions['canExport'],
-                $role,
-                $resource,
-                $resourceTypes
-            );
+            $this->createRight($permissions, false, $role, $resource, $resourceTypes);
         }
 
-        $this->createDefaultsResourcesRights(
-            false, false, false, false, false,
+        $anonymousPerms = array(
+            'canCopy' => false,
+            'canDelete' => false,
+            'canOpen' => false,
+            'canExport' => false,
+            'canEdit' => false
+        );
+
+        $this->createRight(
+            $anonymousPerms,
+            false,
             $roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
             $resource,
             array()
         );
 
-        $resourceTypeRepo->findAll();
+        $resourceTypes = $resourceTypeRepo->findAll();
 
-        $this->createDefaultsResourcesRights(
-            true, true, true, true, true,
+        $adminPerms = array(
+            'canCopy' => true,
+            'canDelete' => true,
+            'canOpen' => true,
+            'canExport' => true,
+            'canEdit' => true
+        );
+
+        $this->createRight(
+            $adminPerms,
+            false,
             $roleRepo->findOneBy(array('name' => 'ROLE_ADMIN')),
             $resource,
             $resourceTypes
         );
-    }
-
-    /**
-     * Create default permissions for a role and a resource.
-     *
-     * @param boolean $canDelete
-     * @param boolean $canOpen
-     * @param boolean $canEdit
-     * @param boolean $canCopy
-     * @param boolean $canExport
-     * @param boolean $canCreate
-     * @param \Claroline\CoreBundle\Entity\Role $role
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
-     *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceRights
-     */
-    private function createDefaultsResourcesRights(
-        $canDelete,
-        $canOpen,
-        $canEdit,
-        $canCopy,
-        $canExport,
-        Role $role,
-        AbstractResource $resource,
-        array $resourceTypes
-    )
-    {
-        $rights = new ResourceRights();
-        $rights->setCanCopy($canCopy);
-        $rights->setCanDelete($canDelete);
-        $rights->setCanEdit($canEdit);
-        $rights->setCanOpen($canOpen);
-        $rights->setCanExport($canExport);
-        $rights->setRole($role);
-        $rights->setResource($resource);
-        $rights->setCreatableResourceTypes($resourceTypes);
-        $this->em->persist($rights);
     }
 
     /**
@@ -511,17 +482,36 @@ class Manager
         return $shortcut;
     }
 
-    public function isPathValid(array $ancestors)
+    /**
+     * Checks if a path is valid.
+     * If strict = false, the path may not exists in the database (every ancestor must be a directory).
+     *
+     * @param array $ancestors
+     * @param boolean $strict
+     *
+     * @return boolean
+     */
+    public function isPathValid(array $ancestors, $strict = true)
     {
+        if (!$strict) {
+            array_pop($ancestors);
+            foreach ($ancestors as $ancestor) {
+                if ($ancestor->getResourceType()->getName() !== 'directory') {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         $continue = true;
 
         for ($i = 0, $size = count($ancestors); $i < $size; $i++) {
 
-            if (isset($ancestors[$i+1])) {
-                if ($ancestors[$i+1]->getParent() == $ancestors[$i]) {
+            if (isset($ancestors[$i + 1])) {
+                if ($ancestors[$i + 1]->getParent() == $ancestors[$i]) {
                     $continue = true;
                 } else {
-                    if ($this->hasLinkTo($ancestors[$i], $ancestors[$i+1])) {
+                    if ($this->hasLinkTo($ancestors[$i], $ancestors[$i + 1])) {
                         $continue = true;
                     } else {
                         $continue = false;
@@ -530,13 +520,16 @@ class Manager
             }
 
             if (!$continue) {
+
                 return false;
             }
         }
+
         return true;
     }
 
-    private function hasLinkTo(Directory $parent, Directory $target) {
+    private function hasLinkTo(Directory $parent, Directory $target)
+    {
         $shortcuts = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceShortcut')
             ->findBy(array('parent' => $parent));
 
@@ -608,11 +601,7 @@ class Manager
      * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $target
      */
     public function insertBefore(AbstractResource $resource, AbstractResource $next = null)
-    {   /*
-        if ($resource->getParent() !== $next->getParent()) {
-            throw new \Exception('Both sorted resources must be located in the same directory');
-        }*/
-
+    {
         if ($resource->getParent() === null) {
             throw new \Exception('The root directories cannot be sorted');
         }
@@ -653,5 +642,80 @@ class Manager
 
         $this->em->persist($resource);
         $this->em->flush();
+    }
+
+    /**
+     * Create a new ResourceRight
+     *
+     * @param array $permissions
+     * @param boolean $isRecursive
+     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     */
+    public function createRight(
+        array $permissions,
+        $isRecursive,
+        Role $role,
+        AbstractResource $resource,
+        array $resourceTypes = array()
+    )
+    {
+        $resourceRights = array();
+
+        if ($isRecursive) {
+            $resourceRights = $this->findAndCreateMissingDescendants($role, $resource);
+        } else {
+                $resourceRight = new ResourceRights();
+                $resourceRight->setRole($role);
+                $resourceRight->setResource($resource);
+                $resourceRights[] = $resourceRight;
+        }
+
+        foreach ($resourceRights as $resourceRight) {
+            $resourceRight->setCanCopy($permissions['canCopy']);
+            $resourceRight->setCanOpen($permissions['canOpen']);
+            $resourceRight->setCanDelete($permissions['canDelete']);
+            $resourceRight->setCanEdit($permissions['canEdit']);
+            $resourceRight->setCanExport($permissions['canExport']);
+            $resourceRight->setCreatableResourceTypes($resourceTypes);
+
+            $this->em->persist($resourceRight);
+        }
+
+        $this->em->flush();
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceRights
+     */
+    public function findAndCreateMissingDescendants(Role $role, AbstractResource $resource)
+    {
+        $resourceRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
+        $alreadyExistings = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
+            ->findRecursiveByResourceAndRole($resource, $role);
+        $descendants = $resourceRepo->findDescendants($resource, true);
+        $finalRights = array();
+
+        foreach ($descendants as $descendant) {
+            $found = false;
+            foreach ($alreadyExistings as $existingRight) {
+                if ($existingRight->getResource() === $descendant) {
+                    $finalRights[] = $existingRight;
+                    $found = true;
+                }
+            }
+
+            if (!$found) {
+                $resourceRight = new ResourceRights();
+                $resourceRight->setRole($role);
+                $resourceRight->setResource($descendant);
+                $finalRights[] = $resourceRight;
+            }
+        }
+
+        return $finalRights;
     }
 }

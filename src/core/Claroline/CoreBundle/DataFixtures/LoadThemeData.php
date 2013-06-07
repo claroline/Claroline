@@ -11,12 +11,12 @@ class Themes extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        $names = array('bootstrap-default', 'bootswatch-cyborg', 'claroline', 'visual');
+        $names = array('Claroline', 'Bootstrap Default', 'Bootstrap Edit', 'Bootswatch Cyborg');
         $path = array(
-            'ClarolineCoreBundle:less:bootstrap-default/theme.html.twig',
-            'ClarolineCoreBundle:less:bootswatch-cyborg/theme.html.twig',
             'ClarolineCoreBundle:less:claroline/theme.html.twig',
-            'ClarolineCoreBundle:less:visual/theme.html.twig'
+            'ClarolineCoreBundle:less:bootstrap-default/theme.html.twig',
+            'ClarolineCoreBundle:less:bootstrap-edit/theme.html.twig',
+            'ClarolineCoreBundle:less:bootswatch-cyborg/theme.html.twig'
         );
 
         foreach ($names as $i => $name) {

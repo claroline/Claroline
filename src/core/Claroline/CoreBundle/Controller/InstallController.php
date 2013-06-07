@@ -164,7 +164,7 @@ class InstallController extends Controller
                         'Impossible de creer la base de donnee verifier vos identifiants'
                     );
 
-                    return $this->showDbFormAction();
+                    return $this->showDbFormAction($value['locale']);
                 }
             } else {
                 $this->get('session')->setFlash('error', 'Veuillez completer correctement le formulaire');
