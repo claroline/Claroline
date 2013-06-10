@@ -145,7 +145,7 @@ class LayoutController extends Controller
      */
     protected function isImpersonated()
     {
-        if ($this->get('security.context')->isGranted('ROLE_PREVIOUS_ADMIN')) {
+        if ($this->get('security.context')->isGranted('ROLE_USURPATE_WORKSPACE_ROLE')) {
             return true;
         }
 
