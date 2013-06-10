@@ -68,14 +68,114 @@ class ResourceRightsController extends Controller
             }
         }
 
+        $workspaces = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
+            ->findNonPersonal();
+        $tags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+            ->findNonEmptyAdminTags();
+        $relTagWorkspace = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
+            ->findByAdmin();
+        $roles = $em->getRepository('ClarolineCoreBundle:Role')->findAll();
+        $tagWorkspaces = array();
+
+        // create an array: tagId => [associated_workspace_relation]
+        foreach ($relTagWorkspace as $tagWs) {
+
+            if (empty($tagWorkspaces[$tagWs['tag_id']])) {
+                $tagWorkspaces[$tagWs['tag_id']] = array();
+            }
+            $tagWorkspaces[$tagWs['tag_id']][] = $tagWs['rel_ws_tag'];
+        }
+
+        $tagsHierarchy = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTagHierarchy')
+            ->findAllAdmin();
+        $rootTags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+            ->findAdminRootTags();
+        $hierarchy = array();
+
+        // create an array : tagId => [direct_children_id]
+        foreach ($tagsHierarchy as $tagHierarchy) {
+
+            if ($tagHierarchy->getLevel() === 1) {
+
+                if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
+                    !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
+
+                    $hierarchy[$tagHierarchy->getParent()->getId()] = array();
+                }
+                $hierarchy[$tagHierarchy->getParent()->getId()][] = $tagHierarchy->getTag();
+            }
+        }
+
+        // create an array indicating which tag is displayable
+        // a tag is displayable if it or one of his children contains is associated to a workspace
+        $displayable = array();
+        $allAdminTags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
+            ->findByUser(null);
+
+        foreach ($allAdminTags as $adminTag) {
+            $adminTagId = $adminTag->getId();
+            $displayable[$adminTagId] = $this->isTagDisplayable($adminTagId, $tagWorkspaces, $hierarchy);
+        }
+
+        $workspaceRoles = array();
+
+        foreach ($roles as $role) {
+            $wsRole = $role->getWorkspace();
+
+            if (!is_null($wsRole)) {
+                $code = $wsRole->getCode();
+
+                if (!isset($workspaceRoles[$code])) {
+                    $workspaceRoles[$code] = array();
+                }
+
+                $workspaceRoles[$code][] = $role;
+            }
+        }
+
         $template = $resource->getResourceType()->getName() === 'directory' ?
             'ClarolineCoreBundle:Resource:rights_form_directory.html.twig' :
             'ClarolineCoreBundle:Resource:rights_form_resource.html.twig';
 
         return $this->render(
             $template,
-            array('roleRights' => $roleRights, 'resource' => $resource)
+            array(
+                'roleRights' => $roleRights,
+                'resource' => $resource,
+                'workspaces' => $workspaces,
+                'tags' => $tags,
+                'tagWorkspaces' => $tagWorkspaces,
+                'hierarchy' => $hierarchy,
+                'rootTags' => $rootTags,
+                'displayable' => $displayable,
+                'workspaceRoles' => $workspaceRoles
+            )
         );
+    }
+
+    private function isTagDisplayable($tagId, $tagWorkspaces, $hierarchy)
+    {
+        $displayable = false;
+
+        if (isset($tagWorkspaces[$tagId]) && count($tagWorkspaces[$tagId]) > 0) {
+            $displayable = true;
+        } else {
+
+            if (isset($hierarchy[$tagId]) && count($hierarchy[$tagId]) > 0) {
+                $children = $hierarchy[$tagId];
+
+                foreach ($children as $child) {
+
+                    $displayable = $this->isTagDisplayable($child->getId(), $tagWorkspaces, $hierarchy);
+
+                    if ($displayable) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $displayable;
     }
 
     /**

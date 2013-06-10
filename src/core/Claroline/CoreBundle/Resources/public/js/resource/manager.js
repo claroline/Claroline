@@ -576,6 +576,30 @@
                         }
                     });
                 },
+                'click .workspace-role-item': function (event) {
+                    event.preventDefault();
+                    $.ajax({
+                        context: this,
+                        url: event.currentTarget.getAttribute('href'),
+                        type: 'POST',
+                        processData: false,
+                        contentType: false,
+                        success: function (form) {
+                            $('#modal-check-role').empty();
+                            $('#modal-check-role').append(form);
+                            $('#rights-form-resource-tab-content').css('display', 'none');
+                            $('#rights-form-resource-nav-tabs').css('display', 'none');
+                            $('#modal-check-resource-right-box').modal('show');
+                        }
+                    });
+                },
+                'click .modal-close': function (event) {
+                    event.preventDefault();
+                    $('#modal-check-role').empty();
+                    $('#modal-check-resource-right-box').modal('hide');
+                    $('#rights-form-resource-tab-content').css('display', 'block');
+                    $('#rights-form-resource-nav-tabs').css('display', 'block');
+                },
                 'click #submit-right-form-button': function (event) {
                     event.preventDefault();
                     var form = $(this.el).find('form')[1];
@@ -590,6 +614,10 @@
                         success: function (newrow) {
                             $('#form-right-wrapper').empty();
                             $('#perms-table').append(newrow);
+                            $('#modal-check-role').empty();
+                            $('#modal-check-resource-right-box').modal('hide');
+                            $('#rights-form-resource-tab-content').css('display', 'block');
+                            $('#rights-form-resource-nav-tabs').css('display', 'block');
                         }
                     });
                 },
