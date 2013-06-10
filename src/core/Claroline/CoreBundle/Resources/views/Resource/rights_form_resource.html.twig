@@ -36,7 +36,7 @@
                                 <div class="accordion-inner">
                                     <ul>
                                         {% for role in workspaceRoles[workspace.getCode()] %}
-                                            <a class="workspace-role-item" href="{{ path('claro_resource_right_form', {'roleId':role.id, 'resourceId':resource.id}) }}">{{ role.getTranslationKey() }}</a><br/>
+                                            <a class="workspace-role-item" href="{{ path('claro_resource_right_form', {'resource':resource.id, 'role':role.id}) }}">{{ role.getTranslationKey() }}</a><br/>
                                         {% endfor %}
                                     </ul>
                                 </div>
@@ -162,7 +162,7 @@
                                         <div class="accordion-inner">
                                             <ul>
                                                 {% for role in workspaceRoles[workspace.getCode()] %}
-                                                    <a class="workspace-role-item" href="{{ path('claro_resource_right_form', {'roleId':role.id, 'resourceId':resource.id}) }}">{{ role.getTranslationKey() }}</a><br/>
+                                                    <a class="workspace-role-item" href="{{ path('claro_resource_right_form', {'resource':resource.id, 'role':role.id}) }}">{{ role.getTranslationKey() }}</a><br/>
                                                 {% endfor %}
                                             </ul>
                                         </div>
