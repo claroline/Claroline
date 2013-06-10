@@ -141,10 +141,11 @@ class ToolListener
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+        $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findBy(array('hasOptions' => true, 'isDisplayableInWorkspace' => true));
 
         return $this->container->get('templating')->render(
             'ClarolineCoreBundle:Tool\workspace\parameters:parameters.html.twig',
-            array('workspace' => $workspace)
+            array('workspace' => $workspace, 'tools' => $tools)
         );
     }
 
@@ -155,9 +156,15 @@ class ToolListener
      */
     public function desktopParameters()
     {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findBy(array('hasOptions' => true, 'isDisplayableInDesktop' => true));
+
         return $this->container
             ->get('templating')
-            ->render('ClarolineCoreBundle:Tool\desktop\parameters:parameters.html.twig');
+            ->render(
+                'ClarolineCoreBundle:Tool\desktop\parameters:parameters.html.twig',
+                array('tools' => $tools)
+            );
     }
 
     public function workspaceCalendar($workspaceId)
