@@ -1,0 +1,29 @@
+{% extends 'ClarolineCoreBundle:Administration:layout.html.twig' %}
+
+{% block section_content %}
+    <div class="margin theme-generator">
+        <h3 class="sub-section-header">
+            {% if theme is defined %}
+            {{ "Edit theme" | trans({}, "theme") }}<em> ({{ theme.name }})</em>
+            {% else %}
+                {{ "New theme" | trans({}, "theme") }}
+            {% endif %}
+        </h3>
+        {% if parameters is defined %}
+            <div class="span4">
+            <h4>{{ "Colors" | trans({}, "theme")}}</h4>
+                <table class="table table-bordered table-striped">
+                    {% for code,value in parameters.getColors() %}
+                        <tr>
+                            <td class="theme-code"><code>{{ code }}</code></td>
+                            <td class="theme-value"><input type="text" placeholder="{{ value }}"></td>
+                            <td class="theme-swatch"><span style="background-color: {{ value }};"></span></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+

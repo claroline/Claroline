@@ -3,11 +3,10 @@
 namespace Claroline\CoreBundle\Listener\Tool;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Library\Event\ExportResourceTemplateEvent;
-use Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Library\Event\ExportToolEvent;
-use Claroline\CoreBundle\Library\Event\ImportToolEvent;
+use Claroline\CoreBundle\Library\Event\ConfigureWorkspaceToolEvent;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @DI\Service(scope="request")
@@ -44,6 +43,16 @@ class ResourceManagerListener
     public function onDisplayWorkspaceResouceManager(DisplayToolEvent $event)
     {
         $event->setContent($this->resourceWorkspace($event->getWorkspace()->getId()));
+    }
+
+    /**
+     * @DI\Observe("configure_workspace_tool_resource_manager")
+     *
+     * @param ConfigureWorkspaceToolEvent $event
+     */
+    public function onDisplayWorkspaceResourceConfiguration(ConfigureWorkspaceToolEvent $event)
+    {
+        $event->setContent($this->workspaceResourceRightsForm($event->getWorkspace()));
     }
 
     /**
@@ -112,6 +121,21 @@ class ResourceManagerListener
         return $this->templating->render(
             'ClarolineCoreBundle:Tool\desktop\resource_manager:resources.html.twig',
             array('resourceTypes' => $resourceTypes)
+        );
+    }
+
+    private function workspaceResourceRightsForm(AbstractWorkspace $workspace)
+    {
+        if (!$this->sc->isGranted('parameters', $workspace)) {
+            throw new AccessDeniedException();
+        }
+        $resource = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findWorkspaceRoot($workspace);
+        $roleRights = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
+            ->findNonAdminRights($resource);
+
+        return $this->templating->render(
+            'ClarolineCoreBundle:Tool\workspace\resource_manager:resources_rights.html.twig',
+            array('workspace' => $workspace, 'resource' => $resource, 'roleRights' => $roleRights)
         );
     }
 }

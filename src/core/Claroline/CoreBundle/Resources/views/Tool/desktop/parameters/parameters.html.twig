@@ -8,14 +8,15 @@
 {% block section_content %}
     <div class="margin">
         <h3 class='sub-section-header'>{{ 'parameters'|trans({}, 'platform') }}</h3>
-
         <ul>
             <li class='li-user-parameters'>
-            <a href="{{ path('claro_widget_properties') }}">{{ 'widgets'|trans({}, 'platform') }}</a>
+                <a href="{{ path('claro_tool_properties') }}">{{ 'tools'|trans({}, 'platform') }}</a>
             </li>
-            <li class='li-user-parameters'>
-            <a href="{{ path('claro_tool_properties') }}">{{ 'tools'|trans({}, 'platform') }}</a>
-            </li>
-        </ul>    
+            {% for tool in tools %}
+            <li class='li-user-parameters'><a href="{{ path('claro_desktop_tool_config', {'tool': tool.getId()}) }}">
+                {{ tool.getName()|trans({}, 'tools') }}
+            </a></li>
+            {% endfor %}
+        </ul>
     </div>
 {% endblock %}

@@ -13,7 +13,7 @@
         <div class="accordion-inner">
             <ul>
                 {% for roleName, role in workspace %}
-                    <a class="role-item" href="{{ path('claro_resource_right_form', {'roleId':role.id, 'resourceId':resourceId}) }}">{{ role.translation_key }}</a><br/>
+                    <a class="role-item" href="{{ path('claro_resource_right_form', {'role':role.id, 'resource':resourceId}) }}">{{ role.translation_key }}</a><br/>
                 {% endfor %}
             </ul>
         </div>

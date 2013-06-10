@@ -2,7 +2,7 @@
 {% block createCell %}
     <td>
         <a data-resource-id="{{ resource.getId() }}"
-           href="{{ path('claro_workspace_resource_rights_creation_form', {'workspaceId': workspace.getId(), 'roleId': permissions.getRole().getId() }) }}">
+           href="{{ path('claro_workspace_resource_rights_creation_form', {'workspace': workspace.getId(), 'role': permissions.getRole().getId() }) }}">
             {{ 'options'|trans({}, 'platform') }}
         </a>
     </td>
