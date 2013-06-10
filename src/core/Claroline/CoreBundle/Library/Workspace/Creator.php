@@ -36,7 +36,6 @@ class Creator
     {
         $this->entityManager = $em;
         $this->manager = $rm;
-        $this->roleRepo = $this->entityManager->getRepository('ClarolineCoreBundle:Role');
         $this->ed = $ed;
         $this->translator = $translator;
     }
@@ -59,9 +58,8 @@ class Creator
         $workspace->setCode($config->getWorkspaceCode());
         $this->entityManager->persist($workspace);
         $this->entityManager->flush();
-        $this->initBaseRoles($workspace, $config);
-        $rootDir = $this->manager->createRootDir($workspace, $manager, $config->getPermsRootConfiguration());
-        $this->entityManager->flush();
+        $entityRoles = $this->initBaseRoles($workspace, $config);
+        $rootDir = $this->manager->createRootDir($workspace, $manager, $config->getPermsRootConfiguration(), $entityRoles);
         $extractPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('claro_ws_tmp_', true);
         $archive = new \ZipArchive();
         $archive->open($config->getArchive());
@@ -80,14 +78,15 @@ class Creator
             $this->ed->dispatch('tool_'.$name.'_from_template', $event);
         }
 
-        $manager->addRole($this->roleRepo->findManagerRole($workspace));
-        $this->addMandatoryTools($workspace, $config);
+        $manager->addRole($entityRoles['ROLE_WS_MANAGER_'.$workspace->getId()]);
+        $this->addMandatoryTools($workspace, $config, $entityRoles);
         $this->entityManager->persist($manager);
+
         if ($autoflush) {
             $this->entityManager->flush();
         }
-        $archive->close();
 
+        $archive->close();
         $log = new LogWorkspaceCreateEvent($workspace);
         $this->ed->dispatch('log', $log);
 
@@ -103,12 +102,14 @@ class Creator
     private function initBaseRoles(AbstractWorkspace $workspace, Configuration $config)
     {
         $roles = $config->getRoles();
+        $entityRoles = array();
 
         foreach ($roles as $name => $translation) {
-            $this->createRole($name, $workspace, $translation);
+            $role = $this->createRole($name, $workspace, $translation);
+            $entityRoles[$role->getName()] = $role;
         }
 
-        $this->entityManager->flush();
+        return $entityRoles;
     }
 
     /**
@@ -142,7 +143,7 @@ class Creator
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
      * @param \Claroline\CoreBundle\Library\Workspace\Configuration $config
      */
-    private function addMandatoryTools(AbstractWorkspace $workspace, Configuration $config)
+    private function addMandatoryTools(AbstractWorkspace $workspace, Configuration $config, array $roles)
     {
         $toolsPermissions = $config->getToolsPermissions();
         $order = 1;
@@ -176,9 +177,7 @@ class Creator
                         ->getRepository('ClarolineCoreBundle:Role')
                         ->findOneBy(array('name' => $role));
                 } else {
-                     $role = $this->entityManager
-                        ->getRepository('ClarolineCoreBundle:Role')
-                        ->findOneBy(array('name' => $role.'_'.$workspace->getId()));
+                     $role = $roles[$role.'_'.$workspace->getId()];
                 }
 
                 $tool = $this->entityManager
