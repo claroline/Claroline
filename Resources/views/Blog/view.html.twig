@@ -1,10 +1,10 @@
-{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+{% extends 'ICAPBlogBundle::layout.html.twig' %}
 
 {% trans_default_domain "icap_blog" %}
 
 {% block title %}{{ _resource.getName() }}{% endblock %}
 
-{% block section_content %}
+{% block content %}
     <p>
         <a href="{{ _path('icap_blog_post_new', {'blogId': _resource.getId()}) }}">
             <button class="btn">{{ 'new_post'|trans() }}</button>

@@ -2,7 +2,7 @@
 
 {% block title %}{{ _resource.getName() }} - {{ "add_new_post"|trans({}, 'icap_blog') }}{% endblock %}
 
-{% block section_content %}
+{% block content %}
     {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
     <form action="{{ _path('icap_blog_post_new', {'blogId':_resource.getId()}) }}" method="post" {{ form_enctype(form) }} id="new_post_form">
        {{ form_widget(form) }}

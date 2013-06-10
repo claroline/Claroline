@@ -1,0 +1,43 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block layout %}
+    <div id="sf-environement" data-env="{{ app.environment }}"></div>
+    <div id="wrapper">
+        <div class="please-wait">
+            <span class="label label-warning"> {{ 'please_wait'|trans({}, 'platform') }} </span>
+        </div>
+        {% if not is_path_mode %}
+            {% if workspace is defined %}
+            {% render controller('ICAPBlogBundle:Layout:topBar', {'workspaceId': workspace.getId()}) %}
+            {% else %}
+            {% render controller('ICAPBlogBundle:Layout:topBar') %}
+            {% endif %}
+        {% endif %}
+
+        <div id="grid" class="container container-fluid">
+            {% if has_role('ROLE_USURPATE_WORKSPACE_ROLE') %}
+                {% render controller('ClarolineCoreBundle:Layout:renderWarningImpersonation') %}
+            {% endif %}
+            {% block sectionHeader %}
+            &nbsp;
+            {% endblock %}
+
+            <div class="row-fluid content">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+   {% block footer %}
+        {% if not is_path_mode %}
+            {% render controller('ClarolineCoreBundle:Layout:footer') %}
+        {% endif %}
+    {% endblock%}
+    <div id="ajax-login-modal" class="modal hide fade">
+        <div class="modal-header">
+        </div>
+        <div class="modal-body" id="ajax-login-modal-body">
+            <div id="ajax-login-validation-box-body">
+            </div>
+        </div>
+    </div>
+{% endblock %}
