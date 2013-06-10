@@ -334,6 +334,7 @@ resource_right_form_isRecursive: Apply changes to current and sub directories
 restore : Restore
 results: Results
 rights: Rights
+rights_management: 'Rights Management'
 role: Role
 roles: Roles
 save: Save
