@@ -44,7 +44,7 @@
                             {% if config.getParent().isLocked() %} disabled {% endif %}>
                         </th>
                         <th> {% if config.getWidget().isConfigurable() and config.getParent().isLocked() == false %}
-                                <a href="{{ path('claro_desktop_widget_configuration', {'widgetId': config.getWidget().getId()}) }}">
+                                <a href="{{ path('claro_desktop_widget_configuration', {'widget': config.getWidget().getId()}) }}">
                                     {{ 'configure'|trans({}, 'platform') }}
                                 </a> {% endif %}
                         </th>

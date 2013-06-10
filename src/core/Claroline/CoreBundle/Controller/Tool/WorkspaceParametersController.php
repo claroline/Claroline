@@ -17,19 +17,17 @@ class WorkspaceParametersController extends AbstractParametersController
 {
     /**
      * @Route(
-     *     "/{workspaceId}/form/export",
+     *     "/{workspace}/form/export",
      *     name="claro_workspace_export_form"
      * )
      * @Method("GET")
      *
-     * @param integer $workspaceId
+     * @param AbstractWorkspace $workspace
      *
      * @return Response
      */
-    public function workspaceExportFormAction($workspaceId)
+    public function workspaceExportFormAction(AbstractWorkspace $workspace)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
         $this->checkAccess($workspace);
         $form = $this->get('form.factory')->create(new WorkspaceTemplateType());
 
@@ -43,19 +41,17 @@ class WorkspaceParametersController extends AbstractParametersController
 
     /**
      * @Route(
-     *     "/{workspaceId}/export",
+     *     "/{workspace}/export",
      *     name="claro_workspace_export"
      * )
      * @Method("POST")
      *
-     * @param integer $workspaceId
+     * @param AbstractWorkspace $workspace
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function workspaceExportAction($workspaceId)
+    public function workspaceExportAction(AbstractWorkspace $workspace)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
         $this->checkAccess($workspace);
         $request = $this->getRequest();
         $form = $this->createForm(new WorkspaceTemplateType());
@@ -82,19 +78,17 @@ class WorkspaceParametersController extends AbstractParametersController
 
     /**
      * @Route(
-     *     "/{workspaceId}/editform",
+     *     "/{workspace}/editform",
      *     name="claro_workspace_edit_form"
      * )
      * @Method("GET")
      *
-     * @param integer $workspaceId
+     * @param AbstractWorkspace $workspace
      *
      * @return Response
      */
-    public function workspaceEditFormAction($workspaceId)
+    public function workspaceEditFormAction($workspace)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
         $this->checkAccess($workspace);
         $form = $this->createForm(new WorkspaceEditType(), $workspace);
 
@@ -107,19 +101,18 @@ class WorkspaceParametersController extends AbstractParametersController
 
     /**
      * @Route(
-     *     "/{workspaceId}/edit",
+     *     "/{workspace}/edit",
      *     name="claro_workspace_edit"
      * )
      * @Method("POST")
      *
-     * @param integer $workspaceId
+     * @param AbstractWorkspace $workspace
      *
      * @return Response
      */
-    public function workspaceEditAction($workspaceId)
+    public function workspaceEditAction(AbstractWorkspace $workspace)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
         if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
             throw new AccessDeniedException();

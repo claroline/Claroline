@@ -5,7 +5,6 @@ namespace Claroline\CoreBundle\Controller\Tool;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Entity\Tool\DesktopTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
-use Claroline\CoreBundle\Library\Event\ConfigureWidgetDesktopEvent;
 use Claroline\CoreBundle\Library\Event\ConfigureDesktopToolEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -51,7 +50,7 @@ class DesktopParametersController extends Controller
 
     /**
      * @Route(
-     *     "/remove/tool/{toolId}",
+     *     "/remove/tool/{tool}",
      *     name="claro_tool_desktop_remove",
      *     options={"expose"=true}
      * )
@@ -59,23 +58,23 @@ class DesktopParametersController extends Controller
      *
      * Remove a tool from the desktop.
      *
-     * @param integer $toolId
+     * @param Tool $tool
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Exception
      */
-    public function desktopRemoveToolAction($toolId)
+    public function desktopRemoveToolAction(Tool $tool)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $user = $this->get('security.context')->getToken()->getUser();
-        $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->find($toolId);
+
         if ($tool->getName() === 'parameters') {
             throw new \Exception('You cannot remove the parameter tool from the desktop.');
         }
+
         $desktopTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
-            ->findOneBy(array('user' => $user, 'tool' => $toolId));
+            ->findOneBy(array('user' => $user, 'tool' => $tool));
         $em->remove($desktopTool);
         $em->flush();
 
@@ -84,7 +83,7 @@ class DesktopParametersController extends Controller
 
     /**
      * @Route(
-     *     "/add/tool/{toolId}/position/{position}",
+     *     "/add/tool/{tool}/position/{position}",
      *     name="claro_tool_desktop_add",
      *     options={"expose"=true}
      * )
@@ -92,16 +91,15 @@ class DesktopParametersController extends Controller
      *
      * Add a tool to the desktop.
      *
-     * @param integer $toolId
+     * @param Tool $tool
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Exception
      */
-    public function desktopAddToolAction($toolId, $position)
+    public function desktopAddToolAction(Tool $tool, $position)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId);
         $user = $this->get('security.context')->getToken()->getUser();
         $switchTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
             ->findOneBy(array('user' => $user, 'order' => $position));
@@ -120,7 +118,7 @@ class DesktopParametersController extends Controller
 
     /**
      * @Route(
-     *     "/move/tool/{toolId}/position/{position}",
+     *     "/move/tool/{tool}/position/{position}",
      *     name="claro_tool_desktop_move",
      *     options={"expose"=true}
      * )
@@ -128,15 +126,14 @@ class DesktopParametersController extends Controller
      *
      * This method switch the position of a tool with an other one.
      *
-     * @param integer $toolId
+     * @param Tool $tool
      * @param integer $position
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function desktopMoveToolAction($toolId, $position)
+    public function desktopMoveToolAction(Tool $tool, $position)
     {
          $em = $this->get('doctrine.orm.entity_manager');
-         $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId);
          $user = $this->get('security.context')->getToken()->getUser();
          $movingTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
             ->findOneBy(array('user' => $user, 'tool' => $tool));

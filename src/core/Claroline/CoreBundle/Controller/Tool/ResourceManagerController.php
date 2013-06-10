@@ -2,6 +2,8 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -11,26 +13,27 @@ class ResourceManagerController extends Controller
 {
     /**
      * @Route(
-     *     "/workspace/{workspaceId}/rights/form/role/{roleId}",
+     *     "/workspace/{workspace}/rights/form/role/{role}",
      *     name="claro_workspace_resource_rights_creation_form"
      * )
      * @Method("GET")
      *
-     * @param integer $workspaceId
-     * @param integer $roleId
+     * @param AbstractWorkspace $workspace
+     * @param Role $role
      *
      * @return Response
      */
-    public function workspaceResourceRightsCreationFormAction($workspaceId, $roleId)
+    public function workspaceResourceRightsCreationFormAction(
+        AbstractWorkspace $workspace,
+        Role $role
+    )
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
         if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
             throw new AccessDeniedException();
         }
+
         $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findWorkspaceRoot($workspace);
-        $role = $em->getRepository('ClarolineCoreBundle:Role')
-            ->find($roleId);
         $config = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
             ->findOneBy(array('resource' => $resource, 'role' => $role));
         $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
@@ -42,7 +45,7 @@ class ResourceManagerController extends Controller
                 'configs' => array($config),
                 'resourceTypes' => $resourceTypes,
                 'resourceId' => $resource->getId(),
-                'roleId' => $roleId,
+                'roleId' => $role->getId(),
                 'tool' => $this->getResourceManagerTool()
             )
         );
