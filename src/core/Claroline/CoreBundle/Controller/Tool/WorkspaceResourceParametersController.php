@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
-use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Claroline\CoreBundle\Controller\Tool\AbstractParametersController;

@@ -10,7 +10,7 @@
     {% endspaceless %}
     <ul>
         <li>
-            <a href="{{ path('claro_workspace_edit_form', {'workspaceId': workspace.getId()}) }}">{{ 'general'|trans({}, 'platform') }}</a>
+            <a href="{{ path('claro_workspace_edit_form', {'workspace': workspace.getId()}) }}">{{ 'general'|trans({}, 'platform') }}</a>
         </li>
         <li>
             <a href="{{ path('claro_workspace_tools_roles', {'workspaceId': workspace.getId()}) }}">{{ 'tools'|trans({}, 'platform') }}</a>
