@@ -87,7 +87,7 @@ class WorkspaceParametersController extends AbstractParametersController
      *
      * @return Response
      */
-    public function workspaceEditFormAction($workspace)
+    public function workspaceEditFormAction(AbstractWorkspace $workspace)
     {
         $this->checkAccess($workspace);
         $form = $this->createForm(new WorkspaceEditType(), $workspace);
