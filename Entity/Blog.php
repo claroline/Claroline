@@ -26,6 +26,13 @@ class Blog extends AbstractResource
      */
     protected $posts;
 
+    /**
+     * @var BlogOptions
+     *
+     * @ORM\OneToOne(targetEntity="BlogOptions", mappedBy="blog")
+     */
+    protected $options;
+
     public function __construct()
     {
         $this->posts  = new ArrayCollection();

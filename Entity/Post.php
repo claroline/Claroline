@@ -13,19 +13,8 @@ use ICAPLyon1\Bundle\SimpleTagBundle\Entity\TaggableInterface;
  * @ORM\Table(name="icap__blog_post")
  * @ORM\Entity(repositoryClass="ICAP\BlogBundle\Repository\PostRepository")
  */
-class Post implements TaggableInterface
+class Post  extends Statusable implements TaggableInterface
 {
-    const STATUS_UNPUBLISHED = 0;
-    const STATUS_PUBLISHED   = 1;
-
-    /**
-     * @var array
-     */
-    private $statusList = array(
-        self::STATUS_PUBLISHED,
-        self::STATUS_UNPUBLISHED
-    );
-
     /**
      * @var int $id
      *
@@ -48,13 +37,6 @@ class Post implements TaggableInterface
      * @ORM\Column(type="text")
      */
     private $content;
-
-    /**
-     * @var int $status
-     *
-     * @ORM\Column(type="smallint")
-     */
-    private $status = self::STATUS_UNPUBLISHED;
 
     /**
      * @Gedmo\Slug(fields={"title"}, unique=true)
@@ -113,30 +95,6 @@ class Post implements TaggableInterface
         $this->blog     = new Blog();
         $this->comments = new ArrayCollection();
         $this->author   = new User();
-    }
-
-    /**
-     * @param $status
-     *
-     * @return Post
-     * @throws \InvalidArgumentException
-     */
-    public function setStatus($status)
-    {
-        if (!in_array($status, $this->statusList)) {
-            throw new \InvalidArgumentException("Invalid status for post.");
-        }
-        $this->status = $status;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getStatus()
-    {
-        return $this->status;
     }
 
     /**

@@ -1,5 +1,5 @@
 plugin:
-  has_options: true
+  has_options: false
   icon: icap_blog_icon.png
 
   resources:

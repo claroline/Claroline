@@ -12,8 +12,9 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Table(name="icap__blog_comment")
  * @ORM\Entity(repositoryClass="ICAP\BlogBundle\Repository\CommentRepository")
  */
-class Comment 
+class Comment extends Statusable
 {
+
     /**
      * @var int $id
      *

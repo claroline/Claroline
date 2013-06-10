@@ -15,6 +15,7 @@ class Version20130530152255 extends BundleMigration
     {
         $this
             ->createBlogTable($schema)
+            ->createBlogOptionsTable($schema)
             ->createBlogPostTable($schema)
             ->createBlogCommentTable($schema)
         ;
@@ -29,13 +30,14 @@ class Version20130530152255 extends BundleMigration
         $schema
             ->dropTable('icap__blog_comment')
             ->dropTable('icap__blog_post')
+            ->dropTable('icap__blog_options')
             ->dropTable('icap__blog')
         ;
          //@TODO Remove associatedTag with posts
     }
 
     /**
-     * Create the 'icap_blog' table.
+     * Create the 'icap__blog' table.
      *
      * @param Schema $schema
      * @return Version20130530152255
@@ -51,7 +53,36 @@ class Version20130530152255 extends BundleMigration
     }
 
     /**
-     * Create the 'icap_blog_post' table.
+     * Create the 'icap__blog_options' table.
+     *
+     * @param Schema $schema
+     * @return Version20130530152255
+     */
+    private function createBlogOptionsTable(Schema $schema)
+    {
+        $table = $schema->createTable('icap__blog_options');
+        $this->addId($table);
+        $table->addColumn('blog_id', 'integer');
+        $table->addColumn('authorize_comment', 'boolean');
+        $table->addColumn('authorize_anonymous_comment', 'boolean');
+        $table->addColumn('post_per_page', 'smallint');
+        $table->addColumn('auto_publish_post', 'boolean');
+        $table->addColumn('auto_publish_comment', 'boolean');
+
+        $table->addForeignKeyConstraint(
+            $schema->getTable('icap__blog'),
+            array('blog_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+
+        $this->storeTable($table);
+
+        return $this;
+    }
+
+    /**
+     * Create the 'icap__blog_post' table.
      *
      * @param Schema $schema
      * @return Version20130530152255
@@ -91,7 +122,7 @@ class Version20130530152255 extends BundleMigration
     }
 
     /**
-     * Create the 'icap_blog_comment' table.
+     * Create the 'icap__blog_comment' table.
      *
      * @param Schema $schema
      * @return Version20130530152255
@@ -101,6 +132,7 @@ class Version20130530152255 extends BundleMigration
         $table = $schema->createTable('icap__blog_comment');
         $this->addId($table);
         $table->addColumn('message', 'text');
+        $table->addColumn('status', 'integer');
         $table->addColumn('creation_date', 'datetime');
         $table->addColumn('user_id', 'integer', array('notnull' => true));
         $table->addColumn('post_id', 'integer', array('notnull' => true));
