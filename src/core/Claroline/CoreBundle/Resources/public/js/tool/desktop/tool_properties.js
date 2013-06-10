@@ -26,12 +26,12 @@
         if (isCurrentRowChecked) {
             route = Routing.generate(
                 'claro_tool_desktop_add',
-                { 'toolId': toolId, 'position': rowIndex }
+                { 'tool': toolId, 'position': rowIndex }
             );
         } else {
             route = Routing.generate(
                 'claro_tool_desktop_remove',
-                { 'toolId': toolId }
+                { 'tool': toolId }
             );
         }
 
@@ -62,7 +62,7 @@
             }
             var route = Routing.generate(
                 'claro_tool_desktop_move',
-                { 'toolId': toolId, 'position': index }
+                { 'tool': toolId, 'position': index }
             );
             $.ajax({url: route, type: 'POST'});
         }
@@ -86,7 +86,7 @@
         }
         var route = Routing.generate(
             'claro_tool_desktop_move',
-            { 'toolId': toolId, 'position': index }
+            { 'tool': toolId, 'position': index }
         );
         $.ajax({url: route, type: 'POST'});
     }

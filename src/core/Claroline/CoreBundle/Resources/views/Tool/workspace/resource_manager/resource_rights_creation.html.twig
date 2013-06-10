@@ -13,7 +13,7 @@
         </li>
          <span class="divider"> / </span>
         <li>
-            <a href="{{ path('claro_workspace_resource_rights_form', {'workspaceId': workspace.getId()}) }}">{{ 'resources'|trans({}, 'platform') }}</a>
+            <a href="{{ path('claro_workspace_tool_config', {'workspace': workspace.getId(), 'tool': tool.getId()}) }}">{{ 'resources'|trans({}, 'platform') }}</a>
         </li>
          <span class="divider"> / </span>
         <li>
