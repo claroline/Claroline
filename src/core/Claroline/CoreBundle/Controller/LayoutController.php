@@ -140,18 +140,22 @@ class LayoutController extends Controller
         );
     }
 
-    private function isImpersonated()
+    /**
+     * @return bool
+     */
+    protected function isImpersonated()
     {
-        foreach ($this->container->get('security.context')->getToken()->getRoles() as $role) {
-            if ($role instanceof \Symfony\Component\Security\Core\Role\SwitchUserRole) {
-                return true;
-            }
+        if ($this->get('security.context')->isGranted('ROLE_PREVIOUS_ADMIN')) {
+            return true;
         }
 
         return false;
     }
 
-    private function findWorkspacesFromLogs()
+    /**
+     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[]
+     */
+    protected function findWorkspacesFromLogs()
     {
         $token = $this->get('security.context')->getToken();
         $user = $token->getUser();
