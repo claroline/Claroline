@@ -1,0 +1,13 @@
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% block title %}{{ _resource.getName() }} - {{ "add_new_post"|trans({}, 'icap_blog') }}{% endblock %}
+
+{% block section_content %}
+    {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
+    <form action="{{ _path('icap_blog_post_new', {'blogId':_resource.getId()}) }}" method="post" {{ form_enctype(form) }} id="new_post_form">
+       {{ form_widget(form) }}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+        </div>
+    </form>
+{% endblock %}

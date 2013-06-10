@@ -2,10 +2,12 @@
 
 {% trans_default_domain "icap_blog" %}
 
+{% block title %}{{ _resource.getName() }}{% endblock %}
+
 {% block section_content %}
     <p>
-        <a href="#">
-            <button class="btn">{{ 'new_article'|trans() }}</button>
+        <a href="{{ _path('icap_blog_post_new', {'blogId': _resource.getId()}) }}">
+            <button class="btn">{{ 'new_post'|trans() }}</button>
         </a>
     </p>
     {% for post in posts %}
@@ -13,7 +15,7 @@
         {{ post.title }}
     </article>
     {% else %}
-    <span>{{ 'no_article'|trans() }}</span>
+    <span>{{ 'no_post'|trans() }}</span>
     {% endfor %}
     {% if pager.haveToPaginate %}
     <div>

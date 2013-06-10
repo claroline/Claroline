@@ -4,6 +4,7 @@ namespace ICAP\BlogBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class BlogType extends AbstractType
 {
@@ -17,10 +18,13 @@ class BlogType extends AbstractType
         return 'icap_blog_form';
     }
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array(
-            'translation_domain' => 'icap_blog'
-        );
+        $resolver->setDefaults(array(
+           'translation_domain' => 'icap_blog',
+            'data_class'      => 'ICAP\BlogBundle\Entity\Blog',
+            'csrf_protection' => true,
+            'intention'       => 'create_blog'
+        ));
     }
 }
