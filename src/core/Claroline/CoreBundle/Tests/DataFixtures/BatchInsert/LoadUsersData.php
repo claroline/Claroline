@@ -50,7 +50,7 @@ class LoadUsersData extends LoggableFixture implements ContainerAwareInterface
             $user->setUsername($mandatoryFieldValue);
             $user->setPlainPassword($mandatoryFieldValue);
             $user->addRole($role);
-            $userCreator->create($user);
+            $userCreator->create($user, false);
 
             $this->log("UOW[{$manager->getUnitOfWork()->size()}]");
             if (($i % self::BATCH_SIZE) === 0) {

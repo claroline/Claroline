@@ -58,7 +58,7 @@ class Creator
      *
      * @return User
      */
-    public function create(User $user)
+    public function create(User $user, $autoflush = true)
     {
         $user->addRole($this->em->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER'));
         $this->em->persist($user);
@@ -91,7 +91,9 @@ class Creator
             $this->em->persist($udt);
         }
 
-        $this->em->flush();
+        if ($autoflush) {
+            $this->em->flush();
+        }
 
         // Log user creation
         $log = new LogUserCreateEvent($user);

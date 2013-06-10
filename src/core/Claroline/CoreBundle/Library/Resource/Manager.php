@@ -343,7 +343,7 @@ class Manager
      * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
      * @param array $rights
      */
-    public function setResourceRights(AbstractResource $resource, array $rights)
+    public function setResourceRights(AbstractResource $resource, array $rights, array $roles = array())
     {
         $roleRepo = $this->em->getRepository('ClarolineCoreBundle:Role');
         $resourceTypeRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType');
@@ -371,8 +371,12 @@ class Manager
                 throw new \Exception($content);
             }
 
-            $role = $roleRepo->findOneBy(array('name' => $role.'_'.$workspace->getId()));
-            $this->createRight($permissions, false, $role, $resource, $resourceTypes);
+            if (count($roles) === 0) {
+                $role = $roleRepo->findOneBy(array('name' => $role.'_'.$workspace->getId()));
+            } else {
+                $role = $roles[$role.'_'.$workspace->getId()];
+            }
+            $this->createRight($permissions, false, $role, $resource, $resourceTypes, false);
         }
 
         $anonymousPerms = array(
@@ -388,7 +392,8 @@ class Manager
             false,
             $roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
             $resource,
-            array()
+            array(),
+            false
         );
 
         $resourceTypes = $resourceTypeRepo->findAll();
@@ -406,7 +411,8 @@ class Manager
             false,
             $roleRepo->findOneBy(array('name' => 'ROLE_ADMIN')),
             $resource,
-            $resourceTypes
+            $resourceTypes,
+            false
         );
     }
 
@@ -435,7 +441,7 @@ class Manager
         return $criteria;
     }
 
-    public function createRootDir(AbstractWorkspace $workspace, User $user, array $configPermsRootDir)
+    public function createRootDir(AbstractWorkspace $workspace, User $user, array $configPermsRootDir, array $roles = array())
     {
         $rootDir = new Directory();
         $rootDir->setName("{$workspace->getName()} - {$workspace->getCode()}");
@@ -449,7 +455,7 @@ class Manager
         $rootDir->setIcon($directoryIcon);
         $rootDir->setResourceType($directoryType);
         $rootDir->setWorkspace($workspace);
-        $this->setResourceRights($rootDir, $configPermsRootDir);
+        $this->setResourceRights($rootDir, $configPermsRootDir, $roles);
         $this->em->persist($rootDir);
 
         return $rootDir;
@@ -657,7 +663,8 @@ class Manager
         $isRecursive,
         Role $role,
         AbstractResource $resource,
-        array $resourceTypes = array()
+        array $resourceTypes = array(),
+        $autoflush = true
     )
     {
         $resourceRights = array();
@@ -682,7 +689,9 @@ class Manager
             $this->em->persist($resourceRight);
         }
 
-        $this->em->flush();
+        if ($autoflush) {
+            $this->em->flush();
+        }
     }
 
     /**
