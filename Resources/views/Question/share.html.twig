@@ -35,7 +35,6 @@
 {% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
 
 {% block section_content %}
-
 <br/><br/>
 
 <div class="input-append pull-left">
@@ -50,9 +49,10 @@
 <div id="searchUserList">
 </div>
 
+<div id="test" style="display: none;">{{ questionID }}</div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/question.js') }}"></script>    
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/question.js') }}"></script>
 {% endblock %}

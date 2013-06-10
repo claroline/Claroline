@@ -13,10 +13,32 @@
         <td>{{ user.lastName }}</td>
         <td>{{ user.firstName }}</td>
         <td>
-            <!--<a href="">-->
+
+            <a href="#" onclick="shareQuestionUser('{{ path('ujm_question_shareQuestionUser') }}','{{ user.lastName }}','{{ user.firstName }}');">
                 <i class="icon-share"></i>
-            <!--</a>-->
+            </a>
         </td>
     </tr>
 {% endfor %}
 </table>
+
+<script type="text/javascript">
+
+    function shareQuestionUser(path,name,fname){
+        qId = document.getElementById('test').innerHTML;
+
+       $.ajax({
+            type: 'POST',
+            url: path,
+            data: {
+                questionID : qId,
+                Uname : name,
+                Ufname : fname
+            },
+           cache: false,
+            success: function (data) {
+              window.location.href = data;
+           }
+        });
+    }
+</script>

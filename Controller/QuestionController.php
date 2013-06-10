@@ -39,6 +39,7 @@ namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormBuilder;
+//use Symfony\Component\HttpFoundation\Response;
 
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
@@ -59,6 +60,7 @@ use UJM\ExoBundle\Entity\InteractionHole;
 use UJM\ExoBundle\Form\InteractionHoleType;
 
 use UJM\ExoBundle\Entity\Interaction;
+use UJM\ExoBundle\Entity\Share;
 
 use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Form\ResponseType;
@@ -84,7 +86,9 @@ class QuestionController extends Controller
             ->getUserInteraction($uid);
 
         $questionWithResponse = array();
+        $alreadyShared = array();
         $em = $this->getDoctrine()->getEntityManager();
+
         foreach ($interactions as $interaction) {
             $response = $em->getRepository('UJMExoBundle:Response')
                 ->findBy(array('interaction' => $interaction->getId()));
@@ -93,12 +97,30 @@ class QuestionController extends Controller
             } else {
                 $questionWithResponse[] = 0;
             }
+
+            $share = $em->getRepository('UJMExoBundle:Share')
+                ->findBy(array('question' => $interaction->getQuestion()->getId()));
+            if (count($share) > 0) {
+                $alreadyShared[] = 1;
+            } else {
+                $alreadyShared[] = 0;
+            }
+        }
+
+        $shared = $em->getRepository('UJMExoBundle:Share')
+            ->findBy(array('user' => $uid));
+
+        for ($i = 0; $i < count($shared); $i++) {
+            $sharedWithMe = $em->getRepository('UJMExoBundle:Interaction')
+                ->findBy(array('question' => $shared[$i]->getQuestion()->getId()));
         }
 
         return $this->render(
             'UJMExoBundle:Question:index.html.twig', array(
             'interactions'         => $interactions,
-            'questionWithResponse' => $questionWithResponse
+            'questionWithResponse' => $questionWithResponse,
+            'alreadyShared'       => $alreadyShared,
+            'sharedWithMe'       => $sharedWithMe
             )
         );
     }
@@ -767,5 +789,34 @@ class QuestionController extends Controller
             'listDoc' => $listFindDoc
             )
         );
+    }
+
+    public function shareQuestionUserAction() {
+
+        $request = $this->container->get('request');
+
+        if ($request->isXmlHttpRequest()) {
+            $QuestionID = $request->request->get('questionID');
+            $UserName = $request->request->get('Uname');
+            $UserFname = $request->request->get('Ufname');
+
+            $em = $this->getDoctrine()->getEntityManager();
+            $MatchingName = $em->getRepository('ClarolineCoreBundle:User')->findByName($UserName);
+            $question = $em->getRepository('UJMExoBundle:Question')->findOneBy(array('id' => $QuestionID));
+
+            for ($i = 0; $i < count($MatchingName); $i++) {
+                if($MatchingName[$i]->getFirstName() == $UserFname) {
+                    $user = $MatchingName[$i];
+                    break;
+                }
+            }
+
+            $share = new Share($user, $question);
+            $share->setAllowToModify(0); // false
+            $em->persist($share);
+            $em->flush();
+        }
+
+         return new \Symfony\Component\HttpFoundation\Response($this->generateUrl('ujm_question_index'));
     }
 }
