@@ -4,115 +4,14 @@ namespace Claroline\CoreBundle\Controller\Tool;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Entity\Tool\DesktopTool;
-use Claroline\CoreBundle\Library\Event\ConfigureWidgetDesktopEvent;
-use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
+use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Library\Event\ConfigureDesktopToolEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 class DesktopParametersController extends Controller
 {
-    /**
-     * @Route(
-     *     "/widget/properties",
-     *     name="claro_widget_properties"
-     * )
-     *
-     * Displays the widget configuration page.
-     *
-     * @return Response
-     */
-    public function desktopWidgetPropertiesAction()
-    {
-        $user = $this->get('security.context')->getToken()->getUser();
-        $configs = $this->get('claroline.widget.manager')
-            ->generateDesktopDisplayConfig($user->getId());
-
-        return $this->render(
-            'ClarolineCoreBundle:Tool\desktop\parameters:widget_properties.html.twig',
-            array('configs' => $configs, 'user' => $user)
-        );
-    }
-
-    /**
-     * @Route(
-     *     "/config/{displayConfigId}/widget/{widgetId}/invertvisible",
-     *     name="claro_desktop_widget_invertvisible",
-     *     options={"expose"=true}
-     * )
-     * @Method("POST")
-     *
-     * Inverts the visibility boolean for a widget for the current user.
-     *
-     * @param integer $widgetId        the widget id
-     * @param integer $displayConfigId the display config id (the configuration entity for widgets)
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function desktopInvertVisibleUserWidgetAction($widgetId, $displayConfigId)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
-        $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
-            ->find($widgetId);
-        $displayConfig = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
-            ->findOneBy(array('user' => $user, 'widget' => $widget));
-
-        if ($displayConfig == null) {
-            $displayConfig = new DisplayConfig();
-            $baseConfig = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
-                ->find($displayConfigId);
-            $displayConfig->setParent($baseConfig);
-            $displayConfig->setWidget($widget);
-            $displayConfig->setUser($user);
-            $displayConfig->setVisible($baseConfig->isVisible());
-            $displayConfig->setLock(true);
-            $displayConfig->setDesktop(true);
-            $displayConfig->invertVisible();
-        } else {
-            $displayConfig->invertVisible();
-        }
-
-        $em->persist($displayConfig);
-        $em->flush();
-
-        return new Response('success');
-    }
-
-    /**
-     * @Route(
-     *     "widget/{widgetId}/configuration/desktop",
-     *     name="claro_desktop_widget_configuration",
-     *     options={"expose"=true}
-     * )
-     * @Method("GET")
-     *
-     * Asks a widget to display its configuration page.
-     *
-     * @param integer $widgetId the widget id
-     *
-     * @return Response
-     */
-    public function desktopConfigureWidgetAction($widgetId)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $user = $this->get('security.context')->getToken()->getUser();
-        $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
-            ->find($widgetId);
-        $event = new ConfigureWidgetDesktopEvent($user);
-        $eventName = "widget_{$widget->getName()}_configuration_desktop";
-        $this->get('event_dispatcher')->dispatch($eventName, $event);
-
-        if ($event->getContent() !== '') {
-            return $this->render(
-                'ClarolineCoreBundle:Tool\desktop\parameters:widget_configuration.html.twig',
-                array('content' => $event->getContent())
-            );
-        }
-
-        throw new \Exception("event $eventName didn't return any Response");
-    }
-
     /**
      * @Route(
      *     "/tools",
@@ -151,7 +50,7 @@ class DesktopParametersController extends Controller
 
     /**
      * @Route(
-     *     "/remove/tool/{toolId}",
+     *     "/remove/tool/{tool}",
      *     name="claro_tool_desktop_remove",
      *     options={"expose"=true}
      * )
@@ -159,23 +58,23 @@ class DesktopParametersController extends Controller
      *
      * Remove a tool from the desktop.
      *
-     * @param integer $toolId
+     * @param Tool $tool
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Exception
      */
-    public function desktopRemoveToolAction($toolId)
+    public function desktopRemoveToolAction(Tool $tool)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $user = $this->get('security.context')->getToken()->getUser();
-        $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->find($toolId);
+
         if ($tool->getName() === 'parameters') {
             throw new \Exception('You cannot remove the parameter tool from the desktop.');
         }
+
         $desktopTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
-            ->findOneBy(array('user' => $user, 'tool' => $toolId));
+            ->findOneBy(array('user' => $user, 'tool' => $tool));
         $em->remove($desktopTool);
         $em->flush();
 
@@ -184,7 +83,7 @@ class DesktopParametersController extends Controller
 
     /**
      * @Route(
-     *     "/add/tool/{toolId}/position/{position}",
+     *     "/add/tool/{tool}/position/{position}",
      *     name="claro_tool_desktop_add",
      *     options={"expose"=true}
      * )
@@ -192,16 +91,15 @@ class DesktopParametersController extends Controller
      *
      * Add a tool to the desktop.
      *
-     * @param integer $toolId
+     * @param Tool $tool
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Exception
      */
-    public function desktopAddToolAction($toolId, $position)
+    public function desktopAddToolAction(Tool $tool, $position)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId);
         $user = $this->get('security.context')->getToken()->getUser();
         $switchTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
             ->findOneBy(array('user' => $user, 'order' => $position));
@@ -220,7 +118,7 @@ class DesktopParametersController extends Controller
 
     /**
      * @Route(
-     *     "/move/tool/{toolId}/position/{position}",
+     *     "/move/tool/{tool}/position/{position}",
      *     name="claro_tool_desktop_move",
      *     options={"expose"=true}
      * )
@@ -228,15 +126,14 @@ class DesktopParametersController extends Controller
      *
      * This method switch the position of a tool with an other one.
      *
-     * @param integer $toolId
+     * @param Tool $tool
      * @param integer $position
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function desktopMoveToolAction($toolId, $position)
+    public function desktopMoveToolAction(Tool $tool, $position)
     {
          $em = $this->get('doctrine.orm.entity_manager');
-         $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId);
          $user = $this->get('security.context')->getToken()->getUser();
          $movingTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
             ->findOneBy(array('user' => $user, 'tool' => $tool));
@@ -268,5 +165,31 @@ class DesktopParametersController extends Controller
         $em->flush();
 
         return new Response('<body>success</body>');
+    }
+
+    /**
+     * @Route(
+     *     "tool/{tool}/config",
+     *     name="claro_desktop_tool_config"
+     * )
+     * @Method("GET")
+     *
+     * @param Tool $tool
+     *
+     * @return Response
+     */
+    public function openDesktopToolConfig(Tool $tool)
+    {
+        $event = new ConfigureDesktopToolEvent($tool);
+        $eventName = strtolower('configure_desktop_tool_' . $tool->getName());
+        $this->get('event_dispatcher')->dispatch($eventName, $event);
+
+        if (is_null($event->getContent())) {
+            throw new \Exception(
+                "Tool '{$tool->getName()}' didn't return any Response for tool event '{$eventName}'."
+            );
+        }
+
+        return new Response($event->getContent());
     }
 }
