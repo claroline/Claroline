@@ -195,7 +195,7 @@ class ResourceRightsController extends Controller
      *     name="claro_resource_right_edit"
      * )
      */
-    public function editRightAction(ResourceRight $resourceRight)
+    public function editRightAction(ResourceRights $resourceRight)
     {
         $request = $this->get('request');
         $em = $this->get('doctrine.orm.entity_manager');
@@ -402,7 +402,7 @@ class ResourceRightsController extends Controller
 
         foreach ($targetResources as $targetResource) {
             $resourceRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
-                ->findOneBy(array('resource' => $targetResource, 'role' => $roleId));
+                ->findOneBy(array('resource' => $targetResource, 'role' => $role));
 
             if ($resourceRights == null) {
                 $resourceRights = new ResourceRights();
