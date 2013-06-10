@@ -78,6 +78,11 @@ class Tool
     protected $isExportable;
 
     /**
+     * @ORM\Column(type="boolean", name="has_options")
+     */
+    protected $hasOptions;
+
+    /**
      * Unmapped var used for the tool configuration.
      *
      * @var boolean
@@ -192,6 +197,16 @@ class Tool
     public function isExportable()
     {
         return $this->isExportable;
+    }
+
+    public function setHasOptions($hasOptions)
+    {
+        $this->hasOptions = $hasOptions;
+    }
+
+    public function hasOptions()
+    {
+        return $this->hasOptions;
     }
 }
 

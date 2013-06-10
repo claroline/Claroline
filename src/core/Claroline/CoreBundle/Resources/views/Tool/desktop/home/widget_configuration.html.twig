@@ -1,0 +1,21 @@
+{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% block section_content %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{{ path('claro_desktop_open_tool', {'toolName': 'parameters'}) }}">{{ 'parameters'|trans({}, 'platform') }}</a>
+        </li>
+        <span class="divider"> / </span>
+        <li>
+            <a href="{{ path('claro_desktop_tool_config', {'tool': tool.getId()}) }}">{{ 'home'|trans({}, 'platform') }}</a>
+        </li>
+        <span class="divider"> / </span>
+        <li>
+            <a href="{{ path('claro_desktop_widget_properties') }}">{{ 'widgets'|trans({}, 'platform') }}</a>
+        </li>
+        <span class="divider"> / </span>
+        <li>
+            <a href="#">{{ 'configuration'|trans({}, 'platform') }}</a>
+        </li>
+    </ul>
+    {{ content|raw }}
+{% endblock %}

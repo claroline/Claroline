@@ -340,6 +340,7 @@ class DatabaseWriter
         $toolEntity->setIsWorkspaceRequired(false);
         $toolEntity->setPlugin($pluginEntity);
         $toolEntity->setExportable($tool['is_exportable']);
+        $toolEntity->setHasOptions($tool['has_options']);
 
         if (isset($tool['class'])) {
             $toolEntity->setClass(
