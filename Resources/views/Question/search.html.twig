@@ -14,7 +14,8 @@
         <td>{{ user.firstName }}</td>
         <td>
 
-            <a href="#" onclick="shareQuestionUser('{{ path('ujm_question_shareQuestionUser') }}','{{ user.lastName }}','{{ user.firstName }}');">
+            <a href="#" onclick="shareQuestionUser('{{ path('ujm_question_shareQuestionUser') }}','{{ user.lastName }}','{{ user.firstName }}'
+            ,'{{ "already" | trans }}','{{ "Self" | trans }}');">
                 <i class="icon-share"></i>
             </a>
         </td>
@@ -24,7 +25,7 @@
 
 <script type="text/javascript">
 
-    function shareQuestionUser(path,name,fname){
+    function shareQuestionUser(path, name, fname, already, Self){
         qId = document.getElementById('test').innerHTML;
 
        $.ajax({
@@ -37,7 +38,16 @@
             },
            cache: false,
             success: function (data) {
-              window.location.href = data;
+                var alreadyShared = data.substr(0, data.indexOf(';'));
+                var action = data.substr(data.indexOf(';')+1);
+
+                if (alreadyShared == 'yes') {
+                    alert(already);
+                } else if (alreadyShared == 'self') {
+                    alert(Self);
+                } else {
+                    window.location.href = action;
+                }
            }
         });
     }

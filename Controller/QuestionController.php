@@ -110,9 +110,11 @@ class QuestionController extends Controller
         $shared = $em->getRepository('UJMExoBundle:Share')
             ->findBy(array('user' => $uid));
 
+        $sharedWithMe = array();
+
         for ($i = 0; $i < count($shared); $i++) {
-            $sharedWithMe = $em->getRepository('UJMExoBundle:Interaction')
-                ->findBy(array('question' => $shared[$i]->getQuestion()->getId()));
+            $sharedWithMe[] = $em->getRepository('UJMExoBundle:Interaction')
+                ->findOneBy(array('question' => $shared[$i]->getQuestion()->getId()));
         }
 
         return $this->render(
@@ -791,9 +793,11 @@ class QuestionController extends Controller
         );
     }
 
-    public function shareQuestionUserAction() {
+    public function shareQuestionUserAction()
+    {
 
         $request = $this->container->get('request');
+        $creator = $this->container->get('security.context')->getToken()->getUser();
 
         if ($request->isXmlHttpRequest()) {
             $QuestionID = $request->request->get('questionID');
@@ -813,10 +817,41 @@ class QuestionController extends Controller
 
             $share = new Share($user, $question);
             $share->setAllowToModify(0); // false
-            $em->persist($share);
-            $em->flush();
+
+            if($creator->getId() == $user->getId()){
+                $self = true;
+                $message = 'self;';
+            } else {
+                $self = false;
+                $message = 'yes;';
+            }
+
+            if ($this->alreadySharedAction($share, $em) == false && $self == false) {
+                $em->persist($share);
+                $em->flush();
+            return new \Symfony\Component\HttpFoundation\Response('no;'.$this->generateUrl('ujm_question_index'));
+            } else {
+                return new \Symfony\Component\HttpFoundation\Response($message);
+            }
+        }
+    }
+
+    public function alreadySharedAction($ToShare, $em)
+    {
+        $alreadyShared = $em->getRepository('UJMExoBundle:Share')->findAll();
+        $already = false;
+
+        for ($i = 0; $i < count($alreadyShared); $i++) {
+            if ($alreadyShared[$i]->getUser() == $ToShare->getUser() && $alreadyShared[$i]->getQuestion() == $ToShare->getQuestion()) {
+               $already = true;
+               break;
+            }
         }
 
-         return new \Symfony\Component\HttpFoundation\Response($this->generateUrl('ujm_question_index'));
+        if ($already == true) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -95,7 +95,8 @@
                 <th style="text-align: center">{{ "Title" | trans }}</th>
                 <th style="text-align: center">{{ "Type" | trans }}</th>
                 <th style="text-align: center">{{ "Question" | trans }}</th>
-                <!--th style="text-align: center">{{ "Actions" | trans }}</th-->
+                <th style="text-align: center">{{ "shared by" | trans }}</th>
+                <!--th style="text-align: center">{#{ "Actions" | trans }#}</th-->
             </tr>
         </thead>
         <tbody>
@@ -107,7 +108,7 @@
                 <td style="text-align: center; vertical-align: middle;">{{ myQShare.type }}</td>
                 <td style="text-align: center; vertical-align: middle;">{{ myQShare.invite|raw }}</td>
                 <!--td style="text-align: center; vertical-align: middle;">
-                    <ul style="text-align: center; vertical-align: middle; list-style-type: none;">
+                    <ul style="list-style-type: none;">
                         <li>
                             <a href="{#{ path('ujm_question_share', { 'questionID': myQShare.question.id }) }}">{{ "Share" | trans }}</a>
                         </li>
@@ -127,6 +128,9 @@
                         {% endif %#}
                     </ul>
                 </td-->
+                <td style="text-align: center; vertical-align: middle;">
+                    {{ myQShare.question.user.firstName }} {{ myQShare.question.user.lastName }}
+                </td>
             </tr>
             {% set i=i+1 %}
         {% endfor %}

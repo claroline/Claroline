@@ -39,6 +39,7 @@ namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 
@@ -240,12 +241,24 @@ class ExerciseController extends Controller
                 ->getRepository('UJMExoBundle:Interaction')
                 ->getUserInteractionImport($this->getDoctrine()->getEntityManager(), $uid, $exoID);
 
+
+            $shared = $em->getRepository('UJMExoBundle:Share')
+                    ->getUserInteractionSharedImport($exoID, $uid, $em);
+
+            $sharedWithMe = array();
+
+            for ($i = 0; $i < count($shared); $i++) {
+                $sharedWithMe[] = $em->getRepository('UJMExoBundle:Interaction')
+                    ->findOneBy(array('question' => $shared[$i]->getQuestion()->getId()));
+            }
+
             return $this->render(
                 'UJMExoBundle:Question:import.html.twig',
                 array(
                     'workspace'    => $workspace,
                     'interactions' => $interactions,
-                    'exoID'        => $exoID
+                    'exoID'        => $exoID,
+                    'sharedWithMe' => $sharedWithMe
                 )
             );
         } else {
@@ -662,6 +675,37 @@ class ExerciseController extends Controller
 
         if (!$this->get('security.context')->isGranted('OPEN', $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
+        }
+    }
+
+
+    public function importValidateSharedAction($exoID, $qid)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $question = $em->getRepository('UJMExoBundle:Interaction')
+            ->findBy(array('question' => $qid));
+
+        if (count($question) > 0) {
+
+            $exo = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
+            $question = $em->getRepository('UJMExoBundle:Question')->find($qid);
+
+            $eq = new ExerciseQuestion($exo, $question);
+
+            $dql = 'SELECT max(eq.ordre) FROM UJM\ExoBundle\Entity\ExerciseQuestion eq '
+                 . 'WHERE eq.exercise='.$exoID;
+            $query = $em->createQuery($dql);
+            $maxOrdre = $query->getResult();
+
+            $eq->setOrdre((int) $maxOrdre[0][1] + 1);
+            $em->persist($eq);
+
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('ujm_exercise_questions', array('id' => $exoID)));
+        } else {
+            return $this->redirect($this->generateUrl('ujm_exercise_import_question', array('exoID' => $exoID)));
         }
     }
 }

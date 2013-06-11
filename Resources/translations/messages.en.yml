@@ -280,3 +280,6 @@ newName: New name ?
 change: Change !
 sort: Sort
 My shared questions: My shared questions
+shared by: Shared by
+already: This question is already shared with this user ...
+Self: You can't shared this question with yourself ...

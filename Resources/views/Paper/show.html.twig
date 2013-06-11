@@ -57,12 +57,10 @@
             {% set interInfo = getInterTwig(interaction.id, 'InteractionQCM') %}
             {% set interQCM =  interInfo['question'] %}
 
-            {% if (display == 'all') %}
-                <div>
-            {% else %}
-                <div style="display:none;">
-            {% endif %}
 
+                <div>
+
+ {% if (display == 'all') %}
             <div name="title">
                 {{ interQCM.interaction.question.title }}
             </div>
@@ -125,12 +123,15 @@
                     {{ "Penalty" | trans }}: {{ hv.hint.penalty }}<br/>
                 {% endif %}
             {% endfor %}
-
+<hr/>
             {{ "Mark" | trans }}: {{ responses[i].mark }}/{{ interInfo['maxScore'] }}<br/>
             {% set exoMark = exoMark + responses[i].mark %}
             {% set exoScoreMax = exoScoreMax + interInfo['maxScore'] %}
-            <hr/>
-        </div>
+             {% else %}
+            {% set exoMark = exoMark + responses[i].mark %}
+            {% set exoScoreMax = exoScoreMax + interInfo['maxScore'] %}
+            {% endif %}
+
     </div>
 
 <!------------------------------------------------- Graphic ----------------------------------------------------------->
@@ -142,85 +143,91 @@
             {% set coords =  getCoordsGraphTwig(interG.id) %}
             {% set maxScore = 0 %}
 
+            <div>
             {% if (display == 'all') %}
-                <div>
+                <div name="title">
+                    {{ interG.interaction.question.title }}
+                </div>
+
+                <div name="description">
+                    {{ interG.interaction.question.description|raw }}
+                </div>
+
+                <div name="invite">
+                    {{ interG.interaction.invite|raw }}
+                </div>
+
+                <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/GraphicOverview.js') }}"></script>
+
+                <div style="position: relative;" id="Answer">
+                    <img src="{{asset (interG.document.url)}}" width="{{ interG.width }}" height="{{ interG.height }}"
+                        alt="AnswerImage" id="AnswerImage{{ interaction.id }}"/>
+
+                    {% set repco = responses[i].response|split(';') %}
+                    {% set x = 0 %}
+
+                    {% for c in coords %}
+
+                        {% set maxScore = maxScore + coords[x].scoreCoords %}
+                        {% set numb = coords[x].value|split(',') %}
+                        {% set repcoX = repco[x]|split('-') %}
+
+                        <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" id="{{ interaction.id }}ra{{ x }}"
+                             alt="RightAnswer{{ x }}" style="position: absolute; z-index: 2;" width="{{ coords[x].size }}"/><br/>
+
+                        <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" id="{{ interaction.id }}cursor{{ x }}"
+                             alt="AnswerZone{{ x }}" style="position: absolute; z-index: 7;"/>
+
+                        <script type="text/javascript">
+                            whichImg('{{coords[x].shape}}', '{{coords[x].color}}', {{x}}, '{{ numb[0] }}', '{{ numb[1] }}',
+                            '{{repcoX[0]}}', '{{repcoX[1]}}', '{{ asset('bundles/ujmexo/images/graphic/') }}',
+                            '{{ coords[x].size }}', '{{interaction.id}}')
+                        </script>
+
+                        {% set x = x + 1 %}
+                    {% endfor %}
+                </div>
+
+                {{ "Mark" | trans }}: {{ responses[i].mark }}/{{ maxScore }} <br/>
+                {% set exoMark = exoMark + responses[i].mark %}
+                {% set exoScoreMax = exoScoreMax + maxScore %}
+
+                {% set point = responses[i].mark + hv.hint.penalty %}
+
+                {% if responses[i].mark == 0 and hv.hint.penalty == 0 %}
+                        Aucune bonne réponse.
+                    {% elseif hv.hint.penalty == 0 %}
+                        Indices non vus, pas de pénalité.
+                    {% else %}
+                        Points bonne réponse : {{ point }} avec : -
+
+                        {% for hv in hintViewed %}
+                            {% if( hv.hint.interaction.id == interaction.id ) %}
+                                {{ "Penalty" | trans }}: {{ hv.hint.penalty }}<br/>
+                            {% endif %}
+                        {% endfor %}
+
+                        de pénalité pour indices vus.
+                    {% endif %}
+                <br/>
+                {% if interG.interaction.feedback is defined %}
+                    <div>
+                        <p>{{ interG.interaction.feedback|raw }}</p>
+                    </div>
+                {% endif %}
+                <hr/>
             {% else %}
-                <div style="display:none;">
-            {% endif %}
-
-            <div name="title">
-                {{ interG.interaction.question.title }}
-            </div>
-
-            <div name="description">
-                {{ interG.interaction.question.description|raw }}
-            </div>
-
-            <div name="invite">
-                {{ interG.interaction.invite|raw }}
-            </div>
-
-            <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/GraphicOverview.js') }}"></script>
-            
-            <div style="position: relative;" id="Answer">
-                <img src="{{asset (interG.document.url)}}" width="{{ interG.width }}" height="{{ interG.height }}"
-                    alt="AnswerImage" id="AnswerImage{{ interaction.id }}"/>
-
-                {% set repco = responses[i].response|split(';') %}
                 {% set x = 0 %}
 
                 {% for c in coords %}
-
                     {% set maxScore = maxScore + coords[x].scoreCoords %}
-                    {% set numb = coords[x].value|split(',') %}
-                    {% set repcoX = repco[x]|split('-') %}
-
-                    <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" id="{{ interaction.id }}ra{{ x }}"
-                         alt="RightAnswer{{ x }}" style="position: absolute; z-index: 2;" width="{{ coords[x].size }}"/><br/>
-
-                    <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" id="{{ interaction.id }}cursor{{ x }}"
-                         alt="AnswerZone{{ x }}" style="position: absolute; z-index: 7;"/>
-
-                    <script type="text/javascript">
-                        whichImg('{{coords[x].shape}}', '{{coords[x].color}}', {{x}}, '{{ numb[0] }}', '{{ numb[1] }}',
-                        '{{repcoX[0]}}', '{{repcoX[1]}}', '{{ asset('bundles/ujmexo/images/graphic/') }}',
-                        '{{ coords[x].size }}', '{{interaction.id}}')
-                    </script>
-
                     {% set x = x + 1 %}
                 {% endfor %}
-            </div>
-            
-            {{ "Mark" | trans }}: {{ responses[i].mark }}/{{ maxScore }} <br/>
-            {% set exoMark = exoMark + responses[i].mark %}
-            {% set exoScoreMax = exoScoreMax + maxScore %}
-            
-            {% set point = responses[i].mark + hv.hint.penalty %}
-            
-            {% if responses[i].mark == 0 and hv.hint.penalty == 0 %} 
-                    Aucune bonne réponse.
-                {% elseif hv.hint.penalty == 0 %}
-                    Indices non vus, pas de pénalité.
-                {% else %}
-                    Points bonne réponse : {{ point }} avec : -
-                    
-                    {% for hv in hintViewed %}
-                        {% if( hv.hint.interaction.id == interaction.id ) %}
-                            {{ "Penalty" | trans }}: {{ hv.hint.penalty }}<br/>
-                        {% endif %}
-                    {% endfor %}
-                    
-                    de pénalité pour indices vus.
-                {% endif %}
-            <br/>
-            {% if interG.interaction.feedback is defined %}
-                <div>
-                    <p>{{ interG.interaction.feedback|raw }}</p>
-                </div>
+
+                {% set exoMark = exoMark + responses[i].mark %}
+                {% set exoScoreMax = exoScoreMax + maxScore %}
             {% endif %}
-            <hr/>
-        </div>
-    </div>
+            </div>
 
 <!--------------------------------------------------- Hole ------------------------------------------------------------>
 

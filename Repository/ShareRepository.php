@@ -47,4 +47,31 @@ use Doctrine\ORM\EntityRepository;
  */
 class ShareRepository extends EntityRepository
 {
+
+    public function getUserInteractionSharedImport($exoId, $uid, $em)
+    {
+
+        $questions = array();
+
+        $dql = 'SELECT eq FROM UJM\ExoBundle\Entity\ExerciseQuestion eq WHERE eq.exercise=' . $exoId
+            . ' ORDER BY eq.ordre';
+
+        $query = $em->createQuery($dql);
+        $eqs = $query->getResult();
+
+        foreach ($eqs as $eq) {
+            $questions[] = $eq->getQuestion()->getId();
+        }
+
+        $qb = $this->createQueryBuilder('s');
+
+        $qb->join('s.question', 'q')
+           ->join('s.user', 'u')
+           ->where($qb->expr()->in('u.id', $uid));
+        if (count($questions) > 0) {
+             $qb->andWhere('q.id not in ('.implode(',', $questions).')');
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }

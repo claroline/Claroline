@@ -23,3 +23,7 @@ ujm_exercise_update:
 ujm_exercise_validate_import:
     pattern: /{exoID}/{qid}/import
     defaults: { _controller: "UJMExoBundle:Exercise:importValidate" }
+    
+ujm_exercise_validate_import_shared:
+    pattern: /{exoID}/{qid}/import/shared
+    defaults: { _controller: "UJMExoBundle:Exercise:importValidateShared" }
