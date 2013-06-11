@@ -145,8 +145,10 @@ class LayoutController extends Controller
      */
     protected function isImpersonated()
     {
-        if ($this->get('security.context')->isGranted('ROLE_USURPATE_WORKSPACE_ROLE')) {
-            return true;
+        foreach ($this->container->get('security.context')->getToken()->getRoles() as $role) {
+            if ($role instanceof \Symfony\Component\Security\Core\Role\SwitchUserRole) {
+                return true;
+            }
         }
 
         return false;
