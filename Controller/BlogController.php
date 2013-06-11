@@ -40,32 +40,6 @@ class BlogController extends Controller
 
     /**
      * @Route(
-     *      "/{blogId}/post/new",
-     *      name="icap_blog_post_new",
-     *      requirements={"blogId" = "\d+"}
-     * )
-     * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
-     * @Template()
-     */
-    public function newPostAction(Request $request, Blog $blog)
-    {
-        $form = $this->createForm(new PostType(), new Post());
-
-        if("POST" === $request->getMethod()) {
-            $form->bind($request);
-            if ($form->isValid()) {
-                return $this->redirect($this->generateUrl('icap_blog_view', array('blogId' => $blog->getId())));
-            }
-        }
-
-        return array(
-            '_resource' => $blog,
-            'form'      => $form->createView()
-        );
-    }
-
-    /**
-     * @Route(
      *      "/configure/{blogId}",
      *      name="icap_blog_configure",
      *      requirements={"blogId" = "\d+"}
