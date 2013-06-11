@@ -6,8 +6,8 @@
 
 {% block content %}
     <p>
-        <a href="{{ _path('icap_blog_post_new', {'blogId': _resource.id}) }}">
-            <button class="btn">{{ 'new_post'|trans() }}</button>
+        <a href="{{ _path('icap_blog_post_new', {'blogId': _resource.id}) }}" class="btn">
+            {{ 'new_post'|trans() }}
         </a>
     </p>
     {% for post in posts %}
