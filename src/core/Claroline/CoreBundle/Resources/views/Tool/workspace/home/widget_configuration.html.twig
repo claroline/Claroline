@@ -1,25 +1,28 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 {% block section_content %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{{ path('claro_workspace_open_tool',
-                {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}">
-                {{ 'parameters'|trans({}, 'platform') }}
-            </a>
-        </li>
-        <span class="divider"> / </span>
-            <a href="{{ path('claro_workspace_tool_config',
-                {'workspace': workspace.getId(), 'tool': tool.getId()}) }}">
-                {{ 'home'|trans({}, 'platform') }}
-            </a>
-        <span class="divider"> / </span>
-        <li>
-            <a href="{{ path('claro_workspace_widget_properties', {'workspace':workspace.getId()}) }}">{{ 'widgets'|trans({}, 'platform') }}</a>
-        </li>
-        <span class="divider"> / </span>
-        <li>
-            <a href="#">{{ 'configure'|trans({}, 'platform') }}</a>
-        </li>
-    </ul><br>
+
+    {{
+        macros.breadcrumbs([
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
+            },
+            {
+                'name': 'home'|trans({}, 'platform'),
+                'href': path('claro_workspace_tool_config', {'workspace': workspace.getId(), 'tool': tool.getId()})
+            },
+            {
+                'name': 'widgets'|trans({}, 'platform'),
+                'href': path('claro_workspace_widget_properties', {'workspace':workspace.getId()})
+            },
+            {
+                'name': 'configure'|trans({}, 'platform'),
+                'href': '#'
+            }
+        ])
+    }}
+
+    <br>
+
     {{ content|raw }}
 {% endblock %}
