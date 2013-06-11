@@ -8,6 +8,7 @@ add_group_s_confirm_message: 'group(s) added'
 add_resource: 'Add resource'
 add_tag_to_workspace: 'Add tag to workspace'
 add_user: 'Add user'
+add_users: 'Add users'
 add_user_s_confirm_message: 'users(s) added'
 admin: Administrator
 admin_form_firstName : 'first name'
@@ -86,6 +87,7 @@ group_form_ownedRoles: Roles
 group_form_platformRole: Role
 group_parameter: 'Group parameter'
 groups: Groups
+groups_list: "Groups list"
 history: History
 home: Home
 id: Id
@@ -381,6 +383,8 @@ user_form_plainPassword_first: Password
 user_form_plainPassword_second: Verification
 user_form_username: Username
 user_parameters: 'User parameters'
+users_management: 'Users management'
+users_list: 'Users list'
 username: Username
 users: Users
 unwritable_file_exception: "The file %path% is not writable."

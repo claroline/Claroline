@@ -1,0 +1,34 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block section_content %}
+
+    {{
+        macros.breadcrumbs([
+            {
+                'name':'users_management'|trans({}, 'platform'),
+                'href':'#'
+            }
+        ])
+    }}
+
+    <div>
+        <ul>
+            <li>
+                <a href="{{ path('claro_admin_user_creation_form') }}" id="link_add_user">
+                {{ 'add_user'|trans({}, 'platform') }}</a>
+            </li>
+            <li>
+                <a href="{{ path('claro_admin_user_list') }}" id="link_list_user">
+                {{ 'list_users'|trans({}, 'platform') }}</a>
+            </li>
+            <li>
+                <a href="{{ path('claro_admin_group_creation_form') }}" id="link_group_create_form">
+                {{ 'create_group'|trans({}, 'platform') }}</a>
+            </li>
+            <li>
+                <a href="{{ path('claro_admin_group_list') }}" id="link_group_list">
+                {{ 'list_groups'|trans({}, 'platform') }}</a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}

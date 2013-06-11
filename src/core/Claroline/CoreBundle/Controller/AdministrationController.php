@@ -667,10 +667,18 @@ class AdministrationController extends Controller
         return $event->getResponse();
     }
 
-    private function paginatorToArray($paginator)
+    /**
+     * @Route(
+     *  "user/management",
+     *  name="claro_admin_users_management"
+     * )
+     * @Method("GET")
+     *
+     * @return Response
+     */
+    public function usersManagementAction()
     {
-        return $this->get('claroline.utilities.paginator_parser')
-            ->paginatorToArray($paginator);
+        return $this->render('ClarolineCoreBundle:Administration:users_management.html.twig');
     }
 
     /**
