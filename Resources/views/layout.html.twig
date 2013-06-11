@@ -6,13 +6,7 @@
         <div class="please-wait">
             <span class="label label-warning"> {{ 'please_wait'|trans({}, 'platform') }} </span>
         </div>
-        {% if not is_path_mode %}
-            {% if workspace is defined %}
-            {% render controller('ICAPBlogBundle:Layout:topBar', {'workspaceId': workspace.getId()}) %}
-            {% else %}
-            {% render controller('ICAPBlogBundle:Layout:topBar') %}
-            {% endif %}
-        {% endif %}
+        {% render controller('ICAPBlogBundle:Layout:topBar', {'blogId': _resource.id}) %}
 
         <div id="grid" class="container container-fluid">
             {% if has_role('ROLE_USURPATE_WORKSPACE_ROLE') %}
@@ -27,7 +21,7 @@
             </div>
         </div>
     </div>
-   {% block footer %}
+    {% block footer %}
         {% if not is_path_mode %}
             {% render controller('ClarolineCoreBundle:Layout:footer') %}
         {% endif %}

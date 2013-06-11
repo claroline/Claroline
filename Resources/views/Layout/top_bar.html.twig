@@ -10,11 +10,45 @@
 
             <div class="nav-collapse collapse">
                 <ul class="nav">
-                    <li{{ "/desktop/tool/" | compareRoute | raw }}>
-                        <a href="{{ path('claro_desktop_open_tool', {"toolName": "resource_manager"}) ~ "#resources/" ~ personalWorkspace.id }}" id="link-desktop">
-                            <i class="icon-briefcase"></i> {{ 'back_to_workspace'|trans({}, 'icap_blog') }}
+                    <li>
+                        <a href="{{ path('claro_desktop_open_tool', {"toolName": "resource_manager"}) ~ "#resources/" ~ personalWorkspace.id }}">
+                            <i class="icon-share-alt"></i> {{ 'back_to_workspace'|trans({}, 'icap_blog') }}
                         </a>
                     </li>
+                    {% if is_granted('ROLE_WS_MANAGER_' ~ blog.workspace.id) %}
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="icon-eye-open"></i>{{ 'show_as'|trans({}, 'platform') }}
+                            <b class="caret"></b>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            {% if has_role_access_to_workspace('ROLE_ANONYMOUS', blog.workspace.id) %}
+                                <li>
+                                    <a href="?view_as=ROLE_ANONYMOUS_{{ blog.workspace.id }}">
+                                        {{ 'anonymous'|trans({}, 'platform') }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% for role in personalWorkspace.getRoles() %}
+                                {% if has_role_access_to_workspace(role.getName(), blog.workspace.id) %}
+                                    <li>
+                                        <a href="{{ path('icap_blog_view', {'blogId': blog.getId()}) }}?view_as={{ role.getName() }}">
+                                            {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    {% endif %}
+                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_WS_MANAGER_' ~ blog.workspace.id) %}
+                    <li>
+                        <a href="{{ path('icap_blog_configure', {"blogId": blog.id}) }}">
+                            <i class="icon-wrench"></i> {{ 'options'|trans({}, 'platform') }}
+                        </a>
+                    </li>
+                    {% endif %}
                 </ul>
 
                 <ul class="nav pull-right">

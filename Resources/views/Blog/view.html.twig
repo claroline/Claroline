@@ -2,11 +2,11 @@
 
 {% trans_default_domain "icap_blog" %}
 
-{% block title %}{{ _resource.getName() }}{% endblock %}
+{% block title %}{{ _resource.name }}{% endblock %}
 
 {% block content %}
     <p>
-        <a href="{{ _path('icap_blog_post_new', {'blogId': _resource.getId()}) }}">
+        <a href="{{ _path('icap_blog_post_new', {'blogId': _resource.id}) }}">
             <button class="btn">{{ 'new_post'|trans() }}</button>
         </a>
     </p>
@@ -26,7 +26,7 @@
                 {
                     'proximity' : 1,
                     'routeName': 'icap_blog_view',
-                    'routeParams': {'blogId': _resource.getId()}
+                    'routeParams': {'blogId': _resource.id}
                 }
             )
         }}

@@ -1,9 +1,13 @@
 services:
-  claroline.listener.blog_listener:
-    class: ICAP\BlogBundle\Listener\BlogListener
-    calls:
-      - [setContainer, ["@service_container"]]
-    tags:
-      - { name: kernel.event_listener, event: create_form_icap_blog, method: onCreateForm }
-      - { name: kernel.event_listener, event: create_icap_blog, method: onCreate }
-      - { name: kernel.event_listener, event: open_icap_blog, method: onOpen }
+    claroline.listener.blog_listener:
+        class: ICAP\BlogBundle\Listener\BlogListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: create_form_icap_blog, method: onCreateForm }
+            - { name: kernel.event_listener, event: create_icap_blog, method: onCreate }
+            - { name: kernel.event_listener, event: open_icap_blog, method: onOpen }
+    icap.doctrine.blog_listener:
+        class: ICAP\BlogBundle\Listener\DoctrineListener
+        tags:
+            - { name: doctrine.event_listener, event: postPersist }

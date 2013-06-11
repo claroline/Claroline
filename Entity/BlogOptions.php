@@ -69,6 +69,9 @@ class BlogOptions
         $this->blog                      = new Blog();
         $this->authorizeComment          = false;
         $this->authorizeAnonymousComment = false;
+        $this->postPerPage               = 10;
+        $this->autoPublishPost           = false;
+        $this->autoPublishComment        = false;
     }
 
     /**
@@ -189,6 +192,14 @@ class BlogOptions
         $this->postPerPage = $postPerPage;
 
         return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPostPerPage()
+    {
+        return $this->postPerPage;
     }
 
 }

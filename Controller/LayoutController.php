@@ -13,22 +13,30 @@ use Symfony\Component\HttpFoundation\Request;
 class LayoutController extends ClarolineLayoutController
 {
     /**
-     * @param integer|null $workspaceId
+     * @param integer $blogId
      *
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function topBarAction($workspaceId = null)
+    public function topBarAction($blogId = null)
     {
+        $entityManager = $this->getDoctrine()->getManager();
+        $blog          = $entityManager->getRepository('ICAPBlogBundle:Blog')->findOneById($blogId);
+
+        if (!$blog) {
+            throw $this->createNotFoundException(sprintf("No blog found for id '%s'.", $blogId));
+        }
+
         $user              = $this->get('security.context')->getToken()->getUser();
         $username          = $user->getFirstName() . ' ' . $user->getLastName();
-        $personalWorkspace = $user->getPersonalWorkspace();
 
         return $this->render(
             'ICAPBlogBundle:Layout:top_bar.html.twig',
             array(
+                'blog'              => $blog,
                 'username'          => $username,
-                'personalWorkspace' => $personalWorkspace,
-                "isImpersonated"    => $this->isImpersonated(),
+                'personalWorkspace' => $user->getPersonalWorkspace(),
+                'isImpersonated'    => $this->isImpersonated(),
             )
         );
     }
