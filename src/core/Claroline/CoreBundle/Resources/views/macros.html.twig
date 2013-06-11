@@ -31,3 +31,16 @@
         </div>
     </div>
 {% endmacro %}
+
+{% macro breadcrumbs(elements) %}
+    <ul class="breadcrumb">
+        {% for element in elements %}
+            <li>
+                <a href="{{ element['href'] }}"> {{ element['name'] }}</a>
+            </li>
+            {% if not loop.last %}
+                <span class="divider"> / </span>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endmacro %}

@@ -1,21 +1,25 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
 {% block section_content %}
-   {% spaceless %}
-        <ul class="breadcrumb">
-            <li>
-                <a href="{{ path('claro_workspace_open_tool', {'toolName': 'parameters', 'workspaceId': workspace.getId()}) }}">{{ 'parameters'|trans({}, 'platform') }}</a>
-            </li>
-            <span class="divider"> / </span>
-            <li>
-                <a href="#">{{ 'home'|trans({}, 'platform') }}</a>
-            </li>
-        </ul>
-    {% endspaceless %}
+
+    {{
+        macros.breadcrumbs([
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
+            },
+            {
+                'name': 'home'|trans({}, 'platform'),
+                'href': '#'
+            }
+        ])
+    }}
 
     <ul>
         <li>
-            <a href="{{ path('claro_workspace_widget_properties', {'workspace': workspace.getId()}) }}">{{ 'widgets'|trans({}, 'platform') }}</a>
+            <a href="{{ path('claro_workspace_widget_properties', {'workspace': workspace.getId()}) }}">
+                {{ 'widgets'|trans({}, 'platform') }}
+            </a>
         </li>
     </ul>
 

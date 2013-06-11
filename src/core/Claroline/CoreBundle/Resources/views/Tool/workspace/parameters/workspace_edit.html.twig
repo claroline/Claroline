@@ -6,18 +6,19 @@
 {% endblock %}
 
 {% block section_content %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{{ path('claro_workspace_open_tool',
-               {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}">
-               {{ 'parameters'|trans({}, 'platform') }}
-            </a>
-        </li>
-         <span class="divider"> / </span>
-        <li>
-            <a href="#">{{ 'general'|trans({}, 'platform') }}</a>
-        </li>
-    </ul>
+
+    {{
+        macros.breadcrumbs([
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
+            },
+            {
+                'name': 'general'|trans({}, 'platform'),
+                'href': '#'
+            }
+        ])
+    }}
 
     <div class="margin">
         {% if is_granted('DELETE', workspace ) %}
