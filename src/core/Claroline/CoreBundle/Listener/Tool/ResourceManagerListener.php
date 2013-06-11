@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Listener\Tool;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Library\Event\ConfigureWorkspaceToolEvent;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -179,7 +180,7 @@ class ResourceManagerListener
 
         foreach ($allAdminTags as $adminTag) {
             $adminTagId = $adminTag->getId();
-            $displayable[$adminTagId] = $this->isTagDisplayable($adminTagId, $tagWorkspaces, $hierarchy);
+            $displayable[$adminTagId] = WorkspaceTag::isTagDisplayable($adminTagId, $tagWorkspaces, $hierarchy);
         }
 
         $workspaceRoles = array();
@@ -213,30 +214,5 @@ class ResourceManagerListener
                 'workspaceRoles' => $workspaceRoles
             )
         );
-    }
-
-    private function isTagDisplayable($tagId, $tagWorkspaces, $hierarchy)
-    {
-        $displayable = false;
-
-        if (isset($tagWorkspaces[$tagId]) && count($tagWorkspaces[$tagId]) > 0) {
-            $displayable = true;
-        } else {
-
-            if (isset($hierarchy[$tagId]) && count($hierarchy[$tagId]) > 0) {
-                $children = $hierarchy[$tagId];
-
-                foreach ($children as $child) {
-
-                    $displayable = $this->isTagDisplayable($child->getId(), $tagWorkspaces, $hierarchy);
-
-                    if ($displayable) {
-                        break;
-                    }
-                }
-            }
-        }
-
-        return $displayable;
     }
 }

@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Claroline\CoreBundle\Form\ResourceRightType;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleChangeRightEvent;
@@ -117,7 +118,7 @@ class ResourceRightsController extends Controller
 
         foreach ($allAdminTags as $adminTag) {
             $adminTagId = $adminTag->getId();
-            $displayable[$adminTagId] = $this->isTagDisplayable($adminTagId, $tagWorkspaces, $hierarchy);
+            $displayable[$adminTagId] = WorkspaceTag::isTagDisplayable($adminTagId, $tagWorkspaces, $hierarchy);
         }
 
         $workspaceRoles = array();
@@ -154,31 +155,6 @@ class ResourceRightsController extends Controller
                 'workspaceRoles' => $workspaceRoles
             )
         );
-    }
-
-    private function isTagDisplayable($tagId, $tagWorkspaces, $hierarchy)
-    {
-        $displayable = false;
-
-        if (isset($tagWorkspaces[$tagId]) && count($tagWorkspaces[$tagId]) > 0) {
-            $displayable = true;
-        } else {
-
-            if (isset($hierarchy[$tagId]) && count($hierarchy[$tagId]) > 0) {
-                $children = $hierarchy[$tagId];
-
-                foreach ($children as $child) {
-
-                    $displayable = $this->isTagDisplayable($child->getId(), $tagWorkspaces, $hierarchy);
-
-                    if ($displayable) {
-                        break;
-                    }
-                }
-            }
-        }
-
-        return $displayable;
     }
 
     /**
