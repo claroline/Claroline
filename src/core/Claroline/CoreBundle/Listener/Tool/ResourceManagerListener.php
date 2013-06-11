@@ -200,7 +200,8 @@ class ResourceManagerListener
 
         return $this->templating->render(
             'ClarolineCoreBundle:Tool\workspace\resource_manager:resources_rights.html.twig',
-            array('workspace' => $workspace,
+            array(
+                'workspace' => $workspace,
                 'resource' => $resource,
                 'roleRights' => $roleRights,
                 'workspaces' => $workspaces,
@@ -209,7 +210,8 @@ class ResourceManagerListener
                 'hierarchy' => $hierarchy,
                 'rootTags' => $rootTags,
                 'displayable' => $displayable,
-                'workspaceRoles' => $workspaceRoles)
+                'workspaceRoles' => $workspaceRoles
+            )
         );
     }
 
