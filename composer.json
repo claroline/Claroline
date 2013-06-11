@@ -55,6 +55,10 @@
         {
             "type": "vcs",
             "url": "http://github.com/claroline/FrontEndBundle"
+        },
+        {
+            "type": "vcs",
+            "url": "http://github.com/stefk/JMSTwigJsBundle"
         }
     ],
     "scripts": {
