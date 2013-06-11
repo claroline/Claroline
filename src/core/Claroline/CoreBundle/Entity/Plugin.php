@@ -22,14 +22,14 @@ class Plugin
     /**
      * @ORM\Column(name="vendor_name", type="string", length=50)
      * @Assert\NotBlank()
-     * @Assert\MaxLength(50)
+     * @Assert\Length(max=50)
      */
     protected $vendorName;
 
     /**
      * @ORM\Column(name="short_name", type="string", length=50)
      * @Assert\NotBlank()
-     * @Assert\MaxLength(50)
+     * @Assert\Length(max=50)
      */
     protected $bundleName;
 
@@ -41,7 +41,7 @@ class Plugin
     /**
      * @ORM\Column(name="icon", type="string", length=255)
      * @Assert\NotBlank()
-     * @Assert\MaxLength(255)
+     * @Assert\Length(max=255)
      */
     protected $icon;
 
