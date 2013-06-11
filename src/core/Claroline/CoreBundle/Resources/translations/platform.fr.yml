@@ -93,6 +93,8 @@ home: Accueil
 id: Id
 informations: Informations
 instructions: Consignes
+import: Importer
+import_user_file_file: Importer depuis fichier
 last_name: Nom
 link: Lien
 list_groups: 'Lister les groupes'

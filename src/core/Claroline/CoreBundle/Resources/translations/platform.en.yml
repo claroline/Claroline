@@ -93,6 +93,8 @@ home: Home
 id: Id
 informations: Informations
 instructions: Instructions
+import: Import
+import_user_file_file: Import from a file
 last_name: 'Last name'
 link: Link
 list_groups: 'List groups'
