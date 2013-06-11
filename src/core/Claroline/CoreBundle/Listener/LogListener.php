@@ -156,8 +156,8 @@ class LogListener
         }
         $log->setDetails($details);
 
-        $this->em->persist($log);
-        $this->em->flush();
+        //$this->em->persist($log);
+        //$this->em->flush();
     }
 
     /**
