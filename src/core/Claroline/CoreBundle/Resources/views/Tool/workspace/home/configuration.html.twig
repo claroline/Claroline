@@ -1,0 +1,26 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block section_content %}
+
+    {{
+        macros.breadcrumbs([
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
+            },
+            {
+                'name': 'home'|trans({}, 'platform'),
+                'href': '#'
+            }
+        ])
+    }}
+
+    <ul>
+        <li>
+            <a href="{{ path('claro_workspace_widget_properties', {'workspace': workspace.getId()}) }}">
+                {{ 'widgets'|trans({}, 'platform') }}
+            </a>
+        </li>
+    </ul>
+
+{% endblock %}

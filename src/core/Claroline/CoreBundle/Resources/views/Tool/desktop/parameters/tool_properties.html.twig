@@ -6,19 +6,21 @@
 {% endblock %}
 
 {% block section_content %}
-   {% spaceless %}
-        <ul class="breadcrumb">
-            <li>
-            <a href="#">{{ 'parameters'|trans({}, 'platform') }}</a>
-            </li>
-            <span class="divider"> / </span>
-            <li>
-                <a href="{{ path('claro_tool_properties') }}">{{ 'tools'|trans({}, 'platform') }}</a>
-            </li>
-        </ul>
-        {% endspaceless %}
 
-        <div class="margin">
+    {{
+        macros.breadcrumbs([
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_desktop_open_tool', {'toolName': 'parameters'})
+            },
+            {
+                'name': 'tools'|trans({}, 'platform'),
+                'href': '#'
+            }
+        ])
+    }}
+
+    <div class="margin">
     <table id="tool-table"  class="table table-striped table-bordered table-condensed">
     <thead>
         <tr>
