@@ -2,6 +2,7 @@
 
 namespace ICAP\BlogBundle\Controller;
 
+use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use ICAP\BlogBundle\Entity\Blog;
 use ICAP\BlogBundle\Entity\BlogOptions;
 use ICAP\BlogBundle\Entity\Post;
@@ -29,6 +30,8 @@ class BlogController extends Controller
      */
     public function viewAction(Blog $blog, $page)
     {
+        $this->checkAccess("OPEN", $blog);
+
         $adapter = new DoctrineCollectionAdapter($blog->getPosts());
         $pager   = new Pagerfanta($adapter);
 
