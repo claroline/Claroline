@@ -10,7 +10,6 @@ use Claroline\CoreBundle\Library\Event\LogCreateDelegateViewEvent;
 use Claroline\CoreBundle\Library\Event\LogResourceChildUpdateEvent;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Library\Security\Utilities;
-use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 
 /**
  * @DI\Service
@@ -50,14 +49,6 @@ class LogWidgetListener
      */
     public function onWorkspaceDisplay(DisplayWidgetEvent $event)
     {
-        $collection = new ResourceCollection(array($event->getWorkspace()));
-        $testCollaborator = $this->securityContext->isGranted('ROLE_WS_COLLABORATOR', $collection);
-        $testManager = $this->securityContext->isGranted('ROLE_WS_MANAGER', $collection);
-
-        var_dump($testCollaborator);
-        var_dump($testManager);
-        die();
-
         $view = $this->twig->render(
             'ClarolineCoreBundle:Log:view_short_list.html.twig',
             $this->logManager->getWorkspaceWidgetList($event->getWorkspace(), 5)
