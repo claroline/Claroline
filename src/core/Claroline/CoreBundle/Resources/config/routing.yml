@@ -69,7 +69,7 @@ claro_desktop_tool_calendar:
 
 claro_desktop_tool_home:
     resource: "@ClarolineCoreBundle/Controller/Tool/HomeController.php"
-    prefix: desktop/tool/home
+    prefix: tool/home
     type: annotation
 
 claro_desktop_tool_properties:
@@ -94,11 +94,6 @@ claro_workspace_tag:
 
 claro_workspace_tool_properties:
     resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceParametersController.php"
-    prefix: workspaces/tool/properties
-    type: annotation
-
-claro_workspace_tool_widgets_properties:
-    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceWidgetParametersController.php"
     prefix: workspaces/tool/properties
     type: annotation
 
@@ -159,6 +154,11 @@ claro_resource_parameters:
 
 claro_resource_rights:
     resource: "@ClarolineCoreBundle/Controller/ResourceRightsController.php"
+    prefix: resource
+    type: annotation
+
+claro_tool_resoure_manager:
+    resource: "@ClarolineCoreBundle/Controller/Tool/ResourceManagerController.php"
     prefix: resource
     type: annotation
 
