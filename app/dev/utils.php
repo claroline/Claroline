@@ -39,25 +39,21 @@ function emptyDir($directory)
 }
 
 /**
- * Searches for the composer executable and launches it in a fork (in order to
- * keep the user interaction required when building the parameters.yml file with
- * 'incenteev/composer-parameter-handler'). Makes the process exit if composer
- * is not found.
+ * Searches for the composer executable and launches it in a fork if possible (in
+ * order to keep the user interaction required when building the parameters.yml
+ * file with 'incenteev/composer-parameter-handler').
  */
 function execComposer()
 {
-    $path = getenv('PATH');
-    $binDirs = explode(':', $path);
-    $binDirs = count($binDirs) > 0 ? $binDirs : explode(';', $path);
-    $composer = false;
-
-    foreach ($binDirs as $binDir) {
+    foreach (explode(':', getenv('PATH')) as $binDir) {
         if (is_executable($path = "{$binDir}/composer")) {
             $composer = $path;
         }
     }
 
-    $composer || exit("Cannot find 'composer' executable\n");
+    if (!function_exists('pcntl_fork') || !isset($composer)) {
+        return system('composer install --dev');
+    }
 
     if (0 === $pid = pcntl_fork()) {
         pcntl_exec($composer, array('install', '--dev'));
