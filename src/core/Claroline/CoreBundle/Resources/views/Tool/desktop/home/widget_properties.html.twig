@@ -6,17 +6,25 @@
 {% endblock %}
 
 {% block section_content %}
-    {% spaceless %}
-        <ul class="breadcrumb">
-            <li>
-            <a href="#">{{ 'parameters'|trans({}, 'platform') }}</a>
-            </li>
-            <span class="divider"> / </span>
-            <li>
-            <a href="{{ path('claro_widget_properties') }}">{{ 'widgets'|trans({}, 'platform') }}</a>
-            </li>
-        </ul>
-    {% endspaceless %}
+    
+    {{
+        macros.breadcrumbs([
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_desktop_open_tool', {'toolName': 'parameters'})
+            },
+            {
+                'name': 'home'|trans({}, 'platform'),
+                'href': path('claro_desktop_tool_config', {'tool': tool.getId()})
+            },
+            {
+                'name': 'widgets'|trans({}, 'platform'),
+                'href': '#'
+            }
+
+        ])
+    }}
+
     <div class='margin'>
         <table id="widget-table"  class="table table-striped table-bordered table-condensed">
             <thead>
@@ -40,7 +48,7 @@
                             {% if config.getParent().isLocked() %} disabled {% endif %}>
                         </th>
                         <th> {% if config.getWidget().isConfigurable() and config.getParent().isLocked() == false %}
-                                <a href="{{ path('claro_desktop_widget_configuration', {'widgetId': config.getWidget().getId()}) }}">
+                                <a href="{{ path('claro_desktop_widget_configuration', {'widget': config.getWidget().getId()}) }}">
                                     {{ 'configure'|trans({}, 'platform') }}
                                 </a> {% endif %}
                         </th>

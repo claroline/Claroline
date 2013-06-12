@@ -6,18 +6,19 @@
 {% endblock %}
 
 {% block section_content %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{{ path('claro_workspace_open_tool',
-               {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}">
-               {{ 'parameters'|trans({}, 'platform') }}
-            </a>
-        </li>
-         <span class="divider"> / </span>
-        <li>
-            <a href="#">{{ 'general'|trans({}, 'platform') }}</a>
-        </li>
-    </ul>
+
+    {{
+        macros.breadcrumbs([
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
+            },
+            {
+                'name': 'general'|trans({}, 'platform'),
+                'href': '#'
+            }
+        ])
+    }}
 
     <div class="margin">
         {% if is_granted('DELETE', workspace ) %}
@@ -25,14 +26,14 @@
             {{ 'workspace_delete'|trans({}, 'platform') }}
         </a>
         {% endif %}
-            <a href="{{ path('claro_workspace_export_form', {'workspaceId': workspace.getId() }) }}" class='btn'>
+            <a href="{{ path('claro_workspace_export_form', {'workspace': workspace.getId() }) }}" class='btn'>
                 {{ 'save_as_template'|trans({}, 'platform') }}
             </a>
     </div>
     <br>
 
     {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
-    <form class="form-horizontal" action="{{ path('claro_workspace_edit', {'workspaceId': workspace.getId()}) }}" method="post" {{ form_enctype(form) }}>
+    <form class="form-horizontal" action="{{ path('claro_workspace_edit', {'workspace': workspace.getId()}) }}" method="post" {{ form_enctype(form) }}>
         <fieldset>
             {{ form_widget(form) }}
             <div class="form-actions">

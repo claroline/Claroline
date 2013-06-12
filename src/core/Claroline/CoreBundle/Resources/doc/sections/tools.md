@@ -22,6 +22,7 @@ Your plugin must define its properties and the list of its tools in the *Resourc
             #class: res_text.png
             is_displayable_in_workspace: true
             is_displayable_in_desktop: true
+            has_options: false (default = false: does the tool need a configuration page)
 
 In order to catch the event, your plugin must define a listener in your config.
 
@@ -40,6 +41,8 @@ This example will show you the main files of a basic HTML5 video player.
     tags:
       - { name: kernel.event_listener, event: open_tool_workspace_claroline_mytool, method: onWorkspaceOpen }
       - { name: kernel.event_listener, event: open_tool_desktop_claroline_mytool, method: onDesktopOpen }
+      - { name: kernel.event_listener, event: configure_workspace_tool_claroline_mytool, method: onWorkspaceConfigure }
+      - { name: kernel.event_listener, event: configure_desktop_tool_claroline_mytool, method: onDesktopConfigure }
 
 ### Listener implementation
 
@@ -103,3 +106,18 @@ When you must know if a user has access to a tool, you can use
         }
 
 *Where $toolName is your tool name and $workspace is the current workspace.*
+
+## Configuration
+
+Each tool can declare a configuration page. The list of configurable tools is displayed
+in the parameter tool.
+Once a user clicks on the link, an event configure_workspace|desktop_tool_*toolname* is thrown.
+
+You can the get the thrown event (Claroline\CoreBundle\Library\Event\ConfigureWorkspaceToolEvent
+or Claroline\CoreBundle\Library\Event\ConfigureDesktopToolEvent) and set some content
+
+        $event->setContent($this->templating->render(...));
+
+Note: if you want to keep the layout, you must extends either
+{% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %} or
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
