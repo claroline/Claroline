@@ -10,6 +10,14 @@ require_once __DIR__ . '/utils.php';
 $start = new DateTime();
 $rootDirectory = realpath(__DIR__ . '/../..');
 
+if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+    echo "This script cannot run composer interactively on Windows.\n"
+    . "If it is a fresh installation or if the update requires modifying the\n"
+    . "parameters.yml file, you may have to launch 'composer install' first.\n";
+}
+
+execComposer();
+
 echo "Refreshing configuration and log files\n";
 
 refreshFile("{$rootDirectory}/app/config/local/plugin/bundles");
@@ -33,7 +41,6 @@ foreach ($directories as $directory) {
     emptyDir($directory);
 }
 
-execComposer();
 system("php {$rootDirectory}/app/console claroline:requirements", $returnCode);
 
 if ($returnCode === 0) {
