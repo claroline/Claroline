@@ -7,7 +7,7 @@ class ThemeParameters
     private $colors;
     private $parameters;
 
-    public function __construct()
+    public function __construct($file = null)
     {
         $this->colors = $this->colors();
 
@@ -28,6 +28,26 @@ class ThemeParameters
             "Alerts" => $this->alerts(),
             "Tooltip & Popovers" => $this->popovers()
         );
+
+        if ($file and file_exists($file)) {
+
+            $variables = $this->parseFile($file);
+
+            foreach ($this->colors as $code => $value) {
+                if (isset($variables[$code])) {
+                    $this->colors[$code] = $variables[$code];
+                }
+            }
+
+            foreach ($this->parameters as $name => $parameters) {
+
+                foreach ($parameters as $code => $value) {
+                    if (isset($variables[$code])) {
+                        $this->parameters[$name][$code] = $variables[$code];
+                    }
+                }
+            }
+        }
     }
 
     public function getColors()
@@ -43,13 +63,13 @@ class ThemeParameters
     public function colors()
     {
         return array(
-            "@black" => "#000",
-            "@grayDarker" => "#222",
-            "@grayDark" => "#333",
-            "@gray" => "#555",
-            "@grayLight" => "#999",
-            "@grayLighter" => "#eee",
-            "@white" => "#fff",
+            "@black" => "#000000",
+            "@grayDarker" => "#222222",
+            "@grayDark" => "#333333",
+            "@gray" => "#555555",
+            "@grayLight" => "#999999",
+            "@grayLighter" => "#eeeeee",
+            "@white" => "#ffffff",
             "@blue" => "#049cdb",
             "@blueDark" => "#0064cd",
             "@green" => "#46a546",
@@ -270,5 +290,34 @@ class ThemeParameters
             "@popoverArrowOuterWidth" => "@popoverArrowWidth + 1",
             "@popoverArrowOuterColor" => "rgba(0,0,0,.25)"
         );
+    }
+
+    public function parseFile($path)
+    {
+        $parameters = array();
+
+        $file = fopen($path, "r");
+
+        while (!feof($file)) {
+
+            $line = explode(":", fgets($file));
+
+            if (count($line) > 1) {
+
+                $code = trim($line[0]);
+
+                $value = array_pop($line);
+
+                if (is_array($value)) {
+                    $value = implode(":", $value); //parameter may contain : character
+                }
+
+                $parameters[$code] = trim(str_replace(";", "", $value));
+            }
+        }
+
+        fclose($file);
+
+        return $parameters;
     }
 }
