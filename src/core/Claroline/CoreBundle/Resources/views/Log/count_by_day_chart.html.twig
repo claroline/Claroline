@@ -20,7 +20,6 @@
     $(document).ready(function(){
         if (chartData.length>0) {
             var step = Math.ceil(chartData.length/8);
-            console.log(step);
             var ticks = [];
             if(chartData.length>1){
                 for(var i=0; i<chartData.length-1; i+=step){
