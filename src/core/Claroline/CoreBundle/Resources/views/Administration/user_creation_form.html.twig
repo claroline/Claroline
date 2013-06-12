@@ -12,7 +12,6 @@
     ])
 }}
 
-{% form_theme form_complete_user 'ClarolineCoreBundle::form_theme.html.twig' %}
 <form class="form-horizontal" action="{{ path('claro_admin_create_user') }}" method="post" {{ form_enctype(form_complete_user) }} id="form_complete_user" autocomplete="off">
     {{ form_widget(form_complete_user) }}
     <div class="form-actions">
