@@ -267,6 +267,7 @@ ok: Ok
 open: Open
 options: Options
 organize_admin_tags: 'Organize admin tags'
+organize_private_tags: 'Organize private tags'
 owner: Owner
 owner_s: Owner(s)
 parameters: Parameters
@@ -351,7 +352,13 @@ show_as: 'Show as'
 show_profile: 'Show profile'
 switch: Switch
 tag: Tag
+tag_children_list: 'Tag children list'
+tag_potential_children_list: 'Tag potential children list'
+tags_add_remove_children_to: 'Add/Remove children to'
+tags_hierarchy: 'Tags hierarchy'
+tags_list: 'Tags list'
 tags_management: 'Tags management'
+tags_organization: 'Tags organization'
 teacher: Teacher
 text_form_name: Name
 text_form_shareType: Sharable
