@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "6d0ccbc7c9106cb96069c95b45662b77",
+    "hash": "bd2ef5cca8e52d19f4c28f5c4b1b802d",
     "packages": [
         {
             "name": "claroline/front-end-bundle",
@@ -1534,19 +1534,19 @@
             "target-dir": "JMS/TwigJsBundle",
             "source": {
                 "type": "git",
-                "url": "https://github.com/stefk/JMSTwigJsBundle.git",
-                "reference": "0c415f6d79e403fc38335345f77f77269121b1a6"
+                "url": "https://github.com/schmittjoh/JMSTwigJsBundle.git",
+                "reference": "838b72b3ff11a351f00d5f4db4763f90e39f3631"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stefk/JMSTwigJsBundle/zipball/0c415f6d79e403fc38335345f77f77269121b1a6",
-                "reference": "0c415f6d79e403fc38335345f77f77269121b1a6",
+                "url": "https://api.github.com/repos/schmittjoh/JMSTwigJsBundle/zipball/838b72b3ff11a351f00d5f4db4763f90e39f3631",
+                "reference": "838b72b3ff11a351f00d5f4db4763f90e39f3631",
                 "shasum": ""
             },
             "require": {
                 "jms/twig-js": "dev-master",
                 "php": ">=5.3.2",
-                "symfony/framework-bundle": "2.*,<2.4"
+                "symfony/framework-bundle": ">=2.0,<3.0"
             },
             "type": "symfony-bundle",
             "autoload": {
@@ -1554,13 +1554,16 @@
                     "JMS\\TwigJsBundle": ""
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Apache2"
             ],
             "authors": [
                 {
                     "name": "Johannes M. Schmitt",
-                    "email": "schmittjoh@gmail.com"
+                    "email": "schmittjoh@gmail.com",
+                    "homepage": "https://github.com/schmittjoh",
+                    "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
             "description": "Integrates twig.js into your Symfony2 application",
@@ -1568,10 +1571,7 @@
             "keywords": [
                 "templating"
             ],
-            "support": {
-                "source": "https://github.com/stefk/JMSTwigJsBundle/tree/master"
-            },
-            "time": "2013-06-10 14:17:29"
+            "time": "2013-06-12 08:45:22"
         },
         {
             "name": "kriswallsmith/assetic",
