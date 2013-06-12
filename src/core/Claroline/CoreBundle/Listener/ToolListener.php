@@ -121,6 +121,16 @@ class ToolListener
     }
 
     /**
+     * @DI\Observe("open_tool_workspace_workgroup")
+     *
+     * @param \Claroline\CoreBundle\Library\Event\DisplayToolEvent $event
+     */
+    public function onDisplayWorkgroup(DisplayToolEvent $event)
+    {
+        $event->setContent($this->workgroup($event->getWorkspace()->getId()));
+    }
+
+    /**
      * Renders the workspace properties page.
      *
      * @param integer $workspaceId
@@ -131,10 +141,11 @@ class ToolListener
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+        $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findBy(array('hasOptions' => true, 'isDisplayableInWorkspace' => true));
 
         return $this->container->get('templating')->render(
             'ClarolineCoreBundle:Tool\workspace\parameters:parameters.html.twig',
-            array('workspace' => $workspace)
+            array('workspace' => $workspace, 'tools' => $tools)
         );
     }
 
@@ -145,9 +156,15 @@ class ToolListener
      */
     public function desktopParameters()
     {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findBy(array('hasOptions' => true, 'isDisplayableInDesktop' => true));
+
         return $this->container
             ->get('templating')
-            ->render('ClarolineCoreBundle:Tool\desktop\parameters:parameters.html.twig');
+            ->render(
+                'ClarolineCoreBundle:Tool\desktop\parameters:parameters.html.twig',
+                array('tools' => $tools)
+            );
     }
 
     public function workspaceCalendar($workspaceId)
@@ -204,6 +221,17 @@ class ToolListener
                 'listEvents' => $listEvents,
                 'cours' => array_unique($cours)
                 )
+        );
+    }
+
+    public function workgroup($workspaceId)
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+
+        return $this->container->get('templating')->render(
+            'ClarolineCoreBundle:Tool/workspace/workgroup:workgroup.html.twig',
+            array('workspace' => $workspace)
         );
     }
 }

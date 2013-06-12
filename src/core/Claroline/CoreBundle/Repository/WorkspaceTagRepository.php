@@ -81,8 +81,33 @@ class WorkspaceTagRepository extends EntityRepository
                     OR (h.tag = t AND h.parent = :tag AND h.level = 1)
                 )
             )
+            ORDER BY t.name ASC
         ";
         $query = $this->_em->createQuery($dql);
+        $query->setParameter("tag", $tag);
+
+        return $query->getResult();
+    }
+
+    public function findPossibleChildren(User $user, WorkspaceTag $tag)
+    {
+        $dql = "
+            SELECT DISTINCT t
+            FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTag t
+            WHERE t.user = :user
+            AND NOT EXISTS (
+                SELECT h
+                FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy h
+                WHERE h.user = :user
+                AND (
+                    (h.tag = :tag AND h.parent = t)
+                    OR (h.tag = t AND h.parent = :tag AND h.level = 1)
+                )
+            )
+            ORDER BY t.name ASC
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter("user", $user);
         $query->setParameter("tag", $tag);
 
         return $query->getResult();
@@ -102,8 +127,32 @@ class WorkspaceTagRepository extends EntityRepository
                 AND h.parent = :tag
                 AND h.level = 1
             )
+            ORDER BY t.name ASC
         ";
         $query = $this->_em->createQuery($dql);
+        $query->setParameter("tag", $tag);
+
+        return $query->getResult();
+    }
+
+    public function findChildren(User $user, WorkspaceTag $tag)
+    {
+        $dql = "
+            SELECT DISTINCT t
+            FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTag t
+            WHERE t.user = :user
+            AND EXISTS (
+                SELECT h
+                FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy h
+                WHERE h.user = :user
+                AND h.tag = t
+                AND h.parent = :tag
+                AND h.level = 1
+            )
+            ORDER BY t.name ASC
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter("user", $user);
         $query->setParameter("tag", $tag);
 
         return $query->getResult();
@@ -125,8 +174,33 @@ class WorkspaceTagRepository extends EntityRepository
                 AND h.tag = t
                 AND h.level > 0
             )
+            ORDER BY t.name
         ";
         $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
+
+    /**
+     * Find all tags that don't have any parents
+     */
+    public function findRootTags(User $user)
+    {
+        $dql = "
+            SELECT DISTINCT t
+            FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTag t
+            WHERE t.user = :user
+            AND NOT EXISTS (
+                SELECT h
+                FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy h
+                WHERE h.user = :user
+                AND h.tag = t
+                AND h.level > 0
+            )
+            ORDER BY t.name
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter("user", $user);
 
         return $query->getResult();
     }
@@ -171,6 +245,46 @@ class WorkspaceTagRepository extends EntityRepository
     }
 
     /**
+     * Find all tags that are children of given tags id
+     * Given tags are included
+     */
+    public function findChildrenFromTags(User $user, array $tags)
+    {
+        if (count($tags) === 0) {
+            throw new \InvalidArgumentException("Array argument cannot be empty");
+        }
+
+        $index = 0;
+        $eol = PHP_EOL;
+        $tagsTest = "(";
+
+        foreach ($tags as $tag) {
+            $tagsTest .= $index > 0 ? "    OR " : "    ";
+            $tagsTest .= "p.id = {$tag}{$eol}";
+            $index++;
+        }
+        $tagsTest .= "){$eol}";
+
+        $dql = "
+            SELECT DISTINCT t
+            FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTag t
+            WHERE t.user = :user
+            AND EXISTS (
+                SELECT h
+                FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy h
+                JOIN h.parent p
+                WHERE h.user = :user
+                AND h.tag = t
+                AND {$tagsTest}
+            )
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter("user", $user);
+
+        return $query->getResult();
+    }
+
+    /**
      * Find all admin tags that is parent of the given tag
      */
     public function findAdminParentsFromTag(WorkspaceTag $tag)
@@ -188,6 +302,30 @@ class WorkspaceTagRepository extends EntityRepository
             )
         ";
         $query = $this->_em->createQuery($dql);
+        $query->setParameter("tag", $tag);
+
+        return $query->getResult();
+    }
+
+    /**
+     * Find all admin tags that is parent of the given tag
+     */
+    public function findParentsFromTag(User $user, WorkspaceTag $tag)
+    {
+        $dql = "
+            SELECT DISTINCT t
+            FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTag t
+            WHERE t.user = :user
+            AND EXISTS (
+                SELECT h
+                FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy h
+                WHERE h.user = :user
+                AND h.tag = :tag
+                AND h.parent = t
+            )
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter("user", $user);
         $query->setParameter("tag", $tag);
 
         return $query->getResult();
