@@ -62,37 +62,4 @@ class WorkspaceTag
     {
         $this->user = $user;
     }
-
-    /**
-     * Checks if given tag or at least one of its children is associated to a workspace
-     *
-     * @param integer $tagId
-     * @param array $tagWorkspaces
-     * @param array $hierarchy
-     * @return boolean
-     */
-    public static function isTagDisplayable($tagId, array $tagWorkspaces, array $hierarchy)
-    {
-        $displayable = false;
-
-        if (isset($tagWorkspaces[$tagId]) && count($tagWorkspaces[$tagId]) > 0) {
-            $displayable = true;
-        } else {
-
-            if (isset($hierarchy[$tagId]) && count($hierarchy[$tagId]) > 0) {
-                $children = $hierarchy[$tagId];
-
-                foreach ($children as $child) {
-
-                    $displayable = self::isTagDisplayable($child->getId(), $tagWorkspaces, $hierarchy);
-
-                    if ($displayable) {
-                        break;
-                    }
-                }
-            }
-        }
-
-        return $displayable;
-    }
 }
