@@ -66,7 +66,7 @@ class FileListener implements ContainerAwareInterface
     {
         $request = $this->container->get('request');
         $form = $this->container->get('form.factory')->create(new FileType, new File());
-        $form->bindRequest($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $file = $form->getData();
