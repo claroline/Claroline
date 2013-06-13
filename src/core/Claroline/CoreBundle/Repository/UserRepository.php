@@ -220,8 +220,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             WHERE UPPER(u.lastName) LIKE :search
             OR UPPER(u.firstName) LIKE :search
             OR UPPER(u.username) LIKE :search
-            OR CONCAT(UPPER(u.firstName), ' ', UPPER(u.lastName)) LIKE :search
-            OR CONCAT(UPPER(u.lastName), ' ', UPPER(u.firstName)) LIKE :search
+            OR CONCAT(UPPER(u.firstName), CONCAT(' ', UPPER(u.lastName))) LIKE :search
+            OR CONCAT(UPPER(u.lastName), CONCAT(' ', UPPER(u.firstName))) LIKE :search
         ";
 
         $query = $this->_em->createQuery($dql)
