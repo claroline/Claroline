@@ -95,7 +95,7 @@ class ForumController extends Controller
     public function createSubjectAction($forumId)
     {
         $form = $this->get('form.factory')->create(new SubjectType(), new Subject);
-        $form->bindRequest($this->get('request'));
+        $form->handleRequest($this->get('request'));
         $em = $this->getDoctrine()->getManager();
         $forum = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($forumId);
         $this->checkAccess($forum);
@@ -210,7 +210,7 @@ class ForumController extends Controller
     public function createMessageAction($subjectId)
     {
         $form = $this->container->get('form.factory')->create(new MessageType, new Message());
-        $form->bindRequest($this->get('request'));
+        $form->handleRequest($this->get('request'));
         $em = $this->getDoctrine()->getManager();
         $subject = $em->getRepository('ClarolineForumBundle:Subject')->find($subjectId);
         $forum = $subject->getForum();
@@ -252,7 +252,7 @@ class ForumController extends Controller
         $em = $this->getDoctrine()->getManager();
         $forumOptions = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
         $form = $this->container->get('form.factory')->create(new ForumOptionsType(), $forumOptions[0]);
-        $form->bindRequest($this->get('request'));
+        $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {
             $forumOptions = $form->getData();
