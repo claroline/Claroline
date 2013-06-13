@@ -39,7 +39,7 @@ class ForumListener extends ContainerAware
     {
         $request = $this->container->get('request');
         $form = $this->container->get('form.factory')->create(new ForumType, new Forum());
-        $form->bindRequest($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $forum = $form->getData();
