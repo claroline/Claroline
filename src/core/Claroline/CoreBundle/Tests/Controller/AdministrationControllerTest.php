@@ -321,7 +321,7 @@ class AdministrationControllerTest extends FunctionalTestCase
             'GET',
             "/admin/group/settings/form/{$this->getGroup('group_a')->getId()}"
         );
-        $selected = $crawler->filter("option[value={$adminRoleId}]")->attr('selected');
+        $selected = $crawler->filter("option[value='{$adminRoleId}']")->attr('selected');
         $this->assertEquals('selected', $selected);
 
         $logs = $this->logRepository->findActionAfterDate(
