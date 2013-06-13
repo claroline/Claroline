@@ -2,13 +2,9 @@
 
 {% block javascripts %}
 {{ parent() }}
-<script src="{{asset('bundles/frontend/jquery/plugin/tinymce/jscripts/tiny_mce/tiny_mce.js')}}" type="text/javascript"></script>
-<script type="text/javascript">
-tinyMCE.init({
-    // General options
-    mode : "textareas"
-});
-</script>
+{% render controller('ClarolineCoreBundle:Tool\\WorkspaceResourceParameters:workspaceResourceTypes')
+%}
+{{ tinymce_init() }}
 {% endblock %}
 
 {% block section_content %}
