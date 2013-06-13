@@ -16,7 +16,7 @@ class ForumRepository extends EntityRepository
        * @param ResourceInstance $forum
        * @return type
        */
-    public function findSubjects(Forum $forum, $offset = null, $limit = null)
+    public function findSubjects(Forum $forum, $getQuery = false)
     {
         $dql = "
             SELECT s, m FROM Claroline\ForumBundle\Entity\Subject s
@@ -27,10 +27,8 @@ class ForumRepository extends EntityRepository
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('forumId', $forum->getId());
-        $query->setMaxResults($limit);
-        $query->setFirstResult($offset);
 
-        return $query->getResult();
+        return ($getQuery) ? $query: $query->getResult();
     }
 
     public function countMessagesForSubject(Subject $subject)

@@ -7,10 +7,14 @@ use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Form\MessageType;
 use Claroline\ForumBundle\Form\SubjectType;
 use Claroline\ForumBundle\Form\ForumOptionsType;
+use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Form\FormError;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+
 
 /**
  * ForumController
@@ -19,56 +23,33 @@ class ForumController extends Controller
 {
     /**
      * @Route(
-     *     "/open/{resourceId}",
-     *     name="claro_forum_open"
+     *     "/{forumId}/subjects/page/{page}",
+     *     name="claro_forum_subjects",
+     *     defaults={"page"=1}
      * )
      *
      * @param integer $resourceId
      *
      * @return Response
      */
-    public function openAction($resourceId)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $forum = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($resourceId);
-        $limits = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
-        $limit = $limits[0]->getSubjects();
-        $countSubjects = $em->getRepository('ClarolineForumBundle:Forum')->countSubjectsForForum($forum);
-        $nbPages = ceil($countSubjects / $limit);
-
-        return $this->render(
-            'ClarolineForumBundle::index.html.twig',
-            array(
-                'forum' => $forum,
-                'workspace' => $forum->getWorkspace(),
-                'limit' => $limit,
-                'nbPages' => $nbPages
-            )
-        );
-    }
-
-    /**
-     * @Route(
-     *     "/{forumId}/offset/{offset}",
-     *     name="claro_forum_subjects",
-     *     options={"expose"=true}
-     * )
-     *
-     * @param integer $forumId
-     * @param integer $offset
-     *
-     * @return Response
-     */
-    public function subjectsAction($forumId, $offset)
+    public function openAction($forumId, $page)
     {
         $em = $this->getDoctrine()->getManager();
         $forum = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($forumId);
+        $this->checkAccess($forum);
         $limits = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
         $limit = $limits[0]->getSubjects();
-        $subjects = $em->getRepository('ClarolineForumBundle:Forum')->findSubjects($forum, $offset, $limit);
+        $query = $em->getRepository('ClarolineForumBundle:Forum')->findSubjects($forum, true);
+        $adapter = new DoctrineORMAdapter($query);
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage($limit);
+        $pager->setCurrentPage($page);
 
         return $this->render(
-            'ClarolineForumBundle::subjects.html.twig', array('subjects' => $subjects)
+            'ClarolineForumBundle::index.html.twig', array(
+                'pager' => $pager,
+                '_resource' => $forum
+            )
         );
     }
 
@@ -84,18 +65,16 @@ class ForumController extends Controller
      */
     public function forumSubjectCreationFormAction($forumId)
     {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $forum = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($forumId);
+        $this->checkAccess($forum);
         $formSubject = $this->get('form.factory')->create(new SubjectType());
-        $workspace = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->find($forumId)
-            ->getWorkspace();
 
         return $this->render(
             'ClarolineForumBundle::subject_form.html.twig',
             array(
-                'form' => $formSubject->createView(),
-                'forumId' => $forumId,
-                'workspace' => $workspace
+                '_resource' => $forum,
+                'form' => $formSubject->createView()
             )
         );
     }
@@ -119,6 +98,7 @@ class ForumController extends Controller
         $form->handleRequest($this->get('request'));
         $em = $this->getDoctrine()->getManager();
         $forum = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($forumId);
+        $this->checkAccess($forum);
 
         if ($form->isValid()) {
             $user = $this->get('security.context')->getToken()->getUser();
@@ -138,7 +118,7 @@ class ForumController extends Controller
                 $em->flush();
 
                 return new RedirectResponse(
-                    $this->generateUrl('claro_forum_open', array('resourceId' => $forum->getId()))
+                    $this->generateUrl('claro_forum_subjects', array('forumId' => $forum->getId(), '_resource' => $forum))
                 );
             }
         }
@@ -151,41 +131,40 @@ class ForumController extends Controller
             'ClarolineForumBundle::subject_form.html.twig',
             array(
                 'form' => $form->createView(),
-                'forumId' => $forum->getId(),
-                'workspace' => $forum->getWorkspace()
+                '_resource' => $forum
             )
         );
     }
 
     /**
      * @Route(
-     *     "/subject/message/{subjectId}",
-     *     name="claro_forum_show_message"
+     *     "/subject/{subjectId}/messages/page/{page}",
+     *     name="claro_forum_messages",
+     *     defaults={"page"=1}
      * )
-     *
-     * @param integer $subjectId
      *
      * @return Response
      */
-    public function showMessagesAction($subjectId)
+    public function showMessagesAction($subjectId, $page)
     {
         $em = $this->getDoctrine()->getManager();
-
         $subject = $em->getRepository('ClarolineForumBundle:Subject')->find($subjectId);
-        $countMessages = $em->getRepository('ClarolineForumBundle:Forum')
-            ->countMessagesForSubject($subject);
+        $forum = $subject->getForum();
+        $this->checkAccess($forum);
         $limits = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
         $limit = $limits[0]->getMessages();
-        $nbPages = ceil($countMessages / $limit);
-        $workspace = $subject->getForum()->getWorkspace();
+        $query = $em->getRepository('ClarolineForumBundle:Message')->findBySubject($subject, true);
+        $adapter = new DoctrineORMAdapter($query);
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage($limit);
+        $pager->setCurrentPage($page);
 
         return $this->render(
-            'ClarolineForumBundle::messages_table.html.twig',
+            'ClarolineForumBundle::messages.html.twig',
             array(
                 'subject' => $subject,
-                'workspace' => $workspace,
-                'limit' => $limit,
-                'nbPages' => $nbPages
+                'pager' => $pager,
+                '_resource' => $forum
             )
         );
     }
@@ -205,40 +184,16 @@ class ForumController extends Controller
         $form = $this->get('form.factory')->create(new MessageType());
         $em = $this->getDoctrine()->getManager();
         $subject = $em->getRepository('ClarolineForumBundle:Subject')->find($subjectId);
+        $forum = $subject->getForum();
+        $this->checkAccess($forum);
 
         return $this->render(
             'ClarolineForumBundle::message_form.html.twig',
             array(
                 'subjectId' => $subjectId,
                 'form' => $form->createView(),
-                'workspace' => $subject->getForum()->getWorkspace()
+                '_resource' => $forum
             )
-        );
-    }
-
-    /**
-     * @Route(
-     *     "/subject/{subjectId}/offset/{offset}",
-     *     name="claro_forum_messages",
-     *     options={"expose"=true}
-     * )
-     *
-     * @param integer $subjectId
-     * @param integer $offset
-     *
-     * @return Response
-     */
-    public function messagesAction($subjectId, $offset)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $subject = $em->getRepository('ClarolineForumBundle:Subject')->find($subjectId);
-        $limits = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
-        $limit = $limits[0]->getMessages();
-        $messages = $em->getRepository('ClarolineForumBundle:Message')
-            ->findBySubject($subject, $offset, $limit);
-
-        return $this->render(
-            'ClarolineForumBundle::messages.html.twig', array('messages' => $messages)
         );
     }
 
@@ -258,6 +213,8 @@ class ForumController extends Controller
         $form->handleRequest($this->get('request'));
         $em = $this->getDoctrine()->getManager();
         $subject = $em->getRepository('ClarolineForumBundle:Subject')->find($subjectId);
+        $forum = $subject->getForum();
+        $this->checkAccess($forum);
 
         if ($form->isValid()) {
             $message = $form->getData();
@@ -268,7 +225,7 @@ class ForumController extends Controller
             $em->flush();
 
             return new RedirectResponse(
-                $this->generateUrl('claro_forum_show_message', array('subjectId' => $subjectId))
+                $this->generateUrl('claro_forum_messages', array('subjectId' => $subjectId))
             );
         }
 
@@ -277,7 +234,7 @@ class ForumController extends Controller
             array(
                 'subjectId' => $subjectId,
                 'form' => $form->createView(),
-                'workspace' => $subject->getWorkspace()
+                '_resource' => $forum
             )
         );
     }
@@ -309,5 +266,14 @@ class ForumController extends Controller
             'ClarolineForumBundle::plugin_options_form.html.twig',
             array('form' => $form->createView())
         );
+    }
+
+    private function checkAccess($forum)
+    {
+        $collection = new ResourceCollection(array($forum));
+
+        if (!$this->get('security.context')->isGranted('OPEN', $collection)) {
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
+        }
     }
 }

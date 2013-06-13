@@ -35,7 +35,7 @@ class ForumControllerTest extends FunctionalTestCase
         $this->client->submit($form);
         $crawler = $this->client->request(
             'GET',
-            "/forum/{$this->getFixtureReference('forum/test')->getId()}/offset/0"
+            "/forum/{$this->getFixtureReference('forum/test')->getId()}/subjects/page"
         );
         $this->assertEquals(1, count($crawler->filter('.row-subject')));
     }
@@ -53,7 +53,7 @@ class ForumControllerTest extends FunctionalTestCase
         $this->loadFixture(new LoadForumData('test', 'user', 2, 2));
         $this->logUser($this->getUser('user'));
         $crawler = $this->client
-            ->request('GET', "/forum/{$this->getFixtureReference('forum/test')->getId()}/offset/0");
+            ->request('GET', "/forum/{$this->getFixtureReference('forum/test')->getId()}/subjects/page");
         $link = $crawler->filter('.link-subject')->first()->link();
         $crawler = $this->client->click($link);
         $this->assertEquals(1, count($crawler->filter('#messages_table')));
@@ -62,15 +62,14 @@ class ForumControllerTest extends FunctionalTestCase
             ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($this->getFixtureReference('forum/test')->getId())
             ->getSubjects();
-
-        $crawler = $this->client->request('GET', "/forum/subject/{$subjects[0]->getId()}/offset/0");
+        $crawler = $this->client->request('GET', "/forum/subject/{$subjects[0]->getId()}/messages/page");
         $this->assertEquals(2, count($crawler->filter('.row-message')));
         $crawler = $this->client->request('GET', "/forum/add/message/{$subjects[0]->getId()}");
         $this->assertEquals(1, count($crawler->filter('#forum_message_form')));
         $form = $crawler->filter('input[type=submit]')->form();
         $form['forum_message_form[content]'] = 'content';
         $this->client->submit($form);
-        $crawler = $this->client->request('GET', "/forum/subject/{$subjects[0]->getId()}/offset/0");
+        $crawler = $this->client->request('GET', "/forum/subject/{$subjects[0]->getId()}/messages/page");
         $this->assertEquals(3, count($crawler->filter('.row-message')));
     }
 }
