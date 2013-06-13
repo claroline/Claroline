@@ -47,6 +47,7 @@ class LoadUsersData extends LoggableFixture implements ContainerAwareInterface
                 $mandatoryFieldValue,
                 $mandatoryFieldValue,
                 $mandatoryFieldValue,
+                $mandatoryFieldValue
             );
         }
 

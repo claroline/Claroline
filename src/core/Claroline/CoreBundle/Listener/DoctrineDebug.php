@@ -13,13 +13,13 @@ use JMS\DiExtraBundle\Annotation\Tag as Tag;
  */
 class DoctrineDebug extends ContainerAware
 {
-    /**
+    /****************
      * @DI\Observe("onFlush")
      *
      * @param WorkspaceLogEvent $event
      */
     public function onFlush(OnFlushEventArgs $eventArgs)
     {
-        print_r(PHP_EOL.'flush !');
+        print_r(PHP_EOL.'flush !'.PHP_EOL);
     }
 }
