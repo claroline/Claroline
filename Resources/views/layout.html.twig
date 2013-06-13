@@ -104,6 +104,7 @@
     <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.css') }}'/>
     <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css') }}'/>
     <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.print.css') }}' media='print' />
+        <link rel="stylesheet" type="text/css" href="{{ asset('bundles/icapblog/css/style.css') }}"/>
 {% endblock %}
 
 {% block javascripts %}
@@ -112,4 +113,6 @@
     <script type='text/javascript' src='{{ asset(calendarPath ~ 'js/fullcalendar.js') }}' ></script>
     <script type='text/javascript'src='{{ asset('bundles/clarolinecore/js/tool/calendar.js') }}'></script>
     <script type="text/javascript" src="{{ asset('bundles/icapblog/js/blog.js') }}"></script>
+    {% block icap_blog_javascripts %}
+    {% endblock icap_blog_javascripts %}
 {% endblock javascripts %}

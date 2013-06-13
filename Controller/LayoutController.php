@@ -3,7 +3,6 @@
 namespace ICAP\BlogBundle\Controller;
 
 use Claroline\CoreBundle\Controller\LayoutController as ClarolineLayoutController;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;

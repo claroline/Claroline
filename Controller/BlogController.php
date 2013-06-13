@@ -2,7 +2,6 @@
 
 namespace ICAP\BlogBundle\Controller;
 
-use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use ICAP\BlogBundle\Entity\Blog;
 use ICAP\BlogBundle\Entity\BlogOptions;
 use ICAP\BlogBundle\Entity\Post;
@@ -10,7 +9,6 @@ use ICAP\BlogBundle\Form\PostType;
 use ICAP\BlogBundle\Form\BlogOptionsType;
 use Pagerfanta\Adapter\DoctrineCollectionAdapter;
 use Pagerfanta\Pagerfanta;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -52,7 +50,7 @@ class BlogController extends Controller
      */
     public function configureAction(Request $request, Blog $blog)
     {
-        $this->checkAccess("ROLE_WS_MANAGER_" . $blog->getWorkspace()->getId(), $blog);
+        $this->checkAccess("EDIT", $blog);
 
         $form = $this->createForm(new BlogOptionsType(), new BlogOptions());
 
@@ -67,21 +65,5 @@ class BlogController extends Controller
             '_resource' => $blog,
             'form'      => $form->createView()
         );
-    }
-
-    /**
-     * @param string $permission
-     *
-     * @param Blog   $blog
-     *
-     * @throws AccessDeniedException
-     */
-    protected function checkAccess($permission, $blog)
-    {
-        $collection = new ResourceCollection(array($blog));
-
-        if (!$this->get('security.context')->isGranted($permission, $collection)) {
-            throw new AccessDeniedException($collection->getErrorsForDisplay());
-        }
     }
 }

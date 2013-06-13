@@ -33,10 +33,3 @@
     </div>
     {%  endif %}
 {% endblock %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    {% stylesheets %}
-        <link rel="stylesheet" type="text/css" href="{{ asset('bundles/icapblog/css/blog_view.css') }}"/>
-    {% endstylesheets %}
-{% endblock %}

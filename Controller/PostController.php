@@ -9,7 +9,6 @@ use ICAP\BlogBundle\Form\PostType;
 use ICAP\BlogBundle\Form\BlogOptionsType;
 use Pagerfanta\Adapter\DoctrineCollectionAdapter;
 use Pagerfanta\Pagerfanta;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -29,6 +28,8 @@ class PostController extends Controller
      */
     public function newAction(Request $request, Blog $blog)
     {
+        $this->checkAccess("EDIT", $blog);
+
         $form = $this->createForm(new PostType(), new Post());
 
         if("POST" === $request->getMethod()) {
