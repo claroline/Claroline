@@ -78,7 +78,7 @@ class RssReaderController extends Controller
     /**
      * @Route(
      *     "/update/workspace/{configId}",
-     *     name="/update/workspace/{configId}"
+     *     name="claro_rss_config_update"
      * )
      * @Method("POST")
      */
