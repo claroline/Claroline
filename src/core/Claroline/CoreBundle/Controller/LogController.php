@@ -28,7 +28,7 @@ class LogController extends Controller
      */
     public function viewDetailsAction($logId)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $log = $em->getRepository('ClarolineCoreBundle:Logger\Log')->find($logId);
 
         if ($log->getAction() === LogResourceChildUpdateEvent::ACTION ) {

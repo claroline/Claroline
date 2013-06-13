@@ -72,7 +72,7 @@ class ProfileController extends Controller
 
             $user = $form->getData();
 
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $unitOfWork = $em->getUnitOfWork();
             $unitOfWork->computeChangeSets();
             $changeSet = $unitOfWork->getEntityChangeSet($user);

@@ -31,7 +31,7 @@ class ResourcePropertiesController extends Controller
     public function renameFormAction($resourceId)
     {
         $resource = $this->getDoctrine()
-            ->getEntityManager()
+            ->getManager()
             ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($resourceId);
         $collection = new ResourceCollection(array($resource));
@@ -107,7 +107,7 @@ class ResourcePropertiesController extends Controller
     public function propertiesFormAction($resourceId)
     {
         $resource = $this->getDoctrine()
-            ->getEntityManager()
+            ->getManager()
             ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($resourceId);
 
