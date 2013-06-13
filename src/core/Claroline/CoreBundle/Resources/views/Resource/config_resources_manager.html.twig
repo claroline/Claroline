@@ -50,8 +50,21 @@
             $('#resource-picker').click(function(){Claroline.ResourceManager.picker('open')});
 
             var callBack = function(resources){
-                var id = _.keys(resources)[0]
-                tinyMCE.execCommand('mceInsertRawHTML', false, '<img src="' + Routing.generate('claro_file_get_image', {'imageId': id}) + '" alt="" />');
+                console.debug(resources[_.keys(resources)][1]);
+                var id = _.keys(resources)[0];
+                var resourceTypes = resources[_.keys(resources)][1];
+                var resourceId = _.keys(resources)[0];
+                var mimeArray = new Array('image/jpeg','image/gif','image/png');
+                var mimeType = resources[_.keys(resources)][2];
+                
+                if( mimeArray.indexOf(mimeType) > -1)
+                {
+                    tinyMCE.execCommand('mceInsertRawHTML', false, '<img src="' + Routing.generate('claro_file_get_image', {'imageId': id}) + '" alt ="'+resourceId+' width="200" height="100"/>');
+                }
+                else
+                {
+                    tinyMCE.execCommand('mceInsertRawHTML', false, '<a href="' + Routing.generate('claro_resource_open', {'resourceType': resourceTypes,'resourceId':resourceId}) + '" />'+resources[_.keys(resources)][0] +'</a>');
+                }
             };
         });
     </script>

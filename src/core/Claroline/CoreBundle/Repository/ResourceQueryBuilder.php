@@ -74,7 +74,8 @@ class ResourceQueryBuilder
             "    resourceType.isBrowsable as is_browsable,{$eol}" .
             "    previous.id as previous_id,{$eol}" .
             "    next.id as next_id,{$eol}" .
-            "    icon.relativeUrl as large_icon";
+            "    icon.relativeUrl as large_icon,{$eol}".
+            "    resource.mimeType as mime_type {$eol}";
 
         if ($withMaxPermissions) {
             $this->leftJoinRights = true;

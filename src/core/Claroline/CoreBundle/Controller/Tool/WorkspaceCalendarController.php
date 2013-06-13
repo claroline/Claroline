@@ -74,9 +74,8 @@ class WorkspaceCalendarController extends Controller
                     );
                 }
             } else {
-
                  return new Response(
-                     json_encode(array('greeting' => 'form invalid')),
+                     json_encode(array('greeting' => '')),
                      400,
                      array('Content-Type' => 'application/json')
                  );
