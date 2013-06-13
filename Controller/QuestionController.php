@@ -81,13 +81,13 @@ class QuestionController extends Controller
         $user = $this->container->get('security.context')->getToken()->getUser();
         $uid = $user->getId();
         $interactions = $this->getDoctrine()
-            ->getEntityManager()
+            ->getManager()
             ->getRepository('UJMExoBundle:Interaction')
             ->getUserInteraction($uid);
 
         $questionWithResponse = array();
         $alreadyShared = array();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         foreach ($interactions as $interaction) {
             $response = $em->getRepository('UJMExoBundle:Response')
@@ -137,7 +137,7 @@ class QuestionController extends Controller
 
         if (count($question) > 0) {
             $interaction = $this->getDoctrine()
-                ->getEntityManager()
+                ->getManager()
                 ->getRepository('UJMExoBundle:Interaction')
                 ->getInteraction($id);
 
@@ -148,7 +148,7 @@ class QuestionController extends Controller
 
                     $response = new Response();
                     $interactionQCM = $this->getDoctrine()
-                        ->getEntityManager()
+                        ->getManager()
                         ->getRepository('UJMExoBundle:InteractionQCM')
                         ->getInteractionQCM($interaction[0]->getId());
 
@@ -170,7 +170,7 @@ class QuestionController extends Controller
                 case "InteractionGraphic":
 
                     $interactionGraph = $this->getDoctrine()
-                        ->getEntityManager()
+                        ->getManager()
                         ->getRepository('UJMExoBundle:InteractionGraphic')
                         ->getInteractionGraphic($interaction[0]->getId());
 
@@ -191,7 +191,7 @@ class QuestionController extends Controller
 
                     $response = new Response();
                     $interactionHole = $this->getDoctrine()
-                        ->getEntityManager()
+                        ->getManager()
                         ->getRepository('UJMExoBundle:InteractionHole')
                         ->getInteractionHole($interaction[0]->getId());
 
@@ -234,7 +234,7 @@ class QuestionController extends Controller
         $form->bindRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
 
@@ -259,14 +259,14 @@ class QuestionController extends Controller
 
         if (count($question) > 0) {
             $interaction = $this->getDoctrine()
-                ->getEntityManager()
+                ->getManager()
                 ->getRepository('UJMExoBundle:Interaction')
                 ->getInteraction($id);
 
             $typeInter = $interaction[0]->getType();
 
             $nbResponses = 0;
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $response = $em->getRepository('UJMExoBundle:Response')
                 ->findBy(array('interaction' => $interaction[0]->getId()));
             $nbResponses = count($response);
@@ -275,7 +275,7 @@ class QuestionController extends Controller
                 case "InteractionQCM":
 
                     $interactionQCM = $this->getDoctrine()
-                        ->getEntityManager()
+                        ->getManager()
                         ->getRepository('UJMExoBundle:InteractionQCM')
                         ->getInteractionQCM($interaction[0]->getId());
                     //fired a sort function
@@ -300,7 +300,7 @@ class QuestionController extends Controller
 
                 case "InteractionGraphic":
                     $interactionGraph = $this->getDoctrine()
-                        ->getEntityManager()
+                        ->getManager()
                         ->getRepository('UJMExoBundle:InteractionGraphic')
                         ->getInteractionGraphic($interaction[0]->getId());
 
@@ -330,7 +330,7 @@ class QuestionController extends Controller
 
                 case "InteractionHole":
                     $interactionHole = $this->getDoctrine()
-                        ->getEntityManager()
+                        ->getManager()
                         ->getRepository('UJMExoBundle:InteractionHole')
                         ->getInteractionHole($interaction[0]->getId());
 
@@ -366,7 +366,7 @@ class QuestionController extends Controller
      */
     public function updateAction($id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('UJMExoBundle:Question')->find($id);
 
@@ -406,10 +406,10 @@ class QuestionController extends Controller
         $question = $this->controlUserQuestion($id);
 
         if (count($question) > 0) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
 
             $eq = $this->getDoctrine()
-                ->getEntityManager()
+                ->getManager()
                 ->getRepository('UJMExoBundle:ExerciseQuestion')
                 ->getExercises($id);
 
@@ -420,7 +420,7 @@ class QuestionController extends Controller
             $em->flush();
 
             $interaction = $this->getDoctrine()
-                ->getEntityManager()
+                ->getManager()
                 ->getRepository('UJMExoBundle:Interaction')
                 ->getInteraction($id);
 
@@ -429,7 +429,7 @@ class QuestionController extends Controller
             switch ($typeInter) {
                 case "InteractionQCM":
                     $interactionQCM = $this->getDoctrine()
-                        ->getEntityManager()
+                        ->getManager()
                         ->getRepository('UJMExoBundle:InteractionQCM')
                         ->getInteractionQCM($interaction[0]->getId());
 
@@ -441,7 +441,7 @@ class QuestionController extends Controller
 
                 case "InteractionGraphic":
                     $interactionGraph = $this->getDoctrine()
-                        ->getEntityManager()
+                        ->getManager()
                         ->getRepository('UJMExoBundle:InteractionGraphic')
                         ->getInteractionGraphic($interaction[0]->getId());
 
@@ -453,7 +453,7 @@ class QuestionController extends Controller
 
                 case "InteractionHole":
                     $interactionHole = $this->getDoctrine()
-                        ->getEntityManager()
+                        ->getManager()
                         ->getRepository('UJMExoBundle:InteractionHole')
                         ->getInteractionHole($interaction[0]->getId());
 
@@ -595,7 +595,7 @@ class QuestionController extends Controller
         $search = $request->request->get('search');
 
         if ($search != '') {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $userList = $em->getRepository('ClarolineCoreBundle:User')->findByName($search);
         }
 
@@ -615,7 +615,7 @@ class QuestionController extends Controller
         $user = $this->container->get('security.context')->getToken()->getUser();
 
         $question = $this->getDoctrine()
-            ->getEntityManager()
+            ->getManager()
             ->getRepository('UJMExoBundle:Question')
             ->getControlOwnerQuestion($user->getId(), $questionID);
 
@@ -655,7 +655,7 @@ class QuestionController extends Controller
 
         $listDoc = $repositoryDoc->findOneBy(array('label' => $label));
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->findBy(array('document' => $listDoc));
 
@@ -704,7 +704,7 @@ class QuestionController extends Controller
 
         $listDoc = $repositoryDoc->findOneBy(array('label' => $label));
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->findBy(array('document' => $listDoc));
 
@@ -727,7 +727,7 @@ class QuestionController extends Controller
         $newlabel = $this->container->get('request')->request->get('newlabel');
         $oldlabel = $this->get('request')->get('oldName');
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $alterDoc = $em->getRepository('UJMExoBundle:Document')->findOneBy(array('label' => $oldlabel));
 
@@ -782,7 +782,7 @@ class QuestionController extends Controller
             $labelToFind = $request->request->get('labelToFind');
 
             if ($labelToFind) {
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
                 $listFindDoc = $em->getRepository('UJMExoBundle:Document')->findByLabel($labelToFind);
             }
         }
@@ -804,7 +804,7 @@ class QuestionController extends Controller
             $UserName = $request->request->get('Uname');
             $UserFname = $request->request->get('Ufname');
 
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $MatchingName = $em->getRepository('ClarolineCoreBundle:User')->findByName($UserName);
             $question = $em->getRepository('UJMExoBundle:Question')->findOneBy(array('id' => $QuestionID));
 

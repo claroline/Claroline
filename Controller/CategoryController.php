@@ -59,7 +59,7 @@ class CategoryController extends Controller
         $uid = $user->getId();
 
         $entities = $this->getDoctrine()
-            ->getEntityManager()
+            ->getManager()
             ->getRepository('UJMExoBundle:Category')
             ->getUserCategory($uid);
 
@@ -76,7 +76,7 @@ class CategoryController extends Controller
      */
     public function showAction($id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('UJMExoBundle:Category')->find($id);
 
@@ -140,7 +140,7 @@ class CategoryController extends Controller
         $form->bindRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $entity->setUser($this->container->get('security.context')->getToken()->getUser());
             $em->persist($entity);
             $em->flush();
@@ -171,7 +171,7 @@ class CategoryController extends Controller
             $entity  = new Category();
             $entity->setValue($val);
             $entity->setUser($this->container->get('security.context')->getToken()->getUser());
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
 
@@ -189,7 +189,7 @@ class CategoryController extends Controller
      */
     public function editAction($id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('UJMExoBundle:Category')->find($id);
 
@@ -215,7 +215,7 @@ class CategoryController extends Controller
      */
     public function updateAction($id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('UJMExoBundle:Category')->find($id);
 
@@ -258,7 +258,7 @@ class CategoryController extends Controller
         $form->bindRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('UJMExoBundle:Category')->find($id);
 
             if (!$entity) {

@@ -55,7 +55,7 @@ class InteractionQCMController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('UJMExoBundle:InteractionQCM')->findAll();
 
@@ -72,7 +72,7 @@ class InteractionQCMController extends Controller
      */
     public function showAction($id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('UJMExoBundle:InteractionQCM')->find($id);
 
@@ -127,7 +127,7 @@ class InteractionQCMController extends Controller
         $exoID = $this->container->get('request')->request->get('exercise');
 
         $formHandler = new InteractionQCMHandler(
-            $form, $this->get('request'), $this->getDoctrine()->getEntityManager(),
+            $form, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('security.context')->getToken()->getUser(), $exoID
         );
 
@@ -156,7 +156,7 @@ class InteractionQCMController extends Controller
      */
     public function editAction($id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('UJMExoBundle:InteractionQCM')->find($id);
 
@@ -186,7 +186,7 @@ class InteractionQCMController extends Controller
      */
     public function updateAction($id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $interQCM = $em->getRepository('UJMExoBundle:InteractionQCM')->find($id);
 
@@ -200,7 +200,7 @@ class InteractionQCMController extends Controller
             ), $interQCM
         );
         $formHandler = new InteractionQCMHandler(
-            $editForm, $this->get('request'), $this->getDoctrine()->getEntityManager(),
+            $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('security.context')->getToken()->getUser()
         );
 
@@ -230,7 +230,7 @@ class InteractionQCMController extends Controller
 
         $form->bindRequest($request);
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('UJMExoBundle:InteractionQCM')->find($id);
 
         if (!$entity) {

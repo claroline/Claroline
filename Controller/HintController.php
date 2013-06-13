@@ -57,7 +57,7 @@ class HintController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('UJMExoBundle:Hint')->findAll();
 
@@ -80,7 +80,7 @@ class HintController extends Controller
         if ($request->isXmlHttpRequest()) {
             $id = $request->request->get('id');
 
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('UJMExoBundle:Hint')->find($id);
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Hint entity.');
@@ -145,7 +145,7 @@ class HintController extends Controller
         $form->bindRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
 
@@ -166,7 +166,7 @@ class HintController extends Controller
      */
     public function editAction($id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('UJMExoBundle:Hint')->find($id);
 
@@ -192,7 +192,7 @@ class HintController extends Controller
      */
     public function updateAction($id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('UJMExoBundle:Hint')->find($id);
 
@@ -235,7 +235,7 @@ class HintController extends Controller
         $form->bindRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('UJMExoBundle:Hint')->find($id);
 
             if (!$entity) {

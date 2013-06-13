@@ -73,7 +73,7 @@ class exerciseServices
         $interactionQCMID = $request->request->get('interactionQCMToValidated');
         $response = array();
 
-        $em = $this->doctrine->getEntityManager();
+        $em = $this->doctrine->getManager();
         $interQCM = $em->getRepository('UJMExoBundle:InteractionQCM')->find($interactionQCMID);
 
         if ($interQCM->getTypeQCM()->getId() == 2) {
@@ -182,7 +182,7 @@ class exerciseServices
     public function getNbPaper($uid, $exoID)
     {
         $papers = $this->doctrine
-                       ->getEntityManager()
+                       ->getManager()
                        ->getRepository('UJMExoBundle:Paper')
                        ->getExerciseUserPapers($uid, $exoID);
 
@@ -192,13 +192,13 @@ class exerciseServices
     private function getPenalty($interaction, $paperID)
     {
         $penalty = 0;
-        $em = $this->doctrine->getEntityManager();
+        $em = $this->doctrine->getManager();
 
         $hints = $interaction->getHints();
 
         foreach ($hints as $hint) {
             $lhp = $this->doctrine
-                        ->getEntityManager()
+                        ->getManager()
                         ->getRepository('UJMExoBundle:LinkHintPaper')
                         ->getLHP($hint->getId(), $paperID);
             if (count($lhp) > 0) {
@@ -221,7 +221,7 @@ class exerciseServices
         $answers = $request->request->get('answers'); // Answer of the student
         $graphId = $request->request->get('graphId'); // Id of the graphic interaction
         $max = $request->request->get('nbpointer'); // Number of answer zones
-        $em = $this->doctrine->getEntityManager();
+        $em = $this->doctrine->getManager();
         $rightCoords = $em->getRepository('UJMExoBundle:Coords')->findBy(array('interactionGraphic' => $graphId));
         $verif = array();
         $z = 0;
