@@ -41,7 +41,9 @@ class LogListener
 
     private function createLog(LogGenericEvent $event)
     {
-        $this->em->flush();
+        if ($event->isAutoFlush()) {
+            $this->em->flush();
+        }
 
         //Add doer details
         $token = $this->container->get('security.context')->getToken();
@@ -157,7 +159,10 @@ class LogListener
         $log->setDetails($details);
 
         $this->em->persist($log);
-        $this->em->flush();
+        
+        if ($event->isAutoFlush()) {
+            $this->em->flush();
+        }
     }
 
     /**
