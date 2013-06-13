@@ -57,7 +57,7 @@ class InteractionGraphicController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('UJMExoBundle:InteractionGraphic')->findAll();
 
@@ -74,7 +74,7 @@ class InteractionGraphicController extends Controller
      */
     public function showAction($id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->find($id);
 
@@ -144,7 +144,7 @@ class InteractionGraphicController extends Controller
 
         if ($form->isValid()) {
 
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $em->persist($interGraph);
             $em->persist($interGraph->getInteraction()->getQuestion());
             $em->persist($interGraph->getInteraction());
@@ -192,7 +192,7 @@ class InteractionGraphicController extends Controller
      */
     public function editAction($id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->find($id);
 
@@ -225,7 +225,7 @@ class InteractionGraphicController extends Controller
     {
         $originalHints=array();
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->find($id);
 
@@ -326,7 +326,7 @@ class InteractionGraphicController extends Controller
 
         $form->bindRequest($request);
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->find($id);
 
         if (!$entity) {

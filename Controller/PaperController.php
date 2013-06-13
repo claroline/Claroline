@@ -57,7 +57,7 @@ class PaperController extends Controller
     {
         $user = $this->container->get('security.context')->getToken()->getUser();
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
         $workspace = $exercise->getWorkspace();
 
@@ -69,12 +69,12 @@ class PaperController extends Controller
 
         if ($subscription[0]->getAdmin() == 1) {
             $papers = $this->getDoctrine()
-                            ->getEntityManager()
+                            ->getManager()
                             ->getRepository('UJMExoBundle:Paper')
                             ->getExerciseAllPapers($exoID);
         } else {
             $papers = $this->getDoctrine()
-                            ->getEntityManager()
+                            ->getManager()
                             ->getRepository('UJMExoBundle:Paper')
                             ->getExerciseUserPapers($user->getId(), $exoID);
         }
@@ -96,7 +96,7 @@ class PaperController extends Controller
     public function showAction($id)
     {
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $paper = $em->getRepository('UJMExoBundle:Paper')->find($id);
 
         $subscription = $this->getSubscription($user, $paper->getExercise()->getId());
@@ -130,21 +130,21 @@ class PaperController extends Controller
         }
 
         $interactions = $this->getDoctrine()
-            ->getEntityManager()
+            ->getManager()
             ->getRepository('UJMExoBundle:Interaction')
             ->getPaperInteraction($em, str_replace(';', '\',\'', substr($paper->getOrdreQuestion(), 0, -1)));
 
         $interactions = $this->orderInteractions($interactions, $paper->getOrdreQuestion());
 
         $responses = $this->getDoctrine()
-            ->getEntityManager()
+            ->getManager()
             ->getRepository('UJMExoBundle:Response')
             ->getPaperResponses($paper->getUser()->getId(), $id);
 
         $responses = $this->orderResponses($responses, $paper->getOrdreQuestion());
 
         $hintViewed = $this->getDoctrine()
-            ->getEntityManager()
+            ->getManager()
             ->getRepository('UJMExoBundle:LinkHintPaper')
             ->getHintViewed($paper->getId());
 
@@ -170,7 +170,7 @@ class PaperController extends Controller
         $form->bindRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('UJMExoBundle:Paper')->find($id);
 
             if (!$entity) {
@@ -241,7 +241,7 @@ class PaperController extends Controller
     private function getSubscription($user, $exoID)
     {
         $subscription = $this->getDoctrine()
-                             ->getEntityManager()
+                             ->getManager()
                              ->getRepository('UJMExoBundle:Subscription')
                              ->getControlExerciseEnroll($user->getId(), $exoID);
 
