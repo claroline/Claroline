@@ -1,7 +1,11 @@
 {% if log.getDetails().resource is defined%}
     <strong>
         {% if log.getResource() != null %}
-            <a href="{{ path('claro_resource_open', {'resourceType': log.getResourceType().getName(), 'action': 'open', 'resourceId': log.getResource().getId()})}}"> {{ log.getDetails().resource.path }}</a>
+            {% if log.getResourceType().getName() == 'directory' %}
+                <a href="{{ path('claro_workspace_open_tool', {'workspaceId': log.getWorkspace().getId(), 'toolName': 'resource_manager'})}}#resources/{{ log.getResource().getId() }}">{{ log.getDetails().resource.path }}</a>
+            {% else %}
+                <a href="{{ path('claro_resource_open', {'resourceType': log.getResourceType().getName(), 'action': 'open', 'resourceId': log.getResource().getId()})}}">{{ log.getDetails().resource.path }}</a>
+            {% endif %}
         {% else %}
             <em>{{ log.getDetails().resource.path }}</em>
         {% endif %}

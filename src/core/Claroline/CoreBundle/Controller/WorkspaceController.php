@@ -39,7 +39,6 @@ class WorkspaceController extends Controller
      */
     public function listAction()
     {
-        $this->assertIsGranted('ROLE_USER');
         $em = $this->get('doctrine.orm.entity_manager');
         $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)->findNonPersonal();
         $tags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')

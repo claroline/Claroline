@@ -17,7 +17,6 @@ html, body {
     padding-bottom: @navbarHeight; /* Reserves a space for the footer */
 }
 
-
 /************/
 /*  @media  */
 /************/
@@ -43,6 +42,12 @@ html, body {
 
 @media (min-width: 768px) {
 
+    footer
+    {
+        margin: -@navbarHeight 0 0 0;
+        padding: 0;
+    }
+
     .workspace-toolbox-item {
         display: block;
         text-align: center;
@@ -50,12 +55,23 @@ html, body {
 }
 
 @media (max-width: 767px) {
-    /* // Compensates for the 20px body padding set in bootstrap "responsive-767px-max.less"
-       // (makes the footer fill the whole screen width). */
+    /* // Compensates for the 20px body padding set in bootstrap "responsive-767px-max.less" */
+
+    footer
+    {
+        margin: -@navbarHeight -20px 0 -20px;
+        padding: 0 20px 0 20px;
+    }
 
     .creator .navbar.navbar-static-top
     {
         margin:0 !important;
+
+    }
+
+    .creator .navbar.navbar-static-top .navbar-inner
+    {
+        padding:5px;
     }
 
     .tool-list {
@@ -78,8 +94,6 @@ html, body {
 footer {
     width: 100%;
     position: relative;
-    margin: -@navbarHeight -20px 0 -20px; /* Puts the footer in the grid with a negative margin */
-    padding: 0 20px 0 20px;
     min-height: @navbarHeight;
     background-color: @grayLighter;
     color: lighten(@gray, 20%);
@@ -673,6 +687,12 @@ form legend
     padding:10px 10px 0 10px;
 }
 
+.creator .navbar.navbar-static-top .navbar-inner
+{
+    padding-left:5px;
+    padding-right:5px;
+}
+
 #regions a.border
 {
     text-align:center;
@@ -750,4 +770,36 @@ form legend
 {
     float:left;
     margin:0 10px 5px 0;
+}
+
+/**********************/
+/** Theme Generator  **/
+/**********************/
+
+.theme-generator .theme-value input
+{
+    padding:7px;
+    margin:0px;
+    border-width:0;
+    width:90%;
+    resize:none;
+    background:transparent;
+    .border-radius(0);
+    .box-shadow(0 0 0 rgba(0,0,0,0));
+}
+
+.theme-generator .theme-value
+{
+    padding:0;
+    margin:0;
+}
+
+.theme-generator .theme-swatch span {
+    display: inline-block;
+    width: 30px;
+    height: 20px;
+    margin: -6px 0;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
 }
