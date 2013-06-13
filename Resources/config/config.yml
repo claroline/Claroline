@@ -1,0 +1,7 @@
+plugin:
+  has_options: false
+
+  tools:
+    - name: claroline_activity_tool
+      is_displayable_in_workspace: true
+      is_displayable_in_desktop: true
