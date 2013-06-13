@@ -22,7 +22,7 @@ class RssReaderController extends Controller
     public function createConfigAction($workspaceId, $isDesktop, $isDefault, $userId)
     {
         $form = $this->get('form.factory')->create(new ConfigType(), new Config());
-        $form->bindRequest($this->get('request'));
+        $form->handleRequest($this->get('request'));
         $em = $this->get('doctrine.orm.entity_manager');
 
         if ($form->isValid()) {
@@ -88,7 +88,7 @@ class RssReaderController extends Controller
         $rssConfig = $em->getRepository('ClarolineRssReaderBundle:Config')->find($configId);
         $this->checkAccess($rssConfig);
         $form = $this->get('form.factory')->create(new ConfigType(), $rssConfig);
-        $form->bindRequest($this->get('request'));
+        $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {
             $config = $form->getData();
