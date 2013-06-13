@@ -324,7 +324,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
         $builder = new ResourceQueryBuilder();
         $builder->selectAsArray();
         $this->addFilters($builder, $criteria, $roles);
-        $dql = $builder->getShortcuts()->getDql();
+        $dql = $builder->whereIsShortcut()->getDql();
         $query = $this->_em->createQuery($dql);
         $query->setParameters($builder->getParameters());
         $results = $query->getResult();
@@ -339,18 +339,6 @@ class AbstractResourceRepository extends MaterializedPathRepository
         }
 
         return $results;
-    }
-
-    private function findWorkspaceRootsPathByRoles(array $roles)
-    {
-        $roots = $this->findWorkspaceRootsByRoles($roles);
-        $paths = array();
-
-        foreach ($roots as $root) {
-            $paths[] = $root['path'];
-        }
-
-        return $paths;
     }
 
     /**

@@ -16,9 +16,9 @@ class LogGenericEvent extends Event
     protected $workspace;
     protected $owner;
     protected $toolName;
-
     protected $childType;
     protected $childAction;
+    protected $autoflush;
 
     /**
      * Constructor.
@@ -47,6 +47,7 @@ class LogGenericEvent extends Event
         $this->toolName = $toolName;
         $this->childType = $childType;
         $this->childAction = $childAction;
+        $this->autoflush = true;
     }
 
     /**
@@ -122,7 +123,7 @@ class LogGenericEvent extends Event
     }
 
     /**
-     * Returns the sub entity's type in case of indirect resource update 
+     * Returns the sub entity's type in case of indirect resource update
      * (creation/delete/update of plugin's sub entities; e.g. In a forum we have threads and posts as sub entities)
      */
     public function getChildType()
@@ -131,12 +132,33 @@ class LogGenericEvent extends Event
     }
 
     /**
-     * Returns the sub entity's action name in case of indirect resource update 
-     * (creation/delete/update of plugin's sub entities; e.g. 
+     * Returns the sub entity's action name in case of indirect resource update
+     * (creation/delete/update of plugin's sub entities; e.g.
      * In a forum we can have thread creation, post publication etc.)
      */
     public function getChildAction()
     {
         return $this->childAction;
+    }
+
+    /**
+     * Enable the flush in the LogListener
+     */
+    public function enAutoFlush()
+    {
+        $this->autoflush = true;
+    }
+
+    /**
+     * Disable the flush in the LogListener (usefull for large inserts).
+     */
+    public function disAutoFlush()
+    {
+        $this->autoflush = false;
+    }
+
+    public function isAutoFlush()
+    {
+        return $this->autoflush;
     }
 }
