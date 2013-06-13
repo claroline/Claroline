@@ -22,10 +22,11 @@ class ResourceManagerListener
      *     "manager" = @DI\Inject("claroline.resource.manager"),
      *     "converter" = @DI\Inject("claroline.resource.converter"),
      *     "sc" = @DI\Inject("security.context"),
-     *     "request" = @DI\Inject("request")
+     *     "request" = @DI\Inject("request"),
+     *     "organizer" = @DI\Inject("claroline.workspace.organizer")
      * })
      */
-    public function __construct($em, $ed, $templating, $manager, $converter, $sc, $request)
+    public function __construct($em, $ed, $templating, $manager, $converter, $sc, $request, $organizer)
     {
         $this->em = $em;
         $this->ed = $ed;
@@ -34,6 +35,7 @@ class ResourceManagerListener
         $this->converter = $converter;
         $this->sc = $sc;
         $this->request = $request;
+        $this->organizer = $organizer;
     }
 
     /**
@@ -134,70 +136,7 @@ class ResourceManagerListener
         $roleRights = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
             ->findNonAdminRights($resource);
 
-        $workspaces = $this->em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
-            ->findNonPersonal();
-        $tags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findNonEmptyAdminTags();
-        $relTagWorkspace = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findByAdmin();
-        $roles = $this->em->getRepository('ClarolineCoreBundle:Role')->findAll();
-        $tagWorkspaces = array();
-
-        // create an array: tagId => [associated_workspace_relation]
-        foreach ($relTagWorkspace as $tagWs) {
-
-            if (empty($tagWorkspaces[$tagWs['tag_id']])) {
-                $tagWorkspaces[$tagWs['tag_id']] = array();
-            }
-            $tagWorkspaces[$tagWs['tag_id']][] = $tagWs['rel_ws_tag'];
-        }
-
-        $tagsHierarchy = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTagHierarchy')
-            ->findAllAdmin();
-        $rootTags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findAdminRootTags();
-        $hierarchy = array();
-
-        // create an array : tagId => [direct_children_id]
-        foreach ($tagsHierarchy as $tagHierarchy) {
-
-            if ($tagHierarchy->getLevel() === 1) {
-
-                if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
-                    !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
-
-                    $hierarchy[$tagHierarchy->getParent()->getId()] = array();
-                }
-                $hierarchy[$tagHierarchy->getParent()->getId()][] = $tagHierarchy->getTag();
-            }
-        }
-
-        // create an array indicating which tag is displayable
-        // a tag is displayable if it or one of his children contains is associated to a workspace
-        $displayable = array();
-        $allAdminTags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findByUser(null);
-
-        foreach ($allAdminTags as $adminTag) {
-            $adminTagId = $adminTag->getId();
-            $displayable[$adminTagId] = WorkspaceTag::isTagDisplayable($adminTagId, $tagWorkspaces, $hierarchy);
-        }
-
-        $workspaceRoles = array();
-
-        foreach ($roles as $role) {
-            $wsRole = $role->getWorkspace();
-
-            if (!is_null($wsRole)) {
-                $code = $wsRole->getCode();
-
-                if (!isset($workspaceRoles[$code])) {
-                    $workspaceRoles[$code] = array();
-                }
-
-                $workspaceRoles[$code][] = $role;
-            }
-        }
+        $datas = $this->organizer->getDatasForWorkspaceList(true);
 
         return $this->templating->render(
             'ClarolineCoreBundle:Tool\workspace\resource_manager:resources_rights.html.twig',
@@ -205,13 +144,13 @@ class ResourceManagerListener
                 'workspace' => $workspace,
                 'resource' => $resource,
                 'roleRights' => $roleRights,
-                'workspaces' => $workspaces,
-                'tags' => $tags,
-                'tagWorkspaces' => $tagWorkspaces,
-                'hierarchy' => $hierarchy,
-                'rootTags' => $rootTags,
-                'displayable' => $displayable,
-                'workspaceRoles' => $workspaceRoles
+                'workspaces' => $datas['workspaces'],
+                'tags' => $datas['tags'],
+                'tagWorkspaces' => $datas['tagWorkspaces'],
+                'hierarchy' => $datas['hierarchy'],
+                'rootTags' => $datas['rootTags'],
+                'displayable' => $datas['displayable'],
+                'workspaceRoles' => $datas['workspaceRoles']
             )
         );
     }
