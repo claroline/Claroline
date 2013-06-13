@@ -7,7 +7,7 @@ use Doctrine\ORM\Event\OnFlushEventArgs;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\DiExtraBundle\Annotation\Tag as Tag;
 
-/**
+/******
  * @DI\Service
  * @Tag("doctrine.event_listener", attributes={"event"="onFlush"})
  */
