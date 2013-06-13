@@ -20,7 +20,6 @@ class Creator
 {
     private $entityManager;
     private $manager;
-    private $roleRepo;
     private $ed;
     private $translator;
 

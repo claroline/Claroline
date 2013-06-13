@@ -277,19 +277,6 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
             return false;
         }
 
-        /*
-         * Impersonating user doesn't workspace with these. They always return false.
-         *
-        if ($this->password !== $user->getPassword()) {
-            throw new \Exception('not password of');
-            return false;
-        }
-
-        if ($this->getSalt() !== $user->getSalt()) {
-            throw new \Exception('not salt of');
-            return false;
-        }*/
-
         return true;
     }
 
