@@ -31,7 +31,7 @@ In order to create a new theme in a **Claroline Plugin** you must first to defin
 
 The *path* of the theme is in fact a path to a twig file inside the views folder of you plugin (ExampleBundle/Resources/views).
 
-This twig file defines a [asset stylesheets][assets] tag with the informations of your *css* or *less* file. You can define also a filter as *lessphp* and the path of output file that will be compiled ina single file and store in public *web* folder of **Symfony2** framework.
+This twig file defines a [asset stylesheets][assets] tag with the informations of your *css* or *less* file. You can define also a filter as *lessphp* and the path of output file that will be compiled in a single file and store in public *web* folder of **Symfony2** framework.
 
 *ExampleBundle/Resources/views/less/example/theme.html.twig*
 
@@ -120,7 +120,7 @@ We know that for someone who never hear talk about **Less CSS** or **Bootstrap**
 
 For that case we create simple theme generator, you can find it in the link *"Create a new theme"* in platform parameters in administration section. There you can chose the colors to be used in a theme with a simple color picker. In section of *"more option"* you can change more that only colors.
 
-When you finish to customize your theme you can simply save it or preview it, this theme will be compile automaticaly and can be used instantly in the platform.
+When you finish to customize your theme you can simply save it or preview it, this theme will be compile automatically and can be used instantly in the platform.
 
 If you dont like the results of a theme, you can simply chose it in theme generator panel and click in delete button.
 
