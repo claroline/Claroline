@@ -206,12 +206,32 @@ table.jqplot-cursor-tooltip {
     padding: 1px;
 }
 
+.jqplot-highlighter-tooltip:after{
+  content:"";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-width: 10px;
+  border-style: solid;
+  border-color: #222 transparent transparent transparent;
+  top: 100%;
+  left: 50%;
+  margin-left:-10px;
+}
+
 .jqplot-highlighter-tooltip, .jqplot-canvasOverlay-tooltip {
-    border: 1px solid #cccccc;
-    font-size: 0.75em;
+    position:absolute;
+    border: 1px solid transparent;
+    font-size: 0.8em;
+    line-height: 1.3em;
     white-space: nowrap;
-    background: rgba(208,208,208,0.5);
-    padding: 1px;
+    background: #222;
+    color: #fff;
+    padding: 3px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    text-align: center;
 }
 
 .jqplot-point-label {
