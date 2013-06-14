@@ -45,7 +45,22 @@
 
 {% block section_content %}
     <div class="margin">
-        <h3 class="sub-section-header">{{ 'group'|trans({}, 'platform') }} "{{ group.getName() }}" : {{ 'users'|trans({}, 'platform') }}</h3>
+        {{
+            macros.breadcrumbs([
+                {
+                    'name': 'users_management'|trans({}, 'platform'),
+                    'href': path('claro_admin_users_management')
+                },
+                {
+                    'name': 'groups_list'|trans({}, 'platform'),
+                    'href': path('claro_admin_group_list')
+                },
+                {
+                    'name':  group.getName(),
+                    'href': '#'
+                }
+            ])
+        }}
 
         <div class="search-bar">
             <a id="link_add_user_to_group" class="btn btn-secondary" href="{{ path('claro_admin_outside_of_group_user_list', {'groupId' : group.getId()}) }}"><i class="icon-plus"></i> {{ 'add_user'|trans({}, 'platform') }}</a>

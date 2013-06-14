@@ -8,6 +8,7 @@ add_group_s_confirm_message: 'groupe(s) ajouté(s)'
 add_resource: 'Ajouter une ressource'
 add_tag_to_workspace: 'Ajouter un Tag à l''espace d''activités'
 add_user: 'Ajouter un utilisateur'
+add_users: 'Ajouter des utilisateurs'
 add_user_s_confirm_message: 'utilisateur(s) ajouté(s)'
 admin: Administrateur
 administration: Administration
@@ -86,11 +87,14 @@ group_form_ownedRoles: Rôles
 group_form_platformRole: Role
 group_parameter: 'Paramètres du groupe'
 groups: Groupes
+groups_list: "Liste des groupes"
 history: Historique
 home: Accueil
 id: Id
 informations: Informations
 instructions: Consignes
+import: Importer
+import_user_file_file: Importer depuis fichier
 last_name: Nom
 link: Lien
 list_groups: 'Lister les groupes'
@@ -390,6 +394,8 @@ user_form_plainPassword_first: 'Mot de passe'
 user_form_plainPassword_second: Vérification
 user_form_username: 'Nom d''utilisateur'
 user_parameters: 'Paramètres de l''utilisateur'
+users_management: 'Gestion des utilisateurs'
+users_list: 'Liste des utilisateurs'
 username: 'Nom d''utilisateur'
 users: Utilisateurs
 validate: Valider
