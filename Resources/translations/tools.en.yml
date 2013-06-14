@@ -1,1 +1,6 @@
+activity: 'Activity'
+activity_list: 'Activity list'
 claroline_activity_tool: 'Activities'
+end_date: 'End date'
+instructions: 'Instructions'
+start_date: 'Start date'
