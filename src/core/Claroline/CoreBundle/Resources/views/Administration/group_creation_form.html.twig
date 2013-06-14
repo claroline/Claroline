@@ -1,10 +1,18 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
 {% block section_content %}
+    {{
+    macros.breadcrumbs([
+            {
+                'name': 'users_management'|trans({}, 'platform'),
+                'href': path('claro_admin_users_management')
+            },
+            {'name':'create_group'|trans({}, 'platform'), 'href':'#'}
+        ])
+    }}
     {% form_theme form_group 'ClarolineCoreBundle::form_theme.html.twig' %}
     <form class="form-horizontal" action="{{ path('claro_admin_create_group') }}" method="post" {{ form_enctype(form_group) }} id="form_group">
         <fieldset>
-            <legend>{{ 'create_group'|trans({}, 'platform') }} :</legend>
             {{ form_widget(form_group) }}
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>

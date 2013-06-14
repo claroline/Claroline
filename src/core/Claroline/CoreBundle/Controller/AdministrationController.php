@@ -10,6 +10,7 @@ use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Form\GroupType;
 use Claroline\CoreBundle\Form\GroupSettingsType;
 use Claroline\CoreBundle\Form\PlatformParametersType;
+use Claroline\CoreBundle\Form\ImportUserType;
 use Claroline\CoreBundle\Library\Event\PluginOptionsEvent;
 use Claroline\CoreBundle\Library\Event\LogUserDeleteEvent;
 use Claroline\CoreBundle\Library\Event\LogGroupCreateEvent;
@@ -667,10 +668,70 @@ class AdministrationController extends Controller
         return $event->getResponse();
     }
 
-    private function paginatorToArray($paginator)
+    /**
+     * @Route(
+     *    "user/management",
+     *    name="claro_admin_users_management"
+     * )
+     * @Method("GET")
+     *
+     * @return Response
+     */
+    public function usersManagementAction()
     {
-        return $this->get('claroline.utilities.paginator_parser')
-            ->paginatorToArray($paginator);
+        return $this->render('ClarolineCoreBundle:Administration:users_management.html.twig');
+    }
+
+    /**
+     * @Route(
+     *    "user/management/import/form",
+     *     name="claro_admin_import_users_form"
+     * )
+     * @Method("GET")
+     *
+     * @return Response
+     */
+    public function importUsersForm()
+    {
+        $form = $this->createForm(new ImportUserType());
+
+        return $this->render('ClarolineCoreBundle:Administration:import_users.html.twig',
+            array('form' => $form->createView())
+        );
+    }
+
+    /**
+     * @Route(
+     *     "user/management/import",
+     *     name="claro_admin_import_users"
+     * )
+     *
+     * @Method("POST")
+     *
+     * @return Response
+     */
+    public function importUsers()
+    {
+        $request = $this->get('request');
+        $form = $this->get('form.factory')->create(new ImportUserType());
+        $form->bind($request);
+
+        if ($form->isValid()) {
+            $file = $form->get('file')->getData();
+            $lines = str_getcsv(file_get_contents($file), PHP_EOL, ',');
+
+            foreach ($lines as $line) {
+                $users[] = str_getcsv($line);
+            }
+
+            $this->get('claroline.user.creator')->import($users);
+
+            return $this->redirect($this->generateUrl('claro_admin_users_management'));
+        }
+
+        return $this->render('ClarolineCoreBundle:Administration:import_users.html.twig',
+            array('form' => $form->createView())
+        );
     }
 
     /**
