@@ -170,7 +170,7 @@ class DirectoryListener implements ContainerAwareInterface
             $config['perms']
         );
         $ed = $this->container->get('event_dispatcher');
-        $createdResources[$config['id']] = $directory;
+        $createdResources[$config['id']] = $directory->getId();
 
         foreach ($config['children'] as $child) {
             $newEvent = new ImportResourceTemplateEvent(
