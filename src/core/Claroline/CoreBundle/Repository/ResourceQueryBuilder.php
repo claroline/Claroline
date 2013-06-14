@@ -320,23 +320,17 @@ class ResourceQueryBuilder
     }
 
     /**
+     * Filters resources that are shortcuts and select their target.
+     *
      * @return \Claroline\CoreBundle\Repository\ResourceQueryBuilder
      */
-    public function getShortcuts()
+    public function whereIsShortcut()
     {
         $eol = PHP_EOL;
-        $this->setFrom('Claroline\CoreBundle\Entity\Resource\ResourceShortcut');
-        $this->addJoinClause('JOIN resource.resource target');
+        $this->joinRelativesClause .= 'JOIN resource.resource target' . PHP_EOL;
+        $this->fromClause = "FROM 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut' resource{$eol}";
         $this->selectClause .= ", target.id as target_id{$eol}";
         $this->selectClause .= ", target.path as target_path{$eol}";
-
-        return $this;
-    }
-
-    public function whereNotShortcutDirectory()
-    {
-        $eol = PHP_EOL;
-        $this->addWhereClause("resource NOT INSTANCE OF Claroline\CoreBundle\Entity\Resource\ResourceShortcut{$eol}");
 
         return $this;
     }
@@ -455,17 +449,5 @@ class ResourceQueryBuilder
         } else {
             $this->whereClause = $this->whereClause . "AND {$clause}" . PHP_EOL;
         }
-    }
-
-    public function addJoinClause($clause)
-    {
-        $this->joinRelativesClause .= $clause . PHP_EOL;
-    }
-
-    public function setFrom($class)
-    {
-        $eol = PHP_EOL;
-        $from = "FROM {$class} resource{$eol}";
-        $this->fromClause = $from;
     }
 }
