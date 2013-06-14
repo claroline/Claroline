@@ -30,7 +30,8 @@
         "idci/exporter-bundle": "dev-master",
         "leafo/lessphp": "0.3.9",
         "twitter/bootstrap": "2.3.1",
-        "fortawesome/fontawesome": "dev-master"
+        "fortawesome/fontawesome": "dev-master",
+        "xaguilars/bootstrap-colorpicker": "dev-master"
     },
     "require-dev": {
         "mockery/mockery": "dev-master@dev"
@@ -43,6 +44,17 @@
                 "version": "dev-master",
                 "dist": {
                     "url": "https://github.com/FortAwesome/Font-Awesome/zipball/master",
+                    "type": "zip"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "xaguilars/bootstrap-colorpicker",
+                "version": "dev-master",
+                "dist": {
+                    "url": "https://github.com/xaguilars/bootstrap-colorpicker/archive/master.zip",
                     "type": "zip"
                 }
             }
