@@ -20,7 +20,7 @@
             </a>
         </li>
     </ul>
-    <a href="{{ path('claro_workspace_agenda_tiny', {workspaceId: workspace.getId()}) }}" > tiny</a>
+ 
     <div id='calendar' class="span9"></div>
     <div  id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
@@ -31,6 +31,7 @@
             <button class="btn btn-danger" id="deleteBtn" >
                 {{ 'delete'|trans({}, 'platform') }}
             </button>
+            {{ tinymce_init() }}
             <form method="post" action="{{ path('claro_workspace_agenda_add_event', {workspaceId: workspace.getId()}) }}" id="myForm" {{ form_enctype(form) }}>
                 {{ form_widget(form) }}
             </form>
@@ -45,6 +46,7 @@
              <button class="btn btn-info" id="updateBtn" > {{ 'update'|trans({}, 'calendar') }}</button>
         </div>
     </div>
+   
     <div class="span3">
         <h4> <u>{{'tasks'|trans({}, 'calendar') }} </u></h4>
         {% for e in listEvents  %}
@@ -73,6 +75,8 @@
 
 {% block javascripts %}
     {{ parent() }}
+      {% render controller('ClarolineCoreBundle:Tool\\WorkspaceResourceParameters:workspaceResourceTypes')
+    %}
     <script type='text/javascript' src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}' ></script>
     <script type='text/javascript' src='{{ asset(calendarPath ~ 'js/fullcalendar.js') }}' ></script>
     <script type='text/javascript'src='{{ asset('bundles/clarolinecore/js/tool/calendar.js') }}'></script>

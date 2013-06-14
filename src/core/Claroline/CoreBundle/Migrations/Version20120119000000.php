@@ -331,6 +331,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('workspace_id', 'integer');
         $table->addColumn('previous_id', 'integer', array('notnull' => false));
         $table->addColumn('next_id', 'integer', array('notnull' => false));
+        $table->addColumn('mime_type', 'string', array('length' => 100, 'notnull' => false));
 
         $this->addDiscriminator($table);
 
@@ -387,7 +388,6 @@ class Version20120119000000 extends BundleMigration
         $this->addId($table);
         $table->addColumn('size', 'integer', array('notnull' => true));
         $table->addColumn('hash_name', 'string', array('length' => 50));
-        $table->addColumn('mime_type', 'string', array('length' => 100));
         $table->addUniqueIndex(array('hash_name'));
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_resource'),
