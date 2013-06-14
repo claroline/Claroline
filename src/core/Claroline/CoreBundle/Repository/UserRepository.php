@@ -188,7 +188,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                         JOIN u.roles r WITH r IN (
                         SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = '.Role::BASE_ROLE.'
                         )
-                        JOIN u.personalWorkspace pws';
+                        LEFT JOIN u.personalWorkspace pws';
 
             //the join on role is required because this method is only fired in the administration
             //and we only want the platform roles of a user.

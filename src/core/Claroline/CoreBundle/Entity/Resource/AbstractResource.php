@@ -181,6 +181,12 @@ abstract class AbstractResource
      */
     protected $previous;
 
+    /**
+     * @ORM\Column(type="string", name="mime_type", nullable=true)
+     */
+    private $mimeType;
+
+
     public function __construct()
     {
         $this->rights = new ArrayCollection();
@@ -480,5 +486,15 @@ abstract class AbstractResource
     public function getPrevious()
     {
         return $this->previous;
+    }
+
+    public function getMimeType()
+    {
+        return $this->mimeType;
+    }
+
+    public function setMimeType($mimeType)
+    {
+        $this->mimeType = $mimeType;
     }
 }

@@ -209,7 +209,7 @@
                             });
                         }
                     }
-
+                    
                     this.dispatcher.trigger('picker', {action: 'close'});
                 },
                 'click a.filter-result': function (event) {
@@ -287,7 +287,7 @@
                         if (this.checkedResources.resources.hasOwnProperty(event.resource.id)) {
                             delete this.checkedResources.resources[event.resource.id];
                         } else {
-                            this.checkedResources.resources[event.resource.id] = event.resource.name;
+                            this.checkedResources.resources[event.resource.id] = [event.resource.name, event.resource.type,event.resource.mimeType];
                         }
 
                         this.checkedResources.directoryId = this.currentDirectory.id;
@@ -485,7 +485,10 @@
                 this.dispatcher.trigger('resource-check-status', {
                     resource: {
                         id: event.currentTarget.getAttribute('value'),
-                        name: event.currentTarget.getAttribute('data-resource-name')
+                        name: event.currentTarget.getAttribute('data-resource-name'),
+                        type: event.currentTarget.getAttribute('data-type'),
+                        mimeType: event.currentTarget.getAttribute('data-mime-type')
+                        
                     },
                     isChecked: event.currentTarget.checked,
                     isPickerMode: this.parameters.isPickerMode

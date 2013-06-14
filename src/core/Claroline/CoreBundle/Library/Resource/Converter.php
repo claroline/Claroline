@@ -52,6 +52,7 @@ class Converter
         $resourceArray['is_browsable'] = $resource->getResourceType()->getBrowsable();
         $resourceArray['large_icon'] = $resource->getIcon()->getRelativeUrl();
         $resourceArray['path_for_display'] = $resource->getPathForDisplay();
+        $resourceArray['mime_type'] = $resource->getMimeType();
 
         if ($resource->getPrevious() !== null) {
             $resourceArray['previous_id'] = $resource->getPrevious()->getId();
