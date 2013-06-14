@@ -40,7 +40,7 @@ class WorkspaceController extends Controller
      */
     public function listAction()
     {
-        $datas = $this->get('claroline.workspace.organizer')->getDatasForWorkspaceList(true);
+        $datas = $this->get('claroline.workspace.organizer')->getDatasForWorkspaceList(false);
 
         return $this->render(
             'ClarolineCoreBundle:Workspace:list.html.twig',
