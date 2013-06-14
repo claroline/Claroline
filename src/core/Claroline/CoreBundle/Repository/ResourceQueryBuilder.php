@@ -75,7 +75,7 @@ class ResourceQueryBuilder
             "    previous.id as previous_id,{$eol}" .
             "    next.id as next_id,{$eol}" .
             "    icon.relativeUrl as large_icon,{$eol}".
-            "    resource.mimeType as mime_type {$eol}";
+            "    resource.mimeType as mime_type";
 
         if ($withMaxPermissions) {
             $this->leftJoinRights = true;
