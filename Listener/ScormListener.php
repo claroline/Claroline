@@ -63,7 +63,7 @@ class ScormListener extends ContainerAware
     {
         $request = $this->container->get('request');
         $form = $this->container->get('form.factory')->create(new ScormType(), new Scorm());
-        $form->bindRequest($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $scorm = $form->getData();
