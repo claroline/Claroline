@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Claroline\CoreBundle\Form\ResourceRightType;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleChangeRightEvent;
@@ -71,13 +72,25 @@ class ResourceRightsController extends Controller
             }
         }
 
+        $datas = $this->get('claroline.workspace.organizer')->getDatasForWorkspaceList(true);
+
         $template = $resource->getResourceType()->getName() === 'directory' ?
             'ClarolineCoreBundle:Resource:rights_form_directory.html.twig' :
             'ClarolineCoreBundle:Resource:rights_form_resource.html.twig';
 
         return $this->render(
             $template,
-            array('roleRights' => $roleRights, 'resource' => $resource)
+            array(
+                'roleRights' => $roleRights,
+                'resource' => $resource,
+                'workspaces' => $datas['workspaces'],
+                'tags' => $datas['tags'],
+                'tagWorkspaces' => $datas['tagWorkspaces'],
+                'hierarchy' => $datas['hierarchy'],
+                'rootTags' => $datas['rootTags'],
+                'displayable' => $datas['displayable'],
+                'workspaceRoles' => $datas['workspaceRoles']
+            )
         );
     }
 
