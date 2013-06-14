@@ -32,6 +32,6 @@ web/thumbnails/*
 test/files/tmp/*
 src/core/Claroline/CoreBundle/Resources/views/less-generated/*
 src/core/Claroline/CoreBundle/Resources/public/css/themes/*
+src/core/Claroline/CoreBundle/Resources/public/css/bootstrap-colorpicker/*
 src/core/Claroline/CoreBundle/Resources/public/css/font-awesome.css
 src/core/Claroline/CoreBundle/Resources/public/font/*
-
