@@ -65,11 +65,8 @@ class AdministrationControllerTest extends FunctionalTestCase
     {
         $now = new \DateTime();
 
-        $crawler = $this->logUser($this->getUser('admin'));
-        $link = $crawler->filter('#link-administration')->link();
-        $crawler = $this->client->click($link);
-        $link = $crawler->filter('#link_add_user')->link();
-        $crawler = $this->client->click($link);
+        $this->logUser($this->getUser('admin'));
+        $crawler = $this->client->request('GET', "/admin/user/form");
         $form = $crawler->filter('button[type=submit]')->form();
         $form['profile_form[firstName]'] = 'toto';
         $form['profile_form[lastName]'] = 'tata';
@@ -145,11 +142,8 @@ class AdministrationControllerTest extends FunctionalTestCase
         $now = new \DateTime();
 
         $this->loadGroupData(array('group_a' => array('john', 'admin')));
-        $crawler = $this->logUser($this->getUser('admin'));
-        $link = $crawler->filter('#link-administration')->link();
-        $crawler = $this->client->click($link);
-        $link = $crawler->filter('#link_group_create_form')->link();
-        $crawler = $this->client->click($link);
+        $this->logUser($this->getUser('admin'));
+        $crawler = $this->client->request('GET', "/admin/group/form");
         $form = $crawler->filter('button[type=submit]')->form();
         $form['group_form[name]'] = 'Group D';
         $this->client->submit($form);
