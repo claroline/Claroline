@@ -15,18 +15,18 @@ use Claroline\CoreBundle\Library\Themes\ThemeCompile;
 class ThemeController extends Controller
 {
     /**
-     * @route("/list", name="claroline_admin_theme_list")
+     * @Route("/list", name="claroline_admin_theme_list")
      *
      */
     public function indexAction()
     {
-        $themes = $this->get('claroline.common.theme_service')->getThemes("less-generated");
+        $themes = $this->get('claroline.common.theme_service')->getThemes('less-generated');
 
         return $this->render('ClarolineCoreBundle:Theme:list.html.twig', array('themes' => $themes));
     }
 
     /**
-     * @route(
+     * @Route(
      *     "/edit/{id}",
      *     name="claroline_admin_theme_edit",
      *     defaults={ "id" = null }
@@ -37,17 +37,16 @@ class ThemeController extends Controller
     {
         $variables = array();
         $file = null;
-
         $themes = $this->get('claroline.common.theme_service')->getThemes();
 
         if ($id and isset($themes[$id])) {
 
             $variables['theme'] = $themes[$id];
 
-            $path = explode(":", $themes[$id]->getPath());
-            $path = explode("/", $path[2]);
+            $path = explode(':', $themes[$id]->getPath());
+            $path = explode('/', $path[2]);
 
-            $file = __dir__."/../Resources/views/less-generated/$path[0]/variables.less";
+            $file = __DIR__."/../Resources/views/less-generated/$path[0]/variables.less";
         }
 
         $variables['parameters'] = new ThemeParameters($file);
@@ -56,7 +55,7 @@ class ThemeController extends Controller
     }
 
     /**
-     * @route(
+     * @Route(
      *     "/preview/{id}",
      *     name="claroline_admin_theme_preview",
      *     defaults={ "id" = null }
@@ -72,7 +71,7 @@ class ThemeController extends Controller
     }
 
     /**
-     * @route(
+     * @Route(
      *     "/build/{id}",
      *     name="claroline_admin_theme_build",
      *     defaults={ "id" = null }
@@ -83,15 +82,15 @@ class ThemeController extends Controller
     {
         return new Response(
             $this->get('claroline.common.theme_service')->editTheme(
-                $this->get('request')->get("variables"),
-                $this->get('request')->get("name"),
-                $this->get('request')->get("theme-id")
+                $this->get('request')->get('variables'),
+                $this->get('request')->get('name'),
+                $this->get('request')->get('theme-id')
             )
         );
     }
 
     /**
-     * @route(
+     * @Route(
      *     "/delete/{id}",
      *     name="claroline_admin_theme_delete",
      *     defaults={ "id" = null }

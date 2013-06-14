@@ -2,7 +2,25 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('../vendor/xaguilars/bootstrap-colorpicker/css/bootstrap-colorpicker.css') }}" screen="media" />
+
+    {% stylesheets debug=false output='bundles/clarolinecore/css/bootstrap-colorpicker/css/bootstrap-colorpicker.css'
+    '../vendor/xaguilars/bootstrap-colorpicker/css/bootstrap-colorpicker.css'
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+        {% endstylesheets %}
+
+    {% image debug=false output='bundles/clarolinecore/css/bootstrap-colorpicker/img/bootstrap-colorpicker/alpha.png'
+        '../vendor/xaguilars/bootstrap-colorpicker/img/bootstrap-colorpicker/alpha.png' %}
+    {% endimage %}
+
+    {% image debug=false output='bundles/clarolinecore/css/bootstrap-colorpicker/img/bootstrap-colorpicker/hue.png'
+        '../vendor/xaguilars/bootstrap-colorpicker/img/bootstrap-colorpicker/hue.png' %}
+    {% endimage %}
+
+    {% image debug=false output='bundles/clarolinecore/css/bootstrap-colorpicker/img/bootstrap-colorpicker/saturation.png'
+        '../vendor/xaguilars/bootstrap-colorpicker/img/bootstrap-colorpicker/saturation.png' %}
+    {% endimage %}
+
 {% endblock %}
 
 {% block section_content %}
