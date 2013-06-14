@@ -12,17 +12,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/FrontEndBundle.git",
-                "reference": "a1ef26b675500f8048429457563eff3eed704cb5"
+                "reference": "495fd11328c5ae564c6b7375b12d6e27e5893250"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/FrontEndBundle/zipball/a1ef26b675500f8048429457563eff3eed704cb5",
-                "reference": "a1ef26b675500f8048429457563eff3eed704cb5",
+                "url": "https://api.github.com/repos/claroline/FrontEndBundle/zipball/495fd11328c5ae564c6b7375b12d6e27e5893250",
+                "reference": "495fd11328c5ae564c6b7375b12d6e27e5893250",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3",
-                "symfony/framework-bundle": "2.2.*"
+                "symfony/framework-bundle": "~2.0"
             },
             "type": "library",
             "autoload": {
@@ -35,7 +35,7 @@
                 "source": "https://github.com/claroline/FrontEndBundle/tree/master",
                 "issues": "https://github.com/claroline/FrontEndBundle/issues"
             },
-            "time": "2013-05-29 07:44:23"
+            "time": "2013-06-14 06:43:21"
         },
         {
             "name": "doctrine/annotations",
@@ -1160,7 +1160,7 @@
                 {
                     "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -1207,7 +1207,7 @@
                 {
                     "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],

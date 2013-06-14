@@ -6,10 +6,6 @@ use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
-use Claroline\CoreBundle\Library\Event\LogCreateDelegateViewEvent;
-use Claroline\CoreBundle\Library\Event\LogResourceChildUpdateEvent;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Library\Security\Utilities;
 
 /**
  * @DI\Service
