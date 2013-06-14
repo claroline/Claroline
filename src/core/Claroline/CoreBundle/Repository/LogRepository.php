@@ -157,7 +157,7 @@ class LogRepository extends EntityRepository
             foreach ($result as $line) {
                 if ($lastDay !== null) {
                     while ($lastDay->getTimestamp() < $line['shortDate']->getTimestamp()) {
-                        $chartData[] = array($lastDay->getTimestamp(), 0);
+                        $chartData[] = array($lastDay->getTimestamp()*1000, 0);
                         $lastDay->add(new \DateInterval('P1D')); // P1D means a period of 1 day
                     }
                 } else {
@@ -165,11 +165,11 @@ class LogRepository extends EntityRepository
                 }
                 $lastDay->add(new \DateInterval('P1D')); // P1D means a period of 1 day
 
-                $chartData[] = array($line['shortDate']->getTimestamp(), intval($line['total']));
+                $chartData[] = array($line['shortDate']->getTimestamp()*1000, intval($line['total']));
             }
 
             while ($lastDay->getTimestamp() <= $endDay->getTimestamp()) {
-                $chartData[] = array($lastDay->getTimestamp(), 0);
+                $chartData[] = array($lastDay->getTimestamp()*1000, 0);
 
                 $lastDay->add(new \DateInterval('P1D')); // P1D means a period of 1 day
             }
