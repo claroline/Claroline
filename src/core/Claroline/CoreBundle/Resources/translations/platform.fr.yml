@@ -338,6 +338,7 @@ resource_right_form_isRecursive: Appliquer au contenu du répertoire et aux sous
 restore : Restaurer
 results: Résultats
 rights: Droits
+rights_management: 'Gestion des droits'
 role: Rôle
 roles: Rôles
 save: Sauvegarder
