@@ -1,0 +1,8 @@
+{
+    "name": "claroline/forum-bundle",
+    "description": "Claroline forum plugin",
+    "type": "claroline-plugin",
+    "autoload": {
+        "psr-0": { "Claroline\\ForumBundle": "" }
+    }
+}
