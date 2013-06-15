@@ -16,6 +16,7 @@ app/build/tools/phpunit.xml
 app/config/local/parameters.yml
 app/config/local/plugin/*
 app/config/local/install.yml
+bin/*
 vendor/*
 web/bundles/*
 web/twig.js
