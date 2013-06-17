@@ -95,7 +95,7 @@ twig:
             - 'ClarolineCoreBundle:Form:date_range.html.twig'
             - 'ClarolineCoreBundle:Form:two_level_select.html.twig'
             - 'ClarolineCoreBundle:Form:simple_auto_complete.html.twig'
-            - 'ZenstruckFormBundle:Twitter:form_bootstrap_layout.html.twig'
+            - 'ClarolineCoreBundle::form_theme.html.twig'
 
 idci_exporter:
     entities:
