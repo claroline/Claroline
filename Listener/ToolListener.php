@@ -118,7 +118,6 @@ class ToolListener extends ContainerAware
         $resourceInfos = array();
         $activitiesId = array();
         $activityInfos = array();
-        $workspaceInfos = array();
 
         foreach ($resources as $resource) {
             $resourceId = $resource['id'];
@@ -127,21 +126,6 @@ class ToolListener extends ContainerAware
         }
 
         if (count($activitiesId) > 0) {
-            $resourcesWorkspaces = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-                ->findWorkspaceInfoByIds($activitiesId);
-
-            foreach ($resourcesWorkspaces as $resWs) {
-                $code = $resWs['code'];
-
-                if (!isset($workspaceInfos[$code])) {
-                    $workspaceInfos[$code] = array();
-                    $workspaceInfos[$code]['code'] = $code;
-                    $workspaceInfos[$code]['name'] = $resWs['name'];
-                    $workspaceInfos[$code]['resources'] = array();
-                }
-                $workspaceInfos[$code]['resources'][] = $resWs['id'];
-            }
-
             $activities = $em->getRepository('ClarolineCoreBundle:Resource\Activity')
                 ->findActivitiesByIds($activitiesId);
 
@@ -161,8 +145,7 @@ class ToolListener extends ContainerAware
             array(
                 'workspace' => $workspace,
                 'resourceInfos' => $resourceInfos,
-                'activityInfos' => $activityInfos,
-                'workspaceInfos' => $workspaceInfos
+                'activityInfos' => $activityInfos
             )
         );
         $event->setContent($content);
