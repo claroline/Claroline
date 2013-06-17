@@ -68,7 +68,7 @@ class TextListener implements ContainerAwareInterface
         $form = $this->container
             ->get('form.factory')
             ->create(new TextType(), new Text());
-        $form->bindRequest($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $revision = new Revision();

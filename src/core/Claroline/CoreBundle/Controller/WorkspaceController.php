@@ -175,7 +175,7 @@ class WorkspaceController extends Controller
         $this->assertIsGranted('ROLE_WS_CREATOR');
         $form = $this->get('form.factory')
             ->create(new WorkspaceType());
-        $form->bind($this->getRequest());
+        $form->handleRequest($this->getRequest());
 
         $templateDir = $this->container->getParameter('claroline.param.templates_directory');
         $ds = DIRECTORY_SEPARATOR;
@@ -359,7 +359,9 @@ class WorkspaceController extends Controller
                 $eventName = "widget_{$config->getWidget()->getName()}_workspace";
                 $event = new DisplayWidgetEvent($workspace);
                 $this->get('event_dispatcher')->dispatch($eventName, $event);
-                $responsesString[strtolower($config->getWidget()->getName())] = $event->getContent();
+                if ($event->hasContent()) {
+                    $responsesString[strtolower($config->getWidget()->getName())] = $event->getContent();
+                }
             }
         }
 
