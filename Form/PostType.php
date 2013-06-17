@@ -19,11 +19,7 @@ class PostType extends AbstractType
                 'property'       => 'name',
                 'use_controller' => true,
                 'placeholder'    => 'Choose Tags',
-                'help'           => 'Try typing a letter such as "o"',
                 'multiple'       => true,
-                'attr'           => array(
-                    'class' => 'span4'
-                )
             ))
             ->add('content', 'textarea')
         ;

@@ -4,7 +4,7 @@
 
 {% block content %}
     <form action="{{ _path('icap_blog_post_new', {'blogId':_resource.getId()}) }}" method="post" {{ form_enctype(form) }} id="new_post_form">
-       {{ form_widget(form) }}
+        {{ form_widget(form) }}
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">{{ 'add'|trans({}, 'platform') }}</button>
         </div>
@@ -19,5 +19,6 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/icapblog/vendor/select2/select2.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/zenstruckform/js/helper.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapblog/js/helper.js') }}"></script>
+    {#<script type="text/javascript" src="{{ asset('bundles/zenstruckform/js/helper.js') }}"></script>#}
 {% endblock javascripts %}
