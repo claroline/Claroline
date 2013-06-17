@@ -175,7 +175,7 @@ class WorkspaceController extends Controller
         $this->assertIsGranted('ROLE_WS_CREATOR');
         $form = $this->get('form.factory')
             ->create(new WorkspaceType());
-        $form->bind($this->getRequest());
+        $form->handleRequest($this->getRequest());
 
         $templateDir = $this->container->getParameter('claroline.param.templates_directory');
         $ds = DIRECTORY_SEPARATOR;
