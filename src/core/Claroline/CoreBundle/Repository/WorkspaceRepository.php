@@ -103,6 +103,33 @@ class WorkspaceRepository extends EntityRepository
         return $query->getResult();
     }
 
+    public function findByUserAndRoleNames($user, $roleNames)
+    {
+        $rolesRestriction = "";
+        $first = true;
+        foreach ($roleNames as $roleName) {
+            if ($first) {
+                $first = false;
+                $rolesRestriction .= "( r.name like '".$roleName."_%'";
+            } else {
+                $rolesRestriction .= "OR r.name like '".$roleName."_%'";
+            }
+        }
+        $rolesRestriction .= " )";
+
+        $dql = "
+            SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            JOIN w.roles r
+            JOIN r.users u
+            WHERE u.id = :userId
+            AND ".$rolesRestriction;
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('userId', $user->getId());
+
+        return $query->getResult();
+    }
+
     public function findLatestWorkspaceByUser(User $user, array $roles, $size = 5)
     {
         $dql = "

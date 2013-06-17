@@ -216,6 +216,15 @@ log_old_workspace: 'Ancien espace de travail'
 log_has_not_changed: 'N''a pas changé'
 log_copy_source: 'Source de la copie'
 log_workspace_source: 'Espace de travail source'
+log_widget_config_creation: Création
+log_widget_config_read: Lecture / Ouverture
+log_widget_config_export: Téléchargement
+log_widget_config_update: Mise à jour d'une ressource
+log_widget_config_updateChild: Nouveauté dans une ressource
+log_widget_config_delete: Suppression
+log_widget_config_move: Déplacement
+log_widget_config_subscribe: Inscription
+log_widget_config_amount: Nombre de ligne
 firstName: Prénom
 lastName: Nom
 canOpen: 'Droit d''ouvrir'
@@ -456,3 +465,5 @@ for period: 'sur la période du'
 for user: 'de l''utilisateur'
 Show actions: 'Afficher les actions'
 See all: 'Voir tous'
+Your changes have been saved: 'Vos changements ont été sauvegardés'
+The form is not valid: 'Le formulaire n''est pas valide'

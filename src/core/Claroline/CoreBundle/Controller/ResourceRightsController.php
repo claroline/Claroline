@@ -173,7 +173,7 @@ class ResourceRightsController extends Controller
         $collection = new ResourceCollection(array($resource));
         $this->checkAccess('EDIT', $collection);
         $form = $this->get('form.factory')->create(new ResourceRightType($resource), new ResourceRights());
-        $form->bind($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $isRecursive = $form->get('isRecursive')->getData();
@@ -217,7 +217,7 @@ class ResourceRightsController extends Controller
         $collection = new ResourceCollection(array($resource));
         $this->checkAccess('EDIT', $collection);
         $form = $this->get('form.factory')->create(new ResourceRightType($resource), $resourceRight);
-        $form->bind($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
 
