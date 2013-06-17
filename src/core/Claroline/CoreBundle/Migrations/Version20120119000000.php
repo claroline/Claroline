@@ -741,13 +741,6 @@ class Version20120119000000 extends BundleMigration
         $table->setPrimaryKey(array('workspace_id', 'user_id'));
 
         $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_workspace'),
-            array('workspace_id'),
-            array('id'),
-            array('onDelete' => 'CASCADE')
-        );
-
-        $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_user'),
             array('user_id'),
             array('id'),

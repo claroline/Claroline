@@ -23,5 +23,7 @@
         ])
     }}
 
-    {{ content|raw }}
+    {% block section_widget_content %}
+        {{ content|raw }}
+    {% endblock %}
 {% endblock %}
