@@ -45,7 +45,7 @@ class MailController extends Controller
     {
         $request = $this->get('request');
         $form = $this->get('form.factory')->create(new MailType());
-        $form->bind($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $data = $form->getData();
