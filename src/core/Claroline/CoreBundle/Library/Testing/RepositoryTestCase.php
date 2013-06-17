@@ -57,7 +57,7 @@ abstract class RepositoryTestCase extends WebTestCase
         return self::$referenceRepo->getReference($name);
     }
 
-    public function __callStatic($name, $arguments)
+    public static function __callStatic($name, $arguments)
     {
         if (($isGet = strpos($name, 'load') !== 0) && strpos($name, 'get') !== 0) {
             throw new \Exception(
