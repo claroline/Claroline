@@ -10,7 +10,11 @@
 
 {% block field_label %}
 {% spaceless %}
-    <label class="control-label" for="{{ id }}">{{ id|trans({}, translation_domain) }} :</label>
+    {% if label %}
+        <label class="control-label" for="{{ id }}">{{ label|trans({}, translation_domain) }} :</label>
+    {% else %}
+        <label class="control-label" for="{{ id }}">{{ id|trans({}, translation_domain) }} :</label>
+    {% endif %}
 {% endspaceless %}
 {% endblock field_label %}
 
