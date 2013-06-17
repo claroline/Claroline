@@ -2,6 +2,7 @@
 
 <form method="POST" action="{{ path('claro_log_update_workspace_widget_config', {'workspaceId': workspace.id}) }}" class="form-horizontal" {{ form_enctype(form) }}>
     <fieldset>
+        <legend>{{ 'Choose visible actions in the widget'|trans({}, 'platform') }}</legend>
         {{ form_widget(form) }}
     </fieldset>
 
