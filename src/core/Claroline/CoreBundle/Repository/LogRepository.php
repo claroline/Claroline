@@ -181,6 +181,11 @@ class LogRepository extends EntityRepository
 
     public function countByDayThroughConfigs($configs, $range)
     {
+        if ($configs === null || count($configs) == 0) {
+
+            return null;
+        }
+
         $qb = $this
             ->createQueryBuilder('log')
             ->leftJoin('log.workspace', 'workspace')
@@ -214,6 +219,11 @@ class LogRepository extends EntityRepository
 
     public function findLogsThroughConfigs($configs, $maxResult = -1)
     {
+        if ($configs === null || count($configs) == 0) {
+
+            return null;
+        }
+
         $qb = $this
             ->createQueryBuilder('log')
             ->leftJoin('log.workspace', 'workspace')

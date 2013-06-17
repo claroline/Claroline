@@ -188,15 +188,5 @@ class LogWidgetListener
             )
         );
         $event->setContent($content);
-
-        // $content = '';
-  
-        // foreach ($workspacesVisibility as $workspaceId => $visible) {
-        //     $content .= '<div>';
-        //     $content .= $workspaceId.': '.$visible;
-        //     $content .= '</div>';
-        // }
-
-        // $event->setContent($content);
     }
 }

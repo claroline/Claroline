@@ -1,6 +1,6 @@
 {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
 
-<form method="POST" action="#" class="form-horizontal" {{ form_enctype(form) }}>
+<form method="POST" action="{{ path('claro_log_update_hidden_workspace_widget_config')}}" class="form-horizontal" {{ form_enctype(form) }}>
     <fieldset>
         {{ form_widget(form) }}
     </fieldset>

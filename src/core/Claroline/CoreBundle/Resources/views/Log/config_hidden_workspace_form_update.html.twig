@@ -1,0 +1,9 @@
+{% extends 'ClarolineCoreBundle:Tool:desktop/home/widget_configuration.html.twig' %}
+
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+
+{% block section_widget_content %}
+    <h1>Test</h1>
+    {{ macros.flashBox() }}
+    {% include 'ClarolineCoreBundle:Log:config_hidden_workspace_widget_form.html.twig' %}
+{% endblock %}
