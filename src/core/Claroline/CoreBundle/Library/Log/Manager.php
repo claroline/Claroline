@@ -136,25 +136,32 @@ class Manager
         $this->container = $container;
     }
 
-    public function getAdminWidgetList($maxResult = 5)
-    {
-        return $this->getWidgetList($this->getAdminActionRestriction(), null, $maxResult);
-    }
-
     public function getDesktopWidgetList()
     {
         $loggedUser = $this->container->get('security.context')->getToken()->getUser();
         $em = $this->container->get('doctrine.orm.entity_manager');
         $repository = $em->getRepository('ClarolineCoreBundle:Logger\Log');
 
+        $hiddenConfigs = $em
+            ->getRepository('ClarolineCoreBundle:Logger\LogHiddenWorkspaceWidgetConfig')
+            ->findBy(array('user' => $loggedUser));
+        $workspaceIds = array();
+        foreach ($hiddenConfigs as $hiddenConfig) {
+            $workspaceIds[] = $hiddenConfig->getWorkspaceId();
+        }
+
         // Get manager and collaborator workspaces config
         $workspaces = $em
             ->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
-            ->findByUserAndRoleNames($loggedUser, array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'));
+            ->findByUserAndRoleNamesNotIn($loggedUser, array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'), $workspaceIds);
 
         $configs = $this->container->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Logger\LogWorkspaceWidgetConfig')
             ->findBy(array('workspace' => $workspaces));
+
+        if ($configs === null) {
+            $configs = array();
+        }
 
         // Complete missing configs
         foreach ($workspaces as $workspace) {
@@ -172,7 +179,6 @@ class Manager
                 $configs[] = $config;
             }
         }
-
         $query = $repository->findLogsThroughConfigs($configs, 10);
         $logs = $query->getResult();
 
@@ -210,80 +216,6 @@ class Manager
         $logs = $query->getResult();
 
         $chartData = $repository->countByDayThroughConfigs(array($config), $this->getDefaultRange());
-
-        //List item delegation
-        $views = $this->renderLogs($logs);
-
-        return array(
-            'logs' => $logs,
-            'listItemViews' => $views,
-            'chartData' => $chartData,
-            'workspace' => $workspace
-        );
-    }
-
-    public function getWidgetList($config, $workspace = null)
-    {
-        if ($workspace && !$this->isAllowedToViewLogs($workspace)) {
-
-            return null;
-        }
-
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $repository = $em->getRepository('ClarolineCoreBundle:Logger\Log');
-
-        $logs = array();
-        if ($workspace) {
-            if ($this->isAllowedToViewLogs($workspace)) {
-                $query = $repository->findLogsThroughConfigs(array($config), $config->getAmount());
-
-                // $query = $repository->findFilteredLogsQuery(
-                //     null,
-                //     null,
-                //     null,
-                //     $actionsRestriction,
-                //     array($workspace->getId()),
-                //     $maxResult
-                // );
-                $logs = $query->getResult();
-            }
-        } else {
-            $loggedUser = $token = $this->container->get('security.context')->getToken()->getUser();
-            $workspaceRepository = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
-            $workspaceIdsResult = $workspaceRepository->findIdsByUserAndRoleNames(
-                $loggedUser,
-                array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER')
-            );
-
-            $workspaceIds = array();
-            foreach ($workspaceIdsResult as $line) {
-                $workspaceIds[] = $line['id'];
-            }
-
-            $query = $repository->findFilteredLogsQuery(
-                null,
-                null,
-                null,
-                $actionsRestriction,
-                $workspaceIds,
-                $maxResult
-            );
-            $logs = $query->getResult();
-        }
-
-        $chartData = array();
-
-        if ($workspace !== null && $this->isAllowedToViewLogs($workspace)) {
-            $range = $this->getDefaultRange();
-
-            $chartData = $repository->countByDayFilteredLogs(
-                null,
-                $range,
-                null,
-                $actionsRestriction,
-                array($workspace->getId())
-            );
-        }
 
         //List item delegation
         $views = $this->renderLogs($logs);
@@ -437,8 +369,8 @@ class Manager
             ->findBy(array('user' => $user));
 
         foreach ($hiddenWorkspaceConfigs as $config) {
-            if ($workspacesVisibility[$config->getWorkspace()->getId()] !== null) {
-                $workspacesVisibility[$config->getWorkspace()->getId()] = false;
+            if ($workspacesVisibility[$config->getWorkspaceId()] !== null) {
+                $workspacesVisibility[$config->getWorkspaceId()] = false;
             }
         }
 

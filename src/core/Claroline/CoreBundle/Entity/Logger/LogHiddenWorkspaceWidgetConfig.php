@@ -13,10 +13,9 @@ class LogHiddenWorkspaceWidgetConfig
 {
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
-     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
+     * @ORM\Column(type="integer", name="workspace_id", nullable=false)
      */
-    protected $workspace;
+    protected $workspaceId;
 
     /**
      * @ORM\Id
@@ -26,33 +25,33 @@ class LogHiddenWorkspaceWidgetConfig
     protected $user;
 
     /**
-     * Set workspace
+     * Set workspaceId
      *
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @return LogHiddenWorkspaceConfig
+     * @param integer $workspaceId
+     * @return LogHiddenWorkspaceWidgetConfig
      */
-    public function setWorkspace(\Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace)
+    public function setWorkspaceId($workspaceId)
     {
-        $this->workspace = $workspace;
+        $this->workspaceId = $workspaceId;
 
         return $this;
     }
 
     /**
-     * Get workspace
+     * Get workspaceId
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace 
+     * @return integer 
      */
-    public function getWorkspace()
+    public function getWorkspaceId()
     {
-        return $this->workspace;
+        return $this->workspaceId;
     }
 
     /**
      * Set user
      *
      * @param \Claroline\CoreBundle\Entity\User $user
-     * @return LogHiddenWorkspaceConfig
+     * @return LogHiddenWorkspaceWidgetConfig
      */
     public function setUser(\Claroline\CoreBundle\Entity\User $user)
     {
