@@ -66,7 +66,7 @@ class ResourcePropertiesController extends Controller
         $collection = new ResourceCollection(array($resource));
         $this->checkAccess('EDIT', $collection);
         $form = $this->createForm(new ResourceNameType(), $resource);
-        $form->bind($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $unitOfWork = $em->getUnitOfWork();
@@ -144,7 +144,7 @@ class ResourcePropertiesController extends Controller
         }
 
         $form = $this->createForm(new ResourcePropertiesType(), $resource);
-        $form->bind($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $data = $form->getData();

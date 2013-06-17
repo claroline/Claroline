@@ -66,7 +66,7 @@ class ProfileController extends Controller
             ->getRepository('ClarolineCoreBundle:Role')
             ->findPlatformRoles($user);
         $form = $this->get('form.factory')->create(new ProfileType($roles), $user);
-        $form->bind($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
 
