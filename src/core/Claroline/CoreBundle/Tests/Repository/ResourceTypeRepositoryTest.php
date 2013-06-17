@@ -5,69 +5,19 @@ namespace Claroline\CoreBundle\Repository;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 
-class ResourceTypeRepositoryTest extends TransactionalTestCase
+class ResourceTypeRepositoryTest extends RepositoryTestCase
 {
-    /** @var Doctrine\ORM\EntityManager */
-    private $em;
+    private static $repo;
 
-    /** @var ResourceTypeRepository */
-    private $repo;
-
-    protected function setUp()
+    public static function setUpBeforeClass()
     {
-        parent::setUp();
-        $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $this->repo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType');
-    }
+        parent::setUpBeforeClass();
+        self::$repo = self::$em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType');
+        self::loadPlatformRoleData();
+        self::loadUserData(array('john' => 'user'));
 
-    public function testFindPluginResourceTypes()
-    {
-        $typeCount = count($this->repo->findPluginResourceTypes());
-
-        $this->createResourceTypes();
-
-        $newTypeCount = count($types = $this->repo->findPluginResourceTypes());
-
-        // Some plugin types may be already registered, so we only test
-        // that the repository can retrieve the ones we have added
-        $this->assertEquals($newTypeCount, $typeCount + 2);
-        $lastType = array_pop($types);
-        $this->assertEquals('Type y', $lastType->getName());
-        $lastType = array_pop($types);
-        $this->assertEquals('Type x', $lastType->getName());
-    }
-
-    public function testFindPluginResourceNameFqcns()
-    {
-        $typeCount = count($this->repo->findPluginResourceNameFqcns());
-
-        $this->createResourceTypes();
-
-        $newTypeCount = count($types = $this->repo->findPluginResourceNameFqcns());
-
-        // see previous test
-        $this->assertEquals($newTypeCount, $typeCount + 2);
-        $lastType = array_pop($types);
-        $this->assertEquals('YYY/YYY/YYY', $lastType['class']);
-        $lastType = array_pop($types);
-        $this->assertEquals('XXX/XXX/XXX', $lastType['class']);
-    }
-
-    public function testFindByIds()
-    {
-        $resourceTypes = $this->repo->findAll();
-        $this->assertGreaterThan(1, count($resourceTypes));
-        $retrievedTypes = $this->repo->findByIds(
-            array($resourceTypes[0]->getId(), $resourceTypes[1]->getId())
-        );
-        $this->assertEquals(2, count($retrievedTypes));
-        $this->assertEquals($resourceTypes[0], $retrievedTypes[0]);
-        $this->assertEquals($resourceTypes[1], $retrievedTypes[1]);
-    }
-
-    private function createResourceTypes()
-    {
         $plugin = new Plugin();
         $plugin->setVendorName('Test');
         $plugin->setBundleName('Test');
@@ -93,10 +43,40 @@ class ResourceTypeRepositoryTest extends TransactionalTestCase
         $thirdType->setBrowsable(false);
         $thirdType->setExportable(false);
 
-        $this->em->persist($plugin);
-        $this->em->persist($firstType);
-        $this->em->persist($secondType);
-        $this->em->persist($thirdType);
-        $this->em->flush();
+        self::$em->persist($plugin);
+        self::$em->persist($firstType);
+        self::$em->persist($secondType);
+        self::$em->persist($thirdType);
+        self::$em->flush();
+    }
+
+    public function testFindPluginResourceTypes()
+    {
+        //should be 2 when the issue #34 is resolved
+        $this->assertEquals(8, count(self::$repo->findPluginResourceTypes()));
+    }
+
+    public function testFindPluginResourceNameFqcns()
+    {
+        $rt = self::$repo->findPluginResourceNameFqcns();
+
+        //should be 2 when the issue #34 is resolved
+        $this->assertEquals(8, count($rt));
+        $lastType = array_pop($rt);
+        $this->assertEquals('YYY/YYY/YYY', $lastType['class']);
+        $lastType = array_pop($rt);
+        $this->assertEquals('XXX/XXX/XXX', $lastType['class']);
+    }
+
+    public function testFindByIds()
+    {
+        $resourceTypes = self::$repo->findAll();
+        $this->assertGreaterThan(1, count($resourceTypes));
+        $retrievedTypes = self::$repo->findByIds(
+            array($resourceTypes[0]->getId(), $resourceTypes[1]->getId())
+        );
+        $this->assertEquals(2, count($retrievedTypes));
+        $this->assertEquals($resourceTypes[0], $retrievedTypes[0]);
+        $this->assertEquals($resourceTypes[1], $retrievedTypes[1]);
     }
 }
