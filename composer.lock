@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "bd2ef5cca8e52d19f4c28f5c4b1b802d",
+    "hash": "5c868ba330a61cc6161f3bddcf2498c9",
     "packages": [
         {
             "name": "claroline/front-end-bundle",
@@ -2745,7 +2745,18 @@
                 "page",
                 "paging"
             ],
-            "time": "2013-06-06 08:08:38"
+            "time": "2013-05-13 07:36:19"
+        },
+        {
+            "name": "xaguilars/bootstrap-colorpicker",
+            "version": "dev-master",
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/xaguilars/bootstrap-colorpicker/archive/master.zip",
+                "reference": null,
+                "shasum": null
+            },
+            "type": "library"
         }
     ],
     "packages-dev": [
@@ -2822,6 +2833,7 @@
         "white-october/pagerfanta-bundle": 20,
         "idci/exporter-bundle": 20,
         "fortawesome/fontawesome": 20,
+        "xaguilars/bootstrap-colorpicker": 20,
         "mockery/mockery": 20
     },
     "platform": {
