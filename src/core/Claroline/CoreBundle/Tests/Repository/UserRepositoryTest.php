@@ -2,36 +2,137 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Claroline\CoreBundle\Library\Testing\FixtureTestCase;
+use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 
-class UserRepositoryTest extends FixtureTestCase
+class UserRepositoryTest extends RepositoryTestCase
 {
-    private $repo;
+    private static $repo;
+    private static $collaboratorA;
 
-    protected function setUp()
+    public static function setUpBeforeClass()
     {
-        parent::setUp();
-        $this->loadPlatformRoleData();
-        $this->loadUserData(array('John' => 'user', 'Jane' => 'admin', 'Bill' => 'user'));
-        $this->repo = $this->em->getRepository('Claroline\CoreBundle\Entity\User');
+        parent::setUpBeforeClass();
+        self::loadPlatformRoleData();
+        self::loadUserData(array('user' => 'user', 'user_2' => 'user', 'user_3' => 'user', 'nogroup' => 'user', 'john' => 'ws_creator'));
+        self::loadGroupData(array('group_a' => array('user', 'user_2')));
+        self::loadGroupData(array('group_b' => array('user_2' => 'user_3')));
+        self::loadWorkspaceData(array('ws_a' => 'john'));
+        self::$collaboratorA = self::$em->getRepository('ClarolineCoreBundle:Role')
+            ->findCollaboratorRole(self::getWorkspace('ws_a'));
+        self::getGroup('group_a')->addRole(self::$collaboratorA);
+        self::$em->persist(self::getGroup('group_a'));
+        self::getUser('nogroup')->addRole(self::$collaboratorA);
+        self::$em->flush();
+        self::$repo = self::$em->getRepository('ClarolineCoreBundle:User');
     }
 
-    public function testFindAllExcept()
+    public function testLoadUserByUsername()
     {
-        $users = $this->repo->findAllExcept($this->getUser('Jane'));
-        $this->assertEquals(2, count($users));
-        $this->assertEquals('John', $users[0]->getFirstName());
-        $this->assertEquals('Bill', $users[1]->getFirstName());
+        $user = self::$repo->loadUserByUsername('john');
+        $this->assertEquals('john', $user->getUsername());
+    }
+
+    public function testLoadUserByUsernameThrowsExceptionOnUnknownUsername()
+    {
+        $this->setExpectedException('Symfony\Component\Security\Core\Exception\UsernameNotFoundException');
+        self::$repo->loadUserByUsername('mr42');
+    }
+
+    public function testRefreshUser()
+    {
+        $user = self::getUser('john');
+        self::$repo->refreshUser($user);
+        $this->assertEquals('john', $user->getUsername());
+    }
+
+    public function testFindByWorkspaceAndRole()
+    {
+        $users = self::$repo->findByWorkspaceAndRole(self::getWorkspace('ws_a'), self::$collaboratorA);
+        //also include groups
+        $this->assertEquals(3, count($users));
+    }
+
+    public function testFindWorkspaceOutsidersByName()
+    {
+        $users = self::$repo->findWorkspaceOutsidersByName(self::getWorkspace('ws_a'), 'user');
+        $this->assertEquals(3, count($users));
+        $users = self::$repo->findWorkspaceOutsidersByName(self::getWorkspace('ws_a'), 'doe');
+        $this->assertEquals(3, count($users));
+    }
+
+    public function testFindWorkspaceOutsiders()
+    {
+        $users = self::$repo->findWorkspaceOutsiders(self::getWorkspace('ws_a'));
+        $this->assertEquals(3, count($users));
+    }
+
+    public function testFindAll()
+    {
+        $users = self::$repo->findAll();
+        $this->assertEquals(5, count($users));
+        $query = self::$repo->findAll(true);
+        $this->assertEquals('Doctrine\ORM\Query', get_class($query));
     }
 
     public function testFindByName()
     {
-        $users = $this->repo->findByName('n');
-        $this->assertEquals(2, count($users));
-        $this->assertEquals('John', $users[0]->getFirstName());
-        $this->assertEquals('Jane', $users[1]->getFirstName());
+        $users = self::$repo->findByName('UsEr');
+        $this->assertEquals(3, count($users));
+    }
 
-        $users = $this->repo->findByName('Jane Doe');
+    public function testFindByGroup()
+    {
+        $users = self::$repo->findByGroup(self::getGroup('group_a'));
+        $this->assertEquals(2, count($users));
+    }
+
+    public function testFindByNameAndGroup()
+    {
+        $users = self::$repo->findByNameAndGroup('user', self::getGroup('group_a'));
+        $this->assertEquals(2, count($users));
+        $users = self::$repo->findByNameAndGroup('2', self::getGroup('group_a'));
         $this->assertEquals(1, count($users));
+        $users = self::$repo->findByNameAndGroup('doe', self::getGroup('group_a'));
+        $this->assertEquals(2, count($users));
+    }
+
+    public function testFindByWorkspace()
+    {
+        $users = self::$repo->findByWorkspace(self::getWorkspace('ws_a'));
+        $this->assertEquals(2, count($users));
+        $this->assertEquals('nogroup', $users[0]->getUsername());
+    }
+
+    public function testFindByWorkspaceAndName()
+    {
+        $users = self::$repo->findByWorkspaceAndName(self::getWorkspace('ws_a'), 'nogroup');
+        $this->assertEquals(1, count($users));
+        $users = self::$repo->findByWorkspaceAndName(self::getWorkspace('ws_a'), 'doe');
+        $this->assertEquals(2, count($users));
+    }
+
+    public function testFindGroupOutsiders()
+    {
+        $users = self::$repo->findGroupOutsiders(self::getGroup('group_a'));
+        $this->assertEquals(3, count($users));
+    }
+
+    public function testFindGroupOutsidersByName()
+    {
+        $users = self::$repo->findGroupOutsidersByName(self::getGroup('group_a'), 'uSeR');
+        $this->assertEquals(1, count($users));
+        $users = self::$repo->findGroupOutsidersByName(self::getGroup('group_a'), 'doe');
+        $this->assertEquals(3, count($users));
+    }
+
+    public function testFindAllExcept()
+    {
+        $users = self::$repo->findAllExcept(self::getUser('john'));
+        $this->assertEquals(4, count($users));
+    }
+
+    public function testCount()
+    {
+        $this->assertEquals(5, self::$repo->count());
     }
 }
