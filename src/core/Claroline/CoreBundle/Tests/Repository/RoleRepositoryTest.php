@@ -2,23 +2,81 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Claroline\CoreBundle\Library\Testing\FixtureTestCase;
+use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 
-class RoleRepositoryTest extends FixtureTestCase
+class RoleRepositoryTest extends RepositoryTestCase
 {
-    private $repo;
+    private static $repo;
 
-    protected function setUp()
+    public static function setUpBeforeClass()
     {
-        parent::setUp();
-        $this->repo = $this->em->getRepository('ClarolineCoreBundle:Role');
+        parent::setUpBeforeClass();
+        self::$repo = self::$em->getRepository('Claroline\CoreBundle\Entity\Role');
+        self::loadPlatformRoleData();
+        self::loadUserData(array('john' => 'user'));
+        self::loadGroupData(array('group_a' => array()));
+        $groupB = self::getGroup('group_a');
+        $groupB->addRole(self::$repo->findCollaboratorRole(self::getWorkspace('john')));
+        self::$em->persist($groupB);
+        self::$em->flush();
+    }
+
+    public function testFindByWorkspace()
+    {
+        $roles = self::$repo->findByWorkspace(self::getWorkspace('john'));
+        $this->assertEquals(3, count($roles));
+    }
+
+    public function testFindCollaboratorRole()
+    {
+        $role = self::$repo->findCollaboratorRole(self::getWorkspace('john'));
+        $this->assertEquals('ROLE_WS_COLLABORATOR_'.self::getWorkspace('john')->getId(), $role->getName());
+    }
+
+    public function testFindVisitorRole()
+    {
+        $role = self::$repo->findVisitorRole(self::getWorkspace('john'));
+        $this->assertEquals('ROLE_WS_VISITOR_'.self::getWorkspace('john')->getId(), $role->getName());
+    }
+
+    public function testFindManagerRole()
+    {
+        $role = self::$repo->findManagerRole(self::getWorkspace('john'));
+        $this->assertEquals('ROLE_WS_MANAGER_'.self::getWorkspace('john')->getId(), $role->getName());
+    }
+
+    public function testFindPlatformRoles()
+    {
+        $roles = self::$repo->findPlatformRoles(self::getUser('john'));
+        $this->assertEquals(1, count($roles));
+        $this->assertEquals('ROLE_USER', $roles[0]->getName());
     }
 
     public function testFindWorkspaceRole()
     {
-        $this->loadPlatformRoleData();
-        $this->loadUserData(array('john' => 'user'));
-        $role = $this->repo->findWorkspaceRole($this->getUser('john'), $this->getWorkspace('john'));
-        $this->assertEquals(0, strpos($role->getName(), 'ROLE_WS_MANAGER'));
+        $role = self::$repo->findWorkspaceRole(self::getUser('john'), self::getWorkspace('john'));
+        $this->assertEquals('ROLE_WS_MANAGER_'.self::getWorkspace('john')->getId(), $role->getName());
+        $role = self::$repo->findWorkspaceRole(self::getGroup('group_a'), self::getWorkspace('john'));
+        $this->assertEquals('ROLE_WS_COLLABORATOR_'.self::getWorkspace('john')->getId(), $role->getName());
+    }
+
+    public function testFindWorkspaceRoleForUser()
+    {
+        $role = self::$repo->findWorkspaceRole(self::getUser('john'), self::getWorkspace('john'));
+        $this->assertEquals('ROLE_WS_MANAGER_'.self::getWorkspace('john')->getId(), $role->getName());
+    }
+
+    public function testFindByWorkspaceAndTool()
+    {
+        $roles = self::$repo->findByWorkspaceAndTool(
+            self::getWorkspace('john'),
+            self::$em->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneByName('home')
+        );
+        $this->assertEquals(3, count($roles));
+    }
+
+    public function testFindByWorkspaceCodeTag()
+    {
+        $this->markTestSkipped('will be changed later');
     }
 }
