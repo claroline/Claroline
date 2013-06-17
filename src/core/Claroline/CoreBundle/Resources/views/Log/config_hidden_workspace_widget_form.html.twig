@@ -2,13 +2,14 @@
 
 <form method="POST" action="{{ path('claro_log_update_hidden_workspace_widget_config')}}" class="form-horizontal" {{ form_enctype(form) }}>
     <fieldset>
+        <legend>{{ 'Choose workspaces displayed in the widget'|trans({}, 'platform') }}</legend>
         {{ form_widget(form) }}
     </fieldset>
 
     <div class="form-actions">
         <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-        {#<a href="{{ path('claro_workspace_widget_properties', {'workspace': workspace.id}) }}">
+        <a href="{{ path('claro_desktop_widget_properties') }}">
             <button type="button" class="btn">{{ 'cancel'|trans({}, 'platform') }}</button>
-        </a>#}
+        </a>
     </div>
 </form>
