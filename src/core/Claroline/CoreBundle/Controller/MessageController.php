@@ -112,7 +112,7 @@ class MessageController extends Controller
         $request = $this->get('request');
         $em = $this->get('doctrine.orm.entity_manager');
         $form = $this->get('form.factory')->create(new MessageType(), new Message());
-        $form->bind($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $message = $form->getData();
