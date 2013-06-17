@@ -320,11 +320,11 @@ class ParametersControllerTest extends FunctionalTestCase
             ->findCollaboratorRole($this->getWorkspace('john'));
 
         $tools = $crawler
-            ->filter("td[data-role-id={$roleCollaborator->getId()}]");
+            ->filter("td[data-role-id='{$roleCollaborator->getId()}']");
         $checkedTools = $crawler
-            ->filter("td[data-role-id={$roleCollaborator->getId()}] input:checked[type='checkbox']");
+            ->filter("td[data-role-id='{$roleCollaborator->getId()}'] input:checked[type='checkbox']");
         $uncheckedTools = $crawler
-            ->filter("td[data-role-id={$roleCollaborator->getId()}] input:not(:checked[type='checkbox'])");
+            ->filter("td[data-role-id='{$roleCollaborator->getId()}'] input:not(:checked[type='checkbox'])");
 
         $this->assertEquals(3, count($checkedTools));
         $this->assertEquals(count($tools) - count($checkedTools), count($uncheckedTools));

@@ -1,4 +1,4 @@
-# Use this template to create a 'parameters.yml' config file (same directory).
+# Template for the 'parameters.yml' config file (same directory).
 # Currently only the db parameters are required.
 
 parameters:

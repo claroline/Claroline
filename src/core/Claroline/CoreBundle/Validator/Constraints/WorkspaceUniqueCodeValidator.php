@@ -24,17 +24,15 @@ class WorkspaceUniqueCodeValidator extends ConstraintValidator
         $this->em = $em;
     }
 
-    public function isValid($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint)
     {
         $code = trim($value);
         $workspace = $this->em
                         ->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
                         ->findOneBy(array('code' => $code));
 
-        if (!is_null($workspace)) {
+        if ($workspace) {
             $this->context->addViolation($constraint->message, array('{{ code }}' => $code));
         }
-
-        return true;
     }
 }
