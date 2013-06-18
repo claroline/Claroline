@@ -188,7 +188,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                         JOIN u.roles r WITH r IN (
                         SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = '.Role::BASE_ROLE.'
                         )
-                        JOIN u.personalWorkspace pws';
+                        LEFT JOIN u.personalWorkspace pws';
 
             //the join on role is required because this method is only fired in the administration
             //and we only want the platform roles of a user.
@@ -220,8 +220,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             WHERE UPPER(u.lastName) LIKE :search
             OR UPPER(u.firstName) LIKE :search
             OR UPPER(u.username) LIKE :search
-            OR CONCAT(UPPER(u.firstName), ' ', UPPER(u.lastName)) LIKE :search
-            OR CONCAT(UPPER(u.lastName), ' ', UPPER(u.firstName)) LIKE :search
+            OR CONCAT(UPPER(u.firstName), CONCAT(' ', UPPER(u.lastName))) LIKE :search
+            OR CONCAT(UPPER(u.lastName), CONCAT(' ', UPPER(u.firstName))) LIKE :search
         ";
 
         $query = $this->_em->createQuery($dql)

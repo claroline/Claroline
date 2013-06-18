@@ -1,4 +1,4 @@
-{% block field_row %}
+{% block form_row %}
     <div class="control-group {% if errors|length > 0 %}error{% endif %}">
         {{ form_label(form) }}
         <div class="controls">
@@ -6,13 +6,13 @@
             <span class="help-inline">{{ form_errors(form) }}</span>
         </div>
     </div>
-{% endblock field_row %}
+{% endblock form_row %}
 
-{% block field_label %}
+{% block form_label %}
 {% spaceless %}
     <label class="control-label" for="{{ id }}">{{ id|trans({}, translation_domain) }} :</label>
 {% endspaceless %}
-{% endblock field_label %}
+{% endblock form_label %}
 
 {% block form_errors %}
 {% spaceless %}

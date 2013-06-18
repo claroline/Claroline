@@ -1,0 +1,10 @@
+{% raw %}
+{% stylesheets
+    debug=false
+    filter="lessphp"
+    output="bundles/clarolinecore/css/themes/{% endraw %}{{ dirname }}{% raw %}/bootstrap.css"
+    "@ClarolineCoreBundle/Resources/views/less-generated/{% endraw %}{{ dirname }}{% raw %}/common.less"
+%}
+    <link href="{{ asset_url }}" rel="stylesheet" media="screen">
+{% endstylesheets %}
+{% endraw %}

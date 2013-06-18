@@ -4,6 +4,8 @@
     <input type="checkbox"
         value="{{ resource.id }}"
         data-resource-name="{{ resource.name }}"
+        data-type="{{ resource.type }}"
+        data-mime-type="{{ resource.mime_type }}"
         {% if isSelectionAllowed == false %}style="visibility: collapse;"{% endif %}
         />
 </div>
@@ -12,6 +14,7 @@
     style="background-image: url('{{ webRoot }}{{ resource.large_icon }}');"
     data-id="{{ resource.id }}"
     data-type="{{ resource.type }}"
+    data-mime-type="{{ resource.mime_type }}"
     >
 
 </div>

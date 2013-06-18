@@ -29,6 +29,7 @@
 
     $('body').on('click', '#submit-right-form-button', function (e) {
         e.preventDefault();
+        $('#modal-check-resource-right-box').modal('hide');
         var formAction = $(e.currentTarget.parentElement.parentElement).attr('action');
         var form = document.getElementById('resource-right-form');
         var formData = new FormData(form);
@@ -90,5 +91,27 @@
                 }
             });
         }
+    });
+
+    $('.workspace-role-item').live('click', function (event) {
+        event.preventDefault();
+        $.ajax({
+            context: this,
+            url: event.currentTarget.getAttribute('href'),
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            success: function (form) {
+                $('#modal-check-role').empty();
+                $('#modal-check-role').append(form);
+                $('#modal-check-resource-right-box').modal('show');
+            }
+        });
+    });
+
+    $('.modal-close').live('click', function (event) {
+        event.preventDefault();
+        $('#modal-check-role').empty();
+        $('#modal-check-resource-right-box').modal('hide');
     });
 })();

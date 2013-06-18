@@ -1,25 +1,24 @@
 <?php
 
-/*
- * This script can be used to make a fresh development installation of the
- * platform. Dev and test environments will be initialized.
- *
- * Requirements :
- *    - a valid 'app/config/local/parameters.yml' file
- *    - a writable app/config/local directory
- *    - an empty, writable app/cache directory
- *    - an empty, writable app/logs directory
- *    - a local installation of composer.phar in the root directory of the project
+/**
+ * This script can be used to make a fresh development installation or update
+ * of the platform. Dev and test environments will be initialized.
  */
 
-$rootDirectory = realpath(__DIR__ . "/../..");
+require_once __DIR__ . '/utils.php';
 
-$start = time();
+$start = new DateTime();
+$rootDirectory = realpath(__DIR__ . '/../..');
 
-function refreshFile($file)
-{
-    file_put_contents($file, '');
+if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+    echo "This script cannot run composer interactively on Windows.\n"
+    . "If it is a fresh installation or if the update requires modifying the\n"
+    . "parameters.yml file, you may have to launch 'composer install' first.\n";
 }
+
+execComposer();
+
+echo "Refreshing configuration and log files\n";
 
 refreshFile("{$rootDirectory}/app/config/local/plugin/bundles");
 refreshFile("{$rootDirectory}/app/config/local/plugin/namespaces");
@@ -27,13 +26,24 @@ refreshFile("{$rootDirectory}/app/config/local/plugin/routing.yml");
 refreshFile("{$rootDirectory}/app/logs/dev.log");
 refreshFile("{$rootDirectory}/app/logs/test.log");
 
-require_once __DIR__.'/delete_files';
+$directories = array(
+    "{$rootDirectory}/files",
+    "{$rootDirectory}/templates",
+    "{$rootDirectory}/test/files",
+    "{$rootDirectory}/test/templates",
+    "{$rootDirectory}/web/HTMLPage",
+    "{$rootDirectory}/test/thumbnails",
+    "{$rootDirectory}/web/thumbnails"
+);
 
-system('composer install --dev');
+foreach ($directories as $directory) {
+    echo "Cleaning {$directory}\n";
+    emptyDir($directory);
+}
+
 system("php {$rootDirectory}/app/console claroline:requirements", $returnCode);
 
 if ($returnCode === 0) {
-
     system("php {$rootDirectory}/app/console doctrine:database:drop --force --env=dev");
     system("php {$rootDirectory}/app/console doctrine:database:create --env=dev");
     system("php {$rootDirectory}/app/console cache:clear --no-warmup --env=dev");
@@ -49,28 +59,9 @@ if ($returnCode === 0) {
     system("php {$rootDirectory}/app/console claroline:fixture:demo");
 }
 
-$end = time();
-$secs = $end - $start;
-
-if ($secs === 0) {
-    return '0s';
-}
-
-$bit = array(
-    'y' => $secs / 31556926 % 12,
-    'w' => $secs / 604800 % 52,
-    'd' => $secs / 86400 % 7,
-    'h' => $secs / 3600 % 24,
-    'm' => $secs / 60 % 60,
-    's' => $secs % 60
-    );
-
-foreach ($bit as $k => $v) {
-    if ($v > 0) {
-        $ret[] = $v . $k;
-    }
-}
-
-$duration = join(' ', $ret);
+$end = new DateTime();
+$diff = $start->diff($end);
+$duration = $diff->i > 0 ? $diff->i . 'm ' : '';
+$duration .= $diff->s . 's';
 
 echo "Total script duration: {$duration}\n";

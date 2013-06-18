@@ -43,7 +43,15 @@
 
 {% block section_content %}
     <div class="margin">
-        <h3 id='user-list-block' class="sub-section-header">{{ 'users'|trans({}, 'platform') }}</h3>
+    {{
+    macros.breadcrumbs([
+            {
+                'name': 'users_management'|trans({}, 'platform'),
+                'href': path('claro_admin_users_management')
+            },
+            {'name':'users_list'|trans({}, 'platform'), 'href':'#'}
+        ])
+    }}
         <div class="search-bar">
                <button class="btn btn-secondary delete-users-button"><i class="icon-trash"></i>
             {{ 'delete'|trans({}, 'platform') }}
