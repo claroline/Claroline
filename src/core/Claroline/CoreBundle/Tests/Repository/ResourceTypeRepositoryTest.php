@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 
 class ResourceTypeRepositoryTest extends RepositoryTestCase
 {
+    /** @var \Claroline\CoreBundle\Repository\ResourceTypeRepository */
     private static $repo;
 
     public static function setUpBeforeClass()

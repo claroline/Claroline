@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole;
 
 class WorkspaceRepositoryTest extends RepositoryTestCase
 {
+    /** @var \Claroline\CoreBundle\Repository\WorkspaceRepository */
     public static $repo;
 
     public static function setUpBeforeClass()

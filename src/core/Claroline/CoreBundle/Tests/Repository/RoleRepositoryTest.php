@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 
 class RoleRepositoryTest extends RepositoryTestCase
 {
+    /** @var \Claroline\CoreBundle\Repository\RoleRepository */
     private static $repo;
 
     public static function setUpBeforeClass()
