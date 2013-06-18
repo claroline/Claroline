@@ -7,7 +7,6 @@
 - [Compile a theme](#compiletheme)
 - [Overwrite Claroline twig files](#overwrite)
 - [Generate themes](#generate)
-- [References and External links](#references)
 
 ## <a id="introduction"></a>Introduction ##
 
@@ -21,13 +20,15 @@ Our themes and **Bootstrap** are written in **Less CSS** but you can create a th
 
 ## <a id="newtheme"></a>Create a new theme ##
 
-In order to create a new theme in a **Claroline Plugin** you must first to define his *name* and *path* in the **config.yml** of the plugin.
+In order to create a new theme in a **Claroline Plugin** you must first define its *name* and *path* in the **config.yml** of the plugin.
 
 *ExampleBundle/Resources/config/config.yml*
 
-    themes:
-      - name: "ExampleBundle Theme"
-        path: less/example/theme.html.twig
+```yml
+themes:
+  - name: "ExampleBundle Theme"
+    path: "less/example/theme.html.twig"
+```
 
 The *path* of the theme is in fact a path to a twig file inside the views folder of you plugin (ExampleBundle/Resources/views).
 
@@ -35,14 +36,16 @@ This twig file defines a [asset stylesheets][assets] tag with the informations o
 
 *ExampleBundle/Resources/views/less/example/theme.html.twig*
 
-    {% stylesheets
-        debug=false
-        filter="lessphp"
-        output="bundles/clarolinecore/css/themes/examplebundle-theme/bootstrap.css"
-        "@ClarolineExampleBundle/Resources/views/less/example/common.less"
-    %}
-        <link href="{{ asset_url }}" rel="stylesheet" media="screen">
-    {% endstylesheets %}
+```django
+{% stylesheets
+    debug=false
+    filter="lessphp"
+    output="bundles/clarolinecore/css/themes/examplebundle-theme/bootstrap.css"
+    "@ClarolineExampleBundle/Resources/views/less/example/common.less"
+%}
+    <link href="{{ asset_url }}" rel="stylesheet" media="screen">
+{% endstylesheets %}
+```
 
 In this example `@ClarolineExampleBundle/Resources/views/less/example/common.less` is the path of a common file that contains imports of your custom theme files, but also the import of important **Bootstrap** files.
 
@@ -120,24 +123,17 @@ We know that for someone who never hear talk about **Less CSS** or **Bootstrap**
 
 For that case we create simple theme generator, you can find it in the link *"Create a new theme"* in platform parameters in administration section. There you can chose the colors to be used in a theme with a simple color picker. In section of *"more option"* you can change more that only colors.
 
+Note that you must have write permission on following folders:
+
+`src/core/Claroline/CoreBundle/Resources/views/less-generated`
+
+`src/core/Claroline/CoreBundle/Resources/public/css/themes`
+
 When you finish to customize your theme you can simply save it or preview it, this theme will be compile automatically and can be used instantly in the platform.
 
 If you dont like the results of a theme, you can simply chose it in theme generator panel and click in delete button.
 
 The less files of your generated theme are stored in *src/core/Claroline/CoreBundle/Resources/views/less-generated/*, you can copy that files as template to start a theme in a plugin, you can simply modify the file *theme.less* in order to add additional style rules, you can consider that file as a simple CSS file but you can use at any place **Less CSS** or **Bootstrap** functions and variables.
-
-## <a id="references"></a>References and External links ##
-
-- [Claroline][claroline]
-- [Bootstrap][bootstrap]
-- [Less CSS][lesscss]
-- [Less CSS Functions][lesscssfunction]
-- [LessPHP][lessphp]
-- [Sass][sass]
-- [Foundation][foundation]
-- [Assetic documentation][assets]
-- [ExampleBundle][examplebundle]
-- [NodeJS][nodejs]
 
 [[Documentation index]][index_path]
 
