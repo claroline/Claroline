@@ -30,7 +30,7 @@ class DateRangeType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->appendClientTransformer(new DateRangeToTextTransformer($this->translator));
+        $builder->addViewTransformer(new DateRangeToTextTransformer($this->translator));
     }
 
     public function getParent()
