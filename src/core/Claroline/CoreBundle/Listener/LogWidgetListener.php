@@ -11,10 +11,9 @@ use Claroline\CoreBundle\Library\Event\ConfigureWidgetDesktopEvent;
 use Claroline\CoreBundle\Library\Event\LogCreateDelegateViewEvent;
 use Claroline\CoreBundle\Library\Event\LogResourceChildUpdateEvent;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Entity\Logger\LogWorkspaceWidgetConfig;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Form\LogWorkspaceWidgetConfigType;
-use Claroline\CoreBundle\Form\LogHiddenWorkspaceWidgetConfigType;
+use Claroline\CoreBundle\Form\LogDesktopWidgetConfigType;
 
 /**
  * @DI\Service
@@ -30,9 +29,6 @@ class LogWidgetListener
 
     private function convertConfigToFormData($config)
     {
-        if ($config === null) {
-            $config = new LogWorkspaceWidgetConfig();
-        }
         $data = array();
 
         $data['creation'] =
@@ -143,10 +139,7 @@ class LogWidgetListener
      */
     public function onWorkspaceConfigure(ConfigureWidgetWorkspaceEvent $event)
     {
-        $config = $this
-            ->entityManager
-            ->getRepository('ClarolineCoreBundle:Logger\LogWorkspaceWidgetConfig')
-            ->findOneBy(array('workspace' => $event->getWorkspace()));
+        $config = $this->logManager->getWorkspaceWidgetConfig($event->getWorkspace());
         $data = $this->convertConfigToFormData($config);
 
         $form = $this->formFactory->create(new LogWorkspaceWidgetConfigType(), $data);
@@ -170,20 +163,24 @@ class LogWidgetListener
             ->entityManager
             ->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
             ->findByUserAndRoleNames($event->getUser(), array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'));
-        
+
         $workspacesVisibility = $this
             ->logManager
             ->getWorkspaceVisibilityForDesktopWidget($event->getUser(), $workspaces);
+
+        $config = $this->logManager->getDesktopWidgetConfig($event->getUser());
+            
+        $workspacesVisibility['amount'] = $config->getAmount();
         
         $form = $this
             ->formFactory
             ->create(
-                new LogHiddenWorkspaceWidgetConfigType(),
+                new LogDesktopWidgetConfigType(),
                 $workspacesVisibility,
                 array('workspaces' => $workspaces)
             );
         $content = $this->twig->render(
-                'ClarolineCoreBundle:Log:config_hidden_workspace_widget_form.html.twig', array(
+                'ClarolineCoreBundle:Log:config_desktop_widget_form.html.twig', array(
                 'form' => $form->createView(),
             )
         );
