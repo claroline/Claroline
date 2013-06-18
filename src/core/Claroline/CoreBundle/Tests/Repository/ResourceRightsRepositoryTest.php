@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 
 class ResourceRightsRepositoryTest extends RepositoryTestCase
 {
+    /** @var \Claroline\CoreBundle\Repository\ResourceRightsRepository */
     public static $repo;
     public static $collaboratorRoleName;
     public static $managerRoleName;

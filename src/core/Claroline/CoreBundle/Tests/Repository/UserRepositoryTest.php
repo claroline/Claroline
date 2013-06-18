@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 
 class UserRepositoryTest extends RepositoryTestCase
 {
+    /** @var \Claroline\CoreBundle\Repository\UserRepository */
     private static $repo;
     private static $collaboratorA;
 
@@ -134,5 +135,11 @@ class UserRepositoryTest extends RepositoryTestCase
     public function testCount()
     {
         $this->assertEquals(5, self::$repo->count());
+    }
+
+    public function testFindByUsernames()
+    {
+        $users = self::$repo->findByUsernames(array('nogroup', 'john'));
+        $this->assertEquals(2, count($users));
     }
 }

@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 
 class GroupRepositoryTest extends RepositoryTestCase
 {
+    /** @var \Claroline\CoreBundle\Repository\GroupRepository */
     private static $repo;
 
     public static function setUpBeforeClass()
