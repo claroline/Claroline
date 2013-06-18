@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class LogWorkspaceWidgetConfigType extends AbstractType
 {
@@ -34,10 +35,10 @@ class LogWorkspaceWidgetConfigType extends AbstractType
         return 'log_widget_config';
     }
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array(
+        $resolver->setDefaults(array(
             'translation_domain' => 'platform'
-        );
+        ));
     }
 }
