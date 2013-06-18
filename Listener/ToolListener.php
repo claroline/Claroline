@@ -71,7 +71,7 @@ class ToolListener extends ContainerAware
         $event->stopPropagation();
     }
 
-    private function fetchActivitiesDatas($isDesktopTool, AbstractWorkspace $workspace = null)
+    public function fetchActivitiesDatas($isDesktopTool, AbstractWorkspace $workspace = null)
     {
         $token = $this->container->get('security.context')->getToken();
         $userRoles = $this->container->get('claroline.security.utilities')->getRoles($token);
