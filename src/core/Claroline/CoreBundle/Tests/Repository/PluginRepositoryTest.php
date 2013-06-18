@@ -13,7 +13,6 @@ class PluginRepositoryTest extends RepositoryTestCase
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
-        self::loadPlatformRoleData();
         self::$repo = self::$em->getRepository('ClarolineCoreBundle:Plugin');
         $plugin = new Plugin();
         $plugin->setVendorName('Vendor');
