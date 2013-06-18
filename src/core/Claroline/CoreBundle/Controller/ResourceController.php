@@ -68,7 +68,7 @@ class ResourceController extends Controller
     public function createAction($resourceType, $parentId)
     {
         $parent = $this->getDoctrine()
-            ->getEntityManager()
+            ->getManager()
             ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($parentId);
         $collection = new ResourceCollection(array($parent));

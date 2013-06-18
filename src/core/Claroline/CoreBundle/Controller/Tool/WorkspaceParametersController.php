@@ -55,7 +55,7 @@ class WorkspaceParametersController extends AbstractParametersController
         $this->checkAccess($workspace);
         $request = $this->getRequest();
         $form = $this->createForm(new WorkspaceTemplateType());
-        $form->bind($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $name = $form->get('name')->getData();
@@ -122,7 +122,7 @@ class WorkspaceParametersController extends AbstractParametersController
         $wsRegisteredCode = $workspace->getCode();
         $form = $this->createForm(new WorkspaceEditType(), $workspace);
         $request = $this->getRequest();
-        $form->bind($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em->persist($workspace);

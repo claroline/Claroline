@@ -24,16 +24,20 @@ class SendToUsernamesValidator extends ConstraintValidator
         $this->em = $em;
     }
 
-    public function isValid($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint)
     {
         $to = preg_replace('/\s+/', '', $value);
+
         if (substr($to, -1, 1) === ';') {
             $to = substr_replace($to, "", -1);
         }
+
         $usernames = explode(';', $to);
+
         foreach ($usernames as $username) {
             $user = $this->em->getRepository('ClarolineCoreBundle:User')->findOneBy(array('username' => $username));
-            if ($user == null) {
+
+            if ($user === null) {
                 $this->context->addViolation($constraint->message, array('{{ username }}' => $username));
             }
         }

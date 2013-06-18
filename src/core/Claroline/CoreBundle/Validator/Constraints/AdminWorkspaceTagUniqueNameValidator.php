@@ -24,17 +24,15 @@ class AdminWorkspaceTagUniqueNameValidator extends ConstraintValidator
         $this->em = $em;
     }
 
-    public function isValid($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint)
     {
         $name = trim($value);
         $workspaceTag = $this->em
             ->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
             ->findOneBy(array('user' => null, 'name' => $name));
 
-        if (!is_null($workspaceTag)) {
+        if ($workspaceTag) {
             $this->context->addViolation($constraint->message, array('{{ name }}' => $name));
         }
-
-        return true;
     }
 }

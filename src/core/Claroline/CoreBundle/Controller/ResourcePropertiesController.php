@@ -31,7 +31,7 @@ class ResourcePropertiesController extends Controller
     public function renameFormAction($resourceId)
     {
         $resource = $this->getDoctrine()
-            ->getEntityManager()
+            ->getManager()
             ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($resourceId);
         $collection = new ResourceCollection(array($resource));
@@ -66,7 +66,7 @@ class ResourcePropertiesController extends Controller
         $collection = new ResourceCollection(array($resource));
         $this->checkAccess('EDIT', $collection);
         $form = $this->createForm(new ResourceNameType(), $resource);
-        $form->bind($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $unitOfWork = $em->getUnitOfWork();
@@ -107,7 +107,7 @@ class ResourcePropertiesController extends Controller
     public function propertiesFormAction($resourceId)
     {
         $resource = $this->getDoctrine()
-            ->getEntityManager()
+            ->getManager()
             ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($resourceId);
 
@@ -144,7 +144,7 @@ class ResourcePropertiesController extends Controller
         }
 
         $form = $this->createForm(new ResourcePropertiesType(), $resource);
-        $form->bind($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $data = $form->getData();
