@@ -21,6 +21,7 @@ class LogWorkspaceWidgetConfigType extends AbstractType
             ->add('subscribe', 'checkbox', array('required' => false))
             ->add('amount', 'choice', array(
                 'choices' => array(
+                    '1' => '1',
                     '5' => '5',
                     '10' => '10',
                     '15' => '15',

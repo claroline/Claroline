@@ -13,12 +13,6 @@ class LogWorkspaceWidgetConfig
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
      * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
      */

@@ -468,3 +468,6 @@ Your changes have been saved: 'Your changes have been saved'
 The form is not valid: 'The form is not valid'
 Choose workspaces displayed in the widget: 'Choose workspaces displayed in the widget'
 Choose visible actions in the widget: 'Choose visible actions in the widget'
+Actions per day: 'Actions per day'
+Last action: '{1} Last action|[1,Inf] Last %logAmount% actions'
+log_hidden_workspace_widget_config_amount : Amount

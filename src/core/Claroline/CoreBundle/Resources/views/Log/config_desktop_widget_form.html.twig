@@ -1,11 +1,14 @@
 {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
 
-<form method="POST" action="{{ path('claro_log_update_hidden_workspace_widget_config')}}" class="form-horizontal" {{ form_enctype(form) }}>
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+
+<form method="POST" action="{{ path('claro_log_update_desktop_widget_config')}}" class="form-horizontal" {{ form_enctype(form) }}>
     <fieldset>
         <legend>{{ 'Choose workspaces displayed in the widget'|trans({}, 'platform') }}</legend>
         {{ form_widget(form) }}
     </fieldset>
 
+    {{ macros.flashBox() }}
     <div class="form-actions">
         <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
         <a href="{{ path('claro_desktop_widget_properties') }}">

@@ -16,6 +16,8 @@
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasAxisLabelRenderer.min.js') }}"></script>
 
+<legend>{{ 'Actions per day'|trans({}, 'platform') }}</legend>
+
 <div id="actions_line_chart" class="line-chart"></div>
 <script type="text/javascript">
     var chartData = {{ chartData|json_encode|raw }};
