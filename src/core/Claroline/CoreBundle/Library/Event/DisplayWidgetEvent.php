@@ -29,4 +29,9 @@ class DisplayWidgetEvent extends Event
     {
         return $this->workspace;
     }
+
+    public function hasContent()
+    {
+        return $this->content !== null;
+    }
 }

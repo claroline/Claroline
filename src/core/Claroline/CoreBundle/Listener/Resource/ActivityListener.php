@@ -66,7 +66,7 @@ class ActivityListener implements ContainerAwareInterface
         $form = $this->container
             ->get('form.factory')
             ->create(new ActivityType(), new Activity());
-        $form->bindRequest($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $event->setResource($form->getData());

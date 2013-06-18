@@ -216,6 +216,15 @@ log_old_workspace: 'Old workspace'
 log_has_not_changed: 'Has not changed'
 log_copy_source: 'Copy source'
 log_workspace_source: 'Workspace source'
+log_widget_config_creation: Creation
+log_widget_config_read: Read / Open
+log_widget_config_export: Export
+log_widget_config_update: Update
+log_widget_config_updateChild: News in the object
+log_widget_config_delete: Delete
+log_widget_config_move: Move
+log_widget_config_subscribe: Subscribe
+log_widget_config_amount: Line number
 firstName: First name
 lastName: Last name
 canOpen: 'Right to open'
@@ -338,6 +347,7 @@ resource_right_form_isRecursive: Apply changes to current and sub directories
 restore : Restore
 results: Results
 rights: Rights
+rights_management: 'Rights Management'
 role: Role
 roles: Roles
 save: Save
@@ -454,3 +464,7 @@ for period: 'for period'
 for user: 'for user'
 Show actions: 'Show actions'
 See all: 'See all'
+Your changes have been saved: 'Your changes have been saved'
+The form is not valid: 'The form is not valid'
+Choose workspaces displayed in the widget: 'Choose workspaces displayed in the widget'
+Choose visible actions in the widget: 'Choose visible actions in the widget'

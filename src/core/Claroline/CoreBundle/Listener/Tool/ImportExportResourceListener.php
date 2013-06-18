@@ -38,7 +38,7 @@ class ImportExportResourceListener
         $config = $event->getConfig();
         $root = $event->getRoot();
         $createdResources = array();
-        $createdResources[$config['root_id']] = $root;
+        $createdResources[$config['root_id']] = $root->getId();
         $createdResources = $this->loadDirectories($config, $createdResources, $event->getRoot(), $event->getUser());
         $this->loadFiles($config, $createdResources, $event->getFiles(), $event->getRoot(), $event->getUser());
     }
