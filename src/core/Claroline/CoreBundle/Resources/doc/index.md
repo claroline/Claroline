@@ -16,7 +16,7 @@ Structure
     - [Tools][6]
     - [Widgets][7]
     - [Players][8]
-    - [Theme][9]
+    - [Themes][9]
 - [Development tools][10]
 
 [1]: ../../../../../../README.md
