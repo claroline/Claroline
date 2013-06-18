@@ -40,7 +40,7 @@ class WorkspaceCalendarController extends Controller
         if ($request->getMethod() === 'POST') {
             // get the value not send by the built in form
             $postData = $request->request->all();
-            $form->bind($request);
+            $form->handleRequest($request);
             if ($form->isValid()) {
 
                 $date = explode('(', $postData['date']);
@@ -74,9 +74,8 @@ class WorkspaceCalendarController extends Controller
                     );
                 }
             } else {
-
                  return new Response(
-                     json_encode(array('greeting' => 'form invalid')),
+                     json_encode(array('greeting' => '')),
                      400,
                      array('Content-Type' => 'application/json')
                  );
@@ -107,7 +106,7 @@ class WorkspaceCalendarController extends Controller
 
         if ($request->getMethod() === 'POST') {
 
-            $form->bind($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 

@@ -288,7 +288,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
         $wot = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')->find($workspaceOrderToolId);
         $form = $this->createForm(new WorkspaceOrderToolEditType(), $wot);
         $request = $this->getRequest();
-        $form->bind($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em->persist($wot);

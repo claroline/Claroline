@@ -34,6 +34,8 @@ class Version20120119000000 extends BundleMigration
         $this->createLogTable($schema);
         $this->createLogDoerPlatformRolesTable($schema);
         $this->createLogDoerWorkspaceRolesTable($schema);
+        $this->createLogWorkspaceWidgetConfigTable($schema);
+        $this->createLogHiddenWorkspaceWidgetConfigTable($schema);
         $this->createWidgetTable($schema);
         $this->createAdminWidgetConfig($schema);
         $this->createResourceLinkTable($schema);
@@ -331,6 +333,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('workspace_id', 'integer');
         $table->addColumn('previous_id', 'integer', array('notnull' => false));
         $table->addColumn('next_id', 'integer', array('notnull' => false));
+        $table->addColumn('mime_type', 'string', array('length' => 100, 'notnull' => false));
 
         $this->addDiscriminator($table);
 
@@ -387,7 +390,6 @@ class Version20120119000000 extends BundleMigration
         $this->addId($table);
         $table->addColumn('size', 'integer', array('notnull' => true));
         $table->addColumn('hash_name', 'string', array('length' => 50));
-        $table->addColumn('mime_type', 'string', array('length' => 100));
         $table->addUniqueIndex(array('hash_name'));
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_resource'),
@@ -682,6 +684,68 @@ class Version20120119000000 extends BundleMigration
         );
 
         $this->storeTable($table);
+    }
+
+    private function createLogWorkspaceWidgetConfigTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_log_workspace_widget_config');
+
+        $this->addId($table);
+
+        $table->addColumn('amount', 'integer', array('notnull' => true));
+
+        $table->addColumn('resource_copy', 'boolean', array('notnull' => true));
+        $table->addColumn('resource_create', 'boolean', array('notnull' => true));
+        $table->addColumn('resource_shortcut', 'boolean', array('notnull' => true));
+
+        $table->addColumn('resource_read', 'boolean', array('notnull' => true));
+        $table->addColumn('ws_tool_read', 'boolean', array('notnull' => true));
+
+        $table->addColumn('resource_export', 'boolean', array('notnull' => true));
+
+        $table->addColumn('resource_update', 'boolean', array('notnull' => true));
+        $table->addColumn('resource_update_rename', 'boolean', array('notnull' => true));
+
+        $table->addColumn('resource_child_update', 'boolean', array('notnull' => true));
+
+        $table->addColumn('resource_delete', 'boolean', array('notnull' => true));
+
+        $table->addColumn('resource_move', 'boolean', array('notnull' => true));
+
+        $table->addColumn('ws_role_subscribe_user', 'boolean', array('notnull' => true));
+        $table->addColumn('ws_role_subscribe_group', 'boolean', array('notnull' => true));
+        $table->addColumn('ws_role_unsubscribe_user', 'boolean', array('notnull' => true));
+        $table->addColumn('ws_role_unsubscribe_group', 'boolean', array('notnull' => true));
+        $table->addColumn('ws_role_change_right', 'boolean', array('notnull' => true));
+        $table->addColumn('ws_role_create', 'boolean', array('notnull' => true));
+        $table->addColumn('ws_role_delete', 'boolean', array('notnull' => true));
+        $table->addColumn('ws_role_update', 'boolean', array('notnull' => true));
+
+        $table->addColumn('workspace_id', 'integer', array('notnull' => false));
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_workspace'),
+            array('workspace_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+    }
+
+    private function createLogHiddenWorkspaceWidgetConfigTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_log_hidden_workspace_widget_config');        
+
+        $table->addColumn('workspace_id', 'integer', array('notnull' => false));
+        $table->addColumn('user_id', 'integer', array('notnull' => false));
+
+        $table->setPrimaryKey(array('workspace_id', 'user_id'));
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_user'),
+            array('user_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
     }
 
     private function createWidgetTable(Schema $schema)

@@ -1,6 +1,5 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 {% block section_content %}
-
     {{
         macros.breadcrumbs([
             {
@@ -22,7 +21,9 @@
         ])
     }}
 
-    <br>
 
-    {{ content|raw }}
+    <br>
+    {% block section_widget_content %}
+        {{ content|raw }}
+    {% endblock %}
 {% endblock %}
