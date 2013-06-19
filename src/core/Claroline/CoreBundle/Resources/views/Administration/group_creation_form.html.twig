@@ -10,7 +10,6 @@
             {'name':'create_group'|trans({}, 'platform'), 'href':'#'}
         ])
     }}
-    {% form_theme form_group 'ClarolineCoreBundle::form_theme.html.twig' %}
     <form class="form-horizontal" action="{{ path('claro_admin_create_group') }}" method="post" {{ form_enctype(form_group) }} id="form_group">
         <fieldset>
             {{ form_widget(form_group) }}

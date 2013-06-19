@@ -144,16 +144,17 @@ class RoleRepository extends EntityRepository
         $dql = "
             SELECT DISTINCT r FROM Claroline\CoreBundle\Entity\Role r
             JOIN r.workspace ws
+            LEFT JOIN ws.personalUser pu
             LEFT JOIN Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag rwt
             WITH rwt.workspace = ws
             LEFT JOIN Claroline\CoreBundle\Entity\Workspace\WorkspaceTag wt
-            WITH rwt.tag = wt
+            WITH rwt.tag = wt AND wt.user IS NULL
             LEFT JOIN Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy wth
-            WITH wth.tag = wt
-            JOIN wth.parent p
-            WHERE UPPER(ws.code) LIKE :code
+            WITH wth.tag = wt AND wth.user IS NULL
+            LEFT JOIN wth.parent p
+            WHERE pu IS NULL AND (UPPER(ws.code) LIKE :code
             OR UPPER(wt.name) LIKE :code
-            OR UPPER(p.name) LIKE :code
+            OR UPPER(p.name) LIKE :code)
         ";
 
         $query = $this->_em->createQuery($dql);

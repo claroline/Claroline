@@ -1,7 +1,6 @@
 {% extends "ClarolineCoreBundle::layout.html.twig" %}
 
 {% block content %}
-    {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
     <form class="form-horizontal"
           id="workspace_tag_form"
           action="{{ path('claro_workspace_tag_create', {'userId': user.getId()}) }}"

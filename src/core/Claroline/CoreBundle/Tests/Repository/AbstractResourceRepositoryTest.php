@@ -2,53 +2,105 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Claroline\CoreBundle\Library\Testing\FixtureTestCase;
+use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 
-class AbstractResourceRepositoryTest extends FixtureTestCase
+class AbstractResourceRepositoryTest extends RepositoryTestCase
 {
-    private $repo;
+    /** @var \Claroline\CoreBundle\Repository\AbstractResourceRepository */
+    private static $repo;
+    private static $timeOne;
+    private static $timeTwo;
 
-    protected function setUp()
+    /*
+     * directory structure:
+     *
+     * john/dir1/dir2/linkToDir3
+     * john/dir1/dir2/linkToDir2
+     * john/dir1/file1.txt
+     * john/dir3/dir4/linkToDir5
+     * john/dir3/dir4/linkToDir1
+     * john/dir5
+     */
+    public static function setUpBeforeClass()
     {
-        parent::setUp();
-        $this->loadPlatformRoleData();
-        $this->loadUserData(array('john' => 'user'));
-        $this->repo = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
+        parent::setUpBeforeClass();
+        self::$repo = self::$em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        self::loadPlatformRoleData();
+        self::loadUserData(array('john' => 'user'));
+        self::$timeOne = new \DateTime();
+        self::loadDirectoryData('john', array('john/dir1/dir2'));
+        sleep(1);
+        self::loadDirectoryData('john', array('john/dir3/dir4'));
+        self::$timeTwo = new \DateTime;
+        self::loadDirectoryData('john', array('john/dir5'));
+        self::loadFileData('john', 'dir1', array('file1.txt'));
+
+        self::loadShortcutData(
+            self::getDirectory('dir3'),
+            'dir2',
+            'john'
+        );
+
+        self::loadShortcutData(
+            self::getDirectory('dir2'),
+            'dir2',
+            'john'
+        );
+
+        self::loadShortcutData(
+            self::getDirectory('dir5'),
+            'dir4',
+            'john'
+        );
+
+        self::loadShortcutData(
+            self::getDirectory('dir1'),
+            'dir4',
+            'john'
+        );
+
+        $rights = self::$em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceRights')
+            ->findOneBy(array('role' => self::getRole('anonymous'), 'resource' => self::getDirectory('dir1')));
+        $rights->setCanOpen(true);
+        //warning: flush !
+        self::$em->persist($rights);
+
+        self::loadUserData(array('jane' => 'user'));
+        $john = self::getUser('john');
+        $role = self::$em->getRepository('Claroline\Corebundle\Entity\Role')
+            ->findCollaboratorRole(self::getWorkspace('jane'));
+        $john->addRole($role);
+        self::$em->persist($john);
+
+        self::$em->flush();
     }
 
     public function testFindWorkspaceRoot()
     {
-        $root = $this->repo->findWorkspaceRoot($this->getWorkspace('john'));
-        $this->assertEquals($this->getDirectory('john'), $root);
+        $root = self::$repo->findWorkspaceRoot(self::getWorkspace('john'));
+        $this->assertEquals(self::getDirectory('john'), $root);
     }
 
     public function testFindDescendants()
     {
-        $this->loadDirectoryData('john', array('john/dir1/dir2', 'john/dir1/dir3'));
-        $this->loadFileData('john', 'dir2', array('foo.txt'));
-
         $this->assertEquals(
             0,
-            count($this->repo->findDescendants($this->getDirectory('dir3')))
-        );
-        $this->assertEquals(
-            3,
-            count($this->repo->findDescendants($this->getDirectory('dir1')))
+            count(self::$repo->findDescendants(self::getDirectory('dir5')))
         );
         $this->assertEquals(
             4,
-            count($this->repo->findDescendants($this->getDirectory('dir1'), true))
+            count(self::$repo->findDescendants(self::getDirectory('dir1')))
+        );
+        $this->assertEquals(
+            5,
+            count(self::$repo->findDescendants(self::getDirectory('dir1'), true))
         );
         $this->assertEquals(
             4,
-            count($this->repo->findDescendants($this->getDirectory('dir1'), true))
-        );
-        $this->assertEquals(
-            3,
-            count($this->repo->findDescendants($this->getDirectory('dir1'), true, 'directory'))
+            count(self::$repo->findDescendants(self::getDirectory('dir1'), true, 'directory'))
         );
 
-        $entityDirs = $this->repo->findDescendants($this->getDirectory('dir1'), false);
+        $entityDirs = self::$repo->findDescendants(self::getDirectory('dir1'), false);
         $this->assertInstanceOf(
             'Claroline\CoreBundle\Entity\Resource\AbstractResource',
             $entityDirs[0]
@@ -57,157 +109,96 @@ class AbstractResourceRepositoryTest extends FixtureTestCase
 
     public function testFindChildren()
     {
-        $this->loadDirectoryData('john', array('john/dir1/dir3', 'john/dir2'));
-
-        $children = $this->repo->findChildren($this->getDirectory('john'), array('ROLE_ADMIN'));
-        $this->assertEquals(2, count($children));
-        $this->assertEquals($this->getDirectory('dir1')->getId(), $children[0]['id']);
-        $this->assertEquals($this->getDirectory('dir2')->getId(), $children[1]['id']);
-
-        $children = $this->repo->findChildren($this->getDirectory('john'), array('ROLE_ANONYMOUS', 'ROLE_FOO'));
-        $this->assertEquals(0, count($children));
-
-        $rights = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceRights')
-            ->findOneBy(array('role' => $this->getRole('anonymous'), 'resource' => $this->getDirectory('dir1')));
-        $rights->setCanOpen(true);
-        $this->em->persist($rights);
-        $this->em->flush();
-        $children = $this->repo->findChildren($this->getDirectory('john'), array('ROLE_ANONYMOUS'));
+        $children = self::$repo->findChildren(self::getDirectory('john'), array('ROLE_ADMIN'));
+        $this->assertEquals(3, count($children));
+        $this->assertEquals(self::getDirectory('dir1')->getId(), $children[0]['id']);
+        $this->assertEquals(self::getDirectory('dir3')->getId(), $children[1]['id']);
+        $children = self::$repo->findChildren(self::getDirectory('john'), array('ROLE_ANONYMOUS'));
         $this->assertEquals(1, count($children));
     }
 
     public function testFindChildrenThrowsAnExceptionIfNoRolesAreGiven()
     {
         $this->setExpectedException('RuntimeException');
-        $children = $this->repo->findChildren($this->getDirectory('john'), array());
+        $children = self::$repo->findChildren(self::getDirectory('john'), array());
         $this->assertEquals(0, count($children));
     }
 
     public function testFindWorkspaceRootsByUser()
     {
-        $john = $this->getUser('john');
-        $roots = $this->repo->findWorkspaceRootsByUser($john);
-        $this->assertEquals(1, count($roots));
-        $this->assertEquals($this->getDirectory('john')->getId(), $roots[0]['id']);
-
-        $this->loadUserData(array('jane' => 'user'));
-        $role = $this->em->getRepository('Claroline\Corebundle\Entity\Role')
-            ->findCollaboratorRole($this->getWorkspace('jane'));
-        $john->addRole($role);
-        $this->em->persist($john);
-        $this->em->flush();
-        $roots = $this->repo->findWorkspaceRootsByUser($john);
+        $john = self::getUser('john');
+        $roots = self::$repo->findWorkspaceRootsByUser($john);
         $this->assertEquals(2, count($roots));
-        $this->assertEquals($this->getDirectory('jane')->getId(), $roots[0]['id']);
-        $this->assertEquals($this->getDirectory('john')->getId(), $roots[1]['id']);
+        $this->assertEquals(self::getDirectory('jane')->getId(), $roots[0]['id']);
+        $this->assertEquals(self::getDirectory('john')->getId(), $roots[1]['id']);
+    }
+
+    public function testFindWorkspaceRootsByRoles()
+    {
+        $janeManager = 'ROLE_WS_MANAGER_'.self::getWorkspace('jane')->getId();
+        $johnManager = 'ROLE_WS_MANAGER_'.self::getWorkspace('john')->getId();
+        $roots = self::$repo->findWorkspaceRootsByRoles(array($janeManager));
+        $this->assertEquals(1, count($roots));
+        $roots = self::$repo->findWorkspaceRootsByRoles(array($janeManager, $johnManager));
+        $this->assertEquals(2, count($roots));
+    }
+
+    public function testFindResourcesByIds()
+    {
+        $ids = array(self::getDirectory('dir1')->getId(), self::getDirectory('dir2')->getId());
+        $resources = self::$repo->findResourcesByIds($ids);
+        $this->assertEquals(2, count($resources));
     }
 
     public function testFindAncestors()
     {
-        $this->loadDirectoryData('john', array('john/dir1/dir2'));
-        $ancestors = $this->repo->findAncestors($this->getDirectory('dir2'));
+        $ancestors = self::$repo->findAncestors(self::getDirectory('dir2'));
         $this->assertEquals(3, count($ancestors));
-        $this->assertEquals($this->getDirectory('john')->getId(), $ancestors[0]['id']);
-        $this->assertEquals($this->getDirectory('dir1')->getId(), $ancestors[1]['id']);
-        $this->assertEquals($this->getDirectory('dir2')->getId(), $ancestors[2]['id']);
+        $this->assertEquals(self::getDirectory('john')->getId(), $ancestors[0]['id']);
+        $this->assertEquals(self::getDirectory('dir1')->getId(), $ancestors[1]['id']);
+        $this->assertEquals(self::getDirectory('dir2')->getId(), $ancestors[2]['id']);
     }
 
     public function testFindByCriteria()
     {
-        $this->loadUserData(array('jane' => 'user'));
-        $timeOne = new \DateTime();
-        sleep(1);
-        $this->loadDirectoryData('jane', array('jane/dir1'));
-        $this->loadDirectoryData('john', array('john/dir2/dir3', 'john/dir4'));
-        sleep(1);
-        $timeTwo = new \DateTime();
-        $this->loadFileData('john', 'dir4', array('foo.txt'));
+        $resources = self::$repo->findByCriteria(array());
+        $this->assertEquals(12, count($resources));
 
-        $resources = $this->repo->findByCriteria(array());
-        $this->assertEquals(7, count($resources));
+        $resources = self::$repo->findByCriteria(array('types' => array('directory')));
+        $this->assertEquals(11, count($resources));
 
-        $resources = $this->repo->findByCriteria(array('types' => array('directory')));
-        $this->assertEquals(6, count($resources));
+        $resources = self::$repo->findByCriteria(array('roots' => array(self::getDirectory('john')->getPath())));
+        $this->assertEquals(11, count($resources));
 
-        $resources = $this->repo->findByCriteria(array('roots' => array($this->getDirectory('john')->getPath())));
-        $this->assertEquals(5, count($resources));
+        $resources = self::$repo->findByCriteria(array('dateFrom' => self::$timeTwo->format('Y-m-d H:i:s')));
+        $this->assertEquals(9, count($resources));
 
-        $resources = $this->repo->findByCriteria(array('dateFrom' => $timeTwo->format('Y-m-d H:i:s')));
+        $resources = self::$repo->findByCriteria(array('dateTo' => self::$timeOne->format('Y-m-d H:i:s')));
+        $this->assertEquals(3, count($resources));
+
+        $resources = self::$repo->findByCriteria(array('name' => 'j'));
+        $this->assertEquals(2, count($resources));
+
+        $resources = self::$repo->findByCriteria(array('isExportable' => true));
+        $this->assertEquals(12, count($resources));
+
+        $resources = self::$repo->findByCriteria(array(), self::getUser('jane')->getRoles());
         $this->assertEquals(1, count($resources));
 
-        $resources = $this->repo->findByCriteria(array('dateTo' => $timeOne->format('Y-m-d H:i:s')));
-        $this->assertEquals(2, count($resources));
-
-        $resources = $this->repo->findByCriteria(array('name' => 'j'));
-        $this->assertEquals(2, count($resources));
-
-        $resources = $this->repo->findByCriteria(array('isExportable' => true));
-        $this->assertEquals(7, count($resources));
-
-        $resources = $this->repo->findByCriteria(array(), $this->getUser('jane')->getRoles());
-        $this->assertEquals(2, count($resources));
-
-        $rights = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceRights')
-            ->findOneBy(array('role' => $this->getRole('anonymous'), 'resource' => $this->getDirectory('dir1')));
-        $rights->setCanOpen(true);
-        $this->em->persist($rights);
-        $this->em->flush();
-
-        $resources = $this->repo->findByCriteria(array(), array('ROLE_ANONYMOUS'));
+        $resources = self::$repo->findByCriteria(array(), array('ROLE_ANONYMOUS'));
         $this->assertEquals(1, count($resources));
-        $this->assertEquals($this->getDirectory('dir1')->getId(), $resources[0]['id']);
+        $this->assertEquals(self::getDirectory('dir1')->getId(), $resources[0]['id']);
     }
 
     public function testFindByCriteriaThrowsAnExceptionOnUnknownFilter()
     {
         $this->setExpectedException('Claroline\CoreBundle\Repository\Exception\UnknownFilterException');
-        $this->repo->findByCriteria(array('foo' => 'bar'));
+        self::$repo->findByCriteria(array('foo' => 'bar'));
     }
 
-    /*
-     * directory structure:
-     *
-     * jane/dir1/dir2/linkToDir3
-     * jane/dir1/dir2/linkToDir2 //testing infinite loops
-     * jane/dir3/dir4/linkToDir5 //follow links more than once
-     * jane/dir3/dir4/linkToDir1 //infinite loop again
-     * jane/dir5
-     *
-     * expected result: 4
-     */
     public function testFindDirectoryShortcutTargets()
     {
-        $this->loadUserData(array('jane' => 'user'));
-
-        $this->loadDirectoryData('jane', array('jane/dir1/dir2'));
-        $this->loadDirectoryData('jane', array('jane/dir3/dir4'));
-        $this->loadDirectoryData('jane', array('jane/dir5'));
-
-        $this->loadShortcutData(
-            $this->getDirectory('dir3'),
-            'dir2',
-            'jane'
-        );
-
-        $this->loadShortcutData(
-            $this->getDirectory('dir2'),
-            'dir2',
-            'jane'
-        );
-
-        $this->loadShortcutData(
-            $this->getDirectory('dir5'),
-            'dir4',
-            'jane'
-        );
-
-        $this->loadShortcutData(
-            $this->getDirectory('dir1'),
-            'dir4',
-            'jane'
-        );
-
-        $shortcuts = $this->repo->findRecursiveDirectoryShortcuts(array(), null, array());
+        $shortcuts = self::$repo->findRecursiveDirectoryShortcuts(array(), null, array());
         $this->assertEquals(4, count($shortcuts));
     }
 }

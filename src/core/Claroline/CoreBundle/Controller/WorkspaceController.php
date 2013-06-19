@@ -136,6 +136,31 @@ class WorkspaceController extends Controller
         );
     }
 
+    private function isTagDisplayable($tagId, array $tagWorkspaces, array $hierarchy)
+    {
+        $displayable = false;
+
+        if (isset($tagWorkspaces[$tagId]) && count($tagWorkspaces[$tagId]) > 0) {
+            $displayable = true;
+        } else {
+
+            if (isset($hierarchy[$tagId]) && count($hierarchy[$tagId]) > 0) {
+                $children = $hierarchy[$tagId];
+
+                foreach ($children as $child) {
+
+                    $displayable = $this->isTagDisplayable($child->getId(), $tagWorkspaces, $hierarchy);
+
+                    if ($displayable) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $displayable;
+    }
+
     /**
      * @Route(
      *     "/new/form",
@@ -265,7 +290,7 @@ class WorkspaceController extends Controller
             ->findBy(array('workspace' => $workspace));
 
         $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->findByRolesAndWorkspace($currentRoles, $workspace, true);
+            ->findDisplayedByRolesAndWorkspace($currentRoles, $workspace);
         $toolsWithTranslation = array();
 
         foreach ($tools as $tool) {
@@ -413,13 +438,13 @@ class WorkspaceController extends Controller
                     ->findBy(array('name' => 'home'));
             } else {
                 $openedTool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-                    ->findByRolesAndWorkspace(array($foundRole), $workspace, true);
+                    ->findDisplayedByRolesAndWorkspace(array($foundRole), $workspace);
             }
 
         } else {
             $foundRole = 'ROLE_ANONYMOUS';
             $openedTool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-                ->findByRolesAndWorkspace(array('ROLE_ANONYMOUS'), $workspace, true);
+                ->findDisplayedByRolesAndWorkspace(array('ROLE_ANONYMOUS'), $workspace);
         }
 
         if ($openedTool == null) {

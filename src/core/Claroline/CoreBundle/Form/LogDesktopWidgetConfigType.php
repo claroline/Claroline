@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class LogHiddenWorkspaceWidgetConfigType extends AbstractType
+class LogDesktopWidgetConfigType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -14,6 +14,17 @@ class LogHiddenWorkspaceWidgetConfigType extends AbstractType
         foreach ($workspaces as $workspace) {
             $builder->add($workspace->getId(), 'checkbox', array('required' => false, 'label' => $workspace->getName()));
         }
+        $builder->add('amount', 'choice', array(
+                'choices' => array(
+                    '1' => '1',
+                    '5' => '5',
+                    '10' => '10',
+                    '15' => '15',
+                    '20' => '20'
+                ),
+                'required' => true
+            )
+        );
     }
 
     public function getName()
