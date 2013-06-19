@@ -1,7 +1,5 @@
 {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
 
-{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
-
 <form method="POST" action="{{ path('claro_log_update_workspace_widget_config', {'workspaceId': workspace.id}) }}" class="form-horizontal" {{ form_enctype(form) }}>
     <fieldset>
         <legend>{{ 'Choose visible actions in the widget'|trans({}, 'platform') }}</legend>
@@ -15,4 +13,4 @@
             <button type="button" class="btn">{{ 'cancel'|trans({}, 'platform') }}</button>
         </a>
     </div>
-</form>
+</form>§

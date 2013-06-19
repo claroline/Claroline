@@ -95,8 +95,8 @@ class LogRepository extends EntityRepository
                     $qb->expr()->like('UPPER(doer.lastName)', ':userSearch'),
                     $qb->expr()->like('UPPER(doer.firstName)', ':userSearch'),
                     $qb->expr()->like('UPPER(doer.username)', ':userSearch'),
-                    $qb->expr()->like("CONCAT(UPPER(doer.firstName), ' ', UPPER(doer.lastName))", ':userSearch'),
-                    $qb->expr()->like("CONCAT(UPPER(doer.lastName), ' ', UPPER(doer.firstName))", ':userSearch')
+                    $qb->expr()->like("CONCAT(CONCAT(UPPER(doer.firstName), ' '), UPPER(doer.lastName))", ':userSearch'),
+                    $qb->expr()->like("CONCAT(CONCAT(UPPER(doer.lastName), ' '), UPPER(doer.firstName))", ':userSearch')
                 )
             );
 
