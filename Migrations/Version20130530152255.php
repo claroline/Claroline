@@ -97,7 +97,7 @@ class Version20130530152255 extends BundleMigration
         $table->addColumn('slug', 'string', array('length' => 128));
         $table->addColumn('creation_date', 'datetime');
         $table->addColumn('modification_date', 'datetime');
-        $table->addColumn('publication_date', 'datetime');
+        $table->addColumn('publication_date', 'datetime', array('notnull' => false));
         $table->addColumn('user_id', 'integer', array('notnull' => true));
         $table->addColumn('blog_id', 'integer', array('notnull' => true));
 

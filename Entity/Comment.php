@@ -37,14 +37,15 @@ class Comment extends Statusable
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime", name="creation_date")
      */
-    private $creationDate;
+    protected $creationDate;
 
     /**
      * @var User $author
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
-    private $author;
+    protected $author;
 
     /**
      * @var Post
@@ -55,7 +56,6 @@ class Comment extends Statusable
 
     public function __construct()
     {
-        $this->author = new User();
     }
 
     /**

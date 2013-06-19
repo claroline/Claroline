@@ -13,7 +13,7 @@ use ICAPLyon1\Bundle\SimpleTagBundle\Entity\TaggableInterface;
  * @ORM\Table(name="icap__blog_post")
  * @ORM\Entity(repositoryClass="ICAP\BlogBundle\Repository\PostRepository")
  */
-class Post  extends Statusable implements TaggableInterface
+class Post extends Statusable implements TaggableInterface
 {
     /**
      * @var int $id
@@ -29,20 +29,20 @@ class Post  extends Statusable implements TaggableInterface
      *
      * @ORM\Column(type="string", length=255)
      */
-    private $title;
+    protected $title;
 
     /**
      * @var string $content
      *
      * @ORM\Column(type="text")
      */
-    private $content;
+    protected $content;
 
     /**
      * @Gedmo\Slug(fields={"title"}, unique=true)
      * @ORM\Column(length=128, unique=true)
      */
-    private $slug;
+    protected $slug;
 
     /**
      * @var \Datetime $creationDate
@@ -50,7 +50,7 @@ class Post  extends Statusable implements TaggableInterface
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime", name="creation_date")
      */
-    private $creationDate;
+    protected $creationDate;
 
     /**
      * @var \Datetime $modificationDate
@@ -58,7 +58,7 @@ class Post  extends Statusable implements TaggableInterface
      * @Gedmo\Timestampable(on="update")
      * @ORM\Column(type="datetime", name="modification_date")
      */
-    private $modificationDate;
+    protected $modificationDate;
 
     /**
      * @var \Datetime $publicationDate
@@ -66,35 +66,34 @@ class Post  extends Statusable implements TaggableInterface
      * @ORM\Column(type="datetime", name="publication_date", nullable=true)
      * @Gedmo\Timestampable(on="change", field="status", value="1")
      */
-    private $publicationDate;
+    protected $publicationDate;
 
     /**
      * @var Comment
      *
      * @ORM\OneToMany(targetEntity="Comment", mappedBy="post", cascade={"remove"})
      */
-    private $comments;
+    protected $comments;
 
     /**
      * @var User $author
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\Column(type="integer", name="user_id")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
-    private $author;
+    protected $author;
 
     /**
      * @var Blog
      *
      * @ORM\ManyToOne(targetEntity="ICAP\BlogBundle\Entity\Blog", inversedBy="posts")
+     * @ORM\JoinColumn(name="blog_id", referencedColumnName="id")
      */
     protected $blog;
 
     public function __construct()
     {
-        $this->blog     = new Blog();
         $this->comments = new ArrayCollection();
-        $this->author   = new User();
     }
 
     /**

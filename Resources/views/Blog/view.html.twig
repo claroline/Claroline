@@ -10,7 +10,7 @@
             {{ 'new_post'|trans() }}
         </a>
     </p>
-    {% for post in posts %}
+    {% for post in pager %}
     <article>
         {{ post.title }}
     </article>

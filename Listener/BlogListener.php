@@ -37,7 +37,7 @@ class BlogListener extends ContainerAware
     {
         $request = $this->container->get('request');
         $form = $this->container->get('form.factory')->create(new Form\BlogType(), new Entity\Blog());
-        $form->bindRequest($request);
+        $form->bind($request);
 
         if ($form->isValid()) {
             $event->setResource($form->getData());

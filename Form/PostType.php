@@ -13,14 +13,6 @@ class PostType extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('tags', 'zenstruck_ajax_entity', array(
-                'mapped'         => false,
-                'class'          => 'ICAPLyon1SimpleTagBundle:Tag',
-                'property'       => 'name',
-                'use_controller' => true,
-                'placeholder'    => 'Choose Tags',
-                'multiple'       => true,
-            ))
             ->add('content', 'textarea')
         ;
     }

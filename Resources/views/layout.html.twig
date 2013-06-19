@@ -20,6 +20,7 @@
                 <div class="hero-unit">
                     <h1>{{ _resource.name }}</h1>
                 </div>
+                {{ macros.flashBox() }}
                 <div class="row-fluid">
                     <section class="span8 well">
                         {% block content %}{% endblock %}

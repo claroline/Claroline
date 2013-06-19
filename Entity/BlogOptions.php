@@ -66,7 +66,6 @@ class BlogOptions
 
     public function __construct()
     {
-        $this->blog                      = new Blog();
         $this->authorizeComment          = false;
         $this->authorizeAnonymousComment = false;
         $this->postPerPage               = 10;

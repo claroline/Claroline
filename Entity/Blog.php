@@ -3,6 +3,7 @@
 namespace ICAP\BlogBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\BlogOptions;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -18,10 +19,7 @@ class Blog extends AbstractResource
     /**
      * @var Post[]
      *
-     * @ORM\OneToMany(
-     *     targetEntity="ICAP\BlogBundle\Entity\Post",
-     *     mappedBy="blog"
-     * )
+     * @ORM\OneToMany(targetEntity="ICAP\BlogBundle\Entity\Post", mappedBy="blog")
      * @ORM\OrderBy({"creationDate" = "ASC"})
      */
     protected $posts;
@@ -56,5 +54,25 @@ class Blog extends AbstractResource
     public function getPosts()
     {
         return $this->posts;
+    }
+
+    /**
+     * @param BlogOptions $options
+     *
+     * @return Blog
+     */
+    public function setOptions(BlogOptions $options)
+    {
+        $this->options = $options;
+
+        return $this;
+    }
+
+    /**
+     * @return BlogOptions
+     */
+    public function getOptions()
+    {
+        return $this->options;
     }
 }

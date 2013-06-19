@@ -2,13 +2,9 @@
 
 namespace ICAP\BlogBundle\Controller;
 
-use ICAP\BlogBundle\Entity\Blog;
-use ICAP\BlogBundle\Entity\BlogOptions;
 use ICAP\BlogBundle\Entity\Post;
+use ICAP\BlogBundle\Entity\Blog;
 use ICAP\BlogBundle\Form\PostType;
-use ICAP\BlogBundle\Form\BlogOptionsType;
-use Pagerfanta\Adapter\DoctrineCollectionAdapter;
-use Pagerfanta\Pagerfanta;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -30,11 +26,27 @@ class PostController extends Controller
     {
         $this->checkAccess("EDIT", $blog);
 
-        $form = $this->createForm(new PostType(), new Post());
+        $post = new Post();
+        $post
+            ->setBlog($blog)
+            ->setAuthor($this->getUser())
+        ;
+
+        $form = $this->get('icaplyon1_simpletag.manager')->createForm(new PostType(), $post);
 
         if("POST" === $request->getMethod()) {
             $form->bind($request);
             if ($form->isValid()) {
+                $translator = $this->get('translator');
+                $flashBag = $this->get('session')->getFlashBag();
+                try {
+                    $post = $this->get('icaplyon1_simpletag.manager')->processForm($form);
+                    $flashBag->add('success', $translator->trans('icap_blog_post_add_success', array(), 'icap_blog'));
+                }
+                catch(\Exception $exception)
+                {
+                    $flashBag->add('error', $translator->trans('icap_blog_post_add_error', array(), 'icap_blog'));
+                }
                 return $this->redirect($this->generateUrl('icap_blog_view', array('blogId' => $blog->getId())));
             }
         }

@@ -5,15 +5,16 @@ namespace ICAP\BlogBundle\Controller;
 use ICAP\BlogBundle\Entity\Blog;
 use ICAP\BlogBundle\Entity\BlogOptions;
 use ICAP\BlogBundle\Entity\Post;
-use ICAP\BlogBundle\Form\PostType;
 use ICAP\BlogBundle\Form\BlogOptionsType;
-use Pagerfanta\Adapter\DoctrineCollectionAdapter;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class BlogController extends Controller
 {
@@ -30,8 +31,25 @@ class BlogController extends Controller
     {
         $this->checkAccess("OPEN", $blog);
 
-        $adapter = new DoctrineCollectionAdapter($blog->getPosts());
-        $pager   = new Pagerfanta($adapter);
+        $postRepository = $this->getDoctrine()->getRepository('ICAPBlogBundle:Post');
+
+        $query = $postRepository
+            ->createQueryBuilder('post')
+            ->andWhere('post.blog = :blogId')
+            ->setParameter('blogId', $blog->getId())
+            ->orderBy('post.publicationDate', 'ASC')
+        ;
+
+        $adapter = new DoctrineORMAdapter($query);
+        $pager   = new PagerFanta($adapter);
+
+        $pager->setMaxPerPage($blog->getOptions()->getPostPerPage());
+
+        try {
+            $pager->setCurrentPage($page);
+        } catch (NotValidCurrentPageException $e) {
+            throw new NotFoundHttpException();
+        }
 
         return array(
             '_resource' => $blog,
