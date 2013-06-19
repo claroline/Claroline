@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Claroline\CoreBundle\Entity\Role;
 
 class GroupRepository extends EntityRepository
