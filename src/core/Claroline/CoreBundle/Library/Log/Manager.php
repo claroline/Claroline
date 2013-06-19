@@ -197,7 +197,8 @@ class Manager
             'logs' => $logs,
             'listItemViews' => $views,
             'chartData' => $chartData,
-            'logAmount' => $desktopConfig->getAmount()
+            'logAmount' => $desktopConfig->getAmount(),
+            'isDesktop' => true
         );
     }
 
