@@ -38,8 +38,15 @@ class WorkspaceToolsParametersController extends AbstractParametersController
         $nextDisplayOrder = 1;
 
         if (!empty($toolsPermissions)) {
+
+            foreach ($toolsPermissions as $toolPerm) {
+
+                if ($toolPerm['tool']->getOrder() > $nextDisplayOrder) {
+                    $nextDisplayOrder = $toolPerm['tool']->getOrder();
+                }
+            }
             //the next display_order will be the incrementation of the last WorkspaceOrderTool display_order
-            $nextDisplayOrder = count($toolsPermissions) + 1;
+            $nextDisplayOrder++;
         }
 
         foreach ($undisplayedTools as $undisplayedTool) {
