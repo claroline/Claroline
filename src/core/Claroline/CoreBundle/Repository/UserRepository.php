@@ -402,23 +402,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
-     * extractQuery
-     *
-     * @param array $params
-     * @return Query
-     */
-    public function extractQuery($params)
-    {
-        $search = $params['search'];
-        if ($search !== null) {
-
-            return $this->findByNameQuery($search, 0, 10);
-        }
-
-        return null;
-    }
-
-    /**
      * extract
      *
      * @param array $params
@@ -426,8 +409,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      */
     public function extract($params)
     {
-        $query = $this->extractQuery($params);
+        $search = $params['search'];
+        if ($search !== null) {
 
-        return is_null($query) ? array() : $query->getResult();
+            return $this->findByName($search, 0, 10);
+        }
+
+        return array();
     }
 }
