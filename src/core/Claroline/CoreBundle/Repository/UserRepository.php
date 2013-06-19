@@ -393,6 +393,28 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $query->getResult();
     }
 
+    public function findByUsernames(array $usernames)
+    {
+        $firstUsername = array_pop($usernames);
+
+        $dql = "SELECT u FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.username = :user_first";
+
+
+        foreach ($usernames as $key => $username) {
+            $dql .= " OR u.username = :user_{$key}" . PHP_EOL;
+        }
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user_first', $firstUsername);
+
+        foreach ($usernames as $key => $username) {
+            $query->setParameter('user_' . $key, $username);
+        }
+
+        return $query->getResult();
+    }
+
     public function count()
     {
         $dql = "SELECT COUNT(u) FROM Claroline\CoreBundle\Entity\User u";
