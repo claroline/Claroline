@@ -118,16 +118,14 @@
 
 {% block javascripts %}
     {{ parent() }}
-        {% if is_granted('ROLE_ADMIN') %}
 
-        {% javascripts debug=false output='bundles/clarolinecore/css/bootstrap-colorpicker/js/bootstrap-colorpicker.js'
-        '../vendor/xaguilars/bootstrap-colorpicker/js/bootstrap-colorpicker.js'
-        %}
-            <script type="text/javascript" src="{{ asset_url }}"></script>
-        {% endjavascripts %}
+    {% javascripts debug=false output='bundles/clarolinecore/css/bootstrap-colorpicker/js/bootstrap-colorpicker.js'
+    '../vendor/xaguilars/bootstrap-colorpicker/js/bootstrap-colorpicker.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 
-        <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/theme/theme.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/theme/theme.js') }}"></script>
 
-    {% endif %}
 {% endblock %}
 
