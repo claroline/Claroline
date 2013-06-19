@@ -13,9 +13,7 @@ class DoctrineListener
         $entity = $args->getEntity();
         $entityManager = $args->getEntityManager();
 
-        // peut-être voulez-vous seulement agir sur une entité « Product »
         if ($entity instanceof Blog) {
-            // faites quelque chose avec l'entité « Product »
             $blogOptions = new BlogOptions();
             $blogOptions->setBlog($entity);
 
