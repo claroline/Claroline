@@ -107,10 +107,8 @@ class AbstractResourceRepository extends MaterializedPathRepository
             $children = $this->executeQuery($query);
         }
 
-        //sort children by next & previous
-
-        return $this->sort($children);
-    }
+        return $children;
+   }
 
     /**
      * Returns the root directories of workspaces a user is registered to.
@@ -255,38 +253,6 @@ class AbstractResourceRepository extends MaterializedPathRepository
         }
 
         return $orderedResult;
-    }
-
-    /**
-     * Sort a resource (linked list)
-     * @param array $resources
-     * @return array
-     */
-    public function sort(array $resources)
-    {
-        $sorted = array();
-        //set the 1st item.
-        foreach ($resources as $resource) {
-            if ($resource['previous_id'] == null) {
-                $sorted[] = $resource;
-            }
-        }
-
-        $loop = 0;
-
-        while (count($sorted) < count($resources)) {
-            $loop++;
-            foreach ($resources as $resource) {
-                if ($sorted[count($sorted) - 1]['id'] == $resource['previous_id']) {
-                    $sorted[] = $resource;
-                }
-            }
-            if ($loop > 100) {
-                throw new \Exception('More than 100 items in a directory or infinite loop detected');
-            }
-        }
-
-        return $sorted;
     }
 
     private function addFilters(ResourceQueryBuilder $builder,  array $criteria, array $roles = null)
