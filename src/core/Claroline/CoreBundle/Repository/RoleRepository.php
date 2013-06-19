@@ -150,7 +150,7 @@ class RoleRepository extends EntityRepository
             WITH rwt.tag = wt
             LEFT JOIN Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy wth
             WITH wth.tag = wt
-            JOIN wth.parent p
+            LEFT JOIN wth.parent p
             WHERE UPPER(ws.code) LIKE :code
             OR UPPER(wt.name) LIKE :code
             OR UPPER(p.name) LIKE :code
