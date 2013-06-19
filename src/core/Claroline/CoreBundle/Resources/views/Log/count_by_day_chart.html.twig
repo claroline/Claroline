@@ -4,6 +4,12 @@
         width: 80%;
         margin: 0 10%;
     }
+
+    .count_by_day_chart_legend {
+        text-align: center;
+        font-size: 11px;
+        color: #777;
+    }
 </style>
 <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
 
@@ -19,6 +25,10 @@
 <legend>{{ 'Actions per day'|trans({}, 'platform') }}</legend>
 
 <div id="actions_line_chart" class="line-chart"></div>
+
+<br/>
+<div class="count_by_day_chart_legend"><i class="icon-hand-up"></i> <em>{{ 'Draw an area on the graph to zoom, double-click to cancel'|trans({}, 'platform') }}</em></div>
+
 <script type="text/javascript">
     var chartData = {{ chartData|json_encode|raw }};
     var bg_color = "transparent";

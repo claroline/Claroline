@@ -169,7 +169,7 @@ class Manager
         foreach ($workspaces as $workspace) {
             $config = null;
             $i = 0;
-            while ($i < count($config) && $config == null) {
+            while ($i < count($configs) && $config == null) {
                 $current = $configs[$i++];
                 if ($current->getWorkspace()->getId() == $workspace->getId()) {
                     $config = $current;
@@ -181,6 +181,7 @@ class Manager
                 $configs[] = $config;
             }
         }
+
         if (count($configs) > 0) {
             $query = $repository->findLogsThroughConfigs($configs, $desktopConfig->getAmount());
             $logs = $query->getResult();
