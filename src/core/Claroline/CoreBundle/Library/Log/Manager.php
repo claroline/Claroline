@@ -14,6 +14,7 @@ use Claroline\CoreBundle\Library\Event\LogResourceChildUpdateEvent;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\CoreBundle\Entity\Logger\LogWorkspaceWidgetConfig;
+use Claroline\CoreBundle\Entity\Logger\LogDesktopWidgetConfig;
 
 /**
  * @DI\Service("claroline.log.manager")
@@ -142,6 +143,7 @@ class Manager
         $em = $this->container->get('doctrine.orm.entity_manager');
         $repository = $em->getRepository('ClarolineCoreBundle:Logger\Log');
 
+        $desktopConfig = $this->getDesktopWidgetConfig($loggedUser);
         $hiddenConfigs = $em
             ->getRepository('ClarolineCoreBundle:Logger\LogHiddenWorkspaceWidgetConfig')
             ->findBy(array('user' => $loggedUser));
@@ -155,11 +157,11 @@ class Manager
             ->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
             ->findByUserAndRoleNamesNotIn($loggedUser, array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'), $workspaceIds);
 
-        $configs = $this->container->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Logger\LogWorkspaceWidgetConfig')
-            ->findBy(array('workspace' => $workspaces));
-
-        if ($configs === null) {
+        if (count($workspaces) > 0) {
+            $configs = $this->container->get('doctrine.orm.entity_manager')
+                ->getRepository('ClarolineCoreBundle:Logger\LogWorkspaceWidgetConfig')
+                ->findBy(array('workspace' => $workspaces));
+        } else {
             $configs = array();
         }
 
@@ -179,10 +181,14 @@ class Manager
                 $configs[] = $config;
             }
         }
-        $query = $repository->findLogsThroughConfigs($configs, 10);
-        $logs = $query->getResult();
-
-        $chartData = $repository->countByDayThroughConfigs($configs, $this->getDefaultRange());
+        if (count($configs) > 0) {
+            $query = $repository->findLogsThroughConfigs($configs, $desktopConfig->getAmount());
+            $logs = $query->getResult();
+            $chartData = $repository->countByDayThroughConfigs($configs, $this->getDefaultRange());
+        } else {
+            $logs = array();
+            $chartData = array();
+        }
 
         //List item delegation
         $views = $this->renderLogs($logs);
@@ -190,7 +196,8 @@ class Manager
         return array(
             'logs' => $logs,
             'listItemViews' => $views,
-            'chartData' => $chartData
+            'chartData' => $chartData,
+            'logAmount' => $desktopConfig->getAmount()
         );
     }
 
@@ -224,7 +231,8 @@ class Manager
             'logs' => $logs,
             'listItemViews' => $views,
             'chartData' => $chartData,
-            'workspace' => $workspace
+            'workspace' => $workspace,
+            'logAmount' => $config->getAmount()
         );
     }
 
@@ -375,5 +383,35 @@ class Manager
         }
 
         return $workspacesVisibility;
+    }
+
+    public function getDesktopWidgetConfig($user)
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $config = $em
+            ->getRepository('ClarolineCoreBundle:Logger\LogDesktopWidgetConfig')
+            ->findOneBy(array('user' => $user));
+
+        if ($config === null) {
+            $config = new LogDesktopWidgetConfig();
+            $config->setUser($user);
+        }
+
+        return $config;
+    }
+
+    public function getWorkspaceWidgetConfig($workspace)
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $config = $em
+            ->getRepository('ClarolineCoreBundle:Logger\LogWorkspaceWidgetConfig')
+            ->findOneBy(array('workspace' => $workspace));
+
+        if ($config === null) {
+            $config = new LogWorkspaceWidgetConfig();
+            $config->setWorkspace($workspace);
+        }
+
+        return $config;
     }
 }

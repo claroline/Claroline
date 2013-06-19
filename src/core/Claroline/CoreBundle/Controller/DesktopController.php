@@ -40,7 +40,9 @@ class DesktopController extends Controller
                 $eventName = "widget_{$config->getWidget()->getName()}_desktop";
                 $event = new DisplayWidgetEvent();
                 $this->get('event_dispatcher')->dispatch($eventName, $event);
-                $responsesString[strtolower($config->getWidget()->getName())] = $event->getContent();
+                if ($event->hasContent()) {
+                    $responsesString[strtolower($config->getWidget()->getName())] = $event->getContent();
+                }
             }
         }
 
