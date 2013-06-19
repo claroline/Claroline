@@ -161,7 +161,6 @@ class Creator
         $requiredTools[] = $repo->findOneBy(array('name' => 'home'));
         $requiredTools[] = $repo->findOneBy(array('name' => 'resource_manager'));
         $requiredTools[] = $repo->findOneBy(array('name' => 'parameters'));
-        $requiredTools[] = $repo->findOneBy(array('name' => 'logs'));
 
         return $requiredTools;
     }
