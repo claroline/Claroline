@@ -1,7 +1,5 @@
 {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
 
-{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
-
 <form method="POST" action="{{ path('claro_log_update_desktop_widget_config')}}" class="form-horizontal" {{ form_enctype(form) }}>
     <fieldset>
         <legend>{{ 'Choose workspaces displayed in the widget'|trans({}, 'platform') }}</legend>
