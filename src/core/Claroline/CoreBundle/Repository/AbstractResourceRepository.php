@@ -374,4 +374,32 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
         return $query->getResult();
     }
+
+    public function findWorkspaceInfoByIds(array $resourcesId)
+    {
+        if (count($resourcesId) === 0) {
+            throw new \InvalidArgumentException("Array argument cannot be empty");
+        }
+
+        $index = 0;
+        $eol = PHP_EOL;
+        $resourcesIdTest = "(";
+
+        foreach ($resourcesId as $resId) {
+            $resourcesIdTest .= $index > 0 ? "    OR " : "    ";
+            $resourcesIdTest .= "r.id = {$resId}{$eol}";
+            $index++;
+        }
+        $resourcesIdTest .= "){$eol}";
+        $dql = "
+            SELECT r.id AS id, w.code AS code, w.name AS name
+            FROM Claroline\CoreBundle\Entity\Resource\AbstractResource r
+            JOIN r.workspace w
+            WHERE {$resourcesIdTest}
+            ORDER BY w.name ASC
+        ";
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
 }
