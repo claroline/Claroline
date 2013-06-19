@@ -746,21 +746,24 @@ class Manager
         $sorted = array();
         //set the 1st item.
         foreach ($resources as $resource) {
-            if ($resource['previous_id'] == null) {
+            if ($resource['previous_id'] === null) {
                 $sorted[] = $resource;
             }
         }
 
-        $loop = 0;
+        $resourceCount = count($resources);
+        $sortedCount = 0;
 
-        while (count($sorted) < count($resources)) {
-            $loop++;
+        for ($i = 0; $sortedCount < $resourceCount; ++$i) {
+            $sortedCount = count($sorted);
+
             foreach ($resources as $resource) {
-                if ($sorted[count($sorted) - 1]['id'] == $resource['previous_id']) {
+                if ($sorted[$sortedCount - 1]['id'] === $resource['previous_id']) {
                     $sorted[] = $resource;
                 }
             }
-            if ($loop > 100) {
+
+            if ($i > 100) {
                 throw new \Exception('More than 100 items in a directory or infinite loop detected');
             }
         }
