@@ -472,3 +472,5 @@ Choose visible actions in the widget: 'Choisissez les actions visibles dans le w
 Actions per day: 'Nombre d''actions par jour'
 Last action: '{1} Dernière action|[1,Inf] %logAmount% dernières actions'
 log_hidden_workspace_widget_config_amount : 'Nombre d''actions'
+Action List: 'Liste des actions'
+Filter actions: 'Filtrer les actions'
