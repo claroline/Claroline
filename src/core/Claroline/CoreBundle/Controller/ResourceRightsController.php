@@ -5,7 +5,6 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Claroline\CoreBundle\Form\ResourceRightType;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleChangeRightEvent;
@@ -121,7 +120,7 @@ class ResourceRightsController extends Controller
         $editedResourceRightsWithChangeSet = array();
         $finalRights = isset($parameters['isRecursive']) ?
             $this->findChildrenRights($resource):
-            $finalRights = $rightsRepo->findNonAdminRights($resource);
+            $rightsRepo->findNonAdminRights($resource);
 
         foreach ($finalRights as $finalRight) {
             foreach ($permissions as $permission) {
@@ -153,7 +152,7 @@ class ResourceRightsController extends Controller
 
         $em->flush();
 
-        return new Response('success');
+        return new Response('success', 204);
     }
 
     /**
@@ -385,7 +384,7 @@ class ResourceRightsController extends Controller
                     $found = true;
                 }
             }
-
+            
             if (!$found) {
                 $newRight = new ResourceRights();
                 $newRight->setResource($item['resource']);
