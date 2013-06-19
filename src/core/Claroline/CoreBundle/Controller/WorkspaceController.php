@@ -385,7 +385,11 @@ class WorkspaceController extends Controller
                 $event = new DisplayWidgetEvent($workspace);
                 $this->get('event_dispatcher')->dispatch($eventName, $event);
                 if ($event->hasContent()) {
-                    $responsesString[strtolower($config->getWidget()->getName())] = $event->getContent();
+                    if ($event->hasTitle()) {
+                        $responsesString[$event->getTitle()] = $event->getContent();
+                    } else {
+                        $responsesString[strtolower($config->getWidget()->getName())] = $event->getContent();
+                    }
                 }
             }
         }
