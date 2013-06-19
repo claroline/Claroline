@@ -136,6 +136,31 @@ class WorkspaceController extends Controller
         );
     }
 
+    private function isTagDisplayable($tagId, array $tagWorkspaces, array $hierarchy)
+    {
+        $displayable = false;
+
+        if (isset($tagWorkspaces[$tagId]) && count($tagWorkspaces[$tagId]) > 0) {
+            $displayable = true;
+        } else {
+
+            if (isset($hierarchy[$tagId]) && count($hierarchy[$tagId]) > 0) {
+                $children = $hierarchy[$tagId];
+
+                foreach ($children as $child) {
+
+                    $displayable = $this->isTagDisplayable($child->getId(), $tagWorkspaces, $hierarchy);
+
+                    if ($displayable) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $displayable;
+    }
+
     /**
      * @Route(
      *     "/new/form",
