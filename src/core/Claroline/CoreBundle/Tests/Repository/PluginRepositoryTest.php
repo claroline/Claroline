@@ -26,7 +26,7 @@ class PluginRepositoryTest extends RepositoryTestCase
     public function testFindOneByBundleFQCN()
     {
         $plugin = self::$repo->findOneByBundleFQCN('Vendor\Bundle');
-        $this->assertEquals('Vendor', $plugin->getVendorNam());
+        $this->assertEquals('Vendor', $plugin->getVendorName());
     }
 
 }
