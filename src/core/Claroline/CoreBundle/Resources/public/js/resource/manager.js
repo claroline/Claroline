@@ -209,7 +209,7 @@
                             });
                         }
                     }
-                    
+
                     this.dispatcher.trigger('picker', {action: 'close'});
                 },
                 'click a.filter-result': function (event) {
@@ -419,7 +419,7 @@
             tagName: 'ul',
             attributes: {'id': 'sortable'},
             events: {
-                'dblclick .resource-thumbnail .resource-element': 'dispatchOpen',
+                'click .resource-thumbnail .resource-element': 'dispatchOpen',
                 'click .resource-thumbnail input[type=checkbox]': 'dispatchCheck',
                 'click .results table a.resource-link': 'dispatchOpen',
                 'click .results table input[type=checkbox]': 'dispatchCheck'
@@ -488,7 +488,7 @@
                         name: event.currentTarget.getAttribute('data-resource-name'),
                         type: event.currentTarget.getAttribute('data-type'),
                         mimeType: event.currentTarget.getAttribute('data-mime-type')
-                        
+
                     },
                     isChecked: event.currentTarget.checked,
                     isPickerMode: this.parameters.isPickerMode
@@ -716,18 +716,20 @@
                 }
             },
             'resource-click': function (event) {
-
-                if (event.isPickerMode) {
-                    if (event.resourceType === 'directory') {
-                        this.displayResources(event.resourceId, 'picker');
-                    }
-                } else {
-                    if (event.resourceType === 'directory') {
-                        this.router.navigate('resources/' + event.resourceId, {trigger: true});
+                if (this.isOpenEnabled) {
+                    if (event.isPickerMode) {
+                        if (event.resourceType === 'directory') {
+                            this.displayResources(event.resourceId, 'picker');
+                        }
                     } else {
-                        this.open(event.resourceType, event.resourceId, event.directoryHistory);
+                        if (event.resourceType === 'directory') {
+                            this.router.navigate('resources/' + event.resourceId, {trigger: true});
+                        } else {
+                            this.open(event.resourceType, event.resourceId, event.directoryHistory);
+                        }
                     }
                 }
+                this.isOpenEnabled = true;
             },
             'filter': function (event) {
                 if (!event.isPickerMode) {
@@ -758,6 +760,7 @@
             }
         },
         initialize: function (parameters) {
+            this.isOpenEnabled = true;
             this.views = {};
             this.parameters = parameters;
             this.dispatcher = _.extend({}, Backbone.Events);
@@ -770,7 +773,6 @@
                 callback = _.bind(callback, this);
                 this.dispatcher.on(event, callback);
             }, this);
-            this.stackedRequests = 0;
             $.ajaxSetup({
                 headers: {'X_Requested_With': 'XMLHttpRequest'},
                 context: this
@@ -832,6 +834,8 @@
                         this.views[view].isAppended = true;
                     }
 
+                    var that = this;
+
                     $('#sortable').sortable({
                         update: function (event, ui) {
                             var ids = $('#sortable').sortable('toArray');
@@ -850,12 +854,17 @@
                                 nextId = ids[indexMoved + 1];
                             }
 
-                            $.ajax({
-                                url: Routing.generate(
-                                    'claro_resource_insert_before',
-                                    {'resourceId': moved, 'nextId': nextId}
-                                )
-                            });
+                            if (ui.position !== ui.originalPosition) {
+                                $.ajax({
+                                    url: Routing.generate(
+                                        'claro_resource_insert_before',
+                                        {'resourceId': moved, 'nextId': nextId}
+                                    )
+                                });
+                            }
+                        },
+                        start: function (event, ui) {
+                            that.isOpenEnabled = false;
                         }
                     });
 

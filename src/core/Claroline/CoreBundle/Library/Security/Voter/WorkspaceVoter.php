@@ -85,7 +85,7 @@ class WorkspaceVoter implements VoterInterface
 
         $tools = $this->em
             ->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->findByRolesAndWorkspace($this->ut->getRoles($token), $workspace, true);
+            ->findDisplayedByRolesAndWorkspace($this->ut->getRoles($token), $workspace);
 
         if ($action === 'OPEN') {
             if (count($tools) > 0) {
