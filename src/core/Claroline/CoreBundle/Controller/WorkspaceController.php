@@ -290,7 +290,7 @@ class WorkspaceController extends Controller
             ->findBy(array('workspace' => $workspace));
 
         $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->findByRolesAndWorkspace($currentRoles, $workspace, true);
+            ->findDisplayedByRolesAndWorkspace($currentRoles, $workspace);
         $toolsWithTranslation = array();
 
         foreach ($tools as $tool) {
@@ -438,13 +438,13 @@ class WorkspaceController extends Controller
                     ->findBy(array('name' => 'home'));
             } else {
                 $openedTool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-                    ->findByRolesAndWorkspace(array($foundRole), $workspace, true);
+                    ->findDisplayedByRolesAndWorkspace(array($foundRole), $workspace);
             }
 
         } else {
             $foundRole = 'ROLE_ANONYMOUS';
             $openedTool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-                ->findByRolesAndWorkspace(array('ROLE_ANONYMOUS'), $workspace, true);
+                ->findDisplayedByRolesAndWorkspace(array('ROLE_ANONYMOUS'), $workspace);
         }
 
         if ($openedTool == null) {

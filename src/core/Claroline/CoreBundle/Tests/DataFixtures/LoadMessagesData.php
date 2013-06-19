@@ -35,24 +35,21 @@ class LoadMessagesData extends LoggableFixture implements ContainerAwareInterfac
 
     public function load(ObjectManager $manager)
     {
-        $lipusmGenerator = $this->container->get('claroline.utilities.lipsum_generator');
-
         foreach ($this->messages as $data) {
-            $message = new Message;
-            $message->setObject($data['object']);
-            $message->setContent($lipusmGenerator->generateLipsum(150, true));
-            $userMessage = new UserMessage();
-            $userMessage->setMessage($message);
-            $message->setUser($this->getReference('user/'.$data['from']));
-            $message->setSenderUsername($this->getReference('user/'.$data['from'])->getUsername());
-            $message->setReceiverUsername($this->getReference('user/'.$data['to'])->getUsername());
-            $userMessage->setUser($this->getReference('user/'.$data['to']));
-            $senderUserMessage = new UserMessage(true);
-            $senderUserMessage->setMessage($message);
-            $senderUserMessage->setUser($this->getReference('user/'.$data['from']));
-            $manager->persist($userMessage);
-            $manager->persist($senderUserMessage);
-            $manager->persist($message);
+            $parent = null;
+            if (isset($data['parent'])) {
+                $parent = $this->getReference('message/'.$data['parent']);
+            }
+
+            $message = $this->container->get('claroline.message.manager')->create(
+                $this->getReference('user/' . $data['from']),
+                $data['to'],
+                $this->container->get('claroline.utilities.lipsum_generator')->generateLipsum(150, true),
+                $data['object'],
+                $parent
+            );
+
+            $this->addReference('message/' . $data['object'], $message);
         }
 
         $manager->flush();
