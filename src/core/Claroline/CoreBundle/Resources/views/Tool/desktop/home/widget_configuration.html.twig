@@ -1,6 +1,5 @@
 {% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
 {% block section_content %}
-
     {{
         macros.breadcrumbs([
             {
@@ -19,10 +18,10 @@
                 'name': 'configuration'|trans({}, 'platform'),
                 'href': '#'
             }
-
         ])
     }}
 
+    <br/>
     {% block section_widget_content %}
         {{ content|raw }}
     {% endblock %}
