@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 
 class AbstractResourceRepositoryTest extends RepositoryTestCase
 {
+    /** @var \Claroline\CoreBundle\Repository\AbstractResourceRepository */
     private static $repo;
     private static $timeOne;
     private static $timeTwo;
