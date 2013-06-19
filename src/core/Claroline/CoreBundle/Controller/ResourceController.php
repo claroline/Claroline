@@ -395,7 +395,7 @@ class ResourceController extends Controller
 
             $workspaceId = $directory->getWorkspace()->getId();
 
-            if ($user == $directory->getCreator() || $this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            if ($user === $directory->getCreator() || $this->get('security.context')->isGranted('ROLE_ADMIN')) {
                 $canChangePosition = true;
             }
 
