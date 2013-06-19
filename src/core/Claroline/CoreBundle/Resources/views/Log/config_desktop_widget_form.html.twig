@@ -1,8 +1,20 @@
 {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
 
-<form method="POST" action="{{ path('claro_log_update_desktop_widget_config')}}" class="form-horizontal" {{ form_enctype(form) }}>
+<style type="text/css">
+    #form_log_update_desktop_widget .control-group {
+        margin-bottom: 0px;
+    }
+
+    #form_log_update_desktop_widget .control-group:last-child {
+        margin-top: 40px;
+        margin-bottom: 20px;
+    }
+</style>
+
+<form id="form_log_update_desktop_widget" method="POST" action="{{ path('claro_log_update_desktop_widget_config')}}" class="form-horizontal" {{ form_enctype(form) }}>
     <fieldset>
         <legend>{{ 'Choose workspaces displayed in the widget'|trans({}, 'platform') }}</legend>
+        {{ form_widget(form._token) }}
         {{ form_widget(form) }}
     </fieldset>
 
