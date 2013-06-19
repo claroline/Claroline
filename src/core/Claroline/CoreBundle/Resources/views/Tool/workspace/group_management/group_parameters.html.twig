@@ -18,7 +18,6 @@
             </li>
         </ul>
     {% endspaceless %}
-    {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
     <form class="form-horizontal" action="{{path('claro_workspace_tools_edit_group_parameters',{'workspaceId':workspace.getId(), 'groupId':group.getId()})}}" method="post" {{ form_enctype(form) }} id="user-parameters">
         <fieldset>
             <legend>{{ 'group_parameter'|trans({}, 'platform') }} :</legend>
