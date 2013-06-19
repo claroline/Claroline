@@ -90,16 +90,6 @@ class ToolListener
     }
 
     /**
-     * @DI\Observe("open_tool_desktop_logs")
-     *
-     * @param DisplayToolEvent $event
-     */
-    public function onDisplayDesktopLogs(DisplayToolEvent $event)
-    {
-        $event->setContent($this->desktopLogs());
-    }
-
-    /**
      * @DI\Observe("open_tool_desktop_parameters")
      *
      * @param DisplayToolEvent $event
@@ -190,14 +180,6 @@ class ToolListener
         return $this->container->get('templating')->render(
             'ClarolineCoreBundle:Tool/workspace/logs:log_list.html.twig',
             $this->container->get('claroline.log.manager')->getWorkspaceList($workspace, 1)
-        );
-    }
-
-    public function desktopLogs()
-    {
-        return $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Tool/desktop/logs:log_list.html.twig',
-            $this->container->get('claroline.log.manager')->getDesktopList(1)
         );
     }
 
