@@ -4,7 +4,6 @@
     'use strict';
 
     var submitForm = function (formAction, formData) {
-        alert('presm');
         $.ajax({
             url: formAction,
             data: formData,
@@ -12,7 +11,6 @@
             processData: false,
             contentType: false,
             success: function () {
-                alert('success');
                 window.location.href = Routing.generate('claro_workspace_open_tool',
                 {'toolName': 'parameters', 'workspaceId': $('#data').attr('data-workspace-id') });
             }
