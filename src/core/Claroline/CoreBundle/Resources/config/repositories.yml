@@ -1,0 +1,14 @@
+services:
+  user_repository:
+    class:           Claroline\CoreBundle\Repository\UserRepository
+    factory_service: doctrine.orm.entity_manager
+    factory_method:  getRepository
+    arguments:
+      - Claroline\CoreBundle\Entity\User
+
+  message_repository:
+    class:           Claroline\CoreBundle\Repository\MessageRepository
+    factory_service: doctrine.orm.entity_manager
+    factory_method:  getRepository
+    arguments:
+      - Claroline\CoreBundle\Entity\Message

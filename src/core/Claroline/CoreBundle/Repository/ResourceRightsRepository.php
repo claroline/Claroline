@@ -89,6 +89,13 @@ class ResourceRightsRepository extends EntityRepository
         return $this->_em->createQuery($dql)->getResult();
     }
 
+    /**
+     * Find ResourceRights for each descendant of a resource.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     *
+     * @return array
+     */
     public function findRecursiveByResource(AbstractResource $resource)
     {
         $dql = "
@@ -102,6 +109,14 @@ class ResourceRightsRepository extends EntityRepository
         return $this->_em->createQuery($dql)->getResult();
     }
 
+    /**
+     * Find ResourceRights for each descendant of a resource for a role.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     * @param \Claroline\CoreBundle\Entity\Role $role
+     *
+     * @return array
+     */
     public function findRecursiveByResourceAndRole(AbstractResource $resource, Role $role)
     {
         $dql = "

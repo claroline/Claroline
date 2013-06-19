@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Library\Event\LogCreateDelegateViewEvent;
 use Claroline\CoreBundle\Library\Event\LogResourceChildUpdateEvent;
 use Claroline\CoreBundle\Form\LogWorkspaceWidgetConfigType;
-use Claroline\CoreBundle\Form\LogHiddenWorkspaceWidgetConfigType;
+use Claroline\CoreBundle\Form\LogDesktopWidgetConfigType;
 use Claroline\CoreBundle\Entity\Logger\LogWorkspaceWidgetConfig;
 use Claroline\CoreBundle\Entity\Logger\LogHiddenWorkspaceWidgetConfig;
 
@@ -139,45 +139,47 @@ class LogController extends Controller
 
     /**
      * @Route(
-     *     "/update_hidden_workspace_widget_config",
-     *     name="claro_log_update_hidden_workspace_widget_config"
+     *     "/update_desktop_widget_config",
+     *     name="claro_log_update_desktop_widget_config"
      * )
      * @Method("POST")
      */
-    public function updateLogHiddenWorkspaceWidgetConfig()
+    public function updateDesktopWidgetConfig()
     {
         $em = $this->getDoctrine()->getManager();
         $loggedUser = $this->get('security.context')->getToken()->getUser();
 
-        $configs = $em->getRepository('ClarolineCoreBundle:Logger\LogHiddenWorkspaceWidgetConfig')
+        $config = $this->get('claroline.log.manager')->getDesktopWidgetConfig($loggedUser);
+        $hiddenConfigs = $em->getRepository('ClarolineCoreBundle:Logger\LogHiddenWorkspaceWidgetConfig')
             ->findBy(array('user' => $loggedUser));
 
         $workspaces = $em
             ->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
             ->findByUserAndRoleNames($loggedUser, array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'));
 
-        $form = $this->get('form.factory')->create(new LogHiddenWorkspaceWidgetConfigType(), null, array('workspaces' => $workspaces));
+        $form = $this->get('form.factory')->create(new LogDesktopWidgetConfigType(), null, array('workspaces' => $workspaces));
         $form->bind($this->getRequest());
 
         $translator = $this->get('translator');
         if ($form->isValid()) {
-
             $data = $form->getData();
-            // remove all configs for loggedUser
-            foreach ($configs as $config) {
-                $em->remove($config);
+            // remove all hiddenConfigs for loggedUser
+            foreach ($hiddenConfigs as $hiddenConfig) {
+                $em->remove($hiddenConfig);
             }
             $em->flush();
-
-            // add configs from formData for loggedUser
+            // add hiddenConfigs from formData for loggedUser
             foreach ($data as $workspaceId => $visible) {
-                if ($visible !== true) {
+                if ($workspaceId != 'amount' and $visible !== true) {
                     $hiddenConfig = new LogHiddenWorkspaceWidgetConfig();
                     $hiddenConfig->setUser($loggedUser);
                     $hiddenConfig->setWorkspaceId($workspaceId);
                     $em->persist($hiddenConfig);
                 }
             }
+            // save amount
+            $config->setAmount($data['amount']);
+            $em->persist($config);
             $em->flush();
 
             $this->get('session')->getFlashBag()->add('success', $translator->trans('Your changes have been saved', array(), 'platform'));
@@ -187,7 +189,7 @@ class LogController extends Controller
         $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneByName('home');
 
         return $this->render(
-            'ClarolineCoreBundle:Log:config_hidden_workspace_form_update.html.twig', array(
+            'ClarolineCoreBundle:Log:config_desktop_form_update.html.twig', array(
             'form' => $form->createView(),
             'tool' => $tool
             )

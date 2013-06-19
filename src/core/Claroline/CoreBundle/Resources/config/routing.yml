@@ -77,11 +77,6 @@ claro_desktop_tool_properties:
     prefix: desktop/tool/properties
     type: annotation
 
-claro_desktop_tool_logs:
-    resource: "@ClarolineCoreBundle/Controller/Tool/DesktopLogController.php"
-    prefix: desktop/tool/logs
-    type: annotation
-
 claro_workspace:
     resource: "@ClarolineCoreBundle/Controller/WorkspaceController.php"
     prefix: workspaces

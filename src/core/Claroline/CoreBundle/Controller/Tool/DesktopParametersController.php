@@ -34,7 +34,8 @@ class DesktopParametersController extends Controller
             $orderedToolList[$desktopTool->getOrder()] = $desktopTool->getTool();
         }
 
-        $undisplayedTools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findByUser($user, false);
+        $undisplayedTools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
+            ->findDesktopUndisplayedToolsByUser($user);
 
         foreach ($undisplayedTools as $tool) {
             $tool->setVisible(false);

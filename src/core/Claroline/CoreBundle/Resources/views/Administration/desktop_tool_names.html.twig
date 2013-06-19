@@ -13,7 +13,7 @@
  	{% for key,value in tools  %}
             <tr class='row-tool-config' data-tool-id={{ tools[key].getId () }}>
                 <td>{{ tools[key].getName()|lower|trans({}, 'tools') }}</td>
-                <td> {% form_theme forms[key] 'ClarolineCoreBundle::form_theme.html.twig' %}
+                <td>
                     <form method="post" action="{{ path('claro_admin_tool_modify', {'id': tools[key].getId() }) }}" method="post" {{ form_enctype(forms[key]) }}
                     class="form-inline" >
                     {{ form_label(forms[key].displayName) }}

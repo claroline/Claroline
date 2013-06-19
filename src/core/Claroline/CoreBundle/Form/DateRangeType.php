@@ -9,7 +9,6 @@ use Claroline\CoreBundle\Validator\Constraints\AdminWorkspaceTagUniqueName;
 use Claroline\CoreBundle\Form\DataTransformer\DateRangeToTextTransformer;
 use JMS\DiExtraBundle\Annotation as DI;
 
-
 /**
  * @DI\Service("claroline.form.daterange")
  * @DI\FormType(alias = "daterange")
@@ -30,7 +29,7 @@ class DateRangeType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->appendClientTransformer(new DateRangeToTextTransformer($this->translator));
+        $builder->addViewTransformer(new DateRangeToTextTransformer($this->translator));
     }
 
     public function getParent()
@@ -45,8 +44,7 @@ class DateRangeType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver
-        ->setDefaults(
+        $resolver->setDefaults(
             array(
                 'translation_domain' => 'platform'
             )

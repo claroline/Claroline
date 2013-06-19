@@ -2,76 +2,128 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Claroline\CoreBundle\Library\Testing\FixtureTestCase;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
+use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
+use Claroline\CoreBundle\Entity\Logger\Log;
+use Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole;
 
-class WorkspaceRepositoryTest extends FixtureTestCase
+class WorkspaceRepositoryTest extends RepositoryTestCase
 {
-    /** @var WorkspaceRepository */
-    private $wsRepo;
+    /** @var \Claroline\CoreBundle\Repository\WorkspaceRepository */
+    public static $repo;
 
-    protected function setUp()
+    public static function setUpBeforeClass()
     {
-        parent::setUp();
-        $this->loadPlatformRolesFixture();
-        $this->loadUserData(array('user' => 'user'));
-        $this->wsRepo = $this->getEntityManager()
-            ->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
+        parent::setUpBeforeClass();
+        self::$repo = self::$em->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        self::loadPlatformRoleData();
+        self::loadUserData(array('john' => 'user', 'jane' => 'user'));
+        self::loadWorkspaceData(array('ws_a' => 'john'));
+
+        $wtr = new WorkspaceToolRole();
+        $wtr->setRole(self::$em->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_ANONYMOUS'));
+        $wots = self::$em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
+            ->findBy(array('workspace' => self::getWorkspace('ws_a')));
+        $wtr->setWorkspaceOrderedTool($wots[0]);
+
+        //insert log wsread event.
+        $first = new Log();
+        $first->setDoer(self::getUser('john'));
+        $first->setWorkspace(self::getWorkspace('john'));
+        $first->setAction('ws_tool_read');
+        $first->setDoerType(Log::doerTypeUser);
+
+        $second = new Log();
+        $second->setDoer(self::getUser('john'));
+        $second->setWorkspace(self::getWorkspace('ws_a'));
+        $second->setAction('ws_tool_read');
+        $second->setDoerType(Log::doerTypeUser);
+
+        self::$em->persist($first);
+        self::$em->persist($second);
+        self::$em->persist($wtr);
+        self::$em->flush();
     }
 
-    public function testfindByUserReturnsExpectedResults()
+    public function testFindByUser()
     {
-        $user = $this->getUser('user');
-        $ws = $this->wsRepo->findByUser($user);
-
-        $this->assertEquals(1, count($ws));
-        $this->assertEquals($user->getPersonalWorkspace(), $ws[0]);
-
-        $this->loadWorkspaceData(
-            array(
-                'Workspace_1' => 'user',
-                'Workspace_2' => 'user',
-                'Workspace_3' => 'user'
-            )
-        );
-        $user->addRole(
-            $this->getEntityManager()
-                ->getRepository('ClarolineCoreBundle:Role')
-                ->findCollaboratorRole($this->getWorkspace('Workspace_3'))
-        );
-        $this->getEntityManager()->flush();
-        $userWs = $this->wsRepo->findByUser($user);
-        $this->assertEquals(4, count($userWs));
-        $this->assertEquals('Workspace_1', $userWs[1]->getName());
-        $this->assertEquals('Workspace_2', $userWs[2]->getName());
+        $workspaces = self::$repo->findByUser(self::getUser('john'));
+        $this->assertEquals(2, count($workspaces));
     }
 
-    public function testfindByRolesResturnsExcectedResults()
+    public function testFindNonPersonal()
     {
-        $this->loadUserData(array('creator' => 'ws_creator'));
-        $user = $this->getUser('user');
-        $this->loadGroupData(array('group_a' => array('user')));
-        $group = $this->getGroup('group_a');
-        $roleRepo = $this->em->getRepository('ClarolineCoreBundle:Role');
+        $workspaces = self::$repo->findNonPersonal(self::getUser('john'));
+        $this->assertEquals(1, count($workspaces));
+        $workspaces = self::$repo->findNonPersonal(self::getUser('jane'));
+        $this->assertEquals(1, count($workspaces));
+    }
 
-        $this->loadWorkspaceData(
-            array(
-                'Workspace_1' => 'creator',
-                'Workspace_2' => 'creator',
-                'Workspace_3' => 'creator'
-            )
+    public function testFindByAnonymous()
+    {
+        $workspaces = self::$repo->findByAnonymous();
+        $this->assertEquals(1, count($workspaces));
+    }
+
+    public function testCount()
+    {
+        $this->assertEquals(3, self::$repo->count());
+    }
+
+    public function testFindByRoles()
+    {
+        $roles = array(
+            'ROLE_ANONYMOUS',
+            'ROLE_WS_MANAGER_' . self::getWorkspace('jane')->getId()
         );
 
-        $user->addRole($roleRepo->findCollaboratorRole($this->getWorkspace('Workspace_1')));
-        $group->addRole($roleRepo->findCollaboratorRole($this->getWorkspace('Workspace_2')));
-        $this->em->persist($user);
-        $this->em->persist($group);
-        $this->em->flush();
+        $workspaces = self::$repo->findByRoles($roles);
+        $this->assertEquals(2, count($workspaces));
+    }
 
-        $ws = $this->em
-            ->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
-            ->findByRoles($user->getRoles());
+    public function testFindIdsByUserAndRoleNames()
+    {
+        $ids = self::$repo->findIdsByUserAndRoleNames(
+            self::getUser('jane'),
+            array('ROLE_WS_MANAGER')
+        );
 
-        $this->assertEquals(3, count($ws));
+        $this->assertEquals(1, count($ids));
+        $this->assertEquals(self::getWorkspace('jane')->getId(), $ids[0]['id']);
+
+        $ids = self::$repo->findIdsByUserAndRoleNames(
+            self::getUser('jane'),
+            array('ROLE_NOT_EXISTING')
+        );
+
+        $this->assertEquals(0, count($ids));
+    }
+
+    public function testFindByUserAndRoleNames()
+    {
+         $workspaces = self::$repo->findByUserAndRoleNames(
+            self::getUser('jane'),
+            array('ROLE_WS_MANAGER')
+        );
+
+        $this->assertEquals(1, count($workspaces));
+        $this->assertEquals(self::getWorkspace('jane')->getId(), $workspaces[0]->getId());
+
+        $workspaces = self::$repo->findByUserAndRoleNames(
+            self::getUser('jane'),
+            array('ROLE_NOT_EXISTING')
+        );
+
+        $this->assertEquals(0, count($workspaces));
+    }
+
+    public function testFindLatestWorkspaceByUser()
+    {
+        $roles = array(
+            'ROLE_WS_MANAGER_' . self::getWorkspace('ws_a')->getId(),
+            'ROLE_WS_MANAGER_' . self::getWorkspace('john')->getId()
+        );
+
+        $workspaces = self::$repo->findLatestWorkspaceByUser(self::getUser('john'), $roles);
+        $this->assertEquals('ws_a', $workspaces[1]['workspace']->getName());
     }
 }

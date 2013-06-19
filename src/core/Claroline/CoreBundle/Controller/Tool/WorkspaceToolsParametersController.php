@@ -30,7 +30,8 @@ class WorkspaceToolsParametersController extends AbstractParametersController
         $anonRole = $em->getRepository('ClarolineCoreBundle:Role')->findBy(array('name' => 'ROLE_ANONYMOUS'));
         $wsRoles = array_merge($wsRoles, $anonRole);
         $toolsPermissions = $this->getToolPermissions($workspace, $wsRoles);
-        $undisplayedTools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findByWorkspace($workspace, false);
+        $undisplayedTools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
+            ->findUndisplayedToolsByWorkspace($workspace);
 
         //this is the missing part of the array
         $toFill = array();
@@ -38,8 +39,15 @@ class WorkspaceToolsParametersController extends AbstractParametersController
         $nextDisplayOrder = 1;
 
         if (!empty($toolsPermissions)) {
+
+            foreach ($toolsPermissions as $toolPerm) {
+
+                if ($toolPerm['tool']->getOrder() > $nextDisplayOrder) {
+                    $nextDisplayOrder = $toolPerm['tool']->getOrder();
+                }
+            }
             //the next display_order will be the incrementation of the last WorkspaceOrderTool display_order
-            $nextDisplayOrder = count($toolsPermissions) + 1;
+            $nextDisplayOrder++;
         }
 
         foreach ($undisplayedTools as $undisplayedTool) {
