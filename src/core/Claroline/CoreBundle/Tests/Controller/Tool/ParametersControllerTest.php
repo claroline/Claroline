@@ -41,7 +41,7 @@ class ParametersControllerTest extends FunctionalTestCase
 
         $this->assertEquals(
             --$nbBaseDisplayedTools,
-            count($repo->findByUser($this->getUser('john'), true))
+            count($repo->findDesktopDisplayedToolsByUser($this->getUser('john')))
         );
     }
 
@@ -51,7 +51,7 @@ class ParametersControllerTest extends FunctionalTestCase
         $workspace = $this->getWorkspace('john');
         $role = $this->em->getRepository('ClarolineCoreBundle:Role')
             ->findVisitorRole($workspace);
-        $baseDisplayedTools = $repo->findByRolesAndWorkspace(array($role->getName()), $workspace, true);
+        $baseDisplayedTools = $repo->findDisplayedByRolesAndWorkspace(array($role->getName()), $workspace);
         $nbBaseDisplayedTools = count($baseDisplayedTools);
         $calendar = $repo->findOneBy(array('name' => 'calendar'));
         $this->logUser($this->getUser('john'));
@@ -67,7 +67,7 @@ class ParametersControllerTest extends FunctionalTestCase
 
         $this->assertEquals(
             ++$nbBaseDisplayedTools,
-            count($repo->findByRolesAndWorkspace(array($role->getName()), $workspace, true))
+            count($repo->findDisplayedByRolesAndWorkspace(array($role->getName()), $workspace))
         );
 
         $this->client->request(
@@ -77,7 +77,7 @@ class ParametersControllerTest extends FunctionalTestCase
 
         $this->assertEquals(
             --$nbBaseDisplayedTools,
-            count($repo->findByRolesAndWorkspace(array($role->getName()), $workspace, true))
+            count($repo->findDisplayedByRolesAndWorkspace(array($role->getName()), $workspace))
         );
     }
 
@@ -369,7 +369,7 @@ class ParametersControllerTest extends FunctionalTestCase
     public function testDesktopConfigureToolsPage()
     {
         $repo = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool');
-        $activeTools = $repo->findByUser($this->getUser('john'), true);
+        $activeTools = $repo->findDesktopDisplayedToolsByUser($this->getUser('john'));
         $this->logUser($this->getUser('john'));
         $crawler = $this->client->request(
             'GET',

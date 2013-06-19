@@ -30,7 +30,8 @@ class WorkspaceToolsParametersController extends AbstractParametersController
         $anonRole = $em->getRepository('ClarolineCoreBundle:Role')->findBy(array('name' => 'ROLE_ANONYMOUS'));
         $wsRoles = array_merge($wsRoles, $anonRole);
         $toolsPermissions = $this->getToolPermissions($workspace, $wsRoles);
-        $undisplayedTools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findByWorkspace($workspace, false);
+        $undisplayedTools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
+            ->findUndisplayedToolsByWorkspace($workspace);
 
         //this is the missing part of the array
         $toFill = array();

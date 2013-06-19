@@ -42,7 +42,7 @@ class WorkspaceAccessExtension extends \Twig_Extension
         $workspace = $this->em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
             ->find($workspaceId);
         $repo = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool');
-        $tools = $repo->findByRolesAndWorkspace(array($role), $workspace, true);
+        $tools = $repo->findDisplayedByRolesAndWorkspace(array($role), $workspace);
 
         return count($tools) > 0 ? true: false;
     }
@@ -53,7 +53,7 @@ class WorkspaceAccessExtension extends \Twig_Extension
         $workspace = $this->em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
             ->find($workspaceId);
         $repo = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool');
-        $tools = $repo->findByRolesAndWorkspace($roles, $workspace, true);
+        $tools = $repo->findDisplayedByRolesAndWorkspace($roles, $workspace);
 
         return count($tools) > 0 ? true: false;
     }
