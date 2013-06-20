@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Claroline\CoreBundle\Templating\Loader;
 
 use Symfony\Component\Config\FileLocatorInterface;
@@ -16,9 +7,7 @@ use Symfony\Component\Templating\TemplateReferenceInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\Loader\TemplateLocator as baseTemplateLocator;
 
 /**
- * TemplateLocator locates templates in bundles.
- *
- * @author Fabien Potencier <fabien@symfony.com>
+ * @inheritDoc
  */
 class TemplateLocator extends baseTemplateLocator
 {
@@ -47,28 +36,7 @@ class TemplateLocator extends baseTemplateLocator
     }
 
     /**
-     * Returns a full path for a given file.
-     *
-     * @param TemplateReferenceInterface $template A template
-     *
-     * @return string The full path for the file
-     */
-    protected function getCacheKey($template)
-    {
-        return $template->getLogicalName();
-    }
-
-    /**
-     * Returns a full path for a given file.
-     *
-     * @param TemplateReferenceInterface $template    A template
-     * @param string                     $currentPath Unused
-     * @param Boolean                    $first       Unused
-     *
-     * @return string The full path for the file
-     *
-     * @throws \InvalidArgumentException When the template is not an instance of TemplateReferenceInterface
-     * @throws \InvalidArgumentException When the template file can not be found
+     * @inheritDoc
      */
     public function locate($template, $currentPath = null, $first = true)
     {
@@ -76,10 +44,11 @@ class TemplateLocator extends baseTemplateLocator
             throw new \InvalidArgumentException('The template must be an instance of TemplateReferenceInterface.');
         }
 
-        $theme = $this->themeService->findTheme(array('path' => $this->configHandler->getParameter('theme')));
-        $bundle = substr($theme->getPath(), 0, strpos($theme->getPath(), ':'));
+        $path = $this->configHandler->getParameter('theme');
+        $theme = $this->themeService->findTheme(array('path' => $path));
+        $bundle = substr($path, 0, strpos($path, ':'));
 
-        if (is_object($template) and
+        if (is_object($theme) and
             $bundle !== '' and
             $bundle !== $template->get('bundle') and
             $template->get('bundle') === 'ClarolineCoreBundle') {
@@ -96,7 +65,6 @@ class TemplateLocator extends baseTemplateLocator
             } catch (\InvalidArgumentException $e) {
                 $template = $tmp; //return to default
             }
-
         }
 
         $key = $this->getCacheKey($template);
