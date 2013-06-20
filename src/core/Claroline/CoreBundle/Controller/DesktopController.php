@@ -37,6 +37,8 @@ class DesktopController extends Controller
 
         $widgets = array();
 
+        //TODO get Parameters' Tool configuration
+
         foreach ($configs as $config) {
             if ($config->isVisible()) {
                 $eventName = "widget_{$config->getWidget()->getName()}_desktop";
