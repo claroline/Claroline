@@ -46,7 +46,7 @@ class IconCreatorTest extends FixtureTestCase
         copy($textPath, $copyTestPath);
 
         $this->thumbDir = $this->client->getContainer()->getParameter('claroline.param.thumbnails_directory');
-        $this->iconCreator = $this->client->getContainer()->get('claroline.resource.icon_creator');
+        $this->iconCreator = $this->client->getContainer()->get('claroline.manager.icon_manager');
 
         $this->fileType = $this->client
             ->getContainer()

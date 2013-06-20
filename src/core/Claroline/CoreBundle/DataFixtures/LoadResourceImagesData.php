@@ -93,7 +93,7 @@ class LoadResourceImagesData extends AbstractFixture implements ContainerAwareIn
             $rimg->setShortcut(false);
             $manager->persist($rimg);
 
-            $this->container->get('claroline.resource.icon_creator')
+            $this->container->get('claroline.manager.icon_manager')
                 ->createShortcutIcon($rimg);
         }
 

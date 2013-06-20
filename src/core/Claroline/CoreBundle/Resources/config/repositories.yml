@@ -12,3 +12,24 @@ services:
     factory_method:  getRepository
     arguments:
       - Claroline\CoreBundle\Entity\Message
+
+  resource_type_repository:
+    class:           Claroline\CoreBundle\Repository\ResourceTypeRepository
+    factory_service: doctrine.orm.entity_manager
+    factory_method:  getRepository
+    arguments:
+      - Claroline\CoreBundle\Entity\Resource\ResourceType
+
+  resource_rights_repository:
+    class:           Claroline\CoreBundle\Repository\
+    factory_service: doctrine.orm.entity_manager
+    factory_method:  getRepository
+    arguments:
+      - Claroline\CoreBundle\Entity\Resource\ResourceType
+
+  resource_repository:
+    class:           Claroline\CoreBundle\Repository\AbstractResourceRepository
+    factory_service: doctrine.orm.entity_manager
+    factory_method:  getRepository
+    arguments:
+      - Claroline\CoreBundle\Entity\Resource\AbstractResource

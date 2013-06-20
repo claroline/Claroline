@@ -15,8 +15,11 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class MessageManager
 {
+    /** @var UserRepository */
     private $userRepo;
+    /** @var MessageRepository */
     private $messageRepo;
+    /** @var Writer */
     private $writer;
 
     /**

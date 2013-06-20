@@ -6,15 +6,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityManager;
 use Gedmo\Exception\UnexpectedValueException;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
-use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Library\Event\LogResourceCreateEvent;
 use Claroline\CoreBundle\Library\Event\LogResourceMoveEvent;
 use Claroline\CoreBundle\Library\Event\LogResourceDeleteEvent;
 use Claroline\CoreBundle\Library\Event\LogResourceCopyEvent;
@@ -56,7 +53,7 @@ class Manager
         $this->ed = $container->get('event_dispatcher');
         $this->sc = $container->get('security.context');
         $this->ut = $container->get('claroline.resource.utilities');
-        $this->ic = $container->get('claroline.resource.icon_creator');
+        $this->ic = $container->get('claroline.manager.icon_manager');
         $this->resourceRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
         $this->container = $container;
     }
@@ -75,68 +72,6 @@ class Manager
      *
      * @throws \Exception
      */
-    public function create(
-        AbstractResource $resource,
-        $parentId,
-        $resourceType,
-        User $user = null,
-        $rights = null,
-        $autoflush = true,
-        $autolog = true
-    )
-    {
-        $resourceType = $this->em
-            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-            ->findOneBy(array('name' => $resourceType));
-
-        if ($user === null) {
-            $user = $this->sc->getToken()->getUser();
-        }
-
-        $resource->setCreator($user);
-        $parent = $this->em
-            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->find($parentId);
-
-        $resource->setParent($parent);
-        $resource->setResourceType($resourceType);
-        $resource->setWorkspace($parent->getWorkspace());
-        $rename = $this->ut->getUniqueName($resource, $parent);
-        $resource->setName($rename);
-        $resource->setCreator($user);
-
-        if ($parent !== null) {
-            $this->setLastPosition($parent, $resource);
-        }
-
-        if ($resource->getUserIcon() === null) {
-            $resource = $this->ic->setResourceIcon($resource);
-        } else {
-            //upload the icon
-            $iconFile = $resource->getUserIcon();
-            $icon = $this->ic->createCustomIcon($iconFile);
-            $this->em->persist($icon);
-            $resource->setIcon($icon);
-        }
-
-        $this->em->persist($resource);
-        if ($rights === null) {
-            $this->cloneRights($parent, $resource);
-        } else {
-            $this->setResourceRights($resource, $rights);
-        }
-
-        if ($autoflush) {
-            $this->em->flush();
-        }
-
-        if ($autolog) {
-            $log = new LogResourceCreateEvent($resource);
-            $this->ed->dispatch('log', $log);
-        }
-
-        return $resource;
-    }
 
     /**
      * Moves a resource.
@@ -240,34 +175,6 @@ class Manager
     }
 
     /**
-     * Copies the resource rights from $resource to $target.
-     *
-     * @param AbstractResource $resource
-     * @param AbstractResource $target
-     *
-     */
-    public function cloneRights(AbstractResource $resource, AbstractResource $target)
-    {
-        $resourceRights = $this->em
-            ->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
-            ->findBy(array('resource' => $resource));
-        foreach ($resourceRights as $resourceRight) {
-            $rc = new ResourceRights();
-            $rc->setRole($resourceRight->getRole());
-            $rc->setResource($target);
-            $rc->setRightsFrom($resourceRight);
-
-            if ($target->getResourceType()->getName() === 'directory') {
-                $rc->setCreatableResourceTypes($resourceRight->getCreatableResourceTypes()->toArray());
-            }
-
-            $this->em->persist($rc);
-        }
-
-        $this->em->persist($target);
-    }
-
-    /**
      * Creates a resource copy with no name.
      *
      * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $originalResource
@@ -336,88 +243,6 @@ class Manager
 
         $log = new LogResourceDeleteEvent($resource);
         $this->ed->dispatch('log', $log);
-    }
-
-    /**
-     * Sets the resource rights of a resource.
-     * Expects an array of role of the following form:
-     * array('ROLE_WS_MANAGER' => array('canOpen' => true, 'canEdit' => false', ...)
-     * The 'canCopy' key must contain an array of resourceTypes name.
-     *
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
-     * @param array $rights
-     */
-    public function setResourceRights(AbstractResource $resource, array $rights, array $roles = array())
-    {
-        $roleRepo = $this->em->getRepository('ClarolineCoreBundle:Role');
-        $resourceTypeRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType');
-        $workspace = $resource->getWorkspace();
-
-        foreach ($rights as $role => $permissions) {
-            $resourceTypes = array();
-            $unknownTypes = array();
-
-            foreach ($permissions['canCreate'] as $type) {
-                $rt = $resourceTypeRepo->findOneByName($type);
-                if ($rt === null) {
-                    $unknownTypes[] = $type['name'];
-                }
-                $resourceTypes[] = $rt;
-            }
-
-            if (count($unknownTypes) > 0) {
-                $content = "The resource type(s) ";
-                foreach ($unknownTypes as $unknown) {
-                    $content .= "{$unknown}, ";
-                }
-                $content .= "were not found";
-
-                throw new \Exception($content);
-            }
-
-            if (count($roles) === 0) {
-                $role = $roleRepo->findOneBy(array('name' => $role.'_'.$workspace->getId()));
-            } else {
-                $role = $roles[$role.'_'.$workspace->getId()];
-            }
-            $this->createRight($permissions, false, $role, $resource, $resourceTypes, false);
-        }
-
-        $anonymousPerms = array(
-            'canCopy' => false,
-            'canDelete' => false,
-            'canOpen' => false,
-            'canExport' => false,
-            'canEdit' => false
-        );
-
-        $this->createRight(
-            $anonymousPerms,
-            false,
-            $roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
-            $resource,
-            array(),
-            false
-        );
-
-        $resourceTypes = $resourceTypeRepo->findAll();
-
-        $adminPerms = array(
-            'canCopy' => true,
-            'canDelete' => true,
-            'canOpen' => true,
-            'canExport' => true,
-            'canEdit' => true
-        );
-
-        $this->createRight(
-            $adminPerms,
-            false,
-            $roleRepo->findOneBy(array('name' => 'ROLE_ADMIN')),
-            $resource,
-            $resourceTypes,
-            false
-        );
     }
 
     /**
@@ -553,29 +378,6 @@ class Manager
     }
 
     /**
-     * Set the $resource at the last position of the $parent.
-     *
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $parent
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
-     */
-    public function setLastPosition(AbstractResource $parent, AbstractResource $resource)
-    {
-        $lastChild = $this->em
-            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->findOneBy(array('parent' => $parent, 'next' => null));
-        if ($lastChild !== null) {
-            $resource->setPrevious($lastChild);
-            $lastChild->setNext($resource);
-            $this->em->persist($lastChild);
-        } else {
-            $resource->setPrevious();
-        }
-        $resource->setNext();
-
-        $this->em->persist($resource);
-    }
-
-    /**
      * Remove the $resource from the chained list.
      *
      * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
@@ -652,171 +454,5 @@ class Manager
 
         $this->em->persist($resource);
         $this->em->flush();
-    }
-
-    /**
-     * Create a new ResourceRight
-     *
-     * @param array $permissions
-     * @param boolean $isRecursive
-     * @param \Claroline\CoreBundle\Entity\Role $role
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
-     */
-    public function createRight(
-        array $permissions,
-        $isRecursive,
-        Role $role,
-        AbstractResource $resource,
-        array $resourceTypes = array(),
-        $autoflush = true
-    )
-    {
-        $resourceRights = array();
-
-        if ($isRecursive) {
-            $resourceRights = $this->findAndCreateMissingDescendants($role, $resource);
-        } else {
-                $resourceRight = new ResourceRights();
-                $resourceRight->setRole($role);
-                $resourceRight->setResource($resource);
-                $resourceRights[] = $resourceRight;
-        }
-
-        foreach ($resourceRights as $resourceRight) {
-            $resourceRight->setCanCopy($permissions['canCopy']);
-            $resourceRight->setCanOpen($permissions['canOpen']);
-            $resourceRight->setCanDelete($permissions['canDelete']);
-            $resourceRight->setCanEdit($permissions['canEdit']);
-            $resourceRight->setCanExport($permissions['canExport']);
-            $resourceRight->setCreatableResourceTypes($resourceTypes);
-
-            $this->em->persist($resourceRight);
-        }
-
-        if ($autoflush) {
-            $this->em->flush();
-        }
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Role $role
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
-     *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceRights
-     */
-    public function findAndCreateMissingDescendants(Role $role, AbstractResource $resource)
-    {
-        $resourceRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
-        $alreadyExistings = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
-            ->findRecursiveByResourceAndRole($resource, $role);
-        $descendants = $resourceRepo->findDescendants($resource, true);
-        $finalRights = array();
-
-        foreach ($descendants as $descendant) {
-            $found = false;
-            foreach ($alreadyExistings as $existingRight) {
-                if ($existingRight->getResource() === $descendant) {
-                    $finalRights[] = $existingRight;
-                    $found = true;
-                }
-            }
-
-            if (!$found) {
-                $resourceRight = new ResourceRights();
-                $resourceRight->setRole($role);
-                $resourceRight->setResource($descendant);
-                $finalRights[] = $resourceRight;
-            }
-        }
-
-        return $finalRights;
-    }
-
-    /**
-     * Sort every children of a resource.
-     *
-     * @param array $resources
-     *
-     * @return array
-     */
-    public function findAndSortChildren(AbstractResource $parent)
-    {
-        //a little bit hacky but retrieve all children of the parent
-        $resources = $this->resourceRepo->findChildren($parent, array('ROLE_ADMIN'));
-        $sorted = array();
-        //set the 1st item.
-        foreach ($resources as $resource) {
-            if ($resource['previous_id'] === null) {
-                $sorted[] = $resource;
-            }
-        }
-
-        $resourceCount = count($resources);
-        $sortedCount = 0;
-
-        for ($i = 0; $sortedCount < $resourceCount; ++$i) {
-            $sortedCount = count($sorted);
-
-            foreach ($resources as $resource) {
-                if ($sorted[$sortedCount - 1]['id'] === $resource['previous_id']) {
-                    $sorted[] = $resource;
-                }
-            }
-
-            if ($i > 100) {
-                throw new \Exception('More than 100 items in a directory or infinite loop detected');
-            }
-        }
-
-        return $sorted;
-    }
-
-    /**
-     * Sort an array of serialized resources. The chained list can have some "holes".
-     *
-     * @param array $resources
-     *
-     * @return array
-     */
-    public function sort(array $resources)
-    {
-        if ($this->sameParents($resources)) {
-            $parent = $this->resourceRepo->find($resources[0]['parent_id']);
-            $sortedList = $this->findAndSortChildren($parent);
-
-            foreach ($sortedList as $sortedItem) {
-                foreach ($resources as $resource) {
-                    if ($resource['id'] === $sortedItem['id']) {
-                        $sortedRes[] = $resource;
-                    }
-                }
-            }
-
-        } else {
-            throw new \Exception("These resources don't share the same parent");
-        }
-
-        return $sortedRes;
-    }
-
-    /**
-     * Checks if an array of serialized resources share the same parent.
-     *
-     * @param array $resources
-     *
-     * @return array
-     */
-    public function sameParents(array $resources)
-    {
-        $firstRes = array_pop($resources);
-        $tmp = $firstRes['parent_id'];
-
-        foreach ($resources as $resource) {
-            if ($tmp !== $resource['parent_id']) {
-                return false;
-            }
-        }
-
-        return true;
     }
 }

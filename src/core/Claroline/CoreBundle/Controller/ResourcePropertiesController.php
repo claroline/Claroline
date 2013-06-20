@@ -152,7 +152,7 @@ class ResourcePropertiesController extends Controller
 
             if ($file !== null) {
                 $this->removeOldIcon($resource);
-                $manager = $this->get('claroline.resource.icon_creator');
+                $manager = $this->get('claroline.manager.icon_manager');
                 $icon = $manager->createCustomIcon($file);
                 $em->persist($icon);
 
