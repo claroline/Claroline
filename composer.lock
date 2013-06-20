@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "f752acb35718ca609abcda1189b36751",
+    "hash": "edb38e1ec68c6103e481f9bf7101121e",
     "packages": [
         {
             "name": "claroline/front-end-bundle",
@@ -870,13 +870,19 @@
         {
             "name": "fortawesome/fontawesome",
             "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FortAwesome/Font-Awesome.git",
+                "reference": "master"
+            },
             "dist": {
                 "type": "zip",
                 "url": "https://github.com/FortAwesome/Font-Awesome/zipball/master",
                 "reference": null,
                 "shasum": null
             },
-            "type": "library"
+            "type": "library",
+            "time": "2013-06-17 15:31:59"
         },
         {
             "name": "friendsofsymfony/jsrouting-bundle",
@@ -1199,7 +1205,7 @@
                 {
                     "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -1246,7 +1252,7 @@
                 {
                     "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -2750,13 +2756,19 @@
         {
             "name": "xaguilars/bootstrap-colorpicker",
             "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/xaguilars/bootstrap-colorpicker",
+                "reference": "master"
+            },
             "dist": {
                 "type": "zip",
                 "url": "https://github.com/xaguilars/bootstrap-colorpicker/archive/master.zip",
                 "reference": null,
                 "shasum": null
             },
-            "type": "library"
+            "type": "library",
+            "time": "2013-05-24 10:20:31"
         },
         {
             "name": "zenstruck/form-bundle",
