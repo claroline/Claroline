@@ -154,6 +154,13 @@ class HomeController extends Controller
         $this->get('event_dispatcher')->dispatch($eventName, $event);
 
         if ($event->getContent() !== '') {
+            if ($this->get('request')->isXMLHttpRequest()) {
+                return $this->render(
+                    'ClarolineCoreBundle:Tool\workspace\home:widget_configuration_form.html.twig',
+                    array('content' => $event->getContent(), 'workspace' => $workspace, 'tool' => $this->getHomeTool())
+                );
+            } 
+
             return $this->render(
                 'ClarolineCoreBundle:Tool\workspace\home:widget_configuration.html.twig',
                 array('content' => $event->getContent(), 'workspace' => $workspace, 'tool' => $this->getHomeTool())
@@ -246,6 +253,13 @@ class HomeController extends Controller
         $this->get('event_dispatcher')->dispatch($eventName, $event);
 
         if ($event->getContent() !== '') {
+            if ($this->get('request')->isXMLHttpRequest()) {
+                return $this->render(
+                    'ClarolineCoreBundle:Tool\desktop\home:widget_configuration_form.html.twig',
+                    array('content' => $event->getContent(), 'tool' => $this->getHomeTool())
+                );
+            } 
+
             return $this->render(
                 'ClarolineCoreBundle:Tool\desktop\home:widget_configuration.html.twig',
                 array('content' => $event->getContent(), 'tool' => $this->getHomeTool())
