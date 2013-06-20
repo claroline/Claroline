@@ -8,11 +8,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\PluginRepository")
- * @ORM\Table(name="claro_plugin",
- *  * uniqueConstraints={
- *          @ORM\UniqueConstraint(
- *          name="plugin",columns={"vendor_name","short_name"}
- *          )
+ * @ORM\Table(
+ *      name="claro_plugin",
+ *      uniqueConstraints={
+ *          @ORM\UniqueConstraint(name="plugin",columns={"vendor_name","short_name"})
  *      }
  * )
  */

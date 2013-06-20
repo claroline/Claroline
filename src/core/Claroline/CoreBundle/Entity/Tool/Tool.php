@@ -9,8 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *       name="claro_tools",
  *       uniqueConstraints={
- *          @ORM\UniqueConstraint(name="tool_name_index",columns={"name"}),
- *          @ORM\UniqueConstraint( name="tool_plugin_id_index",columns={"plugin_id"})
+ *           @ORM\UniqueConstraint(name="tool_name_index", columns={"name"}),
+ *           @ORM\UniqueConstraint( name="tool_plugin_id_index", columns={"plugin_id"})
  *      }
  *)
  */

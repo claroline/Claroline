@@ -11,9 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  * @ORM\Table(
  *      name="claro_workspace_tag",
  *      uniqueConstraints={
- *          @ORM\UniqueConstraint(
- *          name="tool",columns={"user_id","name"}
- *          )
+ *          @ORM\UniqueConstraint(name="tool", columns={"user_id", "name"})
  *      }
  *  )
  * @DoctrineAssert\UniqueEntity({"name", "user"})

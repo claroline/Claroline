@@ -20,9 +20,7 @@ use Claroline\CoreBundle\Entity\Role;
  * @ORM\Table(
  *      name="claro_user",
  *      uniqueConstraints={
- *          @ORM\UniqueConstraint(
- *          name="user",columns={"username"}
- *          )
+ *          @ORM\UniqueConstraint(name="user", columns={"username"})
  *      }
  * )
  * @DoctrineAssert\UniqueEntity("username")
