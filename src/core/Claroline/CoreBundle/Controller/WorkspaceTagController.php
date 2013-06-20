@@ -201,7 +201,7 @@ class WorkspaceTagController extends Controller
 
         $form = $this->createForm(new WorkspaceTagType(), $workspaceTag);
         $request = $this->getRequest();
-        $form->bind($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em->persist($workspaceTag);
@@ -247,7 +247,7 @@ class WorkspaceTagController extends Controller
 
         $form = $this->createForm(new AdminWorkspaceTagType(), $workspaceTag);
         $request = $this->getRequest();
-        $form->bind($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em->persist($workspaceTag);

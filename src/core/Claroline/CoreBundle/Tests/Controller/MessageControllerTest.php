@@ -146,12 +146,13 @@ class MessageControllerTest extends FunctionalTestCase
         $userMessages = $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:UserMessage')
-            ->findAll();
+            ->getRepository('ClarolineCoreBundle:Message')
+            ->findUserMessages($this->getUser('user'), array($this->getMessage('foo')));
         $usrmsgId = $userMessages[0]->getId();
         $this->client->request('GET', "/message/delete/to?ids[]={$usrmsgId}");
         $crawler = $this->client->request('GET', '/message/removed/page');
         $this->assertEquals(1, count($crawler->filter('.row-user-message')));
+
     }
 
     public function testSearchSendMessage()
@@ -201,8 +202,8 @@ class MessageControllerTest extends FunctionalTestCase
         $userMessages = $this->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:UserMessage')
-            ->findAll();
+            ->getRepository('ClarolineCoreBundle:Message')
+            ->findUserMessages($this->getUser('user'), array($this->getMessage('foo')));
         $usrmsgId = $userMessages[0]->getId();
         $object = $userMessages[0]->getMessage()->getObject();
         $this->client->request('GET', "/message/delete/to?ids[]={$usrmsgId}");

@@ -1,4 +1,16 @@
-<div class="span2">
+<style type="text/css">
+    .log_list_item {
+        font-size: 12px;
+    }
+</style>
+
+{% if isDesktop %}
+    <div class="span2 log_list_item">
+        {% include 'ClarolineCoreBundle:Log:view_list_item_workspace.html.twig' %}
+    </div>
+{% endif %}
+
+<div class="span2 log_list_item">
     {% if log.getDateLog()|date('d-m-Y') == ''|date('d-m-Y') %}
         {{ 'today'|trans({}, 'platform') ~ ', ' }}
     {% else %}
@@ -7,15 +19,19 @@
     {{ log.getDateLog()|date('H:i') }}
 </div>
 
-<div class="span2">
+<div class="span2 log_list_item">
     {% include 'ClarolineCoreBundle:Log:view_list_item_label.html.twig' %}
 </div>
 
-<div class="span2">
+<div class="span2 log_list_item">
     {% include 'ClarolineCoreBundle:Log:view_list_item_doer.html.twig' %}
 </div>
 
-<div class='span6'>
+{% if isDesktop %}
+    <div class='span4 log_list_item'>
+{% else %}
+    <div class='span6 log_list_item'>
+{% endif %}
     {% if listItemView is defined and listItemView != null %}
         {{ listItemView|raw }}
     {% else %}

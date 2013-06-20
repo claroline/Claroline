@@ -66,13 +66,13 @@ class ProfileController extends Controller
             ->getRepository('ClarolineCoreBundle:Role')
             ->findPlatformRoles($user);
         $form = $this->get('form.factory')->create(new ProfileType($roles), $user);
-        $form->bind($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
 
             $user = $form->getData();
 
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $unitOfWork = $em->getUnitOfWork();
             $unitOfWork->computeChangeSets();
             $changeSet = $unitOfWork->getEntityChangeSet($user);

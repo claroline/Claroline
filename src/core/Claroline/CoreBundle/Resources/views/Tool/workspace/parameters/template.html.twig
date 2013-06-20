@@ -9,7 +9,6 @@
         </li>
     </ul>
 
-    {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
     <form class="form-horizontal"
           action="{{ path('claro_workspace_export', {'workspace': workspace.getId() }) }}"
           method="post" {{ form_enctype(form) }}>

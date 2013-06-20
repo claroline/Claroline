@@ -1,4 +1,4 @@
 allow_self_registration: false
 context_history_max_size: 5
 locale_language: fr
-theme: 'ClarolineCoreBundle:less:bootstrap-default/theme.html.twig'
+theme: 'ClarolineCoreBundle:less:claroline/theme.html.twig'
