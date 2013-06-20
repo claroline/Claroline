@@ -7,29 +7,29 @@
         {% include theme.getPath() %}
 
         {% stylesheets debug=false filter='lessphp'  output='bundles/clarolinecore/css/font-awesome.css'
-        '../vendor/fortawesome/fontawesome/less/font-awesome.less'
+        '../vendor/fortawesome/fontawesome/build/assets/font-awesome/less/font-awesome.less'
         %}
             <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
         {% endstylesheets %}
 
         {% image debug=false output='bundles/clarolinecore/font/FontAwesome.otf'
-            '../vendor/fortawesome/fontawesome/font/FontAwesome.otf' %}
+            '../vendor/fortawesome/fontawesome/build/assets/font-awesome/font/FontAwesome.otf' %}
         {% endimage %}
 
         {% image debug=false output='bundles/clarolinecore/font/fontawesome-webfont.eot'
-            '../vendor/fortawesome/fontawesome/font/fontawesome-webfont.eot' %}
+            '../vendor/fortawesome/fontawesome/build/assets/font-awesome/font/fontawesome-webfont.eot' %}
         {% endimage %}
 
         {% image debug=false output='bundles/clarolinecore/font/fontawesome-webfont.svg'
-            '../vendor/fortawesome/fontawesome/font/fontawesome-webfont.svg' %}
+            '../vendor/fortawesome/fontawesome/build/assets/font-awesome/font/fontawesome-webfont.svg' %}
         {% endimage %}
 
         {% image debug=false output='bundles/clarolinecore/font/fontawesome-webfont.ttf'
-            '../vendor/fortawesome/fontawesome/font/fontawesome-webfont.ttf' %}
+            '../vendor/fortawesome/fontawesome/build/assets/font-awesome/font/fontawesome-webfont.ttf' %}
         {% endimage %}
 
         {% image debug=false output='bundles/clarolinecore/font/fontawesome-webfont.woff'
-            '../vendor/fortawesome/fontawesome/font/fontawesome-webfont.woff' %}
+            '../vendor/fortawesome/fontawesome/build/assets/font-awesome/font/fontawesome-webfont.woff' %}
         {% endimage %}
 
     {% endblock %}
