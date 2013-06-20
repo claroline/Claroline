@@ -1,4 +1,4 @@
-s<?php
+<?php
 
 namespace Claroline\CoreBundle\Tests\DataFixtures;
 
