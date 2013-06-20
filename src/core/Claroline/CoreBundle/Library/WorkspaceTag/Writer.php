@@ -27,12 +27,19 @@ class Writer
         $this->em = $em;
     }
 
+    public function persist(WorkspaceTag $tag)
+    {
+        $this->em->persist($tag);
+        $this->em->flush();
+    }
+
     public function createTag($name, User $user = null)
     {
         $workspaceTag = new WorkspaceTag();
         $workspaceTag->setName($name);
         $workspaceTag->setUser($user);
         $this->em->persist($workspaceTag);
+        $this->em->flush();
 
         return $workspaceTag;
     }
@@ -40,6 +47,7 @@ class Writer
     public function deleteTag(WorkspaceTag $tag)
     {
         $this->em->remove($tag);
+        $this->em->flush();
     }
 
     public function createTagRelation(WorkspaceTag $tag, AbstractWorkspace $workspace)
@@ -48,6 +56,7 @@ class Writer
         $relWorkspaceTag->setTag($tag);
         $relWorkspaceTag->setWorkspace($workspace);
         $this->em->persist($relWorkspaceTag);
+        $this->em->flush();
 
         return $relWorkspaceTag;
     }
@@ -55,6 +64,7 @@ class Writer
     public function deleteTagRelation(RelWorkspaceTag $relWorkspaceTag)
     {
         $this->em->remove($relWorkspaceTag);
+        $this->em->flush();
     }
 
     public function createTagHierarchy(WorkspaceTag $tag, WorkspaceTag $parent, $level)
@@ -65,6 +75,7 @@ class Writer
         $tagHierarchy->setLevel($level);
         $tagHierarchy->setUser($tag->getUser());
         $this->em->persist($tagHierarchy);
+        $this->em->flush();
 
         return $tagHierarchy;
     }
@@ -72,5 +83,6 @@ class Writer
     public function deleteTagHierarchy(WorkspaceTagHierarchy $tagHierarchy)
     {
         $this->em->remove($tagHierarchy);
+        $this->em->flush();
     }
 }
