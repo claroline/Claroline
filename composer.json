@@ -47,6 +47,11 @@
                 "dist": {
                     "url": "https://github.com/FortAwesome/Font-Awesome/zipball/master",
                     "type": "zip"
+                },
+                "source": {
+                    "url": "https://github.com/FortAwesome/Font-Awesome.git",
+                    "type": "git",
+                    "reference": "master"
                 }
             }
         },
@@ -58,6 +63,11 @@
                 "dist": {
                     "url": "https://github.com/xaguilars/bootstrap-colorpicker/archive/master.zip",
                     "type": "zip"
+                },
+                "source": {
+                    "url": "https://github.com/xaguilars/bootstrap-colorpicker",
+                    "type": "git",
+                    "reference": "master"
                 }
             }
         },
