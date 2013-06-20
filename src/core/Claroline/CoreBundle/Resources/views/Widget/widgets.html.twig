@@ -1,18 +1,51 @@
+<style type="text/css">
+    .accordion-toggle {
+        cursor: default;
+    }
+</style>
+
 <div class="accordion widget">
-    {% for key, value in widgets %}
+    {% for widget in widgets %}
         <div class="accordion-group widget">
             <div class="accordion-heading">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{ value | length }}">
-                    <i class="icon-cogs"></i>
-                    {{ key|trans({}, 'widget') }}
-                    <i class="icon-chevron-down pull-right"></i>
-                </a>
+                <div class="accordion-toggle">
+                    <a data-toggle="collapse"  href="#collapse{{ widget.id }}">
+                        <i class="icon-chevron-up" id="arrow{{ widget.id }}"></i>
+                        {{ widget.title|trans({}, 'widget') }}
+                    </a>
+                    {% if widget.configurable %}
+                        {% if isDesktop %}
+                            <a href="{{ path('claro_desktop_widget_configuration', {'widget': widget.id}) }}" class="pull-right">
+                                <i class="icon-edit"></i> modifier
+                            </a>
+                        {% else %}
+                            <a href="{{ path('claro_workspace_widget_configuration', {'workspace': workspaceId, 'widget': widget.id}) }}" class="pull-right">
+                                <i class="icon-edit"></i> modifier
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                </div>
             </div>
-            <div id="collapse{{ value | length }}" class="accordion-body collapse in">
+            <div id="collapse{{ widget.id }}" class="accordion-body collapse in">
                 <div class="accordion-inner">
-                    {{ value|raw }}
+                    {{ widget.content|raw }}
                 </div>
             </div>
         </div>
     {% endfor %}
 </div>
+
+<script type="text/javascript">
+    {% for widget in widgets %}
+        $('#collapse{{ widget.id }}').on('hidden', function () {
+            var icon = $('#arrow{{ widget.id }}');
+            icon.removeClass('icon-chevron-up');
+            icon.addClass('icon-chevron-down');
+        })
+        $('#collapse{{ widget.id }}').on('shown', function () {
+            var icon = $('#arrow{{ widget.id }}');
+            icon.removeClass('icon-chevron-down');
+            icon.addClass('icon-chevron-up');
+        })
+    {% endfor %}
+</script>

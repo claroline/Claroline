@@ -379,24 +379,36 @@ class WorkspaceController extends Controller
         $em = $this->getDoctrine()->getManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
 
+        $widgets = array();
+
         foreach ($configs as $config) {
             if ($config->isVisible()) {
-                $eventName = "widget_{$config->getWidget()->getName()}_workspace";
-                $event = new DisplayWidgetEvent($workspace);
+                $eventName = "widget_{$config->getWidget()->getName()}_desktop";
+                $event = new DisplayWidgetEvent();
                 $this->get('event_dispatcher')->dispatch($eventName, $event);
+
                 if ($event->hasContent()) {
+                    $widget['id'] = $config->getWidget()->getId();
                     if ($event->hasTitle()) {
-                        $responsesString[$event->getTitle()] = $event->getContent();
+                        $widget['title'] = $event->getTitle();
                     } else {
-                        $responsesString[strtolower($config->getWidget()->getName())] = $event->getContent();
+                        $widget['title'] = strtolower($config->getWidget()->getName());
                     }
+                    $widget['content'] = $event->getContent();
+                    $widget['configurable'] = $config->getWidget()->isConfigurable();
+
+                    $widgets[] = $widget;
                 }
             }
         }
 
         return $this->render(
             'ClarolineCoreBundle:Widget:widgets.html.twig',
-            array('widgets' => $responsesString)
+            array(
+                'widgets' => $widgets,
+                'isDesktop' => false,
+                'workspaceId' => $workspaceId
+            )
         );
     }
 
