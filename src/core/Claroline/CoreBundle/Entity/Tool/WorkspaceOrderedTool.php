@@ -10,19 +10,12 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  * @ORM\Table(
  *     name="claro_workspace_ordered_tool",
  *     uniqueConstraints={
- *          @ORM\UniqueConstraint(
- *          name="tool",columns={"tool_id","workspace_id"}
- *          ),
- *      @ORM\UniqueConstraint(
- *          name="display",columns={"workspace_id","display_order"}
- *          ),
- *      @ORM\UniqueConstraint(
- *          name="workspace",columns={"workspace_id","name"}
- *          )
- *      }
+ *         @ORM\UniqueConstraint(name="tool", columns={"tool_id", "workspace_id"}),
+ *         @ORM\UniqueConstraint(name="display", columns={"workspace_id", "display_order"}),
+ *         @ORM\UniqueConstraint(name="workspace", columns={"workspace_id", "name"})
+ *     }
  * )
  * @DoctrineAssert\UniqueEntity({"name", "workspace"})
- * 
  */
 class WorkspaceOrderedTool
 {

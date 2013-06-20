@@ -6,12 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkpaceToolRoleRepository");
- * @ORM\Table(name="claro_workspace_tools_role",
- *          uniqueConstraints={
- *          @ORM\UniqueConstraint(
- *          name="tool",columns={"role_id","ordered_tool_id"}
- *          )
- *      })
+ * @ORM\Table(
+ *      name="claro_workspace_tools_role",
+ *      uniqueConstraints={
+ *          @ORM\UniqueConstraint(name="tool", columns={"role_id", "ordered_tool_id"})
+ *      }
+ * )
  */
 class WorkspaceToolRole
 {
