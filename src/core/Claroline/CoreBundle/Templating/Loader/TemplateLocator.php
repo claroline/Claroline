@@ -30,10 +30,12 @@ class TemplateLocator extends baseTemplateLocator
     /**
      * Constructor.
      *
-     * @param FileLocatorInterface $locator  A FileLocatorInterface instance
-     * @param string               $cacheDir The cache path
+     * @param FileLocatorInterface          $locator  A FileLocatorInterface instance
+     * @param PlatformConfigurationHandler  $configHandler Claroline platform configuration handler service
+     * @param ThemeService                  $themeService Claroline theme service
+     * @param string                        $cacheDir The cache path
      */
-    public function __construct(FileLocatorInterface $locator, $cacheDir = null, $configHandler, $themeService)
+    public function __construct(FileLocatorInterface $locator, $configHandler, $themeService, $cacheDir = null)
     {
         if (null !== $cacheDir && is_file($cache = $cacheDir.'/templates.php')) {
             $this->cache = require $cache;
@@ -71,21 +73,23 @@ class TemplateLocator extends baseTemplateLocator
     public function locate($template, $currentPath = null, $first = true)
     {
         if (!$template instanceof TemplateReferenceInterface) {
-            throw new \InvalidArgumentException("The template must be an instance of TemplateReferenceInterface.");
+            throw new \InvalidArgumentException('The template must be an instance of TemplateReferenceInterface.');
         }
 
         $theme = $this->themeService->findTheme(array('path' => $this->configHandler->getParameter('theme')));
-        $bundle = substr($theme->getPath(), 0, strpos($theme->getPath(), ":"));
+        $bundle = substr($theme->getPath(), 0, strpos($theme->getPath(), ':'));
 
         if (is_object($template) and
-            $bundle!= "" and
-            $bundle != $template->get("bundle") and
-            $template->get("bundle") == "ClarolineCoreBundle") {
-
+            $bundle !== '' and
+            $bundle !== $template->get('bundle') and
+            $template->get('bundle') === 'ClarolineCoreBundle') {
             $tmp = clone $template;
 
-            $template->set("bundle", $bundle);
-            $template->set("controller", strtolower(str_replace(' ', '', $theme->getName()))."/".$template->get("controller"));
+            $template->set('bundle', $bundle);
+            $template->set(
+                'controller',
+                strtolower(str_replace(' ', '', $theme->getName())).'/'.$template->get('controller')
+            );
 
             try {
                 $this->locator->locate($template->getPath(), $currentPath);

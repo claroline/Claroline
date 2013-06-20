@@ -85,7 +85,7 @@ parameters:
 services:
     templating.locator:
         class: "%templating.locator.class%"
-        arguments: ["@file_locator", "%kernel.root_dir%/Resources", "@claroline.config.platform_config_handler", "@claroline.common.theme_service"]
+        arguments: ["@file_locator", "@claroline.config.platform_config_handler", "@claroline.common.theme_service", "%kernel.root_dir%/Resources"]
 
 twig:
     globals:
