@@ -23,7 +23,7 @@ class License
     protected $name;
 
     /**
-     * @ORM\Column(name="acronym", type="string")
+     * @ORM\Column(name="acronym", type="string", length=255)
      */
     protected $acronym;
 

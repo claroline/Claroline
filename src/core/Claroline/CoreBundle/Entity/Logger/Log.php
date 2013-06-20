@@ -68,10 +68,10 @@ class Log
      * @ORM\JoinTable(
      *     name="claro_log_doer_platform_roles",
      *     joinColumns={
-     *         @ORM\JoinColumn(name="log_id", referencedColumnName="id")
+     *         @ORM\JoinColumn(name="log_id", referencedColumnName="id" , onDelete="CASCADE", nullable=false)
      *     },
      *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="role_id", referencedColumnName="id")
+     *         @ORM\JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      *     }
      * )
      */
@@ -84,10 +84,10 @@ class Log
      * @ORM\JoinTable(
      *     name="claro_log_doer_workspace_roles",
      *     joinColumns={
-     *         @ORM\JoinColumn(name="log_id", referencedColumnName="id")
+     *         @ORM\JoinColumn(name="log_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      *     },
      *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="role_id", referencedColumnName="id")
+     *         @ORM\JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      *     }
      * )
      */
