@@ -40,6 +40,10 @@ class Manager
         $this->writer = $writer;
     }
 
+    public function persist(WorkspaceTag $tag) {
+        $this->writer->persist($tag);
+    }
+
     public function createTag($name, User $user = null)
     {
         return $this->writer->createTag($name, $user);
@@ -47,7 +51,7 @@ class Manager
 
     public function deleteTag(WorkspaceTag $tag)
     {
-        return $this->writer->deleteTag($tag);
+        $this->writer->deleteTag($tag);
     }
 
     public function deleteAllTags(User $user = null)
@@ -66,14 +70,14 @@ class Manager
 
     public function deleteTagRelation(RelWorkspaceTag $relWorkspaceTag)
     {
-        return $this->writer->deleteTagRelation($relWorkspaceTag);
+        $this->writer->deleteTagRelation($relWorkspaceTag);
     }
 
     public function deleteRelWorkspaceTag(WorkspaceTag $tag, AbstractWorkspace $workspace)
     {
         $relWorkspaceTag = $this->relTagRepo->findBy(array('tag' => $tag, 'workspace' => $workspace));
 
-        return $this->writer->deleTagRelation($relWorkspaceTag);
+        $this->writer->deleTagRelation($relWorkspaceTag);
     }
 
     public function createTagHierarchy(WorkspaceTag $tag, WorkspaceTag $parent, $level)
@@ -83,6 +87,6 @@ class Manager
 
     public function deleteTagHierarchy(WorkspaceTagHierarchy $tagHierarchy)
     {
-        return $this->writer->deleteTagHierarchy($tagHierarchy);
+        $this->writer->deleteTagHierarchy($tagHierarchy);
     }
 }
