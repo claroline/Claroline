@@ -25,7 +25,8 @@ class DisplayConfig
      * @ORM\JoinColumn(
      *     name="parent_id",
      *     referencedColumnName="id",
-     *     onDelete="SET NULL"
+     *     onDelete="SET NULL",
+     *     nullable=true
      * )
      */
     protected $parent;
@@ -40,7 +41,7 @@ class DisplayConfig
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
-     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $workspace;
 
@@ -52,12 +53,12 @@ class DisplayConfig
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Widget\Widget")
-     * @ORM\JoinColumn(name="widget_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="widget_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     protected $widget;
 
     /**
-     * @ORM\Column(type="boolean", name="is_locked")
+     * @ORM\Column(type="boolean", name="is_locked", nullable=false)
      */
     protected $isLocked;
 

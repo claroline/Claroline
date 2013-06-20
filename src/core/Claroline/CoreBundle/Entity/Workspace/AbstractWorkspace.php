@@ -51,7 +51,7 @@ abstract class AbstractWorkspace
     protected $code;
 
     /**
-     * @ORM\Column(name="is_public", type="boolean")
+     * @ORM\Column(name="is_public", type="boolean", nullable=true)
      */
     protected $isPublic = true;
 
