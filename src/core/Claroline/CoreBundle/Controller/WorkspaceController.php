@@ -379,6 +379,8 @@ class WorkspaceController extends Controller
         $em = $this->getDoctrine()->getManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
 
+        $rightToConfigure = $this->get('security.context')->isGranted('parameters', $workspace);
+
         $widgets = array();
 
         foreach ($configs as $config) {
@@ -395,7 +397,7 @@ class WorkspaceController extends Controller
                         $widget['title'] = strtolower($config->getWidget()->getName());
                     }
                     $widget['content'] = $event->getContent();
-                    $widget['configurable'] = $config->getWidget()->isConfigurable();
+                    $widget['configurable'] = ($rightToConfigure and $config->getWidget()->isConfigurable());
 
                     $widgets[] = $widget;
                 }
