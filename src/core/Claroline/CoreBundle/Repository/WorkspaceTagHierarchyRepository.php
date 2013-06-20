@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Doctrine\ORM\EntityRepository;
 
 class WorkspaceTagHierarchyRepository extends EntityRepository
@@ -64,71 +63,6 @@ class WorkspaceTagHierarchyRepository extends EntityRepository
             SELECT h
             FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy h
             JOIN h.parent p
-            WHERE h.user = :user
-            AND {$parentsTest}
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter("user", $user);
-
-        return $query->getResult();
-    }
-
-    /**
-     * Returns all relations where parentId is in the param array
-     */
-    public function findAllAdminHierarchiesByParents(array $parents)
-    {
-        if (count($parents) === 0) {
-            throw new \InvalidArgumentException("Array argument cannot be empty");
-        }
-
-        $index = 0;
-        $eol = PHP_EOL;
-        $parentsTest = "(";
-
-        foreach ($parents as $parent) {
-            $parentsTest .= $index > 0 ? "    OR " : "    ";
-            $parentsTest .= "t.id = {$parent}{$eol}";
-            $index++;
-        }
-        $parentsTest .= "){$eol}";
-
-        $dql = "
-            SELECT h
-            FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy h
-            JOIN h.parent t
-            WHERE h.user IS NULL
-            AND {$parentsTest}
-        ";
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getResult();
-    }
-
-    /**
-     * Returns all relations where parentId is in the param array
-     */
-    public function findAllHierarchiesByParents(User $user, array $parents)
-    {
-        if (count($parents) === 0) {
-            throw new \InvalidArgumentException("Array argument cannot be empty");
-        }
-
-        $index = 0;
-        $eol = PHP_EOL;
-        $parentsTest = "(";
-
-        foreach ($parents as $parent) {
-            $parentsTest .= $index > 0 ? "    OR " : "    ";
-            $parentsTest .= "t.id = {$parent}{$eol}";
-            $index++;
-        }
-        $parentsTest .= "){$eol}";
-
-        $dql = "
-            SELECT h
-            FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy h
-            JOIN h.parent t
             WHERE h.user = :user
             AND {$parentsTest}
         ";

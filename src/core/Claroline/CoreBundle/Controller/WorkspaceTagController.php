@@ -677,7 +677,7 @@ class WorkspaceTagController extends Controller
                 ->findBy(array('user' => null , 'tag' => $tag));
             // Get all hierarchies where parent is in param
             $childrenhierarchies = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTagHierarchy')
-                ->findAllAdminHierarchiesByParents($children);
+                ->findAdminHierarchiesByParents($children);
 
             foreach ($childrenhierarchies as $childHierarchy) {
 
@@ -730,7 +730,7 @@ class WorkspaceTagController extends Controller
                 ->findBy(array('user' => $user , 'tag' => $tag));
             // Get all hierarchies where parent is in param
             $childrenhierarchies = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTagHierarchy')
-                ->findAllHierarchiesByParents($user, $children);
+                ->findHierarchiesByParents($user, $children);
 
             foreach ($childrenhierarchies as $childHierarchy) {
 
