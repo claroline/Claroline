@@ -385,8 +385,8 @@ class WorkspaceController extends Controller
 
         foreach ($configs as $config) {
             if ($config->isVisible()) {
-                $eventName = "widget_{$config->getWidget()->getName()}_desktop";
-                $event = new DisplayWidgetEvent();
+                $eventName = "widget_{$config->getWidget()->getName()}_workspace";
+                $event = new DisplayWidgetEvent($workspace);
                 $this->get('event_dispatcher')->dispatch($eventName, $event);
 
                 if ($event->hasContent()) {

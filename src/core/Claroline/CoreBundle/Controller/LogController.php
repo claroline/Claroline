@@ -99,12 +99,13 @@ class LogController extends Controller
 
     /**
      * @Route(
-     *     "/update_workspace_widget_config/{workspaceId}",
-     *     name="claro_log_update_workspace_widget_config"
+     *     "/update_workspace_widget_config/{workspaceId}/{redirectToHome}",
+     *     name="claro_log_update_workspace_widget_config",
+     *     defaults={"redirectToHome" = 0}
      * )
      * @Method("POST")
      */
-    public function updateLogWorkspaceWidgetConfig($workspaceId)
+    public function updateLogWorkspaceWidgetConfig($workspaceId, $redirectToHome)
     {
         $em = $this->getDoctrine()->getManager();
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
@@ -122,29 +123,44 @@ class LogController extends Controller
             $em->persist($config);
             $em->flush();
 
-            $this->get('session')->getFlashBag()->add('success', $translator->trans('Your changes have been saved', array(), 'platform'));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('success', $translator->trans('Your changes have been saved', array(), 'platform'));
         } else {
-            $this->get('session')->getFlashBag()->add('error', $translator->trans('The form is not valid', array(), 'platform'));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('error', $translator->trans('The form is not valid', array(), 'platform'));
         }
         $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneByName('home');
 
-        return $this->render(
-            'ClarolineCoreBundle:Log:config_workspace_form_update.html.twig', array(
-            'form' => $form->createView(),
-            'workspace' => $workspace,
-            'tool' => $tool
-            )
-        );
+        if ($redirectToHome === 0) {
+            return $this->render(
+                'ClarolineCoreBundle:Log:config_workspace_form_update.html.twig', array(
+                'form' => $form->createView(),
+                'workspace' => $workspace,
+                'tool' => $tool
+                )
+            );
+        } else {
+            return $this->redirect(
+                $this->generateUrl(
+                    'claro_workspace_open_tool', array('workspaceId' => $workspaceId, 'toolName' => 'home')
+                )
+            );
+        }
     }
 
     /**
      * @Route(
-     *     "/update_desktop_widget_config",
-     *     name="claro_log_update_desktop_widget_config"
+     *     "/update_desktop_widget_config/{redirectToHome}",
+     *     name="claro_log_update_desktop_widget_config",
+     *     defaults={"redirectToHome" = 0}
      * )
      * @Method("POST")
      */
-    public function updateDesktopWidgetConfig()
+    public function updateDesktopWidgetConfig($redirectToHome)
     {
         $em = $this->getDoctrine()->getManager();
         $loggedUser = $this->get('security.context')->getToken()->getUser();
@@ -188,11 +204,15 @@ class LogController extends Controller
         }
         $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneByName('home');
 
-        return $this->render(
-            'ClarolineCoreBundle:Log:config_desktop_form_update.html.twig', array(
-            'form' => $form->createView(),
-            'tool' => $tool
-            )
-        );
+        if ($redirectToHome === 0) {
+           return $this->render(
+                'ClarolineCoreBundle:Log:config_desktop_form_update.html.twig', array(
+                'form' => $form->createView(),
+                'tool' => $tool
+                )
+            );
+        } else {
+            return $this->redirect($this->generateUrl('claro_desktop_open', array()));
+        }
     }
 }
