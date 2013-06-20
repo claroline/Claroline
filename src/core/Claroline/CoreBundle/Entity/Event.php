@@ -44,13 +44,13 @@ class Event
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
      *     inversedBy="events", cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     private $workspace;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     private $user;
 

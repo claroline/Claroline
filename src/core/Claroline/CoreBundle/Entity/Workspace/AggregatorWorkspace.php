@@ -17,10 +17,10 @@ class AggregatorWorkspace extends AbstractWorkspace
      * @ORM\JoinTable(
      *     name="claro_workspace_aggregation",
      *     joinColumns={
-     *         @ORM\JoinColumn(name="aggregator_workspace_id", referencedColumnName="id")
+     *         @ORM\JoinColumn(name="aggregator_workspace_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      *     },
      *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
+     *         @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      *     }
      * )
      */
