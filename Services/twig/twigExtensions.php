@@ -78,13 +78,13 @@ class TwigExtensions extends \Twig_Extension
 
     public function getInterTwig($interId, $typeInter)
     {
-        //$em = $this->doctrine->getEntityManager();
+        //$em = $this->doctrine->getManager();
 
         switch ($typeInter)
         {
             case "InteractionQCM":
                 $interQCM = $this->doctrine
-                                 ->getEntityManager()
+                                 ->getManager()
                                  ->getRepository('UJMExoBundle:InteractionQCM')
                                  ->getInteractionQCM($interId);
                 $inter['question'] = $interQCM[0];
@@ -93,7 +93,7 @@ class TwigExtensions extends \Twig_Extension
 
             case "InteractionGraphic":
                 $interG = $this->doctrine
-                               ->getEntityManager()
+                               ->getManager()
                                ->getRepository('UJMExoBundle:InteractionGraphic')
                                ->getInteractionGraphic($interId);
                 $inter['question'] = $interG[0];
@@ -114,7 +114,7 @@ class TwigExtensions extends \Twig_Extension
     public function getCoordsGraphTwig($interGraphId)
     {
         $coords = $this->doctrine
-                       ->getEntityManager()
+                       ->getManager()
                        ->getRepository('UJMExoBundle:Coords')
                        ->findBy(array('interactionGraphic' => $interGraphId));
 

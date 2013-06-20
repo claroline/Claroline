@@ -80,7 +80,7 @@ class WSRestController extends Controller
                 $file = basename($_FILES['picture']['name']);
                 move_uploaded_file($_FILES['picture']['tmp_name'], $userDir.'/images/'. $file);
 
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
                 $document = new Document();
 
                 $document->setLabel($_POST['label']);

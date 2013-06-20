@@ -64,7 +64,7 @@ class ExerciseController extends Controller
      */
     public function editAction($id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($id);
         $this->checkAccess($exercise);
 
@@ -99,7 +99,7 @@ class ExerciseController extends Controller
      */
     public function updateAction($id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($id);
 
@@ -112,7 +112,7 @@ class ExerciseController extends Controller
         $editForm    = $this->createForm(new ExerciseType(), $entity);
 
         $formHandler = new ExerciseHandler(
-            $editForm, $this->get('request'), $this->getDoctrine()->getEntityManager(),
+            $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('security.context')->getToken()->getUser(), 'update'
         );
 
@@ -142,7 +142,7 @@ class ExerciseController extends Controller
     {
         $user = $this->container->get('security.context')->getToken()->getUser();
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($exerciseId);
         $this->checkAccess($exercise);
 
@@ -178,7 +178,7 @@ class ExerciseController extends Controller
      */
     public function showQuestionsAction($id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($id);
         $this->checkAccess($exercise);
 
@@ -188,7 +188,7 @@ class ExerciseController extends Controller
 
         if ($exoAdmin == 1) {
             $interactions = $this->getDoctrine()
-                ->getEntityManager()
+                ->getManager()
                 ->getRepository('UJMExoBundle:Interaction')
                 ->getExerciseInteraction($em, $id, 0);
 
@@ -223,7 +223,7 @@ class ExerciseController extends Controller
     */
     public function importQuestionAction($exoID)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($exoID);
         $this->checkAccess($exercise);
 
@@ -237,9 +237,9 @@ class ExerciseController extends Controller
         if ($exoAdmin == 1) {
 
             $interactions = $this->getDoctrine()
-                ->getEntityManager()
+                ->getManager()
                 ->getRepository('UJMExoBundle:Interaction')
-                ->getUserInteractionImport($this->getDoctrine()->getEntityManager(), $uid, $exoID);
+                ->getUserInteractionImport($this->getDoctrine()->getManager(), $uid, $exoID);
 
 
             $shared = $em->getRepository('UJMExoBundle:Share')
@@ -274,12 +274,12 @@ class ExerciseController extends Controller
     {
         $user = $this->container->get('security.context')->getToken()->getUser();
         $question = $this->getDoctrine()
-            ->getEntityManager()
+            ->getManager()
             ->getRepository('UJMExoBundle:Question')
             ->getControlOwnerQuestion($user->getId(), $qid);
 
         if (count($question) > 0) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
 
             $exo = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
             $question = $em->getRepository('UJMExoBundle:Question')->find($qid);
@@ -308,14 +308,14 @@ class ExerciseController extends Controller
      */
     public function deleteQuestionAction($exoID, $qid)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($exoID);
         $this->checkAccess($exercise);
 
         $exoAdmin = $this->isExerciseAdmin($exercise);
 
         if ($exoAdmin == 1) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $eq = $em->getRepository('UJMExoBundle:ExerciseQuestion')
                 ->findOneBy(array('exercise' => $exoID, 'question' => $qid));
             $em->remove($eq);
@@ -334,7 +334,7 @@ class ExerciseController extends Controller
         $user = $this->container->get('security.context')->getToken()->getUser();
         $uid = $user->getId();
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($id);
 
         $exoAdmin = $this->isExerciseAdmin($id);
@@ -354,7 +354,7 @@ class ExerciseController extends Controller
 
             //Verify if it exists a not finished paper
             $paper = $this->getDoctrine()
-                ->getEntityManager()
+                ->getManager()
                 ->getRepository('UJMExoBundle:Paper')
                 ->getPaper($user->getId(), $id);
 
@@ -373,10 +373,10 @@ class ExerciseController extends Controller
                 $paper->setInterupt(0);
 
                 $interactions = $this->getDoctrine()
-                    ->getEntityManager()
+                    ->getManager()
                     ->getRepository('UJMExoBundle:Interaction')
                     ->getExerciseInteraction(
-                        $this->getDoctrine()->getEntityManager(), $id,
+                        $this->getDoctrine()->getManager(), $id,
                         $exercise->getShuffle(), $exercise->getNbQuestion()
                     );
 
@@ -415,7 +415,7 @@ class ExerciseController extends Controller
     public function exercisePaperNavAction()
     {
         $response = '';
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $session = $this->getRequest()->getSession();
         $paper = $em->getRepository('UJMExoBundle:Paper')->find($session->get('paper'));
         $workspace = $paper->getExercise()->getWorkspace();
@@ -429,7 +429,7 @@ class ExerciseController extends Controller
         $ip = $exerciseSer->getIP();
         $interactionToValidatedID = $request->get('interactionToValidated');
         $response = $this->getDoctrine()
-            ->getEntityManager()
+            ->getManager()
             ->getRepository('UJMExoBundle:Response')
             ->getAlreadyResponded($session->get('paper'), $interactionToValidatedID);
 
@@ -499,7 +499,7 @@ class ExerciseController extends Controller
         $typeInterToDisplayed, $dispButtonInterrupt, $workspace
     )
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $session = $this->getRequest()->getSession();
         $tabOrderInter = $session->get('tabOrderInter');
 
@@ -507,7 +507,7 @@ class ExerciseController extends Controller
             case "InteractionQCM":
 
                 $interactionToDisplayed = $this->getDoctrine()
-                    ->getEntityManager()
+                    ->getManager()
                     ->getRepository('UJMExoBundle:InteractionQCM')
                     ->getInteractionQCM($interactionToDisplay->getId());
 
@@ -518,7 +518,7 @@ class ExerciseController extends Controller
                 }
 
                 $responseGiven = $this->getDoctrine()
-                    ->getEntityManager()
+                    ->getManager()
                     ->getRepository('UJMExoBundle:Response')
                     ->getAlreadyResponded($session->get('paper'), $interactionToDisplay->getId());
 
@@ -533,7 +533,7 @@ class ExerciseController extends Controller
             case "InteractionGraphic":
 
                 $interactionToDisplayed = $this->getDoctrine()
-                    ->getEntityManager()
+                    ->getManager()
                     ->getRepository('UJMExoBundle:InteractionGraphic')
                     ->getInteractionGraphic($interactionToDisplay->getId());
 
@@ -541,7 +541,7 @@ class ExerciseController extends Controller
                     ->findBy(array('interactionGraphic' => $interactionToDisplayed[0]->getId()));
 
                 $responseGiven = $this->getDoctrine()
-                    ->getEntityManager()
+                    ->getManager()
                     ->getRepository('UJMExoBundle:Response')
                     ->getAlreadyResponded($session->get('paper'), $interactionToDisplay->getId());
 
@@ -585,7 +585,7 @@ class ExerciseController extends Controller
      */
     private function finishExercise()
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $session = $this->getRequest()->getSession();
 
         $paper = $em->getRepository('UJMExoBundle:Paper')->find($session->get('paper'));
@@ -603,7 +603,7 @@ class ExerciseController extends Controller
      */
     private function interuptExercise()
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $session = $this->getRequest()->getSession();
 
         $paper = $em->getRepository('UJMExoBundle:Paper')->find($session->get('paper'));
@@ -623,7 +623,7 @@ class ExerciseController extends Controller
         $user = $this->container->get('security.context')->getToken()->getUser();
 
         $subscription = $this->getDoctrine()
-            ->getEntityManager()
+            ->getManager()
             ->getRepository('UJMExoBundle:Subscription')
             ->getControlExerciseEnroll($user->getId(), $exoID);
 
@@ -681,7 +681,7 @@ class ExerciseController extends Controller
 
     public function importValidateSharedAction($exoID, $qid)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $question = $em->getRepository('UJMExoBundle:Interaction')
             ->findBy(array('question' => $qid));
