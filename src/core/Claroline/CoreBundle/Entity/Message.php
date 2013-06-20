@@ -28,7 +28,7 @@ class Message
     protected $object;
 
     /**
-     * @ORM\Column(type="string", name="content")
+     * @ORM\Column(type="string", name="content", length=1023)
      * @Assert\NotBlank()
      */
     protected $content;
@@ -38,7 +38,7 @@ class Message
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE" , nullable=false)
      */
     protected $user;
 
@@ -94,7 +94,8 @@ class Message
      * @ORM\JoinColumn(
      *     name="parent_id",
      *     referencedColumnName="id",
-     *     onDelete="SET NULL"
+     *     onDelete="SET NULL",
+     *     nullable=true
      * )
      */
     protected $parent;
