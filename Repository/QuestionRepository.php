@@ -73,4 +73,30 @@ class QuestionRepository extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function findByCategory($userId, $whatToFind)
+    {
+        $dql = 'SELECT q FROM UJM\ExoBundle\Entity\Question q JOIN q.category c
+            WHERE c.value LIKE :search
+            AND q.user = '.$userId.'
+        ';
+
+        $query = $this->_em->createQuery($dql)
+            ->setParameter('search', "%{$whatToFind}%");
+
+        return $query->getResult();
+    }
+
+    public function findByTitle($userId, $whatToFind)
+    {
+        $dql = 'SELECT q FROM UJM\ExoBundle\Entity\Question q
+            WHERE q.title LIKE :search
+            AND q.user = '.$userId.'
+        ';
+
+        $query = $this->_em->createQuery($dql)
+            ->setParameter('search', "%{$whatToFind}%");
+
+        return $query->getResult();
+    }
 }

@@ -1,0 +1,144 @@
+{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+
+{% block section_content %}
+
+    <div id="searchQuestions">
+
+        <form class="well label_bold" id="searchQuestionForm" enctype="multipart/form-data" method="post"
+            action="{{ path('ujm_question_searchQuestion') }}">
+
+            Trouver par :<br/>
+            <input type="radio" name="QuestionSearch" value="Category" style=" position: relative; top: -3px;" checked/> {{ 'CategorySearch'|trans }}
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <input type="radio" name="QuestionSearch" value="Type" style=" position: relative; top: -3px;"/> {{ 'TypeSearch'|trans }}
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <input type="radio" name="QuestionSearch" value="Title" style=" position: relative; top: -3px;"/> {{ 'TitleSearch'|trans }}
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <input type="radio" name="QuestionSearch" value="Contain" style=" position: relative; top: -3px;"/> {{ 'ContainSearch'|trans }}
+            <br/><br/>
+            Trouver dans :<br/>
+            <input type="radio" name="WhereSearch" value="my" style=" position: relative; top: -3px;" checked/> {{ 'My questions'|trans }}
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <input type="radio" name="WhereSearch" value="shared" style=" position: relative; top: -3px;"/> {{ 'My shared questions'|trans }}
+            <br/><br/>
+            Ce que vous cherchez :&nbsp;&nbsp;
+            <input type="text" id='what2search' name='what2search' required="true" style=" position: relative; top: 4px;"
+                   onkeydown="if (event.keyCode == 13) { searchQuestion('{{ path('ujm_question_searchQuestion') }}');return false; }"/><br/><br/>
+            <input type="button" id="SubmitSearchQuestion" value="Search !" onclick="searchQuestion('{{ path('ujm_question_searchQuestion') }}')"/>
+        </form>
+    </div>
+
+    <div id="resultSearch"></div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+
+        function SortQuestions(type) {
+
+            switch (type) {
+                case 'Category':
+                    sortTable('QuestionArray', 0, ASC);
+                    break;
+                case 'Title':
+                    sortTable('QuestionArray', 1, ASC);
+                    break;
+                case 'Type':
+                    sortTable('QuestionArray', 2, ASC);
+                    break;
+                case 'Invite':
+                    sortTable('QuestionArray', 3, ASC);
+                    break;
+            }
+        }
+
+        function DESC(a, b) {
+            a = a[1];
+            b = b[1];
+
+            if (a > b) {
+                return -1;
+            }
+            if (a < b) {
+                return 1;
+            }
+            return 0;
+        }
+
+        function ASC(a, b) {
+            a = a[1];
+            b = b[1];
+
+            if (a > b) {
+                return 1;
+            }
+            if (a < b) {
+                return -1;
+            }
+            return 0;
+         }
+
+        function sortTable(tid, col, ord) {
+
+            mybody = document.getElementById(tid).getElementsByTagName('tbody')[0];
+            lines = mybody.getElementsByTagName('tr');
+
+            var sorter = new Array();
+
+            sorter.length = 0;
+
+            var i = -1;
+
+            while (lines[++i]) {
+                sorter.push([lines[i],lines[i].getElementsByTagName('td')[col].textContent.toLowerCase()]);
+            }
+
+            sorter.sort(ord);
+
+            j = -1;
+
+            while(sorter[++j]) {
+                mybody.appendChild(sorter[j][0]);
+            }
+        }
+
+        function searchQuestion(path){
+
+            var whatToFind = document.getElementById('what2search').value;
+            var type;
+            var where;
+
+            if (document.getElementById('searchQuestionForm').QuestionSearch[0].checked) {
+                type = document.getElementById('searchQuestionForm').QuestionSearch[0].value;
+            } else if (document.getElementById('searchQuestionForm').QuestionSearch[1].checked) {
+                type = document.getElementById('searchQuestionForm').QuestionSearch[1].value;
+            } else if (document.getElementById('searchQuestionForm').QuestionSearch[2].checked) {
+                type = document.getElementById('searchQuestionForm').QuestionSearch[2].value;
+            } else if (document.getElementById('searchQuestionForm').QuestionSearch[3].checked) {
+                type = document.getElementById('searchQuestionForm').QuestionSearch[3].value;
+            }
+
+            if (document.getElementById('searchQuestionForm').WhereSearch[0].checked) {
+                where = document.getElementById('searchQuestionForm').WhereSearch[0].value;
+            } else if (document.getElementById('searchQuestionForm').WhereSearch[1].checked) {
+                where = document.getElementById('searchQuestionForm').WhereSearch[1].value;
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: path,
+                data: {
+                    type : type,
+                    whatToFind : whatToFind,
+                    where : where
+                },
+               cache: false,
+                success: function (data) {
+                  document.getElementById('resultSearch').innerHTML = data;
+               }
+            });
+        }
+    </script>
+{% endblock %}

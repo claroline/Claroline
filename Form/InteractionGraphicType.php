@@ -67,7 +67,9 @@ class InteractionGraphicType extends AbstractType
                     'query_builder' => function (\UJM\ExoBundle\Repository\DocumentRepository $repository) use ($id) {
                         return $repository->createQueryBuilder('d')
                             ->where('d.user = ?1')
-                            ->setParameter(1, $id);
+                            ->andwhere('d.type = \'.png\' OR d.type = \'.jpeg\' OR d.type = \'.jpg\' OR d.type = \'.gif\' OR d.type = \'.bmp\'')
+                            ->setParameter(1, $id)
+                        ;
                     },
                 )
             );

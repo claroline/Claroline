@@ -39,7 +39,7 @@
 
 <form class="well label_bold" id="uploadForm" enctype="multipart/form-data" onsubmit="DisplayMessage();"
       method="post" action="{{ path('ujm_interactiongraphic_AddImg', { 'redirection': 0 }) }}">
-    
+
     <label for="label">{{ "Picture name" | trans }}</label>
     <input type="text" id='label' name='label' required="true" onblur="ValidName('{{ "wrong" | trans }}','label','uploadSubmit');"/><br/>
     <input id="picture" name="picture" type="file" required="true" accept="image/*"/>
@@ -51,5 +51,5 @@
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/addImage.js') }}"></script>
 
 {% if idDoc is defined %}
-    <script type="text/javascript">ChangeList('{{ idDoc }}', '{{ label }}');</script>
+    <script type="text/javascript">ChangeList('{{ idDoc }}', '{{ label }}', '{{ type }}', '{{ 'NotImageMesssage'|trans }}');</script>
 {% endif %}

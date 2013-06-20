@@ -18,21 +18,25 @@ window.onload = function () {
 };
 
 // Put the new image into the drop-down list
-function ChangeList(idDoc, label) {
+function ChangeList(idDoc, label, type, NotImageMesssage) {
 
     list.style.display = "none";
     button.style.display = "block";
 
-    this_select = window.opener.InterGraphForm.ujm_exobundle_interactiongraphictype_document;
-    this_select.options[this_select.length] = new Option(label, idDoc, true, true);
+    if (type == '.png' || type == '.jpeg' || type == '.jpg' || type == '.gif' || type =='.bmp') {
+        this_select = window.opener.InterGraphForm.ujm_exobundle_interactiongraphictype_document;
+        this_select.options[this_select.length] = new Option(label, idDoc, true, true);
 
-    for (var i = 0; i < this_select.options.length; i++) {
-        if (this_select.options[i].value == idDoc) {
-            this_select.options[i].selected = true;
+        for (var i = 0; i < this_select.options.length; i++) {
+            if (this_select.options[i].value == idDoc) {
+                this_select.options[i].selected = true;
+            }
         }
-    }
 
-    window.close();
+        window.close();
+    } else {
+        alert(NotImageMesssage);
+    }
 }
 
 // Display the loading message

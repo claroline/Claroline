@@ -759,7 +759,7 @@ class QuestionController extends Controller
                 if ($type == 'all') {
                     $listDocSort = $repository->findBy(array('user' => $user->getId()));
                 } else {
-                    $listDocSort = $repository->findByType($type);
+                    $listDocSort = $repository->findByType($type, $user->getId());
                 }
             }
         }
@@ -809,7 +809,7 @@ class QuestionController extends Controller
             $question = $em->getRepository('UJMExoBundle:Question')->findOneBy(array('id' => $QuestionID));
 
             for ($i = 0; $i < count($MatchingName); $i++) {
-                if($MatchingName[$i]->getFirstName() == $UserFname) {
+                if ($MatchingName[$i]->getFirstName() == $UserFname) {
                     $user = $MatchingName[$i];
                     break;
                 }
@@ -818,7 +818,7 @@ class QuestionController extends Controller
             $share = new Share($user, $question);
             $share->setAllowToModify(0); // false
 
-            if($creator->getId() == $user->getId()){
+            if ($creator->getId() == $user->getId()) {
                 $self = true;
                 $message = 'self;';
             } else {
@@ -852,6 +852,148 @@ class QuestionController extends Controller
             return true;
         } else {
             return false;
+        }
+    }
+
+    public function searchQuestionAction()
+    {
+        return $this->render('UJMExoBundle:Question:searchQuestion.html.twig');
+    }
+
+    public function searchQuestionTypeAction()
+    {
+
+        $request = $this->container->get('request');
+        $user = $this->container->get('security.context')->getToken()->getUser();
+
+        $listQuestions = array();
+        $questionWithResponse = array();
+        $alreadyShared = array();
+
+        if ($request->isXmlHttpRequest()) {
+            $type = $request->request->get('type');
+            $whatToFind = $request->request->get('whatToFind');
+            $where = $request->request->get('where');
+
+            if ($type && $whatToFind && $where) {
+                $em = $this->getDoctrine()->getEntityManager();
+                $QuestionRepository = $em->getRepository('UJMExoBundle:Question');
+                $InteractionRepository = $em->getRepository('UJMExoBundle:Interaction');
+
+                if ($where == 'my') {
+                    switch ($type) {
+                        case 'Category':
+                            $Questions = $QuestionRepository->findByCategory($user->getId(), $whatToFind);
+
+                            for ($i = 0; $i < count($Questions); $i++) {
+                                $listQuestions[] = $InteractionRepository->findOneBy(array('question' => $Questions[$i]->getId()));
+                            }
+                            break;
+
+                        case 'Type':
+                            $listQuestions = $InteractionRepository->findByType($user->getId(), $whatToFind);
+                            break;
+
+                        case 'Title':
+                             $Questions = $QuestionRepository->findByTitle($user->getId(), $whatToFind);
+
+                            for ($i = 0; $i < count($Questions); $i++) {
+                                $listQuestions[] = $InteractionRepository->findOneBy(array('question' => $Questions[$i]->getId()));
+                            }
+                            break;
+
+                        case 'Contain':
+                            $listQuestions = $InteractionRepository->findByContain($user->getId(), $whatToFind);
+                            break;
+                    }
+
+
+                    foreach ($listQuestions as $list) {
+                        $response = $em->getRepository('UJMExoBundle:Response')
+                            ->findBy(array('interaction' => $list->getId()));
+                        if (count($response) > 0) {
+                            $questionWithResponse[] = 1;
+                        } else {
+                            $questionWithResponse[] = 0;
+                        }
+
+                        $share = $em->getRepository('UJMExoBundle:Share')
+                            ->findBy(array('question' => $list->getQuestion()->getId()));
+                        if (count($share) > 0) {
+                            $alreadyShared[] = 1;
+                        } else {
+                            $alreadyShared[] = 0;
+                        }
+                    }
+
+                    return $this->render(
+                        'UJMExoBundle:Question:SearchQuestionType.html.twig', array(
+                        'listQuestions' => $listQuestions,
+                        'questionWithResponse' => $questionWithResponse,
+                        'alreadyShared'       => $alreadyShared,
+                        'canDisplay' => $where
+                        )
+                    );
+
+
+                } else if ($where == 'shared') {
+                    switch ($type) {
+                        case 'Category':
+                            $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
+                                ->findByCategoryShared($user->getId(), $whatToFind);
+
+                            $listQuestions = array();
+
+                            for ($i = 0; $i < count($sharedQuestion); $i++) {
+                                $listQuestions[] = $em->getRepository('UJMExoBundle:Interaction')
+                                    ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
+                            }
+                            break;
+
+                        case 'Type':
+                            $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
+                                ->findByTypeShared($user->getId(), $whatToFind);
+
+                            $listQuestions = array();
+
+                            for ($i = 0; $i < count($sharedQuestion); $i++) {
+                                $listQuestions[] = $em->getRepository('UJMExoBundle:Interaction')
+                                    ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
+                            }
+                            break;
+
+                        case 'Title':
+                            $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
+                                ->findByTitleShared($user->getId(), $whatToFind);
+
+                            $listQuestions = array();
+
+                            for ($i = 0; $i < count($sharedQuestion); $i++) {
+                                $listQuestions[] = $em->getRepository('UJMExoBundle:Interaction')
+                                    ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
+                            }
+                            break;
+
+                         case 'Contain':
+                            $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
+                                ->findByContainShared($user->getId(), $whatToFind);
+
+                            $listQuestions = array();
+
+                            for ($i = 0; $i < count($sharedQuestion); $i++) {
+                                $listQuestions[] = $em->getRepository('UJMExoBundle:Interaction')
+                                    ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
+                            }
+                            break;
+                    }
+                }
+                return $this->render(
+                    'UJMExoBundle:Question:SearchQuestionType.html.twig', array(
+                    'listQuestions' => $listQuestions,
+                    'canDisplay' => $where
+                    )
+                );
+            }
         }
     }
 }

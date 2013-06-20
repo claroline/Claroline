@@ -74,3 +74,11 @@ ujm_question_shareQuestionUser:
     defaults: { _controller: "UJMExoBundle:Question:shareQuestionUser" }
     requirements:
         _method: POST
+
+ujm_question_search_question:
+    pattern:  /SearchQuestion
+    defaults: { _controller: "UJMExoBundle:Question:searchQuestion" }
+
+ujm_question_searchQuestion:
+    pattern:  /SearchQuestionType/{type, whatToFind}
+    defaults: { _controller: "UJMExoBundle:Question:searchQuestionType" }

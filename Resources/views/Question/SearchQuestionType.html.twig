@@ -1,0 +1,68 @@
+<table class="table table-striped table-bordered table-condensed" id="QuestionArray">
+        <thead>
+            <tr>
+                <th style="text-align: center" onclick="SortQuestions('Category');">
+                    {{ "Category" | trans }}
+                </th>
+                <th style="text-align: center"onclick="SortQuestions('Title');">
+                    {{ "Title" | trans }}
+                </th>
+                <th style="text-align: center"onclick="SortQuestions('Type');">
+                    {{ "Type" | trans }}
+                </th>
+                <th style="text-align: center"onclick="SortQuestions('Invite')">
+                    {{ "Question" | trans }}
+                </th>
+
+                {% if canDisplay == 'shared' %}
+                    <th style="text-align: center">{{ "shared by" | trans }}</th>
+                {% endif %}
+                {% if canDisplay == 'my' %}
+                    <th style="text-align: center">{{ "Actions" | trans }}</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+        {% set i = 0 %}
+        {% for FindQuestion in listQuestions %}
+            <tr>
+                <td style="text-align: center; vertical-align: middle;">{{ FindQuestion.question.category.value }}</td>
+                <td style="text-align: center; vertical-align: middle;"><a href="{{ path('ujm_question_show', { 'id': FindQuestion.question.id }) }}">{{ FindQuestion.question.title }}</a></td>
+                <td style="text-align: center; vertical-align: middle;">{{ FindQuestion.type }}</td>
+                <td style="text-align: center; vertical-align: middle;">{{ FindQuestion.invite|raw }}</td>
+                {% if canDisplay == 'my' %}
+                    <td style="text-align: center; vertical-align: middle;">
+                        <ul style="text-align: center; vertical-align: middle; list-style-type: none;">
+                            <li>
+                                <a href="{{ path('ujm_question_share', { 'questionID': FindQuestion.question.id }) }}">{{ "Share" | trans }}</a>
+                            </li>
+                            {% if(questionWithResponse[i] == 0) %}
+                                <li>
+                                    <a href="{{ path('ujm_question_edit', { 'id': FindQuestion.question.id }) }}">{{ "Edit" | trans }}</a>
+                                </li>
+                                <li>
+                                    <form action="{{ path('ujm_question_delete', { 'id': FindQuestion.question.id}) }}" method="post">
+                                        <button type="submit">{{ "Delete of my bank" | trans }}</button>
+                                    </form>
+                                </li>
+                            {% else %}
+                                <li>
+                                    <a href="{{ path('ujm_question_edit', { 'id': FindQuestion.question.id }) }}" style="color:red">{{ "Edit" | trans }}</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </td>
+                    {% if(alreadyShared[i] == 1) %}
+                        <td style="text-align: center; vertical-align: middle;"><i class=" icon-share-alt"></i></td>
+                    {% endif %}
+                {% endif %}
+                {% if canDisplay == 'shared' %}
+                    <td style="text-align: center; vertical-align: middle;">
+                        {{ FindQuestion.question.user.firstName }} {{ FindQuestion.question.user.lastName }}
+                    </td>
+               {% endif %}
+            </tr>
+            {% set i=i+1 %}
+        {% endfor %}
+        </tbody>
+    </table>

@@ -74,4 +74,58 @@ class ShareRepository extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function findByCategoryShared($userId, $whatToFind)
+    {
+        $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s JOIN s.question q JOIN q.category c
+            WHERE c.value LIKE :search
+            AND s.user = '.$userId.'
+        ';
+
+        $query = $this->_em->createQuery($dql)
+            ->setParameter('search', "%{$whatToFind}%");
+
+        return $query->getResult();
+    }
+
+    public function findByTitleShared($userId, $whatToFind)
+    {
+        $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s JOIN s.question q
+            WHERE q.title LIKE :search
+            AND s.user = '.$userId.'
+        ';
+
+        $query = $this->_em->createQuery($dql)
+            ->setParameter('search', "%{$whatToFind}%");
+
+        return $query->getResult();
+    }
+
+    public function findByTypeShared($userId, $whatToFind)
+    {
+        $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s JOIN UJM\ExoBundle\Entity\Interaction i
+                WHERE s.question = i.question
+                AND s.user = '.$userId.'
+                AND i.type LIKE :search
+        ';
+
+        $query = $this->_em->createQuery($dql)
+            ->setParameter('search', "%{$whatToFind}%");
+
+        return $query->getResult();
+    }
+
+    public function findByContainShared($userId, $whatToFind)
+    {
+         $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s JOIN UJM\ExoBundle\Entity\Interaction i
+                WHERE s.question = i.question
+                AND s.user = '.$userId.'
+                AND i.invite LIKE :search
+        ';
+
+        $query = $this->_em->createQuery($dql)
+            ->setParameter('search', "%{$whatToFind}%");
+
+        return $query->getResult();
+    }
 }

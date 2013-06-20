@@ -88,7 +88,17 @@ class WSRestController extends Controller
                 $document->setType(strrchr($file, '.'));
                 $document->setUser($this->container->get('security.context')->getToken()->getUser());
 
-                $em->persist($document);
+
+                if ($redirection == 1 || ($redirection == 0 && (
+                        $document->getType() == '.png' ||
+                        $document->getType() == '.jpeg' ||
+                        $document->getType() == '.jpg' ||
+                        $document->getType() == '.gif' ||
+                        $document->getType() =='.bmp'))
+                ) {
+
+                    $em->persist($document);
+                }
 
                 $em->flush();
             }
@@ -98,7 +108,8 @@ class WSRestController extends Controller
                     'UJMExoBundle:InteractionGraphic:page.html.twig',
                     array(
                         'idDoc' => $document->getId(),
-                        'label' => $document->getLabel()
+                        'label' => $document->getLabel(),
+                        'type'  => $document->getType()
                     )
                 );
             } else if ($redirection == 1) {
