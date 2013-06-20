@@ -64,6 +64,13 @@ class ThemeService
         return $tmp;
     }
 
+    public function findTheme($array)
+    {
+        $manager = $this->container->get("doctrine")->getManager();
+
+        return $manager->getRepository("ClarolineCoreBundle:Theme\Theme")->findOneBy($array);
+    }
+
     /**
      * List of themes.
      *
