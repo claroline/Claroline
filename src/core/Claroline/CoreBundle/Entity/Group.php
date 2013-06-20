@@ -11,7 +11,14 @@ use Claroline\CoreBundle\Entity\User;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\GroupRepository")
- * @ORM\Table(name="claro_group")
+ * @ORM\Table(
+ *      name="claro_group",
+*       uniqueConstraints={
+ *          @ORM\UniqueConstraint(
+ *          name="name",columns={"name"}
+ *          )
+ *      }
+ *  )
  * @DoctrineAssert\UniqueEntity("name")
  */
 class Group extends AbstractRoleSubject
@@ -24,7 +31,7 @@ class Group extends AbstractRoleSubject
     protected $id;
 
     /**
-     * @ORM\Column(name="name", type="string", length=50)
+     * @ORM\Column(name="name", type="string", length=50, nullable=false)
      * @Assert\NotBlank()
      */
     protected $name;
@@ -37,10 +44,10 @@ class Group extends AbstractRoleSubject
      * @ORM\JoinTable(
      *     name="claro_user_group",
      *     joinColumns={
-     *         @ORM\JoinColumn(name="group_id", referencedColumnName="id")
+     *         @ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      *     },
      *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     *         @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      *     }
      * )
      */
@@ -55,10 +62,10 @@ class Group extends AbstractRoleSubject
      * @ORM\JoinTable(
      *     name="claro_group_role",
      *     joinColumns={
-     *         @ORM\JoinColumn(name="group_id", referencedColumnName="id")
+     *         @ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      *     },
      *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="role_id", referencedColumnName="id")
+     *         @ORM\JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      *     }
      * )
      */
