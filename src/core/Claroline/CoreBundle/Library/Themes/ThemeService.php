@@ -31,9 +31,9 @@ class ThemeService
      */
     public function getTheme($id)
     {
-        $manager = $this->container->get("doctrine")->getManager();
+        $manager = $this->container->get('doctrine')->getManager();
 
-        return $manager->getRepository("ClarolineCoreBundle:Theme\Theme")->find($id);
+        return $manager->getRepository('ClarolineCoreBundle:Theme\Theme')->find($id);
     }
 
     /**
@@ -46,13 +46,13 @@ class ThemeService
     {
         $tmp = array();
 
-        $manager = $this->container->get("doctrine")->getManager();
+        $manager = $this->container->get('doctrine')->getManager();
 
-        $themes = $manager->getRepository("ClarolineCoreBundle:Theme\Theme")->findAll();
+        $themes = $manager->getRepository('ClarolineCoreBundle:Theme\Theme')->findAll();
 
         foreach ($themes as $theme) {
 
-            $path = explode(":", $theme->getPath());
+            $path = explode(':', $theme->getPath());
 
             if ($filter and isset($path[1]) and $path[1] == $filter ) {
                 $tmp[$theme->getId()] = $theme;
@@ -62,6 +62,13 @@ class ThemeService
         }
 
         return $tmp;
+    }
+
+    public function findTheme($array)
+    {
+        $manager = $this->container->get('doctrine')->getManager();
+
+        return $manager->getRepository('ClarolineCoreBundle:Theme\Theme')->findOneBy($array);
     }
 
     /**
@@ -87,16 +94,16 @@ class ThemeService
      * Compile Less Themes that are defined in a twig file with lessphp filter
      *
      * @param mixed $themes An array of Theme entities or an strig of the template with following syntax:
-     *                        "ClarolineCoreBundle:less:bootstrap-default/theme.html.twig"
+     *                        'ClarolineCoreBundle:less:bootstrap-default/theme.html.twig'
      */
-    public function compileTheme($themes, $webPath = ".")
+    public function compileTheme($themes, $webPath = '.')
     {
         //@TODO Find something better for web path
 
-        $twig = $this->container->get("twig");
-        $twigLoader = $this->container->get("twig.loader");
+        $twig = $this->container->get('twig');
+        $twigLoader = $this->container->get('twig.loader');
 
-        $assetic = $this->container->get("assetic.asset_manager");
+        $assetic = $this->container->get('assetic.asset_manager');
 
         // enable loading assets from twig templates
         $assetic->setLoader('twig', new TwigFormulaLoader($twig));
@@ -117,20 +124,20 @@ class ThemeService
 
     public function editTheme($variables, $name = null, $id = null)
     {
-        $manager = $this->container->get("doctrine")->getManager();
+        $manager = $this->container->get('doctrine')->getManager();
 
         if ($id) {
 
-            $theme = $manager->getRepository("ClarolineCoreBundle:Theme\Theme")->find($id);
+            $theme = $manager->getRepository('ClarolineCoreBundle:Theme\Theme')->find($id);
 
         } else {
 
-            $theme = new Theme("", "");
+            $theme = new Theme('', '');
             $manager->persist($theme);
             $manager->flush();
         }
 
-        $path = "Theme".$theme->getId();
+        $path = 'Theme'.$theme->getId();
 
         if ($name) {
 
@@ -150,10 +157,10 @@ class ThemeService
             mkdir($dirname, 0755, true);
         }
 
-        $vars = fopen($dirname."/variables.less", "w");
-        $common = fopen($dirname."/common.less", "w");
-        $themeless = fopen($dirname."/theme.less", "w");
-        $twig = fopen($dirname."/theme.html.twig", "w");
+        $vars = fopen($dirname.'/variables.less', 'w');
+        $common = fopen($dirname.'/common.less', 'w');
+        $themeless = fopen($dirname.'/theme.less', 'w');
+        $twig = fopen($dirname.'/theme.html.twig', 'w');
 
         fwrite($vars, $variables);
         fwrite($common, $this->commonTemplate());
@@ -175,54 +182,54 @@ class ThemeService
 
     public function deleteTheme($id = null)
     {
-        $manager = $this->container->get("doctrine")->getManager();
+        $manager = $this->container->get('doctrine')->getManager();
 
-        $theme = $manager->getRepository("ClarolineCoreBundle:Theme\Theme")->find($id);
+        $theme = $manager->getRepository('ClarolineCoreBundle:Theme\Theme')->find($id);
 
         if ($theme) {
 
-            $path = "Theme".$theme->getId();
+            $path = 'Theme'.$theme->getId();
 
             $dirname = __dir__."/../../Resources/views/less-generated/$path";
 
             if ( is_dir($dirname) ) {
 
-                unlink($dirname."/variables.less");
-                unlink($dirname."/common.less");
-                unlink($dirname."/theme.less");
-                unlink($dirname."/theme.html.twig");
+                unlink($dirname.'/variables.less');
+                unlink($dirname.'/common.less');
+                unlink($dirname.'/theme.less');
+                unlink($dirname.'/theme.html.twig');
 
                 rmdir($dirname);
 
                 $manager->remove($theme);
                 $manager->flush();
 
-                return "true";
+                return 'true';
             }
         }
 
-        return "false";
+        return 'false';
     }
 
     public function themeTemplate()
     {
         return $this->container->get('templating')->render(
-            "ClarolineCoreBundle:Theme:templates/theme.less.twig"
+            'ClarolineCoreBundle:Theme:templates/theme.less.twig'
         );
     }
 
     public function commonTemplate()
     {
         return $this->container->get('templating')->render(
-            "ClarolineCoreBundle:Theme:templates/common.less.twig"
+            'ClarolineCoreBundle:Theme:templates/common.less.twig'
         );
     }
 
     public function twigTemplate($dirname)
     {
         return $this->container->get('templating')->render(
-            "ClarolineCoreBundle:Theme:templates/theme.html.twig",
-            array("dirname" => $dirname)
+            'ClarolineCoreBundle:Theme:templates/theme.html.twig',
+            array('dirname' => $dirname)
         );
     }
 }
