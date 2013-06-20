@@ -19,7 +19,6 @@
         ])
     }}
 
-    {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
     <form class="form-horizontal" action="{{ path('claro_workspace_order_tool_edit', {'workspaceId': workspace.getId(), 'workspaceOrderToolId': wot.getId()}) }}" method="post" {{ form_enctype(form) }}>
         <fieldset>
             {{ form_widget(form) }}

@@ -68,7 +68,7 @@ class ResourceController extends Controller
     public function createAction($resourceType, $parentId)
     {
         $parent = $this->getDoctrine()
-            ->getEntityManager()
+            ->getManager()
             ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->find($parentId);
         $collection = new ResourceCollection(array($parent));
@@ -395,12 +395,13 @@ class ResourceController extends Controller
 
             $workspaceId = $directory->getWorkspace()->getId();
 
-            if ($user == $directory->getCreator()) {
+            if ($user === $directory->getCreator() || $this->get('security.context')->isGranted('ROLE_ADMIN')) {
                 $canChangePosition = true;
             }
 
             $path = $resourceRepo->findAncestors($directory);
             $resources = $resourceRepo->findChildren($directory, $currentRoles);
+            $resources = $this->get('claroline.resource.manager')->sort($resources);
 
             $creationRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
                 ->findCreationRights($currentRoles, $directory);
@@ -665,7 +666,7 @@ class ResourceController extends Controller
         $resource = $repo->find($resourceId);
         $user = $this->get('security.context')->getToken()->getUser();
 
-        if ($user !== $resource->getParent()->getCreator()) {
+        if ($user !== $resource->getParent()->getCreator() && !$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
 

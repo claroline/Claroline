@@ -1,4 +1,3 @@
-{% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
 <form novalidate="novalidate"
       action="{{ path('claro_resource_right_create', {'resource':resource.getId(), 'role':roleId}) }}"
       method="post" {{ form_enctype(form) }}

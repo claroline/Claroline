@@ -64,7 +64,7 @@
             success: function(resources){
                 var html = "";
                 html+= "<li>";
-                html+= "<span class='close' href="+Routing.generate('claro_activity_remove_resource', {'resourceId':resources[0].id, 'activityId': {{ activity.getId() }} })+">x</span>";
+                html+= "<span class='close' href="+Routing.generate('claro_activity_remove_resource', {'resourceId':resources[0].id, 'activityId': {{ _resource.getId() }} })+">x</span>";
                 html+= "<a href="+Routing.generate('claro_resource_open', {'resourceType': resources[0].type, 'action': 'open', 'resourceId': resources[0].id})+">"+resources[0].name+"</a> ";
                 html+="</li>";
 
@@ -107,5 +107,5 @@
     </ul>
 
     <button id="add_resource_button" class="btn btn-secondary">{{'add_resource'|trans({},'platform')}}</button>
-    <div id="twig-attributes" data-activity-id="{{ activity.getId() }}"></div>
+    <div id="twig-attributes" data-activity-id="{{ _resource.getId() }}"></div>
 {% endblock %}

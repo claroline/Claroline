@@ -59,7 +59,7 @@ class AdministrationToolController extends Controller
         $form = $this->createForm(new ToolType(), $tool);
         $request = $this->get('request');
         if ($request->getMethod() === 'POST') {
-            $form->bind($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 

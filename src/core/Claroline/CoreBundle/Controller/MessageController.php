@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Message;
-use Claroline\CoreBundle\Entity\UserMessage;
 use Claroline\CoreBundle\Form\MessageType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
@@ -93,16 +92,10 @@ class MessageController extends Controller
      * @Route(
      *     "/send/{parentId}",
      *     name="claro_message_send",
-     *     defaults={"parentId"=0}
+     *     defaults={"parentId" = 0}
      * )
      *
      * Handles the message form submission.
-     *
-     * @param integer $parentId the parent message (in a discussion, you can answer
-     * to a message wich is the parent). The entity Message is a nested tree.
-     * By default (no parent) $parentId = 0 (defined in the message.yml file).
-     *
-     * @todo: add success/error message
      *
      * @return Response
      */
@@ -110,55 +103,18 @@ class MessageController extends Controller
     {
         $user = $this->get('security.context')->getToken()->getUser();
         $request = $this->get('request');
-        $em = $this->get('doctrine.orm.entity_manager');
         $form = $this->get('form.factory')->create(new MessageType(), new Message());
-        $form->bind($request);
+        $form->handleRequest($request);
+        $parent = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Message')->find($parentId);
 
         if ($form->isValid()) {
-            $message = $form->getData();
-            $message->setUser($user);
-            $message->setSenderUsername($user->getUsername());
-            $parent = $em->getRepository('ClarolineCoreBundle:Message')->find($parentId);
-
-            if ($parent != null) {
-                $message->setParent($parent);
-            }
-            $em->persist($message);
-
-            // create an UserMessage for the sender
-            $userMessage = new UserMessage(true);
-            $userMessage->setUser($user);
-            $userMessage->setMessage($message);
-            $em->persist($userMessage);
-
-            $to = preg_replace('/\s+/', '', $form->get('to')->getData());
-
-            if (substr($to, -1, 1) === ';') {
-                $to = substr_replace($to, "", -1);
-            }
-
-            $usernames = explode(';', $to);
-            foreach ($usernames as $username) {
-                $user = $em->getRepository('ClarolineCoreBundle:User')
-                    ->findOneBy(array('username' => $username));
-                $userMessage = new UserMessage();
-                $userMessage->setUser($user);
-                $userMessage->setMessage($message);
-                $receiversUsername = $message->getReceiverUsername();
-
-                if (empty($receiversUsername)) {
-                    $receiversUsername = $username;
-
-                } else {
-                    $receiversUsername .= ", $username";
-                }
-                $message->setReceiverUsername($receiversUsername);
-                $em->persist($userMessage);
-                $em->persist($message);
-            }
-
-            $em->flush();
-            $form = $this->createForm(new MessageType());
+            $this->get('claroline.message.manager')->create(
+                $user,
+                $form->get('to')->getData(),
+                $form->get('content')->getData(),
+                $form->get('object')->getData(),
+                $parent
+            );
 
             return $this->render(
                 'ClarolineCoreBundle:Message:message_form.html.twig',
