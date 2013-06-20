@@ -49,15 +49,6 @@ class Creator
      */
     public function createWorkspace(Configuration $config, User $manager, $autoflush = true)
     {
-        $config->check();
-        $workspaceType = $config->getWorkspaceType();
-        $workspace = new $workspaceType;
-        $workspace->setName($config->getWorkspaceName());
-        $workspace->setPublic($config->isPublic());
-        $workspace->setCode($config->getWorkspaceCode());
-        $this->entityManager->persist($workspace);
-        $this->entityManager->flush();
-        $entityRoles = $this->initBaseRoles($workspace, $config);
         $rootDir = $this->manager->createRootDir($workspace, $manager, $config->getPermsRootConfiguration(), $entityRoles);
         $extractPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('claro_ws_tmp_', true);
         $archive = new \ZipArchive();
@@ -90,48 +81,6 @@ class Creator
         $this->ed->dispatch('log', $log);
 
         return $workspace;
-    }
-
-    /**
-     * Creates the base roles of a workspace.
-     *
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param \Claroline\CoreBundle\Library\Workspace\Configuration $config
-     */
-    private function initBaseRoles(AbstractWorkspace $workspace, Configuration $config)
-    {
-        $roles = $config->getRoles();
-        $entityRoles = array();
-
-        foreach ($roles as $name => $translation) {
-            $role = $this->createRole($name, $workspace, $translation);
-            $entityRoles[$role->getName()] = $role;
-        }
-
-        return $entityRoles;
-    }
-
-    /**
-     * Creates a new role.
-     *
-     * @param string $baseName
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param string $translationKey
-     *
-     * @return \Claroline\CoreBundle\Entity\Role
-     */
-    private function createRole($baseName, AbstractWorkspace $workspace, $translationKey)
-    {
-        $baseRole = new Role();
-        $baseRole->setName($baseName . '_' . $workspace->getId());
-        $baseRole->setParent(null);
-        $baseRole->setType(Role::WS_ROLE);
-        $baseRole->setTranslationKey($translationKey);
-        $baseRole->setWorkspace($workspace);
-
-        $this->entityManager->persist($baseRole);
-
-        return $baseRole;
     }
 
     /**

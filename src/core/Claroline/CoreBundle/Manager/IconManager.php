@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Library\Resource;
+namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\File as ResourceFile;
@@ -12,9 +12,9 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Service("claroline.resource.icon_creator")
+ * @DI\Service("claroline.manager.icon_manager")
  */
-class IconCreator
+class IconManager
 {
     private $container;
     /** @var EntityManager */
@@ -42,7 +42,7 @@ class IconCreator
      *
      * @return AbstractResource
      */
-    public function setResourceIcon(AbstractResource $resource, $isFixture = false)
+    public function findResourceIcon(AbstractResource $resource, $isFixture = false)
     {
         $type = $resource->getResourceType();
 
@@ -55,9 +55,7 @@ class IconCreator
             $icon = $this->getFileIcon($resource, $isFixture);
         }
 
-        $resource->setIcon($icon);
-
-        return $resource;
+        return $icon;
     }
 
     /**
