@@ -12,6 +12,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface
 {
     private $users;
     private $container;
+    private $withWorkspace;
 
     /**
      * Constructor. Expects an associative array where each key are a firstname and
@@ -32,9 +33,10 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface
      *
      * @param array $users
      */
-    public function __construct(array $users)
+    public function __construct(array $users, $withWorkspace = true)
     {
         $this->users = $users;
+        $this->withWorkspace = $withWorkspace;
     }
 
     /**
@@ -66,13 +68,19 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface
             $user->setUserName($username);
             $user->setPlainPassword($username);
             $user->addRole($this->getReference("role/{$role}"));
-            $userCreator->create($user, false);
-            $this->addReference("user/{$names}", $user);
-            $this->addReference("workspace/{$names}", $user->getPersonalWorkspace());
-            $this->addReference(
-                "directory/{$names}",
+
+            if ($this->withWorkspace) {
+                $userCreator->create($user, false);
+                $this->addReference("workspace/{$names}", $user->getPersonalWorkspace());
+                $this->addReference(
+                    "directory/{$names}",
                 $resourceRepo->findWorkspaceRoot($user->getPersonalWorkspace())
             );
+            } else {
+                $manager->persist($user);
+            }
+
+            $this->addReference("user/{$names}", $user);
 
             $manager->flush();
         }
