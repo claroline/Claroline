@@ -17,7 +17,14 @@ use Claroline\CoreBundle\Entity\Role;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\UserRepository")
- * @ORM\Table(name="claro_user")
+ * @ORM\Table(
+ *      name="claro_user",
+ *      uniqueConstraints={
+ *          @ORM\UniqueConstraint(
+ *          name="user",columns={"username"}
+ *          )
+ *      }
+ * )
  * @DoctrineAssert\UniqueEntity("username")
  */
 class User extends AbstractRoleSubject implements Serializable, UserInterface, EquatableInterface
@@ -85,10 +92,10 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      * @ORM\JoinTable(
      *     name="claro_user_group",
      *     joinColumns={
-     *         @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     *         @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      *     },
      *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="group_id", referencedColumnName="id")
+     *         @ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      *     }
      * )
      */
@@ -102,10 +109,10 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      * @ORM\JoinTable(
      *     name="claro_user_role",
      *     joinColumns={
-     *         @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     *         @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      *     },
      *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="role_id", referencedColumnName="id")
+     *         @ORM\JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      *     }
      * )
      */
@@ -125,7 +132,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      *     inversedBy="personalUser",
      *     cascade={"remove"}
      * )
-     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", onDelete="SET NULL", nullable=false)
      */
     protected $personalWorkspace;
 

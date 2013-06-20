@@ -6,7 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkpaceToolRoleRepository");
- * @ORM\Table(name="claro_workspace_tools_role")
+ * @ORM\Table(name="claro_workspace_tools_role",
+ *          uniqueConstraints={
+ *          @ORM\UniqueConstraint(
+ *          name="tool",columns={"role_id","ordered_tool_id"}
+ *          )
+ *      })
  */
 class WorkspaceToolRole
 {
@@ -22,7 +27,7 @@ class WorkspaceToolRole
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="role_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     protected $role;
 
@@ -31,7 +36,7 @@ class WorkspaceToolRole
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\WorkspaceOrderedTool",
      *     cascade={"persist"}, inversedBy="workspaceToolRoles"
      * )
-     * @ORM\JoinColumn(name="ordered_tool_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="ordered_tool_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     protected $workspaceOrderedTool;
 

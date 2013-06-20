@@ -6,7 +6,14 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\RelWorkspaceTagRepository")
- * @ORM\Table(name="claro_rel_workspace_tag")
+ * @ORM\Table(
+ * name="claro_rel_workspace_tag",
+ * uniqueConstraints={
+ *          @ORM\UniqueConstraint(
+ *          name="workspace_id",columns={"workspace_id","tag_id"}
+ *          )
+ *      }
+ * )
  */
 class RelWorkspaceTag
 {
@@ -21,7 +28,7 @@ class RelWorkspaceTag
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace"
      * )
-     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id" , nullable=false , onDelete="CASCADE")
      */
     protected $workspace;
 
@@ -29,7 +36,7 @@ class RelWorkspaceTag
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\WorkspaceTag"
      * )
-     * @ORM\JoinColumn(name="tag_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="tag_id", referencedColumnName="id" , nullable=false, onDelete="CASCADE")
      */
     protected $tag;
 

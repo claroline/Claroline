@@ -8,7 +8,14 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkspaceTagRepository")
- * @ORM\Table(name="claro_workspace_tag")
+ * @ORM\Table(
+ *      name="claro_workspace_tag",
+ *      uniqueConstraints={
+ *          @ORM\UniqueConstraint(
+ *          name="tool",columns={"user_id","name"}
+ *          )
+ *      }
+ *  )
  * @DoctrineAssert\UniqueEntity({"name", "user"})
  */
 class WorkspaceTag
@@ -29,7 +36,7 @@ class WorkspaceTag
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User"
      * )
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      */
     protected $user;
 

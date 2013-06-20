@@ -6,7 +6,14 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="claro_widget")
+ * @ORM\Table(
+ *      name="claro_widget",
+ *      uniqueConstraints={
+ *          @ORM\UniqueConstraint(
+ *          name="tool",columns={"name"}
+ *          )
+ *      }
+ *  )
  */
 class Widget
 {
@@ -22,7 +29,7 @@ class Widget
      *     targetEntity="Claroline\CoreBundle\Entity\Plugin",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="plugin_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="plugin_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $plugin;
 

@@ -20,12 +20,12 @@ class ResourceIcon
     protected $id;
 
     /**
-     * @ORM\Column(type="string", name="icon_location")
+     * @ORM\Column(type="string", name="icon_location", nullable=true, length=255)
      */
     protected $iconLocation;
 
     /**
-     * @ORM\Column(type="string", name="type")
+     * @ORM\Column(type="string", name="type", length=255)
      */
     protected $type;
 
@@ -35,19 +35,19 @@ class ResourceIcon
     protected $isShortcut;
 
     /**
-     * @ORM\Column(type="string", name="relative_url")
+     * @ORM\Column(type="string", name="relative_url", nullable=true, length=255)
      */
     protected $relativeUrl;
 
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\IconType")
-     * @ORM\JoinColumn(name="icon_type_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="icon_type_id", referencedColumnName="id", nullable=false, onDelete="SET NULL" )
      */
     protected $iconType;
 
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceIcon")
-     * @ORM\JoinColumn(name="shortcut_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="shortcut_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     protected $shortcutIcon;
 
