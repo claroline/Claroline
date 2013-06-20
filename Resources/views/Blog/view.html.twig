@@ -7,15 +7,54 @@
 {% block content %}
     <p>
         <a href="{{ _path('icap_blog_post_new', {'blogId': _resource.id}) }}" class="btn">
-            {{ 'new_post'|trans() }}
+            {{ 'new_post'|trans }}
         </a>
     </p>
     {% for post in pager %}
-    <article>
-        {{ post.title }}
-    </article>
+        {% set isPublished = post.isPublished %}
+        <article{% if not isPublished %} class="draft"{% endif %}>
+            <header>
+                {% if is_granted('EDIT', blog) %}
+                    <div class="btn-group pull-right">
+                        <a href="#" data-toggle="tooltip" title="{{ 'edit'|trans({}, 'platform') }}" data-placement="left" data-original-title="{{ 'edit'|trans({}, 'platform') }}" class="btn btn-small">
+                            <i class="icon-edit"></i>
+                        </a>
+                        <a href="#" data-toggle="tooltip" title="{{ 'delete'|trans({}, 'platform') }}" data-placement="top" data-original-title="{{ 'delete'|trans({}, 'platform') }}" class="btn btn-small btn-danger">
+                            <i class="icon-trash"></i>
+                        </a>
+                        {% if isPublished %}
+                        <a href="#" data-toggle="tooltip" title="{{ 'unpublish'|trans }}" data-placement="right" data-original-title="{{ 'unpublish'|trans }}" class="btn btn-small">
+                            <i class="icon-eye-close"></i>
+                        </a>
+                        {% else %}
+                        <a href="#" data-toggle="tooltip" title="{{ 'publish'|trans }}" data-placement="right" data-original-title="{{ 'publish'|trans }}" class="btn btn-small">
+                            <i class="icon-eye-open"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                <h1>{{ post.title|raw }}</h1>
+                {% set author = post.author %}
+                {{ 'written_by'|trans }} <a href="#" rel="author" title="{{ author.firstname ~ ' ' ~ author.lastname }}">{{ author.firstname ~ ' ' ~ author.lastname }}</a>
+                {% if isPublished %}
+, <time>{{ post.publicationDate|date("d/m/Y") }}</time>
+                {% endif %}
+            </header>
+            <div class="content">{{ post.content|raw }}</div>
+            <footer>
+                <ul class="unstyled inline pull-left">
+                    <li><i class="icon-tags"></i></li>
+                {% for tag in entity_tags(post) %}
+                    <li><a href="#" title="{{ tag.name }}">{{ tag.name }}</a></li>
+                {% else %}
+                    <li>{{ 'no_associated_tags'|trans }}</li>
+                {% endfor %}
+                </ul>
+                <a href="#" class="pull-right" title="{{ 'see_comments'|trans }}"><i class="icon-comments"></i> {{ post.comments|length }} {{ 'comments'|trans }}</a>
+            </footer>
+        </article>
     {% else %}
-    <span>{{ 'no_post'|trans() }}</span>
+        <span>{{ 'no_post'|trans }}</span>
     {% endfor %}
     {% if pager.haveToPaginate %}
     <div>

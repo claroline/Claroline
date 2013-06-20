@@ -42,7 +42,7 @@
                         </ul>
                     </li>
                     {% endif %}
-                    {% if is_granted('ROLE_ADMIN') or is_granted('EDIT', blog) %}
+                    {% if is_granted('EDIT', blog) %}
                     <li>
                         <a href="{{ path('icap_blog_configure', {"blogId": blog.id}) }}">
                             <i class="icon-wrench"></i> {{ 'options'|trans({}, 'platform') }}

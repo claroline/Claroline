@@ -322,4 +322,12 @@ class Post extends Statusable implements TaggableInterface
     {
         return $this->blog;
     }
+
+    /**
+     * @return bool
+     */
+    public function isPublished()
+    {
+        return (null !== $this->getPublicationDate());
+    }
 }

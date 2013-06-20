@@ -32,7 +32,9 @@ class PostController extends Controller
             ->setAuthor($this->getUser())
         ;
 
-        $form = $this->get('icaplyon1_simpletag.manager')->createForm(new PostType(), $post);
+        /** @var \ICAPLyon1\Bundle\SimpleTagBundle\Service\Manager $simpleTagManager */
+        $simpleTagManager = $this->get('icaplyon1_simpletag.manager');
+        $form = $simpleTagManager->createForm(new PostType(), $post);
 
         if("POST" === $request->getMethod()) {
             $form->bind($request);

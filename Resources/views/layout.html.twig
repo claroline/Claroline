@@ -107,7 +107,11 @@
     <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.css') }}'/>
     <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css') }}'/>
     <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.print.css') }}' media='print' />
-        <link rel="stylesheet" type="text/css" href="{{ asset('bundles/icapblog/css/style.css') }}"/>
+    {% stylesheets debug=false filter='lessphp'  output='bundles/icapblog/css/style.css'
+      "@ICAPBlogBundle/Resources/views/less/style.less"
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
 {% endblock %}
 
 {% block javascripts %}
