@@ -25,6 +25,7 @@ class TemplateLocator extends baseTemplateLocator
     protected $locator;
     protected $cache;
     protected $configHandler;
+    protected $themeService;
 
     /**
      * Constructor.
@@ -32,7 +33,7 @@ class TemplateLocator extends baseTemplateLocator
      * @param FileLocatorInterface $locator  A FileLocatorInterface instance
      * @param string               $cacheDir The cache path
      */
-    public function __construct(FileLocatorInterface $locator, $cacheDir = null, $configHandler)
+    public function __construct(FileLocatorInterface $locator, $cacheDir = null, $configHandler, $themeService)
     {
         if (null !== $cacheDir && is_file($cache = $cacheDir.'/templates.php')) {
             $this->cache = require $cache;
@@ -40,6 +41,7 @@ class TemplateLocator extends baseTemplateLocator
 
         $this->locator = $locator;
         $this->configHandler = $configHandler;
+        $this->themeService = $themeService;
     }
 
     /**
@@ -72,19 +74,23 @@ class TemplateLocator extends baseTemplateLocator
             throw new \InvalidArgumentException("The template must be an instance of TemplateReferenceInterface.");
         }
 
-        $theme = $this->configHandler->getParameter("theme");
-        $theme = substr($theme, 0, strpos($theme, ":"));
+        $theme = $this->themeService->findTheme(array('path' => $this->configHandler->getParameter('theme')));
+        $bundle = substr($theme->getPath(), 0, strpos($theme->getPath(), ":"));
 
-        $tmp = $template->get("bundle");
+        if (is_object($template) and
+            $bundle!= "" and
+            $bundle != $template->get("bundle") and
+            $template->get("bundle") == "ClarolineCoreBundle") {
 
-        if (is_object($template) and $theme != "" and $theme != $tmp and $tmp == "ClarolineCoreBundle") {
+            $tmp = clone $template;
 
-            $template->set("bundle", $theme);
+            $template->set("bundle", $bundle);
+            $template->set("controller", strtolower(str_replace(' ', '', $theme->getName()))."/".$template->get("controller"));
 
             try {
                 $this->locator->locate($template->getPath(), $currentPath);
             } catch (\InvalidArgumentException $e) {
-                $template->set("bundle", $tmp);
+                $template = $tmp; //return to default
             }
 
         }
