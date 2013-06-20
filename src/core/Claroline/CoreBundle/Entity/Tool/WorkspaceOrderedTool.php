@@ -7,7 +7,14 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="claro_workspace_ordered_tool")
+ * @ORM\Table(
+ *     name="claro_workspace_ordered_tool",
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(name="tool", columns={"tool_id", "workspace_id"}),
+ *         @ORM\UniqueConstraint(name="display", columns={"workspace_id", "display_order"}),
+ *         @ORM\UniqueConstraint(name="workspace", columns={"workspace_id", "name"})
+ *     }
+ * )
  * @DoctrineAssert\UniqueEntity({"name", "workspace"})
  */
 class WorkspaceOrderedTool
@@ -24,7 +31,7 @@ class WorkspaceOrderedTool
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
      *     cascade={"persist"}, inversedBy="workspaceOrderedTools"
      * )
-     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     protected $workspace;
 
@@ -33,7 +40,7 @@ class WorkspaceOrderedTool
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\Tool",
      *     cascade={"persist"}, inversedBy="workspaceOrderedTools"
      * )
-     * @ORM\JoinColumn(name="tool_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="tool_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     protected $tool;
 
@@ -44,8 +51,8 @@ class WorkspaceOrderedTool
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole",
-     *     mappedBy="workspaceOrderedTool"
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole", 
+     *     cascade={"persist"}, mappedBy="workspaceOrderedTool"
      * )
      */
     protected $workspaceToolRoles;

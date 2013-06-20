@@ -12,7 +12,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceRightsRepository")
- * @ORM\Table(name="claro_resource_rights")
+ * @ORM\Table(
+ *      name="claro_resource_rights",
+ *      uniqueConstraints={
+ *          @ORM\UniqueConstraint(
+ *          name="user",columns={"resource_id","role_id"}
+ *          )
+ *      }
+ * )
  */
 class ResourceRights
 {
@@ -28,6 +35,7 @@ class ResourceRights
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
      *     inversedBy="resourceRights"
      * )
+     * @ORM\JoinColumn(name="role_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     protected $role;
 
@@ -37,6 +45,7 @@ class ResourceRights
      *     inversedBy="rights",
      *     cascade={"persist"}
      * )
+     * @ORM\JoinColumn(name="resource_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     protected $resource;
 
@@ -73,10 +82,10 @@ class ResourceRights
      * @ORM\JoinTable(
      *     name="claro_list_type_creation",
      *     joinColumns={
-     *         @ORM\JoinColumn(name="right_id", referencedColumnName="id")
+     *         @ORM\JoinColumn(name="right_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      *     },
      *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")
+     *         @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      *     }
      * )
      */
