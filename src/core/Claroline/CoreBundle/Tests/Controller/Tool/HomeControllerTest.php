@@ -61,6 +61,7 @@ class HomeControllerTest extends FunctionalTestCase
         $configs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
             ->findAll();
         $crawler = $this->client->request('GET', "/workspaces/{$pwuId}/widgets");
+
         $countVisibleWidgets = count($crawler->filter('.widget'));
         $this->client->request(
             'POST',

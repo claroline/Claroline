@@ -18,7 +18,7 @@ class ParametersControllerTest extends FunctionalTestCase
     public function testDesktopAddThenRemoveTool()
     {
         $repo = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool');
-        $baseDisplayedTools = $repo->findByUser($this->getUser('john'), true);
+        $baseDisplayedTools = $repo->findDesktopDisplayedToolsByUser($this->getUser('john'));
         $nbBaseDisplayedTools = count($baseDisplayedTools);
         $calendar = $repo->findOneBy(array('name' => 'calendar'));
         $calendarPosition = $nbBaseDisplayedTools + 1;
@@ -31,7 +31,7 @@ class ParametersControllerTest extends FunctionalTestCase
 
         $this->assertEquals(
             ++$nbBaseDisplayedTools,
-            count($repo->findByUser($this->getUser('john'), true))
+            count($repo->findDesktopDisplayedToolsByUser($this->getUser('john')))
         );
 
         $this->client->request(
