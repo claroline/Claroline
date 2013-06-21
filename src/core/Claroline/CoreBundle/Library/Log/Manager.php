@@ -199,7 +199,12 @@ class Manager
             'listItemViews' => $views,
             'chartData' => $chartData,
             'logAmount' => $desktopConfig->getAmount(),
-            'isDesktop' => true
+            'isDesktop' => true, 
+            'title' => $this->container->get('translator')->trans(
+                'Overview of recent activities of your workspaces',
+                array(),
+                'platform'
+            )
         );
     }
 
@@ -229,12 +234,27 @@ class Manager
         //List item delegation
         $views = $this->renderLogs($logs);
 
+        if ($config->hasNoRestriction()) {
+            $title = $this->container->get('translator')->trans(
+                'Overview of all recent activities in %workspaceName%',
+                array('%workspaceName%' => $workspace->getName()),
+                'platform'
+            );
+        } else {
+            $title = $this->container->get('translator')->trans(
+                'Overview of recent activities in %workspaceName%',
+                array('%workspaceName%' => $workspace->getName()),
+                'platform'
+            );
+        }
+
         return array(
             'logs' => $logs,
             'listItemViews' => $views,
             'chartData' => $chartData,
             'workspace' => $workspace,
-            'logAmount' => $config->getAmount()
+            'logAmount' => $config->getAmount(),
+            'title' => $title
         );
     }
 

@@ -37,13 +37,13 @@ class Content2Type
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(name="content_id", nullable=false, onDelete="CASCADE")
     */
     private $content;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Type")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
     */
     private $type;
 
@@ -56,11 +56,13 @@ class Content2Type
 
     /**
     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content2Type")
+    * @ORM\JoinColumn(name="next_id", nullable=true, onDelete="CASCADE")
     */
     private $next;
 
     /**
     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content2Type")
+    * @ORM\JoinColumn(name="back_id", nullable=true, onDelete="CASCADE")
     */
     private $back;
 
