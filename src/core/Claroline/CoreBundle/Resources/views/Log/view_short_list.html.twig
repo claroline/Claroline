@@ -2,6 +2,10 @@
 {% if chartData|length > 0 %}
     {% include 'ClarolineCoreBundle:Log:count_by_day_chart.html.twig' %}
 {% endif %}
+<br/><br/>
+<legend>
+    {{ 'Last action'|transchoice(logAmount, {'%logAmount%': logAmount}, 'platform') }}
+</legend>
 {% include 'ClarolineCoreBundle:Log:view_list.html.twig' %}
 {% if workspace is defined and workspace != null %}
     <div class="text-center">

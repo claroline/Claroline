@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Library\Event\LogResourceCreateEvent;
 use Claroline\CoreBundle\Library\Event\LogResourceMoveEvent;
 use Claroline\CoreBundle\Library\Event\LogResourceDeleteEvent;
 use Claroline\CoreBundle\Library\Event\LogResourceCopyEvent;
+use Claroline\CoreBundle\Repository\AbstractResourceRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -37,6 +38,8 @@ class Manager
     private $ut;
     /** @var IconCreator */
     private $ic;
+    /** @var AbstractResourceRepository */
+    private $resourceRepo;
 
     /**
      * Constructor.
@@ -54,6 +57,7 @@ class Manager
         $this->sc = $container->get('security.context');
         $this->ut = $container->get('claroline.resource.utilities');
         $this->ic = $container->get('claroline.resource.icon_creator');
+        $this->resourceRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
         $this->container = $container;
     }
 
@@ -343,7 +347,7 @@ class Manager
      * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
      * @param array $rights
      */
-    public function setResourceRights(AbstractResource $resource, array $rights)
+    public function setResourceRights(AbstractResource $resource, array $rights, array $roles = array())
     {
         $roleRepo = $this->em->getRepository('ClarolineCoreBundle:Role');
         $resourceTypeRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType');
@@ -371,8 +375,12 @@ class Manager
                 throw new \Exception($content);
             }
 
-            $role = $roleRepo->findOneBy(array('name' => $role.'_'.$workspace->getId()));
-            $this->createRight($permissions, false, $role, $resource, $resourceTypes);
+            if (count($roles) === 0) {
+                $role = $roleRepo->findOneBy(array('name' => $role.'_'.$workspace->getId()));
+            } else {
+                $role = $roles[$role.'_'.$workspace->getId()];
+            }
+            $this->createRight($permissions, false, $role, $resource, $resourceTypes, false);
         }
 
         $anonymousPerms = array(
@@ -388,7 +396,8 @@ class Manager
             false,
             $roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
             $resource,
-            array()
+            array(),
+            false
         );
 
         $resourceTypes = $resourceTypeRepo->findAll();
@@ -406,7 +415,8 @@ class Manager
             false,
             $roleRepo->findOneBy(array('name' => 'ROLE_ADMIN')),
             $resource,
-            $resourceTypes
+            $resourceTypes,
+            false
         );
     }
 
@@ -435,7 +445,7 @@ class Manager
         return $criteria;
     }
 
-    public function createRootDir(AbstractWorkspace $workspace, User $user, array $configPermsRootDir)
+    public function createRootDir(AbstractWorkspace $workspace, User $user, array $configPermsRootDir, array $roles = array())
     {
         $rootDir = new Directory();
         $rootDir->setName("{$workspace->getName()} - {$workspace->getCode()}");
@@ -449,7 +459,7 @@ class Manager
         $rootDir->setIcon($directoryIcon);
         $rootDir->setResourceType($directoryType);
         $rootDir->setWorkspace($workspace);
-        $this->setResourceRights($rootDir, $configPermsRootDir);
+        $this->setResourceRights($rootDir, $configPermsRootDir, $roles);
         $this->em->persist($rootDir);
 
         return $rootDir;
@@ -657,7 +667,8 @@ class Manager
         $isRecursive,
         Role $role,
         AbstractResource $resource,
-        array $resourceTypes = array()
+        array $resourceTypes = array(),
+        $autoflush = true
     )
     {
         $resourceRights = array();
@@ -682,7 +693,9 @@ class Manager
             $this->em->persist($resourceRight);
         }
 
-        $this->em->flush();
+        if ($autoflush) {
+            $this->em->flush();
+        }
     }
 
     /**
@@ -717,5 +730,93 @@ class Manager
         }
 
         return $finalRights;
+    }
+
+    /**
+     * Sort every children of a resource.
+     *
+     * @param array $resources
+     *
+     * @return array
+     */
+    public function findAndSortChildren(AbstractResource $parent)
+    {
+        //a little bit hacky but retrieve all children of the parent
+        $resources = $this->resourceRepo->findChildren($parent, array('ROLE_ADMIN'));
+        $sorted = array();
+        //set the 1st item.
+        foreach ($resources as $resource) {
+            if ($resource['previous_id'] === null) {
+                $sorted[] = $resource;
+            }
+        }
+
+        $resourceCount = count($resources);
+        $sortedCount = 0;
+
+        for ($i = 0; $sortedCount < $resourceCount; ++$i) {
+            $sortedCount = count($sorted);
+
+            foreach ($resources as $resource) {
+                if ($sorted[$sortedCount - 1]['id'] === $resource['previous_id']) {
+                    $sorted[] = $resource;
+                }
+            }
+
+            if ($i > 100) {
+                throw new \Exception('More than 100 items in a directory or infinite loop detected');
+            }
+        }
+
+        return $sorted;
+    }
+
+    /**
+     * Sort an array of serialized resources. The chained list can have some "holes".
+     *
+     * @param array $resources
+     *
+     * @return array
+     */
+    public function sort(array $resources)
+    {
+        if ($this->sameParents($resources)) {
+            $parent = $this->resourceRepo->find($resources[0]['parent_id']);
+            $sortedList = $this->findAndSortChildren($parent);
+
+            foreach ($sortedList as $sortedItem) {
+                foreach ($resources as $resource) {
+                    if ($resource['id'] === $sortedItem['id']) {
+                        $sortedRes[] = $resource;
+                    }
+                }
+            }
+
+        } else {
+            throw new \Exception("These resources don't share the same parent");
+        }
+
+        return $sortedRes;
+    }
+
+    /**
+     * Checks if an array of serialized resources share the same parent.
+     *
+     * @param array $resources
+     *
+     * @return array
+     */
+    public function sameParents(array $resources)
+    {
+        $firstRes = array_pop($resources);
+        $tmp = $firstRes['parent_id'];
+
+        foreach ($resources as $resource) {
+            if ($tmp !== $resource['parent_id']) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

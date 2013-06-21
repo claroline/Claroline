@@ -2,11 +2,15 @@
 
 {% block daterange_widget %}
     {% spaceless %}
-        {{ block('field_widget') }}
+        {{ block('form_widget') }}
         {% block daterange_assets %}
-            <link rel="stylesheet" type="text/css" media="all" href="{{ asset('bundles/clarolinecore/css/common/daterangepicker.css') }}" />
+            {% stylesheets debug=false filter='lessphp'  output='bundles/clarolinecore/css/jquery.daterangepicker.css'
+              'bundles/frontend/jquery/plugin/daterangepicker/less/bootstrap-daterangepicker.less'
+            %}
+                <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+            {% endstylesheets %}            
             <script type="text/javascript" src="{{ asset('bundles/frontend/date.js') }}"></script>
-            <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/daterangepicker.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/daterangepicker/daterangepicker.js') }}"></script>
         {% endblock %}
         <script type="text/javascript">
 

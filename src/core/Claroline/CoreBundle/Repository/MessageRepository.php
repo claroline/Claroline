@@ -206,4 +206,45 @@ class MessageRepository extends NestedTreeRepository
 
         return ($getQuery) ? $query: $query->getResult();
     }
+
+    public function findUserMessages(User $user, array $messages)
+    {
+        $firstMsg = array_pop($messages);
+
+        $dql = "SELECT um FROM Claroline\CoreBundle\Entity\UserMessage um
+            JOIN um.user u
+            JOIN um.message m
+            WHERE m.id IN ({$firstMsg->getId()}";
+
+
+        foreach ($messages as $message) {
+            $dql .= ", {$message->getId()}";
+        }
+
+        $dql .= ") AND u.id = {$user->getId()}";
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
+
+    public function findMessages(array $ids)
+    {
+        $firstId = array_pop($ids);
+        $dql = "SELECT m FROM Claroline\CoreBundle\Entity\Message m
+            WHERE m.id IN (:first_id";
+
+        foreach ($ids as $key => $id) {
+            $dql .= ", :id_{$key}" ;
+        }
+
+        $dql .= ')';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('first_id', $firstId);
+
+        foreach ($ids as $key => $id) {
+            $query->setParameter("id_{$key}", $id);
+        }
+
+        return $query->getResult();
+    }
 }

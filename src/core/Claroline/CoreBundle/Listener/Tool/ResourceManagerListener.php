@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Listener\Tool;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Library\Event\ConfigureWorkspaceToolEvent;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -21,10 +22,11 @@ class ResourceManagerListener
      *     "manager" = @DI\Inject("claroline.resource.manager"),
      *     "converter" = @DI\Inject("claroline.resource.converter"),
      *     "sc" = @DI\Inject("security.context"),
-     *     "request" = @DI\Inject("request")
+     *     "request" = @DI\Inject("request"),
+     *     "organizer" = @DI\Inject("claroline.workspace.organizer")
      * })
      */
-    public function __construct($em, $ed, $templating, $manager, $converter, $sc, $request)
+    public function __construct($em, $ed, $templating, $manager, $converter, $sc, $request, $organizer)
     {
         $this->em = $em;
         $this->ed = $ed;
@@ -33,6 +35,7 @@ class ResourceManagerListener
         $this->converter = $converter;
         $this->sc = $sc;
         $this->request = $request;
+        $this->organizer = $organizer;
     }
 
     /**
@@ -133,9 +136,22 @@ class ResourceManagerListener
         $roleRights = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
             ->findNonAdminRights($resource);
 
+        $datas = $this->organizer->getDatasForWorkspaceList(true);
+
         return $this->templating->render(
             'ClarolineCoreBundle:Tool\workspace\resource_manager:resources_rights.html.twig',
-            array('workspace' => $workspace, 'resource' => $resource, 'roleRights' => $roleRights)
+            array(
+                'workspace' => $workspace,
+                'resource' => $resource,
+                'roleRights' => $roleRights,
+                'workspaces' => $datas['workspaces'],
+                'tags' => $datas['tags'],
+                'tagWorkspaces' => $datas['tagWorkspaces'],
+                'hierarchy' => $datas['hierarchy'],
+                'rootTags' => $datas['rootTags'],
+                'displayable' => $datas['displayable'],
+                'workspaceRoles' => $datas['workspaceRoles']
+            )
         );
     }
 }

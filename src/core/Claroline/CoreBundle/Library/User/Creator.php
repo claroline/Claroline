@@ -16,12 +16,15 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class Creator
 {
+    const BATCH_SIZE = 150;
+
     private $em;
     private $trans;
     private $ch;
     private $wsCreator;
     private $personalWsTemplateFile;
     private $ed;
+    private $sc;
 
     /**
      * @DI\InjectParams({
@@ -30,7 +33,8 @@ class Creator
      *     "ch" = @DI\Inject("claroline.config.platform_config_handler"),
      *     "wsCreator" = @DI\Inject("claroline.workspace.creator"),
      *     "personalWsTemplateFile" = @DI\Inject("%claroline.param.templates_directory%"),
-     *     "ed"  = @DI\Inject("event_dispatcher")
+     *     "ed" = @DI\Inject("event_dispatcher"),
+     *     "sc" = @DI\Inject("security.context")
      * })
      */
     public function __construct(
@@ -39,7 +43,8 @@ class Creator
         PlatformConfigurationHandler $ch,
         WsCreator $wsCreator,
         $personalWsTemplateFile,
-        $ed
+        $ed,
+        $sc
     )
     {
         $this->em = $em;
@@ -48,6 +53,7 @@ class Creator
         $this->wsCreator = $wsCreator;
         $this->personalWsTemplateFile = $personalWsTemplateFile."default.zip";
         $this->ed = $ed;
+        $this->sc = $sc;
     }
 
     /**
@@ -58,28 +64,84 @@ class Creator
      *
      * @return User
      */
-    public function create(User $user)
+    public function create(User $user, $autoflush = true)
     {
         $user->addRole($this->em->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER'));
         $this->em->persist($user);
-        $config = Configuration::fromTemplate($this->personalWsTemplateFile);
-        //uncomment this line when the templating system is working
-        $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
-        $locale = $this->ch->getParameter('locale_language');
-        $this->trans->setLocale($locale);
-        $personalWorkspaceName = $this->trans->trans('personal_workspace', array(), 'platform');
-        $config->setWorkspaceName($personalWorkspaceName);
-        $config->setWorkspaceCode($user->getUsername());
-        $workspace = $this->wsCreator->createWorkspace($config, $user, false);
-        $user->setPersonalWorkspace($workspace);
-        $this->em->persist($workspace);
+        $this->setPersonalWorkspace($user);
+        $this->addRequiredTools($user, $this->findRequiredTools());
 
-        $repo = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool');
-        $requiredTools[] = $repo->findOneBy(array('name' => 'home'));
-        $requiredTools[] = $repo->findOneBy(array('name' => 'resource_manager'));
-        $requiredTools[] = $repo->findOneBy(array('name' => 'parameters'));
-        $requiredTools[] = $repo->findOneBy(array('name' => 'logs'));
+        if ($autoflush) {
+            $this->em->flush();
+        }
 
+        $log = new LogUserCreateEvent($user);
+        $this->ed->dispatch('log', $log);
+
+        return $user;
+    }
+
+    /**
+     * Expects an array of users. Each user must be defined this way:
+     * array(
+     *     [0] => 'firstname',
+     *     [1] => 'lastname',
+     *     [2] => 'username',
+     *     [3] => 'password',
+     *     [4] => 'code',
+     *     [5] => 'mail' (optionnal)
+     * )
+     * @param array $users
+     */
+    public function import($users)
+    {
+        $role = $this->em->getRepository('ClarolineCoreBundle:Role')->findOneBy(array('name' => 'ROLE_USER'));
+        $requiredTools = $this->findRequiredTools();
+        $i = $j = 0;
+
+        foreach ($users as $user) {
+            $userEntity = new User();
+            $userEntity->addRole($role);
+            $userEntity->setFirstName($user[0]);
+            $userEntity->setLastName($user[1]);
+            $userEntity->setUsername($user[2]);
+            $userEntity->setPlainPassword($user[3]);
+            $userEntity->setAdministrativeCode($user[4]);
+
+            if (isset($user[5])) {
+                $userEntity->setMail($user[5]);
+            }
+
+            $this->addRequiredTools($userEntity, $requiredTools);
+            $this->em->persist($userEntity);
+            $log = new LogUserCreateEvent($userEntity);
+            $this->ed->dispatch('log', $log);
+
+            if (($i % self::BATCH_SIZE) === 0) {
+                $j++;
+
+                $this->em->flush();
+                $this->em->clear();
+
+                echo ("batch [{$j}] | users [{$i}] | UOW  [{$this->em->getUnitOfWork()->size()}]".PHP_EOL);
+
+                $role = $this->em->getRepository('ClarolineCoreBundle:Role')->findOneBy(array('name' => 'ROLE_USER'));
+                $requiredTools = $this->findRequiredTools();
+                $doer = $this->em->getRepository('ClarolineCoreBundle:User')
+                    ->findOneByUsername($this->sc->getToken()->getUser()->getUsername());
+                $this->em->merge($doer);
+                $this->sc->getToken()->setUser($doer);
+            }
+
+            $i++;
+        }
+
+        $this->em->flush();
+        $this->em->clear();
+    }
+
+    private function addRequiredTools(User $user, array $requiredTools)
+    {
         $i = 1;
 
         foreach ($requiredTools as $requiredTool) {
@@ -91,12 +153,29 @@ class Creator
             $this->em->persist($udt);
         }
 
-        $this->em->flush();
+    }
 
-        // Log user creation
-        $log = new LogUserCreateEvent($user);
-        $this->ed->dispatch('log', $log);
+    private function findRequiredTools()
+    {
+        $repo = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool');
+        $requiredTools[] = $repo->findOneBy(array('name' => 'home'));
+        $requiredTools[] = $repo->findOneBy(array('name' => 'resource_manager'));
+        $requiredTools[] = $repo->findOneBy(array('name' => 'parameters'));
 
-        return $user;
+        return $requiredTools;
+    }
+
+    public function setPersonalWorkspace(User $user)
+    {
+        $config = Configuration::fromTemplate($this->personalWsTemplateFile);
+        $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
+        $locale = $this->ch->getParameter('locale_language');
+        $this->trans->setLocale($locale);
+        $personalWorkspaceName = $this->trans->trans('personal_workspace', array(), 'platform');
+        $config->setWorkspaceName($personalWorkspaceName);
+        $config->setWorkspaceCode($user->getUsername());
+        $workspace = $this->wsCreator->createWorkspace($config, $user, false);
+        $this->em->persist($workspace);
+        $user->setPersonalWorkspace($workspace);
     }
 }

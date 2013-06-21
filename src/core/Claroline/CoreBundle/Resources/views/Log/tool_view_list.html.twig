@@ -1,46 +1,57 @@
-<div>
-    <style type="text/css">
-        #logFilter.form-inline div {
-            display: inline-block;
-            *display: inline;
-            *zoom: 1;
-            margin-bottom: 5px;
-            margin-top: 5px;
-            margin-right: 10px;
-        }
-        #logFilter.form-inline div label {
-            margin-right: 5px;
-        }
-        #logFilter.form-inline {
-            margin-bottom: 5px;
-        }
-
-        div.logs-container {
-            margin: 0 2%;
-        }
-
-    </style>
-
-    <form id="logFilter" action="{{ filterFormAction }}" method="GET" class="form-inline">
-        {{ form_widget(filterForm) }}
-        <input type="submit" value="{{ 'Show actions'|trans({}, 'platform') }}" class="btn btn-primary"/>
-    </form>
-</div>
-
-{% include 'ClarolineCoreBundle:Log:count_by_day_chart.html.twig' %}
-
-<div class="text-center">
-    {% if pager.haveToPaginate %}
-        {{ pagination }}
-    {% endif %}
-</div>
-
 <div class="logs-container">
-    {% include 'ClarolineCoreBundle:Log:view_list.html.twig' with {'logs': pager.currentPageResults} %}
-</div>
+    <div>
+        <style type="text/css">
+            #logFilter.form-inline div {
+                display: inline-block;
+                *display: inline;
+                *zoom: 1;
+                margin-bottom: 5px;
+                margin-top: 5px;
+                margin-right: 10px;
+            }
+            #logFilter.form-inline div label {
+                margin-right: 5px;
+            }
+            #logFilter.form-inline {
+                margin-bottom: 5px;
+            }
 
-<div class="text-center">
-    {% if pager.haveToPaginate %}
-        {{ pagination }}
-    {% endif %}
+            div.logs-container {
+                margin: 0 2%;
+            }
+
+        </style>
+
+        <legend>
+            {{ 'Filter actions'|trans({}, 'platform') }}
+        </legend>
+
+        <form id="logFilter" action="{{ filterFormAction }}" method="GET" class="form-inline">
+            {{ form_widget(filterForm) }}
+            <input type="submit" value="{{ 'Show actions'|trans({}, 'platform') }}" class="btn btn-primary"/>
+        </form>
+        <br/><br/>
+    </div>
+
+    {% include 'ClarolineCoreBundle:Log:count_by_day_chart.html.twig' %}
+
+    <br/><br/>
+
+    <legend>
+        {{ 'Action List'|trans({}, 'platform') }}
+    </legend>
+
+    <div class="text-center">
+        {% if pager.haveToPaginate %}
+            {{ pagination }}
+        {% endif %}
+    </div>
+
+    {% include 'ClarolineCoreBundle:Log:view_list.html.twig' with {'logs': pager.currentPageResults} %}
+
+    <div class="text-center">
+        {% if pager.haveToPaginate %}
+            {{ pagination }}
+        {% endif %}
+    </div>
 </div>

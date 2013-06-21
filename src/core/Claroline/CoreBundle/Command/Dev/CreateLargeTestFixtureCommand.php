@@ -24,32 +24,32 @@ class CreateLargeTestFixtureCommand extends ContainerAwareCommand
             array(
                 new InputArgument(
                     'number_user',
-                    InputArgument::REQUIRED,
+                    InputArgument::OPTIONAL,
                     'The number of user.'
                 ),
                 new InputArgument(
                     'number_workspace',
-                    InputArgument::REQUIRED,
+                    InputArgument::OPTIONAL,
                     'The number of workspace.'
                 ),
                 new InputArgument(
                     'number_directory',
-                    InputArgument::REQUIRED,
+                    InputArgument::OPTIONAL,
                     'The number of directory per level.'
                 ),
                 new InputArgument(
                     'number_file',
-                    InputArgument::REQUIRED,
+                    InputArgument::OPTIONAL,
                     'The number of file per level (recommanded: 5).'
                 ),
                 new InputArgument(
                     'depth',
-                    InputArgument::REQUIRED,
+                    InputArgument::OPTIONAL,
                     'The depth of the data tree(s) (recommanded: 2).'
                 ),
                 new InputArgument(
                     'number_roots',
-                    InputArgument::REQUIRED,
+                    InputArgument::OPTIONAL,
                     'The number of roots.'
                 )
             )
