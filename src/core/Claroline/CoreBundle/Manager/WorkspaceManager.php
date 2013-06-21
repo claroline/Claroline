@@ -3,7 +3,9 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Writer\WorkspaceWriter;
+use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -42,8 +44,23 @@ class WorkspaceManager
 
     public function create(Configuration $config, User $manager)
     {
-        $workspace = $this->writer->create($config);
+        $workspace = $this->writer->create(
+            $config->getName(),
+            $config->getWorkspaceCode(),
+            $config->isPublic()
+        );
         $baseRoles = $this->roleManager->initWorkspaceBaseRole($config->getRole(), $workspace);
-        $root = $this->resourceManager->create();
+        $dir = new Directory();
+        $dir->setName("{$workspace->getName()} - {$workspace->getCode()}");
+        $root = $this->resourceManager->create(
+            $dir,
+            'directory',
+            $manager,
+            $workspace,
+            null,
+            null,
+            $config->getPermsRootConfiguration()
+        );
+        //tools
     }
 }

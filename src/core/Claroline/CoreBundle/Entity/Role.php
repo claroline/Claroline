@@ -226,7 +226,7 @@ class Role implements RoleInterface
         return $this->resourceRights;
     }
 
-    public function setWorkspace(AbstractWorkspace $ws)
+    public function setWorkspace(AbstractWorkspace $ws = null)
     {
         $this->workspace = $ws;
     }
