@@ -41,7 +41,7 @@ class LoadMessagesData extends LoggableFixture implements ContainerAwareInterfac
                 $parent = $this->getReference('message/'.$data['parent']);
             }
 
-            $message = $this->container->get('claroline.message.manager')->create(
+            $message = $this->container->get('claroline.manager.message_manager')->create(
                 $this->getReference('user/' . $data['from']),
                 $data['to'],
                 $this->container->get('claroline.utilities.lipsum_generator')->generateLipsum(150, true),
