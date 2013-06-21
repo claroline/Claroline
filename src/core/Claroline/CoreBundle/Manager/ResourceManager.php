@@ -35,14 +35,14 @@ class ResourceManager
      *
      * @DI\InjectParams({
      *     "resourceTypeRepo" = @Di\Inject("resource_type_repository"),
-     *     "resourceRepo" = @Di\Injec("resource_repository"),
+     *     "resourceRepo" = @Di\Inject("resource_repository"),
      *     "resourceRightsRepo" = @Di\Inject("resource_rights_repository"),
      *     "iconManager" = @Di\Inject("claroline.manager.icon_manager"),
-     *     "writer" = @DI\Inject("claroline.writer.resource_writer")
-     *     "rightsWriter" = @DI\Inject("claroline.writer.rights_writer")
+     *     "writer" = @DI\Inject("claroline.writer.resource_writer"),
+     *     "rightsManager" = @DI\Inject("claroline.manager.rights_manager")
      * })
      */
-    public function __construct(
+    public function __construct (
         ResourceTypeRepository $resourceTypeRepo,
         AbstractResourceRepository $resourceRepo,
         ResourceRightsRepository $resourceRightsRepo,

@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Manager;
 use \Mockery as m;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
-class MessageManagerTest extends MockeryTestCase
+class ResourceManagerTest extends MockeryTestCase
 {
     private $writer;
     private $resourceRepo;
@@ -53,9 +53,70 @@ class MessageManagerTest extends MockeryTestCase
         $this->getManager()->getSiblings(null);
     }
 
-    public function testSameParents()
+    /**
+     * @dataProvider parentAsArrayProvider
+     */
+    public function testSameParents($parents, $result)
     {
-        
+        $this->assertEquals($result, $this->getManager()->sameParents($parents));
+    }
+
+    public function testFindAndSortChildren()
+    {
+        $resources = array(
+            array('previous_id' => 1, 'id' => 2),
+            array('previous_id' => null, 'id' => 1),
+            array('previous_id' => 3, 'id' => 4),
+            array('previous_id' => 2, 'id' => 3),
+        );
+
+        $result = array(
+            array('previous_id' => null, 'id' => 1),
+            array('previous_id' => 1, 'id' => 2),
+            array('previous_id' => 2, 'id' => 3),
+            array('previous_id' => 3, 'id' => 4),
+        );
+
+        $parent = $parent = m::mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $this->resourceRepo->shouldReceive('findChildren')->once()->andReturn($resources);
+        $sorted = $this->getManager()->findAndSortChildren($parent);
+        $this->assertEquals($sorted, $result);
+    }
+
+    public function testSort()
+    {
+        $fullSort = array(
+            array('previous_id' => null, 'id' => 1),
+            array('previous_id' => 1, 'id' => 2),
+            array('previous_id' => 2, 'id' => 3),
+            array('previous_id' => 3, 'id' => 4),
+        );
+
+        $resources = array(
+            array('previous_id' => 2, 'id' => 3, 'parent_id' => 42),
+            array('previous_id' => null, 'id' => 1)
+        );
+
+        $result = array(
+            array('previous_id' => null, 'id' => 1),
+            array('previous_id' => 2, 'id' => 3, 'parent_id' => 42)
+        );
+
+        $parent = m::mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $this->resourceRepo->shouldReceive('find')->once()->andReturn($parent);
+        $manager = $this->getManager(array('sameParents', 'findAndSortChildren'));
+        $manager->shouldReceive('sameParents')->once()->andReturn(true);
+        $manager->shouldReceive('findAndSortChildren')->once()->andReturn($fullSort);
+        $sorted = $manager->sort($resources);
+        $this->assertEquals($sorted, $result);
+    }
+
+    public function parentAsArrayProvider()
+    {
+        return array(
+            array(array(array('parent_id' => 1), array('parent_id' => 2)), false),
+            array(array(array('parent_id' => 1), array('parent_id' => 1)), true)
+        );
     }
 
     public function uniqueNameProvider()
@@ -78,12 +139,14 @@ class MessageManagerTest extends MockeryTestCase
                 $this->rightsManager
             );
         } else {
-            $stringMocked = '';
+            $stringMocked = '[';
+                $stringMocked .= array_pop($mockedMethods);
 
             foreach ($mockedMethods as $mockedMethod) {
-                $stringMocked .= "[{$mockedMethod}]";
+                $stringMocked .= ",{$mockedMethod}";
             }
 
+            $stringMocked .= ']';
             return m::mock(
                 'Claroline\CoreBundle\Manager\ResourceManager' . $stringMocked,
                 array(
