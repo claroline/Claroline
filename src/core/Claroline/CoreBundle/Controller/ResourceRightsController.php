@@ -71,13 +71,25 @@ class ResourceRightsController extends Controller
             }
         }
 
+        $datas = $this->get('claroline.workspace.organizer')->getDatasForWorkspaceList(true);
+
         $template = $resource->getResourceType()->getName() === 'directory' ?
             'ClarolineCoreBundle:Resource:rights_form_directory.html.twig' :
             'ClarolineCoreBundle:Resource:rights_form_resource.html.twig';
 
         return $this->render(
             $template,
-            array('roleRights' => $roleRights, 'resource' => $resource)
+            array(
+                'roleRights' => $roleRights,
+                'resource' => $resource,
+                'workspaces' => $datas['workspaces'],
+                'tags' => $datas['tags'],
+                'tagWorkspaces' => $datas['tagWorkspaces'],
+                'hierarchy' => $datas['hierarchy'],
+                'rootTags' => $datas['rootTags'],
+                'displayable' => $datas['displayable'],
+                'workspaceRoles' => $datas['workspaceRoles']
+            )
         );
     }
 
@@ -108,7 +120,7 @@ class ResourceRightsController extends Controller
         $editedResourceRightsWithChangeSet = array();
         $finalRights = isset($parameters['isRecursive']) ?
             $this->findChildrenRights($resource):
-            $finalRights = $rightsRepo->findNonAdminRights($resource);
+            $rightsRepo->findNonAdminRights($resource);
 
         foreach ($finalRights as $finalRight) {
             foreach ($permissions as $permission) {
@@ -140,7 +152,7 @@ class ResourceRightsController extends Controller
 
         $em->flush();
 
-        return new Response('success');
+        return new Response('success', 204);
     }
 
     /**
@@ -160,7 +172,7 @@ class ResourceRightsController extends Controller
         $collection = new ResourceCollection(array($resource));
         $this->checkAccess('EDIT', $collection);
         $form = $this->get('form.factory')->create(new ResourceRightType($resource), new ResourceRights());
-        $form->bind($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $isRecursive = $form->get('isRecursive')->getData();
@@ -204,7 +216,7 @@ class ResourceRightsController extends Controller
         $collection = new ResourceCollection(array($resource));
         $this->checkAccess('EDIT', $collection);
         $form = $this->get('form.factory')->create(new ResourceRightType($resource), $resourceRight);
-        $form->bind($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
 
@@ -372,7 +384,7 @@ class ResourceRightsController extends Controller
                     $found = true;
                 }
             }
-
+            
             if (!$found) {
                 $newRight = new ResourceRights();
                 $newRight->setResource($item['resource']);

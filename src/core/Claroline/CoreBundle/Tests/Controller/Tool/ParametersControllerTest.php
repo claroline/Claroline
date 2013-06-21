@@ -18,7 +18,7 @@ class ParametersControllerTest extends FunctionalTestCase
     public function testDesktopAddThenRemoveTool()
     {
         $repo = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool');
-        $baseDisplayedTools = $repo->findByUser($this->getUser('john'), true);
+        $baseDisplayedTools = $repo->findDesktopDisplayedToolsByUser($this->getUser('john'));
         $nbBaseDisplayedTools = count($baseDisplayedTools);
         $calendar = $repo->findOneBy(array('name' => 'calendar'));
         $calendarPosition = $nbBaseDisplayedTools + 1;
@@ -31,7 +31,7 @@ class ParametersControllerTest extends FunctionalTestCase
 
         $this->assertEquals(
             ++$nbBaseDisplayedTools,
-            count($repo->findByUser($this->getUser('john'), true))
+            count($repo->findDesktopDisplayedToolsByUser($this->getUser('john')))
         );
 
         $this->client->request(
@@ -41,7 +41,7 @@ class ParametersControllerTest extends FunctionalTestCase
 
         $this->assertEquals(
             --$nbBaseDisplayedTools,
-            count($repo->findByUser($this->getUser('john'), true))
+            count($repo->findDesktopDisplayedToolsByUser($this->getUser('john')))
         );
     }
 
@@ -51,7 +51,7 @@ class ParametersControllerTest extends FunctionalTestCase
         $workspace = $this->getWorkspace('john');
         $role = $this->em->getRepository('ClarolineCoreBundle:Role')
             ->findVisitorRole($workspace);
-        $baseDisplayedTools = $repo->findByRolesAndWorkspace(array($role->getName()), $workspace, true);
+        $baseDisplayedTools = $repo->findDisplayedByRolesAndWorkspace(array($role->getName()), $workspace);
         $nbBaseDisplayedTools = count($baseDisplayedTools);
         $calendar = $repo->findOneBy(array('name' => 'calendar'));
         $this->logUser($this->getUser('john'));
@@ -67,7 +67,7 @@ class ParametersControllerTest extends FunctionalTestCase
 
         $this->assertEquals(
             ++$nbBaseDisplayedTools,
-            count($repo->findByRolesAndWorkspace(array($role->getName()), $workspace, true))
+            count($repo->findDisplayedByRolesAndWorkspace(array($role->getName()), $workspace))
         );
 
         $this->client->request(
@@ -77,7 +77,7 @@ class ParametersControllerTest extends FunctionalTestCase
 
         $this->assertEquals(
             --$nbBaseDisplayedTools,
-            count($repo->findByRolesAndWorkspace(array($role->getName()), $workspace, true))
+            count($repo->findDisplayedByRolesAndWorkspace(array($role->getName()), $workspace))
         );
     }
 
@@ -320,11 +320,11 @@ class ParametersControllerTest extends FunctionalTestCase
             ->findCollaboratorRole($this->getWorkspace('john'));
 
         $tools = $crawler
-            ->filter("td[data-role-id={$roleCollaborator->getId()}]");
+            ->filter("td[data-role-id='{$roleCollaborator->getId()}']");
         $checkedTools = $crawler
-            ->filter("td[data-role-id={$roleCollaborator->getId()}] input:checked[type='checkbox']");
+            ->filter("td[data-role-id='{$roleCollaborator->getId()}'] input:checked[type='checkbox']");
         $uncheckedTools = $crawler
-            ->filter("td[data-role-id={$roleCollaborator->getId()}] input:not(:checked[type='checkbox'])");
+            ->filter("td[data-role-id='{$roleCollaborator->getId()}'] input:not(:checked[type='checkbox'])");
 
         $this->assertEquals(3, count($checkedTools));
         $this->assertEquals(count($tools) - count($checkedTools), count($uncheckedTools));
@@ -369,7 +369,7 @@ class ParametersControllerTest extends FunctionalTestCase
     public function testDesktopConfigureToolsPage()
     {
         $repo = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool');
-        $activeTools = $repo->findByUser($this->getUser('john'), true);
+        $activeTools = $repo->findDesktopDisplayedToolsByUser($this->getUser('john'));
         $this->logUser($this->getUser('john'));
         $crawler = $this->client->request(
             'GET',

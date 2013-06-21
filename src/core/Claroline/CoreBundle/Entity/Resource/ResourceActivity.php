@@ -7,7 +7,15 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceActivityRepository")
- * @ORM\Table(name="claro_resource_activity")
+ * @ORM\Table(
+ *      name="claro_resource_activity",
+ *      uniqueConstraints={
+ *          @ORM\UniqueConstraint(
+ *          name="user",columns={"activity_id","resource_id"}
+ *          )
+ *      }
+ *      
+ * )
  */
 class ResourceActivity
 {
@@ -24,16 +32,18 @@ class ResourceActivity
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\Activity",
      *     inversedBy="resourcesActivities"
      * )
+     * @ORM\JoinColumn(name="activity_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     private $activity;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource")
+     * @ORM\JoinColumn(name="resource_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     private $resource;
 
     /**
-     * @ORM\Column(type="string", nullable=true, name="sequence_order")
+     * @ORM\Column(type="string", nullable=true, name="sequence_order", length=255)
      */
     protected $sequenceOrder;
 

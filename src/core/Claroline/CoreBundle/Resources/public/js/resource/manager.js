@@ -287,7 +287,7 @@
                         if (this.checkedResources.resources.hasOwnProperty(event.resource.id)) {
                             delete this.checkedResources.resources[event.resource.id];
                         } else {
-                            this.checkedResources.resources[event.resource.id] = event.resource.name;
+                            this.checkedResources.resources[event.resource.id] = [event.resource.name, event.resource.type,event.resource.mimeType];
                         }
 
                         this.checkedResources.directoryId = this.currentDirectory.id;
@@ -419,7 +419,7 @@
             tagName: 'ul',
             attributes: {'id': 'sortable'},
             events: {
-                'dblclick .resource-thumbnail .resource-element': 'dispatchOpen',
+                'click .resource-thumbnail .resource-element': 'dispatchOpen',
                 'click .resource-thumbnail input[type=checkbox]': 'dispatchCheck',
                 'click .results table a.resource-link': 'dispatchOpen',
                 'click .results table input[type=checkbox]': 'dispatchCheck'
@@ -485,7 +485,10 @@
                 this.dispatcher.trigger('resource-check-status', {
                     resource: {
                         id: event.currentTarget.getAttribute('value'),
-                        name: event.currentTarget.getAttribute('data-resource-name')
+                        name: event.currentTarget.getAttribute('data-resource-name'),
+                        type: event.currentTarget.getAttribute('data-type'),
+                        mimeType: event.currentTarget.getAttribute('data-mime-type')
+
                     },
                     isChecked: event.currentTarget.checked,
                     isPickerMode: this.parameters.isPickerMode
@@ -576,6 +579,30 @@
                         }
                     });
                 },
+                'click .workspace-role-item': function (event) {
+                    event.preventDefault();
+                    $.ajax({
+                        context: this,
+                        url: event.currentTarget.getAttribute('href'),
+                        type: 'POST',
+                        processData: false,
+                        contentType: false,
+                        success: function (form) {
+                            $('#modal-check-role').empty();
+                            $('#modal-check-role').append(form);
+                            $('#rights-form-resource-tab-content').css('display', 'none');
+                            $('#rights-form-resource-nav-tabs').css('display', 'none');
+                            $('#modal-check-resource-right-box').modal('show');
+                        }
+                    });
+                },
+                'click .modal-close': function (event) {
+                    event.preventDefault();
+                    $('#modal-check-role').empty();
+                    $('#modal-check-resource-right-box').modal('hide');
+                    $('#rights-form-resource-tab-content').css('display', 'block');
+                    $('#rights-form-resource-nav-tabs').css('display', 'block');
+                },
                 'click #submit-right-form-button': function (event) {
                     event.preventDefault();
                     var form = $(this.el).find('form')[1];
@@ -590,6 +617,10 @@
                         success: function (newrow) {
                             $('#form-right-wrapper').empty();
                             $('#perms-table').append(newrow);
+                            $('#modal-check-role').empty();
+                            $('#modal-check-resource-right-box').modal('hide');
+                            $('#rights-form-resource-tab-content').css('display', 'block');
+                            $('#rights-form-resource-nav-tabs').css('display', 'block');
                         }
                     });
                 },
@@ -685,18 +716,20 @@
                 }
             },
             'resource-click': function (event) {
-
-                if (event.isPickerMode) {
-                    if (event.resourceType === 'directory') {
-                        this.displayResources(event.resourceId, 'picker');
-                    }
-                } else {
-                    if (event.resourceType === 'directory') {
-                        this.router.navigate('resources/' + event.resourceId, {trigger: true});
+                if (this.isOpenEnabled) {
+                    if (event.isPickerMode) {
+                        if (event.resourceType === 'directory') {
+                            this.displayResources(event.resourceId, 'picker');
+                        }
                     } else {
-                        this.open(event.resourceType, event.resourceId, event.directoryHistory);
+                        if (event.resourceType === 'directory') {
+                            this.router.navigate('resources/' + event.resourceId, {trigger: true});
+                        } else {
+                            this.open(event.resourceType, event.resourceId, event.directoryHistory);
+                        }
                     }
                 }
+                this.isOpenEnabled = true;
             },
             'filter': function (event) {
                 if (!event.isPickerMode) {
@@ -727,6 +760,7 @@
             }
         },
         initialize: function (parameters) {
+            this.isOpenEnabled = true;
             this.views = {};
             this.parameters = parameters;
             this.dispatcher = _.extend({}, Backbone.Events);
@@ -739,7 +773,6 @@
                 callback = _.bind(callback, this);
                 this.dispatcher.on(event, callback);
             }, this);
-            this.stackedRequests = 0;
             $.ajaxSetup({
                 headers: {'X_Requested_With': 'XMLHttpRequest'},
                 context: this
@@ -801,6 +834,8 @@
                         this.views[view].isAppended = true;
                     }
 
+                    var that = this;
+
                     $('#sortable').sortable({
                         update: function (event, ui) {
                             var ids = $('#sortable').sortable('toArray');
@@ -819,12 +854,17 @@
                                 nextId = ids[indexMoved + 1];
                             }
 
-                            $.ajax({
-                                url: Routing.generate(
-                                    'claro_resource_insert_before',
-                                    {'resourceId': moved, 'nextId': nextId}
-                                )
-                            });
+                            if (ui.position !== ui.originalPosition) {
+                                $.ajax({
+                                    url: Routing.generate(
+                                        'claro_resource_insert_before',
+                                        {'resourceId': moved, 'nextId': nextId}
+                                    )
+                                });
+                            }
+                        },
+                        start: function (event, ui) {
+                            that.isOpenEnabled = false;
                         }
                     });
 

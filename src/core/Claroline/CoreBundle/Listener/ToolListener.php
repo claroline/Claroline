@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Listener;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Entity\Event;
@@ -46,12 +47,11 @@ class ToolListener
     public function onDisplayWorkspaceUserManagement(DisplayToolEvent $event)
     {
         $workspaceId = $event->getWorkspace()->getId();
-        $httpKernel = $this->container->get('http_kernel');
-        $response = $httpKernel->forward(
+        $response = $this->forward(
             'ClarolineCoreBundle:Tool\User:registeredUsersList',
             array('workspaceId' => $workspaceId, 'page' => 1, 'search' => '')
         );
-        $event->setContent(($response->getContent()));
+        $event->setContent($response->getContent());
     }
 
     /**
@@ -62,12 +62,11 @@ class ToolListener
     public function onDisplayWorkspaceGroupManagement(DisplayToolEvent $event)
     {
         $workspaceId = $event->getWorkspace()->getId();
-        $httpKernel = $this->container->get('http_kernel');
-        $response = $httpKernel->forward(
+        $response = $this->forward(
             'ClarolineCoreBundle:Tool\Group:registeredGroupsList',
             array('workspaceId' => $workspaceId, 'page' => 1, 'search' => '')
         );
-        $event->setContent(($response->getContent()));
+        $event->setContent($response->getContent());
     }
 
     /**
@@ -88,16 +87,6 @@ class ToolListener
     public function onDisplayWorkspaceLogs(DisplayToolEvent $event)
     {
         $event->setContent($this->workspaceLogs($event->getWorkspace()->getId()));
-    }
-
-    /**
-     * @DI\Observe("open_tool_desktop_logs")
-     *
-     * @param DisplayToolEvent $event
-     */
-    public function onDisplayDesktopLogs(DisplayToolEvent $event)
-    {
-        $event->setContent($this->desktopLogs());
     }
 
     /**
@@ -194,14 +183,6 @@ class ToolListener
         );
     }
 
-    public function desktopLogs()
-    {
-        return $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Tool/desktop/logs:log_list.html.twig',
-            $this->container->get('claroline.log.manager')->getDesktopList(1)
-        );
-    }
-
     public function desktopCalendar()
     {
         $event = new Event();
@@ -233,6 +214,14 @@ class ToolListener
             'ClarolineCoreBundle:Tool/workspace/workgroup:workgroup.html.twig',
             array('workspace' => $workspace)
         );
+    }
+
+    private function forward($controller, array $parameters = array())
+    {
+        $parameters['_controller'] = $controller;
+        $subRequest = $this->container->get('request')->duplicate(array(), null, $parameters);
+
+        return $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
     }
 }
 

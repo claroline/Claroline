@@ -14,6 +14,18 @@ claro_theme:
     prefix: /admin/theme
     type: annotation
 
+claro_theme_error:
+    pattern: /admin/theme/error
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'ClarolineCoreBundle:Theme:error.html.twig'
+
+claro_theme_confirm:
+    pattern: /admin/theme/confirm
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'ClarolineCoreBundle:Theme:confirm.html.twig'
+
 claro_content_error:
     pattern: /content/error
     defaults:
@@ -63,11 +75,6 @@ claro_desktop_tool_home:
 claro_desktop_tool_properties:
     resource: "@ClarolineCoreBundle/Controller/Tool/DesktopParametersController.php"
     prefix: desktop/tool/properties
-    type: annotation
-
-claro_desktop_tool_logs:
-    resource: "@ClarolineCoreBundle/Controller/Tool/DesktopLogController.php"
-    prefix: desktop/tool/logs
     type: annotation
 
 claro_workspace:

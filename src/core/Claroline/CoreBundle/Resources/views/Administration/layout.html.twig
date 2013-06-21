@@ -14,29 +14,14 @@
                             <i class="icon-chevron-right pull-right"></i>
                             {{ 'platform_parameters'|trans({}, 'platform') }}</a>
             </li>
-            <li{% if path('claro_admin_user_creation_form') == app.request.requesturi %} class="active"{% endif %}>
-                <a href="{{ path('claro_admin_user_creation_form') }}" id="link_add_user">
-                            <i class="icon-user"></i>
-                            <i class="icon-chevron-right pull-right"></i>
-                            {{ 'add_user'|trans({}, 'platform') }}</a>
-            </li>
-            <li{% if path('claro_admin_user_list') == app.request.requesturi %} class="active"{% endif %}>
-                <a href="{{ path('claro_admin_user_list') }}" id="link_list_user">
-                            <i class="icon-group"></i>
-                            <i class="icon-chevron-right pull-right"></i>
-                            {{ 'list_users'|trans({}, 'platform') }}</a>
-            </li>
-            <li{% if path('claro_admin_group_creation_form') == app.request.requesturi %} class="active"{% endif %}>
-                <a href="{{ path('claro_admin_group_creation_form') }}" id="link_group_create_form">
-                            <i class="icon-plus-sign"></i>
-                            <i class="icon-chevron-right pull-right"></i>
-                            {{ 'create_group'|trans({}, 'platform') }}</a>
-            </li>
-            <li{% if path('claro_admin_group_list') == app.request.requesturi %} class="active"{% endif %}>
-                <a href="{{ path('claro_admin_group_list') }}" id="link_group_list">
-                    <i class="icon-reorder"></i>
-                            <i class="icon-chevron-right pull-right"></i>
-                            {{ 'list_groups'|trans({}, 'platform') }}</a>
+            <li>
+                <a href="{{ path('claro_admin_users_management') }}"
+                   
+                   id="link_add_user">
+                    <i class="icon-user"></i>
+                    <i class="icon-chevron-right pull-right"></i>
+                    {{ 'users_management'|trans({}, 'platform') }}
+                </a>
             </li>
             <li{% if path('claro_admin_plugins') == app.request.requesturi %} class="active"{% endif %}>
                 <a href="{{ path('claro_admin_plugins') }}" id="link_platform_plugins">

@@ -36,7 +36,6 @@
             {% endfor %}
         </div>
         <div>
-            {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
             <h4>{{ 'fast_answer'|trans({}, 'platform') }}</h4>
             <form novalidate="novalidate"
                 action="{{ path('claro_message_send', {'parentId': message.getId()}) }}"

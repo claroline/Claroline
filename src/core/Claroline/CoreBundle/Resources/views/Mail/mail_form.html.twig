@@ -8,7 +8,6 @@
         mode : "textareas"
     });
     </script>
-{% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
 <form novalidate="novalidate"
       action="{{path('claro_mail_send', {'userId': userId})}}"
       method="post" {{ form_enctype(form) }}

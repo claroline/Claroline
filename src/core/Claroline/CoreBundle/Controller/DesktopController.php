@@ -40,7 +40,13 @@ class DesktopController extends Controller
                 $eventName = "widget_{$config->getWidget()->getName()}_desktop";
                 $event = new DisplayWidgetEvent();
                 $this->get('event_dispatcher')->dispatch($eventName, $event);
-                $responsesString[strtolower($config->getWidget()->getName())] = $event->getContent();
+                if ($event->hasContent()) {
+                    if ($event->hasTitle()) {
+                        $responsesString[$event->getTitle()] = $event->getContent();
+                    } else {
+                        $responsesString[strtolower($config->getWidget()->getName())] = $event->getContent();
+                    }
+                }
             }
         }
 
@@ -59,7 +65,8 @@ class DesktopController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $user = $this->get('security.context')->getToken()->getUser();
-        $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findByUser($user, true);
+        $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
+            ->findDesktopDisplayedToolsByUser($user);
 
         return $this->render(
             'ClarolineCoreBundle:Desktop:tool_list.html.twig',
@@ -110,7 +117,7 @@ class DesktopController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $openedTool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->findByUser($this->get('security.context')->getToken()->getUser(), true);
+            ->findDesktopDisplayedToolsByUser($this->get('security.context')->getToken()->getUser());
 
         $route = $this->get('router')->generate(
             'claro_desktop_open_tool',

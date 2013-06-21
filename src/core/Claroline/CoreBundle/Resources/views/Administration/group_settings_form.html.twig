@@ -1,10 +1,24 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
 {% block section_content %}
-    {% form_theme form_settings 'ClarolineCoreBundle::form_theme.html.twig' %}
+        {{
+            macros.breadcrumbs([
+                {
+                    'name': 'users_management'|trans({}, 'platform'),
+                    'href': path('claro_admin_users_management')
+                },
+                {
+                    'name': 'groups_list'|trans({}, 'platform'),
+                    'href': path('claro_admin_group_list')
+                },
+                {
+                    'name': 'group_parameter'|trans({}, 'platform'),
+                    'href': '#'
+                }
+            ])
+        }}
     <form class="form-horizontal" action="{{ path('claro_admin_update_group_settings', {'groupId': group.getId()}) }}" method="post" {{ form_enctype(form_settings) }} id="form_settings">
         <fieldset>
-            <legend>{{ 'settings'|trans({}, 'platform') }} :</legend>
             {{ form_widget(form_settings) }}
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>

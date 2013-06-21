@@ -8,6 +8,7 @@ add_group_s_confirm_message: 'group(s) added'
 add_resource: 'Add resource'
 add_tag_to_workspace: 'Add tag to workspace'
 add_user: 'Add user'
+add_users: 'Add users'
 add_user_s_confirm_message: 'users(s) added'
 admin: Administrator
 admin_form_firstName : 'first name'
@@ -86,11 +87,14 @@ group_form_ownedRoles: Roles
 group_form_platformRole: Role
 group_parameter: 'Group parameter'
 groups: Groups
+groups_list: "Groups list"
 history: History
 home: Home
 id: Id
 informations: Informations
 instructions: Instructions
+import: Import
+import_user_file_file: Import from a file
 last_name: 'Last name'
 link: Link
 list_groups: 'List groups'
@@ -212,6 +216,15 @@ log_old_workspace: 'Old workspace'
 log_has_not_changed: 'Has not changed'
 log_copy_source: 'Copy source'
 log_workspace_source: 'Workspace source'
+log_widget_config_creation: Creation
+log_widget_config_read: Read / Open
+log_widget_config_export: Export
+log_widget_config_update: Update
+log_widget_config_updateChild: News in the object
+log_widget_config_delete: Delete
+log_widget_config_move: Move
+log_widget_config_subscribe: Subscribe
+log_widget_config_amount: Line number
 firstName: First name
 lastName: Last name
 canOpen: 'Right to open'
@@ -334,6 +347,7 @@ resource_right_form_isRecursive: Apply changes to current and sub directories
 restore : Restore
 results: Results
 rights: Rights
+rights_management: 'Rights Management'
 role: Role
 roles: Roles
 save: Save
@@ -388,6 +402,8 @@ user_form_plainPassword_first: Password
 user_form_plainPassword_second: Verification
 user_form_username: Username
 user_parameters: 'User parameters'
+users_management: 'Users management'
+users_list: 'Users list'
 username: Username
 users: Users
 unwritable_file_exception: "The file %path% is not writable."
@@ -448,3 +464,16 @@ for period: 'for period'
 for user: 'for user'
 Show actions: 'Show actions'
 See all: 'See all'
+Your changes have been saved: 'Your changes have been saved'
+The form is not valid: 'The form is not valid'
+Choose workspaces displayed in the widget: 'Choose workspaces displayed in the widget'
+Choose visible actions in the widget: 'Choose visible actions in the widget'
+Actions per day: 'Actions per day'
+Last action: '{1} Last action|[1,Inf] Last %logAmount% actions'
+log_hidden_workspace_widget_config_amount : Amount
+Action List: 'Action List'
+Filter actions: 'Filter actions'
+Draw an area on the graph to zoom, double-click to cancel: 'Draw an area on the graph to zoom, double-click to cancel'
+Overview of recent activities of your workspaces: 'Overview of recent activities of your workspaces'
+Overview of recent activities in %workspaceName%: 'Overview of recent activities in %workspaceName%'
+Overview of all recent activities in %workspaceName% : 'Overview of all recent activities in %workspaceName%'
