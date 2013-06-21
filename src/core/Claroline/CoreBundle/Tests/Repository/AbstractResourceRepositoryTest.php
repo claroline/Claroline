@@ -201,4 +201,10 @@ class AbstractResourceRepositoryTest extends RepositoryTestCase
         $shortcuts = self::$repo->findRecursiveDirectoryShortcuts(array(), null, array());
         $this->assertEquals(4, count($shortcuts));
     }
+
+    public function testCount()
+    {
+        //$count = self::$repo->count();
+        //var_dump($count);
+    }
 }

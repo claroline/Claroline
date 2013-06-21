@@ -19,7 +19,7 @@ class MessageWriterTest extends FixtureTestCase
         $this->usrMsgRepo = $this->em->getRepository('ClarolineCoreBundle:UserMessage');
         $this->loadPlatformRoleData();
         $this->loadUserData(array('sender' => 'user', 'receiver' => 'user'), false);
-        self::loadMessagesData(array(array('from' => 'sender', 'to' => 'receiver', 'object' => 'object')));
+        $this->loadMessagesData(array(array('from' => 'sender', 'to' => 'receiver', 'object' => 'object')));
     }
 
     public function testCreate()

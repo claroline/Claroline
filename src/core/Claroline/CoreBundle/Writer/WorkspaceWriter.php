@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Writer;
 
+use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -24,15 +25,15 @@ class WorkspaceWriter
         $this->em = $em;
     }
 
-    public function create(Configuration $config)
+    public function create($name, $code, $isPublic)
     {
-        $config->check();
-        $workspaceType = $config->getWorkspaceType();
-        $workspace = new $workspaceType;
-        $workspace->setName($config->getWorkspaceName());
-        $workspace->setPublic($config->isPublic());
-        $workspace->setCode($config->getWorkspaceCode());
-        $this->entityManager->persist($workspace);
-        $this->entityManager->flush();
+        $workspace = new SimpleWorkspace();
+        $workspace->setName($name);
+        $workspace->setPublic($isPublic);
+        $workspace->setCode($code);
+        $this->em->persist($workspace);
+        $this->em->flush();
+
+        return $workspace;
     }
 }
