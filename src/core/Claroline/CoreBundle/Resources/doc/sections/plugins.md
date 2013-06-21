@@ -3,6 +3,10 @@
 Claroline Plugins
 =================
 
+- [Directory structure](#directory-structure)
+- [Plugin configuration file](#plugin-configuration-file)
+- [Translations](#translations)
+  - [Plugin description](#plugin-description)
 
 Directory structure
 -------------------
@@ -39,20 +43,29 @@ Each plugin require several translations domains:
 
 We use lower case for every translation keys.
 
-### plugin_description
+### Plugin description
 
-Create the *plugin_description* file in your Resources/translations folder.
+Create the *plugin_description* file in your *Resources/translations* folder.
 
-    plugin_description.en.yml
+<pre>
+bundle
++-- Resources
+    +-- translations
+        +-- plugin_description.en.yml
+</pre>
+
 
 Here is the translation key used to translate your plugin name:
 
-    myvendorbundleshortname : this is a translation
+```yml
+myvendorbundleshortname: 'this is a translation'
+```
 
 eg:
 
-    clarolineexample: exemple
-
+```yml
+clarolineexample: 'exemple'
+```
 
 [index_path]: ../index.md
 
@@ -87,15 +100,20 @@ plugin:
 
 The plugin section contains the general options of the plugin.
 The has_options field is required. This field will generate a link in the
-platform administrations wich will fire an event in wich you can send a form and
-set some general parameters of your plugin.
+platform administrations wich will fire an event in wich you can send a form
+and set some general parameters of your plugin.
 
-The event name format is plugin_options_myvendormybundle and
-the $event class is use Claroline\CoreBundle\Library\Event\PluginOptionsEvent.
+The event name format is plugin_options_myvendormybundle and the $event class
+is use *Claroline\CoreBundle\Library\Event\PluginOptionsEvent*.
 
-This $event will be asking you to return a response. Your twig file must extends
-{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %} if you want
-to keep the administration layout.
+This $event will be asking you to return a response. Your twig file must
+extends as following if you want to keep the administration layout:
+
+```django
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+```
+
+[[Documentation index]][index_path]
 
 [practices]: http://symfony.com/doc/2.0/cookbook/bundles/best_practices.html
 
