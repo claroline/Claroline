@@ -21,7 +21,7 @@ services:
       - Claroline\CoreBundle\Entity\Resource\ResourceType
 
   resource_rights_repository:
-    class:           Claroline\CoreBundle\Repository\
+    class:           Claroline\CoreBundle\Repository\ResourceRightsRepository
     factory_service: doctrine.orm.entity_manager
     factory_method:  getRepository
     arguments:

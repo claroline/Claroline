@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Writer\RightsWriter;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
@@ -59,7 +60,7 @@ class RightsManager
         $resourceRights = array();
 
         if ($isRecursive) {
-            $resourceRights = $this->addMissing($role, $resource);
+            $resourceRights = $this->addMissingForDescendants($role, $resource);
         } else {
             $resourceRights[] = $this->writer->create($this->getFalsePermissions(), array(), $resource, $role);
         }
@@ -93,8 +94,9 @@ class RightsManager
      * Expects an array of role of the following form:
      * array('ROLE_WS_MANAGER' => array('canOpen' => true, 'canEdit' => false', ...)
      * The 'canCopy' key must contain an array of resourceTypes name.
+     * @TODO REFACTOR THIS !!! WONT WORK WITH MANAGER
      */
-    public function setResourceRightsFromArray(AbstractResource $resource, array $rights, array $roles = array())
+    public function setRights(AbstractResource $resource, array $rights, array $roles = array())
     {
         $roleRepo = $this->em->getRepository('ClarolineCoreBundle:Role');
         $resourceTypeRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType');
@@ -155,7 +157,7 @@ class RightsManager
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceRights
      */
-    public function addMissing(Role $role, AbstractResource $resource)
+    public function addMissingForDescendants(Role $role, AbstractResource $resource)
     {
         $alreadyExistings = $this->rightsRepo->findRecursiveByResourceAndRole($resource, $role);
         $descendants = $this->resourceRepo->findDescendants($resource, true);
