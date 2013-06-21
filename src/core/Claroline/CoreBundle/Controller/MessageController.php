@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Message;
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Form\MessageType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
@@ -18,7 +19,7 @@ class MessageController extends Controller
 
     /**
      * @Route(
-     *     "/form/group/{groupId}",
+     *     "/form/group/{group}",
      *     name="claro_message_form_for_group"
      * )
      *
@@ -30,27 +31,11 @@ class MessageController extends Controller
      *
      * @return Response
      */
-    public function formForGroupAction($groupId)
+    public function formForGroupAction(Group $group)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $group = $em->find('ClarolineCoreBundle:Group', $groupId);
-        $users = $em->getRepository('ClarolineCoreBundle:User')
-            ->findByGroup($group);
-        $urlParameters = '?';
+        $qs = $this->get('claroline.manager.message_manager')->generateGroupQueryString($group);
 
-        $i = 0;
-
-        foreach ($users as $user) {
-            if ($i > 0) {
-                $urlParameters .= "&";
-            }
-
-            $urlParameters .= "ids[]={$user->getId()}";
-
-            $i++;
-        }
-
-        return $this->redirect($this->generateUrl('claro_message_form') . $urlParameters);
+        return $this->redirect($this->generateUrl('claro_message_form') . $qs);
     }
 
     /**
@@ -73,11 +58,7 @@ class MessageController extends Controller
         $usersString = '';
 
         if (isset($params['ids'])) {
-            foreach ($params['ids'] as $id) {
-                $user = $em->getRepository('ClarolineCoreBundle:User')
-                    ->find($id);
-                $usersString .= "{$user->getUsername()}; ";
-            }
+            $usersString = $this->get('claroline.manager.message_manager')->generateStringTo($params['ids']);
         }
 
         $form = $this->createForm(new MessageType($usersString));
@@ -108,7 +89,7 @@ class MessageController extends Controller
         $parent = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Message')->find($parentId);
 
         if ($form->isValid()) {
-            $this->get('claroline.message.manager')->create(
+            $this->get('claroline.manager.message_manager')->create(
                 $user,
                 $form->get('to')->getData(),
                 $form->get('content')->getData(),
@@ -252,7 +233,7 @@ class MessageController extends Controller
 
     /**
      * @Route(
-     *     "/show/{messageId}",
+     *     "/show/{message}",
      *     name="claro_message_show"
      * )
      *
@@ -262,34 +243,15 @@ class MessageController extends Controller
      *
      * @return Response
      */
-    public function showAction($messageId)
+    public function showAction(Message $message)
     {
-        $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
+        $user = $this->get('security.context')->getToken()->getUser();
         $msgRepo = $em->getRepository('ClarolineCoreBundle:Message');
-        $message = $msgRepo->find($messageId);
-        $userMessage = $em->getRepository('ClarolineCoreBundle:UserMessage')
-            ->findOneBy(array('message' => $message, 'user' => $user));
+        $manager = $this->get('claroline.manager.message_manager');
+        $manager->markAsRead($user, array($message));
         $ancestors = $msgRepo->findAncestors($message);
-
-        if ($userMessage != null) {
-            //was received by the current user
-            $username = $userMessage->getMessage()->getUser()->getUsername();
-            $form = $this->createForm(new MessageType($username, 'Re: ' . $message->getObject(), true));
-            $userMessage->markAsRead();
-            $em->persist($userMessage);
-            $em->flush();
-        } else {
-            //was sent by the current user
-            $userMessages = $message->getUserMessages();
-            $stringUsername = '';
-
-            foreach ($userMessages as $userMessage) {
-                $stringUsername .= "{$userMessage->getUser()->getUsername()}; ";
-            }
-
-            $form = $this->createForm(new MessageType($stringUsername, 'Re: ' . $message->getObject()));
-        }
+        $form = $this->createForm(new MessageType($message->getSenderUsername(), 'Re: ' . $message->getObject()));
 
         return $this->render(
             'ClarolineCoreBundle:Message:show.html.twig',
@@ -319,16 +281,9 @@ class MessageController extends Controller
 
         if (isset($params['ids'])) {
             $em = $this->get('doctrine.orm.entity_manager');
-            foreach ($params['ids'] as $id) {
-                $message = $em->getRepository('ClarolineCoreBundle:UserMessage')
-                    ->find($id);
-
-                if (!is_null($message)) {
-                    $message->markAsRemoved();
-                    $em->persist($message);
-                }
-            }
-            $em->flush();
+            $messages = $em->getRepository('ClarolineCoreBundle:Message')->findByIds($params['ids']);
+            $this->get('claroline.manager.message_manager')
+                ->markAsRemoved($this->get('security.context')->getToken()->getUser(), $messages);
         }
 
         return new Response('success', 204);
@@ -352,16 +307,9 @@ class MessageController extends Controller
 
         if (isset($params['ids'])) {
             $em = $this->get('doctrine.orm.entity_manager');
-
-            foreach ($params['ids'] as $id) {
-                $userMessage = $em->getRepository('ClarolineCoreBundle:UserMessage')
-                    ->find($id);
-                if (!is_null($userMessage)) {
-                    $userMessage->markAsRemoved();
-                    $em->persist($userMessage);
-                }
-            }
-            $em->flush();
+            $messages = $em->getRepository('ClarolineCoreBundle:Message')->findByIds($params['ids']);
+            $this->get('claroline.manager.message_manager')
+                ->markAsRemoved($this->get('security.context')->getToken()->getUser(), $messages);
         }
 
         return new Response('success', 204);
@@ -385,13 +333,9 @@ class MessageController extends Controller
 
         if (isset($params['ids'])) {
             $em = $this->get('doctrine.orm.entity_manager');
-
-            foreach ($params['ids'] as $id) {
-                $userMessage = $em->getRepository('ClarolineCoreBundle:UserMessage')
-                    ->find($id);
-                $em->remove($userMessage);
-            }
-            $em->flush();
+            $messages = $em->getRepository('ClarolineCoreBundle:Message')->findByIds($params['ids']);
+            $this->get('claroline.manager.message_manager')
+                ->remove($this->get('security.context')->getToken()->getUser(), $messages);
         }
 
         return new Response('success', 204);
@@ -415,14 +359,9 @@ class MessageController extends Controller
 
         if (isset($params['ids'])) {
             $em = $this->get('doctrine.orm.entity_manager');
-
-            foreach ($params['ids'] as $id) {
-                $userMessage = $em->getRepository('ClarolineCoreBundle:UserMessage')
-                    ->find($id);
-                $userMessage->markAsUnremoved();
-                $em->persist($userMessage);
-            }
-            $em->flush();
+            $messages = $em->getRepository('ClarolineCoreBundle:Message')->findByIds($params['ids']);
+            $this->get('claroline.manager.message_manager')
+                ->markAsUnremoved($this->get('security.context')->getToken()->getUser(), $messages);
         }
 
         return new Response('success', 204);
@@ -430,7 +369,7 @@ class MessageController extends Controller
 
     /**
      * @Route(
-     *     "/mark_as_read/{userMessageId}",
+     *     "/mark_as_read/{message}",
      *     name="claro_message_mark_as_read",
      *     options={"expose"=true}
      * )
@@ -443,14 +382,10 @@ class MessageController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function markAsReadAction($userMessageId)
+    public function markAsReadAction(Message $message)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $userMessage = $em->getRepository('ClarolineCoreBundle:UserMessage')
-            ->find($userMessageId);
-        $userMessage->markAsRead();
-        $em->persist($userMessage);
-        $em->flush();
+        $this->get('claroline.manager.message_manager')
+            ->markAsRead($this->get('security.context')->getToken()->getUser(), array($message));
 
         return new Response('success', 203);
     }
