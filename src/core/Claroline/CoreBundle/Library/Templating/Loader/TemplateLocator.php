@@ -1,13 +1,13 @@
 <?php
 
-namespace Claroline\CoreBundle\Templating\Loader;
+namespace Claroline\CoreBundle\Library\Templating\Loader;
 
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Templating\TemplateReferenceInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\Loader\TemplateLocator as baseTemplateLocator;
 
 /**
- * @inheritDoc
+ * {@inheritDoc}
  */
 class TemplateLocator extends baseTemplateLocator
 {
@@ -36,7 +36,7 @@ class TemplateLocator extends baseTemplateLocator
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function locate($template, $currentPath = null, $first = true)
     {
