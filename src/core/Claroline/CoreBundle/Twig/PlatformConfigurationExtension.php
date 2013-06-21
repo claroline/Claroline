@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Library\Twig;
+namespace Claroline\CoreBundle\Twig;
 
 use Twig_Extension;
 use JMS\DiExtraBundle\Annotation as DI;

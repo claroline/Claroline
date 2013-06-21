@@ -25,7 +25,7 @@ class LogWidgetListener
     private $twig;
     private $ed;
     private $formFactory;
-    private $entityManager;
+    private $manager;
 
     private function convertConfigToFormData($config)
     {
@@ -73,21 +73,21 @@ class LogWidgetListener
      *     "twig"        = @DI\Inject("templating"),
      *     "ed"          = @DI\Inject("event_dispatcher"),
      *     "formFactory" = @DI\Inject("form.factory"),
-     *     "entityManager" = @DI\Inject("doctrine.orm.entity_manager")
+     *     "manager" = @DI\Inject("doctrine.orm.entity_manager")
      * })
      *
      * @param EntityManager             $em
      * @param SecurityContextInterface  $context
      * @param TwigEngine                $twig
      */
-    public function __construct($logManager, SecurityContextInterface $context, TwigEngine $twig, $ed, $formFactory, $entityManager)
+    public function __construct($logManager, SecurityContextInterface $context, TwigEngine $twig, $ed, $formFactory, $manager)
     {
         $this->logManager = $logManager;
         $this->securityContext = $context;
         $this->twig = $twig;
         $this->ed = $ed;
         $this->formFactory = $formFactory;
-        $this->entityManager = $entityManager;
+        $this->manager = $manager;
     }
 
     /**
@@ -108,6 +108,7 @@ class LogWidgetListener
         }
 
         $event->setContent($view);
+        $event->setTitle($params['title']);
         $event->stopPropagation();
     }
 
@@ -129,6 +130,7 @@ class LogWidgetListener
         }
 
         $event->setContent($view);
+        $event->setTitle($params['title']);
         $event->stopPropagation();
     }
 
@@ -160,7 +162,7 @@ class LogWidgetListener
     public function onDesktopConfigure(ConfigureWidgetDesktopEvent $event)
     {
         $workspaces = $this
-            ->entityManager
+            ->manager
             ->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
             ->findByUserAndRoleNames($event->getUser(), array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'));
 

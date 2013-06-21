@@ -44,7 +44,7 @@ class ResourceType
     protected $customActions;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $class;
 
@@ -60,7 +60,7 @@ class ResourceType
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
-     * @ORM\JoinColumn(name="plugin_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="plugin_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      */
     protected $plugin;
 
@@ -69,7 +69,7 @@ class ResourceType
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
      *     inversedBy="children"
      * )
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="SET NULL")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="SET NULL", nullable=true)
      */
     protected $parent;
 

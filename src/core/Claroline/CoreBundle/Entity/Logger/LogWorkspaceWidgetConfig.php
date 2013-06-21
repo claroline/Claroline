@@ -195,6 +195,29 @@ class LogWorkspaceWidgetConfig
         return $actionRestriction;
     }
 
+    public function hasNoRestriction()
+    {
+        return $this->getResourceCopy() === true
+            and $this->getResourceCreate() === true
+            and $this->getResourceShortcut() === true
+            and $this->getResourceRead() === true
+            and $this->getWsToolRead() === true
+            and $this->getResourceExport() === true
+            and $this->getResourceUpdate() === true
+            and $this->getResourceUpdateRename() === true
+            and $this->getResourceChildUpdate() === true
+            and $this->getResourceDelete() === true
+            and $this->getResourceMove() === true
+            and $this->getWsRoleSubscribeUser() === true
+            and $this->getWsRoleSubscribeGroup() === true
+            and $this->getWsRoleUnsubscribeUser() === true
+            and $this->getWsRoleUnsubscribeGroup() === true
+            and $this->getWsRoleChangeRight() === true
+            and $this->getWsRoleCreate() === true
+            and $this->getWsRoleDelete() === true
+            and $this->getWsRoleUpdate() === true;
+    }
+
     /**
      * Get id
      *
