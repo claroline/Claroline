@@ -1,0 +1,25 @@
+{
+    "name": "claroline/activity-tool-bundle",
+    "description": "Claroline activity tool bundle",
+    "keywords": ["Claroline","ActivityTool"],
+    "homepage": "http://www.claroline.net",
+    "type": "bundle",
+    "license": "",
+    "authors": [
+        {
+            "name": "",
+            "email": "",
+            "homepage": "http://claroline.net"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "symfony/framework-bundle":  "2.*",
+        "symfony/symfony":           "2.*"
+
+    },
+    "autoload": {
+        "psr-0": { "Claroline\\ActivityToolBundle": "" }
+    },
+    "target-dir": "Claroline/ActivityToolBundle"
+}
