@@ -11,9 +11,13 @@
     }
 </style>
 
-<form id="form_log_update_desktop_widget" method="POST" action="{{ path('claro_log_update_desktop_widget_config')}}" class="form-horizontal" {{ form_enctype(form) }}>
+<legend>{{ 'Choose workspaces displayed in the widget'|trans({}, 'platform') }}</legend>
+<form id="form_log_update_desktop_widget"
+    method="POST"
+    action="{{ path('claro_log_update_desktop_widget_config', {'redirectToHome': app.request.isXMLHttpRequest ? 1 : 0})}}"
+    class="form-horizontal"
+    {{ form_enctype(form) }}>
     <fieldset>
-        <legend>{{ 'Choose workspaces displayed in the widget'|trans({}, 'platform') }}</legend>
         {{ form_widget(form._token) }}
         {{ form_widget(form) }}
     </fieldset>
@@ -22,7 +26,7 @@
     <div class="form-actions">
         <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
         <a href="{{ path('claro_desktop_widget_properties') }}">
-            <button type="button" class="btn">{{ 'cancel'|trans({}, 'platform') }}</button>
+            <button type="button" class="btn claro-widget-form-cancel">{{ 'cancel'|trans({}, 'platform') }}</button>
         </a>
     </div>
 </form>

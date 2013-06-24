@@ -182,14 +182,23 @@ class Manager
             }
         }
 
-        if (count($configs) > 0) {
-            $query = $repository->findLogsThroughConfigs($configs, $desktopConfig->getAmount());
-            $logs = $query->getResult();
-            $chartData = $repository->countByDayThroughConfigs($configs, $this->getDefaultRange());
-        } else {
-            $logs = array();
-            $chartData = array();
+        // Remove configs which hasAllRestriction 
+        $configsCleaned = array();
+        foreach ($configs as $config) {
+            if ($config->hasAllRestriction() === false) {
+                $configsCleaned[] = $config;
+            }
         }
+        $configs = $configsCleaned;
+
+        if (count($configs) === 0) {
+
+            return null;
+        }
+
+        $query = $repository->findLogsThroughConfigs($configs, $desktopConfig->getAmount());
+        $logs = $query->getResult();
+        $chartData = $repository->countByDayThroughConfigs($configs, $this->getDefaultRange());
 
         //List item delegation
         $views = $this->renderLogs($logs);
@@ -226,11 +235,14 @@ class Manager
             $config->setWorkspace($workspace);
         }
 
+        if ($config->hasAllRestriction()) {
+            
+            return null;
+        }
         $query = $repository->findLogsThroughConfigs(array($config), $config->getAmount());
         $logs = $query->getResult();
-
         $chartData = $repository->countByDayThroughConfigs(array($config), $this->getDefaultRange());
-
+    
         //List item delegation
         $views = $this->renderLogs($logs);
 
