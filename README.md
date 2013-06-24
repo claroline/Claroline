@@ -93,7 +93,7 @@ $ php app/console claroline:plugin:uninstall [vendor] [bundle short name]
 A new plugin can be added to the module list with :
 
 ```sh
-$ git submodule add http://github.com/vendor/SomeBundle.git src/plugin/Vendor/SomeBundle
+$ git submodule add http://github.com/vendor/bundle.git src/plugin/Vendor/bundle
 ```
 
 Development tools
