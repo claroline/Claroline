@@ -7,9 +7,9 @@
     "license": "",
     "authors": [
         {
-            "name": "",
-            "email": "",
-            "homepage": "http://claroline.net"
+            "name": "Claroline development team",
+            "email": "dev@claroline.net",
+            "homepage": "http://github.com/claroline"
         }
     ],
     "require": {
