@@ -34,7 +34,7 @@ bundle
 |   +-- views
 |       |-- less            (Themes)
 |       |-- less-generated  (Generated themes)
-|-- Templating              (Overwriting of a Symfony Class)
++-- Templating              (Overwriting of a Symfony Class)
 </pre>
 
 Platform organization
