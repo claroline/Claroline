@@ -52,11 +52,11 @@ function execComposer()
     }
 
     if (!function_exists('pcntl_fork') || !isset($composer)) {
-        return system('composer install --dev');
+        return system('composer install --dev --prefer-source');
     }
 
     if (0 === $pid = pcntl_fork()) {
-        pcntl_exec($composer, array('install', '--dev'));
+        pcntl_exec($composer, array('install', '--dev', '--prefer-source'));
     }
 
     pcntl_waitpid($pid, $status);

@@ -218,6 +218,11 @@ class LogWorkspaceWidgetConfig
             and $this->getWsRoleUpdate() === true;
     }
 
+    public function hasAllRestriction()
+    {
+        return count($this->getActionRestriction()) === 0;
+    }
+
     /**
      * Get id
      *
