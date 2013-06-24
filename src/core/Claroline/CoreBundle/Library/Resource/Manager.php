@@ -31,7 +31,7 @@ class Manager
     private $ed;
     /** @var SecurityContext */
     private $sc;
-    /** @var Utilities */
+    /** @var ResourceManager */
     private $ut;
     /** @var IconCreator */
     private $ic;
@@ -52,7 +52,7 @@ class Manager
         $this->em = $container->get('doctrine.orm.entity_manager');
         $this->ed = $container->get('event_dispatcher');
         $this->sc = $container->get('security.context');
-        $this->ut = $container->get('claroline.resource.utilities');
+        $this->ut = $container->get('claroline.manager.resource_manager');
         $this->ic = $container->get('claroline.manager.icon_manager');
         $this->resourceRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
         $this->container = $container;
@@ -268,53 +268,6 @@ class Manager
         }
 
         return $criteria;
-    }
-
-    public function createRootDir(AbstractWorkspace $workspace, User $user, array $configPermsRootDir, array $roles = array())
-    {
-        $rootDir = new Directory();
-        $rootDir->setName("{$workspace->getName()} - {$workspace->getCode()}");
-        $rootDir->setCreator($user);
-        $directoryType = $this->em
-            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-            ->findOneBy(array('name' => 'directory'));
-        $directoryIcon = $this->em
-            ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
-            ->findOneBy(array('type' => 'directory', 'iconType' => 1));
-        $rootDir->setIcon($directoryIcon);
-        $rootDir->setResourceType($directoryType);
-        $rootDir->setWorkspace($workspace);
-        $this->setResourceRights($rootDir, $configPermsRootDir, $roles);
-        $this->em->persist($rootDir);
-
-        return $rootDir;
-    }
-
-    public function makeShortcut(AbstractResource $resource, Directory $parent, User $creator)
-    {
-        $shortcut = new ResourceShortcut();
-        $shortcut->setParent($parent);
-        $shortcut->setCreator($creator);
-        $shortcut->setIcon($resource->getIcon()->getShortcutIcon());
-        $shortcut->setName($resource->getName());
-        $shortcut->setName($this->ut->getUniqueName($shortcut, $parent));
-        $shortcut->setWorkspace($parent->getWorkspace());
-        $shortcut->setResourceType($resource->getResourceType());
-
-        if ($parent !== null) {
-            $this->setLastPosition($parent, $shortcut);
-        }
-
-        if (get_class($resource) !== 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
-            $shortcut->setResource($resource);
-        } else {
-            $shortcut->setResource($resource->getResource());
-        }
-
-        $this->cloneRights($shortcut->getParent(), $shortcut);
-        $this->em->persist($shortcut);
-
-        return $shortcut;
     }
 
     /**

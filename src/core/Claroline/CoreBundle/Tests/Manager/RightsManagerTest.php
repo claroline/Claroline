@@ -10,6 +10,8 @@ class RightsManagerTest extends MockeryTestCase
     private $writer;
     private $rightsRepo;
     private $resourceRepo;
+    private $roleRepo;
+    private $resourceTypeRepo;
 
     public function setUp()
     {
@@ -18,9 +20,11 @@ class RightsManagerTest extends MockeryTestCase
         $this->writer = m::mock('Claroline\CoreBundle\Writer\RightsWriter');
         $this->rightsRepo = m::mock('Claroline\CoreBundle\Repository\ResourceRightsRepository');
         $this->resourceRepo = m::mock('Claroline\CoreBundle\Repository\AbstractResourceRepository');
+        $this->roleRepo = m::mock('Claroline\CoreBundle\Repository\RoleRepository');
+        $this->resourceTypeRepo = m::mock('Claroline\CoreBundle\Repository\ResourceTypeRepository');
     }
 
-    public function testaddMissingForDescendants()
+    public function testAddMissingForDescendants()
     {
         $manager = $this->getManager();
 
@@ -28,13 +32,11 @@ class RightsManagerTest extends MockeryTestCase
         $resource = m::mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
         $descendant1 = m::mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
         $descendant2 = m::mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
-
         $rightsParent = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceRights');
         $rightsDescendant1 = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceRights');
         $rightsDescendant2 = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceRights');
-
-        $rightsParent->shouldReceive('getResource')->once()->andReturn($resource );
-        $rightsDescendant2->shouldReceive('getResource')->once()->andReturn($descendant2);
+        $rightsParent->shouldReceive('getResource')->andReturn($resource );
+        $rightsDescendant2->shouldReceive('getResource')->andReturn($descendant2);
 
         $this->rightsRepo
             ->shouldReceive('findRecursiveByResourceAndRole')
@@ -46,20 +48,22 @@ class RightsManagerTest extends MockeryTestCase
             ->shouldReceive('findDescendants')
             ->once()
             ->with($resource , true)
-            ->andReturn(array($parent, $descendant1, $descendant2));
+            ->andReturn(array($resource, $descendant1, $descendant2));
 
         $this->writer
             ->shouldReceive('create')
             ->once()
-            ->with($manager->getFalsePermissions(), array(), $descendant1, $role)
             ->andReturn($rightsDescendant1);
 
-        //~
-        $results = $manager->addMissingForDescendants($role, $resource );
-        $expectedResults =
-        array(
 
-        );
+        $results = $manager->addMissingForDescendants($role, $resource);
+        $expectedResults = array($rightsParent, $rightsDescendant1, $rightsDescendant2);
+        $this->assertEquals($expectedResults, $results);
+    }
+
+    public function testCheckResourceTypes()
+    {
+        //
     }
 
     private function getManager(array $mockedMethods = array())
@@ -68,7 +72,9 @@ class RightsManagerTest extends MockeryTestCase
             return new RightsManager(
                 $this->writer,
                 $this->rightsRepo,
-                $this->resourceRepo
+                $this->resourceRepo,
+                $this->roleRepo,
+                $this->resourceTypeRepo
             );
         } else {
             $stringMocked = '[';
@@ -85,7 +91,9 @@ class RightsManagerTest extends MockeryTestCase
                 array(
                     $this->writer,
                     $this->rightsRepo,
-                    $this->resourceRepo
+                    $this->resourceRepo,
+                    $this->roleRepo,
+                    $this->resourceTypeRepo
                 )
             );
         }

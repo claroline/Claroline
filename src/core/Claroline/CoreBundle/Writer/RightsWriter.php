@@ -26,18 +26,18 @@ class RightsWriter
         $this->em = $em;
     }
 
-    public function createFrom(AbstractResource $resource, Role $role, ResourceRights $from)
+    public function createFrom(AbstractResource $resource, ResourceRights $from)
     {
         $rights = new ResourceRights();
         $rights->setResource($resource);
-        $rights->setRole($role);
+        $rights->setRole($from->getRole());
         $rights->setRightsFrom($from);
 
         if ($resource->getResourceType()->getName() === 'directory') {
             $rights->setCreatableResourceTypes($from->getCreatableResourceTypes()->toArray());
         }
 
-        $this->em->persist($resource);
+        $this->em->persist($rights);
         $this->em->flush();
 
         return $rights;

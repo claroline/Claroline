@@ -204,7 +204,6 @@ class AbstractResourceRepositoryTest extends RepositoryTestCase
 
     public function testCount()
     {
-        //$count = self::$repo->count();
-        //var_dump($count);
+       $this->assertEquals(12, self::$repo->count());
     }
 }

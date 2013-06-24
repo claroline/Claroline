@@ -3,7 +3,11 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use Claroline\CoreBundle\Repository\AbstractResourceRepository;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
@@ -63,19 +67,19 @@ class ResourceManager
      * define the array rights
      */
     public function create(
-        AbstactResource $resource,
-        $resourceType,
+        AbstractResource $resource,
+        ResourceType $resourceType,
         User $creator,
         AbstractWorkspace $workspace,
         AbstractResource $parent = null,
         $icon = null,
-        array $rights = null
+        array $rights = array()
     )
     {
-        $resourceType = $this->resourceTypeRepo->findOneBy(array('name' => $resourceType));
+        $this->checkResourcePrepared($resource);
         $name = $this->getUniqueName($resource, $parent);
         $previous = $this->resourceRepo->findOneBy(array('parent' => $parent, 'next' => null));
-        $entityIcon = $this->generateIcon($icon);
+        $entityIcon = $this->generateIcon($resource, $resourceType, $icon);
         $resource = $this->writer->create(
             $resource,
             $resourceType,
@@ -83,8 +87,8 @@ class ResourceManager
             $workspace,
             $name,
             $entityIcon,
-            $previous,
-            $parent
+            $parent,
+            $previous
         );
 
         $this->setRights($resource, $parent, $rights);
@@ -110,20 +114,16 @@ class ResourceManager
         $baseName = $arName[0];
         $nbName = 0;
 
-        foreach ($children as $child) {
-            $arChildName = explode('~', pathinfo($child->getName(), PATHINFO_FILENAME));
-            if ($baseName === $arChildName[0]) {
-                $nbName++;
+        if ($children) {
+            foreach ($children as $child) {
+                $arChildName = explode('~', pathinfo($child->getName(), PATHINFO_FILENAME));
+                if ($baseName === $arChildName[0]) {
+                    $nbName++;
+                }
             }
         }
 
-        if (0 !== $nbName) {
-            $newName = $baseName.'~'.$nbName.'.'.pathinfo($name, PATHINFO_EXTENSION);
-        } else {
-            $newName = $name;
-        }
-
-        return $newName;
+        return (0 !== $nbName) ?  $baseName.'~'.$nbName.'.'.pathinfo($name, PATHINFO_EXTENSION): $name;
     }
 
     public function getSiblings(AbstractResource $parent = null)
@@ -135,10 +135,10 @@ class ResourceManager
         return $this->resourceRepo->findBy(array('parent' => null));
     }
 
-    public function generateIcon(AbstractResource $resource, $icon = null)
+    public function generateIcon(AbstractResource $resource, ResourceType $type, $icon = null)
     {
         if ($icon === null) {
-            return $this->iconManager->findResourceIcon($resource);
+            return $this->iconManager->findResourceIcon($resource, $type);
         } else {
             return $this->iconManager->createCustomIcon($icon);
         }
@@ -151,7 +151,7 @@ class ResourceManager
      *
      * @return array
      */
-    public function sameParents(array $resources)
+    public function haveSameParents(array $resources)
     {
         $firstRes = array_pop($resources);
         $tmp = $firstRes['parent_id'];
@@ -213,7 +213,7 @@ class ResourceManager
      */
     public function sort(array $resources)
     {
-        if ($this->sameParents($resources)) {
+        if ($this->haveSameParents($resources)) {
             $parent = $this->resourceRepo->find($resources[0]['parent_id']);
             $sortedList = $this->findAndSortChildren($parent);
 
@@ -232,21 +232,64 @@ class ResourceManager
         return $sortedRes;
     }
 
+    public function makeShortcut(AbstractResource $target, Directory $parent, User $creator)
+    {
+        $shortcut = new ResourceShortcut();
+        $shortcut->setName($target->getName());
+
+        if (get_class($target) !== 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
+            $shortcut->setResource($target);
+        } else {
+            $shortcut->setResource($target->getResource());
+        }
+
+        return $this->create(
+            $shortcut,
+            $target->getResourceType(),
+            $creator,
+            $parent->getWorkspace(),
+            $parent
+        );
+    }
+
 
     /**
      * @todo
      * Define the $rights array.
-     *
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $parent
-     * @param array $rights
+     * If there is no rights: parents rights are copied.
+     * Otherwise: use the new rights array;
      */
-    private function setRights(AbstractResource $resource, AbstractResource $parent, array $rights = array())
+    private function setRights(
+        AbstractResource $resource,
+        AbstractResource $parent = null,
+        array $rights = array()
+    )
     {
-        if (count($rights) === 0) {
+        if (count($rights) === 0 && $parent !== null) {
             $this->rightsManager->cloneRights($parent, $resource);
         } else {
+            if (count($rights) === 0) {
+                throw new \Exception('Rights must be specified if there is no parent');
+            }
+
             $this->rightsManager->setRights($resource, $rights);
+            //todo check if these rights already extits
+            $this->rightsManager->setAdminRights($resource);
+            $this->rightsManager->setAnonymousRights($resource);
+        }
+    }
+
+    public function checkResourcePrepared(AbstractResource $resource)
+    {
+        $stringErrors = '';
+
+        //null or '' shouldn't be valid
+        if ($resource->getName() == null) {
+            $stringErrors .= 'The resource name is missing' . PHPEOL;
+        }
+
+        if ($stringErrors !== '') {
+            throw new \Exception($stringErrors);
         }
     }
 }

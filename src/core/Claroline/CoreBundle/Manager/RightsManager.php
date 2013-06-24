@@ -8,6 +8,8 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\AbstractResourceRepository;
+use Claroline\CoreBundle\Repository\RoleRepository;
+use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 
 /**
  * @DI\Service("claroline.manager.rights_manager")
@@ -20,25 +22,35 @@ class RightsManager
     private $rightsRepo;
     /** @var AbstractResourceRepository */
     private $resourceRepo;
+    /** @var RoleRepository */
+    private $roleRepo;
+    /** @var ResourceTypeRepository */
+    private $resourceTypeRepo;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
      *     "writer" = @DI\Inject("claroline.writer.rights_writer"),
-     *     "rightsRepo" = @Di\Inject("resource_rights_repository"),
-     *     "resourceRepo" = @Di\Inject("resource_rights_repository")
+     *     "rightsRepo" = @DI\Inject("resource_rights_repository"),
+     *     "resourceRepo" = @DI\Inject("resource_repository"),
+     *     "roleRepo" = @DI\Inject("role_repository"),
+     *     "resourceTypeRepo" = @DI\Inject("resource_type_repository")
      * })
      */
     public function __construct(
         RightsWriter $writer,
         ResourceRightsRepository $rightsRepo,
-        AbstractResourceRepository $resourceRepo
+        AbstractResourceRepository $resourceRepo,
+        RoleRepository $roleRepo,
+        ResourceTypeRepository $resourceTypeRepo
     )
     {
         $this->writer = $writer;
         $this->rightsRepo = $rightsRepo;
         $this->resourceRepo = $resourceRepo;
+        $this->roleRepo = $roleRepo;
+        $this->resourceTypeRepo = $resourceTypeRepo;
     }
 
     /**
@@ -78,12 +90,13 @@ class RightsManager
         return $rights;
     }
 
-    public function cloneRights(AbstractResource $resource)
+    public function cloneRights(AbstractResource $parent, AbstractResource $resource)
     {
-       $resourceRights = $this->repo->findBy(array('resource' => $resource));
+       $resourceRights = $this->rightsRepo->findBy(array('resource' => $parent));
+       $created = array();
 
        foreach ($resourceRights as $resourceRight) {
-           $created[] = $this->writer->createFrom($resource, $resourceRight->getRole(), $resourceRight);
+           $created[] = $this->writer->createFrom($resource, $resourceRight);
        }
 
        return $created;
@@ -94,63 +107,39 @@ class RightsManager
      * Expects an array of role of the following form:
      * array('ROLE_WS_MANAGER' => array('canOpen' => true, 'canEdit' => false', ...)
      * The 'canCopy' key must contain an array of resourceTypes name.
-     * @TODO REFACTOR THIS !!! WONT WORK WITH MANAGER
+     * The role array must be structured this way:
+     * 'ROLE_WS_MANAGER' => $entity
      */
-    public function setRights(AbstractResource $resource, array $rights, array $roles = array())
+    public function setRights(AbstractResource $resource, array $rights)
     {
-        $roleRepo = $this->em->getRepository('ClarolineCoreBundle:Role');
-        $resourceTypeRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType');
-        $workspace = $resource->getWorkspace();
-
-        foreach ($rights as $role => $permissions) {
-            $resourceTypes = array();
-            $unknownTypes = array();
-
-            foreach ($permissions['canCreate'] as $type) {
-                $rt = $resourceTypeRepo->findOneByName($type);
-                if ($rt === null) {
-                    $unknownTypes[] = $type['name'];
-                }
-                $resourceTypes[] = $rt;
-            }
-
-            if (count($unknownTypes) > 0) {
-                $content = "The resource type(s) ";
-                foreach ($unknownTypes as $unknown) {
-                    $content .= "{$unknown}, ";
-                }
-                $content .= "were not found";
-
-                throw new \Exception($content);
-            }
-
-            if (count($roles) === 0) {
-                $role = $roleRepo->findOneBy(array('name' => $role.'_'.$workspace->getId()));
-            } else {
-                $role = $roles[$role.'_'.$workspace->getId()];
-            }
-            $this->createRight($permissions, false, $role, $resource, $resourceTypes, false);
+        foreach ($rights as $data) {
+            $resourceTypes = $this->checkResourceTypes($data['canCreate']);
+            $this->writer->create($data, $resourceTypes, $resource, $data['role']);
         }
+    }
 
-        $this->createRight(
-            $this->getFalsePermissions(),
-            $roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
-            $resource,
-            array(),
-            false
-        );
+    public function setAdminRights($resource)
+    {
+        $resourceTypes = $this->resourceTypeRepo->findAll();
 
-        $resourceTypes = $resourceTypeRepo->findAll();
-
-        $this->createRight(
+        $this->writer->create(
             $this->getTruePermissions(),
-            $roleRepo->findOneBy(array('name' => 'ROLE_ADMIN')),
-            $resource,
             $resourceTypes,
-            false
+            $resource,
+            $this->roleRepo->findOneBy(array('name' => 'ROLE_ADMIN'))
         );
     }
 
+
+    public function setAnonymousRights($resource)
+    {
+        $this->writer->create(
+            $this->getFalsePermissions(),
+            array(),
+            $resource,
+            $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS'))
+        );
+    }
     /**
      * @param \Claroline\CoreBundle\Entity\Role $role
      * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
@@ -165,6 +154,7 @@ class RightsManager
 
         foreach ($descendants as $descendant) {
             $found = false;
+
             foreach ($alreadyExistings as $existingRight) {
                 if ($existingRight->getResource() === $descendant) {
                     $finalRights[] = $existingRight;
@@ -200,5 +190,32 @@ class RightsManager
             'canEdit' => true,
             'canExport' => true
         );
+    }
+
+    private function checkResourceTypes(array $resourceTypes)
+    {
+        $validTypes = array();
+        $unknownTypes = array();
+        foreach ($resourceTypes as $type) {
+            //@todo write findByNames method.
+            $rt = $this->resourceTypeRepo->findOneByName($type);
+            if ($rt === null) {
+                $unknownTypes[] = $type['name'];
+            } else {
+                $validTypes[] = $rt;
+            }
+        }
+
+        if (count($unknownTypes) > 0) {
+            $content = "The resource type(s) ";
+            foreach ($unknownTypes as $unknown) {
+                $content .= "{$unknown}, ";
+            }
+            $content .= "were not found";
+
+            throw new \Exception($content);
+        }
+
+        return $validTypes;
     }
 }

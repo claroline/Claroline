@@ -25,7 +25,7 @@ services:
     factory_service: doctrine.orm.entity_manager
     factory_method:  getRepository
     arguments:
-      - Claroline\CoreBundle\Entity\Resource\ResourceType
+      - Claroline\CoreBundle\Entity\Resource\ResourceRights
 
   resource_repository:
     class:           Claroline\CoreBundle\Repository\AbstractResourceRepository
@@ -33,3 +33,10 @@ services:
     factory_method:  getRepository
     arguments:
       - Claroline\CoreBundle\Entity\Resource\AbstractResource
+
+  role_repository:
+    class:           Claroline\CoreBundle\Repository\RoleRepository
+    factory_service: doctrine.orm.entity_manager
+    factory_method:  getRepository
+    arguments:
+      - Claroline\CoreBundle\Entity\Role

@@ -223,7 +223,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
     public function count()
     {
-        $dql = "SELECT COUNT(w) FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w";
+        $dql = "SELECT COUNT(r) FROM Claroline\CoreBundle\Entity\Resource\AbstractResource r";
         $query = $this->_em->createQuery($dql);
 
         return $query->getSingleScalarResult();
