@@ -38,7 +38,7 @@ class ToolListener extends ContainerAware
         $datas = $this->fetchActivitiesDatas(true);
 
         $content = $this->container->get('templating')->render(
-            'ClarolineActivityToolBundle::desktop_activity_list.html.twig',
+            'ClarolineActivityToolBundle::desktopActivityList.html.twig',
             array(
                 'resourceInfos' => $datas['resourceInfos'],
                 'activityInfos' => $datas['activityInfos'],
@@ -60,7 +60,7 @@ class ToolListener extends ContainerAware
         $datas = $this->fetchActivitiesDatas(false, $workspace);
 
         $content = $this->container->get('templating')->render(
-            'ClarolineActivityToolBundle::workspace_activity_list.html.twig',
+            'ClarolineActivityToolBundle::workspaceActivityList.html.twig',
             array(
                 'workspace' => $workspace,
                 'resourceInfos' => $datas['resourceInfos'],
