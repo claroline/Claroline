@@ -97,7 +97,7 @@ class RssReaderListener extends ContainerAware
             $form = $this->container->get('form.factory')->create(new ConfigType, new Config());
 
             $content = $this->container->get('templating')->render(
-                'ClarolineRssReaderBundle::form_create.html.twig', array(
+                'ClarolineRssReaderBundle::formCreate.html.twig', array(
                 'form' => $form->createView(),
                 'workspaceId' => $workspaceId,
                 'isDefault' => $event->isDefault(),
@@ -108,7 +108,7 @@ class RssReaderListener extends ContainerAware
         } else {
             $form = $this->container->get('form.factory')->create(new ConfigType, $config);
             $content = $this->container->get('templating')->render(
-                'ClarolineRssReaderBundle::form_update.html.twig', array(
+                'ClarolineRssReaderBundle::formUpdate.html.twig', array(
                 'form' => $form->createView(),
                 'rssConfig' => $config,
                 'layout' => 'none'
@@ -136,7 +136,7 @@ class RssReaderListener extends ContainerAware
             $form = $this->container->get('form.factory')->create(new ConfigType, new Config());
 
             $content = $this->container->get('templating')->render(
-                'ClarolineRssReaderBundle::form_create.html.twig', array(
+                'ClarolineRssReaderBundle::formCreate.html.twig', array(
                 'form' => $form->createView(),
                 'workspaceId' => 0,
                 'isDefault' => $event->isDefault(),
@@ -147,7 +147,7 @@ class RssReaderListener extends ContainerAware
         } else {
             $form = $this->container->get('form.factory')->create(new ConfigType, $config);
             $content = $this->container->get('templating')->render(
-                'ClarolineRssReaderBundle::form_update.html.twig', array(
+                'ClarolineRssReaderBundle::formUpdate.html.twig', array(
                 'form' => $form->createView(),
                 'rssConfig' => $config,
                 )

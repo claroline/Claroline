@@ -37,10 +37,10 @@ class RssReaderController extends Controller
             $em->flush();
         } else {
             if ($workspaceId === 0) {
-                $template = 'ClarolineRssReaderBundle::desktop_form_create.html.twig';
+                $template = 'ClarolineRssReaderBundle::desktopFormCreate.html.twig';
                 $workspace = null;
             } else {
-                $template = 'ClarolineRssReaderBundle::workspace_form_create.html.twig';
+                $template = 'ClarolineRssReaderBundle::workspaceFormCreate.html.twig';
                 $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
                     ->find($workspaceId);
             }
@@ -96,9 +96,9 @@ class RssReaderController extends Controller
             $em->flush();
         } else {
             if ($rssConfig->getWorkspace() === null) {
-                $template = 'ClarolineRssReaderBundle::desktop_form_update.html.twig';
+                $template = 'ClarolineRssReaderBundle::desktopFormUpdate.html.twig';
             } else {
-                $template = 'ClarolineRssReaderBundle::workspace_form_update.html.twig';
+                $template = 'ClarolineRssReaderBundle::workspaceFormUpdate.html.twig';
             }
 
             return $this->render(
