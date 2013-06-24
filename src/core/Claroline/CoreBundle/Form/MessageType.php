@@ -59,7 +59,7 @@ class MessageType extends AbstractType
             $builder
                 ->add(
                     'to',
-                    'hidden',
+                    'text',
                     array(
                         'data' => $this->username,
                         'required' => true,
