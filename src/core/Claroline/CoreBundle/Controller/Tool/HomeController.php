@@ -12,6 +12,7 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Library\Event\ConfigureWidgetDesktopEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * Controller of the workspace/desktop home page.
@@ -24,13 +25,15 @@ class HomeController extends Controller
      *     name="claro_tool_desktop_perso"
      * )
      *
+     * @Template("ClarolineCoreBundle:Tool\desktop\home:perso.html.twig")
+     *
      * Displays the Perso desktop tab.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function persoAction()
     {
-        return $this->render('ClarolineCoreBundle:Tool\desktop\home:perso.html.twig');
+        return array();
     }
 
     /**
@@ -39,13 +42,15 @@ class HomeController extends Controller
      *     name="claro_tool_desktop_info"
      * )
      *
+     * @Template("ClarolineCoreBundle:Tool\desktop\home:info.html.twig")
+     *
      * Displays the Info desktop tab.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function infoAction()
     {
-        return $this->render('ClarolineCoreBundle:Tool\desktop\home:info.html.twig');
+        return array();
     }
 
     /**
@@ -54,6 +59,8 @@ class HomeController extends Controller
      *     name="claro_workspace_widget_properties"
      * )
      * @Method("GET")
+     *
+     * @Template("ClarolineCoreBundle:Tool\workspace\home:widgetProperties.html.twig")
      *
      * Renders the workspace widget properties page.
      *
@@ -70,9 +77,10 @@ class HomeController extends Controller
         $configs = $this->get('claroline.widget.manager')
             ->generateWorkspaceDisplayConfig($workspace->getId());
 
-        return $this->render(
-            'ClarolineCoreBundle:Tool\workspace\home:widget_properties.html.twig',
-            array('workspace' => $workspace, 'configs' => $configs, 'tool' => $this->getHomeTool())
+        return array(
+            'workspace' => $workspace,
+            'configs' => $configs,
+            'tool' => $this->getHomeTool()
         );
     }
 
@@ -136,6 +144,8 @@ class HomeController extends Controller
      * )
      * @Method("GET")
      *
+     * @Template("ClarolineCoreBundle:Tool\workspace\home:widgetConfiguration.html.twig")
+     *
      * Asks a widget to render its configuration page for a workspace.
      *
      * @param AbstractWorkspace $workspace
@@ -154,9 +164,10 @@ class HomeController extends Controller
         $this->get('event_dispatcher')->dispatch($eventName, $event);
 
         if ($event->getContent() !== '') {
-            return $this->render(
-                'ClarolineCoreBundle:Tool\workspace\home:widget_configuration.html.twig',
-                array('content' => $event->getContent(), 'workspace' => $workspace, 'tool' => $this->getHomeTool())
+            return array(
+                'content' => $event->getContent(),
+                'workspace' => $workspace,
+                'tool' => $this->getHomeTool()
             );
         }
 
@@ -169,6 +180,8 @@ class HomeController extends Controller
      *     name="claro_desktop_widget_properties"
      * )
      *
+     * @Template("ClarolineCoreBundle:Tool\desktop\home:widgetProperties.html.twig")
+     *
      * Displays the widget configuration page.
      *
      * @return Response
@@ -179,9 +192,10 @@ class HomeController extends Controller
         $configs = $this->get('claroline.widget.manager')
             ->generateDesktopDisplayConfig($user->getId());
 
-        return $this->render(
-            'ClarolineCoreBundle:Tool\desktop\home:widget_properties.html.twig',
-            array('configs' => $configs, 'user' => $user, 'tool' => $this->getHomeTool())
+        return array(
+            'configs' => $configs,
+            'user' => $user,
+            'tool' => $this->getHomeTool()
         );
     }
 
@@ -232,6 +246,8 @@ class HomeController extends Controller
      * )
      * @Method("GET")
      *
+     * @Template("ClarolineCoreBundle:Tool\desktop\home:widgetConfiguration.html.twig")
+     *
      * Asks a widget to display its configuration page.
      *
      * @param Widget $widget the widget
@@ -246,9 +262,10 @@ class HomeController extends Controller
         $this->get('event_dispatcher')->dispatch($eventName, $event);
 
         if ($event->getContent() !== '') {
-            return $this->render(
-                'ClarolineCoreBundle:Tool\desktop\home:widget_configuration.html.twig',
-                array('content' => $event->getContent(), 'tool' => $this->getHomeTool())
+
+            return array(
+                'content' => $event->getContent(),
+                'tool' => $this->getHomeTool()
             );
         }
 

@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class ResourceManagerController extends Controller
 {
@@ -17,6 +18,8 @@ class ResourceManagerController extends Controller
      *     name="claro_workspace_resource_rights_creation_form"
      * )
      * @Method("GET")
+     *
+     * @Template("ClarolineCoreBundle:Tool\workspace\resource_manager:resourceRightsCreation.html.twig")
      *
      * @param AbstractWorkspace $workspace
      * @param Role $role
@@ -38,16 +41,13 @@ class ResourceManagerController extends Controller
             ->findOneBy(array('resource' => $resource, 'role' => $role));
         $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
 
-        return $this->render(
-            'ClarolineCoreBundle:Tool\workspace\resource_manager:resource_rights_creation.html.twig',
-            array(
-                'workspace' => $workspace,
-                'configs' => array($config),
-                'resourceTypes' => $resourceTypes,
-                'resourceId' => $resource->getId(),
-                'roleId' => $role->getId(),
-                'tool' => $this->getResourceManagerTool()
-            )
+        return array(
+            'workspace' => $workspace,
+            'configs' => array($config),
+            'resourceTypes' => $resourceTypes,
+            'resourceId' => $resource->getId(),
+            'roleId' => $role->getId(),
+            'tool' => $this->getResourceManagerTool()
         );
     }
 

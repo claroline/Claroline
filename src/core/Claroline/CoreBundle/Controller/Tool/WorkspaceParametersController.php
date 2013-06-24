@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Claroline\CoreBundle\Controller\Tool\AbstractParametersController;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Tool\Tool;
@@ -22,6 +23,8 @@ class WorkspaceParametersController extends AbstractParametersController
      * )
      * @Method("GET")
      *
+     * @Template("ClarolineCoreBundle:Tool\workspace\parameters:template.html.twig")
+     *
      * @param AbstractWorkspace $workspace
      *
      * @return Response
@@ -31,11 +34,9 @@ class WorkspaceParametersController extends AbstractParametersController
         $this->checkAccess($workspace);
         $form = $this->get('form.factory')->create(new WorkspaceTemplateType());
 
-        return $this->render(
-            'ClarolineCoreBundle:Tool\workspace\parameters:template.html.twig',
-            array(
-                'form' => $form->createView(),
-                'workspace' => $workspace)
+        return array(
+            'form' => $form->createView(),
+            'workspace' => $workspace
         );
     }
 
@@ -45,6 +46,8 @@ class WorkspaceParametersController extends AbstractParametersController
      *     name="claro_workspace_export"
      * )
      * @Method("POST")
+     *
+     * @Template("ClarolineCoreBundle:Tool\workspace\parameters:template.html.twig")
      *
      * @param AbstractWorkspace $workspace
      *
@@ -68,11 +71,9 @@ class WorkspaceParametersController extends AbstractParametersController
             return new RedirectResponse($route);
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Tool\workspace\parameters:template.html.twig',
-            array(
-                'form' => $form->createView(),
-                'workspace' => $workspace)
+        return array(
+            'form' => $form->createView(),
+            'workspace' => $workspace
         );
     }
 
@@ -83,6 +84,8 @@ class WorkspaceParametersController extends AbstractParametersController
      * )
      * @Method("GET")
      *
+     * @Template("ClarolineCoreBundle:Tool\workspace\parameters:workspaceEdit.html.twig")
+     *
      * @param AbstractWorkspace $workspace
      *
      * @return Response
@@ -92,9 +95,9 @@ class WorkspaceParametersController extends AbstractParametersController
         $this->checkAccess($workspace);
         $form = $this->createForm(new WorkspaceEditType(), $workspace);
 
-        return $this->render(
-            'ClarolineCoreBundle:Tool\workspace\parameters:workspace_edit.html.twig',
-            array('form' => $form->createView(), 'workspace' => $workspace)
+        return array(
+            'form' => $form->createView(),
+            'workspace' => $workspace
         );
     }
 
@@ -105,6 +108,8 @@ class WorkspaceParametersController extends AbstractParametersController
      *     name="claro_workspace_edit"
      * )
      * @Method("POST")
+     *
+     * @Template("ClarolineCoreBundle:Tool\workspace\parameters:workspaceEdit.html.twig")
      *
      * @param AbstractWorkspace $workspace
      *
@@ -132,7 +137,7 @@ class WorkspaceParametersController extends AbstractParametersController
                 $this->generateUrl(
                     'claro_workspace_open_tool',
                     array(
-                        'workspaceId' => $workspaceId,
+                        'workspaceId' => $workspace->getId(),
                         'toolName' => 'parameters'
                     )
                 )
@@ -142,9 +147,9 @@ class WorkspaceParametersController extends AbstractParametersController
             $workspace->setCode($wsRegisteredCode);
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Tool\workspace\parameters:workspace_edit.html.twig',
-            array('form' => $form->createView(), 'workspace' => $workspace)
+        return array(
+            'form' => $form->createView(),
+            'workspace' => $workspace
         );
     }
 

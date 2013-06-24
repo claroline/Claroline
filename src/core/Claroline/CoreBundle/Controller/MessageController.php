@@ -59,6 +59,8 @@ class MessageController extends Controller
      *     name="claro_message_form"
      * )
      *
+     * @Template("ClarolineCoreBundle:Message:messageForm.html.twig")
+     *
      * Display the message form.
      * It takes a array of user ids (query string: ids[]=1&ids[]=2).
      * The "to" field of the form must be completed in the following way: username1; username2; username3
@@ -82,10 +84,7 @@ class MessageController extends Controller
 
         $form = $this->createForm(new MessageType($usersString));
 
-        return $this->render(
-            'ClarolineCoreBundle:Message:message_form.html.twig',
-            array('form' => $form->createView())
-        );
+        return array('form' => $form->createView());
     }
 
     /**
@@ -94,6 +93,8 @@ class MessageController extends Controller
      *     name="claro_message_send",
      *     defaults={"parentId" = 0}
      * )
+     *
+     * @Template("ClarolineCoreBundle:Message:messageForm.html.twig")
      *
      * Handles the message form submission.
      *
@@ -116,15 +117,10 @@ class MessageController extends Controller
                 $parent
             );
 
-            return $this->render(
-                'ClarolineCoreBundle:Message:message_form.html.twig',
-                array('form' => $form->createView())
-            );
+            return array('form' => $form->createView());
         } else {
 
-            return $this->render(
-                'ClarolineCoreBundle:Message:message_form.html.twig', array('form' => $form->createView())
-            );
+            return array('form' => $form->createView());
         }
     }
 
@@ -256,6 +252,8 @@ class MessageController extends Controller
      *     name="claro_message_show"
      * )
      *
+     * @Template()
+     * 
      * Displays a message.
      *
      * @param integer $messageId the message id
@@ -291,13 +289,10 @@ class MessageController extends Controller
             $form = $this->createForm(new MessageType($stringUsername, 'Re: ' . $message->getObject()));
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Message:show.html.twig',
-            array(
-                'ancestors' => $ancestors,
-                'message' => $message,
-                'form' => $form->createView()
-            )
+        return array(
+            'ancestors' => $ancestors,
+            'message' => $message,
+            'form' => $form->createView()
         );
     }
 

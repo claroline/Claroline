@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * Controller of the user's desktop.
@@ -19,6 +20,8 @@ class DesktopController extends Controller
      *     "/widgets",
      *     name="claro_desktop_widgets"
      * )
+     *
+     * @Template("ClarolineCoreBundle:Widget:widgets.html.twig")
      *
      * Displays registered widgets.
      *
@@ -50,13 +53,12 @@ class DesktopController extends Controller
             }
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Widget:widgets.html.twig',
-            array('widgets' => $responsesString)
-        );
+        return array('widgets' => $responsesString);
     }
 
     /**
+     * @Template()
+     *
      * Renders the left tool bar. Not routed.
      *
      * @return Response
@@ -68,10 +70,7 @@ class DesktopController extends Controller
         $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
             ->findDesktopDisplayedToolsByUser($user);
 
-        return $this->render(
-            'ClarolineCoreBundle:Desktop:tool_list.html.twig',
-            array('tools' => $tools)
-        );
+        return array('tools' => $tools);
     }
 
     /**
