@@ -125,8 +125,8 @@ usage) or visit our continuous integration server [here][7].
 
 ### Miscellaneous
 
-To have the core **Less** and **TwigJs** assets automatically processed and dumped when
-they have changed, you can run the provided [watchr][8] script:
+To have the core **Less** and **TwigJs** assets automatically processed and
+dumped when they have changed, you can run the provided [watchr][8] script:
 
 ```sh
 $ watchr src/core/Claroline/CoreBundle/Resources/watchr/refresh_assets.rb
