@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Form\FormError;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 
 /**
@@ -27,6 +28,8 @@ class ForumController extends Controller
      *     name="claro_forum_subjects",
      *     defaults={"page"=1}
      * )
+     *
+     * @Template("ClarolineForumBundle::index.html.twig")
      *
      * @param integer $resourceId
      *
@@ -45,11 +48,9 @@ class ForumController extends Controller
         $pager->setMaxPerPage($limit);
         $pager->setCurrentPage($page);
 
-        return $this->render(
-            'ClarolineForumBundle::index.html.twig', array(
-                'pager' => $pager,
-                '_resource' => $forum
-            )
+        return array(
+            'pager' => $pager,
+            '_resource' => $forum
         );
     }
 
@@ -58,6 +59,8 @@ class ForumController extends Controller
      *     "/form/subject/{forumId}",
      *     name="claro_forum_form_subject_creation"
      * )
+     *
+     * @Template("ClarolineForumBundle::subjectForm.html.twig")
      *
      * @param integer $forumId
      *
@@ -70,12 +73,9 @@ class ForumController extends Controller
         $this->checkAccess($forum);
         $formSubject = $this->get('form.factory')->create(new SubjectType());
 
-        return $this->render(
-            'ClarolineForumBundle::subject_form.html.twig',
-            array(
-                '_resource' => $forum,
-                'form' => $formSubject->createView()
-            )
+        return array(
+            '_resource' => $forum,
+            'form' => $formSubject->createView()
         );
     }
 
@@ -87,6 +87,8 @@ class ForumController extends Controller
      *     "/subject/create/{forumId}",
      *     name="claro_forum_create_subject"
      * )
+     *
+     * @Template("ClarolineForumBundle::subjectForm.html.twig")
      *
      * @param integer $forumId
      *
@@ -127,12 +129,9 @@ class ForumController extends Controller
             new FormError($this->get('translator')->trans('field_content_required', array(), 'forum'))
         );
 
-        return $this->render(
-            'ClarolineForumBundle::subject_form.html.twig',
-            array(
-                'form' => $form->createView(),
-                '_resource' => $forum
-            )
+        return array(
+            'form' => $form->createView(),
+            '_resource' => $forum
         );
     }
 
@@ -142,6 +141,8 @@ class ForumController extends Controller
      *     name="claro_forum_messages",
      *     defaults={"page"=1}
      * )
+     *
+     * @Template("ClarolineForumBundle::messages.html.twig")
      *
      * @return Response
      */
@@ -159,13 +160,10 @@ class ForumController extends Controller
         $pager->setMaxPerPage($limit);
         $pager->setCurrentPage($page);
 
-        return $this->render(
-            'ClarolineForumBundle::messages.html.twig',
-            array(
-                'subject' => $subject,
-                'pager' => $pager,
-                '_resource' => $forum
-            )
+        return array(
+            'subject' => $subject,
+            'pager' => $pager,
+            '_resource' => $forum
         );
     }
 
@@ -174,6 +172,8 @@ class ForumController extends Controller
      *     "/add/message/{subjectId}",
      *     name="claro_forum_message_form"
      * )
+     *
+     * @Template("ClarolineForumBundle::messageForm.html.twig")
      *
      * @param integer $subjectId
      *
@@ -187,13 +187,10 @@ class ForumController extends Controller
         $forum = $subject->getForum();
         $this->checkAccess($forum);
 
-        return $this->render(
-            'ClarolineForumBundle::message_form.html.twig',
-            array(
-                'subjectId' => $subjectId,
-                'form' => $form->createView(),
-                '_resource' => $forum
-            )
+        return array(
+            'subjectId' => $subjectId,
+            'form' => $form->createView(),
+            '_resource' => $forum
         );
     }
 
@@ -202,6 +199,8 @@ class ForumController extends Controller
      *     "/create/message/{subjectId}",
      *     name="claro_forum_create_message"
      * )
+     *
+     * @Template("ClarolineForumBundle::messageForm.html.twig")
      *
      * @param integer $subjectId
      *
@@ -229,13 +228,10 @@ class ForumController extends Controller
             );
         }
 
-        return $this->render(
-            'ClarolineForumBundle::message_form.html.twig',
-            array(
-                'subjectId' => $subjectId,
-                'form' => $form->createView(),
-                '_resource' => $forum
-            )
+        return array(
+            'subjectId' => $subjectId,
+            'form' => $form->createView(),
+            '_resource' => $forum
         );
     }
 
@@ -244,6 +240,8 @@ class ForumController extends Controller
      *     "/options/edit",
      *     name="claro_forum_edit_options"
      * )
+     *
+     * @Template("ClarolineForumBundle::pluginOptionsForm.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -262,10 +260,7 @@ class ForumController extends Controller
             return new RedirectResponse($this->generateUrl('claro_admin_plugins'));
         }
 
-        return $this->render(
-            'ClarolineForumBundle::plugin_options_form.html.twig',
-            array('form' => $form->createView())
-        );
+        return array('form' => $form->createView());
     }
 
     private function checkAccess($forum)
