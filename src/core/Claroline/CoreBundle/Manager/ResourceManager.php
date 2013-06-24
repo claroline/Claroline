@@ -213,23 +213,26 @@ class ResourceManager
      */
     public function sort(array $resources)
     {
-        if ($this->haveSameParents($resources)) {
-            $parent = $this->resourceRepo->find($resources[0]['parent_id']);
-            $sortedList = $this->findAndSortChildren($parent);
+        $sortedResources = array();
 
-            foreach ($sortedList as $sortedItem) {
-                foreach ($resources as $resource) {
-                    if ($resource['id'] === $sortedItem['id']) {
-                        $sortedRes[] = $resource;
+        if (count($resources) > 0) {
+            if ($this->sameParents($resources)) {
+                $parent = $this->resourceRepo->find($resources[0]['parent_id']);
+                $sortedList = $this->findAndSortChildren($parent);
+
+                foreach ($sortedList as $sortedItem) {
+                    foreach ($resources as $resource) {
+                        if ($resource['id'] === $sortedItem['id']) {
+                            $sortedResources[] = $resource;
+                        }
                     }
                 }
+            } else {
+                throw new \Exception("These resources don't share the same parent");
             }
-
-        } else {
-            throw new \Exception("These resources don't share the same parent");
         }
 
-        return $sortedRes;
+        return $sortedResources;
     }
 
     public function makeShortcut(AbstractResource $target, Directory $parent, User $creator)

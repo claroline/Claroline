@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Library\Twig;
+namespace Claroline\CoreBundle\Twig;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Doctrine\ORM\EntityManager;
