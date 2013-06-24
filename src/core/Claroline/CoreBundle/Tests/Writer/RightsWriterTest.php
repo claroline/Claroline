@@ -14,6 +14,7 @@ class RightsWriterTest extends FixtureTestCase
     private $resourceTypes;
     private $role;
     private $resource;
+    private $otherResource;
 
     public function setUp()
     {
@@ -47,12 +48,30 @@ class RightsWriterTest extends FixtureTestCase
             'dir',
             $icons[0]
         );
+
+        $this->otherResource = $this->client->getContainer()->get('claroline.writer.resource_writer')->create(
+            $dir,
+            $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('directory'),
+            $this->getUser('user'),
+            $ws,
+            'dir',
+            $icons[0]
+        );
     }
 
     public function testCreate()
     {
         $prevCount = count($this->rightsRepo->findAll());
         $this->writer->create($this->permsArray, $this->resourceTypes, $this->resource, $this->role);
+        $nowCount = count($this->rightsRepo->findAll());
+        $this->assertEquals(1, $nowCount - $prevCount);
+    }
+
+    public function testCreateFrom()
+    {
+        $rights = $this->writer->create($this->permsArray, $this->resourceTypes, $this->resource, $this->role);
+        $prevCount = count($this->rightsRepo->findAll());
+        $this->writer->createFrom($this->otherResource, $rights);
         $nowCount = count($this->rightsRepo->findAll());
         $this->assertEquals(1, $nowCount - $prevCount);
     }

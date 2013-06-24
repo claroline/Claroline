@@ -30,7 +30,7 @@ class RoleManager
     {
         foreach ($roles as $name => $translation) {
             $role = $this->writer->create("{$name}_{$workspace->getId()}", $translation, Role::WS_ROLE, $workspace);
-            $entityRoles[$role->getName()] = $role;
+            $entityRoles[$name] = $role;
         }
 
         return $entityRoles;

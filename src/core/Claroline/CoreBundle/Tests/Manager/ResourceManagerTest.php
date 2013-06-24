@@ -56,9 +56,9 @@ class ResourceManagerTest extends MockeryTestCase
     /**
      * @dataProvider parentAsArrayProvider
      */
-    public function testSameParents($parents, $result)
+    public function testhaveSameParents($parents, $result)
     {
-        $this->assertEquals($result, $this->getManager()->sameParents($parents));
+        $this->assertEquals($result, $this->getManager()->haveSameParents($parents));
     }
 
     public function testFindAndSortChildren()
@@ -104,8 +104,8 @@ class ResourceManagerTest extends MockeryTestCase
 
         $parent = m::mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
         $this->resourceRepo->shouldReceive('find')->once()->andReturn($parent);
-        $manager = $this->getManager(array('sameParents', 'findAndSortChildren'));
-        $manager->shouldReceive('sameParents')->once()->andReturn(true);
+        $manager = $this->getManager(array('haveSameParents', 'findAndSortChildren'));
+        $manager->shouldReceive('haveSameParents')->once()->andReturn(true);
         $manager->shouldReceive('findAndSortChildren')->once()->andReturn($fullSort);
         $sorted = $manager->sort($resources);
         $this->assertEquals($sorted, $result);
