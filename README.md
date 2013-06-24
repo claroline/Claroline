@@ -1,6 +1,13 @@
 Project setup
 =============
 
+- [Requirements](#requirements)
+- [Quick start](#quick-start)
+- [Quick update](#quick-update)
+- [Plugin installation](#plugin-installation)
+- [Development tools](#development-tools)
+- [Documentation](#documentation)
+
 Requirements
 ------------
 
@@ -15,40 +22,76 @@ Requirements
 Quick start
 -----------
 
-- Clone the project and its associated plugins with `git clone --recursive https://github.com/claroline/Claroline.git`
-- Checkout the master branch of each plugin with `git submodule foreach git checkout master`
-- Use the automatic install script : `php app/dev/raw_install`
-- Make the *app/cache*, *app/logs*, *app/config/local*, *files*, *templates*, *test* and
-  *src/core/Claroline/CoreBundle/Resources/public/css/themes* directories (and their children)
-  writable from the command line and the webserver (for further explanation on common permissions
-  issues and solutions with Symfony, read [this][5])
-- Open your browser and go to *[site]/web/app.php* (prod) or *[site]/web/app_dev.php* (dev)
+Clone the project and its associated plugins with:
+
+```sh
+$ git clone --recursive 'https://github.com/claroline/Claroline.git'
+```
+
+Checkout the master branch of each plugin with:
+
+```sh
+$ git submodule foreach git checkout master
+```
+
+Use the automatic install script:
+
+```sh
+$ php app/dev/raw_install
+```
+
+Make the following directories (and their children) writable from the command
+line and the webserver
+
+- *app/cache*
+- *app/logs*
+- *app/config/local*
+- *files*
+- *templates*
+- *test*
+- *src/core/Claroline/CoreBundle/Resources/public/css/themes*
+- *src/core/Claroline/CoreBundle/Resources/views/less-generated*
+
+For further explanation on common permissions issues and solutions with
+Symfony2, read [this][5].
+
+Open your browser and go to *[site]/web/app.php* for production environment or
+*[site]/web/app_dev.php* for development environment.
 
 Quick update
 ------------
 
 To update your installation to the last development state, use :
 
-    git pull
-    git submodule update --init --recursive
-    git submodule foreach git checkout master
+```sh
+$ git pull
+$ git submodule update --init --recursive
+$ git submodule foreach git checkout master
+```
 
-Then launch the installation script mentioned above : `php app/dev/raw_install`
+Then launch the installation script mentioned above:
+```sh
+$ php app/dev/raw_install
+```
 
-***Warning*** : this is a quick dev tool, it will drop existing databases (both prod and test)
-and create new ones.
+***Warning*** : this is a quick dev tool, it will drop existing databases
+(both prod and test) and create new ones.
 
 Plugin installation
 -------------------
 
-You can install or uninstall a plugin with :
+You can install or uninstall a plugin with:
 
-- `php app/console claroline:plugin:install [vendor] [bundle short name]`
-- `php app/console claroline:plugin:uninstall [vendor] [bundle short name]`
+```sh
+$ php app/console claroline:plugin:install [vendor] [bundle short name]
+$ php app/console claroline:plugin:uninstall [vendor] [bundle short name]
+```
 
 A new plugin can be added to the module list with :
 
-`git submodule add http://github.com/vendor/SomeBundle.git src/plugin/Vendor/SomeBundle`
+```sh
+$ git submodule add 'http://github.com/vendor/SomeBundle.git' 'src/plugin/Vendor/SomeBundle'
+```
 
 Development tools
 =================
@@ -56,28 +99,41 @@ Development tools
 Testing
 -------
 
-In order to run the test suite you must have [phpunit][6] installed on your system.
+In order to run the test suite you must have [phpunit][6] installed on your
+system.
 
-- Run the complete test suite with : `phpunit -c app`
-- Run the tests for a single directory with : `phpunit -c app src/core/Claroline/CoreBundle`
+Run the complete test suite with:
+
+```sh
+$ phpunit -c app
+```
+Run the tests for a single directory with:
+
+```sh
+$ phpunit -c app 'src/core/Claroline/CoreBundle'
+```
 
 Build / Static analysis
 -----------------------
 
-The *app/build/tools* directory gathers configuration files for various analysis and build tools
-(PHPMD, PHPCS, JSHint, Ant, etc.). You can install and use them locally (see their respective
-documentation for usage) or visit our continuous integration server [here][7].
+The *app/build/tools* directory gathers configuration files for various
+analysis and build tools (PHPMD, PHPCS, JSHint, Ant, etc.).
+
+You can install and use them locally (see their respective documentation for
+usage) or visit our continuous integration server [here][7].
 
 Miscellaneous
 -------------
 
-To have the core Less and TwigJs assets automatically processed and dumped when they have changed,
-you can run the provided [watchr][8] script :
+To have the core Less and TwigJs assets automatically processed and dumped when
+they have changed, you can run the provided [watchr][8] script:
 
-`watchr src/core/Claroline/CoreBundle/Resources/watchr/refresh_assets.rb`
+```sh
+$ watchr 'src/core/Claroline/CoreBundle/Resources/watchr/refresh_assets.rb'
+```
 
 Documentation
-=============
+-------------
 
 For development documentation, see [Claroline/CoreBundle/Resources/doc/index.md][9].
 
