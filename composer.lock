@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "f752acb35718ca609abcda1189b36751",
+    "hash": "edb38e1ec68c6103e481f9bf7101121e",
     "packages": [
         {
             "name": "claroline/front-end-bundle",
@@ -870,13 +870,19 @@
         {
             "name": "fortawesome/fontawesome",
             "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FortAwesome/Font-Awesome.git",
+                "reference": "master"
+            },
             "dist": {
                 "type": "zip",
                 "url": "https://github.com/FortAwesome/Font-Awesome/zipball/master",
                 "reference": null,
                 "shasum": null
             },
-            "type": "library"
+            "type": "library",
+            "time": "2013-06-17 15:31:59"
         },
         {
             "name": "friendsofsymfony/jsrouting-bundle",
@@ -1199,7 +1205,7 @@
                 {
                     "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -1246,7 +1252,7 @@
                 {
                     "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -1729,12 +1735,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "a43f926ffee4de41f14016dbee2aac1ed2cb411a"
+                "reference": "ac7ba91525f4945100677758fe808e16dd8c4927"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/a43f926ffee4de41f14016dbee2aac1ed2cb411a",
-                "reference": "a43f926ffee4de41f14016dbee2aac1ed2cb411a",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/ac7ba91525f4945100677758fe808e16dd8c4927",
+                "reference": "ac7ba91525f4945100677758fe808e16dd8c4927",
                 "shasum": ""
             },
             "require": {
@@ -1783,7 +1789,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2013-06-07 08:26:36"
+            "time": "2013-06-19 11:44:29"
         },
         {
             "name": "pagerfanta/pagerfanta",
@@ -2197,16 +2203,16 @@
         },
         {
             "name": "swiftmailer/swiftmailer",
-            "version": "v5.0.0",
+            "version": "v5.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftmailer/swiftmailer.git",
-                "reference": "v5.0.0"
+                "reference": "v5.0.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/v5.0.0",
-                "reference": "v5.0.0",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/v5.0.1",
+                "reference": "v5.0.1",
                 "shasum": ""
             },
             "require": {
@@ -2215,7 +2221,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.0-dev"
+                    "dev-master": "5.1-dev"
                 }
             },
             "autoload": {
@@ -2242,7 +2248,7 @@
                 "mail",
                 "mailer"
             ],
-            "time": "2013-04-30 17:35:30"
+            "time": "2013-06-17 13:32:32"
         },
         {
             "name": "symfony/assetic-bundle",
@@ -2473,12 +2479,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "caaaec3155a61e71b935dded6811df4ef634e3d9"
+                "reference": "e01c6c22e8f990faaded81f9c9b1caf97ee54d52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/caaaec3155a61e71b935dded6811df4ef634e3d9",
-                "reference": "caaaec3155a61e71b935dded6811df4ef634e3d9",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/e01c6c22e8f990faaded81f9c9b1caf97ee54d52",
+                "reference": "e01c6c22e8f990faaded81f9c9b1caf97ee54d52",
                 "shasum": ""
             },
             "require": {
@@ -2573,7 +2579,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2013-06-17 07:15:51"
+            "time": "2013-06-17 13:51:03"
         },
         {
             "name": "twig/extensions",
@@ -2750,13 +2756,19 @@
         {
             "name": "xaguilars/bootstrap-colorpicker",
             "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/xaguilars/bootstrap-colorpicker",
+                "reference": "master"
+            },
             "dist": {
                 "type": "zip",
                 "url": "https://github.com/xaguilars/bootstrap-colorpicker/archive/master.zip",
                 "reference": null,
                 "shasum": null
             },
-            "type": "library"
+            "type": "library",
+            "time": "2013-05-24 10:20:31"
         },
         {
             "name": "zenstruck/form-bundle",
@@ -2765,12 +2777,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kbond/ZenstruckFormBundle.git",
-                "reference": "36d57084a420a6cc9315970891ca42ffb3627b2c"
+                "reference": "e3fa2c70bd5fc8c457a37ac66704a3beb8012c0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kbond/ZenstruckFormBundle/zipball/36d57084a420a6cc9315970891ca42ffb3627b2c",
-                "reference": "36d57084a420a6cc9315970891ca42ffb3627b2c",
+                "url": "https://api.github.com/repos/kbond/ZenstruckFormBundle/zipball/e3fa2c70bd5fc8c457a37ac66704a3beb8012c0c",
+                "reference": "e3fa2c70bd5fc8c457a37ac66704a3beb8012c0c",
                 "shasum": ""
             },
             "require": {
@@ -2813,7 +2825,7 @@
             "keywords": [
                 "form"
             ],
-            "time": "2013-06-12 18:33:47"
+            "time": "2013-06-17 15:27:38"
         }
     ],
     "packages-dev": [
@@ -2823,12 +2835,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/padraic/mockery.git",
-                "reference": "70739803f85065cc2ec00fae662bdcaaa4df487e"
+                "reference": "6dfaecabca7c74f03107e822337fd63d373d6019"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/70739803f85065cc2ec00fae662bdcaaa4df487e",
-                "reference": "70739803f85065cc2ec00fae662bdcaaa4df487e",
+                "url": "https://api.github.com/repos/padraic/mockery/zipball/6dfaecabca7c74f03107e822337fd63d373d6019",
+                "reference": "6dfaecabca7c74f03107e822337fd63d373d6019",
                 "shasum": ""
             },
             "require": {
@@ -2869,7 +2881,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2013-05-29 09:13:17"
+            "time": "2013-06-18 14:15:15"
         }
     ],
     "aliases": [

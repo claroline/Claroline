@@ -56,10 +56,10 @@ class Role implements RoleInterface
      * @ORM\JoinTable(
      *     name="claro_user_role",
      *     joinColumns={
-     *         @ORM\JoinColumn(name="role_id", referencedColumnName="id")
+     *         @ORM\JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      *     },
      *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     *         @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      *     }
      * )
      */

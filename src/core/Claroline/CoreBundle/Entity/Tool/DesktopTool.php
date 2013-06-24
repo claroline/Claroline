@@ -7,7 +7,18 @@ use Claroline\CoreBundle\Entity\User;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ToolRepository")
- * @ORM\Table(name="claro_user_desktop_tool")
+ * @ORM\Table(
+ *      name="claro_user_desktop_tool",
+*       uniqueConstraints={
+ *          @ORM\UniqueConstraint(
+ *          name="tool",columns={"user_id","tool_id"}
+ *          ),
+ *      @ORM\UniqueConstraint(
+ *          name="display",columns={"user_id","display_order"}
+ *          )
+ *      }
+ *)
+ *
  */
 class DesktopTool
 {
@@ -24,7 +35,7 @@ class DesktopTool
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     cascade={"persist"}, inversedBy="desktopTools"
      * )
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     private $user;
 
@@ -33,7 +44,7 @@ class DesktopTool
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\Tool", cascade={"persist"},
      *     inversedBy="desktopTools"
      * )
-     * @ORM\JoinColumn(name="tool_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="tool_id", referencedColumnName="id", nullable=false , onDelete="CASCADE")
      *
      */
     private $tool;

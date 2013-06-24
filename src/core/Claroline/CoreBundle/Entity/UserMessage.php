@@ -22,6 +22,7 @@ class UserMessage
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     inversedBy="userMessages"
      * )
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE",  nullable=true)
      */
     private $user;
 
@@ -30,6 +31,7 @@ class UserMessage
      *     targetEntity="Claroline\CoreBundle\Entity\Message",
      *     inversedBy="userMessages"
      * )
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE", nullable=true)
      */
     private $message;
 
