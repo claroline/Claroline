@@ -57,6 +57,7 @@ class WorkspaceManager
         );
 
         $baseRoles = $this->roleManager->initWorkspaceBaseRole($config->getRoles(), $workspace);
+        $this->roleManager->bind($baseRoles["ROLE_WS_MANAGER"], $manager);
         $dir = new Directory();
         $dir->setName("{$workspace->getName()} - {$workspace->getCode()}");
         $rights = $config->getPermsRootConfiguration();

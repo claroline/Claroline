@@ -41,7 +41,8 @@ class LoadShortcutData extends AbstractFixture implements ContainerAwareInterfac
         $shortcut = $resourceManager->makeShortcut(
             $this->target,
             $this->getReference('directory/'.$this->directory),
-            $this->getReference('user/'.$this->creator)
+            $this->getReference('user/'.$this->creator),
+            new ResourceShortcut()
         );
 
         if ($this->referenceName !== '') {

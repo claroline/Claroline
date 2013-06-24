@@ -61,9 +61,42 @@ class RightsManagerTest extends MockeryTestCase
         $this->assertEquals($expectedResults, $results);
     }
 
-    public function testCheckResourceTypes()
+    public function testCreate()
     {
-        //
+
+    }
+
+    public function testEdit()
+    {
+        $creations = array();
+        $perms = array(
+            'canCopy' => true,
+            'canOpen' => false,
+            'canDelete' => true,
+            'canEdit' => false,
+            'canExport' => true
+        );
+        $resource = m::mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $rights = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceRights');
+        $role = m::mock('Claroline\CoreBundle\Entity\Role');
+        $this->rightsRepo->shouldReceive('findOneBy')->once()->andReturn($rights);
+        $this->writer->shouldReceive('edit')->once()->with($rights, $perms, $creations)->andReturn($rights);
+        $this->getManager()->edit($resource, $role, $perms, $creations);
+    }
+
+    public function testCopy()
+    {
+        $rights1 = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceRights');
+        $rights2 = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceRights');
+        $original = m::mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $resource = m::mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $this->rightsRepo
+            ->shouldReceive('findBy')
+            ->once()
+            ->with(array('resource' => $original))
+            ->andReturn(array($rights1, $rights2));
+        $this->writer->shouldReceive('createFrom')->times(2);
+        $this->getManager()->copy($original, $resource);
     }
 
     private function getManager(array $mockedMethods = array())

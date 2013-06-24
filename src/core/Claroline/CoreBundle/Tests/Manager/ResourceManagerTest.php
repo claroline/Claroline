@@ -11,6 +11,7 @@ class ResourceManagerTest extends MockeryTestCase
     private $resourceRepo;
     private $rightsManager;
     private $resourceTypeRepo;
+    private $roleRepo;
     private $iconManager;
     private $rightsRepo;
 
@@ -21,6 +22,7 @@ class ResourceManagerTest extends MockeryTestCase
         $this->rightsManager = m::mock('Claroline\CoreBundle\Manager\RightsManager');
         $this->resourceRepo = m::mock('Claroline\CoreBundle\Repository\AbstractResourceRepository');
         $this->resourceTypeRepo = m::mock('Claroline\CoreBundle\Repository\ResourceTypeRepository');
+        $this->roleRepo = m::mock('Claroline\CoreBundle\Repository\RoleRepository');
         $this->rightsRepo = m::mock('Claroline\CoreBundle\Repository\ResourceRightsRepository');
         $this->iconManager = m::mock('Claroline\CoreBundle\Manager\IconManager');
     }
@@ -111,6 +113,70 @@ class ResourceManagerTest extends MockeryTestCase
         $this->assertEquals($sorted, $result);
     }
 
+    public function testCheckResourceTypes()
+    {
+        m::getConfiguration()->allowMockingNonExistentMethods(true);
+        $dirType = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceType');
+        $fileType = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceType');
+        $resourceTypes = array(array('name' => 'dir'), array('name' => 'file'));
+        $this->resourceTypeRepo->shouldReceive('findOneByName')->once()->with('dir')->andReturn($dirType);
+        $this->resourceTypeRepo->shouldReceive('findOneByName')->once()->with('file')->andReturn($fileType);
+        $types = $this->getManager()->checkResourceTypes($resourceTypes);
+        $this->assertEquals(array($dirType, $fileType), $types);
+        m::getConfiguration()->allowMockingNonExistentMethods(false);
+    }
+
+    public function testCheckResourceTypesThrowsException()
+    {
+        m::getConfiguration()->allowMockingNonExistentMethods(true);
+        $this->setExpectedException('\Claroline\CoreBundle\Manager\Exception\ResourceTypeNotFoundException');
+        $resourceTypes = array(array('name' => 'idontexist'));
+        $this->resourceTypeRepo->shouldReceive('findOneByName')->once()->with('idontexist')->andReturn(null);
+        $this->getManager()->checkResourceTypes($resourceTypes);
+        m::getConfiguration()->allowMockingNonExistentMethods(false);
+    }
+
+    public function testCheckResourcePrepared()
+    {
+        $this->setExpectedException('\Claroline\CoreBundle\Manager\Exception\MissingResourceNameException');
+        $resource = m::mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $resource->shouldReceive('getName')->andReturn(null);
+        $this->getManager()->checkResourcePrepared($resource);
+    }
+
+    public function testSetRights()
+    {
+
+    }
+
+    public function testSetRightsThrowsException()
+    {
+
+    }
+
+    public function testCreateRights()
+    {
+        
+    }
+
+    public function testMakeShortcut()
+    {
+        $manager = $this->getManager(array('create'));
+        $target = m::mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $parent = m::mock('Claroline\CoreBundle\Entity\Resource\Directory');
+        $dirType = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceType');
+        $shortcut = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceShortcut');
+        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $creator = m::mock('Claroline\CoreBundle\Entity\User');
+        $manager->shouldReceive('create')->once()->andReturn($shortcut);
+        $target->shouldReceive('getResourceType')->once()->andReturn($dirType);
+        $target->shouldReceive('getName')->once()->andReturn('name');
+        $parent->shouldReceive('getWorkspace')->once()->andReturn($workspace);
+        $shortcut->shouldReceive('setName')->once();
+        $shortcut->shouldReceive('setResource')->once()->with($target);
+        $manager->makeShortcut($target, $parent, $creator, $shortcut);
+    }
+
     public function parentAsArrayProvider()
     {
         return array(
@@ -134,6 +200,7 @@ class ResourceManagerTest extends MockeryTestCase
                 $this->resourceTypeRepo,
                 $this->resourceRepo,
                 $this->rightsRepo,
+                $this->roleRepo,
                 $this->iconManager,
                 $this->writer,
                 $this->rightsManager
@@ -153,6 +220,7 @@ class ResourceManagerTest extends MockeryTestCase
                     $this->resourceTypeRepo,
                     $this->resourceRepo,
                     $this->rightsRepo,
+                    $this->roleRepo,
                     $this->iconManager,
                     $this->writer,
                     $this->rightsManager

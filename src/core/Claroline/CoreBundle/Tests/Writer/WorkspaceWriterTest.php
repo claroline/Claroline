@@ -10,7 +10,6 @@ class WorkspaceWriterTest extends FixtureTestCase
     /** @var WorkspaceWriter */
     private $writer;
     private $workspaceRepo;
-    private $configuration;
 
     public function setUp()
     {

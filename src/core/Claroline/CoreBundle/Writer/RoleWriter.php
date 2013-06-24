@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Writer;
 
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -38,5 +39,12 @@ class RoleWriter
         $this->em->flush();
 
         return $role;
+    }
+
+    public function bind(Role $role, AbstractRoleSubject $users)
+    {
+        $users->addRole($role);
+        $this->em->persist($users);
+        $this->em->flush();
     }
 }
