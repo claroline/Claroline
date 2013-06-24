@@ -49,7 +49,7 @@ class ResourceWriter
         $resource->setIcon($icon);
         $this->em->persist($resource);
         $this->em->flush();
-
+        
         return $resource;
     }
 }

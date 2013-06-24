@@ -52,13 +52,13 @@ class RightsWriter
         $rights->setResource($resource);
         $this->em->persist($rights);
         $this->em->flush();
-
+        
         return $rights;
     }
 
     public function edit(ResourceRights $rights, array $permissions, array $creations = array())
     {
-        $rights->setPermissions($rights, $permissions);
+        $this->setPermissions($rights, $permissions);
         $rights->setCreatableResourceTypes($creations);
         $this->em->persist($rights);
         $this->em->flush();

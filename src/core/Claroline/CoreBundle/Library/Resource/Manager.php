@@ -154,7 +154,7 @@ class Manager
             $copy->setWorkspace($parent->getWorkspace());
             $copy->setName($resource->getName());
             $copy->setName($this->ut->getUniqueName($copy, $parent));
-            $this->cloneRights($resource, $copy);
+            $this->clone($resource, $copy);
             $this->em->flush();
 
             if ($resource->getResourceType()->getName() == 'directory') {

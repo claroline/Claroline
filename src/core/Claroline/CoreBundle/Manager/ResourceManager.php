@@ -11,9 +11,12 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use Claroline\CoreBundle\Repository\AbstractResourceRepository;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
+use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Writer\ResourceWriter;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\IconManager;
+use Claroline\CoreBundle\Manager\Exception\MissingResourceNameException;
+use Claroline\CoreBundle\Manager\Exception\ResourceTypeNotFoundException;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -29,8 +32,10 @@ class ResourceManager
     private $resourceTypeRepo;
     /** @var AbstractResourceRepository */
     private $resourceRepo;
-    /** @var AbstractResourceRightsRepository */
+    /** @var ResourceRightsRepository */
     private $resourceRightsRepo;
+    /** @var RoleRepository */
+    private $roleRepo;
     /** @var IconManager */
     private $iconManager;
 
@@ -38,10 +43,11 @@ class ResourceManager
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "resourceTypeRepo" = @Di\Inject("resource_type_repository"),
-     *     "resourceRepo" = @Di\Inject("resource_repository"),
-     *     "resourceRightsRepo" = @Di\Inject("resource_rights_repository"),
-     *     "iconManager" = @Di\Inject("claroline.manager.icon_manager"),
+     *     "resourceTypeRepo" = @DI\Inject("resource_type_repository"),
+     *     "resourceRepo" = @DI\Inject("resource_repository"),
+     *     "resourceRightsRepo" = @DI\Inject("resource_rights_repository"),
+     *     "roleRepo" = @DI\Inject("role_repository"),
+     *     "iconManager" = @DI\Inject("claroline.manager.icon_manager"),
      *     "writer" = @DI\Inject("claroline.writer.resource_writer"),
      *     "rightsManager" = @DI\Inject("claroline.manager.rights_manager")
      * })
@@ -50,6 +56,7 @@ class ResourceManager
         ResourceTypeRepository $resourceTypeRepo,
         AbstractResourceRepository $resourceRepo,
         ResourceRightsRepository $resourceRightsRepo,
+        RoleRepository $roleRepo,
         IconManager $iconManager,
         ResourceWriter $writer,
         RightsManager $rightsManager
@@ -58,6 +65,7 @@ class ResourceManager
         $this->resourceTypeRepo = $resourceTypeRepo;
         $this->resourceRepo = $resourceRepo;
         $this->resourceRightsRepo = $resourceRightsRepo;
+        $this->roleRepo = $roleRepo;
         $this->iconManager = $iconManager;
         $this->writer = $writer;
         $this->rightsManager = $rightsManager;
@@ -216,7 +224,7 @@ class ResourceManager
         $sortedResources = array();
 
         if (count($resources) > 0) {
-            if ($this->sameParents($resources)) {
+            if ($this->haveSameParents($resources)) {
                 $parent = $this->resourceRepo->find($resources[0]['parent_id']);
                 $sortedList = $this->findAndSortChildren($parent);
 
@@ -235,9 +243,8 @@ class ResourceManager
         return $sortedResources;
     }
 
-    public function makeShortcut(AbstractResource $target, Directory $parent, User $creator)
+    public function makeShortcut(AbstractResource $target, Directory $parent, User $creator, ResourceShortcut $shortcut)
     {
-        $shortcut = new ResourceShortcut();
         $shortcut->setName($target->getName());
 
         if (get_class($target) !== 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
@@ -262,24 +269,65 @@ class ResourceManager
      * If there is no rights: parents rights are copied.
      * Otherwise: use the new rights array;
      */
-    private function setRights(
+    public function setRights(
         AbstractResource $resource,
         AbstractResource $parent = null,
         array $rights = array()
     )
     {
         if (count($rights) === 0 && $parent !== null) {
-            $this->rightsManager->cloneRights($parent, $resource);
+            $this->rightsManager->copy($parent, $resource);
         } else {
             if (count($rights) === 0) {
                 throw new \Exception('Rights must be specified if there is no parent');
             }
-
-            $this->rightsManager->setRights($resource, $rights);
-            //todo check if these rights already extits
-            $this->rightsManager->setAdminRights($resource);
-            $this->rightsManager->setAnonymousRights($resource);
+            $this->createRights($resource, $rights);
         }
+    }
+
+    /*
+     * Creates the base rights for a resource
+     */
+    public function createRights(
+        AbstractResource $resource,
+        array $rights = array()
+    )
+    {
+        foreach ($rights as $data) {
+            $resourceTypes = $this->checkResourceTypes($data['canCreate']);
+            $this->rightsManager->create($data, $data['role'], $resource, false, $resourceTypes);
+        }
+
+        $resourceTypes = $this->resourceTypeRepo->findAll();
+
+        $this->rightsManager->create(
+             array(
+                'canDelete' => true,
+                'canOpen' => true,
+                'canEdit' => true,
+                'canCopy' => true,
+                'canExport' => true,
+            ),
+            $this->roleRepo->findOneBy(array('name' => 'ROLE_ADMIN')),
+            $resource,
+            false,
+            $resourceTypes
+
+        );
+
+        $this->rightsManager->create(
+             array(
+                'canDelete' => false,
+                'canOpen' => false,
+                'canEdit' => false,
+                'canCopy' => false,
+                'canExport' => false,
+            ),
+            $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
+            $resource,
+            false,
+            array()
+        );
     }
 
     public function checkResourcePrepared(AbstractResource $resource)
@@ -288,11 +336,40 @@ class ResourceManager
 
         //null or '' shouldn't be valid
         if ($resource->getName() == null) {
-            $stringErrors .= 'The resource name is missing' . PHPEOL;
+            $stringErrors .= 'The resource name is missing' . PHP_EOL;
         }
 
         if ($stringErrors !== '') {
-            throw new \Exception($stringErrors);
+            throw new MissingResourceNameException($stringErrors);
         }
+    }
+
+    //expects an array of types array(array('name' => 'type'),...);
+    public function checkResourceTypes(array $resourceTypes)
+    {
+        $validTypes = array();
+        $unknownTypes = array();
+
+        foreach ($resourceTypes as $type) {
+            //@todo write findByNames method.
+            $rt = $this->resourceTypeRepo->findOneByName($type['name']);
+            if ($rt === null) {
+                $unknownTypes[] = $type['name'];
+            } else {
+                $validTypes[] = $rt;
+            }
+        }
+
+        if (count($unknownTypes) > 0) {
+            $content = "The resource type(s) ";
+            foreach ($unknownTypes as $unknown) {
+                $content .= "{$unknown}, ";
+            }
+            $content .= "were not found";
+
+            throw new ResourceTypeNotFoundException($content);
+        }
+
+        return $validTypes;
     }
 }

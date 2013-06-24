@@ -74,7 +74,18 @@ class RightsManager
         if ($isRecursive) {
             $resourceRights = $this->addMissingForDescendants($role, $resource);
         } else {
-            $resourceRights[] = $this->writer->create($this->getFalsePermissions(), array(), $resource, $role);
+            $resourceRights[] = $this->writer->create(
+                array(
+                    'canDelete' => false,
+                    'canOpen' => false,
+                    'canEdit' => false,
+                    'canCopy' => false,
+                    'canExport' => false,
+                ),
+                array(),
+                $resource,
+                $role
+            );
         }
 
         foreach ($resourceRights as $resourceRight) {
@@ -82,7 +93,7 @@ class RightsManager
         }
     }
 
-    public function editRights(AbstractResource $resource, Role $role, array $permissions, array $creations = array())
+    public function edit(AbstractResource $resource, Role $role, array $permissions, array $creations = array())
     {
         $rights = $this->rightsRepo->findOneBy(array('resource' => $resource, 'role' => $role));
         $this->writer->edit($rights, $permissions, $creations);
@@ -90,9 +101,9 @@ class RightsManager
         return $rights;
     }
 
-    public function cloneRights(AbstractResource $parent, AbstractResource $resource)
+    public function copy(AbstractResource $original, AbstractResource $resource)
     {
-       $resourceRights = $this->rightsRepo->findBy(array('resource' => $parent));
+       $resourceRights = $this->rightsRepo->findBy(array('resource' => $original));
        $created = array();
 
        foreach ($resourceRights as $resourceRight) {
@@ -102,44 +113,6 @@ class RightsManager
        return $created;
     }
 
-    /**
-     * Sets the resource rights of a resource.
-     * Expects an array of role of the following form:
-     * array('ROLE_WS_MANAGER' => array('canOpen' => true, 'canEdit' => false', ...)
-     * The 'canCopy' key must contain an array of resourceTypes name.
-     * The role array must be structured this way:
-     * 'ROLE_WS_MANAGER' => $entity
-     */
-    public function setRights(AbstractResource $resource, array $rights)
-    {
-        foreach ($rights as $data) {
-            $resourceTypes = $this->checkResourceTypes($data['canCreate']);
-            $this->writer->create($data, $resourceTypes, $resource, $data['role']);
-        }
-    }
-
-    public function setAdminRights($resource)
-    {
-        $resourceTypes = $this->resourceTypeRepo->findAll();
-
-        $this->writer->create(
-            $this->getTruePermissions(),
-            $resourceTypes,
-            $resource,
-            $this->roleRepo->findOneBy(array('name' => 'ROLE_ADMIN'))
-        );
-    }
-
-
-    public function setAnonymousRights($resource)
-    {
-        $this->writer->create(
-            $this->getFalsePermissions(),
-            array(),
-            $resource,
-            $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS'))
-        );
-    }
     /**
      * @param \Claroline\CoreBundle\Entity\Role $role
      * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
@@ -163,59 +136,21 @@ class RightsManager
             }
 
             if (!$found) {
-                $finalRights[] = $this->writer->create($this->getFalsePermissions(), array(), $resource, $role);
+                $finalRights[] = $this->writer->create(
+                    array(
+                        'canDelete' => false,
+                        'canOpen' => false,
+                        'canEdit' => false,
+                        'canCopy' => false,
+                        'canExport' => false,
+                    ),
+                    array(),
+                    $resource,
+                    $role
+                );
             }
         }
 
         return $finalRights;
-    }
-
-    public function getFalsePermissions()
-    {
-        return array(
-            'canCopy' => false,
-            'canOpen' => false,
-            'canDelete' => false,
-            'canEdit' => false,
-            'canExport' => false
-        );
-    }
-
-    public function getTruePermissions()
-    {
-        return array(
-            'canCopy' => true,
-            'canOpen' => true,
-            'canDelete' => true,
-            'canEdit' => true,
-            'canExport' => true
-        );
-    }
-
-    private function checkResourceTypes(array $resourceTypes)
-    {
-        $validTypes = array();
-        $unknownTypes = array();
-        foreach ($resourceTypes as $type) {
-            //@todo write findByNames method.
-            $rt = $this->resourceTypeRepo->findOneByName($type);
-            if ($rt === null) {
-                $unknownTypes[] = $type['name'];
-            } else {
-                $validTypes[] = $rt;
-            }
-        }
-
-        if (count($unknownTypes) > 0) {
-            $content = "The resource type(s) ";
-            foreach ($unknownTypes as $unknown) {
-                $content .= "{$unknown}, ";
-            }
-            $content .= "were not found";
-
-            throw new \Exception($content);
-        }
-
-        return $validTypes;
     }
 }
