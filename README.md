@@ -1,15 +1,20 @@
-Project setup
-=============
+Claroline Connect
+=================
 
-- [Requirements](#requirements)
-- [Quick start](#quick-start)
-- [Quick update](#quick-update)
-- [Plugin installation](#plugin-installation)
+- [Project setup](#project-setup)
+  - [Requirements](#requirements)
+  - [Quick start](#quick-start)
+  - [Quick update](#quick-update)
+  - [Plugin installation](#plugin-installation)
 - [Development tools](#development-tools)
+  - [Build and Static analysis](#build-and-static-analysis)
+  - [Miscellaneous](#miscellaneous)
 - [Documentation](#documentation)
 
-Requirements
-------------
+Project setup
+-------------
+
+### Requirements
 
 - PHP >= 5.3.3
 - PHP extensions :
@@ -19,8 +24,7 @@ Requirements
         - [ffmpeg][2] (for video thumbnail creation)
 - A global installation of [composer][3] (for dependency management)
 
-Quick start
------------
+### Quick start
 
 Clone the project and its associated plugins with:
 
@@ -58,8 +62,7 @@ Symfony2, read [this][5].
 Open your browser and go to *[site]/web/app.php* for production environment or
 *[site]/web/app_dev.php* for development environment.
 
-Quick update
-------------
+### Quick update
 
 To update your installation to the last development state, use :
 
@@ -77,8 +80,7 @@ $ php app/dev/raw_install
 ***Warning*** : this is a quick dev tool, it will drop existing databases
 (both prod and test) and create new ones.
 
-Plugin installation
--------------------
+### Plugin installation
 
 You can install or uninstall a plugin with:
 
@@ -94,10 +96,9 @@ $ git submodule add 'http://github.com/vendor/SomeBundle.git' 'src/plugin/Vendor
 ```
 
 Development tools
-=================
+-----------------
 
-Testing
--------
+### Testing
 
 In order to run the test suite you must have [phpunit][6] installed on your
 system.
@@ -113,8 +114,7 @@ Run the tests for a single directory with:
 $ phpunit -c app 'src/core/Claroline/CoreBundle'
 ```
 
-Build / Static analysis
------------------------
+### Build and Static analysis
 
 The *app/build/tools* directory gathers configuration files for various
 analysis and build tools (PHPMD, PHPCS, JSHint, Ant, etc.).
@@ -122,10 +122,9 @@ analysis and build tools (PHPMD, PHPCS, JSHint, Ant, etc.).
 You can install and use them locally (see their respective documentation for
 usage) or visit our continuous integration server [here][7].
 
-Miscellaneous
--------------
+### Miscellaneous
 
-To have the core Less and TwigJs assets automatically processed and dumped when
+To have the core **Less** and **TwigJs** assets automatically processed and dumped when
 they have changed, you can run the provided [watchr][8] script:
 
 ```sh
