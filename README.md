@@ -1,5 +1,5 @@
-Claroline Connect
-=================
+README
+======
 
 - [Project setup](#project-setup)
   - [Requirements](#requirements)
@@ -7,6 +7,7 @@ Claroline Connect
   - [Quick update](#quick-update)
   - [Plugin installation](#plugin-installation)
 - [Development tools](#development-tools)
+  - [Testing](#testing)
   - [Build and Static analysis](#build-and-static-analysis)
   - [Miscellaneous](#miscellaneous)
 - [Documentation](#documentation)
@@ -29,7 +30,7 @@ Project setup
 Clone the project and its associated plugins with:
 
 ```sh
-$ git clone --recursive 'https://github.com/claroline/Claroline.git'
+$ git clone --recursive https://github.com/claroline/Claroline.git
 ```
 
 Checkout the master branch of each plugin with:
@@ -92,7 +93,7 @@ $ php app/console claroline:plugin:uninstall [vendor] [bundle short name]
 A new plugin can be added to the module list with :
 
 ```sh
-$ git submodule add 'http://github.com/vendor/SomeBundle.git' 'src/plugin/Vendor/SomeBundle'
+$ git submodule add http://github.com/vendor/SomeBundle.git src/plugin/Vendor/SomeBundle
 ```
 
 Development tools
@@ -111,7 +112,7 @@ $ phpunit -c app
 Run the tests for a single directory with:
 
 ```sh
-$ phpunit -c app 'src/core/Claroline/CoreBundle'
+$ phpunit -c app src/core/Claroline/CoreBundle
 ```
 
 ### Build and Static analysis
@@ -128,7 +129,7 @@ To have the core **Less** and **TwigJs** assets automatically processed and dump
 they have changed, you can run the provided [watchr][8] script:
 
 ```sh
-$ watchr 'src/core/Claroline/CoreBundle/Resources/watchr/refresh_assets.rb'
+$ watchr src/core/Claroline/CoreBundle/Resources/watchr/refresh_assets.rb
 ```
 
 Documentation
