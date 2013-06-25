@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Library\WorkspaceTag;
+namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
@@ -9,16 +9,17 @@ use Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy;
 use Claroline\CoreBundle\Repository\WorkspaceTagRepository;
 use Claroline\CoreBundle\Repository\RelWorkspaceTagRepository;
+use Claroline\CoreBundle\Writer\WorkspaceTagWriter;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Service("claroline.workspace_tag.manager")
+ * @DI\Service("claroline.manager.workspace_tag_manager")
  */
-class Manager
+class WorkspaceTagManager
 {
     private $tagRepo;
     private $relTagRepo;
-    private $writer;
+    private $workspaceTagWriter;
 
     /**
      * Constructor.
@@ -26,32 +27,32 @@ class Manager
      * @DI\InjectParams({
      *     "tagRepo" = @DI\Inject("workspace_tag_repository"),
      *     "relTagRepo" = @DI\Inject("rel_workspace_tag_repository"),
-     *     "writer" = @DI\Inject("claroline.workspace_tag.writer")
+     *     "workspaceTagWriter" = @DI\Inject("claroline.writer.workspace_tag_writer")
      * })
      */
     public function __contruct(
         WorkspaceTagRepository $tagRepo,
         RelWorkspaceTagRepository $relTagRepo,
-        Writer $writer
+        WorkspaceTagWriter $workspaceTagWriter
     )
     {
         $this->tagRepo = $tagRepo;
         $this->relTagRepo = $relTagRepo;
-        $this->writer = $writer;
+        $this->workspaceTagWriter = $workspaceTagWriter;
     }
 
-    public function persist(WorkspaceTag $tag) {
-        $this->writer->persist($tag);
+    public function insert(WorkspaceTag $tag) {
+        $this->workspaceTagWriter->insert($tag);
     }
 
     public function createTag($name, User $user = null)
     {
-        return $this->writer->createTag($name, $user);
+        return $this->workspaceTagWriter->createTag($name, $user);
     }
 
     public function deleteTag(WorkspaceTag $tag)
     {
-        $this->writer->deleteTag($tag);
+        $this->workspaceTagWriter->deleteTag($tag);
     }
 
     public function deleteAllTags(User $user = null)
@@ -59,34 +60,34 @@ class Manager
         $tags = $this->tagRepo->findByUser($user);
 
         foreach ($tags as $tag) {
-            $this->writer->deleteTag($tag);
+            $this->workspaceTagWriter->deleteTag($tag);
         }
     }
 
     public function createTagRelation(WorkspaceTag $tag, AbstractWorkspace $workspace)
     {
-        return $this->writer->createTagRelation($tag, $workspace);
+        return $this->workspaceTagWriter->createTagRelation($tag, $workspace);
     }
 
     public function deleteTagRelation(RelWorkspaceTag $relWorkspaceTag)
     {
-        $this->writer->deleteTagRelation($relWorkspaceTag);
+        $this->workspaceTagWriter->deleteTagRelation($relWorkspaceTag);
     }
 
     public function deleteRelWorkspaceTag(WorkspaceTag $tag, AbstractWorkspace $workspace)
     {
         $relWorkspaceTag = $this->relTagRepo->findBy(array('tag' => $tag, 'workspace' => $workspace));
 
-        $this->writer->deleTagRelation($relWorkspaceTag);
+        $this->workspaceTagWriter->deleTagRelation($relWorkspaceTag);
     }
 
     public function createTagHierarchy(WorkspaceTag $tag, WorkspaceTag $parent, $level)
     {
-        return $this->writer->createTagHierarchy($tag, $parent, $level);
+        return $this->workspaceTagWriter->createTagHierarchy($tag, $parent, $level);
     }
 
     public function deleteTagHierarchy(WorkspaceTagHierarchy $tagHierarchy)
     {
-        $this->writer->deleteTagHierarchy($tagHierarchy);
+        $this->workspaceTagWriter->deleteTagHierarchy($tagHierarchy);
     }
 }

@@ -30,7 +30,7 @@ class LoadRelWorkspaceTagData extends LoggableFixture implements ContainerAwareI
             foreach ($data['tags'] as $tagName) {
                 $tag = $this->getReference('tag/' . $tagName);
 
-                $this->container->get('claroline.workspace_tag.manager')->createTagRelation(
+                $this->container->get('claroline.manager.workspace_tag_manager')->createTagRelation(
                     $tag,
                     $workspace
                 );

@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Library\WorkspaceTag;
+namespace Claroline\CoreBundle\Writer;
 
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag;
@@ -11,9 +11,9 @@ use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Service("claroline.workspace_tag.writer")
+ * @DI\Service("claroline.writer.workspace_tag_writer")
  */
-class Writer
+class WorkspaceTagWriter
 {
     private $em;
 
@@ -27,7 +27,7 @@ class Writer
         $this->em = $em;
     }
 
-    public function persist(WorkspaceTag $tag)
+    public function insert(WorkspaceTag $tag)
     {
         $this->em->persist($tag);
         $this->em->flush();
