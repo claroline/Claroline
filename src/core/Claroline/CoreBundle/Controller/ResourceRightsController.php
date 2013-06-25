@@ -312,8 +312,9 @@ class ResourceRightsController extends Controller
             array_keys($parameters['resourceTypes']) :
             array();
 
-        $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-            ->findByIds($resourceTypeIds);
+        $resourceTypes = count($resourceTypeIds) > 0 ?
+            $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findByIds($resourceTypeIds) :
+            array();
 
         $editedResourceRightsWithChangeSet = $this->setNewCreationTypes($targetResources, $resourceTypes, $role);
 
