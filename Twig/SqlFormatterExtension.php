@@ -16,6 +16,9 @@ class SqlFormatterExtension extends \Twig_Extension
     {
         Formatter::$tab = '    ';
         Formatter::setKeywordFormattingOptions(array(
+            'SELECT' => Formatter::KEYWORD_NEWLINE,
+            'FROM' => Formatter::KEYWORD_NEWLINE,
+            'WHERE' => Formatter::KEYWORD_NEWLINE,
             'DROP' => Formatter::KEYWORD_NEWLINE,
             'ALTER TABLE' => Formatter::KEYWORD_NEWLINE,
             'ADD' => Formatter::KEYWORD_NEWLINE,
