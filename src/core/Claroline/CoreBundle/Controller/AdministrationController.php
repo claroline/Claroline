@@ -330,6 +330,9 @@ class AdministrationController extends Controller
         if ($form->isValid()) {
             $group = $form->getData();
             $em = $this->getDoctrine()->getManager();
+            $userRole = $em->getRepository('ClarolineCoreBundle:Role')
+                ->findOneByName('ROLE_USER');
+            $group->setPlatformRole($userRole);
             $em->persist($group);
             $em->flush();
 
