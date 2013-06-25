@@ -203,6 +203,7 @@ class WorkspaceTagController extends Controller
         }
 
         $em = $this->get('doctrine.orm.entity_manager');
+        $tagManager = $this->get('claroline.manager.workspace_tag_manager');
         $workspaceTag = new WorkspaceTag();
         $workspaceTag->setUser($user);
 
@@ -211,14 +212,8 @@ class WorkspaceTagController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em->persist($workspaceTag);
-            $hierarchy = new WorkspaceTagHierarchy();
-            $hierarchy->setUser($user);
-            $hierarchy->setTag($workspaceTag);
-            $hierarchy->setParent($workspaceTag);
-            $hierarchy->setLevel(0);
-            $em->persist($hierarchy);
-            $em->flush();
+            $tagManager->insert($workspaceTag);
+            $tagManager->createTagHierarchy($workspaceTag, $workspaceTag, 0);
 
             return $this->redirect(
                 $this->generateUrl('claro_workspace_manage_tag')
@@ -252,6 +247,7 @@ class WorkspaceTagController extends Controller
             throw new AccessDeniedException();
         }
         $em = $this->get('doctrine.orm.entity_manager');
+        $tagManager = $this->get('claroline.manager.workspace_tag_manager');
         $workspaceTag = new WorkspaceTag();
         $workspaceTag->setUser(null);
 
@@ -260,14 +256,8 @@ class WorkspaceTagController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em->persist($workspaceTag);
-            $hierarchy = new WorkspaceTagHierarchy();
-            $hierarchy->setUser(null);
-            $hierarchy->setTag($workspaceTag);
-            $hierarchy->setParent($workspaceTag);
-            $hierarchy->setLevel(0);
-            $em->persist($hierarchy);
-            $em->flush();
+            $tagManager->insert($workspaceTag);
+            $tagManager->createTagHierarchy($workspaceTag, $workspaceTag, 0);
 
             return $this->redirect(
                 $this->generateUrl('claro_workspace_manage_admin_tag')
@@ -301,6 +291,7 @@ class WorkspaceTagController extends Controller
         }
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
+        $tagManager = $this->get('claroline.manager.workspace_tag_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
         if (is_null($user) || is_null($workspace)) {
@@ -313,28 +304,15 @@ class WorkspaceTagController extends Controller
             ->findOneBy(array('name' => $tagName, 'user' => $user->getId()));
 
         if ($tag === null) {
-            $tag = new WorkspaceTag();
-            $tag->setName($tagName);
-            $tag->setUser($user);
-            $em->persist($tag);
-            $hierarchy = new WorkspaceTagHierarchy();
-            $hierarchy->setUser($user);
-            $hierarchy->setTag($tag);
-            $hierarchy->setParent($tag);
-            $hierarchy->setLevel(0);
-            $em->persist($hierarchy);
-            $em->flush();
+            $tag = $tagManager->createTag($tagName, $user);
+            $tagManager->createTagHierarchy($tag, $tag, 0);
         }
 
         $relWsTag = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
             ->findOneByWorkspaceAndTagAndUser($workspace, $tag, $user);
 
         if ($relWsTag == null) {
-            $relWsTag = new RelWorkspaceTag();
-            $relWsTag->setWorkspace($workspace);
-            $relWsTag->setTag($tag);
-            $em->persist($relWsTag);
-            $em->flush();
+            $tagManager->createTagRelation($tag, $workspace);
         }
 
         return new Response('success', 204);
@@ -362,6 +340,7 @@ class WorkspaceTagController extends Controller
             throw new AccessDeniedException();
         }
         $em = $this->get('doctrine.orm.entity_manager');
+        $tagManager = $this->get('claroline.manager.workspace_tag_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
         if (is_null($workspace)) {
@@ -372,28 +351,15 @@ class WorkspaceTagController extends Controller
             ->findOneBy(array('name' => $tagName, 'user' => null));
 
         if ($tag === null) {
-            $tag = new WorkspaceTag();
-            $tag->setName($tagName);
-            $tag->setUser(null);
-            $em->persist($tag);
-            $hierarchy = new WorkspaceTagHierarchy();
-            $hierarchy->setUser(null);
-            $hierarchy->setTag($tag);
-            $hierarchy->setParent($tag);
-            $hierarchy->setLevel(0);
-            $em->persist($hierarchy);
-            $em->flush();
+            $tag = $tagManager->createTag($tagName);
+            $tagManager->createTagHierarchy($tag, $tag, 0);
         }
 
         $relWsTag = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
             ->findOneAdminByWorkspaceAndTag($workspace, $tag);
 
         if ($relWsTag === null) {
-            $relWsTag = new RelWorkspaceTag();
-            $relWsTag->setWorkspace($workspace);
-            $relWsTag->setTag($tag);
-            $em->persist($relWsTag);
-            $em->flush();
+            $tagManager->createTagRelation($tag, $workspace);
         }
 
         return new Response('success', 204);
@@ -419,6 +385,7 @@ class WorkspaceTagController extends Controller
     public function removeTagFromWorkspace($userId, $workspaceId, $workspaceTagId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
+        $tagManager = $this->get('claroline.manager.workspace_tag_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
         $workspaceTag = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')->find($workspaceTagId);
         $user = $this->get('security.context')->getToken()->getUser();
@@ -435,8 +402,7 @@ class WorkspaceTagController extends Controller
 
         $relWorkspaceTag = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
             ->findOneByWorkspaceAndTagAndUser($workspace, $workspaceTag, $user);
-        $em->remove($relWorkspaceTag);
-        $em->flush();
+        $tagManager->deleteTagRelation($relWorkspaceTag);
 
         return new Response('success', 204);
     }
@@ -463,6 +429,7 @@ class WorkspaceTagController extends Controller
             throw new AccessDeniedException();
         }
         $em = $this->get('doctrine.orm.entity_manager');
+        $tagManager = $this->get('claroline.manager.workspace_tag_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
         $workspaceTag = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')->find($workspaceTagId);
 
@@ -472,8 +439,7 @@ class WorkspaceTagController extends Controller
 
         $relWorkspaceTag = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
             ->findOneAdminByWorkspaceAndTag($workspace, $workspaceTag);
-        $em->remove($relWorkspaceTag);
-        $em->flush();
+        $tagManager->deleteTagRelation($relWorkspaceTag);
 
         return new Response('success', 204);
     }
@@ -673,6 +639,7 @@ class WorkspaceTagController extends Controller
         if (is_array($children) && count($children) > 0) {
 
             $em = $this->get('doctrine.orm.entity_manager');
+            $tagManager = $this->get('claroline.manager.workspace_tag_manager');
             $tag = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
                 ->findOneById($tagId);
             // Get all hierarchies where param $tag is a child
@@ -680,20 +647,18 @@ class WorkspaceTagController extends Controller
                 ->findBy(array('user' => null , 'tag' => $tag));
             // Get all hierarchies where parent is in param
             $childrenhierarchies = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTagHierarchy')
-                ->findAllAdminHierarchiesByParents($children);
+                ->findAdminHierarchiesByParents($children);
 
             foreach ($childrenhierarchies as $childHierarchy) {
 
                 foreach ($tagsHierarchy as $tagHierarchy) {
-                    $hierarchy = new WorkspaceTagHierarchy();
-                    $hierarchy->setUser(null);
-                    $hierarchy->setTag($childHierarchy->getTag());
-                    $hierarchy->setParent($tagHierarchy->getParent());
-                    $hierarchy->setLevel($childHierarchy->getLevel() + $tagHierarchy->getLevel() + 1);
-                    $em->persist($hierarchy);
+                    $tagManager->createTagHierarchy(
+                        $childHierarchy->getTag(),
+                        $tagHierarchy->getParent(),
+                        $childHierarchy->getLevel() + $tagHierarchy->getLevel() + 1
+                    );
                 }
             }
-            $em->flush();
         }
 
         return new Response('success', 204);
@@ -725,6 +690,7 @@ class WorkspaceTagController extends Controller
         $children = explode(',', $childrenString);
 
         if (is_array($children) && count($children) > 0) {
+            $tagManager = $this->get('claroline.manager.workspace_tag_manager');
 
             $tag = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
                 ->findOneBy(array('user' => $user, 'id' => $tagId));
@@ -733,20 +699,18 @@ class WorkspaceTagController extends Controller
                 ->findBy(array('user' => $user , 'tag' => $tag));
             // Get all hierarchies where parent is in param
             $childrenhierarchies = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTagHierarchy')
-                ->findAllHierarchiesByParents($user, $children);
+                ->findHierarchiesByParents($user, $children);
 
             foreach ($childrenhierarchies as $childHierarchy) {
 
                 foreach ($tagsHierarchy as $tagHierarchy) {
-                    $hierarchy = new WorkspaceTagHierarchy();
-                    $hierarchy->setUser($user);
-                    $hierarchy->setTag($childHierarchy->getTag());
-                    $hierarchy->setParent($tagHierarchy->getParent());
-                    $hierarchy->setLevel($childHierarchy->getLevel() + $tagHierarchy->getLevel() + 1);
-                    $em->persist($hierarchy);
+                    $tagManager->createTagHierarchy(
+                        $childHierarchy->getTag(),
+                        $tagHierarchy->getParent(),
+                        $childHierarchy->getLevel() + $tagHierarchy->getLevel() + 1
+                    );
                 }
             }
-            $em->flush();
         }
 
         return new Response('success', 204);
@@ -778,6 +742,7 @@ class WorkspaceTagController extends Controller
         if (is_array($children) && count($children) > 0) {
 
             $em = $this->get('doctrine.orm.entity_manager');
+            $tagManager = $this->get('claroline.manager.workspace_tag_manager');
             $tag = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
                 ->findOneById($tagId);
 
@@ -847,12 +812,10 @@ class WorkspaceTagController extends Controller
 
                         $levelCount[$currentTagId][$level]--;
                         unset($multiHierarchies[$index]);
-                        $em->remove($singleHierarchy);
+                        $tagManager->deleteTagHierarchy($singleHierarchy);
                     }
                 }
             }
-
-            $em->flush();
         }
 
         return new Response('success', 204);
@@ -884,6 +847,7 @@ class WorkspaceTagController extends Controller
         $children = explode(',', $childrenString);
 
         if (is_array($children) && count($children) > 0) {
+            $tagManager = $this->get('claroline.manager.workspace_tag_manager');
 
             $tag = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
                 ->findOneBy(array('user' => $user, 'id' => $tagId));
@@ -954,12 +918,10 @@ class WorkspaceTagController extends Controller
 
                         $levelCount[$currentTagId][$level]--;
                         unset($multiHierarchies[$index]);
-                        $em->remove($singleHierarchy);
+                        $tagManager->deleteTagHierarchy($singleHierarchy);
                     }
                 }
             }
-
-            $em->flush();
         }
 
         return new Response('success', 204);
