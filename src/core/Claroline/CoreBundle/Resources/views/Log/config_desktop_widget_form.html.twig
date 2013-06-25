@@ -1,5 +1,7 @@
 {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
 
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+
 <style type="text/css">
     #form_log_update_desktop_widget .control-group {
         margin-bottom: 0px;
@@ -10,13 +12,16 @@
         margin-bottom: 20px;
     }
 </style>
-
-<legend>{{ 'Choose workspaces displayed in the widget'|trans({}, 'platform') }}</legend>
 <form id="form_log_update_desktop_widget"
     method="POST"
-    action="{{ path('claro_log_update_desktop_widget_config', {'redirectToHome': app.request.isXMLHttpRequest ? 1 : 0})}}"
+    action="{{ path('claro_log_update_desktop_widget_config', {'isDefault': isDefault, 'redirectToHome': app.request.isXMLHttpRequest ? 1 : 0})}}"
+    
     class="form-horizontal"
     {{ form_enctype(form) }}>
+    {% if not isDefault %}
+        <legend>{{ 'Choose workspaces displayed in the widget'|trans({}, 'platform') }}</legend>
+    {% endif %}
+
     <fieldset>
         {{ form_widget(form._token) }}
         {{ form_widget(form) }}

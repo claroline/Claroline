@@ -11,6 +11,7 @@ use Claroline\CoreBundle\Library\Event\LogResourceChildUpdateEvent;
 use Claroline\CoreBundle\Form\LogWorkspaceWidgetConfigType;
 use Claroline\CoreBundle\Form\LogDesktopWidgetConfigType;
 use Claroline\CoreBundle\Entity\Logger\LogWorkspaceWidgetConfig;
+use Claroline\CoreBundle\Entity\Logger\LogDesktopWidgetConfig;
 use Claroline\CoreBundle\Entity\Logger\LogHiddenWorkspaceWidgetConfig;
 
 /**
@@ -19,11 +20,12 @@ use Claroline\CoreBundle\Entity\Logger\LogHiddenWorkspaceWidgetConfig;
 class LogController extends Controller
 {
 
-    private function convertFormDataToConfig($config, $data, $workspace)
+    private function convertFormDataToConfig($config, $data, $workspace, $isDefault)
     {
         if ($config === null) {
             $config = new LogWorkspaceWidgetConfig();    
         }
+        $config->setIsDefault($isDefault);
         
         $config->setResourceCopy($data['creation'] === true);
         $config->setResourceCreate($data['creation'] === true);
@@ -99,18 +101,32 @@ class LogController extends Controller
 
     /**
      * @Route(
-     *     "/update_workspace_widget_config/{workspaceId}/{redirectToHome}",
+     *     "/update_workspace_widget_config/{isDefault}/{workspaceId}/{redirectToHome}",
      *     name="claro_log_update_workspace_widget_config",
-     *     defaults={"redirectToHome" = 0}
+     *     defaults={"isDefault" = 0, "workspaceId" = 0, "redirectToHome" = 0}
      * )
      * @Method("POST")
      */
-    public function updateLogWorkspaceWidgetConfig($workspaceId, $redirectToHome)
+    public function updateLogWorkspaceWidgetConfig($isDefault, $workspaceId, $redirectToHome)
     {
+        $isDefault = (boolean)$isDefault;
+        $redirectToHome = (boolean)$redirectToHome;
+
         $em = $this->getDoctrine()->getManager();
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-        $config = $em->getRepository('ClarolineCoreBundle:Logger\LogWorkspaceWidgetConfig')
-            ->findOneBy(array('workspace' => $workspace));
+
+        if ($isDefault) {
+            $workspace = null;
+            $config = $this->get('claroline.log.manager')->getDefaultWorkspaceWidgetConfig();
+        } else {
+            $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+            $config = $this->get('claroline.log.manager')->getWorkspaceWidgetConfig($workspace);
+        }
+
+        if ($config === null) {
+            $config = new LogWorkspaceWidgetConfig();
+            $config->setIsDefault($isDefault);
+            $config->setWorkspace($workspace);
+        }
 
         $form = $this->get('form.factory')->create(new LogWorkspaceWidgetConfigType(), null);
 
@@ -118,7 +134,7 @@ class LogController extends Controller
         $translator = $this->get('translator');
         if ($form->isValid()) {
             $data = $form->getData();
-            $config = $this->convertFormDataToConfig($config, $data, $workspace);
+            $config = $this->convertFormDataToConfig($config, $data, $workspace, $isDefault);
 
             $em->persist($config);
             $em->flush();
@@ -135,15 +151,27 @@ class LogController extends Controller
         }
         $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneByName('home');
 
-        if ($redirectToHome === 0) {
+        if ($isDefault === true) {
+            $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
+                ->findOneBy(array('name' => 'core_resource_logger'));
+
+            return $this->redirect(
+                $this->generateUrl(
+                    'claro_admin_widget_configuration_workspace', array('widgetId' => $widget->getId())
+                )
+            );
+        } else if ($redirectToHome === false) {
+
             return $this->render(
                 'ClarolineCoreBundle:Log:config_workspace_form_update.html.twig', array(
                 'form' => $form->createView(),
                 'workspace' => $workspace,
-                'tool' => $tool
+                'tool' => $tool,
+                'isDefault' => $config->getIsDefault() ? 1 : 0
                 )
             );
         } else {
+
             return $this->redirect(
                 $this->generateUrl(
                     'claro_workspace_open_tool', array('workspaceId' => $workspaceId, 'toolName' => 'home')
@@ -154,24 +182,42 @@ class LogController extends Controller
 
     /**
      * @Route(
-     *     "/update_desktop_widget_config/{redirectToHome}",
+     *     "/update_desktop_widget_config/{isDefault}/{redirectToHome}",
      *     name="claro_log_update_desktop_widget_config",
-     *     defaults={"redirectToHome" = 0}
+     *     defaults={"isDefault" = 0, "redirectToHome" = 0}
      * )
      * @Method("POST")
      */
-    public function updateDesktopWidgetConfig($redirectToHome)
+    public function updateDesktopWidgetConfig($isDefault, $redirectToHome)
     {
+        $isDefault = (bool)$isDefault;
+        $redirectToHome = (bool)$redirectToHome;
+
         $em = $this->getDoctrine()->getManager();
-        $loggedUser = $this->get('security.context')->getToken()->getUser();
 
-        $config = $this->get('claroline.log.manager')->getDesktopWidgetConfig($loggedUser);
-        $hiddenConfigs = $em->getRepository('ClarolineCoreBundle:Logger\LogHiddenWorkspaceWidgetConfig')
-            ->findBy(array('user' => $loggedUser));
+        if ($isDefault) {
+            $user = null;
+            $hiddenConfigs = array();
+            $workspaces = array();
+        } else {
+            $user = $this->get('security.context')->getToken()->getUser();
+            $hiddenConfigs = $em->getRepository('ClarolineCoreBundle:Logger\LogHiddenWorkspaceWidgetConfig')
+                ->findBy(array('user' => $user));
+            $workspaces = $em
+                ->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
+                ->findByUserAndRoleNames($user, array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'));
+        }
+        if ($isDefault === true) {
+            $config = $this->get('claroline.log.manager')->getDefaultDesktopWidgetConfig();
+        } else {
+            $config = $this->get('claroline.log.manager')->getDesktopWidgetConfig($user);
+        }
 
-        $workspaces = $em
-            ->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
-            ->findByUserAndRoleNames($loggedUser, array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'));
+        if ($config === null) {
+            $config = new LogDesktopWidgetConfig();
+            $config->setIsDefault($isDefault);
+            $config->setUser($user);
+        }
 
         $form = $this->get('form.factory')->create(new LogDesktopWidgetConfigType(), null, array('workspaces' => $workspaces));
         $form->bind($this->getRequest());
@@ -179,16 +225,16 @@ class LogController extends Controller
         $translator = $this->get('translator');
         if ($form->isValid()) {
             $data = $form->getData();
-            // remove all hiddenConfigs for loggedUser
+            // remove all hiddenConfigs for user
             foreach ($hiddenConfigs as $hiddenConfig) {
                 $em->remove($hiddenConfig);
             }
             $em->flush();
-            // add hiddenConfigs from formData for loggedUser
+            // add hiddenConfigs from formData for user
             foreach ($data as $workspaceId => $visible) {
                 if ($workspaceId != 'amount' and $visible !== true) {
                     $hiddenConfig = new LogHiddenWorkspaceWidgetConfig();
-                    $hiddenConfig->setUser($loggedUser);
+                    $hiddenConfig->setUser($user);
                     $hiddenConfig->setWorkspaceId($workspaceId);
                     $em->persist($hiddenConfig);
                 }
@@ -204,14 +250,26 @@ class LogController extends Controller
         }
         $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneByName('home');
 
-        if ($redirectToHome === 0) {
-           return $this->render(
+        if ($isDefault === true) {
+            $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
+                ->findOneBy(array('name' => 'core_resource_logger'));
+
+            return $this->redirect(
+                $this->generateUrl(
+                    'claro_admin_widget_configuration_desktop', array('widgetId' => $widget->getId())
+                )
+            );
+        } else if ($redirectToHome === false) {
+
+            return $this->render(
                 'ClarolineCoreBundle:Log:config_desktop_form_update.html.twig', array(
-                'form' => $form->createView(),
-                'tool' => $tool
+                    'form' => $form->createView(),
+                    'tool' => $tool,
+                    'isDefault' => $config->getIsDefault() ? 1 : 0
                 )
             );
         } else {
+
             return $this->redirect($this->generateUrl('claro_desktop_open', array()));
         }
     }

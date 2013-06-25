@@ -397,7 +397,11 @@ class WorkspaceController extends Controller
                         $widget['title'] = strtolower($config->getWidget()->getName());
                     }
                     $widget['content'] = $event->getContent();
-                    $widget['configurable'] = ($rightToConfigure and $config->getWidget()->isConfigurable());
+                    $widget['configurable'] = (
+                        $rightToConfigure 
+                        and $config->isLocked() !== true 
+                        and $config->getWidget()->isConfigurable()
+                    );
 
                     $widgets[] = $widget;
                 }
