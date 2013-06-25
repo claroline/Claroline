@@ -56,7 +56,7 @@ First you must define a listener to catch the event.
         ...
     }
 
-You can know for wich workspace the configuration change is asked using
+You can know for which workspace the configuration change is asked using
 
     $workspace = $event->getWorkspace();
 
@@ -75,7 +75,7 @@ You'll need to return the configuration form html to the kernel.
     $event->setContent($content);
     $event->stopPropagation();
 
-The action of the form should redirect to one of your controller wich will persist the modification to the configuration.
+The action of the form should redirect to one of your controller which will persist the modification to the configuration.
 You'll have to take care of the redirection once the change are persisted.
 You'll want to redirect to these routes depending on the context:
 
