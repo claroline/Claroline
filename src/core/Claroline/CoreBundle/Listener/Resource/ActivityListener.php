@@ -45,7 +45,7 @@ class ActivityListener implements ContainerAwareInterface
     {
         $form = $this->container->get('form.factory')->create(new ActivityType, new Activity());
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:create_form.html.twig',
+            'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'activity'
@@ -66,7 +66,7 @@ class ActivityListener implements ContainerAwareInterface
         $form = $this->container
             ->get('form.factory')
             ->create(new ActivityType(), new Activity());
-        $form->bindRequest($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $event->setResource($form->getData());
@@ -76,7 +76,7 @@ class ActivityListener implements ContainerAwareInterface
         }
 
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:create_form.html.twig',
+            'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'activity'

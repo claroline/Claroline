@@ -1,0 +1,17 @@
+<form novalidate="novalidate"
+      action="{{ path('claro_resource_edit_properties', {'resourceId': '_resourceId'}) }}"
+      method="post" {{ form_enctype(form) }}
+      id="resource-properties-form"
+      class="form-horizontal">
+
+    <div class="tab-content">
+        {{ form_errors(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.userIcon) }}
+        {{ form_row(form.creationDate) }}
+        {{ form_row(form.resourceType) }}
+        {{ form_row(form.creator) }}
+        {{ form_rest(form) }}
+        <input type="submit" value="{{ 'ok'|trans({}, 'platform') }}"/>
+    </div>
+</form>

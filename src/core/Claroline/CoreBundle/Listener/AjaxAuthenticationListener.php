@@ -43,7 +43,7 @@ class AjaxAuthenticationListener
         if ($request->isXmlHttpRequest()
             && get_class($exception) == 'Symfony\Component\Security\Core\Exception\AccessDeniedException') {
             $form = $this->templating->render(
-                'ClarolineCoreBundle:Authentication:login_ajax_form.html.twig'
+                'ClarolineCoreBundle:Authentication:loginAjaxForm.html.twig'
             );
 
             //@see https://github.com/gillest/HackSessionBundle

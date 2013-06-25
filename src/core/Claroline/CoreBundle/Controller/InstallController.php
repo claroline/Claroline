@@ -18,6 +18,7 @@ use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * @todo Remove all echos !
@@ -33,14 +34,14 @@ class InstallController extends Controller
      *     "/",
      *     name="claro_setup"
      * )
+     *
+     * @Template()
      */
     public function indexAction()
     {
         $this->get('translator')->setlocale('en');
 
-        return $this->render(
-            'ClarolineCoreBundle:Install:index.html.twig'
-        );
+        return array();
     }
 
     /**
@@ -48,6 +49,8 @@ class InstallController extends Controller
      *     "/permission",
      *     name="claro_permission"
      * )
+     *
+     * @Template()
      */
     public function permissionAction()
     {
@@ -76,12 +79,9 @@ class InstallController extends Controller
             $folders[$folder] = (is_writable("..{$ds}{$folder}") ? 'OK' : 'KO');
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Install:permission.html.twig',
-            array(
-                'version' => $version,
-                'folders' => $folders
-                )
+        return array(
+            'version' => $version,
+            'folders' => $folders
         );
     }
 
@@ -91,6 +91,8 @@ class InstallController extends Controller
      *     name="claro_showDbForm"
      * )
      * @Method({"POST","GET"})
+     *
+     * @Template("ClarolineCoreBundle:Install:checkupDb.html.twig")
      */
     public function showDbFormAction($lg)
     {
@@ -102,11 +104,9 @@ class InstallController extends Controller
         $install = new Install();
         $form = $this->createForm(new InstallType, $install);
 
-        return $this->render(
-            'ClarolineCoreBundle:Install:checkupDb.html.twig',
-            array(
-                'version' => $lg,
-                'form' => $form->createView())
+        return array(
+            'version' => $lg,
+            'form' => $form->createView()
         );
     }
 
@@ -116,6 +116,8 @@ class InstallController extends Controller
      *     name="claro_checkDbForm"
      * )
      * @Method("POST")
+     *
+     * @Template("ClarolineCoreBundle:Install:checkupDb.html.twig")
      */
     public function checkDbFormAction()
     {
@@ -126,7 +128,7 @@ class InstallController extends Controller
         $request = $this->get('request');
 
         if ($request->getMethod() == 'POST') {
-            $form->bind($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $postData = $request->request->get('install_form');
@@ -144,13 +146,10 @@ class InstallController extends Controller
                     if (!is_null($count['0']) && !isset($exist['exist'])) {
                         $this->get('session')->setFlash('warning', 'La base de donnée existe deja');
 
-                        return $this->render(
-                            'ClarolineCoreBundle:Install:checkupDb.html.twig',
-                            array(
-                                'form' => $form->createView(),
-                                'exist' => 1,
-                                'version' => $value['locale']
-                            )
+                        return array(
+                            'form' => $form->createView(),
+                            'exist' => 1,
+                            'version' => $value['locale']
                         );
                     }
                     if ($this->putInYml($postData, $form->getName(), 'install_form') == 1) {
@@ -169,21 +168,19 @@ class InstallController extends Controller
             } else {
                 $this->get('session')->setFlash('error', 'Veuillez completer correctement le formulaire');
 
-                return $this->render(
-                    'ClarolineCoreBundle:Install:checkupDb.html.twig',
-                    array('form' => $form->createView())
-                );
+                return array('form' => $form->createView());
             }
         }
     }
 
     /**
-    *@Route(
-    *   "/AdminForm",
-    *   name="claro_showAdminForm"
-    *)
-    *
-    */
+     *@Route(
+     *   "/AdminForm",
+     *   name="claro_showAdminForm"
+     *)
+     *
+     * @Template("ClarolineCoreBundle:Install:checkAdmin.html.twig")
+     */
     public function showAdminForm()
     {
         $value = $this->readYml(self::PATH);
@@ -191,11 +188,9 @@ class InstallController extends Controller
         $user = new User();
         $form = $this->createForm(new AdminType, $user);
 
-        return $this->render(
-            'ClarolineCoreBundle:Install:checkAdmin.html.twig',
-            array(
-                'version' => $value['locale'],
-                'form' => $form->createView())
+        return array(
+            'version' => $value['locale'],
+            'form' => $form->createView()
         );
     }
     /**
@@ -204,6 +199,8 @@ class InstallController extends Controller
      *     name="claro_checkAdminForm"
      * )
      * @Method("POST")
+     *
+     * @Template("ClarolineCoreBundle:Install:checkAdmin.html.twig")
      */
     public function checkAdminFormAction()
     {
@@ -230,21 +227,13 @@ class InstallController extends Controller
                         $this->get('session')->setFlash($i, $message);
                     }
 
-                    return $this->render(
-                        'ClarolineCoreBundle:Install:checkAdmin.html.twig',
-                        array('form' => $form->createView())
-                    );
+                    return array('form' => $form->createView());
                 }
             }
         } else {
             $this->get('session')->setFlash('error', 'Les mot de passes ne correspondent pas');
 
-            return $this->render(
-                'ClarolineCoreBundle:Install:checkAdmin.html.twig',
-                array(
-                    'form' => $form->createView()
-                )
-            );
+            return array('form' => $form->createView());
         }
     }
 
@@ -253,16 +242,15 @@ class InstallController extends Controller
      *     "/summary",
      *     name="claro_summary"
      * )
+     *
+     * @Template("ClarolineCoreBundle:Install:execute.html.twig")
      */
     public function summaryShowAction()
     {
         $value = $this->readYml(self::PATH);
         $this->get('translator')->setlocale($value['locale']);
 
-        return $this->render(
-            'ClarolineCoreBundle:Install:execute.html.twig',
-            array('value' => $value)
-        );
+        return array('value' => $value);
     }
 
     /**
@@ -271,6 +259,8 @@ class InstallController extends Controller
      *     name="claro_execute"
      * )
      * @Method("POST")
+     *
+     * @Template("ClarolineCoreBundle:Install:sucess.html.twig")
      */
     public function executeAction()
     {
@@ -324,7 +314,7 @@ class InstallController extends Controller
             );
         }
 
-        return $this->render('ClarolineCoreBundle:Install:sucess.html.twig');
+        return array();
     }
 
     /**
@@ -333,13 +323,12 @@ class InstallController extends Controller
      *     name="claro_sucess"
      * )
      * @Method("POST")
+     *
+     * @Template("ClarolineCoreBundle:Install:sucess.html.twig")
      */
     public function successAction()
     {
-
-        return $this->render(
-            'ClarolineCoreBundle:Install:sucess.html.twig'
-        );
+        return array();
     }
 
     /**
@@ -493,5 +482,4 @@ class InstallController extends Controller
             $connection->exec($sql);
         }
     }
-
 }

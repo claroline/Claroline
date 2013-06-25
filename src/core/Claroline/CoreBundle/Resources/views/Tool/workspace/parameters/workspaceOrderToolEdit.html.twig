@@ -1,0 +1,33 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block section_content %}
+
+    {{
+        macros.breadcrumbs([
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
+            },
+            {
+                'name': 'tools'|trans({}, 'platform'),
+                'href': path('claro_workspace_tools_roles', {'workspaceId': workspace.getId()})
+            },
+            {
+                'name': 'edit'|trans({}, 'platform'),
+                'href': '#'
+            }
+        ])
+    }}
+
+    <form class="form-horizontal" action="{{ path('claro_workspace_order_tool_edit', {'workspaceId': workspace.getId(), 'workspaceOrderToolId': wot.getId()}) }}" method="post" {{ form_enctype(form) }}>
+        <fieldset>
+            {{ form_widget(form) }}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+                <a href="{{ path('claro_workspace_tools_roles', {'workspaceId': workspace.getId()}) }}">
+                    <button type="button" class="btn">{{ 'cancel'|trans({}, 'platform') }}</button>
+                </a>
+            </div>
+        </fieldset>
+    </form>
+{% endblock %}

@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Claroline\CoreBundle\Form\WorkspaceType;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
@@ -33,96 +35,24 @@ class WorkspaceController extends Controller
      * )
      * @Method("GET")
      *
+     * @Template()
+     *
      * Renders the workspace list page with its claroline layout.
      *
      * @return Response
      */
     public function listAction()
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)->findNonPersonal();
-        $tags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findNonEmptyAdminTags();
-        $relTagWorkspace = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findByAdmin();
-        $tagWorkspaces = array();
+        $datas = $this->get('claroline.workspace.organizer')->getDatasForWorkspaceList(false);
 
-        // create an array: tagId => [associated_workspace_relation]
-        foreach ($relTagWorkspace as $tagWs) {
-
-            if (empty($tagWorkspaces[$tagWs['tag_id']])) {
-                $tagWorkspaces[$tagWs['tag_id']] = array();
-            }
-            $tagWorkspaces[$tagWs['tag_id']][] = $tagWs['rel_ws_tag'];
-        }
-
-        $tagsHierarchy = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTagHierarchy')
-            ->findAllAdmin();
-        $rootTags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findAdminRootTags();
-        $hierarchy = array();
-
-        // create an array : tagId => [direct_children_id]
-        foreach ($tagsHierarchy as $tagHierarchy) {
-
-            if ($tagHierarchy->getLevel() === 1) {
-
-                if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
-                    !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
-
-                    $hierarchy[$tagHierarchy->getParent()->getId()] = array();
-                }
-                $hierarchy[$tagHierarchy->getParent()->getId()][] = $tagHierarchy->getTag();
-            }
-        }
-
-        // create an array indicating which tag is displayable
-        // a tag is displayable if it or one of his children contains is associated to a workspace
-        $displayable = array();
-        $allAdminTags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findByUser(null);
-
-        foreach ($allAdminTags as $adminTag) {
-            $adminTagId = $adminTag->getId();
-            $displayable[$adminTagId] = $this->isTagDisplayable($adminTagId, $tagWorkspaces, $hierarchy);
-        }
-
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:list.html.twig',
-            array(
-                'workspaces' => $workspaces,
-                'tags' => $tags,
-                'tagWorkspaces' => $tagWorkspaces,
-                'hierarchy' => $hierarchy,
-                'rootTags' => $rootTags,
-                'displayable' => $displayable
-            )
+        return array(
+            'workspaces' => $datas['workspaces'],
+            'tags' => $datas['tags'],
+            'tagWorkspaces' => $datas['tagWorkspaces'],
+            'hierarchy' => $datas['hierarchy'],
+            'rootTags' => $datas['rootTags'],
+            'displayable' => $datas['displayable']
         );
-    }
-
-    private function isTagDisplayable($tagId, $tagWorkspaces, $hierarchy)
-    {
-        $displayable = false;
-
-        if (isset($tagWorkspaces[$tagId]) && count($tagWorkspaces[$tagId]) > 0) {
-            $displayable = true;
-        } else {
-
-            if (isset($hierarchy[$tagId]) && count($hierarchy[$tagId]) > 0) {
-                $children = $hierarchy[$tagId];
-
-                foreach ($children as $child) {
-
-                    $displayable = $this->isTagDisplayable($child->getId(), $tagWorkspaces, $hierarchy);
-
-                    if ($displayable) {
-                        break;
-                    }
-                }
-            }
-        }
-
-        return $displayable;
     }
 
     /**
@@ -132,6 +62,8 @@ class WorkspaceController extends Controller
      *     options={"expose"=true}
      * )
      * @Method("GET")
+     *
+     * @Template()
      *
      * Renders the registered workspace list for a user.
      *
@@ -192,18 +124,40 @@ class WorkspaceController extends Controller
             $displayable[$oneTagId] = $this->isTagDisplayable($oneTagId, $tagWorkspaces, $hierarchy);
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:list_my_workspaces.html.twig',
-            array(
-                'user' => $user,
-                'workspaces' => $workspaces,
-                'tags' => $tags,
-                'tagWorkspaces' => $tagWorkspaces,
-                'hierarchy' => $hierarchy,
-                'rootTags' => $rootTags,
-                'displayable' => $displayable
-            )
+        return array(
+            'user' => $user,
+            'workspaces' => $workspaces,
+            'tags' => $tags,
+            'tagWorkspaces' => $tagWorkspaces,
+            'hierarchy' => $hierarchy,
+            'rootTags' => $rootTags,
+            'displayable' => $displayable
         );
+    }
+
+    private function isTagDisplayable($tagId, array $tagWorkspaces, array $hierarchy)
+    {
+        $displayable = false;
+
+        if (isset($tagWorkspaces[$tagId]) && count($tagWorkspaces[$tagId]) > 0) {
+            $displayable = true;
+        } else {
+
+            if (isset($hierarchy[$tagId]) && count($hierarchy[$tagId]) > 0) {
+                $children = $hierarchy[$tagId];
+
+                foreach ($children as $child) {
+
+                    $displayable = $this->isTagDisplayable($child->getId(), $tagWorkspaces, $hierarchy);
+
+                    if ($displayable) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $displayable;
     }
 
     /**
@@ -212,6 +166,8 @@ class WorkspaceController extends Controller
      *     name="claro_workspace_creation_form"
      * )
      * @Method("GET")
+     *
+     * @Template()
      *
      * Renders the workspace creation form.
      *
@@ -223,10 +179,7 @@ class WorkspaceController extends Controller
         $form = $this->get('form.factory')
             ->create(new WorkspaceType());
 
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:form.html.twig',
-            array('form' => $form->createView())
-        );
+        return array('form' => $form->createView());
     }
 
     /**
@@ -238,6 +191,7 @@ class WorkspaceController extends Controller
      * )
      * @Method("POST")
      *
+     * @Template("ClarolineCoreBundle:Workspace:creationForm.html.twig")
      * @return RedirectResponse
      */
     public function createAction()
@@ -245,7 +199,7 @@ class WorkspaceController extends Controller
         $this->assertIsGranted('ROLE_WS_CREATOR');
         $form = $this->get('form.factory')
             ->create(new WorkspaceType());
-        $form->bind($this->getRequest());
+        $form->handleRequest($this->getRequest());
 
         $templateDir = $this->container->getParameter('claroline.param.templates_directory');
         $ds = DIRECTORY_SEPARATOR;
@@ -267,10 +221,7 @@ class WorkspaceController extends Controller
             return new RedirectResponse($route);
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:form.html.twig',
-            array('form' => $form->createView())
-        );
+        return array('form' => $form->createView());
     }
 
     /**
@@ -300,6 +251,8 @@ class WorkspaceController extends Controller
     }
 
     /**
+     * @Template()
+     *
      * Renders the left tool bar. Not routed.
      *
      * @param $_workspace
@@ -335,7 +288,7 @@ class WorkspaceController extends Controller
             ->findBy(array('workspace' => $workspace));
 
         $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->findByRolesAndWorkspace($currentRoles, $workspace, true);
+            ->findDisplayedByRolesAndWorkspace($currentRoles, $workspace);
         $toolsWithTranslation = array();
 
         foreach ($tools as $tool) {
@@ -356,9 +309,9 @@ class WorkspaceController extends Controller
             $toolsWithTranslation[] = $toolWithTranslation;
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:tool_list.html.twig',
-            array('toolsWithTranslation' => $toolsWithTranslation, 'workspace' => $workspace)
+        return array(
+            'toolsWithTranslation' => $toolsWithTranslation,
+            'workspace' => $workspace
         );
     }
 
@@ -406,6 +359,8 @@ class WorkspaceController extends Controller
      * )
      * @Method("GET")
      *
+     * @Template("ClarolineCoreBundle:Widget:widgets.html.twig")
+     *
      * Display registered widgets.
      *
      * @param integer $workspaceId
@@ -424,18 +379,39 @@ class WorkspaceController extends Controller
         $em = $this->getDoctrine()->getManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
 
+        $rightToConfigure = $this->get('security.context')->isGranted('parameters', $workspace);
+
+        $widgets = array();
+
         foreach ($configs as $config) {
             if ($config->isVisible()) {
                 $eventName = "widget_{$config->getWidget()->getName()}_workspace";
                 $event = new DisplayWidgetEvent($workspace);
                 $this->get('event_dispatcher')->dispatch($eventName, $event);
-                $responsesString[strtolower($config->getWidget()->getName())] = $event->getContent();
+
+                if ($event->hasContent()) {
+                    $widget['id'] = $config->getWidget()->getId();
+                    if ($event->hasTitle()) {
+                        $widget['title'] = $event->getTitle();
+                    } else {
+                        $widget['title'] = strtolower($config->getWidget()->getName());
+                    }
+                    $widget['content'] = $event->getContent();
+                    $widget['configurable'] = (
+                        $rightToConfigure 
+                        and $config->isLocked() !== true 
+                        and $config->getWidget()->isConfigurable()
+                    );
+
+                    $widgets[] = $widget;
+                }
             }
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Widget:widgets.html.twig',
-            array('widgets' => $responsesString)
+        return array(
+            'widgets' => $widgets,
+            'isDesktop' => false,
+            'workspaceId' => $workspaceId
         );
     }
 
@@ -481,13 +457,13 @@ class WorkspaceController extends Controller
                     ->findBy(array('name' => 'home'));
             } else {
                 $openedTool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-                    ->findByRolesAndWorkspace(array($foundRole), $workspace, true);
+                    ->findDisplayedByRolesAndWorkspace(array($foundRole), $workspace);
             }
 
         } else {
             $foundRole = 'ROLE_ANONYMOUS';
             $openedTool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-                ->findByRolesAndWorkspace(array('ROLE_ANONYMOUS'), $workspace, true);
+                ->findDisplayedByRolesAndWorkspace(array('ROLE_ANONYMOUS'), $workspace);
         }
 
         if ($openedTool == null) {

@@ -1,0 +1,17 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block content %}
+    {{ macros.flashBox() }}
+    <form class="form-horizontal" id="user_registration_form" action="{{ path('claro_registration_register_user') }}" method="post" {{ form_enctype(form) }}>
+        <fieldset>
+            <legend>{{ 'register'|trans({}, 'platform') }} :</legend>
+            {{ form_widget(form) }}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+                <a href="{{ path('claro_index') }}">
+                    <button type="button" class="btn">{{ 'cancel'|trans({}, 'platform') }}</button>
+                </a>
+            </div>
+        </fieldset>
+    </form>
+{% endblock %}

@@ -96,8 +96,8 @@ class LogRepository extends EntityRepository
                     $qb->expr()->like('UPPER(doer.lastName)', ':userSearch'),
                     $qb->expr()->like('UPPER(doer.firstName)', ':userSearch'),
                     $qb->expr()->like('UPPER(doer.username)', ':userSearch'),
-                    $qb->expr()->like("CONCAT(UPPER(doer.firstName), ' ', UPPER(doer.lastName))", ':userSearch'),
-                    $qb->expr()->like("CONCAT(UPPER(doer.lastName), ' ', UPPER(doer.firstName))", ':userSearch')
+                    $qb->expr()->like("CONCAT(CONCAT(UPPER(doer.firstName), ' '), UPPER(doer.lastName))", ':userSearch'),
+                    $qb->expr()->like("CONCAT(CONCAT(UPPER(doer.lastName), ' '), UPPER(doer.firstName))", ':userSearch')
                 )
             );
 
@@ -122,6 +122,7 @@ class LogRepository extends EntityRepository
         return $qb;
     }
 
+
     public function countByDayFilteredLogs($action, $range, $userSearch, $actionsRestriction, $workspaceIds = null, $unique = false)
     {
         $qb = $this->createQueryBuilder('log');
@@ -142,12 +143,29 @@ class LogRepository extends EntityRepository
 
         if ($workspaceIds !== null and count($workspaceIds) > 0) {
             $qb = $this->addWorkspaceFilterToQueryBuilder($qb, $workspaceIds);
+
+    private function addConfigurationFilterToQueryBuilder($qb, $configs)
+    {
+        $actionIndex = 0;
+        foreach ($configs as $config) {
+            $workspaceId = $config->getWorkspace()->getId();
+            $actionRestriction = $config->getActionRestriction();
+            if (count($actionRestriction) > 0) {
+                foreach($config->getActionRestriction() as $action) {
+                    $qb->orWhere('log.action = :action'.$actionIndex.' AND workspace.id = :workspace'.$workspaceId);
+                    $qb->setParameter('action'.$actionIndex, $action);
+                    $actionIndex++;
+                }
+                $qb->setParameter('workspace'.$workspaceId, $workspaceId);
+            }
+
         }
 
-        $query = $qb->getQuery();
+        return $qb;
+    }
 
-        $result = $query->getResult();
-
+    private function extractChartData($result, $range)
+    {
         $chartData = array();
         if (count($result) > 0) {
             //We send an array indexed by date dans contains count
@@ -183,6 +201,65 @@ class LogRepository extends EntityRepository
         }
 
         return $chartData;
+    }
+
+    public function countByDayThroughConfigs($configs, $range)
+    {
+        if ($configs === null || count($configs) == 0) {
+
+            return null;
+        }
+
+        $qb = $this
+            ->createQueryBuilder('log')
+            ->leftJoin('log.workspace', 'workspace')
+            ->select('log.shortDateLog as shortDate, count(log.id) as total')
+            ->orderBy('shortDate', 'ASC')
+            ->groupBy('shortDate');
+
+        $qb = $this->addConfigurationFilterToQueryBuilder($qb, $configs);
+
+        return $this->extractChartData($qb->getQuery()->getResult(), $range);
+    }
+
+    public function countByDayFilteredLogs($action, $range, $userSearch, $actionsRestriction, $workspaceIds = null)
+    {
+        $qb = $this
+            ->createQueryBuilder('log')
+            ->select('log.shortDateLog as shortDate, count(log.id) as total')
+            ->orderBy('shortDate', 'ASC')
+            ->groupBy('shortDate');
+
+        $qb = $this->addActionFilterToQueryBuilder($qb, $action, $actionsRestriction);
+        $qb = $this->addDateRangeFilterToQueryBuilder($qb, $range);
+        $qb = $this->addUserFilterToQueryBuilder($qb, $userSearch);
+
+        if ($workspaceIds !== null and count($workspaceIds) > 0) {
+            $qb = $this->addWorkspaceFilterToQueryBuilder($qb, $workspaceIds);
+        }
+
+        return $this->extractChartData($qb->getQuery()->getResult(), $range);
+    }
+
+    public function findLogsThroughConfigs($configs, $maxResult = -1)
+    {
+        if ($configs === null || count($configs) == 0) {
+
+            return null;
+        }
+
+        $qb = $this
+            ->createQueryBuilder('log')
+            ->leftJoin('log.workspace', 'workspace')
+            ->orderBy('log.dateLog', 'DESC');
+
+        $qb = $this->addConfigurationFilterToQueryBuilder($qb, $configs);
+
+        if ($maxResult > 0) {
+            $qb->setMaxResults($maxResult);
+        }
+
+        return $qb->getQuery();
     }
 
     public function findFilteredLogsQuery(

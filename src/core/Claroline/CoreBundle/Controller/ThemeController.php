@@ -3,68 +3,103 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Assetic\AssetWriter;
 use Assetic\Extension\Twig\TwigFormulaLoader;
 use Assetic\Extension\Twig\TwigResource;
-use Claroline\CoreBundle\Entity\Theme\Theme;
 use Claroline\CoreBundle\Library\Themes\ThemeParameters;
 use Claroline\CoreBundle\Library\Themes\ThemeCompile;
 
 class ThemeController extends Controller
 {
     /**
-     * @route("/list", name="claroline_admin_theme_list")
+     * @Route("/list", name="claroline_admin_theme_list")
      *
+     * @Template("ClarolineCoreBundle:Theme:list.html.twig")
      */
     public function indexAction()
     {
-        $themes = $this->get('claroline.common.theme_service')->getThemes();
+        $themes = $this->get('claroline.common.theme_service')->getThemes('less-generated');
 
-        return $this->render('ClarolineCoreBundle:Theme:list.html.twig', array('themes' => $themes));
+        return array('themes' => $themes);
     }
 
     /**
-     * @route(
+     * @Route(
      *     "/edit/{id}",
      *     name="claroline_admin_theme_edit",
      *     defaults={ "id" = null }
      * )
      *
+     * @Template()
      */
     public function editAction($id = null)
     {
         $variables = array();
-
+        $file = null;
         $themes = $this->get('claroline.common.theme_service')->getThemes();
 
         if ($id and isset($themes[$id])) {
-            //$this->parse($themes[$id]);
-             $variables['theme'] = $themes[$id];
-        } else {
-             $variables['parameters'] = new ThemeParameters();
+
+            $variables['theme'] = $themes[$id];
+
+            $path = explode(':', $themes[$id]->getPath());
+            $path = explode('/', $path[2]);
+
+            $file = __DIR__."/../Resources/views/less-generated/$path[0]/variables.less";
         }
 
-        return $this->render('ClarolineCoreBundle:Theme:edit.html.twig', $variables);
-    }
+        $variables['parameters'] = new ThemeParameters($file);
 
-    public function deleteAction()
-    {
-        echo "sdf";
+        return $variables;
     }
 
     /**
-     * @route("/compile", name="claroline_admin_theme_compile")
+     * @Route(
+     *     "/preview/{id}",
+     *     name="claroline_admin_theme_preview",
+     *     defaults={ "id" = null }
+     * )
+     *
+     * @Template()
+     */
+    public function previewAction($id)
+    {
+        return array('theme' => $this->get('claroline.common.theme_service')->getTheme($id));
+    }
+
+    /**
+     * @Route(
+     *     "/build/{id}",
+     *     name="claroline_admin_theme_build",
+     *     defaults={ "id" = null }
+     * )
      *
      */
-    public function compileAction()
+    public function buildAction($id = null)
     {
-        $this->get('claroline.common.theme_service')->compileTheme(
-            "ClarolineCoreBundle:less:bootstrap-default/theme.html.twig"
+        return new Response(
+            $this->get('claroline.common.theme_service')->editTheme(
+                $this->get('request')->get('variables'),
+                $this->get('request')->get('name'),
+                $this->get('request')->get('theme-id')
+            )
         );
+    }
 
-        return new Response("true");
+    /**
+     * @Route(
+     *     "/delete/{id}",
+     *     name="claroline_admin_theme_delete",
+     *     defaults={ "id" = null }
+     * )
+     *
+     */
+    public function deleteAction($id = null)
+    {
+        return new Response($this->get('claroline.common.theme_service')->deleteTheme($id));
     }
 }
