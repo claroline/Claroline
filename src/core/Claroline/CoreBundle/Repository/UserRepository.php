@@ -423,6 +423,27 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $query->getSingleScalarResult();
     }
 
+    public function findByIds(array $ids)
+    {
+        $firstId = array_pop($ids);
+        $dql = "SELECT u FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.id IN (:first_id";
+
+        foreach ($ids as $key => $id) {
+            $dql .= ", :id_{$key}" ;
+        }
+
+        $dql .= ')';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('first_id', $firstId);
+
+        foreach ($ids as $key => $id) {
+            $query->setParameter("id_{$key}", $id);
+        }
+
+        return $query->getResult();
+    }
+
     /**
      * extract
      *

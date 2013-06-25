@@ -227,7 +227,7 @@ class MessageRepository extends NestedTreeRepository
         return $query->getResult();
     }
 
-    public function findMessages(array $ids)
+    public function findByIds(array $ids)
     {
         $firstId = array_pop($ids);
         $dql = "SELECT m FROM Claroline\CoreBundle\Entity\Message m

@@ -46,12 +46,12 @@ class MessageRepositoryTest extends RepositoryTestCase
             )
         );
 
-        self::$client->getContainer()->get('claroline.message.manager')->markAsRemoved(
+        self::$client->getContainer()->get('claroline.manager.message_manager')->markAsRemoved(
             self::getUser('receiver'),
             array(self::getMessage('removed1'))
         );
 
-        self::$client->getContainer()->get('claroline.message.manager')->markAsRemoved(
+        self::$client->getContainer()->get('claroline.manager.message_manager')->markAsRemoved(
             self::getUser('sender'),
             array(self::getMessage('removed1'))
         );
@@ -132,9 +132,9 @@ class MessageRepositoryTest extends RepositoryTestCase
         $this->assertEquals(1, count($um));
     }
 
-    public function testFindMessages()
+    public function testFindByIds()
     {
-        $messages = self::$repo->findMessages(array(self::getMessage('child'), self::getMessage('ancestor')));
+        $messages = self::$repo->testFindByIds(array(self::getMessage('child'), self::getMessage('ancestor')));
         $this->assertEquals(2, count($messages));
     }
 }

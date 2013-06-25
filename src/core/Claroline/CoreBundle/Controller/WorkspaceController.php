@@ -379,22 +379,36 @@ class WorkspaceController extends Controller
         $em = $this->getDoctrine()->getManager();
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
 
+        $rightToConfigure = $this->get('security.context')->isGranted('parameters', $workspace);
+
+        $widgets = array();
+
         foreach ($configs as $config) {
             if ($config->isVisible()) {
                 $eventName = "widget_{$config->getWidget()->getName()}_workspace";
                 $event = new DisplayWidgetEvent($workspace);
                 $this->get('event_dispatcher')->dispatch($eventName, $event);
+
                 if ($event->hasContent()) {
+                    $widget['id'] = $config->getWidget()->getId();
                     if ($event->hasTitle()) {
-                        $responsesString[$event->getTitle()] = $event->getContent();
+                        $widget['title'] = $event->getTitle();
                     } else {
-                        $responsesString[strtolower($config->getWidget()->getName())] = $event->getContent();
+                        $widget['title'] = strtolower($config->getWidget()->getName());
                     }
+                    $widget['content'] = $event->getContent();
+                    $widget['configurable'] = ($rightToConfigure and $config->getWidget()->isConfigurable());
+
+                    $widgets[] = $widget;
                 }
             }
         }
 
-        return array('widgets' => $responsesString);
+        return array(
+            'widgets' => $widgets,
+            'isDesktop' => false,
+            'workspaceId' => $workspaceId
+        );
     }
 
     /**

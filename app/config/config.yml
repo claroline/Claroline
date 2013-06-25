@@ -80,7 +80,7 @@ stof_doctrine_extensions:
 
 parameters:
     security.authentication.listener.anonymous.class: Claroline\CoreBundle\Listener\AnonymousAuthenticationListener
-    templating.locator.class: Claroline\CoreBundle\Templating\Loader\TemplateLocator
+    templating.locator.class: Claroline\CoreBundle\Library\Templating\Loader\TemplateLocator
 
 services:
     templating.locator:

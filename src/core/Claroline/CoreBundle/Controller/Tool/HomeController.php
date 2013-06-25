@@ -144,8 +144,6 @@ class HomeController extends Controller
      * )
      * @Method("GET")
      *
-     * @Template("ClarolineCoreBundle:Tool\workspace\home:widgetConfiguration.html.twig")
-     *
      * Asks a widget to render its configuration page for a workspace.
      *
      * @param AbstractWorkspace $workspace
@@ -164,10 +162,16 @@ class HomeController extends Controller
         $this->get('event_dispatcher')->dispatch($eventName, $event);
 
         if ($event->getContent() !== '') {
-            return array(
-                'content' => $event->getContent(),
-                'workspace' => $workspace,
-                'tool' => $this->getHomeTool()
+            if ($this->get('request')->isXMLHttpRequest()) {
+                return $this->render(
+                    'ClarolineCoreBundle:Tool\workspace\home:widgetConfigurationForm.html.twig',
+                    array('content' => $event->getContent(), 'workspace' => $workspace, 'tool' => $this->getHomeTool())
+                );
+            }
+
+            return $this->render(
+                'ClarolineCoreBundle:Tool\workspace\home:widgetConfiguration.html.twig',
+                array('content' => $event->getContent(), 'workspace' => $workspace, 'tool' => $this->getHomeTool())
             );
         }
 
@@ -246,8 +250,6 @@ class HomeController extends Controller
      * )
      * @Method("GET")
      *
-     * @Template("ClarolineCoreBundle:Tool\desktop\home:widgetConfiguration.html.twig")
-     *
      * Asks a widget to display its configuration page.
      *
      * @param Widget $widget the widget
@@ -262,10 +264,16 @@ class HomeController extends Controller
         $this->get('event_dispatcher')->dispatch($eventName, $event);
 
         if ($event->getContent() !== '') {
+            if ($this->get('request')->isXMLHttpRequest()) {
+                return $this->render(
+                    'ClarolineCoreBundle:Tool\desktop\home:widgetConfigurationForm.html.twig',
+                    array('content' => $event->getContent(), 'tool' => $this->getHomeTool())
+                );
+            }
 
-            return array(
-                'content' => $event->getContent(),
-                'tool' => $this->getHomeTool()
+            return $this->render(
+                'ClarolineCoreBundle:Tool\desktop\home:widgetConfiguration.html.twig',
+                array('content' => $event->getContent(), 'tool' => $this->getHomeTool())
             );
         }
 
