@@ -5,8 +5,6 @@
     <div class="margin">
         <h3 id='user-list-block' class="sub-section-header">{{ 'widget_settings'|trans({}, 'platform') }}</h3>
     </div>
-    
-    {% block section_widget_content %}
-        {% include 'ClarolineCoreBundle:Administration:widget_configuration_form.html.twig' %}
-    {% endblock %}
+
+    {{ content|raw }}
 {% endblock %}
