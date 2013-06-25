@@ -42,7 +42,7 @@ class DirectoryListener implements ContainerAwareInterface
     {
         $form = $this->container->get('form.factory')->create(new DirectoryType, new Directory());
         $response = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:create_form.html.twig',
+            'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'directory'
@@ -73,7 +73,7 @@ class DirectoryListener implements ContainerAwareInterface
         }
 
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:create_form.html.twig',
+            'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'directory'

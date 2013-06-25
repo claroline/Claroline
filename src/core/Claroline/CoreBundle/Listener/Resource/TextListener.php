@@ -45,7 +45,7 @@ class TextListener implements ContainerAwareInterface
     {
         $form = $this->container->get('form.factory')->create(new TextType, new Text());
         $response = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:create_form.html.twig',
+            'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'text'
@@ -86,7 +86,7 @@ class TextListener implements ContainerAwareInterface
         }
 
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:create_form.html.twig',
+            'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'text'

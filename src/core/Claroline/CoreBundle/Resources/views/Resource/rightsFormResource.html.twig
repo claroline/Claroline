@@ -2,49 +2,46 @@
 {% for tag in tagsList %}
     {% if displayable[tag.getId()] %}
     {% set currentIndex = index ~ "-" ~ tag.getId() %}
-    <div class="accordion" id="accordion-{{ currentIndex }}">
-        <div class="accordion-group">
-            <div class="accordion-heading">
-                <a  class="accordion-toggle"
-                    data-toggle="collapse"
-                    data-parent="#accordion-{{ currentIndex }}"
-                    href="#collapse-{{ currentIndex }}"
-                >
-                    <i class="icon-align-justify"></i>
-                    {{ tag.getName() }}
-                    <i class="icon-chevron-down pull-right"></i>
-                </a>
-            </div>
-            <div id="collapse-{{ currentIndex }}" class="accordion-body collapse">
-                <div class="accordion-inner">
-                    {% if hierarchy[tag.getId()]|length > 0 %}
-                    {{ _self.showTag(hierarchy[tag.getId()], tagWorkspaces, hierarchy, currentIndex, displayable, workspaceRoles, resource) }}
-                    {% endif %}
-                    <ul>
-                        {% for relWorkspaceTag in tagWorkspaces[tag.id] %}
-                        {% set workspace = relWorkspaceTag.getWorkspace() %}
-                        <div class="accordion-group">
-                            <div class="accordion-heading">
-                                <a class="accordion-toggle"
-                                   data-toggle="collapse"
-                                   href="#collapse-{{ currentIndex }}-{{ workspace.getCode() }}">
-                                    {{ workspace.getName() }}
-                                    <span class="workspace-code">({{ workspace.getCode() }})</span>
-                                </a>
-                            </div>
-                            <div id="collapse-{{ currentIndex }}-{{ workspace.getCode() }}" class="accordion-body collapse">
-                                <div class="accordion-inner">
-                                    <ul>
-                                        {% for role in workspaceRoles[workspace.getCode()] %}
-                                            <a class="workspace-role-item" href="{{ path('claro_resource_right_form', {'resource':resource.id, 'role':role.id}) }}">{{ role.getTranslationKey() }}</a><br/>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a  class="accordion-toggle"
+                data-toggle="collapse"
+                href="#collapse-{{ currentIndex }}"
+            >
+                <i class="icon-align-justify"></i>
+                {{ tag.getName() }}
+                <i class="icon-chevron-down pull-right"></i>
+            </a>
+        </div>
+        <div id="collapse-{{ currentIndex }}" class="accordion-body collapse">
+            <div class="accordion-inner">
+                {% if hierarchy[tag.getId()]|length > 0 %}
+                {{ _self.showTag(hierarchy[tag.getId()], tagWorkspaces, hierarchy, currentIndex, displayable, workspaceRoles, resource) }}
+                {% endif %}
+                <ul>
+                    {% for relWorkspaceTag in tagWorkspaces[tag.id] %}
+                    {% set workspace = relWorkspaceTag.getWorkspace() %}
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle"
+                               data-toggle="collapse"
+                               href="#collapse-{{ currentIndex }}-{{ workspace.getCode() }}">
+                                {{ workspace.getName() }}
+                                <span class="workspace-code">({{ workspace.getCode() }})</span>
+                            </a>
+                        </div>
+                        <div id="collapse-{{ currentIndex }}-{{ workspace.getCode() }}" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                <ul>
+                                    {% for role in workspaceRoles[workspace.getCode()] %}
+                                        <a class="workspace-role-item" href="{{ path('claro_resource_right_form', {'resource':resource.id, 'role':role.id}) }}">{{ role.getTranslationKey() }}</a><br/>
+                                    {% endfor %}
+                                </ul>
                             </div>
                         </div>
-                        {% endfor %}
-                    </ul>
-                </div>
+                    </div>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
     </div>

@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContext;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * Authentication/login controller.
@@ -17,6 +18,8 @@ class AuthenticationController extends Controller
      *     name="claro_security_login",
      *     options={"expose"=true}
      * )
+     *
+     * @Template()
      *
      * Standard Symfony form login controller.
      *
@@ -36,12 +39,9 @@ class AuthenticationController extends Controller
 
         $lastUsername = $request->getSession()->get(SecurityContext::LAST_USERNAME);
 
-        return $this->render(
-            'ClarolineCoreBundle:Authentication:login.html.twig',
-            array(
-                'last_username' => $lastUsername,
-                'error' => $error
-            )
+        return array(
+            'last_username' => $lastUsername,
+            'error' => $error
         );
     }
 }

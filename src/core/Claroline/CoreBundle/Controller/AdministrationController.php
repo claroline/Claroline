@@ -36,13 +36,15 @@ class AdministrationController extends Controller
     const GROUP_PER_PAGE = 40;
 
     /**
+     * @Template("ClarolineCoreBundle:Administration:index.html.twig")
+     *
      * Displays the administration section index.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction()
     {
-        return $this->render('ClarolineCoreBundle:Administration:index.html.twig');
+        return array();
     }
 
     /**
@@ -51,6 +53,8 @@ class AdministrationController extends Controller
      *     name="claro_admin_user_creation_form"
      * )
      * @Method("GET")
+     *
+     * @Template()
      *
      * Displays the user creation form.
      *
@@ -64,10 +68,7 @@ class AdministrationController extends Controller
             ->findPlatformRoles($user);
         $form = $this->createForm(new ProfileType($roles));
 
-        return $this->render(
-            'ClarolineCoreBundle:Administration:user_creation_form.html.twig',
-            array('form_complete_user' => $form->createView())
-        );
+        return array('form_complete_user' => $form->createView());
     }
 
     /**
@@ -76,6 +77,8 @@ class AdministrationController extends Controller
      *     name="claro_admin_create_user"
      * )
      * @Method("POST")
+     *
+     * @Template("ClarolineCoreBundle:Administration:userCreationForm.html.twig")
      *
      * Creates an user (and its personal workspace) and redirects to the user list.
      *
@@ -102,10 +105,7 @@ class AdministrationController extends Controller
             return $this->redirect($this->generateUrl('claro_admin_user_list'));
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Administration:user_creation_form.html.twig',
-            array('form_complete_user' => $form->createView())
-        );
+        return array('form_complete_user' => $form->createView());
     }
 
     /**
@@ -295,6 +295,8 @@ class AdministrationController extends Controller
      * )
      * @Method("GET")
      *
+     * @Template()
+     *
      * Displays the group creation form.
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -303,10 +305,7 @@ class AdministrationController extends Controller
     {
         $form = $this->createForm(new GroupType(), new Group());
 
-        return $this->render(
-            'ClarolineCoreBundle:Administration:group_creation_form.html.twig',
-            array('form_group' => $form->createView())
-        );
+        return array('form_group' => $form->createView());
     }
 
     /**
@@ -315,6 +314,8 @@ class AdministrationController extends Controller
      *     name="claro_admin_create_group"
      * )
      * @Method("POST")
+     *
+     * @Template("ClarolineCoreBundle:Administration:groupCreationForm.html.twig")
      *
      * Creates a group and redirects to the group list.
      *
@@ -338,10 +339,7 @@ class AdministrationController extends Controller
             return $this->redirect($this->generateUrl('claro_admin_group_list'));
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Administration:group_creation_form.html.twig',
-            array('form_group' => $form->createView())
-        );
+        return array('form_group' => $form->createView());
     }
 
     /**
@@ -478,6 +476,8 @@ class AdministrationController extends Controller
      * )
      * @Method("GET")
      *
+     * @Template()
+     *
      * Displays an edition form for a group.
      *
      * @param integer $groupId
@@ -491,9 +491,9 @@ class AdministrationController extends Controller
             ->find($groupId);
         $form = $this->createForm(new GroupSettingsType(), $group);
 
-        return $this->render(
-            'ClarolineCoreBundle:Administration:group_settings_form.html.twig',
-            array('group' => $group, 'form_settings' => $form->createView())
+        return array(
+            'group' => $group,
+            'form_settings' => $form->createView()
         );
     }
 
@@ -502,6 +502,8 @@ class AdministrationController extends Controller
      *     "/group/settings/update/{groupId}",
      *     name="claro_admin_update_group_settings"
      * )
+     *
+     * @Template("ClarolineCoreBundle:Administration:groupSettingsForm.html.twig")
      *
      * Updates the settings of a group and redirects to the group list.
      *
@@ -543,9 +545,9 @@ class AdministrationController extends Controller
             return $this->redirect($this->generateUrl('claro_admin_group_list'));
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Administration:group_settings_form.html.twig',
-            array('group' => $group, 'form_settings' => $form->createView())
+        return array(
+            'group' => $group,
+            'form_settings' => $form->createView()
         );
     }
 
@@ -560,6 +562,8 @@ class AdministrationController extends Controller
      *     options={"expose"=true}
      * )
      *
+     * @Template()
+     *
      * Displays the platform settings.
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -570,10 +574,7 @@ class AdministrationController extends Controller
             ->getPlatformConfig();
         $form = $this->createForm(new PlatformParametersType($this->getThemes()), $platformConfig);
 
-        return $this->render(
-            'ClarolineCoreBundle:Administration:platform_settings_form.html.twig',
-            array('form_settings' => $form->createView())
-        );
+        return array('form_settings' => $form->createView());
     }
 
     /**
@@ -581,6 +582,8 @@ class AdministrationController extends Controller
      *     "claro_admin_update_platform_settings",
      *     name="claro_admin_update_platform_settings"
      * )
+     *
+     * @Template("ClarolineCoreBundle:Administration:platformSettingsForm.html.twig")
      *
      * Updates the platform settings and redirects to the settings form.
      *
@@ -606,10 +609,7 @@ class AdministrationController extends Controller
                     )
                 );
 
-                return $this->render(
-                    'ClarolineCoreBundle:Administration:platform_settings_form.html.twig',
-                    array('form_settings' => $form->createView())
-                );
+                return array('form_settings' => $form->createView());
             }
         }
 
@@ -623,6 +623,8 @@ class AdministrationController extends Controller
      * )
      * @Method("GET")
      *
+     * @Template()
+     *
      * Display the plugin list
      *
      * @return Response
@@ -632,10 +634,7 @@ class AdministrationController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $plugins = $em->getRepository('ClarolineCoreBundle:Plugin')->findAll();
 
-        return $this->render(
-            'ClarolineCoreBundle:Administration:plugins.html.twig',
-            array('plugins' => $plugins)
-        );
+        return array('plugins' => $plugins);
     }
 
     /**
@@ -675,11 +674,13 @@ class AdministrationController extends Controller
      * )
      * @Method("GET")
      *
+     * @Template()
+     *
      * @return Response
      */
     public function usersManagementAction()
     {
-        return $this->render('ClarolineCoreBundle:Administration:users_management.html.twig');
+        return array();
     }
 
     /**
@@ -689,15 +690,15 @@ class AdministrationController extends Controller
      * )
      * @Method("GET")
      *
+     * @Template()
+     *
      * @return Response
      */
-    public function importUsersForm()
+    public function importUsersFormAction()
     {
         $form = $this->createForm(new ImportUserType());
 
-        return $this->render('ClarolineCoreBundle:Administration:import_users.html.twig',
-            array('form' => $form->createView())
-        );
+        return array('form' => $form->createView());
     }
 
     /**
@@ -707,6 +708,8 @@ class AdministrationController extends Controller
      * )
      *
      * @Method("POST")
+     *
+     * @Template("ClarolineCoreBundle:Administration:importUsersForm.html.twig")
      *
      * @return Response
      */
@@ -729,9 +732,7 @@ class AdministrationController extends Controller
             return $this->redirect($this->generateUrl('claro_admin_users_management'));
         }
 
-        return $this->render('ClarolineCoreBundle:Administration:import_users.html.twig',
-            array('form' => $form->createView())
-        );
+        return array('form' => $form->createView());
     }
 
     /**
@@ -771,6 +772,8 @@ class AdministrationController extends Controller
      *
      * @Method("GET")
      *
+     * @Template()
+     *
      * Displays logs list using filter parameteres and page number
      *
      * @param $page int The requested page number.
@@ -781,9 +784,6 @@ class AdministrationController extends Controller
      */
     public function logListAction($page)
     {
-        return $this->render(
-            'ClarolineCoreBundle:Administration:log_list.html.twig',
-            $this->get('claroline.log.manager')->getAdminList($page)
-        );
+        return $this->get('claroline.log.manager')->getAdminList($page);
     }
 }

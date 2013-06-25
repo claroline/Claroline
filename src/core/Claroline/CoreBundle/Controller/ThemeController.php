@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use JMS\SecurityExtraBundle\Annotation\Secure;
@@ -17,12 +18,13 @@ class ThemeController extends Controller
     /**
      * @Route("/list", name="claroline_admin_theme_list")
      *
+     * @Template("ClarolineCoreBundle:Theme:list.html.twig")
      */
     public function indexAction()
     {
         $themes = $this->get('claroline.common.theme_service')->getThemes('less-generated');
 
-        return $this->render('ClarolineCoreBundle:Theme:list.html.twig', array('themes' => $themes));
+        return array('themes' => $themes);
     }
 
     /**
@@ -32,6 +34,7 @@ class ThemeController extends Controller
      *     defaults={ "id" = null }
      * )
      *
+     * @Template()
      */
     public function editAction($id = null)
     {
@@ -51,7 +54,7 @@ class ThemeController extends Controller
 
         $variables['parameters'] = new ThemeParameters($file);
 
-        return $this->render('ClarolineCoreBundle:Theme:edit.html.twig', $variables);
+        return $variables;
     }
 
     /**
@@ -61,13 +64,11 @@ class ThemeController extends Controller
      *     defaults={ "id" = null }
      * )
      *
+     * @Template()
      */
     public function previewAction($id)
     {
-        return $this->render(
-            'ClarolineCoreBundle:Theme:preview.html.twig',
-            array('theme' => $this->get('claroline.common.theme_service')->getTheme($id))
-        );
+        return array('theme' => $this->get('claroline.common.theme_service')->getTheme($id));
     }
 
     /**
