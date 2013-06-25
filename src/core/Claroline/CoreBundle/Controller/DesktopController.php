@@ -56,7 +56,7 @@ class DesktopController extends Controller
                         $widget['title'] = strtolower($config->getWidget()->getName());
                     }
                     $widget['content'] = $event->getContent();
-                    $widget['configurable'] = $config->getWidget()->isConfigurable();
+                    $widget['configurable'] = ($config->isLocked() !== true and $config->getWidget()->isConfigurable());
 
                     $widgets[] = $widget;
                 }
