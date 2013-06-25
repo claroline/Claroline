@@ -13,15 +13,15 @@ class WorkspaceTagHierarchyRepository extends EntityRepository
     public function findAdminHierarchiesByParents(array $parents)
     {
         if (count($parents) === 0) {
-            throw new \InvalidArgumentException("Array argument cannot be empty");
+            throw new \InvalidArgumentException('Array argument cannot be empty');
         }
 
         $index = 0;
         $eol = PHP_EOL;
-        $parentsTest = "(";
+        $parentsTest = '(';
 
         foreach ($parents as $parent) {
-            $parentsTest .= $index > 0 ? "    OR " : "    ";
+            $parentsTest .= $index > 0 ? '    OR ' : '    ';
             $parentsTest .= "p.id = {$parent}{$eol}";
             $index++;
         }
@@ -45,15 +45,15 @@ class WorkspaceTagHierarchyRepository extends EntityRepository
     public function findHierarchiesByParents(User $user, array $parents)
     {
         if (count($parents) === 0) {
-            throw new \InvalidArgumentException("Array argument cannot be empty");
+            throw new \InvalidArgumentException('Array argument cannot be empty');
         }
 
         $index = 0;
         $eol = PHP_EOL;
-        $parentsTest = "(";
+        $parentsTest = '(';
 
         foreach ($parents as $parent) {
-            $parentsTest .= $index > 0 ? "    OR " : "    ";
+            $parentsTest .= $index > 0 ? '    OR ' : '    ';
             $parentsTest .= "p.id = {$parent}{$eol}";
             $index++;
         }
@@ -67,7 +67,7 @@ class WorkspaceTagHierarchyRepository extends EntityRepository
             AND {$parentsTest}
         ";
         $query = $this->_em->createQuery($dql);
-        $query->setParameter("user", $user);
+        $query->setParameter('user', $user);
 
         return $query->getResult();
     }
@@ -79,25 +79,25 @@ class WorkspaceTagHierarchyRepository extends EntityRepository
     public function findAdminHierarchiesByParentsAndChildren(array $parents, array $children)
     {
         if (count($parents) === 0 || count($children) === 0) {
-            throw new \InvalidArgumentException("Array argument cannot be empty");
+            throw new \InvalidArgumentException('Array argument cannot be empty');
         }
 
         $parentIndex = 0;
         $eol = PHP_EOL;
-        $parentsTest = "(";
+        $parentsTest = '(';
 
         foreach ($parents as $parent) {
-            $parentsTest .= $parentIndex > 0 ? "    OR " : "    ";
+            $parentsTest .= $parentIndex > 0 ? '    OR ' : '    ';
             $parentsTest .= "p.id = {$parent}{$eol}";
             $parentIndex++;
         }
         $parentsTest .= "){$eol}";
 
         $childrenIndex = 0;
-        $childrenTest = "(";
+        $childrenTest = '(';
 
         foreach ($children as $child) {
-            $childrenTest .= $childrenIndex > 0 ? "    OR " : "    ";
+            $childrenTest .= $childrenIndex > 0 ? '    OR ' : '    ';
             $childrenTest .= "t.id = {$child}{$eol}";
             $childrenIndex++;
         }
@@ -125,25 +125,25 @@ class WorkspaceTagHierarchyRepository extends EntityRepository
     public function findHierarchiesByParentsAndChildren(User $user, array $parents, array $children)
     {
         if (count($parents) === 0 || count($children) === 0) {
-            throw new \InvalidArgumentException("Array argument cannot be empty");
+            throw new \InvalidArgumentException('Array argument cannot be empty');
         }
 
         $parentIndex = 0;
         $eol = PHP_EOL;
-        $parentsTest = "(";
+        $parentsTest = '(';
 
         foreach ($parents as $parent) {
-            $parentsTest .= $parentIndex > 0 ? "    OR " : "    ";
+            $parentsTest .= $parentIndex > 0 ? '    OR ' : '    ';
             $parentsTest .= "p.id = {$parent}{$eol}";
             $parentIndex++;
         }
         $parentsTest .= "){$eol}";
 
         $childrenIndex = 0;
-        $childrenTest = "(";
+        $childrenTest = '(';
 
         foreach ($children as $child) {
-            $childrenTest .= $childrenIndex > 0 ? "    OR " : "    ";
+            $childrenTest .= $childrenIndex > 0 ? '    OR ' : '    ';
             $childrenTest .= "t.id = {$child}{$eol}";
             $childrenIndex++;
         }
@@ -160,7 +160,7 @@ class WorkspaceTagHierarchyRepository extends EntityRepository
             AND {$childrenTest}
         ";
         $query = $this->_em->createQuery($dql);
-        $query->setParameter("user", $user);
+        $query->setParameter('user', $user);
 
         return $query->getResult();
     }
@@ -171,15 +171,15 @@ class WorkspaceTagHierarchyRepository extends EntityRepository
      */
     public function findAllByUser(User $user)
     {
-        $dql = "
+        $dql = '
             SELECT h
             FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy h
             JOIN h.tag t
             WHERE h.user = :user
             ORDER BY t.name ASC
-        ";
+        ';
         $query = $this->_em->createQuery($dql);
-        $query->setParameter("user", $user);
+        $query->setParameter('user', $user);
 
         return $query->getResult();
     }
@@ -190,13 +190,13 @@ class WorkspaceTagHierarchyRepository extends EntityRepository
      */
     public function findAllAdmin()
     {
-        $dql = "
+        $dql = '
             SELECT h
             FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy h
             JOIN h.tag t
             WHERE h.user IS NULL
             ORDER BY t.name ASC
-        ";
+        ';
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
