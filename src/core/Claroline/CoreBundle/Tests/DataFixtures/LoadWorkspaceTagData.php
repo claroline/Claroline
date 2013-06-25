@@ -31,7 +31,7 @@ class LoadWorkspaceTagData extends LoggableFixture implements ContainerAwareInte
                 $user = $this->getReference('user/' . $data['user']);
             }
 
-            $tag = $this->container->get('claroline.workspace_tag.manager')->createTag(
+            $tag = $this->container->get('claroline.manager.workspace_tag_manager')->createTag(
                 $data['name'],
                 $user
             );
