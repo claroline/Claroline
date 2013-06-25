@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
 class WorkspaceTagController extends Controller
@@ -24,6 +25,9 @@ class WorkspaceTagController extends Controller
      *     name="claro_workspace_manage_tag"
      * )
      * @Method("GET")
+     *
+     * @Template()
+     *
      * @Secure(roles="ROLE_USER")
      *
      * Display a table showing tags associated to user's workspaces
@@ -56,14 +60,11 @@ class WorkspaceTagController extends Controller
         $tagsNameTxt = substr($tagsNameTxt, 0, strlen($tagsNameTxt) - 1);
         $tagsNameTxt .= ']';
 
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:manage_tag.html.twig',
-            array(
-                'user' => $user,
-                'tagsNameTxt' => $tagsNameTxt,
-                'workspaces' => $workspaces,
-                'workspacesTags' => $workspacesTags
-            )
+        return array(
+            'user' => $user,
+            'tagsNameTxt' => $tagsNameTxt,
+            'workspaces' => $workspaces,
+            'workspacesTags' => $workspacesTags
         );
     }
 
@@ -73,6 +74,9 @@ class WorkspaceTagController extends Controller
      *     name="claro_workspace_manage_admin_tag"
      * )
      * @Method("GET")
+     *
+     * @Template()
+     *
      * @Secure(roles="ADMIN")
      *
      * Display a table showing tags associated to user's workspaces
@@ -104,14 +108,11 @@ class WorkspaceTagController extends Controller
         $tagsNameTxt = substr($tagsNameTxt, 0, strlen($tagsNameTxt) - 1);
         $tagsNameTxt .= ']';
 
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:manage_admin_tag.html.twig',
-            array(
-                'user' => $user,
-                'tagsNameTxt' => $tagsNameTxt,
-                'workspaces' => $workspaces,
-                'workspacesTags' => $workspacesTags
-            )
+        return array(
+            'user' => $user,
+            'tagsNameTxt' => $tagsNameTxt,
+            'workspaces' => $workspaces,
+            'workspacesTags' => $workspacesTags
         );
     }
 
@@ -121,6 +122,9 @@ class WorkspaceTagController extends Controller
      *     name="claro_workspace_tag_create_form"
      * )
      * @Method("GET")
+     *
+     * @Template()
+     *
      * @Secure(roles="ROLE_USER")
      *
      * Renders the Tag creation form
@@ -137,9 +141,9 @@ class WorkspaceTagController extends Controller
         $workspaceTag->setUser($user);
         $form = $this->createForm(new WorkspaceTagType(), $workspaceTag);
 
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:workspace_tag_form.html.twig',
-            array('form' => $form->createView(), 'user' => $user)
+        return array(
+            'form' => $form->createView(),
+            'user' => $user
         );
     }
 
@@ -149,6 +153,9 @@ class WorkspaceTagController extends Controller
      *     name="claro_workspace_admin_tag_create_form"
      * )
      * @Method("GET")
+     *
+     * @Template()
+     *
      * @Secure(roles="ROLE_ADMIN")
      *
      * Renders the Tag creation form
@@ -164,10 +171,7 @@ class WorkspaceTagController extends Controller
         $workspaceTag->setUser(null);
         $form = $this->createForm(new AdminWorkspaceTagType(), $workspaceTag);
 
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:workspace_admin_tag_form.html.twig',
-            array('form' => $form->createView())
-        );
+        return array('form' => $form->createView());
     }
 
     /**
@@ -176,6 +180,9 @@ class WorkspaceTagController extends Controller
      *     name="claro_workspace_tag_create"
      * )
      * @Method("POST")
+     *
+     * @Template("ClarolineCoreBundle:WorkspaceTag:workspaceTagCreateForm.html.twig")
+     *
      * @Secure(roles="ROLE_USER")
      *
      * Creates a new Tag
@@ -201,7 +208,7 @@ class WorkspaceTagController extends Controller
 
         $form = $this->createForm(new WorkspaceTagType(), $workspaceTag);
         $request = $this->getRequest();
-        $form->bind($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em->persist($workspaceTag);
@@ -218,9 +225,9 @@ class WorkspaceTagController extends Controller
             );
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:workspace_tag_form.html.twig',
-            array('form' => $form->createView(), 'user' => $user)
+        return array(
+            'form' => $form->createView(),
+            'user' => $user
         );
     }
 
@@ -230,6 +237,9 @@ class WorkspaceTagController extends Controller
      *     name="claro_workspace_admin_tag_create"
      * )
      * @Method("POST")
+     *
+     * @Template("ClarolineCoreBundle:WorkspaceTag:workspaceAdminTagCreateForm.html.twig")
+     *
      * @Secure(roles="ROLE_ADMIN")
      *
      * Creates a new Tag
@@ -247,7 +257,7 @@ class WorkspaceTagController extends Controller
 
         $form = $this->createForm(new AdminWorkspaceTagType(), $workspaceTag);
         $request = $this->getRequest();
-        $form->bind($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em->persist($workspaceTag);
@@ -264,10 +274,7 @@ class WorkspaceTagController extends Controller
             );
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:workspace_admin_tag_form.html.twig',
-            array('form' => $form->createView())
-        );
+        return array('form' => $form->createView());
     }
 
     /**
@@ -478,11 +485,13 @@ class WorkspaceTagController extends Controller
      * )
      * @Method("GET")
      *
+     * @Template()
+     *
      * Render a page where admin tags can be organized
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function organizeWorkspaceAdminTag()
+    public function organizeWorkspaceAdminTagAction()
     {
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
@@ -510,13 +519,10 @@ class WorkspaceTagController extends Controller
             }
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:organize_admin_tag.html.twig',
-            array(
-                'tags' => $tags,
-                'hierarchy' => $hierarchy,
-                'rootTags' => $rootTags
-            )
+        return array(
+            'tags' => $tags,
+            'hierarchy' => $hierarchy,
+            'rootTags' => $rootTags
         );
     }
 
@@ -527,11 +533,13 @@ class WorkspaceTagController extends Controller
      * )
      * @Method("GET")
      *
+     * @Template()
+     *
      * Render a page where tags can be organized
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function organizeWorkspaceTag()
+    public function organizeWorkspaceTagAction()
     {
         if (!$this->get('security.context')->isGranted('ROLE_USER')) {
             throw new AccessDeniedException();
@@ -560,13 +568,10 @@ class WorkspaceTagController extends Controller
             }
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:organize_tag.html.twig',
-            array(
-                'tags' => $tags,
-                'hierarchy' => $hierarchy,
-                'rootTags' => $rootTags
-            )
+        return array(
+            'tags' => $tags,
+            'hierarchy' => $hierarchy,
+            'rootTags' => $rootTags
         );
     }
 
@@ -577,13 +582,15 @@ class WorkspaceTagController extends Controller
      * )
      * @Method("GET")
      *
+     * @Template()
+     *
      * Render a page where children can be added to a tag
      *
      * @param integer $tagId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function checkPotentialWorkspaceAdminTagChildren($tagId)
+    public function checkPotentialWorkspaceAdminTagChildrenAction($tagId)
     {
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
@@ -597,13 +604,10 @@ class WorkspaceTagController extends Controller
         $possibleChildren = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
             ->findPossibleAdminChildren($tag);
 
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:check_admin_tag_children.html.twig',
-            array(
-                'tag' => $tag,
-                'children' => $children,
-                'possibleChildren' => $possibleChildren
-            )
+        return array(
+            'tag' => $tag,
+            'children' => $children,
+            'possibleChildren' => $possibleChildren
         );
     }
 
@@ -614,13 +618,15 @@ class WorkspaceTagController extends Controller
      * )
      * @Method("GET")
      *
+     * @Template()
+     *
      * Render a page where children can be added to a tag
      *
      * @param integer $tagId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function checkPotentialWorkspaceTagChildren($tagId)
+    public function checkPotentialWorkspaceTagChildrenAction($tagId)
     {
         if (!$this->get('security.context')->isGranted('ROLE_USER')) {
             throw new AccessDeniedException();
@@ -634,13 +640,10 @@ class WorkspaceTagController extends Controller
         $possibleChildren = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
             ->findPossibleChildren($user, $tag);
 
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:check_tag_children.html.twig',
-            array(
-                'tag' => $tag,
-                'children' => $children,
-                'possibleChildren' => $possibleChildren
-            )
+        return array(
+            'tag' => $tag,
+            'children' => $children,
+            'possibleChildren' => $possibleChildren
         );
     }
 

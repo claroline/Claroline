@@ -220,8 +220,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             WHERE UPPER(u.lastName) LIKE :search
             OR UPPER(u.firstName) LIKE :search
             OR UPPER(u.username) LIKE :search
-            OR CONCAT(UPPER(u.firstName), ' ', UPPER(u.lastName)) LIKE :search
-            OR CONCAT(UPPER(u.lastName), ' ', UPPER(u.firstName)) LIKE :search
+            OR CONCAT(UPPER(u.firstName), CONCAT(' ', UPPER(u.lastName))) LIKE :search
+            OR CONCAT(UPPER(u.lastName), CONCAT(' ', UPPER(u.firstName))) LIKE :search
         ";
 
         $query = $this->_em->createQuery($dql)
@@ -421,6 +421,28 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $query->getResult();
     }
 
+    public function findByUsernames(array $usernames)
+    {
+        $firstUsername = array_pop($usernames);
+
+        $dql = "SELECT u FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.username = :user_first";
+
+
+        foreach ($usernames as $key => $username) {
+            $dql .= " OR u.username = :user_{$key}" . PHP_EOL;
+        }
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user_first', $firstUsername);
+
+        foreach ($usernames as $key => $username) {
+            $query->setParameter('user_' . $key, $username);
+        }
+
+        return $query->getResult();
+    }
+
     public function count()
     {
         $dql = "SELECT COUNT(u) FROM Claroline\CoreBundle\Entity\User u";
@@ -429,21 +451,25 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $query->getSingleScalarResult();
     }
 
-    /**
-     * extractQuery
-     *
-     * @param array $params
-     * @return Query
-     */
-    public function extractQuery($params)
+    public function findByIds(array $ids)
     {
-        $search = $params['search'];
-        if ($search !== null) {
+        $firstId = array_pop($ids);
+        $dql = "SELECT u FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.id IN (:first_id";
 
-            return $this->findByNameQuery($search, 0, 10);
+        foreach ($ids as $key => $id) {
+            $dql .= ", :id_{$key}" ;
         }
 
-        return null;
+        $dql .= ')';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('first_id', $firstId);
+
+        foreach ($ids as $key => $id) {
+            $query->setParameter("id_{$key}", $id);
+        }
+
+        return $query->getResult();
     }
 
     /**
@@ -454,8 +480,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      */
     public function extract($params)
     {
-        $query = $this->extractQuery($params);
+        $search = $params['search'];
+        if ($search !== null) {
 
-        return is_null($query) ? array() : $query->getResult();
+            return $this->findByName($search, 0, 10);
+        }
+
+        return array();
     }
 }

@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class ResourceRightsController extends Controller
 {
@@ -49,7 +50,7 @@ class ResourceRightsController extends Controller
                  $form = $this->createForm(new ResourceRightType($resource), new ResourceRights());
 
                  return $this->render(
-                     'ClarolineCoreBundle:Resource:resource_rights_form_creation.html.twig',
+                     'ClarolineCoreBundle:Resource:resourceRightsFormCreation.html.twig',
                      array(
                          'form' => $form->createView(),
                          'resource' => $resource,
@@ -60,7 +61,7 @@ class ResourceRightsController extends Controller
                 $form = $this->createForm(new ResourceRightType($resource), $resourceRight);
 
                 return $this->render(
-                    'ClarolineCoreBundle:Resource:resource_rights_form_edit.html.twig',
+                    'ClarolineCoreBundle:Resource:resourceRightsFormEdit.html.twig',
                     array(
                         'form' => $form->createView(),
                         'resourceRightId' => $resourceRight->getId(),
@@ -71,13 +72,25 @@ class ResourceRightsController extends Controller
             }
         }
 
+        $datas = $this->get('claroline.workspace.organizer')->getDatasForWorkspaceList(true);
+
         $template = $resource->getResourceType()->getName() === 'directory' ?
-            'ClarolineCoreBundle:Resource:rights_form_directory.html.twig' :
-            'ClarolineCoreBundle:Resource:rights_form_resource.html.twig';
+            'ClarolineCoreBundle:Resource:rightsFormDirectory.html.twig' :
+            'ClarolineCoreBundle:Resource:rightsFormResource.html.twig';
 
         return $this->render(
             $template,
-            array('roleRights' => $roleRights, 'resource' => $resource)
+            array(
+                'roleRights' => $roleRights,
+                'resource' => $resource,
+                'workspaces' => $datas['workspaces'],
+                'tags' => $datas['tags'],
+                'tagWorkspaces' => $datas['tagWorkspaces'],
+                'hierarchy' => $datas['hierarchy'],
+                'rootTags' => $datas['rootTags'],
+                'displayable' => $datas['displayable'],
+                'workspaceRoles' => $datas['workspaceRoles']
+            )
         );
     }
 
@@ -108,7 +121,7 @@ class ResourceRightsController extends Controller
         $editedResourceRightsWithChangeSet = array();
         $finalRights = isset($parameters['isRecursive']) ?
             $this->findChildrenRights($resource):
-            $finalRights = $rightsRepo->findNonAdminRights($resource);
+            $rightsRepo->findNonAdminRights($resource);
 
         foreach ($finalRights as $finalRight) {
             foreach ($permissions as $permission) {
@@ -140,7 +153,7 @@ class ResourceRightsController extends Controller
 
         $em->flush();
 
-        return new Response('success');
+        return new Response('success', 204);
     }
 
     /**
@@ -148,6 +161,8 @@ class ResourceRightsController extends Controller
      *     "/{resource}/role/{role}/right/create",
      *     name="claro_resource_right_create"
      * )
+     *
+     * @Template("ClarolineCoreBundle:Resource:rightsFormRow.html.twig")
      *
      * @param AbstractResource $resource the resource
      * @param Role             $role     the role
@@ -160,7 +175,7 @@ class ResourceRightsController extends Controller
         $collection = new ResourceCollection(array($resource));
         $this->checkAccess('EDIT', $collection);
         $form = $this->get('form.factory')->create(new ResourceRightType($resource), new ResourceRights());
-        $form->bind($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $isRecursive = $form->get('isRecursive')->getData();
@@ -173,18 +188,15 @@ class ResourceRightsController extends Controller
 
             $isDir = ($resource->getResourceType()->getName() === 'directory') ? true: false;
 
-            return $this->render(
-                'ClarolineCoreBundle:Resource:rights_form_row.html.twig',
-                array(
-                    'canCopy' => $form->get('canCopy')->getData(),
-                    'canOpen' => $form->get('canOpen')->getData(),
-                    'canDelete' => $form->get('canDelete')->getData(),
-                    'canEdit' => $form->get('canEdit')->getData(),
-                    'canExport' => $form->get('canExport')->getData(),
-                    'isDirectory' => $isDir,
-                    'role' => $role,
-                    'resource' => $resource
-                )
+            return array(
+                'canCopy' => $form->get('canCopy')->getData(),
+                'canOpen' => $form->get('canOpen')->getData(),
+                'canDelete' => $form->get('canDelete')->getData(),
+                'canEdit' => $form->get('canEdit')->getData(),
+                'canExport' => $form->get('canExport')->getData(),
+                'isDirectory' => $isDir,
+                'role' => $role,
+                'resource' => $resource
             );
         }
     }
@@ -204,7 +216,7 @@ class ResourceRightsController extends Controller
         $collection = new ResourceCollection(array($resource));
         $this->checkAccess('EDIT', $collection);
         $form = $this->get('form.factory')->create(new ResourceRightType($resource), $resourceRight);
-        $form->bind($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
 
@@ -240,6 +252,8 @@ class ResourceRightsController extends Controller
      *     options={"expose"=true}
      * )
      *
+     * @Template("ClarolineCoreBundle:Resource:rightsCreation.html.twig")
+     *
      * Displays the form for resource creation rights (i.e the right to create a
      * type of resource in a directory). Show the different resource types already
      * allowed for creation.
@@ -260,14 +274,11 @@ class ResourceRightsController extends Controller
             ->findOneBy(array('resource' => $resource, 'role' => $role));
         $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
 
-        return $this->render(
-            'ClarolineCoreBundle:Resource:rights_creation.html.twig',
-            array(
-                'configs' => array($config),
-                'resourceTypes' => $resourceTypes,
-                'resourceId' => $resource->getId(),
-                'roleId' => $role->getId()
-            )
+        return array(
+            'configs' => array($config),
+            'resourceTypes' => $resourceTypes,
+            'resourceId' => $resource->getId(),
+            'roleId' => $role->getId()
         );
     }
 

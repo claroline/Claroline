@@ -1,6 +1,6 @@
 {% macro flashBox() %}
     {% set flashBag = app.session.getFlashBag() %}
-    {% if flashBag.count() > 0 %}
+    {% if flashBag|length > 0 %}
         {% set flashes =
             {
                 'info': flashBag.get('info'),

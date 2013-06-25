@@ -31,3 +31,6 @@
 [submodule "src/plugin/Claroline/ScormBundle"]
 	path = src/plugin/Claroline/ScormBundle
 	url = https://github.com/claroline/ScormBundle.git
+[submodule "src/plugin/Claroline/ActivityToolBundle"]
+	path = src/plugin/Claroline/ActivityToolBundle
+	url = https://github.com/claroline/ActivityToolBundle.git

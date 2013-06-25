@@ -1,0 +1,22 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+{% block content %}
+    <!-- editeur wysiwyg -->
+        <script src='{{ asset('bundles/frontend/jquery/plugin/tinymce/jscripts/tiny_mce/tiny_mce.js') }}' type='text/javascript'></script>
+        <script type="text/javascript">
+    tinyMCE.init({
+        // General options
+        mode : "textareas"
+    });
+    </script>
+<form novalidate="novalidate"
+      action="{{path('claro_mail_send', {'userId': userId})}}"
+      method="post" {{ form_enctype(form) }}
+      id="generic-form"
+      class="form-horizontal">
+   {{ form_widget(form) }}
+   {{ form_rest(form) }}
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+    </div>
+</form>
+{% endblock %}

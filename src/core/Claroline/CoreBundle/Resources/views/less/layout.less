@@ -514,7 +514,7 @@ footer {
     background-image: -o-linear-gradient(top, @dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%)) !important; // Opera 11.10
     background-image: linear-gradient(to bottom, @dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%)) !important; // Standard, IE10
     background-repeat: repeat-x;
-    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",argb(@dropdownLinkBackgroundHover),argb(darken(@dropdownLinkBackgroundHover, 5%)))); // IE9 and down
+    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColparametersorstr='%d', GradientType=0)",argb(@dropdownLinkBackgroundHover),argb(darken(@dropdownLinkBackgroundHover, 5%)))); // IE9 and down
 }
 
 /**********/
@@ -534,7 +534,7 @@ footer {
 
 .please-wait {
     width:100%;
-    position: absolute;
+    position: fixed;
     z-index: 1050;
     top: 10px;
     display: none;
@@ -619,6 +619,10 @@ form legend
 
         (~".content.row-fluid .span@{index}") {
             width:unit(((@index * 100 / @contentSpanIterations) - @contentSpanMargin), "%");
+        }
+
+        (~".content.row-fluid .offset@{index}") {
+            margin-left:unit(((@index * 100 / @contentSpanIterations)), "%");
         }
 
         .contentSpan(@index - 1);
@@ -778,20 +782,7 @@ form legend
 
 .theme-generator .theme-value input
 {
-    padding:7px;
     margin:0px;
-    border-width:0;
-    width:90%;
-    resize:none;
-    background:transparent;
-    .border-radius(0);
-    .box-shadow(0 0 0 rgba(0,0,0,0));
-}
-
-.theme-generator .theme-value
-{
-    padding:0;
-    margin:0;
 }
 
 .theme-generator .theme-swatch span {

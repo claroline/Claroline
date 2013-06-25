@@ -1,0 +1,102 @@
+/*!
+ * Bootstrap v2.3.1
+ *
+ * Copyright 2012 Twitter, Inc
+ * Licensed under the Apache License v2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Designed and built with all the love in the world @twitter by @mdo and @fat.
+ */
+
+@vendorPath: "../../../../../../../../vendor/twitter/bootstrap/less";
+
+// Core variables and mixins
+@import "@{vendorPath}/variables.less";
+@import "variables.less"; // Modify this for custom colors, font-sizes, etc
+@import "@{vendorPath}/mixins.less";
+
+// CSS Reset
+@import "@{vendorPath}/reset.less";
+
+// Grid system and page structure
+@import "@{vendorPath}/scaffolding.less";
+@import "@{vendorPath}/grid.less";
+@import "@{vendorPath}/layouts.less";
+
+// Base CSS
+@import "@{vendorPath}/type.less";
+@import "@{vendorPath}/code.less";
+@import "@{vendorPath}/forms.less";
+@import "@{vendorPath}/tables.less";
+
+// Components: common
+// @import "@{vendorPath}/sprites.less"; // Remplaced by Font Awesome
+@import "@{vendorPath}/dropdowns.less";
+@import "@{vendorPath}/wells.less";
+@import "@{vendorPath}/component-animations.less";
+@import "@{vendorPath}/close.less";
+
+// Components: Buttons & Alerts
+@import "@{vendorPath}/buttons.less";
+@import "@{vendorPath}/button-groups.less";
+@import "@{vendorPath}/alerts.less"; // Note: alerts share common CSS with buttons and thus have styles in buttons.less
+
+// Components: Nav
+@import "@{vendorPath}/navs.less";
+@import "@{vendorPath}/navbar.less";
+@import "@{vendorPath}/breadcrumbs.less";
+@import "@{vendorPath}/pagination.less";
+@import "@{vendorPath}/pager.less";
+
+// Components: Popovers
+@import "@{vendorPath}/modals.less";
+@import "@{vendorPath}/tooltip.less";
+@import "@{vendorPath}/popovers.less";
+
+// Components: Misc
+@import "@{vendorPath}/thumbnails.less";
+@import "@{vendorPath}/media.less";
+@import "@{vendorPath}/labels-badges.less";
+@import "@{vendorPath}/progress-bars.less";
+@import "@{vendorPath}/accordion.less";
+@import "@{vendorPath}/carousel.less";
+@import "@{vendorPath}/hero-unit.less";
+
+// Utility classes
+@import "@{vendorPath}/utilities.less"; // Has to be last to override when necessary
+
+// Responsive.less
+// For phone and tablet devices
+// -------------------------------------------------------------
+
+// RESPONSIVE CLASSES
+// ------------------
+
+@import "@{vendorPath}/responsive-utilities.less";
+
+
+// MEDIA QUERIES
+// ------------------
+
+// Large desktops
+@import "@{vendorPath}/responsive-1200px-min.less";
+
+// Tablets to regular desktops
+@import "@{vendorPath}/responsive-768px-979px.less";
+
+// Phones to portrait tablets and narrow desktops
+@import "@{vendorPath}/responsive-767px-max.less";
+
+
+// RESPONSIVE NAVBAR
+// ------------------
+
+// From 979px and below, show a button to toggle navbar contents
+@import "@{vendorPath}/responsive-navbar.less";
+
+// Themefiles
+// ----------
+
+@import "../../less/layout.less";
+@import "theme.less";
+

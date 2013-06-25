@@ -42,7 +42,7 @@ class DirectoryListener implements ContainerAwareInterface
     {
         $form = $this->container->get('form.factory')->create(new DirectoryType, new Directory());
         $response = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:create_form.html.twig',
+            'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'directory'
@@ -63,7 +63,7 @@ class DirectoryListener implements ContainerAwareInterface
         $form = $this->container
             ->get('form.factory')
             ->create(new DirectoryType(), new Directory());
-        $form->bindRequest($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $event->setResource($form->getData());
@@ -73,7 +73,7 @@ class DirectoryListener implements ContainerAwareInterface
         }
 
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:create_form.html.twig',
+            'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'directory'
@@ -170,7 +170,7 @@ class DirectoryListener implements ContainerAwareInterface
             $config['perms']
         );
         $ed = $this->container->get('event_dispatcher');
-        $createdResources[$config['id']] = $directory;
+        $createdResources[$config['id']] = $directory->getId();
 
         foreach ($config['children'] as $child) {
             $newEvent = new ImportResourceTemplateEvent(

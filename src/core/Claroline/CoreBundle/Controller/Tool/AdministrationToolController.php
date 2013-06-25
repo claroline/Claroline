@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Controller\Tool;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Form\ToolType;
 
@@ -18,7 +18,10 @@ class AdministrationToolController extends Controller
      *     name="claro_admin_tool_show"
      * )
      *
-     * chanche the desktop tool name.
+     * @Template("ClarolineCoreBundle:Administration:desktopToolNames.html.twig")
+     *
+     * change the desktop tool name.
+     *
      * @return Response
      */
     public function showToolAction()
@@ -27,17 +30,15 @@ class AdministrationToolController extends Controller
         $forms = array();
         $em = $this->getDoctrine()->getManager();
         $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findAll();
+
         foreach ($tools as $i => $tool) {
             $forms[] = $this->createForm(new ToolType(), $tool);
             $forms[$i] = $forms[$i]->createView();
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Administration:desktop_tool_names.html.twig',
-            array(
-                'forms' => $forms,
-                'tools' => $tools
-            )
+        return array(
+            'forms' => $forms,
+            'tools' => $tools
         );
     }
 
@@ -48,8 +49,10 @@ class AdministrationToolController extends Controller
      * )
      * @Method("POST")
      *
-     * chanche the desktop tool name.
+     * change the desktop tool name.
+      *
      * @param integer $id
+      *
      * @return Response
      */
     public function modifyToolAction($id)
@@ -59,7 +62,7 @@ class AdministrationToolController extends Controller
         $form = $this->createForm(new ToolType(), $tool);
         $request = $this->get('request');
         if ($request->getMethod() === 'POST') {
-            $form->bind($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 
@@ -69,6 +72,5 @@ class AdministrationToolController extends Controller
         }
 
         return($this->showToolAction());
-
     }
 }
