@@ -136,4 +136,23 @@ class WorkspaceRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function workspacesWithMostResources($max) 
+    {
+        $qb = $this
+            ->createQueryBuilder('ws')
+            ->select('ws.name, ws.code, COUNT(rs.id) AS total')
+            ->leftJoin('Claroline\CoreBundle\Entity\Resource\AbstractResource','rs','WITH','ws = rs.workspace')
+            ->groupBy('ws.id')
+            ->orderBy('total','DESC');
+
+        if ($max >1)
+        {
+            $qb->setMaxResults($max);
+        }
+        $query = $qb->getQuery();
+        $result = $query->getResult();
+
+        return $result;
+    }
 }

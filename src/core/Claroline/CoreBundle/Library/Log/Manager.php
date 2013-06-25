@@ -107,6 +107,20 @@ class Manager
         return array($startDate->getTimestamp(), $endDate->getTimestamp());
     }
 
+    protected function getYesterdayRange()
+    {
+        //By default last thirty days :
+        $startDate = new \DateTime('now');
+        $startDate->setTime(0, 0, 0);
+        $startDate->sub(new \DateInterval('P1D')); // P1D means a period of 1 days
+
+        $endDate = new \DateTime('now');
+        $endDate->setTime(23, 59, 59);
+        $endDate->sub(new \DateInterval('P1D')); // P1D means a period of 1 days
+
+        return array($startDate->getTimestamp(), $endDate->getTimestamp());
+    }
+
     protected function getAdminOrCollaboratorWorkspaceIds()
     {
         $workspaceIds = array();

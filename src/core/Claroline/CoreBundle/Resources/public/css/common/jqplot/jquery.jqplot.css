@@ -8,6 +8,10 @@
     width: 400px;*/
 }
 
+.jqplot-pie-series.jqplot-data-label {
+    color:#fff;
+}
+
 /*rules applied to all axes*/
 .jqplot-axis {
     font-size: 0.75em;
