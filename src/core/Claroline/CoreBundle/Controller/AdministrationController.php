@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Form\ProfileType;
+use Claroline\CoreBundle\Form\AdminAnalyticsConnectionsType;
+use Claroline\CoreBundle\Form\AdminAnalyticsTopType;
 use Claroline\CoreBundle\Form\GroupType;
 use Claroline\CoreBundle\Form\GroupSettingsType;
 use Claroline\CoreBundle\Form\PlatformParametersType;
@@ -152,7 +154,7 @@ class AdministrationController extends Controller
      * @Route(
      *     "users/page/{page}",
      *     name="claro_admin_user_list",
-           defaults={"page"=1, "search"=""},
+     *     defaults={"page"=1, "search"=""},
      *     options = {"expose"=true}
      * )
      * @Method("GET")
@@ -784,6 +786,170 @@ class AdministrationController extends Controller
         return $this->render(
             'ClarolineCoreBundle:Administration:log_list.html.twig',
             $this->get('claroline.log.manager')->getAdminList($page)
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/analytics/",
+     *     name="claro_admin_analytics_show"
+     * )
+     * 
+     * @Method("GET")
+     *
+     * Displays platform analytics home page
+     *
+     *
+     * @return Response
+     *
+     * @throws \Exception
+     */
+    public function analyticsAction()
+    {
+        $manager = $this->get('doctrine.orm.entity_manager');
+        $actionsForRange = $this->get('claroline.analytics.manager')->getDailyActionNumberForDateRange();
+        $lastMonthActions = $actionsForRange["chartData"];
+        $mostViewedWS = $this->get('claroline.analytics.manager')->topWSByAction(null, 'ws_tool_read', 5);
+        $mostViewedMedia = $this->get('claroline.analytics.manager')->topMediaByAction(null, 'resource_read', 5);
+        $mostDownloadedResources = $this->get('claroline.analytics.manager')->topResourcesByAction(null, 'resource_export', 5);
+        $usersCount = $manager->getRepository('ClarolineCoreBundle:User')->count();
+        return $this->render(
+            'ClarolineCoreBundle:Administration:analytics.html.twig', 
+            array(
+                'barChartData'=>$lastMonthActions, 
+                'usersCount'=>$usersCount,
+                'mostViewedWS'=>$mostViewedWS,
+                'mostViewedMedia'=>$mostViewedMedia,
+                'mostDownloadedResources'=>$mostDownloadedResources
+            )
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/analytics/connections",
+     *     name="claro_admin_analytics_connections"
+     * )
+     * 
+     * @Method({"GET", "POST"})
+     *
+     * Displays platform analytics connections page
+     *
+     *
+     * @return Response
+     *
+     * @throws \Exception
+     */
+    public function analyticsConnectionsAction()
+    {
+        $request = $this->get('request');
+        $criteria_form = $this->createForm(new AdminAnalyticsConnectionsType());
+        $clone_form = clone $criteria_form; 
+        $criteria_form->bind($request);
+        $unique = false;
+        if ($criteria_form->isValid()) {
+            $range = $criteria_form->get('range')->getData();
+            $unique = ($criteria_form->get('unique')->getData()=='true')?true:false;
+        }
+        $manager = $this->get('doctrine.orm.entity_manager');
+        $actionsForRange = $this
+                        ->get('claroline.analytics.manager')
+                        ->getDailyActionNumberForDateRange($range, 'user_login',$unique);
+        if ($range === null) {
+            $clone_form->get('range')->setData($actionsForRange['range']);
+            $clone_form->get('unique')->setData($unique);
+            $criteria_form = $clone_form;
+        }
+        
+        $connections = $actionsForRange['chartData'];
+        $activeUsers = $this->get('claroline.analytics.manager')->getActiveUsers();        
+
+        return $this->render(
+            'ClarolineCoreBundle:Administration:analytics_connections.html.twig', 
+            array(
+                'connections'=>$connections,
+                'form_criteria' => $criteria_form->createView(),
+                'activeUsers'=>$activeUsers
+            )
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/analytics/resources",
+     *     name="claro_admin_analytics_resources"
+     * )
+     * 
+     * @Method("GET")
+     *
+     * Displays platform analytics resources page
+     *
+     *
+     * @return Response
+     *
+     * @throws \Exception
+     */
+    public function analyticsResourcesAction()
+    {
+        $manager = $this->get('doctrine.orm.entity_manager');
+        $wsCount = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->count();
+        $resourceCount = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->countResourcesByType();
+        return $this->render(
+            'ClarolineCoreBundle:Administration:analytics_resources.html.twig', 
+            array(
+                'wsCount'=>$wsCount,
+                'resourceCount'=>$resourceCount
+            )
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/analytics/top/{top_type}",
+     *     name="claro_admin_analytics_top",
+     *     defaults={"top_type" = "top_users_connections"}
+     * )
+     * 
+     * @Method({"GET", "POST"})
+     *
+     * Displays platform analytics top activity page
+     *
+     *
+     * @return Response
+     *
+     * @throws \Exception
+     */
+    public function analyticsTopAction($top_type)
+    {
+        $request = $this->get('request');
+        $criteria_form = $this->createForm(new AdminAnalyticsTopType());
+        $clone_form = clone $criteria_form;
+        $criteria_form->bind($request);
+
+        $range = $criteria_form->get('range')->getData();
+        if($range===null) {
+            $range = $this->get('claroline.analytics.manager')->getDefaultRange();
+        }
+        $top_type_temp = $criteria_form->get('top_type')->getData();
+        $top_type = ($top_type_temp!==null)?$top_type_temp:$top_type;
+        $max = $criteria_form->get('top_number')->getData();
+        $max = ($max!==null)?intval($max):30;
+
+        $listData = $this
+                        ->get('claroline.analytics.manager')
+                        ->getTopByCriteria($range, $top_type, $max);
+        
+        $clone_form->get('range')->setData($range);
+        $clone_form->get('top_type')->setData($top_type);
+        $clone_form->get('top_number')->setData($max);
+        $criteria_form = $clone_form;
+
+        return $this->render(
+            'ClarolineCoreBundle:Administration:analytics_top.html.twig', 
+            array(
+                'form_criteria'=>$criteria_form->createView(),
+                'list_data' => $listData
+            )
         );
     }
 }
