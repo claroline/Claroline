@@ -13,7 +13,6 @@ class LogDesktopWidgetConfigType extends AbstractType
         $workspaces = $options['workspaces'];
 
         if (is_array($workspaces)) {
-
             foreach ($workspaces as $workspace) {
                 $builder->add($workspace->getId(), 'checkbox', array('required' => false, 'label' => $workspace->getName()));
             }
