@@ -4,21 +4,11 @@ namespace Claroline\CoreBundle\DataFixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 
-class LoadToolsData extends AbstractFixture implements ContainerAwareInterface, OrderedFixtureInterface
+class LoadToolsData extends AbstractFixture implements OrderedFixtureInterface
 {
-    /** @var ContainerInterface $container */
-    private $container;
-
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-
     public function load(ObjectManager $manager)
     {
         $tools = array(

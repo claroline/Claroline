@@ -2,24 +2,16 @@
 
 namespace Claroline\CoreBundle\Tests\DataFixtures;
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Fixtures\LoggableFixture;
 
-class LoadRelWorkspaceTagData extends LoggableFixture implements ContainerAwareInterface
+class LoadRelWorkspaceTagData extends LoggableFixture
 {
-    private $container;
     private $relWorkspaceTag;
 
     public function __construct(array $relWorkspaceTag)
     {
         $this->relWorkspaceTag = $relWorkspaceTag;
-    }
-
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
     }
 
     public function load(ObjectManager $manager)

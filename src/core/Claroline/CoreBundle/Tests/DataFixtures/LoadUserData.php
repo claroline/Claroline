@@ -2,16 +2,13 @@
 
 namespace Claroline\CoreBundle\Tests\DataFixtures;
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 
-class LoadUserData extends AbstractFixture implements ContainerAwareInterface
+class LoadUserData extends AbstractFixture
 {
     private $users;
-    private $container;
     private $withWorkspace;
 
     /**
@@ -32,19 +29,12 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface
      * - 'directory/[username]' (user's workspace resource directory)
      *
      * @param array $users
+     * @param bool  $withWorkspace
      */
     public function __construct(array $users, $withWorkspace = true)
     {
         $this->users = $users;
         $this->withWorkspace = $withWorkspace;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
     }
 
     /**

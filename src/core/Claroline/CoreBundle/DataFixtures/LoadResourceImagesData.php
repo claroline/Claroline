@@ -4,8 +4,6 @@ namespace Claroline\CoreBundle\DataFixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\IconType;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
@@ -13,16 +11,8 @@ use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 /**
  * Resource images data fixture.
  */
-class LoadResourceImagesData extends AbstractFixture implements ContainerAwareInterface, OrderedFixtureInterface
+class LoadResourceImagesData extends AbstractFixture implements OrderedFixtureInterface
 {
-    /** @var ContainerInterface $container */
-    private $container;
-
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-
     /**
      * @param ObjectManager $manager
      */

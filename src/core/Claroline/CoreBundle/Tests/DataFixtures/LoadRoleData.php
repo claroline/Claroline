@@ -5,10 +5,8 @@ namespace Claroline\CoreBundle\Tests\DataFixtures;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class LoadRoleData extends AbstractFixture implements ContainerAwareInterface
+class LoadRoleData extends AbstractFixture
 {
     private $roles;
 
@@ -20,14 +18,6 @@ class LoadRoleData extends AbstractFixture implements ContainerAwareInterface
     public function __construct(array $roles)
     {
         $this->roles = $roles;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
     }
 
     /**

@@ -4,8 +4,6 @@ namespace Claroline\CoreBundle\DataFixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceTypeCustomAction;
@@ -13,16 +11,8 @@ use Claroline\CoreBundle\Entity\Resource\ResourceTypeCustomAction;
 /**
  * Resource types data fixture.
  */
-class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInterface, OrderedFixtureInterface
+class LoadResourceTypeData extends AbstractFixture implements OrderedFixtureInterface
 {
-    /** @var ContainerInterface $container */
-    private $container;
-
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-
     /**
      * Loads one meta type (document) and four resource types handled by the platform core :
      * - File
