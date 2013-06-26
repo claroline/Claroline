@@ -17,7 +17,7 @@ class ImportExportResourceListener
      * @DI\InjectParams({
      *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
      *     "ed" = @DI\Inject("event_dispatcher"),
-     *     "manager" = @DI\Inject("claroline.resource.manager")
+     *     "manager" = @DI\Inject("claroline.manager.resource_manager")
      * })
      */
     public function __construct($em, $ed, $manager)

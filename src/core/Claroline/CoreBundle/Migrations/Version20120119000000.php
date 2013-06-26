@@ -411,8 +411,10 @@ class Version20120119000000 extends BundleMigration
             array('onDelete' => 'SET NULL')
         );
 
-        $table->addUniqueIndex(array('next_id'), 'next_id');
-        $table->addUniqueIndex(array('previous_id'), 'previous_id');
+        /**@todo find why it doesn't work*/
+        //commented for now (or the resource creation doesn't work
+        //$table->addUniqueIndex(array('next_id'), 'next_id');
+        //$table->addUniqueIndex(array('previous_id'), 'previous_id');
         $this->storeTable($table);
     }
 
@@ -604,7 +606,7 @@ class Version20120119000000 extends BundleMigration
             array('shortcut_id'),
             array('id'),
             array('onDelete' => 'SET NULL')
-        ); 
+        );
 
         $this->storeTable($table);
     }
@@ -809,7 +811,7 @@ class Version20120119000000 extends BundleMigration
 
     private function createLogHiddenWorkspaceWidgetConfigTable(Schema $schema)
     {
-        $table = $schema->createTable('claro_log_hidden_workspace_widget_config');        
+        $table = $schema->createTable('claro_log_hidden_workspace_widget_config');
 
         $table->addColumn('workspace_id', 'integer', array('notnull' => true));
         $table->addColumn('user_id', 'integer', array('notnull' => true));

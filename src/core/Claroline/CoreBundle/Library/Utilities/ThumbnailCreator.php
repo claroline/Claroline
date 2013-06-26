@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Library\Utilities;
 
-use Claroline\CoreBundle\Library\Resource\Utilities;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -13,15 +13,13 @@ class ThumbnailCreator
     /**
      * @DI\InjectParams({
      *     "kernelRootDir" = @DI\Inject("%kernel.root_dir%"),
-     *     "thumbnailDirectory" = @DI\Inject("%claroline.param.thumbnails_directory%"),
-     *     "utilities" = @DI\Inject("claroline.resource.utilities")
+     *     "thumbnailDirectory" = @DI\Inject("%claroline.param.thumbnails_directory%")
      * })
      */
-    public function __construct($kernelRootDir, $thumbnailDirectory, Utilities $utilities)
+    public function __construct($kernelRootDir, $thumbnailDirectory)
     {
         $ds = DIRECTORY_SEPARATOR;
         $this->webDir = "{$kernelRootDir}{$ds}..{$ds}web";
-        $this->utilities = $utilities;
         $this->thumbnailDir = $thumbnailDirectory;
         $this->isGdLoaded = extension_loaded('gd');
         $this->isFfmpegLoaded = extension_loaded('ffmpeg');
@@ -157,7 +155,8 @@ class ThumbnailCreator
         $stamp = imagecreatefrompng($stampPath);
         imagesavealpha($im, true);
         imagecopy($im, $stamp, 0, imagesy($im) - imagesy($stamp), 0, 0, imagesx($stamp), imagesy($stamp));
-        $name = "{$this->utilities->generateGuid()}.{$extension}";
+        /** @TODO make the name random */
+        $name = "CHANGEMYNAME.{$extension}";
         imagepng($im, $this->thumbnailDir.$ds.$name);
         imagedestroy($im);
 

@@ -474,7 +474,7 @@ class ResourceManager
             $this->resourceRepo->findOneBy(array('parent' => $resource->getParent(), 'next' => null));
     }
 
-    private function hasLinkTo(Directory $parent, Directory $target)
+    public function hasLinkTo(Directory $parent, Directory $target)
     {
         $shortcuts = $this->shortcutRepo->findBy(array('parent' => $parent));
 
