@@ -8,6 +8,8 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\AbstractResourceRepository;
+use Claroline\CoreBundle\Repository\RoleRepository;
+use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 
 /**
  * @DI\Service("claroline.manager.rights_manager")
@@ -20,25 +22,35 @@ class RightsManager
     private $rightsRepo;
     /** @var AbstractResourceRepository */
     private $resourceRepo;
+    /** @var RoleRepository */
+    private $roleRepo;
+    /** @var ResourceTypeRepository */
+    private $resourceTypeRepo;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
      *     "writer" = @DI\Inject("claroline.writer.rights_writer"),
-     *     "rightsRepo" = @Di\Inject("resource_rights_repository"),
-     *     "resourceRepo" = @Di\Inject("resource_rights_repository")
+     *     "rightsRepo" = @DI\Inject("resource_rights_repository"),
+     *     "resourceRepo" = @DI\Inject("resource_repository"),
+     *     "roleRepo" = @DI\Inject("role_repository"),
+     *     "resourceTypeRepo" = @DI\Inject("resource_type_repository")
      * })
      */
     public function __construct(
         RightsWriter $writer,
         ResourceRightsRepository $rightsRepo,
-        AbstractResourceRepository $resourceRepo
+        AbstractResourceRepository $resourceRepo,
+        RoleRepository $roleRepo,
+        ResourceTypeRepository $resourceTypeRepo
     )
     {
         $this->writer = $writer;
         $this->rightsRepo = $rightsRepo;
         $this->resourceRepo = $resourceRepo;
+        $this->roleRepo = $roleRepo;
+        $this->resourceTypeRepo = $resourceTypeRepo;
     }
 
     /**
@@ -62,7 +74,18 @@ class RightsManager
         if ($isRecursive) {
             $resourceRights = $this->addMissingForDescendants($role, $resource);
         } else {
-            $resourceRights[] = $this->writer->create($this->getFalsePermissions(), array(), $resource, $role);
+            $resourceRights[] = $this->writer->create(
+                array(
+                    'canDelete' => false,
+                    'canOpen' => false,
+                    'canEdit' => false,
+                    'canCopy' => false,
+                    'canExport' => false,
+                ),
+                array(),
+                $resource,
+                $role
+            );
         }
 
         foreach ($resourceRights as $resourceRight) {
@@ -70,7 +93,7 @@ class RightsManager
         }
     }
 
-    public function editRights(AbstractResource $resource, Role $role, array $permissions, array $creations = array())
+    public function edit(AbstractResource $resource, Role $role, array $permissions, array $creations = array())
     {
         $rights = $this->rightsRepo->findOneBy(array('resource' => $resource, 'role' => $role));
         $this->writer->edit($rights, $permissions, $creations);
@@ -78,77 +101,16 @@ class RightsManager
         return $rights;
     }
 
-    public function cloneRights(AbstractResource $resource)
+    public function copy(AbstractResource $original, AbstractResource $resource)
     {
-       $resourceRights = $this->repo->findBy(array('resource' => $resource));
+       $resourceRights = $this->rightsRepo->findBy(array('resource' => $original));
+       $created = array();
 
        foreach ($resourceRights as $resourceRight) {
-           $created[] = $this->writer->createFrom($resource, $resourceRight->getRole(), $resourceRight);
+           $created[] = $this->writer->createFrom($resource, $resourceRight);
        }
 
        return $created;
-    }
-
-    /**
-     * Sets the resource rights of a resource.
-     * Expects an array of role of the following form:
-     * array('ROLE_WS_MANAGER' => array('canOpen' => true, 'canEdit' => false', ...)
-     * The 'canCopy' key must contain an array of resourceTypes name.
-     * @TODO REFACTOR THIS !!! WONT WORK WITH MANAGER
-     */
-    public function setRights(AbstractResource $resource, array $rights, array $roles = array())
-    {
-        $roleRepo = $this->em->getRepository('ClarolineCoreBundle:Role');
-        $resourceTypeRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType');
-        $workspace = $resource->getWorkspace();
-
-        foreach ($rights as $role => $permissions) {
-            $resourceTypes = array();
-            $unknownTypes = array();
-
-            foreach ($permissions['canCreate'] as $type) {
-                $rt = $resourceTypeRepo->findOneByName($type);
-                if ($rt === null) {
-                    $unknownTypes[] = $type['name'];
-                }
-                $resourceTypes[] = $rt;
-            }
-
-            if (count($unknownTypes) > 0) {
-                $content = "The resource type(s) ";
-                foreach ($unknownTypes as $unknown) {
-                    $content .= "{$unknown}, ";
-                }
-                $content .= "were not found";
-
-                throw new \Exception($content);
-            }
-
-            if (count($roles) === 0) {
-                $role = $roleRepo->findOneBy(array('name' => $role.'_'.$workspace->getId()));
-            } else {
-                $role = $roles[$role.'_'.$workspace->getId()];
-            }
-            $this->createRight($permissions, false, $role, $resource, $resourceTypes, false);
-        }
-
-        $this->createRight(
-            $this->getFalsePermissions(),
-            $roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
-            $resource,
-            array(),
-            false
-        );
-
-        $resourceTypes = $resourceTypeRepo->findAll();
-
-        $this->createRight(
-            $this->getTruePermissions(),
-            $roleRepo->findOneBy(array('name' => 'ROLE_ADMIN')),
-            $resource,
-            $resourceTypes,
-            false
-        );
     }
 
     /**
@@ -165,6 +127,7 @@ class RightsManager
 
         foreach ($descendants as $descendant) {
             $found = false;
+
             foreach ($alreadyExistings as $existingRight) {
                 if ($existingRight->getResource() === $descendant) {
                     $finalRights[] = $existingRight;
@@ -173,32 +136,21 @@ class RightsManager
             }
 
             if (!$found) {
-                $finalRights[] = $this->writer->create($this->getFalsePermissions(), array(), $resource, $role);
+                $finalRights[] = $this->writer->create(
+                    array(
+                        'canDelete' => false,
+                        'canOpen' => false,
+                        'canEdit' => false,
+                        'canCopy' => false,
+                        'canExport' => false,
+                    ),
+                    array(),
+                    $resource,
+                    $role
+                );
             }
         }
 
         return $finalRights;
-    }
-
-    public function getFalsePermissions()
-    {
-        return array(
-            'canCopy' => false,
-            'canOpen' => false,
-            'canDelete' => false,
-            'canEdit' => false,
-            'canExport' => false
-        );
-    }
-
-    public function getTruePermissions()
-    {
-        return array(
-            'canCopy' => true,
-            'canOpen' => true,
-            'canDelete' => true,
-            'canEdit' => true,
-            'canExport' => true
-        );
     }
 }

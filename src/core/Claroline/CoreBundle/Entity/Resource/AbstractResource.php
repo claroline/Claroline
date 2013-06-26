@@ -121,7 +121,7 @@ abstract class AbstractResource
      *     fetch="EAGER"
      * )
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="SET NULL", nullable=true)
+     *   @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      * })
      */
     protected $parent;
@@ -506,5 +506,9 @@ abstract class AbstractResource
     public function setMimeType($mimeType)
     {
         $this->mimeType = $mimeType;
+    }
+
+    public function __toString() {
+        return 'resource !!!';
     }
 }

@@ -126,6 +126,10 @@ class AbstractResourceRepositoryTest extends RepositoryTestCase
 
     public function testFindWorkspaceRootsByUser()
     {
+        $jane = self::getUser('jane');
+        $roots = self::$repo->findWorkspaceRootsByUser($jane);
+        $this->assertEquals(1, count($roots));
+        $this->assertEquals(self::getDirectory('jane')->getId(), $roots[0]['id']);
         $john = self::getUser('john');
         $roots = self::$repo->findWorkspaceRootsByUser($john);
         $this->assertEquals(2, count($roots));
@@ -204,7 +208,6 @@ class AbstractResourceRepositoryTest extends RepositoryTestCase
 
     public function testCount()
     {
-        //$count = self::$repo->count();
-        //var_dump($count);
+       $this->assertEquals(12, self::$repo->count());
     }
 }

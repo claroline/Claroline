@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Event\LogUserUpdateEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * Controller of the user profile.
@@ -30,6 +31,8 @@ class ProfileController extends Controller
      *     name="claro_profile_form"
      * )
      *
+     * @Template("ClarolineCoreBundle:Profile:profileForm.html.twig")
+     *
      * Displays an editable form of the current user's profile.
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -42,10 +45,7 @@ class ProfileController extends Controller
             ->findPlatformRoles($user);
         $form = $this->createForm(new ProfileType($roles), $user);
 
-        return $this->render(
-            'ClarolineCoreBundle:Profile:profile_form.html.twig',
-            array('profile_form' => $form->createView())
-        );
+        return array('profile_form' => $form->createView());
     }
 
     /**
@@ -53,6 +53,8 @@ class ProfileController extends Controller
      *     "/update",
      *     name="claro_profile_update"
      * )
+     *
+     * @Template("ClarolineCoreBundle:Profile:profileForm.html.twig")
      *
      * Updates the user's profile and redirects to the profile form.
      *
@@ -110,10 +112,7 @@ class ProfileController extends Controller
             return $this->redirect($this->generateUrl('claro_profile_form'));
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Profile:profile_form.html.twig',
-            array('profile_form' => $form->createView())
-        );
+        return array('profile_form' => $form->createView());
     }
 
     /**
@@ -121,6 +120,8 @@ class ProfileController extends Controller
      *     "/view/{userId}",
      *     name="claro_profile_view"
      * )
+     *
+     * @Template("ClarolineCoreBundle:Profile:profile.html.twig")
      *
      * Displays the public profile of an user.
      *
@@ -133,10 +134,7 @@ class ProfileController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository('ClarolineCoreBundle:User')->find($userId);
 
-        return $this->render(
-            'ClarolineCoreBundle:Profile:profile.html.twig',
-            array('user' => $user)
-        );
+        return array('user' => $user);
     }
 
     private function addRoles(User $user, $newRoles)

@@ -139,7 +139,7 @@ class ResourceManagerListener
         $datas = $this->organizer->getDatasForWorkspaceList(true);
 
         return $this->templating->render(
-            'ClarolineCoreBundle:Tool\workspace\resource_manager:resources_rights.html.twig',
+            'ClarolineCoreBundle:Tool\workspace\resource_manager:resourcesRights.html.twig',
             array(
                 'workspace' => $workspace,
                 'resource' => $resource,

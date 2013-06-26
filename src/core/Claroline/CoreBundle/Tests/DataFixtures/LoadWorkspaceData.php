@@ -41,7 +41,7 @@ class LoadWorkspaceData extends AbstractFixture implements ContainerAwareInterfa
      */
     public function load(ObjectManager $manager)
     {
-        $workspaceCreator = $this->container->get('claroline.workspace.creator');
+        $workspaceCreator = $this->container->get('claroline.manager.workspace_manager');
         $personalWsTemplateFile = $this->container->getParameter('claroline.param.templates_directory')."default.zip";
 
         foreach ($this->workspaces as $name => $username) {

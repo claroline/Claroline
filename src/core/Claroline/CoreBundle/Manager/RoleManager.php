@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Manager;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Writer\RoleWriter;
 
@@ -30,9 +31,14 @@ class RoleManager
     {
         foreach ($roles as $name => $translation) {
             $role = $this->writer->create("{$name}_{$workspace->getId()}", $translation, Role::WS_ROLE, $workspace);
-            $entityRoles[$role->getName()] = $role;
+            $entityRoles[$name] = $role;
         }
 
         return $entityRoles;
+    }
+
+    public function bind(Role $role, AbstractRoleSubject $users)
+    {
+        $this->writer->bind($role, $users);
     }
 }

@@ -3,9 +3,9 @@
 namespace Claroline\CoreBundle\Controller\Tool;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * Display logs in workspace's tool.
@@ -28,6 +28,8 @@ class WorkspaceLogController extends Controller
      *
      * @Method("GET")
      *
+     * @Template("ClarolineCoreBundle:Tool/workspace/logs:logList.html.twig")
+     *
      * Displays logs list using filter parameteres and page number
      *
      * @param $page int The requested page number.
@@ -41,9 +43,6 @@ class WorkspaceLogController extends Controller
         $em = $this->container->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
-        return $this->render(
-            'ClarolineCoreBundle:Tool/workspace/logs:log_list.html.twig',
-            $this->get('claroline.log.manager')->getWorkspaceList($workspace, $page)
-        );
+        return $this->get('claroline.log.manager')->getWorkspaceList($workspace, $page);
     }
 }

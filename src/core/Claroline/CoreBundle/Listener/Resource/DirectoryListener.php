@@ -11,6 +11,8 @@ use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Library\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Library\Event\ExportResourceTemplateEvent;
 use Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent;
 
@@ -31,6 +33,8 @@ class DirectoryListener implements ContainerAwareInterface
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
+        $this->em = $container->get('doctrine.orm.entity_manager');
+        $this->ed = $container->get('event_dispatcher');
     }
 
     /**
@@ -42,7 +46,7 @@ class DirectoryListener implements ContainerAwareInterface
     {
         $form = $this->container->get('form.factory')->create(new DirectoryType, new Directory());
         $response = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:create_form.html.twig',
+            'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'directory'
@@ -73,7 +77,7 @@ class DirectoryListener implements ContainerAwareInterface
         }
 
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:create_form.html.twig',
+            'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'directory'
@@ -190,5 +194,44 @@ class DirectoryListener implements ContainerAwareInterface
 
         $event->setCreatedResources($createdResources);
         $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("delete_directory")
+     *
+     * @param DeleteResourceEvent $event
+     *
+     * Removes a directory.
+     */
+    public function delete(DeleteResourceEvent $event)
+    {
+        $resource = $event->getResource();
+
+        if ($resource->getParent() === null) {
+            throw new \LogicException('Root directory cannot be removed');
+        }
+
+        $children = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+            ->getChildren($resource, false, 'path', 'DESC');
+
+        foreach ($children as $child) {
+            $event = new DeleteResourceEvent($child);
+            $this->ed->dispatch("delete_{$child->getResourceType()->getName()}", $event);
+        }
+    }
+
+    /**
+     * @DI\Observe("copy_directory")
+     *
+     * @param CopyResourceEvent $event
+     *
+     * Copy a directory.
+     */
+    public function copy(CopyResourceEvent $event)
+    {
+        $resourceCopy = new Directory();
+        $dirType = $this->resourceTypeRepo->findOneByName('directory');
+        $resourceCopy->setResourceType($dirType);
+        $event->setCopy($resourceCopy);
     }
 }

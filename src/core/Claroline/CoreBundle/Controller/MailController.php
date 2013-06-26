@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Form\MailType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class MailController extends Controller
 {
@@ -13,6 +14,8 @@ class MailController extends Controller
      *     "/form/{userId}",
      *     name="claro_mail_form"
      * )
+     *
+     * @Template()
      *
      * Displays the mail form.
      *
@@ -24,9 +27,9 @@ class MailController extends Controller
     {
         $form = $this->createForm(new MailType());
 
-        return $this->render(
-            'ClarolineCoreBundle:Mail:mail_form.html.twig',
-            array('form' => $form->createView(), 'userId' => $userId)
+        return array(
+            'form' => $form->createView(),
+            'userId' => $userId
         );
     }
 
@@ -35,6 +38,9 @@ class MailController extends Controller
      *     "/send/{userId}",
      *     name="claro_mail_send"
      * )
+     *
+     * @Template()
+     *
      * Handles the mail form submission (sends a mail).
      *
      * @param integer $userId
@@ -62,9 +68,9 @@ class MailController extends Controller
 
         // add success/error message...
 
-        return $this->render(
-            'ClarolineCoreBundle:Mail:mail_form.html.twig',
-            array('form' => $form->createView(), 'userId' => $userId)
+        return array(
+            'form' => $form->createView(),
+            'userId' => $userId
         );
     }
 }

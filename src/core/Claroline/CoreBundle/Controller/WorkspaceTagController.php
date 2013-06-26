@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
 class WorkspaceTagController extends Controller
@@ -24,6 +25,9 @@ class WorkspaceTagController extends Controller
      *     name="claro_workspace_manage_tag"
      * )
      * @Method("GET")
+     *
+     * @Template()
+     *
      * @Secure(roles="ROLE_USER")
      *
      * Display a table showing tags associated to user's workspaces
@@ -56,14 +60,11 @@ class WorkspaceTagController extends Controller
         $tagsNameTxt = substr($tagsNameTxt, 0, strlen($tagsNameTxt) - 1);
         $tagsNameTxt .= ']';
 
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:manage_tag.html.twig',
-            array(
-                'user' => $user,
-                'tagsNameTxt' => $tagsNameTxt,
-                'workspaces' => $workspaces,
-                'workspacesTags' => $workspacesTags
-            )
+        return array(
+            'user' => $user,
+            'tagsNameTxt' => $tagsNameTxt,
+            'workspaces' => $workspaces,
+            'workspacesTags' => $workspacesTags
         );
     }
 
@@ -73,6 +74,9 @@ class WorkspaceTagController extends Controller
      *     name="claro_workspace_manage_admin_tag"
      * )
      * @Method("GET")
+     *
+     * @Template()
+     *
      * @Secure(roles="ADMIN")
      *
      * Display a table showing tags associated to user's workspaces
@@ -104,14 +108,11 @@ class WorkspaceTagController extends Controller
         $tagsNameTxt = substr($tagsNameTxt, 0, strlen($tagsNameTxt) - 1);
         $tagsNameTxt .= ']';
 
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:manage_admin_tag.html.twig',
-            array(
-                'user' => $user,
-                'tagsNameTxt' => $tagsNameTxt,
-                'workspaces' => $workspaces,
-                'workspacesTags' => $workspacesTags
-            )
+        return array(
+            'user' => $user,
+            'tagsNameTxt' => $tagsNameTxt,
+            'workspaces' => $workspaces,
+            'workspacesTags' => $workspacesTags
         );
     }
 
@@ -121,6 +122,9 @@ class WorkspaceTagController extends Controller
      *     name="claro_workspace_tag_create_form"
      * )
      * @Method("GET")
+     *
+     * @Template()
+     *
      * @Secure(roles="ROLE_USER")
      *
      * Renders the Tag creation form
@@ -137,9 +141,9 @@ class WorkspaceTagController extends Controller
         $workspaceTag->setUser($user);
         $form = $this->createForm(new WorkspaceTagType(), $workspaceTag);
 
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:workspace_tag_form.html.twig',
-            array('form' => $form->createView(), 'user' => $user)
+        return array(
+            'form' => $form->createView(),
+            'user' => $user
         );
     }
 
@@ -149,6 +153,9 @@ class WorkspaceTagController extends Controller
      *     name="claro_workspace_admin_tag_create_form"
      * )
      * @Method("GET")
+     *
+     * @Template()
+     *
      * @Secure(roles="ROLE_ADMIN")
      *
      * Renders the Tag creation form
@@ -164,10 +171,7 @@ class WorkspaceTagController extends Controller
         $workspaceTag->setUser(null);
         $form = $this->createForm(new AdminWorkspaceTagType(), $workspaceTag);
 
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:workspace_admin_tag_form.html.twig',
-            array('form' => $form->createView())
-        );
+        return array('form' => $form->createView());
     }
 
     /**
@@ -176,6 +180,9 @@ class WorkspaceTagController extends Controller
      *     name="claro_workspace_tag_create"
      * )
      * @Method("POST")
+     *
+     * @Template("ClarolineCoreBundle:WorkspaceTag:workspaceTagCreateForm.html.twig")
+     *
      * @Secure(roles="ROLE_USER")
      *
      * Creates a new Tag
@@ -196,6 +203,7 @@ class WorkspaceTagController extends Controller
         }
 
         $em = $this->get('doctrine.orm.entity_manager');
+        $tagManager = $this->get('claroline.manager.workspace_tag_manager');
         $workspaceTag = new WorkspaceTag();
         $workspaceTag->setUser($user);
 
@@ -204,23 +212,17 @@ class WorkspaceTagController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em->persist($workspaceTag);
-            $hierarchy = new WorkspaceTagHierarchy();
-            $hierarchy->setUser($user);
-            $hierarchy->setTag($workspaceTag);
-            $hierarchy->setParent($workspaceTag);
-            $hierarchy->setLevel(0);
-            $em->persist($hierarchy);
-            $em->flush();
+            $tagManager->insert($workspaceTag);
+            $tagManager->createTagHierarchy($workspaceTag, $workspaceTag, 0);
 
             return $this->redirect(
                 $this->generateUrl('claro_workspace_manage_tag')
             );
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:workspace_tag_form.html.twig',
-            array('form' => $form->createView(), 'user' => $user)
+        return array(
+            'form' => $form->createView(),
+            'user' => $user
         );
     }
 
@@ -230,6 +232,9 @@ class WorkspaceTagController extends Controller
      *     name="claro_workspace_admin_tag_create"
      * )
      * @Method("POST")
+     *
+     * @Template("ClarolineCoreBundle:WorkspaceTag:workspaceAdminTagCreateForm.html.twig")
+     *
      * @Secure(roles="ROLE_ADMIN")
      *
      * Creates a new Tag
@@ -242,6 +247,7 @@ class WorkspaceTagController extends Controller
             throw new AccessDeniedException();
         }
         $em = $this->get('doctrine.orm.entity_manager');
+        $tagManager = $this->get('claroline.manager.workspace_tag_manager');
         $workspaceTag = new WorkspaceTag();
         $workspaceTag->setUser(null);
 
@@ -250,24 +256,15 @@ class WorkspaceTagController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em->persist($workspaceTag);
-            $hierarchy = new WorkspaceTagHierarchy();
-            $hierarchy->setUser(null);
-            $hierarchy->setTag($workspaceTag);
-            $hierarchy->setParent($workspaceTag);
-            $hierarchy->setLevel(0);
-            $em->persist($hierarchy);
-            $em->flush();
+            $tagManager->insert($workspaceTag);
+            $tagManager->createTagHierarchy($workspaceTag, $workspaceTag, 0);
 
             return $this->redirect(
                 $this->generateUrl('claro_workspace_manage_admin_tag')
             );
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:workspace_admin_tag_form.html.twig',
-            array('form' => $form->createView())
-        );
+        return array('form' => $form->createView());
     }
 
     /**
@@ -294,6 +291,7 @@ class WorkspaceTagController extends Controller
         }
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->get('doctrine.orm.entity_manager');
+        $tagManager = $this->get('claroline.manager.workspace_tag_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
         if (is_null($user) || is_null($workspace)) {
@@ -306,28 +304,15 @@ class WorkspaceTagController extends Controller
             ->findOneBy(array('name' => $tagName, 'user' => $user->getId()));
 
         if ($tag === null) {
-            $tag = new WorkspaceTag();
-            $tag->setName($tagName);
-            $tag->setUser($user);
-            $em->persist($tag);
-            $hierarchy = new WorkspaceTagHierarchy();
-            $hierarchy->setUser($user);
-            $hierarchy->setTag($tag);
-            $hierarchy->setParent($tag);
-            $hierarchy->setLevel(0);
-            $em->persist($hierarchy);
-            $em->flush();
+            $tag = $tagManager->createTag($tagName, $user);
+            $tagManager->createTagHierarchy($tag, $tag, 0);
         }
 
         $relWsTag = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
             ->findOneByWorkspaceAndTagAndUser($workspace, $tag, $user);
 
         if ($relWsTag == null) {
-            $relWsTag = new RelWorkspaceTag();
-            $relWsTag->setWorkspace($workspace);
-            $relWsTag->setTag($tag);
-            $em->persist($relWsTag);
-            $em->flush();
+            $tagManager->createTagRelation($tag, $workspace);
         }
 
         return new Response('success', 204);
@@ -355,6 +340,7 @@ class WorkspaceTagController extends Controller
             throw new AccessDeniedException();
         }
         $em = $this->get('doctrine.orm.entity_manager');
+        $tagManager = $this->get('claroline.manager.workspace_tag_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
         if (is_null($workspace)) {
@@ -365,28 +351,15 @@ class WorkspaceTagController extends Controller
             ->findOneBy(array('name' => $tagName, 'user' => null));
 
         if ($tag === null) {
-            $tag = new WorkspaceTag();
-            $tag->setName($tagName);
-            $tag->setUser(null);
-            $em->persist($tag);
-            $hierarchy = new WorkspaceTagHierarchy();
-            $hierarchy->setUser(null);
-            $hierarchy->setTag($tag);
-            $hierarchy->setParent($tag);
-            $hierarchy->setLevel(0);
-            $em->persist($hierarchy);
-            $em->flush();
+            $tag = $tagManager->createTag($tagName);
+            $tagManager->createTagHierarchy($tag, $tag, 0);
         }
 
         $relWsTag = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
             ->findOneAdminByWorkspaceAndTag($workspace, $tag);
 
         if ($relWsTag === null) {
-            $relWsTag = new RelWorkspaceTag();
-            $relWsTag->setWorkspace($workspace);
-            $relWsTag->setTag($tag);
-            $em->persist($relWsTag);
-            $em->flush();
+            $tagManager->createTagRelation($tag, $workspace);
         }
 
         return new Response('success', 204);
@@ -412,6 +385,7 @@ class WorkspaceTagController extends Controller
     public function removeTagFromWorkspace($userId, $workspaceId, $workspaceTagId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
+        $tagManager = $this->get('claroline.manager.workspace_tag_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
         $workspaceTag = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')->find($workspaceTagId);
         $user = $this->get('security.context')->getToken()->getUser();
@@ -428,8 +402,7 @@ class WorkspaceTagController extends Controller
 
         $relWorkspaceTag = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
             ->findOneByWorkspaceAndTagAndUser($workspace, $workspaceTag, $user);
-        $em->remove($relWorkspaceTag);
-        $em->flush();
+        $tagManager->deleteTagRelation($relWorkspaceTag);
 
         return new Response('success', 204);
     }
@@ -456,6 +429,7 @@ class WorkspaceTagController extends Controller
             throw new AccessDeniedException();
         }
         $em = $this->get('doctrine.orm.entity_manager');
+        $tagManager = $this->get('claroline.manager.workspace_tag_manager');
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
         $workspaceTag = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')->find($workspaceTagId);
 
@@ -465,8 +439,7 @@ class WorkspaceTagController extends Controller
 
         $relWorkspaceTag = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
             ->findOneAdminByWorkspaceAndTag($workspace, $workspaceTag);
-        $em->remove($relWorkspaceTag);
-        $em->flush();
+        $tagManager->deleteTagRelation($relWorkspaceTag);
 
         return new Response('success', 204);
     }
@@ -478,11 +451,13 @@ class WorkspaceTagController extends Controller
      * )
      * @Method("GET")
      *
+     * @Template()
+     *
      * Render a page where admin tags can be organized
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function organizeWorkspaceAdminTag()
+    public function organizeWorkspaceAdminTagAction()
     {
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
@@ -510,13 +485,10 @@ class WorkspaceTagController extends Controller
             }
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:organize_admin_tag.html.twig',
-            array(
-                'tags' => $tags,
-                'hierarchy' => $hierarchy,
-                'rootTags' => $rootTags
-            )
+        return array(
+            'tags' => $tags,
+            'hierarchy' => $hierarchy,
+            'rootTags' => $rootTags
         );
     }
 
@@ -527,11 +499,13 @@ class WorkspaceTagController extends Controller
      * )
      * @Method("GET")
      *
+     * @Template()
+     *
      * Render a page where tags can be organized
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function organizeWorkspaceTag()
+    public function organizeWorkspaceTagAction()
     {
         if (!$this->get('security.context')->isGranted('ROLE_USER')) {
             throw new AccessDeniedException();
@@ -560,13 +534,10 @@ class WorkspaceTagController extends Controller
             }
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:organize_tag.html.twig',
-            array(
-                'tags' => $tags,
-                'hierarchy' => $hierarchy,
-                'rootTags' => $rootTags
-            )
+        return array(
+            'tags' => $tags,
+            'hierarchy' => $hierarchy,
+            'rootTags' => $rootTags
         );
     }
 
@@ -577,13 +548,15 @@ class WorkspaceTagController extends Controller
      * )
      * @Method("GET")
      *
+     * @Template()
+     *
      * Render a page where children can be added to a tag
      *
      * @param integer $tagId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function checkPotentialWorkspaceAdminTagChildren($tagId)
+    public function checkPotentialWorkspaceAdminTagChildrenAction($tagId)
     {
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
@@ -597,13 +570,10 @@ class WorkspaceTagController extends Controller
         $possibleChildren = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
             ->findPossibleAdminChildren($tag);
 
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:check_admin_tag_children.html.twig',
-            array(
-                'tag' => $tag,
-                'children' => $children,
-                'possibleChildren' => $possibleChildren
-            )
+        return array(
+            'tag' => $tag,
+            'children' => $children,
+            'possibleChildren' => $possibleChildren
         );
     }
 
@@ -614,13 +584,15 @@ class WorkspaceTagController extends Controller
      * )
      * @Method("GET")
      *
+     * @Template()
+     *
      * Render a page where children can be added to a tag
      *
      * @param integer $tagId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function checkPotentialWorkspaceTagChildren($tagId)
+    public function checkPotentialWorkspaceTagChildrenAction($tagId)
     {
         if (!$this->get('security.context')->isGranted('ROLE_USER')) {
             throw new AccessDeniedException();
@@ -634,13 +606,10 @@ class WorkspaceTagController extends Controller
         $possibleChildren = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
             ->findPossibleChildren($user, $tag);
 
-        return $this->render(
-            'ClarolineCoreBundle:Workspace:check_tag_children.html.twig',
-            array(
-                'tag' => $tag,
-                'children' => $children,
-                'possibleChildren' => $possibleChildren
-            )
+        return array(
+            'tag' => $tag,
+            'children' => $children,
+            'possibleChildren' => $possibleChildren
         );
     }
 
@@ -670,6 +639,7 @@ class WorkspaceTagController extends Controller
         if (is_array($children) && count($children) > 0) {
 
             $em = $this->get('doctrine.orm.entity_manager');
+            $tagManager = $this->get('claroline.manager.workspace_tag_manager');
             $tag = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
                 ->findOneById($tagId);
             // Get all hierarchies where param $tag is a child
@@ -677,20 +647,18 @@ class WorkspaceTagController extends Controller
                 ->findBy(array('user' => null , 'tag' => $tag));
             // Get all hierarchies where parent is in param
             $childrenhierarchies = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTagHierarchy')
-                ->findAllAdminHierarchiesByParents($children);
+                ->findAdminHierarchiesByParents($children);
 
             foreach ($childrenhierarchies as $childHierarchy) {
 
                 foreach ($tagsHierarchy as $tagHierarchy) {
-                    $hierarchy = new WorkspaceTagHierarchy();
-                    $hierarchy->setUser(null);
-                    $hierarchy->setTag($childHierarchy->getTag());
-                    $hierarchy->setParent($tagHierarchy->getParent());
-                    $hierarchy->setLevel($childHierarchy->getLevel() + $tagHierarchy->getLevel() + 1);
-                    $em->persist($hierarchy);
+                    $tagManager->createTagHierarchy(
+                        $childHierarchy->getTag(),
+                        $tagHierarchy->getParent(),
+                        $childHierarchy->getLevel() + $tagHierarchy->getLevel() + 1
+                    );
                 }
             }
-            $em->flush();
         }
 
         return new Response('success', 204);
@@ -722,6 +690,7 @@ class WorkspaceTagController extends Controller
         $children = explode(',', $childrenString);
 
         if (is_array($children) && count($children) > 0) {
+            $tagManager = $this->get('claroline.manager.workspace_tag_manager');
 
             $tag = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
                 ->findOneBy(array('user' => $user, 'id' => $tagId));
@@ -730,20 +699,18 @@ class WorkspaceTagController extends Controller
                 ->findBy(array('user' => $user , 'tag' => $tag));
             // Get all hierarchies where parent is in param
             $childrenhierarchies = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTagHierarchy')
-                ->findAllHierarchiesByParents($user, $children);
+                ->findHierarchiesByParents($user, $children);
 
             foreach ($childrenhierarchies as $childHierarchy) {
 
                 foreach ($tagsHierarchy as $tagHierarchy) {
-                    $hierarchy = new WorkspaceTagHierarchy();
-                    $hierarchy->setUser($user);
-                    $hierarchy->setTag($childHierarchy->getTag());
-                    $hierarchy->setParent($tagHierarchy->getParent());
-                    $hierarchy->setLevel($childHierarchy->getLevel() + $tagHierarchy->getLevel() + 1);
-                    $em->persist($hierarchy);
+                    $tagManager->createTagHierarchy(
+                        $childHierarchy->getTag(),
+                        $tagHierarchy->getParent(),
+                        $childHierarchy->getLevel() + $tagHierarchy->getLevel() + 1
+                    );
                 }
             }
-            $em->flush();
         }
 
         return new Response('success', 204);
@@ -775,6 +742,7 @@ class WorkspaceTagController extends Controller
         if (is_array($children) && count($children) > 0) {
 
             $em = $this->get('doctrine.orm.entity_manager');
+            $tagManager = $this->get('claroline.manager.workspace_tag_manager');
             $tag = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
                 ->findOneById($tagId);
 
@@ -844,12 +812,10 @@ class WorkspaceTagController extends Controller
 
                         $levelCount[$currentTagId][$level]--;
                         unset($multiHierarchies[$index]);
-                        $em->remove($singleHierarchy);
+                        $tagManager->deleteTagHierarchy($singleHierarchy);
                     }
                 }
             }
-
-            $em->flush();
         }
 
         return new Response('success', 204);
@@ -881,6 +847,7 @@ class WorkspaceTagController extends Controller
         $children = explode(',', $childrenString);
 
         if (is_array($children) && count($children) > 0) {
+            $tagManager = $this->get('claroline.manager.workspace_tag_manager');
 
             $tag = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
                 ->findOneBy(array('user' => $user, 'id' => $tagId));
@@ -951,12 +918,10 @@ class WorkspaceTagController extends Controller
 
                         $levelCount[$currentTagId][$level]--;
                         unset($multiHierarchies[$index]);
-                        $em->remove($singleHierarchy);
+                        $tagManager->deleteTagHierarchy($singleHierarchy);
                     }
                 }
             }
-
-            $em->flush();
         }
 
         return new Response('success', 204);

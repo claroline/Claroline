@@ -11,8 +11,20 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class LogDesktopWidgetConfig
 {
+
     /**
      * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @ORM\Column(type="boolean", name="is_default", nullable=false)
+     */
+    protected $isDefault = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
@@ -22,6 +34,47 @@ class LogDesktopWidgetConfig
      * @ORM\Column(type="integer", name="amount", nullable=false)
      */
     protected $amount = 5;
+
+    public function copy (LogDesktopWidgetConfig $source = null) {
+        if ($source !== null) {
+            $this->setIsDefault($source->getIsDefault());
+            $this->setAmount($source->getAmount());
+            $this->setUser($source->getUser());
+        }
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set isDefault
+     *
+     * @param boolean $isDefault
+     * @return LogDesktopWidgetConfig
+     */
+    public function setIsDefault($isDefault)
+    {
+        $this->isDefault = $isDefault;
+    
+        return $this;
+    }
+
+    /**
+     * Get isDefault
+     *
+     * @return boolean 
+     */
+    public function getIsDefault()
+    {
+        return $this->isDefault;
+    }
 
     /**
      * Set amount
@@ -52,7 +105,7 @@ class LogDesktopWidgetConfig
      * @param \Claroline\CoreBundle\Entity\User $user
      * @return LogDesktopWidgetConfig
      */
-    public function setUser(\Claroline\CoreBundle\Entity\User $user)
+    public function setUser(\Claroline\CoreBundle\Entity\User $user = null)
     {
         $this->user = $user;
     

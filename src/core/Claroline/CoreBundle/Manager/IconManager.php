@@ -42,10 +42,8 @@ class IconManager
      *
      * @return AbstractResource
      */
-    public function findResourceIcon(AbstractResource $resource, $isFixture = false)
+    public function findResourceIcon(AbstractResource $resource, ResourceType $type, $isFixture = false)
     {
-        $type = $resource->getResourceType();
-
         if ($type->getName() !== 'file') {
             $icon = $this->getTypeIcon($type);
         } else {

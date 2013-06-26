@@ -37,11 +37,12 @@ class LoadShortcutData extends AbstractFixture implements ContainerAwareInterfac
      */
     public function load(ObjectManager $manager)
     {
-        $resourceManager = $this->container->get('claroline.resource.manager');
+        $resourceManager = $this->container->get('claroline.manager.resource_manager');
         $shortcut = $resourceManager->makeShortcut(
             $this->target,
             $this->getReference('directory/'.$this->directory),
-            $this->getReference('user/'.$this->creator)
+            $this->getReference('user/'.$this->creator),
+            new ResourceShortcut()
         );
 
         if ($this->referenceName !== '') {
