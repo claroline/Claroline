@@ -53,6 +53,12 @@ Model
 - User/Group
 - Resource
 - Roles/Permissions
+- Badge/Group
+
+Badge system
+------------
+
+See the [dedicated documentation][3] to see how badge work in Claroline.
 
 Plugin system
 -------------
@@ -64,4 +70,5 @@ heir own repositories.
 
 [1]: ../index.md
 [2]: plugins.md
+[3]: badge.md
 
