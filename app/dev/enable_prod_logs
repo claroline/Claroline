@@ -17,7 +17,7 @@ $config['monolog'] = array(
         'main' => array(
             'type' => 'stream',
             'path' => '%kernel.logs_dir%/%kernel.environment%.log',
-            'level' => 'debug',
+            'level' => 'debug'
         ),
         'firephp' => array(
             'type' => 'firephp',
