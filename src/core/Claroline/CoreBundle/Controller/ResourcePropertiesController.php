@@ -10,6 +10,7 @@ use Claroline\CoreBundle\Form\ResourcePropertiesType;
 use Claroline\CoreBundle\Form\ResourceNameType;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Claroline\CoreBundle\Library\Event\LogResourceUpdateEvent;
 
 
@@ -21,6 +22,8 @@ class ResourcePropertiesController extends Controller
      *     name="claro_resource_rename_form",
      *     options={"expose"=true}
      * )
+     *
+     * @Template("ClarolineCoreBundle:Resource:renameForm.html.twig")
      *
      * Displays the form allowing to rename a resource.
      *
@@ -38,10 +41,7 @@ class ResourcePropertiesController extends Controller
         $this->checkAccess('EDIT', $collection);
         $form = $this->createForm(new ResourceNameType(), $resource);
 
-        return $this->render(
-            'ClarolineCoreBundle:Resource:rename_form.html.twig',
-            array('form' => $form->createView())
-        );
+        return array('form' => $form->createView());
     }
 
     /**
@@ -50,6 +50,8 @@ class ResourcePropertiesController extends Controller
      *     name="claro_resource_rename",
      *     options={"expose"=true}
      * )
+     *
+     * @Template("ClarolineCoreBundle:Resource:renameForm.html.twig")
      *
      * Renames a resource.
      *
@@ -85,9 +87,9 @@ class ResourcePropertiesController extends Controller
             return $response;
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Resource:rename_form.html.twig',
-            array('resourceId' => $resourceId, 'form' => $form->createView())
+        return array(
+            'resourceId' => $resourceId,
+            'form' => $form->createView()
         );
     }
 
@@ -97,6 +99,8 @@ class ResourcePropertiesController extends Controller
      *     name="claro_resource_form_properties",
      *     options={"expose"=true}
      * )
+     *
+     * @Template("ClarolineCoreBundle:Resource:propertiesForm.html.twig")
      *
      * Displays the resource properties form.
      *
@@ -113,10 +117,7 @@ class ResourcePropertiesController extends Controller
 
         $form = $this->createForm(new ResourcePropertiesType(), $resource);
 
-        return $this->render(
-            'ClarolineCoreBundle:Resource:form_properties.html.twig',
-            array('form' => $form->createView())
-        );
+        return array('form' => $form->createView());
     }
 
     /**
@@ -125,6 +126,8 @@ class ResourcePropertiesController extends Controller
      *     name="claro_resource_edit_properties",
      *     options={"expose"=true}
      * )
+     *
+     * @Template("ClarolineCoreBundle:Resource:propertiesForm.html.twig")
      *
      * Changes the resource properties.
      *
@@ -201,9 +204,9 @@ class ResourcePropertiesController extends Controller
             return $response;
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Resource:form_properties.html.twig',
-            array('resourceId' => $resourceId, 'form' => $form->createView())
+        return array(
+            'resourceId' => $resourceId,
+            'form' => $form->createView()
         );
     }
 

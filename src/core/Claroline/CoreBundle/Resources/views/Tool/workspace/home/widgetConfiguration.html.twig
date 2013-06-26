@@ -1,10 +1,5 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
-{% block javascripts %}
-   {{ parent() }}
-    <script src="{{ asset('bundles/clarolinecore/js/tool/workspace/resource_rights_creation_form.js') }}" type="text/javascript"></script>
-{% endblock %}
 {% block section_content %}
-
     {{
         macros.breadcrumbs([
             {
@@ -12,16 +7,22 @@
                 'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
             },
             {
-                'name': 'resources'|trans({}, 'platform'),
+                'name': 'home'|trans({}, 'platform'),
                 'href': path('claro_workspace_tool_config', {'workspace': workspace.getId(), 'tool': tool.getId()})
             },
             {
-                'name': 'creation'|trans({}, 'platform'),
-                'href': '#'
+                'name': 'widgets'|trans({}, 'platform'),
+                'href': path('claro_workspace_widget_properties', {'workspace':workspace.getId()})
             },
+            {
+                'name': 'configure'|trans({}, 'platform'),
+                'href': '#'
+            }
         ])
     }}
 
-    <div id="data" data-workspace-id="{{ workspace.getId() }}"></div>
-    {% include 'ClarolineCoreBundle:Resource:rights_creation.html.twig' %}
+    <br/>
+    {% block section_widget_content %}
+        {% include 'ClarolineCoreBundle:Tool\\workspace\\home:widgetConfigurationForm.html.twig' %}
+    {% endblock %}
 {% endblock %}
