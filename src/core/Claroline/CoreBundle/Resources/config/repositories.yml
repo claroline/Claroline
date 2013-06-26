@@ -12,3 +12,24 @@ services:
     factory_method:  getRepository
     arguments:
       - Claroline\CoreBundle\Entity\Message
+
+  workspace_tag_repository:
+    class:           Claroline\CoreBundle\Repository\WorkspaceTagRepository
+    factory_service: doctrine.orm.entity_manager
+    factory_method:  getRepository
+    arguments:
+      - Claroline\CoreBundle\Entity\Workspace\WorkspaceTag
+
+  rel_workspace_tag_repository:
+    class:           Claroline\CoreBundle\Repository\RelWorkspaceTagRepository
+    factory_service: doctrine.orm.entity_manager
+    factory_method:  getRepository
+    arguments:
+      - Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag
+
+  workspace_tag_hierarchy_repository:
+    class:           Claroline\CoreBundle\Repository\WorkspaceTagHierarchyRepository
+    factory_service: doctrine.orm.entity_manager
+    factory_method:  getRepository
+    arguments:
+      - Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy
