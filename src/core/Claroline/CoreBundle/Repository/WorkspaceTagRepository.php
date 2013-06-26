@@ -10,26 +10,28 @@ class WorkspaceTagRepository extends EntityRepository
 {
     public function findNonEmptyTagsByUser(User $user)
     {
-        $dql = "
+        $dql = '
             SELECT DISTINCT t
             FROM Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag rwt
             INNER JOIN Claroline\CoreBundle\Entity\Workspace\WorkspaceTag t WITH t = rwt.tag
             WHERE t.user = :user
-        ";
+            ORDER BY t.name ASC
+        ';
         $query = $this->_em->createQuery($dql);
-        $query->setParameter("user", $user);
+        $query->setParameter('user', $user);
 
         return $query->getResult();
     }
 
     public function findNonEmptyAdminTags()
     {
-        $dql = "
+        $dql = '
             SELECT DISTINCT t
             FROM Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag rwt
             INNER JOIN Claroline\CoreBundle\Entity\Workspace\WorkspaceTag t WITH t = rwt.tag
             WHERE t.user IS NULL
-        ";
+            ORDER BY t.name ASC
+        ';
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
@@ -39,17 +41,17 @@ class WorkspaceTagRepository extends EntityRepository
     public function findNonEmptyAdminTagsByWorspaces(array $workspaces)
     {
         if (count($workspaces) === 0) {
-            throw new \InvalidArgumentException("Array argument cannot be empty");
+            throw new \InvalidArgumentException('Array argument cannot be empty');
         }
 
-        $dql = "
+        $dql = '
             SELECT DISTINCT t
             FROM Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag rwt
             INNER JOIN Claroline\CoreBundle\Entity\Workspace\WorkspaceTag t WITH t = rwt.tag
             INNER JOIN Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w WITH w = rwt.workspace
             WHERE t.user IS NULL
             AND (
-        ";
+        ';
 
         $index = 0;
         $eol = PHP_EOL;
@@ -59,7 +61,10 @@ class WorkspaceTagRepository extends EntityRepository
             $dql .= "w.id = {$workspace->getId()}{$eol}";
             $index++;
         }
-        $dql .= ")";
+        $dql .= '
+            )
+            ORDER BY t.name ASC
+        ';
 
         $query = $this->_em->createQuery($dql);
 
@@ -68,7 +73,7 @@ class WorkspaceTagRepository extends EntityRepository
 
     public function findPossibleAdminChildren(WorkspaceTag $tag)
     {
-        $dql = "
+        $dql = '
             SELECT DISTINCT t
             FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTag t
             WHERE t.user IS NULL
@@ -82,16 +87,16 @@ class WorkspaceTagRepository extends EntityRepository
                 )
             )
             ORDER BY t.name ASC
-        ";
+        ';
         $query = $this->_em->createQuery($dql);
-        $query->setParameter("tag", $tag);
+        $query->setParameter('tag', $tag);
 
         return $query->getResult();
     }
 
     public function findPossibleChildren(User $user, WorkspaceTag $tag)
     {
-        $dql = "
+        $dql = '
             SELECT DISTINCT t
             FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTag t
             WHERE t.user = :user
@@ -105,17 +110,17 @@ class WorkspaceTagRepository extends EntityRepository
                 )
             )
             ORDER BY t.name ASC
-        ";
+        ';
         $query = $this->_em->createQuery($dql);
-        $query->setParameter("user", $user);
-        $query->setParameter("tag", $tag);
+        $query->setParameter('user', $user);
+        $query->setParameter('tag', $tag);
 
         return $query->getResult();
     }
 
     public function findAdminChildren(WorkspaceTag $tag)
     {
-        $dql = "
+        $dql = '
             SELECT DISTINCT t
             FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTag t
             WHERE t.user IS NULL
@@ -128,16 +133,16 @@ class WorkspaceTagRepository extends EntityRepository
                 AND h.level = 1
             )
             ORDER BY t.name ASC
-        ";
+        ';
         $query = $this->_em->createQuery($dql);
-        $query->setParameter("tag", $tag);
+        $query->setParameter('tag', $tag);
 
         return $query->getResult();
     }
 
     public function findChildren(User $user, WorkspaceTag $tag)
     {
-        $dql = "
+        $dql = '
             SELECT DISTINCT t
             FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTag t
             WHERE t.user = :user
@@ -150,10 +155,10 @@ class WorkspaceTagRepository extends EntityRepository
                 AND h.level = 1
             )
             ORDER BY t.name ASC
-        ";
+        ';
         $query = $this->_em->createQuery($dql);
-        $query->setParameter("user", $user);
-        $query->setParameter("tag", $tag);
+        $query->setParameter('user', $user);
+        $query->setParameter('tag', $tag);
 
         return $query->getResult();
     }
@@ -163,7 +168,7 @@ class WorkspaceTagRepository extends EntityRepository
      */
     public function findAdminRootTags()
     {
-        $dql = "
+        $dql = '
             SELECT DISTINCT t
             FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTag t
             WHERE t.user IS NULL
@@ -175,7 +180,7 @@ class WorkspaceTagRepository extends EntityRepository
                 AND h.level > 0
             )
             ORDER BY t.name
-        ";
+        ';
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
@@ -186,7 +191,7 @@ class WorkspaceTagRepository extends EntityRepository
      */
     public function findRootTags(User $user)
     {
-        $dql = "
+        $dql = '
             SELECT DISTINCT t
             FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTag t
             WHERE t.user = :user
@@ -198,9 +203,9 @@ class WorkspaceTagRepository extends EntityRepository
                 AND h.level > 0
             )
             ORDER BY t.name
-        ";
+        ';
         $query = $this->_em->createQuery($dql);
-        $query->setParameter("user", $user);
+        $query->setParameter('user', $user);
 
         return $query->getResult();
     }
@@ -212,21 +217,21 @@ class WorkspaceTagRepository extends EntityRepository
     public function findAdminChildrenFromTags(array $tags)
     {
         if (count($tags) === 0) {
-            throw new \InvalidArgumentException("Array argument cannot be empty");
+            throw new \InvalidArgumentException('Array argument cannot be empty');
         }
 
         $index = 0;
         $eol = PHP_EOL;
-        $tagsTest = "(";
+        $tagsTest = '(';
 
         foreach ($tags as $tag) {
-            $tagsTest .= $index > 0 ? "    OR " : "    ";
+            $tagsTest .= $index > 0 ? '    OR ' : '    ';
             $tagsTest .= "p.id = {$tag}{$eol}";
             $index++;
         }
         $tagsTest .= "){$eol}";
 
-        $dql = "
+        $dql = '
             SELECT DISTINCT t
             FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTag t
             WHERE t.user IS NULL
@@ -238,7 +243,8 @@ class WorkspaceTagRepository extends EntityRepository
                 AND h.tag = t
                 AND {$tagsTest}
             )
-        ";
+            ORDER BY t.name
+        ';
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
@@ -251,21 +257,21 @@ class WorkspaceTagRepository extends EntityRepository
     public function findChildrenFromTags(User $user, array $tags)
     {
         if (count($tags) === 0) {
-            throw new \InvalidArgumentException("Array argument cannot be empty");
+            throw new \InvalidArgumentException('Array argument cannot be empty');
         }
 
         $index = 0;
         $eol = PHP_EOL;
-        $tagsTest = "(";
+        $tagsTest = '(';
 
         foreach ($tags as $tag) {
-            $tagsTest .= $index > 0 ? "    OR " : "    ";
+            $tagsTest .= $index > 0 ? '    OR ' : '    ';
             $tagsTest .= "p.id = {$tag}{$eol}";
             $index++;
         }
         $tagsTest .= "){$eol}";
 
-        $dql = "
+        $dql = '
             SELECT DISTINCT t
             FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTag t
             WHERE t.user = :user
@@ -277,9 +283,10 @@ class WorkspaceTagRepository extends EntityRepository
                 AND h.tag = t
                 AND {$tagsTest}
             )
-        ";
+            ORDER BY t.name
+        ';
         $query = $this->_em->createQuery($dql);
-        $query->setParameter("user", $user);
+        $query->setParameter('user', $user);
 
         return $query->getResult();
     }
@@ -289,7 +296,7 @@ class WorkspaceTagRepository extends EntityRepository
      */
     public function findAdminParentsFromTag(WorkspaceTag $tag)
     {
-        $dql = "
+        $dql = '
             SELECT DISTINCT t
             FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTag t
             WHERE t.user IS NULL
@@ -300,9 +307,10 @@ class WorkspaceTagRepository extends EntityRepository
                 AND h.tag = :tag
                 AND h.parent = t
             )
-        ";
+            ORDER BY t.name
+        ';
         $query = $this->_em->createQuery($dql);
-        $query->setParameter("tag", $tag);
+        $query->setParameter('tag', $tag);
 
         return $query->getResult();
     }
@@ -312,7 +320,7 @@ class WorkspaceTagRepository extends EntityRepository
      */
     public function findParentsFromTag(User $user, WorkspaceTag $tag)
     {
-        $dql = "
+        $dql = '
             SELECT DISTINCT t
             FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTag t
             WHERE t.user = :user
@@ -323,10 +331,39 @@ class WorkspaceTagRepository extends EntityRepository
                 AND h.tag = :tag
                 AND h.parent = t
             )
+            ORDER BY t.name
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+        $query->setParameter('tag', $tag);
+
+        return $query->getResult();
+    }
+
+    public function findWorkspaceTagFromIds(array $tagIds)
+    {
+        if (count($tagIds) === 0) {
+            throw new \InvalidArgumentException('Array argument cannot be empty');
+        }
+
+        $index = 0;
+        $eol = PHP_EOL;
+        $tagIdsTest = '(';
+
+        foreach ($tagIds as $tagId) {
+            $tagIdsTest .= $index > 0 ? '    OR ' : '    ';
+            $tagIdsTest .= "t.id = {$tagId}{$eol}";
+            $index++;
+        }
+        $tagIdsTest .= "){$eol}";
+
+        $dql = "
+            SELECT DISTINCT t
+            FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTag t
+            WHERE {$tagIdsTest}
+            ORDER BY t.id ASC
         ";
         $query = $this->_em->createQuery($dql);
-        $query->setParameter("user", $user);
-        $query->setParameter("tag", $tag);
 
         return $query->getResult();
     }

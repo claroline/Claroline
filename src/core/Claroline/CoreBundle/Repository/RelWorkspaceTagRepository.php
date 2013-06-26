@@ -11,7 +11,7 @@ class RelWorkspaceTagRepository extends EntityRepository
 {
     public function findByWorkspaceAndUser(AbstractWorkspace $workspace, User $user)
     {
-        $dql = "
+        $dql = '
             SELECT rwt, t
             FROM Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag rwt
             JOIN rwt.workspace w
@@ -19,7 +19,7 @@ class RelWorkspaceTagRepository extends EntityRepository
             JOIN t.user u
             WHERE u.id = :userId
             AND w.id = :workspaceId
-        ";
+        ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userId', $user->getId());
         $query->setParameter('workspaceId', $workspace->getId());
@@ -29,14 +29,14 @@ class RelWorkspaceTagRepository extends EntityRepository
 
     public function findAdminByWorkspace(AbstractWorkspace $workspace)
     {
-        $dql = "
+        $dql = '
             SELECT rwt, t
             FROM Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag rwt
             JOIN rwt.workspace w
             JOIN rwt.tag t
             WHERE t.user IS NULL
             AND w.id = :workspaceId
-        ";
+        ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaceId', $workspace->getId());
 
@@ -45,7 +45,7 @@ class RelWorkspaceTagRepository extends EntityRepository
 
     public function findOneByWorkspaceAndTagAndUser(AbstractWorkspace $workspace, WorkspaceTag $tag, User $user)
     {
-        $dql = "
+        $dql = '
             SELECT rwt
             FROM Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag rwt
             JOIN rwt.workspace w
@@ -54,7 +54,7 @@ class RelWorkspaceTagRepository extends EntityRepository
             WHERE u.id = :userId
             AND w.id = :workspaceId
             AND t.id = :tagId
-        ";
+        ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userId', $user->getId());
         $query->setParameter('workspaceId', $workspace->getId());
@@ -65,7 +65,7 @@ class RelWorkspaceTagRepository extends EntityRepository
 
     public function findOneAdminByWorkspaceAndTag(AbstractWorkspace $workspace, WorkspaceTag $tag)
     {
-        $dql = "
+        $dql = '
             SELECT rwt
             FROM Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag rwt
             JOIN rwt.workspace w
@@ -73,7 +73,7 @@ class RelWorkspaceTagRepository extends EntityRepository
             WHERE t.user IS NULL
             AND w.id = :workspaceId
             AND t.id = :tagId
-        ";
+        ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaceId', $workspace->getId());
         $query->setParameter('tagId', $tag->getId());
@@ -83,7 +83,7 @@ class RelWorkspaceTagRepository extends EntityRepository
 
     public function findAllByWorkspaceAndUser(AbstractWorkspace $workspace, User $user)
     {
-        $dql = "
+        $dql = '
             SELECT rwt, t
             FROM Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag rwt
             JOIN rwt.workspace w
@@ -91,7 +91,7 @@ class RelWorkspaceTagRepository extends EntityRepository
             WHERE w.id = :workspaceId
             AND (t.user = :user
             OR t.user IS NULL)
-        ";
+        ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaceId', $workspace->getId());
         $query->setParameter('user', $user);
@@ -101,12 +101,12 @@ class RelWorkspaceTagRepository extends EntityRepository
 
     public function findByUser(User $user)
     {
-        $dql = "
+        $dql = '
             SELECT t.id AS tag_id, rwt AS rel_ws_tag
             FROM Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag rwt
             JOIN rwt.tag t
             WHERE t.user = :user
-        ";
+        ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('user', $user);
 
@@ -115,12 +115,12 @@ class RelWorkspaceTagRepository extends EntityRepository
 
     public function findByAdmin()
     {
-        $dql = "
+        $dql = '
             SELECT t.id AS tag_id, rwt AS rel_ws_tag
             FROM Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag rwt
             JOIN rwt.tag t
             WHERE t.user IS NULL
-        ";
+        ';
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
@@ -129,17 +129,17 @@ class RelWorkspaceTagRepository extends EntityRepository
     public function findByAdminAndWorkspaces(array $workspaces)
     {
         if (count($workspaces) === 0) {
-            throw new \InvalidArgumentException("Array argument cannot be empty");
+            throw new \InvalidArgumentException('Array argument cannot be empty');
         }
 
-        $dql = "
+        $dql = '
             SELECT t.id AS tag_id, rwt AS rel_ws_tag
             FROM Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag rwt
             JOIN rwt.tag t
             JOIN rwt.workspace w
             WHERE t.user IS NULL
             AND (
-        ";
+        ';
 
         $index = 0;
         $eol = PHP_EOL;
@@ -149,7 +149,7 @@ class RelWorkspaceTagRepository extends EntityRepository
             $dql .= "w.id = {$workspace->getId()}{$eol}";
             $index++;
         }
-        $dql .= ")";
+        $dql .= ')';
 
         $query = $this->_em->createQuery($dql);
 
