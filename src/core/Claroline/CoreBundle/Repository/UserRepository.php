@@ -460,4 +460,51 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         return array();
     }
+
+
+    public function findUsersEnrolledInMostWorkspaces ($max)
+    {
+        $dql = "
+            SELECT CONCAT(CONCAT(u.firstName,' '), u.lastName), u.username, COUNT( DISTINCT ws.id) AS total FROM
+                Claroline\CoreBundle\Entity\User u, Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace ws
+                WHERE CONCAT(CONCAT(u.id,':'), ws.id) IN
+                (SELECT CONCAT(CONCAT(u1.id,':'), ws1.id) FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace ws1
+                    JOIN ws1.roles r1
+                    JOIN r1.users u1      
+                ) OR CONCAT(CONCAT(u.id,':'), ws.id) IN
+                (SELECT CONCAT(CONCAT(u2.id,':'), ws2.id) FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace ws2
+                    JOIN ws2.roles r2
+                    JOIN r2.groups g2
+                    JOIN g2.users u2 
+                )
+            GROUP BY u.id
+            ORDER BY total DESC
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        if ($max >1)
+        {
+            $query->setMaxResults($max);
+        }
+
+        return $query->getResult();
+    }
+
+    public function findUsersOwnersOfMostWorkspaces ($max)
+    {
+        $dql = "
+            SELECT CONCAT(CONCAT(u.firstName,' '), u.lastName), u.username, COUNT( DISTINCT ws.id) AS total FROM
+                Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace ws
+                JOIN ws.creator u
+            GROUP BY u.id
+            ORDER BY total DESC
+        ";
+        $query = $this->_em->createQuery($dql);
+        if ($max >1)
+        {
+            $query->setMaxResults($max);
+        }
+
+        return $query->getResult();
+    }
 }

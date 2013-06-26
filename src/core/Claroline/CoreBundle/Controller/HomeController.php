@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Entity\Home\Content;
 use Claroline\CoreBundle\Entity\Home\SubContent;
@@ -115,6 +116,7 @@ class HomeController extends Controller
      * @route("/types", name="claroline_types_manager")
      * @Secure(roles="ROLE_ADMIN")
      *
+     * @Template("ClarolineCoreBundle:Home:home.html.twig")
      */
     public function typesAction()
     {
@@ -130,12 +132,14 @@ class HomeController extends Controller
             )->getContent()
         );
 
-        return $this->render("ClarolineCoreBundle:Home:home.html.twig", $variables);
+        return $variables;
     }
 
     /**
      * @route("/type/{type}", name="claro_get_content_by_type")
      * @route("/", name="claro_index")
+     *
+     * @Template("ClarolineCoreBundle:Home:home.html.twig")
      */
     public function homeAction($type = "home", $father = null)
     {
@@ -144,7 +148,7 @@ class HomeController extends Controller
             "content" => $this->typeAction($type, $father)->getContent()
         );
 
-        return $this->render("ClarolineCoreBundle:Home:home.html.twig", $variables);
+        return $variables;
     }
 
     public function getRegions()
@@ -522,14 +526,13 @@ class HomeController extends Controller
      *
      * @route("/content/size/{id}/{size}/{type}", name="claroline_content_size")
      *
+     * @Template("ClarolineCoreBundle:Home:sizes.html.twig")
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function sizeAction($id, $size, $type)
     {
-        return $this->render(
-            'ClarolineCoreBundle:Home:sizes.html.twig',
-            array('id' => $id, 'size' => $size, 'type' => $type)
-        );
+        return array('id' => $id, 'size' => $size, 'type' => $type);
     }
 
     /**
@@ -570,11 +573,13 @@ class HomeController extends Controller
      *
      * @param \String $id The id of the content.
      *
+     * @Template("ClarolineCoreBundle:Home:regions.html.twig")
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function regionAction($id)
     {
-        return $this->render('ClarolineCoreBundle:Home:regions.html.twig', array('id' => $id));
+        return array('id' => $id);
     }
 
     /**

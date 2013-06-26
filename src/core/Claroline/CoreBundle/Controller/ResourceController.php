@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Library\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Library\Event\LogResourceReadEvent;
 use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class ResourceController extends Controller
 {
@@ -598,6 +599,9 @@ class ResourceController extends Controller
         return $response;
     }
 
+    /**
+     * @Template("ClarolineCoreBundle:Resource:breadcrumbs.html.twig")
+     */
     public function renderBreadcrumbsAction($resourceId, $workspaceId, $_breadcrumbs)
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -640,9 +644,9 @@ class ResourceController extends Controller
             throw new \Exception('Breadcrumbs invalid');
         };
 
-        return $this->render(
-            'ClarolineCoreBundle:Resource:breadcrumbs.html.twig',
-            array('ancestors' => $breadcrumbsAncestors, 'workspaceId' => $workspaceId)
+        return array(
+            'ancestors' => $breadcrumbsAncestors,
+            'workspaceId' => $workspaceId
         );
     }
 

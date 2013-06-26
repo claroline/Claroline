@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * Actions of this controller are not routed. They're intended to be rendered
@@ -13,26 +14,32 @@ use Symfony\Component\HttpFoundation\Response;
 class LayoutController extends Controller
 {
     /**
+     * @Template()
+     *
      * Displays the platform header.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function headerAction()
     {
-        return $this->render('ClarolineCoreBundle:Layout:header.html.twig');
+        return array();
     }
 
     /**
+     * @Template()
+     *
      * Displays the platform footer.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function footerAction()
     {
-        return $this->render('ClarolineCoreBundle:Layout:footer.html.twig');
+        return array();
     }
 
     /**
+     * @Template()
+     *
      * Displays the platform top bar. Its content depends on the user status
      * (anonymous/logged, profile, etc.) and the platform options (e.g. self-
      * registration allowed/prohibited).
@@ -88,24 +95,23 @@ class LayoutController extends Controller
             $loginTarget = $this->get('router')->generate('claro_desktop_open');
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Layout:top_bar.html.twig',
-            array(
-                'isLogged' => $isLogged,
-                'countUnreadMessages' => $countUnreadMessages,
-                'username' => $username,
-                'register_target' => $registerTarget,
-                'login_target' => $loginTarget,
-                'workspaces' => $workspaces,
-                'personalWs' => $personalWs,
-                "isImpersonated" => $this->isImpersonated(),
-                'isInAWorkspace' => $isInAWorkspace,
-                'currentWorkspace' => $currentWs
-            )
+        return array(
+            'isLogged' => $isLogged,
+            'countUnreadMessages' => $countUnreadMessages,
+            'username' => $username,
+            'register_target' => $registerTarget,
+            'login_target' => $loginTarget,
+            'workspaces' => $workspaces,
+            'personalWs' => $personalWs,
+            "isImpersonated" => $this->isImpersonated(),
+            'isInAWorkspace' => $isInAWorkspace,
+            'currentWorkspace' => $currentWs
         );
     }
 
     /**
+     * @Template()
+     *
      * Renders the warning bar when a workspace role is impersonated.
      *
      * @return Response
@@ -134,9 +140,9 @@ class LayoutController extends Controller
             $roleName = $roleEntity->getTranslationKey();
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Layout:impersonation_alert.html.twig',
-            array('workspace' => $workspace->getName(), 'role' => $roleName)
+        return array(
+            'workspace' => $workspace->getName(),
+            'role' => $roleName
         );
     }
 
