@@ -110,6 +110,20 @@ class Manager
         return array($startDate->getTimestamp(), $endDate->getTimestamp());
     }
 
+    protected function getYesterdayRange()
+    {
+        //By default last thirty days :
+        $startDate = new \DateTime('now');
+        $startDate->setTime(0, 0, 0);
+        $startDate->sub(new \DateInterval('P1D')); // P1D means a period of 1 days
+
+        $endDate = new \DateTime('now');
+        $endDate->setTime(23, 59, 59);
+        $endDate->sub(new \DateInterval('P1D')); // P1D means a period of 1 days
+
+        return array($startDate->getTimestamp(), $endDate->getTimestamp());
+    }
+
     protected function getAdminOrCollaboratorWorkspaceIds()
     {
         $workspaceIds = array();
@@ -144,6 +158,13 @@ class Manager
         $repository = $em->getRepository('ClarolineCoreBundle:Logger\Log');
 
         $desktopConfig = $this->getDesktopWidgetConfig($loggedUser);
+        if ($desktopConfig === null) {
+            $desktopConfig = $this->getDefaultDesktopWidgetConfig();
+            if ($desktopConfig === null) {
+                $desktopConfig = new LogDesktopWidgetConfig();
+            }
+        }
+
         $hiddenConfigs = $em
             ->getRepository('ClarolineCoreBundle:Logger\LogHiddenWorkspaceWidgetConfig')
             ->findBy(array('user' => $loggedUser));
@@ -158,12 +179,19 @@ class Manager
             ->findByUserAndRoleNamesNotIn($loggedUser, array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'), $workspaceIds);
 
         if (count($workspaces) > 0) {
-            $configs = $this->container->get('doctrine.orm.entity_manager')
+            $configs = $em
                 ->getRepository('ClarolineCoreBundle:Logger\LogWorkspaceWidgetConfig')
-                ->findBy(array('workspace' => $workspaces));
+                ->findBy(array('workspace' => $workspaces, 'isDefault' => false));
         } else {
             $configs = array();
         }
+
+        $defaultConfig = $this->getDefaultWorkspaceWidgetConfig();
+        if ($defaultConfig === null) {
+            $defaultConfig = new LogWorkspaceWidgetConfig();
+            $defaultConfig->setWorkspace(null);
+            $defaultConfig->setIsDefault(true);
+        } 
 
         // Complete missing configs
         foreach ($workspaces as $workspace) {
@@ -177,6 +205,7 @@ class Manager
             }
             if ($config === null) {
                 $config = new LogWorkspaceWidgetConfig();
+                $config->copy($defaultConfig);
                 $config->setWorkspace($workspace);
                 $configs[] = $config;
             }
@@ -226,12 +255,14 @@ class Manager
         $em = $this->container->get('doctrine.orm.entity_manager');
         $repository = $em->getRepository('ClarolineCoreBundle:Logger\Log');
 
-        $config = $this->container->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Logger\LogWorkspaceWidgetConfig')
-            ->findOneByWorkspace($workspace);
-
+        $config = $this->getWorkspaceWidgetConfig($workspace);
         if ($config === null) {
+            $defaultConfig = $this->getDefaultWorkspaceWidgetConfig();
+
             $config = new LogWorkspaceWidgetConfig();
+            if ($defaultConfig !== null) {
+                $config->copy($defaultConfig);
+            }
             $config->setWorkspace($workspace);
         }
 
@@ -280,11 +311,6 @@ class Manager
             null,
             $maxResult
         );
-    }
-
-    public function getDesktopList($page, $maxResult = -1)
-    {
-        return $this->getWorkspaceList(null, $page, $maxResult);
     }
 
     public function getWorkspaceList($workspace, $page, $maxResult = -1)
@@ -422,30 +448,34 @@ class Manager
     public function getDesktopWidgetConfig($user)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $config = $em
+
+        return $em
             ->getRepository('ClarolineCoreBundle:Logger\LogDesktopWidgetConfig')
-            ->findOneBy(array('user' => $user));
+            ->findOneBy(array('user' => $user, 'isDefault' => false));
+    }
 
-        if ($config === null) {
-            $config = new LogDesktopWidgetConfig();
-            $config->setUser($user);
-        }
+    public function getDefaultDesktopWidgetConfig() {
+        $em = $this->container->get('doctrine.orm.entity_manager');
 
-        return $config;
+        return $em
+            ->getRepository('ClarolineCoreBundle:Logger\LogDesktopWidgetConfig')
+            ->findOneBy(array('user' => null, 'isDefault' => true));
     }
 
     public function getWorkspaceWidgetConfig($workspace)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $config = $em
+
+        return $em
             ->getRepository('ClarolineCoreBundle:Logger\LogWorkspaceWidgetConfig')
-            ->findOneBy(array('workspace' => $workspace));
+            ->findOneBy(array('workspace' => $workspace, 'isDefault' => false));
+    }
 
-        if ($config === null) {
-            $config = new LogWorkspaceWidgetConfig();
-            $config->setWorkspace($workspace);
-        }
+    public function getDefaultWorkspaceWidgetConfig() {
+        $em = $this->container->get('doctrine.orm.entity_manager');
 
-        return $config;
+        return $em
+            ->getRepository('ClarolineCoreBundle:Logger\LogWorkspaceWidgetConfig')
+            ->findOneBy(array('workspace' => null, 'isDefault' => true));
     }
 }

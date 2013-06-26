@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Library\Event\ConfigureDesktopToolEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class DesktopParametersController extends Controller
 {
@@ -17,6 +18,8 @@ class DesktopParametersController extends Controller
      *     "/tools",
      *     name="claro_tool_properties"
      * )
+     *
+     * @Template("ClarolineCoreBundle:Tool\desktop\parameters:toolProperties.html.twig")
      *
      * Displays the tools configuration page.
      *
@@ -43,10 +46,7 @@ class DesktopParametersController extends Controller
 
         $tools = $this->get('claroline.utilities.misc')->arrayFill($orderedToolList, $undisplayedTools);
 
-        return $this->render(
-            'ClarolineCoreBundle:Tool\desktop\parameters:tool_properties.html.twig',
-            array('tools' => $tools)
-        );
+        return array('tools' => $tools);
     }
 
     /**

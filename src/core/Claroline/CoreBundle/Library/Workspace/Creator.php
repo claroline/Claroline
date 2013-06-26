@@ -55,6 +55,7 @@ class Creator
         $workspace->setName($config->getWorkspaceName());
         $workspace->setPublic($config->isPublic());
         $workspace->setCode($config->getWorkspaceCode());
+        $workspace->setCreator($manager);
         $this->entityManager->persist($workspace);
         $this->entityManager->flush();
         $entityRoles = $this->initBaseRoles($workspace, $config);

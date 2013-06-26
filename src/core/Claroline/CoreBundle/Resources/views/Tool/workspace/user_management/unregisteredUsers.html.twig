@@ -34,7 +34,7 @@
     {{ parent() }}
     {% javascripts
        vars=["locale"]
-      "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/add_user_confirm.html.twigjs"
+      "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/addUserConfirm.html.twigjs"
        filter="twig_js"
     %}
     <script language="javascript" src="{{ asset_url }}"></script>
@@ -118,7 +118,7 @@
       </div>
       <div class="modal-footer">
           <input type="button" id="modal-valid-button" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-          <input type="button" id="modal-cancel-button" class="btn btn-secondary" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+          <input type="button" id="modal-cancel-button" class="btn btn-secondary" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
       </div>
   </div>
 {% endblock %}
