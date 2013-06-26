@@ -24,4 +24,10 @@ class RoleWriterTest extends FixtureTestCase
         $roles = $this->writer->create('ROLE_HELLO', 'translation', Role::BASE_ROLE);
         $this->assertEquals(1, count($roles));
     }
+
+    public function testBind()
+    {
+        //create group
+        //crerte user
+    }
 }

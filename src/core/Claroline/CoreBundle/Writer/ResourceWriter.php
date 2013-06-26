@@ -36,7 +36,8 @@ class ResourceWriter
         $name,
         ResourceIcon $icon,
         AbstractResource $parent = null,
-        AbstractResource $previous = null
+        AbstractResource $previous = null,
+        AbstractResource $next = null
     )
     {
         $resource->setCreator($creator);
@@ -45,11 +46,46 @@ class ResourceWriter
         $resource->setParent($parent);
         $resource->setName($name);
         $resource->setPrevious($previous);
-        $resource->setNext(null);
+        $resource->setNext($next);
         $resource->setIcon($icon);
+        $this->save($resource);
+
+        return $resource;
+    }
+
+    public function setOrder(
+        AbstractResource $resource,
+        AbstractResource $previous = null,
+        AbstractResource $next = null
+    )
+    {
+        $resource->setPrevious($previous);
+        $resource->setNext($next);
+        $this->save($resource);
+
+        return $resource;
+    }
+
+    public function move(
+        AbstractResource $resource,
+        AbstractResource $parent,
+        $name
+    )
+    {
+        $resource->setParent($parent);
+        $resource->setName($name);
+        $this->save($resource);
+    }
+
+    public function save(AbstractResource $resource)
+    {
         $this->em->persist($resource);
         $this->em->flush();
-        
-        return $resource;
+    }
+
+    public function remove(AbstractResource $resource)
+    {
+        $this->em->remove($resource);
+        $this->em->flush();
     }
 }
