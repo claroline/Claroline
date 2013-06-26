@@ -7,19 +7,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Fixtures\LoggableFixture;
 
-class LoadWorkspaceTagHierarchyData extends LoggableFixture implements ContainerAwareInterface
+class LoadWorkspaceTagHierarchyData extends LoggableFixture
 {
-    private $container;
     private $tagHierarchies;
 
     public function __construct(array $tagHierarchies)
     {
         $this->tagHierarchies = $tagHierarchies;
-    }
-
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
     }
 
     public function load(ObjectManager $manager)

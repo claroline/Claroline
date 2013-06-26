@@ -2,8 +2,6 @@
 
 namespace Claroline\CoreBundle\Tests\DataFixtures\BatchInsert;
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Library\Fixtures\LoggableFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
@@ -11,23 +9,14 @@ use Claroline\CoreBundle\Entity\User;
 /**
  * Loads a large amount of users.
  */
-class LoadUsersData extends LoggableFixture implements ContainerAwareInterface
+class LoadUsersData extends LoggableFixture
 {
-    private $container;
     private $numberUsers;
     const BATCH_SIZE = 5;
 
     public function __construct($numberUsers)
     {
         $this->numberUsers = $numberUsers;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
     }
 
     /**

@@ -5,23 +5,13 @@ namespace Claroline\CoreBundle\DataFixtures;
 use Claroline\CoreBundle\Entity\Workspace\Template;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
 /**
  * Resource types data fixture.
  */
-class LoadTemplateData extends AbstractFixture implements ContainerAwareInterface, OrderedFixtureInterface
+class LoadTemplateData extends AbstractFixture implements OrderedFixtureInterface
 {
-    /** @var ContainerInterface $container */
-    private $container;
-
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-
     /*
      * @param ObjectManager $manager
      */

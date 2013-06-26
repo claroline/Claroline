@@ -5,16 +5,13 @@ namespace Claroline\CoreBundle\Tests\DataFixtures;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\File;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 
-class LoadFileData extends AbstractFixture implements ContainerAwareInterface
+class LoadFileData extends AbstractFixture
 {
     private $creator;
     private $directory;
     private $files;
-    private $container;
 
     /**
      * Constructor. Expects the username of the creator of the file(s), the
@@ -41,14 +38,6 @@ class LoadFileData extends AbstractFixture implements ContainerAwareInterface
         $this->creator = $creator;
         $this->directory = $directory;
         $this->files = $files;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
     }
 
     /**

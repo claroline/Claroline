@@ -5,14 +5,11 @@ namespace Claroline\CoreBundle\Tests\DataFixtures;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\Directory;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class LoadDirectoryData extends AbstractFixture implements ContainerAwareInterface
+class LoadDirectoryData extends AbstractFixture
 {
     private $creator;
     private $paths;
-    private $container;
 
     /**
      * Constructor. Expects a creator username and an array of directory paths (e.g.
@@ -29,14 +26,6 @@ class LoadDirectoryData extends AbstractFixture implements ContainerAwareInterfa
     {
         $this->creator = $creator;
         $this->paths = $paths;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
     }
 
     /**
