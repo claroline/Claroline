@@ -60,6 +60,8 @@ class Version20120119000000 extends BundleMigration
         $this->createLogWorkspaceWidgetConfigTable($schema);
         $this->createLogDesktopWidgetConfigTable($schema);
         $this->createLogHiddenWorkspaceWidgetConfigTable($schema);
+        $this->createBadgeTable($schema);
+        $this->createUserBadgeTable($schema);
     }
 
     public function down(Schema $schema)
@@ -117,6 +119,8 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_content2region');
         $schema->dropTable('claro_workspace_template');
         $schema->dropTable('claro_theme');
+        $schema->dropTable('claro_badge');
+        $schema->dropTable('claro_user_badge');
     }
 
     private function createUserTable(Schema $schema)
@@ -1355,5 +1359,45 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('hash', 'string');
         $table->addColumn('name', 'string');
         $table->addUniqueIndex(array('hash'));
+    }
+
+    private function createBadgeTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_badge');
+        $this->addId($table);
+        $table->addColumn('name', 'string', array('length' => 128, 'notnull' => true));
+        $table->addColumn('description', 'string', array('length' => 128, 'notnull' => true));
+        $table->addColumn('slug', 'string', array('length' => 128, 'notnull' => true));
+        $table->addColumn('criteria', 'text', array('notnull' => true));
+        $table->addColumn('version', 'smallint', array('notnull' => true));
+        $table->addColumn('image', 'string', array('notnull' => true));
+        $table->addColumn('expired_at', 'datetime', array('notnull' => false));
+
+        $table->addUniqueIndex(array('name'));
+        $table->addUniqueIndex(array('slug'));
+    }
+
+    private function createUserBadgeTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_user_badge');
+        $this->addId($table);
+        $table->addColumn('user_id', 'integer', array('notnull' => true));
+        $table->addColumn('badge_id', 'integer', array('notnull' => true));
+        $table->addColumn('issued_at', 'datetime', array('notnull' => true));
+
+        $table->addUniqueIndex(array('user_id', 'badge_id'));
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_user'),
+            array('user_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+        $table->addForeignKeyConstraint(
+            $schema->getTable('claro_badge'),
+            array('badge_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
     }
 }
