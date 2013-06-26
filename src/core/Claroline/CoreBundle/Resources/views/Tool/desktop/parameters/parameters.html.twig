@@ -6,16 +6,18 @@
 {% endblock %}
 
 {% block section_content %}
+    <ul class="breadcrumb">
+        <li><a href="#"><i class="icon-cog"></i> {{ "parameters" | trans({}, 'platform') }}</a>
+    </ul>
     <div class="margin">
-        {{ macros.breadcrumbs([{'name': 'parameters'|trans({}, 'platform'), 'href': '#'}]) }}
         <ul>
             <li class='li-user-parameters'>
-                <a href="{{ path('claro_tool_properties') }}">{{ 'tools'|trans({}, 'platform') }}</a>
+            <a href="{{ path('claro_tool_properties') }}">{{ 'tools'|trans({}, 'platform') }}</a>
             </li>
             {% for tool in tools %}
-            <li class='li-user-parameters'><a href="{{ path('claro_desktop_tool_config', {'tool': tool.getId()}) }}">
-                {{ tool.getName()|trans({}, 'tools') }}
-            </a></li>
+                <li class='li-user-parameters'><a href="{{ path('claro_desktop_tool_config', {'tool': tool.getId()}) }}">
+                    {{ tool.getName()|trans({}, 'tools') }}
+                </a></li>
             {% endfor %}
         </ul>
     </div>
