@@ -40,3 +40,10 @@ services:
     factory_method:  getRepository
     arguments:
       - Claroline\CoreBundle\Entity\Role
+
+  shortcut_repository:
+    class:           Claroline\CoreBundle\Repository\ShortcutRepository
+    factory_service: doctrine.orm.entity_manager
+    factory_method:  getRepository
+    arguments:
+      - Claroline\CoreBundle\Entity\Resource\ResourceShortcut

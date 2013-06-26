@@ -636,7 +636,7 @@ class ResourceController extends Controller
                 ->findResourcesByIds($_breadcrumbs);
         }
 
-        if (!$this->get('claroline.resource.manager')->isPathValid($breadcrumbsAncestors, false)) {
+        if (!$this->get('claroline.manager.manager_resource')->areAncestorsDirectory($breadcrumbsAncestors)) {
             throw new \Exception('Breadcrumbs invalid');
         };
 
