@@ -21,7 +21,7 @@
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#collapse-piechart" href="#collapse-piechart">
                     <i class="icon-bar-chart"></i>
                     {{'resources_usage_ratio'|trans({}, 'platform')}}
-                    <i class="icon-chevron-down pull-right"></i>
+                    <i class="icon-chevron-up pull-right"></i>
                 </a>
             </div>
             <div id="collapse-piechart" class="accordion-body collapse in">
@@ -35,7 +35,7 @@
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#collapse-list" href="#collapse-list">
                     <i class="icon-list"></i>
                     {{'resources_usage_list'|trans({}, 'platform')}}
-                    <i class="icon-chevron-down pull-right"></i>
+                    <i class="icon-chevron-up pull-right"></i>
                 </a>
             </div>
             <div id="collapse-list" class="accordion-body collapse in">
@@ -68,6 +68,18 @@
         var bg_color = "transparent";
         if ($.browser.msie && parseInt($.browser.version, 10) <= 8) bg_color = "#fff"; 
         $(document).ready(function(){
+            $(".accordion-body").bind("hide", function(){
+                var arrowIcon = $(this).parents(".accordion-group").find(".icon-chevron-up");
+                arrowIcon.addClass("icon-chevron-down");
+                arrowIcon.removeClass("icon-chevron-up");
+            });
+
+            $(".accordion-body").bind("show", function(){
+                var arrowIcon = $(this).parents(".accordion-group").find(".icon-chevron-down");
+                arrowIcon.addClass("icon-chevron-up");
+                arrowIcon.removeClass("icon-chevron-down");
+            });
+
             if (chartData.length>0) {
                 var resourcesPlot = $.jqplot(
                     'resources-pie-chart',
