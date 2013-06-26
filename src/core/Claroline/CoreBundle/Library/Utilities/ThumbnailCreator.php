@@ -44,7 +44,7 @@ class ThumbnailCreator
             if (!$this->isGdLoaded) {
                 $message .= 'The GD extension is missing \n';
             }
-            if (!$this->isFfmegLoaded) {
+            if (!$this->isFfmpegLoaded) {
                 $message .= 'The Ffmpeg extension is missing \n';
             }
 
