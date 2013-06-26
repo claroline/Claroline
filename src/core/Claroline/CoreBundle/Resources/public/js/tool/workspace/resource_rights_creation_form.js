@@ -10,11 +10,7 @@
             data: formData,
             type: 'POST',
             processData: false,
-            contentType: false,
-            success: function () {
-                window.location.href = Routing.generate('claro_workspace_open_tool',
-                {'toolName': 'parameters', 'workspaceId': $('#data').attr('data-workspace-id') });
-            }
+            contentType: false
         });
     });
 })();
