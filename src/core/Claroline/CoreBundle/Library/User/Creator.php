@@ -5,7 +5,7 @@ use Symfony\Component\Translation\Translator;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Workspace\Creator as WsCreator;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Tool\DesktopTool;
 use Claroline\CoreBundle\Library\Event\LogUserCreateEvent;
@@ -31,7 +31,7 @@ class Creator
      *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
      *     "trans" = @DI\Inject("translator"),
      *     "ch" = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "wsCreator" = @DI\Inject("claroline.workspace.creator"),
+     *     "wsCreator" = @DI\Inject("claroline.manager.workspace_manager"),
      *     "personalWsTemplateFile" = @DI\Inject("%claroline.param.templates_directory%"),
      *     "ed" = @DI\Inject("event_dispatcher"),
      *     "sc" = @DI\Inject("security.context")
@@ -41,7 +41,7 @@ class Creator
         EntityManager $em,
         Translator $trans,
         PlatformConfigurationHandler $ch,
-        WsCreator $wsCreator,
+        WorkspaceManager $wsCreator,
         $personalWsTemplateFile,
         $ed,
         $sc
@@ -174,7 +174,7 @@ class Creator
         $personalWorkspaceName = $this->trans->trans('personal_workspace', array(), 'platform');
         $config->setWorkspaceName($personalWorkspaceName);
         $config->setWorkspaceCode($user->getUsername());
-        $workspace = $this->wsCreator->createWorkspace($config, $user, false);
+        $workspace = $this->wsCreator->create($config, $user, false);
         $this->em->persist($workspace);
         $user->setPersonalWorkspace($workspace);
     }

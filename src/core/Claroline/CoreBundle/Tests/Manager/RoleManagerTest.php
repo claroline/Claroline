@@ -29,9 +29,7 @@ class RoleManagerTest extends MockeryTestCase
         );
 
         $ws->shouldReceive('getId')->times(2)->andReturn(1);
-        $roleUser->shouldReceive('getName')->once()->andReturn('ROLE_WS_USER_1');
-        $roleSuperUser->shouldReceive('getName')->once()->andReturn('ROLE_WS_SUPERUSER_1');
-        
+
         $this->writer
             ->shouldReceive('create')
             ->once()
@@ -45,8 +43,8 @@ class RoleManagerTest extends MockeryTestCase
 
         $result = $this->getManager()->initWorkspaceBaseRole($params, $ws);
         $expectedResult = array(
-            'ROLE_WS_USER_1' => $roleUser,
-            'ROLE_WS_SUPERUSER_1' => $roleSuperUser
+            'ROLE_WS_USER' => $roleUser,
+            'ROLE_WS_SUPERUSER' => $roleSuperUser
         );
 
         $this->assertEquals($result, $expectedResult);

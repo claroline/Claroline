@@ -223,7 +223,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
     public function count()
     {
-        $dql = "SELECT COUNT(w) FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w";
+        $dql = "SELECT COUNT(r) FROM Claroline\CoreBundle\Entity\Resource\AbstractResource r";
         $query = $this->_em->createQuery($dql);
 
         return $query->getSingleScalarResult();
@@ -337,6 +337,31 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
             return $return;
         }
+
+        return $query->getResult();
+    }
+
+
+    /**
+     * Returns an array of different file types with the number of resources that
+     * belong in this type
+     *
+     * @return array
+     */
+    public function  mimeTypesWithMostResources ($max) 
+    {
+        $qb = $this
+            ->createQueryBuilder('resource')
+            ->select('resource.mimeType, COUNT(resource.id) AS total');
+
+        $qb->andWhere($qb->expr()->isNotNull('resource.mimeType'))
+        ->groupBy('resource.mimeType')
+        ->orderBy('total','DESC');
+        if ($max >1)
+        {
+            $qb->setMaxResults($max);
+        }
+        $query = $qb->getQuery();
 
         return $query->getResult();
     }

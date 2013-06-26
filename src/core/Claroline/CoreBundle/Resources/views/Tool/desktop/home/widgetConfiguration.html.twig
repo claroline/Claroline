@@ -1,0 +1,28 @@
+{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% block section_content %}
+    {{
+        macros.breadcrumbs([
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_desktop_open_tool', {'toolName': 'parameters'})
+            },
+            {
+                'name': 'home'|trans({}, 'platform'),
+                'href': path('claro_desktop_tool_config', {'tool': tool.getId()})
+            },
+            {
+                'name': 'widgets'|trans({}, 'platform'),
+                'href': path('claro_desktop_widget_properties')
+            },
+            {
+                'name': 'configuration'|trans({}, 'platform'),
+                'href': '#'
+            }
+        ])
+    }}
+
+    <br/>
+    {% block section_widget_content %}
+        {% include 'ClarolineCoreBundle:Tool\\desktop\\home:widgetConfigurationForm.html.twig' %}
+    {% endblock %}
+{% endblock %}

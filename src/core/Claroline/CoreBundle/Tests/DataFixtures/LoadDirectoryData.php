@@ -45,7 +45,9 @@ class LoadDirectoryData extends AbstractFixture implements ContainerAwareInterfa
     public function load(ObjectManager $manager)
     {
         $user = $this->getReference("user/{$this->creator}");
-        $resourceManager = $this->container->get('claroline.resource.manager');
+        $resourceManager = $this->container->get('claroline.manager.resource_manager');
+        $dirType = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+            ->findOneByName('directory');
 
         foreach ($this->paths as $path) {
             $directories = explode('/', $path);
@@ -56,7 +58,7 @@ class LoadDirectoryData extends AbstractFixture implements ContainerAwareInterfa
                         $directory = new Directory();
                         $directory->setName($directories[$i]);
                         $parent = $this->getReference("directory/{$directories[$i - 1]}");
-                        $resourceManager->create($directory, $parent->getId(), 'directory', $user);
+                        $resourceManager->create($directory, $dirType, $user, $parent->getWorkspace(), $parent);
                         $this->addReference("directory/{$directories[$i]}", $directory);
                     }
                 }

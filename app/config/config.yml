@@ -80,7 +80,7 @@ stof_doctrine_extensions:
 
 parameters:
     security.authentication.listener.anonymous.class: Claroline\CoreBundle\Listener\AnonymousAuthenticationListener
-    templating.locator.class: Claroline\CoreBundle\Templating\Loader\TemplateLocator
+    templating.locator.class: Claroline\CoreBundle\Library\Templating\Loader\TemplateLocator
 
 services:
     templating.locator:
@@ -95,6 +95,7 @@ twig:
             - 'ClarolineCoreBundle:Form:date_range.html.twig'
             - 'ClarolineCoreBundle:Form:two_level_select.html.twig'
             - 'ClarolineCoreBundle:Form:simple_auto_complete.html.twig'
+            - 'ClarolineCoreBundle:Form:button_group_select.html.twig'
             - 'ClarolineCoreBundle::form_theme.html.twig'
 
 idci_exporter:

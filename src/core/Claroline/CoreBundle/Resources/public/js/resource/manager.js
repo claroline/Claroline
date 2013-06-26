@@ -1065,10 +1065,7 @@
                 data: formData,
                 type: 'POST',
                 processData: false,
-                contentType: false,
-                success: function () {
-                    this.views.form.close();
-                }
+                contentType: false
             });
         },
         custom: function (action, resourceId) {
