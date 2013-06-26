@@ -1,3 +1,38 @@
+{#
+ # ExoOnLine
+ # Copyright or © or Copr. Université Jean Monnet (France), 2012
+ # dsi.dev@univ-st-etienne.fr
+ #
+ # This software is a computer program whose purpose is to [describe
+ # functionalities and technical features of your software].
+ #
+ # This software is governed by the CeCILL license under French law and
+ # abiding by the rules of distribution of free software.  You can  use,
+ # modify and/ or redistribute the software under the terms of the CeCILL
+ # license as circulated by CEA, CNRS and INRIA at the following URL
+ # "http://www.cecill.info".
+ #
+ # As a counterpart to the access to the source code and  rights to copy,
+ # modify and redistribute granted by the license, users are provided only
+ # with a limited warranty  and the software's author,  the holder of the
+ # economic rights,  and the successive licensors  have only  limited
+ # liability.
+ #
+ # In this respect, the user's attention is drawn to the risks associated
+ # with loading,  using,  modifying and/or developing or reproducing the
+ # software by the user in light of its specific status of free software,
+ # that may mean  that it is complicated to manipulate,  and  that  also
+ # therefore means  that it is reserved for developers  and  experienced
+ # professionals having in-depth computer knowledge. Users are therefore
+ # encouraged to load and test the software's suitability as regards their
+ # requirements in conditions enabling the security of their systems and/or
+ # data to be ensured and,  more generally, to use and operate it in the
+ # same conditions as regards security.
+ #
+ # The fact that you are presently reading this means that you have had
+ # knowledge of the CeCILL license and that you accept its terms.
+#}
+
 {% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
 
 {% block section_content %}
@@ -23,122 +58,21 @@
             <br/><br/>
             Ce que vous cherchez :&nbsp;&nbsp;
             <input type="text" id='what2search' name='what2search' required="true" style=" position: relative; top: 4px;"
-                   onkeydown="if (event.keyCode == 13) { searchQuestion('{{ path('ujm_question_searchQuestion') }}');return false; }"/><br/><br/>
-            <input type="button" id="SubmitSearchQuestion" value="Search !" onclick="searchQuestion('{{ path('ujm_question_searchQuestion') }}')"/>
+                   onkeydown="if (event.keyCode == 13) { searchQuestion('{{ path('ujm_question_searchQuestion') }}', 1);return false; }"/><br/><br/>
+            <input type="button" id="SubmitSearchQuestion" value="Search !" onclick="searchQuestion('{{ path('ujm_question_searchQuestion') }}', 1)"/>
         </form>
     </div>
 
-    <div id="resultSearch"></div>
+    <div id="resultSearch">
+        {% if divResultSearch is defined %}
+            {{ divResultSearch | raw }}
+        {% endif %}
+    </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
 
-    <script type="text/javascript">
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/SortAndSearch.js') }}"></script>
 
-        function SortQuestions(type) {
-
-            switch (type) {
-                case 'Category':
-                    sortTable('QuestionArray', 0, ASC);
-                    break;
-                case 'Title':
-                    sortTable('QuestionArray', 1, ASC);
-                    break;
-                case 'Type':
-                    sortTable('QuestionArray', 2, ASC);
-                    break;
-                case 'Invite':
-                    sortTable('QuestionArray', 3, ASC);
-                    break;
-            }
-        }
-
-        function DESC(a, b) {
-            a = a[1];
-            b = b[1];
-
-            if (a > b) {
-                return -1;
-            }
-            if (a < b) {
-                return 1;
-            }
-            return 0;
-        }
-
-        function ASC(a, b) {
-            a = a[1];
-            b = b[1];
-
-            if (a > b) {
-                return 1;
-            }
-            if (a < b) {
-                return -1;
-            }
-            return 0;
-         }
-
-        function sortTable(tid, col, ord) {
-
-            mybody = document.getElementById(tid).getElementsByTagName('tbody')[0];
-            lines = mybody.getElementsByTagName('tr');
-
-            var sorter = new Array();
-
-            sorter.length = 0;
-
-            var i = -1;
-
-            while (lines[++i]) {
-                sorter.push([lines[i],lines[i].getElementsByTagName('td')[col].textContent.toLowerCase()]);
-            }
-
-            sorter.sort(ord);
-
-            j = -1;
-
-            while(sorter[++j]) {
-                mybody.appendChild(sorter[j][0]);
-            }
-        }
-
-        function searchQuestion(path){
-
-            var whatToFind = document.getElementById('what2search').value;
-            var type;
-            var where;
-
-            if (document.getElementById('searchQuestionForm').QuestionSearch[0].checked) {
-                type = document.getElementById('searchQuestionForm').QuestionSearch[0].value;
-            } else if (document.getElementById('searchQuestionForm').QuestionSearch[1].checked) {
-                type = document.getElementById('searchQuestionForm').QuestionSearch[1].value;
-            } else if (document.getElementById('searchQuestionForm').QuestionSearch[2].checked) {
-                type = document.getElementById('searchQuestionForm').QuestionSearch[2].value;
-            } else if (document.getElementById('searchQuestionForm').QuestionSearch[3].checked) {
-                type = document.getElementById('searchQuestionForm').QuestionSearch[3].value;
-            }
-
-            if (document.getElementById('searchQuestionForm').WhereSearch[0].checked) {
-                where = document.getElementById('searchQuestionForm').WhereSearch[0].value;
-            } else if (document.getElementById('searchQuestionForm').WhereSearch[1].checked) {
-                where = document.getElementById('searchQuestionForm').WhereSearch[1].value;
-            }
-
-            $.ajax({
-                type: 'POST',
-                url: path,
-                data: {
-                    type : type,
-                    whatToFind : whatToFind,
-                    where : where
-                },
-               cache: false,
-                success: function (data) {
-                  document.getElementById('resultSearch').innerHTML = data;
-               }
-            });
-        }
-    </script>
 {% endblock %}

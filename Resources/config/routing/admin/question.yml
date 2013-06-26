@@ -1,6 +1,6 @@
 ujm_question_index:
     pattern: /index
-    defaults: { _controller: UJMExoBundle:Question:index }
+    defaults: { _controller: "UJMExoBundle:Question:index"}
 
 ujm_question_show:
     pattern:  /{id}/show
@@ -80,5 +80,5 @@ ujm_question_search_question:
     defaults: { _controller: "UJMExoBundle:Question:searchQuestion" }
 
 ujm_question_searchQuestion:
-    pattern:  /SearchQuestionType/{type, whatToFind}
+    pattern:  /SearchQuestionType
     defaults: { _controller: "UJMExoBundle:Question:searchQuestionType" }
