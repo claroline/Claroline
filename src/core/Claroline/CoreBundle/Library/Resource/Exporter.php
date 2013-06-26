@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Library\Resource;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Library\Resource\Utilities;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Library\Event\DownloadResourceEvent;
 use Claroline\CoreBundle\Library\Event\LogResourceExportEvent;
 use Symfony\Component\Security\Core\SecurityContext;
@@ -29,11 +29,11 @@ class Exporter
      * @DI\InjectParams({
      *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
      *     "ed" = @DI\Inject("event_dispatcher"),
-     *     "ut" = @DI\Inject("claroline.resource.utilities"),
+     *     "ut" = @DI\Inject("claroline.manager.resource_manager"),
      *     "sc" = @DI\Inject("security.context")
      * })
      */
-    public function __construct(EntityManager $em, EventDispatcher $ed, Utilities $ut, SecurityContext $sc)
+    public function __construct(EntityManager $em, EventDispatcher $ed, ResourceManager $ut, SecurityContext $sc)
     {
         $this->em = $em;
         $this->ed = $ed;
