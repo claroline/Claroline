@@ -196,9 +196,15 @@ class ResourceManagerTest extends MockeryTestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testIsPathValid()
+    /**
+     * @dataProvider isPathValidProvider
+     */
+    public function testIsPathValid($breadcrumbs, $expectedResult)
     {
-
+        $manager = $this->getManager(array('hasLinkTo'));
+        $manager->shouldReceive('hasLinkTo')->andReturn($expectedResult);
+        $result = $manager->isPathValid($breadcrumbs);
+        $this->assertEquals($result, $expectedResult);
     }
 
     public function testBuildSearchArray()
@@ -291,11 +297,20 @@ class ResourceManagerTest extends MockeryTestCase
 
     public function isPathValidProvider()
     {
-        $grandParent = m::mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
-        $dirParent = m::mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
-        $child = m::mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
-        $linkToDirParent = m::mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
-        //$child->shouldReceive()->getParent()
+        $grandParent = m::mock('Claroline\CoreBundle\Entity\Resource\Directory');
+        $dirParent = m::mock('Claroline\CoreBundle\Entity\Resource\Directory');
+        $child = m::mock('Claroline\CoreBundle\Entity\Resource\Directory');
+        $linkToDirParent = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceShortcut');
+        $child->shouldReceive('getParent')->andReturn($dirParent);
+        $dirParent->shouldReceive('getParent')->andReturn($grandParent);
+        $linkToDirParent->shouldReceive('getParent')->andReturn($grandParent);
+        $grandParent->shouldReceive('getParent')->andReturn(null);
+
+        return array(
+            array(array($grandParent, $dirParent, $child), true),
+            array(array($grandParent, $grandParent, $child), false),
+            array(array($grandParent, $linkToDirParent, $child), true),
+        );
     }
 
     public function areAncestorsDirectoryProvider()

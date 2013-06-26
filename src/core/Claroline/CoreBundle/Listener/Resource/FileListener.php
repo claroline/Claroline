@@ -75,7 +75,7 @@ class FileListener implements ContainerAwareInterface
             $extension = pathinfo($fileName, PATHINFO_EXTENSION);
             $size = filesize($tmpFile);
             $mimeType = $tmpFile->getClientMimeType();
-            $hashName = $this->container->get('claroline.resource.utilities')->generateGuid() . "." . $extension;
+            $hashName = $this->container->get('claroline.manager.resource_manager')->generateGuid() . "." . $extension;
             $tmpFile->move($this->container->getParameter('claroline.param.files_directory'), $hashName);
             $ds = DIRECTORY_SEPARATOR;
             $file->setSize($size);
@@ -232,7 +232,7 @@ class FileListener implements ContainerAwareInterface
         $files = $event->getFiles();
         $file = new File();
         $extension = pathinfo($files[0], PATHINFO_EXTENSION);
-        $hashName = $this->container->get('claroline.resource.utilities')->generateGuid() . "." . $extension;
+        $hashName = $this->container->get('claroline.manager.resource_manager')->generateGuid() . "." . $extension;
         $physicalPath = $this->container->getParameter('claroline.param.files_directory') . $ds . $hashName;
         rename($files[0], $physicalPath);
         $size = filesize($physicalPath);
@@ -259,7 +259,7 @@ class FileListener implements ContainerAwareInterface
         $newFile->setName($resource->getName());
         $newFile->setMimeType($resource->getMimeType());
         $hashName = $this->container
-            ->get('claroline.resource.utilities')
+            ->get('claroline.manager.resource_manager')
             ->generateGuid() . '.' . pathinfo($resource->getHashName(), PATHINFO_EXTENSION);
         $newFile->setHashName($hashName);
         $filePath = $this->container->getParameter('claroline.param.files_directory') . $ds . $resource->getHashName();
