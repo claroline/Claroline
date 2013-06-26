@@ -341,6 +341,31 @@ class AbstractResourceRepository extends MaterializedPathRepository
         return $query->getResult();
     }
 
+
+    /**
+     * Returns an array of different file types with the number of resources that
+     * belong in this type
+     *
+     * @return array
+     */
+    public function  mimeTypesWithMostResources ($max) 
+    {
+        $qb = $this
+            ->createQueryBuilder('resource')
+            ->select('resource.mimeType, COUNT(resource.id) AS total');
+
+        $qb->andWhere($qb->expr()->isNotNull('resource.mimeType'))
+        ->groupBy('resource.mimeType')
+        ->orderBy('total','DESC');
+        if ($max >1)
+        {
+            $qb->setMaxResults($max);
+        }
+        $query = $qb->getQuery();
+
+        return $query->getResult();
+    }
+
     public function findWorkspaceInfoByIds(array $resourcesId)
     {
         if (count($resourcesId) === 0) {

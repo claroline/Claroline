@@ -55,9 +55,10 @@ class LogRepository extends EntityRepository
             $action = array($action);
         }
 
-        $qb->andWhere("log.action IN (:action)");
-        $qb->setParameter('action', $action);
-
+        if($action !== null){
+            $qb->andWhere("log.action IN (:action)");
+            $qb->setParameter('action', $action);
+        }
         return $qb;
     }
 
@@ -135,6 +136,7 @@ class LogRepository extends EntityRepository
                 }
                 $qb->setParameter('workspace'.$workspaceId, $workspaceId);
             }
+
         }
 
         return $qb;
@@ -197,6 +199,7 @@ class LogRepository extends EntityRepository
 
         return $this->extractChartData($qb->getQuery()->getResult(), $range);
     }
+
 
     public function countByDayFilteredLogs($action, $range, $userSearch, $actionsRestriction, $workspaceIds = null)
     {
@@ -381,5 +384,106 @@ class LogRepository extends EntityRepository
         $logs = $q->getResult();
 
         return $logs;
+    }
+
+    public function topWSByAction ($range, $action, $max)
+    {
+        $qb = $this
+            ->createQueryBuilder('log')
+            ->select('ws.id, ws.name, ws.code, count(log.id) AS actions')
+            ->leftJoin('log.workspace','ws')
+            ->groupBy('ws')
+            ->orderBy('actions', 'DESC');            
+        
+        if ($max >1)
+        {
+            $qb->setMaxResults($max);
+        }
+
+        $qb = $this->addActionFilterToQueryBuilder($qb, $action, null);
+        $qb = $this->addDateRangeFilterToQueryBuilder($qb, $range);
+        $query = $qb->getQuery();
+
+        return $query->getResult();
+    }
+
+    public function topMediaByAction ($range, $action, $max)
+    {
+        $qb = $this
+            ->createQueryBuilder('log')
+            ->select('resource.id, resource.name, count(log.id) AS actions')
+            ->leftJoin('log.resource','resource')
+            ->leftJoin('log.resourceType','resource_type')
+            ->andWhere('resource_type.name=:fileType')
+            ->groupBy('resource')
+            ->orderBy('actions', 'DESC')
+            ->setParameter('fileType','file');            
+        
+        if ($max >1)
+        {
+            $qb->setMaxResults($max);
+        }
+
+        $qb = $this->addActionFilterToQueryBuilder($qb, $action, null);
+        $qb = $this->addDateRangeFilterToQueryBuilder($qb, $range);
+        $query = $qb->getQuery();
+
+        return $query->getResult();
+    }    
+
+    public function topResourcesByAction ($range, $action, $max)
+    {
+        $qb = $this
+            ->createQueryBuilder('log')
+            ->select('resource.id, resource.name, count(log.id) AS actions')
+            ->leftJoin('log.resource','resource')
+            ->groupBy('resource')
+            ->orderBy('actions', 'DESC');     
+        
+        if ($max >1)
+        {
+            $qb->setMaxResults($max);
+        }
+
+        $qb = $this->addActionFilterToQueryBuilder($qb, $action, null);
+        $qb = $this->addDateRangeFilterToQueryBuilder($qb, $range);
+        $query = $qb->getQuery();
+
+        return $query->getResult();
+    }
+
+    public function topUsersByAction ($range, $action, $max)
+    {
+        $qb = $this
+            ->createQueryBuilder('log')
+            ->select("doer.id, CONCAT(CONCAT(doer.firstName,' '), doer.lastName) AS name, doer.username, count(log.id) AS actions")
+            ->leftJoin('log.doer','doer')
+            ->groupBy('doer')
+            ->orderBy('actions', 'DESC');     
+        
+        if ($max >1)
+        {
+            $qb->setMaxResults($max);
+        }
+
+        $qb = $this->addActionFilterToQueryBuilder($qb, $action, null);
+        $qb = $this->addDateRangeFilterToQueryBuilder($qb, $range);
+        $query = $qb->getQuery();
+
+        return $query->getResult();
+    }
+
+    public function activeUsers ()
+    {
+        $qb = $this
+            ->createQueryBuilder('log')
+            ->select('COUNT(DISTINCT log.doer) AS users');
+
+        $qb = $this->addActionFilterToQueryBuilder($qb, "user_login", null);
+
+        $query = $qb->getQuery();
+        $result = $query->getResult();
+
+        return $result[0]['users'];
     }
 }

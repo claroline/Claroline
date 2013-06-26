@@ -11,8 +11,11 @@ class LogDesktopWidgetConfigType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $workspaces = $options['workspaces'];
-        foreach ($workspaces as $workspace) {
-            $builder->add($workspace->getId(), 'checkbox', array('required' => false, 'label' => $workspace->getName()));
+
+        if (is_array($workspaces)) {
+            foreach ($workspaces as $workspace) {
+                $builder->add($workspace->getId(), 'checkbox', array('required' => false, 'label' => $workspace->getName()));
+            }
         }
         $builder->add('amount', 'choice', array(
                 'choices' => array(

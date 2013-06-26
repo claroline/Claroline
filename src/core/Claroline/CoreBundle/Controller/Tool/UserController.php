@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleSubscribeEvent;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleUnsubscribeEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class UserController extends Controller
 {
@@ -39,6 +40,8 @@ class UserController extends Controller
      * )
      *
      * @Method("GET")
+     *
+     * @Template("ClarolineCoreBundle:Tool\workspace\user_management:registeredUsers.html.twig")
      */
     public function registeredUsersListAction($workspaceId, $page, $search)
     {
@@ -54,9 +57,10 @@ class UserController extends Controller
         $pager->setMaxPerPage(20);
         $pager->setCurrentPage($page);
 
-        return $this->render(
-            'ClarolineCoreBundle:Tool\workspace\user_management:registered_users.html.twig',
-            array('workspace' => $workspace, 'pager' => $pager, 'search' => $search)
+        return array(
+            'workspace' => $workspace,
+            'pager' => $pager,
+            'search' => $search
         );
     }
 
@@ -78,6 +82,8 @@ class UserController extends Controller
      * )
      *
      * @Method("GET")
+     *
+     * @Template("ClarolineCoreBundle:Tool\workspace\user_management:unregisteredUsers.html.twig")
      */
     public function unregiseredUsersListAction($workspaceId, $page, $search)
     {
@@ -93,9 +99,10 @@ class UserController extends Controller
         $pager->setMaxPerPage(20);
         $pager->setCurrentPage($page);
 
-        return $this->render(
-            'ClarolineCoreBundle:Tool\workspace\user_management:unregistered_users.html.twig',
-            array('workspace' => $workspace, 'pager' => $pager, 'search' => $search)
+        return array(
+            'workspace' => $workspace,
+            'pager' => $pager,
+            'search' => $search
         );
     }
 
@@ -114,6 +121,8 @@ class UserController extends Controller
      *     options={"expose"=true}
      * )
      * @Method({"POST", "GET"})
+     *
+     * @Template("ClarolineCoreBundle:Tool\workspace\user_management:userParameters.html.twig")
      *
      * Renders the user parameter page with its layout and
      * edit the user parameters for the selected workspace.
@@ -183,13 +192,10 @@ class UserController extends Controller
             return new RedirectResponse($route);
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Tool\workspace\user_management:user_parameters.html.twig',
-            array(
-                'workspace' => $workspace,
-                'user' => $user,
-                'form' => $form->createView()
-            )
+        return array(
+            'workspace' => $workspace,
+            'user' => $user,
+            'form' => $form->createView()
         );
     }
 

@@ -39,4 +39,19 @@ class ResourceTypeRepository extends EntityRepository
         return $this->_em->createQuery($dql)
             ->getResult();
     }
+
+    public function countResourcesByType()
+    {
+        $qb = $this
+            ->createQueryBuilder('type')
+            ->select('type.id, type.name, COUNT(rs.id) AS total')
+            ->leftJoin('Claroline\CoreBundle\Entity\Resource\AbstractResource','rs','WITH','type = rs.resourceType')
+            ->groupBy('type.id')
+            ->orderBy('total','DESC');
+
+        $query = $qb->getQuery();
+        $result = $query->getResult();
+
+        return $result;
+    }
 }

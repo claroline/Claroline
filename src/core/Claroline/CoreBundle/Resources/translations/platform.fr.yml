@@ -1,4 +1,5 @@
 account_created: 'Compte créé'
+account_general_statistics: Statistiques générales sur les comptes
 action: Action
 activity_form_instructions: Instructions
 activity_form_name: Nom
@@ -11,6 +12,7 @@ add_user: 'Ajouter un utilisateur'
 add_users: 'Ajouter des utilisateurs'
 add_user_s_confirm_message: 'utilisateur(s) ajouté(s)'
 admin: Administrateur
+admin_analytics: 'Statistiques plateforme'
 administration: Administration
 administrative_code: 'Code administratif'
 admin_form_firstName : 'Prenom'
@@ -34,6 +36,10 @@ all: Tous
 all_my_workspaces: 'Tous mes espaces d''activités'
 all_workspaces: 'Tous les espaces'
 anonymous: Anonyme
+analytics_home: Vue de l'ensemble
+analytics_connections: Visites utilisateurs
+analytics_resources: Contenu plateforme
+analytics_top: Top des activités
 by: par
 cancel: Annuler
 choose_resource_form_type: 'Type de ressource'
@@ -41,6 +47,7 @@ close: Fermer
 collaborator: Collaborateur
 communication: Communication
 configuration: Configuration
+connections: Nb Cnx.
 configure: Configurer
 copy: Copier
 create: Créer
@@ -62,6 +69,7 @@ directory_form_shareType: Redistribution
 display_options: 'Options d''affichage'
 done_on: 'effectuée sur'
 download: Télécharger
+downloads: Nb tchgr.
 edit: Modifier
 enter_tag_name_message: 'Veuillez entrer un nom de Tag'
 export: Exporter
@@ -95,6 +103,7 @@ informations: Informations
 instructions: Consignes
 import: Importer
 import_user_file_file: Importer depuis fichier
+last_30_days_activity: Activités des 30 derniers jours
 last_name: Nom
 link: Lien
 list_groups: 'Lister les groupes'
@@ -248,6 +257,7 @@ mail_form_content: Contenu
 mail_form_object: Objet
 manage_rights: 'Gérer les droits'
 manager: Gestionnaire
+media_most_viewed: Media les plus consultés
 messages_confirm_delete: 'Etes-vous sûr de vouloir supprimer ce(s) message(s) ?'
 messages_confirm_permanent_delete: 'Etes-vous sûr de vouloir supprimer définitivement ce(s) message(s) ?'
 messages_confirm_restore: 'Etes-vous sûr de vouloir restaurer ce(s) message(s) ?'
@@ -335,7 +345,10 @@ resource_properties_form_sharable: 'Partager cette ressource'
 resource_properties_form_shareType: Redistribution
 resource_properties_form_userIcon: Icône
 resources: Ressources
+resources_most_downloaded: Ressources les plus téléchargés
 resources_rights: 'Droits des ressources'
+resources_usage_ratio: Taux d'utilisation des resources
+resources_usage_list: Liste d'utilisation des resources 
 resource_right_form_canCopy: Copier
 resource_right_form_canDelete: Supprimer
 resource_right_form_canEdit: Editer
@@ -354,6 +367,7 @@ save: Sauvegarder
 save_as_template: Sauvegarder comme modèle
 search: Rechercher
 see: Voir
+see_more: Voir plus
 select all: 'Tout sélectionner'
 send_mail: 'Envoyer un mail'
 send_message: 'Envoyer un message'
@@ -364,6 +378,7 @@ show_as_admin: 'Voir comme admin'
 show_as_user: 'Voir comme utilisateur'
 show_as: 'Voir en tant que'
 show_profile: 'Voir le profile'
+Show: Afficher
 steal_session: 'Voler la session'
 switch: Echanger
 tag: Tag
@@ -385,14 +400,26 @@ to_message: A
 today: 'Aujourd''hui'
 tool: Outil
 tools: Outils
+top: Top
+top_extension: "Top des extensions (Media), par nombre de fichiers"
+top_workspaces_resources: "Top des espaces d'activités avec le plus des resources"
+top_workspaces_connections: "Top des espaces d'activités les plus consultés"
+top_resources_views: "Top des resources les plus consultés"
+top_resources_downloads: "Top des resources les plus téléchargés"
+top_users_workspaces_owners: "Top des utilisateurs ayant crée le plus de modules"
+top_users_workspaces_enrolled: "Top des utilisateurs étant inscrits dans le plus de modules"
+top_users_connections: "Top des utilisateurs s'étant les plus connectés"
+top_media_views: "Top des Medias le plus consultés"
 trash : Corbeille
 type: Type
 type_s: Type(s)
+unique connections: 'Nb Cnx. uniques'
 unregister: Désinscription
 unregistered_groups: 'Groupes non enregistrés'
 unregistered_users: 'Utilisateurs non enregistrés'
 unwritable_file_exception: "Vous n'avez pas la permission d'écrire dans le fichier %path%."
 user: Utilisateur
+user_accounts: Comptes utilisateur
 user_form_administrativeCode: 'Code administratif'
 user_form_firstName: Nom
 user_form_lastName: Prénom
@@ -408,8 +435,11 @@ users_management: 'Gestion des utilisateurs'
 users_list: 'Liste des utilisateurs'
 username: 'Nom d''utilisateur'
 users: Utilisateurs
+users_connected_once: utilisateurs connectés au moins 1 fois sur la plateforme
+users_visits: Visites des utilisateurs
 validate: Valider
 view: Voir
+views: Nb vues
 visible: Visible
 visitor: Visiteur
 warning_workspace_impersonation: Vous êtes connectés en tant que %role% du workspace %workspace%.
@@ -436,6 +466,7 @@ workspace_tools: Outils
 workspace_welcome: Accueil
 workspaces: 'Espaces d''activités'
 ws_creator: 'Créateur d''espaces'
+ws_most_viewed: Espaces d'activités les plus consultés
 date_range.format: 'd-m-Y'
 date_range.js_format: 'dd-MM-yyyy'
 date_range.apply: 'Appliquer'
@@ -465,6 +496,7 @@ for period: 'sur la période du'
 for user: 'de l''utilisateur'
 Show actions: 'Afficher les actions'
 See all: 'Voir tous'
+yesterday_activity: Activité de la veille
 Your changes have been saved: 'Vos changements ont été sauvegardés'
 The form is not valid: 'Le formulaire n''est pas valide'
 Choose workspaces displayed in the widget: 'Choisissez les espaces de travail affichés par le widget'
@@ -478,3 +510,4 @@ Draw an area on the graph to zoom, double-click to cancel: 'Tracez une zone sur 
 Overview of recent activities of your workspaces: 'Aperçu des activités récentes de vos espaces de travail'
 Overview of recent activities in %workspaceName%: 'Aperçu des activités récentes de %workspaceName%'
 Overview of all recent activities in %workspaceName%: 'Aperçu de toutes les activités récentes de %workspaceName%'
+
