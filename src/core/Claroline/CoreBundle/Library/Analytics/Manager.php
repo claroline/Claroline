@@ -97,7 +97,11 @@ class Manager
                 break;
             case "top_users_workspaces_enrolled":
                 $repository = $em->getRepository('ClarolineCoreBundle:User');
-                $listData = $repository->usersEnrolledInMostWorkspaces ($max);
+                $listData = $repository->findUsersEnrolledInMostWorkspaces ($max);
+                break;
+            case "top_users_workspaces_owners":
+                $repository = $em->getRepository('ClarolineCoreBundle:User');
+                $listData = $repository->findUsersOwnersOfMostWorkspaces ($max);
                 break;
             case "top_media_views":
                 $listData = $this->topMediaByAction($range, 'resource_read', $max);

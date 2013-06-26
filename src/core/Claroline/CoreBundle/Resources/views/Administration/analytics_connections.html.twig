@@ -7,6 +7,11 @@
             width: 90%;
             margin: 0 5%;
         }
+        .count_by_day_chart_legend {
+            text-align: center;
+            font-size: 11px;
+            color: #777;
+        }
         #connections_criteria.form-inline div {
             display: inline-block;
             *display: inline;
@@ -24,8 +29,7 @@
     </style>
     <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
 {% endblock %}
-{% block section_content %}
-    
+{% block section_content %}    
     {% include 'ClarolineCoreBundle:Administration:analytics_navbar.html.twig'%}
     <div class="margin">
         <h1>{{activeUsers}}</h1>
@@ -42,6 +46,8 @@
     <div class="margin">
         <h3>{{'users_visits'|trans({}, 'platform')}}</h3>
         <div id="connections-line-chart" class="line-chart"></div>
+        <br/>
+        <div class="count_by_day_chart_legend"><i class="icon-hand-up"></i> <em>{{ 'Draw an area on the graph to zoom, double-click to cancel'|trans({}, 'platform') }}</em></div>
     </div>   
 {% endblock %}
 {% block javascripts %}

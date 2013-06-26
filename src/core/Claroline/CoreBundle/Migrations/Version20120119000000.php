@@ -142,6 +142,17 @@ class Version20120119000000 extends BundleMigration
             array('id'),
             array('onDelete' => 'SET NULL')
         );
+
+        /*
+         * Add foreign constraint for creator in workspace table
+         */
+        $this->getStoredTable('claro_workspace')->addForeignKeyConstraint(
+            $table,
+            array('user_id'),
+            array('id'),
+            array('onDelete' => 'SET NULL')
+        );
+
         $this->storeTable($table);
     }
 
@@ -193,6 +204,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('root', 'integer', array('notnull' => false));
         $table->addColumn('parent_id', 'integer', array('notnull' => false));
         $table->addColumn('code', 'string', array('length' => 255));
+        $table->addColumn('user_id', 'integer', array('notnull' => false));
         $table->addUniqueIndex(array('code'));
 
         $this->storeTable($table);
