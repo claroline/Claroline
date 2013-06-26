@@ -146,7 +146,7 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
         $name = 'file_'.$this->suffixName.'.txt';
         $file = new File();
         $file->setName($name);
-        $hashName = $this->container->get('claroline.resource.utilities')->generateGuid();
+        $hashName = $this->container->get('claroline.resource.resource_manager')->generateGuid();
         $file->setHashName($hashName);
         $file->setMimeType('text/plain');
         $file->setSize(0);

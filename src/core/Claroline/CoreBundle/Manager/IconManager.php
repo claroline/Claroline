@@ -76,7 +76,7 @@ class IconManager
                 . DIRECTORY_SEPARATOR . $resource->getHashName();
             $newPath = $this->container->getParameter('claroline.param.thumbnails_directory')
                 . DIRECTORY_SEPARATOR
-                . $this->container->get('claroline.resource.utilities')->generateGuid() . ".png";
+                . $this->container->get('claroline.manager.resource_manager')->generateGuid() . ".png";
 
             $thumbnailPath = null;
             if ($mimeElements[0] === 'video') {
@@ -217,7 +217,7 @@ class IconManager
         $ds = DIRECTORY_SEPARATOR;
         $iconName = $file->getClientOriginalName();
         $extension = pathinfo($iconName, PATHINFO_EXTENSION);
-        $hashName = $this->container->get('claroline.resource.utilities')->generateGuid() . "." . $extension;
+        $hashName = $this->container->get('claroline.manager.resource_manager')->generateGuid() . "." . $extension;
         $file->move($this->container->getParameter('claroline.param.thumbnails_directory'), $hashName);
         //entity creation
         $icon = new ResourceIcon();

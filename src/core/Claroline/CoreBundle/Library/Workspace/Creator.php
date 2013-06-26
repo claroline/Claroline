@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Library\Workspace;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\Event\ImportToolEvent;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceCreateEvent;
-use Claroline\CoreBundle\Library\Resource\Manager;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
@@ -26,12 +26,12 @@ class Creator
     /**
      * @DI\InjectParams({
      *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "rm" = @DI\Inject("claroline.resource.manager"),
+     *     "rm" = @DI\Inject("claroline.manager.resource_manager"),
      *     "ed" = @DI\Inject("event_dispatcher"),
      *     "translator" = @DI\Inject("translator")
      * })
      */
-    public function __construct(EntityManager $em, Manager $rm, $ed, $translator)
+    public function __construct(EntityManager $em, ResourceManager $rm, $ed, $translator)
     {
         $this->entityManager = $em;
         $this->manager = $rm;
