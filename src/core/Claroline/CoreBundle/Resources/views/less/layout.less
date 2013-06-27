@@ -478,13 +478,23 @@ footer {
     height: 100px;
 }
 
-.add_badge a {
-    display:         block;
-    width:           100px;
-    height:          60px;
-    padding-top:     40px;
-    text-align:      center;
-    text-decoration: none;
+.add_badge {
+    a {
+        display:         block;
+        width:           100px;
+        height:          60px;
+        padding-top:     40px;
+        text-align:      center;
+        text-decoration: none;
+
+        &:hover > i {
+            border: 1px solid #08c;
+            .border-radius(@baseBorderRadius);
+            .box-shadow(0 1px 4px rgba(0,105,214,0.25));
+            margin-right: -1px;
+            padding: 2px;
+        }
+    }
 }
 
 /************/
