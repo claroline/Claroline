@@ -487,12 +487,17 @@ footer {
         text-align:      center;
         text-decoration: none;
 
-        &:hover > i {
-            border: 1px solid #08c;
+        > i {
+            border: 1px solid #ddd;
             .border-radius(@baseBorderRadius);
-            .box-shadow(0 1px 4px rgba(0,105,214,0.25));
+            .box-shadow(0 1px 3px rgba(0,0,0,0.055));
+            .transition(all .2s ease-in-out);
             margin-right: -1px;
             padding: 2px;
+        }
+        &:hover > i {
+            border-color: #08c;
+            .box-shadow(0 1px 4px rgba(0,105,214,0.25));
         }
     }
 }
