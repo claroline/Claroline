@@ -9,9 +9,10 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 
-class LoadGroupData extends AbstractFixture
+class LoadGroupData extends AbstractFixture implements ContainerAwareInterface
 {
     private $groups;
+    private $container;
 
     /**
      * Constructor. Expects an associative array where each key is an unique group name
@@ -21,11 +22,19 @@ class LoadGroupData extends AbstractFixture
      * For each group, 1 fixture reference will be added:
      * - role/[group's name] (group's role)
      *
-     * @param array $groups
+     * @param array $users
      */
     public function __construct(array $groups)
     {
         $this->groups = $groups;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
     }
 
     /**

@@ -6,18 +6,15 @@ use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class LoadShortcutData extends AbstractFixture
+class LoadShortcutData extends AbstractFixture implements ContainerAwareInterface
 {
     /**
      * Constructor. Each key is a role name and each value is a parent role.
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $target
-     * @param string                                                 $directory
-     * @param string                                                 $creator
-     * @param string                                                 $referenceName
-     *
-     * @internal param array $roles
+     * @param array $roles
      */
     public function __construct(AbstractResource $target, $directory, $creator, $referenceName = '')
     {
@@ -25,6 +22,14 @@ class LoadShortcutData extends AbstractFixture
         $this->directory = $directory;
         $this->target = $target;
         $this->referenceName = $referenceName;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
     }
 
     /**

@@ -6,8 +6,10 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\Revision;
 use Claroline\CoreBundle\Entity\Resource\Text;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class LoadTextData extends AbstractFixture
+class LoadTextData extends AbstractFixture implements ContainerAwareInterface
 {
     private $texts;
     private $words;
@@ -28,6 +30,14 @@ class LoadTextData extends AbstractFixture
         $this->creator = $creator;
         $this->parent = $parent;
         $this->texts = $texts;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
     }
 
     /**

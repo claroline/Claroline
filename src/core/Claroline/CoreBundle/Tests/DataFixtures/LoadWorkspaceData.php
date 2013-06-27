@@ -5,8 +5,10 @@ namespace Claroline\CoreBundle\Tests\DataFixtures;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class LoadWorkspaceData extends AbstractFixture
+class LoadWorkspaceData extends AbstractFixture implements ContainerAwareInterface
 {
     private $workspaces;
     static private $codeDiscrCount = 1;
@@ -24,6 +26,14 @@ class LoadWorkspaceData extends AbstractFixture
     public function __construct(array $workspaces)
     {
         $this->workspaces = $workspaces;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
     }
 
     /**
