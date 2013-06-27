@@ -6,9 +6,15 @@
 {% endblock %}
 
 {% block section_content %}
-    <ul class="breadcrumb">
-        <li><a href="#"><i class="icon-cog"></i> {{ "parameters" | trans({}, 'platform') }}</a>
-    </ul>
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_desktop_open_tool', {'toolName': 'parameters'})
+            }
+        ])
+    }}
     <div class="margin">
         <ul>
             <li class='li-user-parameters'>

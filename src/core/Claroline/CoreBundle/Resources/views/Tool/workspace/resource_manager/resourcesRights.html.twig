@@ -14,12 +14,13 @@
     {{
         macros.breadcrumbs([
             {
+                'icon': 'icon-cog',
                 'name': 'parameters'|trans({}, 'platform'),
                 'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
             },
             {
                 'name': 'resources'|trans({}, 'platform'),
-                'href': '#'
+                'href': ''
             }
         ])
     }}

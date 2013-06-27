@@ -1,9 +1,9 @@
 {% macro renderPager(search, workspaceId, pager) %}
-    {% if search == '' %}
+{% if search == '' %}
     {{
         pagerfanta(
-            pager,
-            'twitter_bootstrap_translated',
+        pager,
+        'twitter_bootstrap_translated',
             {
                 'proximity' : 1,
                 'routeName': 'claro_workspace_unregistered_user_list',
@@ -11,19 +11,19 @@
             }
         )
     }}
-    {% else %}
-        {{
-            pagerfanta(
-                pager,
-                'twitter_bootstrap_translated',
-                {
-                    'proximity' : 1,
-                    'routeName': 'claro_workspace_unregistered_user_list_search',
-                    'routeParams': {'search': search, 'workspaceId': workspaceId}
-                }
-            )
-        }}
-    {% endif %}
+{% else %}
+    {{
+        pagerfanta(
+        pager,
+        'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_workspace_unregistered_user_list_search',
+                'routeParams': {'search': search, 'workspaceId': workspaceId}
+            }
+        )
+    }}
+{% endif %}
 {% endmacro %}
 
 {% from _self import renderPager %}
@@ -33,9 +33,9 @@
 {% block javascripts %}
     {{ parent() }}
     {% javascripts
-       vars=["locale"]
-      "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/addUserConfirm.html.twigjs"
-       filter="twig_js"
+        vars=["locale"]
+        "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/addUserConfirm.html.twigjs"
+    filter="twig_js"
     %}
     <script language="javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -43,24 +43,23 @@
 {% endblock %}
 
 {% block section_content %}
-   {% spaceless %}
-       <ul class="breadcrumb">
-            <li>
-                <a href="{{ path('claro_workspace_open_tool',
-                    {'workspaceId': workspace.getId(), 'toolName': 'user_management'}) }}">
-                    {{ 'user_management'|trans({}, 'tools') }}
-                </a>
-            </li>
-            <span class="divider"> / </span>
-            <li>
-                <a href="#"
-                id="link_unregistered_users">{{ 'unregistered_users'|trans({}, 'platform') }}
-                </a>
-            </li>
-        </ul>
-    {% endspaceless %}
+
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-user',
+                'name': 'user_management'|trans({}, 'tools'),
+                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'user_management'})
+            },
+            {
+                'name': 'unregistered_users'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+
     <div id="twig-attributes"
-         data-workspaceId="{{workspace.getId()}}">
+        data-workspaceId="{{workspace.getId()}}">
     </div>
 
     <div class="margin search-bar">
@@ -72,19 +71,17 @@
                 <i class="icon-search"></i>
             </button>
         </div>
-    </div>
-
-    <div>
         {{ renderPager(search, workspace.getId(), pager) }}
     </div>
+
     <form id="list-user-form" >
         <div id="user-checkboxes">
             <table id="user-table-checkboxes" class="table table-striped table-bordered table-condensed">
                 <thead>
-                <th>{{ 'username'|trans({}, 'platform') }}</th>
-                <th>{{ 'last_name'|trans({}, 'platform') }}</th>
-                <th>{{ 'first_name'|trans({}, 'platform') }}</th>
-                <th></th>
+                    <th>{{ 'username'|trans({}, 'platform') }}</th>
+                    <th>{{ 'last_name'|trans({}, 'platform') }}</th>
+                    <th>{{ 'first_name'|trans({}, 'platform') }}</th>
+                    <th></th>
                 </thead>
                 <tbody id="user-table-checkboxes-body">
                     {% for user in pager.currentPageResults %}
@@ -93,7 +90,7 @@
                             <td>{{ user.lastname }}</td>
                             <td>{{ user.firstname }}</td>
                             <td>
-                                 <input type="checkbox" value="{{ user.id }}" class="chk-user" align="center"></input>
+                                <input type="checkbox" value="{{ user.id }}" class="chk-user" align="center"></input>
                             </td>
                         </tr>
                     {% endfor %}
@@ -101,25 +98,23 @@
             </table>
         </div>
     </form>
-    <div>
-        {{ renderPager(search, workspace.getId(), pager) }}
-    </div>
     <div class="margin">
+
+        {{ renderPager(search, workspace.getId(), pager) }}
         <button class="btn btn-secondary add-users-button"><i class="icon-plus"></i> {{ 'add'|trans({}, 'platform') }}</button>
     </div>
-
-  <!-------------- modal box ------------------------------------------------>
-  <div id="validation-box" class="modal hide fade">
-      <div class="modal-header">
-      </div>
-      <div class="modal-body" id="modal-body">
-          <div id="validation-box-body">
-          </div>
-      </div>
-      <div class="modal-footer">
-          <input type="button" id="modal-valid-button" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-          <input type="button" id="modal-cancel-button" class="btn btn-secondary" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
-      </div>
-  </div>
+    <!-------------- modal box ------------------------------------------------>
+    <div id="validation-box" class="modal hide fade">
+        <div class="modal-header">
+        </div>
+        <div class="modal-body" id="modal-body">
+            <div id="validation-box-body">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <input type="button" id="modal-valid-button" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
+            <input type="button" id="modal-cancel-button" class="btn btn-secondary" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+        </div>
+    </div>
 {% endblock %}
 
