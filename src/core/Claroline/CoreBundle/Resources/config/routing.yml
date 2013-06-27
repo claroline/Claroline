@@ -193,3 +193,7 @@ claro_file:
 idci_exporter:
     resource: "../../vendor/idci/exporter-bundle/IDCI/Bundle/ExporterBundle/Controller"
     type:     annotation
+
+claro_badges:
+    resource: "@ClarolineCoreBundle/Controller/BadgeController.php"
+    type:     annotation
