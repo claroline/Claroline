@@ -2,13 +2,17 @@
 
 namespace Claroline\CoreBundle\Tests\DataFixtures;
 
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Fixtures\LoggableFixture;
 use Claroline\CoreBundle\Entity\Message;
 use Claroline\CoreBundle\Entity\UserMessage;
 
-class LoadMessagesData extends LoggableFixture
+class LoadMessagesData extends LoggableFixture implements ContainerAwareInterface
 {
+    /** @var ContainerInterface $container */
+    private $container;
     private $messages;
 
     /**
@@ -22,6 +26,11 @@ class LoadMessagesData extends LoggableFixture
     public function __construct(array $messages)
     {
         $this->messages = $messages;
+    }
+
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
     }
 
     public function load(ObjectManager $manager)

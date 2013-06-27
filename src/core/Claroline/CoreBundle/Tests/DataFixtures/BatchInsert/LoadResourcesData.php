@@ -2,6 +2,8 @@
 
 namespace Claroline\CoreBundle\Tests\DataFixtures\BatchInsert;
 
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Library\Fixtures\LoggableFixture;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\Directory;
@@ -13,8 +15,9 @@ use Doctrine\ORM\EntityManager;
  * Loads a large amount of workspace.
  * This fixture assume the user JohnDoe (admin) already exists.
  */
-class LoadResourcesData extends LoggableFixture
+class LoadResourcesData extends LoggableFixture implements ContainerAwareInterface
 {
+    private $container;
     private $numberFiles;
     private $numberDirectory;
     private $numberRoots;
@@ -31,6 +34,14 @@ class LoadResourcesData extends LoggableFixture
         $this->numberRoots = $numberRoots;
         $this->depth = $depth;
         $this->totalResources = 0;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
     }
 
     public function load(ObjectManager $manager)

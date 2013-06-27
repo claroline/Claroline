@@ -2,12 +2,14 @@
 
 namespace Claroline\CoreBundle\Tests\DataFixtures;
 
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
 
-class LoadActivityData extends AbstractFixture
+class LoadActivityData extends AbstractFixture implements ContainerAwareInterface
 {
     private $name;
     private $parent;
@@ -28,6 +30,11 @@ class LoadActivityData extends AbstractFixture
         $this->parent = $parent;
         $this->creator = $creator;
         $this->resources = $resources;
+    }
+
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
     }
 
     public function load(ObjectManager $manager)

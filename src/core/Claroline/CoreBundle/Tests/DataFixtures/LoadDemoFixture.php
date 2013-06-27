@@ -5,6 +5,8 @@ namespace Claroline\CoreBundle\Tests\DataFixtures;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Claroline\CoreBundle\Library\Fixtures\LoggableFixture;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\User;
@@ -19,8 +21,11 @@ use Claroline\CoreBundle\Tests\DataFixtures\LoadMessagesData;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadActivityData;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadShortcutData;
 
-class LoadDemoFixture extends LoggableFixture
+class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
 {
+    /** @var ContainerInterface $container */
+    protected $container;
+
     protected $filepath;
 
     const NB_USERS = 20;
@@ -33,6 +38,11 @@ class LoadDemoFixture extends LoggableFixture
     {
         $ds = DIRECTORY_SEPARATOR;
         $this->filepath = __DIR__."{$ds}DemoFiles{$ds}";
+    }
+
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
     }
 
     public function getContainer()

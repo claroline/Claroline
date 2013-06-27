@@ -2,6 +2,8 @@
 
 namespace Claroline\CoreBundle\Tests\DataFixtures\BatchInsert;
 
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Library\Fixtures\LoggableFixture;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -10,14 +12,23 @@ use Doctrine\Common\Persistence\ObjectManager;
  * Loads a large amount of workspace.
  * This fixture assume the user JohnDoe (admin) already exists.
  */
-class LoadWorkspacesData extends LoggableFixture
+class LoadWorkspacesData extends LoggableFixture implements ContainerAwareInterface
 {
+    private $container;
     private $numberWorkspaces;
     const BATCH_SIZE = 5;
 
     public function __construct($numberWorkspaces)
     {
         $this->numberWorkspaces = $numberWorkspaces;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
     }
 
     /**
