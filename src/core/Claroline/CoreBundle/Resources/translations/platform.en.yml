@@ -507,4 +507,12 @@ Draw an area on the graph to zoom, double-click to cancel: 'Draw an area on the 
 Overview of recent activities of your workspaces: 'Overview of recent activities of your workspaces'
 Overview of recent activities in %workspaceName%: 'Overview of recent activities in %workspaceName%'
 Overview of all recent activities in %workspaceName% : 'Overview of all recent activities in %workspaceName%'
-
+badges_management: 'Badges management'
+Badges: 'Badges'
+add_badge: 'Add a badge'
+badge_form_name: 'Name'
+badge_form_description: 'Description'
+badge_form_criteria: "Earning criteria"
+badge_form_version: 'Version'
+badge_form_image: 'Image'
+badge_form_expired_at: 'Expiration date'
