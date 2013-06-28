@@ -32,7 +32,7 @@ class UserManager
      *     "roleRepo" = @DI\Inject("role_repository"),
      *     "userWriter" = @DI\Inject("claroline.writer.user_writer"),
      *     "roleManager" = @DI\Inject("claroline.manager.role_manager"),
-     *     "workspaceManager" = @DI\Inject("claroline.workspace.creator")
+     *     "workspaceManager" = @DI\Inject("claroline.workspace.creator"),
      *     "ed" = @DI\Inject("event_dispatcher"),
      * })
      */
