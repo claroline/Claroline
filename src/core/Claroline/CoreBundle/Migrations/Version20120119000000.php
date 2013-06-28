@@ -523,7 +523,7 @@ class Version20120119000000 extends BundleMigration
 
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_user'),
-            array('user_id'),
+            array('sender_id'),
             array('id'),
             array('onDelete' => 'CASCADE')
         );
