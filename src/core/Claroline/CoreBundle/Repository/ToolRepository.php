@@ -96,8 +96,8 @@ class ToolRepository extends EntityRepository
             WHERE tool NOT IN (
                 SELECT tool_2
                 FROM Claroline\CoreBundle\Entity\Tool\Tool tool_2
-                JOIN tool_2.desktopTools desktopTool_2
-                JOIN desktopTool_2.user user_2
+                JOIN tool_2.orderedTools ot_2
+                JOIN ot_2.user user_2
                 WHERE user_2.id = {$user->getId()}
             )
             AND tool.isDisplayableInDesktop = true
