@@ -510,6 +510,9 @@ Overview of all recent activities in %workspaceName% : 'Overview of all recent a
 badges_management: 'Badges management'
 Badges: 'Badges'
 add_badge: 'Add a badge'
+edit_badge: 'Edit the badge `%badge_name%`'
+badge_delete_confirm_title: "Deletion of a badge"
+badge_delete_confirm_message: 'Are you sure you want to delete the badge <strong>%badgeName%</strong> ?'
 badge_add_success_message: 'Badge added with success.'
 badge_add_error_message: "An error occured while adding new badge."
 badge_delete_success_message: 'Badge deleted with success.'
