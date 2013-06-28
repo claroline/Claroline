@@ -36,7 +36,7 @@ class UserManager
      *     "ed" = @DI\Inject("event_dispatcher")
      * })
      */
-    public function __contruct(
+    public function __construct(
         UserRepository $userRepo,
         RoleRepository $roleRepo,
         UserWriter $userWriter,
