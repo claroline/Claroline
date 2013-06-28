@@ -65,15 +65,21 @@ class RoleManager
     public function initWorkspaceBaseRole(array $roles, AbstractWorkspace $workspace)
     {
         foreach ($roles as $name => $translation) {
-            $role = $this->writer->create("{$name}_{$workspace->getId()}", $translation, Role::WS_ROLE, $workspace);
+            $role = $this->roleWriter->createRole(
+                "{$name}_{$workspace->getId()}",
+                $translation,
+                false,
+                Role::WS_ROLE,
+                $workspace
+            );
             $entityRoles[$name] = $role;
         }
 
         return $entityRoles;
     }
 
-    public function bind(Role $role, AbstractRoleSubject $users)
-    {
-        $this->writer->bind($role, $users);
-    }
+//    public function bind(Role $role, AbstractRoleSubject $users)
+//    {
+//        $this->roleWriter->bind($role, $users);
+//    }
 }
