@@ -47,4 +47,33 @@ class RoleWriter
         $this->em->persist($users);
         $this->em->flush();
     }
+
+
+    /////////// ?????????????
+
+    public function ALTcreateRole($name, $translationKey, $isReadOnly, $type, AbstractWorkspace $workspace = null)
+    {
+        $role = new Role();
+        $role->setName($name);
+        $role->setTranslationKey($translationKey);
+        $role->setReadOnly($isReadOnly);
+        $role->setType($type);
+        $role->setWorkspace($workspace);
+        $this->em->persist($role);
+        $this->em->flush();
+
+        return $role;
+    }
+
+    public function associateRole(AbstractRoleSubject $ars, Role $role)
+    {
+        $ars->addRole($role);
+        $this->em->flush();
+    }
+
+    public function dissociateRole(AbstractRoleSubject $ars, Role $role)
+    {
+        $ars->removeRole($role);
+        $this->em->flush();
+    }
 }
