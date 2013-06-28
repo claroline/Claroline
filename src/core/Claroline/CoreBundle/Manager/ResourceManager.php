@@ -13,13 +13,13 @@ use Claroline\CoreBundle\Repository\AbstractResourceRepository;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\ResourceShortcutRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
-use Claroline\CoreBundle\Writer\ResourceWriter;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\IconManager;
 use Claroline\CoreBundle\Manager\Exception\MissingResourceNameException;
 use Claroline\CoreBundle\Manager\Exception\ResourceTypeNotFoundException;
 use Claroline\CoreBundle\Manager\Exception\RightsException;
 use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Database\Writer;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -28,8 +28,6 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class ResourceManager
 {
-    /** @var ResourceWriter */
-    private $writer;
     /** @var RightsManager */
     private $rightsManager;
     /** @var ResourceTypeRepository */
@@ -46,6 +44,8 @@ class ResourceManager
     private $iconManager;
     /** @var EventDispatcher */
     private $ed;
+    /** @var Writer */
+    private $writer;
 
     /**
      * Constructor.
@@ -57,9 +57,9 @@ class ResourceManager
      *     "roleRepo" = @DI\Inject("role_repository"),
      *     "shortcutRepo" = @DI\Inject("shortcut_repository"),
      *     "iconManager" = @DI\Inject("claroline.manager.icon_manager"),
-     *     "writer" = @DI\Inject("claroline.writer.resource_writer"),
      *     "rightsManager" = @DI\Inject("claroline.manager.rights_manager"),
-     *     "ed" = @DI\Inject("event_dispatcher")
+     *     "ed" = @DI\Inject("event_dispatcher"),
+         * "writer" = @DI\Inject("claroline.database.writer")
      * })
      */
     public function __construct (
@@ -69,9 +69,9 @@ class ResourceManager
         RoleRepository $roleRepo,
         ResourceShortcutRepository $shortcutRepo,
         IconManager $iconManager,
-        ResourceWriter $writer,
         RightsManager $rightsManager,
-        EventDispatcher $ed
+        EventDispatcher $ed,
+        Writer $writer
     )
     {
         $this->resourceTypeRepo = $resourceTypeRepo;
@@ -80,9 +80,9 @@ class ResourceManager
         $this->roleRepo = $roleRepo;
         $this->shortcutRepo = $shortcutRepo;
         $this->iconManager = $iconManager;
-        $this->writer = $writer;
         $this->rightsManager = $rightsManager;
         $this->ed = $ed;
+        $this->writer = $writer;
     }
 
     /**
@@ -101,19 +101,17 @@ class ResourceManager
         $this->checkResourcePrepared($resource);
         $name = $this->getUniqueName($resource, $parent);
         $previous = $this->resourceRepo->findOneBy(array('parent' => $parent, 'next' => null));
-        $entityIcon = $this->generateIcon($resource, $resourceType, $icon);
-        $resource = $this->writer->create(
-            $resource,
-            $resourceType,
-            $creator,
-            $workspace,
-            $name,
-            $entityIcon,
-            $parent,
-            $previous
-        );
-
+        $icon = $this->generateIcon($resource, $resourceType, $icon);
+        $resource->setCreator($creator);
+        $resource->setWorkspace($workspace);
+        $resource->setResourceType($resourceType);
+        $resource->setParent($parent);
+        $resource->setName($name);
+        $resource->setPrevious($previous);
+        $resource->setNext(null);
+        $resource->setIcon($icon);
         $this->setRights($resource, $parent, $rights);
+        $this->writer->create($resource);
 
         return $resource;
     }
@@ -396,15 +394,20 @@ class ResourceManager
     public function insertBefore(AbstractResource $resource, AbstractResource $next = null)
     {
         $previous = $this->findPreviousOrLastRes($next);
-        $this->writer->setOrder($resource, $previous, $next);
+        $resource->setPrevious($previous);
+        $resource->setNext($next);
 
         if ($next) {
-            $this->writer->setOrder($next, $resource, $next->getNext());
+            $next->setPrevious($resource);
         }
 
         if ($previous) {
-            $this->writer->setOrder($previous, $previous->getPrevious(), $resource);
+            $previous->setNext($resource);
         }
+
+        $this->writer->update($resource);
+        $this->writer->update($next);
+        $this->writer->update($previous);
 
         return $resource;
     }
@@ -421,7 +424,10 @@ class ResourceManager
         $this->setLastPosition($parent, $child);
 
         try {
-            $child = $this->writer->move($child, $parent, $this->getUniqueName($child, $parent));
+
+            $child->setParent($parent);
+            $child->setName($this->getUniqueName($child, $parent));
+            $this->writer->update($child);
 
             return $child;
         } catch (UnexpectedValueException $e) {
@@ -441,10 +447,13 @@ class ResourceManager
         $lastChild = $this->resourceRepo->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
             ->findOneBy(array('parent' => $parent, 'next' => null));
 
-        $this->writer->setOrder($resource, $lastChild, null);
+        $resource->setPrevious($lastChild);
+        $resource->setNext(null);
+        $this->writer->update($resource);
 
         if ($lastChild) {
-            $this->writer->setOrder($lastChild, $lastChild->getPrevious(), $resource);
+            $lastChild->setNext($resource);
+            $this->writer->update($lastChild);
         }
     }
 
@@ -459,11 +468,13 @@ class ResourceManager
         $previous = $resource->getPrevious();
 
         if ($next) {
-            $this->writer->setOrder($next, $previous, $next->getNext());
+            $next->setPrevious($previous);
+            $this->writer->update($next);
         }
 
         if ($previous) {
-            $this->writer->setOrder($previous, $previous->getPrevious(), $next);
+            $previous->setNext($next);
+            $this->writer->update($previous);
         }
     }
 
@@ -571,16 +582,14 @@ class ResourceManager
         if (get_class($resource) == 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
             $copy = newResourceShortcut();
             $copy->setTarget($resource->getTarget());
-            $this->writer->create(
-                $copy,
-                $resource->getResourceType(),
-                $user,
-                $parent->getWorkspace(),
-                $this->getUniqueName($resource, $parent),
-                $resource->getIcon(),
-                $parent,
-                $last
-            );
+            $copy->setCreator($user);
+            $copy->setWorkspace($parent->getWorkspace());
+            $copy->setResourceType($resource->getResourceType());
+            $copy->setParent($parent);
+            $copy->setName($this->getUniqueName($resource, $parent));
+            $copy->setPrevious($last);
+            $copy->setNext(null);
+            $resource->setIcon($resource->getIcon());
         } else {
             $event = new CopyResourceEvent($resource);
             $eventName = 'copy_' . $resource->getResourceType()->getName();
@@ -595,15 +604,13 @@ class ResourceManager
             }
 
             $copy->setResourceType($resource->getResourceType());
-            $this->writer->create(
-                $copy,
-                $resource->getResourceType(),
-                $user,
-                $parent->getWorkspace(),
-                $this->getUniqueName($copy, $parent),
-                $resource->getIcon(),
-                $last
-            );
+            $copy->setCreator($user);
+            $copy->setWorkspace($parent->getWorkspace());
+            $copy->setResourceType($resource->getResourceType());
+            $copy->setParent($parent);
+            $copy->setName($this->getUniqueName($resource, $parent));
+            $copy->setPrevious($last);
+            $copy->setNext(null);
 
             if ($resource->getResourceType()->getName() == 'directory') {
                 foreach ($resource->getChildren() as $child) {
@@ -630,7 +637,7 @@ class ResourceManager
         $eventName = 'delete_'.$resource->getResourceType()->getName();
         $event = new DeleteResourceEvent($resource);
         $this->ed->dispatch($eventName, $event);
-        $this->writer->remove($resource);
+        $this->writer->delete($resource);
     }
 
     /**
