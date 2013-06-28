@@ -511,7 +511,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('object', 'string');
         $table->addColumn('content', 'string', array('length' => 1023, 'notnull' => true));
         $table->addColumn('date', 'datetime');
-        $table->addColumn('user_id', 'integer', array('notnull' => true));
+        $table->addColumn('sender_id', 'integer', array('notnull' => true));
         $table->addColumn('is_removed', 'boolean');
         $table->addColumn('lft', 'integer', array('notnull' => true));
         $table->addColumn('rgt', 'integer', array('notnull' => true));
@@ -519,7 +519,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('root', 'integer', array('notnull' => false));
         $table->addColumn('parent_id', 'integer', array('notnull' => false));
         $table->addColumn('sender_username', 'string');
-        $table->addColumn('receiver_username', 'string');
+        $table->addColumn('receiver_string', 'string');
 
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_user'),

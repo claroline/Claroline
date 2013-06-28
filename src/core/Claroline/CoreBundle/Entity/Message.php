@@ -34,6 +34,8 @@ class Message
     protected $content;
 
     /**
+     * @todo rename the property to "sender" and the join column to "sender_id"
+     *
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     cascade={"persist"}
@@ -115,9 +117,9 @@ class Message
     protected $senderUsername;
 
     /**
-     * @ORM\Column(type="string", name="receiver_username")
+     * @ORM\Column(type="string", name="receiver_string")
      */
-    protected $receiverUsername;
+    protected $to;
 
     public function __construct()
     {
@@ -149,14 +151,15 @@ class Message
         $this->content = $content;
     }
 
-    public function getUser()
+    public function getSender()
     {
         return $this->user;
     }
 
-    public function setUser($user)
+    public function setSender(User $sender)
     {
-        $this->user = $user;
+        $this->user = $sender;
+        $this->senderUsername = $sender->getUsername();
     }
 
     public function getDate()
@@ -189,7 +192,7 @@ class Message
         return $this->parent;
     }
 
-    public function setParent($parent)
+    public function setParent(Message $parent)
     {
         $this->parent = $parent;
     }
@@ -229,23 +232,19 @@ class Message
         $this->to = $to;
     }
 
-    public function setSenderUsername($senderUsername)
-    {
-        $this->senderUsername = $senderUsername;
-    }
-
     public function getSenderUsername()
     {
         return $this->senderUsername;
     }
 
-    public function setReceiverUsername($receiverUsername)
+    // NOT NEEDED ? -> to()
+    public function setReceiverString($receiverString)
     {
-        $this->receiverUsername = $receiverUsername;
+        $this->receiverString = $receiverString;
     }
 
-    public function getReceiverUsername()
+    public function getReceiverString()
     {
-        return $this->receiverUsername;
+        return $this->receiverString;
     }
 }

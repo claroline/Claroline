@@ -2,115 +2,197 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\CoreBundle\Repository\UserRepository;
-use Claroline\CoreBundle\Repository\MessageRepository;
+use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\Message as Msg;
-use Claroline\CoreBundle\Writer\MessageWriter as Writer;
-use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Entity\Message;
+use Claroline\CoreBundle\Entity\UserMessage;
+use Claroline\CoreBundle\Repository\MessageRepository;
+use Claroline\CoreBundle\Repository\UserMessageRepository;
+use Claroline\CoreBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Database\Writer;
+use Claroline\CoreBundle\Pager\PagerFactory;
 
 /**
  * @DI\Service("claroline.manager.message_manager")
  */
 class MessageManager
 {
-    /** @var UserRepository */
-    private $userRepo;
-    /** @var MessageRepository */
+    const MESSAGE_READ = 'Read';
+    const MESSAGE_SENT = 'Sent';
+    const MESSAGE_REMOVED = 'Removed';
+    const MESSAGE_UNREMOVED = 'Unremoved';
+
     private $messageRepo;
-    /** @var Writer */
+    private $userMessageRepo;
+    private $userRepo;
     private $writer;
+    private $pagerFactory;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "userRepo" = @DI\Inject("user_repository"),
-     *     "messageRepo" = @DI\Inject("message_repository"),
-     *     "writer" = @DI\Inject("claroline.writer.message_writer")
+     *     "messageRepo"        = @DI\Inject("message_repository"),
+     *     "userMessageRepo"    = @DI\Inject("claroline.repository.user_message_repository"),
+     *     "userRepo"           = @DI\Inject("user_repository"),
+     *     "writer"             = @DI\Inject("claroline.database.writer"),
+     *     "pagerFactory"       = @DI\Inject("claroline.pager.pager_factory")
      * })
      */
-    public function __construct(UserRepository $userRepo, MessageRepository $messageRepo, Writer $writer)
+    public function __construct(
+        MessageRepository $messageRepo,
+        UserMessageRepository $userMessageRepo,
+        UserRepository $userRepo,
+        Writer $writer,
+        PagerFactory $pagerFactory
+    )
     {
         $this->userRepo = $userRepo;
         $this->messageRepo = $messageRepo;
         $this->writer = $writer;
+        $this->writer = $writer;
+        $this->userMessageRepo = $userMessageRepo;
+        $this->pagerFactory = $pagerFactory;
     }
 
-    public function create(User $sender, $receiversString, $content, $object, Msg $parent = null)
+    public function send(User $sender, Message $message, $parent = null)
     {
-        if (substr($receiversString, -1, 1) === ';') {
-            $receiversString = substr_replace($receiversString, "", -1);
+        if (substr($receiversString = $message->getTo(), -1, 1) === ';') {
+            $receiversString = substr_replace($receiversString, '', -1);
         }
 
         $usernames = explode(';', $receiversString);
-        $receivers = $this->userRepo->findByUsernames($usernames);
+        $receivers = $this->userRepo->findByUsernames($usernames); // throw ex if missing
+        $message->setSender($sender);
 
-        return $this->writer->create($sender, $receiversString, $receivers, $content, $object, $parent);
+        // replace receiver string by to !!!!
+        $message->setReceiverString($receiversString);
+
+        if (null !== $parent) {
+            $message->setParent($parent);
+        }
+
+        $this->writer->suspendFlush();
+        $this->writer->create($message);
+
+        $userMessage = new UserMessage();
+        $userMessage->setIsSent(true);
+        $userMessage->setUser($sender);
+        $userMessage->setMessage($message);
+        $this->writer->create($userMessage);
+
+        foreach ($receivers as $receiver) {
+            $userMessage = new UserMessage();
+            $userMessage->setUser($receiver);
+            $userMessage->setMessage($message);
+            $this->writer->create($userMessage);
+        }
+
+        $this->writer->forceFlush();
+    }
+
+    // return pager
+    public function getReceivedMessages(User $receiver, $search = '', $page = 1)
+    {
+        $query = $search === '' ?
+            $this->userMessageRepo->findReceivedByUser($receiver, false):
+            $this->userMessageRepo->findReceivedByObjectOrSender($receiver, $search, false);
+
+        return $this->pagerFactory->createPager($query, $page);
+    }
+
+    // return pager
+    public function getSentMessages(User $sender, $search = '', $page = 1)
+    {
+        $query = $search === '' ?
+            $this->userMessageRepo->findSentByUser($sender, false) :
+            $this->userMessageRepo->findSentByObjectOrSender($sender, $search, false);
+
+        return $this->pagerFactory->createPager($query, $page);
+    }
+
+    // return pager
+    public function getRemovedMessages(User $user, $search = '', $page = 1)
+    {
+        $query = $search === '' ?
+            $this->userMessageRepo->findRemovedByUser($user, false):
+            $this->userMessageRepo->findRemovedByUserAndObjectAndUsername($user, $search, false);
+
+        return $this->pagerFactory->createPager($query, $page);
+    }
+
+    public function getConversation(Message $message)
+    {
+        return $this->messageRepo->findAncestors($message);
     }
 
     public function markAsRead(User $user, array $messages)
     {
-        $userMessages = $this->messageRepo->findUserMessages($user, $messages);
-
-        foreach ($userMessages as $userMessage) {
-            $this->writer->markAsRead($userMessage);
-        }
+        $this->markMessages($user, $messages, self::MESSAGE_READ);
     }
 
     public function markAsRemoved(User $user, array $messages)
     {
-        $userMessages = $this->messageRepo->findUserMessages($user, $messages);
-
-        foreach ($userMessages as $userMessage) {
-            $this->writer->markAsRemoved($userMessage);
-        }
+        $this->markMessages($user, $messages, self::MESSAGE_REMOVED);
     }
 
     public function markAsUnremoved(User $user, array $messages)
     {
-        $userMessages = $this->messageRepo->findUserMessages($user, $messages);
-
-        foreach ($userMessages as $userMessage) {
-            $this->writer->markAsUnremoved($userMessage);
-        }
+        $this->markMessages($user, $messages, self::MESSAGE_UNREMOVED);
     }
 
     public function remove(User $user, array $messages)
     {
-        $userMessages = $this->messageRepo->findUserMessages($user, $messages);
+        $userMessages = $this->userMessageRepo->findUserMessages($user, $messages);
+        $this->writer->suspendFlush();
 
         foreach ($userMessages as $userMessage) {
+            $userMessage->markAsUnremoved($userMessage);
             $this->writer->remove($userMessage);
         }
+
+        $this->writer->forceFlush();
     }
 
     public function generateGroupQueryString(Group $group)
     {
         $users = $this->userRepo->findByGroup($group);
-        $urlParameters = '?';
+        $queryString = '?';
 
         for ($i = 0, $count = count($users); $i < $count; $i++) {
             if ($i > 0) {
-                $urlParameters .= "&";
+                $queryString .= "&";
             }
 
-            $urlParameters .= "ids[]={$users[$i]->getId()}";
+            $queryString .= "ids[]={$users[$i]->getId()}";
         }
 
-        return $urlParameters;
+        return $queryString;
     }
 
-    public function generateStringTo(array $userIds)
+    public function generateStringTo(array $receivers)
     {
-        $usersString = '';
-        $users = $this->userRepo->findByIds($userIds);
+        $usernames = array();
 
-        foreach ($users as $user) {
-            $usersString .= "{$user->getUsername()};";
+        foreach ($receivers as $receiver) {
+            $usernames[] = $receiver->getUsername();
         }
 
-        return $usersString;
+        return implode(';', $usernames);
+    }
+
+    private function markMessages(User $user, array $messages, $flag)
+    {
+        $userMessages = $this->userMessageRepo->findUserMessages($user, $messages);
+        $method = 'markAs' . $flag;
+        $this->writer->suspendFlush();
+
+        foreach ($userMessages as $userMessage) {
+            $userMessage->$method($userMessage);
+            $this->writer->update($userMessage);
+        }
+
+        $this->writer->forceFlush();
     }
 }

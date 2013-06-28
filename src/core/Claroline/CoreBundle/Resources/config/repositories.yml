@@ -68,3 +68,10 @@ services:
     factory_method:  getRepository
     arguments:
       - Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy
+
+  claroline.repository.user_message_repository:
+    class:           Claroline\CoreBundle\Repository\UserMessageRepository
+    factory_service: doctrine.orm.entity_manager
+    factory_method:  getRepository
+    arguments:
+      - Claroline\CoreBundle\Entity\UserMessage
