@@ -4,12 +4,13 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
-use Claroline\CoreBundle\Writer\WorkspaceWriter;
+use Claroline\CoreBundle\Database\Writer;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -17,7 +18,7 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class WorkspaceManager
 {
-    /** @var WorkspaceWriter */
+    /** @var Writer */
     private $writer;
     /** @var RoleManager */
     private $roleManager;
@@ -34,7 +35,7 @@ class WorkspaceManager
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "writer" = @DI\Inject("claroline.writer.workspace_writer"),
+     *     "writer" = @DI\Inject("claroline.database.writer"),
      *     "roleManager" = @DI\Inject("claroline.manager.role_manager"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "toolManager" = @DI\Inject("claroline.manager.tool_manager"),
@@ -43,7 +44,7 @@ class WorkspaceManager
      * })
      */
     public function __construct(
-        WorkspaceWriter $writer,
+        Writer $writer,
         RoleManager $roleManager,
         ResourceManager $resourceManager,
         ToolManager $toolManager,
@@ -61,15 +62,15 @@ class WorkspaceManager
 
     public function create(Configuration $config, User $manager)
     {
-        $workspace = $this->writer->create(
-            $config->getWorkspaceName(),
-            $config->getWorkspaceCode(),
-            $config->isPublic()
-        );
-
+        $workspace = new SimpleWorkspace();
+        $workspace->setName($config->getWorkspaceName());
+        $workspace->setPublic($config->isPublic());
+        $workspace->setCode($config->getWorkspaceCode());
+        $this->writer->create($workspace);
+        $this->writer->suspendFlush();
         $baseRoles = $this->roleManager->initWorkspaceBaseRole($config->getRoles(), $workspace);
         $baseRoles['ROLE_ANONYMOUS'] = $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS'));
-        $this->roleManager->bind($baseRoles["ROLE_WS_MANAGER"], $manager);
+        $this->roleManager->associateRole($manager, $baseRoles["ROLE_WS_MANAGER"]);
         $dir = new Directory();
         $dir->setName("{$workspace->getName()} - {$workspace->getCode()}");
         $rights = $config->getPermsRootConfiguration();
@@ -89,6 +90,7 @@ class WorkspaceManager
         $toolsPermissions = $config->getToolsPermissions();
 
         $position = 0;
+
         foreach ($toolsPermissions as $toolName => $perms) {
             $confTool = isset($toolsConfig[$toolName]) ?  $toolsConfig[$toolName] : array();
             $this->toolManager->import(
@@ -104,7 +106,9 @@ class WorkspaceManager
             );
             $position++;
         }
-        
+
+        $this->writer->forceFlush();
+
         return $workspace;
     }
 

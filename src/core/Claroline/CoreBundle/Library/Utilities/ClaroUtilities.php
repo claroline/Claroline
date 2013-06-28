@@ -18,7 +18,7 @@ class ClaroUtilities
      *
      * $array[] = value3
      *
-     * One the function is fired the results is
+     * Once the function is fired the results is
      * $fillable[1] = value1
      * $fillable[2] = value2
      * $fillable[3] = value3
