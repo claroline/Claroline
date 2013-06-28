@@ -2,13 +2,13 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\CoreBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 /**
  * Controller of the user's desktop.
@@ -16,12 +16,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class DesktopController extends Controller
 {
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/widgets",
      *     name="claro_desktop_widgets"
      * )
      *
-     * @Template("ClarolineCoreBundle:Widget:widgets.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Widget:widgets.html.twig")
      *
      * Displays registered widgets.
      *
@@ -70,24 +70,20 @@ class DesktopController extends Controller
     }
 
     /**
-     * @Template()
+     * @EXT\Template()
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * Renders the left tool bar. Not routed.
      *
      * @return Response
      */
-    public function renderToolListAction()
+    public function renderToolListAction(User $user)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $user = $this->get('security.context')->getToken()->getUser();
-        $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->findDesktopDisplayedToolsByUser($user);
-
-        return array('tools' => $tools);
+        return array('tools' => $this->get('claroline.manager.tool_manager')->getDisplayedDesktopOrderedTools($user));
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "tool/open/{toolName}",
      *     name="claro_desktop_open_tool",
      *     options={"expose"=true}
@@ -116,7 +112,7 @@ class DesktopController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/open",
      *     name="claro_desktop_open"
      * )
