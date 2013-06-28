@@ -48,7 +48,7 @@ class MessageType extends AbstractType
                         'data' =>
                         $this->username,
                         'required' => true,
-                        'mapped' => false,
+                        'mapped' => true,
                         'constraints' => array(
                             new NotBlank(),
                             new SendToUsernames()
@@ -63,7 +63,7 @@ class MessageType extends AbstractType
                     array(
                         'data' => $this->username,
                         'required' => true,
-                        'mapped' => false,
+                        'mapped' => true,
                         'constraints' => array(
                             new NotBlank(),
                             new SendToUsernames()
