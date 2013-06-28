@@ -2,13 +2,17 @@
 
 namespace Claroline\CoreBundle\Entity\Tool;
 
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\OrderedToolRepository")
  * @ORM\Table(
- *     name="claro_workspace_ordered_tool",
+ *     name="claro_ordered_tool",
  *     uniqueConstraints={
  *         @ORM\UniqueConstraint(name="tool", columns={"tool_id", "workspace_id"}),
  *         @ORM\UniqueConstraint(name="display", columns={"workspace_id", "display_order"}),
@@ -17,7 +21,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  * )
  * @DoctrineAssert\UniqueEntity({"name", "workspace"})
  */
-class WorkspaceOrderedTool
+class OrderedTool
 {
     /**
      * @ORM\Id
@@ -31,16 +35,16 @@ class WorkspaceOrderedTool
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
      *     cascade={"persist"}, inversedBy="workspaceOrderedTools"
      * )
-     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      */
     protected $workspace;
 
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\Tool",
-     *     cascade={"persist"}, inversedBy="workspaceOrderedTools"
+     *     cascade={"persist"}, inversedBy="orderedTools"
      * )
-     * @ORM\JoinColumn(name="tool_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="tool_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      */
     protected $tool;
 
@@ -50,24 +54,41 @@ class WorkspaceOrderedTool
     protected $order;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole", 
-     *     cascade={"persist"}, mappedBy="workspaceOrderedTool"
-     * )
-     */
-    protected $workspaceToolRoles;
-
-    /**
      * @Orm\Column(type="string")
      */
     protected $name;
+
+    /**
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Role",
+     *     inversedBy="roles"
+     * )
+     * @ORM\JoinTable(
+     *     name="claro_ordered_tool_role"
+     * )
+     */
+    protected $roles;
+
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\User",
+     *     cascade={"persist"}, inversedBy="orderedTools"
+     * )
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
+     */
+    protected $user;
+
+    public function __construct()
+    {
+        $this->roles = new ArrayCollection();
+    }
 
     public function getId()
     {
         return $this->id;
     }
 
-    public function setWorkspace($ws)
+    public function setWorkspace(AbstractWorkspace $ws = null)
     {
         $this->workspace = $ws;
     }
@@ -77,7 +98,7 @@ class WorkspaceOrderedTool
         return $this->workspace;
     }
 
-    public function setTool($tool)
+    public function setTool(Tool $tool)
     {
         $this->tool = $tool;
     }
@@ -105,5 +126,30 @@ class WorkspaceOrderedTool
     public function getName()
     {
         return $this->name;
+    }
+
+    public function addRole(Role $role)
+    {
+        $this->roles->add($role);
+    }
+
+    public function removeRole(Role $role)
+    {
+        $this->roles->removeElement($role);
+    }
+
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    public function setUser(User $user = null)
+    {
+        $this->user = $user;
+    }
+
+    public function getUser()
+    {
+        return $this->user;
     }
 }

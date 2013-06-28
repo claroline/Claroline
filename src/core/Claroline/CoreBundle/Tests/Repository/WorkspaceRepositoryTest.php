@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Repository;
 
 use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 use Claroline\CoreBundle\Entity\Logger\Log;
-use Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 
 class WorkspaceRepositoryTest extends RepositoryTestCase
 {
@@ -19,11 +19,10 @@ class WorkspaceRepositoryTest extends RepositoryTestCase
         self::loadUserData(array('john' => 'user', 'jane' => 'user'));
         self::loadWorkspaceData(array('ws_a' => 'john'));
 
-        $wtr = new WorkspaceToolRole();
-        $wtr->setRole(self::$em->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_ANONYMOUS'));
-        $wots = self::$em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
-            ->findBy(array('workspace' => self::getWorkspace('ws_a')));
-        $wtr->setWorkspaceOrderedTool($wots[0]);
+        $ot = self::$em->getRepository('ClarolineCoreBundle:Tool\OrderedTool')
+            ->findOneBy(array('workspace' => self::getWorkspace('ws_a'),
+            'tool' => self::$em->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneByName('home')));
+        $ot->addRole(self::$em->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_ANONYMOUS'));
 
         //insert log wsread event.
         $first = new Log();
@@ -40,7 +39,7 @@ class WorkspaceRepositoryTest extends RepositoryTestCase
 
         self::$em->persist($first);
         self::$em->persist($second);
-        self::$em->persist($wtr);
+        self::$em->persist($ot);
         self::$em->flush();
     }
 

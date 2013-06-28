@@ -348,15 +348,15 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
             'canCopy' => false
         );
 
-        $this->container->get('claroline.resource.manager')
-            ->createRight($permissions, true, $collaboratorRole, $this->getReference('directory/Docs')
-        );
-        $this->container->get('claroline.resource.manager')
-            ->createRight($permissions, true, $collaboratorRole, $this->getReference('directory/Premier semestre')
-        );
-        $this->container->get('claroline.resource.manager')
-            ->createRight($permissions, true, $collaboratorRole, $this->getReference('directory/Travaux')
-        );
+//        $this->container->get('claroline.resource.manager')
+//            ->createRight($permissions, true, $collaboratorRole, $this->getReference('directory/Docs')
+//        );
+//        $this->container->get('claroline.resource.manager')
+//            ->createRight($permissions, true, $collaboratorRole, $this->getReference('directory/Premier semestre')
+//        );
+//        $this->container->get('claroline.resource.manager')
+//            ->createRight($permissions, true, $collaboratorRole, $this->getReference('directory/Travaux')
+//        );
     }
 
     public function setRssReader(ObjectManager $manager)
