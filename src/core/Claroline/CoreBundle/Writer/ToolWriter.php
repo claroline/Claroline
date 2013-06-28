@@ -29,36 +29,6 @@ class ToolWriter
         $this->em = $em;
     }
 
-    public function create(
-        $name,
-        $isDisplayableInDesktop,
-        $isDisplayableInWorkspace,
-        $isExportable,
-        $isDesktopRequired,
-        $isWorkspaceRequired,
-        $hasOption,
-        $isVisible,
-        $displayName ,
-        Plugin $plugin = null
-    )
-    {
-        $tool = new Tool();
-        $tool->setName($name);
-        $tool->setPlugin($plugin);
-        $tool->setDisplayableInDesktop($isDisplayableInDesktop);
-        $tool->setDisplayableInWorkspace($isDisplayableInWorkspace);
-        $tool->setExportable($isExportable);
-        $tool->setIsDesktopRequired($isDesktopRequired);
-        $tool->setIsWorkspaceRequired($isWorkspaceRequired);
-        $tool->setHasOptions($hasOption);
-        $tool->setVisible($isVisible);
-        $tool->setDisplayName($displayName);
-        $tool->setClass('test');
-        $this->save($tool);
-
-        return $tool;
-    }
-
     public function addRole(OrderedTool $otr, Role $role)
     {
         $otr->addRole($role);

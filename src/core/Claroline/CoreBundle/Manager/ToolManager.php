@@ -6,12 +6,13 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Database\Writer;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
 use Claroline\CoreBundle\Repository\ToolRepository;
-use Claroline\CoreBundle\Writer\ToolWriter;
 use Claroline\CoreBundle\Library\Event\ImportToolEvent;
+use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -20,7 +21,7 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class ToolManager
 {
-    /** @var ToolWriter */
+    /** @var Writer */
     private $writer;
     /** @var OrderedToolRepository */
     private $orderedToolRepo;
@@ -28,6 +29,8 @@ class ToolManager
     private $toolRepo;
     /** @var EventDispatcher */
     private $ed;
+    /** @var ClaroUtilities */
+    private $utilities;
 
     /**
      * Constructor.
@@ -36,20 +39,23 @@ class ToolManager
      *     "writer" = @DI\Inject("claroline.database.writer"),
      *     "orderedToolRepo" = @DI\Inject("ordered_tool_repository"),
      *     "toolRepo" = @DI\Inject("tool_repository"),
-     *     "ed" = @DI\Inject("event_dispatcher")
+     *     "ed" = @DI\Inject("event_dispatcher"),
+     *     "utilities" = @DI\Inject("claroline.utilities.misc")
      * })
      */
     public function __construct(
         Writer $writer,
         OrderedToolRepository $orderedToolRepo,
         ToolRepository $toolRepo,
-        EventDispatcher $ed
+        EventDispatcher $ed,
+        ClaroUtilities $utilities
     )
     {
         $this->writer = $writer;
         $this->orderedToolRepo = $orderedToolRepo;
         $this->toolRepo = $toolRepo;
         $this->ed = $ed;
+        $this->utilities = $utilities;
     }
 
     public function create(
@@ -65,18 +71,19 @@ class ToolManager
         $displayName
     )
     {
-        $this->writer->create(
-            $name,
-            $plugin,
-            $isDisplayableInDesktop,
-            $isDisplayableInWorkspace,
-            $isExportable,
-            $isDesktopRequired,
-            $isWorkspaceRequired,
-            $hasOption,
-            $isVisible,
-            $displayName
-        );
+        $tool = new Tool();
+        $tool->setName($name);
+        $tool->setPlugin($plugin);
+        $tool->setDisplayableInDesktop($isDisplayableInDesktop);
+        $tool->setDisplayableInWorkspace($isDisplayableInWorkspace);
+        $tool->setExportable($isExportable);
+        $tool->setIsDesktopRequired($isDesktopRequired);
+        $tool->setIsWorkspaceRequired($isWorkspaceRequired);
+        $tool->setHasOptions($hasOption);
+        $tool->setVisible($isVisible);
+        $tool->setDisplayName($displayName);
+        $tool->setClass('test');
+        $this->writer->create($tool);
     }
 
     public function import(
@@ -133,6 +140,30 @@ class ToolManager
         $this->writer->removeRole($otr, $role);
     }
 
+    public function getDisplayedDesktopOrderedTools(User $user)
+    {
+         return $this->toolRepo->findDesktopDisplayedToolsByUser($user);
+    }
+
+    public function getDesktopToolsConfigurationArray(User $user)
+    {
+        $orderedToolList = array();
+        $desktopTools = $this->orderedToolRepo->findByUser($user);
+
+        foreach ($desktopTools as $desktopTool) {
+            $desktopTool->getTool()->setVisible(true);
+            $orderedToolList[$desktopTool->getOrder()] = $desktopTool->getTool();
+        }
+
+         $undisplayedTools = $this->toolRepo->findDesktopUndisplayedToolsByUser($user);
+
+        foreach ($undisplayedTools as $tool) {
+            $tool->setVisible(false);
+        }
+
+        return $this->utilities->arrayFill($orderedToolList, $undisplayedTools);
+    }
+
     public function removeDesktopTool(Tool $tool, User $user)
     {
         if ($tool->getName() === 'parameters') {
@@ -140,7 +171,23 @@ class ToolManager
         }
 
         $orderedTool = $this->orderedToolRepo->findOneBy(array('user' => $user, 'tool' => $tool));
-        $this->writer->remove($orderedTool);
+        $this->writer->delete($orderedTool);
+    }
+
+    public function addDesktopTool(Tool $tool, User $user, $position)
+    {
+        $switchTool = $this->orderedToolRepo->findOneBy(array('user' => $user, 'order' => $position));
+
+        if ($switchTool != null) {
+            throw new \RuntimeException('A tool already exists at this position');
+        }
+
+        $desktopTool = new OrderedTool();
+        $desktopTool->setUser($user);
+        $desktopTool->setTool($tool);
+        $desktopTool->setOrder($position);
+        $desktopTool->setName($tool->getName());
+        $this->writer->create($desktopTool);
     }
 
     public function order(array $tools)
