@@ -26,32 +26,7 @@ class RoleWriter
         $this->em = $em;
     }
 
-    public function create($name, $translation, $roleType, AbstractWorkspace $workspace = null, $parent = null)
-    {
-        $role = new Role();
-        $role->setName($name);
-        $role->setParent($parent);
-        $role->setType($roleType);
-        $role->setTranslationKey($translation);
-        $role->setWorkspace($workspace);
-
-        $this->em->persist($role);
-        $this->em->flush();
-
-        return $role;
-    }
-
-    public function bind(Role $role, AbstractRoleSubject $users)
-    {
-        $users->addRole($role);
-        $this->em->persist($users);
-        $this->em->flush();
-    }
-
-
-    /////////// ?????????????
-
-    public function ALTcreateRole($name, $translationKey, $isReadOnly, $type, AbstractWorkspace $workspace = null)
+    public function createRole($name, $translationKey, $isReadOnly, $type, AbstractWorkspace $workspace = null)
     {
         $role = new Role();
         $role->setName($name);
@@ -59,6 +34,7 @@ class RoleWriter
         $role->setReadOnly($isReadOnly);
         $role->setType($type);
         $role->setWorkspace($workspace);
+
         $this->em->persist($role);
         $this->em->flush();
 
@@ -68,12 +44,14 @@ class RoleWriter
     public function associateRole(AbstractRoleSubject $ars, Role $role)
     {
         $ars->addRole($role);
+
         $this->em->flush();
     }
 
     public function dissociateRole(AbstractRoleSubject $ars, Role $role)
     {
         $ars->removeRole($role);
+
         $this->em->flush();
     }
 }
