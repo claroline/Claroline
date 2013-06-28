@@ -30,7 +30,7 @@ class DesktopParametersController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $user = $this->get('security.context')->getToken()->getUser();
         $orderedToolList = array();
-        $desktopTools = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')->findBy(array('user' => $user));
+        $desktopTools = $em->getRepository('ClarolineCoreBundle:Tool\OrderedTool')->findBy(array('user' => $user));
 
         foreach ($desktopTools as $desktopTool) {
             $desktopTool->getTool()->setVisible(true);
