@@ -515,7 +515,7 @@ Badges: 'Badges'
 add_badge: 'Ajouter un badge'
 badge_form_name: 'Nom'
 badge_form_description: 'Description'
-badge_form_criteria: "Critère d'obtention"
+badge_form_criteria: "Critères d'obtention"
 badge_form_version: 'Version'
 badge_form_image: 'Image'
 badge_form_expired_at: "Date d'expiration"
