@@ -3,9 +3,10 @@
 namespace Claroline\CoreBundle\Manager;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Writer\RightsWriter;
+use Claroline\CoreBundle\Database\Writer;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\AbstractResourceRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
@@ -16,8 +17,6 @@ use Claroline\CoreBundle\Repository\ResourceTypeRepository;
  */
 class RightsManager
 {
-    /** @var RightsWriter */
-    private $writer;
     /** @var ResourceRightsRepository */
     private $rightsRepo;
     /** @var AbstractResourceRepository */
@@ -26,31 +25,33 @@ class RightsManager
     private $roleRepo;
     /** @var ResourceTypeRepository */
     private $resourceTypeRepo;
+    /** @var Writer */
+    private $writer;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "writer" = @DI\Inject("claroline.writer.rights_writer"),
      *     "rightsRepo" = @DI\Inject("resource_rights_repository"),
      *     "resourceRepo" = @DI\Inject("resource_repository"),
      *     "roleRepo" = @DI\Inject("role_repository"),
-     *     "resourceTypeRepo" = @DI\Inject("resource_type_repository")
+     *     "resourceTypeRepo" = @DI\Inject("resource_type_repository"),
+     *     "writer" = @DI\Inject("claroline.database.writer")
      * })
      */
     public function __construct(
-        RightsWriter $writer,
         ResourceRightsRepository $rightsRepo,
         AbstractResourceRepository $resourceRepo,
         RoleRepository $roleRepo,
-        ResourceTypeRepository $resourceTypeRepo
+        ResourceTypeRepository $resourceTypeRepo,
+        Writer $writer
     )
     {
-        $this->writer = $writer;
         $this->rightsRepo = $rightsRepo;
         $this->resourceRepo = $resourceRepo;
         $this->roleRepo = $roleRepo;
         $this->resourceTypeRepo = $resourceTypeRepo;
+        $this->writer = $writer;
     }
 
     /**
@@ -74,40 +75,44 @@ class RightsManager
         if ($isRecursive) {
             $resourceRights = $this->addMissingForDescendants($role, $resource);
         } else {
-            $resourceRights[] = $this->writer->create(
-                array(
-                    'canDelete' => false,
-                    'canOpen' => false,
-                    'canEdit' => false,
-                    'canCopy' => false,
-                    'canExport' => false,
-                ),
-                array(),
-                $resource,
-                $role
-            );
+            $rights = new ResourceRights();
+            $rights->setRole($role);
+            $rights->setResource($resource);
+            $this->writer->create($rights);
         }
 
-        foreach ($resourceRights as $resourceRight) {
-            $this->writer->edit($resourceRight, $permissions, $creations);
+        foreach ($resourceRights as $rights) {
+            $this->setPermissions($rights, $permissions);
+            $rights->setCreatableResourceTypes($creations);
+            $this->writer->update($rights);
         }
     }
 
     public function edit(AbstractResource $resource, Role $role, array $permissions, array $creations = array())
     {
         $rights = $this->rightsRepo->findOneBy(array('resource' => $resource, 'role' => $role));
-        $this->writer->edit($rights, $permissions, $creations);
+        $this->setPermissions($rights, $permissions);
+        $rights->setCreatableResourceTypes($creations);
+        $this->writer->update($rights);
 
         return $rights;
     }
 
     public function copy(AbstractResource $original, AbstractResource $resource)
     {
-       $resourceRights = $this->rightsRepo->findBy(array('resource' => $original));
+       $originalRights = $this->rightsRepo->findBy(array('resource' => $original));
        $created = array();
 
-       foreach ($resourceRights as $resourceRight) {
-           $created[] = $this->writer->createFrom($resource, $resourceRight);
+       foreach ($originalRights as $originalRight) {
+            $rights = new ResourceRights();
+            $rights->setResource($resource);
+            $rights->setRole($originalRight->getRole());
+            $rights->setRightsFrom($originalRight);
+
+            if ($resource->getResourceType()->getName() === 'directory') {
+                $rights->setCreatableResourceTypes($originalRight->getCreatableResourceTypes()->toArray());
+            }
+           $created[] = $this->writer->update($rights);
        }
 
        return $created;
@@ -136,21 +141,25 @@ class RightsManager
             }
 
             if (!$found) {
-                $finalRights[] = $this->writer->create(
-                    array(
-                        'canDelete' => false,
-                        'canOpen' => false,
-                        'canEdit' => false,
-                        'canCopy' => false,
-                        'canExport' => false,
-                    ),
-                    array(),
-                    $resource,
-                    $role
-                );
+                $rights = new ResourceRights();
+                $rights->setRole($role);
+                $rights->setResource($resource);
+                $this->writer->create($rights);
+                $finalRights[] = $rights;
             }
         }
 
         return $finalRights;
+    }
+
+    private function setPermissions(ResourceRights $rights, array $permissions)
+    {
+        $rights->setCanCopy($permissions['canCopy']);
+        $rights->setCanOpen($permissions['canOpen']);
+        $rights->setCanDelete($permissions['canDelete']);
+        $rights->setCanEdit($permissions['canEdit']);
+        $rights->setCanExport($permissions['canExport']);
+
+        return $rights;
     }
 }
