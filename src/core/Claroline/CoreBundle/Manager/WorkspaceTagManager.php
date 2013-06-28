@@ -41,7 +41,8 @@ class WorkspaceTagManager
         $this->workspaceTagWriter = $workspaceTagWriter;
     }
 
-    public function insert(WorkspaceTag $tag) {
+    public function insert(WorkspaceTag $tag)
+    {
         $this->workspaceTagWriter->insert($tag);
     }
 

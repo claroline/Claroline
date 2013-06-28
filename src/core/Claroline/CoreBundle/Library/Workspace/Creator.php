@@ -125,7 +125,6 @@ class Creator
     {
         $baseRole = new Role();
         $baseRole->setName($baseName . '_' . $workspace->getId());
-        $baseRole->setParent(null);
         $baseRole->setType(Role::WS_ROLE);
         $baseRole->setTranslationKey($translationKey);
         $baseRole->setWorkspace($workspace);

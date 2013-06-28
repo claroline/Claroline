@@ -236,7 +236,7 @@ class Version20120119000000 extends BundleMigration
 
         $this->addId($table);
         $table->addColumn('name', 'string', array('length' => 255));
-        $table->addColumn('translation_key', 'string', array('length' => 255, 'notnull' => false));
+        $table->addColumn('translation_key', 'string', array('length' => 255, 'notnull' => true));
         $table->addColumn('is_read_only', 'boolean', array('notnull' => true));
         $table->addColumn('type', 'integer', array('notnull' => false));
         $table->addColumn('workspace_id', 'integer', array('notnull' => false));
@@ -604,7 +604,7 @@ class Version20120119000000 extends BundleMigration
             array('shortcut_id'),
             array('id'),
             array('onDelete' => 'SET NULL')
-        ); 
+        );
 
         $this->storeTable($table);
     }
@@ -809,7 +809,7 @@ class Version20120119000000 extends BundleMigration
 
     private function createLogHiddenWorkspaceWidgetConfigTable(Schema $schema)
     {
-        $table = $schema->createTable('claro_log_hidden_workspace_widget_config');        
+        $table = $schema->createTable('claro_log_hidden_workspace_widget_config');
 
         $table->addColumn('workspace_id', 'integer', array('notnull' => true));
         $table->addColumn('user_id', 'integer', array('notnull' => true));

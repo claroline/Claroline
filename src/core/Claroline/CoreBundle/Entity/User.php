@@ -11,7 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
-use Claroline\CoreBundle\Entity\WorkspaceRole;
 use Claroline\CoreBundle\Entity\Role;
 // TODO: Implements AdvancedUserInterface
 
@@ -253,14 +252,6 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         }
 
         return $roleNames;
-    }
-
-    public function addRole(Role $role)
-    {
-        parent::addRole($role);
-        if ($role instanceof WorkspaceRole) {
-            $role->addUser($this);
-        }
     }
 
     public function eraseCredentials()
