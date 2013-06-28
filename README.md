@@ -56,6 +56,7 @@ line and the webserver
 - *test*
 - *src/core/Claroline/CoreBundle/Resources/public/css/themes*
 - *src/core/Claroline/CoreBundle/Resources/views/less-generated*
+- *web/uploads*
 
 For further explanation on common permissions issues and solutions with
 Symfony2, read [this][5].

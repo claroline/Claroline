@@ -22,6 +22,8 @@ web/bundles/*
 web/twig.js
 web/js/*
 web/css/*
+web/uploads/*
+web/uploads/badges/*
 web/HTMLPage/*
 files/*
 files/tmp/*

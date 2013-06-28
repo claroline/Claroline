@@ -510,6 +510,10 @@ Overview of all recent activities in %workspaceName% : 'Overview of all recent a
 badges_management: 'Badges management'
 Badges: 'Badges'
 add_badge: 'Add a badge'
+badge_add_success_message: 'Badge added with success.'
+badge_add_error_message: "An error occured while adding new badge."
+badge_delete_success_message: 'Badge deleted with success.'
+badge_delete_error_message: "An error occured while deleting badge."
 badge_form_name: 'Name'
 badge_form_description: 'Description'
 badge_form_criteria: "Earning criteria"
