@@ -86,14 +86,16 @@ class RoleManager
 
     public function initWorkspaceBaseRole(array $roles, AbstractWorkspace $workspace)
     {
+        $entityRoles = array();
+
         foreach ($roles as $name => $translation) {
-            $role = $this->roleWriter->createRole(
-                "{$name}_{$workspace->getId()}",
-                $translation,
-                false,
-                Role::WS_ROLE,
-                $workspace
-            );
+            $role = new Role();
+            $role->setName("{$name}_{$workspace->getId()}");
+            $role->setTranslationKey($translation);
+            $role->setReadOnly(false);
+            $role->setType(Role::WS_ROLE);
+            $role->setWorkspace($workspace);
+            $this->writer->create($role);
             $entityRoles[$name] = $role;
         }
 
