@@ -517,9 +517,12 @@ badge_add_success_message: 'Badge ajouté avec succès.'
 badge_add_error_message: "Erreur lors de l'ajout du badge."
 badge_delete_success_message: 'Badge supprimé avec succès.'
 badge_delete_error_message: "Erreur lors de la suppression du badge."
+badge_edit_success_message: 'Badge édité avec succès.'
+badge_edit_error_message: "Erreur lors de l'édition du badge."
 badge_form_name: 'Nom'
 badge_form_description: 'Description'
 badge_form_criteria: "Critères d'obtention"
 badge_form_version: 'Version'
 badge_form_image: 'Image'
 badge_form_expired_at: "Date d'expiration"
+badge_form_change_image: "Changer l'image"

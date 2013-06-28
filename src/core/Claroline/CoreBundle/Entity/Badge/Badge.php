@@ -283,7 +283,7 @@ class Badge
     public function preUpload()
     {
         if (null !== $this->file) {
-            // faites ce que vous voulez pour générer un nom unique
+            $this->removeUpload();
             $this->imagePath = $this->file->guessExtension();
         }
     }

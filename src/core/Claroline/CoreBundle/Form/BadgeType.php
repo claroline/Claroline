@@ -21,7 +21,9 @@ class BadgeType extends AbstractType
                 )
             )
             ->add('version', 'integer')
-            ->add('file', 'file')
+            ->add('file', 'file', array(
+                    'label' => 'badge_form_image'
+                ))
             ->add('expired_at', 'datepicker', array(
                   'read_only' => true,
                   'component' => true

@@ -13,8 +13,8 @@
         </li>
     {% for badge in badges %}
         <li class="span2 badge_item">
-            <a href="#" class="thumbnail">
-                <img src="{{ asset(badge.webPath) }}">
+            <a href="{{ path('claro_admin_badges_edit', {'slug': badge.slug}) }}" title="{{ badge.name }}" class="thumbnail">
+                <img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" />
             </a>
         </li>
     {% endfor %}
