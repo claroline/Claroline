@@ -144,11 +144,10 @@ class MessageManager
 
     public function remove(User $user, array $messages)
     {
-        $userMessages = $this->userMessageRepo->findUserMessages($user, $messages);
+        $userMessages = $this->userMessageRepo->findByMessages($user, $messages);
         $this->writer->suspendFlush();
 
         foreach ($userMessages as $userMessage) {
-            $userMessage->markAsUnremoved($userMessage);
             $this->writer->remove($userMessage);
         }
 
@@ -184,7 +183,7 @@ class MessageManager
 
     private function markMessages(User $user, array $messages, $flag)
     {
-        $userMessages = $this->userMessageRepo->findUserMessages($user, $messages);
+        $userMessages = $this->userMessageRepo->findByMessages($user, $messages);
         $method = 'markAs' . $flag;
         $this->writer->suspendFlush();
 
