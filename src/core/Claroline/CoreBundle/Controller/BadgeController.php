@@ -86,6 +86,47 @@ class BadgeController extends Controller
     }
 
     /**
+     * @Route("/edit/{slug}", name="claro_admin_badges_edit")
+     *
+     * @Template()
+     */
+    public function editAction(Request $request, Badge $badge)
+    {
+        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            throw new \AccessDeniedException();
+        }
+
+        $form = $this->createForm(new BadgeType(), $badge);
+
+        if('POST' === $request->getMethod()) {
+            $form->handleRequest($request);
+            if ($form->isValid()) {
+                /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+                $translator = $this->get('translator');
+                try {
+                    /** @var \Doctrine\Common\Persistence\ObjectManager $entityManager */
+                    $entityManager = $this->getDoctrine()->getManager();
+
+                    $entityManager->persist($badge);
+                    $entityManager->flush();
+
+                    $this->get('session')->getFlashBag()->add('success', $translator->trans('badge_edit_success_message', array(), 'platform'));
+                }
+                catch(\Exception $exception) {
+                    $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_edit_error_message', array(), 'platform'));
+                }
+
+                return $this->redirect($this->generateUrl('claro_admin_badges'));
+            }
+        }
+
+        return array(
+            'form'  => $form->createView(),
+            'badge' => $badge
+        );
+    }
+
+    /**
      * @Route("/delete/{slug}", name="claro_admin_badges_delete")
      * @ParamConverter("badge", class="ClarolineCoreBundle:Badge\Badge")
      *
