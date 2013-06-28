@@ -8,8 +8,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\SerializerBundle\Annotation\Type;
-use Claroline\CoreBundle\Entity\Tool\Tool;
-use Claroline\CoreBundle\Entity\Tool\WorkspaceTool;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkspaceRepository")
@@ -74,12 +73,12 @@ abstract class AbstractWorkspace
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\WorkspaceOrderedTool",
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\OrderedTool",
      *     mappedBy="workspace",
      *     cascade={"persist"}
      * )
      */
-    protected $workspaceOrderedTools;
+    protected $orderedTools;
 
 
     /**
@@ -110,7 +109,7 @@ abstract class AbstractWorkspace
     public function __construct()
     {
         $this->roles = new ArrayCollection();
-        $this->workspaceTools = new ArrayCollection();
+        $this->orderedTools = new ArrayCollection();
     }
 
     public function getId()
@@ -160,9 +159,19 @@ abstract class AbstractWorkspace
         return $this->code;
     }
 
-    public function getWorkspaceOrderedTools()
+    public function getOrderedTools()
     {
-        return $this->workspaceOrderedTools;
+       return $this->orderedTools;
+    }
+
+    public function addOrderedTool(OrderedTool $tool)
+    {
+        $this->orderedTools->add($tool);
+    }
+
+    public function removeOrderedTool(OrderedTool $tool)
+    {
+        $this->orderedTools->removeElement($tool);
     }
 
     public function getRoles()

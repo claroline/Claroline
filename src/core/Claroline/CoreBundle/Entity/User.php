@@ -1,4 +1,4 @@
-<?php
+<?php //
 
 namespace Claroline\CoreBundle\Entity;
 
@@ -150,11 +150,11 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\DesktopTool",
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\OrderedTool",
      *     mappedBy="user"
      * )
      */
-    protected $desktopTools;
+    protected $orderedTools;
 
     public function __construct()
     {
@@ -164,7 +164,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $this->groups = new ArrayCollection();
         $this->abstractResources = new ArrayCollection();
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
-        $this->desktopTools = new ArrayCollection();
+        $this->orderedTools = new ArrayCollection();
     }
 
     public function getId()
@@ -383,8 +383,8 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $this->roles->add($platformRole);
     }
 
-    public function getDesktopTools()
+    public function getOrderedTools()
     {
-        return $this->desktopTools;
+        return $this->orderedTools;
     }
 }

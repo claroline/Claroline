@@ -284,33 +284,11 @@ class WorkspaceController extends Controller
         $currentRoles = $this->get('claroline.security.utilities')
             ->getRoles($this->get('security.context')->getToken());
 
-        $workspaceOrderTools = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
-            ->findBy(array('workspace' => $workspace));
-
-        $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->findDisplayedByRolesAndWorkspace($currentRoles, $workspace);
-        $toolsWithTranslation = array();
-
-        foreach ($tools as $tool) {
-            $toolWithTranslation['tool'] = $tool;
-            $found = false;
-
-            foreach ($workspaceOrderTools as $workspaceOrderedTool) {
-                if ($workspaceOrderedTool->getTool() === $tool) {
-                    $toolWithTranslation['name'] = $workspaceOrderedTool->getName();
-                    $found = true;
-                }
-            }
-
-            if (!$found) {
-                $toolWithTranslation['name'] = $tool->getName();
-            }
-
-            $toolsWithTranslation[] = $toolWithTranslation;
-        }
+        $orderedTools = $em->getRepository('ClarolineCoreBundle:Tool\OrderedTool')
+            ->findByWorkspaceAndRoles($workspace, $currentRoles);
 
         return array(
-            'toolsWithTranslation' => $toolsWithTranslation,
+            'orderedTools' => $orderedTools,
             'workspace' => $workspace
         );
     }
@@ -398,8 +376,8 @@ class WorkspaceController extends Controller
                     }
                     $widget['content'] = $event->getContent();
                     $widget['configurable'] = (
-                        $rightToConfigure 
-                        and $config->isLocked() !== true 
+                        $rightToConfigure
+                        and $config->isLocked() !== true
                         and $config->getWidget()->isConfigurable()
                     );
 

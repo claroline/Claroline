@@ -47,26 +47,15 @@ class Tool
     protected $isDesktopRequired;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\WorkspaceOrderedTool",
-     *     mappedBy="tool"
-     * )
-     */
-    protected $workspaceOrderedTools;
-
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\DesktopTool",
-     *     mappedBy="tool"
-     * )
-     */
-    protected $desktopTools;
-
-    /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
      * @ORM\JoinColumn(name="plugin_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      */
     protected $plugin;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Tool\OrderedTool", mappedBy="tool")
+     */
+    protected $orderedTools;
 
     /**
      * @ORM\Column(name="is_displayable_in_workspace", type="boolean")
@@ -160,11 +149,6 @@ class Tool
         return $this->isVisible;
     }
 
-    public function removeDesktopTool($dt)
-    {
-        $this->desktopTools->removeElement($dt);
-    }
-
     public function setPlugin($plugin)
     {
         $this->plugin = $plugin;
@@ -213,6 +197,11 @@ class Tool
     public function hasOptions()
     {
         return $this->hasOptions;
+    }
+
+    public function getOrderedTools()
+    {
+        return $this->orderedTools;
     }
 }
 

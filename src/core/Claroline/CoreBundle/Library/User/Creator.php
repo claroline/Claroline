@@ -7,7 +7,6 @@ use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Tool\DesktopTool;
 use Claroline\CoreBundle\Library\Event\LogUserCreateEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -25,6 +24,7 @@ class Creator
     private $personalWsTemplateFile;
     private $ed;
     private $sc;
+    private $toolManager;
 
     /**
      * @DI\InjectParams({
@@ -32,6 +32,7 @@ class Creator
      *     "trans" = @DI\Inject("translator"),
      *     "ch" = @DI\Inject("claroline.config.platform_config_handler"),
      *     "wsCreator" = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "toolManager" = @DI\Inject("claroline.manager.tool_manager"),
      *     "personalWsTemplateFile" = @DI\Inject("%claroline.param.templates_directory%"),
      *     "ed" = @DI\Inject("event_dispatcher"),
      *     "sc" = @DI\Inject("security.context")
@@ -42,6 +43,7 @@ class Creator
         Translator $trans,
         PlatformConfigurationHandler $ch,
         WorkspaceManager $wsCreator,
+        $toolManager,
         $personalWsTemplateFile,
         $ed,
         $sc
@@ -54,6 +56,7 @@ class Creator
         $this->personalWsTemplateFile = $personalWsTemplateFile."default.zip";
         $this->ed = $ed;
         $this->sc = $sc;
+        $this->toolManager = $toolManager;
     }
 
     /**
@@ -145,12 +148,7 @@ class Creator
         $i = 1;
 
         foreach ($requiredTools as $requiredTool) {
-            $udt = new DesktopTool();
-            $udt->setUser($user);
-            $udt->setOrder($i);
-            $udt->setTool($requiredTool);
-            $i++;
-            $this->em->persist($udt);
+            $this->toolManager->createOrderedTool($requiredTool, $i, $requiredTool->getName(), $user);
         }
 
     }
