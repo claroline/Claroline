@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Entity\Badge;
 
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -278,13 +279,30 @@ class Badge
 
     /**
      * @ORM\PrePersist()
+     */
+    public function PrePersist()
+    {
+        if (null !== $this->file) {
+            $this->imagePath = $this->file->guessExtension();
+        }
+    }
+
+    /**
      * @ORM\PreUpdate()
      */
-    public function preUpload()
+    public function preUpdate(PreUpdateEventArgs $eventArgs)
     {
+        $oldImagePath = $this->imagePath;
+
         if (null !== $this->file) {
             $this->removeUpload();
             $this->imagePath = $this->file->guessExtension();
+        }
+
+        if($eventArgs->hasChangedField('name')) {
+            $oldFilePath = sprintf('%s%s%s.%s', $this->getUploadRootDir(), DIRECTORY_SEPARATOR, $eventArgs->getOldValue('slug'), $oldImagePath);
+            $newFilePath = sprintf('%s%s%s.%s', $this->getUploadRootDir(), DIRECTORY_SEPARATOR, $eventArgs->getNewValue('slug'), $this->imagePath);
+            rename($oldFilePath, $newFilePath);
         }
     }
 
@@ -310,7 +328,9 @@ class Badge
     {
         $filePath = $this->getAbsolutePath();
         if (null !== $filePath) {
-            unlink($filePath);
+            if(file_exists($filePath)) {
+                unlink($filePath);
+            }
         }
     }
 }
