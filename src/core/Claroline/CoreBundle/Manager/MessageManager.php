@@ -96,7 +96,7 @@ class MessageManager
     public function getReceivedMessages(User $receiver, $search = '', $page = 1)
     {
         $query = $search === '' ?
-            $this->userMessageRepo->findReceivedByUser($receiver, false):
+            $this->userMessageRepo->findReceived($receiver, false):
             $this->userMessageRepo->findReceivedByObjectOrSender($receiver, $search, false);
 
         return $this->pagerFactory->createPager($query, $page);
@@ -106,7 +106,7 @@ class MessageManager
     public function getSentMessages(User $sender, $search = '', $page = 1)
     {
         $query = $search === '' ?
-            $this->userMessageRepo->findSentByUser($sender, false) :
+            $this->userMessageRepo->findSent($sender, false) :
             $this->userMessageRepo->findSentByObjectOrSender($sender, $search, false);
 
         return $this->pagerFactory->createPager($query, $page);
@@ -116,7 +116,7 @@ class MessageManager
     public function getRemovedMessages(User $user, $search = '', $page = 1)
     {
         $query = $search === '' ?
-            $this->userMessageRepo->findRemovedByUser($user, false):
+            $this->userMessageRepo->findRemoved($user, false):
             $this->userMessageRepo->findRemovedByUserAndObjectAndUsername($user, $search, false);
 
         return $this->pagerFactory->createPager($query, $page);
