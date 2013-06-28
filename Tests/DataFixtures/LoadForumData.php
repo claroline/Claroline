@@ -42,7 +42,7 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
 
     public function load(ObjectManager $manager)
     {
-        $creator = $this->getContainer()->get('claroline.resource.manager');
+        $creator = $this->getContainer()->get('claroline.manager.resource_manager');
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $user = $em->getRepository('ClarolineCoreBundle:User')->findOneBy(array('username' => $this->username));
         if ($this->parent == null) {
@@ -58,7 +58,14 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
         $maxOffset--;
         $forum = new Forum();
         $forum->setName($this->forumName);
-        $forum = $creator->create($forum, $root->getId(), 'claroline_forum', $user);
+        $forum = $creator->create(
+            $forum,
+            $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('claroline_forum'),
+            $user,
+            $root->getWorkspace(),
+            $root
+        );
+
         $this->log("forum {$forum->getName()} created");
 
         for ($i = 0; $i < $this->nbSubjects; $i++) {
