@@ -102,12 +102,12 @@ class ToolManager
         $this->configChecker($perms);
 
         $tool = $this->toolRepo->findOneBy(array('name' => $name));
-        $this->createOrderedTool($tool, $position, $perms['name'], $manager, $workspace);
+        $otr = $this->createOrderedTool($tool, $position, $perms['name'], $manager, $workspace);
 
         foreach ($perms['perms'] as $role) {
             $tool = $this->toolRepo->findOneBy(array('name' => $name));
 
-            $this->addRole($tool, $roles[$role], $workspace);
+            $this->addRoleToOrderedTool($otr, $roles[$role]);
         }
 
         $realPaths = array();
@@ -125,19 +125,41 @@ class ToolManager
 
     public function createOrderedTool(Tool $tool, $position, $name, User $user = null, AbstractWorkspace $workspace = null)
     {
-        $this->writer->createOrderedTool($tool, $position, $name, $workspace, $user);
+        $orderedTool = new OrderedTool();
+        $orderedTool->setWorkspace($workspace);
+        $orderedTool->setName($name);
+        $orderedTool->setOrder($position);
+        $orderedTool->setUser($user);
+        $orderedTool->setTool($tool);
+        $this->writer->create($orderedTool);
+
+        return $orderedTool;
     }
 
-    public function addRole(Tool $tool, Role $role, AbstractWorkspace $workspace)
+    public function addRole($tool, Role $role, AbstractWorkspace $workspace)
     {
         $otr = $this->orderedToolRepo->findOneBy(array('tool' => $tool, 'workspace' => $workspace));
-        $this->writer->addRole($otr, $role);
+        $otr->addRole($role);
+        $this->writer->update($otr);
+    }
+
+    private function addRoleToOrderedTool(OrderedTool $otr, $role)
+    {
+        $otr->addRole($role);
+        $this->writer->update($otr);
     }
 
     public function removeRole(Tool $tool, Role $role, AbstractWorkspace $workspace)
     {
         $otr = $this->orderedToolRepo->findOneBy(array('tool' => $tool, 'workspace' => $workspace));
-        $this->writer->removeRole($otr, $role);
+        $otr->removeRole($role);
+        $this->writer->update($otr);
+    }
+
+    private function removeRoleFromOrderedTool(OrderedTool $otr, $role)
+    {
+        $otr->removeRole($role);
+        $this->writer->update($otr);
     }
 
     public function getDisplayedDesktopOrderedTools(User $user)
