@@ -7,19 +7,48 @@ use Claroline\CoreBundle\Entity\Tool\DesktopTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Library\Event\ConfigureDesktopToolEvent;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\FormFactoryInterface;
+use Claroline\CoreBundle\Manager\ToolManager;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use JMS\DiExtraBundle\Annotation as DI;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 class DesktopParametersController extends Controller
 {
+    private $request;
+    private $router;
+    private $formFactory;
+    private $toolManager;
+
     /**
-     * @Route(
+     * @DI\InjectParams({
+     *     "request"        = @DI\Inject("request"),
+     *     "urlGenerator"   = @DI\Inject("router"),
+     *     "formFactory"    = @DI\Inject("form.factory"),
+     *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager")
+     * })
+     */
+    public function __construct(
+        Request $request,
+        UrlGeneratorInterface $router,
+        FormFactoryInterface $formFactory,
+        ToolManager $toolManager
+    )
+    {
+        $this->request = $request;
+        $this->router = $router;
+        $this->formFactory = $formFactory;
+        $this->toolManager = $toolManager;
+    }
+
+    /**
+     * @EXT\Route(
      *     "/tools",
      *     name="claro_tool_properties"
      * )
      *
-     * @Template("ClarolineCoreBundle:Tool\desktop\parameters:toolProperties.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\parameters:toolProperties.html.twig")
      *
      * Displays the tools configuration page.
      *
@@ -27,7 +56,6 @@ class DesktopParametersController extends Controller
      */
     public function desktopConfigureToolAction()
     {
-        $em = $this->get('doctrine.orm.entity_manager');
         $user = $this->get('security.context')->getToken()->getUser();
         $orderedToolList = array();
         $desktopTools = $em->getRepository('ClarolineCoreBundle:Tool\OrderedTool')->findBy(array('user' => $user));
@@ -50,12 +78,14 @@ class DesktopParametersController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/remove/tool/{tool}",
      *     name="claro_tool_desktop_remove",
      *     options={"expose"=true}
      * )
-     * @Method("POST")
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter("tool", class="ClarolineCoreBundle:Tool\Tool", options={"id"="tool", "strictId"=true})
+     * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
      *
      * Remove a tool from the desktop.
      *
@@ -65,30 +95,20 @@ class DesktopParametersController extends Controller
      *
      * @throws \Exception
      */
-    public function desktopRemoveToolAction(Tool $tool)
+    public function desktopRemoveToolAction(Tool $tool, User $user)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $user = $this->get('security.context')->getToken()->getUser();
-
-        if ($tool->getName() === 'parameters') {
-            throw new \Exception('You cannot remove the parameter tool from the desktop.');
-        }
-
-        $desktopTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
-            ->findOneBy(array('user' => $user, 'tool' => $tool));
-        $em->remove($desktopTool);
-        $em->flush();
+        $this->toolManager->removeDesktopTool($tool, $user);
 
         return new Response('success', 204);
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/add/tool/{tool}/position/{position}",
      *     name="claro_tool_desktop_add",
      *     options={"expose"=true}
      * )
-     * @Method("POST")
+     * @EXT\Method("POST")
      *
      * Add a tool to the desktop.
      *
@@ -118,12 +138,12 @@ class DesktopParametersController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/move/tool/{tool}/position/{position}",
      *     name="claro_tool_desktop_move",
      *     options={"expose"=true}
      * )
-     * @Method("POST")
+     * @EXT\Method("POST")
      *
      * This method switch the position of a tool with an other one.
      *
@@ -169,11 +189,11 @@ class DesktopParametersController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "tool/{tool}/config",
      *     name="claro_desktop_tool_config"
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
      * @param Tool $tool
      *

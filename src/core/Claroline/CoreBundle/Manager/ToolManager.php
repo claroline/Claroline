@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Database\Writer;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
 use Claroline\CoreBundle\Repository\ToolRepository;
@@ -32,14 +33,14 @@ class ToolManager
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "writer" = @DI\Inject("claroline.writer.tool_writer"),
+     *     "writer" = @DI\Inject("claroline.database.writer"),
      *     "orderedToolRepo" = @DI\Inject("ordered_tool_repository"),
      *     "toolRepo" = @DI\Inject("tool_repository"),
      *     "ed" = @DI\Inject("event_dispatcher")
      * })
      */
     public function __construct(
-        ToolWriter $writer,
+        Writer $writer,
         OrderedToolRepository $orderedToolRepo,
         ToolRepository $toolRepo,
         EventDispatcher $ed
@@ -130,6 +131,16 @@ class ToolManager
     {
         $otr = $this->orderedToolRepo->findOneBy(array('tool' => $tool, 'workspace' => $workspace));
         $this->writer->removeRole($otr, $role);
+    }
+
+    public function removeDesktopTool(Tool $tool, User $user)
+    {
+        if ($tool->getName() === 'parameters') {
+            throw new \Exception('You cannot remove the parameter tool from the desktop.');
+        }
+
+        $orderedTool = $this->orderedToolRepo->findOneBy(array('user' => $user, 'tool' => $tool));
+        $this->writer->remove($orderedTool);
     }
 
     public function order(array $tools)
