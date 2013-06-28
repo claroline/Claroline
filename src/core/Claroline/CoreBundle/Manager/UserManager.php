@@ -204,6 +204,6 @@ class UserManager
 
         $workspace = $this->workspaceManager->create($config, $user);
         $user->setPersonalWorkspace($workspace);
-        $this->writer->update();
+        $this->writer->update($user);
     }
 }
