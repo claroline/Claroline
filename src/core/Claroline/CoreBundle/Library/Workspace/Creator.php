@@ -84,6 +84,47 @@ class Creator
     }
 
     /**
+     * Creates the base roles of a workspace.
+     *
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Library\Workspace\Configuration $config
+     */
+    private function initBaseRoles(AbstractWorkspace $workspace, Configuration $config)
+    {
+        $roles = $config->getRoles();
+        $entityRoles = array();
+
+        foreach ($roles as $name => $translation) {
+            $role = $this->createRole($name, $workspace, $translation);
+            $entityRoles[$role->getName()] = $role;
+        }
+
+        return $entityRoles;
+    }
+
+    /**
+     * Creates a new role.
+     *
+     * @param string $baseName
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param string $translationKey
+     *
+     * @return \Claroline\CoreBundle\Entity\Role
+     */
+    private function createRole($baseName, AbstractWorkspace $workspace, $translationKey)
+    {
+        $baseRole = new Role();
+        $baseRole->setName($baseName . '_' . $workspace->getId());
+        $baseRole->setType(Role::WS_ROLE);
+        $baseRole->setTranslationKey($translationKey);
+        $baseRole->setWorkspace($workspace);
+
+        $this->entityManager->persist($baseRole);
+
+        return $baseRole;
+    }
+
+    /**
      * Adds the tools for a workspace.
      *
      * @todo Optimize this for doctrine (loops with findby aren't exactly really effective).

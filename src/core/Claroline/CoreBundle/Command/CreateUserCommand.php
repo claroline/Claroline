@@ -83,26 +83,38 @@ class CreateUserCommand extends ContainerAwareCommand
         $username = $input->getArgument('user_username');
         $password = $input->getArgument('user_password');
 
-        $user = new User();
-        $user->setFirstName($firstName);
-        $user->setLastName($lastName);
-        $user->setUsername($username);
-        $user->setPlainPassword($password);
+//        $user = new User();
+//        $user->setFirstName($firstName);
+//        $user->setLastName($lastName);
+//        $user->setUsername($username);
+//        $user->setPlainPassword($password);
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $roleRepo = $em->getRepository('ClarolineCoreBundle:Role');
 
         if ($input->getOption('admin')) {
-            $adminRole = $roleRepo->findOneByName(PlatformRoles::ADMIN);
-            $user->addRole($adminRole);
+            $role = $roleRepo->findOneByName(PlatformRoles::ADMIN);
+//            $user->addRole($adminRole);
         } elseif ($input->getOption('ws_creator')) {
-            $wsCreatorRole = $roleRepo->findOneByName(PlatformRoles::WS_CREATOR);
-            $user->addRole($wsCreatorRole);
+            $role = $roleRepo->findOneByName(PlatformRoles::WS_CREATOR);
+//            $user->addRole($wsCreatorRole);
         } else {
-            $userRole = $roleRepo->findOneByName(PlatformRoles::USER);
-            $user->addRole($userRole);
+            $role = $roleRepo->findOneByName(PlatformRoles::USER);
+//            $user->addRole($userRole);
         }
+        $this->getContainer()->get('claroline.manager.user_manager')
+            ->createUserWithRoles(
+                $firstName,
+                $lastName,
+                $username,
+                $password,
+                null,
+                null,
+                null,
+                array($role),
+                null
+            );
 
-        $em->persist($user);
-        $this->getContainer()->get('claroline.user.creator')->create($user);
+//        $em->persist($user);
+//        $this->getContainer()->get('claroline.user.creator')->create($user);
     }
 }
