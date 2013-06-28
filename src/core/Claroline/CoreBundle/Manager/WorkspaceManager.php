@@ -69,7 +69,7 @@ class WorkspaceManager
 
         $baseRoles = $this->roleManager->initWorkspaceBaseRole($config->getRoles(), $workspace);
         $baseRoles['ROLE_ANONYMOUS'] = $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS'));
-        $this->roleManager->bind($baseRoles["ROLE_WS_MANAGER"], $manager);
+        $this->roleManager->associateRole($manager, $baseRoles["ROLE_WS_MANAGER"]);
         $dir = new Directory();
         $dir->setName("{$workspace->getName()} - {$workspace->getCode()}");
         $rights = $config->getPermsRootConfiguration();
@@ -104,7 +104,7 @@ class WorkspaceManager
             );
             $position++;
         }
-        
+
         return $workspace;
     }
 
