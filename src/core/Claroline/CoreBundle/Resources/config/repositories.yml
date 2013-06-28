@@ -69,6 +69,20 @@ services:
     arguments:
       - Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy
 
+  ordered_tool_repository:
+    class:           Claroline\CoreBundle\Repository\OrderedToolRepository
+    factory_service: doctrine.orm.entity_manager
+    factory_method:  getRepository
+    arguments:
+      - Claroline\CoreBundle\Entity\Tool\OrderedTool
+
+  tool_repository:
+    class:           Claroline\CoreBundle\Repository\ToolRepository
+    factory_service: doctrine.orm.entity_manager
+    factory_method:  getRepository
+    arguments:
+      - Claroline\CoreBundle\Entity\Tool\Tool
+
   claroline.repository.user_message_repository:
     class:           Claroline\CoreBundle\Repository\UserMessageRepository
     factory_service: doctrine.orm.entity_manager

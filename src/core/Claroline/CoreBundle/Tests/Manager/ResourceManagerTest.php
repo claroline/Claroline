@@ -300,7 +300,7 @@ class ResourceManagerTest extends MockeryTestCase
         $grandParent = m::mock('Claroline\CoreBundle\Entity\Resource\Directory');
         $dirParent = m::mock('Claroline\CoreBundle\Entity\Resource\Directory');
         $child = m::mock('Claroline\CoreBundle\Entity\Resource\Directory');
-        $linkToDirParent = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceShortcut');
+        $linkToDirParent = m::mock('Claroline\CoreBundle\Entity\Resource\Directory');
         $child->shouldReceive('getParent')->andReturn($dirParent);
         $dirParent->shouldReceive('getParent')->andReturn($grandParent);
         $linkToDirParent->shouldReceive('getParent')->andReturn($grandParent);

@@ -40,9 +40,8 @@ class WorkspaceRepository extends EntityRepository
     {
         $dql = "
             SELECT DISTINCT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
-            JOIN w.workspaceOrderedTools wot
-            JOIN wot.workspaceToolRoles wtr
-            JOIN wtr.role r
+            JOIN w.orderedTools ot
+            JOIN ot.roles r
             WHERE r.name = 'ROLE_ANONYMOUS'";
 
             $query = $this->_em->createQuery($dql);
@@ -62,9 +61,8 @@ class WorkspaceRepository extends EntityRepository
     {
         $dql = "
             SELECT DISTINCT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
-            JOIN w.workspaceOrderedTools wot
-            JOIN wot.workspaceToolRoles wtr
-            JOIN wtr.role r
+            JOIN w.orderedTools ot
+            JOIN ot.roles r
             WHERE r.name = '{$roles[0]}'";
 
         for ($i = 1, $size = count($roles); $i < $size; $i++) {
@@ -122,7 +120,7 @@ class WorkspaceRepository extends EntityRepository
             JOIN w.roles r
             JOIN r.users u
             WHERE u.id = :userId
-            AND ".$rolesRestriction." 
+            AND ".$rolesRestriction."
             ORDER BY w.name";
 
         $query = $this->_em->createQuery($dql);
@@ -155,7 +153,7 @@ class WorkspaceRepository extends EntityRepository
             JOIN w.roles r
             JOIN r.users u
             WHERE u.id = :userId
-            AND ".$rolesRestriction." 
+            AND ".$rolesRestriction."
             AND w.id NOT IN (:restrictionIds)
             ORDER BY w.name";
 
@@ -200,7 +198,7 @@ class WorkspaceRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function workspacesWithMostResources($max) 
+    public function workspacesWithMostResources($max)
     {
         $qb = $this
             ->createQueryBuilder('ws')

@@ -60,8 +60,14 @@ class LoadTextData extends AbstractFixture implements ContainerAwareInterface
             $manager->persist($text);
             $revision->setText($text);
             $text = $this->container
-                ->get('claroline.resource.manager')
-                ->create($text, $this->getReference('directory/'.$this->parent)->getId(), 'text', $user);
+                ->get('claroline.manager.resource_manager')
+                ->create(
+                    $text,
+                    $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('text'),
+                    $user,
+                    $this->getReference('directory/'.$this->parent)->getWorkspace(),
+                    $this->getReference('directory/'.$this->parent)
+                );
             $this->addReference('text/'.$name, $text);
         }
     }
