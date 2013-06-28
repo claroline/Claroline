@@ -47,12 +47,13 @@ class LoadActivityData extends AbstractFixture implements ContainerAwareInterfac
                 ->generateLipsum(100)
         );
         $activity = $this->container
-            ->get('claroline.resource.manager')
+            ->get('claroline.manager.resource_manager')
             ->create(
                 $activity,
-                $this->getReference('directory/'.$this->parent)->getId(),
-                'activity',
-                $this->getReference('user/'.$this->creator)
+                $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('activity'),
+                $this->getReference('user/'.$this->creator),
+                $this->getReference('directory/'.$this->parent)->getWorkspace(),
+                $this->getReference('directory/'.$this->parent)
             );
 
         for ($i = 0, $count = count($this->resources), $order = 1; $i < $count; $i++, $order++) {

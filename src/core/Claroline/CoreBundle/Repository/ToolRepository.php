@@ -37,17 +37,16 @@ class ToolRepository extends EntityRepository
             }
 
             $dql = "SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool
-                JOIN tool.workspaceOrderedTools wot
-                JOIN wot.workspaceToolRoles wtr
-                JOIN wot.workspace ws
-                JOIN wtr.role role
+                JOIN tool.orderedTools ot
+                JOIN ot.workspace ws
+                JOIN ot.roles role
                 WHERE role.name = '{$firstRole}' and ws.id = {$workspace->getId()}";
 
             foreach ($roles as $role) {
                 $dql .= " OR role.name = '{$role}' and ws.id = {$workspace->getId()}";
             }
 
-            $dql .= " ORDER BY wot.order";
+            $dql .= " ORDER BY ot.order";
         }
         else {
             $dql = "
@@ -72,10 +71,10 @@ class ToolRepository extends EntityRepository
     {
         $dql = "
             SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool
-            JOIN tool.desktopTools desktopTool
-            JOIN desktopTool.user user
+            JOIN tool.orderedTools ot
+            JOIN ot.user user
             WHERE user.id = {$user->getId()}
-            ORDER BY desktopTool.order
+            ORDER BY ot.order
         ";
         $query = $this->_em->createQuery($dql);
 
@@ -131,9 +130,8 @@ class ToolRepository extends EntityRepository
         $dql = "
             SELECT tool
             FROM Claroline\CoreBundle\Entity\Tool\Tool tool
-            JOIN tool.workspaceOrderedTools wot
-            JOIN wot.workspace ws
-            JOIN wot.workspaceToolRoles wtr
+            JOIN tool.orderedTools ot
+            JOIN ot.workspace ws
             WHERE ws.id = {$workspace->getId()}
         ";
         $query = $this->_em->createQuery($dql);
