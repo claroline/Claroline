@@ -513,6 +513,10 @@ Overview of all recent activities in %workspaceName%: 'Aperçu de toutes les act
 badges_management: 'Gestion des badges'
 Badges: 'Badges'
 add_badge: 'Ajouter un badge'
+badge_add_success_message: 'Badge ajouté avec succès.'
+badge_add_error_message: "Erreur lors de l'ajout du badge."
+badge_delete_success_message: 'Badge supprimé avec succès.'
+badge_delete_error_message: "Erreur lors de la suppression du badge."
 badge_form_name: 'Nom'
 badge_form_description: 'Description'
 badge_form_criteria: "Critères d'obtention"

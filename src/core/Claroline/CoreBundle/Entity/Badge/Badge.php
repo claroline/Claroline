@@ -4,12 +4,15 @@ namespace Claroline\CoreBundle\Entity\Badge;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Type
  *
  * @ORM\Table(name="claro_badge")
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\BadgeRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 
 class Badge  
@@ -62,9 +65,9 @@ class Badge
     /**
      * @var string
      *
-     * @ORM\Column(type="string", nullable=false)
+     * @ORM\Column(name="image", type="string", nullable=false)
      */
-    protected $image;
+    protected $imagePath;
 
     /**
      * @var \DateTime
@@ -72,6 +75,13 @@ class Badge
      * @ORM\Column(name="expired_at", type="datetime", nullable=true)
      */
     protected $expiredAt;
+
+    /**
+     * @var UploadedFile
+     *
+     * @Assert\File
+     */
+    public $file;
 
     /**
      * @param string $criteria
@@ -154,13 +164,13 @@ class Badge
     }
 
     /**
-     * @param string $image
+     * @param string $imagePath
      *
      * @return Badge
      */
-    public function setImage($image)
+    public function setImagePath($imagePath)
     {
-        $this->image = $image;
+        $this->imagePath = $imagePath;
 
         return $this;
     }
@@ -168,9 +178,9 @@ class Badge
     /**
      * @return string
      */
-    public function getImage()
+    public function getImagePath()
     {
-        return $this->image;
+        return $this->imagePath;
     }
 
     /**
@@ -233,4 +243,74 @@ class Badge
         return $this->version;
     }
 
+    /**
+     * @return null|string
+     */
+    public function getAbsolutePath()
+    {
+        return (null === $this->imagePath) ? null : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->slug . '.' . $this->imagePath;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getWebPath()
+    {
+        return (null === $this->imagePath) ? null : $this->getUploadDir() . DIRECTORY_SEPARATOR . $this->slug . '.' . $this->imagePath;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getUploadRootDir()
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        return sprintf('%s%s..%s..%s..%s..%s..%s..%sweb%s%s', __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir());
+    }
+
+    /**
+     * @return string
+     */
+    protected function getUploadDir()
+    {
+        return sprintf("uploads%sbadges", DIRECTORY_SEPARATOR);
+    }
+
+    /**
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
+     */
+    public function preUpload()
+    {
+        if (null !== $this->file) {
+            // faites ce que vous voulez pour générer un nom unique
+            $this->imagePath = $this->file->guessExtension();
+        }
+    }
+
+    /**
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     */
+    public function upload()
+    {
+        if (null === $this->file) {
+            return;
+        }
+
+        $this->file->move($this->getUploadRootDir(), $this->slug . '.' . $this->file->guessExtension());
+
+        unset($this->file);
+    }
+
+    /**
+     * @ORM\PostRemove()
+     */
+    public function removeUpload()
+    {
+        $filePath = $this->getAbsolutePath();
+        if (null !== $filePath) {
+            unlink($filePath);
+        }
+    }
 }

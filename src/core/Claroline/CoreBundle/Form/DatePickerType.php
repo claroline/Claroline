@@ -18,7 +18,8 @@ class DatePickerType extends AbstractType
             'translation_domain' => 'platform',
             'input'              => 'datetime',
             'widget'             => 'single_text',
-            'component'          => false
+            'component'          => false,
+            'format'             => 'dd-MM-yyyy'
         ));
     }
 
