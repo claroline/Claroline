@@ -99,10 +99,8 @@ class AdministrationController extends Controller
         if ($form->isValid()) {
             $user = $form->getData();
             $newRoles = $form->get('platformRoles')->getData();
-            foreach ($newRoles as $role) {
-                $user->addRole($role);
-            }
-            $this->get('claroline.user.creator')->create($user);
+            $this->get('claroline.manager.user_manager')
+                ->insertUserWithRoles($user, $newRoles);
 
             return $this->redirect($this->generateUrl('claro_admin_user_list'));
         }
@@ -797,7 +795,7 @@ class AdministrationController extends Controller
      *     "/analytics/",
      *     name="claro_admin_analytics_show"
      * )
-     * 
+     *
      * @Method("GET")
      *
      * Displays platform analytics home page
@@ -817,9 +815,9 @@ class AdministrationController extends Controller
         $mostDownloadedResources = $this->get('claroline.analytics.manager')->topResourcesByAction(null, 'resource_export', 5);
         $usersCount = $manager->getRepository('ClarolineCoreBundle:User')->count();
         return $this->render(
-            'ClarolineCoreBundle:Administration:analytics.html.twig', 
+            'ClarolineCoreBundle:Administration:analytics.html.twig',
             array(
-                'barChartData'=>$lastMonthActions, 
+                'barChartData'=>$lastMonthActions,
                 'usersCount'=>$usersCount,
                 'mostViewedWS'=>$mostViewedWS,
                 'mostViewedMedia'=>$mostViewedMedia,
@@ -833,7 +831,7 @@ class AdministrationController extends Controller
      *     "/analytics/connections",
      *     name="claro_admin_analytics_connections"
      * )
-     * 
+     *
      * @Method({"GET", "POST"})
      *
      * Displays platform analytics connections page
@@ -847,7 +845,7 @@ class AdministrationController extends Controller
     {
         $request = $this->get('request');
         $criteria_form = $this->createForm(new AdminAnalyticsConnectionsType());
-        $clone_form = clone $criteria_form; 
+        $clone_form = clone $criteria_form;
         $criteria_form->bind($request);
         $unique = false;
         if ($criteria_form->isValid()) {
@@ -863,12 +861,12 @@ class AdministrationController extends Controller
             $clone_form->get('unique')->setData($unique);
             $criteria_form = $clone_form;
         }
-        
+
         $connections = $actionsForRange['chartData'];
-        $activeUsers = $this->get('claroline.analytics.manager')->getActiveUsers();        
+        $activeUsers = $this->get('claroline.analytics.manager')->getActiveUsers();
 
         return $this->render(
-            'ClarolineCoreBundle:Administration:analytics_connections.html.twig', 
+            'ClarolineCoreBundle:Administration:analytics_connections.html.twig',
             array(
                 'connections'=>$connections,
                 'form_criteria' => $criteria_form->createView(),
@@ -882,7 +880,7 @@ class AdministrationController extends Controller
      *     "/analytics/resources",
      *     name="claro_admin_analytics_resources"
      * )
-     * 
+     *
      * @Method("GET")
      *
      * Displays platform analytics resources page
@@ -898,7 +896,7 @@ class AdministrationController extends Controller
         $wsCount = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->count();
         $resourceCount = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->countResourcesByType();
         return $this->render(
-            'ClarolineCoreBundle:Administration:analytics_resources.html.twig', 
+            'ClarolineCoreBundle:Administration:analytics_resources.html.twig',
             array(
                 'wsCount'=>$wsCount,
                 'resourceCount'=>$resourceCount
@@ -912,7 +910,7 @@ class AdministrationController extends Controller
      *     name="claro_admin_analytics_top",
      *     defaults={"top_type" = "top_users_connections"}
      * )
-     * 
+     *
      * @Method({"GET", "POST"})
      *
      * Displays platform analytics top activity page
@@ -941,14 +939,14 @@ class AdministrationController extends Controller
         $listData = $this
                         ->get('claroline.analytics.manager')
                         ->getTopByCriteria($range, $top_type, $max);
-        
+
         $clone_form->get('range')->setData($range);
         $clone_form->get('top_type')->setData($top_type);
         $clone_form->get('top_number')->setData($max);
         $criteria_form = $clone_form;
 
         return $this->render(
-            'ClarolineCoreBundle:Administration:analytics_top.html.twig', 
+            'ClarolineCoreBundle:Administration:analytics_top.html.twig',
             array(
                 'form_criteria'=>$criteria_form->createView(),
                 'list_data' => $listData

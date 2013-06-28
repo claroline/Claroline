@@ -33,3 +33,10 @@ services:
     factory_method:  getRepository
     arguments:
       - Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy
+
+  role_repository:
+    class:           Claroline\CoreBundle\Repository\RoleRepository
+    factory_service: doctrine.orm.entity_manager
+    factory_method:  getRepository
+    arguments:
+      - Claroline\CoreBundle\Entity\Role
