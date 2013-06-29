@@ -31,12 +31,12 @@ class AuthenticatedUserConverter implements ParamConverterInterface
 
     public function apply(Request $request, ConfigurationInterface $configuration)
     {
-        if (null === $configuration->getName()) {
-            throw new ConfigurationException('the controller parameter name is mandatory');
+        if (null === $parameter = $configuration->getName()) {
+            throw new InvalidConfigurationException('the controller parameter name is mandatory');
         }
 
         if (($user = $this->securityContext->getToken()->getUser()) instanceof User) {
-            $request->attributes->set($configuration->getName(), $user);
+            $request->attributes->set($parameter, $user);
 
             return true;
         }

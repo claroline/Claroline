@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Converter;
 
-class ConfigurationException extends \Exception
+class InvalidConfigurationException extends \Exception
 {
     public function __construct($message)
     {
