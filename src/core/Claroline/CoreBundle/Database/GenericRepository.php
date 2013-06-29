@@ -25,16 +25,13 @@ class GenericRepository
     public function findByIds($entityClass, array $ids)
     {
         $idString = implode(', ', $ids);
-        $dql = "
-            SELECT entity FROM {$entityClass} entity
-            WHERE entity.id IN ({$idString})
-        ";
+        $dql = "SELECT entity FROM {$entityClass} entity WHERE entity.id IN ({$idString})";
         $query = $this->em->createQuery($dql);
         $entities = $query->getResult();
 
         if (($entityCount = count($entities)) !== ($idCount = count($ids))) {
             throw new MissingEntityException(
-                "{$entityCount} on {$idCount} ids don't match any existing entity"
+                "{$entityCount} out of {$idCount} ids don't match any existing entity"
             );
         }
 
