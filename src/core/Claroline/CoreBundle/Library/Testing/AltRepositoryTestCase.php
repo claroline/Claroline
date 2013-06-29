@@ -3,22 +3,26 @@
 namespace Claroline\CoreBundle\Library\Testing;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Doctrine\Common\DataFixtures\ReferenceRepository;
-use Doctrine\Common\DataFixtures\FixtureInterface;
-use Doctrine\Common\DataFixtures\AbstractFixture;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Message;
+use Claroline\CoreBundle\Entity\UserMessage;
 
-abstract class RepositoryTestCase extends WebTestCase
+abstract class AltRepositoryTestCase extends WebTestCase
 {
-    protected static $client;
-    protected static $referenceRepo;
-    protected static $em;
+    protected static $writer;
+
+    protected static $users;
+    protected static $messages;
+    protected static $userMessages;
+
+    private static $em;
+    private static $client;
 
     public static function setUpBeforeClass()
     {
         self::$client = static::createClient();
         self::$em = self::$client->getContainer()->get('doctrine.orm.entity_manager');
-        self::$referenceRepo = new ReferenceRepository(self::$em);
+        self::$writer = self::$client->getContainer()->get('claroline.database.writer');
         self::$client->beginTransaction();
     }
 
@@ -27,66 +31,67 @@ abstract class RepositoryTestCase extends WebTestCase
         self::$client->shutdown();
     }
 
-    /**
-     * Loads a fixture, injecting the entity manager, the reference repository
-     * and the container as needed.
-     *
-     * @param FixtureInterface $fixture
-     */
-    protected static function loadFixture(FixtureInterface $fixture)
+    protected static function getRepository($entityClass)
     {
-        if ($fixture instanceof AbstractFixture) {
-            $fixture->setReferenceRepository(self::$referenceRepo);
-        }
-
-        if ($fixture instanceof ContainerAwareInterface) {
-            $fixture->setContainer(self::$client->getContainer());
-        }
-
-        $fixture->load(self::$em);
+        return self::$em->getRepository($entityClass);
     }
 
-    /**
-     * Returns an object previously stored in the fixture reference repository.
-     *
-     * @param string $name Label of the fixture object to retrieve.
-     * @return object
-     */
-    protected static function getFixtureReference($name)
+    protected static function createUser($name)
     {
-        return self::$referenceRepo->getReference($name);
+        $user = new User();
+        $user->setFirstName($name . 'FirstName');
+        $user->setLastName($name . 'LastName');
+        $user->setUsername($name . 'Username');
+        $user->setPlainPassword($name . 'Password');
+        self::$writer->create($user);
+        self::$users[$name] = $user;
     }
 
-    public static function __callStatic($name, $arguments)
+    protected static function createMessage(
+        $alias,
+        User $sender,
+        array $receivers,
+        $object,
+        $content,
+        Message $parent = null,
+        $removed = false
+    )
     {
-        if (($isGet = strpos($name, 'load') !== 0) && strpos($name, 'get') !== 0) {
-            throw new \Exception(
-                "Cannot call {$name} : method is undefined and doesn't start "
-                . "with the 'load' or 'get' fixture prefix"
-            );
+        $message = new Message();
+        $message->setSender($sender);
+        $message->setObject($object);
+        $message->setContent($content);
+        $message->setTo('some receiver string');
+        $message->setReceiverString('some receiver string');
+
+        if ($parent) {
+            $message->setParent($parent);
         }
 
-        if ($isGet) {
-            if (count($arguments) === 0) {
-                throw new \Exception(
-                    "Cannot call {$name} : method is undefined and one argument is "
-                    . 'expected to get a fixture reference dynamically'
-                );
-            }
+        self::$writer->suspendFlush();
+        self::$writer->create($message);
+        self::$messages[$alias] = $message;
 
-            $getParts = explode('get', $name);
-            $target = strtolower($getParts[1]);
+        $userMessage = new UserMessage();
+        $userMessage->setIsSent(true);
+        $userMessage->setUser($sender);
+        $userMessage->setMessage($message);
 
-            return self::getFixtureReference("{$target}/{$arguments[0]}");
+        if ($removed) {
+            $userMessage->markAsRemoved($removed);
         }
 
-        $fixtureClass = 'Claroline\CoreBundle\Tests\DataFixtures\\' . ucfirst($name);
+        self::$writer->create($userMessage);
+        self::$userMessages[$alias . '/' . $sender->getUsername()] = $userMessage;
 
-        if (!class_exists($fixtureClass)) {
-            throw new \Exception("Cannot call {$name} : fixture class {$fixtureClass} doesn't exist");
+        foreach ($receivers as $receiver) {
+            $userMessage = new UserMessage();
+            $userMessage->setUser($receiver);
+            $userMessage->setMessage($message);
+            self::$writer->create($userMessage);
+            self::$userMessages[$alias . '/' . $receiver->getUsername()] = $userMessage;
         }
 
-        $rFixture = new \ReflectionClass($fixtureClass);
-        self::loadFixture($rFixture->newInstanceArgs($arguments));
+        self::$writer->forceFlush();
     }
 }
