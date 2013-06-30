@@ -10,7 +10,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface;
 use JMS\DiExtraBundle\Annotation as DI;
-
 use Claroline\CoreBundle\Database\GenericRepository;
 use Claroline\CoreBundle\Database\MissingEntityException;
 
@@ -35,11 +34,11 @@ class MultipleIdsConverter implements ParamConverterInterface
     public function apply(Request $request, ConfigurationInterface $configuration)
     {
         if (null === $parameter = $configuration->getName()) {
-            throw new InvalidConfigurationException('the controller parameter name is mandatory');
+            throw new InvalidConfigurationException(InvalidConfigurationException::MISSING_NAME);
         }
 
         if (null === $entityClass = $configuration->getClass()) {
-            throw new InvalidConfigurationException('the "class" field is mandatory');
+            throw new InvalidConfigurationException(InvalidConfigurationException::MISSING_CLASS);
         }
 
         if ($request->query->has('ids')) {
