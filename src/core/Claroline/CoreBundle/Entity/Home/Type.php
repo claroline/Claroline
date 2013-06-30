@@ -7,8 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Type
  *
+ * @ORM\Entity()
  * @ORM\Table(name="claro_type")
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\TypeRepository")
  */
 class Type
 {
