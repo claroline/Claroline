@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Converter;
 
 use Symfony\Component\HttpFoundation\Request;
-
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -16,6 +15,9 @@ use Claroline\CoreBundle\Database\MissingEntityException;
 /**
  * @DI\Service()
  * @DI\Tag("request.param_converter", attributes={"priority" = 500})
+ *
+ * Retreives a set of entities from an array of ids passed in the query string
+ * (e.g.: "?ids[]=1&ids[]=2") and adds it to the request attributes.
  */
 class MultipleIdsConverter implements ParamConverterInterface
 {
@@ -31,6 +33,13 @@ class MultipleIdsConverter implements ParamConverterInterface
         $this->repo = $repo;
     }
 
+    /**
+     * @{inheritDoc}
+     *
+     * @throws InvalidConfigurationException if the name or class parameters are missing
+     * @throws NotFoundHttpException if one or more entities cannot be retreived
+     * @throws BadRequestHttpException if there is no "ids" array parameter in the query string
+     */
     public function apply(Request $request, ConfigurationInterface $configuration)
     {
         if (null === $parameter = $configuration->getName()) {
@@ -58,6 +67,9 @@ class MultipleIdsConverter implements ParamConverterInterface
         throw new BadRequestHttpException('An array of identifiers was expected');
     }
 
+    /**
+     * @{inheritDoc}
+     */
     public function supports(ConfigurationInterface $configuration)
     {
         if (!$configuration instanceof ParamConverter) {
