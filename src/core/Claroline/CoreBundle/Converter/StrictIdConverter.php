@@ -30,20 +30,24 @@ class StrictIdConverter implements ParamConverterInterface
 
     public function apply(Request $request, ConfigurationInterface $configuration)
     {
-        if (null === $configuration->getName()) {
-            throw new ConfigurationException('the controller parameter name is mandatory');
+        if (null === $parameter = $configuration->getName()) {
+            throw new InvalidConfigurationException('the controller parameter name is mandatory');
         }
 
-        if (null === $configuration->getClass()) {
-            throw new ConfigurationException('the "class" field is mandatory');
+        if (null === $entityClass = $configuration->getClass()) {
+            throw new InvalidConfigurationException('the "class" field is mandatory');
         }
 
-        $options = array_merge(array('id' => 'id'), $configuration->getOptions());
+        $options = $configuration->getOptions();
+
+        if (!isset($options['id'])) {
+            throw new InvalidConfigurationException('the "id" option is mandatory');
+        }
 
         if ($request->attributes->has($options['id'])) {
             if (null !== $id = $request->attributes->get($options['id'])) {
-                if (null !== $entity = $this->em->getRepository($configuration->getClass())->find($id)) {
-                    $request->attributes->set($configuration->getName(), $entity);
+                if (null !== $entity = $this->em->getRepository($entityClass)->find($id)) {
+                    $request->attributes->set($parameter, $entity);
 
                     return true;
                 }
