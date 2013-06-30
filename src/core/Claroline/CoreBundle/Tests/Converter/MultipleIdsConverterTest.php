@@ -1,0 +1,103 @@
+<?php
+
+namespace Claroline\CoreBundle\Converter;
+
+use \Mockery as m;
+use Symfony\Component\HttpFoundation\ParameterBag;
+use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Claroline\CoreBundle\Entity\User;
+
+class MultipleIdsConverterTest extends MockeryTestCase
+{
+    private $request;
+    private $configuration;
+    private $repo;
+    private $converter;
+
+    protected function setUp()
+    {
+        $this->request = m::mock('Symfony\Component\HttpFoundation\Request');
+        $this->configuration = m::mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter');
+        $this->repo = m::mock('Claroline\CoreBundle\Database\GenericRepository');
+        $this->converter = new MultipleIdsConverter($this->repo);
+    }
+
+    public function testSupportsAcceptsOnlyParamConverterConfiguration()
+    {
+        $configuration = m::mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface');
+        $this->assertFalse($this->converter->supports($configuration));
+    }
+
+    public function testSupportsAcceptsOnlyAnMultipleIdsParameterSetToTrue()
+    {
+        $configuration = m::mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter');
+        $configuration->shouldReceive('getOptions')->times(3)->andReturn(
+            array('some_other_option'),
+            array('multipleIds' => false),
+            array('multipleIds' => true)
+        );
+        $this->assertFalse($this->converter->supports($configuration));
+        $this->assertFalse($this->converter->supports($configuration));
+        $this->assertTrue($this->converter->supports($configuration));
+    }
+
+    public function testApplyThrowsAnExceptionIfTheNameParameterIsMissing()
+    {
+        $this->setExpectedException('Claroline\CoreBundle\Converter\InvalidConfigurationException');
+        $this->configuration->shouldReceive('getName')->once()->andReturn(null);
+        $this->converter->apply($this->request, $this->configuration);
+    }
+
+    public function testApplyThrowsAnExceptionIfTheClassParameterIsMissing()
+    {
+        $this->setExpectedException('Claroline\CoreBundle\Converter\InvalidConfigurationException');
+        $this->configuration->shouldReceive('getName')->once()->andReturn('parameter');
+        $this->configuration->shouldReceive('getClass')->once()->andReturn(null);
+        $this->converter->apply($this->request, $this->configuration);
+    }
+
+    public function testApplyThrowsAnExceptionIfNoIdsParameterWerePassed()
+    {
+        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\BadRequestHttpException');
+        $this->configuration->shouldReceive('getName')->once()->andReturn('parameter');
+        $this->configuration->shouldReceive('getClass')->once()->andReturn('entity');
+        $this->request->query = new ParameterBag();
+        $this->converter->apply($this->request, $this->configuration);
+    }
+
+    public function testApplyThrowsAnExceptionIfTheIdsParameterIsNotAnArray()
+    {
+        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\BadRequestHttpException');
+        $this->configuration->shouldReceive('getName')->once()->andReturn('parameter');
+        $this->configuration->shouldReceive('getClass')->once()->andReturn('entity');
+        $this->request->query = new ParameterBag();
+        $this->request->query->set('ids', 'not_an_array');
+        $this->converter->apply($this->request, $this->configuration);
+    }
+
+    public function testApplyThrowsAnExceptionIfSomeEntitiesCannotBeRetreived()
+    {
+        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
+        $this->configuration->shouldReceive('getName')->once()->andReturn('parameter');
+        $this->configuration->shouldReceive('getClass')->once()->andReturn('entity');
+        $this->request->query = new ParameterBag();
+        $this->request->query->set('ids', array(1, 2));
+        $this->repo->shouldReceive('findByIds')
+            ->once()
+            ->andThrow('Claroline\CoreBundle\Database\MissingEntityException');
+        $this->converter->apply($this->request, $this->configuration);
+    }
+
+    public function testApplySetsTheRetreivedEntitiesAsARequestAttribute()
+    {
+        $entities = array('entity_1', 'entity_2');
+        $this->configuration->shouldReceive('getName')->once()->andReturn('parameter');
+        $this->configuration->shouldReceive('getClass')->once()->andReturn('entity');
+        $this->request->query = new ParameterBag();
+        $this->request->attributes = new ParameterBag();
+        $this->request->query->set('ids', array(1, 2));
+        $this->repo->shouldReceive('findByIds')->once()->andReturn($entities);
+        $this->assertEquals(true, $this->converter->apply($this->request, $this->configuration));
+        $this->assertEquals($entities, $this->request->attributes->get('parameter'));
+    }
+}
