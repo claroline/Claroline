@@ -62,7 +62,7 @@ class AuthenticatedUserConverterTest extends MockeryTestCase
         $this->request->attributes = new ParameterBag();
         $this->configuration->shouldReceive('getName')->once()->andReturn('user');
         $this->securityContext->shouldReceive('getToken->getUser')->andReturn($user);
-        $this->converter->apply($this->request, $this->configuration);
+        $this->assertEquals(true, $this->converter->apply($this->request, $this->configuration));
         $this->assertEquals($user, $this->request->attributes->get('user'));
     }
 }
