@@ -7,6 +7,8 @@ use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service("claroline.database.generic_repository")
+ *
+ * Helper class providing transversal repository methods.
  */
 class GenericRepository
 {
@@ -22,6 +24,16 @@ class GenericRepository
         $this->em = $em;
     }
 
+    /**
+     * Finds a set of entities by their ids.
+     *
+     * @param string    $entityClass
+     * @param array     $ids
+     *
+     * @return array[object]
+     *
+     * @throws MissingEntityException if any of the requested entities cannot be found
+     */
     public function findByIds($entityClass, array $ids)
     {
         $idString = implode(', ', $ids);

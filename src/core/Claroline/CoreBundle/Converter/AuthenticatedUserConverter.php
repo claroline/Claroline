@@ -14,6 +14,8 @@ use Claroline\CoreBundle\Entity\User;
 /**
  * @DI\Service()
  * @DI\Tag("request.param_converter", attributes={"priority" = 500})
+ *
+ * Adds the current authenticated user in the request attributes.
  */
 class AuthenticatedUserConverter implements ParamConverterInterface
 {
@@ -29,6 +31,12 @@ class AuthenticatedUserConverter implements ParamConverterInterface
         $this->securityContext = $securityContext;
     }
 
+    /**
+     * @{inheritDoc}
+     *
+     * @throws InvalidConfigurationException if the parameter name is missing
+     * @throws AccessDeniedHttpException if the current user is not authenticated
+     */
     public function apply(Request $request, ConfigurationInterface $configuration)
     {
         if (null === $parameter = $configuration->getName()) {
@@ -44,6 +52,9 @@ class AuthenticatedUserConverter implements ParamConverterInterface
         throw new AccessDeniedHttpException();
     }
 
+    /**
+     * @{inheritDoc}
+     */
     public function supports(ConfigurationInterface $configuration)
     {
         if (!$configuration instanceof ParamConverter) {
