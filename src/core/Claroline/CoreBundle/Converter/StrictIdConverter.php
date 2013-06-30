@@ -31,17 +31,17 @@ class StrictIdConverter implements ParamConverterInterface
     public function apply(Request $request, ConfigurationInterface $configuration)
     {
         if (null === $parameter = $configuration->getName()) {
-            throw new InvalidConfigurationException('the controller parameter name is mandatory');
+            throw new InvalidConfigurationException(InvalidConfigurationException::MISSING_NAME);
         }
 
         if (null === $entityClass = $configuration->getClass()) {
-            throw new InvalidConfigurationException('the "class" field is mandatory');
+            throw new InvalidConfigurationException(InvalidConfigurationException::MISSING_CLASS);
         }
 
         $options = $configuration->getOptions();
 
         if (!isset($options['id'])) {
-            throw new InvalidConfigurationException('the "id" option is mandatory');
+            throw new InvalidConfigurationException(InvalidConfigurationException::MISSING_ID);
         }
 
         if ($request->attributes->has($options['id'])) {

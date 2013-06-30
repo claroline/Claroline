@@ -40,24 +40,33 @@ class StrictIdConverterTest extends MockeryTestCase
         $this->assertTrue($this->converter->supports($configuration));
     }
 
+    /**
+     * @expectedException       Claroline\CoreBundle\Converter\InvalidConfigurationException
+     * @expectedExceptionCode   1
+     */
     public function testApplyThrowsAnExceptionIfTheNameParameterIsMissing()
     {
-        $this->setExpectedException('Claroline\CoreBundle\Converter\InvalidConfigurationException');
         $this->configuration->shouldReceive('getName')->once()->andReturn(null);
         $this->converter->apply($this->request, $this->configuration);
     }
 
+    /**
+     * @expectedException       Claroline\CoreBundle\Converter\InvalidConfigurationException
+     * @expectedExceptionCode   2
+     */
     public function testApplyThrowsAnExceptionIfTheClassParameterIsMissing()
     {
-        $this->setExpectedException('Claroline\CoreBundle\Converter\InvalidConfigurationException');
         $this->configuration->shouldReceive('getName')->once()->andReturn('parameter');
         $this->configuration->shouldReceive('getClass')->once()->andReturn(null);
         $this->converter->apply($this->request, $this->configuration);
     }
 
+    /**
+     * @expectedException       Claroline\CoreBundle\Converter\InvalidConfigurationException
+     * @expectedExceptionCode   3
+     */
     public function testApplyThrowsAnExceptionIfTheIdOptionIsMissing()
     {
-        $this->setExpectedException('Claroline\CoreBundle\Converter\InvalidConfigurationException');
         $this->configuration->shouldReceive('getName')->once()->andReturn('parameter');
         $this->configuration->shouldReceive('getClass')->once()->andReturn('Foo\Entity');
         $this->configuration->shouldReceive('getOptions')->once()->andReturn(array());
@@ -84,9 +93,11 @@ class StrictIdConverterTest extends MockeryTestCase
         $this->assertFalse($this->converter->apply($this->request, $this->configuration));
     }
 
+    /**
+     * @expectedException Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
     public function testApplyThrowsAnExceptionIfTheIdAttributeIsNullAndTheParameterIsNotOptional()
     {
-        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
         $this->configuration->shouldReceive('getName')->once()->andReturn('parameter');
         $this->configuration->shouldReceive('getClass')->once()->andReturn('Foo\Entity');
         $this->configuration->shouldReceive('getOptions')->once()->andReturn(array('id' => 'someId'));
@@ -96,9 +107,11 @@ class StrictIdConverterTest extends MockeryTestCase
         $this->converter->apply($this->request, $this->configuration);
     }
 
+    /**
+     * @expectedException Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
     public function testApplyThrowsAnExceptionIfTheEntityCannotBeFound()
     {
-        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
         $this->configuration->shouldReceive('getName')->once()->andReturn('parameter');
         $this->configuration->shouldReceive('getClass')->once()->andReturn('Foo\Entity');
         $this->configuration->shouldReceive('getOptions')->once()->andReturn(array('id' => 'someId'));
@@ -125,49 +138,4 @@ class StrictIdConverterTest extends MockeryTestCase
         $this->assertTrue($this->converter->apply($this->request, $this->configuration));
         $this->assertEquals($entity, $this->request->attributes->get('parameter'));
     }
-
-//    public function testApplyThrowsAnExceptionIfNoIdsParameterWerePassed()
-//    {
-//        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\BadRequestHttpException');
-//        $this->configuration->shouldReceive('getName')->once()->andReturn('parameter');
-//        $this->configuration->shouldReceive('getClass')->once()->andReturn('entity');
-//        $this->request->query = new ParameterBag();
-//        $this->converter->apply($this->request, $this->configuration);
-//    }
-//
-//    public function testApplyThrowsAnExceptionIfTheIdsParameterIsNotAnArray()
-//    {
-//        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\BadRequestHttpException');
-//        $this->configuration->shouldReceive('getName')->once()->andReturn('parameter');
-//        $this->configuration->shouldReceive('getClass')->once()->andReturn('entity');
-//        $this->request->query = new ParameterBag();
-//        $this->request->query->set('ids', 'not_an_array');
-//        $this->converter->apply($this->request, $this->configuration);
-//    }
-//
-//    public function testApplyThrowsAnExceptionIfSomeEntitiesCannotBeRetreived()
-//    {
-//        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
-//        $this->configuration->shouldReceive('getName')->once()->andReturn('parameter');
-//        $this->configuration->shouldReceive('getClass')->once()->andReturn('entity');
-//        $this->request->query = new ParameterBag();
-//        $this->request->query->set('ids', array(1, 2));
-//        $this->repo->shouldReceive('findByIds')
-//            ->once()
-//            ->andThrow('Claroline\CoreBundle\Database\MissingEntityException');
-//        $this->converter->apply($this->request, $this->configuration);
-//    }
-//
-//    public function testApplySetsTheRetreivedEntitiesAsARequestAttribute()
-//    {
-//        $entities = array('entity_1', 'entity_2');
-//        $this->configuration->shouldReceive('getName')->once()->andReturn('parameter');
-//        $this->configuration->shouldReceive('getClass')->once()->andReturn('entity');
-//        $this->request->query = new ParameterBag();
-//        $this->request->attributes = new ParameterBag();
-//        $this->request->query->set('ids', array(1, 2));
-//        $this->repo->shouldReceive('findByIds')->once()->andReturn($entities);
-//        $this->assertEquals(true, $this->converter->apply($this->request, $this->configuration));
-//        $this->assertEquals($entities, $this->request->attributes->get('parameter'));
-//    }
 }

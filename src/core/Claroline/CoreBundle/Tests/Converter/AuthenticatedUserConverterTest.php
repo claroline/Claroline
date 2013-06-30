@@ -41,16 +41,21 @@ class AuthenticatedUserConverterTest extends MockeryTestCase
         $this->assertTrue($this->converter->supports($configuration));
     }
 
+    /**
+     * @expectedException       Claroline\CoreBundle\Converter\InvalidConfigurationException
+     * @expectedExceptionCode   1
+     */
     public function testApplyThrowsAnExceptionIfTheNameParameterIsMissing()
     {
-        $this->setExpectedException('Claroline\CoreBundle\Converter\InvalidConfigurationException');
         $this->configuration->shouldReceive('getName')->once()->andReturn(null);
         $this->converter->apply($this->request, $this->configuration);
     }
 
+    /**
+     * @expectedException Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+     */
     public function testApplyThrowsAnExceptionIfThereIsNoAuthenticatedUser()
     {
-        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException');
         $this->configuration->shouldReceive('getName')->once()->andReturn('user');
         $this->securityContext->shouldReceive('getToken->getUser')->andReturn('anon.');
         $this->converter->apply($this->request, $this->configuration);
