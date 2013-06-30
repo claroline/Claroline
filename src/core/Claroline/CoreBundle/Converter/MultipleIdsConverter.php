@@ -34,19 +34,19 @@ class MultipleIdsConverter implements ParamConverterInterface
 
     public function apply(Request $request, ConfigurationInterface $configuration)
     {
-        if (null === $configuration->getName()) {
-            throw new ConfigurationException('the controller parameter name is mandatory');
+        if (null === $parameter = $configuration->getName()) {
+            throw new InvalidConfigurationException('the controller parameter name is mandatory');
         }
 
-        if (null === $configuration->getClass()) {
-            throw new ConfigurationException('the "class" field is mandatory');
+        if (null === $entityClass = $configuration->getClass()) {
+            throw new InvalidConfigurationException('the "class" field is mandatory');
         }
 
         if ($request->query->has('ids')) {
             if (is_array($ids = $request->query->get('ids'))) {
                 try {
-                    $entities = $this->repo->findByIds($configuration->getClass(), $ids);
-                    $request->attributes->set($configuration->getName(), $entities);
+                    $entities = $this->repo->findByIds($entityClass, $ids);
+                    $request->attributes->set($parameter, $entities);
 
                     return true;
                 } catch (MissingEntityException $ex) {
