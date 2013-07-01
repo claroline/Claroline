@@ -40,7 +40,7 @@ class Message
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE" , nullable=false)
+     * @ORM\JoinColumn(name="sender_id", referencedColumnName="id", onDelete="CASCADE" , nullable=false)
      */
     protected $user;
 
