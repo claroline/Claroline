@@ -41,8 +41,8 @@ class MessageManager
      * })
      */
     public function __construct(
-        MessageRepository $messageRepo,
         UserMessageRepository $userMessageRepo,
+        MessageRepository $messageRepo,
         UserRepository $userRepo,
         Writer $writer,
         PagerFactory $pagerFactory
