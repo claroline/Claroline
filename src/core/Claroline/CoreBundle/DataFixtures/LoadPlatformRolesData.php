@@ -14,6 +14,14 @@ use Claroline\CoreBundle\Library\Security\PlatformRoles;
 class LoadPlatformRolesData extends AbstractFixture implements OrderedFixtureInterface
 {
     /**
+     * {@inheritDoc}
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
+    /**
      * Loads the four base roles commonly used within the platform :
      * - anonymous user         (fixture ref : role/anonymous)
      * - registered user        (fixture ref : role/user)
@@ -24,31 +32,12 @@ class LoadPlatformRolesData extends AbstractFixture implements OrderedFixtureInt
      */
     public function load(ObjectManager $manager)
     {
-        $userRole = new Role();
-        $userRole->setName(PlatformRoles::USER);
-        $userRole->setTranslationKey('user');
-        $userRole->setType(Role::BASE_ROLE);
+        $roleManager = $this->container->get('claroline.manager.role_manager');
 
-        $creatorRole = new Role();
-        $creatorRole->setName(PlatformRoles::WS_CREATOR);
-        $creatorRole->setTranslationKey('ws_creator');
-        $creatorRole->setType(Role::BASE_ROLE);
-
-        $adminRole = new Role();
-        $adminRole->setName(PlatformRoles::ADMIN);
-        $adminRole->setTranslationKey('admin');
-        $adminRole->setType(Role::BASE_ROLE);
-
-        $anonymousRole = new Role();
-        $anonymousRole->setName(PlatformRoles::ANONYMOUS);
-        $anonymousRole->setTranslationKey('anonymous');
-        $anonymousRole->setType(Role::BASE_ROLE);
-
-        $manager->persist($anonymousRole);
-        $manager->persist($userRole);
-        $manager->persist($creatorRole);
-        $manager->persist($adminRole);
-        $manager->flush();
+        $userRole = $roleManager->createBaseRole(PlatformRoles::USER, 'user');
+        $creatorRole = $roleManager->createBaseRole(PlatformRoles::WS_CREATOR, 'ws_creator');
+        $adminRole = $roleManager->createBaseRole(PlatformRoles::ADMIN, 'admin');
+        $anonymousRole = $roleManager->createBaseRole(PlatformRoles::ANONYMOUS, 'anonymous');
 
         $this->addReference('role/anonymous', $anonymousRole);
         $this->addReference('role/user', $userRole);

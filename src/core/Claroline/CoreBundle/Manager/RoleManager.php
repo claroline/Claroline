@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Database\Writer;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -14,18 +15,21 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class RoleManager
 {
+    private $roleRepo;
     private $writer;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "writer" = @DI\Inject("claroline.database.writer")
+     *     "writer" = @DI\Inject("claroline.database.writer"),
+     *     "roleRepo" = @DI\Inject("role_repository")
      * })
      */
-    public function __contruct(Writer $writer)
+    public function __contruct(Writer $writer, RoleRepository $roleRepo)
     {
         $this->writer = $writer;
+        $this->roleRepo = $roleRepo;
     }
 
     public function createWorkspaceRole($name, $translationKey, AbstractWorkspace $workspace, $isReadOnly = false)
@@ -60,6 +64,16 @@ class RoleManager
         $role->setType(Role::CUSTOM_ROLE);
 
         $this->writer->create($role);
+    }
+
+    public function setRoleToRoleSubject(AbstractRoleSubject $ars, $roleName)
+    {
+        $role = $this->roleRepo->findOneBy(array('name' => $roleName));
+
+        if (!is_null($role)) {
+            $ars->addRole($role);
+            $this->writer->update($ars);
+        }
     }
 
     public function associateRole(AbstractRoleSubject $ars, Role $role)

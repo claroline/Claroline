@@ -228,4 +228,19 @@ class ToolManager
         //no implementation yet
         return true;
     }
+
+    public function addRequiredToolsToUser(User $user)
+    {
+        $requiredTools[] = $this->toolRepo->findOneBy(array('name' => 'home'));
+        $requiredTools[] = $this->toolRepo->findOneBy(array('name' => 'resource_manager'));
+        $requiredTools[] = $this->toolRepo->findOneBy(array('name' => 'parameters'));
+
+        $i = 1;
+
+        foreach ($requiredTools as $requiredTool) {
+            $this->createOrderedTool($requiredTool, $i, $requiredTool->getName(), $user);
+            $i++;
+        }
+        $this->writer->update($user);
+    }
 }
