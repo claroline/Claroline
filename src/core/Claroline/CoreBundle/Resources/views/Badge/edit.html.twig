@@ -30,8 +30,8 @@
 
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
-            <a href="{{ path('claro_admin_badges') }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-danger">{{ 'cancel'|trans({}, 'platform') }}</a>
-            <a href="{{ path('claro_admin_badges_delete', {'slug': badge.slug}) }}" title="{{ 'delete'|trans({}, 'platform') }}" class="btn btn-danger delete" data-confirm-title="{{ 'badge_delete_confirm_title'|trans({}, 'platform') }}" data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name}, 'platform') }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}">{{ 'delete'|trans({}, 'platform') }}</a>
+            <a href="{{ path('claro_admin_badges') }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-inverse">{{ 'cancel'|trans({}, 'platform') }}</a>
+            <a href="{{ path('claro_admin_badges_delete', {'slug': badge.slug}) }}" title="{{ 'delete'|trans({}, 'platform') }}" class="btn btn-danger delete" data-confirm-title="{{ 'badge_delete_confirm_title'|trans({}, 'platform') }}" data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name}, 'platform') }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" >{{ 'delete'|trans({}, 'platform') }}</a>
         </div>
     </form>
 {% endblock %}
