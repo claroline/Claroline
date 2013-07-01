@@ -2,6 +2,8 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\WorkspaceTagType;
 use Claroline\CoreBundle\Form\AdminWorkspaceTagType;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
@@ -13,6 +15,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
 class WorkspaceTagController extends Controller
@@ -274,44 +277,48 @@ class WorkspaceTagController extends Controller
      *     options={"expose"=true}
      * )
      * @Method("POST")
+     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter(
+     *      "targetUser",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"id" = "userId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
      * @Secure(roles="ROLE_USER")
      *
-     * Add Tag to Workspace
+     * Adds a user tag to a workspace.
      *
-     * @param integer $userId
-     * @param integer $workspaceId
-     * @param string $tagName
+     * @param User              $currentUser
+     * @param User              $targetUser
+     * @param AbstractWorkspace $workspaceId
+     * @param string            $tagName
      *
      * @return Response
      */
-    public function addTagToWorkspace($userId, $workspaceId, $tagName)
+    public function addTagToWorkspace(User $currentUser, User $targetUser, AbstractWorkspace $workspace, $tagName)
     {
-        if (!$this->get('security.context')->isGranted('ROLE_USER')) {
+        if ($currentUser !== $targetUser) {
             throw new AccessDeniedException();
         }
-        $user = $this->get('security.context')->getToken()->getUser();
+
         $em = $this->get('doctrine.orm.entity_manager');
         $tagManager = $this->get('claroline.manager.workspace_tag_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-
-        if (is_null($user) || is_null($workspace)) {
-            throw new \RuntimeException('User, Workspace cannot be null');
-        } elseif ($user->getId() != $userId) {
-            throw new AccessDeniedException();
-        }
-
         $tag = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findOneBy(array('name' => $tagName, 'user' => $user->getId()));
+            ->findOneBy(array('name' => $tagName, 'user' => $targetUser));
 
         if ($tag === null) {
-            $tag = $tagManager->createTag($tagName, $user);
+            $tag = $tagManager->createTag($tagName, $targetUser);
             $tagManager->createTagHierarchy($tag, $tag, 0);
         }
 
         $relWsTag = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findOneByWorkspaceAndTagAndUser($workspace, $tag, $user);
+            ->findOneByWorkspaceAndTagAndUser($workspace, $tag, $targetUser);
 
-        if ($relWsTag == null) {
+        if ($relWsTag === null) {
             $tagManager->createTagRelation($tag, $workspace);
         }
 
