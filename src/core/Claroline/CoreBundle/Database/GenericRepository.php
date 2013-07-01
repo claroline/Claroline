@@ -7,6 +7,8 @@ use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service("claroline.database.generic_repository")
+ *
+ * Helper class providing transversal repository methods.
  */
 class GenericRepository
 {
@@ -22,19 +24,26 @@ class GenericRepository
         $this->em = $em;
     }
 
+    /**
+     * Finds a set of entities by their ids.
+     *
+     * @param string    $entityClass
+     * @param array     $ids
+     *
+     * @return array[object]
+     *
+     * @throws MissingEntityException if any of the requested entities cannot be found
+     */
     public function findByIds($entityClass, array $ids)
     {
         $idString = implode(', ', $ids);
-        $dql = "
-            SELECT entity FROM {$entityClass} entity
-            WHERE entity.id IN ({$idString})
-        ";
+        $dql = "SELECT entity FROM {$entityClass} entity WHERE entity.id IN ({$idString})";
         $query = $this->em->createQuery($dql);
         $entities = $query->getResult();
 
         if (($entityCount = count($entities)) !== ($idCount = count($ids))) {
             throw new MissingEntityException(
-                "{$entityCount} on {$idCount} ids don't match any existing entity"
+                "{$entityCount} out of {$idCount} ids don't match any existing entity"
             );
         }
 
