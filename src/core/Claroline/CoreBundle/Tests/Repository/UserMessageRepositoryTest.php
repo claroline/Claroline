@@ -2,24 +2,17 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Message;
-use Claroline\CoreBundle\Entity\UserMessage;
+use Claroline\CoreBundle\Library\Testing\AltRepositoryTestCase;
 
-class UserMessageRepositoryTest extends RepositoryTestCase
+class UserMessageRepositoryTest extends AltRepositoryTestCase
 {
-    private static $writer;
     private static $repo;
-    private static $users;
-    private static $messages;
-    private static $userMessages;
 
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
-        self::$writer = self::$client->getContainer()->get('claroline.database.writer');
-        self::$repo = self::$em->getRepository('ClarolineCoreBundle:UserMessage');
+
+        self::$repo = self::getRepository('ClarolineCoreBundle:UserMessage');
 
         self::createUser('sender');
         self::createUser('receiver_1');
@@ -41,7 +34,7 @@ class UserMessageRepositoryTest extends RepositoryTestCase
             'message_2 content',
             self::$messages['message_1']
         );
-        sleep(1);
+        sleep(1); // dates involved
         self::createMessage(
             'message_3',
             self::$users['receiver_2'],
@@ -53,6 +46,10 @@ class UserMessageRepositoryTest extends RepositoryTestCase
         );
     }
 
+    /**
+     * @group message
+     * @group database
+     */
     public function testFindSent()
     {
         $userMessages = self::$repo->findSent(self::$users['sender']);
@@ -61,6 +58,10 @@ class UserMessageRepositoryTest extends RepositoryTestCase
         $this->assertEquals(self::$userMessages['message_1/senderUsername'], $userMessages[1]);
     }
 
+    /**
+     * @group message
+     * @group database
+     */
     public function testFindReceivedr()
     {
         $userMessages = self::$repo->findReceived(self::$users['receiver_1']);
@@ -70,6 +71,10 @@ class UserMessageRepositoryTest extends RepositoryTestCase
         $this->assertEquals(self::$userMessages['message_1/receiver_1Username'], $userMessages[2]);
     }
 
+    /**
+     * @group message
+     * @group database
+     */
     public function testFindRemoved()
     {
         $userMessages = self::$repo->findRemoved(self::$users['receiver_2']);
@@ -77,6 +82,10 @@ class UserMessageRepositoryTest extends RepositoryTestCase
         $this->assertEquals(self::$userMessages['message_3/receiver_2Username'], $userMessages[0]);
     }
 
+    /**
+     * @group message
+     * @group database
+     */
     public function testFindReceivedByObject()
     {
         $userMessages = self::$repo->findReceivedByObjectOrSender(
@@ -87,6 +96,10 @@ class UserMessageRepositoryTest extends RepositoryTestCase
         $this->assertEquals(self::$userMessages['message_2/receiver_2Username'], $userMessages[0]);
     }
 
+    /**
+     * @group message
+     * @group database
+     */
     public function testFindReceivedBySender()
     {
         $userMessages = self::$repo->findReceivedByObjectOrSender(
@@ -98,6 +111,10 @@ class UserMessageRepositoryTest extends RepositoryTestCase
         $this->assertEquals(self::$userMessages['message_1/receiver_1Username'], $userMessages[1]);
     }
 
+    /**
+     * @group message
+     * @group database
+     */
     public function testFindSentByObject()
     {
         $userMessages = self::$repo->findSentByObject(self::$users['sender'], 'ssage_1 oB');
@@ -105,6 +122,10 @@ class UserMessageRepositoryTest extends RepositoryTestCase
         $this->assertEquals(self::$userMessages['message_1/senderUsername'], $userMessages[0]);
     }
 
+    /**
+     * @group message
+     * @group database
+     */
     public function testFindRemovedByObject()
     {
         $userMessages = self::$repo->findRemovedByObjectOrSender(
@@ -115,6 +136,10 @@ class UserMessageRepositoryTest extends RepositoryTestCase
         $this->assertEquals(self::$userMessages['message_3/receiver_2Username'], $userMessages[0]);
     }
 
+    /**
+     * @group message
+     * @group database
+     */
     public function testFindRemovedBySender()
     {
         $userMessages = self::$repo->findRemovedByObjectOrSender(
@@ -125,6 +150,10 @@ class UserMessageRepositoryTest extends RepositoryTestCase
         $this->assertEquals(self::$userMessages['message_3/receiver_2Username'], $userMessages[0]);
     }
 
+    /**
+     * @group message
+     * @group database
+     */
     public function testFindByMessages()
     {
         $userMessages = self::$repo->findByMessages(
@@ -134,56 +163,5 @@ class UserMessageRepositoryTest extends RepositoryTestCase
         $this->assertEquals(2, count($userMessages));
         $this->assertEquals(self::$userMessages['message_2/receiver_1Username'], $userMessages[0]);
         $this->assertEquals(self::$userMessages['message_1/receiver_1Username'], $userMessages[1]);
-    }
-
-    private static function createUser($name)
-    {
-        $user = new User();
-        $user->setFirstName($name . 'FirstName');
-        $user->setLastName($name . 'LastName');
-        $user->setUsername($name . 'Username');
-        $user->setPlainPassword($name . 'Password');
-        self::$writer->create($user);
-        self::$users[$name] = $user;
-    }
-
-    private static function createMessage($alias, User $sender, array $receivers, $object, $content, Message $parent = null, $removed = false)
-    {
-        $message = new Message();
-        $message->setSender($sender);
-        $message->setObject($object);
-        $message->setContent($content);
-        $message->setTo('some receiver string');
-        $message->setReceiverString('some receiver string');
-
-        if ($parent) {
-            $message->setParent($parent);
-        }
-
-        self::$writer->suspendFlush();
-        self::$writer->create($message);
-        self::$messages[$alias] = $message;
-
-        $userMessage = new UserMessage();
-        $userMessage->setIsSent(true);
-        $userMessage->setUser($sender);
-        $userMessage->setMessage($message);
-
-        if ($removed) {
-            $userMessage->markAsRemoved($removed);
-        }
-
-        self::$writer->create($userMessage);
-        self::$userMessages[$alias . '/' . $sender->getUsername()] = $userMessage;
-
-        foreach ($receivers as $receiver) {
-            $userMessage = new UserMessage();
-            $userMessage->setUser($receiver);
-            $userMessage->setMessage($message);
-            self::$writer->create($userMessage);
-            self::$userMessages[$alias . '/' . $receiver->getUsername()] = $userMessage;
-        }
-
-        self::$writer->forceFlush();
     }
 }
