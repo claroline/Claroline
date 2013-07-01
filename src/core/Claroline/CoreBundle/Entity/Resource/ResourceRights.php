@@ -94,6 +94,11 @@ class ResourceRights
     public function __construct()
     {
         $this->resourceTypes = new ArrayCollection();
+        $this->canCopy = false;
+        $this->canEdit = false;
+        $this->canOpen = false;
+        $this->canExport = false;
+        $this->canDelete = false;
     }
 
     public function getId()

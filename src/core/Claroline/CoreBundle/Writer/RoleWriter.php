@@ -26,31 +26,6 @@ class RoleWriter
         $this->em = $em;
     }
 
-//    public function create($name, $translation, $roleType, AbstractWorkspace $workspace = null, $parent = null)
-//    {
-//        $role = new Role();
-//        $role->setName($name);
-//        $role->setParent($parent);
-//        $role->setType($roleType);
-//        $role->setTranslationKey($translation);
-//        $role->setWorkspace($workspace);
-//
-//        $this->em->persist($role);
-//        $this->em->flush();
-//
-//        return $role;
-//    }
-
-//    public function bind(Role $role, AbstractRoleSubject $users)
-//    {
-//        $users->addRole($role);
-//        $this->em->persist($users);
-//        $this->em->flush();
-//    }
-
-
-    /////////// ?????????????
-
     public function createRole($name, $translationKey, $isReadOnly, $type, AbstractWorkspace $workspace = null)
     {
         $role = new Role();
