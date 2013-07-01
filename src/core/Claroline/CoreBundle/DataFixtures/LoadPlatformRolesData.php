@@ -2,6 +2,8 @@
 
 namespace Claroline\CoreBundle\DataFixtures;
 
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -11,8 +13,11 @@ use Claroline\CoreBundle\Library\Security\PlatformRoles;
 /**
  * Platform roles data fixture.
  */
-class LoadPlatformRolesData extends AbstractFixture implements OrderedFixtureInterface
+class LoadPlatformRolesData extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
+    /** @var ContainerInterface $container */
+    private $container;
+
     /**
      * {@inheritDoc}
      */

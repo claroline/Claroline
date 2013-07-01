@@ -42,6 +42,8 @@ class RoleManager
         $role->setWorkspace($workspace);
 
         $this->writer->create($role);
+
+        return $role;
     }
 
     public function createBaseRole($name, $translationKey, $isReadOnly = true)
@@ -53,6 +55,8 @@ class RoleManager
         $role->setType(Role::BASE_ROLE);
 
         $this->writer->create($role);
+
+        return $role;
     }
 
     public function createCustomRole($name, $translationKey, $isReadOnly = false)
@@ -64,6 +68,8 @@ class RoleManager
         $role->setType(Role::CUSTOM_ROLE);
 
         $this->writer->create($role);
+
+        return $role;
     }
 
     public function setRoleToRoleSubject(AbstractRoleSubject $ars, $roleName)
