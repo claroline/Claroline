@@ -26,7 +26,8 @@ class BadgeType extends AbstractType
                 ))
             ->add('expired_at', 'datepicker', array(
                   'read_only' => true,
-                  'component' => true
+                  'component' => true,
+                  'autoclose' => true
             ))
         ;
     }

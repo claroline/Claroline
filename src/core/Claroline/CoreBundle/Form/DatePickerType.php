@@ -3,6 +3,8 @@
 namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -12,6 +14,14 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class DatePickerType extends AbstractType
 {
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        $view->vars['component'] = $options['component'];
+        $view->vars['options']   = array(
+            'autoclose' => $options['autoclose']
+        );
+    }
+
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
@@ -19,6 +29,7 @@ class DatePickerType extends AbstractType
             'input'              => 'datetime',
             'widget'             => 'single_text',
             'component'          => false,
+            'autoclose'          => false,
             'format'             => 'dd-MM-yyyy'
         ));
     }
