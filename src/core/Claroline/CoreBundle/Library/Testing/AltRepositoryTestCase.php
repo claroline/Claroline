@@ -4,25 +4,23 @@ namespace Claroline\CoreBundle\Library\Testing;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Entity\Message;
 use Claroline\CoreBundle\Entity\UserMessage;
 
 abstract class AltRepositoryTestCase extends WebTestCase
 {
     protected static $writer;
-
-    protected static $users;
-    protected static $messages;
-    protected static $userMessages;
-
-    private static $em;
     private static $client;
+    private static $em;
+    private static $references;
 
     public static function setUpBeforeClass()
     {
         self::$client = static::createClient();
         self::$em = self::$client->getContainer()->get('doctrine.orm.entity_manager');
         self::$writer = self::$client->getContainer()->get('claroline.database.writer');
+        self::$references = array();
         self::$client->beginTransaction();
     }
 
@@ -36,6 +34,15 @@ abstract class AltRepositoryTestCase extends WebTestCase
         return self::$em->getRepository($entityClass);
     }
 
+    protected static function get($reference)
+    {
+        if (isset(self::$references[$reference])) {
+            return self::$references[$reference];
+        }
+
+        throw new \Exception("Unknown fixture reference '{$reference}'");
+    }
+
     protected static function createUser($name)
     {
         $user = new User();
@@ -44,7 +51,16 @@ abstract class AltRepositoryTestCase extends WebTestCase
         $user->setUsername($name . 'Username');
         $user->setPlainPassword($name . 'Password');
         self::$writer->create($user);
-        self::$users[$name] = $user;
+        self::set($name, $user);
+    }
+
+    protected static function createWorkspace($name)
+    {
+        $workspace = new SimpleWorkspace();
+        $workspace->setName($name);
+        $workspace->setCode($name . 'Code');
+        self::$writer->create($workspace);
+        self::set($name, $workspace);
     }
 
     protected static function createMessage(
@@ -70,7 +86,7 @@ abstract class AltRepositoryTestCase extends WebTestCase
 
         self::$writer->suspendFlush();
         self::$writer->create($message);
-        self::$messages[$alias] = $message;
+        self::set($alias, $message);
 
         $userMessage = new UserMessage();
         $userMessage->setIsSent(true);
@@ -82,16 +98,25 @@ abstract class AltRepositoryTestCase extends WebTestCase
         }
 
         self::$writer->create($userMessage);
-        self::$userMessages[$alias . '/' . $sender->getUsername()] = $userMessage;
+        self::set($alias . '/' . $sender->getUsername(), $userMessage);
 
         foreach ($receivers as $receiver) {
             $userMessage = new UserMessage();
             $userMessage->setUser($receiver);
             $userMessage->setMessage($message);
             self::$writer->create($userMessage);
-            self::$userMessages[$alias . '/' . $receiver->getUsername()] = $userMessage;
+            self::set($alias . '/' . $receiver->getUsername(), $userMessage);
         }
 
         self::$writer->forceFlush();
+    }
+
+    private static function set($reference, $entity)
+    {
+        if (isset(self::$references[$reference])) {
+            throw new \Exception("Fixture reference '{$reference}' is already set");
+        }
+
+        self::$references[$reference] = $entity;
     }
 }
