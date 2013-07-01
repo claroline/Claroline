@@ -59,12 +59,10 @@ class RegistrationController extends Controller
         $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {
-            $em = $this->get('doctrine.orm.entity_manager');
-            $userRole = $em->getRepository('ClarolineCoreBundle:Role')
-                ->findOneByName(PlatformRoles::USER);
-            $user->addRole($userRole);
-            $user = $this->container->get('claroline.user.creator')->create($user);
-
+            $this->get('claroline.manager.user_manager')->createUserWithRole(
+                $user,
+                PlatformRoles::USER
+            );
             $msg = $this->get('translator')->trans('account_created', array(), 'platform');
             $this->getRequest()->getSession()->getFlashBag()->add('success', $msg);
         }

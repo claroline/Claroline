@@ -52,7 +52,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface
      */
     public function load(ObjectManager $manager)
     {
-        $userCreator = $this->container->get('claroline.user.creator');
+        $userCreator = $this->container->get('claroline.manager.user_manager');
         $resourceRepo = $manager->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
 
         foreach ($this->users as $names => $role) {
@@ -70,14 +70,14 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface
             $user->addRole($this->getReference("role/{$role}"));
 
             if ($this->withWorkspace) {
-                $userCreator->create($user, false);
+                $userCreator->createUser($user);
                 $this->addReference("workspace/{$names}", $user->getPersonalWorkspace());
                 $this->addReference(
                     "directory/{$names}",
                 $resourceRepo->findWorkspaceRoot($user->getPersonalWorkspace())
             );
             } else {
-                $manager->persist($user);
+                $userCreator->insertUser($user);
             }
 
             $this->addReference("user/{$names}", $user);

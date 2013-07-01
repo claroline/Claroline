@@ -149,6 +149,7 @@ class Creator
 
         foreach ($requiredTools as $requiredTool) {
             $this->toolManager->createOrderedTool($requiredTool, $i, $requiredTool->getName(), $user);
+            $i++;
         }
 
     }
