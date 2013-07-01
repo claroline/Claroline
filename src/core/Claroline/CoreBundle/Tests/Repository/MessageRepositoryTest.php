@@ -2,24 +2,18 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Message;
-use Claroline\CoreBundle\Entity\UserMessage;
+use Claroline\CoreBundle\Library\Testing\AltRepositoryTestCase;
 
-class MessageRepositoryTest extends RepositoryTestCase
+class MessageRepositoryTest extends AltRepositoryTestCase
 {
-    private static $writer;
     private static $repo;
-    private static $users;
-    private static $messages;
-    private static $userMessages;
 
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
-        self::$writer = self::$client->getContainer()->get('claroline.database.writer');
-        self::$repo = self::$em->getRepository('ClarolineCoreBundle:Message');
+
+        self::$repo = self::getRepository('ClarolineCoreBundle:Message');
+
         self::createUser('sender');
         self::createUser('receiver');
 
@@ -40,11 +34,19 @@ class MessageRepositoryTest extends RepositoryTestCase
         );
     }
 
+    /**
+     * @group message
+     * @group database
+     */
     public function testFindAll()
     {
         $this->assertEquals(2, count(self::$repo->findAll()));
     }
 
+    /**
+     * @group message
+     * @group database
+     */
     public function testFindAncestors()
     {
         $messages = self::$repo->findAncestors(self::$messages['message_2']);
@@ -53,55 +55,12 @@ class MessageRepositoryTest extends RepositoryTestCase
         $this->assertEquals(self::$messages['message_2'], $messages[1]);
     }
 
+    /**
+     * @group message
+     * @group database
+     */
     public function testCountUnread()
     {
         $this->assertEquals(2, self::$repo->countUnread(self::$users['receiver']));
-    }
-
-
-    private static function createUser($name)
-    {
-        $user = new User();
-        $user->setFirstName($name . 'FirstName');
-        $user->setLastName($name . 'LastName');
-        $user->setUsername($name . 'Username');
-        $user->setPlainPassword($name . 'Password');
-        self::$writer->create($user);
-        self::$users[$name] = $user;
-    }
-
-    private static function createMessage($alias, User $sender, array $receivers, $object, $content, Message $parent = null)
-    {
-        $message = new Message();
-        $message->setSender($sender);
-        $message->setObject($object);
-        $message->setContent($content);
-        $message->setTo('some receiver string');
-        $message->setReceiverString('some receiver string');
-
-        if ($parent) {
-            $message->setParent($parent);
-        }
-
-        self::$writer->suspendFlush();
-        self::$writer->create($message);
-        self::$messages[$alias] = $message;
-
-        $userMessage = new UserMessage();
-        $userMessage->setIsSent(true);
-        $userMessage->setUser($sender);
-        $userMessage->setMessage($message);
-        self::$writer->create($userMessage);
-        self::$userMessages[$alias . '/' . $sender->getUsername()] = $userMessage;
-
-        foreach ($receivers as $receiver) {
-            $userMessage = new UserMessage();
-            $userMessage->setUser($receiver);
-            $userMessage->setMessage($message);
-            self::$writer->create($userMessage);
-            self::$userMessages[$alias . '/' . $receiver->getUsername()] = $userMessage;
-        }
-
-        self::$writer->forceFlush();
     }
 }
