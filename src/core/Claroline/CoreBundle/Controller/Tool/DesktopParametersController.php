@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Library\Event\ConfigureDesktopToolEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -23,23 +24,26 @@ class DesktopParametersController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "request"        = @DI\Inject("request"),
-     *     "urlGenerator"   = @DI\Inject("router"),
-     *     "formFactory"    = @DI\Inject("form.factory"),
-     *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager")
+     *     "request"      = @DI\Inject("request"),
+     *     "urlGenerator" = @DI\Inject("router"),
+     *     "formFactory"  = @DI\Inject("form.factory"),
+     *     "toolManager"  = @DI\Inject("claroline.manager.tool_manager"),
+     *     "ed"           = @DI\Inject("event_dispatcher")
      * })
      */
     public function __construct(
         Request $request,
         UrlGeneratorInterface $router,
         FormFactoryInterface $formFactory,
-        ToolManager $toolManager
+        ToolManager $toolManager,
+        EventDispatcher $ed
     )
     {
         $this->request = $request;
         $this->router = $router;
         $this->formFactory = $formFactory;
         $this->toolManager = $toolManager;
+        $this->ed = $ed;
     }
 
     /**
@@ -80,7 +84,7 @@ class DesktopParametersController extends Controller
      */
     public function desktopRemoveToolAction(Tool $tool, User $user)
     {
-        $this->get('claroline.manager.tool_manager')->removeDesktopTool($tool, $user);
+        $this->toolManager->removeDesktopTool($tool, $user);
 
         return new Response('success', 204);
     }
@@ -104,7 +108,7 @@ class DesktopParametersController extends Controller
      */
     public function desktopAddToolAction(Tool $tool, $position, User $user)
     {
-        $this->get('claroline.manager.tool_manager')->addDesktopTool($tool, $user, $position);
+        $this->toolManager->addDesktopTool($tool, $user, $position, $tool->getName());
 
         return new Response('success', 204);
     }
@@ -116,48 +120,21 @@ class DesktopParametersController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\Method("POST")
+     * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
      *
      * This method switch the position of a tool with an other one.
      *
      * @param Tool $tool
      * @param integer $position
+     * @param User $user
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function desktopMoveToolAction(Tool $tool, $position)
+    public function desktopMoveToolAction(Tool $tool, $position, User $user)
     {
-         $em = $this->get('doctrine.orm.entity_manager');
-         $user = $this->get('security.context')->getToken()->getUser();
-         $movingTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
-            ->findOneBy(array('user' => $user, 'tool' => $tool));
-         $switchTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
-            ->findOneBy(array('user' => $user, 'order' => $position));
+        $this->toolManager->move($tool, $position, $user, null);
 
-        //if a tool is already at this position, he must go "far away"
-        if ($switchTool !== null) {
-            //go far away ! Integrety constraints.
-            $switchTool->setOrder('99');
-            $em->persist($switchTool);
-        }
-
-        $em->flush();
-
-        //the tool must exists
-        if ($movingTool !== null) {
-            $newPosition = $movingTool->getOrder();
-            $movingTool->setOrder(intval($position));
-            $em->persist($movingTool);
-        }
-
-         //put the original tool back.
-        if ($switchTool !== null) {
-            $switchTool->setOrder($newPosition);
-            $em->persist($switchTool);
-        }
-
-        $em->flush();
-
-        return new Response('<body>success</body>');
+        return new Response('success', 204);
     }
 
     /**
@@ -175,7 +152,7 @@ class DesktopParametersController extends Controller
     {
         $event = new ConfigureDesktopToolEvent($tool);
         $eventName = strtolower('configure_desktop_tool_' . $tool->getName());
-        $this->get('event_dispatcher')->dispatch($eventName, $event);
+        $this->ed->dispatch($eventName, $event);
 
         if (is_null($event->getContent())) {
             throw new \Exception(
