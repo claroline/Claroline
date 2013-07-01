@@ -11,14 +11,16 @@
 
 {% block section_content %}
 
-    <ul class="breadcrumb">
-        <li>
-            <a href="#">
-               {{ 'agenda'|trans({}, 'platform') }}
-            </a>
-        </li>
-    </ul>
- 
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-calendar',
+                'name': 'agenda'|trans({}, 'platform'),
+                'href': '#'
+            }
+        ])
+    }}
+
     <div id='calendar' class="span9"></div>
     <div  id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
@@ -44,7 +46,7 @@
              <button class="btn btn-info" id="updateBtn" > {{ 'update'|trans({}, 'calendar') }}</button>
         </div>
     </div>
-   
+
     <div class="span3">
         <h4> <u>{{'tasks'|trans({}, 'calendar') }} </u></h4>
         {% for e in listEvents  %}
