@@ -3,8 +3,8 @@
 namespace Claroline\CoreBundle\Controller\Tool;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Claroline\CoreBundle\Entity\Tool\DesktopTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Event\ConfigureDesktopToolEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,32 +49,15 @@ class DesktopParametersController extends Controller
      * )
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\desktop\parameters:toolProperties.html.twig")
+     * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
      *
      * Displays the tools configuration page.
      *
      * @return Response
      */
-    public function desktopConfigureToolAction()
+    public function desktopConfigureToolAction(User $user)
     {
-        $user = $this->get('security.context')->getToken()->getUser();
-        $orderedToolList = array();
-        $desktopTools = $em->getRepository('ClarolineCoreBundle:Tool\OrderedTool')->findBy(array('user' => $user));
-
-        foreach ($desktopTools as $desktopTool) {
-            $desktopTool->getTool()->setVisible(true);
-            $orderedToolList[$desktopTool->getOrder()] = $desktopTool->getTool();
-        }
-
-        $undisplayedTools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->findDesktopUndisplayedToolsByUser($user);
-
-        foreach ($undisplayedTools as $tool) {
-            $tool->setVisible(false);
-        }
-
-        $tools = $this->get('claroline.utilities.misc')->arrayFill($orderedToolList, $undisplayedTools);
-
-        return array('tools' => $tools);
+        return array('tools' => $this->toolManager->getDesktopToolsConfigurationArray($user));
     }
 
     /**
@@ -97,7 +80,7 @@ class DesktopParametersController extends Controller
      */
     public function desktopRemoveToolAction(Tool $tool, User $user)
     {
-        $this->toolManager->removeDesktopTool($tool, $user);
+        $this->get('claroline.manager.tool_manager')->removeDesktopTool($tool, $user);
 
         return new Response('success', 204);
     }
@@ -109,6 +92,7 @@ class DesktopParametersController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\Method("POST")
+     * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
      *
      * Add a tool to the desktop.
      *
@@ -118,21 +102,9 @@ class DesktopParametersController extends Controller
      *
      * @throws \Exception
      */
-    public function desktopAddToolAction(Tool $tool, $position)
+    public function desktopAddToolAction(Tool $tool, $position, User $user)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $user = $this->get('security.context')->getToken()->getUser();
-        $switchTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
-            ->findOneBy(array('user' => $user, 'order' => $position));
-        if ($switchTool != null) {
-            throw new \RuntimeException('A tool already exists at this position');
-        }
-        $desktopTool = new DesktopTool();
-        $desktopTool->setUser($user);
-        $desktopTool->setTool($tool);
-        $desktopTool->setOrder($position);
-        $em->persist($desktopTool);
-        $em->flush();
+        $this->get('claroline.manager.tool_manager')->addDesktopTool($tool, $user, $position);
 
         return new Response('success', 204);
     }
