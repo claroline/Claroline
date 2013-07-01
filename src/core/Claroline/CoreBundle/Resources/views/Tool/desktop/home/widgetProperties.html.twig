@@ -6,10 +6,11 @@
 {% endblock %}
 
 {% block section_content %}
-    
+
     {{
         macros.breadcrumbs([
             {
+                'icon': 'icon-cog',
                 'name': 'parameters'|trans({}, 'platform'),
                 'href': path('claro_desktop_open_tool', {'toolName': 'parameters'})
             },
@@ -19,7 +20,7 @@
             },
             {
                 'name': 'widgets'|trans({}, 'platform'),
-                'href': '#'
+                'href': ''
             }
 
         ])
