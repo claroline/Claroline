@@ -103,12 +103,12 @@ class RoleManager
         $entityRoles = array();
 
         foreach ($roles as $name => $translation) {
-            $role = new Role();
-            $role->setName("{$name}_{$workspace->getId()}");
-            $role->setTranslationKey($translation);
-            $role->setReadOnly(false);
-            $role->setType(Role::WS_ROLE);
-            $role->setWorkspace($workspace);
+            $role = $this->createWorkspaceRole(
+                "{$name}_{$workspace->getId()}",
+                $translation,
+                $workspace,
+                false
+            );
             $this->writer->create($role);
             $entityRoles[$name] = $role;
         }
