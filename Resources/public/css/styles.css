@@ -1,0 +1,84 @@
+.section-content > .container-reference {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.toolbar {
+    width: 100%;
+    height: 40px;
+    background-color: #EEE;
+    padding-left: 20px;
+    padding-top: 5px;
+    box-shadow: rgba(140, 140, 140, 0.498039) 0px -3px 4px inset;
+}
+
+.reference_list {
+    padding:30px;
+}
+    .reference_list .reference_box { background-color: transparent;margin-bottom: 10px; width:800px;}
+    .reference_list .reference_box:hover { background-color: #efefef;}
+
+.reference_new {
+    padding:30px;
+}
+    .reference_new .reference_box { background-color: #F5F6FA;margin-bottom: 10px; width:800px;}
+
+.reference-list-item {
+    margin: 10px 0px;
+}
+    .reference-list-item h3 {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+.more_info { cursor: pointer; position: relative;}
+    .more_info > *:last-child{ 
+        padding: 4px;
+        z-index: 99999;
+        opacity: 0;
+        position: absolute; 
+        left: 100px; 
+        top: -13px;
+        display: none; 
+    }
+        .more_info > *:last-child > table { 
+            margin: 0px;
+        }
+            .more_info > *:last-child > table > tbody > tr:first-child > td { 
+                border-top: 0px;
+            }
+    .more_info:hover > *:last-child{ 
+        opacity: 1;
+        display: block;
+    }
+
+ul.customFields {
+    list-style-type: none;
+    margin-left: 0px;
+}
+li.custom_field {}
+li.custom_field div div {
+    float: left;
+    padding-right: 10px
+}
+
+.clear {
+    clear: both;
+}
+
+.portrate {
+    text-align: center;
+}
+
+.new-reference {
+    margin: 20px 0px;
+}
+
+.reference-footer {
+    margin: 0px;
+    background-color: transparent;
+}
+
+.breadcrumb > li> span.divider {
+    padding: 0px;
+}

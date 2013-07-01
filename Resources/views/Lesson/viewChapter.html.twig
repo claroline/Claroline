@@ -1,0 +1,35 @@
+{% extends 'ICAPLessonBundle:Lesson:layout.html.twig' %}
+
+{% block lesson_content %}
+    <h1 class="lesson-title">{{ lesson.name }}</h1>
+    <br/>
+    {{ macros.flashBox() }}
+    <div class="row-fluid">
+        <div class="span3">
+            <ul class="nav nav-list">
+                {% for currentChapter in chapters %}
+                    {% if currentChapter.id == chapter.id %}
+                        <li class="active"><a href="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': currentChapter.id }) }}"> {{ currentChapter.title }}</a></li>
+                    {% else %}
+                        <li><a href="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': currentChapter.id }) }}"> {{ currentChapter.title }}</a></li>
+                    {% endif %}
+                {% else %}
+                    <li class="active"><a href="{{ path('icap_lesson', { 'resourceId': lesson.id }) }}">{{ 'There is no chapter'|trans({}, 'icap_lesson') }}</a></li>
+                {% endfor %}
+            </ul>
+            <br/>
+            <div class="btn-group pull-right">
+                <a href="{{ path('icap_lesson_new_chapter', { 'resourceId': lesson.id })}}" class="btn"><i class="icon-plus"></i></a>
+                {% if chapter is defined and chapter != null %}
+                    <a href="{{ path('icap_lesson_edit_chapter', { 'resourceId': lesson.id, 'chapterId': chapter.id })}}" class="btn"><i class="icon-edit"></i></a>
+                    <a href="{{ path('icap_lesson_confirm_delete_chapter', { 'resourceId': lesson.id, 'chapterId': chapter.id })}}" class="btn"><i class="icon-trash"></i></a>
+                {% endif %}
+            </div>
+        </div>
+        {% if chapter is defined and chapter != null %}
+            <div class="span9">{{ chapter.text }}</div>
+        {% else %}
+            <div class="span9">{{ 'Welcome to the module course creation'|trans({}, 'icap_lesson') }}</div>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,12 @@
+plugin:
+    has_options: false
+
+    resources:
+      - class: ICAP\LessonBundle\Entity\Lesson
+        name: icap_lesson
+        is_browsable: true
+        is_exportable: false
+        #icon: res_text.png
+        #actions:
+          #- name: open
+            #is_action_in_new_page: true

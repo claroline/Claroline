@@ -1,0 +1,49 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block section_content %}
+    <header>
+        <ul class="breadcrumb">
+            {% for item in pathArray %}
+                <li>
+                    {% if not loop.last %}
+                        <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'}) }}#resources/{{ item.id }}">
+                            {% if loop.first %}
+                                <i class="icon-folder-open-alt">{{ 'Resources'|trans({}, 'icap_lesson') }}</i>
+                            {% else %}
+                                {{ item.name }}
+                            {% endif %}
+                        </a>
+                        <span class="divider">/</span>
+                    {% endif %}
+                </li>
+            {% endfor %}
+
+            {% block lesson_breadcrumb %}
+                <li>
+                    <a href="{{ path('icap_lesson', { 'resourceId': lesson.id }) }}">
+                        <i class="icon-file"> &nbsp {{ lesson.name }}</i>
+                    </a>
+                    {% if chapter is defined and chapter != null %}
+                        <span class="divider">/</span>
+                        <a href="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': chapter.id}) }}">
+                            <i class="icon-file-text">  &nbsp {{ chapter.title }}</i>
+                        </a>
+                    {% endif %}
+                </li>
+            {% endblock %}
+        </ul>
+    </header>
+
+    {% block lesson_content %}
+    {% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

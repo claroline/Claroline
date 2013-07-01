@@ -1,0 +1,15 @@
+services:
+    icap.listener.lesson_listener:
+        # Class that implements the listener
+        class: ICAP\LessonBundle\Listener\LessonListener
+        # The Symfony Container will be given to the class
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: create_form_icap_lesson, method: onCreateForm }
+            - { name: kernel.event_listener, event: create_icap_lesson, method: onCreate }
+        #  - { name: kernel.event_listener, event: delete_icap_lesson, method: onDelete }
+        #   - { name: kernel.event_listener, event: download_claroline_example, method: onDownload }
+        #   - { name: kernel.event_listener, event: copy_claroline_example, method: onCopy }
+            - { name: kernel.event_listener, event: open_icap_lesson, method: onOpen }
+        #   - { name: kernel.event_listener, event: plugin_options_clarolineexample, method: onAdministrate }
