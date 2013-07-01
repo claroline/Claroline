@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -12,8 +11,8 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Message;
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Form\MessageType;
 use Claroline\CoreBundle\Manager\MessageManager;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
 
 class MessageController
 {
@@ -26,14 +25,14 @@ class MessageController
      * @DI\InjectParams({
      *     "request"        = @DI\Inject("request"),
      *     "urlGenerator"   = @DI\Inject("router"),
-     *     "formFactory"    = @DI\Inject("form.factory"),
+     *     "formFactory"    = @DI\Inject("claroline.form.factory"),
      *     "manager"        = @DI\Inject("claroline.manager.message_manager")
      * })
      */
     public function __construct(
         Request $request,
         UrlGeneratorInterface $router,
-        FormFactoryInterface $formFactory,
+        FormFactory $formFactory,
         MessageManager $manager
     )
     {
@@ -45,15 +44,35 @@ class MessageController
 
     /**
      * @EXT\Route(
+     *     "/form",
+     *     name="claro_message_form"
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Message:messageForm.html.twig")
+     * @EXT\ParamConverter("receivers", class="ClarolineCoreBundle:User", options={"multipleIds" = true})
+     *
+     * Displays the message form with the "to" field filled with users.
+     *
+     * @param array[User] $receivers
+     *
+     * @return Response
+     */
+    public function formAction(array $receivers)
+    {
+        $usersString = $this->messageManager->generateStringTo($receivers);
+        $form = $this->formFactory->create(FormFactory::TYPE_MESSAGE, array($usersString));
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
      *     "/form/group/{group}",
      *     name="claro_message_form_for_group"
      * )
      *
-     * Displays the message form. It'll be sent to every user of a group.
-     * In order to do this, this methods redirects to the form creation controller
-     * with a query string including every users of the group.
+     * Displays the message form with the "to" field filled with users of a group.
      *
-     * @param integer $groupId
+     * @param Group $group
      *
      * @return Response
      */
@@ -63,29 +82,6 @@ class MessageController
             . $this->messageManager->generateGroupQueryString($group);
 
         return new RedirectResponse($url);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/form",
-     *     name="claro_message_form"
-     * )
-     * @EXT\Template("ClarolineCoreBundle:Message:messageForm.html.twig")
-     * @EXT\ParamConverter("receivers", class="ClarolineCoreBundle:User", options={"multipleIds" = true})
-     *
-     * Display the message form.
-     * It takes a array of user ids (query string: ids[]=1&ids[]=2).
-     * The "to" field of the form must be completed in the following way: username1; username2; username3
-     * (the separator is ; and it requires the username).
-     *
-     * @return Response
-     */
-    public function formAction(array $receivers)
-    {
-        $usersString = $this->messageManager->generateStringTo($receivers);
-        $form = $this->formFactory->create(new MessageType($usersString));
-
-        return array('form' => $form->createView());
     }
 
     /**
@@ -109,12 +105,11 @@ class MessageController
      */
     public function sendAction(User $sender, Message $parent = null)
     {
-        $msg =  new Message();
-        $form = $this->formFactory->create(new MessageType(), $msg);
+        $form = $this->formFactory->create(FormFactory::TYPE_MESSAGE);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $this->messageManager->send($sender, $msg, $parent);
+            $this->messageManager->send($sender, $form->getData(), $parent);
         }
 
         return array('form' => $form->createView());
@@ -138,7 +133,12 @@ class MessageController
      * @EXT\ParamConverter("receiver", options={"authenticatedUser" = true})
      * @EXT\Template()
      *
-     * Displays received message list.
+     * Displays the messages received by a user, optionally filtered by a search
+     * on the object or the sender username.
+     *
+     * @param User      $receiver
+     * @param integer   $page
+     * @param string    $search
      *
      * @return Response
      */
@@ -167,7 +167,12 @@ class MessageController
      * @EXT\ParamConverter("sender", options={"authenticatedUser" = true})
      * @EXT\Template()
      *
-     * Displays the layout of the sent message list.
+     * Displays the messages sent by a user, optionally filtered by a search
+     * on the object.
+     *
+     * @param User      $sender
+     * @param integer   $page
+     * @param string    $search
      *
      * @return Response
      */
@@ -197,13 +202,18 @@ class MessageController
      * @EXT\Template()
      *
      *
-     * Displays the removed messages list.
+     * Displays the messages removed by a user, optionally filtered by a search
+     * on the object or the sender username.
+     *
+     * @param User      $user
+     * @param integer   $page
+     * @param string    $search
      *
      * @return Response
      */
     public function listRemovedAction(User $user, $page, $search)
     {
-        $pager = $this->messageManager->getSentMessages($user, $search, $page);
+        $pager = $this->messageManager->getRemovedMessages($user, $search, $page);
 
         return array('pager' => $pager, 'search' => $search);
     }
@@ -226,7 +236,11 @@ class MessageController
     {
         $this->messageManager->markAsRead($user, array($message));
         $ancestors = $this->messageManager->getConversation($message);
-        $form = $this->formFactory->create(new MessageType($message->getSenderUsername(), 'Re: ' . $message->getObject()));
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_MESSAGE,
+            array($message->getSenderUsername(), 'Re: ' . $message->getObject()),
+            $message
+        );
 
         return array(
             'ancestors' => $ancestors,
@@ -237,19 +251,21 @@ class MessageController
 
     /**
      * @EXT\Route(
-     *     "/delete/from",
-     *     name="claro_message_delete_from",
+     *     "/remove",
+     *     name="claro_message_soft_delete",
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\ParamConverter("messages", class="ClarolineCoreBundle:Message", options={"multipleIds" = true})
      *
-     * Deletes a message from the sent message list (soft delete).
-     * It takes an array of ids in the query string (ids[]=1&ids[]=2).
+     * Moves messages from the list of sent or received messages to the trash bin.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param User              $user
+     * @param array[Message]    $messages
+     *
+     * @return Response
      */
-    public function deleteFromUserAction(User $user, array $messages)
+    public function softDeleteAction(User $user, array $messages)
     {
         $this->messageManager->markAsRemoved($user, $messages);
 
@@ -258,41 +274,22 @@ class MessageController
 
     /**
      * @EXT\Route(
-     *     "/delete/to",
-     *     name="claro_message_delete_to",
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\ParamConverter("messages", class="ClarolineCoreBundle:Message", options={"multipleIds" = true})
-     *
-     * Deletes a message from the received message list (soft delete).
-     * It takes an array of ids in the query string (ids[]=1&ids[]=2).
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function deleteToUserAction(User $user, array $messages)
-    {
-        // SAME IMPLEMENTATION THAN THE PREVIOUS METHOD ???
-        $this->messageManager->markAsRemoved($user, $messages);
-
-        return new Response('Success', 204);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/delete/trash",
-     *     name="claro_message_delete_trash",
+     *     "/delete",
+     *     name="claro_message_delete",
      *     options={"expose"=true}
      * )
      * @EXT\Method("DELETE")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\ParamConverter("messages", class="ClarolineCoreBundle:Message", options={"multipleIds" = true})
      *
-     * Deletes a message from trash (permanent delete).
+     * Deletes permanently a set of messages received or sent by a user.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param User              $user
+     * @param array[Message]    $messages
+     *
+     * @return Response
      */
-    public function deleteTrashAction(User $user, array $messages)
+    public function deleteAction(User $user, array $messages)
     {
         $this->messageManager->remove($user, $messages);
 
@@ -308,10 +305,12 @@ class MessageController
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\ParamConverter("messages", class="ClarolineCoreBundle:Message", options={"multipleIds" = true})
      *
-     * Restore a message from the trash.
-     * It takes an array of ids in the query string (ids[]=1&ids[]=2).
+     * Restores messages previously moved to the trash bin.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param User              $user
+     * @param array[Message]    $messages
+     *
+     * @return Response
      */
     public function restoreFromTrashAction(User $user, array $messages)
     {
@@ -330,9 +329,8 @@ class MessageController
      *
      * Marks a message as read.
      *
-     * @param integer $userMessageId the userMessage id (when you send a message,
-     * a UserMessage is created for every user the message was sent. It contains
-     * a few attributes including the "asRead" one.
+     * @param User      $user
+     * @param Message   $message
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
