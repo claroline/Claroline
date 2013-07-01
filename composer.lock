@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/FrontEndBundle.git",
-                "reference": "53a1cd48089882ff437cdbe2c2d1392edd7ae938"
+                "reference": "a8eee6bfc2d8da83a4c50049967efc7f9fb86638"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/FrontEndBundle/zipball/53a1cd48089882ff437cdbe2c2d1392edd7ae938",
-                "reference": "53a1cd48089882ff437cdbe2c2d1392edd7ae938",
+                "url": "https://api.github.com/repos/claroline/FrontEndBundle/zipball/a8eee6bfc2d8da83a4c50049967efc7f9fb86638",
+                "reference": "a8eee6bfc2d8da83a4c50049967efc7f9fb86638",
                 "shasum": ""
             },
             "require": {
@@ -35,7 +35,7 @@
                 "source": "https://github.com/claroline/FrontEndBundle/tree/master",
                 "issues": "https://github.com/claroline/FrontEndBundle/issues"
             },
-            "time": "2013-06-26 17:13:02"
+            "time": "2013-07-01 11:37:17"
         },
         {
             "name": "doctrine/annotations",
@@ -894,7 +894,7 @@
                 "shasum": null
             },
             "type": "library",
-            "time": "2013-06-17 15:31:59"
+            "time": "2013-06-26 15:41:16"
         },
         {
             "name": "friendsofsymfony/jsrouting-bundle",
