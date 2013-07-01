@@ -16,4 +16,9 @@
 {% block javascripts %}
 {{ parent() }}
 {{ tinymce_init() }}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("[name='badge_form[expired_at]']").off('focus');
+    });
+</script>
 {% endblock %}

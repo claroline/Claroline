@@ -46,6 +46,8 @@
 
         $('.delete').confirmModal();
 
+        $("[name='badge_form[expired_at]']").off('focus');
+
         var currentImage  = $('#current_image');
         var badgeFormFile = $('#badge_form_file');
         $('#delete_image').click(function() {
