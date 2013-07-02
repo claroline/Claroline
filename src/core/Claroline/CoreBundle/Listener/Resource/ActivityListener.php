@@ -69,7 +69,7 @@ class ActivityListener implements ContainerAwareInterface
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $event->setResource($form->getData());
+            $event->setResources(array($form->getData()));
             $event->stopPropagation();
 
             return;

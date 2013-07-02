@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Database\Writer;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -112,5 +113,30 @@ class RoleManager
             $this->roleRepo->findByWorkspace($workspace),
             $this->roleRepo->findBy(array('name' => 'ROLE_ANONYMOUS'))
         );
+    }
+
+    public function getStringRolesFromCurrentUser()
+    {
+        return $this->getStringRolesFromCurrentUser($this->sc->getToken());
+    }
+
+    /**
+     * Returns the roles (an array of string) of the $token.
+     *
+     * @todo remove this $method
+     *
+     * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
+     *
+     * @return array
+     */
+    public function getStringRolesFromToken(TokenInterface $token)
+    {
+        $roles = array();
+
+        foreach ($token->getRoles() as $role) {
+            $roles[] = $role->getRole();
+        }
+
+        return $roles;
     }
 }

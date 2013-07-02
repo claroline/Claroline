@@ -79,7 +79,7 @@ class TextListener implements ContainerAwareInterface
             $revision->setText($text);
             $em->persist($text);
             $em->persist($revision);
-            $event->setResource($text);
+            $event->setResources(array($text));
             $event->stopPropagation();
 
             return;

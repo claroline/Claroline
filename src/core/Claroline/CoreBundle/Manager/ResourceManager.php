@@ -51,15 +51,15 @@ class ResourceManager
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "resourceTypeRepo" = @DI\Inject("resource_type_repository"),
-     *     "resourceRepo" = @DI\Inject("resource_repository"),
+     *     "resourceTypeRepo"   = @DI\Inject("resource_type_repository"),
+     *     "resourceRepo"       = @DI\Inject("resource_repository"),
      *     "resourceRightsRepo" = @DI\Inject("resource_rights_repository"),
-     *     "roleRepo" = @DI\Inject("role_repository"),
-     *     "shortcutRepo" = @DI\Inject("shortcut_repository"),
-     *     "iconManager" = @DI\Inject("claroline.manager.icon_manager"),
-     *     "rightsManager" = @DI\Inject("claroline.manager.rights_manager"),
-     *     "ed" = @DI\Inject("event_dispatcher"),
-         * "writer" = @DI\Inject("claroline.database.writer")
+     *     "roleRepo"           = @DI\Inject("role_repository"),
+     *     "shortcutRepo"       = @DI\Inject("shortcut_repository"),
+     *     "iconManager"        = @DI\Inject("claroline.manager.icon_manager"),
+     *     "rightsManager"      = @DI\Inject("claroline.manager.rights_manager"),
+     *     "ed"                 = @DI\Inject("event_dispatcher"),
+     *     "writer"             = @DI\Inject("claroline.database.writer")
      * })
      */
     public function __construct (
@@ -444,8 +444,7 @@ class ResourceManager
      */
     public function setLastPosition(AbstractResource $parent, AbstractResource $resource)
     {
-        $lastChild = $this->resourceRepo->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->findOneBy(array('parent' => $parent, 'next' => null));
+        $lastChild = $this->resourceRepo->findOneBy(array('parent' => $parent, 'next' => null));
 
         $resource->setPrevious($lastChild);
         $resource->setNext(null);
@@ -624,6 +623,78 @@ class ResourceManager
         }
 
         return $copy;
+    }
+
+    public function getResourceTypeByName($name)
+    {
+        return $this->resourceTypeRepo->findOneByName($name);
+    }
+
+    /**
+     * Convert a ressource into an array (mainly used to be serialized and sent to the manager.js as
+     * a json response)
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     *
+     * @return array
+     */
+    public function toArray(AbstractResource $resource)
+    {
+        $resourceArray = array();
+        $resourceArray['id'] = $resource->getId();
+        $resourceArray['name'] = $resource->getName();
+        $resourceArray['parent_id'] = ($resource->getParent() != null) ? $resource->getParent()->getId() : null;
+        $resourceArray['creator_username'] = $resource->getCreator()->getUsername();
+        $resourceArray['type'] = $resource->getResourceType()->getName();
+        $resourceArray['is_browsable'] = $resource->getResourceType()->getBrowsable();
+        $resourceArray['large_icon'] = $resource->getIcon()->getRelativeUrl();
+        $resourceArray['path_for_display'] = $resource->getPathForDisplay();
+        $resourceArray['mime_type'] = $resource->getMimeType();
+
+        if ($resource->getPrevious() !== null) {
+            $resourceArray['previous_id'] = $resource->getPrevious()->getId();
+        }
+        if ($resource->getNext() !== null) {
+            $resourceArray['next_id'] = $resource->getNext()->getId();
+        }
+
+        $isAdmin = false;
+
+        $roles = $this->roleManager->getStringRolesFromCurrentUser();
+
+        foreach ($roles as $role) {
+            if ($role === 'ROLE_ADMIN') {
+                $isAdmin = true;
+            }
+        }
+
+        if ($isAdmin) {
+            $resourceArray['can_export'] = true;
+            $resourceArray['can_edit'] = true;
+            $resourceArray['can_delete'] = true;
+        } else {
+            $rights = $this->resourceRightsRepo->findMaximumRights($roles, $resource);
+            $resourceArray['can_export'] = $rights['canExport'];
+            $resourceArray['can_edit'] = $rights['canEdit'];
+            $resourceArray['can_delete'] = $rights['canDelete'];
+        }
+
+        return $resourceArray;
+    }
+
+    public function getRoots(User $user)
+    {
+        return $this->resourceRepo->findWorkspaceRootsByUser($user);
+    }
+
+    public function getAncestors(AbstractResource $resource)
+    {
+        return $this->resourceRepo->findAncestors($resource);
+    }
+
+    public function getChildren(Directory $directory, array $roles)
+    {
+        return $this->sort($this->resourceRepo->findChildren($directory, $roles));
     }
 
     /**

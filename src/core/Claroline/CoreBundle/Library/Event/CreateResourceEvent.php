@@ -22,26 +22,6 @@ class CreateResourceEvent extends Event
     }
 
     /**
-     * Sets the newly created resource (success scenario).
-     *
-     * @param AbstractResource $resource
-     */
-    public function setResource(AbstractResource $resource)
-    {
-        $this->resource = $resource;
-    }
-
-    /**
-     * Returns the newly created resource.
-     *
-     * @return AbstractResource
-     */
-    public function getResource()
-    {
-        return $this->resource;
-    }
-
-    /**
      * Sets the form content with validations errors (failure scenario)
      *
      * @param string $formContent

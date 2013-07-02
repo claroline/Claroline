@@ -4,19 +4,26 @@ namespace Claroline\CoreBundle\Controller;
 
 use \Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Library\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Library\Event\LogResourceReadEvent;
 use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Manager\RightsManager;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -25,21 +32,42 @@ class ResourceController extends Controller
     const THUMB_PER_PAGE = 12;
 
     private $formFactory;
+    private $ed;
+    private $sc;
+    private $resourceManager;
+    private $rightsManager;
+    private $roleManager;
+    private $translator;
 
     /**
      * @DI\InjectParams({
-     *     "formFactory" = @DI\Inject("claroline.form.factory"),
-     *     "ed"          = @DI\Inject("event_dispatcher")
+     *     "formFactory"     = @DI\Inject("claroline.form.factory"),
+     *     "ed"              = @DI\Inject("event_dispatcher"),
+     *     "sc"              = @DI\Inject("security.context"),
+     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
+     *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager"),
+     *     "roleManager"   = @DI\Inject("claroline.manager.role_manager"),
+     *     "translator"      = @DI\Inject("translator")
      * })
      */
     public function __construct
     (
         FormFactory $formFactory,
-        EventDispatcher $ed
+        EventDispatcher $ed,
+        SecurityContext $sc,
+        ResourceManager $resourceManager,
+        RightsManager $rightsManager,
+        RoleManager $roleManager,
+        Translator $translator
     )
     {
         $this->formFactory = $formFactory;
         $this->ed = $ed;
+        $this->sc = $sc;
+        $this->resourceManager = $resourceManager;
+        $this->translator = $translator;
+        $this->rightsManager = $rightsManager;
+        $this->roleManager = $roleManager;
     }
 
     /**
@@ -77,59 +105,54 @@ class ResourceController extends Controller
      *     name="claro_resource_create",
      *     options={"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *      "parent",
+     *      class="ClarolineCoreBundle:Resource\AbstractResource",
+     *      options={"id" = "parentId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter("sender", options={"authenticatedUser" = true})
      *
      * Creates a resource.
      *
-     * @param string  $resourceType the resource type
-     * @param integer $parentId     the parent id
+     * @param string           $resourceType the resource type
+     * @param AbstractResource $parent       the parent
+     * @param User             $user         the user
      *
      * @throws \Exception
      * @return Response
      */
-    public function createAction($resourceType, $parentId)
+    public function createAction($resourceType, AbstractResource $parent, User $user)
     {
-        $parent = $this->getDoctrine()
-            ->getManager()
-            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->find($parentId);
         $collection = new ResourceCollection(array($parent));
         $collection->setAttributes(array('type' => $resourceType));
         $this->checkAccess('CREATE', $collection);
         $eventName = 'create_'.$resourceType;
         $event = new CreateResourceEvent($resourceType);
-        $this->get('event_dispatcher')->dispatch($eventName, $event);
-        $response = new Response();
+        $this->ed->dispatch($eventName, $event);
 
-        if (($resource = $event->getResource()) instanceof AbstractResource) {
-            $manager = $this->get('claroline.resource.manager');
-            $resource = $manager->create($resource, $parentId, $resourceType);
-            $response->headers->set('Content-Type', 'application/json');
-            $response->setContent(
-                $this->get('claroline.resource.converter')
-                    ->toJson($resource, $this->get('security.context')->getToken())
-            );
-        } elseif (count($event->getResources()) > 0) {
-            $resources = $event->getResources();
-            $manager = $this->get('claroline.resource.manager');
+        if (count($event->getResources()) > 0) {
             $resourcesArray = array();
-            $token = $this->get('security.context')->getToken();
 
-            foreach ($resources as $resource) {
-                $createdResource = $manager->create($resource, $parentId, $resourceType);
-                $resourcesArray[] = $this->get('claroline.resource.converter')
-                    ->toArray($createdResource, $token);
+            foreach ($event->getResources() as $resource) {
+                $createdResource = $this->resourceManager->create(
+                    $resource,
+                    $this->resourceManager->getResourceTypeByName($resourceType),
+                    $user,
+                    $parent->getWorkspace(),
+                    $parent
+                );
+
+                $resourcesArray[] = $this->resourceManager->toArray($createdResource);
             }
-            $json = json_encode($resourcesArray);
-            $response->setContent($json);
+
+            return new JsonResponse($resourcesArray);
         } else {
             if ($event->getErrorFormContent() != null) {
-                $response->setContent($event->getErrorFormContent());
+                return new Response(setContent($event->getErrorFormContent()));
             } else {
                 throw new \Exception('creation failed');
             }
         }
-
-        return $response;
     }
 
     /**
@@ -138,31 +161,31 @@ class ResourceController extends Controller
      *     name="claro_resource_open",
      *     options={"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *      "resource",
+     *      class="ClarolineCoreBundle:Resource\AbstractResource",
+     *      options={"id" = "resourceId", "strictId" = true}
+     * )
      *
      * Opens a resource.
      *
-     * @param integer $resourceId  the resource id
-     * @param string $resourceType the resource type
+     * @param AbstractResource $resource    the resource
+     * @param string          $resourceType the resource type
      *
      * @return Response
      *
      * @throws AccessDeniedException
      * @throws \Exception
      */
-    public function openAction($resourceId, $resourceType)
+    public function openAction(AbstractResource $resource, $resourceType)
     {
-        $em = $this->getDoctrine()->getManager();
-        $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->find($resourceId);
         $collection = new ResourceCollection(array($resource));
         //If it's a link, the resource will be its target.
         $resource = $this->getResource($resource);
         $this->checkAccess('OPEN', $collection);
-        $resource = $this->getResource($resource);
         $event = new OpenResourceEvent($resource);
         $eventName = 'open_'.$resourceType;
-        $this->get('event_dispatcher')->dispatch($eventName, $event);
-        $resource = $this->getResource($resource);
+        $this->ed->dispatch($eventName, $event);
 
         if (!$event->getResponse() instanceof Response) {
             throw new \Exception(
@@ -170,10 +193,7 @@ class ResourceController extends Controller
             );
         }
 
-        $resource = $this->getResource($resource);
-
-        $log = new LogResourceReadEvent($resource);
-        $this->get('event_dispatcher')->dispatch('log', $log);
+        $this->ed->dispatch('log', new LogResourceReadEvent($resource));
 
         return $event->getResponse();
     }
@@ -184,31 +204,24 @@ class ResourceController extends Controller
      *     name="claro_resource_delete",
      *     options={"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *     "resources",
+     *     class="ClarolineCoreBundle:Resource\AbstractResource",
+     *     options={"multipleIds" = true}
+     * )
      *
      * Removes a many resources from a workspace.
      * Takes an array of ids as parameters (query string: "ids[]=1&ids[]=2" ...).
      *
      * @return Response
      */
-    public function deleteAction()
+    public function deleteAction(array $resources)
     {
-        $ids = $this->container->get('request')->query->get('ids', array());
-        $em = $this->getDoctrine()->getManager();
-        $collection = new ResourceCollection();
-
-        foreach ($ids as $id) {
-            $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-                ->find($id);
-
-            if ($resource != null) {
-                $collection->addResource($resource);
-            }
-        }
-
+        $collection = new ResourceCollection($resources);
         $this->checkAccess('DELETE', $collection);
 
         foreach ($collection->getResources() as $resource) {
-            $this->get('claroline.resource.manager')->delete($resource);
+            $this->resourceManager->delete($resource);
         }
 
         return new Response('Resource deleted', 204);
@@ -220,6 +233,16 @@ class ResourceController extends Controller
      *     name="claro_resource_move",
      *     options={"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *     "resources",
+     *     class="ClarolineCoreBundle:Resource\AbstractResource",
+     *     options={"multipleIds" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "newParent",
+     *      class="ClarolineCoreBundle:Resource\AbstractResource",
+     *      options={"id" = "newParentId", "strictId" = true}
+     * )
      *
      * Moves many resource (changes their parents). This function takes an array
      * of parameters which are the ids of the moved resources
@@ -230,49 +253,22 @@ class ResourceController extends Controller
      * @throws \RuntimeException
      * @return Response
      */
-    public function moveAction($newParentId)
+    public function moveAction(AbstractResource $newParent, array $resources)
     {
-        $ids = $this->container->get('request')->query->get('ids', array());
-        $em = $this->getDoctrine()->getManager();
-        $resourceRepo = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
-        $newParent = $resourceRepo->find($newParentId);
-        $resourceManager = $this->get('claroline.resource.manager');
-        $movedResources = array();
-        $collection = new ResourceCollection();
-
-        foreach ($ids as $id) {
-            $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-                ->find($id);
-
-            if ($resource !== null) {
-                $collection->addResource($resource);
-            }
-        }
-
+        $collection = new ResourceCollection($resources);
         $collection->addAttribute('parent', $newParent);
-
         $this->checkAccess('MOVE', $collection);
 
-        foreach ($ids as $id) {
-            $resource = $resourceRepo->find($id);
-
-            if ($resource != null) {
-                try {
-                    $movedResource = $resourceManager->move($resource, $newParent);
-                    $movedResources[] = $this->get('claroline.resource.converter')->toArray(
-                        $movedResource,
-                        $this->get('security.context')->getToken()
-                    );
-                } catch (\Gedmo\Exception\UnexpectedValueException $e) {
-                    throw new \RuntimeException('Cannot move a resource into itself');
-                }
+        foreach ($resources as $resource) {
+            try {
+                $movedResource = $this->resourceManager->move($resource, $newParent);
+                $movedResources[] = $this->resourceManager->toArray($movedResource);
+            } catch (\Gedmo\Exception\UnexpectedValueException $e) {
+                throw new \RuntimeException('Cannot move a resource into itself');
             }
         }
 
-        $response = new Response(json_encode($movedResources));
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
+        return new JsonResponse($movedResources);
     }
 
     /**
@@ -281,27 +277,29 @@ class ResourceController extends Controller
      *     name="claro_resource_custom",
      *     options={"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *      "resource",
+     *      class="ClarolineCoreBundle:Resource\AbstractResource",
+     *      options={"id" = "resourceId", "strictId" = true}
+     * )
      *
      * Handles any custom action (i.e. not defined in this controller) on a
      * resource of a given type.
      *
      * @param string  $resourceType the resource type
      * @param string  $action       the action
-     * @param integer $resourceId   the resourceId
+     * @param integer $resource     the resource
      *
      * @throws \Exception
      * @return Response
      */
-    public function customAction($resourceType, $action, $resourceId)
+    public function customAction($resourceType, $action, AbstractResource $resource)
     {
         $eventName = $action . '_' . $resourceType;
-        $em = $this->get('doctrine.orm.entity_manager');
-        $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->find($resourceId);
         //$collection = new ResourceCollection(array($resource));
 
         $event = new CustomActionResourceEvent($resource);
-        $this->get('event_dispatcher')->dispatch($eventName, $event);
+        $this->ed->dispatch($eventName, $event);
 
         if (!$event->getResponse() instanceof Response) {
             throw new \Exception(
@@ -322,6 +320,11 @@ class ResourceController extends Controller
      *     name="claro_resource_export",
      *     options={"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *     "resources",
+     *     class="ClarolineCoreBundle:Resource\AbstractResource",
+     *     options={"multipleIds" = true}
+     * )
      *
      * This function takes an array of parameters. Theses parameters are the ids
      * of the resources which are going to be downloaded
@@ -329,25 +332,11 @@ class ResourceController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function exportAction()
+    public function exportAction(array $resources)
     {
-        $ids = $this->container->get('request')->query->get('ids', array());
-
-        $collection = new ResourceCollection();
-
-        foreach ($ids as $id) {
-            $resource = $this->get('doctrine.orm.entity_manager')
-                ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-                ->find($id);
-
-            if ($resource != null) {
-                $collection->addResource($resource);
-            }
-        }
-
+        $collection = new ResourceCollection($resources);
         $this->checkAccess('EXPORT', $collection);
-
-        $file = $this->get('claroline.resource.exporter')->exportResources($ids);
+        $file = $this->get('claroline.resource.exporter')->exportResources($resources);
         $response = new StreamedResponse();
 
         $response->setCallBack(
@@ -370,8 +359,14 @@ class ResourceController extends Controller
      *     "directory/{directoryId}",
      *     name="claro_resource_directory",
      *     options={"expose"=true},
-     *     defaults={"resourceId"=0}
+     *     defaults={"directoryId"=0}
      * )
+     * @EXT\ParamConverter(
+     *      "directory",
+     *      class="ClarolineCoreBundle:Resource\AbstractResource",
+     *      options={"id" = "directoryId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * Returns a json representation of a directory, containing the following items :
      * - The path of the directory
@@ -389,71 +384,41 @@ class ResourceController extends Controller
      *
      * @throws Exception if the id doesnt't match any existing directory
      */
-    public function openDirectoryAction($directoryId)
+    public function openDirectoryAction(User $user, Directory $directory = null)
     {
         $path = array();
         $creatableTypes = array();
-        $resources = array();
-        $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
-        $resourceRepo = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
-        $directoryId = (integer) $directoryId;
-        $currentRoles = $this->get('claroline.security.utilities')
-            ->getRoles($this->get('security.context')->getToken());
+        $currentRoles = $this->roleManager->getStringRolesFromCurrentUser();
         $canChangePosition = false;
 
-        if ($directoryId === 0) {
-            $resources = $resourceRepo->findWorkspaceRootsByUser($user);
+        if ($directory === null) {
+            $resources = $this->resourceManager->getRoots($user);
             $isRoot = true;
             $workspaceId = 0;
         } else {
             $isRoot = false;
-            $directory = $this->getResource($resourceRepo->find($directoryId));
-
-            if (null === $directory || !$directory instanceof Directory) {
-                throw new Exception("Cannot find any directory with id '{$directoryId}'");
-            }
-
             $workspaceId = $directory->getWorkspace()->getId();
 
-            if ($user === $directory->getCreator() || $this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            if ($user === $directory->getCreator() || $this->sc->isGranted('ROLE_ADMIN')) {
                 $canChangePosition = true;
             }
 
-            $path = $resourceRepo->findAncestors($directory);
-            $resources = $resourceRepo->findChildren($directory, $currentRoles);
-            $resources = $this->get('claroline.resource.manager')->sort($resources);
-
-            $creationRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
-                ->findCreationRights($currentRoles, $directory);
-
-            if (count($creationRights) != 0) {
-                $translator = $this->get('translator');
-
-                foreach ($creationRights as $type) {
-                    $creatableTypes[$type['name']] = $translator->trans($type['name'], array(), 'resource');
-                }
-            }
-
-            $log = new LogResourceReadEvent($directory);
-            $this->get('event_dispatcher')->dispatch('log', $log);
+            $path = $this->resourceManager->getAncestors($directory);
+            $resources = $this->resourceManager->getChildren($directory, $currentRoles);
+            $creatableTypes = $this->rightsManager->getCreatableTypes($currentRoles, $directory);
+            $this->ed->dispatch('log', new LogResourceReadEvent($directory));
         }
 
-        $response = new Response(
-            json_encode(
-                array(
-                    'path' => $path,
-                    'creatableTypes' => $creatableTypes,
-                    'resources' => $resources,
-                    'canChangePosition' => $canChangePosition,
-                    'workspace_id' => $workspaceId,
-                    'is_root' => $isRoot
-                )
+        return new JsonResponse(
+            array(
+                'path' => $path,
+                'creatableTypes' => $creatableTypes,
+                'resources' => $resources,
+                'canChangePosition' => $canChangePosition,
+                'workspace_id' => $workspaceId,
+                'is_root' => $isRoot
             )
         );
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
     }
 
     /**
@@ -470,42 +435,23 @@ class ResourceController extends Controller
      *
      * @return Response
      */
-    public function copyAction($resourceDestinationId)
+    public function copyAction(AbstractResource $parent, array $resources)
     {
-        $ids = $this->container->get('request')->query->get('ids', array());
-        $token = $this->get('security.context')->getToken();
         $em = $this->getDoctrine()->getManager();
-        $parent = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->find($resourceDestinationId);
         $newNodes = array();
-        $resources = array();
-
-        foreach ($ids as $id) {
-            $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-                ->find($id);
-
-            if ($resource != null) {
-                $resources[] = $resource;
-            }
-        }
-
         $collection = new ResourceCollection($resources);
         $collection->addAttribute('parent', $parent);
-
         $this->checkAccess('COPY', $collection);
 
         foreach ($resources as $resource) {
-            $newNode = $this->get('claroline.resource.manager')->copy($resource, $parent, $token->getUser());
+            $newNode = $this->get('claroline.resource.manager')->copy($resource, $parent);
             $em->persist($newNode);
             $em->flush();
             $em->refresh($parent);
-            $newNodes[] = $this->get('claroline.resource.converter')->toArray($newNode, $token);
+            $newNodes[] = $this->resourceManager->toArray($newNode);
         }
 
-        $response = new Response(json_encode($newNodes));
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
+        return new JsonResponse($newNodes);
     }
 
     /**
