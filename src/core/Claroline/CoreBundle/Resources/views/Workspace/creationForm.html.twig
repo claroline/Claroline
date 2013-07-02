@@ -1,7 +1,7 @@
-{% extends "ClarolineCoreBundle::layout.html.twig" %}
+{% extends "ClarolineCoreBundle:WorkspaceTag:layout.html.twig" %}
 
-{% block content %}
-    <form class="form-horizontal" id="ws_creation_form" action="{{ path('claro_workspace_create') }}" method="post" {{ form_enctype(form) }}>
+{% block section_content %}
+    <form class="margin form-horizontal" id="ws_creation_form" action="{{ path('claro_workspace_create') }}" method="post" {{ form_enctype(form) }}>
         <fieldset>
             <legend>{{ 'workspace.create'|trans({}, 'platform') }} :</legend>
             {{ form_widget(form) }}
