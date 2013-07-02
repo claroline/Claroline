@@ -2,308 +2,235 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Claroline\CoreBundle\Controller\Tool\AbstractParametersController;
-use Claroline\CoreBundle\Entity\Tool\WorkspaceOrderedTool;
-use Claroline\CoreBundle\Entity\Tool\WorkspaceToolRole;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Form\WorkspaceOrderToolEditType;
+use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\DiExtraBundle\Annotation as DI;
 
 
 class WorkspaceToolsParametersController extends AbstractParametersController
 {
+    private $toolManager;
+    private $roleManager;
+    private $formFactory;
+
     /**
-     * @Route(
+     * @DI\InjectParams({
+     *     "toolManager" = @DI\Inject("claroline.manager.tool_manager"),
+     *     "roleManager" = @DI\Inject("claroline.manager.role_manager"),
+     *     "formFactory" = @DI\Inject("claroline.form.factory")
+     * })
+     */
+    public function __construct(
+        ToolManager $toolManager,
+        RoleManager $roleManager,
+        FormFactory $formFactory
+    )
+    {
+        $this->toolManager = $toolManager;
+        $this->roleManager = $roleManager;
+        $this->formFactory = $formFactory;
+    }
+    /**
+     * @EXT\Route(
      *     "/{workspaceId}/tools",
      *     name="claro_workspace_tools_roles"
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:toolRoles.html.twig")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
      *
-     * @Template("ClarolineCoreBundle:Tool\workspace\parameters:toolRoles.html.twig")
+     * @param AbstractWorkspace $workspace
      */
-    public function workspaceToolsRolesAction($workspaceId)
+    public function workspaceToolsRolesAction(AbstractWorkspace $workspace)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-        $this->checkAccess($workspace);
-        $wsRoles = $em->getRepository('ClarolineCoreBundle:Role')->findByWorkspace($workspace);
-        $anonRole = $em->getRepository('ClarolineCoreBundle:Role')->findBy(array('name' => 'ROLE_ANONYMOUS'));
-        $wsRoles = array_merge($wsRoles, $anonRole);
-        $toolsPermissions = $this->getToolPermissions($workspace, $wsRoles);
-        $undisplayedTools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->findUndisplayedToolsByWorkspace($workspace);
-
-        //this is the missing part of the array
-        $toFill = array();
-        //default display_order if there is no WorkspaceOrderTool
-        $nextDisplayOrder = 1;
-
-        if (!empty($toolsPermissions)) {
-
-            foreach ($toolsPermissions as $toolPerm) {
-
-                if ($toolPerm['tool']->getOrder() > $nextDisplayOrder) {
-                    $nextDisplayOrder = $toolPerm['tool']->getOrder();
-                }
-            }
-            //the next display_order will be the incrementation of the last WorkspaceOrderTool display_order
-            $nextDisplayOrder++;
-        }
-
-        foreach ($undisplayedTools as $undisplayedTool) {
-            if ($undisplayedTool->isDisplayableInWorkspace()) {
-                $wot = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
-                    ->findOneBy(array('workspace' => $workspaceId, 'tool' => $undisplayedTool->getId()));
-
-                //create a WorkspaceOrderedTool for each Tool that hasn't already one
-                if ($wot === null) {
-                    $wot = new WorkspaceOrderedTool();
-                    $wot->setOrder($nextDisplayOrder++);
-                    $wot->setTool($undisplayedTool);
-                    $wot->setWorkspace($workspace);
-                    $wot->setName(
-                        $this->container->get('translator')->trans(
-                            $undisplayedTool->getName(),
-                            array(),
-                            'tools'
-                        )
-                    );
-                    $em->persist($wot);
-                    $em->flush();
-                } else {
-                    continue;
-                }
-
-                foreach ($wsRoles as $role) {
-                    $roleVisibility[$role->getId()] = false;
-                }
-                $toFill[] = array('tool' => $wot, 'visibility' => $roleVisibility);
-            }
-        }
-
-        $toolsPermissions = $this->container->get('claroline.utilities.misc')->arrayFill($toolsPermissions, $toFill);
-
         return array(
-            'roles' => $wsRoles,
+            'roles' => $this->roleManager->findWorkspaceRoles($workspace),
             'workspace' => $workspace,
-            'toolPermissions' => $toolsPermissions
+            'toolPermissions' => $this->toolManager->getWorkspaceToolsConfigurationArray($workspace)
         );
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/remove/tool/{toolId}/workspace/{workspaceId}/role/{roleId}",
      *     name="claro_tool_workspace_remove",
      *     options={"expose"=true}
      * )
-     * @Method("POST")
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter("role", class="ClarolineCoreBundle:Role", options={"id" = "roleId", "strictId" = true})
+     * @EXT\ParamConverter("tool", class="ClarolineCoreBundle:Tool\Tool", options={"id" = "toolId", "strictId" = true})
      *
      * Remove a tool from a role in a workspace.
      *
-     * @param integer $toolId
-     * @param integer $roleId
-     * @param integer $workspaceId
+     * @param Tool              $tool
+     * @param Role              $role
+     * @param AbstractWorkspace $workspace
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Exception
      */
-    public function workspaceRemoveToolAction($toolId, $roleId, $workspaceId)
+    public function removeRoleFromTool(Tool $tool, Role $role, AbstractWorkspace $workspace)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-        $this->checkAccess($workspace);
-        $wot = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
-            ->findOneBy(array('workspace' => $workspaceId, 'tool' => $toolId));
-
-        $wtr = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceToolRole')
-            ->findOneBy(array('role' => $roleId, 'workspaceOrderedTool' => $wot));
-        $em->remove($wtr);
-        $em->flush();
+        $this->toolManager->removeRole($tool, $role, $workspace);
 
         return new Response('success', 204);
     }
 
     /**
-     * @Route(
-     *     "/add/tool/{toolId}/position/{position}/workspace/{workspaceId}/role/{roleId}",
+     * @EXT\Route(
+     *     "/add/tool/{toolId}/workspace/{workspaceId}/role/{roleId}",
      *     name="claro_tool_workspace_add",
      *     options={"expose"=true}
      * )
-     * @Method("POST")
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter("role", class="ClarolineCoreBundle:Role", options={"id" = "roleId", "strictId" = true})
+     * @EXT\ParamConverter("tool", class="ClarolineCoreBundle:Tool\Tool", options={"id" = "toolId", "strictId" = true})
      *
      * Adds a tool to a role in a workspace.
      *
-     * @param integer $toolId
-     * @param integer $roleId
-     * @param integer $workspaceId
-     * @param integer $position
+     * @param Tool              $tool
+     * @param Role              $role
+     * @param AbstractWorkspace $workspace
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Exception
      */
-    public function workspaceAddToolAction($toolId, $roleId, $workspaceId, $position)
+    public function addRoleToTool(Tool $tool, Role $role, AbstractWorkspace $workspace)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-        $this->checkAccess($workspace);
-        $role = $em->getRepository('ClarolineCoreBundle:Role')->find($roleId);
-        $wot = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
-            ->findOneBy(array('workspace' => $workspaceId, 'tool' => $toolId));
-        $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId);
-
-        if ($tool->getName() === 'parameters' && $role->getName() === 'ROLE_ANONYMOUS') {
-            throw new \Exception('Anonymous users cannot access the parameters tool');
-        }
-
-        if ($wot === null) {
-            $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId);
-            $wot = new WorkspaceOrderedTool();
-            $wot->setOrder($position);
-            $wot->setTool($tool);
-            $wot->setWorkspace($workspace);
-            $wot->setName($tool->getName());
-            $em->persist($wot);
-        }
-
-        $wtr = new WorkspaceToolRole();
-        $wtr->setRole($role);
-        $wtr->setWorkspaceOrderedTool($wot);
-        $em->persist($wtr);
-        $em->flush();
+        $this->toolManager->addRole($tool, $role, $workspace);
 
         return new Response('success', 204);
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/move/tool/{toolId}/position/{position}/workspace/{workspaceId}",
      *     name="claro_tool_workspace_move",
      *     options={"expose"=true}
      * )
-     * @Method("POST")
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter("tool", class="ClarolineCoreBundle:Tool\Tool", options={"id" = "toolId", "strictId" = true})
      *
      * This method switch the position of a tool with an other one.
      *
-     * @param integer $toolId
-     * @param integer $position
+     * @param Tool              $tool
+     * @param integer           $position
+     * @param AbstractWorkspace $workspace
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function workspaceMoveToolAction($toolId, $position, $workspaceId)
+    public function move(Tool $tool, $position, AbstractWorkspace $workspace)
     {
-        if (intval($position) == null) {
-            throw new \RuntimeException('The $position value must be an integer');
-        }
-
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-        $this->checkAccess($workspace);
-        $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->find($toolId);
-        $movingTool = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
-           ->findOneBy(array('tool' => $tool, 'workspace' => $workspace));
-
-        if ($movingTool === null) {
-            throw new \RuntimeException(
-                "There is no WorkspaceOrderedTool for {$tool->getName()} in {$workspace->getName()}"
-            );
-        }
-
-        $switchTool = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
-           ->findOneBy(array('order' => $position, 'workspace' => $workspace));
-
-         //if a tool is already at this position, he must go "far away"
-        if ($switchTool !== null && $movingTool !== null) {
-            //go far away ! Integrety constraints.
-            $newPosition = $movingTool->getOrder();
-            $switchTool->setOrder('99');
-            $em->persist($switchTool);
-        }
-
-        $em->flush();
-
-         //the tool must exists
-        if ($movingTool !== null) {
-            $movingTool->setOrder(intval($position));
-            $em->persist($movingTool);
-        }
-
-        //put the original tool back.
-        if ($switchTool !== null) {
-            $switchTool->setOrder($newPosition);
-            $em->persist($switchTool);
-        }
-
-        $em->flush();
+        $this->toolManager->move($tool, $position, null, $workspace);
 
         return new Response('success');
     }
 
     /**
-     * @Route(
-     *     "/{workspaceId}/tools/{workspaceOrderToolId}/editform",
+     * @EXT\Route(
+     *     "/{workspaceId}/tools/{toolId}/editform",
      *     name="claro_workspace_order_tool_edit_form"
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Template("ClarolineCoreBundle:Tool\workspace\parameters:workspaceOrderToolEdit.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:workspaceOrderToolEdit.html.twig")
      *
-     * @param integer $workspaceId
-     * @param integer $workspaceOrderToolId
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "tool",
+     *      class="ClarolineCoreBundle:Tool\Tool",
+     *      options={"id" = "toolId", "strictId" = true}
+     * )
+     *
+     * @param AbstractWorkspace $workspace
+     * @param OrderedTool       $ot
      *
      * @return Response
      */
-    public function workspaceOrderToolEditFormAction($workspaceId, $workspaceOrderToolId)
+    public function workspaceOrderToolEditFormAction(AbstractWorkspace $workspace, Tool $tool)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-        $this->checkAccess($workspace);
-        $wot = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')->find($workspaceOrderToolId);
-        $form = $this->createForm(new WorkspaceOrderToolEditType(), $wot);
+        $ot = $this->toolManager->findOneByWorkspaceAndTool($workspace, $tool);
 
         return array(
-            'form' => $form->createView(),
+            'form' => $this->formFactory->create(FormFactory::TYPE_ORDERED_TOOL, array(), $ot)->createView(),
             'workspace' => $workspace,
-            'wot' => $wot
+            'wot' => $ot
         );
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspaceId}/tools/{workspaceOrderToolId}/edit",
      *     name="claro_workspace_order_tool_edit"
      * )
-     * @Method("POST")
+     * @EXT\Method("POST")
      *
-     * @Template("ClarolineCoreBundle:Tool\workspace\parameters:workspaceOrderToolEdit.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:workspaceOrderToolEdit.html.twig")
      *
-     * @param integer $workspaceId
-     * @param integer $workspaceOrderToolId
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "ot",
+     *      class="ClarolineCoreBundle:Tool\OrderedTool",
+     *      options={"id" = "workspaceOrderToolId", "strictId" = true}
+     * )
+     *
+     * @param AbstractWorkspace $workspace
+     * @param OrderedTool       $ot
      *
      * @return Response
      */
-    public function workspaceOrderToolEditAction($workspaceId, $workspaceOrderToolId)
+    public function workspaceOrderToolEditAction(AbstractWorkspace $workspace, OrderedTool $ot)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-        $this->checkAccess($workspace);
-        $wot = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')->find($workspaceOrderToolId);
-        $form = $this->createForm(new WorkspaceOrderToolEditType(), $wot);
+
+        $form = $this->formFactory->create(FormFactory::TYPE_ORDERED_TOOL, array(), $ot);
         $request = $this->getRequest();
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em->persist($wot);
-            $em->flush();
+            $this->toolManager->editOrderedTool($form->getData());
 
             return $this->redirect(
                 $this->generateUrl(
                     'claro_workspace_tools_roles',
-                    array('workspaceId' => $workspaceId)
+                    array('workspaceId' => $workspace->getId())
                 )
             );
         }
@@ -311,56 +238,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
         return array(
             'form' => $form->createView(),
             'workspace' => $workspace,
-            'wot' => $wot
+            'wot' => $ot
         );
-    }
-
-    /**
-     * Creates an easy to use array with tools visibility permissons.
-     * The array has the following structure:
-     *
-     * array[$order] => array(
-     *  'tool' => $tool'
-     *  'visibility' => array('
-     *      ROLE_1 => $bool,
-     *      ROLE_2 => $bool,
-     *      ROLE_3 => $bool)
-     * );
-     */
-    private function getToolPermissions($workspace, $wsRoles)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $wot = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
-            ->findBy(array('workspace' => $workspace->getId()), array('order' => 'ASC'));
-        /* Loading all the datas from the WorkspaceToolRole entities
-         * so doctrine won't do a new request every time the isToolVisibleForRoleInWorkspace()
-         * is fired.
-         */
-        $wtr = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceToolRole')->findByWorkspace($workspace);
-
-        foreach ($wot as $orderedTool) {
-
-            if ($orderedTool->getTool()->isDisplayableInWorkspace()) {
-                //creates the visibility array
-                foreach ($wsRoles as $role) {
-                    $isVisible = false;
-                    //is the tool visible for a role in a workspace ?
-                    foreach ($wtr as $workspaceToolRole) {
-                        if ($workspaceToolRole->getRole() == $role
-                            && $workspaceToolRole->getWorkspaceOrderedTool()->getTool() == $orderedTool->getTool()
-                            && $workspaceToolRole->getWorkspaceOrderedTool()->getWorkspace() == $workspace) {
-                            $isVisible = true;
-                        }
-                    }
-                    $roleVisibility[$role->getId()] = $isVisible;
-                }
-                $toolsPermissions[] = array(
-                    'tool' => $orderedTool,
-                    'visibility' => $roleVisibility
-                );
-            }
-        }
-
-        return $toolsPermissions;
     }
 }

@@ -89,7 +89,7 @@ class WorkspaceManager
         $toolsConfig = $config->getToolsConfiguration();
         $toolsPermissions = $config->getToolsPermissions();
 
-        $position = 0;
+        $position = 1;
 
         foreach ($toolsPermissions as $toolName => $perms) {
             $rolesToAdd = array();
