@@ -76,7 +76,7 @@ abstract class AbstractResource
      *     inversedBy="abstractResources",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     protected $resourceType;
 
@@ -86,7 +86,7 @@ abstract class AbstractResource
      *     inversedBy="abstractResources",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id",onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     protected $creator;
 
@@ -95,7 +95,7 @@ abstract class AbstractResource
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceIcon",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="icon_id", referencedColumnName="id",onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(name="icon_id", referencedColumnName="id",onDelete="CASCADE", nullable=true)
      */
     protected $icon;
 

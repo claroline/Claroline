@@ -52,27 +52,27 @@ class ResourceRights
     /**
      * @ORM\Column(type="boolean", name="can_delete")
      */
-    protected $canDelete;
+    protected $canDelete = false;
 
     /**
      * @ORM\Column(type="boolean", name="can_open")
      */
-    protected $canOpen;
+    protected $canOpen = false;
 
     /**
      * @ORM\Column(type="boolean", name="can_edit")
      */
-    protected $canEdit;
+    protected $canEdit = false;
 
     /**
      * @ORM\Column(type="boolean", name="can_copy")
      */
-    protected $canCopy;
+    protected $canCopy = false;
 
     /**
      * @ORM\Column(type="boolean", name="can_export")
      */
-    protected $canExport;
+    protected $canExport = false;
 
     /**
      * @ORM\ManyToMany(
@@ -94,11 +94,6 @@ class ResourceRights
     public function __construct()
     {
         $this->resourceTypes = new ArrayCollection();
-        $this->canCopy = false;
-        $this->canEdit = false;
-        $this->canOpen = false;
-        $this->canExport = false;
-        $this->canDelete = false;
     }
 
     public function getId()

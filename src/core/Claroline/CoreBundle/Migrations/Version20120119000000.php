@@ -299,7 +299,6 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable('claro_resource_type');
         $this->addId($table);
         $table->addColumn('name', 'string');
-        $table->addColumn('is_browsable', 'boolean');
         $table->addColumn('is_exportable', 'boolean');
         $table->addColumn('plugin_id', 'integer', array('notnull' => false));
         $table->addColumn('class', 'string', array('notnull' => false,'length' => 255));
@@ -345,9 +344,9 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('license_id', 'integer', array('notnull' => false));
         $table->addColumn('creation_date', 'datetime');
         $table->addColumn('modification_date', 'datetime');
-        $table->addColumn('resource_type_id', 'integer', array('notnull' => false));
+        $table->addColumn('resource_type_id', 'integer', array('notnull' => true));
         $table->addColumn('user_id', 'integer', array('notnull' => true));
-        $table->addColumn('icon_id', 'integer', array('notnull' => true));
+        $table->addColumn('icon_id', 'integer', array('notnull' => false));
         $table->addColumn('path', 'string', array('length' => 3000, 'notnull' => false));
         $table->addColumn('name', 'string');
         $table->addColumn('parent_id', 'integer', array('notnull' => false));
