@@ -48,14 +48,13 @@ class LoadGroupData extends AbstractFixture implements ContainerAwareInterface
             $role = $roleManager->createCustomRole('ROLE_' . $name, 'ROLE_' . $name);
             $group = new Group();
             $group->setName($name);
-            $group->addRole($role);
+            $roleManager->associateRole($group, $role);
 
             foreach ($users as $username) {
                 $user = $this->getReference('user/'.$username);
                 $group->addUser($user);
             }
 
-            $manager->persist($group);
             $this->addReference('role/'.$name, $role);
             $this->addReference('group/'.$name, $group);
         }
