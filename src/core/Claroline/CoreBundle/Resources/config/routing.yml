@@ -186,7 +186,7 @@ claro_install:
     prefix: install
 
 claro_file:
-    resource: "@ClarolineCoreBundle/Controller/FileControlller.php"
+    resource: "@ClarolineCoreBundle/Controller/FileController.php"
     type: annotation
     prefix: file
 
