@@ -19,18 +19,18 @@ class MessageRepositoryTest extends AltRepositoryTestCase
 
         self::createMessage(
             'message_1',
-            self::$users['sender'],
-            array(self::$users['receiver']),
+            self::get('sender'),
+            array(self::get('receiver')),
             'message_1 content',
             'message_1 object'
         );
         self::createMessage(
             'message_2',
-            self::$users['sender'],
-            array(self::$users['receiver']),
+            self::get('sender'),
+            array(self::get('receiver')),
             'message_2 content',
             'message_2 object',
-            self::$messages['message_1']
+            self::get('message_1')
         );
     }
 
@@ -49,10 +49,10 @@ class MessageRepositoryTest extends AltRepositoryTestCase
      */
     public function testFindAncestors()
     {
-        $messages = self::$repo->findAncestors(self::$messages['message_2']);
+        $messages = self::$repo->findAncestors(self::get('message_2'));
         $this->assertEquals(2, count($messages));
-        $this->assertEquals(self::$messages['message_1'], $messages[0]);
-        $this->assertEquals(self::$messages['message_2'], $messages[1]);
+        $this->assertEquals(self::get('message_1'), $messages[0]);
+        $this->assertEquals(self::get('message_2'), $messages[1]);
     }
 
     /**
@@ -61,6 +61,6 @@ class MessageRepositoryTest extends AltRepositoryTestCase
      */
     public function testCountUnread()
     {
-        $this->assertEquals(2, self::$repo->countUnread(self::$users['receiver']));
+        $this->assertEquals(2, self::$repo->countUnread(self::get('receiver')));
     }
 }
