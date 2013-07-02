@@ -71,7 +71,7 @@ class ProfileController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-
+            $roleManager = $this->get('claroline.manager.role_manager');
             $user = $form->getData();
 
             $em = $this->getDoctrine()->getManager();
@@ -79,10 +79,9 @@ class ProfileController extends Controller
             $unitOfWork->computeChangeSets();
             $changeSet = $unitOfWork->getEntityChangeSet($user);
             $newRoles = $form->get('platformRoles')->getData();
-            $user = $this->resetRoles($user);
-            $user = $this->addRoles($user, $newRoles);
-            $em->persist($user);
-            $em->flush();
+
+            $roleManager->resetRoles($user);
+            $roleManager->associateRoles($user, $newRoles);
             $this->get('security.context')->getToken()->setUser($user);
 
             $newRoles = $this->get('doctrine.orm.entity_manager')
@@ -135,33 +134,5 @@ class ProfileController extends Controller
         $user = $em->getRepository('ClarolineCoreBundle:User')->find($userId);
 
         return array('user' => $user);
-    }
-
-    private function addRoles(User $user, $newRoles)
-    {
-        foreach ($newRoles as $role) {
-            $user->addRole($role);
-        }
-
-        return $user;
-    }
-
-    private function resetRoles(User $user)
-    {
-        $userRole = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Role')
-            ->findOneByName('ROLE_USER');
-
-        $roles = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Role')
-            ->findPlatformRoles($user);
-
-        foreach ($roles as $role) {
-            if ($role !== $userRole) {
-                $user->removeRole($role);
-            }
-        }
-
-        return $user;
     }
 }
