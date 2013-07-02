@@ -16,7 +16,6 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class RoleManager
 {
-    private $roleRepo;
     private $writer;
     private $roleRepo;
 
