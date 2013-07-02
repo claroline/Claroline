@@ -59,7 +59,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li class="{% if workspaces is empty %}disabled{% else %}dropdown-submenu{% endif %}">
-                                <a>{{ 'history'|trans({}, 'platform') }}</a>
+                                <a><i class="icon-time"></i> {{ 'history'|trans({}, 'platform') }}</a>
                                 {% if not workspaces is empty %}
                                     <ul class="dropdown-menu">
                                     {% for workspace in workspaces %}
@@ -79,19 +79,19 @@
                             <li class="divider"></li>
                             <li>
                             <a href="{{ path('claro_workspace_by_user') }}" id="link-my-workspaces">
-                                {{ 'my_workspaces'|trans({}, 'platform') }}
+                                <i class="icon-book"></i> {{ 'my_workspaces'|trans({}, 'platform') }}
                             </a>
                             </li>
                             <li>
                             <a href="{{ path('claro_workspace_list') }}" id="link-search-workspaces">
-                                {{ 'find_workspaces'|trans({}, 'platform') }}
+                                <i class="icon-book"></i> {{ 'find_workspaces'|trans({}, 'platform') }}
                             </a>
                             </li>
                             <li class="divider"></li>
                             <li>
                             <a href="{{ path('claro_workspace_creation_form') }}"
                                 id="link-create-ws-form">
-                                {{ 'create_workspace'|trans({}, 'platform') }}
+                                <i class="icon-pencil"></i> {{ 'create_workspace'|trans({}, 'platform') }}
                             </a>
                             </li>
                         </ul>

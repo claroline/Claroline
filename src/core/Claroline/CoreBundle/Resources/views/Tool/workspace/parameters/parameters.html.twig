@@ -2,7 +2,13 @@
 
 {% block section_content %}
 
-    {{ macros.breadcrumbs([{'name': 'parameters'|trans({}, 'platform'), 'href': '#'}]) }}
+    {{ macros.breadcrumbs([
+        {
+            'icon': 'icon-cog',
+            'name': 'parameters'|trans({}, 'platform'),
+            'href': '#'
+        }
+    ])}}
 
     <ul>
         <li>

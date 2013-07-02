@@ -4,9 +4,11 @@ namespace Claroline\CoreBundle\Controller;
 
 use \Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
@@ -15,15 +17,33 @@ use Claroline\CoreBundle\Library\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Library\Event\LogResourceReadEvent;
 use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\DiExtraBundle\Annotation as DI;
 
 class ResourceController extends Controller
 {
     const THUMB_PER_PAGE = 12;
 
+    private $formFactory;
+
     /**
-     * @Route(
+     * @DI\InjectParams({
+     *     "formFactory" = @DI\Inject("claroline.form.factory"),
+     *     "ed"          = @DI\Inject("event_dispatcher")
+     * })
+     */
+    public function __construct
+    (
+        FormFactory $formFactory,
+        EventDispatcher $ed
+    )
+    {
+        $this->formFactory = $formFactory;
+        $this->ed = $ed;
+    }
+
+    /**
+     * @EXT\Route(
      *     "/form/{resourceType}",
      *     name="claro_resource_creation_form",
      *     options={"expose"=true}
@@ -40,7 +60,7 @@ class ResourceController extends Controller
     {
         $eventName = 'create_form_'.$resourceType;
         $event = new CreateFormResourceEvent();
-        $this->get('event_dispatcher')->dispatch($eventName, $event);
+        $this->ed->dispatch($eventName, $event);
 
         if ($event->getResponseContent() === "") {
             throw new \Exception(
@@ -52,7 +72,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/create/{resourceType}/{parentId}",
      *     name="claro_resource_create",
      *     options={"expose"=true}
@@ -113,7 +133,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/open/{resourceType}/{resourceId}",
      *     name="claro_resource_open",
      *     options={"expose"=true}
@@ -159,7 +179,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/delete",
      *     name="claro_resource_delete",
      *     options={"expose"=true}
@@ -195,7 +215,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/move/{newParentId}",
      *     name="claro_resource_move",
      *     options={"expose"=true}
@@ -256,7 +276,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/custom/{resourceType}/{action}/{resourceId}",
      *     name="claro_resource_custom",
      *     options={"expose"=true}
@@ -297,7 +317,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/export",
      *     name="claro_resource_export",
      *     options={"expose"=true}
@@ -346,7 +366,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "directory/{directoryId}",
      *     name="claro_resource_directory",
      *     options={"expose"=true},
@@ -437,7 +457,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/copy/{resourceDestinationId}",
      *     name="claro_resource_copy",
      *     options={"expose"=true}
@@ -489,7 +509,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/filter/{directoryId}",
      *     name="claro_resource_filter",
      *     options={"expose"=true}
@@ -532,7 +552,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/shortcut/{newParentId}/create",
      *     name="claro_resource_create_shortcut",
      *     options={"expose"=true}
@@ -572,7 +592,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/search/role/code/{code}",
      *     name="claro_resource_find_role_by_code",
      *     options={"expose"=true}
@@ -600,7 +620,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * @Template("ClarolineCoreBundle:Resource:breadcrumbs.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Resource:breadcrumbs.html.twig")
      */
     public function renderBreadcrumbsAction($resourceId, $workspaceId, $_breadcrumbs)
     {
@@ -651,7 +671,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/sort/{resourceId}/next/{nextId}",
      *     name="claro_resource_insert_before",
      *     options={"expose"=true}
