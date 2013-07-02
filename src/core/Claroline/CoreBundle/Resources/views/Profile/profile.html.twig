@@ -1,18 +1,37 @@
 {% extends "ClarolineCoreBundle::layout.html.twig" %}
 
 {% block content %}
-<div class="span2">
-  <img height="100px" src="{{asset('bundles/clarolinecore/images/workspaces/tools/user.png')}}" />
-</div>
-<div class="span10">
-    {{ 'first_name'|trans({}, 'platform') }}: {{ user.getFirstName() }}<br/>
-    {{ 'last_name'|trans({}, 'platform') }}: {{ user.getLastName() }}<br/>
-    {{ 'username'|trans({}, 'platform') }}: {{ user.getUsername() }}<br/>
-    {{ 'mail'|trans({}, 'platform') }}: {{ user.getMail() }}<br/>
-    {{ 'phone'|trans({}, 'platform') }}: {{ user.getPhone() }}<br/>
-    {{ 'creation_date'|trans({}, 'platform') }} : {{ user.getCreationDate()|date("d-m-Y H:i:s") }}
-</div>
+    <div class="span12 border">
+        <div class="margin">
+            <h3 class="sub-section-header">
+                {{ user.getLastName() }} {{ user.getFirstName() }}
+                <em class="muted"> ({{ user.getUsername() }})</em>
+            </h3>
 
-<a href="{{path('claro_mail_form', {'userId':user.getId()})}}">{{ 'send_mail'|trans({}, 'platform') }}</a><br/>
-<a href="{{path('claro_message_form')}}?ids[]={{ user.getId() }}">{{ 'send_message'|trans({}, 'platform') }}</a><br/>
+            <div class="span2">
+                {% if user.getPhoto() != "" %}
+                    <img class="border" src="{{ user.getPhoto() }}">
+                {% else %}
+                    <div class="hero-unit">
+                        <h1><i class="icon-user"></i><h1>
+                    </div>
+                {% endif %}
+            </div>
+
+            <p>
+                {% if user.getMail() != "" %}
+                    <i class="icon-envelope"></i> {{ user.getMail() }}
+                    &nbsp;
+                {% endif %}
+                {% if user.getPhone() != "" %}
+                    <i class="icon-phone"></i> {{ user.getPhone() }}
+                {% endif %}
+            </p>
+            <p class="muted">{{ 'user'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}</p>
+            <p>
+                <a class="btn" href="{{path('claro_mail_form', {'userId':user.getId()})}}"><i class="icon-envelope"></i> {{ 'send_mail'|trans({}, 'platform') }}</a>
+                <a class="btn" href="{{path('claro_message_form')}}?ids[]={{ user.getId() }}"><i class="icon-comment"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
+            </p>
+        </div>
+    </div>
 {% endblock %}

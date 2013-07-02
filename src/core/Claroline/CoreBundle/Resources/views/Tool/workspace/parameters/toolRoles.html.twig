@@ -6,18 +6,21 @@
 {% endblock %}
 
 {% block section_content %}
-    <ul class="breadcrumb">
-        <li>
-        <a href="{{ path('claro_workspace_open_tool',
-            {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}">
-            {{ 'parameters'|trans({}, 'platform') }}
-        </a>
-        </li>
-        <span class="divider"> / </span>
-        <li>
-        <a href="#">{{ 'tools'|trans({}, 'platform') }}</a>
-        </li>
-    </ul>
+
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
+            },
+            {
+                'name': 'tools'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+
     <div class="margin">
         <table id="tool-table"
             class="table table-striped table-bordered table-condensed"
@@ -35,19 +38,19 @@
                         <td>
                             <a href="{{ path('claro_workspace_order_tool_edit_form',
                                         {'workspaceId': workspace.getId(),
-                                        'workspaceOrderToolId': toolPermission['tool'].getId()}) }}">
+                                        'toolId': toolPermission['tool'].getId()}) }}">
                                 <i class="icon-pencil"></i>
                             </a>
-                            {{ toolPermission['tool'].getName() }}
-                            <small><em>({{ toolPermission['tool'].getTool().getName()|trans({}, 'tools') }})</em></small>
+                            {{ toolPermission['displayedName'] }}
+                            <small><em>({{ toolPermission['tool'].getName()|trans({}, 'tools') }})</em></small>
                         </td>
                         {% for key, isVisible in toolPermission['visibility'] %}
-                            <td data-tool-id="{{ toolPermission['tool'].getTool().getId() }}" data-role-id="{{ key }}">
+                            <td data-tool-id="{{ toolPermission['tool'].getId() }}" data-role-id="{{ key }}">
                                 <input type="checkbox"
                                        class="chk-tool-visible"
                                        value="1"
-                                    {% if toolPermission['tool'].getTool().isDesktopRequired()
-                                        or (toolPermission['tool'].getTool().getName() == 'parameters' and loop.last) %}
+                                    {% if toolPermission['tool'].isDesktopRequired()
+                                        or (toolPermission['tool'].getName() == 'parameters' and loop.last) %}
                                        disabled
                                     {% endif %}
                                     {% if isVisible %}

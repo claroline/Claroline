@@ -4,10 +4,14 @@
     {{
     macros.breadcrumbs([
             {
+                'icon': 'icon-user',
                 'name': 'users_management'|trans({}, 'platform'),
                 'href': path('claro_admin_users_management')
             },
-            {'name':'create_group'|trans({}, 'platform'), 'href':'#'}
+            {
+                'name':'create_group'|trans({}, 'platform'),
+                'href':''
+            }
         ])
     }}
     <form class="form-horizontal" action="{{ path('claro_admin_create_group') }}" method="post" {{ form_enctype(form_group) }} id="form_group">

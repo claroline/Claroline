@@ -17,49 +17,49 @@
 
 {% from _self import showTagHierarchy %}
 
-{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+{% extends 'ClarolineCoreBundle:WorkspaceTag:layout.html.twig' %}
 
-{% block content %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{{ path('claro_workspace_list') }}">
-                {{ 'all_workspaces'|trans({}, 'platform') }}
-            </a>
-        </li>
-        <span class="divider"> / </span>
-        <li>
-            <a href="{{ path('claro_workspace_manage_admin_tag') }}">
-                {{ 'admin_tags_management'|trans({}, 'platform') }}
-            </a>
-        </li>
-        <span class="divider"> / </span>
-        <li>
-            <a href="#">{{ 'admin_tags_organization'|trans({}, 'platform') }}</a>
-        </li>
-    </ul>
+{% block section_content %}
 
-    <h1>{{ 'admin_tags_organization'|trans({}, 'platform') }}</h1>
-    <br>
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-book',
+                'name': 'all_workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_list')
+            },
+            {
+                'name': 'admin_tags_management'|trans({}, 'platform'),
+                'href': path('claro_workspace_manage_admin_tag')
+            },
+            {
+                'name': 'admin_tags_organization'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
 
-    <table class="table table-striped table-bordered table-condensed">
-        <tr>
-            <th>{{ 'admin_tags_hierarchy'|trans({}, 'platform') }}</th>
-            <th>{{ 'admin_tags_list'|trans({}, 'platform') }}</th>
-        </tr>
-        <tr>
-            <td>
-                {{ showTagHierarchy(rootTags, hierarchy) }}
-            </td>
-            <td>
-                <ul>
-                {% for tag in tags %}
-                    <li>
-                        <a href="{{ path('claro_workspace_admin_tag_check_children', {'tagId':tag.getId()}) }}">
-                        {{ tag.getName() }}
-                    </li>
-                {% endfor %}
-                </ul>
-            </td>
-        </tr>
-    </table>
+    <div class="margin">
+        <table class="table table-striped table-bordered table-condensed">
+            <tr>
+                <th>{{ 'admin_tags_hierarchy'|trans({}, 'platform') }}</th>
+                <th>{{ 'admin_tags_list'|trans({}, 'platform') }}</th>
+            </tr>
+            <tr>
+                <td>
+                    {{ showTagHierarchy(rootTags, hierarchy) }}
+                </td>
+                <td>
+                    <ul>
+                    {% for tag in tags %}
+                        <li>
+                            <a href="{{ path('claro_workspace_admin_tag_check_children', {'tagId':tag.getId()}) }}">
+                            {{ tag.getName() }}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
 {% endblock %}
