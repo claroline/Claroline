@@ -10,18 +10,22 @@
 {% endblock %}
 {% block section_content %}
  {{ tinymce_init() }}
-    <ul class="breadcrumb">
-        <li>
-            <a href="#">
-               {{ 'agenda'|trans({}, 'platform') }}
-            </a>
-        </li>
-    </ul>
+
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-calendar',
+                'name': 'agenda'|trans({}, 'platform'),
+                'href': '#'
+            }
+        ])
+    }}
+
     <div id="selectWorkspace">
         {% for c in cours %}
                 {{c}}
                  <input type="checkbox" name="{{c}}"  class="filter" />
-        {% endfor %} 
+        {% endfor %}
     </div>
     <div class="row-fluid">
         <div id="events"></div>

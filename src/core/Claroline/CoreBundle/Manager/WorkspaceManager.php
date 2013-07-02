@@ -85,23 +85,30 @@ class WorkspaceManager
             $preparedRights
         );
 
-        $extractPath = $this->extractTemplate($config->getArchive());
+        $filePaths = $this->extractFiles($config);
         $toolsConfig = $config->getToolsConfiguration();
         $toolsPermissions = $config->getToolsPermissions();
 
-        $position = 0;
+        $position = 1;
 
         foreach ($toolsPermissions as $toolName => $perms) {
+            $rolesToAdd = array();
+
+            foreach ($perms['perms'] as $role) {
+                $rolesToAdd[] = $baseRoles[$role];
+            }
+
             $confTool = isset($toolsConfig[$toolName]) ?  $toolsConfig[$toolName] : array();
+
             $this->toolManager->import(
-                $perms,
                 $confTool,
-                $baseRoles,
-                $toolName,
+                $rolesToAdd,
+                $filePaths,
+                $perms['name'],
                 $workspace,
                 $root,
+                $this->toolManager->findOneByName($toolName),
                 $manager,
-                $extractPath,
                 $position
             );
             $position++;
@@ -125,13 +132,22 @@ class WorkspaceManager
         return $preparedRightsArray;
     }
 
-    private function extractTemplate($archpath)
+    private function extractFiles(Configuration $config)
     {
+        $archpath = $config->getArchive();
         $extractPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('claro_ws_tmp_', true);
         $archive = new \ZipArchive();
         $archive->open($archpath);
         $archive->extractTo($extractPath);
+        $realPaths = array();
+        $confTools = $config->getToolsConfiguration();
 
-        return $extractPath;
+        if (isset($confTools['files'])) {
+            foreach ($config['files'] as $path) {
+                $realPaths[] = $extractPath . DIRECTORY_SEPARATOR . $path;
+            }
+        }
+
+        return $realPaths;
     }
 }

@@ -35,11 +35,15 @@
 {% macro breadcrumbs(elements) %}
     <ul class="breadcrumb">
         {% for element in elements %}
-            <li>
-                <a href="{{ element['href'] }}"> {{ element['name'] }}</a>
+            <li{% if element['href'] == "" %} class="active"{% endif %}>
+                {% if element['href'] != "" %}
+                    <a href="{{ element['href'] }}"><i class="{{ element['icon'] }}"></i> {{ element['name'] }}</a>
+                {% else %}
+                    {{ element['name'] }}
+                {% endif %}
             </li>
             {% if not loop.last %}
-                <span class="divider"> / </span>
+            <li><span class="divider"> / </span></li>
             {% endif %}
         {% endfor %}
     </ul>
