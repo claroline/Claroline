@@ -101,7 +101,7 @@ class ResourceController extends Controller
         $response = new Response();
 
         if (($resource = $event->getResource()) instanceof AbstractResource) {
-            $manager = $this->get('claroline.resource.manager');
+            $manager = $this->get('claroline.manager.resource_manager');
             $resource = $manager->create($resource, $parentId, $resourceType);
             $response->headers->set('Content-Type', 'application/json');
             $response->setContent(
@@ -110,7 +110,7 @@ class ResourceController extends Controller
             );
         } elseif (count($event->getResources()) > 0) {
             $resources = $event->getResources();
-            $manager = $this->get('claroline.resource.manager');
+            $manager = $this->get('claroline.manager.resource_manager');
             $resourcesArray = array();
             $token = $this->get('security.context')->getToken();
 
@@ -208,7 +208,7 @@ class ResourceController extends Controller
         $this->checkAccess('DELETE', $collection);
 
         foreach ($collection->getResources() as $resource) {
-            $this->get('claroline.resource.manager')->delete($resource);
+            $this->get('claroline.manager.resource_manager')->delete($resource);
         }
 
         return new Response('Resource deleted', 204);
@@ -236,7 +236,7 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getManager();
         $resourceRepo = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
         $newParent = $resourceRepo->find($newParentId);
-        $resourceManager = $this->get('claroline.resource.manager');
+        $resourceManager = $this->get('claroline.manager.resource_manager');
         $movedResources = array();
         $collection = new ResourceCollection();
 
@@ -422,7 +422,7 @@ class ResourceController extends Controller
 
             $path = $resourceRepo->findAncestors($directory);
             $resources = $resourceRepo->findChildren($directory, $currentRoles);
-            $resources = $this->get('claroline.resource.manager')->sort($resources);
+            $resources = $this->get('claroline.manager.resource_manager')->sort($resources);
 
             $creationRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
                 ->findCreationRights($currentRoles, $directory);
@@ -495,7 +495,7 @@ class ResourceController extends Controller
         $this->checkAccess('COPY', $collection);
 
         foreach ($resources as $resource) {
-            $newNode = $this->get('claroline.resource.manager')->copy($resource, $parent, $token->getUser());
+            $newNode = $this->get('claroline.manager.resource_manager')->copy($resource, $parent, $token->getUser());
             $em->persist($newNode);
             $em->flush();
             $em->refresh($parent);
@@ -525,7 +525,7 @@ class ResourceController extends Controller
     public function filterAction($directoryId)
     {
         $queryParameters = $this->container->get('request')->query->all();
-        $criteria = $this->get('claroline.resource.manager')->buildSearchArray($queryParameters);
+        $criteria = $this->get('claroline.manager.resource_manager')->buildSearchArray($queryParameters);
         $criteria['roots'] = isset($criteria['roots']) ? $criteria['roots'] : array();
         $resourceRepo = $this->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
@@ -575,7 +575,7 @@ class ResourceController extends Controller
         foreach ($ids as $resourceId) {
             $resource = $repo->find($resourceId);
             $creator = $this->get('security.context')->getToken()->getUser();
-            $shortcut = $this->get('claroline.resource.manager')->makeShortcut($resource, $parent, $creator);
+            $shortcut = $this->get('claroline.manager.resource_manager')->makeShortcut($resource, $parent, $creator);
             $em->flush();
             $em->refresh($parent);
 
@@ -697,9 +697,9 @@ class ResourceController extends Controller
         $next = $repo->find($nextId);
 
         if ($next !== null) {
-            $this->get('claroline.resource.manager')->insertBefore($resource, $next);
+            $this->get('claroline.manager.resource_manager')->insertBefore($resource, $next);
         } else {
-            $this->get('claroline.resource.manager')->insertBefore($resource);
+            $this->get('claroline.manager.resource_manager')->insertBefore($resource);
         }
 
         return new Response('success', 204);
