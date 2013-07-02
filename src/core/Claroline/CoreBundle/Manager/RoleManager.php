@@ -18,12 +18,13 @@ class RoleManager
 {
     private $roleRepo;
     private $writer;
+    private $roleRepo;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "writer" = @DI\Inject("claroline.database.writer"),
+     *     "writer"   = @DI\Inject("claroline.database.writer"),
      *     "roleRepo" = @DI\Inject("role_repository")
      * })
      */
@@ -133,5 +134,13 @@ class RoleManager
         }
 
         return $entityRoles;
+    }
+
+    public function findWorkspaceRoles(AbstractWorkspace $workspace)
+    {
+        return array_merge(
+            $this->roleRepo->findByWorkspace($workspace),
+            $this->roleRepo->findBy(array('name' => 'ROLE_ANONYMOUS'))
+        );
     }
 }

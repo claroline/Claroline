@@ -2,22 +2,21 @@
 {% block javascripts %}
 {% endblock %}
 {% block section_content %}
-   {% spaceless %}
-        <ul class="breadcrumb">
-            <li>
-                <a href="{{ path('claro_workspace_open_tool',
-                    {'workspaceId': workspace.getId(), 'toolName': 'group_management'}) }}">
-                    {{ 'group_management'|trans({}, 'tools') }}
-                </a>
-            </li>
-            <span class="divider"> / </span>
-            <li>
-                <a href="#">
-                    {{ group.getName() }}
-                </a>
-            </li>
-        </ul>
-    {% endspaceless %}
+
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-th-list',
+                'name': 'group_management'|trans({}, 'tools'),
+                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'group_management'})
+            },
+            {
+                'name': 'group_management'|trans({}, 'tools'),
+                'href': ''
+            }
+        ])
+    }}
+
     <form class="form-horizontal" action="{{path('claro_workspace_tools_edit_group_parameters',{'workspaceId':workspace.getId(), 'groupId':group.getId()})}}" method="post" {{ form_enctype(form) }} id="user-parameters">
         <fieldset>
             <legend>{{ 'group_parameter'|trans({}, 'platform') }} :</legend>

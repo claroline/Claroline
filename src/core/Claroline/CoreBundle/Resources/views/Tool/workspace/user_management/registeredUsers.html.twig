@@ -60,16 +60,17 @@
 {% endblock %}
 
 {% block section_content %}
-    {% spaceless %}
-        <ul class="breadcrumb">
-            <li>
-            <a href="{{ path('claro_workspace_open_tool',
-                {'workspaceId': workspace.getId(), 'toolName': 'user_management'}) }}">
-                {{ 'user_management'|trans({}, 'tools') }}
-            </a>
-            </li>
-        </ul>
-    {% endspaceless %}
+
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-user',
+                'name': 'user_management'|trans({}, 'tools'),
+                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'user_management'})
+            }
+        ])
+    }}
+
     {{ macros.flashBox() }}
     <div class="margin">
         <div id="twig-attributes"
@@ -84,9 +85,7 @@
                 </button>
             </div>
         </div>
-        </div>
-            {{ renderPager(search, workspace.getId(), pager) }}
-        <div>
+        {{ renderPager(search, workspace.getId(), pager) }}
         <table class="table table-striped table-bordered table-condensed">
             <thead>
                 <tr>
@@ -126,9 +125,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        </div>
-            {{ renderPager(search, workspace.getId(), pager) }}
-        <div>
+        {{ renderPager(search, workspace.getId(), pager) }}
         {{ displayControls(workspace.getId()) }}
         <div id="validation-box" class="modal hide fade">
             <div class="modal-header">

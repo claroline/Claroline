@@ -1056,7 +1056,6 @@ class Version20120119000000 extends BundleMigration
         );
 
         $table->addUniqueIndex(array('tool_id', 'user_id', 'workspace_id'));
-        $table->addUniqueIndex(array('workspace_id', 'display_order'));
         $table->addUniqueIndex(array('workspace_id', 'name'));
 
         $this->storeTable($table);

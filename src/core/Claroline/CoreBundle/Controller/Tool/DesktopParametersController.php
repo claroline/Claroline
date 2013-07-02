@@ -8,7 +8,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Event\ConfigureDesktopToolEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -19,14 +18,12 @@ class DesktopParametersController extends Controller
 {
     private $request;
     private $router;
-    private $formFactory;
     private $toolManager;
 
     /**
      * @DI\InjectParams({
      *     "request"      = @DI\Inject("request"),
      *     "urlGenerator" = @DI\Inject("router"),
-     *     "formFactory"  = @DI\Inject("form.factory"),
      *     "toolManager"  = @DI\Inject("claroline.manager.tool_manager"),
      *     "ed"           = @DI\Inject("event_dispatcher")
      * })
@@ -34,14 +31,12 @@ class DesktopParametersController extends Controller
     public function __construct(
         Request $request,
         UrlGeneratorInterface $router,
-        FormFactoryInterface $formFactory,
         ToolManager $toolManager,
         EventDispatcher $ed
     )
     {
         $this->request = $request;
         $this->router = $router;
-        $this->formFactory = $formFactory;
         $this->toolManager = $toolManager;
         $this->ed = $ed;
     }
