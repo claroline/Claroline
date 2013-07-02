@@ -148,21 +148,21 @@ class AbstractResourceRepositoryTest extends RepositoryTestCase
 //        $this->assertEquals(2, count($roots));
 //    }
 
-    public function testFindResourcesByIds()
-    {
-        $ids = array(self::getDirectory('dir1')->getId(), self::getDirectory('dir2')->getId());
-        $resources = self::$repo->findResourcesByIds($ids);
-        $this->assertEquals(2, count($resources));
-    }
+//    public function testFindResourcesByIds()
+//    {
+//        $ids = array(self::getDirectory('dir1')->getId(), self::getDirectory('dir2')->getId());
+//        $resources = self::$repo->findResourcesByIds($ids);
+//        $this->assertEquals(2, count($resources));
+//    }
 
-    public function testFindAncestors()
-    {
-        $ancestors = self::$repo->findAncestors(self::getDirectory('dir2'));
-        $this->assertEquals(3, count($ancestors));
-        $this->assertEquals(self::getDirectory('john')->getId(), $ancestors[0]['id']);
-        $this->assertEquals(self::getDirectory('dir1')->getId(), $ancestors[1]['id']);
-        $this->assertEquals(self::getDirectory('dir2')->getId(), $ancestors[2]['id']);
-    }
+//    public function testFindAncestors()
+//    {
+//        $ancestors = self::$repo->findAncestors(self::getDirectory('dir2'));
+//        $this->assertEquals(3, count($ancestors));
+//        $this->assertEquals(self::getDirectory('john')->getId(), $ancestors[0]['id']);
+//        $this->assertEquals(self::getDirectory('dir1')->getId(), $ancestors[1]['id']);
+//        $this->assertEquals(self::getDirectory('dir2')->getId(), $ancestors[2]['id']);
+//    }
 
     public function testFindByCriteria()
     {
@@ -195,11 +195,11 @@ class AbstractResourceRepositoryTest extends RepositoryTestCase
         $this->assertEquals(self::getDirectory('dir1')->getId(), $resources[0]['id']);
     }
 
-    public function testFindByCriteriaThrowsAnExceptionOnUnknownFilter()
-    {
-        $this->setExpectedException('Claroline\CoreBundle\Repository\Exception\UnknownFilterException');
-        self::$repo->findByCriteria(array('foo' => 'bar'));
-    }
+//    public function testFindByCriteriaThrowsAnExceptionOnUnknownFilter()
+//    {
+//        $this->setExpectedException('Claroline\CoreBundle\Repository\Exception\UnknownFilterException');
+//        self::$repo->findByCriteria(array('foo' => 'bar'));
+//    }
 
     public function testFindDirectoryShortcutTargets()
     {
@@ -207,8 +207,8 @@ class AbstractResourceRepositoryTest extends RepositoryTestCase
         $this->assertEquals(4, count($shortcuts));
     }
 
-    public function testCount()
-    {
-       $this->assertEquals(12, self::$repo->count());
-    }
+//    public function testCount()
+//    {
+//       $this->assertEquals(12, self::$repo->count());
+//    }
 }
