@@ -8,10 +8,10 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Form\WorkspaceOrderToolEditType;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -21,23 +21,27 @@ class WorkspaceToolsParametersController extends AbstractParametersController
     private $toolManager;
     private $roleManager;
     private $formFactory;
+    private $request;
 
     /**
      * @DI\InjectParams({
      *     "toolManager" = @DI\Inject("claroline.manager.tool_manager"),
      *     "roleManager" = @DI\Inject("claroline.manager.role_manager"),
-     *     "formFactory" = @DI\Inject("claroline.form.factory")
+     *     "formFactory" = @DI\Inject("claroline.form.factory"),
+     *     "request"     = @DI\Inject("request")
      * })
      */
     public function __construct(
         ToolManager $toolManager,
         RoleManager $roleManager,
-        FormFactory $formFactory
+        FormFactory $formFactory,
+        Request $request
     )
     {
         $this->toolManager = $toolManager;
         $this->roleManager = $roleManager;
         $this->formFactory = $formFactory;
+        $this->request = $request;
     }
     /**
      * @EXT\Route(
@@ -221,8 +225,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
     {
 
         $form = $this->formFactory->create(FormFactory::TYPE_ORDERED_TOOL, array(), $ot);
-        $request = $this->getRequest();
-        $form->handleRequest($request);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $this->toolManager->editOrderedTool($form->getData());
