@@ -12,9 +12,9 @@
             <a href="{{ path('claro_admin_badges_add') }}" class="thumbnail" title="{{ 'add_badge'|trans({}, 'platform') }}"><i class="icon-plus"></i></a>
         </li>
     {% for badge in badges %}
-        <li class="span2 badge_item">
+        <li class="span2">
             <a href="{{ path('claro_admin_badges_edit', {'slug': badge.slug}) }}" title="{{ badge.name }}" class="thumbnail">
-                <img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" />
+                <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" />
             </a>
         </li>
     {% endfor %}

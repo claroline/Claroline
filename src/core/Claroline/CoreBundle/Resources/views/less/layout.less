@@ -473,7 +473,7 @@ footer {
     margin-left: 20px
 }
 
-.badge_item img {
+.badge_image {
     width:  100px;
     height: 100px;
 }
@@ -501,6 +501,29 @@ footer {
         }
     }
 }
+
+/* Special grid styles
+-------------------------------------------------- */
+
+.view_badge {
+    .row-fluid {
+        margin-top: 10px;
+        margin-bottom: 20px;
+        .row-fluid {
+            margin-top: 0;
+            margin-bottom: 0;
+            [class*="span"] {
+                margin-top: 5px;
+            }
+        }
+    }
+    [class*="span"] {
+        text-align: center;
+        min-height: 40px;
+        line-height: 40px;
+    }
+}
+
 
 /************/
 /* MESSAGES */

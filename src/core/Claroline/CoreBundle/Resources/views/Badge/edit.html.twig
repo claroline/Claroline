@@ -1,39 +1,70 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
 {% block section_content %}
-    <div class="margin">
-        <h3 id='user-list-block' class="sub-section-header">{{ 'edit_badge'|trans({'%badge_name%' : badge.name}, 'platform') }}</h3>
-    </div>
-    <form action="{{ path('claro_admin_badges_edit', {'slug': badge.slug}) }}" method="post" {{ form_enctype(form) }} novalidate>
-        {{ form_errors(form) }}
-
-        {{ form_row(form.name) }}
-        {{ form_row(form.description) }}
-        {{ form_row(form.criteria) }}
-        {{ form_row(form.version) }}
-
-        <div class="control-group ">
-            {{ form_errors(form.file) }}
-            {{ form_label(form.file) }}
-            <div class="controls">
-                <img src="{{ asset(badge.webPath) }}" id="current_image" alt="{{ badge.name }}" />
-                {{ form_widget(form.file, {'attr': {'class': 'hidden'}}) }}
-                <label class="checkbox">
-                    <input type="checkbox" id="delete_image" /> {{ 'badge_form_change_image'|trans({}, 'platform') }}
-                </label>
+    <ul class="nav nav-tabs">
+        <li><a href="{{ path('claro_admin_badges') }}" data-toggle="tooltip" data-placement="bottom" title="{{ 'back_to_badges_list'|trans({}, 'platform') }}"><i class="icon-reply"></i></a></li>
+        <li class="active"><a href="#view" data-toggle="tab">{{ 'view'|trans({}, 'platform') }}</a></li>
+        <li><a href="#edit" data-toggle="tab">{{ 'edit'|trans({}, 'platform') }}</a></li>
+    </ul>
+    <div class="tab-content view_badge">
+        <div class="tab-pane active" id="view">
+            <div class="margin">
+                <h3 id='user-list-block' class="sub-section-header">
+                    <span class="badge badge-info accordion-toggle" data-toggle="tooltip" title="{{ 'badge_form_version'|trans({}, 'platform') }} {{ badge.version }}">{{ badge.version }}</span>
+                    {{ 'badge'|trans({}, 'platform') }} "{{ badge.name }}"
+                    {% if badge.expiredAt is not null %}
+                    <small>{{ 'badge_expired_on_date'|trans({'%expirationDate%': badge.expiredAt|date('date_format'|trans({}, 'platform'))}, 'platform') }}</small>
+                    {% endif %}
+                </h3>
+            </div>
+            <div class="row-fluid">
+                <div class="media">
+                    <a class="pull-left" href="#">
+                        <img class="media-object badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" />
+                    </a>
+                    <div class="media-body">
+                        <h4 class="media-heading">{{ badge.description }}</h4>
+                        {{ badge.criteria|raw }}
+                    </div>
+                </div>
             </div>
         </div>
+        <div class="tab-pane" id="edit">
+            <div class="margin">
+                <h3 id='user-list-block' class="sub-section-header">{{ 'edit_badge'|trans({'%badge_name%' : badge.name}, 'platform') }}</h3>
+            </div>
+            <form action="{{ path('claro_admin_badges_edit', {'slug': badge.slug}) }}" method="post" {{ form_enctype(form) }} novalidate>
+                {{ form_errors(form) }}
 
-        {{ form_row(form.expired_at) }}
+                {{ form_row(form.name) }}
+                {{ form_row(form.description) }}
+                {{ form_row(form.criteria) }}
+                {{ form_row(form.version) }}
 
-        {{ form_rest(form) }}
+                <div class="control-group ">
+                    {{ form_errors(form.file) }}
+                    {{ form_label(form.file) }}
+                    <div class="controls">
+                        <img src="{{ asset(badge.webPath) }}" id="current_image" alt="{{ badge.name }}" />
+                        {{ form_widget(form.file, {'attr': {'class': 'hidden'}}) }}
+                        <label class="checkbox">
+                            <input type="checkbox" id="delete_image" /> {{ 'badge_form_change_image'|trans({}, 'platform') }}
+                        </label>
+                    </div>
+                </div>
 
-        <div class="form-actions">
-            <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
-            <a href="{{ path('claro_admin_badges') }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-inverse">{{ 'cancel'|trans({}, 'platform') }}</a>
-            <a href="{{ path('claro_admin_badges_delete', {'slug': badge.slug}) }}" title="{{ 'delete'|trans({}, 'platform') }}" class="btn btn-danger delete" data-confirm-title="{{ 'badge_delete_confirm_title'|trans({}, 'platform') }}" data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name}, 'platform') }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" >{{ 'delete'|trans({}, 'platform') }}</a>
+                {{ form_row(form.expired_at) }}
+
+                {{ form_rest(form) }}
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
+                    <a href="{{ path('claro_admin_badges') }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-inverse">{{ 'cancel'|trans({}, 'platform') }}</a>
+                    <a href="{{ path('claro_admin_badges_delete', {'slug': badge.slug}) }}" title="{{ 'delete'|trans({}, 'platform') }}" class="btn btn-danger delete" data-confirm-title="{{ 'badge_delete_confirm_title'|trans({}, 'platform') }}" data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name}, 'platform') }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" >{{ 'delete'|trans({}, 'platform') }}</a>
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 {% endblock %}
 
 {% block javascripts %}
