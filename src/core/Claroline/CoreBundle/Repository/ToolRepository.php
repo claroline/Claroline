@@ -107,15 +107,15 @@ class ToolRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findUndisplayedToolsByWorkspace($workspace)
+    public function findUndisplayedToolsByWorkspace(AbstractWorkspace $workspace)
     {
         $dql = "
             SELECT tool
             FROM Claroline\CoreBundle\Entity\Tool\Tool tool
             WHERE tool NOT IN (
                 SELECT tool_2 FROM Claroline\CoreBundle\Entity\Tool\Tool tool_2
-                JOIN tool_2.workspaceOrderedTools wot
-                JOIN wot.workspace ws
+                JOIN tool_2.orderedTools ot
+                JOIN ot.workspace ws
                 WHERE ws.id = {$workspace->getId()}
                 AND tool.isDisplayableInWorkspace = true
             )
@@ -125,7 +125,7 @@ class ToolRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findDisplayedToolsByWorkspace($workspace)
+    public function findDisplayedToolsByWorkspace(AbstractWorkspace $workspace)
     {
         $dql = "
             SELECT tool
@@ -137,5 +137,19 @@ class ToolRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
+    }
+
+    public function countDisplayedToolsByWorkspace(AbstractWorkspace $workspace)
+    {
+        $dql = "
+            SELECT count(tool)
+            FROM Claroline\CoreBundle\Entity\Tool\Tool tool
+            JOIN tool.orderedTools ot
+            JOIN ot.workspace ws
+            WHERE ws.id = {$workspace->getId()}
+        ";
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getSingleScalarResult();
     }
 }

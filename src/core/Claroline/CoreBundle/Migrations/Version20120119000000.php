@@ -40,7 +40,6 @@ class Version20120119000000 extends BundleMigration
         $this->createListTypeCreationTable($schema);
         $this->createEventTable($schema);
         $this->createToolTable($schema);
-        $this->createUserDesktopToolTable($schema);
         $this->createOrderedToolTable($schema);
         $this->createOrderedToolRoleTable($schema);
         $this->createWorkspaceTagTable($schema);
@@ -1057,7 +1056,6 @@ class Version20120119000000 extends BundleMigration
         );
 
         $table->addUniqueIndex(array('tool_id', 'user_id', 'workspace_id'));
-        $table->addUniqueIndex(array('workspace_id', 'display_order'));
         $table->addUniqueIndex(array('workspace_id', 'name'));
 
         $this->storeTable($table);
@@ -1083,32 +1081,6 @@ class Version20120119000000 extends BundleMigration
             array('id'),
             array('onDelete' => 'CASCADE')
         );
-    }
-
-    private function createUserDesktopToolTable(Schema $schema)
-    {
-        $table = $schema->createTable('claro_user_desktop_tool');
-        $this->addId($table);
-        $table->addColumn('user_id', 'integer');
-        $table->addColumn('tool_id', 'integer');
-        $table->addColumn('display_order', 'integer');
-
-        $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_tools'),
-            array('tool_id'),
-            array('id'),
-            array('onDelete' => 'CASCADE')
-        );
-
-        $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_user'),
-            array('user_id'),
-            array('id'),
-            array('onDelete' => 'CASCADE')
-        );
-
-        $table->addUniqueIndex(array('user_id', 'tool_id'));
-        $table->addUniqueIndex(array('user_id', 'display_order'));
     }
 
     private function createWorkspaceTagTable(Schema $schema)
