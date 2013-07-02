@@ -515,6 +515,7 @@ badges_management: 'Gestion des badges'
 badges: 'Badges'
 badge: 'Badge'
 back_to_badges_list: 'Retour à la liste des badges'
+no_badges: 'Aucun badge.'
 add_badge: 'Ajouter un badge'
 edit_badge: 'Editer le badge %badge_name%'
 badge_delete_confirm_title: "Suppression d'un badge"

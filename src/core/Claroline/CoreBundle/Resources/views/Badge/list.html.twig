@@ -4,19 +4,31 @@
     {{ macros.flashBox() }}
 
     <div class="margin">
-        <h3 id='user-list-block' class="sub-section-header">{{ 'Badges'|trans({}, 'platform') }}</h3>
+        <h3 id='user-list-block' class="sub-section-header">
+            {{ 'Badges'|trans({}, 'platform') }}
+            <a href="{{ path('claro_admin_badges_add') }}" class="btn btn-mini" data-toggle="tooltip" data-placement="right" title="{{ 'add_badge'|trans({}, 'platform') }}"><i class="icon-plus"></i></a>
+        </h3>
     </div>
 
     <ul class="unstyled inline thumbnails badge_list">
-        <li class="span2 add_badge">
-            <a href="{{ path('claro_admin_badges_add') }}" class="thumbnail" title="{{ 'add_badge'|trans({}, 'platform') }}"><i class="icon-plus"></i></a>
-        </li>
     {% for badge in badges %}
         <li class="span2">
             <a href="{{ path('claro_admin_badges_edit', {'slug': badge.slug}) }}" title="{{ badge.name }}" class="thumbnail">
                 <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" />
             </a>
         </li>
+    {% else %}
+        <li>{{ 'no_badges'|trans({}, 'platform') }}</li>
     {% endfor %}
     </ul>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
+<script type="text/javascript">
+    $(function(){
+        $('[data-toggle=tooltip]').tooltip();
+    });
+</script>
 {% endblock %}

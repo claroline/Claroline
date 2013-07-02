@@ -512,6 +512,7 @@ badges_management: 'Badges management'
 badges: 'Badges'
 badge: 'Badge'
 back_to_badges_list: 'Back to badge list'
+no_badges: 'No badge.'
 add_badge: 'Add a badge'
 edit_badge: 'Edit the badge `%badge_name%`'
 badge_delete_confirm_title: "Deletion of a badge"
