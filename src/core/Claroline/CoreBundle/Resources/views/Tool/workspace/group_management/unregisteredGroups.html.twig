@@ -43,22 +43,21 @@
 {% endblock %}
 
 {% block section_content %}
-    {% spaceless %}
-        <ul class="breadcrumb">
-            <li>
-            <a href="{{ path('claro_workspace_open_tool',
-                {'workspaceId': workspace.getId(), 'toolName': 'group_management'}) }}">
-                {{ 'group_management'|trans({}, 'tools') }}
-            </a>
-            </li>
-            <span class="divider"> / </span>
-            <li>
-            <a href="#"
-                id="link_unregistered_groups">{{ 'unregistered_groups'|trans({}, 'platform') }}
-            </a>
-            </li>
-        </ul>
-    {% endspaceless %}
+
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-th-list',
+                'name': 'group_management'|trans({}, 'tools'),
+                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'group_management'})
+             },
+             {
+                'name': 'unregistered_groups'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+
     <div class="margin">
         <div id="twig-attributes"
             data-workspaceId="{{workspace.getId()}}">
@@ -75,9 +74,8 @@
             </div>
         </div>
 
-        </div>
-            {{ renderPager(search, workspace.getId(), pager) }}
-        <div>
+        {{ renderPager(search, workspace.getId(), pager) }}
+
         <table class="table table-striped table-bordered table-condensed">
             <thead>
                 <tr>
@@ -96,9 +94,9 @@
             {% endfor %}
             </tbody>
         </table>
-        </div>
-            {{ renderPager(search, workspace.getId(), pager) }}
-        <div>
+
+        {{ renderPager(search, workspace.getId(), pager) }}
+
         <p>
             <button class="btn btn-secondary add-groups-button"><i class="icon-plus"></i> {{ 'add'|trans({}, 'platform') }}</button>
 
