@@ -51,12 +51,7 @@ class ResourceType
     /**
      * @ORM\Column(type="boolean", name="is_exportable")
      */
-    protected $isExportable;
-
-    /**
-     * @ORM\Column(type="boolean", name="is_browsable")
-     */
-    protected $isBrowsable;
+    protected $isExportable = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")

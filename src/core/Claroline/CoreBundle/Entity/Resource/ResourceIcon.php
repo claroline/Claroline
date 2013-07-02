@@ -32,7 +32,7 @@ class ResourceIcon
     /**
      * @ORM\Column(type="boolean", name="is_shortcut")
      */
-    protected $isShortcut;
+    protected $isShortcut = false;
 
     /**
      * @ORM\Column(type="string", name="relative_url", nullable=true, length=255)
