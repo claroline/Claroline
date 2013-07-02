@@ -79,8 +79,16 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
-     * @EXT\ParamConverter("role", class="ClarolineCoreBundle:Role", options={"id" = "roleId", "strictId" = true})
-     * @EXT\ParamConverter("tool", class="ClarolineCoreBundle:Tool\Tool", options={"id" = "toolId", "strictId" = true})
+     * @EXT\ParamConverter(
+     *     "role",
+     *     class="ClarolineCoreBundle:Role",
+     *     options={"id" = "roleId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *     "tool",
+     *     class="ClarolineCoreBundle:Tool\Tool",
+     *     options={"id" = "toolId", "strictId" = true}
+     * )
      *
      * Remove a tool from a role in a workspace.
      *
@@ -111,8 +119,16 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
-     * @EXT\ParamConverter("role", class="ClarolineCoreBundle:Role", options={"id" = "roleId", "strictId" = true})
-     * @EXT\ParamConverter("tool", class="ClarolineCoreBundle:Tool\Tool", options={"id" = "toolId", "strictId" = true})
+     * @EXT\ParamConverter(
+     *     "role",
+     *     class="ClarolineCoreBundle:Role",
+     *     options={"id" = "roleId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *     "tool",
+     *     class="ClarolineCoreBundle:Tool\Tool",
+     *     options={"id" = "toolId", "strictId" = true}
+     * )
      *
      * Adds a tool to a role in a workspace.
      *
@@ -143,7 +159,11 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
-     * @EXT\ParamConverter("tool", class="ClarolineCoreBundle:Tool\Tool", options={"id" = "toolId", "strictId" = true})
+     * @EXT\ParamConverter(
+     *     "tool",
+     *     class="ClarolineCoreBundle:Tool\Tool",
+     *     options={"id" = "toolId", "strictId" = true}
+     * )
      *
      * This method switch the position of a tool with an other one.
      *
@@ -181,7 +201,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      * )
      *
      * @param AbstractWorkspace $workspace
-     * @param OrderedTool       $ot
+     * @param Tool              $tool
      *
      * @return Response
      */

@@ -8,7 +8,7 @@ use Claroline\CoreBundle\Entity\Tool\Tool;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -32,7 +32,7 @@ class AdministrationToolController extends Controller
         Request $request,
         ToolManager $toolManager,
         FormFactory $formFactory,
-        Router $router
+        UrlGeneratorInterface $router
     )
     {
         $this->request = $request;

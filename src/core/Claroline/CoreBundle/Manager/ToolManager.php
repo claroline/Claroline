@@ -86,8 +86,8 @@ class ToolManager
      * @param string            $name
      * @param AbstractWorkspace $workspace
      * @param AbstractResource  $rootDir
+     * @param Tool              $tool
      * @param User              $manager
-     * @param string            $extractPath The path were the template archive was extracted
      * @param integer           $position
      */
     public function import(
