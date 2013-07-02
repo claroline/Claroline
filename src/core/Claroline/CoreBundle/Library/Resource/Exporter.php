@@ -49,7 +49,7 @@ class Exporter
      *
      * @return file
      */
-    public function exportResources(array $ids)
+    public function exportResources(array $resources)
     {
         $repo = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
         $archive = new \ZipArchive();
@@ -62,8 +62,7 @@ class Exporter
         }
         $currentDir = $repo->find($ids[0])->getParent();
 
-        foreach ($resourceIds as $resourceId) {
-            $resource = $repo->find($resourceId);
+        foreach ($resources as $resource) {
 
             if (get_class($resource) == 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
                 $resource = $resource->getResource();

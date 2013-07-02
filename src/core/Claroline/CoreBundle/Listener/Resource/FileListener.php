@@ -82,7 +82,7 @@ class FileListener implements ContainerAwareInterface
             $file->setName($fileName);
             $file->setHashName($hashName);
             $file->setMimeType($mimeType);
-            $event->setResource($file);
+            $event->setResources(array($file));
             $event->stopPropagation();
 
             return;
