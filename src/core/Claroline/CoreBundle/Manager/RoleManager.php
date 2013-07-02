@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Repository\RoleRepository;
@@ -102,6 +103,19 @@ class RoleManager
             $ars->addRole($role);
         }
         $this->writer->update($ars);
+    }
+
+    public function resetRoles(User $user)
+    {
+        $userRole = $this->roleRepo->findOneByName('ROLE_USER');
+        $roles = $this->roleRepo->findPlatformRoles($user);
+
+        foreach ($roles as $role) {
+            if ($role !== $userRole) {
+                $user->removeRole($role);
+            }
+        }
+        $this->writer->update($user);
     }
 
     public function initWorkspaceBaseRole(array $roles, AbstractWorkspace $workspace)
