@@ -8,7 +8,6 @@ use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
 class ToolManagerTest extends MockeryTestCase
 {
-
     private $writer;
     private $orderedToolRepo;
     private $toolRepo;
