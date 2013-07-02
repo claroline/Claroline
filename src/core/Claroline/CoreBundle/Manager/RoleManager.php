@@ -26,7 +26,7 @@ class RoleManager
      *     "roleRepo" = @DI\Inject("role_repository")
      * })
      */
-    public function __contruct(Writer $writer, RoleRepository $roleRepo)
+    public function __construct(Writer $writer, RoleRepository $roleRepo)
     {
         $this->writer = $writer;
         $this->roleRepo = $roleRepo;
@@ -115,7 +115,6 @@ class RoleManager
                 $workspace,
                 false
             );
-            $this->writer->create($role);
             $entityRoles[$name] = $role;
         }
 

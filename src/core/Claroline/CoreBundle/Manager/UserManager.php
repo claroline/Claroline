@@ -26,6 +26,8 @@ class UserManager
     private $toolManager;
     private $ed;
     private $personalWsTemplateFile;
+    private $trans;
+    private $ch;
 
     /**
      * Constructor.
@@ -65,7 +67,7 @@ class UserManager
         $this->ch = $ch;
     }
 
-    public function insertUsert(User $user)
+    public function insertUser(User $user)
     {
         $this->writer->create($user);
     }
@@ -130,8 +132,8 @@ class UserManager
             $newUser->setAdministrativeCode($code);
             $newUser->setMail($email);
 
-            $this->setPersonalWorkspace($user);
-            $this->toolManager->addRequiredToolsToUser($user);
+            $this->setPersonalWorkspace($newUser);
+            $this->toolManager->addRequiredToolsToUser($newUser);
             $this->roleManager->setRoleToRoleSubject($newUser, $roleName);
 
             $this->writer->create($newUser);
@@ -141,7 +143,7 @@ class UserManager
         }
     }
 
-    private function setPersonalWorkspace(User $user)
+    public function setPersonalWorkspace(User $user)
     {
         $config = Configuration::fromTemplate($this->personalWsTemplateFile);
         $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
