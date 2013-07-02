@@ -14,17 +14,17 @@ class CreatorTest extends FunctionalTestCase
     {
         parent::setUp();
         $this->loadPlatformRolesFixture();
-        $this->creator = $this->client->getContainer()->get('claroline.user.creator');
+        $this->creator = $this->client->getContainer()->get('claroline.manager.user_manager');
     }
 
     public function testCreateUserGivesUserRole()
     {
-        $user = new User();
-        $user->setFirstName('123');
-        $user->setLastName('123');
-        $user->setPassword('123');
-        $user->setUsername('123');
-        $user = $this->creator->create($user);
+        $newUser = new User();
+        $newUser->setFirstName('123');
+        $newUser->setLastName('123');
+        $newUser->setPassword('123');
+        $newUser->setUsername('123');
+        $user = $this->creator->createUser($newUser);
         $this->assertTrue($user->hasRole('ROLE_USER'));
     }
 }

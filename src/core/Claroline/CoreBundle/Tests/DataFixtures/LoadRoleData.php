@@ -35,13 +35,11 @@ class LoadRoleData extends AbstractFixture implements ContainerAwareInterface
      */
     public function load(ObjectManager $manager)
     {
+        $roleManager = $this->container->get('claroline.manager.role_manager');
+
         foreach ($this->roles as $role) {
-            $entityRole = new Role();
-            $entityRole->setName('ROLE_'.$role);
-            $entityRole->setTranslationKey($role);
-            $entityRole->setType(Role::CUSTOM_ROLE);
-            $manager->persist($entityRole);
-            $this->addReference('role/'.$role, $entityRole);
+            $entityRole = $roleManager->createCustomRole('ROLE_' . $role, $role);
+            $this->addReference('role/' . $role, $entityRole);
         }
 
         $manager->flush();

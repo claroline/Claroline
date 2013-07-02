@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Repository\RoleRepository;
@@ -27,7 +28,7 @@ class RoleManager
      *     "roleRepo" = @DI\Inject("role_repository")
      * })
      */
-    public function __contruct(Writer $writer, RoleRepository $roleRepo)
+    public function __construct(Writer $writer, RoleRepository $roleRepo)
     {
         $this->writer = $writer;
         $this->roleRepo = $roleRepo;
@@ -43,6 +44,8 @@ class RoleManager
         $role->setWorkspace($workspace);
 
         $this->writer->create($role);
+
+        return $role;
     }
 
     public function createBaseRole($name, $translationKey, $isReadOnly = true)
@@ -54,6 +57,8 @@ class RoleManager
         $role->setType(Role::BASE_ROLE);
 
         $this->writer->create($role);
+
+        return $role;
     }
 
     public function createCustomRole($name, $translationKey, $isReadOnly = false)
@@ -65,6 +70,18 @@ class RoleManager
         $role->setType(Role::CUSTOM_ROLE);
 
         $this->writer->create($role);
+
+        return $role;
+    }
+
+    public function setRoleToRoleSubject(AbstractRoleSubject $ars, $roleName)
+    {
+        $role = $this->roleRepo->findOneBy(array('name' => $roleName));
+
+        if (!is_null($role)) {
+            $ars->addRole($role);
+            $this->writer->update($ars);
+        }
     }
 
     public function associateRole(AbstractRoleSubject $ars, Role $role)
@@ -89,18 +106,30 @@ class RoleManager
         $this->writer->update($ars);
     }
 
+    public function resetRoles(User $user)
+    {
+        $userRole = $this->roleRepo->findOneByName('ROLE_USER');
+        $roles = $this->roleRepo->findPlatformRoles($user);
+
+        foreach ($roles as $role) {
+            if ($role !== $userRole) {
+                $user->removeRole($role);
+            }
+        }
+        $this->writer->update($user);
+    }
+
     public function initWorkspaceBaseRole(array $roles, AbstractWorkspace $workspace)
     {
         $entityRoles = array();
 
         foreach ($roles as $name => $translation) {
-            $role = new Role();
-            $role->setName("{$name}_{$workspace->getId()}");
-            $role->setTranslationKey($translation);
-            $role->setReadOnly(false);
-            $role->setType(Role::WS_ROLE);
-            $role->setWorkspace($workspace);
-            $this->writer->create($role);
+            $role = $this->createWorkspaceRole(
+                "{$name}_{$workspace->getId()}",
+                $translation,
+                $workspace,
+                false
+            );
             $entityRoles[$name] = $role;
         }
 

@@ -730,7 +730,7 @@ class AdministrationController extends Controller
                 $users[] = str_getcsv($line);
             }
 
-            $this->get('claroline.user.creator')->import($users);
+            $this->get('claroline.manager.user_manager')->importUsers($users);
 
             return $this->redirect($this->generateUrl('claro_admin_users_management'));
         }

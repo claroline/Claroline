@@ -78,36 +78,20 @@ class CreateUserCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $firstName = $input->getArgument('user_first_name');
-        $lastName = $input->getArgument('user_last_name');
-        $username = $input->getArgument('user_username');
-        $password = $input->getArgument('user_password');
-
         $user = new User();
-        $user->setFirstName($firstName);
-        $user->setLastName($lastName);
-        $user->setUsername($username);
-        $user->setPlainPassword($password);
-//        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-//        $roleRepo = $em->getRepository('ClarolineCoreBundle:Role');
+        $user->setFirstName($input->getArgument('user_first_name'));
+        $user->setLastName($input->getArgument('user_last_name'));
+        $user->setUsername($input->getArgument('user_username'));
+        $user->setPlainPassword($input->getArgument('user_password'));
 
         if ($input->getOption('admin')) {
             $roleName = PlatformRoles::ADMIN;
-//            $role = $roleRepo->findOneByName(PlatformRoles::ADMIN);
-//            $user->addRole($adminRole);
         } elseif ($input->getOption('ws_creator')) {
             $roleName = PlatformRoles::WS_CREATOR;
-//            $role = $roleRepo->findOneByName(PlatformRoles::WS_CREATOR);
-//            $user->addRole($wsCreatorRole);
         } else {
             $roleName = PlatformRoles::USER;
-//            $role = $roleRepo->findOneByName(PlatformRoles::USER);
-//            $user->addRole($userRole);
         }
         $this->getContainer()->get('claroline.manager.user_manager')
             ->createUserWithRole($user, $roleName);
-
-//        $em->persist($user);
-//        $this->getContainer()->get('claroline.user.creator')->create($user);
     }
 }
