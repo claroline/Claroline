@@ -37,6 +37,11 @@ class AdministrationController extends Controller
     const USER_PER_PAGE = 40;
     const GROUP_PER_PAGE = 40;
 
+    public function __construct()
+    {
+
+    }
+    
     /**
      * @Template("ClarolineCoreBundle:Administration:index.html.twig")
      *

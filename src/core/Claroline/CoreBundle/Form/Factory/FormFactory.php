@@ -12,6 +12,7 @@ class FormFactory
 {
     const TYPE_MESSAGE = 'message';
     const TYPE_ORDERED_TOOL = 'ordered_tool';
+    const TYPE_TOOL = 'tool';
 
     private static $types = array(
         self::TYPE_MESSAGE => array(
@@ -21,6 +22,10 @@ class FormFactory
         self::TYPE_ORDERED_TOOL => array(
             'formType' => 'Claroline\CoreBundle\Form\WorkspaceOrderToolEditType',
             'entity' => 'Claroline\CoreBundle\Entity\Tool\OrderedTool'
+        ),
+        self::TYPE_TOOL => array(
+            'formType' => 'Claroline\CoreBundle\Form\ToolType',
+            'entity' => 'Claroline\CoreBundle\Entity\Tool\Tool'
         )
     );
 

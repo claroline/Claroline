@@ -350,9 +350,19 @@ class ToolManager
         $this->writer->update($ot);
     }
 
+    public function editTool(Tool $tool)
+    {
+        $this->writer->update($tool);
+    }
+
     public function findOneByName($name)
     {
         return $this->toolRepo->findOneByName($name);
+    }
+
+    public function findAll()
+    {
+        return $this->toolRepo->findAll();
     }
 
     public function findOneByWorkspaceAndTool(AbstractWorkspace $ws, Tool $tool)
