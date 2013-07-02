@@ -60,6 +60,7 @@ creation_date: 'Creation date'
 cut: Cut
 dashboard: Dashboard
 date: Date
+date_format: 'm-d-Y'
 delete: Delete
 desktop: Desktop
 desktop_tools: Desktop tools
@@ -508,7 +509,9 @@ Overview of recent activities of your workspaces: 'Overview of recent activities
 Overview of recent activities in %workspaceName%: 'Overview of recent activities in %workspaceName%'
 Overview of all recent activities in %workspaceName% : 'Overview of all recent activities in %workspaceName%'
 badges_management: 'Badges management'
-Badges: 'Badges'
+badges: 'Badges'
+badge: 'Badge'
+back_to_badges_list: 'Back to badge list'
 add_badge: 'Add a badge'
 edit_badge: 'Edit the badge `%badge_name%`'
 badge_delete_confirm_title: "Deletion of a badge"
@@ -526,3 +529,4 @@ badge_form_version: 'Version'
 badge_form_image: 'Image'
 badge_form_expired_at: 'Expiration date'
 badge_form_change_image: "Change the image"
+badge_expired_on_date: 'Expire the %expirationDate%'

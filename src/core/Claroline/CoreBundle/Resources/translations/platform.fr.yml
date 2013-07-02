@@ -60,6 +60,7 @@ creation_date: 'Date de création'
 cut: Couper
 dashboard: 'Tableau de bord'
 date: Date
+date_format: 'd-m-Y'
 delete: Supprimer
 desktop: Bureau
 desktop_tools: Outils du bureau
@@ -511,7 +512,9 @@ Overview of recent activities of your workspaces: 'Aperçu des activités récen
 Overview of recent activities in %workspaceName%: 'Aperçu des activités récentes de %workspaceName%'
 Overview of all recent activities in %workspaceName%: 'Aperçu de toutes les activités récentes de %workspaceName%'
 badges_management: 'Gestion des badges'
-Badges: 'Badges'
+badges: 'Badges'
+badge: 'Badge'
+back_to_badges_list: 'Retour à la liste des badges'
 add_badge: 'Ajouter un badge'
 edit_badge: 'Editer le badge %badge_name%'
 badge_delete_confirm_title: "Suppression d'un badge"
@@ -529,3 +532,4 @@ badge_form_version: 'Version'
 badge_form_image: 'Image'
 badge_form_expired_at: "Date d'expiration"
 badge_form_change_image: "Changer l'image"
+badge_expired_on_date: 'Expire le %expirationDate%'
