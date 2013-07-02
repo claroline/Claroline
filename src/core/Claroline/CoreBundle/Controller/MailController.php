@@ -3,19 +3,39 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Claroline\CoreBundle\Form\MailType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\DiExtraBundle\Annotation as DI;
 
 class MailController extends Controller
 {
+    private $formFactory;
+
     /**
-     * @Route(
+     * @DI\InjectParams({
+     *     "formFactory" = @DI\Inject("claroline.form.factory"),
+     *     "request"     = @DI\Inject("request"),
+     *     "mailer"      = @DI\Inject("mailer")
+     * })
+     */
+    public function __construct(
+        FormFactory $formFactory,
+        Request $request,
+        \Swift_Mailer $mailer
+    )
+    {
+        $this->formFactory = $formFactory;
+        $this->request = $request;
+        $this->mailer = $mailer;
+    }
+
+    /**
+     * @EXT\Route(
      *     "/form/{userId}",
      *     name="claro_mail_form"
      * )
-     *
-     * @Template()
+     * @EXT\Template()
      *
      * Displays the mail form.
      *
@@ -25,52 +45,50 @@ class MailController extends Controller
      */
     public function formAction($userId)
     {
-        $form = $this->createForm(new MailType());
-
         return array(
-            'form' => $form->createView(),
+            'form' => $this->formFactory->create(FormFactory::TYPE_MAIL)->createView(),
             'userId' => $userId
         );
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/send/{userId}",
      *     name="claro_mail_send"
      * )
-     *
-     * @Template()
+     * @EXT\ParamConverter(
+     *      "user",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"id" = "userId", "strictId" = true}
+     * )
+     * @EXT\Template()
      *
      * Handles the mail form submission (sends a mail).
      *
-     * @param integer $userId
+     * @param User $user
      *
      * @return Response
      */
-    public function sendAction($userId)
+    public function sendAction(User $user)
     {
-        $request = $this->get('request');
-        $form = $this->get('form.factory')->create(new MailType());
-        $form->handleRequest($request);
+        $form = $this->formFactory->create(FormFactory::TYPE_MAIL);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $data = $form->getData();
-            $user = $this->get('doctrine.orm.entity_manager')
-                ->getRepository('ClarolineCoreBundle:User')
-                ->find($userId);
             $message = \Swift_Message::newInstance()
                 ->setSubject($data['object'])
                 ->setFrom('noreply@claroline.net')
                 ->setTo($user->getMail())
                 ->setBody($data['content'], 'text/html');
-            $this->get('mailer')->send($message);
+            $this->mailer->send($message);
         }
 
         // add success/error message...
 
         return array(
             'form' => $form->createView(),
-            'userId' => $userId
+            'userId' => $user->getId()
         );
     }
 }
