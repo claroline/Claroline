@@ -66,9 +66,6 @@ class MessageManager
         $receivers = $this->userRepo->findByUsernames($usernames); // throw ex if missing
         $message->setSender($sender);
 
-        // replace receiver string by to !!!!
-        $message->setReceiverString($receiversString);
-
         if (null !== $parent) {
             $message->setParent($parent);
         }
@@ -107,7 +104,7 @@ class MessageManager
     {
         $query = $search === '' ?
             $this->userMessageRepo->findSent($sender, false) :
-            $this->userMessageRepo->findSentByObjectOrSender($sender, $search, false);
+            $this->userMessageRepo->findSentByObject($sender, $search, false);
 
         return $this->pagerFactory->createPager($query, $page);
     }
@@ -117,7 +114,7 @@ class MessageManager
     {
         $query = $search === '' ?
             $this->userMessageRepo->findRemoved($user, false):
-            $this->userMessageRepo->findRemovedByUserAndObjectAndUsername($user, $search, false);
+            $this->userMessageRepo->findRemovedByObjectOrSender($user, $search, false);
 
         return $this->pagerFactory->createPager($query, $page);
     }
@@ -148,7 +145,7 @@ class MessageManager
         $this->writer->suspendFlush();
 
         foreach ($userMessages as $userMessage) {
-            $this->writer->remove($userMessage);
+            $this->writer->delete($userMessage);
         }
 
         $this->writer->forceFlush();
@@ -188,7 +185,7 @@ class MessageManager
         $this->writer->suspendFlush();
 
         foreach ($userMessages as $userMessage) {
-            $userMessage->$method($userMessage);
+            $userMessage->$method();
             $this->writer->update($userMessage);
         }
 
