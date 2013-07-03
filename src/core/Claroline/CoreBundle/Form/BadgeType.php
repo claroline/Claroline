@@ -11,15 +11,14 @@ class BadgeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', 'text')
-            ->add('description', 'text')
-            ->add('criteria', 'textarea', array(
-                'attr' => array(
-                    'class' => 'tinymce',
-                    'data-theme' => 'medium'
+            ->add('translations', 'a2lix_translations_gedmo', array(
+                'translatable_class' => "Claroline\CoreBundle\Entity\Badge\Badge",
+                'fields' => array(
+                    'slug' => array(
+                        'display' => false
                     )
                 )
-            )
+            ))
             ->add('version', 'integer')
             ->add('file', 'file', array(
                     'label' => 'badge_form_image'

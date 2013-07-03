@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Entity\Badge;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -9,14 +10,14 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Type
+ * Class Badge
  *
  * @ORM\Table(name="claro_badge")
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\BadgeRepository")
+ * @Gedmo\TranslationEntity(class="Claroline\CoreBundle\Entity\Badge\BadgeTranslation")
  * @ORM\HasLifecycleCallbacks
  */
-
-class Badge  
+class Badge
 {
     /**
      * @var integer
@@ -30,6 +31,7 @@ class Badge
     /**
      * @var string
      *
+     * @Gedmo\Translatable
      * @ORM\Column(type="string", length=128, unique=true, nullable=false)
      */
     protected $name;
@@ -37,6 +39,7 @@ class Badge
     /**
      * @var string
      *
+     * @Gedmo\Translatable
      * @ORM\Column(type="string", length=128, nullable=false)
      */
     protected $description;
@@ -44,14 +47,16 @@ class Badge
     /**
      * @var string
      *
+     * @Gedmo\Translatable
      * @Gedmo\Slug(fields={"name"})
-     * @ORM\Column(type="string", length=128, unique=true, nullable=false)
+     * @ORM\Column(type="string", length=128, unique=true, nullable=true)
      */
     protected $slug;
 
     /**
      * @var string
      *
+     * @Gedmo\Translatable
      * @ORM\Column(type="text", nullable=false)
      */
     protected $criteria;
@@ -82,7 +87,56 @@ class Badge
      *
      * @Assert\File
      */
-    public $file;
+    protected $file;
+
+    /**
+     * @var BadgeTranslation[]
+     *
+     * @ORM\OneToMany(
+     *   targetEntity="Claroline\CoreBundle\Entity\Badge\BadgeTranslation",
+     *   mappedBy="badge",
+     *   cascade={"persist", "remove"}
+     * )
+     */
+    private $translations;
+
+    public function __construct()
+    {
+        $this->translations = new ArrayCollection();
+    }
+
+    /**
+     * @return BadgeTranslation[]
+     */
+    public function getTranslations()
+    {
+        return $this->translations;
+    }
+
+    /**
+     * @param BadgeTranslation $translation
+     * @return Badge
+     */
+    public function addTranslation(BadgeTranslation $translation)
+    {
+        if (!$this->translations->contains($translation)) {
+            $this->translations[] = $translation;
+            $translation->setObject($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param BadgeTranslation $translation
+     * @return Badge
+     */
+    public function removeTranslation(BadgeTranslation $translation)
+    {
+        $this->translations->removeElement($translation);
+
+        return $this;
+    }
 
     /**
      * @param string $criteria
@@ -244,6 +298,37 @@ class Badge
         return $this->version;
     }
 
+    /**
+     * @param string $locale
+     *
+     * @return Badge
+     */
+    public function setTranslatableLocale($locale)
+    {
+        $this->locale = $locale;
+
+        return $this;
+    }
+
+    /**
+     * @param UploadedFile $file
+     *
+     * @return Badge
+     */
+    public function setFile(UploadedFile $file)
+    {
+        $this->file = $file;
+
+        return $this;
+    }
+
+    /**
+     * @return UploadedFile
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
     /**
      * @return null|string
      */

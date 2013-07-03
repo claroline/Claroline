@@ -10,7 +10,7 @@ framework:
     validation:      { enable_annotations: true }
     templating:      { engines: ['twig'] } #assets_version: SomeVersionScheme
     translator:      { fallback: en }
-    default_locale: %locale%
+    default_locale:  %locale%
     session: ~
       #cookie_lifetime: 15
 
@@ -75,9 +75,10 @@ jms_di_extra:
 stof_doctrine_extensions:
     orm:
         default:
-            tree: true   # listeners are not enabled by default
+            tree:          true
             timestampable: true
-            sluggable: true
+            sluggable:     true
+            translatable:  true
 
 parameters:
     security.authentication.listener.anonymous.class: Claroline\CoreBundle\Listener\AnonymousAuthenticationListener
@@ -175,3 +176,5 @@ stfalcon_tinymce:
             inline_styles: false
             convert_fonts_to_spans: false
 
+a2lix_translation_form:
+    locales: [en, fr]

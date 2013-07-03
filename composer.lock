@@ -3,8 +3,67 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "8e9da921132b71939fadaf1f52e24200",
+    "hash": "b3b7aa456a61895b667c8425dbcf37ca",
     "packages": [
+        {
+            "name": "a2lix/translation-form-bundle",
+            "version": "dev-master",
+            "target-dir": "A2lix/TranslationFormBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/a2lix/TranslationFormBundle.git",
+                "reference": "86ea5019112be146bb75d98cbc6efce8b0b20cc4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/a2lix/TranslationFormBundle/zipball/86ea5019112be146bb75d98cbc6efce8b0b20cc4",
+                "reference": "86ea5019112be146bb75d98cbc6efce8b0b20cc4",
+                "shasum": ""
+            },
+            "require": {
+                "symfony/symfony": "2.3.*"
+            },
+            "suggest": {
+                "knplabs/doctrine-behaviors": "For Knp strategy",
+                "stof/doctrine-extensions-bundle": "For Gedmo strategy"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "A2lix\\TranslationFormBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "A2lix",
+                    "homepage": "http://www.a2lix.fr"
+                },
+                {
+                    "name": "David ALLIX"
+                }
+            ],
+            "description": "Translate your doctrine objects easily with a custom form field",
+            "homepage": "https://github.com/a2lix/TranslationFormBundle",
+            "keywords": [
+                "Symfony2",
+                "doctrine2",
+                "form",
+                "gedmo",
+                "knplabs",
+                "translatable",
+                "translation"
+            ],
+            "time": "2013-06-21 16:06:56"
+        },
         {
             "name": "claroline/front-end-bundle",
             "version": "dev-master",
@@ -2916,6 +2975,7 @@
         "fortawesome/fontawesome": 20,
         "xaguilars/bootstrap-colorpicker": 20,
         "zenstruck/form-bundle": 20,
+        "a2lix/translation-form-bundle": 20,
         "mockery/mockery": 20
     },
     "platform": {
