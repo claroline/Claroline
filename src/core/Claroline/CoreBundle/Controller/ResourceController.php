@@ -519,7 +519,7 @@ class ResourceController extends Controller
         foreach ($ids as $resourceId) {
             $resource = $repo->find($resourceId);
             $creator = $this->get('security.context')->getToken()->getUser();
-            $shortcut = $this->get('claroline.resource.manager')->makeShortcut($resource, $parent, $creator);
+            $shortcut = $this->get('claroline.manager.resource_manager')->makeShortcut($resource, $parent, $creator);
             $em->flush();
             $em->refresh($parent);
 

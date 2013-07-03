@@ -24,6 +24,7 @@ use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Database\Writer;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
 
 /**
  * @DI\Service("claroline.manager.resource_manager")
