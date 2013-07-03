@@ -191,6 +191,11 @@ class RoleManager
 
     public function getRoleById($roleId)
     {
-        return $this->roleRepo->findOneById($roleId);
+        return $this->roleRepo->find($roleId);
+    }
+
+    public function getRoleByName($name)
+    {
+        return $this->roleRepo->findOneByName($name);
     }
 }

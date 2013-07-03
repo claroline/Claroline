@@ -71,6 +71,14 @@ class UserManagerTest extends MockeryTestCase
         $manager->createUser($user);
     }
 
+    public function testDeleteUser()
+    {
+        $user = m::mock('Claroline\CoreBundle\Entity\User');
+        $this->writer->shouldReceive('delete')->with($user)->once();
+
+        $this->getManager()->deleteUser($user);
+    }
+
     public function testCreateUserWithRole()
     {
         $manager = $this->getManager(array('setPersonalWorkspace'));
