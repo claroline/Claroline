@@ -44,7 +44,7 @@ class ScormListener extends ContainerAware
     {
         $form = $this->container->get('form.factory')->create(new ScormType, new Scorm());
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:create_form.html.twig',
+            'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'claroline_scorm'
@@ -169,7 +169,7 @@ class ScormListener extends ContainerAware
         }
 
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:create_form.html.twig',
+            'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => $event->getResourceType()
