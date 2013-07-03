@@ -230,7 +230,8 @@ class DirectoryListener implements ContainerAwareInterface
     public function copy(CopyResourceEvent $event)
     {
         $resourceCopy = new Directory();
-        $dirType = $this->resourceTypeRepo->findOneByName('directory');
+        $dirType = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+            ->findOneByName('directory');
         $resourceCopy->setResourceType($dirType);
         $event->setCopy($resourceCopy);
     }

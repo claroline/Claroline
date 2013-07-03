@@ -20,16 +20,15 @@ class DesktopController extends Controller
      *     "/widgets",
      *     name="claro_desktop_widgets"
      * )
-     *
      * @EXT\Template("ClarolineCoreBundle:Widget:widgets.html.twig")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * Displays registered widgets.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function widgetsAction()
+    public function widgetsAction(User $user)
     {
-        $user = $this->get('security.context')->getToken()->getUser();
         $configs = $this->get('claroline.widget.manager')
             ->generateDesktopDisplayConfig($user->getId());
 
@@ -116,16 +115,17 @@ class DesktopController extends Controller
      *     "/open",
      *     name="claro_desktop_open"
      * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * Opens the desktop.
      *
      * @return Response
      */
-    public function openAction()
+    public function openAction(User $user)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $openedTool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->findDesktopDisplayedToolsByUser($this->get('security.context')->getToken()->getUser());
+            ->findDesktopDisplayedToolsByUser($user);
 
         $route = $this->get('router')->generate(
             'claro_desktop_open_tool',
