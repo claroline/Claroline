@@ -15,3 +15,4 @@ parameters:
     claroline.param.platform_config_handler_class: Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler
     claroline.param.platform_options_files:
         prod: %kernel.root_dir%/config/local/platform_options.yml
+    claroline.param.event_dispatcher.class: Claroline\CoreBundle\Library\EventDispatcher\EventDispatcher

@@ -30,9 +30,9 @@ class Manager
     private $em;
     /** @var ContainerInterface */
     protected $container;
-    /** @var EventDispatcher */
+    /** @var \Claroline\CoreBundle\Library\EventDispatcher\EventDispatcher */
     private $ed;
-    /** @var SecurityContext */
+    /** @var \Symfony\Component\Security\Core\SecurityContext */
     private $sc;
     /** @var Utilities */
     private $ut;

@@ -16,3 +16,7 @@ services:
     symfony.yaml:
         class: Symfony\Component\Yaml\Yaml
         public: false
+
+    event_dispatcher:
+        class: %claroline.param.event_dispatcher.class%
+        arguments: ["@service_container"]
