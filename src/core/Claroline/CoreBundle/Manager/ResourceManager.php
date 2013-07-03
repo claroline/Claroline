@@ -22,6 +22,7 @@ use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Database\Writer;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
 
 /**
  * @DI\Service("claroline.manager.resource_manager")
@@ -576,8 +577,7 @@ class ResourceManager
      */
     public function copy(AbstractResource $resource, AbstractResource $parent, User $user)
     {
-        $last = $this->resourceRepo->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->findOneBy(array('parent' => $parent, 'next' => null));
+        $last = $this->resourceRepo->findOneBy(array('parent' => $parent, 'next' => null));
 
         if (get_class($resource) == 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
             $copy = newResourceShortcut();

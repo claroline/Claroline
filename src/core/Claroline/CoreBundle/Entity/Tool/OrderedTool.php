@@ -33,7 +33,7 @@ class OrderedTool
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
-     *     cascade={"persist"}, inversedBy="workspaceOrderedTools"
+     *     cascade={"persist"}, inversedBy="orderedTools"
      * )
      * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      */
