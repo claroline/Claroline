@@ -4,111 +4,94 @@ namespace Claroline\CoreBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Entity\Home\Content;
+use Claroline\CoreBundle\Entity\Home\Type;
 use Claroline\CoreBundle\Entity\Home\SubContent;
 use Claroline\CoreBundle\Entity\Home\Content2Type;
 use Claroline\CoreBundle\Entity\Home\Content2Region;
 use Symfony\Component\HttpFoundation\Response;
 use JMS\SecurityExtraBundle\Annotation\Secure;
+use JMS\DiExtraBundle\Annotation\InjectParams;
+use JMS\DiExtraBundle\Annotation\Inject;
+use Claroline\CoreBundle\Manager\HomeManager;
 
 /**
- * @TODO Finish de doc
+ * @TODO doc
  */
 class HomeController extends Controller
 {
+    private $manager;
+
     /**
-     * Get content by id, if the content does not exists an error is given.
-     * This method require claroline.common.home_service.
-     *
-     * @route(
-     *     "/content/{id}/{type}/{father}",
-     *     requirements={"id" = "\d+"},
-     *     name="claroline_get_content_by_id_and_type",
-     *     defaults={"type" = "home", "father" = null})
-     *
-     * @param \String $id The id of the content.
-     * @param \String $type The type of the content, this parameter is optional, but this parameter could be usefull
-     *                      because the contents can have different twigs templates and sizes by their type.
-     * @param \Integer $father The id of father content.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @see Claroline\CoreBundle\Library\Home\HomeService()
+     * @InjectParams({
+     *     "manager" = @Inject("claroline.manager.home_manager")
+     * })
      */
-    public function contentAction($id, $type = "default", $father = null)
+    public function __construct(HomeManager $manager)
     {
-        $variables = array(
-            "type" => $type,
-            "size" => "span12"
-        );
-
-        $manager = $this->getDoctrine()->getManager();
-
-        $content = $manager->getRepository("ClarolineCoreBundle:Home\Content")->find($id);
-        $type = $manager->getRepository("ClarolineCoreBundle:Home\Type")->findOneBy(array('name' => $type));
-
-        if ($content) {
-
-            if ($father) {
-
-                $variables["father"] = $father;
-
-                $father = $manager->getRepository("ClarolineCoreBundle:Home\Content")->find($father);
-
-                $subContent = $manager->getRepository("ClarolineCoreBundle:Home\SubContent")->findOneBy(
-                    array('child' => $content, 'father' => $father)
-                );
-
-                $variables["size"] = $subContent->getSize();
-
-            } else {
-
-                $contentType = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(
-                    array('content' => $content, 'type' => $type)
-                );
-
-                $variables["size"] = $contentType->getSize();
-            }
-
-            $variables["menu"] = $this->menuAction($id, $variables["size"], $variables["type"], $father)->getContent();
-            $variables["content"] = $content;
-
-            return $this->render(
-                $this->container->get('claroline.common.home_service')->defaultTemplate(
-                    "ClarolineCoreBundle:Home/types:".$variables["type"].".html.twig"
-                ),
-                $variables
-            );
-        }
-
-        return $this->render('ClarolineCoreBundle:Home\:error.html.twig', array('path' => "Content ".$id));
+        $this->manager = $manager;
     }
 
     /**
-     * Render the layout of contents by type, if the type does not exists an error is given.
+     * Get content by id
      *
-     * @param \String $type The type of contents.
+     * @Route(
+     *     "/content/{content}/{type}/{subContent}",
+     *     requirements={"id" = "\d+"},
+     *     name="claroline_get_content_by_id_and_type",
+     *     defaults={"type" = "home", "subContent" = null}
+     * )
+     * @ParamConverter(
+     *     "content",
+     *     class = "ClarolineCoreBundle:Home\Content",
+     *     options = {"id" = "content"}
+     * )
+     * @ParamConverter(
+     *     "type",
+     *     class = "ClarolineCoreBundle:Home\Content2Type",
+     *     options = {"content_id" = "content", "type_id" = "type"}
+     * )
+     * @ParamConverter(
+     *     "subContent",
+     *     class = "ClarolineCoreBundle:Home\SubContent",
+     *     options = {"content_id" = "subContent"}
+     * )
      *
-     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function typeAction($type, $father = null, $region = null)
+    public function contentAction(Content $content, Content2Type $type = null, SubContent $subContent = null)
     {
-        $content = $this->getContentByType($type, $father, $region);
+        return $this->manager->render(
+            'ClarolineCoreBundle:Home/types:'.(is_object($type) ? $type->getType()->getName() : 'default').'.html.twig',
+            $this->manager->getContent($content, $type, $subContent),
+            true
+        );
+    }
 
-        $variables = array();
-
-        if ($content) {
-
-            $variables["content"] = $content;
-            $variables["creator"] = $this->creatorAction($type, null, null, $father)->getContent();
-
-            $variables = $this->isDefinedPush($variables, "father", $father);
-            $variables = $this->isDefinedPush($variables, "region", $region);
-
-            return $this->render("ClarolineCoreBundle:Home:layout.html.twig", $variables);
-        }
-
-        return $this->render('ClarolineCoreBundle:Home:error.html.twig', array('path' => $type));
+    /**
+     * @route("/type/{type}", name="claro_get_content_by_type")
+     * @route("/", name="claro_index", defaults={"type" = "home"})
+     *
+     * @ParamConverter(
+     *     "type",
+     *     class = "ClarolineCoreBundle:Home\Content2Type",
+     *     options = {"mapping": {null: "back", "type_id": "name"}}
+     * )
+     * @ParamConverter(
+     *     "regions",
+     *     class = "ClarolineCoreBundle:Home\Content2Region",
+     *     options = {"mapping": {null: "back"}}
+     * )
+     *
+     * @Template("ClarolineCoreBundle:Home:home.html.twig")
+     */
+    public function homeAction(Content2Type $type, $regions)
+    {
+        return array(
+            "region" => $this->manager->getRegions($regions),
+            "content" => "hola" //$this->manager->contentLayout($type)->getContent()
+        );
     }
 
     /**
@@ -133,80 +116,6 @@ class HomeController extends Controller
         );
 
         return $variables;
-    }
-
-    /**
-     * @route("/type/{type}", name="claro_get_content_by_type")
-     * @route("/", name="claro_index")
-     *
-     * @Template("ClarolineCoreBundle:Home:home.html.twig")
-     */
-    public function homeAction($type = "home", $father = null)
-    {
-        $variables = array(
-            "region" => $this->getRegions(),
-            "content" => $this->typeAction($type, $father)->getContent()
-        );
-
-        return $variables;
-    }
-
-    public function getRegions()
-    {
-        $tmp = array();
-
-        $manager = $this->getDoctrine()->getManager();
-
-        $regions = $manager->getRepository("ClarolineCoreBundle:Home\Region")->findAll();
-
-        foreach ($regions as $region) {
-
-            $content = "";
-
-            $first = $manager->getRepository("ClarolineCoreBundle:Home\Content2Region")->findOneBy(
-                array('back' => null, 'region' => $region)
-            );
-
-            for ($i = 0; $first != null; $i++) {
-
-                $contentType = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(
-                    array('content' => $first->getContent())
-                );
-
-                if ($contentType) {
-                    $type = $contentType->getType()->getName();
-                } else {
-                    $type = "default";
-                }
-
-                //@TODO Need content rights for admin user
-                if (!(!$this->get('security.context')->isGranted('ROLE_ADMIN') and
-                    $type == "menu" and
-                    $first->getContent()->getTitle() == 'Administration')
-                ) {
-                    $content .= $this->render(
-                        $this->container->get('claroline.common.home_service')->defaultTemplate(
-                            "ClarolineCoreBundle:Home/types:".$type.".html.twig"
-                        ),
-                        array(
-                            'content' => $first->getContent(),
-                            'size' => $first->getSize(),
-                            'menu' => "",
-                            'type' => $type,
-                            'region' => $region->getName()
-                        )
-                    )->getContent();
-                }
-
-                $first = $first->getNext();
-            }
-
-            if ($content != "") {
-                $tmp[$region->getName()] = $content;
-            }
-        }
-
-        return $tmp;
     }
 
     /**
@@ -580,73 +489,6 @@ class HomeController extends Controller
     public function regionAction($id)
     {
         return array('id' => $id);
-    }
-
-    /**
-     * Get Content by type.
-     * This method return an array with the content on success or null if the type does not exist.
-     *
-     * @param \String $type  Name of the type.
-     *
-     * @return \Array
-     */
-    public function getContentByType($type = "home", $father = null, $region)
-    {
-        $manager = $this->getDoctrine()->getManager();
-
-        $type = $manager->getRepository("ClarolineCoreBundle:Home\Type")->findOneBy(array('name' => $type));
-
-        if ($type) {
-            if ($father) {
-
-                $father = $manager->getRepository("ClarolineCoreBundle:Home\Content")->find($father);
-
-                $first = $manager->getRepository("ClarolineCoreBundle:Home\SubContent")->findOneBy(
-                    array('back' => null, 'father' => $father)
-                );
-
-            } else {
-                $first = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(
-                    array('back' => null, 'type' => $type)
-                );
-            }
-
-            if ($first) {
-                $content = " ";
-
-                for ($i = 0; $i < $type->getMaxContentPage() and $first != null; $i++) {
-                    $variables = array();
-
-                    $variables["content"] = $first->getContent();
-                    $variables["size"] = $first->getSize();
-                    $variables["type"] = $type->getName();
-                    $variables["menu"] = $this->menuAction(
-                        $first->getContent()->getId(),
-                        $first->getSize(),
-                        $type->getName(),
-                        $father
-                    )->getContent();
-
-                    $variables = $this->isDefinedPush($variables, "father", $father, "getId");
-                    $variables = $this->isDefinedPush($variables, "region", $region);
-
-                    $content .= $this->render(
-                        $this->container->get('claroline.common.home_service')->defaultTemplate(
-                            "ClarolineCoreBundle:Home/types:".$type->getName().".html.twig"
-                        ),
-                        $variables
-                    )->getContent();
-
-                    $first = $first->getNext();
-                }
-
-                return $content;
-            }
-
-            return " "; // Not yet content
-        }
-
-        return null;
     }
 
     /**
