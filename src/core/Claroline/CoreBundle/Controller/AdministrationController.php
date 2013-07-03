@@ -3,7 +3,9 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Form\ProfileType;
@@ -21,12 +23,14 @@ use Claroline\CoreBundle\Library\Event\LogGroupRemoveUserEvent;
 use Claroline\CoreBundle\Library\Event\LogGroupDeleteEvent;
 use Claroline\CoreBundle\Library\Event\LogGroupUpdateEvent;
 use Claroline\CoreBundle\Library\Configuration\UnwritableException;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Pager\PagerFactory;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\Form\FormError;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Controller of the platform administration section (users, groups,
@@ -37,8 +41,38 @@ class AdministrationController extends Controller
     const USER_PER_PAGE = 40;
     const GROUP_PER_PAGE = 40;
 
+    private $userManager;
+    private $roleManager;
+    private $security;
+    private $pagerFactory;
+    private $eventDispatcher;
+
     /**
-     * @Template("ClarolineCoreBundle:Administration:index.html.twig")
+     * @DI\InjectParams({
+     *     "userManager"    = @DI\Inject("claroline.manager.user_manager"),
+     *     "roleManager"    = @DI\Inject("claroline.manager.role_manager"),
+     *     "security"       = @DI\Inject("security.context"),
+     *     "pagerFactory"   = @DI\Inject("claroline.pager.pager_factory"),
+     *     "eventDispatcher"    = @DI\Inject("event_dispatcher")
+     * })
+     */
+    public function __construct(
+        UserManager $userManager,
+        RoleManager $roleManager,
+        SecurityContextInterface $security,
+        PagerFactory $pagerFactory,
+        EventDispatcher $eventDispatcher
+    )
+    {
+        $this->userManager = $userManager;
+        $this->roleManager = $roleManager;
+        $this->security = $security;
+        $this->pagerFactory = $pagerFactory;
+        $this->eventDispatcher = $eventDispatcher;
+    }
+
+    /**
+     * @EXT\Template("ClarolineCoreBundle:Administration:index.html.twig")
      *
      * Displays the administration section index.
      *
@@ -50,13 +84,13 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/user/form",
      *     name="claro_admin_user_creation_form"
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Template()
+     * @EXT\Template()
      *
      * Displays the user creation form.
      *
@@ -64,23 +98,22 @@ class AdministrationController extends Controller
      */
     public function userCreationFormAction()
     {
-        $user = $this->get('security.context')->getToken()->getUser();
-        $roles = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Role')
-            ->findPlatformRoles($user);
+        $user = $this->security->getToken()->getUser();
+        $roles = $this->roleManager->getPlatformRoles($user);
+
         $form = $this->createForm(new ProfileType($roles));
 
         return array('form_complete_user' => $form->createView());
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/user",
      *     name="claro_admin_create_user"
      * )
-     * @Method("POST")
+     * @EXT\Method("POST")
      *
-     * @Template("ClarolineCoreBundle:Administration:userCreationForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration:userCreationForm.html.twig")
      *
      * Creates an user (and its personal workspace) and redirects to the user list.
      *
@@ -89,18 +122,15 @@ class AdministrationController extends Controller
     public function createUserAction()
     {
         $request = $this->get('request');
-        $user = $this->get('security.context')->getToken()->getUser();
-        $roles = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Role')
-            ->findPlatformRoles($user);
+        $user = $this->security->getToken()->getUser();
+        $roles = $this->roleManager->getPlatformRoles($user);
         $form = $this->get('form.factory')->create(new ProfileType($roles), new User());
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $user = $form->getData();
             $newRoles = $form->get('platformRoles')->getData();
-            $this->get('claroline.manager.user_manager')
-                ->insertUserWithRoles($user, $newRoles);
+            $this->userManager->insertUserWithRoles($user, $newRoles);
 
             return $this->redirect($this->generateUrl('claro_admin_user_list'));
         }
@@ -109,96 +139,87 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/users",
      *     name="claro_admin_multidelete_user",
      *     options = {"expose"=true}
      * )
-     * @Method("DELETE")
+     * @EXT\Method("DELETE")
+     * @EXT\ParamConverter(
+     *     "users",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"multipleIds" = true}
+     * )
      *
      * Removes many users from the platform.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteUsersAction()
+    public function deleteUsersAction(array $users)
     {
-        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
+        if (!$this->security->isGranted('ROLE_ADMIN')) {
             throw new \AccessDeniedException();
         }
 
-        $params = $this->get('request')->query->all();
+        foreach ($users as $user) {
+            $this->userManager->deleteUser($user);
 
-        if (isset($params['ids'])) {
-            $em = $this->getDoctrine()->getManager();
-
-            foreach ($params['ids'] as $userId) {
-                $user = $em->getRepository('ClarolineCoreBundle:User')
-                    ->find($userId);
-
-                $em->remove($user);
-                $em->flush();
-
-                $log = new LogUserDeleteEvent($user);
-                $this->get('event_dispatcher')->dispatch('log', $log);
-            }
-
-            $em->flush();
+            $log = new LogUserDeleteEvent($user);
+            $this->eventDispatcher->dispatch('log', $log);
         }
 
         return new Response('user(s) removed', 204);
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "users/page/{page}",
      *     name="claro_admin_user_list",
      *     defaults={"page"=1, "search"=""},
      *     options = {"expose"=true}
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Route(
+     * @EXT\Route(
      *     "users/page/{page}/search/{search}",
      *     name="claro_admin_user_list_search",
      *     defaults={"page"=1},
      *     options = {"expose"=true}
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Template()
+     * @EXT\Template()
      *
      * Displays the platform user list.
      */
     public function userListAction($page, $search)
     {
-        $repo = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:User');
-        $query = ($search == "") ? $repo->findAll(true): $repo->findByName($search, true);
-        $adapter = new DoctrineORMAdapter($query);
-        $pager = new Pagerfanta($adapter);
-        $pager->setMaxPerPage(20);
-        $pager->setCurrentPage($page);
+        $query = ($search == "") ?
+            $this->userManager->getAllUsers(true) :
+            $this->userManager->getUsersByName($search, true);
+        $pager = $this->pagerFactory->createPager($query, $page);
 
         return array('pager' => $pager, 'search' => $search);
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/groups/page/{page}",
      *     name="claro_admin_group_list",
      *     options={"expose"=true},
      *     defaults={"page"=1, "search"=""}
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Route(
+     * @EXT\Route(
      *     "groups/page/{page}/search/{search}",
      *     name="claro_admin_group_list_search",
      *     defaults={"page"=1},
      *     options = {"expose"=true}
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Template()
+     * @EXT\Template()
      *
      * Returns the platform group list.
      */
@@ -206,96 +227,91 @@ class AdministrationController extends Controller
     {
         $repo = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Group');
         $query = ($search == "") ? $repo->findAll(true): $repo->findByName($search, true);
-        $adapter = new DoctrineORMAdapter($query);
-        $pager = new Pagerfanta($adapter);
-        $pager->setMaxPerPage(20);
-        $pager->setCurrentPage($page);
+        $pager = $this->pagerFactory->createPager($query, $page);
 
         return array('pager' => $pager, 'search' => $search);
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/group/{groupId}/users/page/{page}",
      *     name="claro_admin_user_of_group_list",
      *     options={"expose"=true},
      *     defaults={"page"=1, "search"=""}
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Route(
+     * @EXT\Route(
      *     "/group/{groupId}/users/page/{page}/search/{search}",
      *     name="claro_admin_user_of_group_list_search",
      *     options={"expose"=true},
      *     defaults={"page"=1}
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "group",
+     *      class="ClarolineCoreBundle:Group",
+     *      options={"id" = "groupId", "strictId" = true}
+     * )
      *
-     * @Template()
+     * @EXT\Template()
      *
      * Returns the users of a group.
      */
-    public function usersOfGroupListAction($groupId, $page, $search)
+    public function usersOfGroupListAction(Group $group, $page, $search)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
-        $repo = $em->getRepository('ClarolineCoreBundle:User');
         $query = ($search == "") ?
-            $repo->findByGroup($group, true):
-            $repo->findByNameAndGroup($search, $group, true);
-        $adapter = new DoctrineORMAdapter($query);
-        $pager = new Pagerfanta($adapter);
-        $pager->setMaxPerPage(20);
-        $pager->setCurrentPage($page);
+            $this->userManager->getUsersByGroup($group, true) :
+            $this->userManager->getUsersByNameAndGroup($search, $group, true);
+        $pager = $this->pagerFactory->createPager($query, $page);
 
         return array('pager' => $pager, 'search' => $search, 'group' => $group);
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/group/add/{groupId}/page/{page}",
      *     name="claro_admin_outside_of_group_user_list",
      *     options={"expose"=true},
      *     defaults={"page"=1, "search"=""}
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Route(
+     * @EXT\Route(
      *     "/group/add/{groupId}/page/{page}/search/{search}",
      *     name="claro_admin_outside_of_group_user_list_search",
      *     options={"expose"=true},
      *     defaults={"page"=1}
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "group",
+     *      class="ClarolineCoreBundle:Group",
+     *      options={"id" = "groupId", "strictId" = true}
+     * )
      *
-     * @Template()
+     * @EXT\Template()
      *
      * Displays the user list with a control allowing to add them to a group.
      */
-    public function outsideOfGroupUserListAction($groupId, $page, $search)
+    public function outsideOfGroupUserListAction(Group $group, $page, $search)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $group = $em->getRepository('ClarolineCoreBundle:Group')->find($groupId);
-        $repo = $em->getRepository('ClarolineCoreBundle:User');
         $query = ($search == "") ?
-            $repo->findGroupOutsiders($group, true):
-            $repo->findGroupOutsidersByName($group, $search, true);
-        $adapter = new DoctrineORMAdapter($query);
-        $pager = new Pagerfanta($adapter);
-        $pager->setMaxPerPage(20);
-        $pager->setCurrentPage($page);
+            $this->userManager->getGroupOutsiders($group, true) :
+            $this->userManager->getGroupOutsidersByName($group, $search, true);
+        $pager = $this->pagerFactory->createPager($query, $page);
 
         return array('pager' => $pager, 'search' => $search, 'group' => $group);
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/group/form",
      *     name="claro_admin_group_creation_form"
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Template()
+     * @EXT\Template()
      *
      * Displays the group creation form.
      *
@@ -309,13 +325,13 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/group",
      *     name="claro_admin_create_group"
      * )
-     * @Method("POST")
+     * @EXT\Method("POST")
      *
-     * @Template("ClarolineCoreBundle:Administration:groupCreationForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration:groupCreationForm.html.twig")
      *
      * Creates a group and redirects to the group list.
      *
@@ -330,14 +346,13 @@ class AdministrationController extends Controller
         if ($form->isValid()) {
             $group = $form->getData();
             $em = $this->getDoctrine()->getManager();
-            $userRole = $em->getRepository('ClarolineCoreBundle:Role')
-                ->findOneByName('ROLE_USER');
+            $userRole = $this->roleManager->getRoleByName('ROLE_USER');
             $group->setPlatformRole($userRole);
             $em->persist($group);
             $em->flush();
 
             $log = new LogGroupCreateEvent($group);
-            $this->get('event_dispatcher')->dispatch('log', $log);
+            $this->eventDispatcher->dispatch('log', $log);
 
             return $this->redirect($this->generateUrl('claro_admin_group_list'));
         }
@@ -346,13 +361,23 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/group/{groupId}/users",
      *     name="claro_admin_multiadd_user_to_group",
      *     requirements={"groupId"="^(?=.*[0-9].*$)\d*$"},
      *     options={"expose"=true}
      * )
-     * @Method("PUT")
+     * @EXT\Method("PUT")
+     * @EXT\ParamConverter(
+     *      "group",
+     *      class="ClarolineCoreBundle:Group",
+     *      options={"id" = "groupId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *     "users",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"multipleIds" = true}
+     * )
      *
      * Adds multiple user to a group.
      *
@@ -360,45 +385,36 @@ class AdministrationController extends Controller
      *
      * @return Response
      */
-    public function addUsersToGroupAction($groupId)
+    public function addUsersToGroupAction(Group $group, array $users)
     {
-        $em = $this->getDoctrine()->getManager();
-        $params = $this->get('request')->query->all();
-        $group = $em->getRepository('ClarolineCoreBundle:Group')
-            ->find($groupId);
-        $users = array();
-
-        if (isset($params['userIds'])) {
-            foreach ($params['userIds'] as $userId) {
-                $user = $em->getRepository('ClarolineCoreBundle:User')
-                    ->find($userId);
-
-                if ($user !== null) {
-                    $group->addUser($user);
-                    $users[] = $user;
-                }
-            }
-        }
-
-        $em->persist($group);
-        $em->flush();
-
         foreach ($users as $user) {
+            $group->addUser($user);
+
             $log = new LogGroupAddUserEvent($group, $user);
-            $this->get('event_dispatcher')->dispatch('log', $log);
+            $this->eventDispatcher->dispatch('log', $log);
         }
 
         return new Response('success', 204);
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/group/{groupId}/users",
      *     name="claro_admin_multidelete_user_from_group",
      *     options={"expose"=true},
      *     requirements={"groupId"="^(?=.*[1-9].*$)\d*$"}
      * )
-     * @Method("DELETE")
+     * @EXT\Method("DELETE")
+     * @EXT\ParamConverter(
+     *      "group",
+     *      class="ClarolineCoreBundle:Group",
+     *      options={"id" = "groupId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *     "users",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"multipleIds" = true}
+     * )
      *
      * Removes users from a group.
      *
@@ -406,80 +422,58 @@ class AdministrationController extends Controller
      *
      * @return Response
      */
-    public function deleteUsersFromGroupAction($groupId)
+    public function deleteUsersFromGroupAction(Group $group, array $users)
     {
-        $params = $this->get('request')->query->all();
-        $em = $this->getDoctrine()->getManager();
-        $group = $em->getRepository('ClarolineCoreBundle:Group')
-            ->find($groupId);
-
-        $users = array();
-        if (isset($params['userIds'])) {
-            foreach ($params['userIds'] as $userId) {
-                $user = $em->getRepository('ClarolineCoreBundle:User')
-                    ->find($userId);
-                $group->removeUser($user);
-                $em->persist($group);
-
-                $users[] = $user;
-            }
-        }
-
-        $em->flush();
-
         foreach ($users as $user) {
+            $group->removeUser($user);
+
             $log = new LogGroupRemoveUserEvent($group, $user);
-            $this->get('event_dispatcher')->dispatch('log', $log);
+            $this->eventDispatcher->dispatch('log', $log);
         }
 
         return new Response('user removed', 204);
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/groups",
      *     name="claro_admin_multidelete_group",
      *     options={"expose"=true}
      * )
-     * @Method("DELETE")
+     * @EXT\Method("DELETE")
+     * @EXT\ParamConverter(
+     *     "groups",
+     *      class="ClarolineCoreBundle:Group",
+     *      options={"multipleIds" = true}
+     * )
      *
      * Deletes multiple groups.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteGroupsAction()
+    public function deleteGroupsAction(array $groups)
     {
         $em = $this->getDoctrine()->getManager();
-        $params = $this->get('request')->query->all();
-        $groups = array();
 
-        if (isset($params['ids'])) {
-            foreach ($params['ids'] as $groupId) {
-                $group = $em->getRepository('ClarolineCoreBundle:Group')
-                    ->find($groupId);
-                $em->remove($group);
-                $groups[] = $group;
-            }
-        }
+        foreach ($groups as $group) {
+            $em->remove($group);
 
-        foreach ($groups as $deletedGroup) {
-            $log = new LogGroupDeleteEvent($deletedGroup);
-            $this->get('event_dispatcher')->dispatch('log', $log);
+            $log = new LogGroupDeleteEvent($group);
+            $this->eventDispatcher->dispatch('log', $log);
         }
-        $em->flush();
 
         return new Response('groups removed', 204);
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/group/settings/form/{groupId}",
      *     name="claro_admin_group_settings_form",
      *     requirements={"groupId"="^(?=.*[1-9].*$)\d*$"}
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Template()
+     * @EXT\Template()
      *
      * Displays an edition form for a group.
      *
@@ -501,12 +495,12 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/group/settings/update/{groupId}",
      *     name="claro_admin_update_group_settings"
      * )
      *
-     * @Template("ClarolineCoreBundle:Administration:groupSettingsForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration:groupSettingsForm.html.twig")
      *
      * Updates the settings of a group and redirects to the group list.
      *
@@ -555,17 +549,17 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/platform/settings/form",
      *     name="claro_admin_platform_settings_form"
      * )
-     * @Route(
+     * @EXT\Route(
      *     "/",
      *     name="claro_admin_index",
      *     options={"expose"=true}
      * )
      *
-     * @Template()
+     * @EXT\Template()
      *
      * Displays the platform settings.
      *
@@ -581,12 +575,12 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "claro_admin_update_platform_settings",
      *     name="claro_admin_update_platform_settings"
      * )
      *
-     * @Template("ClarolineCoreBundle:Administration:platformSettingsForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration:platformSettingsForm.html.twig")
      *
      * Updates the platform settings and redirects to the settings form.
      *
@@ -620,13 +614,13 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "plugins",
      *     name="claro_admin_plugins"
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Template()
+     * @EXT\Template()
      *
      * Display the plugin list
      *
@@ -641,11 +635,11 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/plugin/{domain}/options",
      *     name="claro_admin_plugin_options"
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
      * Redirects to the plugin mangagement page.
      *
@@ -671,13 +665,13 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *    "user/management",
      *    name="claro_admin_users_management"
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Template()
+     * @EXT\Template()
      *
      * @return Response
      */
@@ -687,13 +681,13 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *    "user/management/import/form",
      *     name="claro_admin_import_users_form"
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Template()
+     * @EXT\Template()
      *
      * @return Response
      */
@@ -705,14 +699,14 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "user/management/import",
      *     name="claro_admin_import_users"
      * )
      *
-     * @Method("POST")
+     * @EXT\Method("POST")
      *
-     * @Template("ClarolineCoreBundle:Administration:importUsersForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration:importUsersForm.html.twig")
      *
      * @return Response
      */
@@ -761,21 +755,21 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/logs/",
      *     name="claro_admin_logs_show",
      *     defaults={"page" = 1}
      * )
-     * @Route(
+     * @EXT\Route(
      *     "/logs/{page}",
      *     name="claro_admin_logs_show_paginated",
      *     requirements={"page" = "\d+"},
      *     defaults={"page" = 1}
      * )
      *
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Template()
+     * @EXT\Template()
      *
      * Displays logs list using filter parameteres and page number
      *
@@ -791,12 +785,12 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/analytics/",
      *     name="claro_admin_analytics_show"
      * )
      *
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
      * Displays platform analytics home page
      *
@@ -827,12 +821,12 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/analytics/connections",
      *     name="claro_admin_analytics_connections"
      * )
      *
-     * @Method({"GET", "POST"})
+     * @EXT\Method({"GET", "POST"})
      *
      * Displays platform analytics connections page
      *
@@ -876,12 +870,12 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/analytics/resources",
      *     name="claro_admin_analytics_resources"
      * )
      *
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
      * Displays platform analytics resources page
      *
@@ -905,13 +899,13 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/analytics/top/{top_type}",
      *     name="claro_admin_analytics_top",
      *     defaults={"top_type" = "top_users_connections"}
      * )
      *
-     * @Method({"GET", "POST"})
+     * @EXT\Method({"GET", "POST"})
      *
      * Displays platform analytics top activity page
      *

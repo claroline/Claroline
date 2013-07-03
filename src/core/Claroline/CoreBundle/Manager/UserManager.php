@@ -90,6 +90,11 @@ class UserManager
         return $user;
     }
 
+    public function deleteUser(User $user)
+    {
+        $this->writer->delete($user);
+    }
+
     public function createUserWithRole(User $user, $roleName)
     {
         $this->setPersonalWorkspace($user);
@@ -259,6 +264,6 @@ class UserManager
 
     public function getUserById($userId)
     {
-        return $this->userRepo->findOneById($userId);
+        return $this->userRepo->find($userId);
     }
 }
