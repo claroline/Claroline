@@ -46,35 +46,35 @@ class AltAbstractResourceRepositoryTest extends AltRepositoryTestCase
         self::createResourceRights(self::get('ROLE_2'), self::get('dir_5'), array('open'));
     }
 
-//    public function testFindWorkspaceRoot()
-//    {
-//        $root = self::$repo->findWorkspaceRoot(self::get('ws_1'));
-//        $this->assertEquals(self::get('dir_1'), $root);
-//    }
-//
-//    public function testFindDescendants()
-//    {
-//        $this->assertEquals(0, count(self::$repo->findDescendants(self::get('dir_2'))));
-//        $this->assertEquals(4, count(self::$repo->findDescendants(self::get('dir_1'))));
-//        $this->assertEquals(5, count(self::$repo->findDescendants(self::get('dir_1'), true)));
-//        $this->assertEquals(2, count(self::$repo->findDescendants(self::get('dir_3'), true, 't_dir')));
-//    }
-//
-//    /**
-//     * @expectedException RuntimeException
-//     */
-//    public function testFindChildrenThrowsAnExceptionIfNoRolesAreGiven()
-//    {
-//        $children = self::$repo->findChildren(self::get('dir_1'), array());
-//    }
-//
-//    public function testFindChildrenReturnsEverythingIfTheUserIsAdmin()
-//    {
-//        $children = self::$repo->findChildren(self::get('dir_1'), array('ROLE_ADMIN'));
-//        $this->assertEquals(2, count($children));
-//        $this->assertEquals('dir_2', $children[0]['name']);
-//        $this->assertEquals('dir_3', $children[1]['name']);
-//    }
+    public function testFindWorkspaceRoot()
+    {
+        $root = self::$repo->findWorkspaceRoot(self::get('ws_1'));
+        $this->assertEquals(self::get('dir_1'), $root);
+    }
+
+    public function testFindDescendants()
+    {
+        $this->assertEquals(0, count(self::$repo->findDescendants(self::get('dir_2'))));
+        $this->assertEquals(4, count(self::$repo->findDescendants(self::get('dir_1'))));
+        $this->assertEquals(5, count(self::$repo->findDescendants(self::get('dir_1'), true)));
+        $this->assertEquals(2, count(self::$repo->findDescendants(self::get('dir_3'), true, 't_dir')));
+    }
+
+    /**
+     * @expectedException RuntimeException
+     */
+    public function testFindChildrenThrowsAnExceptionIfNoRolesAreGiven()
+    {
+        $children = self::$repo->findChildren(self::get('dir_1'), array());
+    }
+
+    public function testFindChildrenReturnsEverythingIfTheUserIsAdmin()
+    {
+        $children = self::$repo->findChildren(self::get('dir_1'), array('ROLE_ADMIN'));
+        $this->assertEquals(2, count($children));
+        $this->assertEquals('dir_2', $children[0]['name']);
+        $this->assertEquals('dir_3', $children[1]['name']);
+    }
 
     public function testFindChildrenReturnsOpenableResources()
     {
@@ -83,42 +83,42 @@ class AltAbstractResourceRepositoryTest extends AltRepositoryTestCase
         $this->assertEquals('dir_2', $children[0]['name']);
     }
 
-//    public function testFindWorkspaceRootsByUser()
-//    {
-//        $johnRoots = self::$repo->findWorkspaceRootsByUser(self::get('john'));
-//        $this->assertEquals(2, count($johnRoots));
-//        $this->assertEquals('dir_1', $johnRoots[0]['name']);
-//        $this->assertEquals('dir_5', $johnRoots[1]['name']);
-//        $janeRoots = self::$repo->findWorkspaceRootsByUser(self::get('jane'));
-//        $this->assertEquals(1, count($janeRoots));
-//        $this->assertEquals('dir_5', $janeRoots[0]['name']);
-//    }
-//
-//    public function testFindWorkspaceRootsByRoles()
-//    {
-//        $roots = self::$repo->findWorkspaceRootsByRoles(array('ROLE_1', 'ROLE_2'));
-//        $this->assertEquals(2, count($roots));
-//        $this->assertEquals('dir_1', $roots[0]['name']);
-//        $this->assertEquals('dir_5', $roots[1]['name']);
-//        $roots = self::$repo->findWorkspaceRootsByRoles(array('ROLE_2'));
-//        $this->assertEquals(1, count($roots));
-//        $this->assertEquals('dir_5', $roots[0]['name']);
-//    }
-//
-//    public function testFindAncestors()
-//    {
-//        $ancestors = self::$repo->findAncestors(self::get('dir_4'));
-//        $this->assertEquals(3, count($ancestors));
-//        $this->assertEquals('dir_1', $ancestors[0]['name']);
-//        $this->assertEquals('dir_3', $ancestors[1]['name']);
-//        $this->assertEquals('dir_4', $ancestors[2]['name']);
-//    }
-//
-//    /**
-//     * @expectedException Claroline\CoreBundle\Repository\Exception\UnknownFilterException
-//     */
-//    public function testFindByCriteriaThrowsAnExceptionOnUnknownFilter()
-//    {
-//        self::$repo->findByCriteria(array('foo' => 'bar'));
-//    }
+    public function testFindWorkspaceRootsByUser()
+    {
+        $johnRoots = self::$repo->findWorkspaceRootsByUser(self::get('john'));
+        $this->assertEquals(2, count($johnRoots));
+        $this->assertEquals('dir_1', $johnRoots[0]['name']);
+        $this->assertEquals('dir_5', $johnRoots[1]['name']);
+        $janeRoots = self::$repo->findWorkspaceRootsByUser(self::get('jane'));
+        $this->assertEquals(1, count($janeRoots));
+        $this->assertEquals('dir_5', $janeRoots[0]['name']);
+    }
+
+    public function testFindWorkspaceRootsByRoles()
+    {
+        $roots = self::$repo->findWorkspaceRootsByRoles(array('ROLE_1', 'ROLE_2'));
+        $this->assertEquals(2, count($roots));
+        $this->assertEquals('dir_1', $roots[0]['name']);
+        $this->assertEquals('dir_5', $roots[1]['name']);
+        $roots = self::$repo->findWorkspaceRootsByRoles(array('ROLE_2'));
+        $this->assertEquals(1, count($roots));
+        $this->assertEquals('dir_5', $roots[0]['name']);
+    }
+
+    public function testFindAncestors()
+    {
+        $ancestors = self::$repo->findAncestors(self::get('dir_4'));
+        $this->assertEquals(3, count($ancestors));
+        $this->assertEquals('dir_1', $ancestors[0]['name']);
+        $this->assertEquals('dir_3', $ancestors[1]['name']);
+        $this->assertEquals('dir_4', $ancestors[2]['name']);
+    }
+
+    /**
+     * @expectedException Claroline\CoreBundle\Repository\Exception\UnknownFilterException
+     */
+    public function testFindByCriteriaThrowsAnExceptionOnUnknownFilter()
+    {
+        self::$repo->findByCriteria(array('foo' => 'bar'));
+    }
 }
