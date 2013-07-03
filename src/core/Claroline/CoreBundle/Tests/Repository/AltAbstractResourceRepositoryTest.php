@@ -96,6 +96,7 @@ class AltAbstractResourceRepositoryTest extends AltRepositoryTestCase
 
     public function testFindWorkspaceRootsByRoles()
     {
+        $this->markTestSkipped('The query makes mysql randomly slow (problem = temporary tables + transaction ?)');
         $roots = self::$repo->findWorkspaceRootsByRoles(array('ROLE_1', 'ROLE_2'));
         $this->assertEquals(2, count($roots));
         $this->assertEquals('dir_1', $roots[0]['name']);
