@@ -10,48 +10,68 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleSubscribeEvent;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleUnsubscribeEvent;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\DiExtraBundle\Annotation as DI;
 
 class UserController extends Controller
 {
     const ABSTRACT_WS_CLASS = 'ClarolineCoreBundle:Workspace\AbstractWorkspace';
     const NUMBER_USER_PER_ITERATION = 25;
 
+    private $userManager;
+    private $roleManager;
+
     /**
-     * @Route(
+     * @DI\InjectParams({
+     *     "userManager"    = @DI\Inject("claroline.manager.user_manager"),
+     *     "roleManager"    = @DI\Inject("claroline.manager.role_manager")
+     * })
+     */
+    public function __construct(UserManager $userManager, RoleManager $roleManager)
+    {
+        $this->userManager = $userManager;
+        $this->roleManager = $roleManager;
+    }
+
+    /**
+     * @EXT\Route(
      *     "/{workspaceId}/users/registered/page/{page}",
      *     name="claro_workspace_registered_user_list",
      *     defaults={"page"=1, "search"=""},
      *     options = {"expose"=true}
      * )
      *
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Route(
+     * @EXT\Route(
      *     "/{workspaceId}/users/registered/page/{page}/search/{search}",
      *     name="claro_workspace_registered_user_list_search",
      *     defaults={"page"=1},
      *     options = {"expose"=true}
      * )
      *
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Template("ClarolineCoreBundle:Tool\workspace\user_management:registeredUsers.html.twig")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\user_management:registeredUsers.html.twig")
      */
-    public function registeredUsersListAction($workspaceId, $page, $search)
+    public function registeredUsersListAction(AbstractWorkspace $workspace, $page, $search)
     {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
         $this->checkRegistration($workspace);
-        $repo = $em->getRepository('ClarolineCoreBundle:User');
         $query = ($search == "") ?
-            $repo->findByWorkspace($workspace, true):
-            $repo->findByWorkspaceAndName($workspace, $search, true);
+            $this->userManager->getUsersByWorkspace($workspace, true) :
+            $this->userManager->getUsersByWorkspaceAndName($workspace, $search, true);
         $adapter = new DoctrineORMAdapter($query);
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage(20);
@@ -65,35 +85,38 @@ class UserController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspaceId}/users/unregistered/page/{page}",
      *     name="claro_workspace_unregistered_user_list",
      *     defaults={"page"=1, "search"=""},
      *     options = {"expose"=true}
      * )
      *
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Route(
+     * @EXT\Route(
      *     "/{workspaceId}/users/unregistered/page/{page}/search/{search}",
      *     name="claro_workspace_unregistered_user_list_search",
      *     defaults={"page"=1},
      *     options = {"expose"=true}
      * )
      *
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Template("ClarolineCoreBundle:Tool\workspace\user_management:unregisteredUsers.html.twig")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\user_management:unregisteredUsers.html.twig")
      */
-    public function unregiseredUsersListAction($workspaceId, $page, $search)
+    public function unregiseredUsersListAction(AbstractWorkspace $workspace, $page, $search)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkRegistration($workspace, false);
-        $repo = $em->getRepository('ClarolineCoreBundle:User');
         $query = ($search == "") ?
-            $repo->findWorkspaceOutsiders($workspace, true):
-            $repo->findWorkspaceOutsidersByName($workspace, $search, true);
+            $this->userManager->getWorkspaceOutsiders($workspace, true) :
+            $this->userManager->getWorkspaceOutsidersByName($workspace, $search, true);
         $adapter = new DoctrineORMAdapter($query);
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage(20);
@@ -107,22 +130,32 @@ class UserController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspaceId}/user/{userId}",
      *     name="claro_workspace_tools_show_user_parameters",
      *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$", "userId"="^(?=.*[1-9].*$)\d*$" },
      *     options={"expose"=true}
      * )
      *
-     * @Route(
+     * @EXT\Route(
      *     "/{workspaceId}/user/{userId}",
      *     name="claro_workspace_tools_edit_user_parameters",
      *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$", "userId"="^(?=.*[1-9].*$)\d*$" },
      *     options={"expose"=true}
      * )
-     * @Method({"POST", "GET"})
+     * @EXT\Method({"POST", "GET"})
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "user",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"id" = "userId", "strictId" = true}
+     * )
      *
-     * @Template("ClarolineCoreBundle:Tool\workspace\user_management:userParameters.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\user_management:userParameters.html.twig")
      *
      * Renders the user parameter page with its layout and
      * edit the user parameters for the selected workspace.
@@ -132,18 +165,14 @@ class UserController extends Controller
      *
      * @return Response
      */
-    public function userParametersAction($workspaceId, $userId)
+    public function userParametersAction(AbstractWorkspace $workspace, User $user)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $roleManager = $this->get('claroline.manager.role_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
-            ->find($workspaceId);
         $this->checkRegistration($workspace, false);
-        $user = $em->getRepository('ClarolineCoreBundle:User')
-            ->find($userId);
         $roleRepo = $em->getRepository('ClarolineCoreBundle:Role');
-        $role = $roleRepo->findWorkspaceRoleForUser($user, $workspace);
+        $role = $this->roleManager->getWorkspaceRoleForUser($user, $workspace);
         $defaultData = array('role' => $role);
+        $workspaceId = $workspace->getId();
         $form = $this->createFormBuilder($defaultData, array('translation_domain' => 'platform'))
             ->add(
                 'role',
@@ -170,12 +199,12 @@ class UserController extends Controller
             //cannot bind request: why ?
             $newRole = $roleRepo->find($parameters['form']['role']);
 
-            if ($newRole->getId() != $roleRepo->findManagerRole($workspace)->getId()) {
-                $this->checkRemoveManagerRoleIsValid(array ($userId), $workspace);
+            if ($newRole->getId() != $this->roleManager->getManagerRole($workspace)->getId()) {
+                $this->checkRemoveManagerRoleIsValid(array($user->getId()), $workspace);
             }
 
-            $roleManager->dissociateRole($user, $role);
-            $roleManager->associateRole($user, $newRole);
+            $this->roleManager->dissociateRole($user, $role);
+            $this->roleManager->associateRole($user, $newRole);
             $route = $this->get('router')->generate(
                 'claro_workspace_open_tool',
                 array('workspaceId' => $workspaceId, 'toolName' => 'user_management')
@@ -199,13 +228,18 @@ class UserController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspaceId}/add/user",
      *     name="claro_workspace_multiadd_user",
      *     options={"expose"=true},
      *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
      * )
-     * @Method("PUT")
+     * @EXT\Method("PUT")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
      *
      * Adds many users to a workspace.
      * It uses a query string of userIds as parameter (userIds[]=1&userIds[]=2)
@@ -214,14 +248,11 @@ class UserController extends Controller
      *
      * @return Response
      */
-    public function addUsersAction($workspaceId)
+    public function addUsersAction(AbstractWorkspace $workspace)
     {
         $params = $this->get('request')->query->all();
         $users = array();
         $em = $this->get('doctrine.orm.entity_manager');
-        $roleManager = $this->get('claroline.manager.role_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
-            ->find($workspaceId);
         $this->checkRegistration($workspace, false);
         $roleRepo = $em->getRepository('ClarolineCoreBundle:Role');
         $role = $roleRepo->findCollaboratorRole($workspace);
@@ -234,10 +265,9 @@ class UserController extends Controller
                 $userRole = $roleRepo->findWorkspaceRoleForUser($user, $workspace);
                 if ($userRole === null) {
                     $users[] = $user;
-                    $roleManager->associateRole($user, $role);
+                    $this->roleManager->associateRole($user, $role);
                 }
             }
-            $em->flush();
         }
 
         foreach ($users as $user) {
@@ -252,13 +282,18 @@ class UserController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspaceId}/users",
      *     name="claro_workspace_delete_users",
      *     options={"expose"=true},
      *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
      * )
-     * @Method("DELETE")
+     * @EXT\Method("DELETE")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
      *
      * Removes many users from a workspace.
      * It uses a query string of groupIds as parameter (userIds[]=1&userIds[]=2)
@@ -267,12 +302,10 @@ class UserController extends Controller
      *
      * @return Response
      */
-    public function removeUsersAction($workspaceId)
+    public function removeUsersAction(AbstractWorkspace $workspace)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $roleManager = $this->get('claroline.manager.role_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
-            ->find($workspaceId);
         $this->checkRegistration($workspace, false);
         $roles = $em->getRepository('ClarolineCoreBundle:Role')
             ->findByWorkspace($workspace);
@@ -321,7 +354,7 @@ class UserController extends Controller
      *
      * @throws LogicException
      */
-    private function checkRemoveManagerRoleIsValid($userIds, $workspace)
+    private function checkRemoveManagerRoleIsValid(array $userIds, AbstractWorkspace $workspace)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $countRemovedManagers = 0;

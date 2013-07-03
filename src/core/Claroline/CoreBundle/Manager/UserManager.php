@@ -4,7 +4,11 @@ namespace Claroline\CoreBundle\Manager;
 
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Database\Writer;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
@@ -156,5 +160,105 @@ class UserManager
         $workspace = $this->workspaceManager->create($config, $user);
         $user->setPersonalWorkspace($workspace);
         $this->writer->update($user);
+    }
+
+    public function getUserByUsername($username)
+    {
+        return $this->userRepo->loadUserByUsername($username);
+    }
+
+    public function refreshUser(UserInterface $user)
+    {
+        return $this->userRepo->refreshUser($user);
+    }
+
+    public function getUserByWorkspaceAndRole(AbstractWorkspace $workspace, Role $role)
+    {
+        return $this->userRepo->findByWorkspaceAndRole($workspace, $role);
+    }
+
+    public function getWorkspaceOutsidersByName(AbstractWorkspace $workspace, $search, $getQuery = false)
+    {
+        return $this->userRepo->findWorkspaceOutsidersByName($workspace, $search, $getQuery);
+    }
+
+    public function getWorkspaceOutsiders(AbstractWorkspace $workspace, $getQuery = false)
+    {
+        return $this->userRepo->findWorkspaceOutsiders($workspace, $getQuery);
+    }
+
+    public function getAllUsers($getQuery = false)
+    {
+        return $this->userRepo->findAll($getQuery);
+    }
+
+    public function getUsersByName($search, $getQuery = false)
+    {
+        return $this->userRepo->findByName($search, $getQuery);
+    }
+
+    public function getUsersByGroup(Group $group, $getQuery = false)
+    {
+        return $this->userRepo->findByGroup($group, $getQuery);
+    }
+
+    public function getUsersByNameAndGroup($search, Group $group, $getQuery = false)
+    {
+        return $this->userRepo->findByNameAndGroup($search, $group, $getQuery);
+    }
+
+    public function getUsersByWorkspace(AbstractWorkspace $workspace, $getQuery = false)
+    {
+        return $this->userRepo->findByWorkspace($workspace, $getQuery);
+    }
+
+    public function getUsersByWorkspaceAndName(AbstractWorkspace $workspace, $search, $getQuery = false)
+    {
+        return $this->userRepo->findByWorkspaceAndName($workspace, $search, $getQuery);
+    }
+
+    public function getGroupOutsiders(Group $group, $getQuery = false)
+    {
+        return $this->userRepo->findGroupOutsiders($group, $getQuery);
+    }
+
+    public function getGroupOutsidersByName(Group $group, $search, $getQuery = false)
+    {
+        return $this->userRepo->findGroupOutsidersByName($group, $search, $getQuery);
+    }
+
+    public function getAllUsersExcept(User $excludedUser)
+    {
+        return $this->userRepo->findAllExcept($excludedUser);
+    }
+
+    public function getUsersByUsernames(array $usernames)
+    {
+        return $this->userRepo->findByUsernames($usernames);
+    }
+
+    public function getNbUsers()
+    {
+        return $this->userRepo->count();
+    }
+
+    public function getUsersByIds(array $ids)
+    {
+        return $this->userRepo->findByIds($ids);
+    }
+
+    public function getUsersEnrolledInMostWorkspaces ($max)
+    {
+        return $this->userRepo->findUsersEnrolledInMostWorkspaces($max);
+    }
+
+    public function getUsersOwnersOfMostWorkspaces ($max)
+    {
+        return $this->userRepo->findUsersOwnersOfMostWorkspaces($max);
+    }
+
+    public function getUserById($userId)
+    {
+        return $this->userRepo->findOneById($userId);
     }
 }

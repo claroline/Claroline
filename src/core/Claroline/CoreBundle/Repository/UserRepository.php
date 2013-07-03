@@ -194,7 +194,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             //and we only want the platform roles of a user.
 
             return $this->_em->createQuery($dql);
-
         }
 
         return parent::findAll();
@@ -470,12 +469,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 WHERE CONCAT(CONCAT(u.id,':'), ws.id) IN
                 (SELECT CONCAT(CONCAT(u1.id,':'), ws1.id) FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace ws1
                     JOIN ws1.roles r1
-                    JOIN r1.users u1      
+                    JOIN r1.users u1
                 ) OR CONCAT(CONCAT(u.id,':'), ws.id) IN
                 (SELECT CONCAT(CONCAT(u2.id,':'), ws2.id) FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace ws2
                     JOIN ws2.roles r2
                     JOIN r2.groups g2
-                    JOIN g2.users u2 
+                    JOIN g2.users u2
                 )
             GROUP BY u.id
             ORDER BY total DESC
