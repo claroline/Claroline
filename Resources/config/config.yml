@@ -5,6 +5,5 @@ plugin:
   resources:
     - class: Claroline\ForumBundle\Entity\Forum
       name: claroline_forum
-      is_browsable: false
       is_exportable: true
       icon: res_forum.png
