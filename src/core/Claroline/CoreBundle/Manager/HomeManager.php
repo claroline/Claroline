@@ -15,21 +15,34 @@ class HomeManager
 {
     private $graph;
     private $templating;
+    private $security;
+    private $content;
+    private $type;
+    private $region;
     private $contentType;
+    private $contentRegion;
+    private $subContent;
 
     /**
      * @InjectParams({
      *     "graph" = @Inject("claroline.common.graph_service"),
      *     "templating"  = @Inject("templating"),
-     *     "manager"  = @Inject("doctrine")
+     *     "manager"  = @Inject("doctrine"),
+     *     "security"  = @Inject("security.context")
      * })
      */
-    public function __construct($graph, $templating, $manager)
+    public function __construct($graph, $templating, $manager, $security)
     {
         $this->graph = $graph;
         $this->templating = $templating;
+        $this->security = $security;
+        $this->content = $manager->getRepository("ClarolineCoreBundle:Home\Content");
+        $this->type = $manager->getRepository("ClarolineCoreBundle:Home\Type");
+        $this->region = $manager->getRepository("ClarolineCoreBundle:Home\Region");
         $this->contentType = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type");
-    }
+        $this->contentRegion = $manager->getRepository("ClarolineCoreBundle:Home\Content2Region");
+        $this->subContent = $manager->getRepository("ClarolineCoreBundle:Home\SubContent");
+   }
 
     /**
      * Alias
@@ -45,7 +58,7 @@ class HomeManager
 
     /**
      * Verify if a twig template exists, If the template does not exists a default path will be return;
-     *
+     *getMenu
      * @param \String $path The path of the twig template separated by : just as the path for $this->render(...)
      * @return Return \String
      */
@@ -87,39 +100,61 @@ class HomeManager
         return $path;
     }
 
-    public function getContent($content, $type = null, $subContent = null)
+    public function getContent($content, $type = null, $father = null)
     {
-        $array = array(
+        $variables = array(
             "type" => $type,
-            "size" => "span12",
-            "content" => $content
+            "size" => "span12"
         );
 
-        if ($subContent) {
-            $array["father"] = $subContent->getfather()->getId();
-            $array["size"] = $subContent->getSize();
+        $type = $this->type->findOneBy(array('name' => $type));
 
-        } else if ($type) {
+        if ($father) {
 
-            $array["size"] = $type->getSize();
+            $variables["father"] = $father;
+
+            $father = $this->content->find($father);
+
+            $subContent = $this->subContent->findOneBy(
+                array('child' => $content, 'father' => $father)
+            );
+
+            $variables["size"] = $subContent->getSize();
+
+        } else {
+
+            $contentType = $this->contentType->findOneBy(
+                array('content' => $content, 'type' => $type)
+            );
+
+            $variables["size"] = $contentType->getSize();
         }
 
-        $array["menu"] = $this->getMenu($content, $type, $subContent)->getContent();
+        $variables["menu"] = $this->menuAction(
+            $content->getId(), $variables["size"], $variables["type"], $father
+        )->getContent();
 
-        return $array;
+        $variables["content"] = $content;
+
+        return $variables;
     }
 
     /**
      * Render the HTML of the menu in a content.
      *
+     * @param \String $id The id of the content.
+     * @param \String $size The size (span12) of the content.
+     * @param \String $type The type of the content.
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getMenu($content, $type, $subContent)
+    public function getMenu($id, $size, $type, $father = null)
     {
-        return $this->render(
-            "ClarolineCoreBundle:Home:menu.html.twig",
-            array("content" => $content, "type" => $type, "subContent" => $subContent)
-        );
+        $variables = array('id' => $id, 'size' => $size, 'type' => $type);
+
+        $variables = $this->isDefinedPush($variables, "father", $father, "getId");
+
+        return $this->render('ClarolineCoreBundle:Home:menu.html.twig', $variables);
     }
 
     /**
@@ -127,18 +162,19 @@ class HomeManager
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function contentLayout($type, $subContent = null, $region = null)
+    public function contentLayout($type, $father = null, $region = null)
     {
-        $content = $this->getContentByType($type, $subContent, $region);
+        $content = $this->getContentByType($type, $father, $region);
 
         $variables = array();
 
         if ($content) {
 
             $variables['content'] = $content;
-            $variables['creator'] = $this->getCreator($type, null, null, $subContent);
-            $variables['subcontent'] = $subContent;
-            $variables['region'] = $region;
+            $variables['creator'] = $this->getCreator($type, null, null, $father);
+
+            $variables = $this->isDefinedPush($variables, "father", $father);
+            $variables = $this->isDefinedPush($variables, "region", $region);
 
             return $this->render('ClarolineCoreBundle:Home:layout.html.twig', $variables);
         }
@@ -152,17 +188,26 @@ class HomeManager
      *
      * @return \Array
      */
-    public function getContentByType($type, $subContent = null, $region = null)
+    public function getContentByType($type, $father = null, $region = null)
     {
+        $type = $this->type->findOneBy(array('name' => $type));
+
         if ($type) {
-            if ($subContent) {
-                $first = $subContent;
+            if ($father) {
+
+                $father = $this->content->find($father);
+
+                $first = $this->subContent->findOneBy(
+                    array('back' => null, 'father' => $father)
+                );
+
             } else {
-                $first = $type;
+                $first = $this->contentType->findOneBy(
+                    array('back' => null, 'type' => $type)
+                );
             }
 
             if ($first) {
-
                 $content = " ";
 
                 for ($i = 0; $i < $type->getMaxContentPage() and $first != null; $i++) {
@@ -172,7 +217,7 @@ class HomeManager
                     $variables["size"] = $first->getSize();
                     $variables["type"] = $type->getName();
                     $variables["menu"] = $this->getMenu(
-                        $first->getContent(),
+                        $first->getContent()->getId(),
                         $first->getSize(),
                         $type->getName(),
                         $father
@@ -182,10 +227,9 @@ class HomeManager
                     $variables = $this->isDefinedPush($variables, "region", $region);
 
                     $content .= $this->render(
-                        $this->container->get('claroline.common.home_service')->defaultTemplate(
-                            "ClarolineCoreBundle:Home/types:".$type->getName().".html.twig"
-                        ),
-                        $variables
+                        "ClarolineCoreBundle:Home/types:".$type->getName().".html.twig",
+                        $variables,
+                        true
                     )->getContent();
 
                     $first = $first->getNext();
@@ -200,17 +244,17 @@ class HomeManager
         return null;
     }
 
-    public function getRegions($regions)
+    public function getRegions()
     {
         $tmp = array();
 
-        echo count($regions);
+        $regions = $this->region->findAll();
 
-        foreach ($regions as $first) {
-
-            var_dump($first->getRegion());
+        foreach ($regions as $region) {
 
             $content = "";
+
+            $first = $this->contentRegion->findOneBy(array('back' => null, 'region' => $region));
 
             while ($first != null) {
 
@@ -225,7 +269,7 @@ class HomeManager
                 }
 
                 //@TODO Need content rights for admin users
-                if (!(!$this->get('security.context')->isGranted('ROLE_ADMIN') and
+                if (!(!$this->security->isGranted('ROLE_ADMIN') and
                     $type == "menu" and
                     $first->getContent()->getTitle() == 'Administration')
                 ) {
@@ -251,5 +295,41 @@ class HomeManager
         }
 
         return $tmp;
+    }
+
+    public function getCreator($type, $id = null, $content = null, $father = null)
+    {
+        //cant use @Secure(roles="ROLE_ADMIN") annotation beacause this method is called in anonymous mode
+
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+
+            $variables = array('type' => $type);
+
+            if ($id and !$content) {
+
+                $variables["content"] = $this->content->find($id);
+            }
+
+            $variables = $this->isDefinedPush($variables, "father", $father);
+
+            return $this->render("ClarolineCoreBundle:Home/types:".$type.".creator.twig", $variables, true);
+        }
+
+        return new Response(); //return void and not an exeption
+    }
+
+    /**
+     *  Reduce some "overall complexity"
+     *
+     */
+    private function isDefinedPush($array, $name, $variable, $method = null)
+    {
+        if ($method and $variable) {
+            $array[$name] = $variable->$method();
+        } elseif ($variable) {
+            $array[$name] = $variable;
+        }
+
+        return $array;
     }
 }
