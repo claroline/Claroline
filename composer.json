@@ -33,7 +33,8 @@
         "twitter/bootstrap": "2.3.1",
         "fortawesome/fontawesome": "dev-master",
         "xaguilars/bootstrap-colorpicker": "dev-master",
-        "zenstruck/form-bundle": "dev-master"
+        "zenstruck/form-bundle": "dev-master",
+        "a2lix/translation-form-bundle": "1.*@dev"
     },
     "require-dev": {
         "mockery/mockery": "dev-master@dev"

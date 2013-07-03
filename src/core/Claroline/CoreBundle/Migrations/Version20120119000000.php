@@ -61,6 +61,7 @@ class Version20120119000000 extends BundleMigration
         $this->createLogDesktopWidgetConfigTable($schema);
         $this->createLogHiddenWorkspaceWidgetConfigTable($schema);
         $this->createBadgeTable($schema);
+        $this->createBadgeTranslationTable($schema);
         $this->createUserBadgeTable($schema);
     }
 
@@ -120,6 +121,7 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_workspace_template');
         $schema->dropTable('claro_theme');
         $schema->dropTable('claro_badge');
+        $schema->dropTable('claro_badge_translation');
         $schema->dropTable('claro_user_badge');
     }
 
@@ -1375,6 +1377,25 @@ class Version20120119000000 extends BundleMigration
 
         $table->addUniqueIndex(array('name'));
         $table->addUniqueIndex(array('slug'));
+
+        $this->storeTable($table);
+    }
+
+    private function createBadgeTranslationTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_badge_translation');
+        $this->addId($table);
+        $table->addColumn('locale', 'string', array('length' => 8, 'notnull' => true));
+        $table->addColumn('field', 'string', array('length' => 32, 'notnull' => true));
+        $table->addColumn('content', 'text', array('notnull' => true));
+        $table->addColumn('badge_id', 'integer');
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_badge'),
+            array('badge_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
     }
 
     private function createUserBadgeTable(Schema $schema)
