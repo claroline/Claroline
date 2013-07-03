@@ -104,10 +104,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
                 ->groupByResourceUserTypeAndIcon();
 
             $query = $this->_em->createQuery($builder->getDql());
-            var_dump($query->getDql());
             $query->setParameters($builder->getParameters());
-
-            var_dump($query->getSql());
             $children = $this->executeQuery($query);
         }
 
@@ -149,6 +146,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
             ->whereParentIsNull()
             ->whereRoleIn($roles)
             ->whereCanOpen()
+            ->orderByName()
             ->getDql();
 
         $query = $this->_em->createQuery($dql);
