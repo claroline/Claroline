@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -38,6 +39,7 @@ class ResourceController extends Controller
     private $rightsManager;
     private $roleManager;
     private $translator;
+    private $request;
 
     /**
      * @DI\InjectParams({
@@ -46,8 +48,9 @@ class ResourceController extends Controller
      *     "sc"              = @DI\Inject("security.context"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager"),
-     *     "roleManager"   = @DI\Inject("claroline.manager.role_manager"),
-     *     "translator"      = @DI\Inject("translator")
+     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
+     *     "translator"      = @DI\Inject("translator"),
+     *     "request"         = @DI\Inject("request")
      * })
      */
     public function __construct
@@ -58,7 +61,8 @@ class ResourceController extends Controller
         ResourceManager $resourceManager,
         RightsManager $rightsManager,
         RoleManager $roleManager,
-        Translator $translator
+        Translator $translator,
+        Request $request
     )
     {
         $this->formFactory = $formFactory;
@@ -68,6 +72,7 @@ class ResourceController extends Controller
         $this->translator = $translator;
         $this->rightsManager = $rightsManager;
         $this->roleManager = $roleManager;
+        $this->request = $request;
     }
 
     /**
@@ -427,6 +432,17 @@ class ResourceController extends Controller
      *     name="claro_resource_copy",
      *     options={"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *      "parent",
+     *      class="ClarolineCoreBundle:Resource\AbstractResource",
+     *      options={"id" = "resourceDestinationId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *     "resources",
+     *     class="ClarolineCoreBundle:Resource\AbstractResource",
+     *     options={"multipleIds" = true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * Adds multiple resource resource to a workspace.
      * Needs an array of ids to be functionnal (query string: "ids[]=1&ids[]=2" ...).
@@ -435,20 +451,15 @@ class ResourceController extends Controller
      *
      * @return Response
      */
-    public function copyAction(AbstractResource $parent, array $resources)
+    public function copyAction(AbstractResource $parent, array $resources, User $user)
     {
-        $em = $this->getDoctrine()->getManager();
         $newNodes = array();
         $collection = new ResourceCollection($resources);
         $collection->addAttribute('parent', $parent);
         $this->checkAccess('COPY', $collection);
 
         foreach ($resources as $resource) {
-            $newNode = $this->get('claroline.resource.manager')->copy($resource, $parent);
-            $em->persist($newNode);
-            $em->flush();
-            $em->refresh($parent);
-            $newNodes[] = $this->resourceManager->toArray($newNode);
+            $newNodes[] = $this->resourceManager->toArray($this->resourceManager->copy($resource, $parent, $user));
         }
 
         return new JsonResponse($newNodes);
@@ -460,6 +471,11 @@ class ResourceController extends Controller
      *     name="claro_resource_filter",
      *     options={"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *      "directory",
+     *      class="ClarolineCoreBundle:Resource\Directory",
+     *      options={"id" = "directoryId", "strictId" = true}
+     * )
      *
      * Returns a json representation of a resource search result.
      *
@@ -468,33 +484,15 @@ class ResourceController extends Controller
      * @throws \Exception
      * @return Response
      */
-    public function filterAction($directoryId)
+    public function filterAction(Directory $directory)
     {
-        $queryParameters = $this->container->get('request')->query->all();
-        $criteria = $this->get('claroline.resource.manager')->buildSearchArray($queryParameters);
+        $criteria = $this->resourceManager->buildSearchArray($this->request->query->all());
         $criteria['roots'] = isset($criteria['roots']) ? $criteria['roots'] : array();
-        $resourceRepo = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
-        $directoryId = (integer) $directoryId;
-        $path = array();
+        $path = $this->resourceManager->getAncestors($directory);
+        $userRoles = $this->roleManager->getStringRolesFromCurrentUser();
+        $resources = $this->resourceManager->getByCriteria($criteria, $userRoles, true);
 
-        if ($directoryId !== 0) {
-            $directory = $this->getResource($resourceRepo->find($directoryId));
-
-            if (null === $directory || !$directory instanceof Directory) {
-                throw new Exception("Cannot find any directory with id '{$directoryId}'");
-            }
-
-            $path = $resourceRepo->findAncestors($directory);
-        }
-
-        $token = $this->get('security.context')->getToken();
-        $userRoles = $this->get('claroline.security.utilities')->getRoles($token);
-        $resources = $resourceRepo->findByCriteria($criteria, $userRoles, true);
-        $response = new Response(json_encode(array('resources' => $resources, 'path' => $path)));
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
+        return new JsonResponse(array('resources' => $resources, 'path' => $path));
     }
 
     /**
@@ -538,6 +536,7 @@ class ResourceController extends Controller
     }
 
     /**
+     * @todo move that function elsewhere.
      * @EXT\Route(
      *     "/search/role/code/{code}",
      *     name="claro_resource_find_role_by_code",
@@ -559,10 +558,7 @@ class ResourceController extends Controller
             );
         }
 
-        $response = new Response(json_encode($arWorkspace));
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
+        return new JsonResponse($arWorkspace);
     }
 
     /**
@@ -622,31 +618,31 @@ class ResourceController extends Controller
      *     name="claro_resource_insert_before",
      *     options={"expose"=true}
      * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter(
+     *      "resource",
+     *      class="ClarolineCoreBundle:Resource\AbstractResource",
+     *      options={"id" = "resourceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "next",
+     *      class="ClarolineCoreBundle:Resource\AbstractResource",
+     *      options={"id" = "nextId", "strictId" = true}
+     * )
      *
-     * @param type $resourceId
+     * @param AbstractResource $resource
      * @param type $nextId
      *
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function insertBefore($resourceId, $nextId)
+    public function insertBefore(AbstractResource $resource, AbstractResource $next, User $user)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $repo = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
-        $resource = $repo->find($resourceId);
-        $user = $this->get('security.context')->getToken()->getUser();
-
-        if ($user !== $resource->getParent()->getCreator() && !$this->get('security.context')->isGranted('ROLE_ADMIN')) {
+        if ($user !== $resource->getParent()->getCreator() && !$this->sc->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
 
-        $next = $repo->find($nextId);
-
-        if ($next !== null) {
-            $this->get('claroline.resource.manager')->insertBefore($resource, $next);
-        } else {
-            $this->get('claroline.resource.manager')->insertBefore($resource);
-        }
+        $this->resourceManager->insertBefore($resource, $next);
 
         return new Response('success', 204);
     }
@@ -676,7 +672,7 @@ class ResourceController extends Controller
      */
     private function checkAccess($permission, ResourceCollection $collection)
     {
-        if (!$this->get('security.context')->isGranted($permission, $collection)) {
+        if (!$this->sc->isGranted($permission, $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
     }

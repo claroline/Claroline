@@ -14,11 +14,13 @@ use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\ResourceShortcutRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Manager\RightsManager;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\IconManager;
 use Claroline\CoreBundle\Manager\Exception\MissingResourceNameException;
 use Claroline\CoreBundle\Manager\Exception\ResourceTypeNotFoundException;
 use Claroline\CoreBundle\Manager\Exception\RightsException;
 use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Database\Writer;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -40,6 +42,8 @@ class ResourceManager
     private $shortcutRepo;
     /** @var RoleRepository */
     private $roleRepo;
+    /** @var RoleManager */
+    private $roleManager;
     /** @var IconManager */
     private $iconManager;
     /** @var EventDispatcher */
@@ -55,6 +59,7 @@ class ResourceManager
      *     "resourceRepo"       = @DI\Inject("resource_repository"),
      *     "resourceRightsRepo" = @DI\Inject("resource_rights_repository"),
      *     "roleRepo"           = @DI\Inject("role_repository"),
+     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
      *     "shortcutRepo"       = @DI\Inject("shortcut_repository"),
      *     "iconManager"        = @DI\Inject("claroline.manager.icon_manager"),
      *     "rightsManager"      = @DI\Inject("claroline.manager.rights_manager"),
@@ -67,6 +72,7 @@ class ResourceManager
         AbstractResourceRepository $resourceRepo,
         ResourceRightsRepository $resourceRightsRepo,
         RoleRepository $roleRepo,
+        RoleManager $roleManager,
         ResourceShortcutRepository $shortcutRepo,
         IconManager $iconManager,
         RightsManager $rightsManager,
@@ -78,6 +84,7 @@ class ResourceManager
         $this->resourceRepo = $resourceRepo;
         $this->resourceRightsRepo = $resourceRightsRepo;
         $this->roleRepo = $roleRepo;
+        $this->roleManager = $roleManager;
         $this->shortcutRepo = $shortcutRepo;
         $this->iconManager = $iconManager;
         $this->rightsManager = $rightsManager;
@@ -575,12 +582,11 @@ class ResourceManager
      */
     public function copy(AbstractResource $resource, AbstractResource $parent, User $user)
     {
-        $last = $this->resourceRepo->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->findOneBy(array('parent' => $parent, 'next' => null));
+        $last = $this->resourceRepo->findOneBy(array('parent' => $parent, 'next' => null));
 
         if (get_class($resource) == 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
-            $copy = newResourceShortcut();
-            $copy->setTarget($resource->getTarget());
+            $copy = new ResourceShortcut();
+            $copy->setResource($resource->getResource());
             $copy->setCreator($user);
             $copy->setWorkspace($parent->getWorkspace());
             $copy->setResourceType($resource->getResourceType());
@@ -619,7 +625,8 @@ class ResourceManager
         }
 
         if ($last) {
-            $this->writer->setOrder($last, $last->getPrevious(), $resource);
+            $last->setNext($resource);
+            $this->writer->update($last);
         }
 
         return $copy;
@@ -695,6 +702,11 @@ class ResourceManager
     public function getChildren(Directory $directory, array $roles)
     {
         return $this->sort($this->resourceRepo->findChildren($directory, $roles));
+    }
+
+    public function getByCriteria(array $criteria, array $userRoles, $isRecursive)
+    {
+        return $this->resourceRepo->findByCriteria($criteria, $userRoles, $isRecursive);
     }
 
     /**
