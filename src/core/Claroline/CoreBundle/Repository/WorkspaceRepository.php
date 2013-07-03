@@ -207,7 +207,7 @@ class WorkspaceRepository extends EntityRepository
             ->groupBy('ws.id')
             ->orderBy('total','DESC');
 
-        if ($max >1)
+        if ($max > 1)
         {
             $qb->setMaxResults($max);
         }

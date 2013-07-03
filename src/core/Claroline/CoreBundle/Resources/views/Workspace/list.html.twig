@@ -22,7 +22,6 @@
                     {% for relWorkspaceTag in tagWorkspaces[tag.id] %}
                     {% set workspace = relWorkspaceTag.getWorkspace() %}
                     <li class="row-workspace row-workspace-id-{{ workspace.getId() }}">
-                        <i class="icon-book"></i>
                         {% set granted = has_access_to_workspace(workspace.getId(), app.security.getToken()) %}
                         {% if granted == true %}
                         <a href="{{ path('claro_workspace_open',
@@ -30,6 +29,7 @@
                            id="link-home-{{ workspace.getId() }}"
                         >
                         {% endif %}
+                        <i class="icon-book"></i>
                         {{ workspace.getName() }}
                         <span class="workspace-code">({{ workspace.getCode() }})</span>
                         {% if granted %}</a>{% endif %}
@@ -45,58 +45,66 @@
 
 {% from _self import showTag %}
 
-{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+{% extends 'ClarolineCoreBundle:WorkspaceTag:layout.html.twig' %}
 
-{% block sectionHeader %}
-    {{ macros.sectionHeader('all_workspaces'|trans({}, 'platform')) }}
-{% endblock %}
+{% block section_content %}
 
-{% block content %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-book',
+                'name': 'all_workspaces'|trans({}, 'platform'),
+                'href': '#'
+            }
+        ])
+    }}
+
+    <div class="margin widget">
+
     {% if is_granted('ROLE_ADMIN') %}
-    <div>
         <a href="{{ path('claro_workspace_manage_admin_tag') }}">
             <button type="button" class="btn">{{ 'admin_tags_management'|trans({}, 'platform') }}</button>
         </a>
-    </div>
-    <br>
+        <hr>
     {% endif %}
-    <div class="accordion" id="accordion-all">
-        <div class="accordion-group">
-            <div class="accordion-heading">
-                <a  class="accordion-toggle"
-                    data-toggle="collapse"
-                    data-parent="#accordion-all"
-                    href="#collapse-all"
-                >
-                    <i class="icon-align-justify"></i>
-                    {{ 'all_workspaces'|trans({}, 'platform') }}
-                    <i class="icon-chevron-down pull-right"></i>
-                </a>
-            </div>
-            <div id="collapse-all" class="accordion-body collapse {% if tags|length == 0 %}in{% endif %}">
-                <div class="accordion-inner">
-                    <ul>
-                        {% for workspace in workspaces %}
-                        <li class="row-workspace row-workspace-id-{{ workspace.getId() }}">
-                            <i class="icon-book"></i>
-                            {% set granted = has_access_to_workspace(workspace.getId(), app.security.getToken()) %}
-                            {% if granted == true %}
-                            <a href="{{ path('claro_workspace_open',
-                               {'workspaceId': workspace.getId()}) }}"
-                               id="link-home-{{ workspace.getId() }}"
-                            >
-                            {% endif %}
-                            {{ workspace.getName() }}
-                            <span class="workspace-code">({{ workspace.getCode() }})</span>
-                            {% if granted%}</a>{% endif %}
-                        </li>
-                        {% endfor %}
-                    </ul>
+
+        <div class="accordion" id="accordion-all">
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a  class="accordion-toggle"
+                        data-toggle="collapse"
+                        data-parent="#accordion-all"
+                        href="#collapse-all"
+                    >
+                        <i class="icon-align-justify"></i>
+                        {{ 'all_workspaces'|trans({}, 'platform') }}
+                        <i class="icon-chevron-down pull-right"></i>
+                    </a>
+                </div>
+                <div id="collapse-all" class="accordion-body collapse {% if tags|length == 0 %}in{% endif %}">
+                    <div class="accordion-inner">
+                        <ul>
+                            {% for workspace in workspaces %}
+                            <li class="row-workspace row-workspace-id-{{ workspace.getId() }}">
+                                {% set granted = has_access_to_workspace(workspace.getId(), app.security.getToken()) %}
+                                {% if granted == true %}
+                                <a href="{{ path('claro_workspace_open',
+                                   {'workspaceId': workspace.getId()}) }}"
+                                   id="link-home-{{ workspace.getId() }}"
+                                >
+                                {% endif %}
+                                <i class="icon-book"></i>
+                                {{ workspace.getName() }}
+                                <span class="workspace-code">({{ workspace.getCode() }})</span>
+                                {% if granted%}</a>{% endif %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
     {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable) }}
-
+    </div>
 {% endblock %}
