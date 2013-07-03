@@ -4,5 +4,4 @@ plugin:
   resources:
     - class: Claroline\ScormBundle\Entity\Scorm
       name: claroline_scorm
-      is_browsable: false
       icon: scorm_file.png

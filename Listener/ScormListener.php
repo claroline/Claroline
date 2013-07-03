@@ -70,7 +70,7 @@ class ScormListener extends ContainerAware
             $tmpFile = $form->get('file')->getData();
             $fileName = $tmpFile->getClientOriginalName();
             $extension = pathinfo($fileName, PATHINFO_EXTENSION);
-            $hashName = $this->container->get('claroline.resource.utilities')->generateGuid() . "." . $extension;
+            $hashName = $this->container->get('claroline.resource.resource_manager')->generateGuid() . "." . $extension;
             $tmpFile->move($this->container->getParameter('claroline.param.files_directory'), $hashName);
 
             $path = $this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR . $hashName;
@@ -156,12 +156,9 @@ class ScormListener extends ContainerAware
                         }
                     }
 
-                    if (count($resources) === 1) {
-                        $event->setResource($resources[0]);
-                    } else {
-                        $event->setResources($resources);
-                    }
+                    $event->setResources($resources);
                     $this->unzipTmpFile($hashName);
+                    
                 } else {
                     throw new \Exception("File imsmanifest.xml must be in the root directory of the archive");
                 }
