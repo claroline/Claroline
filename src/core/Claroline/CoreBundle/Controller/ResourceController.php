@@ -4,9 +4,11 @@ namespace Claroline\CoreBundle\Controller;
 
 use \Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
@@ -15,15 +17,33 @@ use Claroline\CoreBundle\Library\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Library\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Library\Event\LogResourceReadEvent;
 use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\DiExtraBundle\Annotation as DI;
 
 class ResourceController extends Controller
 {
     const THUMB_PER_PAGE = 12;
 
+    private $formFactory;
+
     /**
-     * @Route(
+     * @DI\InjectParams({
+     *     "formFactory" = @DI\Inject("claroline.form.factory"),
+     *     "ed"          = @DI\Inject("event_dispatcher")
+     * })
+     */
+    public function __construct
+    (
+        FormFactory $formFactory,
+        EventDispatcher $ed
+    )
+    {
+        $this->formFactory = $formFactory;
+        $this->ed = $ed;
+    }
+
+    /**
+     * @EXT\Route(
      *     "/form/{resourceType}",
      *     name="claro_resource_creation_form",
      *     options={"expose"=true}
@@ -40,7 +60,7 @@ class ResourceController extends Controller
     {
         $eventName = 'create_form_'.$resourceType;
         $event = new CreateFormResourceEvent();
-        $this->get('event_dispatcher')->dispatch($eventName, $event);
+        $this->ed->dispatch($eventName, $event);
 
         if ($event->getResponseContent() === "") {
             throw new \Exception(
@@ -52,7 +72,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/create/{resourceType}/{parentId}",
      *     name="claro_resource_create",
      *     options={"expose"=true}
@@ -81,7 +101,7 @@ class ResourceController extends Controller
         $response = new Response();
 
         if (($resource = $event->getResource()) instanceof AbstractResource) {
-            $manager = $this->get('claroline.resource.manager');
+            $manager = $this->get('claroline.manager.resource_manager');
             $resource = $manager->create($resource, $parentId, $resourceType);
             $response->headers->set('Content-Type', 'application/json');
             $response->setContent(
@@ -90,7 +110,7 @@ class ResourceController extends Controller
             );
         } elseif (count($event->getResources()) > 0) {
             $resources = $event->getResources();
-            $manager = $this->get('claroline.resource.manager');
+            $manager = $this->get('claroline.manager.resource_manager');
             $resourcesArray = array();
             $token = $this->get('security.context')->getToken();
 
@@ -113,7 +133,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/open/{resourceType}/{resourceId}",
      *     name="claro_resource_open",
      *     options={"expose"=true}
@@ -159,7 +179,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/delete",
      *     name="claro_resource_delete",
      *     options={"expose"=true}
@@ -188,14 +208,14 @@ class ResourceController extends Controller
         $this->checkAccess('DELETE', $collection);
 
         foreach ($collection->getResources() as $resource) {
-            $this->get('claroline.resource.manager')->delete($resource);
+            $this->get('claroline.manager.resource_manager')->delete($resource);
         }
 
         return new Response('Resource deleted', 204);
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/move/{newParentId}",
      *     name="claro_resource_move",
      *     options={"expose"=true}
@@ -216,7 +236,7 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getManager();
         $resourceRepo = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
         $newParent = $resourceRepo->find($newParentId);
-        $resourceManager = $this->get('claroline.resource.manager');
+        $resourceManager = $this->get('claroline.manager.resource_manager');
         $movedResources = array();
         $collection = new ResourceCollection();
 
@@ -256,7 +276,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/custom/{resourceType}/{action}/{resourceId}",
      *     name="claro_resource_custom",
      *     options={"expose"=true}
@@ -297,7 +317,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/export",
      *     name="claro_resource_export",
      *     options={"expose"=true}
@@ -346,7 +366,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "directory/{directoryId}",
      *     name="claro_resource_directory",
      *     options={"expose"=true},
@@ -402,7 +422,7 @@ class ResourceController extends Controller
 
             $path = $resourceRepo->findAncestors($directory);
             $resources = $resourceRepo->findChildren($directory, $currentRoles);
-            $resources = $this->get('claroline.resource.manager')->sort($resources);
+            $resources = $this->get('claroline.manager.resource_manager')->sort($resources);
 
             $creationRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
                 ->findCreationRights($currentRoles, $directory);
@@ -437,7 +457,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/copy/{resourceDestinationId}",
      *     name="claro_resource_copy",
      *     options={"expose"=true}
@@ -475,7 +495,7 @@ class ResourceController extends Controller
         $this->checkAccess('COPY', $collection);
 
         foreach ($resources as $resource) {
-            $newNode = $this->get('claroline.resource.manager')->copy($resource, $parent, $token->getUser());
+            $newNode = $this->get('claroline.manager.resource_manager')->copy($resource, $parent, $token->getUser());
             $em->persist($newNode);
             $em->flush();
             $em->refresh($parent);
@@ -489,7 +509,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/filter/{directoryId}",
      *     name="claro_resource_filter",
      *     options={"expose"=true}
@@ -505,7 +525,7 @@ class ResourceController extends Controller
     public function filterAction($directoryId)
     {
         $queryParameters = $this->container->get('request')->query->all();
-        $criteria = $this->get('claroline.resource.manager')->buildSearchArray($queryParameters);
+        $criteria = $this->get('claroline.manager.resource_manager')->buildSearchArray($queryParameters);
         $criteria['roots'] = isset($criteria['roots']) ? $criteria['roots'] : array();
         $resourceRepo = $this->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
@@ -532,7 +552,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/shortcut/{newParentId}/create",
      *     name="claro_resource_create_shortcut",
      *     options={"expose"=true}
@@ -555,7 +575,7 @@ class ResourceController extends Controller
         foreach ($ids as $resourceId) {
             $resource = $repo->find($resourceId);
             $creator = $this->get('security.context')->getToken()->getUser();
-            $shortcut = $this->get('claroline.resource.manager')->makeShortcut($resource, $parent, $creator);
+            $shortcut = $this->get('claroline.manager.resource_manager')->makeShortcut($resource, $parent, $creator);
             $em->flush();
             $em->refresh($parent);
 
@@ -572,7 +592,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/search/role/code/{code}",
      *     name="claro_resource_find_role_by_code",
      *     options={"expose"=true}
@@ -600,7 +620,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * @Template("ClarolineCoreBundle:Resource:breadcrumbs.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Resource:breadcrumbs.html.twig")
      */
     public function renderBreadcrumbsAction($resourceId, $workspaceId, $_breadcrumbs)
     {
@@ -651,7 +671,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/sort/{resourceId}/next/{nextId}",
      *     name="claro_resource_insert_before",
      *     options={"expose"=true}
@@ -677,9 +697,9 @@ class ResourceController extends Controller
         $next = $repo->find($nextId);
 
         if ($next !== null) {
-            $this->get('claroline.resource.manager')->insertBefore($resource, $next);
+            $this->get('claroline.manager.resource_manager')->insertBefore($resource, $next);
         } else {
-            $this->get('claroline.resource.manager')->insertBefore($resource);
+            $this->get('claroline.manager.resource_manager')->insertBefore($resource);
         }
 
         return new Response('success', 204);
