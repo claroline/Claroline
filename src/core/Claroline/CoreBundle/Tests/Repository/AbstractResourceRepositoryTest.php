@@ -75,77 +75,78 @@ class AbstractResourceRepositoryTest extends RepositoryTestCase
         self::$em->flush();
     }
 
-    public function testFindWorkspaceRoot()
-    {
-        $root = self::$repo->findWorkspaceRoot(self::getWorkspace('john'));
-        $this->assertEquals(self::getDirectory('john'), $root);
-    }
+//    public function testFindWorkspaceRoot()
+//    {
+//        $root = self::$repo->findWorkspaceRoot(self::getWorkspace('john'));
+//        $this->assertEquals(self::getDirectory('john'), $root);
+//    }
+//
+//    public function testFindDescendants()
+//    {
+//        $this->assertEquals(
+//            0,
+//            count(self::$repo->findDescendants(self::getDirectory('dir5')))
+//        );
+//        $this->assertEquals(
+//            4,
+//            count(self::$repo->findDescendants(self::getDirectory('dir1')))
+//        );
+//        $this->assertEquals(
+//            5,
+//            count(self::$repo->findDescendants(self::getDirectory('dir1'), true))
+//        );
+//        $this->assertEquals(
+//            4,
+//            count(self::$repo->findDescendants(self::getDirectory('dir1'), true, 'directory'))
+//        );
+//
+//        $entityDirs = self::$repo->findDescendants(self::getDirectory('dir1'), false);
+//        $this->assertInstanceOf(
+//            'Claroline\CoreBundle\Entity\Resource\AbstractResource',
+//            $entityDirs[0]
+//        );
+//    }
 
-    public function testFindDescendants()
-    {
-        $this->assertEquals(
-            0,
-            count(self::$repo->findDescendants(self::getDirectory('dir5')))
-        );
-        $this->assertEquals(
-            4,
-            count(self::$repo->findDescendants(self::getDirectory('dir1')))
-        );
-        $this->assertEquals(
-            5,
-            count(self::$repo->findDescendants(self::getDirectory('dir1'), true))
-        );
-        $this->assertEquals(
-            4,
-            count(self::$repo->findDescendants(self::getDirectory('dir1'), true, 'directory'))
-        );
 
-        $entityDirs = self::$repo->findDescendants(self::getDirectory('dir1'), false);
-        $this->assertInstanceOf(
-            'Claroline\CoreBundle\Entity\Resource\AbstractResource',
-            $entityDirs[0]
-        );
-    }
+//    public function testFindChildrenThrowsAnExceptionIfNoRolesAreGiven()
+//    {
+//        $this->setExpectedException('RuntimeException');
+//        $children = self::$repo->findChildren(self::getDirectory('john'), array());
+//        $this->assertEquals(0, count($children));
+//    }
+//
+//    public function testFindChildren()
+//    {
+//        $children = self::$repo->findChildren(self::getDirectory('john'), array('ROLE_ADMIN'));
+//        $this->assertEquals(3, count($children));
+//        $this->assertEquals(self::getDirectory('dir1')->getId(), $children[0]['id']);
+//        $this->assertEquals(self::getDirectory('dir3')->getId(), $children[1]['id']);
+//        $children = self::$repo->findChildren(self::getDirectory('john'), array('ROLE_ANONYMOUS'));
+//        $this->assertEquals(1, count($children));
+//    }
 
-    public function testFindChildren()
-    {
-        $children = self::$repo->findChildren(self::getDirectory('john'), array('ROLE_ADMIN'));
-        $this->assertEquals(3, count($children));
-        $this->assertEquals(self::getDirectory('dir1')->getId(), $children[0]['id']);
-        $this->assertEquals(self::getDirectory('dir3')->getId(), $children[1]['id']);
-        $children = self::$repo->findChildren(self::getDirectory('john'), array('ROLE_ANONYMOUS'));
-        $this->assertEquals(1, count($children));
-    }
+//    public function testFindWorkspaceRootsByUser()
+//    {
+//        $jane = self::getUser('jane');
+//        $roots = self::$repo->findWorkspaceRootsByUser($jane);
+//        $this->assertEquals(1, count($roots));
+//        $this->assertEquals(self::getDirectory('jane')->getId(), $roots[0]['id']);
+//        $john = self::getUser('john');
+//        $roots = self::$repo->findWorkspaceRootsByUser($john);
+//        $this->assertEquals(2, count($roots));
+//        $this->assertEquals(self::getDirectory('jane')->getId(), $roots[0]['id']);
+//        $this->assertEquals(self::getDirectory('john')->getId(), $roots[1]['id']);
+//    }
 
-    public function testFindChildrenThrowsAnExceptionIfNoRolesAreGiven()
-    {
-        $this->setExpectedException('RuntimeException');
-        $children = self::$repo->findChildren(self::getDirectory('john'), array());
-        $this->assertEquals(0, count($children));
-    }
-
-    public function testFindWorkspaceRootsByUser()
-    {
-        $jane = self::getUser('jane');
-        $roots = self::$repo->findWorkspaceRootsByUser($jane);
-        $this->assertEquals(1, count($roots));
-        $this->assertEquals(self::getDirectory('jane')->getId(), $roots[0]['id']);
-        $john = self::getUser('john');
-        $roots = self::$repo->findWorkspaceRootsByUser($john);
-        $this->assertEquals(2, count($roots));
-        $this->assertEquals(self::getDirectory('jane')->getId(), $roots[0]['id']);
-        $this->assertEquals(self::getDirectory('john')->getId(), $roots[1]['id']);
-    }
-
-    public function testFindWorkspaceRootsByRoles()
-    {
-        $janeManager = 'ROLE_WS_MANAGER_'.self::getWorkspace('jane')->getId();
-        $johnManager = 'ROLE_WS_MANAGER_'.self::getWorkspace('john')->getId();
-        $roots = self::$repo->findWorkspaceRootsByRoles(array($janeManager));
-        $this->assertEquals(1, count($roots));
-        $roots = self::$repo->findWorkspaceRootsByRoles(array($janeManager, $johnManager));
-        $this->assertEquals(2, count($roots));
-    }
+//    public function testFindWorkspaceRootsByRoles()
+//    {
+//        $janeManager = 'ROLE_WS_MANAGER_'.self::getWorkspace('jane')->getId();
+//        $johnManager = 'ROLE_WS_MANAGER_'.self::getWorkspace('john')->getId();
+//        $roots = self::$repo->findWorkspaceRootsByRoles(array($janeManager));
+//        $this->assertEquals(1, count($roots));
+//        $roots = self::$repo->findWorkspaceRootsByRoles(array($janeManager, $johnManager));
+//        $this->assertEquals(2, count($roots));
+//    }
 
     public function testFindResourcesByIds()
     {

@@ -1,22 +1,21 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
 {% block section_content %}
-   {% spaceless %}
-        <ul class="breadcrumb">
-            <li>
-                <a href="{{ path('claro_workspace_open_tool',
-                    {'workspaceId': workspace.getId(), 'toolName': 'user_management'}) }}">
-                    {{ 'user_management'|trans({}, 'tools') }}
-                </a>
-            </li>
-            <span class="divider"> / </span>
-            <li>
-                <a href="#">
-                    {{ user.getUsername() }}
-                </a>
-            </li>
-        </ul>
-    {% endspaceless %}
+
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-user',
+                'name': 'user_management'|trans({}, 'tools'),
+                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'user_management'})
+            },
+            {
+                'name': user.getUsername(),
+                'href': ''
+            }
+        ])
+    }}
+
     <form class="form-horizontal" action="{{path('claro_workspace_tools_edit_user_parameters',{'workspaceId':workspace.getId(), 'userId':user.getId()})}}" method="post" {{ form_enctype(form) }} id="user-parameters">
         <fieldset>
             <legend>{{ 'user_parameters'|trans({}, 'platform') }} :</legend>

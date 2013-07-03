@@ -148,7 +148,8 @@ class Creator
         $i = 1;
 
         foreach ($requiredTools as $requiredTool) {
-            $this->toolManager->createOrderedTool($requiredTool, $i, $requiredTool->getName(), $user);
+            $this->toolManager->addDesktopTool($requiredTool, $user, $i, $requiredTool->getName());
+            $i++;
         }
 
     }
