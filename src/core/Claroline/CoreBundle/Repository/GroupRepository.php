@@ -73,25 +73,29 @@ class GroupRepository extends EntityRepository
         return $executeQuery ? $query->getResult() : $query;
     }
 
-
-    
-
-    public function findByWorkspace(AbstractWorkspace $workspace, $getQuery = false)
+    /**
+     * Returns the groups which are member of a workspace.
+     *
+     * @param AbstractWorkspace $workspace
+     * @param boolean           $executeQuery
+     *
+     * @return array[Group]|Query
+     */
+    public function findByWorkspace(AbstractWorkspace $workspace, $executeQuery = true)
     {
-        $dql = "
+        $dql = '
             SELECT g, wr
             FROM Claroline\CoreBundle\Entity\Group g
             LEFT JOIN g.roles wr WITH wr IN (
-                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ".Role::WS_ROLE."
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::WS_ROLE . '
             )
             LEFT JOIN wr.workspace w
             WHERE w.id = :workspaceId
-       ";
-
+       ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaceId', $workspace->getId());
 
-        return ($getQuery) ? $query: $query->getResult();
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     /**
@@ -130,43 +134,44 @@ class GroupRepository extends EntityRepository
     }
 
     /**
-     * Returns the groups of the platform
+     * Returns all the groups.
+     *
+     * @param boolean $executeQuery
+     *
+     * @return array[Group]|Query
      */
-    public function findAll($getQuery = false)
+    public function findAll($executeQuery = true)
     {
-        if ($getQuery) {
-            $dql = "
+        if (!$executeQuery) {
+            return $this->_em->createQuery('
                 SELECT g, r FROM Claroline\CoreBundle\Entity\Group g
-                  LEFT JOIN g.roles r";
-
-             return $this->_em->createQuery($dql);
+                LEFT JOIN g.roles r
+            ');
         }
 
         return parent::findAll();
     }
 
     /**
-     * Search the groups of the platform
+     * Returns all the groups whose name match a search string.
      *
-     * @param string  $search
-     * @param boolean $getQuery
+     * @param string    $search
+     * @param boolean   $executeQuery
      *
-     * @return \Doctrine\ORM\Tools\Pagination\Paginator
+     * @return array[Group]|Query
      */
-    public function findByName($search, $getQuery = false)
+    public function findByName($search, $executeQuery = true)
     {
-        $search = strtoupper($search);
-
-        $dql = "
+        $dql = '
             SELECT g, r
             FROM Claroline\CoreBundle\Entity\Group g
             LEFT JOIN g.roles r
             WHERE UPPER(g.name) LIKE :search
-        ";
-
+        ';
+        $search = strtoupper($search);
         $query = $this->_em->createQuery($dql);
         $query->setParameter('search', "%{$search}%");
 
-        return ($getQuery) ? $query: $query->getResult();
+        return $executeQuery ? $query->getResult() : $query;
     }
 }

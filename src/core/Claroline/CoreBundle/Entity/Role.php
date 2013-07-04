@@ -94,7 +94,7 @@ class Role implements RoleInterface
     /**
      * @ORM\Column(name="type", type="integer", nullable=false)
      */
-    protected $type;
+    protected $type = self::PLATFORM_ROLE;
 
     /**
      * @ORM\OneToMany(
@@ -205,6 +205,9 @@ class Role implements RoleInterface
         }
     }
 
+    /**
+     * @todo check the type is a Role class constant
+     */
     public function setType($type)
     {
         $this->type = $type;
