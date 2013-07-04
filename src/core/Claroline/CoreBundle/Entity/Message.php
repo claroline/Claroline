@@ -116,7 +116,6 @@ class Message
      */
     protected $senderUsername;
 
-
     protected $to;
 
     public function __construct()
@@ -235,5 +234,4 @@ class Message
         return $this->senderUsername;
     }
 
-    
 }
