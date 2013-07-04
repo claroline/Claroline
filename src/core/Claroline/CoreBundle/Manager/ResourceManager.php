@@ -22,7 +22,7 @@ use Claroline\CoreBundle\Manager\Exception\RightsException;
 use Claroline\CoreBundle\Manager\Exception\ExportResourceException;
 use Claroline\CoreBundle\Database\Writer;
 use Claroline\CoreBundle\Database\GenericRepository;
-use Claroline\CoreBundle\Event\Dispatcher;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -79,7 +79,7 @@ class ResourceManager
         ResourceShortcutRepository $shortcutRepo,
         IconManager $iconManager,
         RightsManager $rightsManager,
-        Dispatcher $dispatcher,
+        StrictDispatcher $dispatcher,
         Writer $writer,
         GenericRepository $genericRepo
     )

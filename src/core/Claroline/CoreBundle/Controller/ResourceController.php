@@ -22,7 +22,7 @@ use Claroline\CoreBundle\Event\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Event\Dispatcher;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -60,7 +60,7 @@ class ResourceController extends Controller
         RoleManager $roleManager,
         Translator $translator,
         Request $request,
-        Dispatcher $dispatcher
+        StrictDispatcher $dispatcher
     )
     {
         $this->formFactory = $formFactory;
