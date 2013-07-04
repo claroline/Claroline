@@ -2,7 +2,7 @@
 
 namespace Claroline\PdfPlayerBundle\Listener;
 
-use Claroline\CoreBundle\Library\Event\PlayFileEvent;
+use Claroline\CoreBundle\Event\Event\PlayFileEvent;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Response;
 
