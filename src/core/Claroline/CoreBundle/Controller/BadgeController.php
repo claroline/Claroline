@@ -180,4 +180,21 @@ class BadgeController extends Controller
 
         return $this->redirect($this->generateUrl('claro_admin_badges'));
     }
+
+    /**
+     * @Route("/attribute/{id}", name="claro_admin_badges_attribute")
+     *
+     * @Template()
+     */
+    public function attributeAction()
+    {
+        $doctrine = $this->getDoctrine();
+        $users    = $doctrine->getRepository('ClarolineCoreBundle:User')->findAll();
+        $groups   = $doctrine->getRepository('ClarolineCoreBundle:Group')->findAll();
+
+        return array(
+            'users'  => $users,
+            'groups' => $groups
+        );
+    }
 }

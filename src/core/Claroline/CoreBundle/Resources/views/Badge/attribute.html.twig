@@ -1,0 +1,41 @@
+{% extends app.request.xmlHttpRequest ? "ClarolineCoreBundle:Administration:ajaxLayout.html.twig" : "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block content %}
+    <form class="form-horizontal">
+        <div class="control-group">
+            <div class="dropdown">
+                <a class="dropdown-toggle btn" id="select_group_list" role="button" data-toggle="dropdown" href="#">Sélection des groupes <i class="icon-chevron-up"></i></a>
+                <ul id="group_list" class="dropdown-menu" role="list" aria-labelledby="select_group_list">
+                    {% for group in groups %}
+                        <li>
+                            <a role="menuitem" tabindex="-1" href="#">
+                                <label class="checkbox"><input type="checkbox" name="selected_groups" value="{{ group.id }}"> {{ group.name }}</label>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="users_container">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" name="selectd_users" /></th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td><input type="checkbox" name="selectd_users" value="{{ user.id }}" /></td>
+                        <td>{{ user.firstname }}</td>
+                        <td>{{ user.lastname }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </form>
+{% endblock %}
