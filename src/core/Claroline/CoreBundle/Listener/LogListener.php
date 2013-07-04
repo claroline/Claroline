@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Library\Event\LogUserDeleteEvent;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleDeleteEvent;
 use Claroline\CoreBundle\Library\Event\LogNotRepeatableInterface;
 use Claroline\CoreBundle\Entity\Logger\Log;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Doctrine\ORM\EntityManager;
@@ -22,21 +23,29 @@ class LogListener
     private $em;
     private $securityContext;
     private $container;
+    private $roleManager;
 
     /**
      * @DI\InjectParams({
-     *     "em"         = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "context"    = @DI\Inject("security.context"),
-     *     "container"  = @DI\Inject("service_container")
+     *     "em"             = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "context"        = @DI\Inject("security.context"),
+     *     "container"      = @DI\Inject("service_container"),
+     *     "roleManager"    = @DI\Inject("claroline.manager.role_manager")
      * })
      *
      * @param \Doctrine\ORM\EntityManager $em
      */
-    public function __construct(EntityManager $em, SecurityContextInterface $context, $container)
+    public function __construct(
+        EntityManager $em,
+        SecurityContextInterface $context,
+        $container,
+        RoleManager $roleManager
+    )
     {
         $this->em = $em;
         $this->securityContext = $context;
         $this->container = $container;
+        $this->roleManager = $roleManager;
     }
 
     private function createLog(LogGenericEvent $event)
@@ -44,7 +53,7 @@ class LogListener
         $this->em->flush();
 
         //Add doer details
-        $token = $this->container->get('security.context')->getToken();
+        $token = $this->securityContext->getToken();
         $doer = null;
         $sessionId = null;
         $doerIp = null;
@@ -109,14 +118,15 @@ class LogListener
         }
 
         if ($doer !== null) {
-            $roleRepository = $this->em->getRepository('ClarolineCoreBundle:Role');
-            $platformRoles = $roleRepository->findPlatformRoles($doer);
+            $platformRoles = $this->roleManager->getPlatformRoles($doer);
+
             foreach ($platformRoles as $platformRole) {
                 $log->addDoerPlatformRole($platformRole);
             }
 
             if ($event->getWorkspace() !== null) {
-                $workspaceRole = $roleRepository->findWorkspaceRoleForUser($doer, $event->getWorkspace());
+                $workspaceRole = $this->roleManager->getWorkspaceRoleForUser($doer, $event->getWorkspace());
+
                 if ($workspaceRole != null) {
                     $log->addDoerWorkspaceRole($workspaceRole);
                 }
@@ -128,6 +138,7 @@ class LogListener
 
         //Json_array properties
         $details = $event->getDetails();
+
         if ($details === null) {
             $details = array();
         }
@@ -165,7 +176,7 @@ class LogListener
      */
     private function isARepeat(LogGenericEvent $event)
     {
-        if ($this->container->get('security.context')->getToken() === null) {
+        if ($this->securityContext->getToken() === null) {
             //Only if have a user session;
 
             return false;

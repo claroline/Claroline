@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Listener\Resource;
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -26,7 +25,7 @@ use Doctrine\ORM\EntityManager;
 /**
  * @DI\Service
  */
-class DirectoryListener implements ContainerAwareInterface
+class DirectoryListener
 {
     private $container;
     private $roleManager;
@@ -45,7 +44,8 @@ class DirectoryListener implements ContainerAwareInterface
      *     "converter"          = @DI\Inject("claroline.resource.converter"),
      *     "formFactory"        = @DI\Inject("form.factory"),
      *     "templating"         = @DI\Inject("templating"),
-     *     "resourceExporter"   = @DI\Inject("claroline.resource.exporter")
+     *     "resourceExporter"   = @DI\Inject("claroline.resource.exporter"),
+     *     "container"          = @DI\Inject("service_container")
      * })
      */
     public function __construct(
@@ -55,7 +55,8 @@ class DirectoryListener implements ContainerAwareInterface
         SecurityContextInterface $security,
         FormFactoryInterface $formFactory,
         TwigEngine $templating,
-        Exporter $resourceExporter
+        Exporter $resourceExporter,
+        ContainerInterface $container
     )
     {
         $this->em = $em;
@@ -65,17 +66,6 @@ class DirectoryListener implements ContainerAwareInterface
         $this->formFactory = $formFactory;
         $this->templating = $templating;
         $this->resourceExporter = $resourceExporter;
-    }
-
-    /**
-     * @DI\InjectParams({
-     *     "container" = @DI\Inject("service_container")
-     * })
-     *
-     * @param ContainerInterface $container
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
         $this->container = $container;
     }
 
