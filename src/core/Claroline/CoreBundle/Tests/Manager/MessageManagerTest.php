@@ -39,15 +39,14 @@ class MessageManagerTest extends MockeryTestCase
         $receiver1 = m::mock('Claroline\CoreBundle\Entity\User');
         $receiver2 = m::mock('Claroline\CoreBundle\Entity\User');
         $msg = m::mock('Claroline\CoreBundle\Entity\Message');
-        $msgParent = m::mock('Claroline\CoreBundle\Entity\Message');
 
+        $msgParent = m::mock('Claroline\CoreBundle\Entity\Message');
         $msg->shouldReceive('getTo')->once()->andReturn('user1;user2');
         $this->userRepo->shouldReceive('findByUsernames')
             ->once()
             ->with(array('user1','user2'))
             ->andReturn(array($receiver1, $receiver2));
         $msg->shouldReceive('setSender')->once()->with($sender);
-
         $msg->shouldReceive('setParent')->once()->with($msgParent);
         $this->writer->shouldReceive('suspendFlush')->once();
         $this->writer->shouldReceive('create')->with($msg)->once();
@@ -55,7 +54,6 @@ class MessageManagerTest extends MockeryTestCase
         $this->writer->shouldReceive('forceFlush')->once();
 
         $this->manager->send($sender, $msg, $msgParent);
-
     }
 
     /**
@@ -134,8 +132,8 @@ class MessageManagerTest extends MockeryTestCase
     {
         $msg = m::mock('Claroline\CoreBundle\Entity\Message');
 
-        $this->messageRepo->shouldReceive('findAncestors')->with($msg);
-        $this->manager->getConversation($msg);
+        $this->messageRepo->shouldReceive('findAncestors')->with($msg)->andReturn($msg);
+        $this->assertEquals($msg, $this->manager->getConversation($msg));
     }
 
     public function testRemove()
@@ -157,7 +155,6 @@ class MessageManagerTest extends MockeryTestCase
         $users = array();
 
         for ($i = 0; $i < 3; $i++) {
-
             $user = m::mock('Claroline\CoreBundle\Entity\User');
             $user->shouldReceive('getId')->once()->andReturn($i);
             $users[] = $user;
@@ -166,6 +163,5 @@ class MessageManagerTest extends MockeryTestCase
         $this->userRepo->shouldReceive('findByGroup')->once()->with($group)->andReturn($users);
         $this->assertEquals('?ids[]=0&ids[]=1&ids[]=2', $this->manager->generateGroupQueryString($group));
      }
-
 
 }
