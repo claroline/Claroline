@@ -331,7 +331,7 @@ class Badge
      */
     public function getAbsolutePath()
     {
-        return (null === $this->imagePath) ? null : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->slug . '.' . $this->imagePath;
+        return (null === $this->imagePath) ? null : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->imagePath;
     }
 
     /**
@@ -339,7 +339,7 @@ class Badge
      */
     public function getWebPath()
     {
-        return (null === $this->imagePath) ? null : $this->getUploadDir() . DIRECTORY_SEPARATOR . $this->slug . '.' . $this->imagePath;
+        return (null === $this->imagePath) ? null : $this->getUploadDir() . DIRECTORY_SEPARATOR . $this->imagePath;
     }
 
     /**
@@ -361,30 +361,13 @@ class Badge
 
     /**
      * @ORM\PrePersist()
-     */
-    public function PrePersist()
-    {
-        if (null !== $this->file) {
-            $this->imagePath = $this->file->guessExtension();
-        }
-    }
-
-    /**
      * @ORM\PreUpdate()
      */
-    public function preUpdate(PreUpdateEventArgs $eventArgs)
+    public function preUpload()
     {
-        $oldImagePath = $this->imagePath;
-
         if (null !== $this->file) {
             $this->removeUpload();
-            $this->imagePath = $this->file->guessExtension();
-        }
-
-        if($eventArgs->hasChangedField('name')) {
-            $oldFilePath = sprintf('%s%s%s.%s', $this->getUploadRootDir(), DIRECTORY_SEPARATOR, $eventArgs->getOldValue('slug'), $oldImagePath);
-            $newFilePath = sprintf('%s%s%s.%s', $this->getUploadRootDir(), DIRECTORY_SEPARATOR, $eventArgs->getNewValue('slug'), $this->imagePath);
-            rename($oldFilePath, $newFilePath);
+            $this->imagePath = $this->file->getClientOriginalName();
         }
     }
 
@@ -398,7 +381,7 @@ class Badge
             return;
         }
 
-        $this->file->move($this->getUploadRootDir(), $this->slug . '.' . $this->file->guessExtension());
+        $this->file->move($this->getUploadRootDir(), $this->file->getClientOriginalName());
 
         unset($this->file);
     }
