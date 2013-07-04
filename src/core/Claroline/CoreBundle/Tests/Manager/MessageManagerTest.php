@@ -25,7 +25,13 @@ class MessageManagerTest extends MockeryTestCase
         $this->userMessageRepo = m::mock('Claroline\CoreBundle\Repository\UserMessageRepository');
         $this->writer = m::mock('Claroline\CoreBundle\Database\Writer');
         $this->pagerFactory = m::mock('Claroline\CoreBundle\Pager\PagerFactory');
-        $this->manager = new MessageManager($this->userMessageRepo, $this->messageRepo, $this->userRepo, $this->writer, $this->pagerFactory);
+        $this->manager = new MessageManager(
+            $this->userMessageRepo,
+            $this->messageRepo,
+            $this->userRepo,
+            $this->writer,
+            $this->pagerFactory
+        );
     }
     public function testSend()
     {
@@ -150,8 +156,7 @@ class MessageManagerTest extends MockeryTestCase
         $group = m::mock('Claroline\CoreBundle\Entity\Group');
         $users = array();
 
-        for ($i=0; $i < 3; $i++) 
-        {
+        for ($i = 0; $i < 3; $i++) {
 
             $user = m::mock('Claroline\CoreBundle\Entity\User');
             $user->shouldReceive('getId')->once()->andReturn($i);
