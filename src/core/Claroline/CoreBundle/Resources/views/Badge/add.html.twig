@@ -4,12 +4,31 @@
     <div class="margin">
         <h3 id='user-list-block' class="sub-section-header">{{ 'add_badge'|trans({}, 'platform') }}</h3>
     </div>
-    <form action="{{ path('claro_admin_badges_add') }}" method="post" {{ form_enctype(form) }}>
+    <form action="{{ path('claro_admin_badges_add') }}" method="post" class="form-horizontal" {{ form_enctype(form) }}>
+        <div class="">
+            <ul class="nav nav-tabs" id="translationFormTabs">
+                <li class="active"><a href="#fr" data-toggle="tab">{{ 'badge_form_frTranslation'|trans({}, 'platform') }}</a></li>
+                <li><a href="#en" data-toggle="tab">{{ 'badge_form_enTranslation'|trans({}, 'platform') }}</a></li>
+            </ul>
+
+            <div class="tab-content well well-small badge_translations">
+                <div class="tab-pane active" id="fr">
+                    {{ form_errors(form.frTranslation) }}
+                    {{ form_widget(form.frTranslation) }}
+                </div>
+                <div class="tab-pane" id="en">
+                    {{ form_errors(form.enTranslation) }}
+                    {{ form_widget(form.enTranslation) }}
+                </div>
+            </div>
+        </div>
+
         {{ form_widget(form) }}
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">{{ 'add'|trans({}, 'platform') }}</button>
             <a href="{{ path('claro_admin_badges') }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-danger">{{ 'cancel'|trans({}, 'platform') }}</a>
         </div>
+
     </form>
 {% endblock %}
 

@@ -7,12 +7,21 @@ use Doctrine\ORM\EntityRepository;
 class BadgeRepository extends EntityRepository
 {
     /**
+     * @param null|string $locale
+     *
      * @return array
      */
-    public function findAllOrderedByName()
+    public function findAllOrderedByName($locale = null)
     {
         return $this->getEntityManager()
-            ->createQuery('SELECT b FROM ClarolineCoreBundle:Badge\Badge b ORDER BY b.name ASC')
+            ->createQuery('
+                SELECT b, t
+                FROM ClarolineCoreBundle:Badge\Badge b
+                JOIN b.translations t
+                WHERE t.locale = :locale
+                ORDER BY t.name ASC'
+            )
+            ->setParameter('locale', $locale)
             ->getResult();
     }
 }

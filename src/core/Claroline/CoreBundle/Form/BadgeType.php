@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Form;
 
+use Claroline\CoreBundle\Entity\Badge\BadgeTranslation;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -11,14 +12,8 @@ class BadgeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('translations', 'a2lix_translations_gedmo', array(
-                'translatable_class' => "Claroline\CoreBundle\Entity\Badge\Badge",
-                'fields' => array(
-                    'slug' => array(
-                        'display' => false
-                    )
-                )
-            ))
+            ->add('frTranslation', new BadgeTranslationType())
+            ->add('enTranslation', new BadgeTranslationType())
             ->add('version', 'integer')
             ->add('file', 'file', array(
                     'label' => 'badge_form_image'
@@ -41,6 +36,7 @@ class BadgeType extends AbstractType
         $resolver
         ->setDefaults(
             array(
+                'data_class' => 'Claroline\CoreBundle\Entity\Badge\Badge',
                 'translation_domain' => 'platform'
                 )
         );
