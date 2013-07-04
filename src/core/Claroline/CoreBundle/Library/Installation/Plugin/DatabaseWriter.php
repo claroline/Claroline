@@ -262,7 +262,6 @@ class DatabaseWriter
     {
         $resourceType = new ResourceType();
         $resourceType->setName($resource['name']);
-        $resourceType->setBrowsable($resource['is_browsable']);
         $resourceType->setExportable($resource['is_exportable']);
         $resourceType->setPlugin($pluginEntity);
         $resourceClass = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')

@@ -133,16 +133,6 @@ class ResourceType
         $this->name = $name;
     }
 
-    public function setBrowsable($isBrowsable)
-    {
-        $this->isBrowsable = $isBrowsable;
-    }
-
-    public function getBrowsable()
-    {
-        return $this->isBrowsable;
-    }
-
     public function setPlugin(Plugin $plugin)
     {
         $this->plugin = $plugin;
