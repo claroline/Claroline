@@ -59,6 +59,7 @@ class LessonListener extends ContainerAware
         $event->stopPropagation();
     }
 
+
     public function onOpen(OpenResourceEvent $event)
     {
         $route = $this->container

@@ -39,12 +39,22 @@ class LessonController extends Controller
     public function viewChapterAction($resourceId, $chapterId)
     {
         $lesson = $this->findLesson($resourceId);
+        $em = $this->getDoctrine()->getManager();
+        $chapterRepository = $em->getRepository('ICAPLessonBundle:Chapter');
 
-        $chapterRepository = $this->getDoctrine()->getManager()->getRepository('ICAPLessonBundle:Chapter');
-
-        $chapter = null;
         if ($chapterId == 0) {
-            $chapter = $chapterRepository->findOneBy(array('lesson' => $lesson, 'level' => 1, 'left' => 2, 'root' => $lesson->getRoot()->getId()));
+
+            $chapter = $lesson->getRoot();
+            if($chapter == null){
+
+                $chapter = new Chapter();
+                $chapter->setLesson($lesson);
+                $chapter->getLeft(1);
+                $chapter->setLevel(0);
+
+                $em->persist($chapter);
+                $em->flush();
+            }
         } else {
             $chapter = $this->findChapter($lesson, $chapterId);
         }
@@ -54,7 +64,8 @@ class LessonController extends Controller
             ->select('node')
             ->from('ICAP\\LessonBundle\\Entity\\Chapter', 'node')
             ->orderBy('node.root, node.left', 'ASC')
-            ->where('node.root = 1')
+            ->where('node.root = :rootId')
+            ->setParameter('rootId', $lesson->getRoot()->getId())
             ->getQuery()
         ;
         $options = array('decorate' => false);
