@@ -3,19 +3,23 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\MailType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 class MailController extends Controller
 {
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/form/{userId}",
      *     name="claro_mail_form"
      * )
-     *
-     * @Template()
+     * @EXT\ParamConverter(
+     *      "user",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"id" = "userId", "strictId" = true}
+     * )
+     * @EXT\Template()
      *
      * Displays the mail form.
      *
@@ -23,23 +27,27 @@ class MailController extends Controller
      *
      * @return Response
      */
-    public function formAction($userId)
+    public function formAction(User $user)
     {
         $form = $this->createForm(new MailType());
 
         return array(
             'form' => $form->createView(),
-            'userId' => $userId
+            'userId' => $user->getId()
         );
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/send/{userId}",
      *     name="claro_mail_send"
      * )
-     *
-     * @Template()
+     * @EXT\ParamConverter(
+     *      "user",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"id" = "userId", "strictId" = true}
+     * )
+     * @EXT\Template()
      *
      * Handles the mail form submission (sends a mail).
      *
@@ -47,7 +55,7 @@ class MailController extends Controller
      *
      * @return Response
      */
-    public function sendAction($userId)
+    public function sendAction(User $user)
     {
         $request = $this->get('request');
         $form = $this->get('form.factory')->create(new MailType());
@@ -55,9 +63,6 @@ class MailController extends Controller
 
         if ($form->isValid()) {
             $data = $form->getData();
-            $user = $this->get('doctrine.orm.entity_manager')
-                ->getRepository('ClarolineCoreBundle:User')
-                ->find($userId);
             $message = \Swift_Message::newInstance()
                 ->setSubject($data['object'])
                 ->setFrom('noreply@claroline.net')
@@ -70,7 +75,7 @@ class MailController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'userId' => $userId
+            'userId' => $user->getId()
         );
     }
 }
