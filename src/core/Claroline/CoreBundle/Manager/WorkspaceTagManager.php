@@ -180,7 +180,7 @@ class WorkspaceTagManager
         return $this->tagRepo->findWorkspaceTagFromIds($tagIds);
     }
 
-    public function getTagByUser(User $user = null)
+    public function getTagsByUser(User $user = null)
     {
         return $this->tagRepo->findByUser($user);
     }
@@ -297,7 +297,7 @@ class WorkspaceTagManager
         // create an array indicating which tag is displayable
         // a tag is displayable if it or one of his children contains is associated to a workspace
         $displayable = array();
-        $allAdminTags = $this->getTagByUser(null);
+        $allAdminTags = $this->getTagsByUser(null);
 
         foreach ($allAdminTags as $adminTag) {
             $adminTagId = $adminTag->getId();
