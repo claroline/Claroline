@@ -40,7 +40,13 @@ class BadgeController extends Controller
         $badgeRepository = $this->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Badge\Badge');
 
+        /** @var Badge[] $badges */
         $badges = $badgeRepository->findAllOrderedByName($platformConfigHandler->getParameter('locale_language'));
+
+        foreach($badges as $badge)
+        {
+            $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
+        }
 
         return array(
             'badges' => $badges
@@ -60,6 +66,7 @@ class BadgeController extends Controller
 
         $badge = new Badge();
 
+        //@TODO Get locales from locale source (database etc...)
         $locales = array('fr', 'en');
         foreach($locales as $locale)
         {
@@ -85,10 +92,6 @@ class BadgeController extends Controller
                     $this->get('session')->getFlashBag()->add('success', $translator->trans('badge_add_success_message', array(), 'platform'));
                 }
                 catch(\Exception $exception) {
-                    echo "<pre>";
-                    var_dump($exception->getMessage());
-                    echo "</pre>" . PHP_EOL;
-                    die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
                     $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_add_error_message', array(), 'platform'));
                 }
 

@@ -16,7 +16,15 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class BadgeTranslation
 {
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Badge", inversedBy="translations")
      * @ORM\JoinColumn(name="badge_id", referencedColumnName="id", onDelete="CASCADE")
      */
@@ -25,7 +33,6 @@ class BadgeTranslation
     /**
      * @var string $locale
      *
-     * @ORM\Id
      * @ORM\Column(type="string", length=8, nullable=false)
      */
     protected $locale;
@@ -58,6 +65,26 @@ class BadgeTranslation
      * @ORM\Column(type="text", nullable=false)
      */
     protected $criteria;
+
+    /**
+     * @param int $id
+     *
+     * @return BagdeTranslation
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * @param mixed $badge
