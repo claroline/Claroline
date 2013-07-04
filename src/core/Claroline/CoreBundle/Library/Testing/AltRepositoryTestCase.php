@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Library\Testing;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
@@ -66,13 +67,27 @@ abstract class AltRepositoryTestCase extends WebTestCase
         self::create($name, $user);
     }
 
+    protected static function createGroup($name, array $roles = array())
+    {
+        $group = new Group();
+        $group->setName($name);
+
+        foreach ($roles as $role) {
+            $group->addRole($role);
+        }
+
+        self::create($name, $group);
+    }
+
     protected static function createRole($name, AbstractWorkspace $workspace = null)
     {
         $role = new Role();
         $role->setName($name);
         $role->setTranslationKey($name);
+        $role->setType(Role::PLATFORM_ROLE);
 
         if ($workspace) {
+            $role->setType(Role::WS_ROLE);
             $role->setWorkspace($workspace);
         }
 
