@@ -22,7 +22,7 @@ class RssReaderController extends Controller
     public function createConfigAction($workspaceId, $isDesktop, $isDefault, $userId)
     {
         $form = $this->get('form.factory')->create(new ConfigType(), new Config());
-        $form->bindRequest($this->get('request'));
+        $form->handleRequest($this->get('request'));
         $em = $this->get('doctrine.orm.entity_manager');
 
         if ($form->isValid()) {
@@ -37,10 +37,10 @@ class RssReaderController extends Controller
             $em->flush();
         } else {
             if ($workspaceId === 0) {
-                $template = 'ClarolineRssReaderBundle::desktop_form_create.html.twig';
+                $template = 'ClarolineRssReaderBundle::desktopFormCreate.html.twig';
                 $workspace = null;
             } else {
-                $template = 'ClarolineRssReaderBundle::workspace_form_create.html.twig';
+                $template = 'ClarolineRssReaderBundle::workspaceFormCreate.html.twig';
                 $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
                     ->find($workspaceId);
             }
@@ -88,7 +88,7 @@ class RssReaderController extends Controller
         $rssConfig = $em->getRepository('ClarolineRssReaderBundle:Config')->find($configId);
         $this->checkAccess($rssConfig);
         $form = $this->get('form.factory')->create(new ConfigType(), $rssConfig);
-        $form->bindRequest($this->get('request'));
+        $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {
             $config = $form->getData();
@@ -96,9 +96,9 @@ class RssReaderController extends Controller
             $em->flush();
         } else {
             if ($rssConfig->getWorkspace() === null) {
-                $template = 'ClarolineRssReaderBundle::desktop_form_update.html.twig';
+                $template = 'ClarolineRssReaderBundle::desktopFormUpdate.html.twig';
             } else {
-                $template = 'ClarolineRssReaderBundle::workspace_form_update.html.twig';
+                $template = 'ClarolineRssReaderBundle::workspaceFormUpdate.html.twig';
             }
 
             return $this->render(
