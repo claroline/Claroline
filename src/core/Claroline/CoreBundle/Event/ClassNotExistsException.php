@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Event;
 
-class PopulateEventException extends \Exception
+class ClassNotExistsException extends \Exception
 {
 
 }

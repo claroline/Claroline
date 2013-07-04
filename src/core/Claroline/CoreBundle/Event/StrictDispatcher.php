@@ -4,11 +4,13 @@ namespace Claroline\CoreBundle\Event;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Event\Event\MandatoryEventInterface;
+use Claroline\CoreBundle\Event\Event\DataConveyorEventInterface;
 
 /**
  * @DI\Service("claroline.event.event_dispatcher")
  */
-class Dispatcher
+class StrictDispatcher
 {
     /** @var EventDispatcher */
     private $ed;
@@ -28,6 +30,11 @@ class Dispatcher
     public function dispatch($eventName, $className, array $args = array())
     {
         $className = '\\Claroline\\CoreBundle\\Event\\Event\\' . $className . 'Event';
+
+        if (!class_exists($className)) {
+            throw new ClassNotExistsException("The event class {$className} doesn't exists.");
+        }
+
         $rEvent = new \ReflectionClass($className);
         $event = $rEvent->newInstanceArgs($args);
 
@@ -41,7 +48,7 @@ class Dispatcher
 
          if ($event instanceof DataConveyorEventInterface) {
              if (!$event->isPopulated()) {
-                 throw new PopulateEventException("Event object for '{$eventName}' was not populated as expected");
+                 throw new NotPopulatedEventException("Event object for '{$eventName}' was not populated as expected");
              }
          }
 

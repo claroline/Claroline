@@ -17,6 +17,7 @@ class ResourceManagerTest extends MockeryTestCase
     private $iconManager;
     private $rightsRepo;
     private $eventDispatcher;
+    private $genericRepo;
 
     public function setUp()
     {
@@ -30,7 +31,8 @@ class ResourceManagerTest extends MockeryTestCase
         $this->roleManager = m::mock('Claroline\CoreBundle\Manager\RoleManager');
         $this->rightsRepo = m::mock('Claroline\CoreBundle\Repository\ResourceRightsRepository');
         $this->iconManager = m::mock('Claroline\CoreBundle\Manager\IconManager');
-        $this->eventDispatcher = m::mock('Claroline\CoreBundle\Event\Dispatcher');
+        $this->eventDispatcher = m::mock('Claroline\CoreBundle\Event\StrictDispatcher');
+        $this->genericRepo = m::mock('Claroline\CoreBundle\Database\GenericRepository');
     }
 
     /**
@@ -397,7 +399,7 @@ class ResourceManagerTest extends MockeryTestCase
 
     public function testExport()
     {
-        
+
     }
 
     /**
@@ -517,7 +519,8 @@ class ResourceManagerTest extends MockeryTestCase
                 $this->iconManager,
                 $this->rightsManager,
                 $this->eventDispatcher,
-                $this->writer
+                $this->writer,
+                $this->genericRepo
             );
         } else {
             $stringMocked = '[';
@@ -540,7 +543,8 @@ class ResourceManagerTest extends MockeryTestCase
                     $this->iconManager,
                     $this->rightsManager,
                     $this->eventDispatcher,
-                    $this->writer
+                    $this->writer,
+                    $this->genericRepo
                 )
             );
         }
