@@ -4,9 +4,8 @@ namespace Claroline\CoreBundle\Listener\Tool;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
-use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Library\Event\ConfigureWorkspaceToolEvent;
+use Claroline\CoreBundle\Event\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Event\Event\ConfigureWorkspaceToolEvent;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -79,8 +78,7 @@ class ResourceManagerListener
     {
         $breadcrumbsIds = $this->request->query->get('_breadcrumbs');
         if ($breadcrumbsIds != null) {
-            $ancestors = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-                ->findResourcesByIds($breadcrumbsIds);
+            $ancestors = $this->manager->getByIds($breadcrumbsIds);
             if (!$this->manager->isPathValid($ancestors)) {
                 throw new \Exception('Breadcrumbs invalid');
             };
@@ -90,7 +88,7 @@ class ResourceManagerListener
         $path = array();
 
         foreach ($ancestors as $ancestor) {
-            $path[] = $this->converter->toArray($ancestor, $this->sc->getToken());
+            $path[] = $this->manager->toArray($ancestor);
         }
 
         $jsonPath = json_encode($path);

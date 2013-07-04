@@ -11,7 +11,7 @@ use Claroline\CoreBundle\Form\ResourceNameType;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Claroline\CoreBundle\Library\Event\LogResourceUpdateEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogResourceUpdateEvent;
 
 
 class ResourcePropertiesController extends Controller
