@@ -410,9 +410,9 @@ class Version20120119000000 extends BundleMigration
         );
 
         /**@todo find why it doesn't work*/
-        //commented for now (or the resource creation doesn't work
-        //$table->addUniqueIndex(array('next_id'), 'next_id');
-        //$table->addUniqueIndex(array('previous_id'), 'previous_id');
+        //commented for now (or the resource reordering doesn't work
+        //$table->addUniqueIndex(array('next_id', 'parent_id'));
+        //$table->addUniqueIndex(array('previous_id', 'parent_id'));
         $this->storeTable($table);
     }
 

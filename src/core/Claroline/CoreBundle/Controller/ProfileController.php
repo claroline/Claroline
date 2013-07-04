@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Event\LogUserUpdateEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogUserUpdateEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 

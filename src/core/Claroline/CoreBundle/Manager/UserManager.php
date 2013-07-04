@@ -8,7 +8,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Database\Writer;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
-use Claroline\CoreBundle\Library\Event\LogUserCreateEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogUserCreateEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Doctrine\Common\Collections\ArrayCollection;

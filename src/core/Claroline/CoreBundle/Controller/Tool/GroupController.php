@@ -14,8 +14,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleSubscribeEvent;
-use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleUnsubscribeEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceRoleSubscribeEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceRoleUnsubscribeEvent;
 
 class GroupController extends Controller
 {

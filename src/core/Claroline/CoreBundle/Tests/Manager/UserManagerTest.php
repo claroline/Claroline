@@ -65,7 +65,7 @@ class UserManagerTest extends MockeryTestCase
         $user->shouldReceive('getFirstName')
             ->once();
         $this->ed->shouldReceive('dispatch')
-            ->with('log', anInstanceOf('Claroline\CoreBundle\Library\Event\LogUserCreateEvent'))
+            ->with('log', anInstanceOf('Claroline\CoreBundle\Event\Event\Log\LogUserCreateEvent'))
             ->once();
 
         $manager->createUser($user);
@@ -95,7 +95,7 @@ class UserManagerTest extends MockeryTestCase
         $user->shouldReceive('getFirstName')
             ->once();
         $this->ed->shouldReceive('dispatch')
-            ->with('log', anInstanceOf('Claroline\CoreBundle\Library\Event\LogUserCreateEvent'))
+            ->with('log', anInstanceOf('Claroline\CoreBundle\Event\Event\Log\LogUserCreateEvent'))
             ->once();
 
         $manager->createUserWithRole($user, 'MY_ROLE');
@@ -128,7 +128,7 @@ class UserManagerTest extends MockeryTestCase
         $user->shouldReceive('getFirstName')
             ->once();
         $this->ed->shouldReceive('dispatch')
-            ->with('log', anInstanceOf('Claroline\CoreBundle\Library\Event\LogUserCreateEvent'))
+            ->with('log', anInstanceOf('Claroline\CoreBundle\Event\Event\Log\LogUserCreateEvent'))
             ->once();
 
         $manager->insertUserWithRoles($user, $roles);
@@ -177,7 +177,7 @@ class UserManagerTest extends MockeryTestCase
             ->with(anInstanceOf('Claroline\CoreBundle\Entity\User'))
             ->times(2);
         $this->ed->shouldReceive('dispatch')
-            ->with('log', anInstanceOf('Claroline\CoreBundle\Library\Event\LogUserCreateEvent'))
+            ->with('log', anInstanceOf('Claroline\CoreBundle\Event\Event\Log\LogUserCreateEvent'))
             ->times(2);
 
         $manager->importUsers($users);

@@ -2,10 +2,10 @@
 
 namespace Claroline\CoreBundle\Listener\Tool;
 
-use Claroline\CoreBundle\Library\Event\ExportToolEvent;
-use Claroline\CoreBundle\Library\Event\ExportResourceTemplateEvent;
-use Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent;
-use Claroline\CoreBundle\Library\Event\ImportToolEvent;
+use Claroline\CoreBundle\Event\Event\ExportToolEvent;
+use Claroline\CoreBundle\Event\Event\ExportResourceTemplateEvent;
+use Claroline\CoreBundle\Event\Event\ImportResourceTemplateEvent;
+use Claroline\CoreBundle\Event\Event\ImportToolEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
