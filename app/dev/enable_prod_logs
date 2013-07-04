@@ -22,6 +22,22 @@ $config['monolog'] = array(
         'firephp' => array(
             'type' => 'firephp',
             'level' => 'info'
+        ),
+        'mail' => array(
+            'type' => 'fingers_crossed',
+            'action_level' => 'critical',
+            'handler' => 'buffered'
+        ),
+        'buffered' => array(
+            'type' =>  'buffer',
+            'handler' => 'swift'
+        ),
+        'swift' => array(
+            'type' => 'swift_mailer',
+            'from_email' => 'dev@claroline.net',
+            'to_email' => 'dev@claroline.net',
+            'subject' => 'An Error Occurred!',
+            'level' => 'debug'
         )
     )
 );
