@@ -3,12 +3,12 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Claroline\CoreBundle\Form\WorkspaceType;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
@@ -16,6 +16,10 @@ use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceToolReadEvent;
 use Claroline\CoreBundle\Library\Event\LogWorkspaceDeleteEvent;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\WorkspaceTagManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * This controller is able to:
@@ -27,15 +31,45 @@ class WorkspaceController extends Controller
 {
     const ABSTRACT_WS_CLASS = 'ClarolineCoreBundle:Workspace\AbstractWorkspace';
 
+    private $roleManager;
+    private $tagManager;
+    private $eventDispatcher;
+    private $security;
+    private $router;
+
     /**
-     * @Route(
+     * @DI\InjectParams({
+     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
+     *     "tagManager"        = @DI\Inject("claroline.manager.workspace_tag_manager"),
+     *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
+     *     "security"           = @DI\Inject("security.context"),
+     *     "router"             = @DI\Inject("router")
+     * })
+     */
+    public function __construct(
+        RoleManager $roleManager,
+        WorkspaceTagManager $tagManager,
+        EventDispatcher $eventDispatcher,
+        SecurityContextInterface $security,
+        UrlGeneratorInterface $router
+    )
+    {
+        $this->roleManager = $roleManager;
+        $this->tagManager = $tagManager;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->security = $security;
+        $this->router = $router;
+    }
+
+    /**
+     * @EXT\Route(
      *     "/",
      *     name="claro_workspace_list",
      *     options={"expose"=true}
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Template()
+     * @EXT\Template()
      *
      * Renders the workspace list page with its claroline layout.
      *
@@ -56,14 +90,14 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/user",
      *     name="claro_workspace_by_user",
      *     options={"expose"=true}
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Template()
+     * @EXT\Template()
      *
      * Renders the registered workspace list for a user.
      *
@@ -73,7 +107,7 @@ class WorkspaceController extends Controller
     {
         $this->assertIsGranted('ROLE_USER');
         $em = $this->get('doctrine.orm.entity_manager');
-        $token = $this->get('security.context')->getToken();
+        $token = $this->security->getToken();
         $user = $token->getUser();
         $roles = $this->get('claroline.security.utilities')->getRoles($token);
 
@@ -161,13 +195,13 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/new/form",
      *     name="claro_workspace_creation_form"
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Template()
+     * @EXT\Template()
      *
      * Renders the workspace creation form.
      *
@@ -185,13 +219,14 @@ class WorkspaceController extends Controller
     /**
      * Creates a workspace from a form sent by POST.
      *
-     * @Route(
+     * @EXT\Route(
      *     "/",
      *     name="claro_workspace_create"
      * )
-     * @Method("POST")
+     * @EXT\Method("POST")
      *
-     * @Template("ClarolineCoreBundle:Workspace:creationForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Workspace:creationForm.html.twig")
+     *
      * @return RedirectResponse
      */
     public function createAction()
@@ -225,13 +260,13 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspaceId}",
      *     name="claro_workspace_delete",
      *     options={"expose"=true},
      *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
      * )
-     * @Method("DELETE")
+     * @EXT\Method("DELETE")
      *
      * @param integer $workspaceId
      *
@@ -251,7 +286,7 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * @Template()
+     * @EXT\Template()
      *
      * Renders the left tool bar. Not routed.
      *
@@ -294,12 +329,12 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspaceId}/open/tool/{toolName}",
      *     name="claro_workspace_open_tool",
      *     options={"expose"=true}
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
      * Opens a tool.
      *
@@ -331,13 +366,13 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspaceId}/widgets",
      *     name="claro_workspace_widgets"
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Template("ClarolineCoreBundle:Widget:widgets.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Widget:widgets.html.twig")
      *
      * Display registered widgets.
      *
@@ -394,11 +429,11 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspaceId}/open",
      *     name="claro_workspace_open"
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
      * Open the first tool of a workspace.
      *
