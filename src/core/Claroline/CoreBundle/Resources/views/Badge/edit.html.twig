@@ -9,15 +9,13 @@
     <div class="tab-content view_badge">
         <div class="tab-pane active" id="view">
             <div class="margin">
-                <h3 id='user-list-block' class="sub-section-header">
+                <h3 class="sub-section-header">
                     <span class="badge badge-info accordion-toggle" data-toggle="tooltip" title="{{ 'badge_form_version'|trans({}, 'platform') }} {{ badge.version }}">{{ badge.version }}</span>
                     {{ 'badge'|trans({}, 'platform') }} "{{ badge.name }}"
                     {% if badge.expiredAt is not null %}
                     <small>{{ 'badge_expired_on_date'|trans({'%expirationDate%': badge.expiredAt|date('date_format'|trans({}, 'platform'))}, 'platform') }}</small>
                     {% endif %}
                 </h3>
-            </div>
-            <div class="row-fluid">
                 <div class="media">
                     <a class="pull-left" href="#">
                         <img class="media-object badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" />
@@ -26,6 +24,30 @@
                         <h4 class="media-heading">{{ badge.description }}</h4>
                         {{ badge.criteria|raw }}
                     </div>
+                </div>
+            </div>
+            <div class="margin">
+                <h3 class="sub-section-header">
+                    {{ 'badge_attribute_to'|trans({}, 'platform') }} :
+                    <a href="{{ path('claro_admin_badges_attribute', {'id': badge.id}) }}" id="attributeUser" role="button" class="btn pull-right" data-toggle="tooltip" data-placement="left" title="{{ 'attribute_badge'|trans({}, 'platform') }}"><i class="icon-plus-sign"></i></a>
+                </h3>
+
+                <ul class="unstyled">
+                    {% for user in badge.users %}
+                    {% else %}
+                    <li>{{ 'bagde_attribute_to_none_user'|trans({}, 'platform') }}.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="modal hide fade" id="attribute_user_modal">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3>{{ 'bagde_attribution'|trans({}, 'platform') }}</h3>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <a href="#" class="btn" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</a>
+                    <a href="#" class="btn btn-primary">{{ 'attribute'|trans({}, 'platform') }}</a>
                 </div>
             </div>
         </div>
@@ -84,28 +106,5 @@
 {{ parent() }}
 {{ tinymce_init() }}
 <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
-<script type="text/javascript">
-    $(function(){
-        $('[data-toggle=tooltip]').tooltip();
-
-        $('.delete').confirmModal();
-
-        $("[name='badge_form[expired_at]']").off('focus');
-
-        var currentImage  = $('#current_image');
-        var badgeFormFile = $('#badge_form_file');
-        $('#delete_image').click(function() {
-            if($(this)[0].checked)
-            {
-                currentImage.addClass('hidden');
-                badgeFormFile.removeClass('hidden');
-            }
-            else
-            {
-                currentImage.removeClass('hidden');
-                badgeFormFile.addClass('hidden');
-            }
-        });
-    });
-</script>
+<script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/badge/edit.js') }}'></script>
 {% endblock %}
