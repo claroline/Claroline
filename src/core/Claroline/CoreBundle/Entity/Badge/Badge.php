@@ -5,7 +5,6 @@ namespace Claroline\CoreBundle\Entity\Badge;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -14,7 +13,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="claro_badge")
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\BadgeRepository")
- * @Gedmo\TranslationEntity(class="Claroline\CoreBundle\Entity\Badge\BadgeTranslation")
  * @ORM\HasLifecycleCallbacks
  */
 class Badge
@@ -27,39 +25,6 @@ class Badge
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-
-    /**
-     * @var string
-     *
-     * @Gedmo\Translatable
-     * @ORM\Column(type="string", length=128, unique=true, nullable=false)
-     */
-    protected $name;
-
-    /**
-     * @var string
-     *
-     * @Gedmo\Translatable
-     * @ORM\Column(type="string", length=128, nullable=false)
-     */
-    protected $description;
-
-    /**
-     * @var string
-     *
-     * @Gedmo\Translatable
-     * @Gedmo\Slug(fields={"name"})
-     * @ORM\Column(type="string", length=128, unique=true, nullable=true)
-     */
-    protected $slug;
-
-    /**
-     * @var string
-     *
-     * @Gedmo\Translatable
-     * @ORM\Column(type="text", nullable=false)
-     */
-    protected $criteria;
 
     /**
      * @var integer
@@ -114,6 +79,39 @@ class Badge
     }
 
     /**
+     * @param string $locale
+     *
+     * @return BadgeTranslation|null
+     */
+    public function getTranslationForLocale($locale)
+    {
+        foreach($this->getTranslations() as $translation)
+        {
+            if($locale === $translation->getLocale()) {
+                return $translation;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return BadgeTranslation|null
+     */
+    public function getFrTranslation()
+    {
+        return $this->getTranslationForLocale('fr');
+    }
+
+    /**
+     * @return BadgeTranslation|null
+     */
+    public function getEnTranslation()
+    {
+        return $this->getTranslationForLocale('en');
+    }
+
+    /**
      * @param BadgeTranslation $translation
      * @return Badge
      */
@@ -121,7 +119,7 @@ class Badge
     {
         if (!$this->translations->contains($translation)) {
             $this->translations[] = $translation;
-            $translation->setObject($this);
+            $translation->setBadge($this);
         }
 
         return $this;
@@ -136,46 +134,6 @@ class Badge
         $this->translations->removeElement($translation);
 
         return $this;
-    }
-
-    /**
-     * @param string $criteria
-     *
-     * @return Badge
-     */
-    public function setCriteria($criteria)
-    {
-        $this->criteria = $criteria;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCriteria()
-    {
-        return $this->criteria;
-    }
-
-    /**
-     * @param string $description
-     *
-     * @return Badge
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
     }
 
     /**
@@ -239,46 +197,6 @@ class Badge
     }
 
     /**
-     * @param string $name
-     *
-     * @return Badge
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string $slug
-     *
-     * @return Badge
-     */
-    public function setSlug($slug)
-    {
-        $this->slug = $slug;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSlug()
-    {
-        return $this->slug;
-    }
-
-    /**
      * @param int $version
      *
      * @return Badge
@@ -296,18 +214,6 @@ class Badge
     public function getVersion()
     {
         return $this->version;
-    }
-
-    /**
-     * @param string $locale
-     *
-     * @return Badge
-     */
-    public function setTranslatableLocale($locale)
-    {
-        $this->locale = $locale;
-
-        return $this;
     }
 
     /**

@@ -1367,16 +1367,9 @@ class Version20120119000000 extends BundleMigration
     {
         $table = $schema->createTable('claro_badge');
         $this->addId($table);
-        $table->addColumn('name', 'string', array('length' => 128, 'notnull' => true));
-        $table->addColumn('description', 'string', array('length' => 128, 'notnull' => true));
-        $table->addColumn('slug', 'string', array('length' => 128, 'notnull' => true));
-        $table->addColumn('criteria', 'text', array('notnull' => true));
         $table->addColumn('version', 'smallint', array('notnull' => true));
         $table->addColumn('image', 'string', array('notnull' => true));
         $table->addColumn('expired_at', 'datetime', array('notnull' => false));
-
-        $table->addUniqueIndex(array('name'));
-        $table->addUniqueIndex(array('slug'));
 
         $this->storeTable($table);
     }
@@ -1386,9 +1379,15 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable('claro_badge_translation');
         $this->addId($table);
         $table->addColumn('locale', 'string', array('length' => 8, 'notnull' => true));
-        $table->addColumn('field', 'string', array('length' => 32, 'notnull' => true));
-        $table->addColumn('content', 'text', array('notnull' => true));
+        $table->addColumn('name', 'string', array('length' => 128, 'notnull' => true));
+        $table->addColumn('description', 'string', array('length' => 128, 'notnull' => true));
+        $table->addColumn('slug', 'string', array('length' => 128, 'notnull' => true));
+        $table->addColumn('criteria', 'text', array('notnull' => true));
         $table->addColumn('badge_id', 'integer');
+
+        $table->addUniqueIndex(array('locale', 'badge_id'));
+        $table->addUniqueIndex(array('name'));
+        $table->addUniqueIndex(array('slug'));
 
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_badge'),

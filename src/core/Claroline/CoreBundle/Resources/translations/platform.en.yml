@@ -515,6 +515,8 @@ back_to_badges_list: 'Back to badge list'
 no_badges: 'No badge.'
 add_badge: 'Add a badge'
 edit_badge: 'Edit the badge `%badge_name%`'
+badge_form_frTranslation: 'French translation'
+badge_form_enTranslation: 'English translation'
 badge_delete_confirm_title: "Deletion of a badge"
 badge_delete_confirm_message: 'Are you sure you want to delete the badge <strong>%badgeName%</strong> ?'
 badge_add_success_message: 'Badge added with success.'
