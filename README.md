@@ -69,8 +69,7 @@ To update your installation to the last development state, use :
 
 ```sh
 $ git pull
-$ git submodule update --init --recursive
-$ git submodule foreach git checkout master
+$ git submodule update
 ```
 
 Then launch the installation script mentioned above:
