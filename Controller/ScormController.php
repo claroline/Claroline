@@ -6,7 +6,7 @@ use Claroline\ScormBundle\Entity\ScormInfo;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Claroline\CoreBundle\Library\Event\LogGenericEvent;
+use Claroline\CoreBundle\Event\Event\LogGenericEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 

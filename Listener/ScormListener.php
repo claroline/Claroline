@@ -2,12 +2,12 @@
 
 namespace Claroline\ScormBundle\Listener;
 
-use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Library\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Library\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
-use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
-//use Claroline\CoreBundle\Library\Event\DownloadResourceEvent;
+use Claroline\CoreBundle\Event\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Event\Event\CreateFormResourceEvent;
+use Claroline\CoreBundle\Event\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Event\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Event\Event\DeleteResourceEvent;
+//use Claroline\CoreBundle\Event\Event\DownloadResourceEvent;
 use Claroline\ScormBundle\Entity\Scorm;
 use Claroline\ScormBundle\Entity\ScormInfo;
 use Claroline\ScormBundle\Form\ScormType;
