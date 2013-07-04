@@ -77,7 +77,7 @@ class WorkspaceController extends Controller
      */
     public function listAction()
     {
-        $datas = $this->get('claroline.workspace.organizer')->getDatasForWorkspaceList(false);
+        $datas = $this->get('claroline.manager.workspace_tag_manager')->getDatasForWorkspaceList(false);
 
         return array(
             'workspaces' => $datas['workspaces'],
