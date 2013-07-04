@@ -13,15 +13,23 @@
     </style>
 
     <form method="POST" action="{{ path('icap_lesson_delete_chapter', { 'resourceId': lesson.id, 'chapterId': chapter.id }) }}" class="form-horizontal">
+
         <fieldset>
+
             <legend>{{ 'Chapter Suppression'|trans({}, 'icap_lesson') }}</legend>
-                <label class="">{{ chapter.title }}</label>
+
+            <label class="">{{ chapter.title }}</label>
             {{ form_rest(form) }}
+
         </fieldset>
 
         <div class="form-actions">
+
             <button type="submit" class="btn btn-primary">Ok</button>
             <a href="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': chapter.id }) }}"><button type="button" class="btn">{{ 'Cancel'|trans({}, 'icap_lesson') }}</button></a>
+
         </div>
+
     </form>
+
 {% endblock %}

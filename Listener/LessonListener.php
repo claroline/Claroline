@@ -10,6 +10,7 @@ use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Library\Event\LogCreateDelegateViewEvent;
 
+use ICAP\LessonBundle\Entity\Chapter;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;

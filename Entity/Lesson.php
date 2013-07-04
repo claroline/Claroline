@@ -17,6 +17,32 @@ use Doctrine\ORM\Mapping as ORM;
 */
 class Lesson extends AbstractResource
 {
+    /**
+     * @ORM\OneToOne(targetEntity="ICAP\LessonBundle\Entity\Chapter", cascade={"all"})
+     * @ORM\JoinColumn(name="root_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    private $root;
+
+    /**
+     * @param mixed $root
+     */
+    public function setRoot($root)
+    {
+        $this->root = $root;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRoot()
+    {
+        return $this->root;
+    }
+
+    /**
+     * Fonction retournant le chemin dans lequel se trouve le cours
+     * @return array $pathArray
+     */
     public function getPathArray()
     {
         $path = $this->getPath();

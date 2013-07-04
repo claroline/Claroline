@@ -7,9 +7,13 @@
 {% endblock %}
 
 {% block section_content %}
+
     <header>
+
         <ul class="breadcrumb">
+
             {% for item in pathArray %}
+
                 <li>
                     {% if not loop.last %}
                         <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'}) }}#resources/{{ item.id }}">
@@ -22,26 +26,33 @@
                         <span class="divider">/</span>
                     {% endif %}
                 </li>
+
             {% endfor %}
 
             {% block lesson_breadcrumb %}
+
                 <li>
                     <a href="{{ path('icap_lesson', { 'resourceId': lesson.id }) }}">
                         <i class="icon-file"> &nbsp {{ lesson.name }}</i>
                     </a>
+
                     {% if chapter is defined and chapter != null %}
                         <span class="divider">/</span>
                         <a href="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': chapter.id}) }}">
                             <i class="icon-file-text">  &nbsp {{ chapter.title }}</i>
                         </a>
                     {% endif %}
+
                 </li>
+
             {% endblock %}
         </ul>
+
     </header>
 
     {% block lesson_content %}
     {% endblock %}
+
 {% endblock %}
 
 {% block javascripts %}

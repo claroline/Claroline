@@ -20,6 +20,9 @@ use ICAP\LessonBundle\Form\DeleteChapterType;
 class LessonController extends Controller
 {
     /**
+     * @param $resourceId, $chapterId
+     * @return $lesson, $chapters, $chapter
+     *
      * @Route(
      *      "view/{resourceId}",
      *      name="icap_lesson",
@@ -38,18 +41,28 @@ class LessonController extends Controller
         $lesson = $this->findLesson($resourceId);
 
         $chapterRepository = $this->getDoctrine()->getManager()->getRepository('ICAPLessonBundle:Chapter');
-        $chapters = $chapterRepository->findBy(array('lesson' => $lesson));
 
         $chapter = null;
         if ($chapterId == 0) {
-            $chapter = count($chapters) > 0 ? $chapters[0] : null;
+            $chapter = $chapterRepository->findOneBy(array('lesson' => $lesson, 'level' => 1, 'left' => 2, 'root' => $lesson->getRoot()->getId()));
         } else {
             $chapter = $this->findChapter($lesson, $chapterId);
         }
 
+        $query = $this->getDoctrine()->getManager()
+            ->createQueryBuilder()
+            ->select('node')
+            ->from('ICAP\\LessonBundle\\Entity\\Chapter', 'node')
+            ->orderBy('node.root, node.left', 'ASC')
+            ->where('node.root = 1')
+            ->getQuery()
+        ;
+        $options = array('decorate' => false);
+        $tree = $chapterRepository->buildTree($query->getArrayResult(), $options);
+
         return array(
             'lesson' => $lesson,
-            'chapters' => $chapters,
+            'tree' => $tree,
             'chapter' => $chapter,
             'workspace' => $lesson->getWorkspace(),
             'pathArray' => $lesson->getPathArray()
@@ -57,6 +70,10 @@ class LessonController extends Controller
     }
 
     /**
+     * Route affichant le formulaire à l'utilisateur lui permettant de modifier le chapitre
+     * @param $resourceId, $chapterId
+     * @return $lesson, $chapter, $form
+     *
      * @Route(
      *      "edit/{resourceId}/{chapterId}",
      *      name="icap_lesson_edit_chapter",
@@ -82,6 +99,10 @@ class LessonController extends Controller
     }
 
     /**
+     * Route mettant à jour le chapitre modifié par l'utilisateur
+     * @param $resourceId, $chapterId
+     * @return $lesson, $chapter, $form
+     *
      * @Route(
      *      "update/{resourceId}/{chapterId}",
      *      name="icap_lesson_update_chapter",
@@ -119,6 +140,10 @@ class LessonController extends Controller
     }
 
     /**
+     * Route affichant une page de confirmation de la suppression
+     * @param $resourceId, $chapterId
+     * @return $lesson, $chapter, $form
+     *
      * @Route(
      *      "confirm-delete/{resourceId}/{chapterId}",
      *      name="icap_lesson_confirm_delete_chapter",
@@ -144,6 +169,10 @@ class LessonController extends Controller
     }
 
     /**
+     * Route effaçant le chapitre de la base
+     * @param $resourceId, $chapter
+     * @return $lesson, $chapter, $form
+     *
      * @Route(
      *      "delete/{resourceId}/{chapterId}",
      *      name="icap_lesson_delete_chapter",
@@ -181,6 +210,10 @@ class LessonController extends Controller
     }
 
     /**
+     * Route affichant le formulaire de création d'un nouveau chapitre
+     * @param $resourceId
+     * @return $lesson, $form
+     *
      * @Route(
      *      "new/{resourceId}",
      *      name="icap_lesson_new_chapter",
@@ -203,6 +236,10 @@ class LessonController extends Controller
     }
 
     /**
+     * Route ajoutant le chapitre à la base
+     * @param $resourceId
+     * @return $lesson, $form
+     *
      * @Route(
      *      "add/{resourceId}",
      *      name="icap_lesson_add_chapter",
@@ -240,6 +277,9 @@ class LessonController extends Controller
         );
     }
 
+    /*
+     * fonction recherchant un cours dans la base
+     */
     private function findLesson($resourceId)
     {
         $lessonRepository = $this->getDoctrine()->getManager()->getRepository('ICAPLessonBundle:Lesson');
@@ -250,6 +290,10 @@ class LessonController extends Controller
 
         return $lesson;
     }
+
+    /*
+     * fonction recherchant un chapitre dans la base
+     */
     private function findChapter($lesson, $chapterId)
     {
         $chapterRepository = $this->getDoctrine()->getManager()->getRepository('ICAPLessonBundle:Chapter');

@@ -13,29 +13,42 @@
     </style>
 
     <form method="POST" action="{{ path('icap_lesson_update_chapter', { 'resourceId': lesson.id, 'chapterId': chapter.id }) }}" class="form-horizontal">
+
         <fieldset>
+
             <legend>{{ 'Chapter Edition'|trans({}, 'icap_lesson') }}</legend>
+
             <div class="control-group">
+
                 <label class="control-label" for="icap_lesson_chaptertype_title">{{ 'Title'|trans({}, 'icap_lesson') }}</label>
+
                 <div class="controls">
                     {{ form_widget(form.title) }}
                 </div>
+
             </div>
+
             <div class="control-group">
+
                 <label class="control-label" for="icap_lesson_chaptertype_text">{{ 'Text'|trans({}, 'icap_lesson') }}</label>
+
                 <div class="controls">
                     {{ form_widget(form.text) }}
                 </div>
+
             </div>
             {{ form_rest(form) }}
 
         </fieldset>
-
         {{ macros.flashBox() }}
 
         <div class="form-actions">
+
             <button type="submit" class="btn btn-primary">{{ 'Ok'|trans({}, 'icap_lesson') }}</button>
+
             <a href="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': chapter.id }) }}"><button type="button" class="btn">{{ 'Cancel'|trans({}, 'icap_lesson') }}</button></a>
         </div>
+
     </form>
+
 {% endblock %}

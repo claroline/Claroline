@@ -1,0 +1,25 @@
+{% macro recursiveChapter(tree, chapter, lesson) %}
+
+    {% if tree.id == chapter.id %}
+        <li class="active" ><a style="padding-left: {{ tree.level * 20 }}px" href="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': tree.id }) }}"> {{ tree.title }}</a>
+    {% else %}
+        <li><a style="padding-left: {{ tree.level * 20 }}px" href="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': tree.id }) }}"> {{ tree.title }}</a>
+    {% endif %}
+
+    {% if tree.__children|length %}
+        {% for child in tree.__children %}
+            {{ _self.recursiveChapter(child, chapter, lesson) }}
+        {% endfor %}
+    {% endif %}
+    </li>
+{% endmacro %}
+
+{% if tree is defined and tree != null and tree[0] is defined and tree[0] != null and tree[0].__children is defined and tree[0].__children|length %}
+    <div id="tree">
+        <ul  class="nav nav-list">
+            {% for child in tree[0].__children %}
+                {{ _self.recursiveChapter(child, chapter, lesson) }}
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}

@@ -36,6 +36,7 @@ class Version20130619153000 extends BundleMigration
         // Table creation
         $table = $schema->createTable('icap__lesson');
         $this->addId($table);
+        $table->addColumn('root_id', 'integer', array('notnull' => false));
         $this->storeTable($table);
         $table->addForeignKeyConstraint(
             $schema->getTable('claro_resource'), array('id'), array('id'), array("onDelete" => "CASCADE")
@@ -54,12 +55,27 @@ class Version20130619153000 extends BundleMigration
         $this->addId($table);
 
         $table->addColumn('text', 'text', array('notnull' => false));
-        $table->addColumn('title', 'string');
+        $table->addColumn('title', 'string', array('notnull' => false));
         $table->addColumn('lesson_id', 'integer');
+        $table->addColumn('left', 'integer');
+        $table->addColumn('level', 'integer');
+        $table->addColumn('right', 'integer');
+        $table->addColumn('root', 'integer', array('notnull' => false));
+        $table->addColumn('parent_id', 'integer', array('notnull' => false));
+
 
         $this->storeTable($table);
         $table->addForeignKeyConstraint(
             $schema->getTable('icap__lesson'), array('lesson_id'), array('id'), array("onDelete" => "CASCADE")
         );
+
+        $table->addForeignKeyConstraint(
+            $schema->getTable('icap__lesson_chapter'), array('parent_id'), array('id'), array("onDelete" => "CASCADE")
+        );
+
+        $schema->getTable('icap__lesson')->addForeignKeyConstraint(
+            $table, array('root_id'), array('id'), array("onDelete" => "CASCADE")
+        );
+
     }
 }

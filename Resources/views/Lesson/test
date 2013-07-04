@@ -1,0 +1,30 @@
+<ul>
+
+    <li class="active">
+        <a href="/claroline/app_dev.php/lesson/view/60/1"> </a>
+
+        <ul>
+
+            <li><a href="/claroline/app_dev.php/lesson/view/60/2"> chapitre1</a>
+
+                <ul>
+
+                    <li><a href="/claroline/app_dev.php/lesson/view/60/4"> chapitre1.1</a>
+
+                    </li>
+
+
+                </ul>
+            </li>
+
+
+
+            <li><a href="/claroline/app_dev.php/lesson/view/60/3"> chapitre2</a>
+
+            </li>
+
+
+        </ul>
+    </li>
+
+</ul>

@@ -9,34 +9,69 @@
 namespace ICAP\LessonBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @Gedmo\Tree(type="nested")
  * @ORM\Table(name="icap__lesson_chapter")
+ * @ORM\Entity(repositoryClass="Gedmo\Tree\Entity\Repository\NestedTreeRepository")
  */
 class Chapter
 {
     /**
-     * @ORM\Id
      * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Id
+     * @ORM\GeneratedValue
      */
     private $id;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $title;
+
     /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $text;
-    /**
-     * @ORM\Column(type="string")
-     */
-    private $title;
 
     /**
      * @ORM\ManyToOne(targetEntity="ICAP\LessonBundle\Entity\Lesson")
      * @ORM\JoinColumn(name="lesson_id", referencedColumnName="id")
      */
     private $lesson;
+
+    /**
+     * @Gedmo\TreeLeft
+     * @ORM\Column(type="integer")
+     */
+    private $left;
+
+    /**
+     * @Gedmo\TreeLevel
+     * @ORM\Column(type="integer")
+     */
+    private $level;
+
+    /**
+     * @Gedmo\TreeRight
+     * @ORM\Column(type="integer")
+     */
+    private $right;
+
+    /**
+     * @Gedmo\TreeRoot
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $root;
+
+    /**
+     * @Gedmo\TreeParent
+     * @ORM\ManyToOne(targetEntity="ICAP\LessonBundle\Entity\Chapter")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    private $parent;
 
     /**
      * @param mixed $id
@@ -52,6 +87,102 @@ class Chapter
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param mixed $left
+     */
+    public function setLeft($left)
+    {
+        $this->left = $left;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLeft()
+    {
+        return $this->left;
+    }
+
+    /**
+     * @param mixed $lesson
+     */
+    public function setLesson($lesson)
+    {
+        $this->lesson = $lesson;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLesson()
+    {
+        return $this->lesson;
+    }
+
+    /**
+     * @param mixed $level
+     */
+    public function setLevel($level)
+    {
+        $this->level = $level;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLevel()
+    {
+        return $this->level;
+    }
+
+    /**
+     * @param mixed $parent
+     */
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * @param mixed $right
+     */
+    public function setRight($right)
+    {
+        $this->right = $right;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRight()
+    {
+        return $this->right;
+    }
+
+    /**
+     * @param mixed $root
+     */
+    public function setRoot($root)
+    {
+        $this->root = $root;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRoot()
+    {
+        return $this->root;
     }
 
     /**
@@ -85,22 +216,4 @@ class Chapter
     {
         return $this->title;
     }
-
-    /**
-     * @param mixed $lesson
-     */
-    public function setLesson($lesson)
-    {
-        $this->lesson = $lesson;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLesson()
-    {
-        return $this->lesson;
-    }
-
-
 }
