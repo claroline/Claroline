@@ -105,7 +105,7 @@ class BadgeController extends Controller
     }
 
     /**
-     * @Route("/edit/{slug}", name="claro_admin_badges_edit")
+     * @Route("/edit/{id}", name="claro_admin_badges_edit")
      *
      * @Template()
      */
@@ -114,6 +114,13 @@ class BadgeController extends Controller
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             throw new \AccessDeniedException();
         }
+
+        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
+        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
+
+        $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
+
+        $locales = array('fr', 'en');
 
         $form = $this->createForm(new BadgeType(), $badge);
 
@@ -146,8 +153,7 @@ class BadgeController extends Controller
     }
 
     /**
-     * @Route("/delete/{slug}", name="claro_admin_badges_delete")
-     * @ParamConverter("badge", class="ClarolineCoreBundle:Badge\Badge")
+     * @Route("/delete/{id}", name="claro_admin_badges_delete")
      *
      * @Template()
      */

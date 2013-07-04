@@ -13,7 +13,7 @@
     <ul class="unstyled inline thumbnails badge_list">
     {% for badge in badges %}
         <li class="span2">
-            <a href="{{ path('claro_admin_badges_edit', {'slug': badge.slug}) }}" title="{{ badge.name }}" class="thumbnail">
+            <a href="{{ path('claro_admin_badges_edit', {'id': badge.id}) }}" title="{{ badge.name }}" class="thumbnail">
                 <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" />
             </a>
         </li>

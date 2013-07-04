@@ -33,12 +33,26 @@
             <div class="margin">
                 <h3 id='user-list-block' class="sub-section-header">{{ 'edit_badge'|trans({'%badge_name%' : badge.name}, 'platform') }}</h3>
             </div>
-            <form action="{{ path('claro_admin_badges_edit', {'slug': badge.slug}) }}" method="post" {{ form_enctype(form) }} novalidate>
+            <form action="{{ path('claro_admin_badges_edit', {'id': badge.id}) }}" method="post" {{ form_enctype(form) }} novalidate>
                 {{ form_errors(form) }}
 
-                {{ form_row(form.name) }}
-                {{ form_row(form.description) }}
-                {{ form_row(form.criteria) }}
+                <ul class="nav nav-tabs" id="translationFormTabs">
+                    <li class="active"><a href="#fr" data-toggle="tab">{{ 'badge_form_frTranslation'|trans({}, 'platform') }}</a></li>
+                    <li><a href="#en" data-toggle="tab">{{ 'badge_form_enTranslation'|trans({}, 'platform') }}</a></li>
+                </ul>
+
+                <div class="tab-content well well-small badge_translations">
+                    <div class="tab-pane active" id="fr">
+                        {{ form_errors(form.frTranslation) }}
+                        {{ form_widget(form.frTranslation) }}
+                    </div>
+                    <div class="tab-pane" id="en">
+                        {{ form_errors(form.enTranslation) }}
+                        {{ form_widget(form.enTranslation) }}
+                    </div>
+                </div>
+
+
                 {{ form_row(form.version) }}
 
                 <div class="control-group ">
@@ -60,7 +74,7 @@
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
                     <a href="{{ path('claro_admin_badges') }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-inverse">{{ 'cancel'|trans({}, 'platform') }}</a>
-                    <a href="{{ path('claro_admin_badges_delete', {'slug': badge.slug}) }}" title="{{ 'delete'|trans({}, 'platform') }}" class="btn btn-danger delete" data-confirm-title="{{ 'badge_delete_confirm_title'|trans({}, 'platform') }}" data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name}, 'platform') }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" >{{ 'delete'|trans({}, 'platform') }}</a>
+                    <a href="{{ path('claro_admin_badges_delete', {'id': badge.id}) }}" title="{{ 'delete'|trans({}, 'platform') }}" class="btn btn-danger delete" data-confirm-title="{{ 'badge_delete_confirm_title'|trans({}, 'platform') }}" data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name}, 'platform') }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" >{{ 'delete'|trans({}, 'platform') }}</a>
                 </div>
             </form>
         </div>
