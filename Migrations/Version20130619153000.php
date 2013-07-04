@@ -57,9 +57,9 @@ class Version20130619153000 extends BundleMigration
         $table->addColumn('text', 'text', array('notnull' => false));
         $table->addColumn('title', 'string', array('notnull' => false));
         $table->addColumn('lesson_id', 'integer');
-        $table->addColumn('left', 'integer');
-        $table->addColumn('level', 'integer');
-        $table->addColumn('right', 'integer');
+        $table->addColumn('lft', 'integer');
+        $table->addColumn('lvl', 'integer');
+        $table->addColumn('rgt', 'integer');
         $table->addColumn('root', 'integer', array('notnull' => false));
         $table->addColumn('parent_id', 'integer', array('notnull' => false));
 

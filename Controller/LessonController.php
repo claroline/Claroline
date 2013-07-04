@@ -215,21 +215,23 @@ class LessonController extends Controller
      * @return $lesson, $form
      *
      * @Route(
-     *      "new/{resourceId}",
+     *      "new/{resourceId}/{parentChapterId}",
      *      name="icap_lesson_new_chapter",
-     *      requirements={"resourceId" = "\d+"}
+     *      requirements={"resourceId" = "\d+", "parentChapterId" = "\d+"}
      * )
      * @Template()
      */
-    public function newChapterAction($resourceId)
+    public function newChapterAction($resourceId, $parentChapterId)
     {
         $lesson = $this->findLesson($resourceId);
+        $chapterParent = $this->findChapter($lesson, $parentChapterId);
 
         $form = $this->createForm(new ChapterType(), null);
 
         return array(
             'lesson' => $lesson,
             'form' => $form->createView(),
+            'chapter' => $chapterParent,
             'workspace' => $lesson->getWorkspace(),
             'pathArray' => $lesson->getPathArray()
         );
@@ -241,26 +243,29 @@ class LessonController extends Controller
      * @return $lesson, $form
      *
      * @Route(
-     *      "add/{resourceId}",
+     *      "add/{resourceId}/{parentChapterId}",
      *      name="icap_lesson_add_chapter",
-     *      requirements={"resourceId" = "\d+"}
+     *      requirements={"resourceId" = "\d+", "parentChapterId" = "\d+"}
      * )
      * @Template("ICAPLessonBundle:Lesson:newChapter.html.twig")
      */
-    public function addChapterAction($resourceId)
+    public function addChapterAction($resourceId, $parentChapterId)
     {
         $translator = $this->get('translator');
 
         $lesson = $this->findLesson($resourceId);
+        $chapterParent = $this->findChapter($lesson, $parentChapterId);
 
         $form = $this->createForm(new ChapterType(), null);
         $form->handleRequest($this->getRequest());
+
         if ($form->isValid()) {
             $chapter = $form->getData();
             $chapter->setLesson($lesson);
 
             $em = $this->getDoctrine()->getManager();
-            $em->persist($chapter);
+            $chapterRepository = $this->getDoctrine()->getManager()->getRepository('ICAPLessonBundle:Chapter');
+            $chapterRepository->persistAsLastChildOf($chapter, $chapterParent);
             $em->flush();
 
             $this->get('session')->getFlashBag()->add('success',$translator->trans('Your chapter has been added',array(), 'icap_lesson'));
@@ -272,6 +277,7 @@ class LessonController extends Controller
         return array(
             'lesson' => $lesson,
             'form' => $form->createView(),
+
             'workspace' => $lesson->getWorkspace(),
             'pathArray' => $lesson->getPathArray()
         );

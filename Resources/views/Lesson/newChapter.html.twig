@@ -12,7 +12,7 @@
         }
     </style>
 
-    <form method="POST" action="{{ path('icap_lesson_add_chapter', { 'resourceId': lesson.id }) }}" class="form-horizontal">
+    <form method="POST" action="{{ path('icap_lesson_add_chapter', { 'resourceId': lesson.id , 'parentChapterId': chapter.id }) }}" class="form-horizontal">
 
         <fieldset>
 

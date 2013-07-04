@@ -44,19 +44,19 @@ class Chapter
 
     /**
      * @Gedmo\TreeLeft
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="lft", type="integer")
      */
     private $left;
 
     /**
      * @Gedmo\TreeLevel
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="lvl", type="integer")
      */
     private $level;
 
     /**
      * @Gedmo\TreeRight
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="rgt", type="integer")
      */
     private $right;
 
