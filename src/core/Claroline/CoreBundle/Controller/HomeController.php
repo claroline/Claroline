@@ -75,7 +75,7 @@ class HomeController extends Controller
     {
         return array(
             "region" => $this->manager->getRegions(),
-            "content" => "hola" //$this->manager->contentLayout($type)->getContent()
+            "content" => $this->manager->contentLayout($type)->getContent()
         );
     }
 
@@ -86,7 +86,7 @@ class HomeController extends Controller
      */
     public function typeAction($type, $father = null, $region = null)
     {
-        return $this->manager->contentLayout($type, $father, $region)->getContent();
+        return $this->manager->contentLayout($type, $father, $region);
     }
 
     /**

@@ -58,7 +58,7 @@ class HomeManager
 
     /**
      * Verify if a twig template exists, If the template does not exists a default path will be return;
-     *getMenu
+     *
      * @param \String $path The path of the twig template separated by : just as the path for $this->render(...)
      * @return Return \String
      */
@@ -171,7 +171,7 @@ class HomeManager
         if ($content) {
 
             $variables['content'] = $content;
-            $variables['creator'] = $this->getCreator($type, null, null, $father);
+            $variables['creator'] = $this->getCreator($type, null, null, $father)->getContent();
 
             $variables = $this->isDefinedPush($variables, "father", $father);
             $variables = $this->isDefinedPush($variables, "region", $region);
