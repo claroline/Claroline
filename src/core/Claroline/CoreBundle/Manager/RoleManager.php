@@ -50,7 +50,7 @@ class RoleManager
         $role->setName($name);
         $role->setTranslationKey($translationKey);
         $role->setReadOnly($isReadOnly);
-        $role->setType(Role::BASE_ROLE);
+        $role->setType(Role::PLATFORM_ROLE);
 
         $this->writer->create($role);
     }

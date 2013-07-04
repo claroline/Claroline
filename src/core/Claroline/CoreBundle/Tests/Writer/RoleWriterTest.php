@@ -21,7 +21,7 @@ class RoleWriterTest extends FixtureTestCase
 
     public function testCreate()
     {
-        $roles = $this->writer->create('ROLE_HELLO', 'translation', Role::BASE_ROLE);
+        $roles = $this->writer->create('ROLE_HELLO', 'translation', Role::PLATFORM_ROLE);
         $this->assertEquals(1, count($roles));
     }
 

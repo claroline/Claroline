@@ -21,7 +21,7 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
  */
 class Role implements RoleInterface
 {
-    const BASE_ROLE = 1;
+    const PLATFORM_ROLE = 1;
     const WS_ROLE = 2;
     const CUSTOM_ROLE = 3;
 
@@ -92,7 +92,7 @@ class Role implements RoleInterface
     protected $groups;
 
     /**
-     * @ORM\Column(name="type", type="integer")
+     * @ORM\Column(name="type", type="integer", nullable=false)
      */
     protected $type;
 
