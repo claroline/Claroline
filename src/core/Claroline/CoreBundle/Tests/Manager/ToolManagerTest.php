@@ -63,7 +63,7 @@ class ToolManagerTest extends MockeryTestCase
         $manager->shouldReceive('addRoleToOrderedTool')->times(2);
         $tool->shouldReceive('getName')->once()->andReturn('claro_tool');
         $this->ed->shouldReceive('dispatch')->once()
-            ->with('tool_claro_tool_from_template', anInstanceOf('Claroline\CoreBundle\Library\Event\ImportToolEvent'));
+            ->with('tool_claro_tool_from_template', anInstanceOf('Claroline\CoreBundle\Event\Event\ImportToolEvent'));
 
         $manager->import($config, $roles, $files, $name, $workspace, $resource, $tool, $userManager, $position);
     }

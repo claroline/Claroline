@@ -386,6 +386,9 @@ class ResourceQueryBuilder
     {
         $this->groupByClause = '
             GROUP BY resource.id,
+                     parent.id,
+                     previous.id,
+                     next.id,
                      creator.username,
                      resourceType.name,
                      icon.relativeUrl

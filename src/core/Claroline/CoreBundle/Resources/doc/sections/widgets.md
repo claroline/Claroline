@@ -190,7 +190,7 @@ Define a listener in your listeners.yml file
 
 Simply set a string in the $event->setContent() method.
 
-    use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
+    use Claroline\CoreBundle\Event\Event\DisplayWidgetEvent;
     ...
     function onWorkspaceDisplay(DisplayWidgetEvent $event)
     {

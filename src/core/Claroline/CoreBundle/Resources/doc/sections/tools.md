@@ -113,8 +113,8 @@ Each tool can declare a configuration page. The list of configurable tools is di
 in the parameter tool.
 Once a user clicks on the link, an event configure_workspace|desktop_tool_*toolname* is thrown.
 
-You can the get the thrown event (Claroline\CoreBundle\Library\Event\ConfigureWorkspaceToolEvent
-or Claroline\CoreBundle\Library\Event\ConfigureDesktopToolEvent) and set some content
+You can the get the thrown event (Claroline\CoreBundle\Event\Event\ConfigureWorkspaceToolEvent
+or Claroline\CoreBundle\Event\Event\ConfigureDesktopToolEvent) and set some content
 
         $event->setContent($this->templating->render(...));
 

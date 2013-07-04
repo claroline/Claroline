@@ -70,7 +70,7 @@ class Role implements RoleInterface
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\OrderedTool",
      *     mappedBy="roles"
      * )
-     * )
+     * 
      */
     protected $orderedTools;
 

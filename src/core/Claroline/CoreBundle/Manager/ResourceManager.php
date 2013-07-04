@@ -14,15 +14,16 @@ use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\ResourceShortcutRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Manager\RightsManager;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\IconManager;
 use Claroline\CoreBundle\Manager\Exception\MissingResourceNameException;
 use Claroline\CoreBundle\Manager\Exception\ResourceTypeNotFoundException;
 use Claroline\CoreBundle\Manager\Exception\RightsException;
-use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Manager\Exception\ExportResourceException;
 use Claroline\CoreBundle\Database\Writer;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Claroline\CoreBundle\Database\GenericRepository;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
 
 /**
  * @DI\Service("claroline.manager.resource_manager")
@@ -41,26 +42,32 @@ class ResourceManager
     private $shortcutRepo;
     /** @var RoleRepository */
     private $roleRepo;
+    /** @var RoleManager */
+    private $roleManager;
     /** @var IconManager */
     private $iconManager;
-    /** @var EventDispatcher */
-    private $ed;
+    /** @var Dispatcher */
+    private $dispatcher;
     /** @var Writer */
     private $writer;
+    /** @var GenericRepository */
+    private $genericRepo;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "resourceTypeRepo" = @DI\Inject("resource_type_repository"),
-     *     "resourceRepo" = @DI\Inject("resource_repository"),
+     *     "resourceTypeRepo"   = @DI\Inject("resource_type_repository"),
+     *     "resourceRepo"       = @DI\Inject("resource_repository"),
      *     "resourceRightsRepo" = @DI\Inject("resource_rights_repository"),
-     *     "roleRepo" = @DI\Inject("role_repository"),
-     *     "shortcutRepo" = @DI\Inject("shortcut_repository"),
-     *     "iconManager" = @DI\Inject("claroline.manager.icon_manager"),
-     *     "rightsManager" = @DI\Inject("claroline.manager.rights_manager"),
-     *     "ed" = @DI\Inject("event_dispatcher"),
-         * "writer" = @DI\Inject("claroline.database.writer")
+     *     "roleRepo"           = @DI\Inject("role_repository"),
+     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
+     *     "shortcutRepo"       = @DI\Inject("shortcut_repository"),
+     *     "iconManager"        = @DI\Inject("claroline.manager.icon_manager"),
+     *     "rightsManager"      = @DI\Inject("claroline.manager.rights_manager"),
+     *     "dispatcher"         = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "writer"             = @DI\Inject("claroline.database.writer"),
+     *     "genericRepo"        = @DI\Inject("claroline.database.generic_repository")
      * })
      */
     public function __construct (
@@ -68,22 +75,26 @@ class ResourceManager
         AbstractResourceRepository $resourceRepo,
         ResourceRightsRepository $resourceRightsRepo,
         RoleRepository $roleRepo,
+        RoleManager $roleManager,
         ResourceShortcutRepository $shortcutRepo,
         IconManager $iconManager,
         RightsManager $rightsManager,
-        EventDispatcher $ed,
-        Writer $writer
+        StrictDispatcher $dispatcher,
+        Writer $writer,
+        GenericRepository $genericRepo
     )
     {
         $this->resourceTypeRepo = $resourceTypeRepo;
         $this->resourceRepo = $resourceRepo;
         $this->resourceRightsRepo = $resourceRightsRepo;
         $this->roleRepo = $roleRepo;
+        $this->roleManager = $roleManager;
         $this->shortcutRepo = $shortcutRepo;
         $this->iconManager = $iconManager;
         $this->rightsManager = $rightsManager;
-        $this->ed = $ed;
+        $this->dispatcher = $dispatcher;
         $this->writer = $writer;
+        $this->genericRepo = $genericRepo;
     }
 
     /**
@@ -102,7 +113,12 @@ class ResourceManager
         $this->checkResourcePrepared($resource);
         $name = $this->getUniqueName($resource, $parent);
         $previous = $this->resourceRepo->findOneBy(array('parent' => $parent, 'next' => null));
-        $icon = $this->generateIcon($resource, $resourceType, $icon);
+        if ($previous) {
+            $previous->setNext($resource);
+        }
+        if ($icon === null) {
+            $icon = $this->generateIcon($resource, $resourceType, $icon);
+        }
         $resource->setCreator($creator);
         $resource->setWorkspace($workspace);
         $resource->setResourceType($resourceType);
@@ -271,7 +287,8 @@ class ResourceManager
             $target->getResourceType(),
             $creator,
             $parent->getWorkspace(),
-            $parent
+            $parent,
+            $target->getIcon()->getShortcutIcon()
         );
     }
 
@@ -389,26 +406,41 @@ class ResourceManager
     /**
      * Insert the resource $resource before the target $next.
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $next
+     * @param AbstractResource $resource
+     * @param AbstractResource $next
      */
     public function insertBefore(AbstractResource $resource, AbstractResource $next = null)
     {
-        $previous = $this->findPreviousOrLastRes($next);
+        $previous = $this->findPreviousOrLastRes($resource->getParent(), $next);
+        $oldPrev = $resource->getPrevious();
+        $oldNext = $resource->getNext();
         $resource->setPrevious($previous);
         $resource->setNext($next);
 
+        $this->writer->suspendFlush();
+
         if ($next) {
             $next->setPrevious($resource);
+            $this->writer->update($next);
         }
 
         if ($previous) {
             $previous->setNext($resource);
+            $this->writer->update($previous);
+        }
+
+        if ($oldPrev) {
+            $oldPrev->setNext($oldNext);
+            $this->writer->update($oldPrev);
+        }
+
+        if ($oldNext) {
+            $oldNext->setPrevious($oldPrev);
+            $this->writer->update($oldNext);
         }
 
         $this->writer->update($resource);
-        $this->writer->update($next);
-        $this->writer->update($previous);
+        $this->writer->forceFlush();
 
         return $resource;
     }
@@ -445,8 +477,7 @@ class ResourceManager
      */
     public function setLastPosition(AbstractResource $parent, AbstractResource $resource)
     {
-        $lastChild = $this->resourceRepo->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->findOneBy(array('parent' => $parent, 'next' => null));
+        $lastChild = $this->resourceRepo->findOneBy(array('parent' => $parent, 'next' => null));
 
         $resource->setPrevious($lastChild);
         $resource->setNext(null);
@@ -479,11 +510,11 @@ class ResourceManager
         }
     }
 
-    public function findPreviousOrLastRes($resource = null)
+    public function findPreviousOrLastRes(AbstractResource $parent, AbstractResource $resource = null)
     {
         return ($resource !== null) ?
             $resource->getPrevious():
-            $this->resourceRepo->findOneBy(array('parent' => $resource->getParent(), 'next' => null));
+            $this->resourceRepo->findOneBy(array('parent' => $parent, 'next' => null));
     }
 
     public function hasLinkTo(Directory $parent, Directory $target)
@@ -580,8 +611,8 @@ class ResourceManager
         $last = $this->resourceRepo->findOneBy(array('parent' => $parent, 'next' => null));
 
         if (get_class($resource) == 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
-            $copy = newResourceShortcut();
-            $copy->setTarget($resource->getTarget());
+            $copy = new ResourceShortcut();
+            $copy->setResource($resource->getResource());
             $copy->setCreator($user);
             $copy->setWorkspace($parent->getWorkspace());
             $copy->setResourceType($resource->getResourceType());
@@ -589,20 +620,16 @@ class ResourceManager
             $copy->setName($this->getUniqueName($resource, $parent));
             $copy->setPrevious($last);
             $copy->setNext(null);
-            $resource->setIcon($resource->getIcon());
+            $copy->setIcon($resource->getIcon());
+            $this->rightsManager->copy($resource, $copy);
         } else {
-            $event = new CopyResourceEvent($resource);
-            $eventName = 'copy_' . $resource->getResourceType()->getName();
-            $this->ed->dispatch($eventName, $event);
+            $event = $this->dispatcher->dispatch(
+                'copy_' . $resource->getResourceType()->getName(),
+                'CopyResource',
+                array($resource)
+            );
+
             $copy = $event->getCopy();
-
-            if ($copy === null) {
-                throw new \Exception(
-                    "The resource {$resource->getResourceType()->getName()}" .
-                    " couldn't be created."
-                );
-            }
-
             $copy->setResourceType($resource->getResourceType());
             $copy->setCreator($user);
             $copy->setWorkspace($parent->getWorkspace());
@@ -611,6 +638,8 @@ class ResourceManager
             $copy->setName($this->getUniqueName($resource, $parent));
             $copy->setPrevious($last);
             $copy->setNext(null);
+            $copy->setIcon($resource->getIcon());
+            $this->rightsManager->copy($resource, $copy);
 
             if ($resource->getResourceType()->getName() == 'directory') {
                 foreach ($resource->getChildren() as $child) {
@@ -619,11 +648,105 @@ class ResourceManager
             }
         }
 
+        $this->writer->update($copy);
+
         if ($last) {
-            $this->writer->setOrder($last, $last->getPrevious(), $resource);
+            $last->setNext($copy);
+            $this->writer->update($last);
         }
 
         return $copy;
+    }
+
+    public function getResourceTypeByName($name)
+    {
+        return $this->resourceTypeRepo->findOneByName($name);
+    }
+
+    /**
+     * Convert a ressource into an array (mainly used to be serialized and sent to the manager.js as
+     * a json response)
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     *
+     * @return array
+     */
+    public function toArray(AbstractResource $resource)
+    {
+        $resourceArray = array();
+        $resourceArray['id'] = $resource->getId();
+        $resourceArray['name'] = $resource->getName();
+        $resourceArray['parent_id'] = ($resource->getParent() != null) ? $resource->getParent()->getId() : null;
+        $resourceArray['creator_username'] = $resource->getCreator()->getUsername();
+        $resourceArray['type'] = $resource->getResourceType()->getName();
+        $resourceArray['large_icon'] = $resource->getIcon()->getRelativeUrl();
+        $resourceArray['path_for_display'] = $resource->getPathForDisplay();
+        $resourceArray['mime_type'] = $resource->getMimeType();
+
+        if ($resource->getPrevious() !== null) {
+            $resourceArray['previous_id'] = $resource->getPrevious()->getId();
+        }
+        if ($resource->getNext() !== null) {
+            $resourceArray['next_id'] = $resource->getNext()->getId();
+        }
+
+        $isAdmin = false;
+
+        $roles = $this->roleManager->getStringRolesFromCurrentUser();
+
+        foreach ($roles as $role) {
+            if ($role === 'ROLE_ADMIN') {
+                $isAdmin = true;
+            }
+        }
+
+        if ($isAdmin) {
+            $resourceArray['can_export'] = true;
+            $resourceArray['can_edit'] = true;
+            $resourceArray['can_delete'] = true;
+        } else {
+            $rights = $this->resourceRightsRepo->findMaximumRights($roles, $resource);
+            $resourceArray['can_export'] = $rights['canExport'];
+            $resourceArray['can_edit'] = $rights['canEdit'];
+            $resourceArray['can_delete'] = $rights['canDelete'];
+        }
+
+        return $resourceArray;
+    }
+
+    public function getRoots(User $user)
+    {
+        return $this->resourceRepo->findWorkspaceRootsByUser($user);
+    }
+
+    public function getAncestors(AbstractResource $resource)
+    {
+        return $this->resourceRepo->findAncestors($resource);
+    }
+
+    public function getChildren(Directory $directory, array $roles, $isSorted = true)
+    {
+        $children = $this->resourceRepo->findChildren($directory, $roles);
+
+        return ($isSorted) ? $this->sort($children): $children;
+    }
+
+    public function getDescendants(Directory $directory)
+    {
+        return $this->resourceRepo->findDescendants($directory);
+    }
+
+    public function getByCriteria(array $criteria, array $userRoles, $isRecursive)
+    {
+        return $this->resourceRepo->findByCriteria($criteria, $userRoles, $isRecursive);
+    }
+
+    public function getByIds(array $ids)
+    {
+        return $this->genericRepo->findByIds(
+            'Claroline\CoreBundle\Entity\Resource\AbstractResource',
+            $ids
+        );
     }
 
     /**
@@ -634,10 +757,95 @@ class ResourceManager
     public function delete(AbstractResource $resource)
     {
         $this->removePosition($resource);
-        $eventName = 'delete_'.$resource->getResourceType()->getName();
-        $event = new DeleteResourceEvent($resource);
-        $this->ed->dispatch($eventName, $event);
+        $this->dispatcher->dispatch('delete_'.$resource->getResourceType()->getName(), 'DeleteResource', array($resource));
         $this->writer->delete($resource);
+    }
+
+    /**
+     * Returns an archive with the required content.
+     *
+     * @param array $resources the resources being exported
+     *
+     * @return file
+     */
+    public function download(array $resources)
+    {
+        if (count($resources) === 0) {
+            throw new ExportResourceException('No resources were selected.');
+        }
+
+        $archive = new \ZipArchive();
+        $pathArch = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $this->generateGuid() . '.zip';
+        $archive->open($pathArch, \ZipArchive::CREATE);
+        $resources = $this->expandResources($resources);
+
+        $currentDir = $resources[0];
+
+        foreach ($resources as $resource) {
+
+            if (get_class($resource) == 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
+                $resource = $resource->getResource();
+            }
+
+            if ($resource->getResourceType()->getName() != 'directory') {
+                $event = $this->dispatcher->dispatch(
+                    "download_{$resource->getResourceType()->getName()}",
+                    'DownloadResource',
+                    array($resource)
+                );
+
+                $obj = $event->getItem();
+
+                if ($obj !== null) {
+                    $archive->addFile($obj, $this->getRelativePath($currentDir, $resource) . $resource->getName());
+                } else {
+                     $archive->addFromString($this->getRelativePath($currentDir, $resource) . $resource->getName(), '');
+                }
+            } else {
+                $archive->addEmptyDir($this->getRelativePath($currentDir, $resource). $resource->getName());
+            }
+
+            $this->dispatcher->dispatch('log', 'Log\ResourceExport', array($resource));
+        }
+
+        $archive->close();
+
+        return $pathArch;
+    }
+
+    /**
+     * Returns every children of every resource (includes the startnode).
+     *
+     * @param array $resources
+     * @return type
+     * @throws \Exception
+     */
+    public function expandResources(array $resources)
+    {
+        $dirs = array();
+        $ress = array();
+
+        foreach ($resources as $resource) {
+            $resourceTypeName = $resource->getResourceType()->getName();
+            ($resourceTypeName === 'directory') ? $dirs[] = $resource : $ress[] = $resource;
+        }
+
+        $toAppendIds = array();
+
+        foreach ($dirs as $dir) {
+            $children = $this->getDescendants($dir);
+
+            foreach ($children as $child) {
+                if ($child->getResourceType()->getName() !== 'directory') {
+                    $toAppend[] = $child;
+                }
+            }
+        }
+
+        $merge = array_merge($toAppend, $ress);
+        $merge = array_merge($merge, $dirs);
+
+        return $merge;
     }
 
     /**
@@ -664,5 +872,24 @@ class ResourceManager
             mt_rand(0, 65535),
             mt_rand(0, 65535)
         );
+    }
+
+    /**
+     * Gets the relative path between 2 instances (not optimized yet).
+     *
+     * @param ResourceInstance $root
+     * @param ResourceInstance $resourceInstance
+     * @param string           $path
+     *
+     * @return string
+     */
+    private function getRelativePath($root, AbstractResource $resource, $path = '')
+    {
+        if ($root !== $resource->getParent() && $resource->getParent() !== null) {
+            $path = $resource->getParent()->getName() . DIRECTORY_SEPARATOR . $path;
+            $path = $this->getRelativePath($root, $resource->getParent(), $path);
+        }
+
+        return $path;
     }
 }
