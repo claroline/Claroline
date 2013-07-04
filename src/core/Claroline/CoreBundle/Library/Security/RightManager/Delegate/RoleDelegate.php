@@ -3,9 +3,9 @@
 namespace Claroline\CoreBundle\Library\Security\RightManager\Delegate;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
 use Claroline\CoreBundle\Library\Security\SecurityException;
+use Claroline\CoreBundle\Manager\RoleManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -15,19 +15,18 @@ class RoleDelegate implements SubjectDelegateInterface
 {
     /** @var EntityManager */
     private $em;
-
-    /** @var EntityRepository */
-    private $roleRepository;
+    private $roleManager;
 
     /**
      * @DI\InjectParams({
-     *     "em" = @DI\Inject("doctrine.orm.entity_manager")
+     *     "em"             = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "roleManager"    = @DI\Inject("claroline.manager.role_manager")
      * })
      */
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, RoleManager $roleManager)
     {
         $this->em = $em;
-        $this->roleRepository = $this->em->getRepository('ClarolineCoreBundle:Role');
+        $this->roleManager = $roleManager;
     }
 
     public function buildSecurityIdentity($subject)
@@ -45,7 +44,7 @@ class RoleDelegate implements SubjectDelegateInterface
     public function buildSubject($sid)
     {
         $roleName = $sid->getRole();
-        $role = $this->roleRepository->findOneByName($roleName);
+        $role = $this->roleManager->getRoleByName($roleName);
 
         return $role;
     }
