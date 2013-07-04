@@ -55,15 +55,20 @@ class Badge
     protected $file;
 
     /**
-     * @var BadgeTranslation[]
+     * @var ArrayCollection|BadgeTranslation[]
      *
      * @ORM\OneToMany(
      *   targetEntity="Claroline\CoreBundle\Entity\Badge\BadgeTranslation",
      *   mappedBy="badge",
-     *   cascade={"persist", "remove"}
+     *   cascade={"all"}
      * )
      */
-    private $translations;
+    protected $translations;
+
+    /**
+     * @var null
+     */
+    protected $locale = null;
 
     public function __construct()
     {
@@ -81,6 +86,7 @@ class Badge
     /**
      * @param string $locale
      *
+     * @throws \InvalidArgumentException
      * @return BadgeTranslation|null
      */
     public function getTranslationForLocale($locale)
@@ -92,7 +98,7 @@ class Badge
             }
         }
 
-        return null;
+        throw new \InvalidArgumentException(sprintf('Unknown translation for locale %s.', $locale));
     }
 
     /**
@@ -177,6 +183,31 @@ class Badge
     }
 
     /**
+     * @param null|string $locale
+     *
+     * @return Badge
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+
+        return $this;
+    }
+
+    /**
+     * @throws \InvalidArgumentException
+     * @return null|string
+     */
+    public function getLocale()
+    {
+        if(null === $this->locale) {
+            throw new \InvalidArgumentException('No locale setted.');
+        }
+
+        return $this->locale;
+    }
+
+    /**
      * @param string $imagePath
      *
      * @return Badge
@@ -214,6 +245,66 @@ class Badge
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * @param string $locale
+     *
+     * @throws \InvalidArgumentException
+     * @return string
+     */
+    public function getName($locale = null)
+    {
+        if(null === $locale) {
+            $locale = $this->getLocale();
+        }
+
+        return $this->getTranslationForLocale($locale)->getName();
+    }
+
+    /**
+     * @param string $locale
+     *
+     * @throws \InvalidArgumentException
+     * @return string
+     */
+    public function getDescription($locale = null)
+    {
+        if(null === $locale) {
+            $locale = $this->getLocale();
+        }
+
+        return $this->getTranslationForLocale($locale)->getDescription();
+    }
+
+    /**
+     * @param string $locale
+     *
+     * @throws \InvalidArgumentException
+     * @return string
+     */
+    public function getSlug($locale = null)
+    {
+        if(null === $locale) {
+            $locale = $this->getLocale();
+        }
+
+        return $this->getTranslationForLocale($locale)->getSlug();
+    }
+
+    /**
+     * @param string $locale
+     *
+     * @throws \InvalidArgumentException
+     * @return string
+     */
+    public function getCriteria($locale)
+    {
+        if(null === $locale) {
+            $locale = $this->getLocale();
+        }
+
+        return $this->getTranslationForLocale($locale)->getCriteria();
     }
 
     /**
