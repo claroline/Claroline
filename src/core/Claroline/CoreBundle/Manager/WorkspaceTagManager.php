@@ -7,9 +7,8 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy;
-use Claroline\CoreBundle\Repository\WorkspaceTagRepository;
 use Claroline\CoreBundle\Repository\RelWorkspaceTagRepository;
-use Claroline\CoreBundle\Writer\WorkspaceTagWriter;
+use Claroline\CoreBundle\Database\Writer;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -17,78 +16,77 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class WorkspaceTagManager
 {
-    private $tagRepo;
     private $relTagRepo;
-    private $workspaceTagWriter;
+    private $writer;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "tagRepo" = @DI\Inject("workspace_tag_repository"),
      *     "relTagRepo" = @DI\Inject("rel_workspace_tag_repository"),
-     *     "workspaceTagWriter" = @DI\Inject("claroline.writer.workspace_tag_writer")
+     *     "writer" = @DI\Inject("claroline.database.writer")
      * })
      */
     public function __contruct(
-        WorkspaceTagRepository $tagRepo,
         RelWorkspaceTagRepository $relTagRepo,
-        WorkspaceTagWriter $workspaceTagWriter
+        Writer $writer
     )
     {
-        $this->tagRepo = $tagRepo;
         $this->relTagRepo = $relTagRepo;
-        $this->workspaceTagWriter = $workspaceTagWriter;
+        $this->writer = $writer;
     }
 
     public function insert(WorkspaceTag $tag)
     {
-        $this->workspaceTagWriter->insert($tag);
+        $this->writer->create($tag);
     }
 
     public function createTag($name, User $user = null)
     {
-        return $this->workspaceTagWriter->createTag($name, $user);
-    }
+        $tag = new WorkspaceTag();
+        $tag->setName($name);
+        $tag->setUser($user);
+        $this->writer->create($tag);
 
-    public function deleteTag(WorkspaceTag $tag)
-    {
-        $this->workspaceTagWriter->deleteTag($tag);
-    }
-
-    public function deleteAllTags(User $user = null)
-    {
-        $tags = $this->tagRepo->findByUser($user);
-
-        foreach ($tags as $tag) {
-            $this->workspaceTagWriter->deleteTag($tag);
-        }
+        return $tag;
     }
 
     public function createTagRelation(WorkspaceTag $tag, AbstractWorkspace $workspace)
     {
-        return $this->workspaceTagWriter->createTagRelation($tag, $workspace);
+        $relWorkspaceTag = new RelWorkspaceTag();
+        $relWorkspaceTag->setTag($tag);
+        $relWorkspaceTag->setWorkspace($workspace);
+        $this->writer->create($relWorkspaceTag);
+
+        return $relWorkspaceTag;
     }
 
     public function deleteTagRelation(RelWorkspaceTag $relWorkspaceTag)
     {
-        $this->workspaceTagWriter->deleteTagRelation($relWorkspaceTag);
+        $this->writer->delete($relWorkspaceTag);
     }
 
     public function deleteRelWorkspaceTag(WorkspaceTag $tag, AbstractWorkspace $workspace)
     {
         $relWorkspaceTag = $this->relTagRepo->findBy(array('tag' => $tag, 'workspace' => $workspace));
 
-        $this->workspaceTagWriter->deleTagRelation($relWorkspaceTag);
+        $this->writer->delete($relWorkspaceTag);
     }
 
     public function createTagHierarchy(WorkspaceTag $tag, WorkspaceTag $parent, $level)
     {
-        return $this->workspaceTagWriter->createTagHierarchy($tag, $parent, $level);
+        $tagHierarchy = new WorkspaceTagHierarchy();
+        $tagHierarchy->setTag($tag);
+        $tagHierarchy->setParent($parent);
+        $tagHierarchy->setLevel($level);
+        $tagHierarchy->setUser($tag->getUser());
+        $this->writer->create($tagHierarchy);
+
+        return $tagHierarchy;
     }
 
     public function deleteTagHierarchy(WorkspaceTagHierarchy $tagHierarchy)
     {
-        $this->workspaceTagWriter->deleteTagHierarchy($tagHierarchy);
+        $this->writer->delete($tagHierarchy);
     }
 }

@@ -3,8 +3,8 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Claroline\CoreBundle\Library\Event\ConfigureWidgetWorkspaceEvent;
-use Claroline\CoreBundle\Library\Event\ConfigureWidgetDesktopEvent;
+use Claroline\CoreBundle\Event\Event\ConfigureWidgetWorkspaceEvent;
+use Claroline\CoreBundle\Event\Event\ConfigureWidgetDesktopEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;

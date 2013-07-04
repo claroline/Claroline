@@ -8,7 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Controller\Tool\AbstractParametersController;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Tool\Tool;
-use Claroline\CoreBundle\Library\Event\ConfigureWorkspaceToolEvent;
+use Claroline\CoreBundle\Event\Event\ConfigureWorkspaceToolEvent;
 use Claroline\CoreBundle\Form\WorkspaceEditType;
 use Claroline\CoreBundle\Form\WorkspaceTemplateType;
 

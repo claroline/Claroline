@@ -13,6 +13,7 @@ class FormFactory
     const TYPE_MESSAGE = 'message';
     const TYPE_ORDERED_TOOL = 'ordered_tool';
     const TYPE_TOOL = 'tool';
+    const TYPE_MAIL = 'mail';
 
     private static $types = array(
         self::TYPE_MESSAGE => array(
@@ -26,6 +27,9 @@ class FormFactory
         self::TYPE_TOOL => array(
             'formType' => 'Claroline\CoreBundle\Form\ToolType',
             'entity' => 'Claroline\CoreBundle\Entity\Tool\Tool'
+        ),
+        self::TYPE_MAIL => array(
+            'formType' => 'Claroline\CoreBundle\Form\MailType'
         )
     );
 
@@ -56,7 +60,7 @@ class FormFactory
             $formType = new self::$types[$type]['formType'];
         }
 
-        if (!$entityVar) {
+        if (!$entityVar && isset(self::$types[$type]['entity'])) {
             $entityVar = new self::$types[$type]['entity'];
         }
 
