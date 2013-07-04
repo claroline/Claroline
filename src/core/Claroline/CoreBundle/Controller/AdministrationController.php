@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Form\GroupType;
 use Claroline\CoreBundle\Form\GroupSettingsType;
 use Claroline\CoreBundle\Form\PlatformParametersType;
 use Claroline\CoreBundle\Form\ImportUserType;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Event\PluginOptionsEvent;
 use Claroline\CoreBundle\Library\Event\LogUserDeleteEvent;
 use Claroline\CoreBundle\Library\Event\LogGroupCreateEvent;
@@ -23,6 +24,7 @@ use Claroline\CoreBundle\Library\Event\LogGroupRemoveUserEvent;
 use Claroline\CoreBundle\Library\Event\LogGroupDeleteEvent;
 use Claroline\CoreBundle\Library\Event\LogGroupUpdateEvent;
 use Claroline\CoreBundle\Library\Configuration\UnwritableException;
+use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
@@ -43,32 +45,40 @@ class AdministrationController extends Controller
 
     private $userManager;
     private $roleManager;
+    private $groupManager;
     private $security;
     private $pagerFactory;
     private $eventDispatcher;
+    private $configHandler;
 
     /**
      * @DI\InjectParams({
      *     "userManager"    = @DI\Inject("claroline.manager.user_manager"),
      *     "roleManager"    = @DI\Inject("claroline.manager.role_manager"),
+     *     "groupManager"    = @DI\Inject("claroline.manager.group_manager"),
      *     "security"       = @DI\Inject("security.context"),
      *     "pagerFactory"   = @DI\Inject("claroline.pager.pager_factory"),
-     *     "eventDispatcher"    = @DI\Inject("event_dispatcher")
+     *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
+     *     "configHandler"    = @DI\Inject("claroline.config.platform_config_handler")
      * })
      */
     public function __construct(
         UserManager $userManager,
         RoleManager $roleManager,
+        GroupManager $groupManager,
         SecurityContextInterface $security,
         PagerFactory $pagerFactory,
-        EventDispatcher $eventDispatcher
+        EventDispatcher $eventDispatcher,
+        PlatformConfigurationHandler $configHandler
     )
     {
         $this->userManager = $userManager;
         $this->roleManager = $roleManager;
+        $this->groupManager = $groupManager;
         $this->security = $security;
         $this->pagerFactory = $pagerFactory;
         $this->eventDispatcher = $eventDispatcher;
+        $this->configHandler = $configHandler;
     }
 
     /**
@@ -225,8 +235,9 @@ class AdministrationController extends Controller
      */
     public function groupListAction($page, $search)
     {
-        $repo = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Group');
-        $query = ($search == "") ? $repo->findAll(true): $repo->findByName($search, true);
+        $query = ($search == "") ?
+            $this->groupManager->getAllGroups(true) :
+            $this->groupManager->getGroupsByName($search, true);
         $pager = $this->pagerFactory->createPager($query, $page);
 
         return array('pager' => $pager, 'search' => $search);
@@ -345,11 +356,9 @@ class AdministrationController extends Controller
 
         if ($form->isValid()) {
             $group = $form->getData();
-            $em = $this->getDoctrine()->getManager();
             $userRole = $this->roleManager->getRoleByName('ROLE_USER');
             $group->setPlatformRole($userRole);
-            $em->persist($group);
-            $em->flush();
+            $this->groupManager->insertGroup($group);
 
             $log = new LogGroupCreateEvent($group);
             $this->eventDispatcher->dispatch('log', $log);
@@ -387,9 +396,9 @@ class AdministrationController extends Controller
      */
     public function addUsersToGroupAction(Group $group, array $users)
     {
-        foreach ($users as $user) {
-            $group->addUser($user);
+        $this->groupManager->addUsersToGroup($group, $users);
 
+        foreach ($users as $user) {
             $log = new LogGroupAddUserEvent($group, $user);
             $this->eventDispatcher->dispatch('log', $log);
         }
@@ -424,9 +433,9 @@ class AdministrationController extends Controller
      */
     public function deleteUsersFromGroupAction(Group $group, array $users)
     {
-        foreach ($users as $user) {
-            $group->removeUser($user);
+        $this->groupManager->removeUsersFromGroup($group, $users);
 
+        foreach ($users as $user) {
             $log = new LogGroupRemoveUserEvent($group, $user);
             $this->eventDispatcher->dispatch('log', $log);
         }
@@ -453,10 +462,8 @@ class AdministrationController extends Controller
      */
     public function deleteGroupsAction(array $groups)
     {
-        $em = $this->getDoctrine()->getManager();
-
         foreach ($groups as $group) {
-            $em->remove($group);
+            $this->groupManager->deleteGroup($group);
 
             $log = new LogGroupDeleteEvent($group);
             $this->eventDispatcher->dispatch('log', $log);
@@ -472,6 +479,11 @@ class AdministrationController extends Controller
      *     requirements={"groupId"="^(?=.*[1-9].*$)\d*$"}
      * )
      * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "group",
+     *      class="ClarolineCoreBundle:Group",
+     *      options={"id" = "groupId", "strictId" = true}
+     * )
      *
      * @EXT\Template()
      *
@@ -481,11 +493,8 @@ class AdministrationController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function groupSettingsFormAction($groupId)
+    public function groupSettingsFormAction(Group $group)
     {
-        $em = $this->getDoctrine()->getManager();
-        $group = $em->getRepository('ClarolineCoreBundle:Group')
-            ->find($groupId);
         $form = $this->createForm(new GroupSettingsType(), $group);
 
         return array(
@@ -499,6 +508,11 @@ class AdministrationController extends Controller
      *     "/group/settings/update/{groupId}",
      *     name="claro_admin_update_group_settings"
      * )
+     * @EXT\ParamConverter(
+     *      "group",
+     *      class="ClarolineCoreBundle:Group",
+     *      options={"id" = "groupId", "strictId" = true}
+     * )
      *
      * @EXT\Template("ClarolineCoreBundle:Administration:groupSettingsForm.html.twig")
      *
@@ -508,12 +522,10 @@ class AdministrationController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function updateGroupSettingsAction($groupId)
+    public function updateGroupSettingsAction(Group $group)
     {
         $request = $this->get('request');
         $em = $this->getDoctrine()->getManager();
-        $group = $em->getRepository('ClarolineCoreBundle:Group')
-            ->find($groupId);
 
         $oldPlatformRoleTransactionKey = $group->getPlatformRole()->getTranslationKey();
 
@@ -529,15 +541,14 @@ class AdministrationController extends Controller
 
             //The changeSet don't manage manyToMany
             $newPlatformRoleTransactionKey = $group->getPlatformRole()->getTranslationKey();
+
             if ($oldPlatformRoleTransactionKey !== $newPlatformRoleTransactionKey) {
                 $changeSet['platformRole'] = array($oldPlatformRoleTransactionKey, $newPlatformRoleTransactionKey);
             }
-
-            $em->persist($group);
-            $em->flush();
+            $this->groupManager->updateGroup($group);
 
             $log = new LogGroupUpdateEvent($group, $changeSet);
-            $this->get('event_dispatcher')->dispatch('log', $log);
+            $this->eventDispatcher->dispatch('log', $log);
 
             return $this->redirect($this->generateUrl('claro_admin_group_list'));
         }
@@ -567,8 +578,7 @@ class AdministrationController extends Controller
      */
     public function platformSettingsFormAction()
     {
-        $platformConfig = $this->get('claroline.config.platform_config_handler')
-            ->getPlatformConfig();
+        $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->createForm(new PlatformParametersType($this->getThemes()), $platformConfig);
 
         return array('form_settings' => $form->createView());
@@ -589,15 +599,23 @@ class AdministrationController extends Controller
     public function updatePlatformSettingsAction()
     {
         $request = $this->get('request');
-        $configHandler = $this->get('claroline.config.platform_config_handler');
         $form = $this->get('form.factory')->create(new PlatformParametersType($this->getThemes()));
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             try {
-                $configHandler->setParameter('allow_self_registration', $form['selfRegistration']->getData());
-                $configHandler->setParameter('locale_language', $form['localLanguage']->getData());
-                $configHandler->setParameter('theme', $form['theme']->getData());
+                $this->configHandler->setParameter(
+                    'allow_self_registration',
+                    $form['selfRegistration'] ->getData()
+                );
+                $this->configHandler->setParameter(
+                    'locale_language',
+                    $form['localLanguage']->getData()
+                );
+                $this->configHandler->setParameter(
+                    'theme',
+                    $form['theme']->getData()
+                );
             } catch (UnwritableException $e) {
                 $form->addError(
                     new FormError(
@@ -653,7 +671,7 @@ class AdministrationController extends Controller
     {
         $event = new PluginOptionsEvent();
         $eventName = "plugin_options_{$domain}";
-        $this->get('event_dispatcher')->dispatch($eventName, $event);
+        $this->eventDispatcher->dispatch($eventName, $event);
 
         if (!$event->getResponse() instanceof Response) {
             throw new \Exception(
@@ -724,7 +742,7 @@ class AdministrationController extends Controller
                 $users[] = str_getcsv($line);
             }
 
-            $this->get('claroline.manager.user_manager')->importUsers($users);
+            $this->userManager->importUsers($users);
 
             return $this->redirect($this->generateUrl('claro_admin_users_management'));
         }
@@ -792,6 +810,8 @@ class AdministrationController extends Controller
      *
      * @EXT\Method("GET")
      *
+     * @EXT\Template("ClarolineCoreBundle:Administration:analytics.html.twig")
+     *
      * Displays platform analytics home page
      *
      *
@@ -801,22 +821,19 @@ class AdministrationController extends Controller
      */
     public function analyticsAction()
     {
-        $manager = $this->get('doctrine.orm.entity_manager');
         $actionsForRange = $this->get('claroline.analytics.manager')->getDailyActionNumberForDateRange();
         $lastMonthActions = $actionsForRange["chartData"];
         $mostViewedWS = $this->get('claroline.analytics.manager')->topWSByAction(null, 'ws_tool_read', 5);
         $mostViewedMedia = $this->get('claroline.analytics.manager')->topMediaByAction(null, 'resource_read', 5);
         $mostDownloadedResources = $this->get('claroline.analytics.manager')->topResourcesByAction(null, 'resource_export', 5);
-        $usersCount = $manager->getRepository('ClarolineCoreBundle:User')->count();
-        return $this->render(
-            'ClarolineCoreBundle:Administration:analytics.html.twig',
-            array(
-                'barChartData'=>$lastMonthActions,
-                'usersCount'=>$usersCount,
-                'mostViewedWS'=>$mostViewedWS,
-                'mostViewedMedia'=>$mostViewedMedia,
-                'mostDownloadedResources'=>$mostDownloadedResources
-            )
+        $usersCount = $this->userManager->getNbUsers();
+
+        return array(
+            'barChartData'=>$lastMonthActions,
+            'usersCount'=>$usersCount,
+            'mostViewedWS'=>$mostViewedWS,
+            'mostViewedMedia'=>$mostViewedMedia,
+            'mostDownloadedResources'=>$mostDownloadedResources
         );
     }
 
@@ -827,6 +844,8 @@ class AdministrationController extends Controller
      * )
      *
      * @EXT\Method({"GET", "POST"})
+     *
+     * @EXT\Template("ClarolineCoreBundle:Administration:analytics_connections.html.twig")
      *
      * Displays platform analytics connections page
      *
@@ -846,7 +865,6 @@ class AdministrationController extends Controller
             $range = $criteria_form->get('range')->getData();
             $unique = ($criteria_form->get('unique')->getData()=='true')?true:false;
         }
-        $manager = $this->get('doctrine.orm.entity_manager');
         $actionsForRange = $this
                         ->get('claroline.analytics.manager')
                         ->getDailyActionNumberForDateRange($range, 'user_login',$unique);
@@ -859,13 +877,10 @@ class AdministrationController extends Controller
         $connections = $actionsForRange['chartData'];
         $activeUsers = $this->get('claroline.analytics.manager')->getActiveUsers();
 
-        return $this->render(
-            'ClarolineCoreBundle:Administration:analytics_connections.html.twig',
-            array(
-                'connections'=>$connections,
-                'form_criteria' => $criteria_form->createView(),
-                'activeUsers'=>$activeUsers
-            )
+        return array(
+            'connections'=>$connections,
+            'form_criteria' => $criteria_form->createView(),
+            'activeUsers'=>$activeUsers
         );
     }
 
@@ -876,6 +891,8 @@ class AdministrationController extends Controller
      * )
      *
      * @EXT\Method("GET")
+     *
+     * @EXT\Template("ClarolineCoreBundle:Administration:analytics_resources.html.twig")
      *
      * Displays platform analytics resources page
      *
@@ -889,12 +906,10 @@ class AdministrationController extends Controller
         $manager = $this->get('doctrine.orm.entity_manager');
         $wsCount = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->count();
         $resourceCount = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->countResourcesByType();
-        return $this->render(
-            'ClarolineCoreBundle:Administration:analytics_resources.html.twig',
-            array(
-                'wsCount'=>$wsCount,
-                'resourceCount'=>$resourceCount
-            )
+
+        return array(
+            'wsCount'=>$wsCount,
+            'resourceCount'=>$resourceCount
         );
     }
 
@@ -906,6 +921,8 @@ class AdministrationController extends Controller
      * )
      *
      * @EXT\Method({"GET", "POST"})
+     *
+     * @EXT\Template("ClarolineCoreBundle:Administration:analytics_top.html.twig")
      *
      * Displays platform analytics top activity page
      *
@@ -939,12 +956,9 @@ class AdministrationController extends Controller
         $clone_form->get('top_number')->setData($max);
         $criteria_form = $clone_form;
 
-        return $this->render(
-            'ClarolineCoreBundle:Administration:analytics_top.html.twig',
-            array(
-                'form_criteria'=>$criteria_form->createView(),
-                'list_data' => $listData
-            )
+        return array(
+            'form_criteria'=>$criteria_form->createView(),
+            'list_data' => $listData
         );
     }
 }
