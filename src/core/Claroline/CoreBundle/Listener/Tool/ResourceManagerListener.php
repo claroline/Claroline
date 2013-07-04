@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Library\Event\ConfigureWorkspaceToolEvent;
+use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -23,10 +24,19 @@ class ResourceManagerListener
      *     "converter" = @DI\Inject("claroline.resource.converter"),
      *     "sc" = @DI\Inject("security.context"),
      *     "request" = @DI\Inject("request"),
-     *     "organizer" = @DI\Inject("claroline.workspace.organizer")
+     *     "workspaceTagManager" = @DI\Inject("claroline.manager.workspace_tag_manager")
      * })
      */
-    public function __construct($em, $ed, $templating, $manager, $converter, $sc, $request, $organizer)
+    public function __construct(
+        $em,
+        $ed,
+        $templating,
+        $manager,
+        $converter,
+        $sc,
+        $request,
+        WorkspaceTagManager $workspaceTagManager
+    )
     {
         $this->em = $em;
         $this->ed = $ed;
@@ -35,7 +45,7 @@ class ResourceManagerListener
         $this->converter = $converter;
         $this->sc = $sc;
         $this->request = $request;
-        $this->organizer = $organizer;
+        $this->workspaceTagManager = $workspaceTagManager;
     }
 
     /**
@@ -136,7 +146,7 @@ class ResourceManagerListener
         $roleRights = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
             ->findNonAdminRights($resource);
 
-        $datas = $this->organizer->getDatasForWorkspaceList(true);
+        $datas = $this->workspaceTagManager->getDatasForWorkspaceList(true);
 
         return $this->templating->render(
             'ClarolineCoreBundle:Tool\workspace\resource_manager:resourcesRights.html.twig',

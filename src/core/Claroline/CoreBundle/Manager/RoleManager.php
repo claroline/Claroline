@@ -198,4 +198,9 @@ class RoleManager
     {
         return $this->roleRepo->findOneByName($name);
     }
+
+    public function getAllRoles()
+    {
+        return $this->roleRepo->findAll();
+    }
 }
