@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Form\BadgeAttributionType;
 use Claroline\CoreBundle\Form\BadgeType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -218,7 +219,16 @@ class BadgeController extends Controller
                     $this->get('session')->getFlashBag()->add('success', $translator->trans('badge_attribution_success_message', array(), 'platform'));
                 }
                 catch(\Exception $exception) {
-                    $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_attribution_error_message', array(), 'platform'));
+                    if(!$request->isXmlHttpRequest()) {
+                        $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_attribution_error_message', array(), 'platform'));
+                    }
+                    else {
+                        return new Response($exception->getMessage(), 500);
+                    }
+                }
+
+                if($request->isXmlHttpRequest()) {
+                    return new JsonResponse(array('error' => false));
                 }
 
                 return $this->redirect($this->generateUrl('claro_admin_badges_edit', array('id' => $badge->getId())));

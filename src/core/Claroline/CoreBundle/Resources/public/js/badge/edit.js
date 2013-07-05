@@ -26,12 +26,30 @@ $(function(){
         event.preventDefault();
         $.ajax({
             url: event.currentTarget.getAttribute('href'),
-            type: 'POST',
+            type: 'GET',
             success: function (data) {
                 $('.modal-body', attributeModal).html(data);
                 attributeModal.modal();
             }
         });
+    });
 
+    $('#validAttribution').click(function(event) {
+        event.preventDefault();
+        var attributionForm = $('.modal-body form', attributeModal);
+        $.ajax({
+            url: attributionForm.attr('action'),
+            type: 'POST',
+            data: attributionForm.serialize(),
+            success: function (data) {
+                if(data.error) {
+                    $('.modal-body', attributeModal).html(data);
+                }
+                else {
+                    attributeModal.modal('hide');
+                    window.location.reload();
+                }
+            }
+        });
     });
 });
