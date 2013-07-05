@@ -13,13 +13,13 @@ use Claroline\CoreBundle\Form\GroupType;
 use Claroline\CoreBundle\Form\GroupSettingsType;
 use Claroline\CoreBundle\Form\PlatformParametersType;
 use Claroline\CoreBundle\Form\ImportUserType;
-use Claroline\CoreBundle\Library\Event\PluginOptionsEvent;
-use Claroline\CoreBundle\Library\Event\LogUserDeleteEvent;
-use Claroline\CoreBundle\Library\Event\LogGroupCreateEvent;
-use Claroline\CoreBundle\Library\Event\LogGroupAddUserEvent;
-use Claroline\CoreBundle\Library\Event\LogGroupRemoveUserEvent;
-use Claroline\CoreBundle\Library\Event\LogGroupDeleteEvent;
-use Claroline\CoreBundle\Library\Event\LogGroupUpdateEvent;
+use Claroline\CoreBundle\Event\Event\PluginOptionsEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogUserDeleteEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogGroupCreateEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogGroupAddUserEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogGroupRemoveUserEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogGroupDeleteEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogGroupUpdateEvent;
 use Claroline\CoreBundle\Library\Configuration\UnwritableException;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
@@ -730,7 +730,7 @@ class AdministrationController extends Controller
                 $users[] = str_getcsv($line);
             }
 
-            $this->get('claroline.user.creator')->import($users);
+            $this->get('claroline.manager.user_manager')->importUsers($users);
 
             return $this->redirect($this->generateUrl('claro_admin_users_management'));
         }

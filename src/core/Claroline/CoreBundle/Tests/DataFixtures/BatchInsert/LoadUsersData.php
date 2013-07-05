@@ -35,7 +35,6 @@ class LoadUsersData extends LoggableFixture implements ContainerAwareInterface
      */
     public function load(ObjectManager $manager)
     {
-        $userCreator = $this->container->get('claroline.user.creator');
         $start = time();
         $countUser = $manager->getRepository('ClarolineCoreBundle:User')->count();
 
@@ -51,7 +50,7 @@ class LoadUsersData extends LoggableFixture implements ContainerAwareInterface
             );
         }
 
-        $userCreator->import($users);
+        $this->container->get('claroline.manager.user_manager')->importUsers($users);
         $end = time();
         $duration = $this->container->get('claroline.utilities.misc')->timeElapsed($end - $start);
         $this->log("Time elapsed for the user creation: " . $duration);

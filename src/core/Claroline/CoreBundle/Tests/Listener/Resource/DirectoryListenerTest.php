@@ -4,8 +4,8 @@ namespace Claroline\CoreBundle\Listener\Resource;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Entity\Resource\Directory;
-use Claroline\CoreBundle\Library\Event\ExportResourceTemplateEvent;
-use Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent;
+use Claroline\CoreBundle\Event\Event\ExportResourceTemplateEvent;
+use Claroline\CoreBundle\Event\Event\ImportResourceTemplateEvent;
 use DirectoryIterator;
 
 class DirectoryListenerTest extends FunctionalTestCase

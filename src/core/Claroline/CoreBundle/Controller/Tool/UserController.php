@@ -11,8 +11,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleSubscribeEvent;
-use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleUnsubscribeEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceRoleSubscribeEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceRoleUnsubscribeEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -135,6 +135,7 @@ class UserController extends Controller
     public function userParametersAction($workspaceId, $userId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
+        $roleManager = $this->get('claroline.manager.role_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
             ->find($workspaceId);
         $this->checkRegistration($workspace, false);
@@ -173,10 +174,8 @@ class UserController extends Controller
                 $this->checkRemoveManagerRoleIsValid(array ($userId), $workspace);
             }
 
-            $user->removeRole($role);
-            $user->addRole($newRole);
-            $em->persist($user);
-            $em->flush();
+            $roleManager->dissociateRole($user, $role);
+            $roleManager->associateRole($user, $newRole);
             $route = $this->get('router')->generate(
                 'claro_workspace_open_tool',
                 array('workspaceId' => $workspaceId, 'toolName' => 'user_management')
@@ -220,6 +219,7 @@ class UserController extends Controller
         $params = $this->get('request')->query->all();
         $users = array();
         $em = $this->get('doctrine.orm.entity_manager');
+        $roleManager = $this->get('claroline.manager.role_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
             ->find($workspaceId);
         $this->checkRegistration($workspace, false);
@@ -234,7 +234,7 @@ class UserController extends Controller
                 $userRole = $roleRepo->findWorkspaceRoleForUser($user, $workspace);
                 if ($userRole === null) {
                     $users[] = $user;
-                    $user->addRole($role);
+                    $roleManager->associateRole($user, $role);
                 }
             }
             $em->flush();
@@ -270,6 +270,7 @@ class UserController extends Controller
     public function removeUsersAction($workspaceId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
+        $roleManager = $this->get('claroline.manager.role_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
             ->find($workspaceId);
         $this->checkRegistration($workspace, false);
@@ -289,7 +290,7 @@ class UserController extends Controller
                     $rolesForUser = array();
                     foreach ($roles as $role) {
                         if ($user->hasRole($role->getName())) {
-                            $user->removeRole($role);
+                            $roleManager->dissociateRole($user, $role);
                             $rolesForUser[] = $role;
                         }
                     }

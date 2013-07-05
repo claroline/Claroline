@@ -116,9 +116,6 @@ class Message
      */
     protected $senderUsername;
 
-    /**
-     * @ORM\Column(type="string", name="receiver_string")
-     */
     protected $to;
 
     public function __construct()
@@ -237,14 +234,4 @@ class Message
         return $this->senderUsername;
     }
 
-    // NOT NEEDED ? -> to()
-    public function setReceiverString($receiverString)
-    {
-        $this->receiverString = $receiverString;
-    }
-
-    public function getReceiverString()
-    {
-        return $this->receiverString;
-    }
 }

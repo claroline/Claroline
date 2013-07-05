@@ -37,11 +37,11 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
     {
         // resource type attributes : name, listable, navigable, class
         $resourceTypes = array(
-            array('file', false, true, 'Claroline\CoreBundle\Entity\Resource\File'),
-            array('directory', true, true, 'Claroline\CoreBundle\Entity\Resource\Directory'),
-            array('text', false, true, 'Claroline\CoreBundle\Entity\Resource\Text'),
-            array('resource_shortcut', false, false, 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut'),
-            array('activity', false, true, 'Claroline\CoreBundle\Entity\Resource\Activity')
+            array('file', true, 'Claroline\CoreBundle\Entity\Resource\File'),
+            array('directory', true, 'Claroline\CoreBundle\Entity\Resource\Directory'),
+            array('text', true, 'Claroline\CoreBundle\Entity\Resource\Text'),
+            array('resource_shortcut', false, 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut'),
+            array('activity', true, 'Claroline\CoreBundle\Entity\Resource\Activity')
         );
 
         $i = 0;
@@ -49,9 +49,8 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
         foreach ($resourceTypes as $attributes) {
             $type = new ResourceType();
             $type->setName($attributes[0]);
-            $type->setBrowsable($attributes[1]);
-            $type->setExportable($attributes[2]);
-            $type->setClass($attributes[3]);
+            $type->setExportable($attributes[1]);
+            $type->setClass($attributes[2]);
             $manager->persist($type);
 
             if (isset($customActions[$i])) {
