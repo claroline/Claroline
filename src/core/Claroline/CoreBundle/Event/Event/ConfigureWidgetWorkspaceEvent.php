@@ -8,11 +8,12 @@ use Symfony\Component\EventDispatcher\Event;
 /**
  * Event dispatched when a widget is configured.
  */
-class ConfigureWidgetWorkspaceEvent extends Event
+class ConfigureWidgetWorkspaceEvent extends Event implements DataConveyorEventInterface
 {
     private $workspace;
     private $content;
     private $isDefault;
+    private $isPopulated = false;
 
     /**
      * Constructor.
@@ -37,6 +38,7 @@ class ConfigureWidgetWorkspaceEvent extends Event
 
     public function setContent($content)
     {
+        $this->isPopulated = true;
         $this->content = $content;
     }
 
@@ -53,5 +55,9 @@ class ConfigureWidgetWorkspaceEvent extends Event
     public function setDefault($bool)
     {
         $this->isDefault = $bool;
+    }
+    
+    public function isPopulated() {
+        return $this->isPopulated;
     }
 }
