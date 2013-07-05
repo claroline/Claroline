@@ -15,18 +15,18 @@ $config = Yaml::parse(file_get_contents($prodConfigFile));
 $config['monolog'] = array(
     'handlers' => array(
         'main' => array(
+            'type' => 'fingers_crossed',
+            'action_level' => 'error',
+            'handler' => 'grouped'
+        ),
+        'grouped' => array(
+            'type' => 'group',
+            'members' => '[streamed, buffered]'
+        ),
+        'streamed' => array(
             'type' => 'stream',
             'path' => '%kernel.logs_dir%/%kernel.environment%.log',
             'level' => 'debug'
-        ),
-        'firephp' => array(
-            'type' => 'firephp',
-            'level' => 'info'
-        ),
-        'mail' => array(
-            'type' => 'fingers_crossed',
-            'action_level' => 'critical',
-            'handler' => 'buffered'
         ),
         'buffered' => array(
             'type' =>  'buffer',
