@@ -11,12 +11,12 @@ use Claroline\CoreBundle\Entity\Role;
 class ToolRepository extends EntityRepository
 {
     /**
-     * Returns the visible tools list for an array of role for a workspace.
+     * Returns the workspace tools visible by a set of roles.
      *
-     * @param array $roles
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param array             $roles
+     * @param AbstractWorkspace $workspace
      *
-     * @return array
+     * @return array[Tool]
      *
      * @throws \RuntimeException
      */
@@ -31,30 +31,31 @@ class ToolRepository extends EntityRepository
         }
 
         if (!$isAdmin) {
-
             if (null === $firstRole = array_shift($roles)) {
                 throw new \RuntimeException('The roles array cannot be empty');
             }
 
-            $dql = "SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool
+            $dql = "
+                SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool
                 JOIN tool.orderedTools ot
                 JOIN ot.workspace ws
                 JOIN ot.roles role
-                WHERE role.name = '{$firstRole}' and ws.id = {$workspace->getId()}";
+                WHERE role.name = '{$firstRole}' and ws.id = {$workspace->getId()}
+            ";
 
             foreach ($roles as $role) {
                 $dql .= " OR role.name = '{$role}' and ws.id = {$workspace->getId()}";
             }
 
-            $dql .= " ORDER BY ot.order";
-        }
-        else {
-            $dql = "
+            $dql .= ' ORDER BY ot.order';
+        } else {
+            $dql = '
                 SELECT tool
                 FROM Claroline\CoreBundle\Entity\Tool\Tool tool
                 WHERE tool.isDisplayableInWorkspace = true
-            ";
+            ';
         }
+
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
@@ -63,9 +64,9 @@ class ToolRepository extends EntityRepository
     /**
      * Returns the visible tools in a user's desktop.
      *
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param User $user
      *
-     * @return array
+     * @return array[Tool]
      */
     public function findDesktopDisplayedToolsByUser(User $user)
     {
@@ -84,9 +85,9 @@ class ToolRepository extends EntityRepository
     /**
      * Returns the non-visible tools in a user's desktop.
      *
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param User $user
      *
-     * @return array
+     * @return array[Tool]
      */
     public function findDesktopUndisplayedToolsByUser(User $user)
     {
@@ -107,6 +108,13 @@ class ToolRepository extends EntityRepository
         return $query->getResult();
     }
 
+    /**
+     * Returns the non-visible tools in a workspace.
+     *
+     * @param AbstractWorkspace $workspace
+     *
+     * @return array[Tool]
+     */
     public function findUndisplayedToolsByWorkspace(AbstractWorkspace $workspace)
     {
         $dql = "
@@ -125,6 +133,13 @@ class ToolRepository extends EntityRepository
         return $query->getResult();
     }
 
+    /**
+     * Returns the visible tools in a workspace.
+     *
+     * @param AbstractWorkspace $workspace
+     *
+     * @return array[Tool]
+     */
     public function findDisplayedToolsByWorkspace(AbstractWorkspace $workspace)
     {
         $dql = "
@@ -139,6 +154,13 @@ class ToolRepository extends EntityRepository
         return $query->getResult();
     }
 
+    /**
+     * Returns the number of tools visible in a workspace.
+     *
+     * @param AbstractWorkspace $workspace
+     *
+     * @return integer
+     */
     public function countDisplayedToolsByWorkspace(AbstractWorkspace $workspace)
     {
         $dql = "

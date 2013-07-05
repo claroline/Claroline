@@ -286,6 +286,21 @@ abstract class AltRepositoryTestCase extends WebTestCase
         self::create("orderedTool/{$workspace->getName()}-{$tool->getName()}", $orderedTool);
     }
 
+    protected static function createDesktopTool(
+        Tool $tool,
+        User $user,
+        $position
+    )
+    {
+        $orderedTool = new OrderedTool();
+        $orderedTool->setName($tool->getName());
+        $orderedTool->setTool($tool);
+        $orderedTool->setUser($user);
+        $orderedTool->setOrder($position);
+
+        self::create("orderedTool/{$user->getUsername()}-{$tool->getName()}", $orderedTool);
+    }
+
     protected static function createMessage(
         $alias,
         User $sender,
