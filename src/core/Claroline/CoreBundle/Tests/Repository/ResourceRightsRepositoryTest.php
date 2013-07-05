@@ -2,66 +2,61 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
+use Claroline\CoreBundle\Library\Testing\AltRepositoryTestCase;
 
-class ResourceRightsRepositoryTest extends RepositoryTestCase
+class ResourceRightsRepositoryTest extends AltRepositoryTestCase
 {
-    /** @var \Claroline\CoreBundle\Repository\ResourceRightsRepository */
-    public static $repo;
-    public static $collaboratorRoleName;
-    public static $managerRoleName;
+    private static $repo;
 
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
-        self::loadPlatformRoleData();
-        self::$repo = self::$em->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
-        self::loadUserData(array('john' => 'user'));
-        self::loadDirectoryData('john', array('john/dir1'));
-        self::$collaboratorRoleName = 'ROLE_WS_COLLABORATOR_'.self::getWorkspace('john')->getId();
-        self::$managerRoleName = 'ROLE_WS_MANAGER_'.self::getWorkspace('john')->getId();
+        self::$repo = self::getRepository('ClarolineCoreBundle:Resource\ResourceRights');
+
+        self::createWorkspace('ws_1');
+        self::createRole('ROLE_ADMIN');
+        self::createRole('ROLE_1', self::get('ws_1'));
+        self::createRole('ROLE_2', self::get('ws_1'));
+        self::createUser('john', array(self::get('ROLE_1')));
+        self::createResourceType('t_dir');
+        self::createDirectory('dir_1', self::get('t_dir'), self::get('john'), self::get('ws_1'));
+        self::createDirectory('dir_2', self::get('t_dir'), self::get('john'), self::get('ws_1'), self::get('dir_1'));
+        self::createResourceRights(self::get('ROLE_1'), self::get('dir_1'), array('open'));
+        self::createResourceRights(self::get('ROLE_1'), self::get('dir_2'), array('open'));
+        self::createResourceRights(self::get('ROLE_2'), self::get('dir_1'), array('edit'), array(self::get('t_dir')));
     }
 
     public function testFindMaximumRights()
     {
-        $rights = self::$repo->findMaximumRights(
-            array(self::$collaboratorRoleName, self::$managerRoleName), self::getDirectory('john')
-        );
-        $this->assertEquals(1, $rights['canEdit']);
-        $rights = self::$repo->findMaximumRights(array(self::$collaboratorRoleName), self::getDirectory('john'));
+        $rights = self::$repo->findMaximumRights(array('ROLE_1'), self::get('dir_1'));
         $this->assertEquals(0, $rights['canEdit']);
+        $rights = self::$repo->findMaximumRights(array('ROLE_1', 'ROLE_2'), self::get('dir_1'));
+        $this->assertEquals(1, $rights['canEdit']);
     }
 
     public function testFindCreationRights()
     {
-        $creationRights = self::$repo->findCreationRights(array(self::$collaboratorRoleName), self::getDirectory('john'));
+        $creationRights = self::$repo->findCreationRights(array('ROLE_1'), self::get('dir_1'));
         $this->assertEquals(0, count($creationRights));
-        $creationRights = self::$repo->findCreationRights(array(self::$managerRoleName), self::getDirectory('john'));
-        $this->assertEquals(5, count($creationRights));
-        $creationRights = self::$repo->findCreationRights(
-            array(self::$managerRoleName, self::$collaboratorRoleName), self::getDirectory('john')
-        );
-        $this->assertEquals(5, count($creationRights));
+        $creationRights = self::$repo->findCreationRights(array('ROLE_1', 'ROLE_2'), self::get('dir_1'));
+        $this->assertEquals(1, count($creationRights));
+        $this->assertEquals('t_dir', $creationRights[0]['name']);
     }
 
     public function testFindNonAdminRights()
     {
-        $rights = self::$repo->findNonAdminRights(self::getDirectory('john'));
-        $this->assertEquals(4, count($rights));
+        $this->markTestSkipped('That method will disappear soon');
     }
 
     public function testFindRecursiveByResource()
     {
-        $rights =  self::$repo->findRecursiveByResource(self::getDirectory('john'));
-        $this->assertEquals(10, count($rights));
+        $rights =  self::$repo->findRecursiveByResource(self::get('dir_1'));
+        $this->assertEquals(3, count($rights));
     }
 
     public function testFindRecursiveByResourceAndRole()
     {
-        $rights =  self::$repo->findRecursiveByResourceAndRole(
-            self::getDirectory('john'),
-            self::$em->getRepository('ClarolineCoreBundle:Role')->findOneByName(self::$collaboratorRoleName)
-        );
+        $rights =  self::$repo->findRecursiveByResourceAndRole(self::get('dir_1'), self::get('ROLE_1'));
         $this->assertEquals(2, count($rights));
     }
 }
