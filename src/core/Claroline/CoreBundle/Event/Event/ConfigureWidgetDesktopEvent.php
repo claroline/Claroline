@@ -7,10 +7,11 @@ use Symfony\Component\EventDispatcher\Event;
 /**
  * Event dispatched when a widget is configured.
  */
-class ConfigureWidgetDesktopEvent extends Event
+class ConfigureWidgetDesktopEvent extends Event implements DataConveyorEventInterface
 {
     private $user;
     private $content;
+    private $isPopulated;
 
     /**
      * Constructor.
@@ -47,6 +48,9 @@ class ConfigureWidgetDesktopEvent extends Event
     {
         return $this->isDefault;
     }
-
+    
+    public function isPopulated() {
+       
+    }
 }
 

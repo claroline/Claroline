@@ -43,9 +43,11 @@ class DesktopController extends Controller
 
         foreach ($configs as $config) {
             if ($config->isVisible()) {
-                $eventName = "widget_{$config->getWidget()->getName()}_desktop";
-                $event = new DisplayWidgetEvent();
-                $this->get('event_dispatcher')->dispatch($eventName, $event);
+                
+                $event = $this->get('claroline.event.event_dispatcher')->dispatch(
+                        "widget_{$config->getWidget()->getName()}_desktop", 
+                        'DisplayWidget'
+                    );
 
                 if ($event->hasContent()) {
                     $widget['id'] = $config->getWidget()->getId();
