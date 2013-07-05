@@ -319,9 +319,9 @@ class ResourceQueryBuilder
     }
 
     /**
-     * Filters resources that are shortcuts and select their target.
+     * Filters resources that are shortcuts and selects their target.
      *
-     * @return \Claroline\CoreBundle\Repository\ResourceQueryBuilder
+     * @return ResourceQueryBuilder
      */
     public function whereIsShortcut()
     {

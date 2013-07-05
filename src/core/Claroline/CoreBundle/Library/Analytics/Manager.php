@@ -77,7 +77,7 @@ class Manager
         switch ($top_type) {
             case "top_extension":
                 $repository = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
-                $listData = $repository->mimeTypesWithMostResources ($max);
+                $listData = $repository->findMimeTypesWithMostResources ($max);
                 break;
             case "top_workspaces_resources":
                 $repository = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');

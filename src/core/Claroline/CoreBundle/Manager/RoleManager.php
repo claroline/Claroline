@@ -10,6 +10,8 @@ use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Database\Writer;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -19,19 +21,22 @@ class RoleManager
 {
     private $writer;
     private $roleRepo;
+    private $sc;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
      *     "writer"   = @DI\Inject("claroline.database.writer"),
-     *     "roleRepo" = @DI\Inject("role_repository")
+     *     "roleRepo" = @DI\Inject("role_repository"),
+     *     "sc" =       @DI\Inject("security.context"),
      * })
      */
-    public function __construct(Writer $writer, RoleRepository $roleRepo)
+    public function __construct(Writer $writer, RoleRepository $roleRepo, SecurityContext $sc)
     {
         $this->writer = $writer;
         $this->roleRepo = $roleRepo;
+        $this->sc = $sc;
     }
 
     public function createWorkspaceRole($name, $translationKey, AbstractWorkspace $workspace, $isReadOnly = false)
@@ -54,7 +59,7 @@ class RoleManager
         $role->setName($name);
         $role->setTranslationKey($translationKey);
         $role->setReadOnly($isReadOnly);
-        $role->setType(Role::BASE_ROLE);
+        $role->setType(Role::PLATFORM_ROLE);
 
         $this->writer->create($role);
 
@@ -202,5 +207,30 @@ class RoleManager
     public function getAllRoles()
     {
         return $this->roleRepo->findAll();
+    }
+
+    public function getStringRolesFromCurrentUser()
+    {
+        return $this->getStringRolesFromToken($this->sc->getToken());
+    }
+
+    /**
+     * Returns the roles (an array of string) of the $token.
+     *
+     * @todo remove this $method
+     *
+     * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
+     *
+     * @return array
+     */
+    public function getStringRolesFromToken(TokenInterface $token)
+    {
+        $roles = array();
+
+        foreach ($token->getRoles() as $role) {
+            $roles[] = $role->getRole();
+        }
+
+        return $roles;
     }
 }

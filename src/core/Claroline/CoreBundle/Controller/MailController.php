@@ -2,13 +2,40 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Form\MailType;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\DiExtraBundle\Annotation as DI;
 
 class MailController extends Controller
 {
+    private $formFactory;
+
+    /**
+<<<<<<< HEAD
+     * @EXT\Route(
+||||||| merged common ancestors
+     * @Route(
+=======
+     * @DI\InjectParams({
+     *     "formFactory" = @DI\Inject("claroline.form.factory"),
+     *     "request"     = @DI\Inject("request"),
+     *     "mailer"      = @DI\Inject("mailer")
+     * })
+     */
+    public function __construct(
+        FormFactory $formFactory,
+        Request $request,
+        \Swift_Mailer $mailer
+    )
+    {
+        $this->formFactory = $formFactory;
+        $this->request = $request;
+        $this->mailer = $mailer;
+    }
+
     /**
      * @EXT\Route(
      *     "/form/{userId}",
@@ -29,10 +56,8 @@ class MailController extends Controller
      */
     public function formAction(User $user)
     {
-        $form = $this->createForm(new MailType());
-
         return array(
-            'form' => $form->createView(),
+            'form' => $this->formFactory->create(FormFactory::TYPE_MAIL)->createView(),
             'userId' => $user->getId()
         );
     }
@@ -51,15 +76,14 @@ class MailController extends Controller
      *
      * Handles the mail form submission (sends a mail).
      *
-     * @param integer $userId
+     * @param User $user
      *
      * @return Response
      */
     public function sendAction(User $user)
     {
-        $request = $this->get('request');
-        $form = $this->get('form.factory')->create(new MailType());
-        $form->handleRequest($request);
+        $form = $this->formFactory->create(FormFactory::TYPE_MAIL);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $data = $form->getData();
@@ -68,7 +92,7 @@ class MailController extends Controller
                 ->setFrom('noreply@claroline.net')
                 ->setTo($user->getMail())
                 ->setBody($data['content'], 'text/html');
-            $this->get('mailer')->send($message);
+            $this->mailer->send($message);
         }
 
         // add success/error message...

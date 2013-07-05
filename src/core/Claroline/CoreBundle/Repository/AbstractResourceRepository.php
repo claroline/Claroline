@@ -192,7 +192,6 @@ class AbstractResourceRepository extends MaterializedPathRepository
      * @param array $roles         An array of user's roles
      * @param boolean $isRecursive Will the search follow links.
      *
-     *
      * @return array[array] An array of resources represented as arrays
      */
     public function findByCriteria(array $criteria, array $roles = null, $isRecursive = false)
@@ -225,49 +224,49 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
     /**
      * Returns an array of different file types with the number of resources that
-     * belong in this type
+     * belong to this type.
+     *
+     * @param integer $max
      *
      * @return array
      */
-    public function  mimeTypesWithMostResources ($max)
+    public function findMimeTypesWithMostResources($max)
     {
-        $qb = $this
-            ->createQueryBuilder('resource')
-            ->select('resource.mimeType, COUNT(resource.id) AS total');
+        $qb = $this->createQueryBuilder('resource');
+        $qb->select('resource.mimeType, COUNT(resource.id) AS total')
+            ->where($qb->expr()->isNotNull('resource.mimeType'))
+            ->groupBy('resource.mimeType')
+            ->orderBy('total', 'DESC');
 
-        $qb->andWhere($qb->expr()->isNotNull('resource.mimeType'))
-        ->groupBy('resource.mimeType')
-        ->orderBy('total','DESC');
-        if ($max >1)
-        {
+        if ($max > 1) {
             $qb->setMaxResults($max);
         }
-        $query = $qb->getQuery();
 
-        return $query->getResult();
+        return $qb->getQuery()->getResult();
     }
 
-    public function findWorkspaceInfoByIds(array $resourcesId)
+    /**
+     * Returns the workspace name and code of the resources whose ids are passed
+     * as argument.
+     *
+     * @param array $resourceIds
+     *
+     * @return array
+     *
+     * @throws \InvalidArgumentException if the resource ids array is empty
+     */
+    public function findWorkspaceInfoByIds(array $resourceIds)
     {
-        if (count($resourcesId) === 0) {
-            throw new \InvalidArgumentException("Array argument cannot be empty");
+        if (count($resourceIds) === 0) {
+            throw new \InvalidArgumentException('Resource ids array cannot be empty');
         }
 
-        $index = 0;
-        $eol = PHP_EOL;
-        $resourcesIdTest = "(";
-
-        foreach ($resourcesId as $resId) {
-            $resourcesIdTest .= $index > 0 ? "    OR " : "    ";
-            $resourcesIdTest .= "r.id = {$resId}{$eol}";
-            $index++;
-        }
-        $resourcesIdTest .= "){$eol}";
+        $ids = implode(', ', $resourceIds);
         $dql = "
             SELECT r.id AS id, w.code AS code, w.name AS name
             FROM Claroline\CoreBundle\Entity\Resource\AbstractResource r
             JOIN r.workspace w
-            WHERE {$resourcesIdTest}
+            WHERE r.id IN ({$ids})
             ORDER BY w.name ASC
         ";
         $query = $this->_em->createQuery($dql);
@@ -275,7 +274,17 @@ class AbstractResourceRepository extends MaterializedPathRepository
         return $query->getResult();
     }
 
-    public function findRecursiveDirectoryShortcuts(array $criteria, array $roles = null, $alreadyFound = array())
+    /**
+     * Returns all the shortcuts targeting a directory (recursive).
+     *
+     * @param array $criteria
+     * @param array $roles
+     *
+     * @return array[array] An array of resources represented as arrays
+     *
+     * @todo find a proper way to prevent infinite recursion
+     */
+    public function findRecursiveDirectoryShortcuts(array $criteria, array $roles = null)
     {
         $builder = new ResourceQueryBuilder();
         $builder->selectAsArray();
@@ -287,11 +296,8 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
         foreach ($results as $result) {
             $criteria['roots'] = array($result['target_path']);
-            //Infinite loops are evil.
-            if (!in_array($result, $alreadyFound)) {
-                $results = array_merge($this->findRecursiveDirectoryShortcuts($criteria, $roles, $results), $results);
-                $results = array_map("unserialize", array_unique(array_map("serialize", $results)));
-            }
+            $results = array_merge($this->findRecursiveDirectoryShortcuts($criteria, $roles, $results), $results);
+            $results = array_map('unserialize', array_unique(array_map('serialize', $results)));
         }
 
         return $results;
