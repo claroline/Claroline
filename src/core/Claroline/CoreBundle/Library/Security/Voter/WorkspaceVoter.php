@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Library\Security\Voter;
 
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Library\Security\Utilities;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
@@ -21,19 +22,27 @@ class WorkspaceVoter implements VoterInterface
     private $em;
     private $translator;
     private $ut;
+    private $roleManager;
 
     /**
      * @DI\InjectParams({
-     *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "translator" = @DI\Inject("translator"),
-     *     "ut" = @DI\Inject("claroline.security.utilities")
+     *     "em"             = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "translator"     = @DI\Inject("translator"),
+     *     "ut"             = @DI\Inject("claroline.security.utilities"),
+     *     "roleManager"    = @DI\Inject("claroline.manager.role_manager")
      * })
      */
-    public function __construct(EntityManager $em, Translator $translator, Utilities $ut)
+    public function __construct(
+        EntityManager $em,
+        Translator $translator,
+        Utilities $ut,
+        RoleManager $roleManager
+    )
     {
         $this->em = $em;
         $this->translator = $translator;
         $this->ut = $ut;
+        $this->roleManager = $roleManager;
     }
 
     public function vote(TokenInterface $token, $object, array $attributes)
@@ -70,7 +79,7 @@ class WorkspaceVoter implements VoterInterface
      */
     private function canDo(AbstractWorkspace $workspace, TokenInterface $token, $action)
     {
-        $manager = $this->em->getRepository('ClarolineCoreBundle:Role')->findManagerRole($workspace);
+        $manager = $this->roleManager->getManagerRole($workspace);
         $roles = $this->ut->getRoles($token);
 
         if ($action === 'DELETE') {

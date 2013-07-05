@@ -72,7 +72,7 @@ class ResourceRightsController extends Controller
             }
         }
 
-        $datas = $this->get('claroline.workspace.organizer')->getDatasForWorkspaceList(true);
+        $datas = $this->get('claroline.manager.workspace_tag_manager')->getDatasForWorkspaceList(true);
 
         $template = $resource->getResourceType()->getName() === 'directory' ?
             'ClarolineCoreBundle:Resource:rightsFormDirectory.html.twig' :
