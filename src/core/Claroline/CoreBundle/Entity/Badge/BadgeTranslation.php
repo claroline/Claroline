@@ -55,7 +55,7 @@ class BadgeTranslation
      * @var string $slug
      *
      * @Gedmo\Slug(fields={"name"})
-     * @ORM\Column(type="string", length=128, unique=true, nullable=true)
+     * @ORM\Column(type="string", length=128, unique=true, nullable=false)
      */
     protected $slug;
 
