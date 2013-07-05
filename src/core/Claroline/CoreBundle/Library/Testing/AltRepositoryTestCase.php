@@ -14,6 +14,8 @@ use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
+use Claroline\CoreBundle\Entity\Resource\Activity;
+use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Message;
@@ -166,6 +168,39 @@ abstract class AltRepositoryTestCase extends WebTestCase
         $shortcut->setResourceType($type);
         $shortcut->setMimeType('shortcut/mime');
         self::create($name, $shortcut);
+    }
+
+    protected static function createActivity(
+        $name,
+        ResourceType $type,
+        User $creator,
+        array $resources,
+        Directory $parent
+    )
+    {
+        $activity = new Activity();
+        $activity->setName($name);
+        $activity->setInstructions('Some instructions...');
+        $activity->setResourceType($type);
+        $activity->setCreator($creator);
+        $activity->setWorkspace($parent->getWorkspace());
+        $activity->setParent($parent);
+        self::$writer->suspendFlush();
+
+        for ($i = 0, $count = count($resources); $i < $count; ++$i) {
+            $activityResource = new ResourceActivity();
+            $activityResource->setActivity($activity);
+            $activityResource->setResource($resources[$i]);
+            $activityResource->setSequenceOrder($i);
+            self::create(
+                'activityResource/' . $name . '-' . $resources[$i]->getName(),
+                $activityResource
+            );
+            $activity->addResourceActivity($activityResource);
+        }
+
+        self::create($name, $activity);
+        self::$writer->forceFlush();
     }
 
     protected static function createResourceRights(
