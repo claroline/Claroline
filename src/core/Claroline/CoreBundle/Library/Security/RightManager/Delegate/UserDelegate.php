@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Library\Security\RightManager\Delegate;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\Security\SecurityException;
+use Claroline\CoreBundle\Manager\UserManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -14,19 +15,18 @@ class UserDelegate implements SubjectDelegateInterface
 {
     /** @var EntityManager */
     private $em;
-
-    /** @var UserRepository */
-    private $userRepository;
+    private $userManager;
 
     /**
      * @DI\InjectParams({
-     *     "em" = @DI\Inject("doctrine.orm.entity_manager")
+     *     "em"             = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "userManager"    = @DI\Inject("claroline.manager.user_manager")
      * })
      */
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, UserManager $userManager)
     {
         $this->em = $em;
-        $this->userRepository = $this->em->getRepository('ClarolineCoreBundle:User');
+        $this->userManager = $userManager;
     }
 
     public function buildSecurityIdentity($subject)
@@ -43,8 +43,8 @@ class UserDelegate implements SubjectDelegateInterface
 
     public function buildSubject($sid)
     {
-        $userName = $sid->getUsername();
-        $user = $this->userRepository->findOneByUsername($userName);
+        $username = $sid->getUsername();
+        $user = $this->userManager->getUserByUsername($username);
 
         return $user;
     }
