@@ -298,7 +298,7 @@ class Badge
      * @throws \InvalidArgumentException
      * @return string
      */
-    public function getCriteria($locale)
+    public function getCriteria($locale = null)
     {
         if(null === $locale) {
             $locale = $this->getLocale();

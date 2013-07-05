@@ -6,13 +6,13 @@
             <div class="dropdown">
                 <a class="dropdown-toggle btn" id="select_group_list" role="button" data-toggle="dropdown" href="#">Sélection des groupes <i class="icon-chevron-up"></i></a>
                 <ul id="group_list" class="dropdown-menu" role="list" aria-labelledby="select_group_list">
-                    {% for group in groups %}
-                        <li>
-                            <a role="menuitem" tabindex="-1" href="#">
-                                <label class="checkbox"><input type="checkbox" name="selected_groups" value="{{ group.id }}"> {{ group.name }}</label>
-                            </a>
-                        </li>
-                    {% endfor %}
+                {% for group in groups %}
+                    <li data-group-id="{{ group.id }}">
+                        <a role="listitem" tabindex="-1" href="#">
+                            <label class="checkbox"><input type="checkbox" name="selected_groups" value="{{ group.id }}"> {{ group.name }}</label>
+                        </a>
+                    </li>
+                {% endfor %}
                 </ul>
             </div>
         </div>
@@ -28,9 +28,9 @@
 
                 <tbody>
                 {% for user in users %}
-                    <tr>
+                    <tr class="{% for group in user.groups %}group{{ group.id }} {% else %}no_group {% endfor %}">
                         <td><input type="checkbox" name="selectd_users" value="{{ user.id }}" /></td>
-                        <td>{{ user.firstname }}</td>
+                        <td>{{ user.firstname }} {{ userGroupsClass }}</td>
                         <td>{{ user.lastname }}</td>
                     </tr>
                 {% endfor %}
@@ -38,4 +38,34 @@
             </table>
         </div>
     </form>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script type="text/javascript">
+    $('#select_group_list').click(function () {
+        var dropDownParent = $(this).parent('.dropdown');
+        var icon           = $('i', this);
+
+        if(!dropDownParent.hasClass('open')) {
+            icon.removeClass('icon-chevron-up');
+            icon.addClass('icon-chevron-down');
+        }
+        else {
+            icon.removeClass('icon-chevron-down');
+            icon.addClass('icon-chevron-up');
+        }
+    });
+
+    $('#group_list li').click(function(event) {
+        event.stopPropagation();
+        var checkbox = $('input[type=checkbox]', this);
+        checkbox.prop("checked", !checkbox.prop("checked"));
+
+        var isChecked = checkbox.prop("checked");
+
+        var userGroupCheckbox = $('.group' + $(this).attr('data-group-id'));
+        $('input[type=checkbox]', userGroupCheckbox).prop("checked", isChecked);
+    });
+</script>
 {% endblock %}
