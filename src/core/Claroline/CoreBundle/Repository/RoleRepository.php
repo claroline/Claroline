@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\User;
@@ -24,7 +25,6 @@ class RoleRepository extends EntityRepository
             JOIN r.workspace ws
             WHERE ws.id = {$workspace->getId()}
         ";
-
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
