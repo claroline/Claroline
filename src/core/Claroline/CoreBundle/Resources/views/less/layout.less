@@ -505,6 +505,27 @@ footer {
     overflow: auto;
 }
 
+.user_badges {
+    li {
+        a:hover {
+            &> span {
+                background-color: #333333;
+            }
+        }
+
+        &:hover {
+            .close {
+                display: block;
+            }
+        }
+
+        .close {
+            display:    none;
+            margin-top: -10px;
+        }
+    }
+}
+
 /* Special grid styles
 -------------------------------------------------- */
 

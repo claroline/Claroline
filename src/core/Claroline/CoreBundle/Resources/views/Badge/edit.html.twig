@@ -33,9 +33,9 @@
                     <a href="{{ path('claro_admin_badges_attribute', {'id': badge.id}) }}" id="attributeUser" role="button" class="btn pull-right" data-toggle="tooltip" data-placement="left" title="{{ 'attribute_badge'|trans({}, 'platform') }}"><i class="icon-plus-sign"></i></a>
                 </h3>
 
-                <ul class="unstyled inline">
+                <ul class="unstyled inline user_badges">
                     {% for user in badge.users %}
-                    <li><span class="label">{{ user.lastname }} {{ user.firstname }}</span></li>
+                    <li><a href="#"><span class="label">{{ user.lastname }} {{ user.firstname }}</span></a><a class="close" href="#"><i class="icon-remove-circle"></i></a></li>
                     {% else %}
                     <li>{{ 'bagde_attribute_to_none_user'|trans({}, 'platform') }}.</li>
                     {% endfor %}
