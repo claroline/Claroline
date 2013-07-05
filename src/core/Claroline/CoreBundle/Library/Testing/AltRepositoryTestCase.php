@@ -14,6 +14,8 @@ use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
+use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Message;
 use Claroline\CoreBundle\Entity\UserMessage;
 
@@ -180,7 +182,36 @@ abstract class AltRepositoryTestCase extends WebTestCase
             $rights->{$method}(true);
         }
 
-        self::create("{resource_right/{$role->getName()}-{$resource->getName()}" , $rights);
+        self::create("resource_right/{$role->getName()}-{$resource->getName()}" , $rights);
+    }
+
+    protected static function createTool($name)
+    {
+        $tool = new Tool();
+        $tool->setName($name);
+        $tool->setDisplayName($name);
+        $tool->setClass($name . 'Class');
+        self::create($name, $tool);
+    }
+
+    protected static function createWorkspaceTool(
+        Tool $tool,
+        AbstractWorkspace $workspace,
+        array $roles,
+        $position
+    )
+    {
+        $orderedTool = new OrderedTool();
+        $orderedTool->setName($tool->getName());
+        $orderedTool->setTool($tool);
+        $orderedTool->setWorkspace($workspace);
+        $orderedTool->setOrder($position);
+
+        foreach ($roles as $role) {
+            $orderedTool->addRole($role);
+        }
+
+        self::create("orderedTool/{$workspace->getName()}-{$tool->getName()}", $orderedTool);
     }
 
     protected static function createMessage(
