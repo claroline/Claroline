@@ -1,0 +1,51 @@
+{% extends 'ICAPLessonBundle:Lesson:layout.html.twig' %}
+
+{% block lesson_content %}
+    <style>
+        #icap_lesson_chaptertype_title {
+            width: 80%;
+        }
+        #icap_lesson_chaptertype_text {
+            width: 80%;
+            max-width: 80%;
+            min-height: 150px;
+        }
+    </style>
+
+    <form method="POST" action="{{ path('icap_lesson_move_chapter', { 'resourceId': lesson.id, 'chapterId': chapter.id }) }}" class="form-horizontal">
+
+        <fieldset>
+
+            <legend>{{ 'Chapter Move'|trans({}, 'icap_lesson') }}</legend>
+
+            <div class="control-group">
+
+                <label class="control-label" for="icap_lesson_chaptertype_title">{{ 'Title'|trans({}, 'icap_lesson') }}</label>
+
+                <div class="controls">
+                    {{ form_widget(form.title) }}
+                </div>
+
+            </div>
+
+            <div class="control-group">
+
+                {{ form_row(form.choiceChapter) }}
+                {{ form_row(form.brother) }}
+
+            </div>
+            {{ form_rest(form) }}
+
+        </fieldset>
+        {{ macros.flashBox() }}
+
+        <div class="form-actions">
+
+            <button type="submit" class="btn btn-primary">{{ 'Ok'|trans({}, 'icap_lesson') }}</button>
+
+            <a href="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': chapter.id }) }}"><button type="button" class="btn">{{ 'Cancel'|trans({}, 'icap_lesson') }}</button></a>
+        </div>
+
+    </form>
+
+{% endblock %}

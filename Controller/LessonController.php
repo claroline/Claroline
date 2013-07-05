@@ -3,6 +3,7 @@
 namespace ICAP\LessonBundle\Controller;
 
 use ICAP\LessonBundle\Form\ChapterType;
+use ICAP\LessonBundle\Form\MoveChapterType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -312,6 +313,89 @@ class LessonController extends Controller
             'lesson' => $lesson,
             'form' => $form->createView(),
 
+            'workspace' => $lesson->getWorkspace(),
+            'pathArray' => $lesson->getPathArray()
+        );
+    }
+
+
+    /**
+     *
+     * @Route(
+     *      "choice-move/{resourceId}/{chapterId}",
+     *      name="icap_lesson_choice_move_chapter",
+     *      requirements={"resourceId" = "\d+", "chapterId" = "\d+"}
+     * )
+     * @Template()
+     */
+    public function choiceMoveChapterAction($resourceId, $chapterId)
+    {
+        $lesson = $this->findLesson($resourceId);
+        $chapter = $this->findChapter($lesson, $chapterId);
+
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('ICAPLessonBundle:Chapter');
+        $chapters = $repo->children($lesson->getRoot());
+
+        $form = $this->createForm(new MoveChapterType(), $chapter,  array('chapters' => $chapters));
+        $form->handleRequest($this->getRequest());
+
+        return array(
+            'lesson' => $lesson,
+            'chapter' => $chapter,
+            'form' => $form->createView(),
+            'workspace' => $lesson->getWorkspace(),
+            'pathArray' => $lesson->getPathArray()
+        );
+    }
+
+    /**
+     *
+     * @Route(
+     *      "move/{resourceId}/{chapterId}",
+     *      name="icap_lesson_move_chapter",
+     *      requirements={"resourceId" = "\d+", "chapterId" = "\d+"}
+     * )
+     * @Method("POST")
+     * @Template("ICAPLessonBundle:Lesson:choiceMoveChapter.html.twig")
+     */
+    public function moveChapterAction($resourceId, $chapterId)
+    {
+        $translator = $this->get('translator');
+
+        $lesson = $this->findLesson($resourceId);
+        $chapter = $this->findChapter($lesson, $chapterId);
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('ICAPLessonBundle:Chapter');
+        $chapters = $repo->children($lesson->getRoot());
+
+        $form = $this->createForm(new MoveChapterType(), $chapter,  array('chapters' => $chapters));
+        $form->handleRequest($this->getRequest());
+
+        if ($form->isValid()) {
+            $newParentId = $form->get('choiceChapter')->getData();
+            $newParent = $this->findChapter($lesson, $newParentId);
+
+            $path = $repo->getPath($newParent);
+            foreach ($path as $currentParent) {
+                if ($currentParent->getId() == $chapterId) {
+                    throw new \InvalidArgumentException();
+                }
+            }
+            if ($form->get('brother')->getData() == true){
+                $repo->persistAsNextSiblingOf($chapter, $newParent);
+                $em->flush();
+            } else {
+                $repo->persistAsLastChildOf($chapter, $newParent);
+                $em->flush();
+            }
+            return $this->redirect($this->generateUrl('icap_lesson', array('resourceId' => $lesson->getId())));
+        }
+
+        return array(
+            'lesson' => $lesson,
+            'chapter' => $chapter,
+            'form' => $form->createView(),
             'workspace' => $lesson->getWorkspace(),
             'pathArray' => $lesson->getPathArray()
         );
