@@ -6,7 +6,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Event\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Entity\Event;
 use Claroline\CoreBundle\Form\CalendarType;
 
@@ -112,7 +112,7 @@ class ToolListener
     /**
      * @DI\Observe("open_tool_workspace_workgroup")
      *
-     * @param \Claroline\CoreBundle\Library\Event\DisplayToolEvent $event
+     * @param \Claroline\CoreBundle\Event\Event\DisplayToolEvent $event
      */
     public function onDisplayWorkgroup(DisplayToolEvent $event)
     {

@@ -61,7 +61,7 @@ class OrderedTool
     /**
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
-     *     inversedBy="roles"
+     *     inversedBy="orderedTools"
      * )
      * @ORM\JoinTable(
      *     name="claro_ordered_tool_role"
