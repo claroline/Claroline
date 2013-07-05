@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Message;
 use Claroline\CoreBundle\Entity\UserMessage;
+use Claroline\CoreBundle\Entity\Plugin;
 
 abstract class AltRepositoryTestCase extends WebTestCase
 {
@@ -257,6 +258,16 @@ abstract class AltRepositoryTestCase extends WebTestCase
         }
 
         self::$writer->forceFlush();
+    }
+
+    protected static function createPlugin($vendor, $bundle)
+    {
+        $plugin = new Plugin();
+        $plugin->setVendorName($vendor);
+        $plugin->setBundleName($bundle);
+        $plugin->setHasOptions(false);
+        $plugin->setIcon('default');
+        self::create($vendor . $bundle, $plugin);
     }
 
     private static function set($reference, $entity)
