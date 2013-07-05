@@ -25,6 +25,7 @@ parameters:
     mailer_encryption: ~
     mailer_auth_mode: ~
     mailer_host: ~
+    mailer_port: ~
     mailer_user: ~
     mailer_password: ~
 

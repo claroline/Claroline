@@ -12,7 +12,7 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Database\Writer;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
-use Claroline\CoreBundle\Library\Event\LogUserCreateEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogUserCreateEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -37,15 +37,15 @@ class UserManager
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "userRepo" = @DI\Inject("user_repository"),
-     *     "writer" = @DI\Inject("claroline.database.writer"),
-     *     "roleManager" = @DI\Inject("claroline.manager.role_manager"),
-     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "toolManager" = @DI\Inject("claroline.manager.tool_manager"),
-     *     "ed" = @DI\Inject("event_dispatcher"),
+     *     "userRepo" =               @DI\Inject("user_repository"),
+     *     "writer" =                 @DI\Inject("claroline.database.writer"),
+     *     "roleManager" =            @DI\Inject("claroline.manager.role_manager"),
+     *     "workspaceManager" =       @DI\Inject("claroline.manager.workspace_manager"),
+     *     "toolManager" =            @DI\Inject("claroline.manager.tool_manager"),
+     *     "ed" =                     @DI\Inject("event_dispatcher"),
      *     "personalWsTemplateFile" = @DI\Inject("%claroline.param.templates_directory%"),
-     *     "trans" = @DI\Inject("translator"),
-     *     "ch" = @DI\Inject("claroline.config.platform_config_handler")
+     *     "trans" =                  @DI\Inject("translator"),
+     *     "ch" =                     @DI\Inject("claroline.config.platform_config_handler")
      * })
      */
     public function __construct(

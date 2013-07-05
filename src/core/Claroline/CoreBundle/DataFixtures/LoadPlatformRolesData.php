@@ -7,7 +7,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 
 /**

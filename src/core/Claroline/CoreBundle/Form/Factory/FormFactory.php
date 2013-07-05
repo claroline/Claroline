@@ -20,6 +20,7 @@ class FormFactory
     const TYPE_USER_IMPORT = 'user_import';
     const TYPE_ADMIN_ANALYTICS_CONNECTIONS = 'admin_analytics_connections';
     const TYPE_ADMIN_ANALYTICS_TOP = 'admin_analytics_top';
+    const TYPE_MAIL = 'mail';
 
     private static $types = array(
         self::TYPE_MESSAGE => array(
@@ -58,6 +59,9 @@ class FormFactory
         ),
         self::TYPE_ADMIN_ANALYTICS_TOP => array(
             'formType' => 'Claroline\CoreBundle\Form\AdminAnalyticsTopType'
+        ),
+        self::TYPE_MAIL => array(
+            'formType' => 'Claroline\CoreBundle\Form\MailType'
         )
     );
 

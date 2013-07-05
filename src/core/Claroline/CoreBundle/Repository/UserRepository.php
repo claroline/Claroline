@@ -186,7 +186,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         if ($getQuery) {
             $dql = 'SELECT u, r, pws from Claroline\CoreBundle\Entity\User u
                         JOIN u.roles r WITH r IN (
-                        SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = '.Role::BASE_ROLE.'
+                        SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = '.Role::PLATFORM_ROLE.'
                         )
                         LEFT JOIN u.personalWorkspace pws';
 
@@ -236,7 +236,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             JOIN u.groups g
             JOIN u.personalWorkspace pw
             JOIN u.roles r WITH r IN (
-                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ".Role::BASE_ROLE."
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ".Role::PLATFORM_ROLE."
             )
             WHERE g.id = :groupId ORDER BY u.id";
 
@@ -255,7 +255,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             JOIN u.groups g
             JOIN u.personalWorkspace pw
             JOIN u.roles r WITH r IN (
-                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ".Role::BASE_ROLE."
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ".Role::PLATFORM_ROLE."
             )
             WHERE g.id = :groupId
             AND (UPPER(u.username) LIKE :search
@@ -328,7 +328,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             SELECT DISTINCT u, ws, r FROM Claroline\CoreBundle\Entity\User u
             JOIN u.personalWorkspace ws
             JOIN u.roles r WITH r IN (
-                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ".Role::BASE_ROLE."
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ".Role::PLATFORM_ROLE."
             )
             WHERE u NOT IN (
                 SELECT us FROM Claroline\CoreBundle\Entity\User us
@@ -351,7 +351,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             SELECT DISTINCT u, ws, r FROM Claroline\CoreBundle\Entity\User u
             JOIN u.personalWorkspace ws
             JOIN u.roles r WITH r IN (
-                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ".Role::BASE_ROLE."
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ".Role::PLATFORM_ROLE."
             )
             WHERE UPPER(u.lastName) LIKE :search
             AND u NOT IN (

@@ -7,10 +7,12 @@ use Claroline\CoreBundle\Database\Writer;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
+use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\AbstractResourceRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
+use Symfony\Component\Translation\Translator;
 
 /**
  * @DI\Service("claroline.manager.rights_manager")
@@ -27,16 +29,19 @@ class RightsManager
     private $resourceTypeRepo;
     /** @var Writer */
     private $writer;
+    /** @var Translator */
+    private $translator;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "rightsRepo" = @DI\Inject("resource_rights_repository"),
-     *     "resourceRepo" = @DI\Inject("resource_repository"),
-     *     "roleRepo" = @DI\Inject("role_repository"),
+     *     "rightsRepo" =       @DI\Inject("resource_rights_repository"),
+     *     "resourceRepo" =     @DI\Inject("resource_repository"),
+     *     "roleRepo" =         @DI\Inject("role_repository"),
      *     "resourceTypeRepo" = @DI\Inject("resource_type_repository"),
-     *     "writer" = @DI\Inject("claroline.database.writer")
+     *     "writer" =           @DI\Inject("claroline.database.writer"),
+     *     "translator" =       @DI\Inject("translator")
      * })
      */
     public function __construct(
@@ -44,7 +49,8 @@ class RightsManager
         AbstractResourceRepository $resourceRepo,
         RoleRepository $roleRepo,
         ResourceTypeRepository $resourceTypeRepo,
-        Writer $writer
+        Writer $writer,
+        Translator $translator
     )
     {
         $this->rightsRepo = $rightsRepo;
@@ -52,6 +58,7 @@ class RightsManager
         $this->roleRepo = $roleRepo;
         $this->resourceTypeRepo = $resourceTypeRepo;
         $this->writer = $writer;
+        $this->translator = $translator;
     }
 
     /**
@@ -78,6 +85,8 @@ class RightsManager
             $rights = new ResourceRights();
             $rights->setRole($role);
             $rights->setResource($resource);
+            $rights->setCreatableResourceTypes($creations);
+            $this->setPermissions($rights, $permissions);
             $this->writer->create($rights);
         }
 
@@ -112,7 +121,8 @@ class RightsManager
             if ($resource->getResourceType()->getName() === 'directory') {
                 $rights->setCreatableResourceTypes($originalRight->getCreatableResourceTypes()->toArray());
             }
-           $created[] = $this->writer->update($rights);
+
+           $created[] = $this->writer->create($rights);
        }
 
        return $created;
@@ -161,5 +171,19 @@ class RightsManager
         $rights->setCanExport($permissions['canExport']);
 
         return $rights;
+    }
+
+    public function getCreatableTypes(array $roles, Directory $directory)
+    {
+        $creatableTypes = array();
+        $creationRights = $this->rightsRepo->findCreationRights($roles, $directory);
+
+        if (count($creationRights) != 0) {
+            foreach ($creationRights as $type) {
+                $creatableTypes[$type['name']] = $this->translator->trans($type['name'], array(), 'resource');
+            }
+        }
+
+        return $creatableTypes;
     }
 }

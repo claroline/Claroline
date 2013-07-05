@@ -7,7 +7,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Event\LogUserUpdateEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogUserUpdateEvent;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;

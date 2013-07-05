@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Library\Testing;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
@@ -12,6 +13,9 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
+use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
+use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Message;
 use Claroline\CoreBundle\Entity\UserMessage;
 
@@ -65,13 +69,27 @@ abstract class AltRepositoryTestCase extends WebTestCase
         self::create($name, $user);
     }
 
+    protected static function createGroup($name, array $roles = array())
+    {
+        $group = new Group();
+        $group->setName($name);
+
+        foreach ($roles as $role) {
+            $group->addRole($role);
+        }
+
+        self::create($name, $group);
+    }
+
     protected static function createRole($name, AbstractWorkspace $workspace = null)
     {
         $role = new Role();
         $role->setName($name);
         $role->setTranslationKey($name);
+        $role->setType(Role::PLATFORM_ROLE);
 
         if ($workspace) {
+            $role->setType(Role::WS_ROLE);
             $role->setWorkspace($workspace);
         }
 
@@ -86,10 +104,11 @@ abstract class AltRepositoryTestCase extends WebTestCase
         self::create($name, $workspace);
     }
 
-    protected static function createResourceType($name)
+    protected static function createResourceType($name, $isExportable = true)
     {
         $type = new ResourceType();
         $type->setName($name);
+        $type->setExportable($isExportable);
         self::create($name, $type);
     }
 
@@ -106,6 +125,7 @@ abstract class AltRepositoryTestCase extends WebTestCase
         $directory->setCreator($creator);
         $directory->setWorkspace($workspace);
         $directory->setResourceType($type);
+        $directory->setMimeType('directory/mime');
 
         if ($parent) {
             $directory->setParent($parent);
@@ -114,7 +134,7 @@ abstract class AltRepositoryTestCase extends WebTestCase
         self::create($name, $directory);
     }
 
-    protected static function createFile($name, ResourceType $type, User $creator,  Directory $parent)
+    protected static function createFile($name, ResourceType $type, User $creator, Directory $parent)
     {
         $file = new File();
         $file->setName($name);
@@ -124,7 +144,27 @@ abstract class AltRepositoryTestCase extends WebTestCase
         $file->setSize(123);
         $file->setHashName($name);
         $file->setResourceType($type);
+        $file->setMimeType('file/mime');
         self::create($name, $file);
+    }
+
+    protected static function createShortcut(
+        $name,
+        ResourceType $type,
+        AbstractResource $target,
+        User $creator,
+        Directory $parent
+    )
+    {
+        $shortcut = new ResourceShortcut();
+        $shortcut->setName($name);
+        $shortcut->setCreator($creator);
+        $shortcut->setWorkspace($parent->getWorkspace());
+        $shortcut->setParent($parent);
+        $shortcut->setResource($target);
+        $shortcut->setResourceType($type);
+        $shortcut->setMimeType('shortcut/mime');
+        self::create($name, $shortcut);
     }
 
     protected static function createResourceRights(
@@ -142,7 +182,36 @@ abstract class AltRepositoryTestCase extends WebTestCase
             $rights->{$method}(true);
         }
 
-        self::create("{resource_right/{$role->getName()}-{$resource->getName()}" , $rights);
+        self::create("resource_right/{$role->getName()}-{$resource->getName()}" , $rights);
+    }
+
+    protected static function createTool($name)
+    {
+        $tool = new Tool();
+        $tool->setName($name);
+        $tool->setDisplayName($name);
+        $tool->setClass($name . 'Class');
+        self::create($name, $tool);
+    }
+
+    protected static function createWorkspaceTool(
+        Tool $tool,
+        AbstractWorkspace $workspace,
+        array $roles,
+        $position
+    )
+    {
+        $orderedTool = new OrderedTool();
+        $orderedTool->setName($tool->getName());
+        $orderedTool->setTool($tool);
+        $orderedTool->setWorkspace($workspace);
+        $orderedTool->setOrder($position);
+
+        foreach ($roles as $role) {
+            $orderedTool->addRole($role);
+        }
+
+        self::create("orderedTool/{$workspace->getName()}-{$tool->getName()}", $orderedTool);
     }
 
     protected static function createMessage(
