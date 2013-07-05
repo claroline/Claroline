@@ -16,6 +16,8 @@ use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
+use Claroline\CoreBundle\Entity\Resource\Text;
+use Claroline\CoreBundle\Entity\Resource\Revision;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Message;
@@ -155,6 +157,29 @@ abstract class AltRepositoryTestCase extends WebTestCase
         $file->setResourceType($type);
         $file->setMimeType('file/mime');
         self::create($name, $file);
+    }
+
+    protected static function createText(
+        $name,
+        $revisionNumber,
+        ResourceType $type,
+        User $creator,
+        Directory $parent
+    )
+    {
+        $text = new Text();
+        $text->setName($name);
+        $text->setResourceType($type);
+        $text->setCreator($creator);
+        $text->setWorkspace($parent->getWorkspace());
+        $text->setParent($parent);
+        self::create($name, $text);
+
+        $revision = new Revision();
+        $revision->setVersion($revisionNumber);
+        $revision->setContent($name . 'Content');
+        $revision->setText($text);
+        self::create("revision/{$text->getName()}-{$revisionNumber}", $revision);
     }
 
     protected static function createShortcut(
