@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Entity\Badge;
 
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
@@ -55,6 +56,13 @@ class Badge
     protected $file;
 
     /**
+     * @var ArrayCollection|UserBadge[]
+     *
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Badge\UserBadge", mappedBy="badge", cascade={"all"})
+     */
+    private $userBadges;
+
+    /**
      * @var ArrayCollection|BadgeTranslation[]
      *
      * @ORM\OneToMany(
@@ -73,6 +81,66 @@ class Badge
     public function __construct()
     {
         $this->translations = new ArrayCollection();
+        $this->userBadges        = new ArrayCollection();
+    }
+
+    /**
+     * @return User[]|ArrayCollection
+     */
+    public function getUsers()
+    {
+        $users = new ArrayCollection();
+
+        foreach($this->userBadges as $userBadge)
+        {
+            $users[] = $userBadge->getUser();
+        }
+
+        return $users;
+    }
+
+    /**
+     * @param User[]|ArrayCollection $users
+     *
+     * @return $this
+     */
+    public function setUsers($users)
+    {
+        foreach($users as $user)
+        {
+            $userBagde = new UserBadge();
+
+            $userBagde
+                ->setBadge($this)
+                ->setUser($user)
+            ;
+
+            $this->addUserBadge($userBagde);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param UserBadge $userBadge
+     *
+     * @return Badge
+     */
+    public function addUserBadge(UserBadge $userBadge)
+    {
+        $this->userBadges[] = $userBadge;
+
+        return $this;
+    }
+
+    /**
+     * @param UserBadge $userBadge
+     *
+     * @return bool
+     */
+    public function removeUserBadge(UserBadge $userBadge)
+    {
+        return $this->userBadges->removeElement($userBadge);
     }
 
     /**

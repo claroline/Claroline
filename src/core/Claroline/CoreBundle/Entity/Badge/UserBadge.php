@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Entity\Badge;
 
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Type
@@ -14,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  * )
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\UserBadgeRepository")
  */
-class UserBadge  
+class UserBadge
 {
     /**
      * @var integer
@@ -28,7 +29,7 @@ class UserBadge
     /**
      * @var User
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User", inversedBy="user")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
     */
     protected $user;
@@ -36,7 +37,7 @@ class UserBadge
     /**
      * @var Badge
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Badge\Badge")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Badge\Badge", inversedBy="badge")
      * @ORM\JoinColumn(name="badge_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
     */
     protected $badge;
@@ -44,6 +45,7 @@ class UserBadge
     /**
      * @var \DateTime
      *
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="issued_at", type="datetime", nullable=false)
      */
     protected $issuedAt;
@@ -51,7 +53,7 @@ class UserBadge
     /**
      * @param int $id
      *
-     * @return Id
+     * @return UserBadge
      */
     public function setId($id)
     {
@@ -71,7 +73,7 @@ class UserBadge
     /**
      * @param User $user
      *
-     * @return User
+     * @return UserBadge
      */
     public function setUser(User $user)
     {
@@ -91,7 +93,7 @@ class UserBadge
     /**
      * @param Badge $badge
      *
-     * @return Badge
+     * @return UserBadge
      */
     public function setBadge(Badge $badge)
     {
@@ -101,7 +103,7 @@ class UserBadge
     }
 
     /**
-     * @return Badge
+     * @return UserBadge
      */
     public function getBadge()
     {
@@ -111,7 +113,7 @@ class UserBadge
     /**
      * @param \DateTime $issuedAt
      *
-     * @return IssuedAt
+     * @return UserBadge
      */
     public function setIssuedAt(\DateTime $issuedAt)
     {
@@ -121,7 +123,7 @@ class UserBadge
     }
 
     /**
-     * @return \Claroline\CoreBundle\Entity\Badge\datetime
+     * @return \Datetime
      */
     public function getIssuedAt()
     {

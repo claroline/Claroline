@@ -38,7 +38,7 @@ class BadgeType extends AbstractType
             array(
                 'data_class' => 'Claroline\CoreBundle\Entity\Badge\Badge',
                 'translation_domain' => 'platform'
-                )
+            )
         );
     }
 }

@@ -1,7 +1,7 @@
 {% extends app.request.xmlHttpRequest ? "ClarolineCoreBundle:Administration:ajaxLayout.html.twig" : "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
 {% block content %}
-    <form class="form-horizontal">
+    <form action="{{ path('claro_admin_badges_attribute', {'id': badge.id}) }}" method="post" class="form-horizontal">
         <div class="control-group">
             <div class="dropdown">
                 <a class="dropdown-toggle btn" id="select_group_list" role="button" data-toggle="dropdown" href="#">Sélection des groupes <i class="icon-chevron-up"></i></a>
@@ -29,14 +29,24 @@
                 <tbody>
                 {% for user in users %}
                     <tr class="{% for group in user.groups %}group{{ group.id }} {% else %}no_group {% endfor %}">
-                        <td><input type="checkbox" name="selectd_users" value="{{ user.id }}" /></td>
-                        <td>{{ user.firstname }} {{ userGroupsClass }}</td>
+                        <td><input type="checkbox" name="badge_attribution_form[users][]" value="{{ user.id }}" /></td>
+                        <td>{{ user.firstname }}</td>
                         <td>{{ user.lastname }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
         </div>
+        {{ form_errors(form) }}
+
+        {{ form_row(form._token) }}
+
+        {% if not app.request.xmlHttpRequest %}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">{{ 'attribute'|trans({}, 'platform') }}</button>
+            <a href="{{ path('claro_admin_badges_edit', {'id': badge.id}) }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-danger">{{ 'cancel'|trans({}, 'platform') }}</a>
+        </div>
+        {% endif %}
     </form>
 {% endblock %}
 
