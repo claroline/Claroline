@@ -533,6 +533,8 @@ badge_delete_success_message: 'Badge supprimé avec succès.'
 badge_delete_error_message: "Erreur lors de la suppression du badge."
 badge_edit_success_message: 'Badge édité avec succès.'
 badge_edit_error_message: "Erreur lors de l'édition du badge."
+badge_attribution_success_message: 'Attribution du badge effectué avec succès.'
+badge_attribution_error_message: "Erreur lors de l'attribution du badge."
 badge_form_name: 'Nom'
 badge_form_description: 'Description'
 badge_form_criteria: "Critères d'obtention"
