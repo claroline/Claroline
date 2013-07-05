@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Database\Writer;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Repository\GroupRepository;
+use Claroline\CoreBundle\Pager\PagerFactory;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -15,22 +16,26 @@ class GroupManager
 {
     private $writer;
     private $groupRepo;
+    private $pagerFactory;
 
  /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "groupRepo" = @DI\Inject("claroline.repository.group_repository"),
-     *     "writer" = @DI\Inject("claroline.database.writer")
+     *     "groupRepo"      = @DI\Inject("claroline.repository.group_repository"),
+     *     "writer"         = @DI\Inject("claroline.database.writer"),
+     *     "pagerFactory    = @DI\Inject("claroline.pager.pager_factory")
      * })
      */
     public function __construct(
         GroupRepository $groupRepo,
-        Writer $writer
+        Writer $writer,
+        PagerFactory $pagerFactory
     )
     {
         $this->writer = $writer;
         $this->groupRepo = $groupRepo;
+        $this->pagerFactory = $pagerFactory;
     }
 
     public function insertGroup(Group $group)
@@ -61,36 +66,49 @@ class GroupManager
         foreach ($users as $user) {
             $group->removeUser($user);
         }
+
         $this->writer->update($group);
     }
 
-    public function getWorkspaceOutsiders(AbstractWorkspace $workspace, $getQuery = false)
+    public function getWorkspaceOutsiders(AbstractWorkspace $workspace, $page)
     {
-        return $this->groupRepo->findWorkspaceOutsiders($workspace, $getQuery);
+        $query = $this->groupRepo->findWorkspaceOutsiders($workspace, false);
+
+        return $this->pagerFactory->createPager($query, $page);
     }
 
-    public function getWorkspaceOutsidersByName(AbstractWorkspace $workspace, $search, $getQuery = false)
+    public function getWorkspaceOutsidersByName(AbstractWorkspace $workspace, $search, $page)
     {
-        return $this->groupRepo->findWorkspaceOutsidersByName($workspace, $search, $getQuery);
+        $query = $this->groupRepo->findWorkspaceOutsidersByName($workspace, $search, false);
+
+        return $this->pagerFactory->createPager($query, $page);
     }
 
-    public function getGroupsByWorkspaceAndName(AbstractWorkspace $workspace, $search, $getQuery = false)
+    public function getGroupsByWorkspace(AbstractWorkspace $workspace, $page)
     {
-        return $this->groupRepo->findByWorkspaceAndName($workspace, $search, $getQuery);
+        $query = $this->groupRepo->findByWorkspace($workspace, false);
+
+        return $this->pagerFactory->createPager($query, $page);
     }
 
-    public function getAllGroups($getQuery = false)
+    public function getGroupsByWorkspaceAndName(AbstractWorkspace $workspace, $search, $page)
     {
-        return $this->groupRepo->findAll($getQuery);
+        $query = $this->groupRepo->findByWorkspaceAndName($workspace, $search, false);
+
+        return $this->pagerFactory->createPager($query, $page);
     }
 
-    public function getGroupsByName($search, $getQuery = false)
+    public function getGroups($page)
     {
-        return $this->groupRepo->findByName($search, $getQuery);
+        $query = $this->groupRepo->findAll(false);
+
+        return $this->pagerFactory->createPager($query, $page);
     }
 
-    public function getGroupsByWorkspace(AbstractWorkspace $workspace, $getQuery = false)
+    public function getGroupsByName($search, $page)
     {
-        return $this->groupRepo->findByWorkspace($workspace, $getQuery);
+        $query = $this->groupRepo->findByName($search, false);
+
+        return $this->pagerFactory->createPager($query, $page);
     }
 }
