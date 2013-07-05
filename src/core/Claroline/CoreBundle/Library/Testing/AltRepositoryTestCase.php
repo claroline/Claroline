@@ -206,7 +206,8 @@ abstract class AltRepositoryTestCase extends WebTestCase
     protected static function createResourceRights(
         Role $role,
         AbstractResource $resource,
-        array $allowedActions = array()
+        array $allowedActions = array(),
+        array $creatableResourceTypes = array()
     )
     {
         $rights = new ResourceRights();
@@ -216,6 +217,10 @@ abstract class AltRepositoryTestCase extends WebTestCase
         foreach ($allowedActions as $action) {
             $method = 'setCan' . ucfirst($action);
             $rights->{$method}(true);
+        }
+
+        foreach ($creatableResourceTypes as $type) {
+            $rights->addCreatableResourceType($type);
         }
 
         self::create("resource_right/{$role->getName()}-{$resource->getName()}" , $rights);
