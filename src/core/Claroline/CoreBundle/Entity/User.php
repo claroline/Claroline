@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Badge\Badge;
 use \Serializable;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
@@ -28,6 +29,8 @@ use Claroline\CoreBundle\Entity\Role;
 class User extends AbstractRoleSubject implements Serializable, UserInterface, EquatableInterface
 {
     /**
+     * @var integer
+     *
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -35,54 +38,74 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     protected $id;
 
     /**
+     * @var string
+     *
      * @ORM\Column(name="first_name", type="string", length=50)
      * @Assert\NotBlank()
      */
     protected $firstName;
 
     /**
+     * @var string
+     *
      * @ORM\Column(name="last_name", type="string", length=50)
      * @Assert\NotBlank()
      */
     protected $lastName;
 
     /**
+     * @var string
+     *
      * @ORM\Column(name="username", type="string", length=255, unique=true)
      * @Assert\NotBlank()
      */
     protected $username;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=255)
      */
     protected $password;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=255)
      */
     protected $salt;
 
     /**
+     * @var string
+     *
      * @Assert\NotBlank()
      */
     protected $plainPassword;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string", nullable=true)
      */
     protected $phone;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string", nullable=true)
      */
     protected $mail;
 
     /**
+     * @var string
+     *
      * @ORM\Column(name="administrative_code", type="string", nullable=true)
      */
     protected $administrativeCode;
 
     /**
+     * @var Group[]|ArrayCollection
+     *
      * @ORM\ManyToMany(
      *      targetEntity="Claroline\CoreBundle\Entity\Group",
      *      inversedBy="users"
@@ -100,6 +123,8 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     protected $groups;
 
     /**
+     * @var Role[]|ArrayCollection
+     *
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
      *     inversedBy="users", fetch="EXTRA_LAZY"
@@ -117,6 +142,8 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     protected $roles;
 
     /**
+     * @var AbstractResource[]|ArrayCollection
+     *
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
      *     mappedBy="creator"
@@ -125,6 +152,8 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     protected $abstractResources;
 
     /**
+     * @var Workspace\AbstractWorkspace
+     *
      * @ORM\OneToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
      *     inversedBy="personalUser",
@@ -135,12 +164,16 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     protected $personalWorkspace;
 
     /**
+     * @var \DateTime
+     *
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime", name="creation_date")
      */
     protected $created;
 
     /**
+     * @var UserMessage[]|ArrayCollection
+     *
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\UserMessage",
      *     mappedBy="user"
@@ -149,6 +182,8 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     protected $userMessages;
 
     /**
+     * @var DesktopTool[]|ArrayCollection
+     *
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\DesktopTool",
      *     mappedBy="user"
@@ -156,78 +191,146 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      */
     protected $desktopTools;
 
+    /**
+     * @var Badge[]|ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Badge\UserBadge", mappedBy="user", cascade={"all"})
+     * @ORM\JoinTable(name="claro_user_badge")
+     */
+    protected $badges;
+
     public function __construct()
     {
         parent::__construct();
-        $this->userMessages = new ArrayCollection();
-        $this->roles = new ArrayCollection();
-        $this->groups = new ArrayCollection();
+        $this->userMessages      = new ArrayCollection();
+        $this->roles             = new ArrayCollection();
+        $this->groups            = new ArrayCollection();
         $this->abstractResources = new ArrayCollection();
-        $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
-        $this->desktopTools = new ArrayCollection();
+        $this->salt              = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
+        $this->desktopTools      = new ArrayCollection();
+        $this->badges            = new ArrayCollection();
     }
 
+    /**
+     * @return int
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @return string
+     */
     public function getFirstName()
     {
         return $this->firstName;
     }
 
+    /**
+     * @return string
+     */
     public function getLastName()
     {
         return $this->lastName;
     }
 
+    /**
+     * @return string
+     */
     public function getUsername()
     {
         return $this->username;
     }
 
+    /**
+     * @return string
+     */
     public function getPassword()
     {
         return $this->password;
     }
 
+    /**
+     * @return string
+     */
     public function getPlainPassword()
     {
         return $this->plainPassword;
     }
 
+    /**
+     * @return string
+     */
     public function getSalt()
     {
         return $this->salt;
     }
 
+    /**
+     * @param string $firstName
+     *
+     * @return User
+     */
     public function setFirstName($firstName)
     {
         $this->firstName = $firstName;
+
+        return $this;
     }
 
+    /**
+     * @param string $lastName
+     *
+     * @return User
+     */
     public function setLastName($lastName)
     {
         $this->lastName = $lastName;
+
+        return $this;
     }
 
+    /**
+     * @param string $username
+     *
+     * @return User
+     */
     public function setUsername($username)
     {
         $this->username = $username;
+
+        return $this;
     }
 
+    /**
+     * @param string $password
+     *
+     * @return User
+     */
     public function setPassword($password)
     {
         $this->password = $password;
+
+        return $this;
     }
 
+    /**
+     * @param string $plainPassword
+     *
+     * @return User
+     */
     public function setPlainPassword($plainPassword)
     {
         $this->plainPassword = $plainPassword;
         $this->password = null;
+
+        return $this;
     }
 
+    /**
+     * @return Group[]|ArrayCollection
+     */
     public function getGroups()
     {
         return $this->groups;
@@ -255,19 +358,35 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         return $roleNames;
     }
 
+    /**
+     * @param Role $role
+     * @return User
+     */
     public function addRole(Role $role)
     {
         parent::addRole($role);
         if ($role instanceof WorkspaceRole) {
             $role->addUser($this);
         }
+
+        return $this;
     }
 
+    /**
+     * @return User
+     */
     public function eraseCredentials()
     {
         $this->plainPassword = null;
+
+        return $this;
     }
 
+    /**
+     * @param UserInterface $user
+     *
+     * @return bool
+     */
     public function isEqualTo(UserInterface $user)
     {
         if ($user->getRoles() !== $this->getRoles()) {
@@ -285,36 +404,68 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         return true;
     }
 
+    /**
+     * @return string
+     */
     public function getPhone()
     {
         return $this->phone;
     }
 
+    /**
+     * @param string $phone
+     * @return User
+     */
     public function setPhone($phone)
     {
         $this->phone = $phone;
+
+        return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getMail()
     {
         return $this->mail;
     }
 
+    /**
+     * @param string $mail
+     *
+     * @return User
+     */
     public function setMail($mail)
     {
         $this->mail = $mail;
+
+        return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getAdministrativeCode()
     {
         return $this->administrativeCode;
     }
 
+    /**
+     * @param string $administrativeCode
+     *
+     * @return User
+     */
     public function setAdministrativeCode($administrativeCode)
     {
         $this->administrativeCode = $administrativeCode;
+
+        return $this;
     }
 
+    /**
+     * @return string
+     */
     public function serialize()
     {
         return serialize(
@@ -326,6 +477,9 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         );
     }
 
+    /**
+     * @param string $serialized
+     */
     public function unserialize($serialized)
     {
         $unserialized = unserialize($serialized);
@@ -335,21 +489,37 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $this->groups = new ArrayCollection();
     }
 
+    /**
+     * @param Workspace\AbstractWorkspace $workspace
+     *
+     * @return User
+     */
     public function setPersonalWorkspace($workspace)
     {
         $this->personalWorkspace = $workspace;
+
+        return $this;
     }
 
+    /**
+     * @return Workspace\AbstractWorkspace
+     */
     public function getPersonalWorkspace()
     {
         return $this->personalWorkspace;
     }
 
+    /**
+     * @return \DateTime
+     */
     public function getCreationDate()
     {
         return $this->created;
     }
 
+    /**
+     * @return mixed
+     */
     public function getPlatformRole()
     {
         $roles = $this->getEntityRoles();
@@ -383,8 +553,31 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $this->roles->add($platformRole);
     }
 
+    /**
+     * @return DesktopTool[]|ArrayCollection
+     */
     public function getDesktopTools()
     {
         return $this->desktopTools;
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Badge[]|\Doctrine\Common\Collections\ArrayCollection $badges
+     *
+     * @return User
+     */
+    public function setBadges($badges)
+    {
+        $this->badges = $badges;
+
+        return $this;
+    }
+
+    /**
+     * @return \Claroline\CoreBundle\Entity\Badge[]|\Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getBadges()
+    {
+        return $this->badges;
     }
 }

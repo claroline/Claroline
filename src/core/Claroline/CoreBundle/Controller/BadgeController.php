@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\Badge\BadgeTranslation;
+use Claroline\CoreBundle\Form\BadgeAttributionType;
 use Claroline\CoreBundle\Form\BadgeType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
@@ -77,7 +78,7 @@ class BadgeController extends Controller
 
         $form = $this->createForm(new BadgeType(), $badge);
 
-        if('POST' === $request->getMethod()) {
+        if($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isValid()) {
                 /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
@@ -124,7 +125,7 @@ class BadgeController extends Controller
 
         $form = $this->createForm(new BadgeType(), $badge);
 
-        if('POST' === $request->getMethod()) {
+        if($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isValid()) {
                 /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
@@ -186,15 +187,41 @@ class BadgeController extends Controller
      *
      * @Template()
      */
-    public function attributeAction()
+    public function attributeAction(Request $request, Badge $badge)
     {
         $doctrine = $this->getDoctrine();
         $users    = $doctrine->getRepository('ClarolineCoreBundle:User')->findAll();
         $groups   = $doctrine->getRepository('ClarolineCoreBundle:Group')->findAll();
 
+        $form = $this->createForm(new BadgeAttributionType(), $badge);
+
+        if($request->isMethod('POST')) {
+            $form->handleRequest($request);
+            if ($form->isValid()) {
+                /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+                $translator = $this->get('translator');
+                try {
+                    /** @var \Doctrine\Common\Persistence\ObjectManager $entityManager */
+                    $entityManager = $this->getDoctrine()->getManager();
+
+                    $entityManager->persist($badge);
+                    $entityManager->flush();
+
+                    $this->get('session')->getFlashBag()->add('success', $translator->trans('badge_attribution_success_message', array(), 'platform'));
+                }
+                catch(\Exception $exception) {
+                    $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_attribution_error_message', array(), 'platform'));
+                }
+
+                return $this->redirect($this->generateUrl('claro_admin_badges_edit', array('id' => $badge->getId())));
+            }
+        }
+
         return array(
+            'badge'  => $badge,
             'users'  => $users,
-            'groups' => $groups
+            'groups' => $groups,
+            'form'   => $form->createView()
         );
     }
 }

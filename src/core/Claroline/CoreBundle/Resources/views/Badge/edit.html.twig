@@ -8,6 +8,7 @@
     </ul>
     <div class="tab-content view_badge">
         <div class="tab-pane active" id="view">
+            {{ macros.flashBox() }}
             <div class="margin">
                 <h3 class="sub-section-header">
                     <span class="badge badge-info accordion-toggle" data-toggle="tooltip" title="{{ 'badge_form_version'|trans({}, 'platform') }} {{ badge.version }}">{{ badge.version }}</span>
