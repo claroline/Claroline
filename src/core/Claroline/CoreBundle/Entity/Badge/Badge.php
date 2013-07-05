@@ -81,7 +81,7 @@ class Badge
     public function __construct()
     {
         $this->translations = new ArrayCollection();
-        $this->userBadges        = new ArrayCollection();
+        $this->userBadges   = new ArrayCollection();
     }
 
     /**
@@ -106,6 +106,8 @@ class Badge
      */
     public function setUsers($users)
     {
+        $this->userBadges->clear();
+
         foreach($users as $user)
         {
             $userBagde = new UserBadge();
@@ -122,13 +124,23 @@ class Badge
     }
 
     /**
+     * @return UserBadge[]|ArrayCollection
+     */
+    public function getUserBadge()
+    {
+        return $this->userBadges;
+    }
+
+    /**
      * @param UserBadge $userBadge
      *
      * @return Badge
      */
     public function addUserBadge(UserBadge $userBadge)
     {
-        $this->userBadges[] = $userBadge;
+        if(!$this->userBadges->contains($userBadge)) {
+            $this->userBadges[] = $userBadge;
+        }
 
         return $this;
     }

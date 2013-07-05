@@ -189,6 +189,10 @@ class BadgeController extends Controller
      */
     public function attributeAction(Request $request, Badge $badge)
     {
+        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            throw new \AccessDeniedException();
+        }
+
         $doctrine = $this->getDoctrine();
         $users    = $doctrine->getRepository('ClarolineCoreBundle:User')->findAll();
         $groups   = $doctrine->getRepository('ClarolineCoreBundle:Group')->findAll();
@@ -196,13 +200,17 @@ class BadgeController extends Controller
         $form = $this->createForm(new BadgeAttributionType(), $badge);
 
         if($request->isMethod('POST')) {
+            $previousUserBadges = $badge->getUserBadge()->toArray();
+
             $form->handleRequest($request);
             if ($form->isValid()) {
                 /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
                 $translator = $this->get('translator');
                 try {
-                    /** @var \Doctrine\Common\Persistence\ObjectManager $entityManager */
-                    $entityManager = $this->getDoctrine()->getManager();
+                    /** @var \Doctrine\ORM\EntityManager $entityManager */
+                    $entityManager = $doctrine->getManager();
+
+                    $doctrine->getRepository('ClarolineCoreBundle:Badge\UserBadge')->deleteBybadge($badge);
 
                     $entityManager->persist($badge);
                     $entityManager->flush();
