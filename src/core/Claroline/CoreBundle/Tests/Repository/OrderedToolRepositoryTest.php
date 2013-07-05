@@ -2,28 +2,29 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
+use Claroline\CoreBundle\Library\Testing\AltRepositoryTestCase;
 
-class OrderedToolRepositoryTest extends RepositoryTestCase
+class OrderedToolRepositoryTest extends AltRepositoryTestCase
 {
-    /** @var \Claroline\CoreBundle\Repository\OrderedToolRepository */
     public static $repo;
 
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
-        self::$repo = self::$em->getRepository('Claroline\CoreBundle\Entity\Tool\OrderedTool');
-        self::loadPlatformRoleData();
-        self::loadUserData(array('john' => 'user', 'jane' => 'user'));
-        self::loadWorkspaceData(array('ws_a' => 'john'));
+        self::$repo = self::getRepository('ClarolineCoreBundle:Tool\OrderedTool');
+
+        self::createWorkspace('ws_1');
+        self::createRole('ROLE_1', self::get('ws_1'));
+        self::createRole('ROLE_2', self::get('ws_1'));
+        self::createTool('tool_1');
+        self::createTool('tool_2');
+        self::createWorkspaceTool(self::get('tool_1'), self::get('ws_1'), array(self::get('ROLE_1')), 1);
+        self::createWorkspaceTool(self::get('tool_2'), self::get('ws_1'), array(self::get('ROLE_2')), 1);
     }
 
     public function testFindByWorkspaceAndRole()
     {
-        $res = self::$repo->findByWorkspaceAndRoles(
-            self::getWorkspace('jane'),
-            array('ROLE_WS_MANAGER_' . self::getWorkspace('jane')->getId())
-        );
-        $this->assertEquals(7, count($res));
+        $tools = self::$repo->findByWorkspaceAndRoles(self::get('ws_1'), array('ROLE_1', 'ROLE_2'));
+        $this->assertEquals(2, count($tools));
     }
 }
