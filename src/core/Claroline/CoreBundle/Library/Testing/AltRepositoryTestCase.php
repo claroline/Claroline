@@ -74,10 +74,14 @@ abstract class AltRepositoryTestCase extends WebTestCase
         self::create($name, $user);
     }
 
-    protected static function createGroup($name, array $roles = array())
+    protected static function createGroup($name, array $users = array(), array $roles = array())
     {
         $group = new Group();
         $group->setName($name);
+
+        foreach ($users as $user) {
+            $group->addUser($user);
+        }
 
         foreach ($roles as $role) {
             $group->addRole($role);
