@@ -14,11 +14,6 @@ class MailController extends Controller
     private $formFactory;
 
     /**
-<<<<<<< HEAD
-     * @EXT\Route(
-||||||| merged common ancestors
-     * @Route(
-=======
      * @DI\InjectParams({
      *     "formFactory" = @DI\Inject("claroline.form.factory"),
      *     "request"     = @DI\Inject("request"),
