@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Database\Writer;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -146,6 +147,66 @@ class RoleManager
             $this->roleRepo->findByWorkspace($workspace),
             $this->roleRepo->findBy(array('name' => 'ROLE_ANONYMOUS'))
         );
+    }
+
+    public function getRolesByWorkspace(AbstractWorkspace $workspace)
+    {
+        return $this->roleRepo->findByWorkspace($workspace);
+    }
+
+    public function getCollaboratorRole(AbstractWorkspace $workspace)
+    {
+        return $this->roleRepo->findCollaboratorRole($workspace);
+    }
+
+    public function getVisitorRole(AbstractWorkspace $workspace)
+    {
+        return $this->roleRepo->findVisitorRole($workspace);
+    }
+
+    public function getManagerRole(AbstractWorkspace $workspace)
+    {
+        return $this->roleRepo->findManagerRole($workspace);
+    }
+
+    public function getPlatformRoles(User $user)
+    {
+        return $this->roleRepo->findPlatformRoles($user);
+    }
+
+    public function getWorkspaceRole(AbstractRoleSubject $subject, AbstractWorkspace $workspace)
+    {
+        return $this->roleRepo->findWorkspaceRole($subject, $workspace);
+    }
+
+    public function getWorkspaceRoleForUser(User $user, AbstractWorkspace $workspace)
+    {
+        return $this->roleRepo->findWorkspaceRoleForUser($user, $workspace);
+    }
+
+    public function getRolesByWorkspaceAndTool(AbstractWorkspace $workspace, Tool $tool)
+    {
+        return $this->roleRepo->findByWorkspaceAndTool($workspace, $tool);
+    }
+
+    public function getRolesBySearchOnWorkspaceAndTag($search)
+    {
+        return $this->roleRepo->findByWorkspaceCodeTag($search);
+    }
+
+    public function getRoleById($roleId)
+    {
+        return $this->roleRepo->find($roleId);
+    }
+
+    public function getRoleByName($name)
+    {
+        return $this->roleRepo->findOneByName($name);
+    }
+
+    public function getAllRoles()
+    {
+        return $this->roleRepo->findAll();
     }
 
     public function getStringRolesFromCurrentUser()
