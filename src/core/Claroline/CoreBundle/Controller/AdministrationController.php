@@ -8,13 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Form\ProfileType;
-use Claroline\CoreBundle\Form\AdminAnalyticsConnectionsType;
-use Claroline\CoreBundle\Form\AdminAnalyticsTopType;
-use Claroline\CoreBundle\Form\GroupType;
-use Claroline\CoreBundle\Form\GroupSettingsType;
-use Claroline\CoreBundle\Form\PlatformParametersType;
-use Claroline\CoreBundle\Form\ImportUserType;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Event\PluginOptionsEvent;
 use Claroline\CoreBundle\Library\Event\LogUserDeleteEvent;
@@ -28,8 +22,6 @@ use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
-use Pagerfanta\Pagerfanta;
 use Symfony\Component\Form\FormError;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -50,6 +42,7 @@ class AdministrationController extends Controller
     private $pagerFactory;
     private $eventDispatcher;
     private $configHandler;
+    private $formFactory;
 
     /**
      * @DI\InjectParams({
@@ -59,7 +52,8 @@ class AdministrationController extends Controller
      *     "security"       = @DI\Inject("security.context"),
      *     "pagerFactory"   = @DI\Inject("claroline.pager.pager_factory"),
      *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
-     *     "configHandler"    = @DI\Inject("claroline.config.platform_config_handler")
+     *     "configHandler"    = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "formFactory" = @DI\Inject("claroline.form.factory")
      * })
      */
     public function __construct(
@@ -69,7 +63,8 @@ class AdministrationController extends Controller
         SecurityContextInterface $security,
         PagerFactory $pagerFactory,
         EventDispatcher $eventDispatcher,
-        PlatformConfigurationHandler $configHandler
+        PlatformConfigurationHandler $configHandler,
+        FormFactory $formFactory
     )
     {
         $this->userManager = $userManager;
@@ -79,6 +74,7 @@ class AdministrationController extends Controller
         $this->pagerFactory = $pagerFactory;
         $this->eventDispatcher = $eventDispatcher;
         $this->configHandler = $configHandler;
+        $this->formFactory = $formFactory;
     }
 
     /**
@@ -99,6 +95,7 @@ class AdministrationController extends Controller
      *     name="claro_admin_user_creation_form"
      * )
      * @EXT\Method("GET")
+     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
      *
      * @EXT\Template()
      *
@@ -106,12 +103,10 @@ class AdministrationController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function userCreationFormAction()
+    public function userCreationFormAction(User $currentUser)
     {
-        $user = $this->security->getToken()->getUser();
-        $roles = $this->roleManager->getPlatformRoles($user);
-
-        $form = $this->createForm(new ProfileType($roles));
+        $roles = $this->roleManager->getPlatformRoles($currentUser);
+        $form = $this->formFactory->create(FormFactory::TYPE_USER, array($roles));
 
         return array('form_complete_user' => $form->createView());
     }
@@ -122,6 +117,7 @@ class AdministrationController extends Controller
      *     name="claro_admin_create_user"
      * )
      * @EXT\Method("POST")
+     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
      *
      * @EXT\Template("ClarolineCoreBundle:Administration:userCreationForm.html.twig")
      *
@@ -129,12 +125,11 @@ class AdministrationController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function createUserAction()
+    public function createUserAction(User $currentUser)
     {
         $request = $this->get('request');
-        $user = $this->security->getToken()->getUser();
-        $roles = $this->roleManager->getPlatformRoles($user);
-        $form = $this->get('form.factory')->create(new ProfileType($roles), new User());
+        $roles = $this->roleManager->getPlatformRoles($currentUser);
+        $form = $this->formFactory->create(FormFactory::TYPE_USER, array($roles), new User());
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -167,10 +162,6 @@ class AdministrationController extends Controller
      */
     public function deleteUsersAction(array $users)
     {
-        if (!$this->security->isGranted('ROLE_ADMIN')) {
-            throw new \AccessDeniedException();
-        }
-
         foreach ($users as $user) {
             $this->userManager->deleteUser($user);
 
@@ -204,7 +195,7 @@ class AdministrationController extends Controller
      */
     public function userListAction($page, $search)
     {
-        $query = ($search == "") ?
+        $query = ($search === '') ?
             $this->userManager->getAllUsers(true) :
             $this->userManager->getUsersByName($search, true);
         $pager = $this->pagerFactory->createPager($query, $page);
@@ -235,7 +226,7 @@ class AdministrationController extends Controller
      */
     public function groupListAction($page, $search)
     {
-        $query = ($search == "") ?
+        $query = ($search === '') ?
             $this->groupManager->getAllGroups(true) :
             $this->groupManager->getGroupsByName($search, true);
         $pager = $this->pagerFactory->createPager($query, $page);
@@ -271,7 +262,7 @@ class AdministrationController extends Controller
      */
     public function usersOfGroupListAction(Group $group, $page, $search)
     {
-        $query = ($search == "") ?
+        $query = ($search === '') ?
             $this->userManager->getUsersByGroup($group, true) :
             $this->userManager->getUsersByNameAndGroup($search, $group, true);
         $pager = $this->pagerFactory->createPager($query, $page);
@@ -307,7 +298,7 @@ class AdministrationController extends Controller
      */
     public function outsideOfGroupUserListAction(Group $group, $page, $search)
     {
-        $query = ($search == "") ?
+        $query = ($search === '') ?
             $this->userManager->getGroupOutsiders($group, true) :
             $this->userManager->getGroupOutsidersByName($group, $search, true);
         $pager = $this->pagerFactory->createPager($query, $page);
@@ -330,7 +321,7 @@ class AdministrationController extends Controller
      */
     public function groupCreationFormAction()
     {
-        $form = $this->createForm(new GroupType(), new Group());
+        $form = $this->formFactory->create(FormFactory::TYPE_GROUP, array());
 
         return array('form_group' => $form->createView());
     }
@@ -351,7 +342,7 @@ class AdministrationController extends Controller
     public function createGroupAction()
     {
         $request = $this->get('request');
-        $form = $this->get('form.factory')->create(new GroupType(), new Group());
+        $form = $this->formFactory->create(FormFactory::TYPE_GROUP, array());
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -495,7 +486,7 @@ class AdministrationController extends Controller
      */
     public function groupSettingsFormAction(Group $group)
     {
-        $form = $this->createForm(new GroupSettingsType(), $group);
+        $form = $this->formFactory->create(FormFactory::TYPE_GROUP_SETTINGS, array(), $group);
 
         return array(
             'group' => $group,
@@ -529,7 +520,7 @@ class AdministrationController extends Controller
 
         $oldPlatformRoleTransactionKey = $group->getPlatformRole()->getTranslationKey();
 
-        $form = $this->createForm(new GroupSettingsType(), $group);
+        $form = $this->formFactory->create(FormFactory::TYPE_GROUP_SETTINGS, array(), $group);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -579,7 +570,11 @@ class AdministrationController extends Controller
     public function platformSettingsFormAction()
     {
         $platformConfig = $this->configHandler->getPlatformConfig();
-        $form = $this->createForm(new PlatformParametersType($this->getThemes()), $platformConfig);
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_PLATFORM_PARAMETERS,
+            array($this->getThemes()),
+            $platformConfig
+        );
 
         return array('form_settings' => $form->createView());
     }
@@ -599,7 +594,10 @@ class AdministrationController extends Controller
     public function updatePlatformSettingsAction()
     {
         $request = $this->get('request');
-        $form = $this->get('form.factory')->create(new PlatformParametersType($this->getThemes()));
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_PLATFORM_PARAMETERS,
+            array($this->getThemes())
+        );
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -711,7 +709,7 @@ class AdministrationController extends Controller
      */
     public function importUsersFormAction()
     {
-        $form = $this->createForm(new ImportUserType());
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT);
 
         return array('form' => $form->createView());
     }
@@ -731,7 +729,7 @@ class AdministrationController extends Controller
     public function importUsers()
     {
         $request = $this->get('request');
-        $form = $this->get('form.factory')->create(new ImportUserType());
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -829,11 +827,11 @@ class AdministrationController extends Controller
         $usersCount = $this->userManager->getNbUsers();
 
         return array(
-            'barChartData'=>$lastMonthActions,
-            'usersCount'=>$usersCount,
-            'mostViewedWS'=>$mostViewedWS,
-            'mostViewedMedia'=>$mostViewedMedia,
-            'mostDownloadedResources'=>$mostDownloadedResources
+            'barChartData' => $lastMonthActions,
+            'usersCount' => $usersCount,
+            'mostViewedWS' => $mostViewedWS,
+            'mostViewedMedia' => $mostViewedMedia,
+            'mostDownloadedResources' => $mostDownloadedResources
         );
     }
 
@@ -857,13 +855,13 @@ class AdministrationController extends Controller
     public function analyticsConnectionsAction()
     {
         $request = $this->get('request');
-        $criteria_form = $this->createForm(new AdminAnalyticsConnectionsType());
+        $criteria_form = $this->formFactory->create(FormFactory::TYPE_ADMIN_ANALYTICS_CONNECTIONS);
         $clone_form = clone $criteria_form;
         $criteria_form->bind($request);
         $unique = false;
         if ($criteria_form->isValid()) {
             $range = $criteria_form->get('range')->getData();
-            $unique = ($criteria_form->get('unique')->getData()=='true')?true:false;
+            $unique = ($criteria_form->get('unique')->getData()=='true') ? true : false;
         }
         $actionsForRange = $this
                         ->get('claroline.analytics.manager')
@@ -878,9 +876,9 @@ class AdministrationController extends Controller
         $activeUsers = $this->get('claroline.analytics.manager')->getActiveUsers();
 
         return array(
-            'connections'=>$connections,
+            'connections' => $connections,
             'form_criteria' => $criteria_form->createView(),
-            'activeUsers'=>$activeUsers
+            'activeUsers' => $activeUsers
         );
     }
 
@@ -904,12 +902,14 @@ class AdministrationController extends Controller
     public function analyticsResourcesAction()
     {
         $manager = $this->get('doctrine.orm.entity_manager');
-        $wsCount = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->count();
-        $resourceCount = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->countResourcesByType();
+        $wsCount = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
+            ->count();
+        $resourceCount = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+            ->countResourcesByType();
 
         return array(
-            'wsCount'=>$wsCount,
-            'resourceCount'=>$resourceCount
+            'wsCount' => $wsCount,
+            'resourceCount' => $resourceCount
         );
     }
 
@@ -934,7 +934,7 @@ class AdministrationController extends Controller
     public function analyticsTopAction($top_type)
     {
         $request = $this->get('request');
-        $criteria_form = $this->createForm(new AdminAnalyticsTopType());
+        $criteria_form = $this->formFactory->create(FormFactory::TYPE_ADMIN_ANALYTICS_TOP);
         $clone_form = clone $criteria_form;
         $criteria_form->bind($request);
 
@@ -957,7 +957,7 @@ class AdministrationController extends Controller
         $criteria_form = $clone_form;
 
         return array(
-            'form_criteria'=>$criteria_form->createView(),
+            'form_criteria' => $criteria_form->createView(),
             'list_data' => $listData
         );
     }
