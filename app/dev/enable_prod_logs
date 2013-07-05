@@ -21,7 +21,7 @@ $config['monolog'] = array(
         ),
         'grouped' => array(
             'type' => 'group',
-            'members' => '[streamed, buffered]'
+            'members' => array('streamed', 'buffered')
         ),
         'streamed' => array(
             'type' => 'stream',
