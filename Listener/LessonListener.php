@@ -26,7 +26,7 @@ class LessonListener extends ContainerAware
     {
         $form = $this->container->get('form.factory')->create(new LessonType(), new Lesson());
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:create_form.html.twig',
+            'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'icap_lesson'
@@ -72,10 +72,11 @@ class LessonListener extends ContainerAware
         $event->stopPropagation();
     }
 
-    /*public function onDelete(DeleteResourceEvent $event)
+    public function onDelete(DeleteResourceEvent $event)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $em->remove($event->getResource());
+        $em->flush();
         $event->stopPropagation();
-    }*/
+    }
 }

@@ -8,7 +8,7 @@ services:
         tags:
             - { name: kernel.event_listener, event: create_form_icap_lesson, method: onCreateForm }
             - { name: kernel.event_listener, event: create_icap_lesson, method: onCreate }
-        #  - { name: kernel.event_listener, event: delete_icap_lesson, method: onDelete }
+            - { name: kernel.event_listener, event: delete_icap_lesson, method: onDelete }
         #   - { name: kernel.event_listener, event: download_claroline_example, method: onDownload }
         #   - { name: kernel.event_listener, event: copy_claroline_example, method: onCopy }
             - { name: kernel.event_listener, event: open_icap_lesson, method: onOpen }

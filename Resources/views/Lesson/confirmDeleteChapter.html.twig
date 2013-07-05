@@ -18,9 +18,21 @@
 
             <legend>{{ 'Chapter Suppression'|trans({}, 'icap_lesson') }}</legend>
 
-            <label class="">{{ chapter.title }}</label>
-            {{ form_rest(form) }}
+            <div class="control-group">
 
+                <label class="control-label" for="icap_lesson_deletechaptertype_title">{{ 'Title'|trans({}, 'icap_lesson') }}</label>
+
+                <div class="controls">
+                    {{ form_widget(form.title) }}
+                </div>
+
+            </div>
+
+            <div class="control-group">
+                {{ form_row(form.children) }}
+            </div>
+
+            {{ form_rest(form) }}
         </fieldset>
 
         <div class="form-actions">

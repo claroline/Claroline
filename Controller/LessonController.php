@@ -42,21 +42,12 @@ class LessonController extends Controller
         $em = $this->getDoctrine()->getManager();
         $chapterRepository = $em->getRepository('ICAPLessonBundle:Chapter');
 
-        if ($chapterId == 0) {
+        $chapter = null;
 
-            $chapter = $lesson->getRoot();
-            if($chapter == null){
-
-                $chapter = new Chapter();
-                $chapter->setLesson($lesson);
-                $chapter->getLeft(1);
-                $chapter->setLevel(0);
-
-                $em->persist($chapter);
-                $em->flush();
-            }
-        } else {
+        if ($chapterId != 0) {
             $chapter = $this->findChapter($lesson, $chapterId);
+        } else {
+            $chapter = $chapterRepository->findOneBy(array('lesson' => $lesson, 'root' => $lesson->getRoot()->getId(), 'left' => 2));
         }
 
         $query = $this->getDoctrine()->getManager()
@@ -167,7 +158,10 @@ class LessonController extends Controller
         $lesson = $this->findLesson($resourceId);
         $chapter = $this->findChapter($lesson, $chapterId);
 
-        $form = $this->createForm(new DeleteChapterType(), $chapter);
+        $chapterRepository = $this->getDoctrine()->getManager()->getRepository('ICAPLessonBundle:Chapter');
+        $childrenChapter = $chapterRepository->childCount($chapter);
+
+        $form = $this->createForm(new DeleteChapterType(), $chapter, array('hasChildren' => $childrenChapter > 0));
         $form->handleRequest($this->getRequest());
 
         return array(
@@ -200,16 +194,33 @@ class LessonController extends Controller
 
         $form = $this->createForm(new DeleteChapterType(), $chapter);
         $form->handleRequest($this->getRequest());
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($chapter);
-            $em->flush();
-            $this->get('session')->getFlashBag()->add('success',$translator->trans('Your chapter has been deleted',array(), 'icap_lesson'));
 
-            return $this->redirect($this->generateUrl('icap_lesson', array('resourceId' => $lesson->getId())));
+        if($form->isValid()){
+            if ($form->get('children')->getData() == false) {
+                $em = $this->getDoctrine()->getManager();
+                $repo = $em->getRepository('ICAPLessonBundle:Chapter');
+                $repo->removeFromTree($chapter);
+                $em->clear();
+                $em->flush();
+
+                $this->get('session')->getFlashBag()->add('success',$translator->trans('Your chapter has been deleted but no subchapter',array(), 'icap_lesson'));
+
+                return $this->redirect($this->generateUrl('icap_lesson', array('resourceId' => $lesson->getId())));
+
+            } else {
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($chapter);
+                $em->flush();
+
+                $this->get('session')->getFlashBag()->add('success',$translator->trans('Your chapter has been deleted',array(), 'icap_lesson'));
+
+                return $this->redirect($this->generateUrl('icap_lesson', array('resourceId' => $lesson->getId())));
+
+                }
         } else {
             $this->get('session')->getFlashBag()->add('error',$translator->trans('Your chapter has not been deleted',array(), 'icap_lesson'));
         }
+
 
         return array(
             'lesson' => $lesson,
@@ -226,6 +237,13 @@ class LessonController extends Controller
      * @return $lesson, $form
      *
      * @Route(
+     *      "new/{resourceId}",
+     *      name="icap_lesson_new_chapter_without_parent",
+     *      requirements={"resourceId" = "\d+"},
+     *      defaults={"parentChapterId" = 0}
+     * )
+     *
+     * @Route(
      *      "new/{resourceId}/{parentChapterId}",
      *      name="icap_lesson_new_chapter",
      *      requirements={"resourceId" = "\d+", "parentChapterId" = "\d+"}
@@ -235,14 +253,19 @@ class LessonController extends Controller
     public function newChapterAction($resourceId, $parentChapterId)
     {
         $lesson = $this->findLesson($resourceId);
-        $chapterParent = $this->findChapter($lesson, $parentChapterId);
-
         $form = $this->createForm(new ChapterType(), null);
+
+        if($parentChapterId == 0){
+            $chapterParent = $lesson->getRoot();
+        }
+        else{
+            $chapterParent = $this->findChapter($lesson, $parentChapterId);
+        }
 
         return array(
             'lesson' => $lesson,
             'form' => $form->createView(),
-            'chapter' => $chapterParent,
+            'chapterParent' => $chapterParent,
             'workspace' => $lesson->getWorkspace(),
             'pathArray' => $lesson->getPathArray()
         );

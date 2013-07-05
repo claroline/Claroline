@@ -111,7 +111,6 @@ class Chapter
     public function setLesson($lesson)
     {
         $this->lesson = $lesson;
-        $lesson->setRoot($this);
     }
 
     /**

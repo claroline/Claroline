@@ -9,12 +9,14 @@
 namespace ICAP\LessonBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
-* @ORM\Entity
-* @ORM\Table(name="icap__lesson")
-*/
+ * @ORM\Entity
+ * @ORM\Table(name="icap__lesson")
+ * @ORM\HasLifecycleCallbacks()
+ */
 class Lesson extends AbstractResource
 {
     /**
@@ -58,5 +60,24 @@ class Lesson extends AbstractResource
         }
 
         return $pathArray;
+    }
+
+    /**
+     * @ORM\PostPersist
+     */
+    public function createRoot(LifecycleEventArgs $event){
+        if($this->getRoot() == null){
+            $em = $event->getEntityManager();
+            $rootLesson = $this->getRoot();
+            if($rootLesson == null){
+
+                $rootLesson = new Chapter();
+                $rootLesson->setLesson($this);
+                $this->setRoot($rootLesson);
+
+                $em->getRepository('ICAPLessonBundle:Chapter')->persistAsFirstChild($rootLesson);
+                $em->flush();
+            }
+        }
     }
 }

@@ -16,11 +16,13 @@
             <br/>
             <div class="btn-group pull-right">
 
-                <a href="{{ path('icap_lesson_new_chapter', { 'resourceId': lesson.id, 'parentChapterId': chapter.id })}}" class="btn"><i class="icon-plus"></i></a>
-
                 {% if chapter is defined and chapter != null %}
+                    <a href="#" class="btn"><i class="icon-ambulance"></i></a>
+                    <a href="{{ path('icap_lesson_new_chapter', { 'resourceId': lesson.id, 'parentChapterId': chapter.id })}}" class="btn"><i class="icon-plus"></i></a>
                     <a href="{{ path('icap_lesson_edit_chapter', { 'resourceId': lesson.id, 'chapterId': chapter.id })}}" class="btn"><i class="icon-edit"></i></a>
                     <a href="{{ path('icap_lesson_confirm_delete_chapter', { 'resourceId': lesson.id, 'chapterId': chapter.id })}}" class="btn"><i class="icon-trash"></i></a>
+                {% else %}
+                    <a href="{{ path('icap_lesson_new_chapter_without_parent', { 'resourceId': lesson.id })}}" class="btn"><i class="icon-plus"></i></a>
                 {% endif %}
 
             </div>

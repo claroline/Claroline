@@ -16,13 +16,27 @@ class DeleteChapterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder->add('title', 'text', array('disabled' => true));
 
+        if ($options['hasChildren'] == true){
+            $builder ->add('children', 'checkbox', array(
+                'label' => 'Voulez-vous supprimer les sous-chapitres ?',
+                'required' => false,
+                'mapped' => false
+            ));
+        } else {
+            $builder ->add('children', 'hidden', array(
+                'required' => false,
+                'mapped' => false
+            ));
+        }
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'ICAP\LessonBundle\Entity\Chapter'
+            'data_class' => 'ICAP\LessonBundle\Entity\Chapter',
+            'hasChildren' => true
         ));
     }
 

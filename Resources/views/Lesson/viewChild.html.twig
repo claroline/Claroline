@@ -22,4 +22,6 @@
             {% endfor %}
         </ul>
     </div>
+{% else %}
+    {{ 'There is no chapter'|trans({}, 'icap_lesson') }}
 {% endif %}
