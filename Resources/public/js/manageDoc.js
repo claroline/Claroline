@@ -36,32 +36,45 @@ function searchDocuments() {
     }
 }
 
-function sortDocument(type, path) {
+function sortDocument(type, path, page) {
     // Send the type to display the matching documents
+
+    var searchLabel;
+
+    if (document.getElementById('labelToFind').value) {
+        searchLabel = document.getElementById('labelToFind').value;
+    } else {
+        searchLabel = '';
+    }
+
+
     $.ajax({
-        type: 'POST',
+        type: 'GET',
         url: path,
         data: {
-            doctype : type
+            doctype : type,
+            searchLabel: searchLabel,
+            page: page
         },
-       cache: false,
+        cache: false,
         success: function (data) {
           document.getElementById('sorting').innerHTML = data;
        }
     });
 }
 
-function searchDoc(path){
+function searchDoc(path, page){
 
     var labelToFind = document.getElementById('labelToFind').value;
 
     $.ajax({
-        type: 'POST',
+        type: 'GET',
         url: path,
         data: {
-            labelToFind : labelToFind
+            labelToFind : labelToFind,
+            page: page
         },
-       cache: false,
+        cache: false,
         success: function (data) {
           document.getElementById('sorting').innerHTML = data;
        }

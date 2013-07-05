@@ -54,17 +54,18 @@ function recordGraph() { // Record the answer zones of the student before changi
 
     for (var x = 1 ; x < taille ; x++) {
         var label = 'cursor' + x;
+        var top = document.getElementById(label).style.top;
 
         if (!tempCoords[label]) {
-            if (document.getElementById(label).style.top) {
+            if (parseInt(top.substring(0, top.indexOf('px'))) > 2) {
 
                 var n1 = document.getElementById(label).style.left;
                 var n2 = document.getElementById('AnswerImg').offsetLeft;
                 var n3 = document.getElementById(label).style.top;
                 var n4 = document.getElementById('AnswerImg').offsetTop;
 
-                var abs = n1.substring(0, n1.indexOf('px')) - n2 + 10;
-                var ord = n3.substring(0, n3.indexOf('px')) - n4 + 10;
+                var abs = parseInt(parseInt(n1.substring(0, n1.indexOf('px'))) - parseInt(n2)) + 10;
+                var ord = parseInt(parseInt(n3.substring(0, n3.indexOf('px'))) - parseInt(n4)) + 10;
 
                 tempCoords[label] = abs + '-' + ord;
             } else {
@@ -77,16 +78,18 @@ function recordGraph() { // Record the answer zones of the student before changi
 
 function displayAnswersGraph(response) { // Place the already placed answer zones
 
-    var taille = document.getElementById('nbpointer').value;
-    var coords = response.split(';');
+    if (response != 'empty') {
+        var taille = document.getElementById('nbpointer').value;
+        var coords = response.split(';');
 
-    for (var x = 1 ; x < taille ; x++) {
-        var xy = coords[x - 1].split('-');
-        var cur = 'cursor' + x;
+        for (var x = 1 ; x < taille ; x++) {
+            var xy = coords[x - 1].split('-');
+            var cur = 'cursor' + x;
 
-        document.getElementById(cur).style.left = String(parseInt(document.getElementById('AnswerImg').offsetLeft) +
-            parseInt(xy[0]) - 10) + 'px';
-        document.getElementById(cur).style.top = String(parseInt(document.getElementById('AnswerImg').offsetTop) +
-            parseInt(xy[1]) - 10) + 'px';
+            document.getElementById(cur).style.left = String(parseInt(document.getElementById('AnswerImg').offsetLeft) +
+                parseInt(xy[0]) - 10) + 'px';
+            document.getElementById(cur).style.top = String(parseInt(document.getElementById('AnswerImg').offsetTop) +
+                parseInt(xy[1]) - 10) + 'px';
+        }
     }
 }

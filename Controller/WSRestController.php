@@ -41,6 +41,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use UJM\ExoBundle\Entity\Document;
 
+use Pagerfanta\Adapter\ArrayAdapter;
+use Pagerfanta\Pagerfanta;
+
 /**
  * WSRest controller.
  * To create REST WS
@@ -53,7 +56,7 @@ class WSRestController extends Controller
      * To add a document with the plugin advimage with tinyMCEBundle
      *
      */
-    public function postDocumentAddAction($redirection)
+    public function postDocumentAddAction($redirection, $page2Go, $maxPage, $nbItem)
     {
         // We post the data label, url, type, login
         // Login allow to link a doc and a user
@@ -103,6 +106,7 @@ class WSRestController extends Controller
                 $em->flush();
             }
 
+            // Add document on create/edit graphic question
             if ($redirection == 0) {
                 return $this->render(
                     'UJMExoBundle:InteractionGraphic:page.html.twig',
@@ -112,9 +116,41 @@ class WSRestController extends Controller
                         'type'  => $document->getType()
                     )
                 );
+            // Add document on manage documents
             } else if ($redirection == 1) {
-                return $this->forward('UJMExoBundle:Question:manageDoc', array(
-                    'label' => $document->getLabel()
+
+                $user = $this->container->get('security.context')->getToken()->getUser();
+
+                $repository = $this->getDoctrine()
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:Document');
+
+                $ListDoc = $repository->findBy(array('user' => $user->getId()));
+
+                // Pagination of documents
+                $adapterDoc = new ArrayAdapter($ListDoc);
+                $pagerDoc = new Pagerfanta($adapterDoc);
+
+                // If new item > max per page, display next page
+                $rest = $nbItem % $maxPage;
+
+                if ($rest == 0) {
+                    $page2Go += 1;
+                }
+
+                try {
+                    $listDoc = $pagerDoc
+                        ->setMaxPerPage($maxPage)
+                        ->setCurrentPage($page2Go)
+                        ->getCurrentPageResults()
+                    ;
+                } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
+                    throw $this->createNotFoundException("Cette page n'existe pas.");
+                }
+
+                return $this->render('UJMExoBundle:Question:manageImg.html.twig', array(
+                    'listDoc' => $listDoc,
+                    'pagerDoc' => $pagerDoc,
                     )
                 );
             }

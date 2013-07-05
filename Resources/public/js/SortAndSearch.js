@@ -1,11 +1,13 @@
-var clickC = clickTi = clickTy = clickI = 'no'; // To know if sorting is up or down
+var clickC = clickTi = clickTy = clickI = clickL = clickT = clickU = clickN = clickS = clickE = 'no'; // To know if sorting is up or down
 
 // Sort questions by selected column (type)
 function SortQuestions(type, array) {
 
-    var upC, upTi, upTy, upI, downC, downTi, downTy, downI; // Arrows to show the directions of the sorting
+    // Arrows to show the directions of the sorting
+    var upC, upTi, upTy, upI, upL, upT, upU, upN, upS, upE,
+        downC, downTi, downTy, downI, downL, downT, downU, downN, downS, downE;
 
-    // If two arrays in one page, select the matching arrows of the right array
+    // Select the matching arrows of the right array (e.g. if two arrays in one page
     if (array == 'QuestionArray' || array == 'QuestionArrayMy'){
         upC = document.getElementById('upC');
         upTi = document.getElementById('upTi');
@@ -26,36 +28,71 @@ function SortQuestions(type, array) {
         downI = document.getElementById('downIs');
     }
 
+    if (array == 'table') {
+        upL = document.getElementById('upL');
+        downL = document.getElementById('downL');
+        upT = document.getElementById('upT');
+        downT = document.getElementById('downT');
+    }
+
+    if (array == 'UserArray') {
+       upU = document.getElementById('upU');
+       upN = document.getElementById('upN');
+       upS = document.getElementById('upS');
+       upE = document.getElementById('upE');
+       downU = document.getElementById('downU');
+       downN = document.getElementById('downN');
+       downS = document.getElementById('downS');
+       downE = document.getElementById('downE');
+    }
+
+
     // Hide all arrows
-    upC.style.display = 'none';
-    upTi.style.display = 'none';
-    upTy.style.display = 'none';
-    upI.style.display = 'none';
-    downC.style.display = 'none';
-    downTi.style.display = 'none';
-    downTy.style.display = 'none';
-    downI.style.display = 'none';
+    if (array == 'table') {
+        upL.style.display = 'none';
+        downL.style.display = 'none';
+        upT.style.display = 'none';
+        downT.style.display = 'none';
+    } else if (array == 'UserArray') {
+        upU.style.display = 'none';
+        upN.style.display = 'none';
+        upS.style.display = 'none';
+        upE.style.display = 'none';
+        downU.style.display = 'none';
+        downN.style.display = 'none';
+        downS.style.display = 'none';
+        downE.style.display = 'none';
+    } else {
+        upC.style.display = 'none';
+        upTi.style.display = 'none';
+        upTy.style.display = 'none';
+        upI.style.display = 'none';
+        downC.style.display = 'none';
+        downTi.style.display = 'none';
+        downTy.style.display = 'none';
+        downI.style.display = 'none';
+    }
 
     // Depend on which column were clicked, sort in the good direction and display the matching arrow
     switch (type) {
         case 'Category':
             if (clickC == 'no') {
-                sortTable(array, 0, ASC);
+                sortTable(array, 0, ASC, type);
                 downC.style.display = 'block';
                 clickC = 'yes';
             } else {
-                sortTable(array, 0, DESC);
+                sortTable(array, 0, DESC, type);
                 upC.style.display = 'block';
                 clickC = 'no';
             }
             break;
         case 'Title':
             if (clickTi == 'no') {
-                sortTable(array, 1, ASC);
+                sortTable(array, 1, ASC, type);
                 downTi.style.display = 'block';
                 clickTi = 'yes';
             } else {
-                sortTable(array, 1, DESC);
+                sortTable(array, 1, DESC, type);
                 upTi.style.display = 'block';
                 clickTi = 'no';
             }
@@ -63,24 +100,92 @@ function SortQuestions(type, array) {
             break;
         case 'Type':
             if (clickTy == 'no') {
-                sortTable(array, 2, ASC);
+                sortTable(array, 2, ASC, type);
                 downTy.style.display = 'block';
                 clickTy = 'yes';
             } else {
-                sortTable(array, 2, DESC);
+                sortTable(array, 2, DESC, type);
                 upTy.style.display = 'block';
                 clickTy = 'no';
             }
             break;
         case 'Invite':
             if (clickI == 'no') {
-                sortTable(array, 3, ASC);
+                sortTable(array, 3, ASC, type);
                 downI.style.display = 'block';
                 clickI = 'yes';
             } else {
-                sortTable(array, 3, DESC);
+                sortTable(array, 3, DESC, type);
                 upI.style.display = 'block';
                 clickI = 'no';
+            }
+            break;
+
+        case 'Label':
+            if (clickL == 'no') {
+                sortTable(array, 2, ASC, type);
+                downL.style.display = 'block';
+                clickL = 'yes';
+            } else {
+                sortTable(array, 2, DESC, type);
+                upL.style.display = 'block';
+                clickL = 'no';
+            }
+            break;
+        case 'kind':
+            if (clickT == 'no') {
+                sortTable(array, 0, ASC, type);
+                downT.style.display = 'block';
+                clickT = 'yes';
+            } else {
+                sortTable(array, 0, DESC, type);
+                upT.style.display = 'block';
+                clickT = 'no';
+            }
+            break;
+
+        case 'user':
+            if (clickU == 'no') {
+                sortTable(array, 0, ASC, type);
+                downU.style.display = 'block';
+                clickU = 'yes';
+            } else {
+                sortTable(array, 0, DESC, type);
+                upU.style.display = 'block';
+                clickU = 'no';
+            }
+            break;
+        case 'numPaper':
+            if (clickN == 'no') {
+                sortTable(array, 1, NUMA, type);
+                downN.style.display = 'block';
+                clickN = 'yes';
+            } else {
+                sortTable(array, 1, NUMD, type);
+                upN.style.display = 'block';
+                clickN = 'no';
+            }
+            break;
+        case 'startDate':
+            if (clickS == 'no') {
+                sortTable(array, 2, DATEA, type);
+                downS.style.display = 'block';
+                clickS = 'yes';
+            } else {
+                sortTable(array, 2, DATED, type);
+                upS.style.display = 'block';
+                clickS = 'no';
+            }
+            break;
+        case 'endDate':
+            if (clickE == 'no') {
+                sortTable(array, 3, DATEA, type);
+                downE.style.display = 'block';
+                clickE = 'yes';
+            } else {
+                sortTable(array, 3, DATED, type);
+                upE.style.display = 'block';
+                clickE = 'no';
             }
             break;
     }
@@ -114,8 +219,61 @@ function ASC(a, b) {
     return 0;
  }
 
+// To sort increasing
+function NUMA(a, b) {
+    return a - b;
+}
+
+// To sort decreasing
+function NUMD(a, b) {
+    return b - a;
+}
+
+function DATE(x){
+    var datex, yx, mx, dx, hx, mix, sx;
+
+    datex = x[1];
+
+    dx = datex.substring(0, datex.indexOf('/'));
+    mx = datex.substring(datex.indexOf('/') + 1, datex.indexOf('/') + 3);
+    yx = datex.substring(datex.lastIndexOf('/') + 1, datex.indexOf('-') - 1);
+    hx = datex.substring(datex.indexOf('-') + 2, datex.indexOf('h'));
+    mix = datex.substring(datex.indexOf('h') + 1, datex.indexOf('m'));
+    sx = datex.substring(datex.indexOf('m') + 1, datex.indexOf('s'));
+
+    dx = new Date(yx, (parseInt(mx) - 1), dx, hx, mix, sx);
+
+    return (dx);
+}
+
+function DATEA(a, b){
+    var datea = DATE(a);
+    var dateb = DATE(b);
+
+    if (datea > dateb) {
+        return 1;
+    } else if (datea < dateb) {
+        return -1;
+    } else {
+        return 0;
+    }
+}
+
+function DATED(a, b){
+    var datea = DATE(a);
+    var dateb = DATE(b);
+
+    if (datea > dateb) {
+        return -1;
+    } else if (datea < dateb) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
 // To display the rows in the right order
-function sortTable(tid, col, ord) {
+function sortTable(tid, col, ord, type) {
 
     mybody = document.getElementById(tid).getElementsByTagName('tbody')[0]; // The array to sort
     lines = mybody.getElementsByTagName('tr'); // The rows of the array to sort
@@ -128,11 +286,35 @@ function sortTable(tid, col, ord) {
 
     // Put the rows of the html array into the rows of the javascript array
     while (lines[++i]) {
-        sorter.push([lines[i],lines[i].getElementsByTagName('td')[col].textContent.toLowerCase()]);
+        // Sort by class
+        if (type == 'kind') {
+            colIcon = lines[i].getElementsByTagName('td')[col].getElementsByTagName('i')[col].className;
+            iconLabel = colIcon.substring(colIcon.indexOf('-')+1);
+
+            sorter.push([lines[i], iconLabel]);
+        // Sort numbers
+        } else if (type == 'numPaper'){
+            sorter.push([lines[i].getElementsByTagName('td')[col].textContent.toLowerCase()]);
+        // Sort string
+        } else {
+            sorter.push([lines[i], lines[i].getElementsByTagName('td')[col].textContent.toLowerCase()]);
+        }
+
     }
 
     // Sort the rows
     sorter.sort(ord);
+
+    // If numbers, get only numbers at first and after sort, get the entire row to sort it right
+    if (type == 'numPaper') {
+        for (var x = 0 ; x < sorter.length ; x++) {
+           for (var z = 0 ; z < sorter.length ; z++ ) {
+               if (sorter[x] == lines[z].getElementsByTagName('td')[col].textContent.toLowerCase()) {
+                   sorter[x] = [lines[z], lines[z].getElementsByTagName('td')[col].textContent.toLowerCase()];
+               }
+            }
+        }
+    }
 
     j = -1;
 
@@ -177,7 +359,7 @@ function searchQuestion(path, page) {
             where : where,
             page: page
         },
-       cache: false,
+        cache: false,
         success: function (data) {
           document.getElementById('resultSearch').innerHTML = data;
        }
@@ -187,7 +369,7 @@ function searchQuestion(path, page) {
 // If user change page after search, this function keep the parameters of the research and display it on the new page
 window.onload = function () {
 
-    // If has already done a research
+    // If has already done a question research
     if (document.getElementById('type') && document.getElementById('whatToFind') && document.getElementById('where')) {
         // What did he selected before changing page
         var type = document.getElementById('type').value;
@@ -211,6 +393,18 @@ window.onload = function () {
             document.getElementById('searchQuestionForm').WhereSearch[0].checked = true;
         } else if (where == 'shared') {
             document.getElementById('searchQuestionForm').WhereSearch[1].checked = true;
+        }
+    }
+
+    // If has already done a document research, put the values of the research and display selected block when changing page
+    if (document.getElementById('label2Find') && document.getElementById('whichAction')) {
+        if (document.getElementById('label2Find').value != '') {
+            document.getElementById('labelToFind').value = document.getElementById('label2Find').value;
+            document.getElementById('searchDocuments').style.display = 'block';
+        }
+
+        if (document.getElementById('whichAction').value == 'sort') {
+            document.getElementById('sortDocuments').style.display = 'block';
         }
     }
 };

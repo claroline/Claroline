@@ -1,6 +1,6 @@
 ujm_paper_list:
-    pattern:  /list/{exoID}
-    defaults: { _controller: "UJMExoBundle:Paper:index" }
+    pattern:  /list/{exoID}/{page}
+    defaults: { _controller: UJMExoBundle:Paper:index, page: 1 }
 
 ujm_paper_show:
     pattern:  /{id}/show

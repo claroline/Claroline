@@ -43,6 +43,8 @@ use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Form\PaperType;
 
+use Pagerfanta\Adapter\ArrayAdapter;
+use Pagerfanta\Pagerfanta;
 /**
  * Paper controller.
  *
@@ -53,7 +55,7 @@ class PaperController extends Controller
      * Lists all Paper entities.
      *
      */
-    public function indexAction($exoID)
+    public function indexAction($exoID, $page)
     {
         $user = $this->container->get('security.context')->getToken()->getUser();
 
@@ -68,15 +70,31 @@ class PaperController extends Controller
         }
 
         if ($subscription[0]->getAdmin() == 1) {
-            $papers = $this->getDoctrine()
+            $paper = $this->getDoctrine()
                             ->getManager()
                             ->getRepository('UJMExoBundle:Paper')
                             ->getExerciseAllPapers($exoID);
         } else {
-            $papers = $this->getDoctrine()
+            $paper = $this->getDoctrine()
                             ->getManager()
                             ->getRepository('UJMExoBundle:Paper')
                             ->getExerciseUserPapers($user->getId(), $exoID);
+        }
+
+        // Pagination of the paper list
+        $max = 10; // Max per page
+
+        $adapter = new ArrayAdapter($paper);
+        $pagerfanta = new Pagerfanta($adapter);
+
+        try {
+           $papers = $pagerfanta
+                ->setMaxPerPage($max)
+                ->setCurrentPage($page)
+                ->getCurrentPageResults()
+            ;
+        } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
+            throw $this->createNotFoundException("Cette page n'existe pas.");
         }
 
         return $this->render(
@@ -85,6 +103,7 @@ class PaperController extends Controller
                 'workspace' => $workspace,
                 'papers'    => $papers,
                 'isAdmin'   => $subscription[0]->getAdmin(),
+                'pager' => $pagerfanta
             )
         );
     }

@@ -42,7 +42,7 @@
         <form class="well label_bold" id="searchQuestionForm" enctype="multipart/form-data" method="post"
             action="{{ path('ujm_question_searchQuestion') }}">
 
-            Trouver par :<br/>
+            {{ 'findBy'|trans }} :<br/>
             <input type="radio" name="QuestionSearch" value="Category" style=" position: relative; top: -3px;" checked/> {{ 'CategorySearch'|trans }}
             &nbsp;&nbsp;|&nbsp;&nbsp;
             <input type="radio" name="QuestionSearch" value="Type" style=" position: relative; top: -3px;"/> {{ 'TypeSearch'|trans }}
@@ -51,13 +51,15 @@
             &nbsp;&nbsp;|&nbsp;&nbsp;
             <input type="radio" name="QuestionSearch" value="Contain" style=" position: relative; top: -3px;"/> {{ 'ContainSearch'|trans }}
             <br/><br/>
-            Trouver dans :<br/>
+
+            {{ 'findIn'|trans }} :<br/>
             <input type="radio" name="WhereSearch" value="my" style=" position: relative; top: -3px;" checked/> {{ 'My questions'|trans }}
             &nbsp;&nbsp;|&nbsp;&nbsp;
             <input type="radio" name="WhereSearch" value="shared" style=" position: relative; top: -3px;"/> {{ 'My shared questions'|trans }}
             <br/><br/>
-            Ce que vous cherchez :&nbsp;&nbsp;
-            <input type="text" id='what2search' name='what2search' required="true" style=" position: relative; top: 4px;"
+
+            {{ 'findWhat'|trans }} :&nbsp;&nbsp;
+            <input type="text" id='what2search' name='what2search'  placeholder="{{ 'search'|trans({}, 'platform') }}" required="true" style=" position: relative; top: 4px;"
                    onkeydown="if (event.keyCode == 13) { searchQuestion('{{ path('ujm_question_searchQuestion') }}', 1);return false; }"/><br/><br/>
             <input type="button" id="SubmitSearchQuestion" value="Search !" onclick="searchQuestion('{{ path('ujm_question_searchQuestion') }}', 1)"/>
         </form>

@@ -123,7 +123,7 @@
                     {{ "Penalty" | trans }}: {{ hv.hint.penalty }}<br/>
                 {% endif %}
             {% endfor %}
-<hr/>
+
             {{ "Mark" | trans }}: {{ responses[i].mark }}/{{ interInfo['maxScore'] }}<br/>
             {% set exoMark = exoMark + responses[i].mark %}
             {% set exoScoreMax = exoScoreMax + interInfo['maxScore'] %}
@@ -131,7 +131,7 @@
             {% set exoMark = exoMark + responses[i].mark %}
             {% set exoScoreMax = exoScoreMax + interInfo['maxScore'] %}
             {% endif %}
-
+        <hr/>
     </div>
 
 <!------------------------------------------------- Graphic ----------------------------------------------------------->

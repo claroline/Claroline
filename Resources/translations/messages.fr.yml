@@ -290,4 +290,16 @@ CategorySearch: Catégorie
 TypeSearch: Type
 TitleSearch: Titre
 ContainSearch: Dont la question contient ...
-noQuestionFound: Aucune question correspondant à votre recherche n'a été trouvée ...
+noQuestionFound: Pas de question trouvée ...
+noDocFound: Pas de document trouvé ...
+noPaperFound: Aucune copie
+Num_paper: Numéro de la copie
+DocManage: Gestion de mes documents
+sharedUser: Partage de question
+nameUser2Shared: Nom de l'utilisateur avec qui partager la question
+findLabel: Trouver un document avec un label spécifique
+chooseType: Choisissez le type de document à afficher
+reset: réinitialiser
+findBy: Trouver par
+findIn: Trouver dans
+findWhat: Ce que vous cherchez

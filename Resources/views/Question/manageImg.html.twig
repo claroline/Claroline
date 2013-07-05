@@ -36,134 +36,171 @@
 {% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
 
 {% block section_content %}
-<a href="#" onclick="AddDocument();"><i class="icon-plus" id="icon"></i> {{ "addDoc" | trans }}</a>
 
+    <h1>{{ "DocManage" | trans }}</h1>
 
-<div id="AddDocuments" style="display: none;"><br/>
-    <form class="well label_bold" id="uploadForm" enctype="multipart/form-data" onsubmit="DisplayMessage();"
-      method="post" action="{{ path('ujm_interactiongraphic_AddImg', { 'redirection': 1 }) }}">
-    
-        <label for="label">{{ "docName" | trans }}</label>
-        <input type="text" id='label' name='label' required="true" onblur="ValidName('{{ "wrong" | trans }}','label','uploadSubmit');"/><br/>
-        <input id="picture" name="picture" type="file" required="true"/>
-        <br /><br />
-        <input id="uploadSubmit" type="submit" value="{{ "Upload !" | trans }}"/><p id="Result">{{ "Uploading ..." | trans }}</p>
-    </form>
-</div><hr>
+    <a href="{{ path('ujm_question_index') }}" ><i class="icon-arrow-left"></i> {{ "Back" | trans }}</a>
+    <hr>
+    <a href="#" onclick="AddDocument();"><i class="icon-plus" id="icon"></i> {{ "addDoc" | trans }}</a>
 
-<a href="#" onclick="searchDocuments();"><i class="icon-search"></i> {{ "search" | trans }}</a>
+    <div id="AddDocuments" style="display: none;"><br/>
+        <form class="well label_bold" id="uploadForm" enctype="multipart/form-data" onsubmit="DisplayMessage();"
+          method="post" action="{{ path('ujm_interactiongraphic_AddImg', { 'redirection': 1, 'page2Go': pagerDoc.getNbPages,
+                                    'maxPage': pagerDoc.maxPerPage, 'nbItem': pagerDoc.getNbResults }) }}">
 
-<div id="searchDocuments" style="display: none;">
-Trouver un document avec un label spécifique :<br/>
-    <div class="input-append pull-left">
-        <input type="text" id="labelToFind" placeholder="{{ 'search'|trans({}, 'platform') }}">
-        <button class="filter btn" type="button" id="searchDocbutton" onClick="searchDoc('{{ path('ujm_question_searchDocuments') }}');">
-            <i class="icon-search"></i>
-        </button>
+            <label for="label">{{ "docName" | trans }}</label>
+            <input type="text" id='label' name='label' required="true" onblur="ValidName('{{ "wrong" | trans }}','label','uploadSubmit');"/><br/>
+            <input id="picture" name="picture" type="file" required="true"/>
+            <br /><br />
+            <input id="uploadSubmit" type="submit" value="{{ "Upload !" | trans }}"/><p id="Result">{{ "Uploading ..." | trans }}</p>
+        </form>
+    </div><hr>
+
+    <a href="#" onclick="searchDocuments();"><i class="icon-search"></i> {{ "search" | trans }}</a>
+
+    <div id="searchDocuments" style="display: none;">
+        {{ "findLabel" | trans }} :<br/>
+        <div class="input-append pull-left">
+            <input type="text" id="labelToFind" placeholder="{{ 'search'|trans({}, 'platform') }}"
+                onkeydown="if (event.keyCode == 13) { searchDoc('{{ path('ujm_question_searchDocuments') }}', 1);return false; }">
+            <button class="filter btn" type="button" id="searchDocbutton" onClick="searchDoc('{{ path('ujm_question_searchDocuments') }}', 1);">
+                <i class="icon-search"></i>
+            </button>
+
+            <a href="{{ path('ujm_question_manage_doc') }}" style="margin-left: 50%">
+            <button type="button">{{ "reset" | trans }}</button>
+            </a>
+
+        </div>
+        <br/>
     </div>
-<br/>
-</div>
-<hr>
+    <hr>
 
-<a href="#SortDoc" onclick="sortDoc();"><i class="icon-filter"></i> {{ "sort" | trans }}</a>
+    <a href="#SortDoc" onclick="sortDoc();"><i class="icon-filter"></i> {{ "sort" | trans }}</a>
 
-<div id="sortDocuments" style="display: none;">
-    Choisissez le type de document à afficher :<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <a href="#" onclick="sortDocument('image', '{{ path('ujm_question_sortDocuments') }}');"><i class="icon-picture"></i></a>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <a href="#" onclick="sortDocument('music', '{{ path('ujm_question_sortDocuments') }}');"><i class="icon-music"></i></a>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <a href="#" onclick="sortDocument('video', '{{ path('ujm_question_sortDocuments') }}');"><i class="icon-film"></i></a>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <a href="#" onclick="sortDocument('file', '{{ path('ujm_question_sortDocuments') }}');"><i class="icon-file"></i></a>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <a href="#" onclick="sortDocument('all', '{{ path('ujm_question_sortDocuments') }}');"><i class="icon-list-alt"></i></a>
-</div>
+    <div id="sortDocuments" style="display: none;">
+        {{ "chooseType" | trans }} :<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="#" onclick="sortDocument('image', '{{ path('ujm_question_sortDocuments') }}', 1);"><i class="icon-picture"></i></a>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="#" onclick="sortDocument('music', '{{ path('ujm_question_sortDocuments') }}', 1);"><i class="icon-music"></i></a>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="#" onclick="sortDocument('video', '{{ path('ujm_question_sortDocuments') }}', 1);"><i class="icon-film"></i></a>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="#" onclick="sortDocument('file', '{{ path('ujm_question_sortDocuments') }}', 1);"><i class="icon-file"></i></a>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="#" onclick="sortDocument('all', '{{ path('ujm_question_sortDocuments') }}', 1);"><i class="icon-list-alt"></i></a>
 
-<div id="UpdateName" style="position: fixed; left: 40%; top: 20%; background-color: #D4D0C8; border: #000 thin solid;
-     width: 400px; height: 200px; display: none; opacity: 0.95; text-align: center;">
-    
-         <a href="#" style="color: red; float: right;" onclick="ChangeName();"><i class="icon-remove"></i> {{ "close" | trans }}</a><br/>
-         
-    <h3 style="text-align: center;">{{ "changeName" | trans }}</h3>
-    
-    <form id="updateName" enctype="multipart/form-data" method="post" action="{{ path('ujm_question_name_update') }}">
-    
-        <p>{{ "newName" | trans }}</p>
-        <input type="text" id='newlabel' name='newlabel' required="true" onblur="ValidName('{{ "wrong" | trans }}','newlabel','updateSubmit');"/><br/>
-        <input id="updateSubmit" type="submit" value="{{ "change" | trans }}"/>
-        
-        <input type="hidden" id="oldName" name="oldName" value=""/>
-    </form>
-    
-</div>
-<hr>
+        <a href="{{ path('ujm_question_manage_doc') }}" style="margin-left: 24%">
+        <button type="button">{{ "reset" | trans }}</button>
+        </a>
 
+    </div>
 
+    <div id="UpdateName" style="position: fixed; left: 40%; top: 20%; background-color: #D4D0C8; border: #000 thin solid;
+         width: 400px; height: 200px; display: none; opacity: 0.95; text-align: center;">
 
-<div id="sorting">
-    <table class="table table-striped table-bordered table-condensed" id="table">
-        <thead>
-            <tr>
-                <th style="text-align: center">{{ "Type" | trans }}</th>
-                <th style="text-align: center">{{ "Preview" | trans }}</th>
-                <th style="text-align: center">{{ "Label" | trans }}</th>
-                <th style="text-align: center">{{ "Actions" | trans }}</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for myDoc in listDoc %}
-                <tr>
-                    <td style="text-align: center; vertical-align: middle;">
-                        {% if myDoc.type == ".png" or myDoc.type == ".jpeg" 
-                            or myDoc.type == ".jpg" or myDoc.type == ".gif" or myDoc.type == ".bmp" %}
-                            <i class="icon-picture"></i>
-                        {% elseif myDoc.type == ".mp3" or myDoc.type == ".wav" %}
-                            <i class="icon-music"></i>
-                        {% elseif myDoc.type == ".avi" or myDoc.type == ".mpeg" 
-                            or myDoc.type == ".wmv" or myDoc.type == ".flv" or myDoc.type == ".mov" %}
-                            <i class="icon-film"></i>
-                        {% else %}
-                            <i class="icon-file"></i>
-                        {% endif %}
-                    </td>
-                    
-                     <td style="text-align: center">
-                         {% if myDoc.type == ".png" or myDoc.type == ".jpeg" 
-                            or myDoc.type == ".jpg" or myDoc.type == ".gif" or myDoc.type == ".bmp" %}
-                            <img src="{{ asset(myDoc.url) }}" width="100px" height="100px"/>
-                        {% elseif myDoc.type == ".mp3" or myDoc.type == ".wav" %}
-                            <a href="{{ asset(myDoc.url) }}" onclick="window.open(this.href, 'ListenSong', 
-                                'height=200, width=300, toolbar=no, menubar=no, location=no, resizable=yes, scrollbars=no, status=no');
-                                return false;"><i class="icon-play"></i>
-                            </a>
-                        {% elseif myDoc.type == ".avi" or myDoc.type == ".mpeg" 
-                            or myDoc.type == ".wmv" or myDoc.type == ".flv" or myDoc.type == ".mov" %}
-                            <a href="{{ asset(myDoc.url) }}"><i class="icon-play"></i></a>
-                        {% else %}
-                            <a href="{{ asset(myDoc.url) }}"><i class="icon-download-alt"></i></a>
-                        {% endif %}
-                    </td>
-                    
-                    <td style="text-align: center">
-                        {{ myDoc.label }}
-                    </td>
+             <a href="#" style="color: red; float: right;" onclick="ChangeName();"><i class="icon-remove"></i> {{ "close" | trans }}</a><br/>
 
-                    <td style="text-align: center">
-                        <a href="#" onclick="ChangeName('{{ myDoc.label }}');"><i class="icon-pencil"></i></a>
-                        
-                        <a href="{{ path('ujm_document_del', { 'label': myDoc.label }) }}" 
-                           onclick="return confirm('{{ "waring" | trans }}');"><i class="icon-trash"></i>
-                        </a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-<hr>
+        <h3 style="text-align: center;">{{ "changeName" | trans }}</h3>
 
-<a href="{{ path('ujm_question_index') }}" ><i class="icon-arrow-left"></i> {{ "Back" | trans }}</a>
+        <form id="updateName" enctype="multipart/form-data" method="post" action="{{ path('ujm_question_name_update') }}">
+
+            <p>{{ "newName" | trans }}</p>
+            <input type="text" id='newlabel' name='newlabel' required="true" onblur="ValidName('{{ "wrong" | trans }}','newlabel','updateSubmit');"/><br/>
+            <input id="updateSubmit" type="submit" value="{{ "change" | trans }}"/>
+
+            <input type="hidden" id="oldName" name="oldName" value=""/>
+        </form>
+    </div>
+    <hr>
+
+    <div id="sorting">
+        {% if divResultSearch is defined %}
+            {{ divResultSearch | raw }}
+        {% else %}
+
+            {% if listDoc is not empty %}
+                <table class="table table-striped table-bordered table-condensed" id="table">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center" onclick="SortQuestions('kind', 'table');"
+                                onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
+                                onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
+                                <i class="icon-chevron-up" id="upT"  style="display: none;"></i>
+                                <i class="icon-chevron-down" id="downT"  style="display: none;"></i>
+                                {{ "Type" | trans }}
+                            </th>
+                            <th style="text-align: center">{{ "Preview" | trans }}</th>
+                            <th style="text-align: center" onclick="SortQuestions('Label', 'table');"
+                                onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
+                                onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
+                                <i class="icon-chevron-up" id="upL"  style="display: none;"></i>
+                                <i class="icon-chevron-down" id="downL"  style="display: none;"></i>
+                                {{ "Label" | trans }}
+                            </th>
+                            <th style="text-align: center">{{ "Actions" | trans }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for myDoc in listDoc %}
+                            <tr>
+                                <td style="text-align: center; vertical-align: middle;">
+                                    {% if myDoc.type == ".png" or myDoc.type == ".jpeg"
+                                        or myDoc.type == ".jpg" or myDoc.type == ".gif" or myDoc.type == ".bmp" %}
+                                        <i class="icon-picture"></i>
+                                    {% elseif myDoc.type == ".mp3" or myDoc.type == ".wav" %}
+                                        <i class="icon-music"></i>
+                                    {% elseif myDoc.type == ".avi" or myDoc.type == ".mpeg"
+                                        or myDoc.type == ".wmv" or myDoc.type == ".flv" or myDoc.type == ".mov" %}
+                                        <i class="icon-film"></i>
+                                    {% else %}
+                                        <i class="icon-file"></i>
+                                    {% endif %}
+                                </td>
+
+                                 <td style="text-align: center">
+                                     {% if myDoc.type == ".png" or myDoc.type == ".jpeg"
+                                        or myDoc.type == ".jpg" or myDoc.type == ".gif" or myDoc.type == ".bmp" %}
+                                        <img src="{{ asset(myDoc.url) }}" width="100px" height="100px"/>
+                                    {% elseif myDoc.type == ".mp3" or myDoc.type == ".wav" %}
+                                        <a href="{{ asset(myDoc.url) }}" onclick="window.open(this.href, 'ListenSong',
+                                            'height=200, width=300, toolbar=no, menubar=no, location=no, resizable=yes, scrollbars=no, status=no');
+                                            return false;"><i class="icon-play"></i>
+                                        </a>
+                                    {% elseif myDoc.type == ".avi" or myDoc.type == ".mpeg"
+                                        or myDoc.type == ".wmv" or myDoc.type == ".flv" or myDoc.type == ".mov" %}
+                                        <a href="{{ asset(myDoc.url) }}"><i class="icon-play"></i></a>
+                                    {% else %}
+                                        <a href="{{ asset(myDoc.url) }}"><i class="icon-download-alt"></i></a>
+                                    {% endif %}
+                                </td>
+
+                                <td style="text-align: center">
+                                    {{ myDoc.label }}
+                                </td>
+
+                                <td style="text-align: center">
+                                    <a href="#" onclick="ChangeName('{{ myDoc.label }}');"><i class="icon-pencil"></i></a>
+
+                                    <a href="{{ path('ujm_document_del', { 'label': myDoc.label, 'pageNow': pagerDoc.currentPage,
+                                                'maxPage': pagerDoc.maxPerPage,'nbItem': pagerDoc.getNbResults }) }}"
+                                       onclick="return confirm('{{ "waring" | trans }}');"><i class="icon-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                {% if pagerDoc.haveToPaginate %}
+                    {{ pagerfanta(pagerDoc, 'twitter_bootstrap_translated', {'routeName': 'ujm_question_manage_doc'}) }}
+                {% endif %}
+            {% else %}
+                <p>{{ 'noDocFound'|trans }}</p>
+            {% endif %}
+        {% endif %}
+    </div>
+    <hr>
 {% endblock %}
 
 {% block javascripts %}
@@ -171,5 +208,6 @@ Trouver un document avec un label spécifique :<br/>
 
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/addImage.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/manageDoc.js') }}"></script>
-    
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/SortAndSearch.js') }}"></script>
+
 {% endblock %}

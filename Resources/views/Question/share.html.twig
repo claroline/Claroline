@@ -36,22 +36,27 @@
 {% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
 
 {% block section_content %}
-<a href="{{ path('ujm_question_index') }}" ><i class="icon-arrow-left"></i> {{ "Back" | trans }}</a>
-<br/><br/>
 
-<div class="input-append pull-left">
-    <input class="input-medium" type="text" id="search-user-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
-    <button class="filter btn" type="button" id="search-user-button" onClick="search_user_ajax('{{ path('ujm_question_share_search_user') }}')">
-        <i class="icon-search"></i>
-    </button>
-</div>
+    <h1>{{ "sharedUser" | trans }}</h1>
 
-<br/><br/><br/>
+    <a href="{{ path('ujm_question_index') }}" ><i class="icon-arrow-left"></i> {{ "Back" | trans }}</a>
+    <br/>
+    <hr>
+    {{ "nameUser2Shared" | trans }} :<br/><br/>
+    <div class="input-append pull-left">
+        <input class="input-medium" type="text" id="search-user-txt" placeholder="{{ 'search'|trans({}, 'platform') }}"
+            onkeydown="if (event.keyCode == 13) { search_user_ajax('{{ path('ujm_question_share_search_user') }}');return false; }">
+        <button class="filter btn" type="button" id="search-user-button" onClick="search_user_ajax('{{ path('ujm_question_share_search_user') }}')">
+            <i class="icon-search"></i>
+        </button>
+    </div>
 
-<div id="searchUserList">
-</div>
+    <br/><br/><br/>
 
-<div id="test" style="display: none;">{{ questionID }}</div>
+    <div id="searchUserList">
+    </div>
+
+    <div id="QID" style="display: none;">{{ questionID }}</div>
 {% endblock %}
 
 {% block javascripts %}

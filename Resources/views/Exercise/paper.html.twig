@@ -152,12 +152,17 @@
                         {% set i = i + 1 %}
                    {% endfor %}
                 </p><p>
+
+                    {% if response is empty %}
+                        {% set response = 'empty' %}
+                    {% endif %}
+
                     <img src="{{ asset(interactionToDisplayed.document.url) }}" alt="AnswerImg" id="AnswerImg"
                          width="{{ interactionToDisplayed.width }}" height="{{ interactionToDisplayed.height }}"
                          style="margin-top: 30px" onload="displayAnswersGraph('{{ response }}')"/>
                 </p>
             </div>
-            
+
             <input type="hidden" id="nbpointer" name="nbpointer" value="{{ i }}"/>
             <input type="hidden" id="answers" name="answers" value=""/>
             <input type="hidden" id="graphId" name="graphId" value="{{ interactionToDisplayed.id }}"/>

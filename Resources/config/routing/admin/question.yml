@@ -44,8 +44,8 @@ ujm_question_manage_doc:
     defaults: { _controller: "UJMExoBundle:Question:manageDoc" }
 
 ujm_document_del:
-    pattern:  /deleteDoc/{label}
-    defaults: { _controller: "UJMExoBundle:Question:deleteDoc" }
+    pattern:  /deleteDoc/{label}/{pageNow}/{maxPage}/{nbItem}
+    defaults: { _controller: UJMExoBundle:Question:deleteDoc, pageNow: 1, maxPage: 10, nbItem: 1 }
 
 ujm_document_del_linked:
     pattern:  /deletelinkedDoc/{label}
@@ -60,14 +60,10 @@ ujm_question_name_update:
 ujm_question_sortDocuments:
     pattern: /sort
     defaults: { _controller: "UJMExoBundle:Question:sortDocuments" }
-    requirements:
-        _method: POST
 
 ujm_question_searchDocuments:
     pattern: /search
     defaults: { _controller: "UJMExoBundle:Question:searchDoc" }
-    requirements:
-        _method: POST
 
 ujm_question_shareQuestionUser:
     pattern: /shareQuestionUser

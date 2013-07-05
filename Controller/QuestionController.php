@@ -680,15 +680,36 @@ class QuestionController extends Controller
     public function manageDocAction()
     {
         $user = $this->container->get('security.context')->getToken()->getUser();
+        $request = $this->get('request');
 
         $repository = $this->getDoctrine()
             ->getManager()
             ->getRepository('UJMExoBundle:Document');
 
-        $listDoc = $repository->findBy(array('user' => $user->getId()));
+        $ListDoc = $repository->findBy(array('user' => $user->getId()));
+
+        // Pagination of the documents
+        $max = 5; // Max questions displayed per page
+
+        $page = $request->query->get('page', 1); // Which page
+
+         // Make the pagination of the result with pagerfanta bundle
+        $adapterDoc = new ArrayAdapter($ListDoc);
+        $pagerDoc = new Pagerfanta($adapterDoc);
+
+        try {
+            $listDoc = $pagerDoc
+                ->setMaxPerPage($max)
+                ->setCurrentPage($page)
+                ->getCurrentPageResults()
+            ;
+        } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
+            throw $this->createNotFoundException("Cette page n'existe pas.");
+        }
 
         return $this->render('UJMExoBundle:Question:manageImg.html.twig', array(
-            'listDoc' => $listDoc
+            'listDoc' => $listDoc,
+            'pagerDoc' => $pagerDoc
             )
         );
     }
@@ -697,7 +718,7 @@ class QuestionController extends Controller
      * To delete a User's document
      *
      */
-    public function deleteDocAction($label)
+    public function deleteDocAction($label, $pageNow, $maxPage, $nbItem)
     {
         $dontdisplay = 0;
         $repositoryDoc = $this->getDoctrine()
@@ -715,7 +736,40 @@ class QuestionController extends Controller
             $em->remove($listDoc);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('ujm_question_manage_doc'));
+            $user = $this->container->get('security.context')->getToken()->getUser();
+
+                $repository = $this->getDoctrine()
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:Document');
+
+                $ListDoc = $repository->findBy(array('user' => $user->getId()));
+
+                // Pagination to see questions link to paper (and cannot be deleted)
+                $adapterDoc = new ArrayAdapter($ListDoc);
+                $pagerDoc = new Pagerfanta($adapterDoc);
+
+                // If delete last item of page, display the previous one
+                $rest = $nbItem % $maxPage;
+
+                if ($rest == 1) {
+                    $pageNow -= 1;
+                }
+
+                try {
+                    $listDoc = $pagerDoc
+                        ->setMaxPerPage($maxPage)
+                        ->setCurrentPage($pageNow)
+                        ->getCurrentPageResults()
+                    ;
+                } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
+                    throw $this->createNotFoundException("Cette page n'existe pas.");
+                }
+
+                return $this->render('UJMExoBundle:Question:manageImg.html.twig', array(
+                    'listDoc' => $listDoc,
+                    'pagerDoc' => $pagerDoc,
+                    )
+                );
 
         } else {
 
@@ -799,26 +853,63 @@ class QuestionController extends Controller
         $request = $this->container->get('request');
         $user = $this->container->get('security.context')->getToken()->getUser();
 
-        if ($request->isXmlHttpRequest()) {
-            $type = $request->request->get('doctype');
+        $max = 5; // Max per page
 
-            if ($type) {
-                $repository = $this->getDoctrine()
-                    ->getManager()
-                    ->getRepository('UJMExoBundle:Document');
+        $type = $request->query->get('doctype');
+        $searchLabel = $request->query->get('searchLabel');
+        $page = $request->query->get('page');
 
-                if ($type == 'all') {
-                    $listDocSort = $repository->findBy(array('user' => $user->getId()));
-                } else {
-                    $listDocSort = $repository->findByType($type, $user->getId());
-                }
+        if ($type && isset($searchLabel)) {
+            $repository = $this->getDoctrine()
+                ->getManager()
+                ->getRepository('UJMExoBundle:Document');
+
+            $ListDocSort = $repository->findByType($type, $user->getId(), $searchLabel);
+
+            // Pagination of sorted documents
+            $adapterSortDoc = new ArrayAdapter($ListDocSort);
+            $pagerSortDoc = new Pagerfanta($adapterSortDoc);
+
+            try {
+                $listDocSort = $pagerSortDoc
+                    ->setMaxPerPage($max)
+                    ->setCurrentPage($page)
+                    ->getCurrentPageResults()
+                ;
+            } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
+                throw $this->createNotFoundException("Cette page n'existe pas.");
             }
-        }
 
-        return $this->render('UJMExoBundle:Question:sortDoc.html.twig', array(
-            'listDoc' => $listDocSort
-            )
-        );
+            // Put the result in a twig
+            $divResultSearch = $this->render(
+                'UJMExoBundle:Question:sortDoc.html.twig', array(
+                'listFindDoc' => $listDocSort,
+                'pagerFindDoc' => $pagerSortDoc,
+                'labelToFind' => $searchLabel,
+                'whichAction' => 'sort',
+                'doctype' => $type
+            ));
+
+            // If request is ajax (first display of the first search result (page = 1))
+            if ($request->isXmlHttpRequest()) {
+                return $divResultSearch; // Send the twig with the result
+            } else {
+                // Cut the header of the request to only have the twig with the result
+                $divResultSearch = substr($divResultSearch, strrpos($divResultSearch, '<table'));
+
+                // Send the form to search and the result
+                return $this->render(
+                    'UJMExoBundle:Question:manageImg.html.twig', array(
+                    'divResultSearch' => $divResultSearch
+                ));
+            }
+        } else {
+            return $this->render(
+                'UJMExoBundle:Question:sortDoc.html.twig', array(
+                'listFindDoc' => '',
+                'whichAction' => 'sort'
+            ));
+        }
     }
 
     /**
@@ -827,21 +918,61 @@ class QuestionController extends Controller
      */
     public function searchDocAction()
     {
-        $request = $this->container->get('request');
+        $userId = $this->container->get('security.context')->getToken()->getUser()->getId();
+        $request = $this->get('request');
 
-        if ($request->isXmlHttpRequest()) {
-            $labelToFind = $request->request->get('labelToFind');
+        $max = 5; // Max per page
 
-            if ($labelToFind) {
-                $em = $this->getDoctrine()->getManager();
-                $listFindDoc = $em->getRepository('UJMExoBundle:Document')->findByLabel($labelToFind);
+        $labelToFind = $request->query->get('labelToFind');
+        $page = $request->query->get('page');
+
+        if ($labelToFind) {
+            $em = $this->getDoctrine()->getManager();
+            $ListFindDoc = $em->getRepository('UJMExoBundle:Document')->findByLabel($labelToFind, $userId);
+
+            // Pagination finded documents
+            $adapterFindDoc = new ArrayAdapter($ListFindDoc);
+            $pagerFindDoc = new Pagerfanta($adapterFindDoc);
+
+            try {
+                $listFindDoc = $pagerFindDoc
+                    ->setMaxPerPage($max)
+                    ->setCurrentPage($page)
+                    ->getCurrentPageResults()
+                ;
+            } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
+                throw $this->createNotFoundException("Cette page n'existe pas.");
             }
-        }
 
-        return $this->render('UJMExoBundle:Question:sortDoc.html.twig', array(
-            'listDoc' => $listFindDoc
-            )
-        );
+            // Put the result in a twig
+            $divResultSearch = $this->render(
+                'UJMExoBundle:Question:sortDoc.html.twig', array(
+                'listFindDoc' => $listFindDoc,
+                'pagerFindDoc' => $pagerFindDoc,
+                'labelToFind' => $labelToFind,
+                'whichAction' => 'search'
+            ));
+
+            // If request is ajax (first display of the first search result (page = 1))
+            if ($request->isXmlHttpRequest()) {
+                return $divResultSearch; // Send the twig with the result
+            } else {
+                // Cut the header of the request to only have the twig with the result
+                $divResultSearch = substr($divResultSearch, strrpos($divResultSearch, '<table'));
+
+                // Send the form to search and the result
+                return $this->render(
+                    'UJMExoBundle:Question:manageImg.html.twig', array(
+                    'divResultSearch' => $divResultSearch
+                ));
+            }
+        } else {
+            return $this->render(
+                'UJMExoBundle:Question:sortDoc.html.twig', array(
+                'listFindDoc' => '',
+                'whichAction' => 'search'
+            ));
+        }
     }
 
 
@@ -1128,6 +1259,11 @@ class QuestionController extends Controller
                     ));
                 }
             }
+        } else {
+            return $this->render(
+                'UJMExoBundle:Question:SearchQuestionType.html.twig', array(
+                'listQuestions' => '',
+            ));
         }
     }
 }

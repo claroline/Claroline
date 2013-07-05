@@ -1,4 +1,4 @@
-##
+
  # ExoOnLine
  # Copyright or © or Copr. Université Jean Monnet (France), 2012
  # dsi.dev@univ-st-etienne.fr
@@ -289,4 +289,16 @@ CategorySearch: Category
 TypeSearch: Type
 TitleSearch: Title
 ContainSearch: Whose question contains ...
-noQuestionFound: No question matching to your search was founded ...
+noQuestionFound: No question  found ...
+noDocFound: No document found ...
+noPaperFound: No paper
+Num_paper: paper's number
+DocManage: Manage my documents
+sharedUser: Shared question
+nameUser2Shared: Name of user to shared question
+findLabel: Find a document  with a specific label
+chooseType: Choose type of document to display
+reset: reset
+findBy: Find by
+findIn: Find in
+findWhat: What you're looking for

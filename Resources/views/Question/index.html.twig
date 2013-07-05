@@ -36,6 +36,27 @@
 {% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
 
 {% block section_content %}
+    <ul>
+        <li style="float: left;  margin-left: 70px;">
+            <a href="{{ path('ujm_question_new') }}">
+                {{ "Create a new entry" | trans }}
+            </a>
+        </li>
+
+        <li style="float: left; margin-left: 100px;">
+            <a href="{{ path('ujm_question_manage_doc') }}">
+                {{ "manageImg" | trans }}
+            </a>
+        </li>
+
+        <li style="float: left; margin-left: 100px;">
+            <a href="{{ path('ujm_question_search_question') }}">
+                {{ "SearchQuestion" | trans }}
+            </a>
+        </li>
+    </ul>
+<hr/>
+
     <h3>{{ "My questions" | trans }}</h3>
     <hr/>
 
@@ -214,26 +235,6 @@
         <p>{{ 'noQuestionFound'|trans }}</p>
     {% endif %}
     <hr/>
-    <ul>
-        <li style="float: left;">
-            <a href="{{ path('ujm_question_new') }}">
-                {{ "Create a new entry" | trans }}
-            </a>
-        </li>
-
-        <li style="float: left; margin-left: 80px;">
-            <a href="{{ path('ujm_question_manage_doc') }}">
-                {{ "manageImg" | trans }}
-            </a>
-        </li>
-
-        <li style="float: left; margin-left: 80px;">
-            <a href="{{ path('ujm_question_search_question') }}">
-                {{ "SearchQuestion" | trans }}
-            </a>
-        </li>
-    </ul>
-
 {% endblock %}
 
 {% block javascripts %}
