@@ -314,16 +314,6 @@ abstract class AbstractResource
     }
 
     /**
-     * Adds a child resource.
-     *
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
-     */
-    public function addChild(AbstractResource $resource)
-    {
-        $this->children[] = $resource;
-    }
-
-    /**
      * Sets the workspace containing the resource instance.
      *
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
