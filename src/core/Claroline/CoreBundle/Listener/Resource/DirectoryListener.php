@@ -18,7 +18,7 @@ use Claroline\CoreBundle\Event\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Event\ExportResourceTemplateEvent;
 use Claroline\CoreBundle\Event\Event\ImportResourceTemplateEvent;
-use Claroline\CoreBundle\Library\Resource\Exporter;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Doctrine\ORM\EntityManager;
 
@@ -29,43 +29,43 @@ class DirectoryListener
 {
     private $container;
     private $roleManager;
+    private $resourceManager;
     private $security;
     private $eventDispatcher;
     private $formFactory;
     private $templating;
-    private $resourceExporter;
 
     /**
      * @DI\InjectParams({
      *     "em"                 = @DI\Inject("doctrine.orm.entity_manager"),
      *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
+     *     "resourceManager"    = @DI\Inject("claroline.manager.resource_manager"),
      *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
      *     "security"           = @DI\Inject("security.context"),
      *     "converter"          = @DI\Inject("claroline.resource.converter"),
      *     "formFactory"        = @DI\Inject("form.factory"),
      *     "templating"         = @DI\Inject("templating"),
-     *     "resourceExporter"   = @DI\Inject("claroline.resource.exporter"),
      *     "container"          = @DI\Inject("service_container")
      * })
      */
     public function __construct(
         EntityManager $em,
         RoleManager $roleManager,
+        ResourceManager $resourceManager,
         EventDispatcher $eventDispatcher,
         SecurityContextInterface $security,
         FormFactoryInterface $formFactory,
         TwigEngine $templating,
-        Exporter $resourceExporter,
         ContainerInterface $container
     )
     {
         $this->em = $em;
         $this->roleManager = $roleManager;
+        $this->resourceManager = $resourceManager;
         $this->eventDispatcher = $eventDispatcher;
         $this->security = $security;
         $this->formFactory = $formFactory;
         $this->templating = $templating;
-        $this->resourceExporter = $resourceExporter;
         $this->container = $container;
     }
 
@@ -125,7 +125,7 @@ class DirectoryListener
     public function onOpen(OpenResourceEvent $event)
     {
         $dir = $event->getResource();
-        $file = $this->resourceExporter->exportResources(array($dir->getId()));
+        $file = $this->resourceManager->download(array($dir));
         $response = new StreamedResponse();
 
         $response->setCallBack(

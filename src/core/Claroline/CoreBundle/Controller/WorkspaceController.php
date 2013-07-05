@@ -507,7 +507,7 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/search/role/code/{code}",
      *     name="claro_resource_find_role_by_code",
      *     options={"expose"=true}
