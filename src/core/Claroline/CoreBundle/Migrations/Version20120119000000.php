@@ -300,7 +300,8 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('name', 'string');
         $table->addColumn('is_exportable', 'boolean');
         $table->addColumn('plugin_id', 'integer', array('notnull' => false));
-        $table->addColumn('class', 'string', array('notnull' => true, 'length' => 255));
+        // class should not be null (>< site bundle -> inherited type)
+        $table->addColumn('class', 'string', array('notnull' => false, 'length' => 255));
         $table->addColumn('parent_id', 'integer', array('notnull' => false));
         $table->addUniqueIndex(array('name'));
         $table->addForeignKeyConstraint(
