@@ -182,7 +182,17 @@ class WorkspaceTagManager
 
     public function getTagsByUser(User $user = null)
     {
-        return $this->tagRepo->findByUser($user);
+        return $this->tagRepo->findBy(array('user' => $user), array('name' => 'ASC'));;
+    }
+
+    public function getTagByNameAndUser($name, User $user = null)
+    {
+        return $this->tagRepo->findOneBy(
+            array(
+                'name' => $name,
+                'user' => $user
+            )
+        );
     }
 
     public function getTagRelationsByWorkspaceAndUser(AbstractWorkspace $workspace, User $user)
@@ -257,6 +267,16 @@ class WorkspaceTagManager
     public function getAllAdminHierarchies()
     {
         return $this->tagHierarchyRepo->findAllAdmin();
+    }
+
+    public function getHierarchiesByUserAndTag(WorkspaceTag $tag, User $user = null)
+    {
+        return $this->tagHierarchyRepo->findBy(array('user' => $user , 'tag' => $tag));
+    }
+
+    public function getHierarchiesByTag(WorkspaceTag $tag)
+    {
+        return $this->tagHierarchyRepo->findBy(array('tag' => $tag));
     }
 
     public function getDatasForWorkspaceList($withRoles = true)
@@ -335,7 +355,6 @@ class WorkspaceTagManager
 
         return $datas;
     }
-
 
     /**
      * Checks if given tag or at least one of its children is associated to a workspace
