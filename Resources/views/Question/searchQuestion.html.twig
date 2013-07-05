@@ -37,6 +37,11 @@
 
 {% block section_content %}
 
+    <h1>{{ "findQuestion" | trans }}</h1>
+
+    <a href="{{ path('ujm_question_index') }}" ><i class="icon-arrow-left"></i> {{ "Back" | trans }}</a>
+    <hr>
+
     <div id="searchQuestions">
 
         <form class="well label_bold" id="searchQuestionForm" enctype="multipart/form-data" method="post"
@@ -67,6 +72,7 @@
 
     <div id="resultSearch">
         {% if divResultSearch is defined %}
+            <br/>{{ 'result' | trans }} : <br/><br/>
             {{ divResultSearch | raw }}
         {% endif %}
     </div>

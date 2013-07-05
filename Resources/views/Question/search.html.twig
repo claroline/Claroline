@@ -33,25 +33,25 @@
  # knowledge of the CeCILL license and that you accept its terms.
 #}
 
+{{ 'result' | trans }} : <br/><br/>
+
 <table id="user-table"  class="table table-striped table-bordered table-condensed">
 <thead>
     <tr>
-        <th>{{ 'username'|trans({}, 'platform') }}</th>
-        <th>{{ 'last_name'|trans({}, 'platform') }}</th>
-        <th>{{ 'first_name'|trans({}, 'platform') }}</th>
-        <th>{{ 'Share'|trans}}</th>
+        <th style="text-align: center">{{ 'username'|trans({}, 'platform') }}</th>
+        <th style="text-align: center">{{ 'last_name'|trans({}, 'platform') }}</th>
+        <th style="text-align: center">{{ 'first_name'|trans({}, 'platform') }}</th>
+        <th style="text-align: center">{{ 'Share'|trans}}</th>
     </tr>
 </thead>
 {% for user in userList %}
     <tr>
-        <td>{{ user.userName }}</td>
-        <td>{{ user.lastName }}</td>
-        <td>{{ user.firstName }}</td>
-        <td>
-
+        <td style="text-align: center; vertical-align: middle;">{{ user.userName }}</td>
+        <td style="text-align: center; vertical-align: middle;">{{ user.lastName }}</td>
+        <td style="text-align: center; vertical-align: middle;">{{ user.firstName }}</td>
+        <td style="text-align: center; vertical-align: middle;">
             <a href="#" onclick="shareQuestionUser('{{ path('ujm_question_shareQuestionUser') }}','{{ user.lastName }}','{{ user.firstName }}'
-            ,'{{ "already" | trans }}','{{ "Self" | trans }}');">
-                <i class="icon-share"></i>
+            ,'{{ "already" | trans }}','{{ "Self" | trans }}');"><i class="icon-share"></i>
             </a>
         </td>
     </tr>

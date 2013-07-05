@@ -302,3 +302,5 @@ reset: reset
 findBy: Find by
 findIn: Find in
 findWhat: What you're looking for
+result: Results
+findQuestion: Find questions

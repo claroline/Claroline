@@ -40,9 +40,11 @@
 {% block section_content %}
     <h1>{{ "My questions" | trans }}</h1>
 
-    <a href="{{ path('ujm_exercise_open', { 'exerciseId':  exerciseID }) }}">{{ "Back" | trans }}</a>
-    |
+    <a href="{{ path('ujm_exercise_open', { 'exerciseId':  exerciseID }) }}"><i class="icon-arrow-left"></i> {{ "Back" | trans }}</a>
+    &nbsp;&nbsp;|&nbsp;&nbsp;
     <a href="{{ path('ujm_exercise_import_question', { 'exoID':  exerciseID }) }}">{{ "Import questions" | trans }}</a>
+    &nbsp;&nbsp;|&nbsp;&nbsp;
+    <a href="{{ path('ujm_question_new', { 'exoID': exerciseID }) }}">{{ "Create a new entry" | trans }}</a>
     <br/><br/>
     <table class="table table-striped table-bordered table-condensed">
         <thead>
@@ -63,7 +65,7 @@
                 <td style="text-align: center; vertical-align: middle;">{{ interaction.invite|raw }}</td>
                 <td style="text-align: center; vertical-align: middle;">{{ interaction.question.category.value }}</td>
                 <td style="text-align: center; vertical-align: middle;">
-                    <ul  style="list-style-type: none;">
+                    <ul  style="list-style-type: none; margin-left: 0;">
                         {% if(questionWithResponse[i] == 0) %}
                             <li>
                                 <a href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}">{{ "Edit" | trans }}</a>
@@ -84,12 +86,4 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('ujm_question_new', { 'exoID': exerciseID }) }}">
-                {{ "Create a new entry" | trans }}
-            </a>
-        </li>
-    </ul>
 {% endblock %}
