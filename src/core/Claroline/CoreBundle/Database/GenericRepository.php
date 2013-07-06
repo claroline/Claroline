@@ -38,8 +38,8 @@ class GenericRepository
     {
         $dql = 'SELECT entity FROM :entityClass entity WHERE entity.id IN (:ids)';
         $query = $this->em->createQuery($dql);
-        $query->setParameter(':entityClass', $entityClass);
-        $query->setParameter(':ids', $ids);
+        $query->setParameter('entityClass', $entityClass);
+        $query->setParameter('ids', $ids);
         $entities = $query->getResult();
 
         if (($entityCount = count($entities)) !== ($idCount = count($ids))) {

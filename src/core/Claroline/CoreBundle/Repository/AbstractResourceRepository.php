@@ -269,7 +269,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
             ORDER BY w.name ASC
         ';
         $query = $this->_em->createQuery($dql);
-        $query->setParameter(':resourceIds', $resourceIds);
+        $query->setParameter('resourceIds', $resourceIds);
 
         return $query->getResult();
     }
