@@ -23,6 +23,7 @@ use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Message;
 use Claroline\CoreBundle\Entity\UserMessage;
 use Claroline\CoreBundle\Entity\Plugin;
+use Claroline\CoreBundle\Entity\Logger\Log;
 
 abstract class AltRepositoryTestCase extends WebTestCase
 {
@@ -360,6 +361,20 @@ abstract class AltRepositoryTestCase extends WebTestCase
         $plugin->setHasOptions(false);
         $plugin->setIcon('default');
         self::create($vendor . $bundle, $plugin);
+    }
+
+    protected static function createLog(User $doer, $action, AbstractWorkspace $workspace = null)
+    {
+        $log = new Log();
+        $log->setDoer($doer);
+        $log->setAction($action);
+        $log->setDoerType(Log::doerTypeUser);
+
+        if ($workspace) {
+            $log->setWorkspace($workspace);
+        }
+
+        self::$writer->create($log);
     }
 
     private static function set($reference, $entity)
