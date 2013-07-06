@@ -41,11 +41,9 @@ class AltAbstractResourceRepositoryTest extends RepositoryTestCase
          */
         self::createDirectory('dir_1', self::get('t_dir'), self::get('john'), self::get('ws_1'));
         self::createDirectory('dir_2', self::get('t_dir'), self::get('john'), self::get('ws_1'), self::get('dir_1'));
-
-        sleep(1); // dates involved
-        self::$time = new \DateTime();
-        sleep(1);
-
+        self::sleep(1); // dates involved
+        self::$time = self::getTime();
+        self::sleep(1);
         self::createDirectory('dir_3', self::get('t_dir'), self::get('john'), self::get('ws_1'), self::get('dir_1'));
         self::createDirectory('dir_4', self::get('t_dir'), self::get('john'), self::get('ws_1'), self::get('dir_3'));
         self::createDirectory('dir_5', self::get('t_dir'), self::get('jane'), self::get('ws_2'));
@@ -147,10 +145,10 @@ class AltAbstractResourceRepositoryTest extends RepositoryTestCase
         $resources = self::$repo->findByCriteria(array('roots' => array(self::get('dir_1')->getPath())));
         $this->assertEquals(6, count($resources));
 
-        $resources = self::$repo->findByCriteria(array('dateFrom' => self::$time->format('Y-m-d H:i:s')));
+        $resources = self::$repo->findByCriteria(array('dateFrom' => self::$time));
         $this->assertEquals(6, count($resources));
 
-        $resources = self::$repo->findByCriteria(array('dateTo' => self::$time->format('Y-m-d H:i:s')));
+        $resources = self::$repo->findByCriteria(array('dateTo' => self::$time));
         $this->assertEquals(2, count($resources));
 
         $resources = self::$repo->findByCriteria(array('name' => '_1'));

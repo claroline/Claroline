@@ -27,7 +27,7 @@ class WorkspaceRepositoryTest extends RepositoryTestCase
         self::createWorkspaceTool(self::get('tool_2'), self::get('ws_2'), array(self::get('ROLE_2')), 1);
         self::createUser('john', array(self::get('ROLE_1'), self::get('ROLE_2')), self::get('ws_1'));
         self::createLog(self::get('john'), 'ws_tool_read', self::get('ws_1'));
-        sleep(1); // dates involved
+        self::sleep(1); // dates involved
         self::createLog(self::get('john'), 'ws_tool_read', self::get('ws_2'));
         self::createResourceType('t_dir');
         self::createDirectory('dir_1', self::get('t_dir'), self::get('john'), self::get('ws_2'));

@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Library\Testing;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Gedmo\Timestampable\TimestampableListener;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
@@ -32,18 +33,36 @@ abstract class RepositoryTestCase extends WebTestCase
     private static $em;
     private static $references;
 
+    private static $time;
+
     public static function setUpBeforeClass()
     {
         self::$client = static::createClient();
         self::$em = self::$client->getContainer()->get('doctrine.orm.entity_manager');
         self::$writer = self::$client->getContainer()->get('claroline.database.writer');
         self::$references = array();
+        self::$time = new \DateTime();
         self::$client->beginTransaction();
+        self::disableTimestampableListener();
     }
 
     public static function tearDownAfterClass()
     {
         self::$client->shutdown();
+    }
+
+    protected static function getTime($format = 'Y-m-d H:i:s')
+    {
+        if ($format) {
+            return self::$time->format($format);
+        }
+
+        return self::$time;
+    }
+
+    protected static function sleep($seconds)
+    {
+        self::$time->add(new \DateInterval("PT{$seconds}S"));
     }
 
     protected static function getRepository($entityClass)
@@ -67,6 +86,7 @@ abstract class RepositoryTestCase extends WebTestCase
         $user->setLastName($name . 'LastName');
         $user->setUsername($name . 'Username');
         $user->setPlainPassword($name . 'Password');
+        $user->setCreationDate(self::$time);
 
         foreach ($roles as $role) {
             $user->addRole($role);
@@ -140,30 +160,18 @@ abstract class RepositoryTestCase extends WebTestCase
         Directory $parent = null
     )
     {
-        $directory = new Directory();
+        $directory = self::prepareResource(new Directory(), $type, $creator, $workspace, $parent);
         $directory->setName($name);
-        $directory->setCreator($creator);
-        $directory->setWorkspace($workspace);
-        $directory->setResourceType($type);
         $directory->setMimeType('directory/mime');
-
-        if ($parent) {
-            $directory->setParent($parent);
-        }
-
         self::create($name, $directory);
     }
 
     protected static function createFile($name, ResourceType $type, User $creator, Directory $parent)
     {
-        $file = new File();
+        $file = self::prepareResource(new File(), $type, $creator, $parent->getWorkspace(), $parent);
         $file->setName($name);
-        $file->setCreator($creator);
-        $file->setWorkspace($parent->getWorkspace());
-        $file->setParent($parent);
         $file->setSize(123);
         $file->setHashName($name);
-        $file->setResourceType($type);
         $file->setMimeType('file/mime');
         self::create($name, $file);
     }
@@ -176,12 +184,8 @@ abstract class RepositoryTestCase extends WebTestCase
         Directory $parent
     )
     {
-        $text = new Text();
+        $text = self::prepareResource(new Text(), $type, $creator, $parent->getWorkspace(), $parent);
         $text->setName($name);
-        $text->setResourceType($type);
-        $text->setCreator($creator);
-        $text->setWorkspace($parent->getWorkspace());
-        $text->setParent($parent);
         self::create($name, $text);
 
         $revision = new Revision();
@@ -199,13 +203,9 @@ abstract class RepositoryTestCase extends WebTestCase
         Directory $parent
     )
     {
-        $shortcut = new ResourceShortcut();
+        $shortcut = self::prepareResource(new ResourceShortcut(), $type, $creator, $parent->getWorkspace(), $parent);
         $shortcut->setName($name);
-        $shortcut->setCreator($creator);
-        $shortcut->setWorkspace($parent->getWorkspace());
-        $shortcut->setParent($parent);
         $shortcut->setResource($target);
-        $shortcut->setResourceType($type);
         $shortcut->setMimeType('shortcut/mime');
         self::create($name, $shortcut);
     }
@@ -238,6 +238,10 @@ abstract class RepositoryTestCase extends WebTestCase
             );
             $activity->addResourceActivity($activityResource);
         }
+
+
+        $activity->setCreationDate(self::$time);
+
 
         self::create($name, $activity);
         self::$writer->forceFlush();
@@ -324,6 +328,7 @@ abstract class RepositoryTestCase extends WebTestCase
         $message->setSender($sender);
         $message->setObject($object);
         $message->setContent($content);
+        $message->setDate(self::$time);
 
         if ($parent) {
             $message->setParent($parent);
@@ -369,12 +374,46 @@ abstract class RepositoryTestCase extends WebTestCase
         $log->setDoer($doer);
         $log->setAction($action);
         $log->setDoerType(Log::doerTypeUser);
+        $log->setDateLog(self::$time);
 
         if ($workspace) {
             $log->setWorkspace($workspace);
         }
 
         self::$writer->create($log);
+    }
+
+    private static function prepareResource(
+        AbstractResource $resource,
+        ResourceType $type,
+        User $creator,
+        AbstractWorkspace $workspace,
+        $parent = null
+    )
+    {
+        $resource->setResourceType($type);
+        $resource->setCreator($creator);
+        $resource->setWorkspace($workspace);
+        $resource->setCreationDate(self::$time);
+
+        if ($parent) {
+            $resource->setParent($parent);
+        }
+
+        return $resource;
+    }
+
+    private static function disableTimestampableListener()
+    {
+        $eventManager = self::$em->getConnection()->getEventManager();
+
+        foreach ($eventManager->getListeners() as $listeners) {
+            foreach ($listeners as $listener) {
+                if ($listener instanceof TimestampableListener) {
+                    $eventManager->removeEventSubscriber($listener);
+                }
+            }
+        }
     }
 
     private static function set($reference, $entity)
