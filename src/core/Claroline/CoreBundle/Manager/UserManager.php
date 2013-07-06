@@ -213,7 +213,7 @@ class UserManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
-    public function getUsersByName($search, $getQuery = false)
+    public function getUsersByName($search, $page)
     {
         $query = $this->userRepo->findByName($search, false);
 
