@@ -166,8 +166,10 @@ class UserRepositoryTest extends RepositoryTestCase
         $users = self::$repo->findUsersEnrolledInMostWorkspaces(10);
         $this->assertEquals(3, count($users));
         $this->assertEquals('bobUsername', $users[0]['username']);
-        $this->assertEquals('janeUsername', $users[2]['username']);
-        $this->assertEquals(2, $users[0]['total']);
+        $lastUsers = array($users[1]['username'], $users[2]['username']);
+        $this->assertContains('janeUsername', $lastUsers);
+        $this->assertContains('johnUsername', $lastUsers);
+        $this->assertEquals(1, $users[1]['total']);
         $this->assertEquals(1, $users[2]['total']);
     }
 
