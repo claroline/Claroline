@@ -26,13 +26,18 @@ use Claroline\CoreBundle\Entity\UserMessage;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Logger\Log;
 
+/**
+ * Base test case for repository testing. Provides fixture methods intended to be
+ * called during the test case class set up, so that all the writing operations are
+ * done once per test case. Created objects are stored in a internal collection
+ * and can be retrieved in every test using a getter.
+ */
 abstract class RepositoryTestCase extends WebTestCase
 {
     protected static $writer;
     private static $client;
     private static $em;
     private static $references;
-
     private static $time;
 
     public static function setUpBeforeClass()
@@ -51,6 +56,45 @@ abstract class RepositoryTestCase extends WebTestCase
         self::$client->shutdown();
     }
 
+    /**
+     * Returns the repository associated to an entity class.
+     *
+     * @param string $entityClass
+     *
+     * @return EntityRepository
+     */
+    protected static function getRepository($entityClass)
+    {
+        return self::$em->getRepository($entityClass);
+    }
+
+    /**
+     * Returns a reference previously stored by a fixture method.
+     *
+     * @param string $reference
+     *
+     * @return object
+     *
+     * @throws \InvalidArgumentException if the reference is not present in the collection
+     */
+    protected static function get($reference)
+    {
+        if (isset(self::$references[$reference])) {
+            return self::$references[$reference];
+        }
+
+        throw new \InvalidArgumentException("Unknown fixture reference '{$reference}'");
+    }
+
+    /**
+     * Returns the internal time of the test case. All the fixture methods dealing
+     * with dates refer to that time. Default time is the set up time but it may be
+     * changed with calls to the "sleep" method.
+     *
+     * @param string $format
+     *
+     * @return string|DateTime
+     */
     protected static function getTime($format = 'Y-m-d H:i:s')
     {
         if ($format) {
@@ -60,23 +104,14 @@ abstract class RepositoryTestCase extends WebTestCase
         return self::$time;
     }
 
+    /**
+     * Increases the test case internal time by a number of seconds.
+     *
+     * @param integer $seconds
+     */
     protected static function sleep($seconds)
     {
         self::$time->add(new \DateInterval("PT{$seconds}S"));
-    }
-
-    protected static function getRepository($entityClass)
-    {
-        return self::$em->getRepository($entityClass);
-    }
-
-    protected static function get($reference)
-    {
-        if (isset(self::$references[$reference])) {
-            return self::$references[$reference];
-        }
-
-        throw new \Exception("Unknown fixture reference '{$reference}'");
     }
 
     protected static function createUser($name, array $roles = array(), AbstractWorkspace $personalWorkspace = null)
@@ -383,6 +418,17 @@ abstract class RepositoryTestCase extends WebTestCase
         self::$writer->create($log);
     }
 
+    /**
+     * Sets the common properties of a resource.
+     *
+     * @param AbstractResource $resource
+     * @param ResourceType $type
+     * @param User $creator
+     * @param AbstractWorkspace $workspace
+     * @param Directory $parent
+     *
+     * @return AbstractResource
+     */
     private static function prepareResource(
         AbstractResource $resource,
         ResourceType $type,
@@ -403,6 +449,10 @@ abstract class RepositoryTestCase extends WebTestCase
         return $resource;
     }
 
+    /**
+     * Disables the timestamp listener so that fixture methods are forced to set
+     * dates explicitely.
+     */
     private static function disableTimestampableListener()
     {
         $eventManager = self::$em->getConnection()->getEventManager();
@@ -416,15 +466,29 @@ abstract class RepositoryTestCase extends WebTestCase
         }
     }
 
+    /**
+     * Stores an entity in the reference collection.
+     *
+     * @param string $reference
+     * @param object $entity
+     *
+     * @throws \InvalidArgumentException if the reference is already set
+     */
     private static function set($reference, $entity)
     {
         if (isset(self::$references[$reference])) {
-            throw new \Exception("Fixture reference '{$reference}' is already set");
+            throw new \InvalidArgumentException("Fixture reference '{$reference}' is already set");
         }
 
         self::$references[$reference] = $entity;
     }
 
+    /**
+     * Persists an entity and stores it in the reference collection.
+     *
+     * @param string $reference
+     * @param object $entity
+     */
     private static function create($reference, $entity)
     {
         self::$writer->create($entity);
