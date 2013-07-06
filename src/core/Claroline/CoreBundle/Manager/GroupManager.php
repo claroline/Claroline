@@ -18,13 +18,13 @@ class GroupManager
     private $groupRepo;
     private $pagerFactory;
 
- /**
+    /**
      * Constructor.
      *
      * @DI\InjectParams({
      *     "groupRepo"      = @DI\Inject("claroline.repository.group_repository"),
      *     "writer"         = @DI\Inject("claroline.database.writer"),
-     *     "pagerFactory    = @DI\Inject("claroline.pager.pager_factory")
+     *     "pagerFactory"   = @DI\Inject("claroline.pager.pager_factory")
      * })
      */
     public function __construct(
