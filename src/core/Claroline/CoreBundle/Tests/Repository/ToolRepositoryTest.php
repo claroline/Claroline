@@ -53,8 +53,9 @@ class ToolRepositoryTest extends RepositoryTestCase
     {
         $result = self::$repo->findDisplayedToolsByWorkspace(self::get('ws_1'));
         $this->assertEquals(2, count($result));
-        $this->assertEquals('tool_1', $result[0]->getName());
-        $this->assertEquals('tool_2', $result[1]->getName());
+        $toolNames = array($result[0]->getName(), $result[1]->getName());
+        $this->assertContains('tool_1', $toolNames);
+        $this->assertContains('tool_2', $toolNames);
     }
 
     public function testCountDisplayedToolsByWorkspace()
