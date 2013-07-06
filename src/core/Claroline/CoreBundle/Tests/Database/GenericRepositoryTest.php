@@ -26,8 +26,8 @@ class GenericRepositoryTest extends MockeryTestCase
             ->once()
             ->with('SELECT entity FROM :entityClass entity WHERE entity.id IN (:ids)')
             ->andReturn($this->query);
-        $this->query->shouldReceive('setParameter')->with(':entityClass', 'Entity\Foo')->once();
-        $this->query->shouldReceive('setParameter')->with(':ids', array(1, 2))->once();
+        $this->query->shouldReceive('setParameter')->with('entityClass', 'Entity\Foo')->once();
+        $this->query->shouldReceive('setParameter')->with('ids', array(1, 2))->once();
         $this->query->shouldReceive('getResult')->once()->andReturn(array('entity 1', 'entity 2'));
         $entities = $this->repo->findByIds('Entity\Foo', array(1, 2));
         $this->assertEquals(array('entity 1', 'entity 2'), $entities);

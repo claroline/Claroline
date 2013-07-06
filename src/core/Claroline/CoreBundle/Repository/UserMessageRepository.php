@@ -202,8 +202,8 @@ class UserMessageRepository extends EntityRepository
             ORDER BY m.date DESC
         ';
         $query = $this->_em->createQuery($dql);
-        $query->setParameter(':messageIds', $messageIds);
-        $query->setParameter(':userId', $user->getId());
+        $query->setParameter('messageIds', $messageIds);
+        $query->setParameter('userId', $user->getId());
 
         return $query->getResult();
     }
