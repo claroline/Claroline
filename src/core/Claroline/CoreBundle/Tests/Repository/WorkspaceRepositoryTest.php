@@ -2,11 +2,11 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Claroline\CoreBundle\Library\Testing\AltRepositoryTestCase;
+use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 use Claroline\CoreBundle\Entity\Logger\Log;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 
-class WorkspaceRepositoryTest extends AltRepositoryTestCase
+class WorkspaceRepositoryTest extends RepositoryTestCase
 {
     public static $repo;
 
