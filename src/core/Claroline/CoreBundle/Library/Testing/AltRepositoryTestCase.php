@@ -59,7 +59,7 @@ abstract class AltRepositoryTestCase extends WebTestCase
         throw new \Exception("Unknown fixture reference '{$reference}'");
     }
 
-    protected static function createUser($name, array $roles = array())
+    protected static function createUser($name, array $roles = array(), AbstractWorkspace $personalWorkspace = null)
     {
         $user = new User();
         $user->setFirstName($name . 'FirstName');
@@ -69,6 +69,10 @@ abstract class AltRepositoryTestCase extends WebTestCase
 
         foreach ($roles as $role) {
             $user->addRole($role);
+        }
+
+        if ($personalWorkspace) {
+            $user->setPersonalWorkspace($personalWorkspace);
         }
 
         self::create($name, $user);
@@ -319,8 +323,6 @@ abstract class AltRepositoryTestCase extends WebTestCase
         $message->setSender($sender);
         $message->setObject($object);
         $message->setContent($content);
-        $message->setTo('some receiver string');
-        $message->setReceiverString('some receiver string');
 
         if ($parent) {
             $message->setParent($parent);
