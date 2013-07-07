@@ -11,52 +11,43 @@ class RoleManagerTest extends MockeryTestCase
 {
     private $writer;
     private $roleRepo;
+    private $securityContext;
 
     public function setUp()
     {
         parent::setUp();
         $this->writer = m::mock('Claroline\CoreBundle\Database\Writer');
         $this->roleRepo = m::mock('Claroline\CoreBundle\Repository\RoleRepository');
+        $this->securityContext = m::mock('Symfony\Component\Security\Core\SecurityContextInterface');
     }
 
     public function testCreateWorkspaceRole()
     {
-        $this->markTestSkipped('Not tested thoroughly');
         $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $roleName = 'ROLE_WS_USER';
-        $roleKey = 'user';
-
         $this->writer->shouldReceive('create')
             ->with(anInstanceOf('Claroline\CoreBundle\Entity\Role'))
             ->once();
+        $this->getManager()->createWorkspaceRole('ROLE_WS_USER', 'user', $workspace);
 
-        $this->getManager()->createWorkspaceRole($roleName, $roleKey, $workspace);
+        $this->markTestIncomplete('Not tested thoroughly');
     }
 
     public function testCreateBaseRole()
     {
-        $this->markTestSkipped('Not tested thoroughly');
-        $roleName = 'ROLE_WS_USER';
-        $roleKey = 'user';
-
         $this->writer->shouldReceive('create')
             ->with(anInstanceOf('Claroline\CoreBundle\Entity\Role'))
             ->once();
-
-        $this->getManager()->createBaseRole($roleName, $roleKey);
+        $this->getManager()->createBaseRole('ROLE_WS_USER', 'user');
+        $this->markTestIncomplete('Not tested thoroughly');
     }
 
     public function testCreateCustomRole()
     {
-        $this->markTestSkipped('Not tested thoroughly');
-        $roleName = 'ROLE_WS_USER';
-        $roleKey = 'user';
-
         $this->writer->shouldReceive('create')
             ->with(anInstanceOf('Claroline\CoreBundle\Entity\Role'))
             ->once();
-
-        $this->getManager()->createCustomRole($roleName, $roleKey);
+        $this->getManager()->createCustomRole('ROLE_WS_USER', 'user');
+        $this->markTestIncomplete('Not tested thoroughly');
     }
 
     public function testSetRoleToRoleSubject()
@@ -162,22 +153,21 @@ class RoleManagerTest extends MockeryTestCase
     private function getManager(array $mockedMethods = array())
     {
         if (count($mockedMethods) === 0) {
-
-            return new RoleManager($this->writer, $this->roleRepo);
-        } else {
-            $stringMocked = '[';
-            $stringMocked .= array_pop($mockedMethods);
-
-            foreach ($mockedMethods as $mockedMethod) {
-                $stringMocked .= ",{$mockedMethod}";
-            }
-
-            $stringMocked .= ']';
-
-            return m::mock(
-                'Claroline\CoreBundle\Manager\RoleManager' . $stringMocked,
-                array($this->writer, $this->roleRepo)
-            );
+            return new RoleManager($this->writer, $this->roleRepo, $this->securityContext);
         }
+
+        $stringMocked = '[';
+        $stringMocked .= array_pop($mockedMethods);
+
+        foreach ($mockedMethods as $mockedMethod) {
+            $stringMocked .= ",{$mockedMethod}";
+        }
+
+        $stringMocked .= ']';
+
+        return m::mock(
+            'Claroline\CoreBundle\Manager\RoleManager' . $stringMocked,
+            array($this->writer, $this->roleRepo, $this->securityContext)
+        );
     }
 }

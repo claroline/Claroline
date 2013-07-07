@@ -18,6 +18,8 @@ class UserManagerTest extends MockeryTestCase
     private $personalWsTemplateFile;
     private $trans;
     private $ch;
+    private $genericRepo;
+    private $pagerFactory;
 
     public function setUp()
     {
@@ -31,6 +33,8 @@ class UserManagerTest extends MockeryTestCase
         $this->personalWsTemplateFile = 'template';
         $this->trans = m::mock('Symfony\Component\Translation\Translator');
         $this->ch = m::mock('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
+        $this->genericRepo = m::mock('Claroline\CoreBundle\Database\GenericRepository');
+        $this->pagerFactory = m::mock('Claroline\CoreBundle\Pager\PagerFactory');
     }
 
     public function testInsert()
@@ -194,7 +198,6 @@ class UserManagerTest extends MockeryTestCase
     private function getManager(array $mockedMethods = array())
     {
         if (count($mockedMethods) === 0) {
-
             return new UserManager(
                 $this->userRepo,
                 $this->writer,
@@ -204,32 +207,36 @@ class UserManagerTest extends MockeryTestCase
                 $this->ed,
                 $this->personalWsTemplateFile,
                 $this->trans,
-                $this->ch
-            );
-        } else {
-            $stringMocked = '[';
-            $stringMocked .= array_pop($mockedMethods);
-
-            foreach ($mockedMethods as $mockedMethod) {
-                $stringMocked .= ",{$mockedMethod}";
-            }
-
-            $stringMocked .= ']';
-
-            return m::mock(
-                'Claroline\CoreBundle\Manager\UserManager' . $stringMocked,
-                array(
-                    $this->userRepo,
-                    $this->writer,
-                    $this->roleManager,
-                    $this->workspaceManager,
-                    $this->toolManager,
-                    $this->ed,
-                    $this->personalWsTemplateFile,
-                    $this->trans,
-                    $this->ch
-                )
+                $this->ch,
+                $this->genericRepo,
+                $this->pagerFactory
             );
         }
+
+        $stringMocked = '[';
+        $stringMocked .= array_pop($mockedMethods);
+
+        foreach ($mockedMethods as $mockedMethod) {
+            $stringMocked .= ",{$mockedMethod}";
+        }
+
+        $stringMocked .= ']';
+
+        return m::mock(
+            'Claroline\CoreBundle\Manager\UserManager' . $stringMocked,
+            array(
+                $this->userRepo,
+                $this->writer,
+                $this->roleManager,
+                $this->workspaceManager,
+                $this->toolManager,
+                $this->ed,
+                $this->personalWsTemplateFile,
+                $this->trans,
+                $this->ch,
+                $this->genericRepo,
+                $this->pagerFactory
+            )
+        );
     }
 }
