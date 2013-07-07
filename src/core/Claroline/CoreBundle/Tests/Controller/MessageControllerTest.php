@@ -34,9 +34,6 @@ class MessageControllerTest extends MockeryTestCase
         );
     }
 
-    /**
-     * @group message
-     */
     public function testFormAction()
     {
         $receivers = array('foo');
@@ -52,9 +49,6 @@ class MessageControllerTest extends MockeryTestCase
         $this->assertEquals(array('form' => 'view'), $this->controller->formAction($receivers));
     }
 
-    /**
-     * @group message
-     */
     public function testFormForGroupAction()
     {
         $group = new Group();
@@ -71,9 +65,6 @@ class MessageControllerTest extends MockeryTestCase
         $this->assertEquals('/message?ids[]=1', $response->getTargetUrl());
     }
 
-    /**
-     * @group message
-     */
     public function testSendAction()
     {
         $sender = new User();
@@ -99,8 +90,31 @@ class MessageControllerTest extends MockeryTestCase
         );
     }
 
+    public function testShowAction()
+    {
+        $user = new User();
+        $sender = new User();
+        $sender->setUsername('john');
+        $message = new Message();
+        $message->setSender($sender);
+        $message->setObject('Some object...');
+        $this->messageManager->shouldReceive('markAsRead')->once()->with($user, array($message));
+        $this->messageManager->shouldReceive('getConversation')
+            ->once()
+            ->with($message)
+            ->andReturn('ancestors');
+        $this->formFactory->shouldReceive('create')
+            ->once()
+            ->with(FormFactory::TYPE_MESSAGE, array('john', 'Re: Some object...'), $message)
+            ->andReturn($this->form);
+        $this->form->shouldReceive('createView')->once()->andReturn('form');
+        $this->assertEquals(
+            array('ancestors' => 'ancestors', 'message' => $message, 'form' => 'form'),
+            $this->controller->showAction($user, $message)
+        );
+    }
+
     /**
-     * @group message
      * @dataProvider messageTypeProvider
      */
     public function testListMessages($type)
@@ -117,7 +131,6 @@ class MessageControllerTest extends MockeryTestCase
     }
 
     /**
-     * @group message
      * @dataProvider messageActionProvider
      */
     public function testActOnMessages($controllerAction, $managerMethod)
@@ -131,9 +144,6 @@ class MessageControllerTest extends MockeryTestCase
         $this->assertEquals(204, $response->getStatusCode());
     }
 
-    /**
-     * @group message
-     */
     public function testMarkAsReadAction()
     {
         $user = new User();
