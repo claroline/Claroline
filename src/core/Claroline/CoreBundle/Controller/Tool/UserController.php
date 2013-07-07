@@ -95,16 +95,11 @@ class UserController extends Controller
     public function registeredUsersListAction(AbstractWorkspace $workspace, $page, $search)
     {
         $this->checkRegistration($workspace);
-        $query = ($search == "") ?
-            $this->userManager->getUsersByWorkspace($workspace, true) :
-            $this->userManager->getUsersByWorkspaceAndName($workspace, $search, true);
-        $pager = $this->pagerFactory->createPager($query, $page);
+        $pager = $search === '' ?
+            $this->userManager->getUsersByWorkspace($workspace, $page) :
+            $this->userManager->getUsersByWorkspaceAndName($workspace, $search, $page);
 
-        return array(
-            'workspace' => $workspace,
-            'pager' => $pager,
-            'search' => $search
-        );
+        return array('workspace' => $workspace, 'pager' => $pager, 'search' => $search);
     }
 
     /**
@@ -134,13 +129,12 @@ class UserController extends Controller
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\user_management:unregisteredUsers.html.twig")
      */
-    public function unregiseredUsersListAction(AbstractWorkspace $workspace, $pager, $search)
+    public function unregiseredUsersListAction(AbstractWorkspace $workspace, $page, $search)
     {
         $this->checkRegistration($workspace, false);
-        $query = ($search == "") ?
-            $this->userManager->getWorkspaceOutsiders($workspace, true) :
-            $this->userManager->getWorkspaceOutsidersByName($workspace, $search, true);
-        $pager = $this->pagerFactory->createPager($query, $page);
+        $pager = $search === '' ?
+            $this->userManager->getWorkspaceOutsiders($workspace, $page) :
+            $this->userManager->getWorkspaceOutsidersByName($workspace, $search, $page);
 
         return array(
             'workspace' => $workspace,

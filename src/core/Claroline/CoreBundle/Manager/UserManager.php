@@ -17,6 +17,8 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Database\GenericRepository;
+use Claroline\CoreBundle\Pager\PagerFactory;
 
 /**
  * @DI\Service("claroline.manager.user_manager")
@@ -32,6 +34,8 @@ class UserManager
     private $personalWsTemplateFile;
     private $trans;
     private $ch;
+    private $genericRepo;
+    private $pagerFactory;
 
     /**
      * Constructor.
@@ -45,7 +49,9 @@ class UserManager
      *     "ed" =                     @DI\Inject("event_dispatcher"),
      *     "personalWsTemplateFile" = @DI\Inject("%claroline.param.templates_directory%"),
      *     "trans" =                  @DI\Inject("translator"),
-     *     "ch" =                     @DI\Inject("claroline.config.platform_config_handler")
+     *     "ch" =                     @DI\Inject("claroline.config.platform_config_handler"),
+     *     "genericRepo" =            @DI\Inject("claroline.database.generic_repository"),
+     *     "pagerFactory" =           @DI\Inject("claroline.pager.pager_factory")
      * })
      */
     public function __construct(
@@ -57,7 +63,9 @@ class UserManager
         EventDispatcher $ed,
         $personalWsTemplateFile,
         Translator $trans,
-        PlatformConfigurationHandler $ch
+        PlatformConfigurationHandler $ch,
+        GenericRepository $genericRepo,
+        PagerFactory $pagerFactory
     )
     {
         $this->userRepo = $userRepo;
@@ -69,6 +77,8 @@ class UserManager
         $this->personalWsTemplateFile = $personalWsTemplateFile."default.zip";
         $this->trans = $trans;
         $this->ch = $ch;
+        $this->genericRepo = $genericRepo;
+        $this->pagerFactory = $pagerFactory;
     }
 
     public function insertUser(User $user)
@@ -182,54 +192,74 @@ class UserManager
         return $this->userRepo->findByWorkspaceAndRole($workspace, $role);
     }
 
-    public function getWorkspaceOutsidersByName(AbstractWorkspace $workspace, $search, $getQuery = false)
+    public function getWorkspaceOutsidersByName(AbstractWorkspace $workspace, $search, $page)
     {
-        return $this->userRepo->findWorkspaceOutsidersByName($workspace, $search, $getQuery);
+        $query = $this->userRepo->findWorkspaceOutsidersByName($workspace, $search, false);
+
+        return $this->pagerFactory->createPager($query, $page);
     }
 
-    public function getWorkspaceOutsiders(AbstractWorkspace $workspace, $getQuery = false)
+    public function getWorkspaceOutsiders(AbstractWorkspace $workspace, $page)
     {
-        return $this->userRepo->findWorkspaceOutsiders($workspace, $getQuery);
+        $query = $this->userRepo->findWorkspaceOutsiders($workspace, false);
+
+        return $this->pagerFactory->createPager($query, $page);
     }
 
-    public function getAllUsers($getQuery = false)
+    public function getAllUsers($page)
     {
-        return $this->userRepo->findAll($getQuery);
+        $query = $this->userRepo->findAll(false);
+
+        return $this->pagerFactory->createPager($query, $page);
     }
 
-    public function getUsersByName($search, $getQuery = false)
+    public function getUsersByName($search, $page)
     {
-        return $this->userRepo->findByName($search, $getQuery);
+        $query = $this->userRepo->findByName($search, false);
+
+        return $this->pagerFactory->createPager($query, $page);
     }
 
-    public function getUsersByGroup(Group $group, $getQuery = false)
+    public function getUsersByGroup(Group $group, $page)
     {
-        return $this->userRepo->findByGroup($group, $getQuery);
+        $query = $this->userRepo->findByGroup($group, false);
+
+        return $this->pagerFactory->createPager($query, $page);
     }
 
-    public function getUsersByNameAndGroup($search, Group $group, $getQuery = false)
+    public function getUsersByNameAndGroup($search, Group $group, $page)
     {
-        return $this->userRepo->findByNameAndGroup($search, $group, $getQuery);
+        $query = $this->userRepo->findByNameAndGroup($search, $group, false);
+
+        return $this->pagerFactory->createPager($query, $page);
     }
 
-    public function getUsersByWorkspace(AbstractWorkspace $workspace, $getQuery = false)
+    public function getUsersByWorkspace(AbstractWorkspace $workspace, $page)
     {
-        return $this->userRepo->findByWorkspace($workspace, $getQuery);
+        $query = $this->userRepo->findByWorkspace($workspace, false);
+
+        return $this->pagerFactory->createPager($query, $page);
     }
 
-    public function getUsersByWorkspaceAndName(AbstractWorkspace $workspace, $search, $getQuery = false)
+    public function getUsersByWorkspaceAndName(AbstractWorkspace $workspace, $search, $page)
     {
-        return $this->userRepo->findByWorkspaceAndName($workspace, $search, $getQuery);
+        $query = $this->userRepo->findByWorkspaceAndName($workspace, $search, false);
+
+        return $this->pagerFactory->createPager($query, $page);
     }
 
-    public function getGroupOutsiders(Group $group, $getQuery = false)
+    public function getGroupOutsiders(Group $group, $page)
     {
-        return $this->userRepo->findGroupOutsiders($group, $getQuery);
+        $query = $this->userRepo->findGroupOutsiders($group, false);
+
+        return $this->pagerFactory->createPager($query, $page);
     }
 
     public function getGroupOutsidersByName(Group $group, $search, $getQuery = false)
     {
-        return $this->userRepo->findGroupOutsidersByName($group, $search, $getQuery);
+        $query = $this->userRepo->findGroupOutsidersByName($group, $search, false);
+
+        return $this->pagerFactory->createPager($query, $page);
     }
 
     public function getAllUsersExcept(User $excludedUser)
@@ -249,7 +279,7 @@ class UserManager
 
     public function getUsersByIds(array $ids)
     {
-        return $this->userRepo->findByIds($ids);
+        return $this->genericRepo->findByIds('Claroline\CoreBundle\Entity\User', $ids);
     }
 
     public function getUsersEnrolledInMostWorkspaces ($max)

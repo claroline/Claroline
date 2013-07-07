@@ -2,9 +2,9 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Claroline\CoreBundle\Library\Testing\AltRepositoryTestCase;
+use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 
-class TextRepositoryTest extends AltRepositoryTestCase
+class TextRepositoryTest extends RepositoryTestCase
 {
     public static $repo;
 
