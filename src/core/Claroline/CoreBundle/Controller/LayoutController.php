@@ -177,7 +177,7 @@ class LayoutController extends Controller
         $roles = $this->get('claroline.security.utilities')->getRoles($token);
         $em = $this->get('doctrine.orm.entity_manager');
         $wsLogs = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
-            ->findLatestWorkspaceByUser($user, $roles);
+            ->findLatestWorkspacesByUser($user, $roles);
         $workspaces = array();
 
         if (!empty($wsLogs)) {

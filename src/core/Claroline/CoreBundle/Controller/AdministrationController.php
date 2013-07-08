@@ -21,7 +21,6 @@ use Claroline\CoreBundle\Library\Configuration\UnwritableException;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Pager\PagerFactory;
 use Symfony\Component\Form\FormError;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -32,14 +31,10 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class AdministrationController extends Controller
 {
-    const USER_PER_PAGE = 40;
-    const GROUP_PER_PAGE = 40;
-
     private $userManager;
     private $roleManager;
     private $groupManager;
     private $security;
-    private $pagerFactory;
     private $eventDispatcher;
     private $configHandler;
     private $formFactory;
@@ -50,7 +45,6 @@ class AdministrationController extends Controller
      *     "roleManager"    = @DI\Inject("claroline.manager.role_manager"),
      *     "groupManager"    = @DI\Inject("claroline.manager.group_manager"),
      *     "security"       = @DI\Inject("security.context"),
-     *     "pagerFactory"   = @DI\Inject("claroline.pager.pager_factory"),
      *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
      *     "configHandler"    = @DI\Inject("claroline.config.platform_config_handler"),
      *     "formFactory" = @DI\Inject("claroline.form.factory")
@@ -61,7 +55,6 @@ class AdministrationController extends Controller
         RoleManager $roleManager,
         GroupManager $groupManager,
         SecurityContextInterface $security,
-        PagerFactory $pagerFactory,
         EventDispatcher $eventDispatcher,
         PlatformConfigurationHandler $configHandler,
         FormFactory $formFactory
@@ -71,7 +64,6 @@ class AdministrationController extends Controller
         $this->roleManager = $roleManager;
         $this->groupManager = $groupManager;
         $this->security = $security;
-        $this->pagerFactory = $pagerFactory;
         $this->eventDispatcher = $eventDispatcher;
         $this->configHandler = $configHandler;
         $this->formFactory = $formFactory;
@@ -96,7 +88,6 @@ class AdministrationController extends Controller
      * )
      * @EXT\Method("GET")
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
-     *
      * @EXT\Template()
      *
      * Displays the user creation form.
@@ -118,7 +109,6 @@ class AdministrationController extends Controller
      * )
      * @EXT\Method("POST")
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
-     *
      * @EXT\Template("ClarolineCoreBundle:Administration:userCreationForm.html.twig")
      *
      * Creates an user (and its personal workspace) and redirects to the user list.
@@ -180,7 +170,6 @@ class AdministrationController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
-     *
      * @EXT\Route(
      *     "users/page/{page}/search/{search}",
      *     name="claro_admin_user_list_search",
@@ -188,17 +177,15 @@ class AdministrationController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
-     *
      * @EXT\Template()
      *
      * Displays the platform user list.
      */
     public function userListAction($page, $search)
     {
-        $query = ($search === '') ?
-            $this->userManager->getAllUsers(true) :
-            $this->userManager->getUsersByName($search, true);
-        $pager = $this->pagerFactory->createPager($query, $page);
+        $pager = $search === '' ?
+            $this->userManager->getAllUsers($page) :
+            $this->userManager->getUsersByName($search, $page);
 
         return array('pager' => $pager, 'search' => $search);
     }
@@ -211,7 +198,6 @@ class AdministrationController extends Controller
      *     defaults={"page"=1, "search"=""}
      * )
      * @EXT\Method("GET")
-     *
      * @EXT\Route(
      *     "groups/page/{page}/search/{search}",
      *     name="claro_admin_group_list_search",
@@ -219,17 +205,15 @@ class AdministrationController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
-     *
      * @EXT\Template()
      *
      * Returns the platform group list.
      */
     public function groupListAction($page, $search)
     {
-        $query = ($search === '') ?
-            $this->groupManager->getAllGroups(true) :
-            $this->groupManager->getGroupsByName($search, true);
-        $pager = $this->pagerFactory->createPager($query, $page);
+        $pager = $search === '' ?
+            $this->groupManager->getGroups($page) :
+            $this->groupManager->getGroupsByName($search, $page);
 
         return array('pager' => $pager, 'search' => $search);
     }
@@ -255,17 +239,15 @@ class AdministrationController extends Controller
      *      class="ClarolineCoreBundle:Group",
      *      options={"id" = "groupId", "strictId" = true}
      * )
-     *
      * @EXT\Template()
      *
      * Returns the users of a group.
      */
     public function usersOfGroupListAction(Group $group, $page, $search)
     {
-        $query = ($search === '') ?
-            $this->userManager->getUsersByGroup($group, true) :
-            $this->userManager->getUsersByNameAndGroup($search, $group, true);
-        $pager = $this->pagerFactory->createPager($query, $page);
+        $pager = $search === '' ?
+            $this->userManager->getUsersByGroup($group, $page) :
+            $this->userManager->getUsersByNameAndGroup($search, $group, $page);
 
         return array('pager' => $pager, 'search' => $search, 'group' => $group);
     }
@@ -291,17 +273,15 @@ class AdministrationController extends Controller
      *      class="ClarolineCoreBundle:Group",
      *      options={"id" = "groupId", "strictId" = true}
      * )
-     *
      * @EXT\Template()
      *
      * Displays the user list with a control allowing to add them to a group.
      */
     public function outsideOfGroupUserListAction(Group $group, $page, $search)
     {
-        $query = ($search === '') ?
-            $this->userManager->getGroupOutsiders($group, true) :
-            $this->userManager->getGroupOutsidersByName($group, $search, true);
-        $pager = $this->pagerFactory->createPager($query, $page);
+        $pager = $search === '' ?
+            $this->userManager->getGroupOutsiders($group, $page) :
+            $this->userManager->getGroupOutsidersByName($group, $page, $search);
 
         return array('pager' => $pager, 'search' => $search, 'group' => $group);
     }
@@ -312,7 +292,6 @@ class AdministrationController extends Controller
      *     name="claro_admin_group_creation_form"
      * )
      * @EXT\Method("GET")
-     *
      * @EXT\Template()
      *
      * Displays the group creation form.
@@ -321,7 +300,7 @@ class AdministrationController extends Controller
      */
     public function groupCreationFormAction()
     {
-        $form = $this->formFactory->create(FormFactory::TYPE_GROUP, array());
+        $form = $this->formFactory->create(FormFactory::TYPE_GROUP);
 
         return array('form_group' => $form->createView());
     }

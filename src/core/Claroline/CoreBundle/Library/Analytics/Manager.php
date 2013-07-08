@@ -81,7 +81,7 @@ class Manager
                 break;
             case "top_workspaces_resources":
                 $repository = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
-                $listData = $repository->workspacesWithMostResources ($max);
+                $listData = $repository->findWorkspacesWithMostResources ($max);
                 break;
             case "top_workspaces_connections":
                 $listData = $this->topWSByAction($range, 'ws_tool_read', $max);

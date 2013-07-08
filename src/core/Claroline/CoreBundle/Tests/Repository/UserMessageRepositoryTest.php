@@ -2,9 +2,9 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Claroline\CoreBundle\Library\Testing\AltRepositoryTestCase;
+use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 
-class UserMessageRepositoryTest extends AltRepositoryTestCase
+class UserMessageRepositoryTest extends RepositoryTestCase
 {
     private static $repo;
 
@@ -25,7 +25,7 @@ class UserMessageRepositoryTest extends AltRepositoryTestCase
             'message_1 object',
             'message_1 content'
         );
-        sleep(1); // dates involved
+        self::sleep(1); // dates involved
         self::createMessage(
             'message_2',
             self::get('sender'),
@@ -34,7 +34,7 @@ class UserMessageRepositoryTest extends AltRepositoryTestCase
             'message_2 content',
             self::get('message_1')
         );
-        sleep(1); // dates involved
+        self::sleep(1); // dates involved
         self::createMessage(
             'message_3',
             self::get('receiver_2'),
