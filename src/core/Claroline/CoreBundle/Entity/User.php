@@ -192,12 +192,12 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     protected $desktopTools;
 
     /**
-     * @var Badge[]|ArrayCollection
+     * @var UserBadge[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Badge\UserBadge", mappedBy="user", cascade={"all"})
      * @ORM\JoinTable(name="claro_user_badge")
      */
-    protected $badges;
+    protected $userBadges;
 
     public function __construct()
     {
@@ -208,7 +208,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $this->abstractResources = new ArrayCollection();
         $this->salt              = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
         $this->desktopTools      = new ArrayCollection();
-        $this->badges            = new ArrayCollection();
+        $this->userBadges        = new ArrayCollection();
     }
 
     /**
@@ -562,22 +562,54 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Badge[]|\Doctrine\Common\Collections\ArrayCollection $badges
+     * @param \Claroline\CoreBundle\Entity\Badge\Badge[]|\Doctrine\Common\Collections\ArrayCollection $badges
      *
      * @return User
      */
-    public function setBadges($badges)
+    public function setUserBadges($badges)
     {
-        $this->badges = $badges;
+        $this->userBadges = $badges;
 
         return $this;
     }
 
     /**
-     * @return \Claroline\CoreBundle\Entity\Badge[]|\Doctrine\Common\Collections\ArrayCollection
+     * @return \Claroline\CoreBundle\Entity\UserBadge[]|\Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getUserBadges()
+    {
+        return $this->userBadges;
+    }
+
+    /**
+     * @return \Claroline\CoreBundle\Entity\Badge\Badge[]|\Doctrine\Common\Collections\ArrayCollection
      */
     public function getBadges()
     {
-        return $this->badges;
+        $badges = new ArrayCollection();
+
+        foreach($this->getUserBadges() as $userBadge)
+        {
+            $badges[] = $userBadge->getBadge();
+        }
+
+        return $badges;
+    }
+
+    /**
+     * @param Badge $badge
+     *
+     * @return bool
+     */
+    public function hasBadge(badge $badge)
+    {
+        foreach($this->getBadges() as $userBadge)
+        {
+            if($userBadge->getId() === $badge->getId()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

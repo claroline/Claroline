@@ -28,33 +28,37 @@
                 </div>
             </div>
             <div class="margin">
+                <button type="button" class="btn btn-danger" data-toggle="collapse" data-target="#award_form_container">{{ 'award'|trans({}, 'platform') }}</button>
+
+                <div id="award_form_container" class="collapse">
+                    {{ render(controller('ClarolineCoreBundle:Badge:award', { 'id': badge.id })) }}
+                </div>
                 <h3 class="sub-section-header">
                     {{ 'badge_awarded_to'|trans({}, 'platform') }} :
-                    <a href="{{ path('claro_admin_badges_award', {'id': badge.id}) }}" id="awardUser" role="button" class="btn pull-right" data-toggle="tooltip" data-placement="left" title="{{ 'award_badge'|trans({}, 'platform') }}"><i class="icon-plus-sign"></i></a>
                 </h3>
 
-                <ul class="unstyled inline user_badges">
-                    {% for user in badge.users %}
-                    <li>
-                        <a href="#"><span class="label">{{ user.lastname }} {{ user.firstname }}</span></a><a class="close delete" href="{{ path('claro_admin_badges_unaward', {'id': badge.id, 'username': user.username}) }}" data-confirm-title="{{ 'badge_unaward_confirm_title'|trans({}, 'platform') }}" data-confirm-message="{{ 'badge_unaward_confirm_message'|trans({'%badgeName%': badge.name, '%user%': user.username ~ ' ' ~ user.firstname}, 'platform') }}" data-confirm-ok="{{ 'unaward'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}">
-                            <i class="icon-remove-circle"></i>
-                        </a>
-                    </li>
-                    {% else %}
-                    <li>{{ 'bagde_awarded_to_none_user'|trans({}, 'platform') }}.</li>
-                    {% endfor %}
-                </ul>
-            </div>
-            <div class="modal hide fade" id="award_user_modal">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h3>{{ 'bagde_awarding'|trans({}, 'platform') }}</h3>
-                </div>
-                <div class="modal-body"></div>
-                <div class="modal-footer">
-                    <a href="#" class="btn" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</a>
-                    <a href="#" id="validAwarding" class="btn btn-primary">{{ 'award'|trans({}, 'platform') }}</a>
-                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>{{ 'lastname'|trans({}, 'platform') }}</th>
+                            <th>{{ 'firstname'|trans({}, 'platform') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in badge.users %}
+                        <tr>
+                            <td>
+                                <a class="close delete" href="{{ path('claro_admin_badges_unaward', {'id': badge.id, 'username': user.username}) }}" data-toggle="tooltip" title="{{ 'badge_unaward_confirm_title'|trans({}, 'platform') }}" data-confirm-title="{{ 'badge_unaward_confirm_title'|trans({}, 'platform') }}" data-confirm-message="{{ 'badge_unaward_confirm_message'|trans({'%badgeName%': badge.name, '%user%': user.username ~ ' ' ~ user.firstname}, 'platform') }}" data-confirm-ok="{{ 'unaward'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"><i class="icon-remove-circle"></i></a>
+                            </td>
+                            <td>{{ user.lastname }}</td>
+                            <td>{{ user.firstname }}</td>
+                        </tr>
+                        {% else %}
+                        <tr><td>{{ 'bagde_awarded_to_none_user'|trans({}, 'platform') }}.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
         <div class="tab-pane" id="edit">

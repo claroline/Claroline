@@ -12,11 +12,14 @@ class BadgeAwardType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('users', 'entity', array(
-                'class'    => 'ClarolineCoreBundle:User',
-                'expanded' => true,
-                'multiple' => true,
-                'property' => 'username'
+            ->add('groups', 'simpleautocomplete', array(
+                'entity_reference' => 'group',
+                'required'         => false
+            ))
+            ->add('users', 'simpleautocomplete', array(
+                'entity_reference' => 'user',
+                'required'         => false,
+                'with_vendors'     => false
             ))
         ;
     }
@@ -31,7 +34,6 @@ class BadgeAwardType extends AbstractType
         $resolver
         ->setDefaults(
             array(
-                'data_class' => 'Claroline\CoreBundle\Entity\Badge\Badge',
                 'translation_domain' => 'platform'
             )
         );

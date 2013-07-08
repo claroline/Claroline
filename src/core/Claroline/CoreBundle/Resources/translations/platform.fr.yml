@@ -525,7 +525,6 @@ no_badges: 'Aucun badge.'
 add_badge: 'Ajouter un badge'
 edit_badge: 'Editer le badge %badge_name%'
 award: 'Attribuer'
-bagde_awarding: 'Attribution de badge'
 badge_form_frTranslation: 'Traduction française'
 badge_form_enTranslation: 'Traduction anglaise'
 badge_delete_confirm_title: "Suppression d'un badge"
@@ -547,4 +546,6 @@ badge_form_version: 'Version'
 badge_form_image: 'Image'
 badge_form_expired_at: "Date d'expiration"
 badge_form_change_image: "Changer l'image"
+badge_award_form_groups: 'Groupe'
+badge_award_form_users : 'Utilisateur'
 badge_expired_on_date: 'Expire le %expirationDate%'

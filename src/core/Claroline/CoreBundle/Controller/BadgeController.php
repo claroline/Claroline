@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\Badge\BadgeTranslation;
+use Claroline\CoreBundle\Entity\Badge\UserBadge;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\BadgeAwardType;
 use Claroline\CoreBundle\Form\BadgeType;
@@ -120,10 +121,7 @@ class BadgeController extends Controller
 
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-
         $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
-
-        $locales = array('fr', 'en');
 
         $form = $this->createForm(new BadgeType(), $badge);
 
@@ -195,11 +193,7 @@ class BadgeController extends Controller
             throw new \AccessDeniedException();
         }
 
-        $doctrine = $this->getDoctrine();
-        $users    = $doctrine->getRepository('ClarolineCoreBundle:User')->findAll();
-        $groups   = $doctrine->getRepository('ClarolineCoreBundle:Group')->findAll();
-
-        $form = $this->createForm(new BadgeAwardType(), $badge);
+        $form = $this->createForm(new BadgeAwardType());
 
         if($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -207,10 +201,33 @@ class BadgeController extends Controller
                 /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
                 $translator = $this->get('translator');
                 try {
+                    $doctrine = $this->getDoctrine();
+
+                    $groupName = $form->get('groups')->getData();
+
                     /** @var \Doctrine\ORM\EntityManager $entityManager */
                     $entityManager = $doctrine->getManager();
 
-                    $doctrine->getRepository('ClarolineCoreBundle:Badge\UserBadge')->deleteByBadge($badge);
+                    $group = $doctrine->getRepository('ClarolineCoreBundle:Group')->findOneByName($groupName);
+
+                    if(null === $group) {
+                        throw new \InvalidArgumentException(sprintf("No group found with '%s' as name.", $groupName));
+                    }
+
+                    /** @var \Claroline\CoreBundle\Entity\User[] $users */
+                    $users = $doctrine->getRepository('ClarolineCoreBundle:User')->findByGroup($group);
+
+                    foreach($users as $user)
+                    {
+                        if(!$user->hasBadge($badge)) {
+                            $userBadge = new UserBadge();
+                            $userBadge
+                            ->setBadge($badge)
+                            ->setUser($user)
+                            ;
+                            $badge->addUserBadge($userBadge);
+                        }
+                    }
 
                     $entityManager->persist($badge);
                     $entityManager->flush();
@@ -236,8 +253,6 @@ class BadgeController extends Controller
 
         return array(
             'badge'  => $badge,
-            'users'  => $users,
-            'groups' => $groups,
             'form'   => $form->createView()
         );
     }
