@@ -254,6 +254,20 @@ abstract class AbstractResource
     }
 
     /**
+     * Sets the resource creation date.
+     *
+     * NOTE : creation date is already handled by the timestamp listener; this
+     *        setter exists mainly for testing purposes.
+     *
+     * @param \DateTime $date
+     */
+    public function setCreationDate(\DateTime $date)
+    {
+        $this->creationDate = $date;
+        $this->modificationDate = $date;
+    }
+
+    /**
      * Returns the resource modification date.
      *
      * @return \DateTime
@@ -262,6 +276,14 @@ abstract class AbstractResource
     {
         return $this->modificationDate;
     }
+
+
+
+    public function setModificationDate(\DateTime $date)
+    {
+        $this->modificationDate = $date;
+    }
+
 
     /**
      * Returns the resource type.
@@ -311,16 +333,6 @@ abstract class AbstractResource
     public function getChildren()
     {
         return $this->children;
-    }
-
-    /**
-     * Adds a child resource.
-     *
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
-     */
-    public function addChild(AbstractResource $resource)
-    {
-        $this->children[] = $resource;
     }
 
     /**
@@ -506,9 +518,5 @@ abstract class AbstractResource
     public function setMimeType($mimeType)
     {
         $this->mimeType = $mimeType;
-    }
-
-    public function __toString() {
-        return 'resource !!!';
     }
 }

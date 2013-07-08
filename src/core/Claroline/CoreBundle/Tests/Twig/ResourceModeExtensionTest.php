@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Library\Twig;
+namespace Claroline\CoreBundle\Twig;
 
 use \Mockery as m;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;

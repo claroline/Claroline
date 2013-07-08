@@ -2,4 +2,4 @@ plugin:
   has_options: true
 
   resources:
-    - is_browsable: false
+    - icon: icn.gif

@@ -38,12 +38,6 @@ class DatabaseWriter
     /**
      * Constructor.
      *
-     * @param SymfonyValidator  $validator
-     * @param EntityManager     $em
-     * @param IconCreator       $im
-     * @param KernelInterface   $kernel
-     * @param string            $templateDir
-     *
      * @DI\InjectParams({
      *     "em"             = @DI\Inject("doctrine.orm.entity_manager"),
      *     "im"             = @DI\Inject("claroline.manager.icon_manager"),

@@ -3,9 +3,11 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Actions of this controller are not routed. They're intended to be rendered
@@ -13,8 +15,20 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
  */
 class LayoutController extends Controller
 {
+    private $roleManager;
+
     /**
-     * @Template()
+     * @DI\InjectParams({
+     *     "roleManager"    = @DI\Inject("claroline.manager.role_manager")
+     * })
+     */
+    public function __construct(RoleManager $roleManager)
+    {
+        $this->roleManager = $roleManager;
+    }
+
+    /**
+     * @EXT\Template()
      *
      * Displays the platform header.
      *
@@ -26,7 +40,7 @@ class LayoutController extends Controller
     }
 
     /**
-     * @Template()
+     * @EXT\Template()
      *
      * Displays the platform footer.
      *
@@ -38,7 +52,12 @@ class LayoutController extends Controller
     }
 
     /**
-     * @Template()
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\Template()
      *
      * Displays the platform top bar. Its content depends on the user status
      * (anonymous/logged, profile, etc.) and the platform options (e.g. self-
@@ -46,7 +65,7 @@ class LayoutController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function topBarAction($workspaceId = null)
+    public function topBarAction(AbstractWorkspace $workspace = null)
     {
         $isLogged = false;
         $countUnreadMessages = 0;
@@ -55,7 +74,6 @@ class LayoutController extends Controller
         $loginTarget = null;
         $workspaces = null;
         $personalWs = null;
-        $currentWs = null;
         $isInAWorkspace = false;
 
         $token = $this->get('security.context')->getToken();
@@ -64,12 +82,8 @@ class LayoutController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $wsRepo = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
 
-        if (!is_null($workspaceId)) {
-            $currentWs = $wsRepo->findOneById($workspaceId);
-
-            if (!empty($currentWs)) {
-                $isInAWorkspace = true;
-            }
+        if (!is_null($workspace)) {
+            $isInAWorkspace = true;
         }
 
         if (!in_array('ROLE_ANONYMOUS', $roles)) {
@@ -105,12 +119,12 @@ class LayoutController extends Controller
             'personalWs' => $personalWs,
             "isImpersonated" => $this->isImpersonated(),
             'isInAWorkspace' => $isInAWorkspace,
-            'currentWorkspace' => $currentWs
+            'currentWorkspace' => $workspace
         );
     }
 
     /**
-     * @Template()
+     * @EXT\Template()
      *
      * Renders the warning bar when a workspace role is impersonated.
      *
@@ -135,8 +149,7 @@ class LayoutController extends Controller
             $workspaceId = substr($impersonatedRole, strripos($impersonatedRole, '_') + 1);
             $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
                 ->find($workspaceId);
-            $roleEntity = $em->getRepository('ClarolineCoreBundle:Role')
-                ->findOneByName($impersonatedRole);
+            $roleEntity = $this->roleManager->getRoleByName($impersonatedRole);
             $roleName = $roleEntity->getTranslationKey();
         }
 
@@ -164,7 +177,7 @@ class LayoutController extends Controller
         $roles = $this->get('claroline.security.utilities')->getRoles($token);
         $em = $this->get('doctrine.orm.entity_manager');
         $wsLogs = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
-            ->findLatestWorkspaceByUser($user, $roles);
+            ->findLatestWorkspacesByUser($user, $roles);
         $workspaces = array();
 
         if (!empty($wsLogs)) {
