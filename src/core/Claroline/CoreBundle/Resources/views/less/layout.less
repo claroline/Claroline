@@ -505,8 +505,10 @@ footer {
     overflow: auto;
 }
 
-.user_badges {
-    li {
+ul.user_badges {
+    & > li {
+        padding: 0;
+
         a:hover {
             &> span {
                 background-color: #333333;
@@ -515,12 +517,12 @@ footer {
 
         &:hover {
             .close {
-                display: block;
+                visibility: visible;
             }
         }
 
         .close {
-            display:    none;
+            visibility: hidden;
             margin-top: -10px;
         }
     }

@@ -515,14 +515,17 @@ badges_management: 'Gestion des badges'
 badges: 'Badges'
 badge: 'Badge'
 back_to_badges_list: 'Retour à la liste des badges'
-badge_attribute_to: 'Badge attribué à'
-bagde_attribute_to_none_user: 'Badge attribué à aucun utilisateur'
-attribute_badge: 'Attribuer le badge'
+badge_awarded_to: 'Badge attribué à'
+bagde_awarded_to_none_user: 'Badge attribué à aucun utilisateur'
+award_badge: 'Attribuer le badge'
+unaward: 'Désattribuer'
+badge_unaward_confirm_title: "Désattribution d'un badge"
+badge_unaward_confirm_message: 'Etes-vous sûr de vouloir désattribuer le badge <strong>%badgeName%</strong> à <strong>%user%</strong>?'
 no_badges: 'Aucun badge.'
 add_badge: 'Ajouter un badge'
 edit_badge: 'Editer le badge %badge_name%'
-attribute: 'Attribuer'
-bagde_attribution: 'Attribution de badge'
+award: 'Attribuer'
+bagde_awarding: 'Attribution de badge'
 badge_form_frTranslation: 'Traduction française'
 badge_form_enTranslation: 'Traduction anglaise'
 badge_delete_confirm_title: "Suppression d'un badge"
@@ -533,8 +536,10 @@ badge_delete_success_message: 'Badge supprimé avec succès.'
 badge_delete_error_message: "Erreur lors de la suppression du badge."
 badge_edit_success_message: 'Badge édité avec succès.'
 badge_edit_error_message: "Erreur lors de l'édition du badge."
-badge_attribution_success_message: 'Attribution du badge effectué avec succès.'
-badge_attribution_error_message: "Erreur lors de l'attribution du badge."
+badge_award_success_message: 'Attribution du badge effectuée avec succès.'
+badge_award_error_message: "Erreur lors de l'attribution du badge."
+badge_unaward_success_message: 'Déattribution du badge effectuée avec succès.'
+badge_unaward_error_message: "Erreur lors de la désattribution du badge."
 badge_form_name: 'Nom'
 badge_form_description: 'Description'
 badge_form_criteria: "Critères d'obtention"

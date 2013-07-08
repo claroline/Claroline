@@ -20,33 +20,33 @@ $(function(){
         }
     });
 
-    var attributeModal = $('#attribute_user_modal');
+    var awardModal = $('#award_user_modal');
 
-    $('#attributeUser').click(function(event) {
+    $('#awardUser').click(function(event) {
         event.preventDefault();
         $.ajax({
             url: event.currentTarget.getAttribute('href'),
             type: 'GET',
             success: function (data) {
-                $('.modal-body', attributeModal).html(data);
-                attributeModal.modal();
+                $('.modal-body', awardModal).html(data);
+                awardModal.modal();
             }
         });
     });
 
-    $('#validAttribution').click(function(event) {
+    $('#validAwarding').click(function(event) {
         event.preventDefault();
-        var attributionForm = $('.modal-body form', attributeModal);
+        var awardForm = $('.modal-body form', awardModal);
         $.ajax({
-            url: attributionForm.attr('action'),
+            url: awardForm.attr('action'),
             type: 'POST',
-            data: attributionForm.serialize(),
+            data: awardForm.serialize(),
             success: function (data) {
                 if(data.error) {
-                    $('.modal-body', attributeModal).html(data);
+                    $('.modal-body', awardModal).html(data);
                 }
                 else {
-                    attributeModal.modal('hide');
+                    awardModal.modal('hide');
                     window.location.reload();
                 }
             }
