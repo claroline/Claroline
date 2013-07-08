@@ -12,7 +12,7 @@
 
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">{{ 'award'|trans({}, 'platform') }}</button>
-            <a href="{{ path('claro_admin_badges_edit', {'id': badge.id}) }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-danger">{{ 'cancel'|trans({}, 'platform') }}</a>
+            <button class="btn btn-danger" id="viewAwardedUser" type="button" title="{{ 'cancel'|trans({}, 'platform') }}">{{ 'cancel'|trans({}, 'platform') }}</button>
         </div>
     </form>
 {% endblock %}
