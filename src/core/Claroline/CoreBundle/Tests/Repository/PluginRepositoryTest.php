@@ -7,20 +7,13 @@ use Claroline\CoreBundle\Entity\Plugin;
 
 class PluginRepositoryTest extends RepositoryTestCase
 {
-    /** @var \Claroline\CoreBundle\Repository\PluginRepository */
     public static $repo;
 
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
-        self::$repo = self::$em->getRepository('ClarolineCoreBundle:Plugin');
-        $plugin = new Plugin();
-        $plugin->setVendorName('Vendor');
-        $plugin->setBundleName('Bundle');
-        $plugin->setHasOptions(false);
-        $plugin->setIcon('default');
-        self::$em->persist($plugin);
-        self::$em->flush();
+        self::$repo = self::getRepository('ClarolineCoreBundle:Plugin');
+        self::createPlugin('Vendor', 'Bundle');
     }
 
     public function testFindOneByBundleFQCN()
@@ -28,5 +21,4 @@ class PluginRepositoryTest extends RepositoryTestCase
         $plugin = self::$repo->findOneByBundleFQCN('Vendor\Bundle');
         $this->assertEquals('Vendor', $plugin->getVendorName());
     }
-
 }

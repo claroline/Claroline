@@ -3,13 +3,13 @@
 namespace Claroline\CoreBundle\Listener\Tool;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Library\Event\ExportWidgetConfigEvent;
-use Claroline\CoreBundle\Library\Event\ImportWidgetConfigEvent;
-use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Library\Event\ExportToolEvent;
-use Claroline\CoreBundle\Library\Event\ImportToolEvent;
-use Claroline\CoreBundle\Library\Event\ConfigureWorkspaceToolEvent;
-use Claroline\CoreBundle\Library\Event\ConfigureDesktopToolEvent;
+use Claroline\CoreBundle\Event\Event\ExportWidgetConfigEvent;
+use Claroline\CoreBundle\Event\Event\ImportWidgetConfigEvent;
+use Claroline\CoreBundle\Event\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Event\Event\ExportToolEvent;
+use Claroline\CoreBundle\Event\Event\ImportToolEvent;
+use Claroline\CoreBundle\Event\Event\ConfigureWorkspaceToolEvent;
+use Claroline\CoreBundle\Event\Event\ConfigureDesktopToolEvent;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Symfony\Component\HttpFoundation\Response;
 

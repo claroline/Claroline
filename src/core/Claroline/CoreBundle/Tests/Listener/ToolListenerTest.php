@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Listener;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
-use Claroline\CoreBundle\Library\Event\ExportToolEvent;
+use Claroline\CoreBundle\Event\Event\ExportToolEvent;
 use Claroline\CoreBundle\Listener\Tool\HomeListener;
 use Claroline\CoreBundle\Listener\Tool\ImportExportResourceListener;
 

@@ -3,9 +3,9 @@
 namespace Claroline\CoreBundle\Listener\Resource;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
-use Claroline\CoreBundle\Library\Event\ExportResourceTemplateEvent;
-use Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent;
-use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\Event\ExportResourceTemplateEvent;
+use Claroline\CoreBundle\Event\Event\ImportResourceTemplateEvent;
+use Claroline\CoreBundle\Event\Event\DeleteResourceEvent;
 
 class TextListenerTest extends FunctionalTestCase
 {

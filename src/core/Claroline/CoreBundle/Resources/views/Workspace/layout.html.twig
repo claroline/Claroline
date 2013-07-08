@@ -26,7 +26,7 @@
                 </div>
                 {% if not is_path_mode  %}
                 {% render controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
-                    {'workspaceId': workspace.getId(), 'resourceId': _resource.getId(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})
+                    {'workspace': workspace, 'resource': _resource, '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})
                 %}
                 {% endif %}
             {% endif %}

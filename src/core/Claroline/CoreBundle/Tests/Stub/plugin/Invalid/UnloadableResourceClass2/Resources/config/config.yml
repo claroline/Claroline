@@ -2,7 +2,5 @@ plugin:
   has_options: true
 
   resources:
-
     - class: Invalid\UnloadableResourceClass2\Entity\ResourceX
-      is_browsable: true
       name: ResourceX

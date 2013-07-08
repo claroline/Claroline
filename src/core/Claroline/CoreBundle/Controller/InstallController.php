@@ -298,14 +298,7 @@ class InstallController extends Controller
         $user->setUsername($db['username']);
         $user->setPlainPassword($db['plainPassword']['first']);
 
-        $em = $this->get('doctrine.orm.entity_manager');
-
-        $roleRepo = $em->getRepository('ClarolineCoreBundle:Role');
-        $adminRole = $roleRepo->findOneByName(PlatformRoles::ADMIN);
-        $user->addRole($adminRole);
-        $user = $this->get('claroline.user.creator')->create($user);
-        $em->persist($user);
-        $em->flush();
+        $this->get('claroline.manager.user_manager')->createUserWithRole($user, PlatformRoles::ADMIN);
 
         if (!unlink(self::PATH)) {
             $this->get('session')->setFlash(

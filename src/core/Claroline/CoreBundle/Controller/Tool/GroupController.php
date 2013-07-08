@@ -5,136 +5,162 @@ namespace Claroline\CoreBundle\Controller\Tool;
 use Doctrine\ORM\EntityRepository;
 use LogicException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
-use Pagerfanta\Pagerfanta;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleSubscribeEvent;
-use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleUnsubscribeEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceRoleSubscribeEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceRoleUnsubscribeEvent;
+use Claroline\CoreBundle\Library\Resource\Converter;
+use Claroline\CoreBundle\Manager\GroupManager;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\UserManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\DiExtraBundle\Annotation as DI;
 
 class GroupController extends Controller
 {
-    const ABSTRACT_WS_CLASS = 'ClarolineCoreBundle:Workspace\AbstractWorkspace';
-    const NUMBER_GROUP_PER_ITERATION = 25;
+    private $groupManager;
+    private $roleManager;
+    private $userManager;
+    private $eventDispatcher;
+    private $security;
+    private $router;
+    private $converter;
 
     /**
-     * @Route(
+     * @DI\InjectParams({
+     *     "groupManager"       = @DI\Inject("claroline.manager.group_manager"),
+     *     "roleManager"       = @DI\Inject("claroline.manager.role_manager"),
+     *     "userManager"       = @DI\Inject("claroline.manager.user_manager"),
+     *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
+     *     "security"           = @DI\Inject("security.context"),
+     *     "router"             = @DI\Inject("router"),
+     *     "converter"          = @DI\Inject("claroline.resource.converter")
+     * })
+     */
+    public function __construct(
+        GroupManager $groupManager,
+        RoleManager $roleManager,
+        UserManager $userManager,
+        EventDispatcher $eventDispatcher,
+        SecurityContextInterface $security,
+        UrlGeneratorInterface $router,
+        Converter $converter
+    )
+    {
+        $this->groupManager = $groupManager;
+        $this->roleManager = $roleManager;
+        $this->userManager = $userManager;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->security = $security;
+        $this->router = $router;
+        $this->converter = $converter;
+    }
+
+    /**
+     * @EXT\Route(
      *     "/{workspaceId}/groups/registered/page/{page}",
      *     name="claro_workspace_registered_group_list",
      *     defaults={"page"=1, "search"=""},
      *     options = {"expose"=true}
      * )
-     *
-     * @Method("GET")
-     *
-     * @Route(
+     * @EXT\Method("GET")
+     * @EXT\Route(
      *     "/{workspaceId}/groups/registered/page/{page}/search/{search}",
      *     name="claro_workspace_registered_group_list_search",
      *     defaults={"page"=1},
      *     options = {"expose"=true}
      * )
-     *
-     * @Method("GET")
-     *
-     * @Template("ClarolineCoreBundle:Tool\workspace\group_management:registeredGroups.html.twig")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\group_management:registeredGroups.html.twig")
      */
-    public function registeredGroupsListAction($workspaceId, $page, $search)
+    public function registeredGroupsListAction(AbstractWorkspace $workspace, $page, $search)
     {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
         $this->checkRegistration($workspace);
-        $repo = $em->getRepository('ClarolineCoreBundle:Group');
-        $query = ($search == "") ?
-            $repo->findByWorkspace($workspace, true):
-            $repo->findByWorkspaceAndName($workspace, $search, true);
-        $adapter = new DoctrineORMAdapter($query);
-        $pager = new Pagerfanta($adapter);
-        $pager->setMaxPerPage(20);
-        $pager->setCurrentPage($page);
+        $pager = $search === '' ?
+            $this->groupManager->getGroupsByWorkspace($workspace, $page) :
+            $this->groupManager->getGroupsByWorkspaceAndName($workspace, $search, $page);
 
         return array('workspace' => $workspace, 'pager' => $pager, 'search' => $search);
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspaceId}/groups/unregistered/page/{page}",
      *     name="claro_workspace_unregistered_group_list",
      *     defaults={"page"=1, "search"=""},
      *     options = {"expose"=true}
      * )
-     *
-     * @Method("GET")
-     *
-     * @Route(
+     * @EXT\Method("GET")
+     * @EXT\Route(
      *     "/{workspaceId}/groups/unregistered/page/{page}/search/{search}",
      *     name="claro_workspace_unregistered_group_list_search",
      *     defaults={"page"=1},
      *     options = {"expose"=true}
      * )
-     *
-     * @Method("GET")
-     *
-     * @Template("ClarolineCoreBundle:Tool\workspace\group_management:unregisteredGroups.html.twig")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\group_management:unregisteredGroups.html.twig")
      */
-    public function unregiseredGroupsListAction($workspaceId, $page, $search)
+    public function unregiseredGroupsListAction(AbstractWorkspace $workspace, $page, $search)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkRegistration($workspace, false);
-        $repo = $em->getRepository('ClarolineCoreBundle:Group');
-        $query = ($search == "") ?
-            $repo->findWorkspaceOutsiders($workspace, true):
-            $repo->findWorkspaceOutsidersByName($workspace, $search, true);
-        $adapter = new DoctrineORMAdapter($query);
-        $pager = new Pagerfanta($adapter);
-        $pager->setMaxPerPage(20);
-        $pager->setCurrentPage($page);
+        $pager = $search === '' ?
+            $this->groupManager->getWorkspaceOutsiders($workspace, $page) :
+            $this->groupManager->getWorkspaceOutsidersByName($workspace, $search, $page);
 
         return array('workspace' => $workspace, 'pager' => $pager, 'search' => $search);
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspaceId}/tools/group/{groupId}",
      *     name="claro_workspace_tools_show_group_parameters",
      *     options={"expose"=true},
      *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$", "groupId"="^(?=.*[1-9].*$)\d*$"}
      * )
-     *
-     * @Route(
+     * @EXT\Route(
      *     "/{workspaceId}/group/{groupId}",
      *     name="claro_workspace_tools_edit_group_parameters",
      *     options={"expose"=true},
      *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$", "groupId"="^(?=.*[1-9].*$)\d*$" }
      * )
-     * @Method({"POST", "GET"})
-     *
-     * @Template("ClarolineCoreBundle:Tool\workspace\group_management:groupParameters.html.twig")
+     * @EXT\Method({"POST", "GET"})
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "group",
+     *      class="ClarolineCoreBundle:Group",
+     *      options={"id" = "groupId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\group_management:groupParameters.html.twig")
      *
      * Renders the group parameter page with its layout and
      * edit the group parameters for the selected workspace.
-     *
-     * @param integer $workspaceId the workspace id
-     * @param integer $groupId the group id
-     *
-     * @return Response
      */
-    public function groupParametersAction($workspaceId, $groupId)
+    public function groupParametersAction(AbstractWorkspace $workspace, Group $group)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
-            ->find($workspaceId);
         $this->checkRegistration($workspace, false);
-        $group = $em->getRepository('ClarolineCoreBundle:Group')
-            ->find($groupId);
-        $roleRepo = $em->getRepository('ClarolineCoreBundle:Role');
-        $role = $roleRepo->findWorkspaceRole($group, $workspace);
+        $role = $this->roleManager->getWorkspaceRole($group, $workspace);
         $defaultData = array('role' => $role);
+        $workspaceId = $workspace->getId();
         $form = $this->createFormBuilder($defaultData, array('translation_domain' => 'platform'))
             ->add(
                 'role',
@@ -159,29 +185,25 @@ class GroupController extends Controller
             $request = $this->getRequest();
             $parameters = $request->request->all();
             //cannot bind request: why ?
-            $newRole = $em->getRepository('ClarolineCoreBundle:Role')
-                ->find($parameters['form']['role']);
+            $newRole = $this->roleManager->getRoleById($parameters['form']['role']);
 
             //verifications: can we change his role.
-            if ($newRole->getId() != $roleRepo->findManagerRole($workspace)->getId()) {
-                $this->checkRemoveManagerRoleIsValid(array($group->getId()), $workspace);
+            if ($newRole->getId() != $this->roleManager->getManagerRole($workspace)->getId()) {
+                $this->checkRemoveManagerRoleIsValid(array($group), $workspace);
             }
 
-            $group->removeRole($role, false);
-            $group->addRole($newRole);
-            $em->persist($group);
-            $em->flush();
-            $route = $this->get('router')->generate(
+            $this->roleManager->dissociateRole($group, $role);
+            $this->roleManager->associateRole($group, $newRole);
+            $route = $this->router->generate(
                 'claro_workspace_open_tool',
                 array('workspaceId' => $workspaceId, 'toolName' => 'group_management')
             );
 
             $log = new LogWorkspaceRoleUnsubscribeEvent($role, null, $group);
-            $this->get('event_dispatcher')->dispatch('log', $log);
+            $this->eventDispatcher->dispatch('log', $log);
 
             $log = new LogWorkspaceRoleSubscribeEvent($newRole, null, $group);
-            $this->get('event_dispatcher')->dispatch('log', $log);
-            $em->flush();
+            $this->eventDispatcher->dispatch('log', $log);
 
             return new RedirectResponse($route);
         }
@@ -194,13 +216,24 @@ class GroupController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspaceId}/groups",
      *     name="claro_workspace_delete_groups",
      *     options={"expose"=true},
      *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
      * )
-     * @Method("DELETE")
+     * @EXT\Method("DELETE")
+     *
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *     "groups",
+     *      class="ClarolineCoreBundle:Group",
+     *      options={"multipleIds" = true}
+     * )
      *
      * Removes many groups from a workspace.
      * It uses a query string of groupIds as parameter (groupIds[]=1&groupIds[]=2)
@@ -209,57 +242,45 @@ class GroupController extends Controller
      *
      * @return Response
      */
-    public function removeGroupsAction($workspaceId)
+    public function removeGroupsAction(AbstractWorkspace $workspace, array $groups)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
-            ->find($workspaceId);
         $this->checkRegistration($workspace, false);
-        $roles = $em->getRepository('ClarolineCoreBundle:Role')
-            ->findByWorkspace($workspace);
-        $params = $this->get('request')->query->all();
+        $roles = $this->roleManager->getRolesByWorkspace($workspace);
 
-        $groups = array();
-        $rolesForGroups = array();
-        if (isset($params['ids'])) {
-            $this->checkRemoveManagerRoleIsValid($params['ids'], $workspace);
-            foreach ($params['ids'] as $groupId) {
-                $group = $em->find('ClarolineCoreBundle:Group', $groupId);
+        $this->checkRemoveManagerRoleIsValid($groups, $workspace);
 
-                if (null != $group) {
-                    $rolesForGroup = array();
-                    foreach ($roles as $role) {
-                        if ($group->hasRole($role->getName())) {
-                            $group->removeRole($role);
-                            $rolesForGroup[] = $role;
-                        }
-                    }
-                    $groups[] = $group;
-                    $rolesForGroups['group_'.$group->getId()] = $rolesForGroup;
+        foreach ($groups as $group) {
+            foreach ($roles as $role) {
+                if ($group->hasRole($role->getName())) {
+                    $this->roleManager->dissociateRole($group, $role);
+
+                    $log = new LogWorkspaceRoleUnsubscribeEvent($role, null, $group);
+                    $this->eventDispatcher->dispatch('log', $log);
                 }
             }
         }
-
-        foreach ($groups as $group) {
-            foreach ($rolesForGroups['group_'.$group->getId()] as $role) {
-                $log = new LogWorkspaceRoleUnsubscribeEvent($role, null, $group);
-                $this->get('event_dispatcher')->dispatch('log', $log);
-            }
-        }
-
-        $em->flush();
 
         return new Response("success", 204);
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspaceId}/add/group",
      *     name="claro_workspace_multiadd_group",
      *     options={"expose"=true},
      *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
      * )
-     * @Method("PUT")
+     * @EXT\Method("PUT")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *     "groups",
+     *      class="ClarolineCoreBundle:Group",
+     *      options={"multipleIds" = true}
+     * )
      *
      * Adds many groups to a workspace.
      * It uses a query string of groupIds as parameter (groupIds[]=1&groupIds[]=2)
@@ -268,32 +289,19 @@ class GroupController extends Controller
      *
      * @return Response
      */
-    public function addGroupsAction($workspaceId)
+    public function addGroupsAction(AbstractWorkspace $workspace, array $groups)
     {
-        $params = $this->get('request')->query->all();
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
-            ->find($workspaceId);
         $this->checkRegistration($workspace, false);
-        $role = $em->getRepository('ClarolineCoreBundle:Role')
-                        ->findCollaboratorRole($workspace);
-        $groups = array();
-
-        if (isset($params['ids'])) {
-            foreach ($params['ids'] as $groupId) {
-                $group = $em->find('ClarolineCoreBundle:Group', $groupId);
-                $groups[] = $group;
-                $group->addRole($role);
-                $em->flush();
-            }
-        }
+        $role = $this->roleManager->getCollaboratorRole($workspace);
 
         foreach ($groups as $group) {
+            $this->roleManager->associateRole($group, $role);
+
             $log = new LogWorkspaceRoleSubscribeEvent($role, null, $group);
-            $this->get('event_dispatcher')->dispatch('log', $log);
+            $this->eventDispatcher->dispatch('log', $log);
         }
 
-        $response = new Response($this->get('claroline.resource.converter')->jsonEncodeGroups($groups));
+        $response = new Response($this->converter->jsonEncodeGroups($groups));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
@@ -308,25 +316,18 @@ class GroupController extends Controller
      *
      * @throws LogicException
      */
-    private function checkRemoveManagerRoleIsValid($groupIds, $workspace)
+    private function checkRemoveManagerRoleIsValid(array $groups, AbstractWorkspace $workspace)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $managerRole = $em->getRepository('ClarolineCoreBundle:Role')
-            ->findManagerRole($workspace);
+        $managerRole = $this->roleManager->getManagerRole($workspace);
         $countRemovedManagers = 0;
 
-        foreach ($groupIds as $groupId) {
-            $group = $em->find('ClarolineCoreBundle:Group', $groupId);
-
-            if (null !== $group) {
-                if ($group->hasRole($managerRole->getName())) {
-                    $countRemovedManagers += count($group->getUsers());
-                }
+        foreach ($groups as $group) {
+            if ($group->hasRole($managerRole->getName())) {
+                $countRemovedManagers += count($group->getUsers());
             }
         }
 
-        $userManagers = $em->getRepository('ClarolineCoreBundle:User')
-            ->findByWorkspaceAndRole($workspace, $managerRole);
+        $userManagers = $this->userManager->getUserByWorkspaceAndRole($workspace, $managerRole);
         $countUserManagers = count($userManagers);
 
         if ($countRemovedManagers >= $countUserManagers) {
@@ -347,25 +348,9 @@ class GroupController extends Controller
      */
     private function checkRegistration(AbstractWorkspace $workspace, $allowAnonymous = true)
     {
-        $security = $this->get('security.context');
-
-        if (($security->getToken()->getUser() === 'anon.' && !$allowAnonymous)
-            || !$security->isGranted('group_management', $workspace)) {
+        if (($this->security->getToken()->getUser() === 'anon.' && !$allowAnonymous)
+            || !$this->security->isGranted('group_management', $workspace)) {
             throw new AccessDeniedException();
         }
-    }
-
-    /**
-     * Most dql request required by this controller are paginated.
-     * This function transform the results of the repository in an array.
-     *
-     * @param Paginator $paginator the return value of the Repository using a paginator.
-     *
-     * @return array.
-     */
-    private function paginatorToArray($paginator)
-    {
-        return $this->get('claroline.utilities.paginator_parser')
-            ->paginatorToArray($paginator);
     }
 }

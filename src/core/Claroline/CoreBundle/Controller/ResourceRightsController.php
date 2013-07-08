@@ -7,7 +7,7 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Form\ResourceRightType;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleChangeRightEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceRoleChangeRightEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -72,7 +72,7 @@ class ResourceRightsController extends Controller
             }
         }
 
-        $datas = $this->get('claroline.workspace.organizer')->getDatasForWorkspaceList(true);
+        $datas = $this->get('claroline.manager.workspace_tag_manager')->getDatasForWorkspaceList(true);
 
         $template = $resource->getResourceType()->getName() === 'directory' ?
             'ClarolineCoreBundle:Resource:rightsFormDirectory.html.twig' :

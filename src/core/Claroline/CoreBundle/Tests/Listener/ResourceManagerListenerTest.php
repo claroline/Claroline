@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Listener\Tool;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Listener\Tool\ImportExportResourceListener;
-use Claroline\CoreBundle\Library\Event\ImportToolEvent;
+use Claroline\CoreBundle\Event\Event\ImportToolEvent;
 use Symfony\Component\Yaml\Yaml;
 
 class ResourceManagerListenerTest extends FunctionalTestCase
