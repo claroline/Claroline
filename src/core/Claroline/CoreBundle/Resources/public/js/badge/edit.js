@@ -19,4 +19,18 @@ $(function(){
             badgeFormFile.addClass('hidden');
         }
     });
+
+    var awardFormContainer  = $("#award_form_container");
+    var awardUsersContainer = $("#award_users_container");
+
+    $('#awardUser').click(function(event) {
+        event.preventDefault();
+        awardUsersContainer.toggleClass('hidden');
+        awardFormContainer.toggleClass('hidden');
+    });
+    $('#viewAwardedUser').click(function(event) {
+        event.preventDefault();
+        awardFormContainer.toggleClass('hidden');
+        awardUsersContainer.toggleClass('hidden');
+    });
 });
