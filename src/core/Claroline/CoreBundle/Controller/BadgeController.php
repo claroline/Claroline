@@ -4,7 +4,8 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\Badge\BadgeTranslation;
-use Claroline\CoreBundle\Form\BadgeAttributionType;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Form\BadgeAwardType;
 use Claroline\CoreBundle\Form\BadgeType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
@@ -184,11 +185,11 @@ class BadgeController extends Controller
     }
 
     /**
-     * @Route("/attribute/{id}", name="claro_admin_badges_attribute")
+     * @Route("/award/{id}", name="claro_admin_badges_award")
      *
      * @Template()
      */
-    public function attributeAction(Request $request, Badge $badge)
+    public function awardAction(Request $request, Badge $badge)
     {
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             throw new \AccessDeniedException();
@@ -198,11 +199,9 @@ class BadgeController extends Controller
         $users    = $doctrine->getRepository('ClarolineCoreBundle:User')->findAll();
         $groups   = $doctrine->getRepository('ClarolineCoreBundle:Group')->findAll();
 
-        $form = $this->createForm(new BadgeAttributionType(), $badge);
+        $form = $this->createForm(new BadgeAwardType(), $badge);
 
         if($request->isMethod('POST')) {
-            $previousUserBadges = $badge->getUserBadge()->toArray();
-
             $form->handleRequest($request);
             if ($form->isValid()) {
                 /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
@@ -211,16 +210,16 @@ class BadgeController extends Controller
                     /** @var \Doctrine\ORM\EntityManager $entityManager */
                     $entityManager = $doctrine->getManager();
 
-                    $doctrine->getRepository('ClarolineCoreBundle:Badge\UserBadge')->deleteBybadge($badge);
+                    $doctrine->getRepository('ClarolineCoreBundle:Badge\UserBadge')->deleteByBadge($badge);
 
                     $entityManager->persist($badge);
                     $entityManager->flush();
 
-                    $this->get('session')->getFlashBag()->add('success', $translator->trans('badge_attribution_success_message', array(), 'platform'));
+                    $this->get('session')->getFlashBag()->add('success', $translator->trans('badge_award_success_message', array(), 'platform'));
                 }
                 catch(\Exception $exception) {
                     if(!$request->isXmlHttpRequest()) {
-                        $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_attribution_error_message', array(), 'platform'));
+                        $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_award_error_message', array(), 'platform'));
                     }
                     else {
                         return new Response($exception->getMessage(), 500);
@@ -241,5 +240,45 @@ class BadgeController extends Controller
             'groups' => $groups,
             'form'   => $form->createView()
         );
+    }
+
+    /**
+     * @Route("/unaward/{id}/{username}", name="claro_admin_badges_unaward")
+     * @ParamConverter("user", options={"mapping": {"username": "username"}})
+     *
+     * @Template()
+     */
+    public function unawardAction(Request $request, Badge $badge, User $user)
+    {
+        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            throw new \AccessDeniedException();
+        }
+
+        /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+        $translator = $this->get('translator');
+        try {
+
+            $nbRows = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\UserBadge')->deleteByBadgeAndUser($badge, $user);
+
+            if(0 == $nbRows) {
+                throw new \InvalidArgumentException('No awarded badge deletion occured.');
+            }
+
+            $this->get('session')->getFlashBag()->add('success', $translator->trans('badge_unaward_success_message', array(), 'platform'));
+        }
+        catch(\Exception $exception) {
+            if(!$request->isXmlHttpRequest()) {
+                $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_unaward_error_message', array(), 'platform'));
+            }
+            else {
+                return new Response($exception->getMessage(), 500);
+            }
+        }
+
+        if($request->isXmlHttpRequest()) {
+            return new JsonResponse(array('error' => false));
+        }
+//
+        return $this->redirect($this->generateUrl('claro_admin_badges_edit', array('id' => $badge->getId())));
     }
 }
