@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Repository;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Role;
@@ -112,7 +113,7 @@ class GroupRepository extends EntityRepository
      * @param string  $search
      * @param boolean $getQuery
      *
-     * @return \Doctrine\ORM\Tools\Pagination\Paginator
+     * @return \Doctrine\ORM\Query
      */
     public function findByName($search, $getQuery = false)
     {
@@ -147,5 +148,26 @@ class GroupRepository extends EntityRepository
         $query->setParameter('workspaceId', $workspace->getId());
 
         return ($getQuery) ? $query: $query->getResult();
+    }
+
+    /**
+     * @param array $params
+     * @return ArrayCollection
+     */
+    public function extract($params)
+    {
+        $search = $params['search'];
+        if ($search !== null) {
+
+            $query = $this->findByName($search, true);
+
+            return $query
+                ->setFirstResult(0)
+                ->setMaxResults(10)
+                ->getResult()
+            ;
+        }
+
+        return array();
     }
 }

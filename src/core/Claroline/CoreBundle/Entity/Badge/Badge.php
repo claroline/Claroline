@@ -126,7 +126,7 @@ class Badge
     /**
      * @return UserBadge[]|ArrayCollection
      */
-    public function getUserBadge()
+    public function getUserBadges()
     {
         return $this->userBadges;
     }
