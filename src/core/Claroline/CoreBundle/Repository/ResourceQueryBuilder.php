@@ -319,9 +319,9 @@ class ResourceQueryBuilder
     }
 
     /**
-     * Filters resources that are shortcuts and select their target.
+     * Filters resources that are shortcuts and selects their target.
      *
-     * @return \Claroline\CoreBundle\Repository\ResourceQueryBuilder
+     * @return ResourceQueryBuilder
      */
     public function whereIsShortcut()
     {
@@ -386,6 +386,9 @@ class ResourceQueryBuilder
     {
         $this->groupByClause = '
             GROUP BY resource.id,
+                     parent.id,
+                     previous.id,
+                     next.id,
                      creator.username,
                      resourceType.name,
                      icon.relativeUrl

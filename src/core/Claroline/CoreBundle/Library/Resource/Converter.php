@@ -33,61 +33,6 @@ class Converter
     }
 
     /**
-     * Convert a ressource into an array (mainly used to be serialized and sent to the manager.js as
-     * a json response)
-     *
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
-     * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
-     *
-     * @return array
-     */
-    public function toArray(AbstractResource $resource, TokenInterface $token)
-    {
-        $resourceArray = array();
-        $resourceArray['id'] = $resource->getId();
-        $resourceArray['name'] = $resource->getName();
-        $resourceArray['parent_id'] = ($resource->getParent() != null) ? $resource->getParent()->getId() : null;
-        $resourceArray['creator_username'] = $resource->getCreator()->getUsername();
-        $resourceArray['type'] = $resource->getResourceType()->getName();
-        $resourceArray['is_browsable'] = $resource->getResourceType()->getBrowsable();
-        $resourceArray['large_icon'] = $resource->getIcon()->getRelativeUrl();
-        $resourceArray['path_for_display'] = $resource->getPathForDisplay();
-        $resourceArray['mime_type'] = $resource->getMimeType();
-
-        if ($resource->getPrevious() !== null) {
-            $resourceArray['previous_id'] = $resource->getPrevious()->getId();
-        }
-        if ($resource->getNext() !== null) {
-            $resourceArray['next_id'] = $resource->getNext()->getId();
-        }
-
-        $isAdmin = false;
-
-        $roles = $this->ut->getRoles($token);
-
-        foreach ($roles as $role) {
-            if ($role === 'ROLE_ADMIN') {
-                $isAdmin = true;
-            }
-        }
-
-        if ($isAdmin) {
-            $resourceArray['can_export'] = true;
-            $resourceArray['can_edit'] = true;
-            $resourceArray['can_delete'] = true;
-        } else {
-            $rights = $this->em
-                ->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
-                ->findMaximumRights($roles, $resource);
-            $resourceArray['can_export'] = $rights['canExport'];
-            $resourceArray['can_edit'] = $rights['canEdit'];
-            $resourceArray['can_delete'] = $rights['canDelete'];
-        }
-
-        return $resourceArray;
-    }
-
-    /**
      * Convert a ressource into an json string (mainly used to be sent to the manager.js)
      *
      * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource

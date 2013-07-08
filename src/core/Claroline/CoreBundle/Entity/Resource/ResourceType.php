@@ -44,7 +44,7 @@ class ResourceType
     protected $customActions;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=false)
      */
     protected $class;
 
@@ -131,16 +131,6 @@ class ResourceType
     public function setName($name)
     {
         $this->name = $name;
-    }
-
-    public function setBrowsable($isBrowsable)
-    {
-        $this->isBrowsable = $isBrowsable;
-    }
-
-    public function getBrowsable()
-    {
-        return $this->isBrowsable;
     }
 
     public function setPlugin(Plugin $plugin)

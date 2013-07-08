@@ -12,7 +12,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
 use Claroline\CoreBundle\Repository\ToolRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
-use Claroline\CoreBundle\Library\Event\ImportToolEvent;
+use Claroline\CoreBundle\Event\Event\ImportToolEvent;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Exception\ToolPositionAlreadyOccupiedException;
 use Claroline\CoreBundle\Manager\Exception\UnremovableToolException;
@@ -382,5 +382,20 @@ class ToolManager
     {
         //no implementation yet
         return true;
+    }
+
+    public function addRequiredToolsToUser(User $user)
+    {
+        $requiredTools[] = $this->toolRepo->findOneBy(array('name' => 'home'));
+        $requiredTools[] = $this->toolRepo->findOneBy(array('name' => 'resource_manager'));
+        $requiredTools[] = $this->toolRepo->findOneBy(array('name' => 'parameters'));
+
+        $position = 1;
+
+        foreach ($requiredTools as $requiredTool) {
+            $this->addDesktopTool($requiredTool, $user, $position, $requiredTool->getName());
+            $position++;
+        }
+        $this->writer->update($user);
     }
 }

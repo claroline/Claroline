@@ -116,9 +116,6 @@ class Message
      */
     protected $senderUsername;
 
-    /**
-     * @ORM\Column(type="string", name="receiver_string")
-     */
     protected $to;
 
     public function __construct()
@@ -165,6 +162,19 @@ class Message
     public function getDate()
     {
         return $this->date;
+    }
+
+    /**
+     * Sets the message creation date.
+     *
+     * NOTE : creation date is already handled by the timestamp listener; this
+     *        setter exists mainly for testing purposes.
+     *
+     * @param \DateTime $date
+     */
+    public function setDate(\DateTime $date)
+    {
+        $this->date = $date;
     }
 
     public function isRemoved()
@@ -237,14 +247,4 @@ class Message
         return $this->senderUsername;
     }
 
-    // NOT NEEDED ? -> to()
-    public function setReceiverString($receiverString)
-    {
-        $this->receiverString = $receiverString;
-    }
-
-    public function getReceiverString()
-    {
-        return $this->receiverString;
-    }
 }

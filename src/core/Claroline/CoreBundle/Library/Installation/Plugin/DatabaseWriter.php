@@ -38,12 +38,6 @@ class DatabaseWriter
     /**
      * Constructor.
      *
-     * @param SymfonyValidator  $validator
-     * @param EntityManager     $em
-     * @param IconCreator       $im
-     * @param KernelInterface   $kernel
-     * @param string            $templateDir
-     *
      * @DI\InjectParams({
      *     "em"             = @DI\Inject("doctrine.orm.entity_manager"),
      *     "im"             = @DI\Inject("claroline.manager.icon_manager"),
@@ -262,7 +256,6 @@ class DatabaseWriter
     {
         $resourceType = new ResourceType();
         $resourceType->setName($resource['name']);
-        $resourceType->setBrowsable($resource['is_browsable']);
         $resourceType->setExportable($resource['is_exportable']);
         $resourceType->setPlugin($pluginEntity);
         $resourceClass = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')

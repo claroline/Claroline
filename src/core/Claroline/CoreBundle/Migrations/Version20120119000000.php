@@ -237,7 +237,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('name', 'string', array('length' => 255));
         $table->addColumn('translation_key', 'string', array('length' => 255, 'notnull' => true));
         $table->addColumn('is_read_only', 'boolean', array('notnull' => true));
-        $table->addColumn('type', 'integer', array('notnull' => false));
+        $table->addColumn('type', 'integer', array('notnull' => true));
         $table->addColumn('workspace_id', 'integer', array('notnull' => false));
 
         $table->addForeignKeyConstraint(
@@ -300,7 +300,8 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('name', 'string');
         $table->addColumn('is_exportable', 'boolean');
         $table->addColumn('plugin_id', 'integer', array('notnull' => false));
-        $table->addColumn('class', 'string', array('notnull' => false,'length' => 255));
+        // class should not be null (>< site bundle -> inherited type)
+        $table->addColumn('class', 'string', array('notnull' => false, 'length' => 255));
         $table->addColumn('parent_id', 'integer', array('notnull' => false));
         $table->addUniqueIndex(array('name'));
         $table->addForeignKeyConstraint(
@@ -410,9 +411,9 @@ class Version20120119000000 extends BundleMigration
         );
 
         /**@todo find why it doesn't work*/
-        //commented for now (or the resource creation doesn't work
-        //$table->addUniqueIndex(array('next_id'), 'next_id');
-        //$table->addUniqueIndex(array('previous_id'), 'previous_id');
+        //commented for now (or the resource reordering doesn't work
+        //$table->addUniqueIndex(array('next_id', 'parent_id'));
+        //$table->addUniqueIndex(array('previous_id', 'parent_id'));
         $this->storeTable($table);
     }
 
@@ -517,7 +518,6 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('root', 'integer', array('notnull' => false));
         $table->addColumn('parent_id', 'integer', array('notnull' => false));
         $table->addColumn('sender_username', 'string');
-        $table->addColumn('receiver_string', 'string');
 
         $table->addForeignKeyConstraint(
             $this->getStoredTable('claro_user'),
