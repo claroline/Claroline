@@ -205,12 +205,13 @@ class TextController extends Controller
      */
     public function editFormAction($textId)
     {
-        $textRepo = $this->container->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\Text');
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $textRepo = $em->getRepository('ClarolineCoreBundle:Resource\Text');
+        $revisionRepo = $em->getRepository('ClarolineCoreBundle:Resource\Revision');
         $text = $textRepo->find($textId);
 
         return array(
-            'text' => $textRepo->getLastRevision($text)->getContent(),
+            'text' => $revisionRepo->getLastRevision($text)->getContent(),
             '_resource' => $text
         );
     }

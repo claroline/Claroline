@@ -36,9 +36,10 @@ class GenericRepository
      */
     public function findByIds($entityClass, array $ids)
     {
-        $idString = implode(', ', $ids);
-        $dql = "SELECT entity FROM {$entityClass} entity WHERE entity.id IN ({$idString})";
+        $dql = 'SELECT entity FROM :entityClass entity WHERE entity.id IN (:ids)';
         $query = $this->em->createQuery($dql);
+        $query->setParameter('entityClass', $entityClass);
+        $query->setParameter('ids', $ids);
         $entities = $query->getResult();
 
         if (($entityCount = count($entities)) !== ($idCount = count($ids))) {

@@ -128,12 +128,12 @@ class TextListener implements ContainerAwareInterface
     public function onOpen(OpenResourceEvent $event)
     {
         $text = $event->getResource();
-        $textRepo = $this->container->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\Text');
+        $revisionRepo = $this->container->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Resource\Revision');
         $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Text:index.html.twig',
             array(
-                'text' => $textRepo->getLastRevision($text)->getContent(),
+                'text' => $revisionRepo->getLastRevision($text)->getContent(),
                 '_resource' => $text
             )
         );
@@ -161,10 +161,10 @@ class TextListener implements ContainerAwareInterface
      */
     public function onExportTemplate(ExportResourceTemplateEvent $event)
     {
-        $textRepo = $this->container->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\Text');
         $text = $event->getResource();
-        $config['text'] = $textRepo->getLastRevision($text)->getContent();
+        $revisionRepo = $this->container->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Resource\Revision');
+        $config['text'] = $revisionRepo->getLastRevision($text)->getContent();
         $event->setConfig($config);
         $event->stopPropagation();
     }
