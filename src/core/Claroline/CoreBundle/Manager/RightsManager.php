@@ -97,14 +97,26 @@ class RightsManager
         }
     }
 
-    public function edit(AbstractResource $resource, Role $role, array $permissions, array $creations = array())
+    public function editPerms(
+        array $permissions,
+        Role $role,
+        AbstractResource $resource,
+        $isRecursive
+    )
     {
-        $rights = $this->rightsRepo->findOneBy(array('resource' => $resource, 'role' => $role));
-        $this->setPermissions($rights, $permissions);
-        $rights->setCreatableResourceTypes($creations);
-        $this->writer->update($rights);
+        $this->writer->suspendFlush();
+        $arRights = ($isRecursive) ?
+            $this->addMissingForDescendants($role, $resource):
+            array($this->getOneByRoleAndResource($role, $resource));
 
-        return $rights;
+        foreach ($arRights as $toUpdate) {
+            $this->setPermissions($toUpdate, $permissions);
+            $this->writer->update($toUpdate);
+        }
+
+        $this->writer->forceFlush();
+
+        return $arRights;
     }
 
     public function copy(AbstractResource $original, AbstractResource $resource)
@@ -129,6 +141,9 @@ class RightsManager
     }
 
     /**
+     * Create rights wich weren't created for every descendants and returns every rights of
+     * every descendants (include rights wich weren't created).
+     *
      * @param \Claroline\CoreBundle\Entity\Role $role
      * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
      *
@@ -173,12 +188,37 @@ class RightsManager
         return $rights;
     }
 
+    public function getOneByRoleAndResource(Role $role, AbstractResource $resource)
+    {
+        $resourceRights = $this->rightsRepo->findOneBy(array('resource' => $resource, 'role' => $role));
+
+        if ($resourceRights === null) {
+            $resourceRights = new ResourceRights();
+            $resourceRights->setResource($resource);
+            $resourceRights->setRole($role);
+        }
+
+        return $resourceRights;
+    }
+
+    /**
+     * Returns every ResourceRights of a resource on 1 level if the role linked is not 'ROLE_ADMIN'
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     *
+     * @return array
+     */
+    public function getNonAdminRights(AbstractResource $resource)
+    {
+        return $this->rightsRepo->findNonAdminRights($resource);
+    }
+
     public function getCreatableTypes(array $roles, Directory $directory)
     {
         $creatableTypes = array();
         $creationRights = $this->rightsRepo->findCreationRights($roles, $directory);
 
-        if (count($creationRights) != 0) {
+        if (count($creationRights) !== 0) {
             foreach ($creationRights as $type) {
                 $creatableTypes[$type['name']] = $this->translator->trans($type['name'], array(), 'resource');
             }

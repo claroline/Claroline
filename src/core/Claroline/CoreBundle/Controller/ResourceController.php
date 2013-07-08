@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Controller;
 
 use \Exception;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +25,7 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
-class ResourceController extends Controller
+class ResourceController
 {
     const THUMB_PER_PAGE = 12;
 
