@@ -15,13 +15,29 @@ $config = Yaml::parse(file_get_contents($prodConfigFile));
 $config['monolog'] = array(
     'handlers' => array(
         'main' => array(
+            'type' => 'fingers_crossed',
+            'action_level' => 'error',
+            'handler' => 'grouped'
+        ),
+        'grouped' => array(
+            'type' => 'group',
+            'members' => array('streamed', 'buffered')
+        ),
+        'streamed' => array(
             'type' => 'stream',
             'path' => '%kernel.logs_dir%/%kernel.environment%.log',
             'level' => 'debug'
         ),
-        'firephp' => array(
-            'type' => 'firephp',
-            'level' => 'info'
+        'buffered' => array(
+            'type' =>  'buffer',
+            'handler' => 'swift'
+        ),
+        'swift' => array(
+            'type' => 'swift_mailer',
+            'from_email' => 'dev@claroline.net',
+            'to_email' => 'dev@claroline.net',
+            'subject' => 'An Error Occurred!',
+            'level' => 'debug'
         )
     )
 );
