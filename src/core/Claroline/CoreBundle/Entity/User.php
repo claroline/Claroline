@@ -341,6 +341,19 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         return $this->created;
     }
 
+    /**
+     * Sets the user creation date.
+     *
+     * NOTE : creation date is already handled by the timestamp listener; this
+     *        setter exists mainly for testing purposes.
+     *
+     * @param \DateTime $date
+     */
+    public function setCreationDate(\DateTime $date)
+    {
+        $this->created = $date;
+    }
+
     public function getPlatformRole()
     {
         $roles = $this->getEntityRoles();

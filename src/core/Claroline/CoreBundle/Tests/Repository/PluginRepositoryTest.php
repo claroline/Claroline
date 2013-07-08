@@ -2,10 +2,10 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Claroline\CoreBundle\Library\Testing\AltRepositoryTestCase;
+use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 use Claroline\CoreBundle\Entity\Plugin;
 
-class PluginRepositoryTest extends AltRepositoryTestCase
+class PluginRepositoryTest extends RepositoryTestCase
 {
     public static $repo;
 

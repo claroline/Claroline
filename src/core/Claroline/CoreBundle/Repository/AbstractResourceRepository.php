@@ -261,15 +261,15 @@ class AbstractResourceRepository extends MaterializedPathRepository
             throw new \InvalidArgumentException('Resource ids array cannot be empty');
         }
 
-        $ids = implode(', ', $resourceIds);
-        $dql = "
+        $dql = '
             SELECT r.id AS id, w.code AS code, w.name AS name
             FROM Claroline\CoreBundle\Entity\Resource\AbstractResource r
             JOIN r.workspace w
-            WHERE r.id IN ({$ids})
+            WHERE r.id IN (:resourceIds)
             ORDER BY w.name ASC
-        ";
+        ';
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('resourceIds', $resourceIds);
 
         return $query->getResult();
     }

@@ -164,6 +164,19 @@ class Message
         return $this->date;
     }
 
+    /**
+     * Sets the message creation date.
+     *
+     * NOTE : creation date is already handled by the timestamp listener; this
+     *        setter exists mainly for testing purposes.
+     *
+     * @param \DateTime $date
+     */
+    public function setDate(\DateTime $date)
+    {
+        $this->date = $date;
+    }
+
     public function isRemoved()
     {
         return $this->isRemoved;
