@@ -783,11 +783,11 @@ class ResourceManager
 
         foreach ($resources as $resource) {
 
-            if (get_class($resource) == 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
+            if (get_class($resource) === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
                 $resource = $resource->getResource();
             }
 
-            if ($resource->getResourceType()->getName() != 'directory') {
+            if ($resource->getResourceType()->getName() !== 'directory') {
                 $event = $this->dispatcher->dispatch(
                     "download_{$resource->getResourceType()->getName()}",
                     'DownloadResource',

@@ -14,6 +14,7 @@ class FormFactory
     const TYPE_ORDERED_TOOL = 'ordered_tool';
     const TYPE_TOOL = 'tool';
     const TYPE_MAIL = 'mail';
+    const TYPE_RESOURCE_PERMS = 'resource_permissions';
 
     private static $types = array(
         self::TYPE_MESSAGE => array(
@@ -30,6 +31,10 @@ class FormFactory
         ),
         self::TYPE_MAIL => array(
             'formType' => 'Claroline\CoreBundle\Form\MailType'
+        ),
+        self::TYPE_RESOURCE_PERMS => array(
+            'formType' => 'Claroline\CoreBundle\Form\ResourceRightType',
+            'entity' => 'Claroline\CoreBundle\Entity\Resource\ResourceRights'
         )
     );
 

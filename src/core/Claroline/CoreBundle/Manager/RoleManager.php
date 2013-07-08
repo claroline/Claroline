@@ -88,6 +88,11 @@ class RoleManager
         }
     }
 
+    public function getRole($roleId)
+    {
+        return $this->roleRepo->find($roleId);
+    }
+
     public function associateRole(AbstractRoleSubject $ars, Role $role)
     {
         $ars->addRole($role);

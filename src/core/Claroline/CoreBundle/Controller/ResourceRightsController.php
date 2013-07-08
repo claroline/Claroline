@@ -5,19 +5,47 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Form\ResourceRightType;
-use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceRoleChangeRightEvent;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Claroline\CoreBundle\Manager\RightsManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\SecurityContext;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\DiExtraBundle\Annotation as DI;
 
 class ResourceRightsController extends Controller
 {
+    private $rightsManager;
+    private $formFactory;
+    private $request;
+    private $sc;
+
     /**
-     * @Route(
+     * @DI\InjectParams({
+     *     "rightsManager" = @DI\Inject("claroline.manager.rights_manager"),
+     *     "formFactory"   = @DI\Inject("claroline.form.factory"),
+     *     "request"       = @DI\Inject("request"),
+     *     "sc"            = @DI\Inject("security.context")
+     * })
+     */
+    public function __construct(
+        RightsManager $rightsManager,
+        FormFactory $formFactory,
+        Request $request,
+        SecurityContext $sc
+    )
+    {
+        $this->rightsManager = $rightsManager;
+        $this->formFactory = $formFactory;
+        $this->request = $request;
+        $this->sc = $sc;
+    }
+
+    /* add "*"
+     * @EXT\Route(
      *     "/{resource}/rights/form/role/{role}",
      *     name="claro_resource_right_form",
      *     options={"expose"=true},
@@ -47,7 +75,8 @@ class ResourceRightsController extends Controller
                 ->findOneBy(array('role' => $role, 'resource' => $resource));
 
             if ($resourceRight === null) {
-                 $form = $this->createForm(new ResourceRightType($resource), new ResourceRights());
+
+                 $form = $this->formFactory->create(FormFactory::TYPE_RESOURCE_RIGHTS, array($resource));
 
                  return $this->render(
                      'ClarolineCoreBundle:Resource:resourceRightsFormCreation.html.twig',
@@ -58,7 +87,7 @@ class ResourceRightsController extends Controller
                      )
                  );
             } else {
-                $form = $this->createForm(new ResourceRightType($resource), $resourceRight);
+                $form = $this->formFactory->create(FormFactory::TYPE_RESOURCE_RIGHTS, array($resource), $resourceRight);
 
                 return $this->render(
                     'ClarolineCoreBundle:Resource:resourceRightsFormEdit.html.twig',
@@ -94,8 +123,8 @@ class ResourceRightsController extends Controller
         );
     }
 
-    /**
-     * @Route(
+    /*
+     * @EXT\Route(
      *     "/{resource}/rights/edit",
      *     name="claro_resource_rights_edit",
      *     options={"expose"=true}
@@ -157,12 +186,12 @@ class ResourceRightsController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{resource}/role/{role}/right/create",
      *     name="claro_resource_right_create"
      * )
      *
-     * @Template("ClarolineCoreBundle:Resource:rightsFormRow.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Resource:rightsFormRow.html.twig")
      *
      * @param AbstractResource $resource the resource
      * @param Role             $role     the role
@@ -171,21 +200,15 @@ class ResourceRightsController extends Controller
      */
     public function createRightAction(Role $role, AbstractResource $resource)
     {
-        $request = $this->get('request');
         $collection = new ResourceCollection(array($resource));
         $this->checkAccess('EDIT', $collection);
-        $form = $this->get('form.factory')->create(new ResourceRightType($resource), new ResourceRights());
-        $form->handleRequest($request);
+        $form = $this->formFactory->create(FormFactory::TYPE_RESOURCE_RIGHTS, array($resource));
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $isRecursive = $form->get('isRecursive')->getData();
-            $permissions['canCopy'] = $form->get('canCopy')->getData();
-            $permissions['canDelete'] = $form->get('canDelete')->getData();
-            $permissions['canOpen'] = $form->get('canOpen')->getData();
-            $permissions['canEdit'] = $form->get('canEdit')->getData();
-            $permissions['canExport'] = $form->get('canExport')->getData();
-            $this->get('claroline.resource.manager')->createRight($permissions, $isRecursive, $role, $resource);
-
+            $permissions = $this->getPermissionsFromForm($form);
+            $this->rightsManager->create($permissions, $role, $resource, $isRecursive);
             $isDir = ($resource->getResourceType()->getName() === 'directory') ? true: false;
 
             return array(
@@ -202,57 +225,35 @@ class ResourceRightsController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/right/{resourceRight}/edit",
      *     name="claro_resource_right_edit"
      * )
      */
     public function editRightAction(ResourceRights $resourceRight)
     {
-        $request = $this->get('request');
-        $em = $this->get('doctrine.orm.entity_manager');
-        $role = $resourceRight->getRole();
-        $resource = $resourceRight->getResource();
-        $collection = new ResourceCollection(array($resource));
+        $collection = new ResourceCollection(array($resourceRight->getResource()));
         $this->checkAccess('EDIT', $collection);
-        $form = $this->get('form.factory')->create(new ResourceRightType($resource), $resourceRight);
-        $form->handleRequest($request);
+        $form = $this->formFactory
+            ->create(FormFactory::TYPE_RESOURCE_RIGHTS, array($resourceRight->getResource()), $resourceRight);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-
             $isRecursive = $form->get('isRecursive')->getData();
-            if ($isRecursive) {
-                $resourceRights = $this->get('claroline.resource.manager')
-                    ->findAndCreateMissingDescendants($role, $resource);
-            } else {
-                $resourceRights[] = $resourceRight;
-            }
-
-            foreach ($resourceRights as $resourceRight) {
-                $resourceRight->setCanCopy($form->get('canCopy')->getData());
-                $resourceRight->setCanOpen($form->get('canOpen')->getData());
-                $resourceRight->setCanDelete($form->get('canDelete')->getData());
-                $resourceRight->setCanEdit($form->get('canEdit')->getData());
-                $resourceRight->setCanExport($form->get('canExport')->getData());
-
-                $em->persist($resourceRight);
-            }
-
-            $em->flush();
-
-            return new Response("success");
+            $permissions = $this->getPermissionsFromForm($form);
+            $this->rightsManager->edit($permissions, $resourceRight, $isRecursive, $creations);
         }
 
+        return new Response("success");
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{resource}/role/{role}/right/creation/form",
      *     name="claro_resource_right_creation_form",
      *     options={"expose"=true}
      * )
-     *
-     * @Template("ClarolineCoreBundle:Resource:rightsCreation.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Resource:rightsCreation.html.twig")
      *
      * Displays the form for resource creation rights (i.e the right to create a
      * type of resource in a directory). Show the different resource types already
@@ -270,8 +271,7 @@ class ResourceRightsController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $collection = new ResourceCollection(array($resource));
         $this->checkAccess('EDIT', $collection);
-        $config = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
-            ->findOneBy(array('resource' => $resource, 'role' => $role));
+        $config = $this->rightsManager->getOneByRoleAndResource($role, $resource);
         $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
 
         return array(
@@ -283,7 +283,7 @@ class ResourceRightsController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{resource}/role/{role}/right/creation/edit",
      *     name="claro_resource_rights_creation_edit",
      *     options={"expose"=true}
@@ -348,54 +348,6 @@ class ResourceRightsController extends Controller
         }
 
         return false;
-    }
-
-    /**
-     * Find (and create if missing) resourcerights form every children.
-     */
-    private function findChildrenRights(AbstractResource $resource)
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $resourceRepo = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
-        $rightsRepo = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
-        $rootRoleRights = $rightsRepo->findNonAdminRights($resource);
-        $existingRights = $rightsRepo->findRecursiveByResource($resource);
-        $missingRights = array();
-        $resources = $resourceRepo->findDescendants($resource, true);
-        $roles = array();
-
-        foreach ($rootRoleRights as $rootRoleRight) {
-            $roles[] = $rootRoleRight->getRole();
-        }
-
-        $toFind = array();
-
-        foreach ($resources as $resource) {
-            foreach ($roles as $role) {
-                $toFind[] = array('resource' => $resource, 'role' => $role);
-            }
-        }
-
-        $found = false;
-        foreach ($toFind as $item) {
-            foreach ($existingRights as $existingRight) {
-                if ($item['resource'] == $existingRight->getResource()
-                    && $item['role'] == $existingRight->getRole()) {
-                    $found = true;
-                }
-            }
-
-            if (!$found) {
-                $newRight = new ResourceRights();
-                $newRight->setResource($item['resource']);
-                $newRight->setRole($item['role']);
-                $missingRights[] = $newRight;
-            }
-
-            $found = false;
-        }
-
-        return array_merge($missingRights, $existingRights);
     }
 
     /**
@@ -500,8 +452,19 @@ class ResourceRightsController extends Controller
      */
     private function checkAccess($permission, ResourceCollection $collection)
     {
-        if (!$this->get('security.context')->isGranted($permission, $collection)) {
+        if (!$this->sc->isGranted($permission, $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
+    }
+
+    private function getPermissionsFromForm($form)
+    {
+        $permissions['canCopy'] = $form->get('canCopy')->getData();
+        $permissions['canDelete'] = $form->get('canDelete')->getData();
+        $permissions['canOpen'] = $form->get('canOpen')->getData();
+        $permissions['canEdit'] = $form->get('canEdit')->getData();
+        $permissions['canExport'] = $form->get('canExport')->getData();
+
+        return $form;
     }
 }
