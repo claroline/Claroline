@@ -4,10 +4,11 @@ namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Claroline\CoreBundle\Validator\Constraints\AdminWorkspaceTagUniqueName;
 use JMS\DiExtraBundle\Annotation as DI;
-
 
 /**
  * @DI\Service("claroline.form.simpleautocomplete")
@@ -25,11 +26,14 @@ class SimpleAutoCompleteType extends AbstractType
         return 'simpleautocomplete';
     }
 
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        $view->vars['entity_reference'] = $options['entity_reference'];
+    }
+
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver
-        ->setDefaults(
-            array(
+        $resolver->setDefaults(array(
                 'translation_domain' => 'platform',
                 'entity_reference' => null
             )
