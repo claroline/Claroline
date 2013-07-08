@@ -23,7 +23,7 @@ class BadgeAwardType extends AbstractType
 
     public function getName()
     {
-        return 'badge_attribution_form';
+        return 'badge_award_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
