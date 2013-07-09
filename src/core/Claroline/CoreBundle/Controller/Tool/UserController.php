@@ -6,6 +6,7 @@ use LogicException;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -15,7 +16,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceRoleSubscribeEvent;
 use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceRoleUnsubscribeEvent;
-use Claroline\CoreBundle\Library\Resource\Converter;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
@@ -33,7 +33,6 @@ class UserController extends Controller
     private $pagerFactory;
     private $security;
     private $router;
-    private $converter;
 
     /**
      * @DI\InjectParams({
@@ -42,8 +41,7 @@ class UserController extends Controller
      *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
      *     "pagerFactory"       = @DI\Inject("claroline.pager.pager_factory"),
      *     "security"           = @DI\Inject("security.context"),
-     *     "router"             = @DI\Inject("router"),
-     *     "converter"          = @DI\Inject("claroline.resource.converter")
+     *     "router"             = @DI\Inject("router")
      * })
      */
     public function __construct(
@@ -52,8 +50,7 @@ class UserController extends Controller
         EventDispatcher $eventDispatcher,
         PagerFactory $pagerFactory,
         SecurityContextInterface $security,
-        UrlGeneratorInterface $router,
-        Converter $converter
+        UrlGeneratorInterface $router
     )
     {
         $this->userManager = $userManager;
@@ -62,7 +59,6 @@ class UserController extends Controller
         $this->pagerFactory = $pagerFactory;
         $this->security = $security;
         $this->router = $router;
-        $this->converter = $converter;
     }
 
     /**
@@ -279,10 +275,7 @@ class UserController extends Controller
             }
         }
 
-        $response = new Response($this->converter->jsonEncodeUsers($users));
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
+        return new JsonResponse($this->userManager->convertUsersToArray($users));
     }
 
     /**
