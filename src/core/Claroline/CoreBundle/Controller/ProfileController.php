@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Doctrine\ORM\NoResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Entity\User;
@@ -131,8 +132,19 @@ class ProfileController extends Controller
      */
     public function viewAction($userId)
     {
-        $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository('ClarolineCoreBundle:User')->find($userId);
+        $query = $this->getDoctrine()->getManager()
+            ->createQuery('
+                SELECT u, ub
+                FROM ClarolineCoreBundle:User u
+                JOIN u.userBadges ub
+                WHERE u.id = :id'
+            )->setParameter('id', $userId);
+
+        try {
+            $user = $query->getSingleResult();
+        } catch (NoResultException $e) {
+            $user = null;
+        }
 
         return array('user' => $user);
     }

@@ -281,7 +281,7 @@ class Badge
     public function getLocale()
     {
         if(null === $this->locale) {
-            throw new \InvalidArgumentException('No locale setted.');
+            throw new \InvalidArgumentException('No locale setted for badge translation.');
         }
 
         return $this->locale;
