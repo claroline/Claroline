@@ -20,7 +20,6 @@ class ResourceManagerListener
      *     "ed" = @DI\Inject("event_dispatcher"),
      *     "templating" = @DI\Inject("templating"),
      *     "manager" = @DI\Inject("claroline.manager.resource_manager"),
-     *     "converter" = @DI\Inject("claroline.resource.converter"),
      *     "sc" = @DI\Inject("security.context"),
      *     "request" = @DI\Inject("request"),
      *     "workspaceTagManager" = @DI\Inject("claroline.manager.workspace_tag_manager")
@@ -31,7 +30,6 @@ class ResourceManagerListener
         $ed,
         $templating,
         $manager,
-        $converter,
         $sc,
         $request,
         WorkspaceTagManager $workspaceTagManager
@@ -41,7 +39,6 @@ class ResourceManagerListener
         $this->ed = $ed;
         $this->templating = $templating;
         $this->manager = $manager;
-        $this->converter = $converter;
         $this->sc = $sc;
         $this->request = $request;
         $this->workspaceTagManager = $workspaceTagManager;

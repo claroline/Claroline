@@ -177,6 +177,38 @@ class UserManager
         $this->writer->update($user);
     }
 
+    public function convertUsersToArray(array $users)
+    {
+        $content = array();
+        $i = 0;
+
+        foreach ($users as $user) {
+            $content[$i]['id'] = $user->getId();
+            $content[$i]['username'] = $user->getUsername();
+            $content[$i]['lastname'] = $user->getLastName();
+            $content[$i]['firstname'] = $user->getFirstName();
+            $content[$i]['administrativeCode'] = $user->getAdministrativeCode();
+
+            $rolesString = '';
+            $roles = $user->getEntityRoles();
+            $rolesCount = count($roles);
+            $j = 0;
+
+            foreach ($roles as $role) {
+                $rolesString .= "{$this->translator->trans($role->getTranslationKey(), array(), 'platform')}";
+
+                if ($j < $rolesCount - 1) {
+                    $rolesString .= ' ,';
+                }
+                $j++;
+            }
+            $content[$i]['roles'] = $rolesString;
+            $i++;
+        }
+
+        return $content;
+    }
+
     public function getUserByUsername($username)
     {
         return $this->userRepo->loadUserByUsername($username);
