@@ -81,7 +81,10 @@ class BadgeController extends Controller
             $badge->addTranslation($translation);
         }
 
-        $form = $this->createForm(new BadgeType(), $badge);
+        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
+        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
+
+        $form = $this->createForm(new BadgeType(), $badge, array('language' => $platformConfigHandler->getParameter('locale_language')));
 
         if($request->isMethod('POST')) {
             $form->handleRequest($request);
