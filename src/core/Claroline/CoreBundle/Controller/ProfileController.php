@@ -136,7 +136,7 @@ class ProfileController extends Controller
             ->createQuery('
                 SELECT u, ub
                 FROM ClarolineCoreBundle:User u
-                JOIN u.userBadges ub
+                LEFT JOIN u.userBadges ub
                 WHERE u.id = :id'
             )->setParameter('id', $userId);
 
