@@ -138,8 +138,6 @@ class ProfileController extends Controller
      */
     public function viewAction(User $user, $page = 1)
     {
-        $user = $this->get('security.context')->getToken()->getUser();
-
         $query = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\Badge')->findByUser($user, true);
         $adapter = new DoctrineORMAdapter($query);
         $pager   = new Pagerfanta($adapter);
