@@ -18,7 +18,8 @@ class DatePickerType extends AbstractType
     {
         $view->vars['component'] = $options['component'];
         $view->vars['options']   = array(
-            'autoclose' => $options['autoclose']
+            'autoclose' => $options['autoclose'],
+            'language'  => $options['language']
         );
     }
 
@@ -30,7 +31,7 @@ class DatePickerType extends AbstractType
             'widget'             => 'single_text',
             'component'          => false,
             'autoclose'          => false,
-            'format'             => 'dd-MM-yyyy'
+            'language'           => 'en'
         ));
     }
 

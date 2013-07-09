@@ -21,7 +21,8 @@ class BadgeType extends AbstractType
             ->add('expired_at', 'datepicker', array(
                   'read_only' => true,
                   'component' => true,
-                  'autoclose' => true
+                  'autoclose' => true,
+                  'language'  => $options['language']
             ))
         ;
     }
@@ -36,8 +37,9 @@ class BadgeType extends AbstractType
         $resolver
         ->setDefaults(
             array(
-                'data_class' => 'Claroline\CoreBundle\Entity\Badge\Badge',
-                'translation_domain' => 'platform'
+                'data_class'         => 'Claroline\CoreBundle\Entity\Badge\Badge',
+                'translation_domain' => 'platform',
+                'language'           => 'en'
             )
         );
     }
