@@ -176,4 +176,22 @@ class ProfileController extends Controller
 
         return $user;
     }
+
+    /**
+     * @Route("/badges", name="claro_profile_view_badges")
+     *
+     * @Template("ClarolineCoreBundle:Profile:badge.html.twig")
+     *
+     * Displays the public profile of an user.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function badgeAction()
+    {
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        return array(
+            'badges' => $user->getBadges()
+        );
+    }
 }

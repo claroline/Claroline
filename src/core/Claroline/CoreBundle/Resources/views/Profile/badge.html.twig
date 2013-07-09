@@ -1,0 +1,7 @@
+{% extends "ClarolineCoreBundle::layout.html.twig" %}
+
+{% block content %}
+    <div class="span12 border">
+        {% include 'ClarolineCoreBundle:Profile:list_badge.html.twig' with {'title': 'my_badges'|trans({}, 'platform'), 'badges': badges} %}
+    </div>
+{% endblock %}
