@@ -25,12 +25,12 @@ $(function(){
 
     $('#awardUser').click(function(event) {
         event.preventDefault();
-        awardUsersContainer.toggleClass('hidden');
-        awardFormContainer.toggleClass('hidden');
+        awardUsersContainer.hide('fast');
+        awardFormContainer.show('fast');
     });
     $('#viewAwardedUser').click(function(event) {
         event.preventDefault();
-        awardFormContainer.toggleClass('hidden');
-        awardUsersContainer.toggleClass('hidden');
+        awardFormContainer.hide('fast');
+        awardUsersContainer.show('fast');
     });
 });
