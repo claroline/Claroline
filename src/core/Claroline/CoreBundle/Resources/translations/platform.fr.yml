@@ -15,7 +15,7 @@ admin: Administrateur
 admin_analytics: 'Statistiques plateforme'
 administration: Administration
 administrative_code: 'Code administratif'
-admin_form_firstName : 'Prenom'
+admin_form_firstName : 'Prénom'
 admin_form_lastName : 'Nom de famille'
 admin_form_plainPassword_first : 'Mot de passe'
 admin_form_plainPassword_second : 'Répétez votre mot de passe'
@@ -288,6 +288,7 @@ note: Note
 none: Aucun
 object: Objet
 ok: Ok
+or: Ou
 open: Ouvrir
 options: Options
 organize_admin_tags: 'Organiser les Tags administrateur'
@@ -536,7 +537,7 @@ badge_delete_success_message: 'Badge supprimé avec succès.'
 badge_delete_error_message: "Erreur lors de la suppression du badge."
 badge_edit_success_message: 'Badge édité avec succès.'
 badge_edit_error_message: "Erreur lors de l'édition du badge."
-badge_award_success_message: 'Attribution du badge effectuée avec succès.'
+badge_awarded_count_message: '%awaredBadge% attribution de badge effectuée.|%awaredBadge% attributions de badge effectuées.'
 badge_award_error_message: "Erreur lors de l'attribution du badge."
 badge_unaward_success_message: 'Déattribution du badge effectuée avec succès.'
 badge_unaward_error_message: "Erreur lors de la désattribution du badge."
@@ -547,6 +548,7 @@ badge_form_version: 'Version'
 badge_form_image: 'Image'
 badge_form_expired_at: "Date d'expiration"
 badge_form_change_image: "Changer l'image"
-badge_award_form_groups: 'Groupe'
-badge_award_form_users : 'Utilisateur'
+badge_award_form_group: 'Groupe'
+badge_award_form_user: 'Utilisateur'
 badge_expired_on_date: 'Expire le %expirationDate%'
+badge_award_info_no_group_message: "Aucun groupe sélectionné pour l'attribution"

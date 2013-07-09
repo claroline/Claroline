@@ -203,23 +203,37 @@ class BadgeController extends Controller
                 try {
                     $doctrine = $this->getDoctrine();
 
-                    $groupName = $form->get('groups')->getData();
-
                     /** @var \Doctrine\ORM\EntityManager $entityManager */
                     $entityManager = $doctrine->getManager();
 
-                    $group = $doctrine->getRepository('ClarolineCoreBundle:Group')->findOneByName($groupName);
-
-                    if(null === $group) {
-                        throw new \InvalidArgumentException(sprintf("No group found with '%s' as name.", $groupName));
-                    }
+                    $groupName    = $form->get('group')->getData();
+                    $userName     = $form->get('user')->getData();
+                    $awardedBadge = 0;
 
                     /** @var \Claroline\CoreBundle\Entity\User[] $users */
-                    $users = $doctrine->getRepository('ClarolineCoreBundle:User')->findByGroup($group);
+                    $users = array();
+
+                    if(null !== $groupName) {
+                        $group = $doctrine->getRepository('ClarolineCoreBundle:Group')->findOneByName($groupName);
+
+                        if(null !== $group) {
+                            $users = $doctrine->getRepository('ClarolineCoreBundle:User')->findByGroup($group);
+                        }
+                    }
+                    elseif(null !== $userName) {
+                        list($firstName, $lastName) = explode(' ', $userName);
+                        $user = $doctrine->getRepository('ClarolineCoreBundle:User')->findOneByUsername($firstName . $lastName);
+
+                        if(null !== $user) {
+                            $users[] = $user;
+                        }
+                    }
 
                     foreach($users as $user)
                     {
                         if(!$user->hasBadge($badge)) {
+                            $awardedBadge++;
+
                             $userBadge = new UserBadge();
                             $userBadge
                             ->setBadge($badge)
@@ -229,10 +243,16 @@ class BadgeController extends Controller
                         }
                     }
 
-                    $entityManager->persist($badge);
-                    $entityManager->flush();
+                    $flashMessageType = 'alert';
 
-                    $this->get('session')->getFlashBag()->add('success', $translator->trans('badge_award_success_message', array(), 'platform'));
+                    if(0 < $awardedBadge) {
+                        $entityManager->persist($badge);
+                        $entityManager->flush();
+
+                        $flashMessageType = 'success';
+                    }
+
+                    $this->get('session')->getFlashBag()->add($flashMessageType, $translator->transChoice('badge_awarded_count_message', $awardedBadge, array('%awaredBadge%' => $awardedBadge), 'platform'));
                 }
                 catch(\Exception $exception) {
                     if(!$request->isXmlHttpRequest()) {
