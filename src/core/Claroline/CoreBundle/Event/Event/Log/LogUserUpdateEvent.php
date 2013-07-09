@@ -1,8 +1,9 @@
 <?php
 
 namespace Claroline\CoreBundle\Event\Event\Log;
+use Claroline\CoreBundle\Event\Event\MandatoryEventInterface;
 
-class LogUserUpdateEvent extends LogGenericEvent
+class LogUserUpdateEvent extends LogGenericEvent implements MandatoryEventInterface
 {
     const ACTION = 'user_update';
 

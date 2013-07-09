@@ -145,9 +145,11 @@ class DesktopParametersController extends Controller
      */
     public function openDesktopToolConfig(Tool $tool)
     {
-        $event = new ConfigureDesktopToolEvent($tool);
-        $eventName = strtolower('configure_desktop_tool_' . $tool->getName());
-        $this->ed->dispatch($eventName, $event);
+        $event = $this->get('claroline.event.event_dispatcher')->dispatch(
+                  strtolower('configure_desktop_tool_' . $tool->getName()),
+                  'ConfigureDesktopTool',
+                  array($tool)
+                );
 
         if (is_null($event->getContent())) {
             throw new \Exception(

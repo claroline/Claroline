@@ -43,11 +43,10 @@ class DesktopController extends Controller
 
         foreach ($configs as $config) {
             if ($config->isVisible()) {
-                
                 $event = $this->get('claroline.event.event_dispatcher')->dispatch(
-                        "widget_{$config->getWidget()->getName()}_desktop", 
-                        'DisplayWidget'
-                    );
+                    "widget_{$config->getWidget()->getName()}_desktop",
+                    'DisplayWidget'
+                );
 
                 if ($event->hasContent()) {
                     $widget['id'] = $config->getWidget()->getId();
@@ -99,15 +98,10 @@ class DesktopController extends Controller
      */
     public function openToolAction($toolName)
     {
-        $event = new DisplayToolEvent();
-        $eventName = 'open_tool_desktop_'.$toolName;
-        $this->get('event_dispatcher')->dispatch($eventName, $event);
-
-        if (is_null($event->getContent())) {
-            throw new \Exception(
-                "Tool '{$toolName}' didn't return any Response for tool event '{$eventName}'."
-            );
-        }
+        $event = $this->get('claroline.event.event_dispatcher')->dispatch(
+            'open_tool_desktop_'.$toolName,
+            'DisplayTool'
+        );
 
         return new Response($event->getContent());
     }

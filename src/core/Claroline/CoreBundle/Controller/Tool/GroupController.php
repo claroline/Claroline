@@ -175,8 +175,11 @@ class GroupController extends Controller
                 array('workspaceId' => $workspaceId, 'toolName' => 'group_management')
             );
 
-            $log = new LogWorkspaceRoleUnsubscribeEvent($role, null, $group);
-            $this->get('event_dispatcher')->dispatch('log', $log);
+            $log = $this->get('claroline.event.event_dispatcher')->dispatch(
+                'log',
+                'Log\WorkspaceRoleUnsubscribe',
+                array($role,null,$group)
+            );
 
             $log = new LogWorkspaceRoleSubscribeEvent($newRole, null, $group);
             $this->get('event_dispatcher')->dispatch('log', $log);
