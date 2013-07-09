@@ -288,6 +288,7 @@ none: None
 note: Note
 object: Object
 ok: Ok
+or: Or
 open: Open
 options: Options
 organize_admin_tags: 'Organize admin tags'
@@ -533,7 +534,8 @@ badge_delete_success_message: 'Badge deleted with success.'
 badge_delete_error_message: 'An error occured while deleting badge.'
 badge_edit_success_message: 'Badge edited with success.'
 badge_edit_error_message: 'An error occured while editing badge.'
-badge_award_success_message: 'Badge awarded with success.'
+badge_awarded_count_message: '%awaredBadge% badge awarding made with success.|%awaredBadge% badge awardings made with success.'
+badge_awarded_count_message: '%awaredBadge% attribution de badge effectuée.|%awaredBadge% attributions de badge effectuées.'
 badge_award_error_message: 'An error occured while awarding badge.'
 badge_unaward_success_message: 'Badge awarded remove with success.'
 badge_unaward_error_message: 'An error occured while removing awarded badge.'
@@ -544,6 +546,6 @@ badge_form_version: 'Version'
 badge_form_image: 'Image'
 badge_form_expired_at: 'Expiration date'
 badge_form_change_image: "Change the image"
-badge_award_form_groups: 'Group'
-badge_award_form_users : 'User'
+badge_award_form_group: 'Group'
+badge_award_form_user: 'User'
 badge_expired_on_date: 'Expire the %expirationDate%'

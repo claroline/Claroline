@@ -5,8 +5,23 @@
 
         {{ form_errors(form) }}
 
-        {{ form_row(form.groups) }}
-        {{ form_row(form.users) }}
+        <div class="row-fluid">
+            <div class="span5">
+                {{ form_label(form.group) }}
+                {{ form_errors(form.group) }}
+                {{ form_widget(form.group) }}
+            </div>
+
+            <div class="span2">
+                <p>{{ 'or'|trans({}, 'platform') }}</p>
+            </div>
+
+            <div class="span5">
+                {{ form_label(form.user) }}
+                {{ form_errors(form.user) }}
+                {{ form_widget(form.user) }}
+            </div>
+        </div>
 
         {{ form_rest(form) }}
 

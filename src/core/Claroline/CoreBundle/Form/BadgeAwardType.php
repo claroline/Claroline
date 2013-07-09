@@ -12,11 +12,11 @@ class BadgeAwardType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('groups', 'simpleautocomplete', array(
+            ->add('group', 'simpleautocomplete', array(
                 'entity_reference' => 'group',
                 'required'         => false
             ))
-            ->add('users', 'simpleautocomplete', array(
+            ->add('user', 'simpleautocomplete', array(
                 'entity_reference' => 'user',
                 'required'         => false,
                 'with_vendors'     => false
