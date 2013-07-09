@@ -326,7 +326,7 @@ class BadgeController extends Controller
         if($request->isXmlHttpRequest()) {
             return new JsonResponse(array('error' => false));
         }
-//
+
         return $this->redirect($this->generateUrl('claro_admin_badges_edit', array('id' => $badge->getId())));
     }
 }

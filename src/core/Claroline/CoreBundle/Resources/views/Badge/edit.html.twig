@@ -52,7 +52,7 @@
                                 <td>{{ user.firstname }}</td>
                             </tr>
                         {% else %}
-                            <tr><td>{{ 'bagde_awarded_to_none_user'|trans({}, 'platform') }}.</td></tr>
+                            <tr><td colspan="3">{{ 'bagde_awarded_to_none_user'|trans({}, 'platform') }}.</td></tr>
                         {% endfor %}
                         </tbody>
                     </table>
