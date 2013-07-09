@@ -35,29 +35,60 @@
 
 {{ 'result' | trans }} : <br/><br/>
 
-<table id="user-table"  class="table table-striped table-bordered table-condensed">
-<thead>
-    <tr>
-        <th style="text-align: center">{{ 'username'|trans({}, 'platform') }}</th>
-        <th style="text-align: center">{{ 'last_name'|trans({}, 'platform') }}</th>
-        <th style="text-align: center">{{ 'first_name'|trans({}, 'platform') }}</th>
-        <th style="text-align: center">{{ 'Share'|trans}}</th>
-    </tr>
-</thead>
-{% for user in userList %}
-    <tr>
-        <td style="text-align: center; vertical-align: middle;">{{ user.userName }}</td>
-        <td style="text-align: center; vertical-align: middle;">{{ user.lastName }}</td>
-        <td style="text-align: center; vertical-align: middle;">{{ user.firstName }}</td>
-        <td style="text-align: center; vertical-align: middle;">
-            <a href="#" onclick="shareQuestionUser('{{ path('ujm_question_shareQuestionUser') }}','{{ user.lastName }}','{{ user.firstName }}'
-            ,'{{ "already" | trans }}','{{ "Self" | trans }}');"><i class="icon-share"></i>
-            </a>
-        </td>
-    </tr>
-{% endfor %}
-</table>
+{% if userList is not empty %}
+    <table id="user-table"  class="table table-striped table-bordered table-condensed">
+        <thead>
+            <tr>
+                <th style="text-align: center" onclick="SortQuestions('pseudo', 'user-table');"
+                    onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
+                    onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
+                    <i class="icon-chevron-up" id="upSps"  style="display: none;"></i>
+                    <i class="icon-chevron-down" id="downSps"  style="display: none;"></i>
+                    {{ 'username'|trans({}, 'platform') }}
+                </th>
+                <th style="text-align: center" onclick="SortQuestions('name', 'user-table');"
+                    onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
+                    onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
+                    <i class="icon-chevron-up" id="upSn"  style="display: none;"></i>
+                    <i class="icon-chevron-down" id="downSn"  style="display: none;"></i>
+                    {{ 'last_name'|trans({}, 'platform') }}
+                </th>
+                <th style="text-align: center" onclick="SortQuestions('fname', 'user-table');"
+                    onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
+                    onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
+                    <i class="icon-chevron-up" id="upSp"  style="display: none;"></i>
+                    <i class="icon-chevron-down" id="downSp"  style="display: none;"></i>
+                    {{ 'first_name'|trans({}, 'platform') }}
+                </th>
+                <th style="text-align: center">{{ 'Share'|trans}}</th>
+            </tr>
+        </thead>
+        {% for user in userList %}
+            <tr>
+                <td style="text-align: center; vertical-align: middle;">{{ user.userName }}</td>
+                <td style="text-align: center; vertical-align: middle;">{{ user.lastName }}</td>
+                <td style="text-align: center; vertical-align: middle;">{{ user.firstName }}</td>
+                <td style="text-align: center; vertical-align: middle;">
+                    <a href="#" onclick="shareQuestionUser('{{ path('ujm_question_shareQuestionUser') }}','{{ user.lastName }}','{{ user.firstName }}'
+                    ,'{{ "already" | trans }}','{{ "Self" | trans }}');"><i class="icon-share"></i>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
 
+    <input type="hidden" id="search" value="{{ search }}"/>
+
+    {% if pagerUserSearch.haveToPaginate %}
+        {{ pagerfanta(pagerUserSearch, 'twitter_bootstrap_translated',{ 'routeName': 'ujm_question_share_search_user',
+            'routeParams': { 'search': search , 'qId': questionID } }) }}
+    {% endif %}
+{% else %}
+    <p>{{ 'noUserFound'|trans }}</p>
+{% endif %}
+
+
+<script type="text/javascript" src="{{ asset('bundles/ujmexo/js/SortAndSearch.js') }}"></script>
 <script type="text/javascript">
 
     function shareQuestionUser(path, name, fname, already, Self){

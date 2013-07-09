@@ -45,8 +45,8 @@
     {{ "nameUser2Shared" | trans }} :<br/><br/>
     <div class="input-append pull-left">
         <input class="input-medium" type="text" id="search-user-txt" placeholder="{{ 'search'|trans({}, 'platform') }}"
-            onkeydown="if (event.keyCode == 13) { search_user_ajax('{{ path('ujm_question_share_search_user') }}');return false; }">
-        <button class="filter btn" type="button" id="search-user-button" onClick="search_user_ajax('{{ path('ujm_question_share_search_user') }}')">
+            onkeydown="if (event.keyCode == 13) { search_user_ajax('{{ path('ujm_question_share_search_user') }}', 1);return false; }">
+        <button class="filter btn" type="button" id="search-user-button" onClick="search_user_ajax('{{ path('ujm_question_share_search_user') }}', 1)">
             <i class="icon-search"></i>
         </button>
     </div>
@@ -54,6 +54,10 @@
     <br/><br/><br/>
 
     <div id="searchUserList">
+        {% if divResultSearch is defined %}
+            {{ 'result' | trans }} : <br/><br/>
+            {{ divResultSearch | raw }}
+        {% endif %}
     </div>
 
     <div id="QID" style="display: none;">{{ questionID }}</div>
@@ -62,4 +66,11 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/question.js') }}"></script>
+    <script type="text/javascript">
+        window.onload = function () {
+            if (document.getElementById('search')) {
+                document.getElementById('search-user-txt').value = document.getElementById('search').value;
+            }
+        };
+    </script>
 {% endblock %}

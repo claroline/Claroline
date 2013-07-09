@@ -26,16 +26,21 @@ function cherche_type(warningChangeTypeQ, exoID, displayFormType) {
     }
 }
 
-function search_user_ajax(ujm_question_share_search_user) {
+function search_user_ajax(ujm_question_share_search_user, page) {
     //"use strict";
     //alert($("#search-user-txt").val());
 
     var search = $("#search-user-txt").val();
+    var qId = document.getElementById('QID').innerHTML;
 
     $.ajax({
-        type: "POST",
+        type: "GET",
         url: ujm_question_share_search_user,
-        data: { search: search },
+        data: {
+            search: search,
+            page: page,
+            qId: qId
+        },
         cache: false,
         success: function (data) {
             $("#searchUserList").html(data);

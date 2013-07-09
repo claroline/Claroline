@@ -2,9 +2,9 @@ ujm_question_index:
     pattern: /index
     defaults: { _controller: "UJMExoBundle:Question:index"}
 
-ujm_question_show:
-    pattern:  /{id}/show
-    defaults: { _controller: "UJMExoBundle:Question:show" }
+#ujm_question_show:
+#    pattern:  /{id}/show
+#    defaults: { _controller: "UJMExoBundle:Question:show" }
 
 ujm_question_new:
     pattern:  /new/{exoID}
@@ -32,8 +32,6 @@ ujm_question_share:
 ujm_question_share_search_user:
   pattern: /share/search/user
   defaults: { _controller: "UJMExoBundle:Question:search" }
-  requirements:
-      _method: POST
 
 ujm_question_show:
     pattern:  /show/{id}

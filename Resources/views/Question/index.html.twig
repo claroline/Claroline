@@ -58,11 +58,12 @@
 <hr/>
 
     <h3>{{ "My questions" | trans }}</h3>
+
     <hr/>
 
     {% if interactions is not empty %}
 
-        <table class="table table-striped table-bordered table-condensed"  id="QuestionArrayMy">
+        <table class="table table-striped table-bordered table-condensed" id="QuestionArrayMy">
             <thead>
                 <tr>
                     <th style="text-align: center" onclick="SortQuestions('Category', 'QuestionArrayMy');"
@@ -97,7 +98,7 @@
                     <th><i class="icon-share-alt"></th>
                 </tr>
             </thead>
-            <tbody id="arrayBody">
+            <tbody>
             {% set i = 0 %}
             {% for interaction in interactions %}
                 {% set x = i + 3 * (pagerMy.getCurrentPage - 1) %}
@@ -153,7 +154,7 @@
 
     {% if sharedWithMe is not empty %}
 
-        <table class="table table-striped table-bordered table-condensed"  id="QuestionArrayShared">
+        <table class="table table-striped table-bordered table-condensed" id="QuestionArrayShared">
             <thead>
                 <tr>
                     <th style="text-align: center" onclick="SortQuestions('Category', 'QuestionArrayShared');"

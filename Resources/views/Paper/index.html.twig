@@ -39,7 +39,7 @@
 
     <h1>{{ "Paper list" | trans }}</h1>
 
-    <a href="{{ path('ujm_exercise_open', { 'exerciseId': papers[0].exercise.id }) }}" ><i class="icon-arrow-left"></i> {{ "Back" | trans }}</a>
+    <a href="{{ path('ujm_exercise_open', { 'exerciseId': exoID }) }}" ><i class="icon-arrow-left"></i> {{ "Back" | trans }}</a>
     <br/><br/>
 
     {% if papers is not empty %}

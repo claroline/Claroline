@@ -270,7 +270,8 @@ doNothing: Do nothing and go back to my documents management ...
 seeDoc: See linked questions to this document.
 delDocQuestion: Delete this document and all the linked questions !
 creationDate: Creation date
-Linkpaper: Link to a test with answers ?
+Linkpaper: Link to a test ?
+withResponse:  With answers ?
 no: no
 yes: yes
 docName: Document name ?
@@ -292,6 +293,7 @@ ContainSearch: Whose question contains ...
 noQuestionFound: No question  found ...
 noDocFound: No document found ...
 noPaperFound: No paper
+noUserFound: No user found ...
 Num_paper: paper's number
 DocManage: Manage my documents
 sharedUser: Shared question

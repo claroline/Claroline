@@ -67,6 +67,7 @@ class PaperController extends Controller
 
         if (count($subscription) < 1) {
             return $this->redirect($this->generateUrl('exercise_show', array('id' => $exoID)));
+//            return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $exoID)));
         }
 
         if ($subscription[0]->getAdmin() == 1) {
@@ -103,7 +104,8 @@ class PaperController extends Controller
                 'workspace' => $workspace,
                 'papers'    => $papers,
                 'isAdmin'   => $subscription[0]->getAdmin(),
-                'pager' => $pagerfanta
+                'pager' => $pagerfanta,
+                'exoID' => $exoID
             )
         );
     }

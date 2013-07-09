@@ -42,59 +42,66 @@
 <form class="well label_bold" name="InterGraphForm" id="InterGraphForm" action="{{ path('ujm_interactiongraphic_create') }}" method="post" {{ form_enctype(form) }}>
 
 
-{# ------------------------------------------------- Champs questions ---------------------------------------------------------------------------- #}  
-    <p> 
-        {{ form_row(form.interaction.question.title) }} 
-    </p><p>              
-        {{ form_row(form.interaction.question.category) }}
-
-        {# link to category #}
-        <a href="#" style="margin: 5px 5px 5px 5px;" id="lien_category">{{ "Create a new category" | trans }}</a> 
-
-    </p><p>            
+{# ------------------------------------------------- Champs questions ---------------------------------------------------------------------------- #}
+    <p>
+        {{ form_row(form.interaction.question.title) }}
+    </p><p>
+    <ul style="margin-left: 0; list-style-type: none;">
+        <li style="float: left;">
+            {{ form_row(form.interaction.question.category, { 'attr': {'style': 'float left;'} }) }}
+        </li>
+        <li style="float: left;  margin-left: 70px; margin-top: 4%;">
+            <a href="#" id="lien_category">{{ "Create a new category" | trans }}</a>
+        </li>
+    </ul>
+    </p><br/><br/><br/><br/><p>
         {{ form_row(form.interaction.question.description) }}
-    </p><p>                
+    </p><p>
         {{ form_row(form.interaction.question.model) }}
-    </p><p>                       
+    </p><p>
         {{ form_row(form.interaction.invite) }}
-    </p><p>                
+    </p><p>
         {{ form_row(form.interaction.feedBack) }}
-    </p><p>              
-        {{ form_row(form.interaction.hints) }}         
+    </p><p>
+        {{ form_row(form.interaction.hints) }}
+    </p><p>
+
+        <ul style="margin-left: 0; list-style-type: none;">
+            <li style="float: left;">
+    {# ------------------------------------------------- Lien nouvelle image ---------------------------------------------------------------------------- #}
+                {{ form_row(form.document, { 'attr': {'style': 'float left;'} }) }}
+            </li>
+            <li style="float: left;  margin-left: 70px; margin-top: 4%;">
+    {# ------------------------------------------------- Champs Liste images ---------------------------------------------------------------------------- #}
+                <a href="{{ path('ujm_interactiongraphic_SavePic') }}" onclick="window.open(this.href, 'NewPic',
+                'height=167, width=287, top=300, left=570, toolbar=no, menubar=no, location=no, resizable=yes, scrollbars=no, status=no'
+                ); return false;">{{ "Add a new picture ..." | trans }}</a>
+            </li>
+        </ul>
     </p>
-    
-{# ------------------------------------------------- Lien nouvelle image ---------------------------------------------------------------------------- #}            
-   
-    <p><a href="{{ path('ujm_interactiongraphic_SavePic') }}" onclick="window.open(this.href, 'NewPic', 
-        'height=167, width=287, top=300, left=570, toolbar=no, menubar=no, location=no, resizable=yes, scrollbars=no, status=no'
-    ); return false;" style="float: right; margin-right: 42%">{{ "Add a new picture ..." | trans }}</a>
-            
-{# ------------------------------------------------- Champs Liste images ---------------------------------------------------------------------------- #} 
-            
-        {{ form_row(form.document) }}   
-    </p>  
- 
+    <br/><br/><br/><br/><p>
+
 {# ------------------------------------------------- Boutton affichage image ---------------------------------------------------------------------------- #}
-    
+
     <p><input id="LoadImg" type="button" value="{{ "Select" | trans }}" onclick="LoadPic('{{ path('ujm_interactiongraphic_DisplayPic') }}',
             '{{ asset('bundles') }}', {{ form.document.vars.id }});"/></p>
- 
-{# ------------------------------------------------- Zone affichage image ---------------------------------------------------------------------------- #}    
-    
-    <a onclick="DisplayInstruction();" id="Order" 
+
+{# ------------------------------------------------- Zone affichage image ---------------------------------------------------------------------------- #}
+
+    <a onclick="DisplayInstruction();" id="Order"
        onmouseover="document.body.style.cursor = 'pointer';"
        onmouseout="document.body.style.cursor = 'default';"
     >Instructions</a>
-              
+
     <p id="Instructions">{{ "ResizeZone" | trans }}<br/>{{ "SelectZone" | trans }}<br/>{{ "PlaceZone" | trans }}<br/>
         {{ "Resize" | trans }}<br/>{{ "Erase" | trans }}</p>
-        
+
     <div style="position: relative;" id="Answer">
         <img src="" width="" height="" id="AnswerImage"/>
     </div>
-        
-{# ------------------------------------------------- tableau zone de reponse ---------------------------------------------------------------------------- #}    
-    
+
+{# ------------------------------------------------- tableau zone de reponse ---------------------------------------------------------------------------- #}
+
     <div style="position: relative;" id="AnswerArray">
         <table>
             <tr>
@@ -121,7 +128,7 @@
                     <select id="color" name="color" size="1" style="width:70px" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}');">
                         <option value="white"    style="background-color:#FFFFFF;"selected> &nbsp;&nbsp;&nbsp; </option>
                         <option value="red"      style="background-color:#FF0000;">         &nbsp;&nbsp;&nbsp; </option>
-                        <option value="blue"     style="background-color:#002FFF;">         &nbsp;&nbsp;&nbsp; </option> 
+                        <option value="blue"     style="background-color:#002FFF;">         &nbsp;&nbsp;&nbsp; </option>
                         <option value="purple"   style="background-color:#8B008B;">         &nbsp;&nbsp;&nbsp; </option>
                         <option value="green"    style="background-color:#008600;">         &nbsp;&nbsp;&nbsp; </option>
                         <option value="orange"   style="background-color:#FF7A00;">         &nbsp;&nbsp;&nbsp; </option>
@@ -133,18 +140,18 @@
                     <input type="TEXT" id="points" name="points" value="1" style="width:50px; text-align: end" onblur="CheckScore('{{ "wrong" | trans }}');">
                 </td>
             </tr>
-        </table>    
+        </table>
     </div>
- 
+
     <input type="hidden" id="imgwidth" name="imgwidth" value="0"/>
     <input type="hidden" id="imgheight" name="imgheight" value="0"/>
     <input type="hidden" id="coordsZone" name="coordsZone" value=""/>
-    
+
     <input type="hidden" name="exercise" value="{{ exoID }}"/>
-    
+
     <input type="hidden" id="message" name="message" value="{{ "inside" | trans }}"/>
-        
-{# ------------------------------------------------- Boutton validation formulaire ---------------------------------------------------------------------------- #}    
+
+{# ------------------------------------------------- Boutton validation formulaire ---------------------------------------------------------------------------- #}
     <div style="visibility: hidden;">{{ form_rest(form) }}</div>
     {{ form_errors(form) }}
     <p>
@@ -173,6 +180,6 @@
 {# ------------------------------------------------- Javascript ---------------------------------------------------------------------------- #}
 
 <script type="text/javascript">
-    addFormHint('{{ "add hint" | trans }}', '{{ "hint number" | trans }}', '{{ "Hint" | trans }}', '{{ "Penalty" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');    
+    addFormHint('{{ "add hint" | trans }}', '{{ "hint number" | trans }}', '{{ "Hint" | trans }}', '{{ "Penalty" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');
     linkCategory('{{ path('ujm_category_new_pop') }}');
 </script>

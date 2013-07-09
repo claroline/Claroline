@@ -271,7 +271,8 @@ doNothing: Ne rien faire et revenir à la liste de mes documents ...
 seeDoc: Voir les questions liées à ce document.
 delDocQuestion: Supprimer ce document ainsi que toutes les questions qui y sont liées !
 creationDate: Date de création
-Linkpaper: Liées à un test avec des réponses ?
+Linkpaper: Liées à un test ?
+withResponse: Avec des réponses ?
 no: non
 yes: oui
 docName: Nom du document ?
@@ -293,6 +294,7 @@ ContainSearch: Dont la question contient ...
 noQuestionFound: Pas de question trouvée ...
 noDocFound: Pas de document trouvé ...
 noPaperFound: Aucune copie
+noUserFound: Pas d'utilisateur trouvé ...
 Num_paper: Numéro de la copie
 DocManage: Gestion de mes documents
 sharedUser: Partage de question

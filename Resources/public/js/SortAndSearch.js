@@ -1,12 +1,20 @@
-var clickC = clickTi = clickTy = clickI = clickL = clickT = clickU = clickN = clickS = clickE = 'no'; // To know if sorting is up or down
+// To know if sorting is up or down
+var clickC = clickTi = clickTy = clickI = clickL = clickT = clickU = clickN = clickS
+    = clickE = clickSps = clickSn = clickSp = clickDl = clickTl = clickQl = clickCl = clickPl = clickRl = 'no';
+
+// Arrows to show the directions of the sorting
+var upC, upTi, upTy, upI, upL, upT, upU, upN, upS, upE, upSps, upSn, upSp, upDl, upTl, upQl, upCl, upPl, upRl,
+    downC, downTi, downTy, downI, downL, downT, downU, downN, downS, downE, downSps, downSn, downSp,
+    downDl, downTl, downQl, downCl, downPl, downRl;
 
 // Sort questions by selected column (type)
 function SortQuestions(type, array) {
+    selectArrows(array);
+    hideArrows(array);
+    switchType(type, array);
+}
 
-    // Arrows to show the directions of the sorting
-    var upC, upTi, upTy, upI, upL, upT, upU, upN, upS, upE,
-        downC, downTi, downTy, downI, downL, downT, downU, downN, downS, downE;
-
+function selectArrows(array) {
     // Select the matching arrows of the right array (e.g. if two arrays in one page
     if (array == 'QuestionArray' || array == 'QuestionArrayMy'){
         upC = document.getElementById('upC');
@@ -46,7 +54,32 @@ function SortQuestions(type, array) {
        downE = document.getElementById('downE');
     }
 
+    if (array == 'user-table') {
+        upSps = document.getElementById('upSps');
+        upSn = document.getElementById('upSn');
+        upSp = document.getElementById('upSp');
+        downSps = document.getElementById('downSps');
+        downSn = document.getElementById('downSn');
+        downSp = document.getElementById('downSp');
+    }
 
+    if (array == 'linkDocArray') {
+        upDl = document.getElementById('upDl');
+        upTl = document.getElementById('upTl');
+        upQl = document.getElementById('upQl');
+        upCl = document.getElementById('upCl');
+        upPl = document.getElementById('upPl');
+        upRl = document.getElementById('upRl');
+        downDl = document.getElementById('downDl');
+        downTl = document.getElementById('downTl');
+        downQl = document.getElementById('downQl');
+        downCl = document.getElementById('downCl');
+        downPl = document.getElementById('downPl');
+        downRl = document.getElementById('downRl');
+    }
+}
+
+function hideArrows(array) {
     // Hide all arrows
     if (array == 'table') {
         upL.style.display = 'none';
@@ -62,6 +95,26 @@ function SortQuestions(type, array) {
         downN.style.display = 'none';
         downS.style.display = 'none';
         downE.style.display = 'none';
+    } else if (array == 'user-table') {
+        upSps.style.display = 'none';
+        upSn.style.display = 'none';
+        upSp.style.display = 'none';
+        downSps.style.display = 'none';
+        downSn.style.display = 'none';
+        downSp.style.display = 'none';
+    } else if (array == 'linkDocArray') {
+        upDl.style.display = 'none';
+        upTl.style.display = 'none';
+        upQl.style.display = 'none';
+        upCl.style.display = 'none';
+        upPl.style.display = 'none';
+        upRl.style.display = 'none';
+        downDl.style.display = 'none';
+        downTl.style.display = 'none';
+        downQl.style.display = 'none';
+        downCl.style.display = 'none';
+        downPl.style.display = 'none';
+        downRl.style.display = 'none';
     } else {
         upC.style.display = 'none';
         upTi.style.display = 'none';
@@ -72,7 +125,9 @@ function SortQuestions(type, array) {
         downTy.style.display = 'none';
         downI.style.display = 'none';
     }
+}
 
+function switchType(type, array) {
     // Depend on which column were clicked, sort in the good direction and display the matching arrow
     switch (type) {
         case 'Category':
@@ -188,9 +243,109 @@ function SortQuestions(type, array) {
                 clickE = 'no';
             }
             break;
+
+            case 'pseudo':
+            if (clickSps == 'no') {
+                sortTable(array, 0, ASC, type);
+                downSps.style.display = 'block';
+                clickSps = 'yes';
+            } else {
+                sortTable(array, 0, DESC, type);
+                upSps.style.display = 'block';
+                clickSps = 'no';
+            }
+            break;
+        case 'name':
+            if (clickSn == 'no') {
+                sortTable(array, 1, ASC, type);
+                downSn.style.display = 'block';
+                clickSn = 'yes';
+            } else {
+                sortTable(array, 1, DESC, type);
+                upSn.style.display = 'block';
+                clickSn = 'no';
+            }
+            break;
+        case 'fname':
+            if (clickSp == 'no') {
+                sortTable(array, 2, ASC, type);
+                downSp.style.display = 'block';
+                clickSp = 'yes';
+            } else {
+                sortTable(array, 2, DESC, type);
+                upSp.style.display = 'block';
+                clickSp = 'no';
+            }
+            break;
+
+        case 'dateL':
+            if (clickDl == 'no') {
+                sortTable(array, 0, DATEA, type);
+                downDl.style.display = 'block';
+                clickDl = 'yes';
+            } else {
+                sortTable(array, 0, DATED, type);
+                upDl.style.display = 'block';
+                clickDl = 'no';
+            }
+            break;
+        case 'titleL':
+            if (clickTl == 'no') {
+                sortTable(array, 1, ASC, type);
+                downTl.style.display = 'block';
+                clickTl = 'yes';
+            } else {
+                sortTable(array, 1, DESC, type);
+                upTl.style.display = 'block';
+                clickTl = 'no';
+            }
+            break;
+        case 'QuestionL':
+            if (clickQl == 'no') {
+                sortTable(array, 2, ASC, type);
+                downQl.style.display = 'block';
+                clickQl = 'yes';
+            } else {
+                sortTable(array, 2, DESC, type);
+                upQl.style.display = 'block';
+                clickQl = 'no';
+            }
+            break;
+        case 'CategoryL':
+            if (clickCl == 'no') {
+                sortTable(array, 3, ASC, type);
+                downCl.style.display = 'block';
+                clickCl = 'yes';
+            } else {
+                sortTable(array, 3, DESC, type);
+                upCl.style.display = 'block';
+                clickCl = 'no';
+            }
+            break;
+        case 'paperL':
+            if (clickPl == 'no') {
+                sortTable(array, 4, ASC, type);
+                downPl.style.display = 'block';
+                clickPl = 'yes';
+            } else {
+                sortTable(array, 4, DESC, type);
+                upPl.style.display = 'block';
+                clickPl = 'no';
+            }
+            break;
+        case 'responseL':
+            if (clickRl == 'no') {
+                sortTable(array, 5, ASC, type);
+                downRl.style.display = 'block';
+                clickRl = 'yes';
+            } else {
+                sortTable(array, 5, DESC, type);
+                upRl.style.display = 'block';
+                clickRl = 'no';
+            }
+            break;
     }
 }
-
 // To sort decreasing
 function DESC(a, b) {
     a = a[1];

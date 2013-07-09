@@ -55,22 +55,23 @@ function ValidName(message, label, button) {
     }
 }
 
-// To close the window if its loose focus
-window.onblur = function () {
-    if (allowclose == true) {
-        window.close();
-    }
-};
-
-// If input file selected, cannot close the pop up
-document.getElementById('picture').onblur = function () {
-    allowclose = false;
-    inputselected = true;
-};
-
-// If input file unselected, can close the pop up
-window.onclick = function () {
-    if (inputselected == true) {
-        allowclose = true;
-    }
-};
+// --> If activate followed functions, can not move or resize the pop up ...
+//// To close the window if its loose focus
+//window.onblur = function () {
+//    if (allowclose == true) {
+//        window.close();
+//    }
+//};
+//
+//// If input file selected, cannot close the pop up
+//document.getElementById('picture').onblur = function () {
+//    allowclose = false;
+//    inputselected = true;
+//};
+//
+//// If input file unselected, can close the pop up
+//window.onclick = function () {
+//    if (inputselected == true) {
+//        allowclose = true;
+//    }
+//};

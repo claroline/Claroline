@@ -51,6 +51,9 @@ use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Entity\Interaction;
 
+use Pagerfanta\Adapter\ArrayAdapter;
+use Pagerfanta\Pagerfanta;
+
 /**
  * Exercise controller.
  *
@@ -167,7 +170,8 @@ class ExerciseController extends Controller
                 'workspace'      => $workspace,
                 'entity'         => $exercise,
                 'exoAdmin'       => $exoAdmin,
-                'allowToCompose' => $allowToCompose
+                'allowToCompose' => $allowToCompose,
+                'userId'         => $user->getId()
             )
         );
     }
@@ -186,14 +190,18 @@ class ExerciseController extends Controller
 
         $exoAdmin = $this->isExerciseAdmin($id);
 
+        $max = 3; // Max Per Page
+        $request = $this->get('request');
+        $page = $request->query->get('page', 1);
+
         if ($exoAdmin == 1) {
-            $interactions = $this->getDoctrine()
+            $Interactions = $this->getDoctrine()
                 ->getManager()
                 ->getRepository('UJMExoBundle:Interaction')
                 ->getExerciseInteraction($em, $id, 0);
 
             $questionWithResponse = array();
-            foreach ($interactions as $interaction) {
+            foreach ($Interactions as $interaction) {
                 $response = $em->getRepository('UJMExoBundle:Response')
                     ->findBy(array('interaction' => $interaction->getId()));
                 if (count($response) > 0) {
@@ -203,13 +211,28 @@ class ExerciseController extends Controller
                 }
             }
 
+            // Pagination finded documents
+            $adapterQuestion = new ArrayAdapter($Interactions);
+            $pagerQuestion = new Pagerfanta($adapterQuestion);
+
+            try {
+                $interactions = $pagerQuestion
+                    ->setMaxPerPage($max)
+                    ->setCurrentPage($page)
+                    ->getCurrentPageResults()
+                ;
+            } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
+                throw $this->createNotFoundException("Cette page n'existe pas.");
+            }
+
             return $this->render(
                 'UJMExoBundle:Question:exerciseQuestion.html.twig',
                 array(
                     'workspace'            => $workspace,
                     'interactions'         => $interactions,
                     'exerciseID'           => $id,
-                    'questionWithResponse' => $questionWithResponse
+                    'questionWithResponse' => $questionWithResponse,
+                    'pagerQuestion'        => $pagerQuestion
                 )
             );
         } else {
@@ -234,9 +257,27 @@ class ExerciseController extends Controller
 
         $exoAdmin = $this->isExerciseAdmin($exoID);
 
+        // To paginate the result :
+        $request = $this->get('request'); // Get the request which contains the following parameters :
+        $page = $request->query->get('page', 1); // Get the choosen page (default 1)
+        $click = $request->query->get('click', 'my'); // Get which array to change page (default 'my question')
+        $pagerMy = $request->query->get('pagerMy', 1); // Get the page of the array my question (default 1)
+        $pagerShared = $request->query->get('pagerShared', 1); // Get the pager of the array my shared question (default 1)
+        $max = 2; // Max of questions per page
+
+        // If change page of my questions array
+        if ($click == 'my') {
+            // The choosen new page is for my questions array
+            $pagerMy = $page;
+        // Else if change page of my shared questions array
+        } else if ($click == 'shared') {
+            // The choosen new page is for my shared questions array
+            $pagerShared = $page;
+        }
+
         if ($exoAdmin == 1) {
 
-            $interactions = $this->getDoctrine()
+            $Interactions = $this->getDoctrine()
                 ->getManager()
                 ->getRepository('UJMExoBundle:Interaction')
                 ->getUserInteractionImport($this->getDoctrine()->getManager(), $uid, $exoID);
@@ -245,11 +286,39 @@ class ExerciseController extends Controller
             $shared = $em->getRepository('UJMExoBundle:Share')
                     ->getUserInteractionSharedImport($exoID, $uid, $em);
 
-            $sharedWithMe = array();
+            $SharedWithMe = array();
 
             for ($i = 0; $i < count($shared); $i++) {
-                $sharedWithMe[] = $em->getRepository('UJMExoBundle:Interaction')
+                $SharedWithMe[] = $em->getRepository('UJMExoBundle:Interaction')
                     ->findOneBy(array('question' => $shared[$i]->getQuestion()->getId()));
+            }
+
+            // Do the pagination of the result depending on which page of which array was changed
+            // (My questions array)
+            $adapterMy = new ArrayAdapter($Interactions);
+            $pagerfantaMy = new Pagerfanta($adapterMy);
+
+            // (My shared questions array)
+            $adapterShared = new ArrayAdapter($SharedWithMe);
+            $pagerfantaShared = new Pagerfanta($adapterShared);
+
+            try {
+                // Test if my questions array exists (try) and affects the matching results (which page, how many per page ...)
+                $interactions = $pagerfantaMy
+                    ->setMaxPerPage($max)
+                    ->setCurrentPage($pagerMy)
+                    ->getCurrentPageResults()
+                ;
+
+                // Test if my shared questions array exists (try) and affects the matching results (which page, how many per page ...)
+                $sharedWithMe = $pagerfantaShared
+                    ->setMaxPerPage($max)
+                    ->setCurrentPage($pagerShared)
+                    ->getCurrentPageResults()
+                ;
+            } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
+                // If page don't exist
+                throw $this->createNotFoundException("Cette page n'existe pas.");
             }
 
             return $this->render(
@@ -258,7 +327,9 @@ class ExerciseController extends Controller
                     'workspace'    => $workspace,
                     'interactions' => $interactions,
                     'exoID'        => $exoID,
-                    'sharedWithMe' => $sharedWithMe
+                    'sharedWithMe' => $sharedWithMe,
+                    'pagerMy'      => $pagerfantaMy,
+                    'pagerShared'  => $pagerfantaShared
                 )
             );
         } else {

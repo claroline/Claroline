@@ -76,15 +76,19 @@ class DocumentRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findByLabel($labelToFind, $userId)
+    public function findByLabel($labelToFind, $userId, $strict)
     {
         $dql = 'SELECT d FROM UJM\ExoBundle\Entity\Document d
             WHERE d.user = '.$userId.'
             AND UPPER(d.label) LIKE :search';
 
-        $query = $this->_em->createQuery($dql)
-            ->setParameter('search', "%{$labelToFind}%");
-
+        if ($strict == 0) {
+            $query = $this->_em->createQuery($dql)
+                ->setParameter('search', "{$labelToFind}");
+        } else {
+             $query = $this->_em->createQuery($dql)
+                ->setParameter('search', "%{$labelToFind}%");
+        }
         return $query->getResult();
     }
 }
