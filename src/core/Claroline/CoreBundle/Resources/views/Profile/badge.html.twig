@@ -2,6 +2,6 @@
 
 {% block content %}
     <div class="span12 border">
-        {% include 'ClarolineCoreBundle:Profile:list_badge.html.twig' with {'title': 'my_badges'|trans({}, 'platform'), 'badges': badges} %}
+        {% include 'ClarolineCoreBundle:Profile:list_badge.html.twig' with {'title': 'my_badges'|trans({}, 'platform'), 'pager': pager, 'routeName': 'claro_profile_view_badges'} %}
     </div>
 {% endblock %}

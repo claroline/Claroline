@@ -3,12 +3,15 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Doctrine\ORM\NoResultException;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Event\LogUserUpdateEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
  * Controller of the user profile.
@@ -118,35 +121,37 @@ class ProfileController extends Controller
 
     /**
      * @Route(
-     *     "/view/{userId}",
-     *     name="claro_profile_view"
+     *     "/view/{userId}/{page}",
+     *           name="claro_profile_view"
      * )
      *
      * @Template("ClarolineCoreBundle:Profile:profile.html.twig")
+     * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"id" = "userId"})
      *
      * Displays the public profile of an user.
      *
-     * @param integer $userId The id of the user we want to see the profile
+     * @param \Claroline\CoreBundle\Entity\User $user
+     *
+     * @param int                               $page
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function viewAction($userId)
+    public function viewAction(User $user, $page = 1)
     {
-        $query = $this->getDoctrine()->getManager()
-            ->createQuery('
-                SELECT u, ub
-                FROM ClarolineCoreBundle:User u
-                LEFT JOIN u.userBadges ub
-                WHERE u.id = :id'
-            )->setParameter('id', $userId);
+        $user = $this->get('security.context')->getToken()->getUser();
 
-        try {
-            $user = $query->getSingleResult();
-        } catch (NoResultException $e) {
-            $user = null;
-        }
+        $query = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\Badge')->findByUser($user, true);
+        $adapter = new DoctrineORMAdapter($query);
+        $pager   = new Pagerfanta($adapter);
+        $pager
+            ->setMaxPerPage(10)
+            ->setCurrentPage($page)
+        ;
 
-        return array('user' => $user);
+        return array(
+            'user'  => $user,
+            'pager' => $pager
+        );
     }
 
     private function addRoles(User $user, $newRoles)
@@ -178,20 +183,30 @@ class ProfileController extends Controller
     }
 
     /**
-     * @Route("/badges", name="claro_profile_view_badges")
+     * @Route("/badges/{page}", name="claro_profile_view_badges")
      *
      * @Template("ClarolineCoreBundle:Profile:badge.html.twig")
      *
      * Displays the public profile of an user.
      *
+     * @param int $page
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function badgeAction()
+    public function badgeAction($page = 1)
     {
         $user = $this->get('security.context')->getToken()->getUser();
 
+        $query = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\Badge')->findByUser($user, true);
+        $adapter = new DoctrineORMAdapter($query);
+        $pager   = new Pagerfanta($adapter);
+        $pager
+            ->setMaxPerPage(10)
+            ->setCurrentPage($page)
+        ;
+
         return array(
-            'badges' => $user->getBadges()
+            'pager' => $pager
         );
     }
 }
