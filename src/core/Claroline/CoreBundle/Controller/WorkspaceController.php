@@ -242,8 +242,13 @@ class WorkspaceController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->assertIsGranted('DELETE', $workspace);
-        $log = new LogWorkspaceDeleteEvent($workspace);
-        $this->get('event_dispatcher')->dispatch('log', $log);
+
+        $log = $this->get('claroline.event.event_dispatcher')->dispatch(
+            'log',
+            'Log\LogWorkspaceDeletele',
+            array($workspace)
+        );
+
         $em->remove($workspace);
         $em->flush();
 
@@ -314,18 +319,17 @@ class WorkspaceController extends Controller
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
             ->find($workspaceId);
         $this->assertIsGranted($toolName, $workspace);
-        $event = new DisplayToolEvent($workspace);
-        $eventName = 'open_tool_workspace_'.$toolName;
-        $this->get('event_dispatcher')->dispatch($eventName, $event);
+        $event = $this->get('claroline.event.event_dispatcher')->dispatch(
+            'open_tool_workspace_'.$toolName,
+            'DisplayTool',
+            array($workspace)
+        );
 
-        if (is_null($event->getContent())) {
-            throw new \Exception(
-                "Tool '{$toolName}' didn't return any Response for tool event '{$eventName}'."
-            );
-        }
-
-        $log = new LogWorkspaceToolReadEvent($workspace, $toolName);
-        $this->get('event_dispatcher')->dispatch('log', $log);
+        $log = $this->get('claroline.event.event_dispatcher')->dispatch(
+            'log',
+            'Log\LogWorkspaceToolRead',
+            array($workspace,$toolName)
+        );
 
         return new Response($event->getContent());
     }

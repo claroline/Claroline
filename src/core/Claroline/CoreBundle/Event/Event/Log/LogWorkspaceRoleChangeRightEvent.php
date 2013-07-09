@@ -1,8 +1,9 @@
 <?php
 
 namespace Claroline\CoreBundle\Event\Event\Log;
+use Claroline\CoreBundle\Event\Event\MandatoryEventInterface;
 
-class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent
+class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent implements MandatoryEventInterface
 {
     const ACTION = 'ws_role_change_right';
 

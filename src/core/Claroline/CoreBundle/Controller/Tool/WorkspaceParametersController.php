@@ -166,15 +166,11 @@ class WorkspaceParametersController extends AbstractParametersController
     {
         $this->checkAccess($workspace);
 
-        $event = new ConfigureWorkspaceToolEvent($tool, $workspace);
-        $eventName = strtolower('configure_workspace_tool_' . $tool->getName());
-        $this->get('event_dispatcher')->dispatch($eventName, $event);
-
-        if (is_null($event->getContent())) {
-            throw new \Exception(
-                "Tool '{$tool->getName()}' didn't return any Response for tool event '{$eventName}'."
-            );
-        }
+        $event = $this->get('claroline.event.event_dispatcher')->dispatch(
+            strtolower('configure_workspace_tool_' . $tool->getName()),
+            'ConfigureWorkspaceTool',
+            array($tool,$workspace)
+        );
 
         return new Response($event->getContent());
     }

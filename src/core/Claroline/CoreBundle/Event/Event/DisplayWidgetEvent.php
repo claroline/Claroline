@@ -10,7 +10,7 @@ class DisplayWidgetEvent extends Event implements DataConveyorEventInterface
     protected $content;
     protected $title;
     protected $workspace;
-    protected $isPopulated;
+    protected $isPopulated = false;
 
     public function __construct(AbstractWorkspace $workspace = null)
     {

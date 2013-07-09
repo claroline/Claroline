@@ -11,7 +11,7 @@ class ConfigureWidgetDesktopEvent extends Event implements DataConveyorEventInte
 {
     private $user;
     private $content;
-    private $isPopulated;
+    private $isPopulated = false;
 
     /**
      * Constructor.
@@ -36,6 +36,7 @@ class ConfigureWidgetDesktopEvent extends Event implements DataConveyorEventInte
 
     public function setContent($content)
     {
+        $this->isPopulated = true;
         $this->content = $content;
     }
 
@@ -50,7 +51,7 @@ class ConfigureWidgetDesktopEvent extends Event implements DataConveyorEventInte
     }
     
     public function isPopulated() {
-       
+        return $this->isPopulated;
     }
 }
 

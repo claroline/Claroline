@@ -81,8 +81,11 @@ class ResourcePropertiesController extends Controller
             $response = new Response($content);
             $response->headers->set('Content-Type', 'application/json');
 
-            $log = new LogResourceUpdateEvent($resource, $changeSet);
-            $this->get('event_dispatcher')->dispatch('log', $log);
+            $log = $this->get('claroline.event.event_dispatcher')->dispatch(
+                'log',
+                'Log\ResourceUpdate',
+                array($resource,$changeSet)
+            );
 
             return $response;
         }
@@ -198,8 +201,11 @@ class ResourcePropertiesController extends Controller
             $response = new Response($content);
             $response->headers->set('Content-Type', 'application/json');
 
-            $log = new LogResourceUpdateEvent($resource, $changeSet);
-            $this->get('event_dispatcher')->dispatch('log', $log);
+            $log = $this->get('claroline.event.event_dispatcher')->dispatch(
+                'log',
+                'Log\ResourceUpdate',
+                array($resource,$changeSet)
+            );
 
             return $response;
         }

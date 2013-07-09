@@ -105,8 +105,11 @@ class ProfileController extends Controller
                 $changeSet['roles'] = $rolesChangeSet;
             }
 
-            $log = new LogUserUpdateEvent($user, $changeSet);
-            $this->get('event_dispatcher')->dispatch('log', $log);
+            $log = $this->get('claroline.event.event_dispatcher')->dispatch(
+                'log',
+                'Log\UserUpdateEvent',
+                array($user,$changeSet)
+            );
 
             return $this->redirect($this->generateUrl('claro_profile_form'));
         }

@@ -180,12 +180,17 @@ class UserController extends Controller
                 'claro_workspace_open_tool',
                 array('workspaceId' => $workspaceId, 'toolName' => 'user_management')
             );
+            $log = $this->get('claroline.event.event_dispatcher')->dispatch(
+                'log',
+                'LogWorkspaceRoleUnsubscribe',
+                array($role,$user)
+            );
+            $log = $this->get('claroline.event.event_dispatcher')->dispatch(
+                'log',
+                'LogWorkspaceRoleSubscribe',
+                array($newRole,$user)
+            );
 
-            $log = new LogWorkspaceRoleUnsubscribeEvent($role, $user);
-            $this->get('event_dispatcher')->dispatch('log', $log);
-
-            $log = new LogWorkspaceRoleSubscribeEvent($newRole, $user);
-            $this->get('event_dispatcher')->dispatch('log', $log);
             $em->flush();
 
             return new RedirectResponse($route);
