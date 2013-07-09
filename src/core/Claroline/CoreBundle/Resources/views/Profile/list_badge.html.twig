@@ -2,7 +2,7 @@
     <h3 class="sub-section-header">{{ title }}</h3>
 
     <ul class="unstyled inline thumbnails badge_user_list">
-    {% for badge in badges %}
+    {% for badge in pager.currentPageResults %}
         <li>
             <a href="{{ path('claro_admin_badges_edit', {'id': badge.id}) }}" title="{{ badge.name('fr') }}" class="thumbnail">
                 <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name('fr') }}" />
@@ -12,5 +12,19 @@
         <li>{{ 'no_badges'|trans({}, 'platform') }}</li>
     {% endfor %}
     </ul>
+
+    {% if pager.haveToPaginate %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': routeName,
+                'routeParams': routeParams|default({})
+            }
+        )
+    }}
+    {% endif %}
 
 </div>
