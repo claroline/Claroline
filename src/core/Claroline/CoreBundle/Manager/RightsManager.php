@@ -91,7 +91,7 @@ class RightsManager extends AbstractManager
     {
         $this->writer->suspendFlush();
         $arRights = ($isRecursive) ?
-            $this->addMissingForDescendants($role, $resource):
+            $this->updateRightsTree($role, $resource):
             array($this->getOneByRoleAndResource($role, $resource));
 
         foreach ($arRights as $toUpdate) {
@@ -114,7 +114,7 @@ class RightsManager extends AbstractManager
         $this->writer->suspendFlush();
 
         $arRights = ($isRecursive) ?
-            $this->addMissingForDescendants($role, $resource):
+            $this->updateRightsTree($role, $resource):
             array($this->getOneByRoleAndResource($role, $resource));
 
         foreach ($arRights as $toUpdate) {
@@ -157,7 +157,7 @@ class RightsManager extends AbstractManager
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceRights
      */
-    public function addMissingForDescendants(Role $role, AbstractResource $resource)
+    public function updateRightsTree(Role $role, AbstractResource $resource)
     {
         $alreadyExistings = $this->rightsRepo->findRecursiveByResourceAndRole($resource, $role);
         $descendants = $this->resourceRepo->findDescendants($resource, true);
@@ -174,7 +174,7 @@ class RightsManager extends AbstractManager
             }
 
             if (!$found) {
-                $rights = new ResourceRights();
+                $rights = $this->getEntity('Resource\ResourceRights');
                 $rights->setRole($role);
                 $rights->setResource($descendant);
                 $this->writer->create($rights);
@@ -242,7 +242,7 @@ class RightsManager extends AbstractManager
         array $creations = array()
     ) {
         //will create every rights with the role and the resource already set.
-        $resourceRights = $this->addMissingForDescendants($role, $resource);
+        $resourceRights = $this->updateRightsTree($role, $resource);
 
         foreach ($resourceRights as $rights) {
             $this->setPermissions($rights, $permissions);
