@@ -8,6 +8,8 @@ use Claroline\CoreBundle\Entity\Badge\UserBadge;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\BadgeAwardType;
 use Claroline\CoreBundle\Form\BadgeType;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -109,11 +111,11 @@ class BadgeController extends Controller
     }
 
     /**
-     * @Route("/edit/{id}", name="claro_admin_badges_edit")
+     * @Route("/edit/{id}/{page}", name="claro_admin_badges_edit")
      *
      * @Template()
      */
-    public function editAction(Request $request, Badge $badge)
+    public function editAction(Request $request, Badge $badge, $page = 1)
     {
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
             throw new \AccessDeniedException();
@@ -122,6 +124,16 @@ class BadgeController extends Controller
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
         $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
+
+        $doctrine = $this->getDoctrine();
+
+        $query   = $doctrine->getRepository('ClarolineCoreBundle:Badge\Badge')->findUsers($badge, true);
+        $adapter = new DoctrineORMAdapter($query);
+        $pager   = new Pagerfanta($adapter);
+        $pager
+            ->setMaxPerPage(10)
+            ->setCurrentPage($page)
+        ;
 
         $form = $this->createForm(new BadgeType(), $badge);
 
@@ -132,7 +144,7 @@ class BadgeController extends Controller
                 $translator = $this->get('translator');
                 try {
                     /** @var \Doctrine\Common\Persistence\ObjectManager $entityManager */
-                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager = $doctrine->getManager();
 
                     $entityManager->persist($badge);
                     $entityManager->flush();
@@ -149,7 +161,8 @@ class BadgeController extends Controller
 
         return array(
             'form'  => $form->createView(),
-            'badge' => $badge
+            'badge' => $badge,
+            'pager' => $pager
         );
     }
 

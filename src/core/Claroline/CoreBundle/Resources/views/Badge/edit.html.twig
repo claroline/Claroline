@@ -43,7 +43,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for user in badge.users %}
+                        {% for user in pager.currentPageResults %}
                             <tr>
                                 <td>
                                     <a class="close delete" href="{{ path('claro_admin_badges_unaward', {'id': badge.id, 'username': user.username}) }}" data-toggle="tooltip" title="{{ 'badge_unaward_confirm_title'|trans({}, 'platform') }}" data-confirm-title="{{ 'badge_unaward_confirm_title'|trans({}, 'platform') }}" data-confirm-message="{{ 'badge_unaward_confirm_message'|trans({'%badgeName%': badge.name, '%user%': user.username ~ ' ' ~ user.firstname}, 'platform') }}" data-confirm-ok="{{ 'unaward'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"><i class="icon-remove-circle"></i></a>
@@ -56,6 +56,19 @@
                         {% endfor %}
                         </tbody>
                     </table>
+                    {% if pager.haveToPaginate %}
+                    {{
+                        pagerfanta(
+                            pager,
+                            'twitter_bootstrap_translated',
+                            {
+                                'proximity' : 1,
+                                'routeName': 'claro_admin_badges_edit',
+                                'routeParams': {'id': badge.id}
+                            }
+                        )
+                    }}
+                    {% endif %}
                 </div>
                 <div id="award_form_container" class="hide">
                     <h3 class="sub-section-header">
