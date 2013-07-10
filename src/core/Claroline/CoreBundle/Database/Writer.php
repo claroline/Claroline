@@ -15,6 +15,8 @@ class Writer
 {
     private $em;
     private $isFlushSuspended = false;
+    private $isLocked = false;
+    private $lockedTimes = 0;
 
     /**
      * @DI\InjectParams({
@@ -64,7 +66,19 @@ class Writer
      */
     public function suspendFlush()
     {
-        $this->isFlushSuspended = true;
+        if (!$this->isLocked) {
+            $this->isFlushSuspended = true;
+        }
+    }
+    
+    /**
+     * Forces previously suspended flush operations.
+     */
+    public function allowFlush()
+    {
+        if (!$this->isLocked) {
+            $this->isFlushSuspended = false;
+        }
     }
 
     /**
@@ -72,8 +86,10 @@ class Writer
      */
     public function forceFlush()
     {
-        $this->isFlushSuspended = false;
-        $this->em->flush();
+        if (!$this->isLocked) {
+            $this->isFlushSuspended = false;
+            $this->em->flush();
+        }
     }
 
     private function tryFlush()
@@ -81,5 +97,35 @@ class Writer
         if (!$this->isFlushSuspended) {
             $this->em->flush();
         }
+    }
+    
+    /**
+     * Locks the isFlushSuspended parameter.
+     */
+    public function lock()
+    {
+        $this->isLocked = true;
+        $this->lockedTimes++;
+    }
+    
+    /**
+     * Unlocks the isFlushSuspended parameter.
+     */
+    public function unlock()
+    {
+        $this->lockedTimes--;
+        
+        if ($this->lockedTimes === 0) {
+            $this->isLocked = false;
+        }
+    }
+    
+    /**
+     * Unlocks the isFlushSuspended parameter.
+     */
+    public function unlockAll()
+    {
+        $this->lockedTimes = 0;
+        $this->isLocked = false;
     }
 }
