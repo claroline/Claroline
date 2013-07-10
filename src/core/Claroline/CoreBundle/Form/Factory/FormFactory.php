@@ -26,6 +26,7 @@ class FormFactory
     const TYPE_WORKSPACE_TEMPLATE = 'workspace_template';
     const TYPE_LOG_WORKSPACE_WIDGET_CONFIG = 'log_workspace_widget_config';
     const TYPE_LOG_DESKTOP_WIDGET_CONFIG = 'log_desktop_widget_config';
+    const TYPE_CALENDAR = 'calendar';
 
     private static $types = array(
         self::TYPE_MESSAGE => array(
@@ -83,6 +84,10 @@ class FormFactory
         ),
         self::TYPE_LOG_DESKTOP_WIDGET_CONFIG => array(
             'formType' => 'Claroline\CoreBundle\Form\LogDesktopWidgetConfigType'
+        ),
+        self::TYPE_CALENDAR => array(
+            'formType' => 'Claroline\CoreBundle\Form\CalendarType',
+            'entity' => 'Claroline\CoreBundle\Entity\Event'
         )
     );
 

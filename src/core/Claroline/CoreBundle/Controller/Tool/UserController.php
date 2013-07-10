@@ -24,7 +24,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 
 class UserController extends Controller
 {
-    const ABSTRACT_WS_CLASS = 'ClarolineCoreBundle:Workspace\AbstractWorkspace';
     const NUMBER_USER_PER_ITERATION = 25;
 
     private $userManager;
