@@ -162,6 +162,42 @@ class IconManagerTest extends MockeryTestCase
         $this->assertEquals('path/to/thumbnail', $this->getManager()->createFromFile($filePath, $baseMime));
     }
     
+    public function testDeleteCustom()
+    {
+        $manager = $this->getManager(array('removeImageFromThumbDir'));
+        $icon = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
+        $shortcut = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
+        $icon->shouldReceive('getShortcutIcon')->once()->andReturn($shortcut);
+        $icon->shouldReceive('getMimeType')->once()->andReturn('custom');
+        $manager->shouldReceive('removeImageFromThumbDir')->once()->with($icon);
+        $manager->shouldReceive('removeImageFromThumbDir')->once()->with($shortcut);
+        $this->writer->shouldReceive('delete')->once()->with($shortcut);
+        $this->writer->shouldReceive('delete')->once()->with($icon);
+        
+        $manager->delete($icon);
+    }
+ 
+   
+    public function testReplace()
+    {
+        $manager = $this->getManager(array('delete'));
+        $this->writer->shouldReceive('suspendFlush')->once();
+        $icon = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
+        $oldIcon = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
+        $resource = m::mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $resource->shouldReceive('getIcon')->once()->andReturn($oldIcon);
+        $resource->shouldReceive('setIcon')->once()->with($icon);
+        $manager->shouldReceive('delete')->once()->with($oldIcon);
+        $this->writer->shouldReceive('forceFlush')->once();
+        
+        $this->assertEquals($resource, $manager->replace($resource, $icon));
+    }
+    
+    public function testRemoveImageFromThumbDir()
+    {
+        $this->markTestSkipped('Requires stubs');
+    }
+    
     private function getManager(array $mockedMethods = array())
     {
         if (count($mockedMethods) === 0) {

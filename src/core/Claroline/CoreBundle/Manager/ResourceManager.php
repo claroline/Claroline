@@ -898,4 +898,20 @@ class ResourceManager
 
         return $path;
     }
+    
+    public function rename(AbstractResource $resource, $name)
+    {
+        $resource->setName($name);
+        $this->writer->update($resource);
+        
+        return $resource;
+    }
+    
+    public function changeIcon(AbstractResource $resource, UploadedFile $file)
+    {
+        $icon = $this->iconManager->createCustomIcon($file);
+        $this->iconManager->replace($resource, $icon);
+        
+        return $icon;
+    }
 }

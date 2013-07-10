@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Controller;
 
 use \Exception;
 use Symfony\Component\Translation\Translator;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,7 +26,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 
 class ResourceController
 {
-    private $formFactory;
     private $sc;
     private $resourceManager;
     private $rightsManager;
@@ -38,7 +36,6 @@ class ResourceController
 
     /**
      * @DI\InjectParams({
-     *     "formFactory"     = @DI\Inject("claroline.form.factory"),
      *     "sc"              = @DI\Inject("security.context"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager"),
@@ -50,7 +47,6 @@ class ResourceController
      */
     public function __construct
     (
-        FormFactory $formFactory,
         SecurityContext $sc,
         ResourceManager $resourceManager,
         RightsManager $rightsManager,
@@ -60,7 +56,6 @@ class ResourceController
         StrictDispatcher $dispatcher
     )
     {
-        $this->formFactory = $formFactory;
         $this->sc = $sc;
         $this->resourceManager = $resourceManager;
         $this->translator = $translator;

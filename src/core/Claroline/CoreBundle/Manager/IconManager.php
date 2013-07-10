@@ -228,4 +228,35 @@ class IconManager extends AbstractManager
         
         return $thumbnailPath;
     }
+    
+    public function delete(ResourceIcon $icon)
+    {        
+        if ($icon->getMimeType() === 'custom') {
+            $shortcut = $icon->getShortcutIcon();
+            $this->removeImageFromThumbDir($icon);
+            $this->removeImageFromThumbDir($shortcut);
+            $this->writer->delete($shortcut);
+            $this->writer->delete($icon);
+        } 
+    }
+    
+    public function replace(AbstractResource $resource, ResourceIcon $icon)
+    {
+        $this->writer->suspendFlush();
+        $oldIcon = $resource->getIcon();
+        $this->delete($oldIcon);
+        $resource->setIcon($icon);
+        $this->writer->forceFlush();
+        
+        return $resource;
+    }
+    
+    public function removeImageFromThumbDir(ResourceIcon $icon)
+    {
+        $pathName = $this->thumbDir . DIRECTORY_SEPARATOR . $icon->getIconLocation();
+            
+        if (file_exists($pathName)) {
+            unlink($pathName);
+        }
+    }
 }
