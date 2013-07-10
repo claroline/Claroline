@@ -531,6 +531,7 @@ class ResourceManagerTest extends MockeryTestCase
             }
 
             $stringMocked .= ']';
+            
             return m::mock(
                 'Claroline\CoreBundle\Manager\ResourceManager' . $stringMocked,
                 array(
