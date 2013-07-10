@@ -2,35 +2,39 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use JMS\SecurityExtraBundle\Annotation\Secure;
-use JMS\DiExtraBundle\Annotation\InjectParams;
-use JMS\DiExtraBundle\Annotation\Inject;
-use Claroline\CoreBundle\Entity\Home\Type;
+use Claroline\CoreBundle\Entity\Home\Content2Region;
+use Claroline\CoreBundle\Entity\Home\Content2Type;
 use Claroline\CoreBundle\Entity\Home\Content;
 use Claroline\CoreBundle\Entity\Home\SubContent;
-use Claroline\CoreBundle\Entity\Home\Content2Type;
-use Claroline\CoreBundle\Entity\Home\Content2Region;
+use Claroline\CoreBundle\Entity\Home\Type;
 use Claroline\CoreBundle\Manager\HomeManager;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
+use JMS\SecurityExtraBundle\Annotation\Secure;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @TODO doc
  */
-class HomeController extends Controller
+class HomeController
 {
     private $manager;
+    private $request;
 
     /**
      * @InjectParams({
-     *     "manager" = @Inject("claroline.manager.home_manager")
+     *     "manager" = @Inject("claroline.manager.home_manager"),
+     *     "request" = @Inject("request")
      * })
      */
-    public function __construct(HomeManager $manager)
+    public function __construct(HomeManager $manager, Request $request)
     {
         $this->manager = $manager;
+        $this->request = $request;
     }
 
     /**
@@ -148,9 +152,7 @@ class HomeController extends Controller
      */
     public function graphAction()
     {
-        $request = $this->get('request');
-
-        return $this->manager->getGraph($request->get("generated_content_url"));
+        return $this->manager->getGraph($this->request->get("generated_content_url"));
     }
 
     /**
@@ -180,14 +182,12 @@ class HomeController extends Controller
      */
     public function createAction()
     {
-        $request = $this->get('request');
-
         return $this->manager->createContent(
-            $request->get('title'),
-            $request->get('text'),
-            $request->get('generated'),
-            $request->get('type'),
-            $request->get('father')
+            $this->request->get('title'),
+            $this->request->get('text'),
+            $this->request->get('generated'),
+            $this->request->get('type'),
+            $this->request->get('father')
         );
     }
 
@@ -204,15 +204,13 @@ class HomeController extends Controller
      */
     public function updateAction($content)
     {
-        $request = $this->get('request');
-
         return $this->manager->UpdateContent(
             $content,
-            $request->get('title'),
-            $request->get('text'),
-            $request->get('generated'),
-            $request->get('size'),
-            $request->get('type')
+            $this->request->get('title'),
+            $this->request->get('text'),
+            $this->request->get('generated'),
+            $this->request->get('size'),
+            $this->request->get('type')
         );
     }
 
