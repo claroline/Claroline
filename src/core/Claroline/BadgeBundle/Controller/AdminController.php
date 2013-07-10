@@ -242,26 +242,13 @@ class AdminController extends Controller
                         }
                     }
 
-                    foreach($users as $user)
-                    {
-                        if(!$user->hasBadge($badge)) {
-                            $awardedBadge++;
-
-                            $userBadge = new UserBadge();
-                            $userBadge
-                            ->setBadge($badge)
-                            ->setUser($user)
-                            ;
-                            $badge->addUserBadge($userBadge);
-                        }
-                    }
+                    /** @var \Claroline\BadgeBundle\Manager\BadgeManager $badgeManager */
+                    $badgeManager = $this->get('claroline.manager.badge');
+                    $awardedBadge = $badgeManager->addBadgeToUsers($badge, $users);
 
                     $flashMessageType = 'alert';
 
                     if(0 < $awardedBadge) {
-                        $entityManager->persist($badge);
-                        $entityManager->flush();
-
                         $flashMessageType = 'success';
                     }
 
