@@ -67,6 +67,7 @@ class LogWidgetListener
             $config->getWsRoleUpdate() === true;
 
         $data['amount'] = $config->getAmount();
+
         return $data;
     }
 
@@ -75,7 +76,7 @@ class LogWidgetListener
      *     "logManager"  = @DI\Inject("claroline.log.manager"),
      *     "context"     = @DI\Inject("security.context"),
      *     "twig"        = @DI\Inject("templating"),
-     *     "ed"          = @DI\Inject("event_dispatcher"),
+     *     "ed"          = @DI\Inject("claroline.event.event_dispatcher"),
      *     "formFactory" = @DI\Inject("form.factory"),
      *     "manager" = @DI\Inject("doctrine.orm.entity_manager")
      * })
