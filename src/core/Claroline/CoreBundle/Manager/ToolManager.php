@@ -398,4 +398,9 @@ class ToolManager
         }
         $this->writer->update($user);
     }
+
+    public function getOneToolByName($name)
+    {
+        return $this->toolRepo->findOneByName($name);
+    }
 }

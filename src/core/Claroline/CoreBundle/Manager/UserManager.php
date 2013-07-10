@@ -41,17 +41,17 @@ class UserManager
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "userRepo" =               @DI\Inject("user_repository"),
-     *     "writer" =                 @DI\Inject("claroline.database.writer"),
-     *     "roleManager" =            @DI\Inject("claroline.manager.role_manager"),
-     *     "workspaceManager" =       @DI\Inject("claroline.manager.workspace_manager"),
-     *     "toolManager" =            @DI\Inject("claroline.manager.tool_manager"),
-     *     "ed" =                     @DI\Inject("event_dispatcher"),
+     *     "userRepo"               = @DI\Inject("user_repository"),
+     *     "writer"                 = @DI\Inject("claroline.database.writer"),
+     *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
+     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
+     *     "ed"                     = @DI\Inject("event_dispatcher"),
      *     "personalWsTemplateFile" = @DI\Inject("%claroline.param.templates_directory%"),
-     *     "trans" =                  @DI\Inject("translator"),
-     *     "ch" =                     @DI\Inject("claroline.config.platform_config_handler"),
-     *     "genericRepo" =            @DI\Inject("claroline.database.generic_repository"),
-     *     "pagerFactory" =           @DI\Inject("claroline.pager.pager_factory")
+     *     "trans"                  = @DI\Inject("translator"),
+     *     "ch"                     = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "genericRepo"            = @DI\Inject("claroline.database.generic_repository"),
+     *     "pagerFactory"           = @DI\Inject("claroline.pager.pager_factory")
      * })
      */
     public function __construct(

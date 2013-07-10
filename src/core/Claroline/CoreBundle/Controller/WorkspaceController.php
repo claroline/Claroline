@@ -4,19 +4,18 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Form\WorkspaceType;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Event\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceToolReadEvent;
 use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceDeleteEvent;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
@@ -32,8 +31,6 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class WorkspaceController extends Controller
 {
-    const ABSTRACT_WS_CLASS = 'ClarolineCoreBundle:Workspace\AbstractWorkspace';
-
     private $workspaceManager;
     private $roleManager;
     private $tagManager;
@@ -52,7 +49,7 @@ class WorkspaceController extends Controller
      *     "security"           = @DI\Inject("security.context"),
      *     "router"             = @DI\Inject("router"),
      *     "utils"              = @DI\Inject("claroline.security.utilities"),
-     *     "formFactory"        = @DI\Inject("form.factory")
+     *     "formFactory"        = @DI\Inject("claroline.form.factory")
      * })
      */
     public function __construct(
@@ -63,7 +60,7 @@ class WorkspaceController extends Controller
         SecurityContextInterface $security,
         UrlGeneratorInterface $router,
         Utilities $utils,
-        FormFactoryInterface $formFactory
+        FormFactory $formFactory
     )
     {
         $this->workspaceManager = $workspaceManager;
@@ -125,9 +122,7 @@ class WorkspaceController extends Controller
         $token = $this->security->getToken();
         $user = $token->getUser();
         $roles = $this->utils->getRoles($token);
-
-        $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)
-            ->findByRoles($roles);
+        $workspaces = $this->workspaceManager->getWorkspacesByRoles($roles);
         $tags = $this->tagManager->getNonEmptyTagsByUser($user);
         $relTagWorkspace = $this->tagManager->getTagRelationsByUser($user);
         $tagWorkspaces = array();
@@ -219,7 +214,7 @@ class WorkspaceController extends Controller
     public function creationFormAction()
     {
         $this->assertIsGranted('ROLE_WS_CREATOR');
-        $form = $this->formFactory->create(new WorkspaceType());
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE);
 
         return array('form' => $form->createView());
     }
@@ -240,7 +235,7 @@ class WorkspaceController extends Controller
     public function createAction()
     {
         $this->assertIsGranted('ROLE_WS_CREATOR');
-        $form = $this->formFactory->create(new WorkspaceType());
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE);
         $form->handleRequest($this->getRequest());
 
         $templateDir = $this->container->getParameter('claroline.param.templates_directory');
