@@ -36,9 +36,10 @@ class GenericRepository
      */
     public function findByIds($entityClass, array $ids)
     {
-        $dql = 'SELECT entity FROM :entityClass entity WHERE entity.id IN (:ids)';
+        //setParameter doesn't work: why ?
+        $dql = "SELECT entity FROM {$entityClass} entity WHERE entity.id IN (:ids)";
         $query = $this->em->createQuery($dql);
-        $query->setParameter('entityClass', $entityClass);
+        //$query->setParameter('entityClass', $entityClass);
         $query->setParameter('ids', $ids);
         $entities = $query->getResult();
 
