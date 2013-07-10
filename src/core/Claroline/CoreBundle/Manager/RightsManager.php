@@ -17,7 +17,7 @@ use Symfony\Component\Translation\Translator;
 /**
  * @DI\Service("claroline.manager.rights_manager")
  */
-class RightsManager
+class RightsManager extends AbstractManager
 {
     /** @var ResourceRightsRepository */
     private $rightsRepo;
@@ -77,64 +77,87 @@ class RightsManager
         array $creations = array()
     )
     {
-        $resourceRights = array();
-
-        if ($isRecursive) {
-            $resourceRights = $this->addMissingForDescendants($role, $resource);
-        } else {
-            $rights = new ResourceRights();
-            $rights->setRole($role);
-            $rights->setResource($resource);
-            $rights->setCreatableResourceTypes($creations);
-            $this->setPermissions($rights, $permissions);
-            $this->writer->create($rights);
-        }
-
-        foreach ($resourceRights as $rights) {
-            $this->setPermissions($rights, $permissions);
-            $rights->setCreatableResourceTypes($creations);
-            $this->writer->update($rights);
-        }
+        $isRecursive ?
+            $this->recursiveCreation($permissions, $role, $resource, $creations) :
+            $this->nonRecursiveCreation($permissions, $role, $resource, $creations);
     }
 
-    public function edit(AbstractResource $resource, Role $role, array $permissions, array $creations = array())
+    public function editPerms(
+        array $permissions,
+        Role $role,
+        AbstractResource $resource,
+        $isRecursive
+    )
     {
-        $rights = $this->rightsRepo->findOneBy(array('resource' => $resource, 'role' => $role));
-        $this->setPermissions($rights, $permissions);
-        $rights->setCreatableResourceTypes($creations);
-        $this->writer->update($rights);
+        $this->writer->suspendFlush();
+        $arRights = ($isRecursive) ?
+            $this->updateRightsTree($role, $resource):
+            array($this->getOneByRoleAndResource($role, $resource));
 
-        return $rights;
+        foreach ($arRights as $toUpdate) {
+            $this->setPermissions($toUpdate, $permissions);
+            $this->writer->update($toUpdate);
+        }
+
+        $this->writer->forceFlush();
+
+        return $arRights;
+    }
+
+    public function editCreationRights(
+        array $resourceTypes,
+        Role $role,
+        AbstractResource $resource,
+        $isRecursive
+    )
+    {
+        $this->writer->suspendFlush();
+
+        $arRights = ($isRecursive) ?
+            $this->updateRightsTree($role, $resource):
+            array($this->getOneByRoleAndResource($role, $resource));
+
+        foreach ($arRights as $toUpdate) {
+            $toUpdate->setCreatableResourceTypes($resourceTypes);
+            $this->writer->update($toUpdate);
+        }
+
+        $this->writer->forceFlush();
+
+        return $arRights;
     }
 
     public function copy(AbstractResource $original, AbstractResource $resource)
     {
        $originalRights = $this->rightsRepo->findBy(array('resource' => $original));
        $created = array();
+       $this->writer->suspendFlush();
 
        foreach ($originalRights as $originalRight) {
-            $rights = new ResourceRights();
-            $rights->setResource($resource);
-            $rights->setRole($originalRight->getRole());
-            $rights->setRightsFrom($originalRight);
-
-            if ($resource->getResourceType()->getName() === 'directory') {
-                $rights->setCreatableResourceTypes($originalRight->getCreatableResourceTypes()->toArray());
-            }
-
-           $created[] = $this->writer->create($rights);
+           $created[] = $this->create(
+               $originalRight->getPermissions(),
+               $originalRight->getRole(),
+               $resource,
+               false,
+               $originalRight->getCreatableResourceTypes()->toArray()
+           );
        }
+
+       $this->writer->forceFlush();
 
        return $created;
     }
 
     /**
+     * Create rights wich weren't created for every descendants and returns every rights of
+     * every descendants (include rights wich weren't created).
+     *
      * @param \Claroline\CoreBundle\Entity\Role $role
      * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceRights
      */
-    public function addMissingForDescendants(Role $role, AbstractResource $resource)
+    public function updateRightsTree(Role $role, AbstractResource $resource)
     {
         $alreadyExistings = $this->rightsRepo->findRecursiveByResourceAndRole($resource, $role);
         $descendants = $this->resourceRepo->findDescendants($resource, true);
@@ -151,9 +174,9 @@ class RightsManager
             }
 
             if (!$found) {
-                $rights = new ResourceRights();
+                $rights = $this->getEntity('Resource\ResourceRights');
                 $rights->setRole($role);
-                $rights->setResource($resource);
+                $rights->setResource($descendant);
                 $this->writer->create($rights);
                 $finalRights[] = $rights;
             }
@@ -162,7 +185,7 @@ class RightsManager
         return $finalRights;
     }
 
-    private function setPermissions(ResourceRights $rights, array $permissions)
+    public function setPermissions(ResourceRights $rights, array $permissions)
     {
         $rights->setCanCopy($permissions['canCopy']);
         $rights->setCanOpen($permissions['canOpen']);
@@ -173,17 +196,77 @@ class RightsManager
         return $rights;
     }
 
+    public function getOneByRoleAndResource(Role $role, AbstractResource $resource)
+    {
+        $resourceRights = $this->rightsRepo->findOneBy(array('resource' => $resource, 'role' => $role));
+
+        if ($resourceRights === null) {
+            $resourceRights = new ResourceRights();
+            $resourceRights->setResource($resource);
+            $resourceRights->setRole($role);
+        }
+
+        return $resourceRights;
+    }
+
+    /**
+     * Returns every ResourceRights of a resource on 1 level if the role linked is not 'ROLE_ADMIN'
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     *
+     * @return array
+     */
+    public function getNonAdminRights(AbstractResource $resource)
+    {
+        return $this->rightsRepo->findNonAdminRights($resource);
+    }
+
     public function getCreatableTypes(array $roles, Directory $directory)
     {
         $creatableTypes = array();
         $creationRights = $this->rightsRepo->findCreationRights($roles, $directory);
 
-        if (count($creationRights) != 0) {
+        if (count($creationRights) !== 0) {
             foreach ($creationRights as $type) {
                 $creatableTypes[$type['name']] = $this->translator->trans($type['name'], array(), 'resource');
             }
         }
 
         return $creatableTypes;
+    }
+
+    private function recursiveCreation(
+        array $permissions,
+        Role $role,
+        AbstractResource $resource,
+        array $creations = array()
+    ) {
+        //will create every rights with the role and the resource already set.
+        $resourceRights = $this->updateRightsTree($role, $resource);
+
+        foreach ($resourceRights as $rights) {
+            $this->setPermissions($rights, $permissions);
+            $rights->setCreatableResourceTypes($creations);
+            $this->writer->update($rights);
+        }
+    }
+
+    private function nonRecursiveCreation(
+        array $permissions,
+        Role $role,
+        AbstractResource $resource,
+        array $creations = array()
+    ) {
+        $rights = $this->getEntity('Resource\ResourceRights');
+        $rights->setRole($role);
+        $rights->setResource($resource);
+        $rights->setCreatableResourceTypes($creations);
+        $this->setPermissions($rights, $permissions);
+        $this->writer->create($rights);
+    }
+
+    public function getResourceTypes()
+    {
+       return $this->resourceTypeRepo->findAll();
     }
 }

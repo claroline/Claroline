@@ -3,9 +3,9 @@
 namespace Claroline\CoreBundle\Event;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Event\Event\MandatoryEventInterface;
 use Claroline\CoreBundle\Event\Event\DataConveyorEventInterface;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service("claroline.event.event_dispatcher")
@@ -40,7 +40,7 @@ class StrictDispatcher
 
         if ($event instanceof MandatoryEventInterface) {
             if (!$this->ed->hasListeners($eventName)) {
-                throw new MandatoryEventException("No listener is attached to the '{$eventName}' event");
+                throw new MandatoryEventException("No listener is attached to the '{$eventName}' event.");
             }
         }
 
@@ -48,7 +48,7 @@ class StrictDispatcher
 
          if ($event instanceof DataConveyorEventInterface) {
              if (!$event->isPopulated()) {
-                 throw new NotPopulatedEventException("Event object for '{$eventName}' was not populated as expected");
+                 throw new NotPopulatedEventException("Event object for '{$eventName}' was not populated as expected.");
              }
          }
 

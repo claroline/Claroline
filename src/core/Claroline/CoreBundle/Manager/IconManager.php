@@ -2,140 +2,99 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Database\Writer;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Entity\Resource\File as ResourceFile;
-use Claroline\CoreBundle\Entity\Resource\ResourceType;
-use Claroline\CoreBundle\Entity\Resource\IconType;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Claroline\CoreBundle\Repository\ResourceIconRepository;
+use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
+use Claroline\CoreBundle\Library\Utilities\ThumbnailCreator;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service("claroline.manager.icon_manager")
  */
-class IconManager
+class IconManager extends AbstractManager
 {
-    private $container;
-    /** @var EntityManager */
-    private $em;
-    private $ic;
+    /** @var ThumbnailCreator */
+    private $creator;
+    /** @var ResourceIconRepository */
+    private $repo;
+    /** @var string */
+    private $fileDir;
+    /** @var string */
+    private $thumbDir;
+    /** @var Writer */
+    private $writer;
+    /** @var string */
+    private $rootDir;
+    /** @var ClaroUtilities */
+    private $ut;
 
     /**
      * @DI\InjectParams({
-     *     "container" = @DI\Inject("service_container")
+     *     "creator"  = @DI\Inject("claroline.utilities.thumbnail_creator"),
+     *     "repo"     = @DI\Inject("claroline.repository.icon_repository"),
+     *     "fileDir"  = @DI\Inject("%claroline.param.files_directory%"),
+     *     "thumbDir" = @DI\Inject("%claroline.param.thumbnails_directory%"),
+     *     "writer"   = @DI\Inject("claroline.database.writer"),
+     *     "rootDir"  = @DI\Inject("%kernel.root_dir%"),
+     *     "ut"       = @DI\Inject("claroline.utilities.misc")
      * })
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(
+        ThumbnailCreator $creator,
+        ResourceIconRepository $repo,
+        $fileDir,
+        $thumbDir,
+        Writer $writer,
+        $rootDir,
+        ClaroUtilities $ut
+    )
     {
-        $this->container = $container;
-        $this->em = $container->get('doctrine.orm.entity_manager');
-        $this->ic = $container->get('claroline.utilities.thumbnail_creator');
+        $this->creator = $creator;
+        $this->repo = $repo;
+        $this->fileDir = $fileDir;
+        $this->thumbDir = $thumbDir;
+        $this->writer = $writer;
+        $this->rootDir = $rootDir;
+        $this->ut = $ut;
     }
 
     /**
-     * Sets the correct ResourceIcon to the resource. Persist the resource is required
-     * before firing this.
-     *
-     * @param AbstractResource $resource
-     * @param boolean          $isFixture (for testing purpose)
-     *
-     * @return AbstractResource
-     */
-    public function findResourceIcon(AbstractResource $resource, ResourceType $type, $isFixture = false)
-    {
-        if ($type->getName() !== 'file') {
-            $icon = $this->getTypeIcon($type);
-        } else {
-            if ($resource->getMimeType() === null) {
-                throw new \RuntimeException("The entity {$resource->getName()} as no mime type set");
-            }
-            $icon = $this->getFileIcon($resource, $isFixture);
-        }
-
-        return $icon;
-    }
-
-    /**
-     * Create (if possible) and returns an icon for a file.
+     * Create (if possible) and|or returns an icon for a resource
      *
      * @param File    $resource  the file
-     * @param boolean $isFixture
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceIcon
      *
      * @throws \InvalidArgumentException
      */
-    public function getFileIcon(ResourceFile $resource, $isFixture)
+    public function getIcon(AbstractResource $resource)
     {
         $mimeElements = explode('/', $resource->getMimeType());
-
+        $ds = DIRECTORY_SEPARATOR;
         // if video or img => generate the thumbnail, otherwise find an existing one.
-        if (($mimeElements[0] === 'video' || $mimeElements[0] === 'image') && $isFixture == false) {
-            $originalPath = $this->container->getParameter('claroline.param.files_directory')
-                . DIRECTORY_SEPARATOR . $resource->getHashName();
-            $newPath = $this->container->getParameter('claroline.param.thumbnails_directory')
-                . DIRECTORY_SEPARATOR
-                . $this->container->get('claroline.manager.resource_manager')->generateGuid() . ".png";
-
-            $thumbnailPath = null;
-            if ($mimeElements[0] === 'video') {
-                try {
-                    $thumbnailPath = $this->ic->fromVideo($originalPath, $newPath, 100, 100);
-                } catch (\Exception $e) {
-                    $thumbnailPath = null;
-                    //error handling ? $thumbnailPath = null
-                }
-            }
-
-            if ($mimeElements[0] === 'image') {
-                try {
-                    $thumbnailPath = $this->ic->fromImage($originalPath, $newPath, 100, 100);
-                } catch (\Exception $e) {
-                    $thumbnailPath = null;
-                    //error handling ? $thumbnailPath = null
-                }
-            }
+        if (($mimeElements[0] === 'video' || $mimeElements[0] === 'image')) {
+            $thumbnailPath = $this->createFromFile($this->fileDir. $ds . $resource->getHashName(), $mimeElements[0]);
 
             if ($thumbnailPath !== null) {
                 $thumbnailName = pathinfo($thumbnailPath, PATHINFO_BASENAME);
                 $relativeUrl = "thumbnails/{$thumbnailName}";
-                $icon = new ResourceIcon();
-                $generatedIconType = $this->em
-                    ->getRepository('ClarolineCoreBundle:Resource\IconType')
-                    ->find(IconType::GENERATED);
-                $icon->setIconType($generatedIconType);
-                $icon->setIconLocation($newPath);
+                $icon = $this->getEntity('Resource\ResourceIcon');
+                $icon->setMimeType('custom');
+                $icon->setIconLocation($thumbnailPath);
                 $icon->setRelativeUrl($relativeUrl);
-                $icon->setType('generated');
                 $icon->setShortcut(false);
+                $this->writer->create($icon);
                 $this->createShortcutIcon($icon);
-                $this->em->persist($icon);
 
                 return $icon;
             }
         }
-
-        return $this->searchFileIcon($resource->getMimeType());
-    }
-
-    /**
-     * Returns the icon for the specified ResourceType.
-     *
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceType $type
-     *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceIcon the resource type
-     */
-    public function getTypeIcon(ResourceType $type)
-    {
-        $repo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceIcon');
-        $icon = $repo->findOneBy(array('type' => $type->getName(), 'iconType' => IconType::TYPE));
-
-        if ($icon === null) {
-            $icon = $repo->findOneBy(array('type' => 'default', 'iconType' => IconType::DEFAULT_ICON));
-        }
-
-        return $icon;
+        
+        //default & fallback
+        return $this->searchIcon($resource->getMimeType());
     }
 
     /**
@@ -146,18 +105,17 @@ class IconManager
      *
      * @return  \Claroline\CoreBundle\Entity\Resource\ResourceIcon
      */
-    public function searchFileIcon($mimeType)
+    public function searchIcon($mimeType)
     {
         $mimeElements = explode('/', $mimeType);
-        $repo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceIcon');
 
-        $icon = $repo->findOneBy(array('type' => $mimeType, 'iconType' => IconType::COMPLETE_MIME_TYPE));
+        $icon = $this->repo->findOneByMimeType($mimeType);
 
         if ($icon === null) {
-            $icon = $repo->findOneBy(array('type' => $mimeElements[0], 'iconType' => IconType::BASIC_MIME_TYPE));
+            $icon = $this->repo->findOneByMimeType($mimeElements[0]);
 
             if ($icon === null) {
-                $icon = $repo->findOneBy(array('type' => 'file', 'iconType' => IconType::TYPE));
+                $icon = $this->repo->findOneByMimeType('custom/default');
             }
         }
 
@@ -175,31 +133,36 @@ class IconManager
      */
     public function createShortcutIcon(ResourceIcon $icon)
     {
+        $this->writer->suspendFlush();
+        
         $ds = DIRECTORY_SEPARATOR;
         try {
-            $shortcutLocation = $this->ic->shortcutThumbnail($icon->getIconLocation());
+            $shortcutLocation = $this->creator->shortcutThumbnail($icon->getIconLocation());
         } catch (\Exception $e) {
-            $shortcutLocation = "{$this->container->getParameter('kernel.root_dir')}{$ds}.."
+            $shortcutLocation = "{$this->rootDir}{$ds}.."
             . "{$ds}web{$ds}bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}shortcut-default.png";
         }
 
-        $shortcutIcon = new ResourceIcon();
+        $shortcutIcon = $this->getEntity('Resource\ResourceIcon');
         $shortcutIcon->setIconLocation($shortcutLocation);
+        
         if (strstr($shortcutLocation, "bundles")) {
             $tmpRelativeUrl = strstr($shortcutLocation, "bundles");
         } else {
             $tmpRelativeUrl = strstr($shortcutLocation, "thumbnails");
         }
+        
         $relativeUrl = str_replace('\\', '/', $tmpRelativeUrl);
         $shortcutIcon->setRelativeUrl($relativeUrl);
-        $shortcutIcon->setIconType($icon->getIconType());
-        $shortcutIcon->setType($icon->getType());
+        $shortcutIcon->setMimeType($icon->getMimeType());
         $shortcutIcon->setShortcut(true);
         $icon->setShortcutIcon($shortcutIcon);
         $shortcutIcon->setShortcutIcon($shortcutIcon);
-        $this->em->persist($icon);
-        $this->em->persist($shortcutIcon);
+        $this->writer->update($icon);
+        $this->writer->create($shortcutIcon);
 
+        $this->writer->forceFlush();
+        
         return $shortcutIcon;
 
     }
@@ -217,23 +180,52 @@ class IconManager
         $ds = DIRECTORY_SEPARATOR;
         $iconName = $file->getClientOriginalName();
         $extension = pathinfo($iconName, PATHINFO_EXTENSION);
-        $hashName = $this->container->get('claroline.manager.resource_manager')->generateGuid() . "." . $extension;
-        $file->move($this->container->getParameter('claroline.param.thumbnails_directory'), $hashName);
+        $hashName = $this->ut->generateGuid() . "." . $extension;
+        $file->move($this->thumbDir, $hashName);
         //entity creation
-        $icon = new ResourceIcon();
-        $icon->setIconLocation(
-            "{$this->container->getParameter('claroline.param.thumbnails_directory')}{$ds}{$hashName}"
-        );
+        $icon = $this->getEntity('Resource\ResourceIcon');
+        $icon->setIconLocation("{$this->thumbDir}{$ds}{$hashName}");
         $icon->setRelativeUrl("thumbnails/{$hashName}");
-        $customType = $this->em
-            ->getRepository('ClarolineCoreBundle:Resource\IconType')
-            ->find(IconType::CUSTOM_ICON);
-        $icon->setIconType($customType);
-        $icon->setType('custom');
+        $icon->setMimeType('custom');
         $icon->setShortcut(false);
-        $this->em->persist($icon);
+        $this->writer->create($icon);
         $this->createShortcutIcon($icon);
 
         return $icon;
+    }
+    
+    /**
+     * Creates an image from a file.
+     * 
+     * @param string $filePath
+     * @param string $baseMime (image|video)
+     * 
+     * @return $thumnnailPath
+     */
+    public function createFromFile($filePath, $baseMime)
+    {        
+        $ds = DIRECTORY_SEPARATOR;
+        $newPath = $this->thumbDir. $ds . $this->ut->generateGuid() . ".png";
+
+        $thumbnailPath = null;
+        if ($baseMime === 'video') {
+            try {
+                $thumbnailPath = $this->creator->fromVideo($filePath, $newPath, 100, 100);
+            } catch (\Exception $e) {
+                $thumbnailPath = null;
+                //error handling ? $thumbnailPath = null
+            }
+        }
+
+        if ($baseMime === 'image') {
+            try {
+                $thumbnailPath = $this->creator->fromImage($filePath, $newPath, 100, 100);
+            } catch (\Exception $e) {
+                $thumbnailPath = null;
+                //error handling ? $thumbnailPath = null
+            }
+        }
+        
+        return $thumbnailPath;
     }
 }
