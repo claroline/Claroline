@@ -7,24 +7,27 @@ use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\EventDispatcher\Event;
 
-class ImportToolEvent extends Event
+class ImportToolEvent extends Event implements MandatoryEventInterface
 {
     private $workspace;
     private $config;
     private $root;
     private $files;
+    private $filePaths;
 
     public function __construct(
         AbstractWorkspace $workspace,
         $config,
         Directory $root,
-        User $user
+        User $user,
+        $filePaths
     )
     {
         $this->workspace = $workspace;
         $this->config = $config;
         $this->root = $root;
         $this->user = $user;
+        $this->filePaths = $filePaths;
     }
 
     public function getWorkspace()
@@ -56,5 +59,17 @@ class ImportToolEvent extends Event
     {
         return $this->files;
     }
+
+    public function getFilePaths()
+    {
+        return $this->filePaths;
+    }
+
+    public function setFilePaths($filePaths)
+    {
+        $this->filePaths = $filePaths;
+    }
+
+
 }
 

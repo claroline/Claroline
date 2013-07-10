@@ -160,7 +160,7 @@ class WorkspaceParametersController extends AbstractParametersController
      * @param AbstractWorkspace $workspace
      * @param Tool $tool
      *
-     * @return Response
+     * @return Response 
      */
     public function openWorkspaceToolConfig(AbstractWorkspace $workspace, Tool $tool)
     {

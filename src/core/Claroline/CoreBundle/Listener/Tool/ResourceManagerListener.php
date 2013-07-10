@@ -16,7 +16,7 @@ class ResourceManagerListener
     /**
      * @DI\InjectParams({
      *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "ed" = @DI\Inject("event_dispatcher"),
+     *     "ed" = @DI\Inject("claroline.event.event_dispatcher"),
      *     "templating" = @DI\Inject("templating"),
      *     "manager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "converter" = @DI\Inject("claroline.resource.converter"),

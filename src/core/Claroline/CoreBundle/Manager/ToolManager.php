@@ -17,7 +17,7 @@ use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Exception\ToolPositionAlreadyOccupiedException;
 use Claroline\CoreBundle\Manager\Exception\UnremovableToolException;
 use Symfony\Component\Translation\Translator;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -47,7 +47,7 @@ class ToolManager
      *     "writer"          = @DI\Inject("claroline.database.writer"),
      *     "orderedToolRepo" = @DI\Inject("ordered_tool_repository"),
      *     "toolRepo"        = @DI\Inject("tool_repository"),
-     *     "ed"              = @DI\Inject("event_dispatcher"),
+     *     "ed"              = @DI\Inject("claroline.event.event_dispatcher"),
      *     "utilities"       = @DI\Inject("claroline.utilities.misc"),
      *     "roleRepo"        = @DI\Inject("role_repository"),
      *     "translator"      = @DI\Inject("translator")
@@ -57,7 +57,7 @@ class ToolManager
         Writer $writer,
         OrderedToolRepository $orderedToolRepo,
         ToolRepository $toolRepo,
-        EventDispatcher $ed,
+        StrictDispatcher $ed,
         ClaroUtilities $utilities,
         RoleRepository $roleRepo,
         Translator $translator
@@ -109,9 +109,10 @@ class ToolManager
             $this->addRoleToOrderedTool($otr, $role);
         }
 
-        $event = new ImportToolEvent($workspace, $config, $rootDir, $manager);
-        $event->setFiles($filePaths);
-        $this->ed->dispatch('tool_' . $tool->getName() . '_from_template', $event);
+        $this->ed->dispatch(
+            'tool_' . $tool->getName() . '_from_template', 'ImportTool',
+            array($workspace, $config, $rootDir, $manager, $filePaths)
+        );
     }
 
     public function addWorkspaceTool(Tool $tool, $position, $name, AbstractWorkspace $workspace)

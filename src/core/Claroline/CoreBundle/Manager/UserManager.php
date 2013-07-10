@@ -38,7 +38,7 @@ class UserManager
      *     "roleManager" =            @DI\Inject("claroline.manager.role_manager"),
      *     "workspaceManager" =       @DI\Inject("claroline.manager.workspace_manager"),
      *     "toolManager" =            @DI\Inject("claroline.manager.tool_manager"),
-     *     "ed" =                     @DI\Inject("event_dispatcher"),
+     *     "ed" =                     @DI\Inject("claroline.event.event_dispatcher"),
      *     "personalWsTemplateFile" = @DI\Inject("%claroline.param.templates_directory%"),
      *     "trans" =                  @DI\Inject("translator"),
      *     "ch" =                     @DI\Inject("claroline.config.platform_config_handler")
@@ -80,8 +80,7 @@ class UserManager
 
         $this->writer->create($user);
 
-        $log = new LogUserCreateEvent($user);
-        $this->ed->dispatch('log', $log);
+        $this->ed->dispatch('log', 'LogUserCreate', $user);
 
         return $user;
     }
