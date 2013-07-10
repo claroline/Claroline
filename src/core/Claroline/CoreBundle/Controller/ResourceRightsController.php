@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Claroline\CoreBundle\Manager\RightsManager;
@@ -20,7 +19,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 class ResourceRightsController
 {
     private $rightsManager;
-    private $formFactory;
     private $request;
     private $sc;
     private $wsTagManager;
@@ -31,7 +29,6 @@ class ResourceRightsController
     /**
      * @DI\InjectParams({
      *     "rightsManager" = @DI\Inject("claroline.manager.rights_manager"),
-     *     "formFactory"   = @DI\Inject("claroline.form.factory"),
      *     "request"       = @DI\Inject("request"),
      *     "sc"            = @DI\Inject("security.context"),
      *     "wsTagManager"  = @DI\Inject("claroline.manager.workspace_tag_manager"),
@@ -42,7 +39,6 @@ class ResourceRightsController
      */
     public function __construct(
         RightsManager $rightsManager,
-        FormFactory $formFactory,
         Request $request,
         SecurityContext $sc,
         WorkspaceTagManager $wsTagManager,
@@ -52,7 +48,6 @@ class ResourceRightsController
     )
     {
         $this->rightsManager = $rightsManager;
-        $this->formFactory = $formFactory;
         $this->request = $request;
         $this->sc = $sc;
         $this->wsTagManager = $wsTagManager;
