@@ -4,26 +4,24 @@ namespace Claroline\CoreBundle\Controller\Tool;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Controller\Tool\AbstractParametersController;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Tool\Tool;
-use Claroline\CoreBundle\Library\Event\ConfigureWorkspaceToolEvent;
+use Claroline\CoreBundle\Event\Event\ConfigureWorkspaceToolEvent;
 use Claroline\CoreBundle\Form\WorkspaceEditType;
 use Claroline\CoreBundle\Form\WorkspaceTemplateType;
 
 class WorkspaceParametersController extends AbstractParametersController
 {
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspace}/form/export",
      *     name="claro_workspace_export_form"
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Template("ClarolineCoreBundle:Tool\workspace\parameters:template.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:template.html.twig")
      *
      * @param AbstractWorkspace $workspace
      *
@@ -41,13 +39,13 @@ class WorkspaceParametersController extends AbstractParametersController
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspace}/export",
      *     name="claro_workspace_export"
      * )
-     * @Method("POST")
+     * @EXT\Method("POST")
      *
-     * @Template("ClarolineCoreBundle:Tool\workspace\parameters:template.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:template.html.twig")
      *
      * @param AbstractWorkspace $workspace
      *
@@ -78,13 +76,13 @@ class WorkspaceParametersController extends AbstractParametersController
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspace}/editform",
      *     name="claro_workspace_edit_form"
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Template("ClarolineCoreBundle:Tool\workspace\parameters:workspaceEdit.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:workspaceEdit.html.twig")
      *
      * @param AbstractWorkspace $workspace
      *
@@ -101,15 +99,14 @@ class WorkspaceParametersController extends AbstractParametersController
         );
     }
 
-
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspace}/edit",
      *     name="claro_workspace_edit"
      * )
-     * @Method("POST")
+     * @EXT\Method("POST")
      *
-     * @Template("ClarolineCoreBundle:Tool\workspace\parameters:workspaceEdit.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:workspaceEdit.html.twig")
      *
      * @param AbstractWorkspace $workspace
      *
@@ -154,30 +151,26 @@ class WorkspaceParametersController extends AbstractParametersController
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspace}/tool/{tool}/config",
      *     name="claro_workspace_tool_config"
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
      * @param AbstractWorkspace $workspace
      * @param Tool $tool
      *
-     * @return Response
+     * @return Response 
      */
     public function openWorkspaceToolConfig(AbstractWorkspace $workspace, Tool $tool)
     {
         $this->checkAccess($workspace);
 
-        $event = new ConfigureWorkspaceToolEvent($tool, $workspace);
-        $eventName = strtolower('configure_workspace_tool_' . $tool->getName());
-        $this->get('event_dispatcher')->dispatch($eventName, $event);
-
-        if (is_null($event->getContent())) {
-            throw new \Exception(
-                "Tool '{$tool->getName()}' didn't return any Response for tool event '{$eventName}'."
-            );
-        }
+        $event = $this->get('claroline.event.event_dispatcher')->dispatch(
+            strtolower('configure_workspace_tool_' . $tool->getName()),
+            'ConfigureWorkspaceTool',
+            array($tool,$workspace)
+        );
 
         return new Response($event->getContent());
     }

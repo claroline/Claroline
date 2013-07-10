@@ -39,7 +39,7 @@ class Role implements RoleInterface
     protected $name;
 
     /**
-     * @ORM\Column(name="translation_key", type="string", length=255)
+     * @ORM\Column(name="translation_key", type="string", length=255, nullable=false)
      */
     protected $translationKey;
 
@@ -64,6 +64,15 @@ class Role implements RoleInterface
      * )
      */
     protected $users;
+
+    /**
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\OrderedTool",
+     *     mappedBy="roles"
+     * )
+     * 
+     */
+    protected $orderedTools;
 
     /**
      * @ORM\ManyToMany(
@@ -167,16 +176,6 @@ class Role implements RoleInterface
         return $this->getName();
     }
 
-    public function setParent(Role $role = null)
-    {
-        $this->parent = $role;
-    }
-
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
     /**
      * @ORM\PreRemove
      */
@@ -187,7 +186,7 @@ class Role implements RoleInterface
         }
     }
 
-    protected function setReadOnly($value)
+    public function setReadOnly($value)
     {
         $this->isReadOnly = $value;
     }
@@ -226,7 +225,7 @@ class Role implements RoleInterface
         return $this->resourceRights;
     }
 
-    public function setWorkspace(AbstractWorkspace $ws)
+    public function setWorkspace(AbstractWorkspace $ws = null)
     {
         $this->workspace = $ws;
     }

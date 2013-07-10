@@ -58,15 +58,16 @@ class LoadFileData extends AbstractFixture implements ContainerAwareInterface
     {
         $user = $this->getReference("user/{$this->creator}");
         $directory = $this->getReference("directory/{$this->directory}");
-        $resourceManager = $this->container->get('claroline.resource.manager');
-        $resourceUtilities = $this->container->get('claroline.resource.utilities');
+        $resourceManager = $this->container->get('claroline.manager.resource_manager');
         $filesDirectory = $this->container->getParameter('claroline.param.files_directory');
+        $fileType = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+            ->findOneByName('file');
 
         foreach ($this->files as $filePath) {
             $filePathParts = explode(DIRECTORY_SEPARATOR, $filePath);
             $fileName = array_pop($filePathParts);
             $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-            $hashName = "{$resourceUtilities->generateGuid()}.{$extension}";
+            $hashName = "{$resourceManager->generateGuid()}.{$extension}";
             $targetFilePath = $filesDirectory . DIRECTORY_SEPARATOR . $hashName;
             $file = new File();
             $file->setName($fileName);
@@ -82,7 +83,7 @@ class LoadFileData extends AbstractFixture implements ContainerAwareInterface
 
             $mimeType = MimeTypeGuesser::getInstance()->guess($targetFilePath);
             $file->setMimeType($mimeType);
-            $resourceManager->create($file, $directory->getId(), 'file', $user);
+            $resourceManager->create($file, $fileType, $user, $directory->getWorkspace(), $directory);
             $this->addReference("file/{$fileName}", $file);
         }
 

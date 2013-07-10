@@ -3,9 +3,9 @@
 namespace Claroline\CoreBundle\Library\Workspace;
 
 use Doctrine\ORM\EntityManager;
-use Claroline\CoreBundle\Library\Event\ImportToolEvent;
-use Claroline\CoreBundle\Library\Event\LogWorkspaceCreateEvent;
-use Claroline\CoreBundle\Library\Resource\Manager;
+use Claroline\CoreBundle\Event\Event\ImportToolEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceCreateEvent;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
@@ -26,12 +26,12 @@ class Creator
     /**
      * @DI\InjectParams({
      *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "rm" = @DI\Inject("claroline.resource.manager"),
+     *     "rm" = @DI\Inject("claroline.manager.resource_manager"),
      *     "ed" = @DI\Inject("event_dispatcher"),
      *     "translator" = @DI\Inject("translator")
      * })
      */
-    public function __construct(EntityManager $em, Manager $rm, $ed, $translator)
+    public function __construct(EntityManager $em, ResourceManager $rm, $ed, $translator)
     {
         $this->entityManager = $em;
         $this->manager = $rm;
@@ -49,36 +49,6 @@ class Creator
      */
     public function createWorkspace(Configuration $config, User $manager, $autoflush = true)
     {
-        $config->check();
-        $workspaceType = $config->getWorkspaceType();
-        $workspace = new $workspaceType;
-        $workspace->setName($config->getWorkspaceName());
-        $workspace->setPublic($config->isPublic());
-        $workspace->setCode($config->getWorkspaceCode());
-        $workspace->setCreator($manager);
-        $this->entityManager->persist($workspace);
-        $this->entityManager->flush();
-        $entityRoles = $this->initBaseRoles($workspace, $config);
-        $rootDir = $this->manager->createRootDir($workspace, $manager, $config->getPermsRootConfiguration(), $entityRoles);
-        $extractPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('claro_ws_tmp_', true);
-        $archive = new \ZipArchive();
-        $archive->open($config->getArchive());
-        $archive->extractTo($extractPath);
-        $toolsConfig = $config->getToolsConfiguration();
-
-        foreach ($toolsConfig as $name => $conf) {
-            $realPaths = array();
-
-            foreach ($conf['files'] as $path) {
-                $realPaths[] = $extractPath . DIRECTORY_SEPARATOR . $path;
-            }
-
-            $event = new ImportToolEvent($workspace, $conf, $rootDir, $manager);
-            $event->setFiles($realPaths);
-            $this->ed->dispatch('tool_'.$name.'_from_template', $event);
-        }
-
-        $manager->addRole($entityRoles['ROLE_WS_MANAGER_'.$workspace->getId()]);
         $this->addMandatoryTools($workspace, $config, $entityRoles);
         $this->entityManager->persist($manager);
 
@@ -125,7 +95,6 @@ class Creator
     {
         $baseRole = new Role();
         $baseRole->setName($baseName . '_' . $workspace->getId());
-        $baseRole->setParent(null);
         $baseRole->setType(Role::WS_ROLE);
         $baseRole->setTranslationKey($translationKey);
         $baseRole->setWorkspace($workspace);

@@ -27,7 +27,7 @@ class IconType
     /**
      * @ORM\Column(type="string", name="type")
      */
-    protected $type;
+    protected $type = self::TYPE;
 
     public function getId()
     {

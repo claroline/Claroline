@@ -30,7 +30,7 @@
             });
             parameters.ids = array;
 
-            var route = Routing.generate('claro_message_delete_from');
+            var route = Routing.generate('claro_message_soft_delete');
             route += '?' + $.param(parameters);
             $('#deleting').show();
             $.ajax({

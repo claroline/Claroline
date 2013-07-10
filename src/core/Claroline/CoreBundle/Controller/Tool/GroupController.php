@@ -14,8 +14,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleSubscribeEvent;
-use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleUnsubscribeEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceRoleSubscribeEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceRoleUnsubscribeEvent;
 
 class GroupController extends Controller
 {
@@ -157,6 +157,7 @@ class GroupController extends Controller
 
         if ($this->getRequest()->getMethod() == 'POST') {
             $request = $this->getRequest();
+            $roleManager = $this->get('claroline.manager.role_manager');
             $parameters = $request->request->all();
             //cannot bind request: why ?
             $newRole = $em->getRepository('ClarolineCoreBundle:Role')
@@ -167,17 +168,18 @@ class GroupController extends Controller
                 $this->checkRemoveManagerRoleIsValid(array($group->getId()), $workspace);
             }
 
-            $group->removeRole($role, false);
-            $group->addRole($newRole);
-            $em->persist($group);
-            $em->flush();
+            $roleManager->dissociateRole($group, $role);
+            $roleManager->associateRole($group, $newRole);
             $route = $this->get('router')->generate(
                 'claro_workspace_open_tool',
                 array('workspaceId' => $workspaceId, 'toolName' => 'group_management')
             );
 
-            $log = new LogWorkspaceRoleUnsubscribeEvent($role, null, $group);
-            $this->get('event_dispatcher')->dispatch('log', $log);
+            $log = $this->get('claroline.event.event_dispatcher')->dispatch(
+                'log',
+                'Log\WorkspaceRoleUnsubscribe',
+                array($role,null,$group)
+            );
 
             $log = new LogWorkspaceRoleSubscribeEvent($newRole, null, $group);
             $this->get('event_dispatcher')->dispatch('log', $log);
@@ -211,6 +213,7 @@ class GroupController extends Controller
      */
     public function removeGroupsAction($workspaceId)
     {
+        $roleManager = $this->get('claroline.manager.role_manager');
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
             ->find($workspaceId);
@@ -230,7 +233,7 @@ class GroupController extends Controller
                     $rolesForGroup = array();
                     foreach ($roles as $role) {
                         if ($group->hasRole($role->getName())) {
-                            $group->removeRole($role);
+                            $roleManager->dissociateRole($group, $role);
                             $rolesForGroup[] = $role;
                         }
                     }
@@ -271,6 +274,7 @@ class GroupController extends Controller
     public function addGroupsAction($workspaceId)
     {
         $params = $this->get('request')->query->all();
+        $roleManager = $this->get('claroline.manager.role_manager');
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)
             ->find($workspaceId);
@@ -283,8 +287,7 @@ class GroupController extends Controller
             foreach ($params['ids'] as $groupId) {
                 $group = $em->find('ClarolineCoreBundle:Group', $groupId);
                 $groups[] = $group;
-                $group->addRole($role);
-                $em->flush();
+                $roleManager->associateRole($group, $role);
             }
         }
 

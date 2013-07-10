@@ -3,13 +3,13 @@
 namespace Claroline\CoreBundle\Listener\Tool;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Library\Event\ExportWidgetConfigEvent;
-use Claroline\CoreBundle\Library\Event\ImportWidgetConfigEvent;
-use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Library\Event\ExportToolEvent;
-use Claroline\CoreBundle\Library\Event\ImportToolEvent;
-use Claroline\CoreBundle\Library\Event\ConfigureWorkspaceToolEvent;
-use Claroline\CoreBundle\Library\Event\ConfigureDesktopToolEvent;
+use Claroline\CoreBundle\Event\Event\ExportWidgetConfigEvent;
+use Claroline\CoreBundle\Event\Event\ImportWidgetConfigEvent;
+use Claroline\CoreBundle\Event\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Event\Event\ExportToolEvent;
+use Claroline\CoreBundle\Event\Event\ImportToolEvent;
+use Claroline\CoreBundle\Event\Event\ConfigureWorkspaceToolEvent;
+use Claroline\CoreBundle\Event\Event\ConfigureDesktopToolEvent;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -21,7 +21,7 @@ class HomeListener
     /**
      * @DI\InjectParams({
      *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "ed" = @DI\Inject("event_dispatcher"),
+     *     "ed" = @DI\Inject("claroline.event.event_dispatcher"),
      *     "templating" = @DI\Inject("templating"),
      *     "wm" = @DI\Inject("claroline.widget.manager")
      * })
@@ -110,11 +110,12 @@ class HomeListener
                 $displayConfig->setWorkspace($event->getWorkspace());
 
                 if (isset($widgetConfig['config'])) {
-                    $newEvent = new ImportWidgetConfigEvent(
-                        $widgetConfig['config'],
-                        $event->getWorkspace()
+
+                    $this->ed->dispatch(
+                        "widget_{$widgetConfig['name']}_from_template",
+                        'ImportWidgetConfig',
+                        array($widgetConfig['config'], $event->getWorkspace())
                     );
-                    $this->ed->dispatch("widget_{$widgetConfig['name']}_from_template", $newEvent);
                 }
 
                 $this->em->persist($displayConfig);
@@ -154,7 +155,11 @@ class HomeListener
                     $config->getWidget(),
                     $workspace
                 );
-                $this->ed->dispatch("widget_{$config->getWidget()->getName()}_to_template", $newEvent);
+                $this->ed->dispatch(
+                    "widget_{$config->getWidget()->getName()}_to_template",
+                    'ExportWidgetConfig',
+                    array($config->getWidget(), $workspace)
+                );
                 if ($newEvent->getConfig() === null) {
                     throw new \Exception(
                         "The event widget_{$config->getWidget()->getName()}_to_template" .

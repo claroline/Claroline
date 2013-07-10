@@ -6,8 +6,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use Claroline\CoreBundle\Library\Event\LogCreateDelegateViewEvent;
-use Claroline\CoreBundle\Library\Event\LogResourceChildUpdateEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogCreateDelegateViewEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogResourceChildUpdateEvent;
 use Claroline\CoreBundle\Form\LogWorkspaceWidgetConfigType;
 use Claroline\CoreBundle\Form\LogDesktopWidgetConfigType;
 use Claroline\CoreBundle\Entity\Logger\LogWorkspaceWidgetConfig;
@@ -23,14 +23,13 @@ class LogController extends Controller
     private function convertFormDataToConfig($config, $data, $workspace, $isDefault)
     {
         if ($config === null) {
-            $config = new LogWorkspaceWidgetConfig();    
+                $config = new LogWorkspaceWidgetConfig();
         }
         $config->setIsDefault($isDefault);
-        
         $config->setResourceCopy($data['creation'] === true);
         $config->setResourceCreate($data['creation'] === true);
         $config->setResourceShortcut($data['creation'] === true);
-        
+
         $config->setResourceRead($data['read'] === true);
         $config->setWsToolRead($data['read'] === true);
 
@@ -80,15 +79,12 @@ class LogController extends Controller
         $log = $em->getRepository('ClarolineCoreBundle:Logger\Log')->find($logId);
 
         if ($log->getAction() === LogResourceChildUpdateEvent::ACTION ) {
-            $eventName = 'create_log_details_'.$log->getResourceType()->getName();
-            $event = new LogCreateDelegateViewEvent($log);
-            $this->container->get('event_dispatcher')->dispatch($eventName, $event);
 
-            if ($event->getResponseContent() === "") {
-                throw new \Exception(
-                    "Event '{$eventName}' didn't receive any response."
-                );
-            }
+            $event = $this->get('claroline.event.event_dispatcher')->dispatch(
+                'create_log_details_'.$log->getResourceType()->getName(),
+                'Log\CreateDelegateView',
+                array($log)
+            );
 
             return new Response($event->getResponseContent());
         }

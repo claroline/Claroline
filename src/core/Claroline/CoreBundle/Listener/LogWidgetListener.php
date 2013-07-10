@@ -5,11 +5,11 @@ namespace  Claroline\CoreBundle\Listener;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
-use Claroline\CoreBundle\Library\Event\ConfigureWidgetWorkspaceEvent;
-use Claroline\CoreBundle\Library\Event\ConfigureWidgetDesktopEvent;
-use Claroline\CoreBundle\Library\Event\LogCreateDelegateViewEvent;
-use Claroline\CoreBundle\Library\Event\LogResourceChildUpdateEvent;
+use Claroline\CoreBundle\Event\Event\DisplayWidgetEvent;
+use Claroline\CoreBundle\Event\Event\ConfigureWidgetWorkspaceEvent;
+use Claroline\CoreBundle\Event\Event\ConfigureWidgetDesktopEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogCreateDelegateViewEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogResourceChildUpdateEvent;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Logger\LogWorkspaceWidgetConfig;
 use Claroline\CoreBundle\Entity\Logger\LogDesktopWidgetConfig;
@@ -67,6 +67,7 @@ class LogWidgetListener
             $config->getWsRoleUpdate() === true;
 
         $data['amount'] = $config->getAmount();
+
         return $data;
     }
 
@@ -75,7 +76,7 @@ class LogWidgetListener
      *     "logManager"  = @DI\Inject("claroline.log.manager"),
      *     "context"     = @DI\Inject("security.context"),
      *     "twig"        = @DI\Inject("templating"),
-     *     "ed"          = @DI\Inject("event_dispatcher"),
+     *     "ed"          = @DI\Inject("claroline.event.event_dispatcher"),
      *     "formFactory" = @DI\Inject("form.factory"),
      *     "manager" = @DI\Inject("doctrine.orm.entity_manager")
      * })

@@ -76,7 +76,7 @@ abstract class AbstractResource
      *     inversedBy="abstractResources",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     protected $resourceType;
 
@@ -86,7 +86,7 @@ abstract class AbstractResource
      *     inversedBy="abstractResources",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id",onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     protected $creator;
 
@@ -95,7 +95,7 @@ abstract class AbstractResource
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceIcon",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="icon_id", referencedColumnName="id",onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(name="icon_id", referencedColumnName="id",onDelete="CASCADE", nullable=true)
      */
     protected $icon;
 
@@ -121,7 +121,7 @@ abstract class AbstractResource
      *     fetch="EAGER"
      * )
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="SET NULL", nullable=true)
+     *   @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      * })
      */
     protected $parent;
@@ -506,5 +506,9 @@ abstract class AbstractResource
     public function setMimeType($mimeType)
     {
         $this->mimeType = $mimeType;
+    }
+
+    public function __toString() {
+        return 'resource !!!';
     }
 }

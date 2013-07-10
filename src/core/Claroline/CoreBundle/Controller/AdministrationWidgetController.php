@@ -3,12 +3,14 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Claroline\CoreBundle\Library\Event\ConfigureWidgetWorkspaceEvent;
-use Claroline\CoreBundle\Library\Event\ConfigureWidgetDesktopEvent;
+use Claroline\CoreBundle\Event\Event\ConfigureWidgetWorkspaceEvent;
+use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Event\Event\ConfigureWidgetDesktopEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use JMS\DiExtraBundle\Annotation as DI;
 
 class AdministrationWidgetController extends Controller
 {
@@ -88,15 +90,14 @@ class AdministrationWidgetController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
             ->find($widgetId);
-        $event = new ConfigureWidgetWorkspaceEvent(null, true);
-        $eventName = "widget_{$widget->getName()}_configuration_workspace";
-        $this->get('event_dispatcher')->dispatch($eventName, $event);
+        
+        $event = $this->get('claroline.event.event_dispatcher')->dispatch(
+            "widget_{$widget->getName()}_configuration_workspace", 
+            'ConfigureWidgetWorkspace', 
+            array(null, true)
+        );
 
-        if ($event->getContent() != '') {
-            return array('content' => $event->getContent());
-        }
-
-        throw new \Exception("event $eventName didn't return any response");
+        return array('content' => $event->getContent());
     }
 
     /**
@@ -122,15 +123,14 @@ class AdministrationWidgetController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
             ->find($widgetId);
-        $event = new ConfigureWidgetDesktopEvent(null, true);
-        $eventName = "widget_{$widget->getName()}_configuration_desktop";
-        $this->get('event_dispatcher')->dispatch($eventName, $event);
-
-        if ($event->getContent() != '') {
-            return array('content' => $event->getContent());
-        }
-
-        throw new \Exception("event $eventName didn't return any Response");
+        
+        $event = $this->get('claroline.event.event_dispatcher')->dispatch(
+                    "widget_{$widget->getName()}_configuration_desktop",
+                    "ConfigureWidgetDesktop",
+                    array(null, true)
+              );
+      
+        return array('content' => $event->getContent());
     }
 
     /**

@@ -58,7 +58,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         $this->manager = $manager;
         $this->setReferenceRepository($this->referenceRepo);
         $this->setReferences($manager);
-        $this->setRssReader($manager);
+        //$this->setRssReader($manager);
         $this->createUsers();
         $this->createGroups();
         //main users
@@ -172,7 +172,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
             )
         );
 
-        $this->createForums();
+        //$this->createForums();
         $this->createActivities();
         $this->createShortcuts($manager);
     }
@@ -197,6 +197,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
 
     private function addUsersToWorkspace(AbstractWorkspace $workspace, User $excludedUser)
     {
+        $roleManager = $this->container->get('claroline.manager.role_manager');
         $users = $this->manager->getRepository('ClarolineCoreBundle:User')->findAllExcept($excludedUser);
         $groups = $this->manager->getRepository('ClarolineCoreBundle:Group')->findAll();
         $userKeys = array_rand($users, self::USER_PER_WORKSPACE);
@@ -206,16 +207,12 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
             ->findCollaboratorRole($workspace);
 
         foreach ($userKeys as $key) {
-            $users[$key]->addRole($collaboratorRole);
-            $this->manager->persist($users[$key]);
+            $roleManager->associateRole($users[$key], $collaboratorRole);
         }
 
         foreach ($groupsKey as $key) {
-            $groups[$key]->addRole($collaboratorRole);
-            $this->manager->persist($groups[$key]);
+            $roleManager->associateRole($groups[$key], $collaboratorRole);
         }
-
-         $this->manager->flush();
     }
 
     public function createUsers()
@@ -348,15 +345,15 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
             'canCopy' => false
         );
 
-        $this->container->get('claroline.resource.manager')
-            ->createRight($permissions, true, $collaboratorRole, $this->getReference('directory/Docs')
-        );
-        $this->container->get('claroline.resource.manager')
-            ->createRight($permissions, true, $collaboratorRole, $this->getReference('directory/Premier semestre')
-        );
-        $this->container->get('claroline.resource.manager')
-            ->createRight($permissions, true, $collaboratorRole, $this->getReference('directory/Travaux')
-        );
+//        $this->container->get('claroline.resource.manager')
+//            ->createRight($permissions, true, $collaboratorRole, $this->getReference('directory/Docs')
+//        );
+//        $this->container->get('claroline.resource.manager')
+//            ->createRight($permissions, true, $collaboratorRole, $this->getReference('directory/Premier semestre')
+//        );
+//        $this->container->get('claroline.resource.manager')
+//            ->createRight($permissions, true, $collaboratorRole, $this->getReference('directory/Travaux')
+//        );
     }
 
     public function setRssReader(ObjectManager $manager)
@@ -371,6 +368,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
 
     public function createUser(ObjectManager $manager)
     {
+        $roleManager = $this->container->get('claroline.manager.role_manager');
         $this->loadFixture(
             new LoadUserData(array('John Smith' => 'user'))
         );
@@ -380,8 +378,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
             ->findCollaboratorRole($this->getReference('user/Jane Doe')->getPersonalWorkspace());
 
         $user = $this->getReference('user/John Smith');
-        $user->addRole($collaboratorRole);
-        $manager->persist($user);
+        $roleManager->associateRole($user, $collaboratorRole);
     }
 
     private function getFirstNames()

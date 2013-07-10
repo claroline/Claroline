@@ -7,8 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * SubContent
  *
+ * @ORM\Entity()
  * @ORM\Table(name="claro_subcontent")
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\SubContentRepository")
  */
 class SubContent
 {

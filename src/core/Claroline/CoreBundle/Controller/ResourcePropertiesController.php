@@ -11,7 +11,7 @@ use Claroline\CoreBundle\Form\ResourceNameType;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Claroline\CoreBundle\Library\Event\LogResourceUpdateEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogResourceUpdateEvent;
 
 
 class ResourcePropertiesController extends Controller
@@ -81,8 +81,11 @@ class ResourcePropertiesController extends Controller
             $response = new Response($content);
             $response->headers->set('Content-Type', 'application/json');
 
-            $log = new LogResourceUpdateEvent($resource, $changeSet);
-            $this->get('event_dispatcher')->dispatch('log', $log);
+            $log = $this->get('claroline.event.event_dispatcher')->dispatch(
+                'log',
+                'Log\ResourceUpdate',
+                array($resource,$changeSet)
+            );
 
             return $response;
         }
@@ -155,7 +158,7 @@ class ResourcePropertiesController extends Controller
 
             if ($file !== null) {
                 $this->removeOldIcon($resource);
-                $manager = $this->get('claroline.resource.icon_creator');
+                $manager = $this->get('claroline.manager.icon_manager');
                 $icon = $manager->createCustomIcon($file);
                 $em->persist($icon);
 
@@ -198,8 +201,11 @@ class ResourcePropertiesController extends Controller
             $response = new Response($content);
             $response->headers->set('Content-Type', 'application/json');
 
-            $log = new LogResourceUpdateEvent($resource, $changeSet);
-            $this->get('event_dispatcher')->dispatch('log', $log);
+            $log = $this->get('claroline.event.event_dispatcher')->dispatch(
+                'log',
+                'Log\ResourceUpdate',
+                array($resource,$changeSet)
+            );
 
             return $response;
         }

@@ -123,10 +123,9 @@ class RoleRepository extends EntityRepository
         $dql = "
             SELECT DISTINCT r FROM Claroline\CoreBundle\Entity\Role r
             JOIN r.workspace ws
-            JOIN ws.workspaceOrderedTools wot
-            JOIN wot.workspaceToolRoles wtr
-            JOIN wtr.role r_2
-            JOIN wot.tool tool
+            JOIN ws.orderedTools ot
+            JOIN ot.roles r_2
+            JOIN ot.tool tool
             WHERE ws.id = {$workspace->getId()}
             AND tool.id = {$tool->getId()}
             AND r.id = r_2.id

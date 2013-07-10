@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Library\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\Template;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Library\Event\ExportToolEvent;
+use Claroline\CoreBundle\Event\Event\ExportToolEvent;
 use Symfony\Component\Yaml\Yaml;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -23,7 +23,7 @@ class Exporter
      *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
      *     "ed" = @DI\Inject("event_dispatcher"),
      *     "templateDir" = @DI\Inject("%claroline.param.templates_directory%"),
-     *     "utils" = @DI\Inject("claroline.resource.utilities")
+     *     "utils" = @DI\Inject("claroline.manager.resource_manager")
      * })
      */
     public function __construct(EntityManager $em, $ed, $templateDir, $utils)

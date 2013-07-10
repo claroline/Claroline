@@ -7,7 +7,7 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Form\ResourceRightType;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use Claroline\CoreBundle\Library\Event\LogWorkspaceRoleChangeRightEvent;
+use Claroline\CoreBundle\Event\Event\LogWorkspaceRoleChangeRightEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -146,9 +146,13 @@ class ResourceRightsController extends Controller
         foreach ($editedResourceRightsWithChangeSet as $roleRightWithChangeSet) {
             $roleRight = $roleRightWithChangeSet['resourceRights'];
             $changeSet = $roleRightWithChangeSet['changeSet'];
+            
+            $log = $this->get('claroline.event.event_dispatcher')->dispatch(
+                   'log',
+                    'Log\WorkspaceRoleChangeRight',
+                    array($roleRight->getRole(),$roleRight->getResource(),$changeSet)
+                    );
 
-            $log = new LogWorkspaceRoleChangeRightEvent($roleRight->getRole(), $roleRight->getResource(), $changeSet);
-            $this->get('event_dispatcher')->dispatch('log', $log);
         }
 
         $em->flush();
@@ -330,9 +334,13 @@ class ResourceRightsController extends Controller
         foreach ($editedResourceRightsWithChangeSet as $roleRightWithChangeSet) {
             $roleRight = $roleRightWithChangeSet['resourceRights'];
             $changeSet = $roleRightWithChangeSet['changeSet'];
+            
+            $log = $this->get('claroline.event.event_dispatcher')->dispatch(
+                    'log',
+                     'Log\WorkspaceRoleChangeRight',
+                     array($roleRight->getRole(),$roleRight->getResource(),$changeSet)
+            );
 
-            $log = new LogWorkspaceRoleChangeRightEvent($roleRight->getRole(), $roleRight->getResource(), $changeSet);
-            $this->get('event_dispatcher')->dispatch('log', $log);
         }
 
         return $response;

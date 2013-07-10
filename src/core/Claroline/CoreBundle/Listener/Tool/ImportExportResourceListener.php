@@ -2,10 +2,10 @@
 
 namespace Claroline\CoreBundle\Listener\Tool;
 
-use Claroline\CoreBundle\Library\Event\ExportToolEvent;
-use Claroline\CoreBundle\Library\Event\ExportResourceTemplateEvent;
-use Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent;
-use Claroline\CoreBundle\Library\Event\ImportToolEvent;
+use Claroline\CoreBundle\Event\Event\ExportToolEvent;
+use Claroline\CoreBundle\Event\Event\ExportResourceTemplateEvent;
+use Claroline\CoreBundle\Event\Event\ImportResourceTemplateEvent;
+use Claroline\CoreBundle\Event\Event\ImportToolEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -16,8 +16,8 @@ class ImportExportResourceListener
     /**
      * @DI\InjectParams({
      *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "ed" = @DI\Inject("event_dispatcher"),
-     *     "manager" = @DI\Inject("claroline.resource.manager")
+     *     "ed" = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "manager" = @DI\Inject("claroline.manager.resource_manager")
      * })
      */
     public function __construct($em, $ed, $manager)
@@ -68,11 +68,8 @@ class ImportExportResourceListener
 
         foreach ($children as $child) {
             $newEvent = new ExportResourceTemplateEvent($child);
-            $this->ed->dispatch("resource_directory_to_template", $newEvent);
+            $this->ed->dispatch("resource_directory_to_template", 'ExportResourceTemplate', array($child));
             $dataChildren = $newEvent->getConfig();
-            if ($dataChildren == null) {
-                throw new \Exception('The event resource_directory_to_template did not return any config');
-            }
             $config['directory'][] = $dataChildren;
         }
 
@@ -86,7 +83,11 @@ class ImportExportResourceListener
         foreach ($resources as $resource) {
             if ($resource['type'] !== 'directory') {
                 $newEvent = new ExportResourceTemplateEvent($resourceRepo->find($resource['id']));
-                $this->ed->dispatch("resource_{$resource['type']}_to_template", $newEvent);
+                $this->ed->dispatch(
+                    "resource_{$resource['type']}_to_template",
+                    'ExportResourceTemplate',
+                    array($resourceRepo->find($resource['id']))
+                );
                 $dataResources = $newEvent->getConfig();
 
                 if ($dataResources === null) {
@@ -225,7 +226,11 @@ class ImportExportResourceListener
         if (isset($config['directory'])) {
             foreach ($config['directory'] as $resource) {
                 $newEvent = new ImportResourceTemplateEvent($resource, $root, $user);
-                $this->ed->dispatch("resource_{$resource['type']}_from_template", $newEvent);
+                $this->ed->dispatch(
+                    "resource_{$resource['type']}_from_template",
+                    'ImportResourceTemplate',
+                    array($resource, $root, $user)
+                );
 
                 $childResources = $newEvent->getCreatedResources();
 

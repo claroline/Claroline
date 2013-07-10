@@ -1,4 +1,4 @@
-<?php
+<?php //
 
 namespace Claroline\CoreBundle\Entity;
 
@@ -11,7 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
-use Claroline\CoreBundle\Entity\WorkspaceRole;
 use Claroline\CoreBundle\Entity\Role;
 // TODO: Implements AdvancedUserInterface
 
@@ -150,11 +149,11 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\DesktopTool",
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\OrderedTool",
      *     mappedBy="user"
      * )
      */
-    protected $desktopTools;
+    protected $orderedTools;
 
     public function __construct()
     {
@@ -164,7 +163,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $this->groups = new ArrayCollection();
         $this->abstractResources = new ArrayCollection();
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
-        $this->desktopTools = new ArrayCollection();
+        $this->orderedTools = new ArrayCollection();
     }
 
     public function getId()
@@ -253,14 +252,6 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         }
 
         return $roleNames;
-    }
-
-    public function addRole(Role $role)
-    {
-        parent::addRole($role);
-        if ($role instanceof WorkspaceRole) {
-            $role->addUser($this);
-        }
     }
 
     public function eraseCredentials()
@@ -383,8 +374,8 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $this->roles->add($platformRole);
     }
 
-    public function getDesktopTools()
+    public function getOrderedTools()
     {
-        return $this->desktopTools;
+        return $this->orderedTools;
     }
 }

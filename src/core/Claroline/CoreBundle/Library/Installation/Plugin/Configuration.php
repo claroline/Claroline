@@ -116,7 +116,6 @@ class Configuration implements ConfigurationInterface
                             ->end()
                        ->booleanNode('is_visible')->end()
                        ->scalarNode('is_exportable')->defaultValue(false)->end()
-                       ->booleanNode('is_browsable')->isRequired()->end()
                        ->scalarNode('icon')
                            ->validate()
                                 ->ifTrue(

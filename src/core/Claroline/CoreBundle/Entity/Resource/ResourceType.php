@@ -51,12 +51,7 @@ class ResourceType
     /**
      * @ORM\Column(type="boolean", name="is_exportable")
      */
-    protected $isExportable;
-
-    /**
-     * @ORM\Column(type="boolean", name="is_browsable")
-     */
-    protected $isBrowsable;
+    protected $isExportable = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
@@ -136,16 +131,6 @@ class ResourceType
     public function setName($name)
     {
         $this->name = $name;
-    }
-
-    public function setBrowsable($isBrowsable)
-    {
-        $this->isBrowsable = $isBrowsable;
-    }
-
-    public function getBrowsable()
-    {
-        return $this->isBrowsable;
     }
 
     public function setPlugin(Plugin $plugin)

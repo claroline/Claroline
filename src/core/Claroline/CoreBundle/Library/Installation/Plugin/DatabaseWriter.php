@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Library\Installation\Plugin;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Claroline\CoreBundle\Library\PluginBundle;
-use Claroline\CoreBundle\Library\Resource\IconCreator;
+use Claroline\CoreBundle\Manager\IconManager;
 use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Theme\Theme;
@@ -46,7 +46,7 @@ class DatabaseWriter
      *
      * @DI\InjectParams({
      *     "em"             = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "im"             = @DI\Inject("claroline.resource.icon_creator"),
+     *     "im"             = @DI\Inject("claroline.manager.icon_manager"),
      *     "fileSystem"     = @DI\Inject("filesystem"),
      *     "kernel"         = @DI\Inject("kernel"),
      *     "templateDir"    = @DI\Inject("%claroline.param.templates_directory%")
@@ -54,7 +54,7 @@ class DatabaseWriter
      */
     public function __construct(
         EntityManager $em,
-        IconCreator $im,
+        IconManager $im,
         Filesystem $fileSystem,
         KernelInterface $kernel,
         $templateDir
@@ -262,7 +262,6 @@ class DatabaseWriter
     {
         $resourceType = new ResourceType();
         $resourceType->setName($resource['name']);
-        $resourceType->setBrowsable($resource['is_browsable']);
         $resourceType->setExportable($resource['is_exportable']);
         $resourceType->setPlugin($pluginEntity);
         $resourceClass = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')

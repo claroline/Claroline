@@ -12,10 +12,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Claroline\CoreBundle\Form\WorkspaceType;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
-use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
-use Claroline\CoreBundle\Library\Event\LogWorkspaceToolReadEvent;
-use Claroline\CoreBundle\Library\Event\LogWorkspaceDeleteEvent;
+use Claroline\CoreBundle\Event\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Event\Event\DisplayWidgetEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceToolReadEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceDeleteEvent;
 
 /**
  * This controller is able to:
@@ -242,8 +242,13 @@ class WorkspaceController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->assertIsGranted('DELETE', $workspace);
-        $log = new LogWorkspaceDeleteEvent($workspace);
-        $this->get('event_dispatcher')->dispatch('log', $log);
+
+        $log = $this->get('claroline.event.event_dispatcher')->dispatch(
+            'log',
+            'Log\LogWorkspaceDeletele',
+            array($workspace)
+        );
+
         $em->remove($workspace);
         $em->flush();
 
@@ -284,33 +289,11 @@ class WorkspaceController extends Controller
         $currentRoles = $this->get('claroline.security.utilities')
             ->getRoles($this->get('security.context')->getToken());
 
-        $workspaceOrderTools = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
-            ->findBy(array('workspace' => $workspace));
-
-        $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->findDisplayedByRolesAndWorkspace($currentRoles, $workspace);
-        $toolsWithTranslation = array();
-
-        foreach ($tools as $tool) {
-            $toolWithTranslation['tool'] = $tool;
-            $found = false;
-
-            foreach ($workspaceOrderTools as $workspaceOrderedTool) {
-                if ($workspaceOrderedTool->getTool() === $tool) {
-                    $toolWithTranslation['name'] = $workspaceOrderedTool->getName();
-                    $found = true;
-                }
-            }
-
-            if (!$found) {
-                $toolWithTranslation['name'] = $tool->getName();
-            }
-
-            $toolsWithTranslation[] = $toolWithTranslation;
-        }
+        $orderedTools = $em->getRepository('ClarolineCoreBundle:Tool\OrderedTool')
+            ->findByWorkspaceAndRoles($workspace, $currentRoles);
 
         return array(
-            'toolsWithTranslation' => $toolsWithTranslation,
+            'orderedTools' => $orderedTools,
             'workspace' => $workspace
         );
     }
@@ -336,18 +319,17 @@ class WorkspaceController extends Controller
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
             ->find($workspaceId);
         $this->assertIsGranted($toolName, $workspace);
-        $event = new DisplayToolEvent($workspace);
-        $eventName = 'open_tool_workspace_'.$toolName;
-        $this->get('event_dispatcher')->dispatch($eventName, $event);
+        $event = $this->get('claroline.event.event_dispatcher')->dispatch(
+            'open_tool_workspace_'.$toolName,
+            'DisplayTool',
+            array($workspace)
+        );
 
-        if (is_null($event->getContent())) {
-            throw new \Exception(
-                "Tool '{$toolName}' didn't return any Response for tool event '{$eventName}'."
-            );
-        }
-
-        $log = new LogWorkspaceToolReadEvent($workspace, $toolName);
-        $this->get('event_dispatcher')->dispatch('log', $log);
+        $log = $this->get('claroline.event.event_dispatcher')->dispatch(
+            'log',
+            'Log\LogWorkspaceToolRead',
+            array($workspace,$toolName)
+        );
 
         return new Response($event->getContent());
     }
@@ -398,8 +380,8 @@ class WorkspaceController extends Controller
                     }
                     $widget['content'] = $event->getContent();
                     $widget['configurable'] = (
-                        $rightToConfigure 
-                        and $config->isLocked() !== true 
+                        $rightToConfigure
+                        and $config->isLocked() !== true
                         and $config->getWidget()->isConfigurable()
                     );
 
@@ -476,6 +458,31 @@ class WorkspaceController extends Controller
         );
 
         return new RedirectResponse($route);
+    }
+
+    /**
+     * @Route(
+     *     "/search/role/code/{code}",
+     *     name="claro_resource_find_role_by_code",
+     *     options={"expose"=true}
+     * )
+     */
+    public function findRoleByWorkspaceCodeAction($code)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $roles = $em->getRepository('ClarolineCoreBundle:Role')->findByWorkspaceCodeTag($code);
+        $arWorkspace = array();
+
+        foreach ($roles as $role) {
+            $arWorkspace[$role->getWorkspace()->getCode()][$role->getName()] = array(
+                'name' => $role->getName(),
+                'translation_key' => $role->getTranslationKey(),
+                'id' => $role->getId(),
+                'workspace' => $role->getWorkspace()->getName()
+            );
+        }
+
+        return new JsonResponse($arWorkspace);
     }
 
     private function assertIsGranted($attributes, $object = null)
