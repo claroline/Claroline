@@ -33,6 +33,6 @@
                 <a class="btn" href="{{path('claro_message_form')}}?ids[]={{ user.id }}"><i class="icon-comment"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
             </p>
         </div>
-        {% include 'ClarolineCoreBundle:Profile:list_badge.html.twig' with {'title': 'badges'|trans({}, 'platform'), 'pager': pager, 'routeName': 'claro_profile_view', 'routeParams': {'userId': user.id}} %}
+        {% include 'ClarolineCoreBundle:Profile:list_badge.html.twig' with {'title': 'badges'|trans({}, 'platform'), 'pager': pager, 'language': language, 'routeName': 'claro_profile_view', 'routeParams': {'userId': user.id}} %}
     </div>
 {% endblock %}
