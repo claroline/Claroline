@@ -83,9 +83,8 @@ class DatabaseWriter
             $iconWebDir = "bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons";
             $pluginEntity->setIcon("{$iconWebDir}{$ds}{$pluginConfiguration['icon']}");
         } else {
-            $defaultIcon = $this->em
-                ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
-                ->findOneBy(array('iconType' => IconType::DEFAULT_ICON));
+            $defaultIcon = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
+                ->findOneByMimeType('custom/default');
             $pluginEntity->setIcon($defaultIcon->getRelativeUrl());
         }
 
@@ -206,15 +205,7 @@ class DatabaseWriter
     private function persistIcons(array $resource, ResourceType $resourceType, PluginBundle $plugin)
     {
         $resourceIcon = new ResourceIcon();
-
-        $defaultIcon = $this->em
-            ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
-            ->findOneBy(array('iconType' => IconType::DEFAULT_ICON));
-        $defaultIconType = $this->em
-            ->getRepository('ClarolineCoreBundle:Resource\IconType')
-            ->findOneBy(array('type' => 'type'));
-        $resourceIcon->setIconType($defaultIconType);
-        $resourceIcon->setType($resourceType->getName());
+        $resourceIcon->setMimeType('custom/' . $resourceType->getName());
         $ds = DIRECTORY_SEPARATOR;
 
         if (isset($resource['icon'])) {
@@ -232,6 +223,9 @@ class DatabaseWriter
                 "bundles/{$plugin->getAssetsFolder()}/images/icons/{$resource['icon']}"
             );
         } else {
+            $defaultIcon = $this->em
+                ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
+                ->findOneByMimeType('custom/default');
             $resourceIcon->setIconLocation($defaultIcon->getIconLocation());
             $resourceIcon->setRelativeUrl($defaultIcon->getRelativeUrl());
         }
