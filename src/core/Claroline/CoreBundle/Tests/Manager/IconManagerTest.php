@@ -63,7 +63,7 @@ class IconManagerTest extends MockeryTestCase
         $this->writer->shouldReceive('create')->once()->with($icon);
         $manager->shouldReceive('createShortcutIcon')->once()->with($icon);
         
-        $manager->getIcon($file);
+        $this->assertEquals($icon, $manager->getIcon($file));
     }
     
     /**
