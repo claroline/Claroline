@@ -327,4 +327,9 @@ class WorkspaceManager
     {
         return $this->workspaceRepo->findWorkspacesWithMostResources($max);
     }
+
+    public function getWorkspaceById($workspaceId)
+    {
+        return $this->workspaceRepo->find($workspaceId);
+    }
 }
