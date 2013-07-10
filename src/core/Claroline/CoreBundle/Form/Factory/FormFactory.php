@@ -21,8 +21,11 @@ class FormFactory
     const TYPE_ADMIN_ANALYTICS_CONNECTIONS = 'admin_analytics_connections';
     const TYPE_ADMIN_ANALYTICS_TOP = 'admin_analytics_top';
     const TYPE_MAIL = 'mail';
-    const TYPE_WORKSPACE_TEMPLATE = 'workspace_template';
+    const TYPE_WORKSPACE = 'workspace';
     const TYPE_WORKSPACE_EDIT = 'workspace_edit';
+    const TYPE_WORKSPACE_TEMPLATE = 'workspace_template';
+    const TYPE_LOG_WORKSPACE_WIDGET_CONFIG = 'log_workspace_widget_config';
+    const TYPE_LOG_DESKTOP_WIDGET_CONFIG = 'log_desktop_widget_config';
 
     private static $types = array(
         self::TYPE_MESSAGE => array(
@@ -65,12 +68,21 @@ class FormFactory
         self::TYPE_MAIL => array(
             'formType' => 'Claroline\CoreBundle\Form\MailType'
         ),
-        self::TYPE_WORKSPACE_TEMPLATE => array(
-            'formType' => 'Claroline\CoreBundle\Form\WorkspaceTemplateType'
+        self::TYPE_WORKSPACE => array(
+            'formType' => 'Claroline\CoreBundle\Form\WorkspaceType'
         ),
         self::TYPE_WORKSPACE_EDIT => array(
             'formType' => 'Claroline\CoreBundle\Form\WorkspaceEditType',
             'entity' => 'Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace'
+        ),
+        self::TYPE_WORKSPACE_TEMPLATE => array(
+            'formType' => 'Claroline\CoreBundle\Form\WorkspaceTemplateType'
+        ),
+        self::TYPE_LOG_WORKSPACE_WIDGET_CONFIG => array(
+            'formType' => 'Claroline\CoreBundle\Form\LogWorkspaceWidgetConfigType'
+        ),
+        self::TYPE_LOG_DESKTOP_WIDGET_CONFIG => array(
+            'formType' => 'Claroline\CoreBundle\Form\LogDesktopWidgetConfigType'
         )
     );
 
