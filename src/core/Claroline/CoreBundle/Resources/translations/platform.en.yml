@@ -61,6 +61,7 @@ cut: Cut
 dashboard: Dashboard
 date: Date
 date_format: 'm-d-Y'
+date_form_format: 'MM-dd-yyyy'
 delete: Delete
 desktop: Desktop
 desktop_tools: Desktop tools

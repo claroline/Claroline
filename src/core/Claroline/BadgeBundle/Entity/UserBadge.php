@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Entity\Badge;
+namespace Claroline\BadgeBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,7 +13,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *      name="claro_user_badge",
  *      uniqueConstraints={@ORM\UniqueConstraint(name="user_badge_unique",columns={"user_id", "badge_id"})}
  * )
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\UserBadgeRepository")
+ * @ORM\Entity(repositoryClass="Claroline\BadgeBundle\Repository\UserBadgeRepository")
  */
 class UserBadge
 {
@@ -37,7 +37,7 @@ class UserBadge
     /**
      * @var Badge
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Badge\Badge", inversedBy="badge")
+     * @ORM\ManyToOne(targetEntity="Claroline\BadgeBundle\Entity\Badge", inversedBy="badge")
      * @ORM\JoinColumn(name="badge_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
     */
     protected $badge;

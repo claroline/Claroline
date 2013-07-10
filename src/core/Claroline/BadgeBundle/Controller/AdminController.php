@@ -1,22 +1,19 @@
 <?php
 
-namespace Claroline\CoreBundle\Controller;
+namespace Claroline\BadgeBundle\Controller;
 
-use Claroline\CoreBundle\Entity\Badge\Badge;
-use Claroline\CoreBundle\Entity\Badge\BadgeTranslation;
-use Claroline\CoreBundle\Entity\Badge\UserBadge;
+use Claroline\BadgeBundle\Entity\Badge;
+use Claroline\BadgeBundle\Entity\BadgeTranslation;
+use Claroline\BadgeBundle\Entity\UserBadge;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Form\BadgeAwardType;
-use Claroline\CoreBundle\Form\BadgeType;
+use Claroline\BadgeBundle\Form\BadgeAwardType;
+use Claroline\BadgeBundle\Form\BadgeType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -26,12 +23,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
  *
  * @Route("/admin/badges")
  */
-class BadgeController extends Controller
+class AdminController extends Controller
 {
     /**
      * @Route("/", name="claro_admin_badges")
      *
-     * @Template()
+     * @Template
      */
     public function listAction()
     {
@@ -42,9 +39,9 @@ class BadgeController extends Controller
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
 
-        /** @var \Claroline\CoreBundle\Repository\BadgeRepository $badgeRepository */
+        /** @var \Claroline\BadgeBundle\Repository\BadgeRepository $badgeRepository */
         $badgeRepository = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Badge\Badge');
+            ->getRepository('ClarolineBadgeBundle:Badge');
 
         /** @var Badge[] $badges */
         $badges = $badgeRepository->findAllOrderedByName($platformConfigHandler->getParameter('locale_language'));
@@ -84,7 +81,7 @@ class BadgeController extends Controller
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
 
-        $form = $this->createForm(new BadgeType(), $badge, array('language' => $platformConfigHandler->getParameter('locale_language')));
+        $form = $this->createForm(new BadgeType(), $badge, array('language' => $platformConfigHandler->getParameter('locale_language'), 'date_format' => $this->get('translator')->trans('date_form_format', array(), 'platform')));
 
         if($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -130,7 +127,7 @@ class BadgeController extends Controller
 
         $doctrine = $this->getDoctrine();
 
-        $query   = $doctrine->getRepository('ClarolineCoreBundle:Badge\Badge')->findUsers($badge, true);
+        $query   = $doctrine->getRepository('ClarolineBadgeBundle:Badge')->findUsers($badge, true);
         $adapter = new DoctrineORMAdapter($query);
         $pager   = new Pagerfanta($adapter);
         $pager
@@ -309,7 +306,7 @@ class BadgeController extends Controller
         $translator = $this->get('translator');
         try {
 
-            $nbRows = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\UserBadge')->deleteByBadgeAndUser($badge, $user);
+            $nbRows = $this->getDoctrine()->getRepository('ClarolineBadgeBundle:UserBadge')->deleteByBadgeAndUser($badge, $user);
 
             if(0 == $nbRows) {
                 throw new \InvalidArgumentException('No awarded badge deletion occured.');

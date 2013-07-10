@@ -61,6 +61,7 @@ cut: Couper
 dashboard: 'Tableau de bord'
 date: Date
 date_format: 'd-m-Y'
+date_form_format: 'dd-MM-yyyy'
 delete: Supprimer
 desktop: Bureau
 desktop_tools: Outils du bureau
@@ -540,7 +541,7 @@ badge_edit_success_message: 'Badge édité avec succès.'
 badge_edit_error_message: "Erreur lors de l'édition du badge."
 badge_awarded_count_message: '%awaredBadge% attribution de badge effectuée.|%awaredBadge% attributions de badge effectuées.'
 badge_award_error_message: "Erreur lors de l'attribution du badge."
-badge_unaward_success_message: 'Déattribution du badge effectuée avec succès.'
+badge_unaward_success_message: 'Désattribution du badge effectuée avec succès.'
 badge_unaward_error_message: "Erreur lors de la désattribution du badge."
 badge_form_name: 'Nom'
 badge_form_description: 'Description'

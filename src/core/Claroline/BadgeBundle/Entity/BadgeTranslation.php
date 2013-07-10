@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Entity\Badge;
+namespace Claroline\BadgeBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;

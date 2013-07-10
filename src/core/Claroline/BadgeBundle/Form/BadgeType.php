@@ -1,9 +1,10 @@
 <?php
 
-namespace Claroline\CoreBundle\Form;
+namespace Claroline\BadgeBundle\Form;
 
-use Claroline\CoreBundle\Entity\Badge\BadgeTranslation;
+use Claroline\BadgeBundle\Entity\BadgeTranslation;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
@@ -22,7 +23,8 @@ class BadgeType extends AbstractType
                   'read_only' => true,
                   'component' => true,
                   'autoclose' => true,
-                  'language'  => $options['language']
+                  'language'  => $options['language'],
+                  'format'    => $options['date_format']
             ))
         ;
     }
@@ -37,9 +39,10 @@ class BadgeType extends AbstractType
         $resolver
         ->setDefaults(
             array(
-                'data_class'         => 'Claroline\CoreBundle\Entity\Badge\Badge',
+                'data_class'         => 'Claroline\BadgeBundle\Entity\Badge',
                 'translation_domain' => 'platform',
-                'language'           => 'en'
+                'language'           => 'en',
+                'date_format'        => DateType::HTML5_FORMAT
             )
         );
     }

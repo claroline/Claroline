@@ -1,5 +1,8 @@
 _core:
     resource: "@ClarolineCoreBundle/Resources/config/routing.yml"
 
+_badge:
+    resource: "@ClarolineBadgeBundle/Resources/config/routing.yml"
+
 _plugin:
     resource: local/plugin/routing.yml

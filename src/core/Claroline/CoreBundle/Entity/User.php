@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Badge\Badge;
+use Claroline\BadgeBundle\Entity\Badge;
 use \Serializable;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
@@ -194,7 +194,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     /**
      * @var UserBadge[]|ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Badge\UserBadge", mappedBy="user", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="Claroline\BadgeBundle\Entity\UserBadge", mappedBy="user", cascade={"all"})
      * @ORM\JoinTable(name="claro_user_badge")
      */
     protected $userBadges;
@@ -562,7 +562,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Badge\Badge[]|\Doctrine\Common\Collections\ArrayCollection $badges
+     * @param \Claroline\BadgeBundle\Entity\Badge[]|\Doctrine\Common\Collections\ArrayCollection $badges
      *
      * @return User
      */
@@ -574,7 +574,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     }
 
     /**
-     * @return \Claroline\CoreBundle\Entity\UserBadge[]|\Doctrine\Common\Collections\ArrayCollection
+     * @return \Claroline\BadgeBundle\Entity\UserBadge[]|\Doctrine\Common\Collections\ArrayCollection
      */
     public function getUserBadges()
     {
@@ -582,7 +582,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     }
 
     /**
-     * @return \Claroline\CoreBundle\Entity\Badge\Badge[]|\Doctrine\Common\Collections\ArrayCollection
+     * @return \Claroline\BadgeBundle\Entity\Badge[]|\Doctrine\Common\Collections\ArrayCollection
      */
     public function getBadges()
     {
