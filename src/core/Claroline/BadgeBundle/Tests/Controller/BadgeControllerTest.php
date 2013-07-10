@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Controller;
+namespace Claroline\BadgeBundle\Controller;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 
