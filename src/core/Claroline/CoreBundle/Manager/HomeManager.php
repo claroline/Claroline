@@ -6,6 +6,11 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\HttpFoundation\Response;
+use Claroline\CoreBundle\Entity\Home\Type;
+use Claroline\CoreBundle\Entity\Home\Content;
+use Claroline\CoreBundle\Entity\Home\SubContent;
+use Claroline\CoreBundle\Entity\Home\Content2Type;
+use Claroline\CoreBundle\Entity\Home\Content2Region;
 
 /**
  * @Service("claroline.manager.home_manager")
@@ -13,9 +18,11 @@ use Symfony\Component\HttpFoundation\Response;
 class HomeManager
 {
     private $graph;
+    private $writer;
     private $security;
     private $templating;
     private $homeService;
+
     private $type;
     private $region;
     private $content;
@@ -36,6 +43,7 @@ class HomeManager
     public function __construct($graph, $homeService, $templating, $manager, $security, $writer)
     {
         $this->graph = $graph;
+        $this->writer = $writer;
         $this->security = $security;
         $this->templating = $templating;
         $this->homeService = $homeService;
@@ -336,8 +344,8 @@ class HomeManager
 
             if ($father) {
 
-                $father = $this->manager->content->find($father);
-                $first = $this->manager->subContent->findOneBy(array('back' => null, 'father' => $father));
+                $father = $this->content->find($father);
+                $first = $this->subContent->findOneBy(array('back' => null, 'father' => $father));
 
                 $subContent = new SubContent($first);
                 $subContent->setFather($father);
@@ -347,8 +355,8 @@ class HomeManager
 
             } else {
 
-                $type = $this->manager->type->findOneBy(array('name' => $type));
-                $first = $this->manager->contentType->findOneBy(array('back' => null, 'type' => $type));
+                $type = $this->type->findOneBy(array('name' => $type));
+                $first = $this->contentType->findOneBy(array('back' => null, 'type' => $type));
 
                 $contentType = new Content2Type($first);
                 $contentType->setContent($content);
@@ -368,7 +376,7 @@ class HomeManager
     /**
      * Update a content.
      *
-     * @return \String The word "true" usefull in ajax.
+     * @return \String The word "true" useful in ajax.
      */
     public function updateContent($content, $title, $text, $generated = null, $size = null, $type = null)
     {
@@ -380,8 +388,8 @@ class HomeManager
 
         if ($size and $type) {
 
-            $type = $this->manager->type->findOneBy(array('name' => $type));
-            $contentType = $this->manager->contentType->findOneBy(array('content' => $content, 'type' => $type));
+            $type = $this->type->findOneBy(array('name' => $type));
+            $contentType = $this->contentType->findOneBy(array('content' => $content, 'type' => $type));
             $contentType->setSize($size);
 
             $this->writer->update($contentType);
@@ -398,16 +406,16 @@ class HomeManager
     /**
      * Reorder Contents.
      *
-     * @return \String The word "true" usefull in ajax.
+     * @return \String The word "true" useful in ajax.
      */
     public function reorderContent($type, $a, $b = null)
     {
-        $a = $this->manager->contentType->findOneBy(array('type' => $type, 'content' => $a));
+        $a = $this->contentType->findOneBy(array('type' => $type, 'content' => $a));
         $a->detach();
 
         if ($b) {
 
-            $b = $this->manager->contentType->findOneBy(array('type' => $type, 'content' => $b));
+            $b = $this->contentType->findOneBy(array('type' => $type, 'content' => $b));
 
             $a->setBack($b->getBack());
             $a->setNext($b);
@@ -420,7 +428,7 @@ class HomeManager
 
         } else {
 
-            $b = $this->manager->contentType->findOneBy(array('type' => $type, 'next' => null));
+            $b = $this->contentType->findOneBy(array('type' => $type, 'next' => null));
 
             $a->setNext($b->getNext());
             $a->setBack($b);
@@ -428,10 +436,10 @@ class HomeManager
             $b->setNext($a);
         }
 
-        $this->writer->suspendFlush();
+        //$this->writer->suspendFlush();
         $this->writer->update($a);
         $this->writer->update($b);
-        $this->writer->forceFlush();
+        //$this->writer->forceFlush();
 
         return new Response('true');
     }
@@ -439,7 +447,7 @@ class HomeManager
     /**
      * Delete a content and his childs.
      *
-     * @return \String The word "true" usefull in ajax.
+     * @return \String The word "true" useful in ajax.
      */
     public function deleteContent($content)
     {
@@ -463,7 +471,7 @@ class HomeManager
     /**
      * Delete a node entity and link together the next and back entities.
      *
-     * @return \String The word "true" usefull in ajax.
+     * @return \String The word "true" useful in ajax.
      */
     public function deleNodeEntity($entity, $search, $function = null)
     {
@@ -483,7 +491,7 @@ class HomeManager
     /**
      * Put a content in a region of home page as left, right, footer or header, this is useful for menus.
      *
-     * @return \String The word "true" usefull in ajax.
+     * @return \String The word "true" useful in ajax.
      */
     public function contentToRegion($region, $content)
     {

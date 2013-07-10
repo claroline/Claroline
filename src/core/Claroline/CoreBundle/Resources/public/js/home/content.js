@@ -66,7 +66,7 @@
             .error(
                     function ()
                     {
-                        modal("content/error");
+                        alert("An error occurred!\n\nPlease try again later or check your internet connection");
                     }
                   )
             ;
@@ -213,6 +213,7 @@
                         }
                         else
                         {
+                            //document.body.innerHTML = data;
                             modal("content/error");
                         }
                     }

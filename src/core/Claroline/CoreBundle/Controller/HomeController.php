@@ -9,8 +9,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Inject;
-use Claroline\CoreBundle\Entity\Home\Content;
 use Claroline\CoreBundle\Entity\Home\Type;
+use Claroline\CoreBundle\Entity\Home\Content;
 use Claroline\CoreBundle\Entity\Home\SubContent;
 use Claroline\CoreBundle\Entity\Home\Content2Type;
 use Claroline\CoreBundle\Entity\Home\Content2Region;
@@ -38,7 +38,7 @@ class HomeController extends Controller
      *
      * @Route(
      *     "/content/{content}/{type}/{father}",
-     *     requirements={"id" = "\d+"},
+     *     requirements={"content" = "\d+"},
      *     name="claroline_get_content_by_id_and_type",
      *     defaults={"type" = "home", "father" = null}
      * )
@@ -110,9 +110,9 @@ class HomeController extends Controller
     /**
      * Render the page of the creator box.
      *
-     * @param \String $type The type of the content to create.
-     *
      * @Route("/content/creator/{type}/{id}/{father}", name="claroline_content_creator", defaults={"father" = null})
+     *
+     * @param \String $type The type of the content to create.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -185,6 +185,7 @@ class HomeController extends Controller
         return $this->manager->createContent(
             $request->get('title'),
             $request->get('text'),
+            $request->get('generated'),
             $request->get('type'),
             $request->get('father')
         );
@@ -209,6 +210,7 @@ class HomeController extends Controller
             $content,
             $request->get('title'),
             $request->get('text'),
+            $request->get('generated'),
             $request->get('size'),
             $request->get('type')
         );
@@ -226,23 +228,23 @@ class HomeController extends Controller
      *
      * @Secure(roles="ROLE_ADMIN")
      *
-     * @ParamConverter("type", class = "ClarolineCoreBundle:Home\Type", options = {"name" = "type"})
+     * @ParamConverter("type", class = "ClarolineCoreBundle:Home\Type", options = {"mapping": {"type": "name"}})
      *
      * @ParamConverter("a", class = "ClarolineCoreBundle:Home\Content", options = {"id" = "a"})
      * @ParamConverter("b", class = "ClarolineCoreBundle:Home\Content", options = {"id" = "b"})
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function reorderAction($type, $a, $b)
+    public function reorderAction($type, $a, Content $b = null)
     {
-        return $this->manager->reorderContent($type, $a, $b = null);
+        return $this->manager->reorderContent($type, $a, $b);
     }
 
     /**
      * Delete a content by POST method. This is used by ajax.
      * The response is the word true in a string in success, otherwise false.
      *
-     * @Route("/content/delete/{content", name="claroline_content_delete")
+     * @Route("/content/delete/{content}", name="claroline_content_delete")
      * @Secure(roles="ROLE_ADMIN")
      *
      * @ParamConverter("content", class = "ClarolineCoreBundle:Home\Content", options = {"id" = "content"})
@@ -259,7 +261,7 @@ class HomeController extends Controller
      *
      * @Route("/region/{region}/{content}", requirements={"content" = "\d+"}, name="claroline_content_to_region")
      *
-     * @ParamConverter("content", class = "ClarolineCoreBundle:Home\Region", options = {"name" = "region"})
+     * @ParamConverter("region", class = "ClarolineCoreBundle:Home\Region", options = {"mapping": {"region": "name"}})
      * @ParamConverter("content", class = "ClarolineCoreBundle:Home\Content", options = {"id" = "content"})
      *
      * @Secure(roles="ROLE_ADMIN")
@@ -268,7 +270,7 @@ class HomeController extends Controller
      */
     public function contentToRegionAction($region, $content)
     {
-        return $this->manager->contentToRegionAction($region, $content);
+        return $this->manager->contentToRegion($region, $content);
     }
 
 }
