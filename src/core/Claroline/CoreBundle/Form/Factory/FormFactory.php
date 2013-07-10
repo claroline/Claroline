@@ -27,6 +27,8 @@ class FormFactory
     const TYPE_LOG_WORKSPACE_WIDGET_CONFIG = 'log_workspace_widget_config';
     const TYPE_LOG_DESKTOP_WIDGET_CONFIG = 'log_desktop_widget_config';
     const TYPE_CALENDAR = 'calendar';
+    const TYPE_WORKSPACE_TAG = 'workspace_tag';
+    const TYPE_ADMIN_WORKSPACE_TAG = 'admin_workspace_tag';
 
     private static $types = array(
         self::TYPE_MESSAGE => array(
@@ -88,6 +90,14 @@ class FormFactory
         self::TYPE_CALENDAR => array(
             'formType' => 'Claroline\CoreBundle\Form\CalendarType',
             'entity' => 'Claroline\CoreBundle\Entity\Event'
+        ),
+        self::TYPE_WORKSPACE_TAG => array(
+            'formType' => 'Claroline\CoreBundle\Form\WorkspaceTagType',
+            'entity' => 'Claroline\CoreBundle\Entity\Workspace\WorkspaceTag'
+        ),
+        self::TYPE_ADMIN_WORKSPACE_TAG => array(
+            'formType' => 'Claroline\CoreBundle\Form\AdminWorkspaceTagType',
+            'entity' => 'Claroline\CoreBundle\Entity\Workspace\WorkspaceTag'
         )
     );
 
