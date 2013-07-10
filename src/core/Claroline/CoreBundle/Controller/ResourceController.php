@@ -27,8 +27,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 
 class ResourceController
 {
-    const THUMB_PER_PAGE = 12;
-
     private $formFactory;
     private $sc;
     private $resourceManager;
