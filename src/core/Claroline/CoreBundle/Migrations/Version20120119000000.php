@@ -1404,6 +1404,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('user_id', 'integer', array('notnull' => true));
         $table->addColumn('badge_id', 'integer', array('notnull' => true));
         $table->addColumn('issued_at', 'datetime', array('notnull' => true));
+        $table->addColumn('issuer_id', 'integer', array('notnull' => false));
 
         $table->addUniqueIndex(array('user_id', 'badge_id'));
 
@@ -1418,6 +1419,12 @@ class Version20120119000000 extends BundleMigration
             array('badge_id'),
             array('id'),
             array('onDelete' => 'CASCADE')
+        );
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_user'),
+            array('issuer_id'),
+            array('id'),
+            array('onDelete' => 'SET NULL')
         );
     }
 }

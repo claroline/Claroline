@@ -79,6 +79,7 @@ stof_doctrine_extensions:
             timestampable: true
             sluggable:     true
             translatable:  true
+            blameable:     true
 
 parameters:
     security.authentication.listener.anonymous.class: Claroline\CoreBundle\Listener\AnonymousAuthenticationListener
