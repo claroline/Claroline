@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
+use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
@@ -23,6 +24,7 @@ use Claroline\CoreBundle\Manager\Exception\ExportResourceException;
 use Claroline\CoreBundle\Database\Writer;
 use Claroline\CoreBundle\Database\GenericRepository;
 use Claroline\CoreBundle\Event\StrictDispatcher;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -106,19 +108,29 @@ class ResourceManager
         User $creator,
         AbstractWorkspace $workspace,
         AbstractResource $parent = null,
-        $icon = null,
+        ResourceIcon $icon = null,
         array $rights = array()
     )
     {
+        $this->writer->suspendFlush();
+        $this->writer->lock();
+
         $this->checkResourcePrepared($resource);
         $name = $this->getUniqueName($resource, $parent);
+
+        if ($resource->getMimeType() === null) {
+            $resource->setMimeType('custom/' . $resourceType->getName());
+        }
+
         $previous = $this->resourceRepo->findOneBy(array('parent' => $parent, 'next' => null));
+
         if ($previous) {
             $previous->setNext($resource);
         }
         if ($icon === null) {
-            $icon = $this->generateIcon($resource, $resourceType, $icon);
+            $icon = $this->iconManager->getIcon($resource, $icon);
         }
+
         $resource->setCreator($creator);
         $resource->setWorkspace($workspace);
         $resource->setResourceType($resourceType);
@@ -128,6 +140,9 @@ class ResourceManager
         $resource->setNext(null);
         $resource->setIcon($icon);
         $this->setRights($resource, $parent, $rights);
+
+        $this->writer->unlock();
+        $this->writer->allowFlush();
         $this->writer->create($resource);
 
         return $resource;
@@ -170,15 +185,6 @@ class ResourceManager
         }
 
         return $this->resourceRepo->findBy(array('parent' => null));
-    }
-
-    public function generateIcon(AbstractResource $resource, ResourceType $type, $icon = null)
-    {
-        if ($icon === null) {
-            return $this->iconManager->findResourceIcon($resource, $type);
-        } else {
-            return $this->iconManager->createCustomIcon($icon);
-        }
     }
 
     /**
@@ -564,7 +570,8 @@ class ResourceManager
         return true;
     }
 
-    public function areAncestorsDirectory(array $ancestors) {
+    public function areAncestorsDirectory(array $ancestors)
+    {
         array_pop($ancestors);
 
         foreach ($ancestors as $ancestor) {
@@ -572,6 +579,7 @@ class ResourceManager
                 return false;
             }
         }
+
         return true;
     }
 
@@ -757,7 +765,9 @@ class ResourceManager
     public function delete(AbstractResource $resource)
     {
         $this->removePosition($resource);
-        $this->dispatcher->dispatch('delete_'.$resource->getResourceType()->getName(), 'DeleteResource', array($resource));
+        $this->dispatcher->dispatch(
+            'delete_'.$resource->getResourceType()->getName(), 'DeleteResource', array($resource)
+        );
         $this->writer->delete($resource);
     }
 
@@ -783,11 +793,11 @@ class ResourceManager
 
         foreach ($resources as $resource) {
 
-            if (get_class($resource) == 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
+            if (get_class($resource) === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
                 $resource = $resource->getResource();
             }
 
-            if ($resource->getResourceType()->getName() != 'directory') {
+            if ($resource->getResourceType()->getName() !== 'directory') {
                 $event = $this->dispatcher->dispatch(
                     "download_{$resource->getResourceType()->getName()}",
                     'DownloadResource',
@@ -852,7 +862,7 @@ class ResourceManager
      * Generates a globally unique identifier.
      *
      * @see http://php.net/manual/fr/function.com-create-guid.php
-     *
+     * @todo remove this and use the one located in ClaroUtilities.
      * @return string
      */
     public function generateGuid()
@@ -891,5 +901,21 @@ class ResourceManager
         }
 
         return $path;
+    }
+
+    public function rename(AbstractResource $resource, $name)
+    {
+        $resource->setName($name);
+        $this->writer->update($resource);
+
+        return $resource;
+    }
+
+    public function changeIcon(AbstractResource $resource, UploadedFile $file)
+    {
+        $icon = $this->iconManager->createCustomIcon($file);
+        $this->iconManager->replace($resource, $icon);
+
+        return $icon;
     }
 }
