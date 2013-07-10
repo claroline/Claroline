@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceToolReadEvent;
 use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceDeleteEvent;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -33,6 +34,7 @@ class WorkspaceController extends Controller
 {
     const ABSTRACT_WS_CLASS = 'ClarolineCoreBundle:Workspace\AbstractWorkspace';
 
+    private $workspaceManager;
     private $roleManager;
     private $tagManager;
     private $eventDispatcher;
@@ -43,6 +45,7 @@ class WorkspaceController extends Controller
 
     /**
      * @DI\InjectParams({
+     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
      *     "tagManager"         = @DI\Inject("claroline.manager.workspace_tag_manager"),
      *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
@@ -53,6 +56,7 @@ class WorkspaceController extends Controller
      * })
      */
     public function __construct(
+        WorkspaceManager $workspaceManager,
         RoleManager $roleManager,
         WorkspaceTagManager $tagManager,
         EventDispatcher $eventDispatcher,
@@ -62,6 +66,7 @@ class WorkspaceController extends Controller
         FormFactoryInterface $formFactory
     )
     {
+        $this->workspaceManager = $workspaceManager;
         $this->roleManager = $roleManager;
         $this->tagManager = $tagManager;
         $this->eventDispatcher = $eventDispatcher;
@@ -250,8 +255,7 @@ class WorkspaceController extends Controller
             $config->setWorkspaceName($form->get('name')->getData());
             $config->setWorkspaceCode($form->get('code')->getData());
             $user = $this->security->getToken()->getUser();
-            $wsCreator = $this->get('claroline.workspace.creator');
-            $wsCreator->createWorkspace($config, $user);
+            $this->workspaceManager->create($config, $user);
             $this->get('claroline.security.token_updater')->update($this->security->getToken());
             $route = $this->router->generate('claro_workspace_list');
 
