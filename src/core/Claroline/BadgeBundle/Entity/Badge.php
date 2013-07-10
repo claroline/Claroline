@@ -56,6 +56,11 @@ class Badge
     protected $file;
 
     /**
+     * @var string
+     */
+    protected $olfFileName;
+
+    /**
      * @var ArrayCollection|UserBadge[]
      *
      * @ORM\OneToMany(targetEntity="Claroline\BadgeBundle\Entity\UserBadge", mappedBy="badge", cascade={"all"})
@@ -394,6 +399,12 @@ class Badge
      */
     public function setFile(UploadedFile $file)
     {
+        $newFileName = $file->getClientOriginalName();
+
+        if($this->imagePath !== $newFileName) {
+            $this->olfFileName = $this->imagePath;
+            $this->imagePath   = null;
+        }
         $this->file = $file;
 
         return $this;
@@ -428,7 +439,7 @@ class Badge
     protected function getUploadRootDir()
     {
         $ds = DIRECTORY_SEPARATOR;
-        return sprintf('%s%s..%s..%s..%s..%s..%s..%sweb%s%s', __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir());
+        return sprintf('%s%s..%s..%s..%s..%s..%sweb%s%s', __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir());
     }
 
     /**
@@ -441,27 +452,53 @@ class Badge
 
     /**
      * @ORM\PrePersist()
-     * @ORM\PreUpdate()
      */
-    public function preUpload()
+    public function prePersist()
     {
         if (null !== $this->file) {
-            $this->removeUpload();
             $this->imagePath = $this->file->getClientOriginalName();
         }
     }
 
     /**
-     * @ORM\PostPersist()
+     * @ORM\PreUpdate()
+     */
+    public function preUpdate()
+    {
+        if (null !== $this->file) {
+            $this->imagePath = $this->file->getClientOriginalName();
+        }
+    }
+
+    /**
      * @ORM\PostUpdate()
      */
-    public function upload()
+    public function postUpdate()
     {
         if (null === $this->file) {
             return;
         }
 
-        $this->file->move($this->getUploadRootDir(), $this->file->getClientOriginalName());
+        $this->file->move($this->getUploadRootDir(), $this->imagePath);
+
+        if (null !== $this->olfFileName) {
+            unlink($this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->olfFileName);
+            $this->olfFileName = null;
+        }
+
+        $this->file = null;
+    }
+
+    /**
+     * @ORM\PostPersist()
+     */
+    public function postPersist()
+    {
+        if (null === $this->file) {
+            return;
+        }
+
+        $this->file->move($this->getUploadRootDir(), $this->imagePath);
 
         unset($this->file);
     }
@@ -469,13 +506,11 @@ class Badge
     /**
      * @ORM\PostRemove()
      */
-    public function removeUpload()
+    public function postRemove()
     {
         $filePath = $this->getAbsolutePath();
         if (null !== $filePath) {
-            if(file_exists($filePath)) {
-                unlink($filePath);
-            }
+            unlink($filePath);
         }
     }
 }
