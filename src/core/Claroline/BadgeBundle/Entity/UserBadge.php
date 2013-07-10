@@ -51,6 +51,16 @@ class UserBadge
     protected $issuedAt;
 
     /**
+     * @var User $issuer
+     *
+     * @Gedmo\Blameable(on="create")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User", inversedBy="issuer")
+     * @ORM\JoinColumn(name="issuer_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+    */
+
+    protected $issuer;
+
+    /**
      * @param int $id
      *
      * @return UserBadge
@@ -111,22 +121,18 @@ class UserBadge
     }
 
     /**
-     * @param \DateTime $issuedAt
-     *
-     * @return UserBadge
-     */
-    public function setIssuedAt(\DateTime $issuedAt)
-    {
-        $this->issuedAt = $issuedAt;
-
-        return $this;
-    }
-
-    /**
      * @return \Datetime
      */
     public function getIssuedAt()
     {
         return $this->issuedAt;
+    }
+
+    /**
+     * @return \Claroline\CoreBundle\Entity\User
+     */
+    public function getIssuer()
+    {
+        return $this->issuer;
     }
 }
