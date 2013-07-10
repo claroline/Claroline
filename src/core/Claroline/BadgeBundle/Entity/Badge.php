@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Entity\Badge;
+namespace Claroline\BadgeBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Class Badge
  *
  * @ORM\Table(name="claro_badge")
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\BadgeRepository")
+ * @ORM\Entity(repositoryClass="Claroline\BadgeBundle\Repository\BadgeRepository")
  * @ORM\HasLifecycleCallbacks
  */
 class Badge
@@ -58,7 +58,7 @@ class Badge
     /**
      * @var ArrayCollection|UserBadge[]
      *
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Badge\UserBadge", mappedBy="badge", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="Claroline\BadgeBundle\Entity\UserBadge", mappedBy="badge", cascade={"all"})
      */
     private $userBadges;
 
@@ -66,7 +66,7 @@ class Badge
      * @var ArrayCollection|BadgeTranslation[]
      *
      * @ORM\OneToMany(
-     *   targetEntity="Claroline\CoreBundle\Entity\Badge\BadgeTranslation",
+     *   targetEntity="Claroline\BadgeBundle\Entity\BadgeTranslation",
      *   mappedBy="badge",
      *   cascade={"all"}
      * )

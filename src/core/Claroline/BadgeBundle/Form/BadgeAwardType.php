@@ -1,32 +1,32 @@
 <?php
 
-namespace Claroline\CoreBundle\Form;
+namespace Claroline\BadgeBundle\Form;
 
+use Claroline\BadgeBundle\Entity\BadgeTranslation;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class BadgeTranslationType extends AbstractType
+class BadgeAwardType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', 'text', array(
-                'label' => 'badge_form_name'
+            ->add('group', 'simpleautocomplete', array(
+                'entity_reference' => 'group',
+                'required'         => false
             ))
-            ->add('description', 'text', array(
-                'label' => 'badge_form_description'
+            ->add('user', 'simpleautocomplete', array(
+                'entity_reference' => 'user',
+                'required'         => false,
+                'with_vendors'     => false
             ))
-            ->add('criteria', 'textarea', array(
-                'label' => 'badge_form_criteria'
-            ))
-            ->add('locale', 'hidden')
         ;
     }
 
     public function getName()
     {
-        return 'badge_translation_form';
+        return 'badge_award_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -34,7 +34,6 @@ class BadgeTranslationType extends AbstractType
         $resolver
         ->setDefaults(
             array(
-                'data_class' => 'Claroline\CoreBundle\Entity\Badge\BadgeTranslation',
                 'translation_domain' => 'platform'
             )
         );

@@ -75,7 +75,7 @@
                         {{ 'badge_awarded_to'|trans({}, 'platform') }} :
                     </h3>
 
-                    {{ render(controller('ClarolineCoreBundle:Badge:award', { 'id': badge.id })) }}
+                    {{ render(controller('ClarolineBadgeBundle:Admin:award', { 'id': badge.id })) }}
                 </div>
             </div>
         </div>
@@ -134,5 +134,5 @@
 {{ parent() }}
 {{ tinymce_init() }}
 <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
-<script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/badge/edit.js') }}'></script>
+<script type="text/javascript" src='{{ asset('bundles/clarolinebadge/js/edit.js') }}'></script>
 {% endblock %}

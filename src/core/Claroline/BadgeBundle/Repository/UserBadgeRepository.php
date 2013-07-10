@@ -1,8 +1,8 @@
 <?php
 
-namespace Claroline\CoreBundle\Repository;
+namespace Claroline\BadgeBundle\Repository;
 
-use Claroline\CoreBundle\Entity\Badge\Badge;
+use Claroline\BadgeBundle\Entity\Badge;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
@@ -16,7 +16,7 @@ class UserBadgeRepository extends EntityRepository
     public function deleteByBadge(Badge $badge)
     {
         return $this->getEntityManager()
-            ->createQuery('DELETE FROM CLaroline\CoreBundle\Entity\Badge\UserBadge ub where ub.badge = :badgeId')
+            ->createQuery('DELETE FROM CLaroline\BadgeBundle\Entity\UserBadge ub where ub.badge = :badgeId')
             ->setParameter(':badgeId', $badge->getId())
             ->execute()
         ;
@@ -31,7 +31,7 @@ class UserBadgeRepository extends EntityRepository
     public function deleteByBadgeAndUser(Badge $badge, User $user)
     {
         return $this->getEntityManager()
-            ->createQuery('DELETE FROM CLaroline\CoreBundle\Entity\Badge\UserBadge ub where ub.badge = :badgeId AND ub.user = :userId')
+            ->createQuery('DELETE FROM CLaroline\BadgeBundle\Entity\UserBadge ub where ub.badge = :badgeId AND ub.user = :userId')
             ->setParameter(':badgeId', $badge->getId())
             ->setParameter(':userId', $user->getId())
             ->execute()

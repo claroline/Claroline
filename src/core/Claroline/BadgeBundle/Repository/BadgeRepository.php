@@ -1,8 +1,8 @@
 <?php
 
-namespace Claroline\CoreBundle\Repository;
+namespace Claroline\BadgeBundle\Repository;
 
-use Claroline\CoreBundle\Entity\Badge\Badge;
+use Claroline\BadgeBundle\Entity\Badge;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
@@ -44,7 +44,7 @@ class BadgeRepository extends EntityRepository
         $query = $this->getEntityManager()
             ->createQuery('
                 SELECT b, ub, bt
-                FROM ClarolineCoreBundle:Badge\Badge b
+                FROM ClarolineBadgeBundle:Badge b
                 JOIN b.userBadges ub
                 JOIN b.translations bt
                 WHERE ub.user = :userId
@@ -65,7 +65,7 @@ class BadgeRepository extends EntityRepository
         return $this->getEntityManager()
             ->createQuery('
                 SELECT b, t
-                FROM ClarolineCoreBundle:Badge\Badge b
+                FROM ClarolineBadgeBundle:Badge b
                 JOIN b.translations t
                 WHERE t.locale = :locale
                 ORDER BY t.name ASC'
@@ -84,7 +84,7 @@ class BadgeRepository extends EntityRepository
         return $this->getEntityManager()
             ->createQuery('
                 SELECT b, t
-                FROM ClarolineCoreBundle:Badge\Badge b
+                FROM ClarolineBadgeBundle:Badge b
                 JOIN b.translations t
                 WHERE t.slug = :slug
                 ORDER BY t.name ASC'

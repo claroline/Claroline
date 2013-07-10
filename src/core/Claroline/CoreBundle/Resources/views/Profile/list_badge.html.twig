@@ -4,7 +4,7 @@
     <ul class="unstyled inline thumbnails badge_user_list">
     {% for badge in pager.currentPageResults %}
         <li>
-            <a href="{{ path('claro_admin_badges_edit', {'id': badge.id}) }}" title="{{ badge.name('fr') }}" class="thumbnail">
+            <a href="{{ path('claro_view_badge', {'id': badge.id}) }}" title="{{ badge.name('fr') }}" class="thumbnail">
                 <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name('fr') }}" />
             </a>
         </li>
