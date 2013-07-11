@@ -21,6 +21,11 @@ class FrontController extends Controller
      */
     public function viewAction(Badge $badge)
     {
+        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
+        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
+
+        $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
+
         return array(
             'badge' => $badge
         );
