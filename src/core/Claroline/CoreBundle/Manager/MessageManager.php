@@ -27,8 +27,8 @@ class MessageManager
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "om"    = @DI\Inject("claroline.persistence.object_manager"),
-     *     "pagerFactory"       = @DI\Inject("claroline.pager.pager_factory")
+     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
+     *     "pagerFactory"   = @DI\Inject("claroline.pager.pager_factory")
      * })
      */
     public function __construct(
