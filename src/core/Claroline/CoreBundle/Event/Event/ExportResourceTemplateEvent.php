@@ -5,12 +5,13 @@ namespace Claroline\CoreBundle\Event\Event;
 use Symfony\Component\EventDispatcher\Event;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
-class ExportResourceTemplateEvent extends Event
+class ExportResourceTemplateEvent extends Event implements DataConveyorEventInterface
 {
     private $resource;
     private $config;
     private $resourceDependencies;
     private $files;
+    private $isPopulated = false;
 
     public function __construct(AbstractResource $resource)
     {
@@ -26,6 +27,7 @@ class ExportResourceTemplateEvent extends Event
 
     public function setConfig(array $config)
     {
+        $this->isPopulated = true;
         $this->config = $config;
     }
 
@@ -70,5 +72,10 @@ class ExportResourceTemplateEvent extends Event
     public function getResourceDependencies()
     {
         return $this->resourceDependencies;
+    }
+
+    public function isPopulated()
+    {
+        return $this->isPopulated;
     }
 }

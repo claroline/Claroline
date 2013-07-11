@@ -13,18 +13,21 @@ class ImportToolEvent extends Event
     private $config;
     private $root;
     private $files;
+    private $filePaths;
 
     public function __construct(
         AbstractWorkspace $workspace,
         $config,
         Directory $root,
-        User $user
+        User $user,
+        $filePaths
     )
     {
         $this->workspace = $workspace;
         $this->config = $config;
         $this->root = $root;
         $this->user = $user;
+        $this->filePaths = $filePaths;
     }
 
     public function getWorkspace()
@@ -55,6 +58,16 @@ class ImportToolEvent extends Event
     public function getFiles()
     {
         return $this->files;
+    }
+
+    public function getFilePaths()
+    {
+        return $this->filePaths;
+    }
+
+    public function setFilePaths($filePaths)
+    {
+        $this->filePaths = $filePaths;
     }
 }
 
