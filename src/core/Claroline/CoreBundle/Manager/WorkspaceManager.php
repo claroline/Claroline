@@ -64,7 +64,7 @@ class WorkspaceManager
      *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
      *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "ut"              = @DI\Inject("claroline.utilities.misc")
+     *     "ut"              = @DI\Inject("claroline.utilities.misc"),
      *     "templateDir"     = @DI\Inject("%claroline.param.templates_directory%")
      * })
      */
@@ -149,7 +149,7 @@ class WorkspaceManager
             $position++;
         }
 
-        $this->dispatcher->dispatch('log', 'Log\WorkspaceCreate', array($workspace));
+        $this->dispatcher->dispatch('log', 'Log\LogWorkspaceCreate', array($workspace));
         $this->om->persist($workspace);
         $this->om->endFlushSuite();
 
