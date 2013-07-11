@@ -13,7 +13,7 @@
         </div>
         <script type="text/javascript">
             $(document).ready(function() {
-                var path = '{{ path('exporter_api', {'entity_reference': entity_reference, '_format': 'json'}) }}';
+                var path = '{{ path('exporter_api', {'entity_reference': entity_reference, '_format': format}) }}';
                 $( "#{{ form.vars['id'] }}" ).after('<a id="{{ form.vars['id'] }}_clear" class="btn"><i class="icon-remove"></i></a>');
                 $( "#{{ form.vars['id'] }}_clear" ).on('click', function(){
                     $( "#{{ form.vars['id'] }}" ).val('');
@@ -22,7 +22,11 @@
                     source: function( request, response ) {
                         $.ajax({
                             url: path,
-                            dataType: 'jsonp',
+                            dataType: '{{ format }}',
+                            {% if 'jsonp' == format %}
+                            jsonp: 'extractData',
+                            jsonpCallback: 'extractData',
+                            {% endif %}
                             contentType: "application/json; charset=utf-8",
                             data: {
                                 search: request.term
@@ -31,7 +35,7 @@
                                 if (data.status == 200) {
                                     var result = eval(data.responseText);
                                     response(
-                                        $.map( 
+                                        $.map(
                                             result, function( item ) {
                                                 return { label: item.label, value: item.label };
                                             }
@@ -42,7 +46,11 @@
                         });
                     }
                 });
-            });          
+
+                function extractData() {
+                    return
+                }
+            });
         </script>
     {% endspaceless %} 
 {% endblock %}
