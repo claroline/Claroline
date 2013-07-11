@@ -3,44 +3,50 @@
 namespace Claroline\CoreBundle\Manager;
 
 use \Mockery as m;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\UserMessage;
 
 class MessageManagerTest extends MockeryTestCase
 {
-    /** @var MessageManager */
-    private $manager;
-    private $writer;
+    private $om;
+    private $pagerFactory;
     private $userRepo;
     private $messageRepo;
     private $userMessageRepo;
-    private $pagerFactory;
+    private $manager;
 
     public function setUp()
     {
         parent::setUp();
-
+        $this->om = m::mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->pagerFactory = m::mock('Claroline\CoreBundle\Pager\PagerFactory');
         $this->userRepo = m::mock('Claroline\CoreBundle\Repository\UserRepository');
         $this->messageRepo = m::mock('Claroline\CoreBundle\Repository\MessageRepository');
         $this->userMessageRepo = m::mock('Claroline\CoreBundle\Repository\UserMessageRepository');
-        $this->writer = m::mock('Claroline\CoreBundle\Database\Writer');
-        $this->pagerFactory = m::mock('Claroline\CoreBundle\Pager\PagerFactory');
-        $this->manager = new MessageManager(
-            $this->userMessageRepo,
-            $this->messageRepo,
-            $this->userRepo,
-            $this->writer,
-            $this->pagerFactory
-        );
+        $this->om->shouldReceive('getRepository')
+            ->with('ClarolineCoreBundle:User')
+            ->andReturn($this->userRepo);
+        $this->om->shouldReceive('getRepository')
+            ->with('ClarolineCoreBundle:Message')
+            ->andReturn($this->messageRepo);
+        $this->om->shouldReceive('getRepository')
+            ->with('ClarolineCoreBundle:UserMessage')
+            ->andReturn($this->userMessageRepo);
+        $this->manager = new MessageManager($this->om, $this->pagerFactory);
     }
+
     public function testSend()
     {
-        $sender = m::mock('Claroline\CoreBundle\Entity\User');
-        $receiver1 = m::mock('Claroline\CoreBundle\Entity\User');
-        $receiver2 = m::mock('Claroline\CoreBundle\Entity\User');
+        $sender = new User();
+        $receiver1 = new User();
+        $receiver2 = new User();
         $msg = m::mock('Claroline\CoreBundle\Entity\Message');
-
         $msgParent = m::mock('Claroline\CoreBundle\Entity\Message');
+        $userMessage1 = m::mock('Claroline\CoreBundle\Entity\UserMessage');
+        $userMessage2 = m::mock('Claroline\CoreBundle\Entity\UserMessage');
+        $userMessage3 = m::mock('Claroline\CoreBundle\Entity\UserMessage');
+
         $msg->shouldReceive('getTo')->once()->andReturn('user1;user2');
         $this->userRepo->shouldReceive('findByUsernames')
             ->once()
@@ -48,10 +54,22 @@ class MessageManagerTest extends MockeryTestCase
             ->andReturn(array($receiver1, $receiver2));
         $msg->shouldReceive('setSender')->once()->with($sender);
         $msg->shouldReceive('setParent')->once()->with($msgParent);
-        $this->writer->shouldReceive('suspendFlush')->once();
-        $this->writer->shouldReceive('create')->with($msg)->once();
-        $this->writer->shouldReceive('create')->with(anInstanceOf('Claroline\CoreBundle\Entity\UserMessage'))->atLeast()->twice();
-        $this->writer->shouldReceive('forceFlush')->once();
+        $this->om->shouldReceive('persist')->once()->with($msg);
+        $this->om->shouldReceive('factory')
+            ->times(3)
+            ->with('Claroline\CoreBundle\Entity\UserMessage')
+            ->andReturn($userMessage1, $userMessage2, $userMessage3);
+        $userMessage1->shouldReceive('setIsSent')->once()->with(true);
+        $userMessage1->shouldReceive('setUser')->once()->with($sender);
+        $userMessage1->shouldReceive('setMessage')->once()->with($msg);
+        $userMessage2->shouldReceive('setUser')->once()->with($receiver1);
+        $userMessage2->shouldReceive('setMessage')->once()->with($msg);
+        $userMessage3->shouldReceive('setUser')->once()->with($receiver2);
+        $userMessage3->shouldReceive('setMessage')->once()->with($msg);
+        $this->om->shouldReceive('persist')->once()->with($userMessage1);
+        $this->om->shouldReceive('persist')->once()->with($userMessage2);
+        $this->om->shouldReceive('persist')->once()->with($userMessage3);
+        $this->om->shouldReceive('flush')->once();
 
         $this->manager->send($sender, $msg, $msgParent);
     }
@@ -110,12 +128,11 @@ class MessageManagerTest extends MockeryTestCase
             ->once()
             ->with($user, array('message1', 'message2'))
             ->andReturn(array($usrMsg1, $usrMsg2));
-        $this->writer->shouldReceive('suspendFlush')->once();
         $usrMsg1->shouldReceive('markAs' . $flag)->once();
         $usrMsg2->shouldReceive('markAs' . $flag)->once();
-        $this->writer->shouldReceive('update')->with($usrMsg1)->once();
-        $this->writer->shouldReceive('update')->with($usrMsg2)->once();
-        $this->writer->shouldReceive('forceFlush')->once();
+        $this->om->shouldReceive('persist')->with($usrMsg1)->once();
+        $this->om->shouldReceive('persist')->with($usrMsg2)->once();
+        $this->om->shouldReceive('flush')->once();
         $this->manager->{$managerMethod}($user, array('message1', 'message2'));
     }
 
@@ -125,10 +142,10 @@ class MessageManagerTest extends MockeryTestCase
             array('Read','markAsRead'),
             array('Removed','markAsRemoved'),
             array('Unremoved','markAsUnremoved')
-            );
+        );
     }
 
-    public function testgetConversation()
+    public function testGetConversation()
     {
         $msg = m::mock('Claroline\CoreBundle\Entity\Message');
 
@@ -143,9 +160,8 @@ class MessageManagerTest extends MockeryTestCase
         $usrMsg = m::mock('Claroline\CoreBundle\Entity\UserMessage');
 
         $this->userMessageRepo->shouldReceive('findByMessages')->once()->andReturn(array($usrMsg));
-        $this->writer->shouldReceive('suspendFlush')->once();
-        $this->writer->shouldReceive('delete')->with($usrMsg)->once();
-        $this->writer->shouldReceive('forceFlush')->once();
+        $this->om->shouldReceive('remove')->with($usrMsg)->once();
+        $this->om->shouldReceive('flush')->once();
         $this->manager->remove($user, array($msg));
     }
 
@@ -163,5 +179,4 @@ class MessageManagerTest extends MockeryTestCase
         $this->userRepo->shouldReceive('findByGroup')->once()->with($group)->andReturn($users);
         $this->assertEquals('?ids[]=0&ids[]=1&ids[]=2', $this->manager->generateGroupQueryString($group));
      }
-
 }

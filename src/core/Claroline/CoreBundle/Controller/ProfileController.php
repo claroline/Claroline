@@ -3,13 +3,13 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Event\Log\LogUserUpdateEvent;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -27,14 +27,14 @@ class ProfileController extends Controller
      * @DI\InjectParams({
      *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
      *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
-     *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
+     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "security"           = @DI\Inject("security.context")
      * })
      */
     public function __construct(
         UserManager $userManager,
         RoleManager $roleManager,
-        EventDispatcher $eventDispatcher,
+        StrictDispatcher $eventDispatcher,
         SecurityContextInterface $security
     )
     {
@@ -129,8 +129,11 @@ class ProfileController extends Controller
                 $changeSet['roles'] = $rolesChangeSet;
             }
 
-            $log = new LogUserUpdateEvent($user, $changeSet);
-            $this->eventDispatcher->dispatch('log', $log);
+            $this->eventDispatcher->dispatch(
+                'log',
+                'Log\LogUserUpdateEvent',
+                array($user, $changeSet)
+            );
 
             return $this->redirect($this->generateUrl('claro_profile_form'));
         }

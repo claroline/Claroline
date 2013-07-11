@@ -17,7 +17,7 @@ class ResourceVoterTest extends FunctionalTestCase
         $this->manager = $this->getUser('ws_creator');
         $em = $this->getEntityManager();
         $this->roleWsManager = $em->getRepository('ClarolineCoreBundle:Role')
-            ->findOneBy(array('name' => 'ROLE_WS_MANAGER_'.$this->manager->getPersonalWorkspace()->getId()));
+            ->findOneBy(array('name' => 'ROLE_WS_MANAGER_'.$this->manager->getPersonalWorkspace()->getGuid()));
         $this->root = $this->getDirectory('ws_creator');
         $this->rootRights = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
             ->findOneBy(array('resource' => $this->root, 'role' => $this->roleWsManager));

@@ -165,7 +165,7 @@ class ResourceController
         $resource = $this->getResource($resource);
         $this->checkAccess('OPEN', $collection);
         $event = $this->dispatcher->dispatch('open_'.$resourceType, 'OpenResource', array($resource));
-        $this->dispatcher->dispatch('log', 'Log\ResourceRead', array($resource));
+        $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($resource));
 
         return $event->getResponse();
     }
@@ -282,7 +282,7 @@ class ResourceController
             );
         }
 
-        //TODO waiting for define CustomActions
+        // TODO waiting for define CustomActions
         // $logevent = new ResourceLogEvent($ri, $action);
         // $this->get('event_dispatcher')->dispatch('log_resource', $logevent);
 
@@ -385,7 +385,7 @@ class ResourceController
             $path = $this->resourceManager->getAncestors($directory);
             $resources = $this->resourceManager->getChildren($directory, $currentRoles);
             $creatableTypes = $this->rightsManager->getCreatableTypes($currentRoles, $directory);
-            $this->dispatcher->dispatch('log', 'Log\ResourceRead', array($directory));
+            $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($directory));
         }
 
         return new JsonResponse(

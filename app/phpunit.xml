@@ -28,12 +28,6 @@
 
         <!-- see https://github.com/sebastianbergmann/phpunit/pull/959 -->
         <testsuite name="core">
-            <!-- TO BE FIXED -->
-
-            <!--
-            <file>../src/core/Claroline/CoreBundle/Tests/Manager/RightsManagerTest.php</file>
-            -->
-
             <!-- TO BE REWRITTEN IN UNIT STYLE -->
 
             <!--
@@ -45,20 +39,12 @@
             <directory>../src/core/Claroline/CoreBundle/Tests/Listener</directory>
             -->
 
-            <!-- TO BE REMOVED AND TESTED ELSEWHERE -->
-
-            <!--
-            <file>../src/core/Claroline/CoreBundle/Tests/Library/Resource/IconCreatorTest.php</file>
-            <file>../src/core/Claroline/CoreBundle/Tests/Library/Workspace/CreatorTest.php</file>
-            -->
-
             <!-- TO BE TESTED -->
 
             <!--
             <directory>../src/core/Claroline/CoreBundle/Tests/Library/Analytics</directory>
             <directory>../src/core/Claroline/CoreBundle/Tests/Library/Home</directory>
             <directory>../src/core/Claroline/CoreBundle/Tests/Library/Log</directory>
-            <file>../src/core/Claroline/CoreBundle/Tests/Library/Resource/Converter.php</file>
             <file>../src/core/Claroline/CoreBundle/Tests/Library/Resource/ModeAccessor.php</file>
             <file>../src/core/Claroline/CoreBundle/Tests/Library/Security/TokenUpdater.php</file>
             <file>../src/core/Claroline/CoreBundle/Tests/Library/Security/Utilities.php</file>
@@ -68,7 +54,7 @@
             <directory>../src/core/Claroline/CoreBundle/Tests/Library/Widget</directory>
             <directory>../src/core/Claroline/CoreBundle/Tests/Library/Workspace</directory>
             <file>../src/core/Claroline/CoreBundle/Tests/Manager/GroupManagerTest.php</file>
-            <file>../src/core/Claroline/CoreBundle/Tests/Manager/IconManagerTest.php</file>
+            <file>../src/core/Claroline/CoreBundle/Tests/Manager/WorkspaceManagerTest.php</file>
             <file>../src/core/Claroline/CoreBundle/Tests/Manager/WorkspaceTagManagerTest.php</file>
             <directory>../src/core/Claroline/CoreBundle/Tests/Pager</directory>
             <file>../src/core/Claroline/CoreBundle/Tests/Repository/ActivityRepositoryTest.php</file>

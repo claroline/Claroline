@@ -21,7 +21,7 @@ class ToolManagerTest extends MockeryTestCase
         $this->writer = m::mock('Claroline\CoreBundle\Database\Writer');
         $this->orderedToolRepo = m::mock('Claroline\CoreBundle\Repository\OrderedToolRepository');
         $this->toolRepo = m::mock('Claroline\CoreBundle\Repository\ToolRepository');
-        $this->ed = m::mock('Symfony\Component\EventDispatcher\EventDispatcher');
+        $this->ed = m::mock('Claroline\CoreBundle\Event\StrictDispatcher');
         $this->utilities = m::mock('Claroline\CoreBundle\Library\Utilities\ClaroUtilities');
         $this->roleRepo = m::mock('Claroline\CoreBundle\Repository\RoleRepository');
         $this->translator = m::mock('Symfony\Component\Translation\Translator');
@@ -48,7 +48,7 @@ class ToolManagerTest extends MockeryTestCase
         $role1 = m::mock('Claroline\CoreBundle\Entity\Role');
         $role2 = m::mock('Claroline\CoreBundle\Entity\Role');
         $config = array();
-        $files = array();
+        $files = array('path');
         $roles = array($role1, $role2);
         $name = 'toolName';
         $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
@@ -63,7 +63,7 @@ class ToolManagerTest extends MockeryTestCase
         $manager->shouldReceive('addRoleToOrderedTool')->times(2);
         $tool->shouldReceive('getName')->once()->andReturn('claro_tool');
         $this->ed->shouldReceive('dispatch')->once()
-            ->with('tool_claro_tool_from_template', anInstanceOf('Claroline\CoreBundle\Event\Event\ImportToolEvent'));
+            ->with('tool_claro_tool_from_template', 'ImportTool', m::any());
 
         $manager->import($config, $roles, $files, $name, $workspace, $resource, $tool, $userManager, $position);
     }

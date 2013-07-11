@@ -96,7 +96,14 @@ services:
     factory_method:  getRepository
     arguments:
       - Claroline\CoreBundle\Entity\Group
-      
+
+  claroline.repository.workspace_repository:
+    class:           Claroline\CoreBundle\Repository\WorkspaceRepository
+    factory_service: doctrine.orm.entity_manager
+    factory_method:  getRepository
+    arguments:
+      - Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
+
   claroline.repository.icon_repository:
     class:           Claroline\CoreBundle\Repository\ResourceIconRepository
     factory_service: doctrine.orm.entity_manager
