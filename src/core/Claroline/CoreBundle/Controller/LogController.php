@@ -23,7 +23,7 @@ class LogController extends Controller
     private function convertFormDataToConfig($config, $data, $workspace, $isDefault)
     {
         if ($config === null) {
-                $config = new LogWorkspaceWidgetConfig();
+            $config = new LogWorkspaceWidgetConfig();
         }
         $config->setIsDefault($isDefault);
         $config->setResourceCopy($data['creation'] === true);
@@ -82,7 +82,7 @@ class LogController extends Controller
 
             $event = $this->get('claroline.event.event_dispatcher')->dispatch(
                 'create_log_details_'.$log->getResourceType()->getName(),
-                'Log\CreateDelegateView',
+                'Log\LogCreateDelegateView',
                 array($log)
             );
 

@@ -223,12 +223,12 @@ class UserController extends Controller
             );
             $this->eventDispatcher->dispatch(
                 'log',
-                'LogWorkspaceRoleUnsubscribe',
+                'Log\LogWorkspaceRoleUnsubscribe',
                 array($role, $user)
             );
             $this->eventDispatcher->dispatch(
                 'log',
-                'LogWorkspaceRoleSubscribe',
+                'Log\LogWorkspaceRoleSubscribe',
                 array($newRole, $user)
             );
 
