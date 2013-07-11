@@ -110,7 +110,6 @@ class HomeListener
                 $displayConfig->setWorkspace($event->getWorkspace());
 
                 if (isset($widgetConfig['config'])) {
-
                     $this->ed->dispatch(
                         "widget_{$widgetConfig['name']}_from_template",
                         'ImportWidgetConfig',
@@ -155,7 +154,7 @@ class HomeListener
                     $config->getWidget(),
                     $workspace
                 );
-                $this->ed->dispatch(
+                $newEvent = $this->ed->dispatch(
                     "widget_{$config->getWidget()->getName()}_to_template",
                     'ExportWidgetConfig',
                     array($config->getWidget(), $workspace)

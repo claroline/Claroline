@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Symfony\Component\Translation\Translator;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
@@ -60,7 +60,7 @@ class UserManager
         RoleManager $roleManager,
         WorkspaceManager $workspaceManager,
         ToolManager $toolManager,
-        EventDispatcher $ed,
+        StrictDispatcher $ed,
         $personalWsTemplateFile,
         Translator $trans,
         PlatformConfigurationHandler $ch,

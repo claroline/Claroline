@@ -208,8 +208,8 @@ class DirectoryListener
 
         foreach ($config['children'] as $child) {
             $newEvent = $this->eventDispatcher->dispatch(
-                "resource_directory_from_template", 
-                "ImportResourceTemplate", 
+                'resource_directory_from_template',
+                'ImportResourceTemplate',
                 array($child, $directory, $event->getUser(), $createdResources)
             );
             $childResources = $newEvent->getCreatedResources();
@@ -243,8 +243,8 @@ class DirectoryListener
 
         foreach ($children as $child) {
             $this->eventDispatcher->dispatch(
-                "delete_{$child->getResourceType()->getName()}", 
-                'DeleteResource', 
+                'delete_{$child->getResourceType()->getName()}',
+                'DeleteResource',
                 array($child)
             );
         }
