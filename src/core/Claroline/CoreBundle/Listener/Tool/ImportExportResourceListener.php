@@ -234,8 +234,7 @@ class ImportExportResourceListener
     {
         if (isset($config['directory'])) {
             foreach ($config['directory'] as $resource) {
-                $newEvent = new ImportResourceTemplateEvent($resource, $root, $user);
-                $this->ed->dispatch(
+                $newEvent = $this->ed->dispatch(
                     "resource_{$resource['type']}_from_template",
                     'ImportResourceTemplate',
                     array($resource, $root, $user)

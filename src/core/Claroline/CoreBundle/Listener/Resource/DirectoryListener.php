@@ -160,8 +160,8 @@ class DirectoryListener
         foreach ($children as $child) {
             if ($child['type'] === 'directory') {
                 $newEvent = $this->ed->dispatch(
-                    "resource_directory_to_template",
-                    "ExportResourceTemplate",
+                    'resource_directory_to_template',
+                    'ExportResourceTemplate',
                     array($resourceRepo->find($child['id']))
                 );
                 $descr = $newEvent->getConfig();
