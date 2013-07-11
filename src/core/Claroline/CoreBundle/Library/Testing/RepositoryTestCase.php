@@ -9,6 +9,9 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
+use Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag;
+use Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
@@ -417,6 +420,40 @@ abstract class RepositoryTestCase extends WebTestCase
         }
 
         self::$writer->create($log);
+    }
+
+    protected static function createWorkspaceTag($name, User $user = null)
+    {
+        $tag = new WorkspaceTag();
+        $tag->setName($name);
+        $tag->setUser($user);
+
+        self::create($name, $tag);
+    }
+
+    protected static function createWorkspaceTagRelation(WorkspaceTag $tag, AbstractWorkspace $workspace)
+    {
+        $tagRelation = new RelWorkspaceTag();
+        $tagRelation->setTag($tag);
+        $tagRelation->setWorkspace($workspace);
+
+        self::$writer->create($tagRelation);
+    }
+
+    protected static function createWorkspaceTagHierarchy(
+        WorkspaceTag $parent,
+        WorkspaceTag $child,
+        $level,
+        User $user = null
+    )
+    {
+        $tagHierarchy = new WorkspaceTagHierarchy();
+        $tagHierarchy->setParent($parent);
+        $tagHierarchy->setTag($child);
+        $tagHierarchy->setLevel($level);
+        $tagHierarchy->setUser($user);
+
+        self::$writer->create($tagHierarchy);
     }
 
     /**

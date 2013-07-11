@@ -16,11 +16,13 @@ use Claroline\CoreBundle\Event\Event\Log\LogGroupRemoveUserEvent;
 use Claroline\CoreBundle\Event\Event\Log\LogGroupDeleteEvent;
 use Claroline\CoreBundle\Event\Event\Log\LogGroupUpdateEvent;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Library\Analytics\Manager;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\UnwritableException;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Symfony\Component\Form\FormError;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -34,39 +36,47 @@ class AdministrationController extends Controller
     private $userManager;
     private $roleManager;
     private $groupManager;
+    private $workspaceManager;
     private $security;
     private $eventDispatcher;
     private $configHandler;
     private $formFactory;
+    private $analyticsManager;
 
     /**
      * @DI\InjectParams({
-     *     "userManager"    = @DI\Inject("claroline.manager.user_manager"),
-     *     "roleManager"    = @DI\Inject("claroline.manager.role_manager"),
-     *     "groupManager"    = @DI\Inject("claroline.manager.group_manager"),
-     *     "security"       = @DI\Inject("security.context"),
+     *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
+     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
+     *     "groupManager"       = @DI\Inject("claroline.manager.group_manager"),
+     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "security"           = @DI\Inject("security.context"),
      *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
-     *     "configHandler"    = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "formFactory" = @DI\Inject("claroline.form.factory")
+     *     "configHandler"      = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
+     *     "analyticsManager"   = @DI\Inject("claroline.analytics.manager"),
      * })
      */
     public function __construct(
         UserManager $userManager,
         RoleManager $roleManager,
         GroupManager $groupManager,
+        WorkspaceManager $workspaceManager,
         SecurityContextInterface $security,
         EventDispatcher $eventDispatcher,
         PlatformConfigurationHandler $configHandler,
-        FormFactory $formFactory
+        FormFactory $formFactory,
+        Manager $analyticsManager
     )
     {
         $this->userManager = $userManager;
         $this->roleManager = $roleManager;
         $this->groupManager = $groupManager;
+        $this->workspaceManager = $workspaceManager;
         $this->security = $security;
         $this->eventDispatcher = $eventDispatcher;
         $this->configHandler = $configHandler;
         $this->formFactory = $formFactory;
+        $this->analyticsManager = $analyticsManager;
     }
 
     /**
@@ -798,11 +808,11 @@ class AdministrationController extends Controller
      */
     public function analyticsAction()
     {
-        $actionsForRange = $this->get('claroline.analytics.manager')->getDailyActionNumberForDateRange();
+        $actionsForRange = $this->analyticsManager->getDailyActionNumberForDateRange();
         $lastMonthActions = $actionsForRange["chartData"];
-        $mostViewedWS = $this->get('claroline.analytics.manager')->topWSByAction(null, 'ws_tool_read', 5);
-        $mostViewedMedia = $this->get('claroline.analytics.manager')->topMediaByAction(null, 'resource_read', 5);
-        $mostDownloadedResources = $this->get('claroline.analytics.manager')->topResourcesByAction(null, 'resource_export', 5);
+        $mostViewedWS = $this->analyticsManager->topWSByAction(null, 'ws_tool_read', 5);
+        $mostViewedMedia = $this->analyticsManager->topMediaByAction(null, 'resource_read', 5);
+        $mostDownloadedResources = $this->analyticsManager->topResourcesByAction(null, 'resource_export', 5);
         $usersCount = $this->userManager->getNbUsers();
 
         return array(
@@ -842,9 +852,8 @@ class AdministrationController extends Controller
             $range = $criteria_form->get('range')->getData();
             $unique = ($criteria_form->get('unique')->getData()=='true') ? true : false;
         }
-        $actionsForRange = $this
-                        ->get('claroline.analytics.manager')
-                        ->getDailyActionNumberForDateRange($range, 'user_login',$unique);
+        $actionsForRange = $this->analyticsManager
+            ->getDailyActionNumberForDateRange($range, 'user_login',$unique);
         if ($range === null) {
             $clone_form->get('range')->setData($actionsForRange['range']);
             $clone_form->get('unique')->setData($unique);
@@ -852,7 +861,7 @@ class AdministrationController extends Controller
         }
 
         $connections = $actionsForRange['chartData'];
-        $activeUsers = $this->get('claroline.analytics.manager')->getActiveUsers();
+        $activeUsers = $this->analyticsManager->getActiveUsers();
 
         return array(
             'connections' => $connections,
@@ -881,8 +890,7 @@ class AdministrationController extends Controller
     public function analyticsResourcesAction()
     {
         $manager = $this->get('doctrine.orm.entity_manager');
-        $wsCount = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
-            ->count();
+        $wsCount = $this->workspaceManager->getNbWorkspaces();
         $resourceCount = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->countResourcesByType();
 
@@ -919,16 +927,14 @@ class AdministrationController extends Controller
 
         $range = $criteria_form->get('range')->getData();
         if($range===null) {
-            $range = $this->get('claroline.analytics.manager')->getDefaultRange();
+            $range = $this->analyticsManager->getDefaultRange();
         }
         $top_type_temp = $criteria_form->get('top_type')->getData();
-        $top_type = ($top_type_temp!==null)?$top_type_temp:$top_type;
+        $top_type = ($top_type_temp !== null) ? $top_type_temp : $top_type;
         $max = $criteria_form->get('top_number')->getData();
         $max = ($max!==null)?intval($max):30;
 
-        $listData = $this
-                        ->get('claroline.analytics.manager')
-                        ->getTopByCriteria($range, $top_type, $max);
+        $listData = $this->analyticsManager->getTopByCriteria($range, $top_type, $max);
 
         $clone_form->get('range')->setData($range);
         $clone_form->get('top_type')->setData($top_type);

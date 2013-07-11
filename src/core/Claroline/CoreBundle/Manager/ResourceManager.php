@@ -720,6 +720,11 @@ class ResourceManager
         return $this->resourceRepo->findWorkspaceRootsByUser($user);
     }
 
+    public function getWorkspaceRoot(AbstractWorkspace $workspace)
+    {
+        return $this->resourceRepo->findWorkspaceRoot($workspace);
+    }
+
     public function getAncestors(AbstractResource $resource)
     {
         return $this->resourceRepo->findAncestors($resource);
@@ -809,7 +814,7 @@ class ResourceManager
                 $archive->addEmptyDir($this->getRelativePath($currentDir, $resource). $resource->getName());
             }
 
-            $this->dispatcher->dispatch('log', 'Log\ResourceExport', array($resource));
+            $this->dispatcher->dispatch('log', 'Log\LogResourceExport', array($resource));
         }
 
         $archive->close();

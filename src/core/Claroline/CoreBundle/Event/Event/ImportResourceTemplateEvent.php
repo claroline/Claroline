@@ -15,12 +15,17 @@ class ImportResourceTemplateEvent extends Event
     private $user;
     private $files;
 
-    public function __construct(array $config, AbstractResource $parent, User $user)
+    public function __construct(
+        array $config, 
+        AbstractResource $parent, 
+        User $user,
+        array $createdResources = array()
+    )
     {
         $this->parent = $parent;
         $this->config = $config;
         $this->user = $user;
-        $this->createdResources = array();
+        $this->createdResources = $createdResources;
         $this->files = array();
     }
 

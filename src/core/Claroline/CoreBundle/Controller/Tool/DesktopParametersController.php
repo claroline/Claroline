@@ -8,7 +8,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Event\ConfigureDesktopToolEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -25,14 +25,14 @@ class DesktopParametersController extends Controller
      *     "request"      = @DI\Inject("request"),
      *     "urlGenerator" = @DI\Inject("router"),
      *     "toolManager"  = @DI\Inject("claroline.manager.tool_manager"),
-     *     "ed"           = @DI\Inject("event_dispatcher")
+     *     "ed"           = @DI\Inject("claroline.event.event_dispatcher")
      * })
      */
     public function __construct(
         Request $request,
         UrlGeneratorInterface $router,
         ToolManager $toolManager,
-        EventDispatcher $ed
+        StrictDispatcher $ed
     )
     {
         $this->request = $request;
@@ -145,15 +145,11 @@ class DesktopParametersController extends Controller
      */
     public function openDesktopToolConfig(Tool $tool)
     {
-        $event = new ConfigureDesktopToolEvent($tool);
-        $eventName = strtolower('configure_desktop_tool_' . $tool->getName());
-        $this->ed->dispatch($eventName, $event);
-
-        if (is_null($event->getContent())) {
-            throw new \Exception(
-                "Tool '{$tool->getName()}' didn't return any Response for tool event '{$eventName}'."
-            );
-        }
+        $event = $this->ed->dispatch(
+            strtolower('configure_desktop_tool_' . $tool->getName()),
+            'ConfigureDesktopTool',
+            array($tool)
+        );
 
         return new Response($event->getContent());
     }

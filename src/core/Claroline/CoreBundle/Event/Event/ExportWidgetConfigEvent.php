@@ -6,11 +6,12 @@ use Symfony\Component\EventDispatcher\Event;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
-class ExportWidgetConfigEvent extends Event
+class ExportWidgetConfigEvent extends Event implements DataConveyorEventInterface
 {
     private $config;
     private $workspace;
     private $widget;
+    private $isPopulated = false;
 
     public function __construct(Widget $widget, AbstractWorkspace $workspace)
     {
@@ -18,8 +19,9 @@ class ExportWidgetConfigEvent extends Event
         $this->workspace = $workspace;
     }
 
-    public function setConfig($config)
+    public function setConfig(array $config)
     {
+        $this->isPopulated = true;
         $this->config = $config;
     }
 
@@ -36,6 +38,10 @@ class ExportWidgetConfigEvent extends Event
     public function getWorkspace()
     {
         return $this->workspace;
+    }
+
+    public function isPopulated() {
+        return $this->isPopulated;
     }
 }
 

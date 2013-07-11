@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Symfony\Component\Translation\Translator;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
@@ -46,12 +46,12 @@ class UserManager
      *     "roleManager" =            @DI\Inject("claroline.manager.role_manager"),
      *     "workspaceManager" =       @DI\Inject("claroline.manager.workspace_manager"),
      *     "toolManager" =            @DI\Inject("claroline.manager.tool_manager"),
-     *     "ed" =                     @DI\Inject("event_dispatcher"),
+     *     "ed" =                     @DI\Inject("claroline.event.event_dispatcher"),
      *     "personalWsTemplateFile" = @DI\Inject("%claroline.param.templates_directory%"),
-     *     "trans" =                  @DI\Inject("translator"),
-     *     "ch" =                     @DI\Inject("claroline.config.platform_config_handler"),
-     *     "genericRepo" =            @DI\Inject("claroline.database.generic_repository"),
-     *     "pagerFactory" =           @DI\Inject("claroline.pager.pager_factory")
+     *     "trans"                  = @DI\Inject("translator"),
+     *     "ch"                     = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "genericRepo"            = @DI\Inject("claroline.database.generic_repository"),
+     *     "pagerFactory"           = @DI\Inject("claroline.pager.pager_factory")
      * })
      */
     public function __construct(
@@ -60,7 +60,7 @@ class UserManager
         RoleManager $roleManager,
         WorkspaceManager $workspaceManager,
         ToolManager $toolManager,
-        EventDispatcher $ed,
+        StrictDispatcher $ed,
         $personalWsTemplateFile,
         Translator $trans,
         PlatformConfigurationHandler $ch,
@@ -94,8 +94,7 @@ class UserManager
 
         $this->writer->create($user);
 
-        $log = new LogUserCreateEvent($user);
-        $this->ed->dispatch('log', $log);
+        $this->ed->dispatch('log', 'LogUserCreate', array($user));
 
         return $user;
     }
@@ -114,7 +113,7 @@ class UserManager
         $this->writer->create($user);
 
         $log = new LogUserCreateEvent($user);
-        $this->ed->dispatch('log', $log);
+        $this->ed->dispatch('log', 'Log\LogUserCreateEvent', array($user));
 
         return $user;
     }
@@ -175,6 +174,38 @@ class UserManager
         $workspace = $this->workspaceManager->create($config, $user);
         $user->setPersonalWorkspace($workspace);
         $this->writer->update($user);
+    }
+
+    public function convertUsersToArray(array $users)
+    {
+        $content = array();
+        $i = 0;
+
+        foreach ($users as $user) {
+            $content[$i]['id'] = $user->getId();
+            $content[$i]['username'] = $user->getUsername();
+            $content[$i]['lastname'] = $user->getLastName();
+            $content[$i]['firstname'] = $user->getFirstName();
+            $content[$i]['administrativeCode'] = $user->getAdministrativeCode();
+
+            $rolesString = '';
+            $roles = $user->getEntityRoles();
+            $rolesCount = count($roles);
+            $j = 0;
+
+            foreach ($roles as $role) {
+                $rolesString .= "{$this->translator->trans($role->getTranslationKey(), array(), 'platform')}";
+
+                if ($j < $rolesCount - 1) {
+                    $rolesString .= ' ,';
+                }
+                $j++;
+            }
+            $content[$i]['roles'] = $rolesString;
+            $i++;
+        }
+
+        return $content;
     }
 
     public function getUserByUsername($username)

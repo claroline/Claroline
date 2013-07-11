@@ -3,14 +3,15 @@
 namespace Claroline\CoreBundle\Event\Event\Log;
 
 use Symfony\Component\EventDispatcher\Event;
-
+use Claroline\CoreBundle\Event\Event\DataConveyorEventInterface;
 /**
  *
  */
-class LogCreateDelegateViewEvent extends Event
+class LogCreateDelegateViewEvent extends Event implements DataConveyorEventInterface
 {
     private $responseContent = '';
     private $log;
+    private $isPopulated = false;
 
     public function __construct($log)
     {
@@ -24,6 +25,7 @@ class LogCreateDelegateViewEvent extends Event
      */
     public function setResponseContent($responseContent)
     {
+        $this->isPopulated = true;
         $this->responseContent = $responseContent;
     }
 
@@ -40,5 +42,9 @@ class LogCreateDelegateViewEvent extends Event
     public function getLog()
     {
         return $this->log;
+    }
+    
+    public function isPopulated() {
+       return $this->isPopulated;
     }
 }
