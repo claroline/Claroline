@@ -258,7 +258,7 @@ noImg: You must upload a picture !
 noAnswerZone: There is no answer zone ...
 notAll: All the answers zones haven\'t been placed !
 onlyOnce: => The rights answers count only once.
-wrong: The input value is wrong.
+wrong: The input name is wrong.
 inside: You must put all the answer zone INSIDE the picture ...
 manageImg: Manage my documents ...
 Preview: Preview
@@ -306,3 +306,4 @@ findIn: Find in
 findWhat: What you're looking for
 result: Results
 findQuestion: Find questions
+alreadyExist: This name exist already.

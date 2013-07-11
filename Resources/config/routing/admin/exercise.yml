@@ -1,29 +1,29 @@
 ujm_exercise_edit:
     pattern:  /{id}/edit
     defaults: { _controller: "UJMExoBundle:Exercise:edit" }
-    
+
 ujm_exercise_import_question:
-    pattern: /{exoID}/import
-    defaults: { _controller: "UJMExoBundle:Exercise:importQuestion" }
+    pattern: /{exoID}/import/{page2Go}/{maxPage}/{nbItem}
+    defaults: { _controller: UJMExoBundle:Exercise:importQuestion, page2Go: 1, maxPage: 10, nbItem: 1 }
 
 ujm_exercise_questions:
-    pattern:  /{id}/questions
-    defaults: { _controller: "UJMExoBundle:Exercise:showQuestions" }   
-    
+    pattern:  /{id}/questions/{pageNow}/{category2Find}/{title2Find}
+    defaults: { _controller: UJMExoBundle:Exercise:showQuestions, pageNow: 0, category2Find: z, title2Find: z }
+
 ujm_exercise_question_delete:
-    pattern:  /{exoID}/{qid}/delete
-    defaults: { _controller: "UJMExoBundle:Exercise:deleteQuestion" }
+    pattern:  /{exoID}/{qid}/delete/{pageNow}/{maxPage}/{nbItem}/{lastPage}
+    defaults: { _controller: UJMExoBundle:Exercise:deleteQuestion, pageNow: 1, maxPage: 10, nbItem: 1, lastPage: 1 }
     requirements: { _method: post }
-    
+
 ujm_exercise_update:
     pattern:  /{id}/update
     defaults: { _controller: "UJMExoBundle:Exercise:update" }
     requirements: { _method: post }
-    
+
 ujm_exercise_validate_import:
-    pattern: /{exoID}/{qid}/import
-    defaults: { _controller: "UJMExoBundle:Exercise:importValidate" }
-    
+    pattern: /{exoID}/{qid}/import/{page2go}
+    defaults: { _controller: UJMExoBundle:Exercise:importValidate, page2go: 1 }
+
 ujm_exercise_validate_import_shared:
-    pattern: /{exoID}/{qid}/import/shared
-    defaults: { _controller: "UJMExoBundle:Exercise:importValidateShared" }
+    pattern: /import/shared/{exoID}/{qid}/{page2go}
+    defaults: { _controller: UJMExoBundle:Exercise:importValidateShared, page2go: 1 }

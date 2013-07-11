@@ -42,7 +42,8 @@
 
     <a href="{{ path('ujm_exercise_open', { 'exerciseId':  exerciseID }) }}"><i class="icon-arrow-left"></i> {{ "Back" | trans }}</a>
     &nbsp;&nbsp;|&nbsp;&nbsp;
-    <a href="{{ path('ujm_exercise_import_question', { 'exoID':  exerciseID }) }}">{{ "Import questions" | trans }}</a>
+    <a href="{{ path('ujm_exercise_import_question', { 'exoID':  exerciseID, 'page2Go': pagerQuestion.getNbPages,
+        'maxPage': pagerQuestion.maxPerPage, 'nbItem': pagerQuestion.getNbResults }) }}">{{ "Import questions" | trans }}</a>
     &nbsp;&nbsp;|&nbsp;&nbsp;
     <a href="{{ path('ujm_question_new', { 'exoID': exerciseID }) }}">{{ "Create a new entry" | trans }}</a>
     <br/><br/>
@@ -102,7 +103,10 @@
                                 </li>
                             {% endif %}
                             <li>
-                                <form action="{{ path('ujm_exercise_question_delete', { 'exoID': exerciseID, 'qid': interaction.question.id }) }}" method="post">
+                                <form action="{{ path('ujm_exercise_question_delete', {
+                                        'exoID': exerciseID, 'qid': interaction.question.id, 'pageNow': pagerQuestion.getCurrentPage,
+                                        'maxPage': pagerQuestion.maxPerPage, 'nbItem': pagerQuestion.getNbResults, 'lastPage': pagerQuestion.getNbPages
+                                    }) }}" method="post">
                                     <button type="submit">{{ "Delete of my exercise" | trans }}</button>
                                 </form>
                             </li>

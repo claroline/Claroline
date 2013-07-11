@@ -170,10 +170,17 @@ class InteractionGraphicController extends Controller
                 $em->flush();
             }
 
+            $category2Find = $interGraph->getInteraction()->getQuestion()->getCategory();
+            $title2Find = $interGraph->getInteraction()->getQuestion()->getTitle();
+
             if ($exoID == -1) {
-                return $this->redirect($this->generateUrl('ujm_question_index'));
+                return $this->redirect($this->generateUrl('ujm_question_index', array(
+                    'category2Find' => $category2Find, 'title2Find' => $title2Find))
+                );
             } else {
-                return $this->redirect($this->generateUrl('ujm_exercise_questions', array('id' => $exoID)));
+                return $this->redirect($this->generateUrl('ujm_exercise_questions', array(
+                    'id' => $exoID, 'category2Find' => $category2Find, 'title2Find' => $title2Find))
+                );
             }
         }
 
@@ -319,7 +326,7 @@ class InteractionGraphicController extends Controller
      * Deletes a InteractionGraphic entity.
      *
      */
-    public function deleteAction($id)
+    public function deleteAction($id, $pageNow)
     {
         $form = $this->createDeleteForm($id);
         $request = $this->getRequest();
@@ -336,7 +343,7 @@ class InteractionGraphicController extends Controller
         $em->remove($entity);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('ujm_question_index'));
+        return $this->redirect($this->generateUrl('ujm_question_index', array('pageNow' => $pageNow)));
     }
 
     private function createDeleteForm($id)

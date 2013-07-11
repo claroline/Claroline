@@ -46,6 +46,8 @@
 
 {% block section_content %}
 
+<a href="{{ path('ujm_question_index') }}" ><i class="icon-arrow-left"></i> {{ "Back" | trans }}</a>
+
 <h1> Question : {{ interactionGraphic.interaction.question.title }} </h1>
 
 <div name="description">
@@ -63,13 +65,13 @@
     <p id="ContainerCursor">
         {% set i = 1 %}
         {% for coords in listeCoords %}
-            <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{ i }}" id="cursor{{ i }}" 
+            <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{ i }}" id="cursor{{ i }}"
                  style="position: absolute;"/>
             {% set i = i + 1 %}
        {% endfor %}
-    </p><p> 
-       <img src="{{ asset(interactionGraphic.document.url) }}" alt="AnswerImg" id="AnswerImg" 
-             width="{{ interactionGraphic.width }}" height="{{ interactionGraphic.height }}" 
+    </p><p>
+       <img src="{{ asset(interactionGraphic.document.url) }}" alt="AnswerImg" id="AnswerImg"
+             width="{{ interactionGraphic.width }}" height="{{ interactionGraphic.height }}"
              style="margin-top: 30px"/>
     </p>
 </div>
@@ -81,7 +83,7 @@
     <input type="hidden" id="PositionInit" name="PositionInit" value="true"/>
     <table>
         {% set nbr_hint = 1 %}
-        {% for hint in interactionGraphic.interaction.hints %}              
+        {% for hint in interactionGraphic.interaction.hints %}
             <tr>
                 <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}', '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }}', '{{nbr_hint}}')">{{ "Hint" | trans }} {{nbr_hint}} </a></td>
                 <td id="div_hint{{nbr_hint}}"></td>
@@ -89,7 +91,7 @@
             {% set nbr_hint = nbr_hint + 1 %}
         {% endfor %}
     </table><br/>
-    
+
     <button type="submit" onclick="NoEmptyAnswer();return false;">Ok</button>
 </form><br/>
 

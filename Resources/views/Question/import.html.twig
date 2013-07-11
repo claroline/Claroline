@@ -90,7 +90,7 @@
                     <td style="text-align: center; vertical-align: middle;">
                         <ul style="text-align: center; vertical-align: middle; list-style-type: none; margin-left: 0;">
                             <li>
-                                <a href="{{ path('ujm_exercise_validate_import', { 'exoID': exoID, 'qid': interaction.question.id }) }}">{{ "Import" | trans }}</a>
+                                <a href="{{ path('ujm_exercise_validate_import', { 'exoID': exoID, 'qid': interaction.question.id, 'page2go': page2go }) }}">{{ "Import" | trans }}</a>
                             </li>
                         </ul>
                     </td>
@@ -101,7 +101,7 @@
     {% if pagerMy.haveToPaginate %}
             {{ pagerfanta(pagerMy, 'twitter_bootstrap_translated',
             {'routeName': 'ujm_exercise_import_question', 'routeParams':
-            {'exoID': exoID, 'pagerShared': pagerShared.getCurrentPage, 'pagerMy': pagerMy.getCurrentPage, 'click': 'my'} }) }}
+            { 'exoID': exoID, 'pagerShared': pagerShared.getCurrentPage, 'pagerMy': pagerMy.getCurrentPage, 'click': 'my', 'pageToGo': page2go } }) }}
         {% endif %}
     {% else %}
         <p>{{ 'noQuestionFound'|trans }}</p>
@@ -159,7 +159,7 @@
                     <td style="text-align: center; vertical-align: middle;">
                         <ul style="list-style-type: none; margin-left: 0;">
                             <li>
-                                <a href="{{ path('ujm_exercise_validate_import_shared', { 'exoID': exoID, 'qid': myQShare.question.id }) }}">{{ "Import" | trans }}</a>
+                                <a href="{{ path('ujm_exercise_validate_import_shared', { 'exoID': exoID, 'qid': myQShare.question.id, 'page2go': page2go }) }}">{{ "Import" | trans }}</a>
                             </li>
                         </ul>
                     </td>
@@ -172,7 +172,7 @@
     {% if pagerShared.haveToPaginate %}
             {{ pagerfanta(pagerShared, 'twitter_bootstrap_translated',
             {'routeName': 'ujm_exercise_import_question', 'routeParams':
-            {'exoID': exoID, 'pagerMy': pagerMy.getCurrentPage, 'pagerShared': pagerShared.getCurrentPage,  'click': 'shared'} }) }}
+            { 'exoID': exoID, 'pagerMy': pagerMy.getCurrentPage, 'pagerShared': pagerShared.getCurrentPage,  'click': 'shared', 'pageToGo': page2go} }) }}
         {% endif %}
     {% else %}
         <p>{{ 'noQuestionFound'|trans }}</p>

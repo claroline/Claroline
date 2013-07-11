@@ -117,7 +117,9 @@
                                     <a href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}">{{ "Edit" | trans }}</a>
                                 </li>
                                 <li>
-                                    <form action="{{ path('ujm_question_delete', { 'id': interaction.question.id}) }}" method="post">
+                                    <form action="{{ path('ujm_question_delete', {
+                                        'id': interaction.question.id, 'pageNow': pagerMy.getCurrentPage, 'maxPage': pagerMy.maxPerPage,
+                                        'nbItem': pagerMy.getNbResults, 'lastPage': pagerMy.getNbPages }) }}" method="post">
                                         <button type="submit">{{ "Delete of my bank" | trans }}</button>
                                     </form>
                                 </li>

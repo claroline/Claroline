@@ -47,6 +47,15 @@ use Doctrine\ORM\EntityRepository;
  */
 class ShareRepository extends EntityRepository
 {
+    public function getControlSharedQuestion($user, $question)
+    {
+        $qb = $this->createQueryBuilder('s');
+        $qb->join('s.user', 'u')
+            ->where($qb->expr()->in('s.question', $question))
+            ->andWhere($qb->expr()->in('u.id', $user));
+
+        return $qb->getQuery()->getResult();
+    }
 
     public function getUserInteractionSharedImport($exoId, $uid, $em)
     {

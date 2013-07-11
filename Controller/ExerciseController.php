@@ -180,7 +180,7 @@ class ExerciseController extends Controller
      * Finds and displays a Question entity to this Exercise.
      *
      */
-    public function showQuestionsAction($id)
+    public function showQuestionsAction($id, $pageNow, $category2Find, $title2Find)
     {
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($id);
@@ -211,16 +211,44 @@ class ExerciseController extends Controller
                 }
             }
 
+            if ($category2Find != '' && $title2Find != '' && $category2Find != 'z' && $title2Find != 'z') {
+                $i = 1 ; $pos = 0 ; $temp = 0;
+                foreach ($Interactions as $interaction) {
+                    if ($interaction->getQuestion()->getCategory() == $category2Find) {
+                        $temp = $i;
+                    }
+                    if ($interaction->getQuestion()->getTitle() == $title2Find && $temp == $i) {
+                        $pos = $i;
+                        break;
+                    }
+                    $i++;
+                }
+
+                if ($pos % $max == 0) {
+                    $pageNow = $pos / $max;
+                } else {
+                    $pageNow = ceil($pos / $max);
+                }
+            }
+
             // Pagination finded documents
             $adapterQuestion = new ArrayAdapter($Interactions);
             $pagerQuestion = new Pagerfanta($adapterQuestion);
 
             try {
-                $interactions = $pagerQuestion
-                    ->setMaxPerPage($max)
-                    ->setCurrentPage($page)
-                    ->getCurrentPageResults()
-                ;
+                if ($pageNow == 0) {
+                    $interactions = $pagerQuestion
+                        ->setMaxPerPage($max)
+                        ->setCurrentPage($page)
+                        ->getCurrentPageResults()
+                    ;
+                } else {
+                    $interactions = $pagerQuestion
+                        ->setMaxPerPage($max)
+                        ->setCurrentPage($pageNow)
+                        ->getCurrentPageResults()
+                    ;
+                }
             } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
                 throw $this->createNotFoundException("Cette page n'existe pas.");
             }
@@ -244,7 +272,7 @@ class ExerciseController extends Controller
     *To import in this Exercise a Question of the User's bank.
     *
     */
-    public function importQuestionAction($exoID)
+    public function importQuestionAction($exoID, $page2Go, $maxPage, $nbItem)
     {
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($exoID);
@@ -263,6 +291,7 @@ class ExerciseController extends Controller
         $click = $request->query->get('click', 'my'); // Get which array to change page (default 'my question')
         $pagerMy = $request->query->get('pagerMy', 1); // Get the page of the array my question (default 1)
         $pagerShared = $request->query->get('pagerShared', 1); // Get the pager of the array my shared question (default 1)
+        $pageToGo = $request->query->get('pageToGo'); // Page to go for the list of the questions of the exercise
         $max = 2; // Max of questions per page
 
         // If change page of my questions array
@@ -321,6 +350,17 @@ class ExerciseController extends Controller
                 throw $this->createNotFoundException("Cette page n'existe pas.");
             }
 
+            if ($pageToGo) {
+                $page2Go = $pageToGo;
+            } else {
+                // If new item > max per page, display next page
+                $rest = $nbItem % $maxPage;
+
+                if ($rest == 0) {
+                    $page2Go += 1;
+                }
+            }
+
             return $this->render(
                 'UJMExoBundle:Question:import.html.twig',
                 array(
@@ -329,7 +369,8 @@ class ExerciseController extends Controller
                     'exoID'        => $exoID,
                     'sharedWithMe' => $sharedWithMe,
                     'pagerMy'      => $pagerfantaMy,
-                    'pagerShared'  => $pagerfantaShared
+                    'pagerShared'  => $pagerfantaShared,
+                    'page2go'      => $page2Go
                 )
             );
         } else {
@@ -341,7 +382,7 @@ class ExerciseController extends Controller
      * To record the Question's import.
      *
      */
-    public function importValidateAction($exoID, $qid)
+    public function importValidateAction($exoID, $qid, $page2go)
     {
         $user = $this->container->get('security.context')->getToken()->getUser();
         $question = $this->getDoctrine()
@@ -367,7 +408,41 @@ class ExerciseController extends Controller
 
             $em->flush();
 
-            return $this->redirect($this->generateUrl('ujm_exercise_questions', array('id' => $exoID)));
+            return $this->redirect($this->generateUrl('ujm_exercise_questions', array(
+                'id' => $exoID, 'pageNow' => $page2go))
+            );
+        } else {
+            return $this->redirect($this->generateUrl('ujm_exercise_import_question', array('exoID' => $exoID)));
+        }
+    }
+
+    public function importValidateSharedAction($exoID, $qid, $page2go)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $question = $em->getRepository('UJMExoBundle:Share')
+            ->findBy(array('question' => $qid));
+
+        if (count($question) > 0) {
+
+            $exo = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
+            $question = $em->getRepository('UJMExoBundle:Question')->find($qid);
+
+            $eq = new ExerciseQuestion($exo, $question);
+
+            $dql = 'SELECT max(eq.ordre) FROM UJM\ExoBundle\Entity\ExerciseQuestion eq '
+                 . 'WHERE eq.exercise='.$exoID;
+            $query = $em->createQuery($dql);
+            $maxOrdre = $query->getResult();
+
+            $eq->setOrdre((int) $maxOrdre[0][1] + 1);
+            $em->persist($eq);
+
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('ujm_exercise_questions', array(
+                'id' => $exoID, 'pageNow' => $page2go))
+            );
         } else {
             return $this->redirect($this->generateUrl('ujm_exercise_import_question', array('exoID' => $exoID)));
         }
@@ -377,13 +452,14 @@ class ExerciseController extends Controller
      * Delete the Question of the exercise.
      *
      */
-    public function deleteQuestionAction($exoID, $qid)
+    public function deleteQuestionAction($exoID, $qid, $pageNow, $maxPage, $nbItem, $lastPage)
     {
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($exoID);
+
         $this->checkAccess($exercise);
 
-        $exoAdmin = $this->isExerciseAdmin($exercise);
+        $exoAdmin = $this->isExerciseAdmin($exoID);
 
         if ($exoAdmin == 1) {
             $em = $this->getDoctrine()->getManager();
@@ -391,9 +467,18 @@ class ExerciseController extends Controller
                 ->findOneBy(array('exercise' => $exoID, 'question' => $qid));
             $em->remove($eq);
             $em->flush();
+
+             // If delete last item of page, display the previous one
+            $rest = $nbItem % $maxPage;
+
+            if ($rest == 1 && $pageNow == $lastPage) {
+                $pageNow -= 1;
+            }
         }
 
-        return $this->redirect($this->generateUrl('ujm_exercise_questions', array('id' => $exoID)));
+        return $this->redirect($this->generateUrl('ujm_exercise_questions', array(
+            'id' => $exoID, 'pageNow'=>$pageNow))
+        );
     }
 
     /**
@@ -746,37 +831,6 @@ class ExerciseController extends Controller
 
         if (!$this->get('security.context')->isGranted('OPEN', $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
-        }
-    }
-
-
-    public function importValidateSharedAction($exoID, $qid)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $question = $em->getRepository('UJMExoBundle:Interaction')
-            ->findBy(array('question' => $qid));
-
-        if (count($question) > 0) {
-
-            $exo = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
-            $question = $em->getRepository('UJMExoBundle:Question')->find($qid);
-
-            $eq = new ExerciseQuestion($exo, $question);
-
-            $dql = 'SELECT max(eq.ordre) FROM UJM\ExoBundle\Entity\ExerciseQuestion eq '
-                 . 'WHERE eq.exercise='.$exoID;
-            $query = $em->createQuery($dql);
-            $maxOrdre = $query->getResult();
-
-            $eq->setOrdre((int) $maxOrdre[0][1] + 1);
-            $em->persist($eq);
-
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('ujm_exercise_questions', array('id' => $exoID)));
-        } else {
-            return $this->redirect($this->generateUrl('ujm_exercise_import_question', array('exoID' => $exoID)));
         }
     }
 }

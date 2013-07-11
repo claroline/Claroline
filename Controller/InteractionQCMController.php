@@ -223,7 +223,7 @@ class InteractionQCMController extends Controller
      * Deletes a InteractionQCM entity.
      *
      */
-    public function deleteAction($id)
+    public function deleteAction($id, $pageNow)
     {
         $form = $this->createDeleteForm($id);
         $request = $this->getRequest();
@@ -240,7 +240,7 @@ class InteractionQCMController extends Controller
         $em->remove($entity);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('ujm_question_index'));
+        return $this->redirect($this->generateUrl('ujm_question_index', array('pageNow'=> $pageNow)));
     }
 
     private function createDeleteForm($id)

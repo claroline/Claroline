@@ -44,6 +44,7 @@ use UJM\ExoBundle\Entity\Document;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
 
+use Symfony\Component\HttpFoundation\Response;
 /**
  * WSRest controller.
  * To create REST WS
@@ -86,7 +87,7 @@ class WSRestController extends Controller
                 $em = $this->getDoctrine()->getManager();
                 $document = new Document();
 
-                $document->setLabel($_POST['label']);
+                $document->setLabel(trim($_POST['label']));
                 $document->setUrl($userDir.'/images/'. $file);
                 $document->setType(strrchr($file, '.'));
                 $document->setUser($this->container->get('security.context')->getToken()->getUser());
@@ -157,5 +158,32 @@ class WSRestController extends Controller
         } else {
             return 'Not authorized';
         }
+    }
+
+    public function NameAlreadyExistAction()
+    {
+        $request = $this->container->get('request');
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $response = 'not yet';
+
+        if ($request->isXmlHttpRequest()) {
+            $label = trim($request->request->get('label'));
+
+            if ($label) {
+                $repository = $this->getDoctrine()
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:Document');
+
+                $list = $repository->findBy(array('user' => $user->getId()));
+
+                for ($i = 0; $i < count($list); $i++) {
+                    if ($list[$i]->getLabel() ==  $label) {
+                        $response = 'already';
+                        break;
+                    }
+                }
+            }
+        }
+        return new Response($response);
     }
 }

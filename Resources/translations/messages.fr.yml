@@ -259,7 +259,7 @@ noImg: Vous devez télécharger une image !
 noAnswerZone: Vous n\'avez mis aucune zone de réponse ...
 notAll: Toutes les zones de réponses n\'ont pas été placées !
 onlyOnce: => Les bonnes réponses ne sont comptabilisées qu'une seule fois.
-wrong: La valeur saisie est incorrecte.
+wrong: Le nom saisi est incorrect.
 inside: Vous devez mettre la zone de reponse complète DANS l'image ...
 manageImg: Gérer mes documents ...
 Preview: Aperçu
@@ -307,3 +307,4 @@ findIn: Trouver dans
 findWhat: Ce que vous cherchez
 result: Résultats
 findQuestion: Rechercher des questions
+alreadyExist: Ce nom existe déjà.

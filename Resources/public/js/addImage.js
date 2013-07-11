@@ -46,12 +46,38 @@ function DisplayMessage() {
 }
 
 // To check if the label of the image is valid
-function ValidName(message, label, button) {
+function ValidName(message, label, path, messageA) {
+    var correctName = false;
+    var uniqueName = false;
+
     if (/^[a-z0-9_ !?éèà]+$/gi.test(document.getElementById(label).value) == false) {
         alert(message);
-        document.getElementById(button).disabled = true;
+        document.getElementById(label).focus();
+        return false;
     } else {
-        document.getElementById(button).disabled = false;
+        correctName = true;
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: path,
+        data: {
+            label : document.getElementById(label).value
+        },
+        cache: false,
+        success: function (data) {
+            if (data == 'already') {
+                alert(messageA);
+                document.getElementById(label).focus();
+                return false;
+            } else {
+                uniqueName = true;
+            }
+        }
+    });
+
+    if (correctName === true && uniqueName === true) {
+        document.getElementById('uploadForm').submit();
     }
 }
 

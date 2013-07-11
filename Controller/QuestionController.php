@@ -77,13 +77,12 @@ class QuestionController extends Controller
      * Lists the User's Question entities.
      *
      */
-    public function indexAction()
+    public function indexAction($pageNow = 0, $category2Find = '', $title2Find = '')
     {
-
         // To paginate the result :
         $request = $this->get('request'); // Get the request which contains the following parameters :
         $page = $request->query->get('page', 1); // Get the choosen page (default 1)
-        $click = $request->query->get('click', 'my'); // Get which array to change page (default 'my question')
+        $click = $request->query->get('click', 'my'); // Get which array to fchange page (default 'my question')
         $pagerMy = $request->query->get('pagerMy', 1); // Get the page of the array my question (default 1)
         $pagerShared = $request->query->get('pagerShared', 1); // Get the pager of the array my shared question (default 1)
         $max = 3; // Max of questions per page
@@ -137,6 +136,26 @@ class QuestionController extends Controller
                 ->findOneBy(array('question' => $shared[$i]->getQuestion()->getId()));
         }
 
+        if ($category2Find != '' && $title2Find != '' && $category2Find != 'z' && $title2Find != 'z') {
+            $i = 1 ; $pos = 0 ; $temp = 0;
+            foreach ($Interactions as $interaction) {
+                if ($interaction->getQuestion()->getCategory() == $category2Find) {
+                    $temp = $i;
+                }
+                if ($interaction->getQuestion()->getTitle() == $title2Find && $temp == $i) {
+                    $pos = $i;
+                    break;
+                }
+                $i++;
+            }
+
+            if ($pos % $max == 0) {
+                $pageNow = $pos / $max;
+            } else {
+                $pageNow = ceil($pos / $max);
+            }
+        }
+
         // Do the pagination of the result depending on which page of which array was changed
         // (My questions array)
         $adapterMy = new ArrayAdapter($Interactions);
@@ -147,12 +166,20 @@ class QuestionController extends Controller
         $pagerfantaShared = new Pagerfanta($adapterShared);
 
         try {
-            // Test if my questions array exists (try) and affects the matching results (which page, how many per page ...)
-            $interactions = $pagerfantaMy
-                ->setMaxPerPage($max)
-                ->setCurrentPage($pagerMy)
-                ->getCurrentPageResults()
-            ;
+            if ($pageNow == 0) {
+                // Test if my questions array exists (try) and affects the matching results (which page, how many per page ...)
+                $interactions = $pagerfantaMy
+                    ->setMaxPerPage($max)
+                    ->setCurrentPage($pagerMy)
+                    ->getCurrentPageResults()
+                ;
+            } else {
+                $interactions = $pagerfantaMy
+                    ->setMaxPerPage($max)
+                    ->setCurrentPage($pageNow)
+                    ->getCurrentPageResults()
+                ;
+            }
 
             // Test if my shared questions array exists (try) and affects the matching results (which page, how many per page ...)
             $sharedWithMe = $pagerfantaShared
@@ -184,8 +211,9 @@ class QuestionController extends Controller
     public function showAction($id)
     {
         $question = $this->controlUserQuestion($id);
+        $sharedQuestion = $this->controlUserSharedQuestion($id);
 
-        if (count($question) > 0) {
+        if (count($question) > 0 || count($sharedQuestion) > 0) {
             $interaction = $this->getDoctrine()
                 ->getManager()
                 ->getRepository('UJMExoBundle:Interaction')
@@ -451,7 +479,7 @@ class QuestionController extends Controller
      * Deletes a Question entity.
      *
      */
-    public function deleteAction($id)
+    public function deleteAction($id, $pageNow, $maxPage, $nbItem, $lastPage)
     {
         $question = $this->controlUserQuestion($id);
 
@@ -476,6 +504,13 @@ class QuestionController extends Controller
 
             $typeInter = $interaction[0]->getType();
 
+             // If delete last item of page, display the previous one
+            $rest = $nbItem % $maxPage;
+
+            if ($rest == 1 && $pageNow == $lastPage) {
+                $pageNow -= 1;
+            }
+
             switch ($typeInter) {
                 case "InteractionQCM":
                     $interactionQCM = $this->getDoctrine()
@@ -485,7 +520,8 @@ class QuestionController extends Controller
 
                     return $this->forward(
                         'UJMExoBundle:InteractionQCM:delete', array(
-                            'id' => $interactionQCM[0]->getId()
+                            'id' => $interactionQCM[0]->getId(),
+                            'pageNow'=> $pageNow
                         )
                     );
 
@@ -497,7 +533,8 @@ class QuestionController extends Controller
 
                     return $this->forward(
                         'UJMExoBundle:InteractionGraphic:delete', array(
-                            'id' => $interactionGraph[0]->getId()
+                            'id' => $interactionGraph[0]->getId(),
+                            'pageNow'=> $pageNow
                         )
                     );
 
@@ -509,7 +546,8 @@ class QuestionController extends Controller
 
                     return $this->forward(
                         'UJMExoBundle:InteractionHole:delete', array(
-                            'id' => $interactionHole[0]->getId()
+                            'id' => $interactionHole[0]->getId(),
+                            'pageNow'=> $pageNow
                         )
                     );
 
@@ -717,6 +755,18 @@ class QuestionController extends Controller
         return $question;
     }
 
+    private function controlUserSharedQuestion($questionID)
+    {
+        $user = $this->container->get('security.context')->getToken()->getUser();
+
+        $questions = $this->getDoctrine()
+            ->getManager()
+            ->getRepository('UJMExoBundle:Share')
+            ->getControlSharedQuestion($user->getId(), $questionID);
+
+        return $questions;
+    }
+
     /**
      * To manage the User's documents
      *
@@ -762,7 +812,7 @@ class QuestionController extends Controller
      * To delete a User's document
      *
      */
-    public function deleteDocAction($label, $pageNow, $maxPage, $nbItem)
+    public function deleteDocAction($label, $pageNow, $maxPage, $nbItem, $lastPage)
     {
         $dontdisplay = 0;
 
@@ -796,7 +846,7 @@ class QuestionController extends Controller
             // If delete last item of page, display the previous one
             $rest = $nbItem % $maxPage;
 
-            if ($rest == 1) {
+            if ($rest == 1 && $pageNow == $lastPage) {
                 $pageNow -= 1;
             }
 
