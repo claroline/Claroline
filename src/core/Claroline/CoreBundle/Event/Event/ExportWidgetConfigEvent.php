@@ -19,7 +19,7 @@ class ExportWidgetConfigEvent extends Event implements DataConveyorEventInterfac
         $this->workspace = $workspace;
     }
 
-    public function setConfig($config)
+    public function setConfig(array $config)
     {
         $this->isPopulated = true;
         $this->config = $config;

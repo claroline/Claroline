@@ -23,23 +23,11 @@ class HomeListener
 
     /**
      * @DI\InjectParams({
-<<<<<<< HEAD
-     *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "ed" = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "templating" = @DI\Inject("templating"),
-     *     "wm" = @DI\Inject("claroline.widget.manager")
-||||||| merged common ancestors
-     *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "ed" = @DI\Inject("event_dispatcher"),
-     *     "templating" = @DI\Inject("templating"),
-     *     "wm" = @DI\Inject("claroline.widget.manager")
-=======
      *     "em"                 = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "ed"                 = @DI\Inject("event_dispatcher"),
+     *     "ed"                 = @DI\Inject("claroline.event.event_dispatcher"),
      *     "templating"         = @DI\Inject("templating"),
      *     "wm"                 = @DI\Inject("claroline.widget.manager"),
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager")
->>>>>>> af271bbf915cb67ed23b511fd373f9b3eb885f83
      * })
      */
     public function __construct($em, $ed, $templating, $wm, WorkspaceManager $workspaceManager)
@@ -167,21 +155,12 @@ class HomeListener
             $widgetArray['name'] = $config->getWidget()->getName();
             $widgetArray['is_visible'] = $config->isVisible();
             if ($config->getWidget()->isExportable()) {
-                $newEvent = new ExportWidgetConfigEvent(
-                    $config->getWidget(),
-                    $workspace
-                );
                 $newEvent = $this->ed->dispatch(
-                    "widget_{$config->getWidget()->getName()}_to_template",
+                    'widget_{$config->getWidget()->getName()}_to_template',
                     'ExportWidgetConfig',
                     array($config->getWidget(), $workspace)
                 );
-                if ($newEvent->getConfig() === null) {
-                    throw new \Exception(
-                        "The event widget_{$config->getWidget()->getName()}_to_template" .
-                        " did not return any response"
-                    );
-                }
+
                 $widgetArray['config'] = $newEvent->getConfig();
             }
 
