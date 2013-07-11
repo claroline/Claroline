@@ -186,4 +186,9 @@ class RightsManager
 
         return $creatableTypes;
     }
+
+    public function getNonAdminRights(AbstractResource $resource)
+    {
+        return $this->rightsRepo->findNonAdminRights($resource);
+    }
 }
