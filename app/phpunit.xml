@@ -45,7 +45,6 @@
             <directory>../src/core/Claroline/CoreBundle/Tests/Library/Analytics</directory>
             <directory>../src/core/Claroline/CoreBundle/Tests/Library/Home</directory>
             <directory>../src/core/Claroline/CoreBundle/Tests/Library/Log</directory>
-            <file>../src/core/Claroline/CoreBundle/Tests/Library/Resource/Converter.php</file>
             <file>../src/core/Claroline/CoreBundle/Tests/Library/Resource/ModeAccessor.php</file>
             <file>../src/core/Claroline/CoreBundle/Tests/Library/Security/TokenUpdater.php</file>
             <file>../src/core/Claroline/CoreBundle/Tests/Library/Security/Utilities.php</file>
