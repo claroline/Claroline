@@ -3,6 +3,7 @@
 namespace Claroline\BadgeBundle\Controller;
 
 use Claroline\BadgeBundle\Entity\Badge;
+use Claroline\BadgeBundle\Entity\BadgeClaim;
 use Claroline\BadgeBundle\Entity\BadgeTranslation;
 use Claroline\BadgeBundle\Entity\UserBadge;
 use Claroline\CoreBundle\Entity\User;
@@ -32,10 +33,6 @@ class AdminController extends Controller
      */
     public function listAction()
     {
-        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            throw new \AccessDeniedException();
-        }
-
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
 
@@ -64,10 +61,6 @@ class AdminController extends Controller
      */
     public function addAction(Request $request)
     {
-        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            throw new \AccessDeniedException();
-        }
-
         $badge = new Badge();
 
         //@TODO Get locales from locale source (database etc...)
@@ -118,10 +111,6 @@ class AdminController extends Controller
      */
     public function editAction(Request $request, Badge $badge, $page = 1)
     {
-        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            throw new \AccessDeniedException();
-        }
-
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
         $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
@@ -174,10 +163,6 @@ class AdminController extends Controller
      */
     public function deleteAction(Badge $badge)
     {
-        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            throw new \AccessDeniedException();
-        }
-
         /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
         $translator = $this->get('translator');
         try {
@@ -203,10 +188,6 @@ class AdminController extends Controller
      */
     public function awardAction(Request $request, Badge $badge)
     {
-        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            throw new \AccessDeniedException();
-        }
-
         $form = $this->createForm(new BadgeAwardType());
 
         if($request->isMethod('POST')) {
@@ -286,10 +267,6 @@ class AdminController extends Controller
      */
     public function unawardAction(Request $request, Badge $badge, User $user)
     {
-        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            throw new \AccessDeniedException();
-        }
-
         /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
         $translator = $this->get('translator');
         try {
@@ -316,5 +293,45 @@ class AdminController extends Controller
         }
 
         return $this->redirect($this->generateUrl('claro_admin_badges_edit', array('id' => $badge->getId())));
+    }
+
+    /**
+     * @Route("/claim/manage/{id}/{validate}", name="claro_admin_manage_claim")
+     * @ParamConverter("user", options={"mapping": {"username": "username"}})
+     *
+     * @Template()
+     */
+    public function manageClaimAction(Request $request, BadgeClaim $badgeClaim, $validate = false)
+    {
+        /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+        $translator = $this->get('translator');
+        try {
+            $successMessage = $translator->trans('badge_reject_award_success_message', array(), 'platform');
+            $errorMessage   = $translator->trans('badge_reject_award_error_message', array(), 'platform');
+
+            if($validate) {
+                $successMessage = $translator->trans('badge_validate_award_success_message', array(), 'platform');
+                $errorMessage   = $translator->trans('badge_validate_award_error_message', array(), 'platform');
+
+                /** @var \Claroline\BadgeBundle\Manager\BadgeManager $badgeManager */
+                $badgeManager = $this->get('claroline.manager.badge');
+                $awardedBadge = $badgeManager->addBadgeToUsers($badgeClaim->getBadge(), array($badgeClaim->getUser()));
+                if(0 === $awardedBadge) {
+                    throw new \Exception('No badge were awarded.');
+                }
+            }
+
+            $entityManager = $this->getDoctrine()->getManager();
+
+            $entityManager->remove($badgeClaim);
+            $entityManager->flush();
+
+            $this->get('session')->getFlashBag()->add('success', $successMessage);
+        }
+        catch(\Exception $exception) {
+            $this->get('session')->getFlashBag()->add('error', $errorMessage);
+        }
+
+        return $this->redirect($this->generateUrl('claro_admin_badges'));
     }
 }
