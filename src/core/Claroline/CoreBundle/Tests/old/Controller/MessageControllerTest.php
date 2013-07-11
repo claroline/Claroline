@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 
-class MessageTest extends FunctionalTestCase
+class MessageControllerTest extends FunctionalTestCase
 {
     public function setUp()
     {
