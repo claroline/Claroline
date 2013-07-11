@@ -8,16 +8,6 @@ use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
 class ObjectManagerTest extends MockeryTestCase
 {
-    private $wrapped;
-    private $om;
-
-    protected function setUp()
-    {
-        parent::setUp();
-//        $this->wrapped = m::mock('Doctrine\Common\Persistence\ObjectManager');
-//        $this->om = new ObjectManager($this->wrapped);
-    }
-
     /**
      * @dataProvider hasSupportMethodProvider
      */
@@ -126,9 +116,8 @@ class ObjectManagerTest extends MockeryTestCase
         $query = m::mock(new Query($oom));
         $oom->shouldReceive('createQuery')
             ->once()
-            ->with('SELECT object FROM :class object WHERE object.id IN (:ids)')
+            ->with('SELECT object FROM Foo\Bar object WHERE object.id IN (:ids)')
             ->andReturn($query);
-        $query->shouldReceive('setParameter')->with('class', 'Foo\Bar')->once();
         $query->shouldReceive('setParameter')->with('ids', array(1, 2))->once();
         $query->shouldReceive('getResult')->once()->andReturn(array('object 1', 'object 2'));
         $om = new ObjectManager($oom);
@@ -141,9 +130,8 @@ class ObjectManagerTest extends MockeryTestCase
         $query = m::mock(new Query($oom));
         $oom->shouldReceive('createQuery')
             ->once()
-            ->with('SELECT COUNT(object) FROM :class object')
+            ->with('SELECT COUNT(object) FROM Foo\Bar object')
             ->andReturn($query);
-        $query->shouldReceive('setParameter')->with('class', 'Foo\Bar')->once();
         $query->shouldReceive('getSingleScalarResult')->once()->andReturn(5);
         $om = new ObjectManager($oom);
         $this->assertEquals(5, $om->count('Foo\Bar'));

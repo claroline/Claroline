@@ -64,12 +64,8 @@ class UserManagerTest extends MockeryTestCase
         $this->writer->shouldReceive('create')
             ->with($user)
             ->once();
-        $user->shouldReceive('getLastName')
-            ->once();
-        $user->shouldReceive('getFirstName')
-            ->once();
         $this->ed->shouldReceive('dispatch')
-            ->with('log', 'Log\LogUserCreate', $user)
+            ->with('log', 'Log\LogUserCreate', array($user))
             ->once();
 
         $manager->createUser($user);
@@ -89,26 +85,11 @@ class UserManagerTest extends MockeryTestCase
         $user = m::mock('Claroline\CoreBundle\Entity\User');
         $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
 
-        $manager->shouldReceive('setPersonalWorkspace')
-            ->with($user)
-            ->once()
-            ->andReturn($workspace);
-        $this->toolManager->shouldReceive('addRequiredToolsToUser')
-            ->with($user)
-            ->once();
-        $this->roleManager->shouldReceive('setRoleToRoleSubject')
-            ->with($user, 'MY_ROLE')
-            ->once();
-        $this->writer->shouldReceive('create')
-            ->with($user)
-            ->once();
-        $user->shouldReceive('getLastName')
-            ->once();
-        $user->shouldReceive('getFirstName')
-            ->once();
-        $this->ed->shouldReceive('dispatch')
-            ->with('log', anInstanceOf('Claroline\CoreBundle\Event\Event\Log\LogUserCreateEvent'))
-            ->once();
+        $manager->shouldReceive('setPersonalWorkspace')->with($user)->once()->andReturn($workspace);
+        $this->toolManager->shouldReceive('addRequiredToolsToUser')->with($user)->once();
+        $this->roleManager->shouldReceive('setRoleToRoleSubject')->with($user, 'MY_ROLE')->once();
+        $this->writer->shouldReceive('create')->with($user)->once();
+        $this->ed->shouldReceive('dispatch')->with('log', 'Log\LogUserCreate', array($user))->once();
 
         $manager->createUserWithRole($user, 'MY_ROLE');
     }
@@ -135,12 +116,8 @@ class UserManagerTest extends MockeryTestCase
         $this->writer->shouldReceive('create')
             ->with($user)
             ->once();
-        $user->shouldReceive('getLastName')
-            ->once();
-        $user->shouldReceive('getFirstName')
-            ->once();
         $this->ed->shouldReceive('dispatch')
-            ->with('log', anInstanceOf('Claroline\CoreBundle\Event\Event\Log\LogUserCreateEvent'))
+            ->with('log', 'Log\LogUserCreate', array($user))
             ->once();
 
         $manager->insertUserWithRoles($user, $roles);
