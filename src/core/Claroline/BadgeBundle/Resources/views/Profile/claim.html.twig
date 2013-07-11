@@ -1,0 +1,16 @@
+{% extends "ClarolineCoreBundle::layout.html.twig" %}
+
+{% block content %}
+<div class="margin border">
+    <h3 class="sub-section-header">{{ 'claim_badge_form'|trans({}, 'platform') }}</h3>
+
+    <form action="{{ path('claro_claim_badge') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+        {{ form_widget(form) }}
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
+            <a href="{{ path('claro_profile_view_badges') }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-danger">{{ 'cancel'|trans({}, 'platform') }}</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "ClarolineCoreBundle::layout.html.twig" %}
+
+{% block content %}
+    {{ macros.flashBox() }}
+
+    <div class="span12 border">
+        <div class="row margin">
+            <h3 class="sub-section-header">
+                {{ 'my_badges'|trans({}, 'platform') }}
+                <a href="{{ path('claro_claim_badge', {'id': user.id}) }}" class="btn btn-small" data-toggle="tooltip" data-placement="right" title="{{ 'claim_badge'|trans({}, 'platform') }}"><i class="icon-plus"></i></a>
+            </h3>
+
+            <ul class="unstyled inline thumbnails badge_user_list">
+            {% for badge in pager.currentPageResults %}
+                <li>
+                    <a href="{{ path('claro_view_badge', {'id': badge.id}) }}" title="{{ badge.name(language) }}" class="thumbnail">
+                        <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name(language) }}" />
+                    </a>
+                </li>
+            {% else %}
+                <li>{{ 'no_badges'|trans({}, 'platform') }}</li>
+            {% endfor %}
+            </ul>
+
+            {% if pager.haveToPaginate %}
+            {{
+                pagerfanta(
+                    pager,
+                    'twitter_bootstrap_translated',
+                    {
+                        'proximity' : 1,
+                        'routeName': 'claro_profile_view_badges',
+                        'routeParams': {}
+                    }
+                )
+            }}
+            {% endif %}
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('[data-toggle=tooltip]').tooltip();
+    });
+</script>
+{% endblock %}

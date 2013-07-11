@@ -63,6 +63,7 @@ class Version20120119000000 extends BundleMigration
         $this->createBadgeTable($schema);
         $this->createBadgeTranslationTable($schema);
         $this->createUserBadgeTable($schema);
+        $this->createBadgeClaimTable($schema);
     }
 
     public function down(Schema $schema)
@@ -1425,6 +1426,30 @@ class Version20120119000000 extends BundleMigration
             array('issuer_id'),
             array('id'),
             array('onDelete' => 'SET NULL')
+        );
+    }
+
+    private function createBadgeClaimTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_badge_claim');
+        $this->addId($table);
+        $table->addColumn('user_id', 'integer', array('notnull' => true));
+        $table->addColumn('badge_id', 'integer', array('notnull' => true));
+        $table->addColumn('claimed_at', 'datetime', array('notnull' => true));
+
+        $table->addUniqueIndex(array('user_id', 'badge_id'));
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_user'),
+            array('user_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+        $table->addForeignKeyConstraint(
+            $schema->getTable('claro_badge'),
+            array('badge_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
         );
     }
 }

@@ -199,6 +199,14 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      */
     protected $userBadges;
 
+    /**
+     * @var BadgeClaim[]|ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Claroline\BadgeBundle\Entity\BadgeClaim", mappedBy="user", cascade={"all"})
+     * @ORM\JoinTable(name="claro_badge_claim")
+     */
+    protected $badgeClaims;
+
     public function __construct()
     {
         parent::__construct();
@@ -606,6 +614,41 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         foreach($this->getBadges() as $userBadge)
         {
             if($userBadge->getId() === $badge->getId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\BadgeClaim[]|\Doctrine\Common\Collections\ArrayCollection $badgeClaims
+     *
+     * @return User
+     */
+    public function setBadgeClaims($badgeClaims)
+    {
+        $this->badgeClaims = $badgeClaims;
+    }
+
+    /**
+     * @return \Claroline\CoreBundle\Entity\BadgeClaim[]|\Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getBadgeClaims()
+    {
+        return $this->badgeClaims;
+    }
+
+    /**
+     * @param Badge $badge
+     *
+     * @return bool
+     */
+    public function hasClaimedFor(Badge $badge)
+    {
+        foreach($this->getBadgeClaims() as $claimedBadge)
+        {
+            if($badge->getId() === $claimedBadge->getId()) {
                 return true;
             }
         }

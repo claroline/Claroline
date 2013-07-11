@@ -2,13 +2,12 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Doctrine\ORM\NoResultException;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Form\ProfileType;
+use Claroline\CoreBundle\Library\Event\LogUserUpdateEvent;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Claroline\CoreBundle\Form\ProfileType;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Event\LogUserUpdateEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -178,37 +177,5 @@ class ProfileController extends Controller
         }
 
         return $user;
-    }
-
-    /**
-     * @Route("/badges/{page}", name="claro_profile_view_badges")
-     *
-     * @Template("ClarolineCoreBundle:Profile:badge.html.twig")
-     *
-     * Displays the public profile of an user.
-     *
-     * @param int $page
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function badgeAction($page = 1)
-    {
-        $user = $this->get('security.context')->getToken()->getUser();
-
-        $query = $this->getDoctrine()->getRepository('ClarolineBadgeBundle:Badge')->findByUser($user, true);
-        $adapter = new DoctrineORMAdapter($query);
-        $pager   = new Pagerfanta($adapter);
-        $pager
-            ->setMaxPerPage(10)
-            ->setCurrentPage($page)
-        ;
-
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-
-        return array(
-            'pager'    => $pager,
-            'language' => $platformConfigHandler->getParameter('locale_language')
-        );
     }
 }
