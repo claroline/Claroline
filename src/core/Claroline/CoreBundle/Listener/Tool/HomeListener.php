@@ -11,6 +11,7 @@ use Claroline\CoreBundle\Event\Event\ImportToolEvent;
 use Claroline\CoreBundle\Event\Event\ConfigureWorkspaceToolEvent;
 use Claroline\CoreBundle\Event\Event\ConfigureDesktopToolEvent;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -18,20 +19,24 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class HomeListener
 {
+    private $workspaceManager;
+
     /**
      * @DI\InjectParams({
-     *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "ed" = @DI\Inject("event_dispatcher"),
-     *     "templating" = @DI\Inject("templating"),
-     *     "wm" = @DI\Inject("claroline.widget.manager")
+     *     "em"                 = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "ed"                 = @DI\Inject("event_dispatcher"),
+     *     "templating"         = @DI\Inject("templating"),
+     *     "wm"                 = @DI\Inject("claroline.widget.manager"),
+     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
-    public function __construct($em, $ed, $templating, $wm)
+    public function __construct($em, $ed, $templating, $wm, WorkspaceManager $workspaceManager)
     {
         $this->em = $em;
         $this->ed = $ed;
         $this->templating = $templating;
         $this->wm = $wm;
+        $this->workspaceManager = $workspaceManager;
     }
 
     /**
@@ -180,7 +185,7 @@ class HomeListener
      */
     public function workspaceHome($workspaceId)
     {
-        $workspace = $this->em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+        $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
 
         return $this->templating->render(
             'ClarolineCoreBundle:Tool\workspace\home:home.html.twig',

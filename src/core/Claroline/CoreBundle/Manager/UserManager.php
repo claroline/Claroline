@@ -41,17 +41,17 @@ class UserManager
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "userRepo" =               @DI\Inject("user_repository"),
-     *     "writer" =                 @DI\Inject("claroline.database.writer"),
-     *     "roleManager" =            @DI\Inject("claroline.manager.role_manager"),
-     *     "workspaceManager" =       @DI\Inject("claroline.manager.workspace_manager"),
-     *     "toolManager" =            @DI\Inject("claroline.manager.tool_manager"),
-     *     "ed" =                     @DI\Inject("event_dispatcher"),
+     *     "userRepo"               = @DI\Inject("user_repository"),
+     *     "writer"                 = @DI\Inject("claroline.database.writer"),
+     *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
+     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
+     *     "ed"                     = @DI\Inject("event_dispatcher"),
      *     "personalWsTemplateFile" = @DI\Inject("%claroline.param.templates_directory%"),
-     *     "trans" =                  @DI\Inject("translator"),
-     *     "ch" =                     @DI\Inject("claroline.config.platform_config_handler"),
-     *     "genericRepo" =            @DI\Inject("claroline.database.generic_repository"),
-     *     "pagerFactory" =           @DI\Inject("claroline.pager.pager_factory")
+     *     "trans"                  = @DI\Inject("translator"),
+     *     "ch"                     = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "genericRepo"            = @DI\Inject("claroline.database.generic_repository"),
+     *     "pagerFactory"           = @DI\Inject("claroline.pager.pager_factory")
      * })
      */
     public function __construct(
@@ -175,6 +175,38 @@ class UserManager
         $workspace = $this->workspaceManager->create($config, $user);
         $user->setPersonalWorkspace($workspace);
         $this->writer->update($user);
+    }
+
+    public function convertUsersToArray(array $users)
+    {
+        $content = array();
+        $i = 0;
+
+        foreach ($users as $user) {
+            $content[$i]['id'] = $user->getId();
+            $content[$i]['username'] = $user->getUsername();
+            $content[$i]['lastname'] = $user->getLastName();
+            $content[$i]['firstname'] = $user->getFirstName();
+            $content[$i]['administrativeCode'] = $user->getAdministrativeCode();
+
+            $rolesString = '';
+            $roles = $user->getEntityRoles();
+            $rolesCount = count($roles);
+            $j = 0;
+
+            foreach ($roles as $role) {
+                $rolesString .= "{$this->translator->trans($role->getTranslationKey(), array(), 'platform')}";
+
+                if ($j < $rolesCount - 1) {
+                    $rolesString .= ' ,';
+                }
+                $j++;
+            }
+            $content[$i]['roles'] = $rolesString;
+            $i++;
+        }
+
+        return $content;
     }
 
     public function getUserByUsername($username)

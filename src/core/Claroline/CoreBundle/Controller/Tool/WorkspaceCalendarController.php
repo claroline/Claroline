@@ -5,36 +5,57 @@ namespace Claroline\CoreBundle\Controller\Tool;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Entity\Event;
-use Claroline\CoreBundle\Form\CalendarType;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Controller of the calendar
  */
 class WorkspaceCalendarController extends Controller
 {
-    const ABSTRACT_WS_CLASS = 'ClarolineCoreBundle:Workspace\AbstractWorkspace';
+    private $security;
+    private $formFactory;
 
     /**
-     * @Route(
+     * @DI\InjectParams({
+     *     "security"           = @DI\Inject("security.context"),
+     *     "formFactory"        = @DI\Inject("claroline.form.factory")
+     * })
+     */
+    public function __construct(
+        SecurityContextInterface $security,
+        FormFactory $formFactory
+    )
+    {
+        $this->security = $security;
+        $this->formFactory = $formFactory;
+    }
+
+    /**
+     * @EXT\Route(
      *     "/{workspaceId}/add",
      *     name="claro_workspace_agenda_add_event"
      * )
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
      *
-     * @param integer $workspaceId
+     * @param AbstractWorkspace $workspace
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function addEventAction($workspaceId)
+    public function addEventAction(AbstractWorkspace $workspace)
     {
         $em = $this->getDoctrine()->getManager();
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkUserIsAllowed('calendar', $workspace);
         $event = new Event();
-        $form = $this->createForm(new CalendarType, $event);
+        $form = $this->formFactory->create(FormFactory::TYPE_CALENDAR, array(), $event);
         $request = $this->get('request');
 
         if ($request->getMethod() === 'POST') {
@@ -49,7 +70,7 @@ class WorkspaceCalendarController extends Controller
                 // the end date has to be bigger
                 if ($event->getStart() <= $event->getEnd()) {
                     $event->setWorkspace($workspace);
-                    $event->setUser($this->get('security.context')->getToken()->getUser());
+                    $event->setUser($this->security->getToken()->getUser());
                     $em->persist($event);
                     $em->flush();
                     $data = array(
@@ -84,25 +105,29 @@ class WorkspaceCalendarController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspaceId}/update",
      *     name="claro_workspace_agenda_update"
      * )
-     * @Method("POST")
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
      *
-     * @param type $workspaceId
+     * @param AbstractWorkspace $workspace
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function updateAction($workspaceId)
+    public function updateAction(AbstractWorkspace $workspace)
     {
         $em = $this->getDoctrine()->getManager();
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkUserIsAllowed('calendar', $workspace);
         $request = $this->get('request');
         $postData = $request->request->all();
         $event = $em->getRepository('ClarolineCoreBundle:Event')->find($postData['id']);
-        $form = $this->createForm(new CalendarType(), $event);
+        $form = $this->formFactory->create(FormFactory::TYPE_CALENDAR, array(), $event);
 
         if ($request->getMethod() === 'POST') {
 
@@ -131,20 +156,24 @@ class WorkspaceCalendarController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspaceId}/delete",
      *     name="claro_workspace_agenda_delete"
      * )
-     * @Method("POST")
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
      *
-     * @param integer $workspaceId
+     * @param AbstractWorkspace $workspace
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteAction($workspaceId)
+    public function deleteAction(AbstractWorkspace $workspace)
     {
         $em = $this->getDoctrine()->getManager();
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkUserIsAllowed('calendar', $workspace);
         $repository = $em->getRepository('ClarolineCoreBundle:Event');
         $request = $this->get('request');
@@ -161,22 +190,27 @@ class WorkspaceCalendarController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspaceId}/show",
      *     name="claro_workspace_agenda_show"
      * )
-     * @Method({"GET","POST"})
+     * @EXT\Method({"GET","POST"})
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
      *
-     * @param integer $workspaceId
+     * @param AbstractWorkspace $workspace
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showAction($workspaceId)
+    public function showAction(AbstractWorkspace $workspace)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->checkUserIsAllowed('calendar', $workspace);
-        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findbyWorkspaceId($workspaceId, false);
+        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')
+            ->findbyWorkspaceId($workspace->getId(), false);
         $data = array();
 
         foreach ($listEvents as $key => $object) {
@@ -196,7 +230,7 @@ class WorkspaceCalendarController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/move",
      *     name="claro_workspace_agenda_move"
      * )
@@ -237,7 +271,7 @@ class WorkspaceCalendarController extends Controller
 
     private function checkUserIsAllowed($permission, AbstractWorkspace $workspace)
     {
-        if (!$this->get('security.context')->isGranted($permission, $workspace)) {
+        if (!$this->security->isGranted($permission, $workspace)) {
             throw new AccessDeniedException();
         }
     }
