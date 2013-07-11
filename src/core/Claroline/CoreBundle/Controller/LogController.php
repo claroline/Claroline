@@ -67,7 +67,7 @@ class LogController extends Controller
             $config = new LogWorkspaceWidgetConfig();
         }
         $config->setIsDefault($isDefault);
-
+        
         $config->setResourceCopy($data['creation'] === true);
         $config->setResourceCreate($data['creation'] === true);
         $config->setResourceShortcut($data['creation'] === true);
@@ -123,15 +123,14 @@ class LogController extends Controller
     public function viewDetailsAction(Log $log)
     {
         if ($log->getAction() === LogResourceChildUpdateEvent::ACTION ) {
-            $eventName = 'create_log_details_'.$log->getResourceType()->getName();
-            $event = new LogCreateDelegateViewEvent($log);
-            $this->eventDispatcher->dispatch($eventName, $event);
 
-            if ($event->getResponseContent() === "") {
-                throw new \Exception(
-                    "Event '{$eventName}' didn't receive any response."
-                );
-            }
+
+            $event = $this->eventDispatcher->dispatch(
+                'create_log_details_'.$log->getResourceType()->getName(),
+                'Log\LogCreateDelegateView',
+                array($log)
+            );
+
 
             return new Response($event->getResponseContent());
         }

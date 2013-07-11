@@ -10,6 +10,7 @@ use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -24,7 +25,7 @@ class ResourceManagerListener
     /**
      * @DI\InjectParams({
      *     "em"                     = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "ed"                     = @DI\Inject("event_dispatcher"),
+     *     "ed"                     = @DI\Inject("claroline.event.event_dispatcher"),
      *     "templating"             = @DI\Inject("templating"),
      *     "manager"                = @DI\Inject("claroline.manager.resource_manager"),
      *     "sc"                     = @DI\Inject("security.context"),
@@ -37,7 +38,7 @@ class ResourceManagerListener
      */
     public function __construct(
         $em,
-        $ed,
+        StrictDispatcher $ed,
         $templating,
         $manager,
         $sc,

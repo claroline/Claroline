@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Symfony\Component\Translation\Translator;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
@@ -41,12 +41,12 @@ class UserManager
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "userRepo"               = @DI\Inject("user_repository"),
-     *     "writer"                 = @DI\Inject("claroline.database.writer"),
-     *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
-     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
-     *     "ed"                     = @DI\Inject("event_dispatcher"),
+     *     "userRepo" =               @DI\Inject("user_repository"),
+     *     "writer" =                 @DI\Inject("claroline.database.writer"),
+     *     "roleManager" =            @DI\Inject("claroline.manager.role_manager"),
+     *     "workspaceManager" =       @DI\Inject("claroline.manager.workspace_manager"),
+     *     "toolManager" =            @DI\Inject("claroline.manager.tool_manager"),
+     *     "ed" =                     @DI\Inject("claroline.event.event_dispatcher"),
      *     "personalWsTemplateFile" = @DI\Inject("%claroline.param.templates_directory%"),
      *     "trans"                  = @DI\Inject("translator"),
      *     "ch"                     = @DI\Inject("claroline.config.platform_config_handler"),
@@ -60,7 +60,7 @@ class UserManager
         RoleManager $roleManager,
         WorkspaceManager $workspaceManager,
         ToolManager $toolManager,
-        EventDispatcher $ed,
+        StrictDispatcher $ed,
         $personalWsTemplateFile,
         Translator $trans,
         PlatformConfigurationHandler $ch,
@@ -94,8 +94,7 @@ class UserManager
 
         $this->writer->create($user);
 
-        $log = new LogUserCreateEvent($user);
-        $this->ed->dispatch('log', $log);
+        $this->ed->dispatch('log', 'LogUserCreate', $user);
 
         return $user;
     }
@@ -114,7 +113,7 @@ class UserManager
         $this->writer->create($user);
 
         $log = new LogUserCreateEvent($user);
-        $this->ed->dispatch('log', $log);
+        $this->ed->dispatch('log', 'Log\LogUserCreateEvent', array($user));
 
         return $user;
     }
