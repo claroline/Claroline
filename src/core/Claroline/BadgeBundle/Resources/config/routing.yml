@@ -5,3 +5,7 @@ claro_badge_admin:
 claro_badge_front:
     resource: "@ClarolineBadgeBundle/Controller/FrontController.php"
     type:     annotation
+
+claro_badge_profil:
+    resource: "@ClarolineBadgeBundle/Controller/ProfileController.php"
+    type:     annotation

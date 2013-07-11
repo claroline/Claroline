@@ -93,4 +93,68 @@ class BadgeRepository extends EntityRepository
             ->getSingleResult()
         ;
     }
+
+    /**
+     * @param string $name
+     * @param bool   $getQuery
+     *
+     * @return array|\Doctrine\ORM\AbstractQuery
+     */
+    public function findByName($name, $getQuery = false)
+    {
+        $name  = strtoupper($name);
+        $query = $this->getEntityManager()
+            ->createQuery('
+                SELECT b, t
+                FROM ClarolineBadgeBundle:Badge b
+                JOIN b.translations t
+                WHERE UPPER(t.name) LIKE :name
+                ORDER BY t.name ASC'
+            )
+            ->setParameter('name', "%{$name}%")
+        ;
+
+        return ($getQuery) ? $query: $query->getResult();
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return Badge
+     */
+    public function findOneByName($name)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery('
+                SELECT b, t
+                FROM ClarolineBadgeBundle:Badge b
+                JOIN b.translations t
+                WHERE t.name = :name'
+            )
+            ->setParameter('name', $name)
+        ;
+
+        return $query->getSingleResult();
+    }
+
+    /**
+     * @param array $params
+     * @return ArrayCollection
+     */
+    public function extract($params)
+    {
+        $search = $params['search'];
+        if ($search !== null) {
+
+            $query = $this->findByName($search, true);
+
+            return $query
+                ->setFirstResult(0)
+                ->setMaxResults(10)
+                ->getResult()
+            ;
+        }
+
+        return array();
+    }
 }

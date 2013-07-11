@@ -33,6 +33,35 @@
                 <a class="btn" href="{{path('claro_message_form')}}?ids[]={{ user.id }}"><i class="icon-comment"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
             </p>
         </div>
-        {% include 'ClarolineCoreBundle:Profile:list_badge.html.twig' with {'title': 'badges'|trans({}, 'platform'), 'pager': pager, 'language': language, 'routeName': 'claro_profile_view', 'routeParams': {'userId': user.id}} %}
+        <div class="row margin">
+            <h3 class="sub-section-header">{{ 'badges'|trans({}, 'platform') }}</h3>
+
+            <ul class="unstyled inline thumbnails badge_user_list">
+            {% for badge in pager.currentPageResults %}
+                <li>
+                    <a href="{{ path('claro_view_badge', {'id': badge.id}) }}" title="{{ badge.name(language) }}" class="thumbnail">
+                        <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name(language) }}" />
+                    </a>
+                </li>
+            {% else %}
+                <li>{{ 'no_badges'|trans({}, 'platform') }}</li>
+            {% endfor %}
+            </ul>
+
+            {% if pager.haveToPaginate %}
+            {{
+                pagerfanta(
+                    pager,
+                    'twitter_bootstrap_translated',
+                    {
+                        'proximity' : 1,
+                        'routeName': 'claro_profile_view',
+                        'routeParams': {'userId': user.id}
+                    }
+                )
+            }}
+            {% endif %}
+
+        </div>
     </div>
 {% endblock %}
