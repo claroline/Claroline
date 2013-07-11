@@ -45,6 +45,9 @@ use UJM\ExoBundle\Form\PaperType;
 
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
+
+use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+
 /**
  * Paper controller.
  *
@@ -57,6 +60,8 @@ class PaperController extends Controller
      */
     public function indexAction($exoID, $page)
     {
+        $exoAdmin = false;
+        
         $user = $this->container->get('security.context')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
@@ -65,11 +70,17 @@ class PaperController extends Controller
 
         $subscription = $this->getSubscription($user, $exoID);
 
-        if (count($subscription) < 1) {
-            return $this->redirect($this->generateUrl('exercise_show', array('id' => $exoID)));
+        $this->checkAccess($exercise);
+
+        if ((isset($subscription[0])) && ($subscription[0]->getAdmin() == 1)) {
+            $exoAdmin = true;
         }
 
-        if ($subscription[0]->getAdmin() == 1) {
+//        if (count($subscription) < 1) {
+//            return $this->redirect($this->generateUrl('exercise_show', array('id' => $exoID)));
+//        }
+
+        if ($exoAdmin === true) {
             $paper = $this->getDoctrine()
                             ->getManager()
                             ->getRepository('UJMExoBundle:Paper')
@@ -102,7 +113,7 @@ class PaperController extends Controller
             array(
                 'workspace' => $workspace,
                 'papers'    => $papers,
-                'isAdmin'   => $subscription[0]->getAdmin(),
+                'isAdmin'   => $exoAdmin,
                 'pager' => $pagerfanta,
                 'exoID' => $exoID
             )
@@ -123,11 +134,11 @@ class PaperController extends Controller
 
         $worspace = $paper->getExercise()->getWorkspace();
 
-        if (($subscription[0]->getAdmin() != 1) && ($paper->getEnd() == null)) {
+        if (($this->checkAccess($paper->getExercise())) && ($paper->getEnd() == null)) {
 
-            return $this->redirect($this->generateUrl('exercise_show', array('id' => $paper->getExercise()->getId())));
+            return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $paper->getExercise()->getId())));
 
-        } else if (($subscription[0]->getAdmin() == 1) || (($user->getId() == $paper->getUser()->getId()) &&
+        } else if (((isset($subscription[0])) && ($subscription[0]->getAdmin() == 1)) || (($user->getId() == $paper->getUser()->getId()) &&
             (($paper->getExercise()->getCorrectionMode() == 1) ||
             (($paper->getExercise()->getCorrectionMode() == 3) &&
             ($paper->getExercise()->getDateCorrection()->format('Y-m-d H:i:s') <= date("Y-m-d H:i:s"))) ||
@@ -146,7 +157,7 @@ class PaperController extends Controller
             // If not allowed to see correction but mark can be displayed at the end of the assessment
             $display = 'score';
         } else {
-            return $this->redirect($this->generateUrl('exercise_show', array('id' => $paper->getExercise()->getId())));
+            return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $paper->getExercise()->getId())));
         }
 
         $interactions = $this->getDoctrine()
@@ -266,5 +277,14 @@ class PaperController extends Controller
                              ->getControlExerciseEnroll($user->getId(), $exoID);
 
         return $subscription;
+    }
+    
+    private function checkAccess($exo)
+    {
+        $collection = new ResourceCollection(array($exo));
+
+        if (!$this->get('security.context')->isGranted('OPEN', $collection)) {
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
+        }
     }
 }

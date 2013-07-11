@@ -517,7 +517,7 @@ class ExerciseController extends Controller
             //if not exist a paper no finished
             if (count($paper) == 0) {
                 if ($this->controlMaxAttemps($exercise, $user, $exoAdmin) === false) {
-                    return $this->redirect($this->generateUrl('exercise_show', array('id' => $id)));
+                   return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $id)));
                 }
 
                 $paper = new Paper();
@@ -560,7 +560,7 @@ class ExerciseController extends Controller
             //To display selectioned question
             return $this->displayQuestion(1, $interactions[0], $typeInter, $exercise->getDispButtonInterrupt(), $workspace);
         } else {
-            return $this->redirect($this->generateUrl('exercise_show', array('id' => $id)));
+            return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $id)));
         }
     }
 
@@ -767,7 +767,7 @@ class ExerciseController extends Controller
         $em->persist($paper);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('exercise_show', array('id' => $paper->getExercise()->getId())));
+        return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $paper->getExercise()->getId())));
     }
 
     /**
