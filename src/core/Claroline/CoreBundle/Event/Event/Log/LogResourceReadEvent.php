@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Event\Event\Log;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
-class ResourceReadEvent extends LogGenericEvent implements LogNotRepeatableInterface
+class LogResourceReadEvent extends LogGenericEvent implements LogNotRepeatableInterface
 {
     const ACTION = 'resource_read';
 

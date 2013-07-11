@@ -24,7 +24,7 @@ class HomeListener
     /**
      * @DI\InjectParams({
      *     "em"                 = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "ed"                 = @DI\Inject("event_dispatcher"),
+     *     "ed"                 = @DI\Inject("claroline.event.event_dispatcher"),
      *     "templating"         = @DI\Inject("templating"),
      *     "wm"                 = @DI\Inject("claroline.widget.manager"),
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager")
@@ -115,11 +115,11 @@ class HomeListener
                 $displayConfig->setWorkspace($event->getWorkspace());
 
                 if (isset($widgetConfig['config'])) {
-                    $newEvent = new ImportWidgetConfigEvent(
-                        $widgetConfig['config'],
-                        $event->getWorkspace()
+                    $this->ed->dispatch(
+                        "widget_{$widgetConfig['name']}_from_template",
+                        'ImportWidgetConfig',
+                        array($widgetConfig['config'], $event->getWorkspace())
                     );
-                    $this->ed->dispatch("widget_{$widgetConfig['name']}_from_template", $newEvent);
                 }
 
                 $this->em->persist($displayConfig);
@@ -155,17 +155,12 @@ class HomeListener
             $widgetArray['name'] = $config->getWidget()->getName();
             $widgetArray['is_visible'] = $config->isVisible();
             if ($config->getWidget()->isExportable()) {
-                $newEvent = new ExportWidgetConfigEvent(
-                    $config->getWidget(),
-                    $workspace
+                $newEvent = $this->ed->dispatch(
+                    'widget_{$config->getWidget()->getName()}_to_template',
+                    'ExportWidgetConfig',
+                    array($config->getWidget(), $workspace)
                 );
-                $this->ed->dispatch("widget_{$config->getWidget()->getName()}_to_template", $newEvent);
-                if ($newEvent->getConfig() === null) {
-                    throw new \Exception(
-                        "The event widget_{$config->getWidget()->getName()}_to_template" .
-                        " did not return any response"
-                    );
-                }
+
                 $widgetArray['config'] = $newEvent->getConfig();
             }
 
