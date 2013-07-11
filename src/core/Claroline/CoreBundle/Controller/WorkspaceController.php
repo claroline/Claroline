@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -46,7 +46,7 @@ class WorkspaceController extends Controller
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
      *     "tagManager"         = @DI\Inject("claroline.manager.workspace_tag_manager"),
-     *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
+     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "security"           = @DI\Inject("security.context"),
      *     "router"             = @DI\Inject("router"),
      *     "utils"              = @DI\Inject("claroline.security.utilities"),
@@ -57,7 +57,7 @@ class WorkspaceController extends Controller
         WorkspaceManager $workspaceManager,
         RoleManager $roleManager,
         WorkspaceTagManager $tagManager,
-        EventDispatcher $eventDispatcher,
+        StrictDispatcher $eventDispatcher,
         SecurityContextInterface $security,
         UrlGeneratorInterface $router,
         Utilities $utils,
@@ -411,8 +411,7 @@ class WorkspaceController extends Controller
         foreach ($configs as $config) {
             if ($config->isVisible()) {
                 $eventName = "widget_{$config->getWidget()->getName()}_workspace";
-                $event = new DisplayWidgetEvent($workspace);
-                $this->eventDispatcher->dispatch($eventName, $event);
+                $event = $this->eventDispatcher->dispatch($eventName, 'DisplayWidget', array($workspace));
 
                 if ($event->hasContent()) {
                     $widget['id'] = $config->getWidget()->getId();
