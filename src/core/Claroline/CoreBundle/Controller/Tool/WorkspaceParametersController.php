@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -28,7 +28,7 @@ class WorkspaceParametersController extends AbstractParametersController
      * @DI\InjectParams({
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "security"           = @DI\Inject("security.context"),
-     *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
+     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
      *     "router"             = @DI\Inject("router")
      * })
@@ -36,7 +36,7 @@ class WorkspaceParametersController extends AbstractParametersController
     public function __construct(
         WorkspaceManager $workspaceManager,
         SecurityContextInterface $security,
-        EventDispatcher $eventDispatcher,
+        StrictDispatcher $eventDispatcher,
         FormFactory $formFactory,
         UrlGeneratorInterface $router
     )
