@@ -2,35 +2,76 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Event\Event\Log\LogCreateDelegateViewEvent;
 use Claroline\CoreBundle\Event\Event\Log\LogResourceChildUpdateEvent;
 use Claroline\CoreBundle\Form\LogWorkspaceWidgetConfigType;
 use Claroline\CoreBundle\Form\LogDesktopWidgetConfigType;
+use Claroline\CoreBundle\Entity\Logger\Log;
 use Claroline\CoreBundle\Entity\Logger\LogWorkspaceWidgetConfig;
 use Claroline\CoreBundle\Entity\Logger\LogDesktopWidgetConfig;
 use Claroline\CoreBundle\Entity\Logger\LogHiddenWorkspaceWidgetConfig;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Controller of the user profile.
  */
 class LogController extends Controller
 {
+    private $toolManager;
+    private $workspaceManager;
+    private $eventDispatcher;
+    private $security;
+    private $formFactory;
+    private $translator;
 
-    private function convertFormDataToConfig($config, $data, $workspace, $isDefault)
+    /**
+     * @DI\InjectParams({
+     *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
+     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
+     *     "security"           = @DI\Inject("security.context"),
+     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
+     *     "translator"         = @DI\Inject("translator")
+     * })
+     */
+    public function __construct(
+        ToolManager $toolManager,
+        WorkspaceManager $workspaceManager,
+        EventDispatcher $eventDispatcher,
+        SecurityContextInterface $security,
+        FormFactory $formFactory,
+        Translator $translator
+    )
+    {
+        $this->toolManager = $toolManager;
+        $this->workspaceManager = $workspaceManager;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->security = $security;
+        $this->formFactory = $formFactory;
+        $this->translator = $translator;
+    }
+
+    private function convertFormDataToConfig($config, $data, AbstractWorkspace $workspace, $isDefault)
     {
         if ($config === null) {
-            $config = new LogWorkspaceWidgetConfig();    
+            $config = new LogWorkspaceWidgetConfig();
         }
         $config->setIsDefault($isDefault);
-        
+
         $config->setResourceCopy($data['creation'] === true);
         $config->setResourceCreate($data['creation'] === true);
         $config->setResourceShortcut($data['creation'] === true);
-        
+
         $config->setResourceRead($data['read'] === true);
         $config->setWsToolRead($data['read'] === true);
 
@@ -62,10 +103,15 @@ class LogController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/view_details/{logId}",
      *     name="claro_log_view_details",
      *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *      "log",
+     *      class="ClarolineCoreBundle:Logger\Log",
+     *      options={"id" = "logId", "strictId" = true}
      * )
      *
      * Displays the public profile of an user.
@@ -74,15 +120,12 @@ class LogController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function viewDetailsAction($logId)
+    public function viewDetailsAction(Log $log)
     {
-        $em = $this->getDoctrine()->getManager();
-        $log = $em->getRepository('ClarolineCoreBundle:Logger\Log')->find($logId);
-
         if ($log->getAction() === LogResourceChildUpdateEvent::ACTION ) {
             $eventName = 'create_log_details_'.$log->getResourceType()->getName();
             $event = new LogCreateDelegateViewEvent($log);
-            $this->container->get('event_dispatcher')->dispatch($eventName, $event);
+            $this->eventDispatcher->dispatch($eventName, $event);
 
             if ($event->getResponseContent() === "") {
                 throw new \Exception(
@@ -100,14 +143,19 @@ class LogController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/update_workspace_widget_config/{isDefault}/{workspaceId}/{redirectToHome}",
      *     name="claro_log_update_workspace_widget_config",
      *     defaults={"isDefault" = 0, "workspaceId" = 0, "redirectToHome" = 0}
      * )
-     * @Method("POST")
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
      */
-    public function updateLogWorkspaceWidgetConfig($isDefault, $workspaceId, $redirectToHome)
+    public function updateLogWorkspaceWidgetConfig($isDefault, AbstractWorkspace $workspace, $redirectToHome)
     {
         $isDefault = (boolean)$isDefault;
         $redirectToHome = (boolean)$redirectToHome;
@@ -118,7 +166,6 @@ class LogController extends Controller
             $workspace = null;
             $config = $this->get('claroline.log.manager')->getDefaultWorkspaceWidgetConfig();
         } else {
-            $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
             $config = $this->get('claroline.log.manager')->getWorkspaceWidgetConfig($workspace);
         }
 
@@ -128,10 +175,9 @@ class LogController extends Controller
             $config->setWorkspace($workspace);
         }
 
-        $form = $this->get('form.factory')->create(new LogWorkspaceWidgetConfigType(), null);
+        $form = $this->formFactory->create(FormFactory::TYPE_LOG_WORKSPACE_WIDGET_CONFIG);
 
         $form->bind($this->getRequest());
-        $translator = $this->get('translator');
         if ($form->isValid()) {
             $data = $form->getData();
             $config = $this->convertFormDataToConfig($config, $data, $workspace, $isDefault);
@@ -142,14 +188,14 @@ class LogController extends Controller
             $this
                 ->get('session')
                 ->getFlashBag()
-                ->add('success', $translator->trans('Your changes have been saved', array(), 'platform'));
+                ->add('success', $this->translator->trans('Your changes have been saved', array(), 'platform'));
         } else {
             $this
                 ->get('session')
                 ->getFlashBag()
-                ->add('error', $translator->trans('The form is not valid', array(), 'platform'));
+                ->add('error', $this->translator->trans('The form is not valid', array(), 'platform'));
         }
-        $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneByName('home');
+        $tool = $this->toolManager->getOneToolByName('home');
 
         if ($isDefault === true) {
             $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
@@ -181,12 +227,12 @@ class LogController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/update_desktop_widget_config/{isDefault}/{redirectToHome}",
      *     name="claro_log_update_desktop_widget_config",
      *     defaults={"isDefault" = 0, "redirectToHome" = 0}
      * )
-     * @Method("POST")
+     * @EXT\Method("POST")
      */
     public function updateDesktopWidgetConfig($isDefault, $redirectToHome)
     {
@@ -200,12 +246,11 @@ class LogController extends Controller
             $hiddenConfigs = array();
             $workspaces = array();
         } else {
-            $user = $this->get('security.context')->getToken()->getUser();
+            $user = $this->security->getToken()->getUser();
             $hiddenConfigs = $em->getRepository('ClarolineCoreBundle:Logger\LogHiddenWorkspaceWidgetConfig')
                 ->findBy(array('user' => $user));
-            $workspaces = $em
-                ->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
-                ->findByUserAndRoleNames($user, array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'));
+            $workspaces = $this->workspaceManager
+                ->getWorkspacesByUserAndRoleNames($user, array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'));
         }
         if ($isDefault === true) {
             $config = $this->get('claroline.log.manager')->getDefaultDesktopWidgetConfig();
@@ -222,7 +267,6 @@ class LogController extends Controller
         $form = $this->get('form.factory')->create(new LogDesktopWidgetConfigType(), null, array('workspaces' => $workspaces));
         $form->bind($this->getRequest());
 
-        $translator = $this->get('translator');
         if ($form->isValid()) {
             $data = $form->getData();
             // remove all hiddenConfigs for user
@@ -244,11 +288,11 @@ class LogController extends Controller
             $em->persist($config);
             $em->flush();
 
-            $this->get('session')->getFlashBag()->add('success', $translator->trans('Your changes have been saved', array(), 'platform'));
+            $this->get('session')->getFlashBag()->add('success', $this->translator->trans('Your changes have been saved', array(), 'platform'));
         } else {
-            $this->get('session')->getFlashBag()->add('error', $translator->trans('The form is not valid', array(), 'platform'));
+            $this->get('session')->getFlashBag()->add('error', $this->translator->trans('The form is not valid', array(), 'platform'));
         }
-        $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneByName('home');
+        $tool = $this->toolManager->getOneToolByName('home');
 
         if ($isDefault === true) {
             $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
