@@ -67,7 +67,6 @@ class ToolListenerTest extends MockeryTestCase
                         'parent_id' => 2,
                         'creator_username' => 'my_name',
                         'type' => 'activity',
-                        'is_browsable' => true,
                         'previous_id' => 3,
                         'next_id' => 4,
                         'large_icon' => 'no_icon'
@@ -114,7 +113,6 @@ class ToolListenerTest extends MockeryTestCase
                         'parent_id' => 2,
                         'creator_username' => 'my_name',
                         'type' => 'activity',
-                        'is_browsable' => true,
                         'previous_id' => 3,
                         'next_id' => 4,
                         'large_icon' => 'no_icon'
@@ -197,7 +195,6 @@ class ToolListenerTest extends MockeryTestCase
                         'parent_id' => 2,
                         'creator_username' => 'my_name',
                         'type' => 'activity',
-                        'is_browsable' => true,
                         'previous_id' => 3,
                         'next_id' => 4,
                         'large_icon' => 'no_icon'
@@ -232,7 +229,6 @@ class ToolListenerTest extends MockeryTestCase
                         'parent_id' => 2,
                         'creator_username' => 'my_name',
                         'type' => 'activity',
-                        'is_browsable' => true,
                         'previous_id' => 3,
                         'next_id' => 4,
                         'large_icon' => 'no_icon'
