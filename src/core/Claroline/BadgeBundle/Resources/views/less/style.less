@@ -1,0 +1,74 @@
+.thumbnails.badge_list {
+    margin-left: 20px;
+}
+.thumbnails.badge_user_list > li {
+    margin-left: 5px;
+}
+
+.badge_image {
+    width:  100px;
+    height: 100px;
+}
+
+#translationFormTabs {
+    margin-bottom: 0;
+    border-bottom: 0;
+    &> .active > a {
+        background-color: #f5f5f5;
+    }
+}
+
+.badge_translations {
+    border-top: 0;
+    .border-radius(0 0);
+    .box-shadow(0);
+}
+
+#award_user_modal {
+    min-width: 650px;
+
+    .modal-body {
+        max-height: 500px;
+    }
+}
+
+.users_container {
+    max-height: 400px;
+    overflow: auto;
+}
+
+ul.user_badges {
+    & > li {
+        padding: 0;
+
+        a:hover {
+            &> span {
+                background-color: #333333;
+            }
+        }
+
+        &:hover {
+            .close {
+                visibility: visible;
+            }
+        }
+
+        .close {
+            visibility: hidden;
+            margin-top: -10px;
+        }
+    }
+}
+
+#award_form {
+    .input-append .btn {
+        vertical-align: middle;
+    }
+
+    label {
+        margin-left:  auto;
+        margin-right: auto;
+        float:        none;
+        text-align:   center;
+    }
+}
