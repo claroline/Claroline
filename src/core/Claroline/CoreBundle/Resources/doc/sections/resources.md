@@ -282,29 +282,8 @@ This AbstractResource class some very important relations.
 
 This entity job is to stock important attributes wich will differ depending on
 the ResourceType.
-Theses attributes are:
 
-* isBrowsable;
-* isVisible;
-
-These attributes are defined in the resource section in your config file.
-
-It also has relations to the customaction and the plugin tables.
-
-Once you created your basic entity and filled the field you defined yourself,
-you can ask the resource manager to set every needed relations and persist it.
-
-Hopefully, this is very easy to do:
-
-At first, get the claroline.resource.manager service.
-
-     $creator = $this->get('claroline.resource.manager');
-
-Then you must use the create() method.
-
-Here is the method signature:
-
-     public function create(AbstractResource $resource, $parentId, $resourceType, User $user = null)
+[Update needed]
 
 ### Keeping the context
 
