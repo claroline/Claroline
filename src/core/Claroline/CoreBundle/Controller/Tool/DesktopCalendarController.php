@@ -11,9 +11,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
  */
 class DesktopCalendarController extends Controller
 {
-
-    const ABSTRACT_WS_CLASS = 'ClarolineCoreBundle:Workspace\AbstractWorkspace';
-
     /**
      * @Route(
      *     "/show/",

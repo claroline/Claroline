@@ -2,18 +2,52 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Controller\Tool\AbstractParametersController;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Event\Event\ConfigureWorkspaceToolEvent;
-use Claroline\CoreBundle\Form\WorkspaceEditType;
-use Claroline\CoreBundle\Form\WorkspaceTemplateType;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
+use JMS\DiExtraBundle\Annotation as DI;
 
 class WorkspaceParametersController extends AbstractParametersController
 {
+    private $workspaceManager;
+    private $security;
+    private $eventDispatcher;
+    private $formFactory;
+    private $router;
+
+    /**
+     * @DI\InjectParams({
+     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "security"           = @DI\Inject("security.context"),
+     *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
+     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
+     *     "router"             = @DI\Inject("router")
+     * })
+     */
+    public function __construct(
+        WorkspaceManager $workspaceManager,
+        SecurityContextInterface $security,
+        EventDispatcher $eventDispatcher,
+        FormFactory $formFactory,
+        UrlGeneratorInterface $router
+    )
+    {
+        $this->workspaceManager = $workspaceManager;
+        $this->security = $security;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->formFactory = $formFactory;
+        $this->router = $router;
+    }
+
     /**
      * @EXT\Route(
      *     "/{workspace}/form/export",
@@ -30,7 +64,7 @@ class WorkspaceParametersController extends AbstractParametersController
     public function workspaceExportFormAction(AbstractWorkspace $workspace)
     {
         $this->checkAccess($workspace);
-        $form = $this->get('form.factory')->create(new WorkspaceTemplateType());
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_TEMPLATE);
 
         return array(
             'form' => $form->createView(),
@@ -55,13 +89,13 @@ class WorkspaceParametersController extends AbstractParametersController
     {
         $this->checkAccess($workspace);
         $request = $this->getRequest();
-        $form = $this->createForm(new WorkspaceTemplateType());
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_TEMPLATE);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $name = $form->get('name')->getData();
-            $this->get('claroline.workspace.exporter')->export($workspace, $name);
-            $route = $this->get('router')->generate(
+            $this->workspaceManager->export($workspace, $name);
+            $route = $this->router->generate(
                 'claro_workspace_open_tool',
                 array('toolName' => 'parameters', 'workspaceId' => $workspace->getId())
             );
@@ -91,7 +125,7 @@ class WorkspaceParametersController extends AbstractParametersController
     public function workspaceEditFormAction(AbstractWorkspace $workspace)
     {
         $this->checkAccess($workspace);
-        $form = $this->createForm(new WorkspaceEditType(), $workspace);
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array(), $workspace);
 
         return array(
             'form' => $form->createView(),
@@ -114,21 +148,18 @@ class WorkspaceParametersController extends AbstractParametersController
      */
     public function workspaceEditAction(AbstractWorkspace $workspace)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-
-        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
+        if (!$this->security->isGranted('parameters', $workspace)) {
             throw new AccessDeniedException();
         }
 
         $wsRegisteredName = $workspace->getName();
         $wsRegisteredCode = $workspace->getCode();
-        $form = $this->createForm(new WorkspaceEditType(), $workspace);
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array(), $workspace);
         $request = $this->getRequest();
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em->persist($workspace);
-            $em->flush();
+            $this->workspaceManager->createWorkspace($workspace);
 
             return $this->redirect(
                 $this->generateUrl(
@@ -168,7 +199,7 @@ class WorkspaceParametersController extends AbstractParametersController
 
         $event = new ConfigureWorkspaceToolEvent($tool, $workspace);
         $eventName = strtolower('configure_workspace_tool_' . $tool->getName());
-        $this->get('event_dispatcher')->dispatch($eventName, $event);
+        $this->eventDispatcher->dispatch($eventName, $event);
 
         if (is_null($event->getContent())) {
             throw new \Exception(

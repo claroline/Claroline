@@ -12,346 +12,194 @@ class WorkspaceTagRepositoryTest extends RepositoryTestCase
     {
         parent::setUpBeforeClass();
         self::$repo = self::getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag');
+        self::createWorkspace('wsa');
+        self::createWorkspace('wsb');
+        self::createWorkspace('wsc');
+        self::createWorkspace('wsd');
+        self::createRole('ROLE_wsa', self::get('wsa'));
+        self::createRole('ROLE_wsb', self::get('wsb'));
+        self::createRole('ROLE_wsc', self::get('wsc'));
+        self::createRole('ROLE_wsd', self::get('wsd'));
+        self::createUser('user', array(self::get('ROLE_wsa'), self::get('ROLE_wsb'), self::get('ROLE_wsc')));
+        self::createUser('admin', array(self::get('ROLE_wsd')));
+        self::createWorkspaceTag('tag_1');
+        self::createWorkspaceTag('tag_2');
+        self::createWorkspaceTag('tag_3');
+        self::createWorkspaceTag('tag_4');
+        self::createWorkspaceTag('tag_5');
+        self::createWorkspaceTag('user_tag_1', self::get('user'));
+        self::createWorkspaceTag('user_tag_2', self::get('user'));
+        self::createWorkspaceTag('user_tag_3', self::get('user'));
+        self::createWorkspaceTag('user_tag_4', self::get('user'));
+        self::createWorkspaceTag('admin_tag', self::get('admin'));
 
-// MUST CHANGE
-// -----------
-//
-//        self::loadPlatformRoleData();
-//        self::loadUserData(array('user' => 'user', 'admin' => 'admin'));
-//        self::loadWorkspaceData(array('wsa' => 'user', 'wsb' => 'user', 'wsc' => 'user', 'wsd' => 'admin'));
-//        self::loadWorkspaceTagData(
-//            array(
-//                array(
-//                    'name' => 'tag_1'
-//                ),
-//                array(
-//                    'name' => 'tag_2'
-//                ),
-//                array(
-//                    'name' => 'tag_3'
-//                ),
-//                array(
-//                    'name' => 'tag_4'
-//                ),
-//                array(
-//                    'name' => 'tag_5'
-//                ),
-//                array(
-//                    'name' => 'user_tag_1',
-//                    'user' => 'user'
-//                ),
-//                array(
-//                    'name' => 'user_tag_2',
-//                    'user' => 'user'
-//                ),
-//                array(
-//                    'name' => 'user_tag_3',
-//                    'user' => 'user'
-//                ),
-//                array(
-//                    'name' => 'user_tag_4',
-//                    'user' => 'user'
-//                ),
-//                array(
-//                    'name' => 'admin_tag',
-//                    'user' => 'admin'
-//                )
-//            )
-//        );
-//
-//        /**
-//         *  Associates workspaces and tags :
-//         *   ___________________________________________________
-//         *  | Workspaces |                 Tags                 |
-//         *  |---------------------------------------------------|
-//         *  | wsa        | tag_1, tag_5, user_tag_1, user_tag_4 |
-//         *  | wsb        | tag_3, tag_5, user_tag_1, user_tag_2 |
-//         *  | wsc        | tag_4, tag_5                         |
-//         *  | wsd        | tag_1, tag_5, admin_tag              |
-//         *  |____________|______________________________________|
-//         */
-//        self::loadRelWorkspaceTagData(
-//            array(
-//                array(
-//                    'workspace' => 'wsa',
-//                    'tags' => array('tag_1', 'tag_5', 'user_tag_1', 'user_tag_4')
-//                ),
-//                array(
-//                    'workspace' => 'wsb',
-//                    'tags' => array('tag_3', 'tag_5', 'user_tag_1', 'user_tag_2')
-//                ),
-//                array(
-//                    'workspace' => 'wsc',
-//                    'tags' => array('tag_4', 'tag_5')
-//                ),
-//                array(
-//                    'workspace' => 'wsd',
-//                    'tags' => array('tag_1', 'tag_5', 'admin_tag')
-//                )
-//            )
-//        );
-//
-//        /**
-//         *  Creates tag hierarchy
-//         *
-//         *  admin :
-//         *   ________________________
-//         *  | parent | child | level |
-//         *  |------------------------|
-//         *  | tag_1  | tag_1 |   0   |
-//         *  | tag_1  | tag_2 |   1   |
-//         *  | tag_1  | tag_4 |   1   |
-//         *  | tag_1  | tag_2 |   2   |
-//         *  | tag_1  | tag_3 |   2   |
-//         *  | tag_1  | tag_3 |   3   |
-//         *  | tag_2  | tag_2 |   0   |
-//         *  | tag_2  | tag_3 |   1   |
-//         *  | tag_3  | tag_3 |   0   |
-//         *  | tag_4  | tag_4 |   0   |
-//         *  | tag_4  | tag_2 |   1   |
-//         *  | tag_4  | tag_3 |   2   |
-//         *  | tag_5  | tag_5 |   0   |
-//         *  |________|_______|_______|
-//         *
-//         *
-//         *  user :
-//         *   _________________________________
-//         *  |   parent   |   child    | level |
-//         *  |---------------------------------|
-//         *  | user_tag_1 | user_tag_1 |   0   |
-//         *  | user_tag_1 | user_tag_2 |   1   |
-//         *  | user_tag_1 | user_tag_4 |   1   |
-//         *  | user_tag_1 | user_tag_2 |   2   |
-//         *  | user_tag_1 | user_tag_3 |   2   |
-//         *  | user_tag_1 | user_tag_3 |   3   |
-//         *  | user_tag_2 | user_tag_2 |   0   |
-//         *  | user_tag_2 | user_tag_3 |   1   |
-//         *  | user_tag_3 | user_tag_3 |   0   |
-//         *  | user_tag_4 | user_tag_4 |   0   |
-//         *  | user_tag_4 | user_tag_2 |   1   |
-//         *  | user_tag_4 | user_tag_3 |   2   |
-//         *  |____________|____________|_______|
-//         *
-//         *
-//         *  admin :
-//         *   _______________________________
-//         *  |  parent   |   child   | level |
-//         *  |-------------------------------|
-//         *  | admin_tag | admin_tag |   0   |
-//         *  |___________|___________|_______|
-//         *
-//         */
-//        self::loadWorkspaceTagHierarchyData(
-//            array(
-//                array(
-//                    'parent' => 'tag_1',
-//                    'child' => 'tag_1',
-//                    'level' => 0
-//                ),
-//                array(
-//                    'parent' => 'tag_1',
-//                    'child' => 'tag_2',
-//                    'level' => 1
-//                ),
-//                array(
-//                    'parent' => 'tag_1',
-//                    'child' => 'tag_4',
-//                    'level' => 1
-//                ),
-//                array(
-//                    'parent' => 'tag_1',
-//                    'child' => 'tag_2',
-//                    'level' => 2
-//                ),
-//                array(
-//                    'parent' => 'tag_1',
-//                    'child' => 'tag_3',
-//                    'level' => 2
-//                ),
-//                array(
-//                    'parent' => 'tag_1',
-//                    'child' => 'tag_3',
-//                    'level' => 3
-//                ),
-//                array(
-//                    'parent' => 'tag_2',
-//                    'child' => 'tag_2',
-//                    'level' => 0
-//                ),
-//                array(
-//                    'parent' => 'tag_2',
-//                    'child' => 'tag_3',
-//                    'level' => 1
-//                ),
-//                array(
-//                    'parent' => 'tag_3',
-//                    'child' => 'tag_3',
-//                    'level' => 0
-//                ),
-//                array(
-//                    'parent' => 'tag_4',
-//                    'child' => 'tag_4',
-//                    'level' => 0
-//                ),
-//                array(
-//                    'parent' => 'tag_4',
-//                    'child' => 'tag_2',
-//                    'level' => 1
-//                ),
-//                array(
-//                    'parent' => 'tag_4',
-//                    'child' => 'tag_3',
-//                    'level' => 2
-//                ),
-//                array(
-//                    'parent' => 'tag_5',
-//                    'child' => 'tag_5',
-//                    'level' => 0
-//                ),
-//                array(
-//                    'parent' => 'user_tag_1',
-//                    'child' => 'user_tag_1',
-//                    'level' => 0
-//                ),
-//                array(
-//                    'parent' => 'user_tag_1',
-//                    'child' => 'user_tag_2',
-//                    'level' => 1
-//                ),
-//                array(
-//                    'parent' => 'user_tag_1',
-//                    'child' => 'user_tag_4',
-//                    'level' => 1
-//                ),
-//                array(
-//                    'parent' => 'user_tag_1',
-//                    'child' => 'user_tag_2',
-//                    'level' => 2
-//                ),
-//                array(
-//                    'parent' => 'user_tag_1',
-//                    'child' => 'user_tag_3',
-//                    'level' => 2
-//                ),
-//                array(
-//                    'parent' => 'user_tag_1',
-//                    'child' => 'user_tag_3',
-//                    'level' => 3
-//                ),
-//                array(
-//                    'parent' => 'user_tag_2',
-//                    'child' => 'user_tag_2',
-//                    'level' => 0
-//                ),
-//                array(
-//                    'parent' => 'user_tag_2',
-//                    'child' => 'user_tag_3',
-//                    'level' => 1
-//                ),
-//                array(
-//                    'parent' => 'user_tag_3',
-//                    'child' => 'user_tag_3',
-//                    'level' => 0
-//                ),
-//                array(
-//                    'parent' => 'user_tag_4',
-//                    'child' => 'user_tag_4',
-//                    'level' => 0
-//                ),
-//                array(
-//                    'parent' => 'user_tag_4',
-//                    'child' => 'user_tag_2',
-//                    'level' => 1
-//                ),
-//                array(
-//                    'parent' => 'user_tag_4',
-//                    'child' => 'user_tag_3',
-//                    'level' => 2
-//                ),
-//                array(
-//                    'parent' => 'admin_tag',
-//                    'child' => 'admin_tag',
-//                    'level' => 0
-//                )
-//            )
-//        );
-    }
+        /**
+         *  Associates workspaces and tags :
+         *   ___________________________________________________
+         *  | Workspaces |                 Tags                 |
+         *  |---------------------------------------------------|
+         *  | wsa        | tag_1, tag_5, user_tag_1, user_tag_4 |
+         *  | wsb        | tag_3, tag_5, user_tag_1, user_tag_2 |
+         *  | wsc        | tag_4, tag_5                         |
+         *  | wsd        | tag_1, tag_5, admin_tag              |
+         *  |____________|______________________________________|
+         */
 
-    protected function setUp()
-    {
-        $this->markTestSkipped('Must change');
+        self::createWorkspaceTagRelation(self::get('tag_1'), self::get('wsa'));
+        self::createWorkspaceTagRelation(self::get('tag_5'), self::get('wsa'));
+        self::createWorkspaceTagRelation(self::get('user_tag_1'), self::get('wsa'));
+        self::createWorkspaceTagRelation(self::get('user_tag_4'), self::get('wsa'));
+        self::createWorkspaceTagRelation(self::get('tag_3'), self::get('wsb'));
+        self::createWorkspaceTagRelation(self::get('tag_5'), self::get('wsb'));
+        self::createWorkspaceTagRelation(self::get('user_tag_1'), self::get('wsb'));
+        self::createWorkspaceTagRelation(self::get('user_tag_2'), self::get('wsb'));
+        self::createWorkspaceTagRelation(self::get('tag_4'), self::get('wsc'));
+        self::createWorkspaceTagRelation(self::get('tag_5'), self::get('wsc'));
+        self::createWorkspaceTagRelation(self::get('tag_1'), self::get('wsd'));
+        self::createWorkspaceTagRelation(self::get('tag_5'), self::get('wsd'));
+        self::createWorkspaceTagRelation(self::get('admin_tag'), self::get('wsd'));
+
+        /**
+         *  Creates admin tag hierarchy
+         *   ________________________
+         *  | parent | child | level |
+         *  |------------------------|
+         *  | tag_1  | tag_1 |   0   |
+         *  | tag_1  | tag_2 |   1   |
+         *  | tag_1  | tag_4 |   1   |
+         *  | tag_1  | tag_2 |   2   |
+         *  | tag_1  | tag_3 |   2   |
+         *  | tag_1  | tag_3 |   3   |
+         *  | tag_2  | tag_2 |   0   |
+         *  | tag_2  | tag_3 |   1   |
+         *  | tag_3  | tag_3 |   0   |
+         *  | tag_4  | tag_4 |   0   |
+         *  | tag_4  | tag_2 |   1   |
+         *  | tag_4  | tag_3 |   2   |
+         *  | tag_5  | tag_5 |   0   |
+         *  |________|_______|_______|
+         */
+
+        self::createWorkspaceTagHierarchy(self::get('tag_1'), self::get('tag_1'), 0);
+        self::createWorkspaceTagHierarchy(self::get('tag_1'), self::get('tag_2'), 1);
+        self::createWorkspaceTagHierarchy(self::get('tag_1'), self::get('tag_4'), 1);
+        self::createWorkspaceTagHierarchy(self::get('tag_1'), self::get('tag_2'), 2);
+        self::createWorkspaceTagHierarchy(self::get('tag_1'), self::get('tag_3'), 2);
+        self::createWorkspaceTagHierarchy(self::get('tag_1'), self::get('tag_3'), 3);
+        self::createWorkspaceTagHierarchy(self::get('tag_2'), self::get('tag_2'), 0);
+        self::createWorkspaceTagHierarchy(self::get('tag_2'), self::get('tag_3'), 1);
+        self::createWorkspaceTagHierarchy(self::get('tag_3'), self::get('tag_3'), 0);
+        self::createWorkspaceTagHierarchy(self::get('tag_4'), self::get('tag_4'), 0);
+        self::createWorkspaceTagHierarchy(self::get('tag_4'), self::get('tag_2'), 1);
+        self::createWorkspaceTagHierarchy(self::get('tag_4'), self::get('tag_3'), 2);
+        self::createWorkspaceTagHierarchy(self::get('tag_5'), self::get('tag_5'), 0);
+
+        /**
+         *  Creates tag hierarchy for user 'user'
+         *   _________________________________
+         *  |   parent   |   child    | level |
+         *  |---------------------------------|
+         *  | user_tag_1 | user_tag_1 |   0   |
+         *  | user_tag_1 | user_tag_2 |   1   |
+         *  | user_tag_1 | user_tag_4 |   1   |
+         *  | user_tag_1 | user_tag_2 |   2   |
+         *  | user_tag_1 | user_tag_3 |   2   |
+         *  | user_tag_1 | user_tag_3 |   3   |
+         *  | user_tag_2 | user_tag_2 |   0   |
+         *  | user_tag_2 | user_tag_3 |   1   |
+         *  | user_tag_3 | user_tag_3 |   0   |
+         *  | user_tag_4 | user_tag_4 |   0   |
+         *  | user_tag_4 | user_tag_2 |   1   |
+         *  | user_tag_4 | user_tag_3 |   2   |
+         *  |____________|____________|_______|
+         */
+
+        self::createWorkspaceTagHierarchy(self::get('user_tag_1'), self::get('user_tag_1'), 0, self::get('user'));
+        self::createWorkspaceTagHierarchy(self::get('user_tag_1'), self::get('user_tag_2'), 1, self::get('user'));
+        self::createWorkspaceTagHierarchy(self::get('user_tag_1'), self::get('user_tag_4'), 1, self::get('user'));
+        self::createWorkspaceTagHierarchy(self::get('user_tag_1'), self::get('user_tag_2'), 2, self::get('user'));
+        self::createWorkspaceTagHierarchy(self::get('user_tag_1'), self::get('user_tag_3'), 2, self::get('user'));
+        self::createWorkspaceTagHierarchy(self::get('user_tag_1'), self::get('user_tag_3'), 3, self::get('user'));
+        self::createWorkspaceTagHierarchy(self::get('user_tag_2'), self::get('user_tag_2'), 0, self::get('user'));
+        self::createWorkspaceTagHierarchy(self::get('user_tag_2'), self::get('user_tag_3'), 1, self::get('user'));
+        self::createWorkspaceTagHierarchy(self::get('user_tag_3'), self::get('user_tag_3'), 0, self::get('user'));
+        self::createWorkspaceTagHierarchy(self::get('user_tag_4'), self::get('user_tag_4'), 0, self::get('user'));
+        self::createWorkspaceTagHierarchy(self::get('user_tag_4'), self::get('user_tag_2'), 1, self::get('user'));
+        self::createWorkspaceTagHierarchy(self::get('user_tag_4'), self::get('user_tag_3'), 2, self::get('user'));
+
+        /**
+         *  Creates tag hierarchy for user 'admin'
+         *   _______________________________
+         *  |  parent   |   child   | level |
+         *  |-------------------------------|
+         *  | admin_tag | admin_tag |   0   |
+         *  |___________|___________|_______|
+         */
+
+        self::createWorkspaceTagHierarchy(self::get('admin_tag'), self::get('admin_tag'), 0, self::get('admin'));
     }
 
     public function testFindNonEmptyTagsByUser()
     {
-        $tags = self::$repo->findNonEmptyTagsByUser(self::getUser('user'));
+        $tags = self::$repo->findNonEmptyTagsByUser(self::get('user'));
         $this->assertEquals(3, count($tags));
-        $this->assertEquals('user_tag_1' , $tags[0]->getName());
-        $this->assertEquals('user_tag_2' , $tags[1]->getName());
-        $this->assertEquals('user_tag_4' , $tags[2]->getName());
+        $this->assertEquals(self::get('user_tag_1') , $tags[0]);
+        $this->assertEquals(self::get('user_tag_2') , $tags[1]);
+        $this->assertEquals(self::get('user_tag_4') , $tags[2]);
     }
 
     public function testFindNonEmptyAdminTags()
     {
         $tags = self::$repo->findNonEmptyAdminTags();
         $this->assertEquals(4, count($tags));
-        $this->assertEquals('tag_1' , $tags[0]->getName());
-        $this->assertEquals('tag_3' , $tags[1]->getName());
-        $this->assertEquals('tag_4' , $tags[2]->getName());
-        $this->assertEquals('tag_5' , $tags[3]->getName());
+        $this->assertEquals(self::get('tag_1') , $tags[0]);
+        $this->assertEquals(self::get('tag_3') , $tags[1]);
+        $this->assertEquals(self::get('tag_4') , $tags[2]);
+        $this->assertEquals(self::get('tag_5') , $tags[3]);
     }
 
     public function testFindNonEmptyAdminTagsByWorspaces()
     {
-        $workspaces = array(self::getWorkspace('wsa'), self::getWorkspace('wsb'));
+        $workspaces = array(self::get('wsa'), self::get('wsb'));
         $tags = self::$repo->findNonEmptyAdminTagsByWorspaces($workspaces);
         $this->assertEquals(3, count($tags));
-        $this->assertEquals('tag_1' , $tags[0]->getName());
-        $this->assertEquals('tag_3' , $tags[1]->getName());
-        $this->assertEquals('tag_5' , $tags[2]->getName());
+        $this->assertEquals(self::get('tag_1') , $tags[0]);
+        $this->assertEquals(self::get('tag_3') , $tags[1]);
+        $this->assertEquals(self::get('tag_5') , $tags[2]);
     }
 
     public function testFindPossibleAdminChildren()
     {
-        $tag = self::getTag('tag_4');
+        $tag = self::get('tag_4');
         $tags = self::$repo->findPossibleAdminChildren($tag);
         $this->assertEquals(2, count($tags));
-        $this->assertEquals('tag_3' , $tags[0]->getName());
-        $this->assertEquals('tag_5' , $tags[1]->getName());
+        $this->assertEquals(self::get('tag_3') , $tags[0]);
+        $this->assertEquals(self::get('tag_5') , $tags[1]);
     }
 
     public function testFindPossibleChildren()
     {
-        $user = self::getUser('user');
-        $admin = self::getUser('admin');
-        $userTag = self::getTag('user_tag_4');
-        $adminTag = self::getTag('admin_tag');
-        $userTags = self::$repo->findPossibleChildren($user, $userTag);
-        $adminTags = self::$repo->findPossibleChildren($admin, $adminTag);
+        $userTags = self::$repo->findPossibleChildren(self::get('user'), self::get('user_tag_4'));
+        $adminTags = self::$repo->findPossibleChildren(self::get('admin'), self::get('admin_tag'));
         $this->assertEquals(1, count($userTags));
-        $this->assertEquals('user_tag_3' , $userTags[0]->getName());
+        $this->assertEquals(self::get('user_tag_3') , $userTags[0]);
         $this->assertEquals(0, count($adminTags));
     }
 
     public function testFindAdminChildren()
     {
-        $tag = self::getTag('tag_1');
-        $tags = self::$repo->findAdminChildren($tag);
+        $tags = self::$repo->findAdminChildren(self::get('tag_1'));
         $this->assertEquals(2, count($tags));
-        $this->assertEquals('tag_2' , $tags[0]->getName());
-        $this->assertEquals('tag_4' , $tags[1]->getName());
+        $this->assertEquals(self::get('tag_2') , $tags[0]);
+        $this->assertEquals(self::get('tag_4') , $tags[1]);
     }
 
     public function testFindChildren()
     {
-        $user = self::getUser('user');
-        $admin = self::getUser('admin');
-        $userTag = self::getTag('user_tag_4');
-        $adminTag = self::getTag('admin_tag');
-        $userTags = self::$repo->findChildren($user, $userTag);
-        $adminTags = self::$repo->findChildren($admin, $adminTag);
+        $userTags = self::$repo->findChildren(self::get('user'), self::get('user_tag_4'));
+        $adminTags = self::$repo->findChildren(self::get('admin'), self::get('admin_tag'));
         $this->assertEquals(1, count($userTags));
-        $this->assertEquals('user_tag_2' , $userTags[0]->getName());
+        $this->assertEquals(self::get('user_tag_2') , $userTags[0]);
         $this->assertEquals(0, count($adminTags));
     }
 
@@ -359,84 +207,75 @@ class WorkspaceTagRepositoryTest extends RepositoryTestCase
     {
         $tags = self::$repo->findAdminRootTags();
         $this->assertEquals(2, count($tags));
-        $this->assertEquals('tag_1' , $tags[0]->getName());
-        $this->assertEquals('tag_5' , $tags[1]->getName());
+        $this->assertEquals(self::get('tag_1') , $tags[0]);
+        $this->assertEquals(self::get('tag_5') , $tags[1]);
     }
 
     public function testFindRootTags()
     {
-        $user = self::getUser('user');
-        $admin = self::getUser('admin');
-        $userTags = self::$repo->findRootTags($user);
-        $adminTags = self::$repo->findRootTags($admin);
+        $userTags = self::$repo->findRootTags(self::get('user'));
+        $adminTags = self::$repo->findRootTags(self::get('admin'));
         $this->assertEquals(1, count($userTags));
-        $this->assertEquals('user_tag_1' , $userTags[0]->getName());
+        $this->assertEquals(self::get('user_tag_1') , $userTags[0]);
         $this->assertEquals(1, count($adminTags));
-        $this->assertEquals('admin_tag' , $adminTags[0]->getName());
+        $this->assertEquals(self::get('admin_tag') , $adminTags[0]);
     }
 
     public function testFindAdminChildrenFromTags()
     {
-        $tagsArray = array(self::getTag('tag_2')->getId(), self::getTag('tag_4')->getId());
+        $tagsArray = array(self::get('tag_2')->getId(), self::get('tag_4')->getId());
         $tags = self::$repo->findAdminChildrenFromTags($tagsArray);
         $this->assertEquals(3, count($tags));
-        $this->assertEquals('tag_2' , $tags[0]->getName());
-        $this->assertEquals('tag_3' , $tags[1]->getName());
-        $this->assertEquals('tag_4' , $tags[2]->getName());
+        $this->assertEquals(self::get('tag_2') , $tags[0]);
+        $this->assertEquals(self::get('tag_3') , $tags[1]);
+        $this->assertEquals(self::get('tag_4') , $tags[2]);
     }
 
     public function testFindChildrenFromTags()
     {
-        $user = self::getUser('user');
-        $admin = self::getUser('admin');
-        $userTagsArray = array(self::getTag('user_tag_2')->getId(), self::getTag('user_tag_4')->getId());
-        $adminTagsArray = array(self::getTag('admin_tag')->getId());
-        $userTags = self::$repo->findChildrenFromTags($user, $userTagsArray);
-        $admninTags = self::$repo->findChildrenFromTags($admin, $adminTagsArray);
+        $userTagsArray = array(self::get('user_tag_2')->getId(), self::get('user_tag_4')->getId());
+        $adminTagsArray = array(self::get('admin_tag')->getId());
+        $userTags = self::$repo->findChildrenFromTags(self::get('user'), $userTagsArray);
+        $admninTags = self::$repo->findChildrenFromTags(self::get('admin'), $adminTagsArray);
         $this->assertEquals(3, count($userTags));
-        $this->assertEquals('user_tag_2' , $userTags[0]->getName());
-        $this->assertEquals('user_tag_3' , $userTags[1]->getName());
-        $this->assertEquals('user_tag_4' , $userTags[2]->getName());
+        $this->assertEquals(self::get('user_tag_2') , $userTags[0]);
+        $this->assertEquals(self::get('user_tag_3') , $userTags[1]);
+        $this->assertEquals(self::get('user_tag_4') , $userTags[2]);
         $this->assertEquals(1, count($admninTags));
-        $this->assertEquals('admin_tag' , $admninTags[0]->getName());
+        $this->assertEquals(self::get('admin_tag') , $admninTags[0]);
     }
 
     public function testFindAdminParentsFromTag()
     {
-        $tag = self::getTag('tag_2');
-        $tags = self::$repo->findAdminParentsFromTag($tag);
+        $tags = self::$repo->findAdminParentsFromTag(self::get('tag_2'));
         $this->assertEquals(3, count($tags));
-        $this->assertEquals('tag_1' , $tags[0]->getName());
-        $this->assertEquals('tag_2' , $tags[1]->getName());
-        $this->assertEquals('tag_4' , $tags[2]->getName());
+        $this->assertEquals(self::get('tag_1') , $tags[0]);
+        $this->assertEquals(self::get('tag_2') , $tags[1]);
+        $this->assertEquals(self::get('tag_4') , $tags[2]);
     }
 
     public function testFindParentsFromTag()
     {
-        $user = self::getUser('user');
-        $admin = self::getUser('admin');
-        $userTag = self::getTag('user_tag_2');
-        $adminTag = self::getTag('admin_tag');
-        $userTags = self::$repo->findParentsFromTag($user, $userTag);
-        $admninTags = self::$repo->findParentsFromTag($admin, $adminTag);
+        $userTags = self::$repo->findParentsFromTag(self::get('user'), self::get('user_tag_2'));
+        $admninTags = self::$repo->findParentsFromTag(self::get('admin'), self::get('admin_tag'));
         $this->assertEquals(3, count($userTags));
-        $this->assertEquals('user_tag_1' , $userTags[0]->getName());
-        $this->assertEquals('user_tag_2' , $userTags[1]->getName());
-        $this->assertEquals('user_tag_4' , $userTags[2]->getName());
+        $this->assertEquals(self::get('user_tag_1') , $userTags[0]);
+        $this->assertEquals(self::get('user_tag_2') , $userTags[1]);
+        $this->assertEquals(self::get('user_tag_4') , $userTags[2]);
         $this->assertEquals(1, count($admninTags));
-        $this->assertEquals('admin_tag' , $admninTags[0]->getName());
+        $this->assertEquals(self::get('admin_tag') , $admninTags[0]);
     }
 
     public function testFindWorkspaceTagFromIds()
     {
         $tags = self::$repo->findWorkspaceTagFromIds(
             array(
-                self::getTag('user_tag_1')->getId(),
-                self::getTag('user_tag_2')->getId()
+                self::get('user_tag_1')->getId(),
+                self::get('user_tag_2')->getId()
             )
         );
         $this->assertEquals(2, count($tags));
-        $this->assertEquals('user_tag_1', $tags[0]->getName());
-        $this->assertEquals('user_tag_2', $tags[1]->getName());
+        $this->assertEquals(self::get('user_tag_1'), $tags[0]);
+        $this->assertEquals(self::get('user_tag_2'), $tags[1]);
     }
 }
