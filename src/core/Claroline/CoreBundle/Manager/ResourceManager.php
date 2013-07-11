@@ -816,7 +816,7 @@ class ResourceManager
                 $archive->addEmptyDir($this->getRelativePath($currentDir, $resource). $resource->getName());
             }
 
-            $this->dispatcher->dispatch('log', 'Log\ResourceExport', array($resource));
+            $this->dispatcher->dispatch('log', 'Log\LogResourceExport', array($resource));
         }
 
         $archive->close();

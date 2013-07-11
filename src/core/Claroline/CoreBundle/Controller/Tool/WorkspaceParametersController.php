@@ -191,21 +191,16 @@ class WorkspaceParametersController extends AbstractParametersController
      * @param AbstractWorkspace $workspace
      * @param Tool $tool
      *
-     * @return Response
+     * @return Response 
      */
     public function openWorkspaceToolConfig(AbstractWorkspace $workspace, Tool $tool)
     {
         $this->checkAccess($workspace);
-
-        $event = new ConfigureWorkspaceToolEvent($tool, $workspace);
-        $eventName = strtolower('configure_workspace_tool_' . $tool->getName());
-        $this->eventDispatcher->dispatch($eventName, $event);
-
-        if (is_null($event->getContent())) {
-            throw new \Exception(
-                "Tool '{$tool->getName()}' didn't return any Response for tool event '{$eventName}'."
-            );
-        }
+        $event = $this->eventDispatcher->dispatch(
+            strtolower('configure_workspace_tool_' . $tool->getName()),
+            'ConfigureWorkspaceTool',
+            array($tool,$workspace)
+        );
 
         return new Response($event->getContent());
     }
