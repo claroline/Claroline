@@ -178,8 +178,8 @@ class LayoutController extends Controller
         if ($impersonatedRole === null) {
             $roleName = 'ROLE_ANONYMOUS';
         } else {
-            $workspaceId = substr($impersonatedRole, strripos($impersonatedRole, '_') + 1);
-            $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
+            $guid = substr($impersonatedRole, strripos($impersonatedRole, '_') + 1);
+            $workspace = $this->workspaceManager->getOneByGuid($guid);
             $roleEntity = $this->roleManager->getRoleByName($impersonatedRole);
             $roleName = $roleEntity->getTranslationKey();
         }
