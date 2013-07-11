@@ -8,16 +8,6 @@ use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
 class ObjectManagerTest extends MockeryTestCase
 {
-    private $wrapped;
-    private $om;
-
-    protected function setUp()
-    {
-        parent::setUp();
-//        $this->wrapped = m::mock('Doctrine\Common\Persistence\ObjectManager');
-//        $this->om = new ObjectManager($this->wrapped);
-    }
-
     /**
      * @dataProvider hasSupportMethodProvider
      */
