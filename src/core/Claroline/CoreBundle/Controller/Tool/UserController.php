@@ -5,7 +5,6 @@ namespace Claroline\CoreBundle\Controller\Tool;
 use LogicException;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,6 +18,7 @@ use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceRoleUnsubscribeEvent;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -37,7 +37,7 @@ class UserController extends Controller
      * @DI\InjectParams({
      *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
      *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
-     *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
+     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "pagerFactory"       = @DI\Inject("claroline.pager.pager_factory"),
      *     "security"           = @DI\Inject("security.context"),
      *     "router"             = @DI\Inject("router")
@@ -46,7 +46,7 @@ class UserController extends Controller
     public function __construct(
         UserManager $userManager,
         RoleManager $roleManager,
-        EventDispatcher $eventDispatcher,
+        StrictDispatcher $eventDispatcher,
         PagerFactory $pagerFactory,
         SecurityContextInterface $security,
         UrlGeneratorInterface $router
@@ -216,12 +216,16 @@ class UserController extends Controller
                 'claro_workspace_open_tool',
                 array('workspaceId' => $workspaceId, 'toolName' => 'user_management')
             );
-
-            $log = new LogWorkspaceRoleUnsubscribeEvent($role, $user);
-            $this->eventDispatcher->dispatch('log', $log);
-
-            $log = new LogWorkspaceRoleSubscribeEvent($newRole, $user);
-            $this->eventDispatcher->dispatch('log', $log);
+            $this->eventDispatcher->dispatch(
+                'log',
+                'Log\LogWorkspaceRoleUnsubscribe',
+                array($role, $user)
+            );
+            $this->eventDispatcher->dispatch(
+                'log',
+                'Log\LogWorkspaceRoleSubscribe',
+                array($newRole, $user)
+            );
 
             return new RedirectResponse($route);
         }

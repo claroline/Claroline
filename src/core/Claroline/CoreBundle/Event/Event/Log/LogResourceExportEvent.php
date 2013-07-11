@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Event\Event\Log;
 
-class ResourceExportEvent extends LogGenericEvent
+class LogResourceExportEvent extends LogGenericEvent
 {
     const ACTION = 'resource_export';
 

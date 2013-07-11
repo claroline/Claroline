@@ -283,8 +283,11 @@ class WorkspaceController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $this->assertIsGranted('DELETE', $workspace);
-        $log = new LogWorkspaceDeleteEvent($workspace);
-        $this->eventDispatcher->dispatch('log', $log);
+        $this->eventDispatcher->dispatch(
+            'log',
+            'Log\LogWorkspaceDelete',
+            array($workspace)
+        );
         $em->remove($workspace);
         $em->flush();
 
@@ -358,18 +361,16 @@ class WorkspaceController extends Controller
     public function openToolAction($toolName, AbstractWorkspace $workspace)
     {
         $this->assertIsGranted($toolName, $workspace);
-        $event = new DisplayToolEvent($workspace);
-        $eventName = 'open_tool_workspace_'.$toolName;
-        $this->eventDispatcher->dispatch($eventName, $event);
-
-        if (is_null($event->getContent())) {
-            throw new \Exception(
-                "Tool '{$toolName}' didn't return any Response for tool event '{$eventName}'."
-            );
-        }
-
-        $log = new LogWorkspaceToolReadEvent($workspace, $toolName);
-        $this->eventDispatcher->dispatch('log', $log);
+        $event = $this->eventDispatcher->dispatch(
+            'open_tool_workspace_'.$toolName,
+            'DisplayTool',
+            array($workspace)
+        );
+        $this->eventDispatcher->dispatch(
+            'log',
+            'Log\LogWorkspaceToolRead',
+            array($workspace,$toolName)
+        );
 
         return new Response($event->getContent());
     }

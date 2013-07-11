@@ -26,7 +26,7 @@ class AuthenticationSuccessListener
     /**
      * @DI\InjectParams({
      *     "context"    = @DI\Inject("security.context"),
-     *     "ed"         = @DI\Inject("event_dispatcher"),
+     *     "ed"         = @DI\Inject("claroline.event.event_dispatcher"),
      *     "trans" = @DI\Inject("translator"),
      *     "ch" = @DI\Inject("claroline.config.platform_config_handler"),
      *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
@@ -60,8 +60,8 @@ class AuthenticationSuccessListener
     public function onAuthenticationSuccess()
     {
         $user = $this->securityContext->getToken()->getUser();
-        $log = new LogUserLoginEvent($user);
-        $this->eventDispatcher->dispatch('log', $log);
+
+        $this->eventDispatcher->dispatch('log', 'Log\LogUserLogin', array($user));
 
         if ($user instanceof User && $user->getPersonalWorkspace() === null) {
             $this->creator->setPersonalWorkspace($user);
