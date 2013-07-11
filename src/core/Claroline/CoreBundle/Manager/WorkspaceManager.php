@@ -68,7 +68,7 @@ class WorkspaceManager
      *     "templateDir"     = @DI\Inject("%claroline.param.templates_directory%")
      * })
      */
-        
+
     public function __construct(
         RoleManager $roleManager,
         ResourceManager $resourceManager,
@@ -323,5 +323,10 @@ class WorkspaceManager
     public function getWorkspaceById($workspaceId)
     {
         return $this->workspaceRepo->find($workspaceId);
+    }
+
+    public function getOneByGuid($guid)
+    {
+        return $this->workspaceRepo->findOneByGuid($guid);
     }
 }
