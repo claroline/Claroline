@@ -6,6 +6,9 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Event\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\Event\ConfigureWorkspaceToolEvent;
+use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Manager\RightsManager;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -14,16 +17,22 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class ResourceManagerListener
 {
+    private $resourceManager;
+    private $rightsManager;
+    private $workspaceManager;
+
     /**
      * @DI\InjectParams({
-     *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "ed" = @DI\Inject("event_dispatcher"),
-     *     "templating" = @DI\Inject("templating"),
-     *     "manager" = @DI\Inject("claroline.manager.resource_manager"),
-     *     "converter" = @DI\Inject("claroline.resource.converter"),
-     *     "sc" = @DI\Inject("security.context"),
-     *     "request" = @DI\Inject("request"),
-     *     "workspaceTagManager" = @DI\Inject("claroline.manager.workspace_tag_manager")
+     *     "em"                     = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "ed"                     = @DI\Inject("event_dispatcher"),
+     *     "templating"             = @DI\Inject("templating"),
+     *     "manager"                = @DI\Inject("claroline.manager.resource_manager"),
+     *     "sc"                     = @DI\Inject("security.context"),
+     *     "request"                = @DI\Inject("request"),
+     *     "resourceManager"        = @DI\Inject("claroline.manager.resource_manager"),
+     *     "rightsManager"          = @DI\Inject("claroline.manager.rights_manager"),
+     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "workspaceTagManager"    = @DI\Inject("claroline.manager.workspace_tag_manager")
      * })
      */
     public function __construct(
@@ -31,9 +40,11 @@ class ResourceManagerListener
         $ed,
         $templating,
         $manager,
-        $converter,
         $sc,
         $request,
+        ResourceManager $resourceManager,
+        RightsManager $rightsManager,
+        WorkspaceManager $workspaceManager,
         WorkspaceTagManager $workspaceTagManager
     )
     {
@@ -41,9 +52,11 @@ class ResourceManagerListener
         $this->ed = $ed;
         $this->templating = $templating;
         $this->manager = $manager;
-        $this->converter = $converter;
         $this->sc = $sc;
         $this->request = $request;
+        $this->resourceManager = $resourceManager;
+        $this->rightsManager = $rightsManager;
+        $this->workspaceManager = $workspaceManager;
         $this->workspaceTagManager = $workspaceTagManager;
     }
 
@@ -87,8 +100,10 @@ class ResourceManagerListener
     public function resourceWorkspace($workspaceId)
     {
         $breadcrumbsIds = $this->request->query->get('_breadcrumbs');
+
         if ($breadcrumbsIds != null) {
             $ancestors = $this->manager->getByIds($breadcrumbsIds);
+
             if (!$this->manager->isPathValid($ancestors)) {
                 throw new \Exception('Breadcrumbs invalid');
             };
@@ -103,10 +118,8 @@ class ResourceManagerListener
 
         $jsonPath = json_encode($path);
 
-        $workspace = $this->em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-        $directoryId = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->findWorkspaceRoot($workspace)
-            ->getId();
+        $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
+        $directoryId = $this->resourceManager->getWorkspaceRoot($workspace)->getId();
         $resourceTypes = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findAll();
 
@@ -140,9 +153,8 @@ class ResourceManagerListener
         if (!$this->sc->isGranted('parameters', $workspace)) {
             throw new AccessDeniedException();
         }
-        $resource = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->findWorkspaceRoot($workspace);
-        $roleRights = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
-            ->findNonAdminRights($resource);
+        $resource = $this->resourceManager->getWorkspaceRoot($workspace);
+        $roleRights = $this->rightsManager->getNonAdminRights($resource);
 
         $datas = $this->workspaceTagManager->getDatasForWorkspaceList(true);
 
