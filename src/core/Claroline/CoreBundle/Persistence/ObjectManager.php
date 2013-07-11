@@ -15,6 +15,7 @@ class ObjectManager extends ObjectManagerDecorator
     private $flushSuiteLevel = 0;
     private $supportsTransactions = false;
     private $hasEventManager = false;
+    private $hasUnitOfWork = false;
 
     /**
      * Constructor.
@@ -28,6 +29,7 @@ class ObjectManager extends ObjectManagerDecorator
         $this->wrapped = $om;
         $this->supportsTransactions
             = $this->hasEventManager
+            = $this->hasUnitOfWork
             = $om instanceof EntityManagerInterface;
     }
 
@@ -49,6 +51,16 @@ class ObjectManager extends ObjectManagerDecorator
     public function hasEventManager()
     {
         return $this->hasEventManager;
+    }
+
+    /**
+     * Checks if the underlying manager has an unit of work.
+     *
+     * @return boolean
+     */
+    public function hasUnitOfWork()
+    {
+        return $this->hasUnitOfWork;
     }
 
     /**
@@ -136,6 +148,21 @@ class ObjectManager extends ObjectManagerDecorator
         $this->assertIsSupported($this->hasEventManager, __METHOD__);
 
         return $this->wrapped->getEventManager();
+    }
+
+    /**
+     * Returns the unit of work.
+     *
+     * @todo remove this method if possible
+     *
+     * @throws UnsupportedMethodException if the method is not supported by
+     *                                    the underlying object manager
+     */
+    public function getUnitOfWork()
+    {
+        $this->assertIsSupported($this->hasUnitOfWork, __METHOD__);
+
+        return $this->wrapped->getUnitOfWork();
     }
 
     /**

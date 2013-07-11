@@ -48,6 +48,14 @@ class ObjectManagerTest extends MockeryTestCase
         $this->assertEquals('evm', $om->getEventManager());
     }
 
+    public function testGetUnitOfWork()
+    {
+        $oom = m::mock('Doctrine\ORM\EntityManagerInterface');
+        $oom->shouldReceive('getUnitOfWork')->once()->andReturn('uow');
+        $om = new ObjectManager($oom);
+        $this->assertEquals('uow', $om->getUnitOfWork());
+    }
+
     /**
      * @expectedException Claroline\CoreBundle\Persistence\NoFlushSuiteStartedException
      */
@@ -95,7 +103,6 @@ class ObjectManagerTest extends MockeryTestCase
         $om = new ObjectManager(m::mock('Doctrine\Common\Persistence\ObjectManager'));
         $this->assertInstanceOf('stdClass', $om->factory('stdClass'));
     }
-
 
     /**
      * @expectedException Claroline\CoreBundle\Persistence\MissingObjectException
@@ -154,6 +161,7 @@ class ObjectManagerTest extends MockeryTestCase
             array('commit'),
             array('rollBack'),
             array('getEventManager'),
+            array('getUnitOfWork')
         );
     }
 
