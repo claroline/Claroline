@@ -19,13 +19,33 @@
                 </a>
             </div>
             <div id="collapseOne" class="accordion-body collapse">
-                {% for badgeClaim in badgeClaims %}
                 <div class="accordion-inner">
-                    <a href="{{ path('claro_view_badge', {'id': badgeClaim.badge.id}) }}" title="{{ badgeClaim.badge.name(language) }}">{{ badgeClaim.badge.name(language) }}</a> =>
-                    <a href="{{ path('claro_profile_view', {'userId': badgeClaim.user.id}) }}" title="{{ badgeClaim.user.firstname }} {{ badgeClaim.user.lasstname }}">{{ badgeClaim.user.firstname }} {{ badgeClaim.user.lasstname }}</a> =>
-                    {{ badgeClaim.claimedAt|date('date_format'|trans({}, 'platform')) }}
+                    <table class="table">
+                        <thead>
+                            <th>Actions</th>
+                            <th>Badge</th>
+                            <th>Utilisateur</th>
+                            <th>Date</th>
+                        </thead>
+                        <tbody>
+                        {% for badgeClaim in badgeClaims %}
+                            <tr>
+                                <td>
+                                    <a href="#" class="btn confirm" data-toggle="tooltip" title="{{ 'badge_validate_award'|trans({}, 'platform') }}" data-confirm-title="{{ 'badge_award_confirm_title'|trans({}, 'platform') }}" data-confirm-message="{{ 'badge_award_confirm_message'|trans({'%badgeName%': badgeClaim.badge.name(language), '%user%': badgeClaim.user.firstname ~ ' ' ~ badgeClaim.user.lastname }, 'platform') }}" data-confirm-ok="{{ 'award'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}">
+                                        <i class="icon-ok-circle"></i>
+                                    </a>
+                                    <a href="#" class="btn confirm" data-toggle="tooltip" title="{{ 'badge_reject_award'|trans({}, 'platform') }}" data-confirm-title="{{ 'badge_dont_award_confirm_title'|trans({}, 'platform') }}" data-confirm-message="{{ 'badge_dont_award_confirm_message'|trans({'%badgeName%': badgeClaim.badge.name(language), '%user%': badgeClaim.user.firstname ~ ' ' ~ badgeClaim.user.lastname}, 'platform') }}" data-confirm-ok="{{ 'dont_award'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}">
+                                        <i class="icon-remove-circle"></i>
+                                    </a>
+                                </td>
+                                <td><a href="{{ path('claro_view_badge', {'id': badgeClaim.badge.id}) }}" title="{{ badgeClaim.badge.name(language) }}">{{ badgeClaim.badge.name(language) }}</a></td>
+                                <td><a href="{{ path('claro_profile_view', {'userId': badgeClaim.user.id}) }}" title="{{ badgeClaim.user.firstname }} {{ badgeClaim.user.lastname }}">{{ badgeClaim.user.firstname }} {{ badgeClaim.user.lastname }}</a></td>
+                                <td>{{ badgeClaim.claimedAt|date('date_format'|trans({}, 'platform')) }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
-                {% endfor %}
             </div>
         </div>
     </div>
@@ -50,6 +70,8 @@
 <script type="text/javascript">
     $(function(){
         $('[data-toggle=tooltip]').tooltip();
+
+        $('.confirm').confirmModal();
     });
 </script>
 {% endblock %}

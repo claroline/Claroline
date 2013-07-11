@@ -1,3 +1,11 @@
+/*
+ * This code allow tooltip to appear when in an accordion
+ */
+.collapse,
+.collapse .btn-group {
+  position: static;
+}
+
 .thumbnails.badge_list {
   margin-left: 20px;
 }
