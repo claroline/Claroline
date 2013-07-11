@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Manager;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Database\Writer;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
@@ -12,12 +11,13 @@ use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\AbstractResourceRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Translation\Translator;
 
 /**
  * @DI\Service("claroline.manager.rights_manager")
  */
-class RightsManager extends AbstractManager
+class RightsManager
 {
     /** @var ResourceRightsRepository */
     private $rightsRepo;
@@ -27,38 +27,30 @@ class RightsManager extends AbstractManager
     private $roleRepo;
     /** @var ResourceTypeRepository */
     private $resourceTypeRepo;
-    /** @var Writer */
-    private $writer;
     /** @var Translator */
     private $translator;
+    /** @var ObjectManager */
+    private $om;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "rightsRepo" =       @DI\Inject("resource_rights_repository"),
-     *     "resourceRepo" =     @DI\Inject("resource_repository"),
-     *     "roleRepo" =         @DI\Inject("role_repository"),
-     *     "resourceTypeRepo" = @DI\Inject("resource_type_repository"),
-     *     "writer" =           @DI\Inject("claroline.database.writer"),
-     *     "translator" =       @DI\Inject("translator")
+     *     "translator" =    @DI\Inject("translator"),
+     *     "om" = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(
-        ResourceRightsRepository $rightsRepo,
-        AbstractResourceRepository $resourceRepo,
-        RoleRepository $roleRepo,
-        ResourceTypeRepository $resourceTypeRepo,
-        Writer $writer,
-        Translator $translator
+        Translator $translator,
+        ObjectManager $om
     )
     {
-        $this->rightsRepo = $rightsRepo;
-        $this->resourceRepo = $resourceRepo;
-        $this->roleRepo = $roleRepo;
-        $this->resourceTypeRepo = $resourceTypeRepo;
-        $this->writer = $writer;
+        $this->rightsRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
+        $this->resourceRepo = $om->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
+        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
+        $this->resourceTypeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
         $this->translator = $translator;
+        $this->om = $om;
     }
 
     /**
@@ -89,17 +81,18 @@ class RightsManager extends AbstractManager
         $isRecursive
     )
     {
-        $this->writer->suspendFlush();
+        $this->om->startFlushSuite();
+            
         $arRights = ($isRecursive) ?
             $this->updateRightsTree($role, $resource):
             array($this->getOneByRoleAndResource($role, $resource));
 
         foreach ($arRights as $toUpdate) {
             $this->setPermissions($toUpdate, $permissions);
-            $this->writer->update($toUpdate);
+            $this->om->persist($toUpdate);
         }
 
-        $this->writer->forceFlush();
+        $this->om->endFlushSuite();
 
         return $arRights;
     }
@@ -111,7 +104,7 @@ class RightsManager extends AbstractManager
         $isRecursive
     )
     {
-        $this->writer->suspendFlush();
+        $this->om->startFlushSuite();
 
         $arRights = ($isRecursive) ?
             $this->updateRightsTree($role, $resource):
@@ -119,10 +112,10 @@ class RightsManager extends AbstractManager
 
         foreach ($arRights as $toUpdate) {
             $toUpdate->setCreatableResourceTypes($resourceTypes);
-            $this->writer->update($toUpdate);
+            $this->om->persist($toUpdate);
         }
 
-        $this->writer->forceFlush();
+        $this->om->endFlushSuite();
 
         return $arRights;
     }
@@ -131,7 +124,7 @@ class RightsManager extends AbstractManager
     {
        $originalRights = $this->rightsRepo->findBy(array('resource' => $original));
        $created = array();
-       $this->writer->suspendFlush();
+       $this->om->startFlushSuite();
 
        foreach ($originalRights as $originalRight) {
            $created[] = $this->create(
@@ -143,7 +136,7 @@ class RightsManager extends AbstractManager
            );
        }
 
-       $this->writer->forceFlush();
+       $this->om->endFlushSuite();
 
        return $created;
     }
@@ -174,13 +167,15 @@ class RightsManager extends AbstractManager
             }
 
             if (!$found) {
-                $rights = $this->getEntity('Resource\ResourceRights');
+                $rights = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceRights');
                 $rights->setRole($role);
                 $rights->setResource($descendant);
-                $this->writer->create($rights);
+                $this->om->persist($rights);
                 $finalRights[] = $rights;
             }
         }
+        
+        $this->om->flush();
 
         return $finalRights;
     }
@@ -201,7 +196,7 @@ class RightsManager extends AbstractManager
         $resourceRights = $this->rightsRepo->findOneBy(array('resource' => $resource, 'role' => $role));
 
         if ($resourceRights === null) {
-            $resourceRights = new ResourceRights();
+            $resourceRights = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceRights');
             $resourceRights->setResource($resource);
             $resourceRights->setRole($role);
         }
@@ -241,14 +236,17 @@ class RightsManager extends AbstractManager
         AbstractResource $resource,
         array $creations = array()
     ) {
+        $this->om->startFlushSuite();
         //will create every rights with the role and the resource already set.
         $resourceRights = $this->updateRightsTree($role, $resource);
 
         foreach ($resourceRights as $rights) {
             $this->setPermissions($rights, $permissions);
             $rights->setCreatableResourceTypes($creations);
-            $this->writer->update($rights);
+            $this->om->persist($rights);
         }
+        
+        $this->om->endFlushSuite();
     }
 
     private function nonRecursiveCreation(
@@ -257,12 +255,13 @@ class RightsManager extends AbstractManager
         AbstractResource $resource,
         array $creations = array()
     ) {
-        $rights = $this->getEntity('Resource\ResourceRights');
+        $rights = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceRights');
         $rights->setRole($role);
         $rights->setResource($resource);
         $rights->setCreatableResourceTypes($creations);
         $this->setPermissions($rights, $permissions);
-        $this->writer->create($rights);
+        $this->om->persist($rights);
+        $this->om->flush();
     }
 
     public function getResourceTypes()

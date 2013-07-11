@@ -60,6 +60,7 @@ class LoadFileData extends AbstractFixture implements ContainerAwareInterface
         $directory = $this->getReference("directory/{$this->directory}");
         $resourceManager = $this->container->get('claroline.manager.resource_manager');
         $filesDirectory = $this->container->getParameter('claroline.param.files_directory');
+        $ut = $this->container->get('claroline.utilities.misc');
         $fileType = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findOneByName('file');
 
@@ -67,7 +68,7 @@ class LoadFileData extends AbstractFixture implements ContainerAwareInterface
             $filePathParts = explode(DIRECTORY_SEPARATOR, $filePath);
             $fileName = array_pop($filePathParts);
             $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-            $hashName = "{$resourceManager->generateGuid()}.{$extension}";
+            $hashName = "{$ut->generateGuid()}.{$extension}";
             $targetFilePath = $filesDirectory . DIRECTORY_SEPARATOR . $hashName;
             $file = new File();
             $file->setName($fileName);

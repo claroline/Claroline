@@ -91,9 +91,7 @@ class UserManager
         $this->setPersonalWorkspace($user);
         $this->toolManager->addRequiredToolsToUser($user);
         $this->roleManager->setRoleToRoleSubject($user, PlatformRoles::USER);
-
         $this->writer->create($user);
-
         $this->ed->dispatch('log', 'Log\LogUserCreate', array($user));
 
         return $user;
@@ -111,7 +109,7 @@ class UserManager
         $this->roleManager->setRoleToRoleSubject($user, $roleName);
 
         $this->writer->create($user);
-        $this->ed->dispatch('log', 'Log\LogUserCreateEvent', array($user));
+        $this->ed->dispatch('log', 'Log\LogUserCreate', array($user));
 
         return $user;
     }
@@ -121,9 +119,8 @@ class UserManager
         $this->setPersonalWorkspace($user);
         $this->toolManager->addRequiredToolsToUser($user);
         $this->roleManager->associateRoles($user, $roles);
-
         $this->writer->create($user);
-        $this->ed->dispatch('log', 'Log\LogUserCreateEvent', array($user));
+        $this->ed->dispatch('log', 'Log\LogUserCreate', array($user));
     }
 
     public function importUsers($users)
