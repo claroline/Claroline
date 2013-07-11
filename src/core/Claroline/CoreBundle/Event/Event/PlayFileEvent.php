@@ -5,11 +5,10 @@ namespace Claroline\CoreBundle\Event\Event;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Response;
 
-class PlayFileEvent extends Event implements DataConveyorEventInterface
+class PlayFileEvent extends Event
 {
     private $resource;
     private $response;
-    private $isPopulated = false;
 
     /**
      * Constructor.
@@ -38,7 +37,6 @@ class PlayFileEvent extends Event implements DataConveyorEventInterface
      */
     public function setResponse(Response $response)
     {
-        $this->isPopulated = true;
         $this->response = $response;
     }
 
@@ -50,10 +48,5 @@ class PlayFileEvent extends Event implements DataConveyorEventInterface
     public function getResponse()
     {
         return $this->response;
-    }
-
-    public function isPopulated()
-    {
-        return $this->isPopulated;
     }
 }

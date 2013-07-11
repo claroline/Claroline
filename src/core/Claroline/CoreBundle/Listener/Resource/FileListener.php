@@ -26,7 +26,6 @@ class FileListener implements ContainerAwareInterface
 {
     private $container;
 
-
     /**
      * @DI\InjectParams({
      *     "container" = @DI\Inject("service_container")
@@ -37,7 +36,6 @@ class FileListener implements ContainerAwareInterface
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
-
     }
 
     /**
@@ -157,14 +155,12 @@ class FileListener implements ContainerAwareInterface
     {
         $ds = DIRECTORY_SEPARATOR;
         $file = $event->getResource();
-        $mimeType = $file->getMimeType();
-        $playEvent = new PlayFileEvent($file);
         $eventName = strtolower(str_replace('/', '_', 'play_file_'.$mimeType));
         $this->container->get('claroline.event.event_dispatcher')
                 ->dispatch(
                     strtolower(str_replace('/', '_', 'play_file_'.$mimeType)),
                     'PlayFile',
-                    $file
+                    array($file)
                 );
 
         if ($playEvent->getResponse() instanceof Response) {
@@ -174,8 +170,8 @@ class FileListener implements ContainerAwareInterface
             $mimeElements = explode('/', $mimeType);
             $baseType = strtolower($mimeElements[0]);
             $fallBackPlayEventName = 'play_file_'.$baseType;
-            $this->container->get('claroline.event.event_dispatcher')
-                    ->dispatch($fallBackPlayEventName, 'PlayFile', $file);
+            $fallBackPlayEvent = $this->container->get('claroline.event.event_dispatcher')
+                    ->dispatch($fallBackPlayEventName, 'PlayFile', array($file));
             if ($fallBackPlayEvent->getResponse() instanceof Response) {
                 $response = $fallBackPlayEvent->getResponse();
             } else {

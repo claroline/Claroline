@@ -77,8 +77,7 @@ class ImportExportResourceListener
         $children = $resourceRepo->findBy(array('parent' => $root, 'resourceType' => $dirType));
 
         foreach ($children as $child) {
-            $newEvent = new ExportResourceTemplateEvent($child);
-            $this->ed->dispatch("resource_directory_to_template", 'ExportResourceTemplate', array($child));
+            $newEvent = $this->ed->dispatch("resource_directory_to_template", 'ExportResourceTemplate', array($child));
             $dataChildren = $newEvent->getConfig();
             $config['directory'][] = $dataChildren;
         }
@@ -93,7 +92,7 @@ class ImportExportResourceListener
         foreach ($resources as $resource) {
             if ($resource['type'] !== 'directory') {
                 $newEvent = new ExportResourceTemplateEvent($resourceRepo->find($resource['id']));
-                $this->ed->dispatch(
+                $newEvent = $this->ed->dispatch(
                     "resource_{$resource['type']}_to_template",
                     'ExportResourceTemplate',
                     array($resourceRepo->find($resource['id']))
