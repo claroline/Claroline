@@ -403,4 +403,9 @@ class ToolManager
     {
         return $this->toolRepo->findOneByName($name);
     }
+
+    public function getToolByCriterias(array $criterias)
+    {
+        return $this->toolRepo->findBy($criterias);
+    }
 }
