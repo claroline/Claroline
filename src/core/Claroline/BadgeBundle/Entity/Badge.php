@@ -68,6 +68,13 @@ class Badge
     private $userBadges;
 
     /**
+     * @var ArrayCollection|BadgeClaim[]
+     *
+     * @ORM\OneToMany(targetEntity="Claroline\BadgeBundle\Entity\BadgeClaim", mappedBy="badge", cascade={"all"})
+     */
+    private $badgeClaims;
+
+    /**
      * @var ArrayCollection|BadgeTranslation[]
      *
      * @ORM\OneToMany(

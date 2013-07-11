@@ -29,7 +29,7 @@ class BadgeClaim
     /**
      * @var User
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User", inversedBy="user")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User", inversedBy="badgeClaims")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
     */
     protected $user;
@@ -37,7 +37,7 @@ class BadgeClaim
     /**
      * @var Badge
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\BadgeBundle\Entity\Badge", inversedBy="badge")
+     * @ORM\ManyToOne(targetEntity="Claroline\BadgeBundle\Entity\Badge", inversedBy="badgeClaims")
      * @ORM\JoinColumn(name="badge_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
     */
     protected $badge;

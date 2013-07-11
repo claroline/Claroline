@@ -63,10 +63,6 @@ class ProfileController extends Controller
                     }
                 }
                 catch(\Exception $exception) {
-                    echo "<pre>";
-                    var_dump($exception->getMessage());
-                    echo "</pre>" . PHP_EOL;
-                    die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
                     $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_claim_error_message', array(), 'platform'));
                 }
 
@@ -95,12 +91,15 @@ class ProfileController extends Controller
             ->setCurrentPage($page)
         ;
 
+        $badgeClaims = $this->getDoctrine()->getRepository('ClarolineBadgeBundle:BadgeClaim')->findByUser($user);
+
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
 
         return array(
-            'pager'    => $pager,
-            'language' => $platformConfigHandler->getParameter('locale_language')
+            'pager'         => $pager,
+            'badgeClaims'   => $badgeClaims,
+            'language'      => $platformConfigHandler->getParameter('locale_language')
         );
     }
 }
