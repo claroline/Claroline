@@ -1,6 +1,9 @@
 <?php
 namespace Claroline\CoreBundle\Library\Analytics;
 
+use Claroline\CoreBundle\Repository\AbstractResourceRepository;
+use Claroline\CoreBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -9,14 +12,30 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class Manager
 {
+    private $container;
+    private $resourceRepo;
+    private $userRepo;
+    private $workspaceRepo;
+
     /**
      * @DI\InjectParams({
-     *     "container" = @DI\Inject("service_container")
+     *     "container"      = @DI\Inject("service_container"),
+     *     "resourceRepo"   = @DI\Inject("resource_repository"),
+     *     "userRepo"       = @DI\Inject("user_repository"),
+     *     "workspaceRepo"  = @DI\Inject("claroline.repository.workspace_repository")
      * })
      */
-    public function __construct($container)
+    public function __construct(
+        $container,
+        AbstractResourceRepository $resourceRepo,
+        UserRepository $userRepo,
+        WorkspaceRepository $workspaceRepo
+    )
     {
         $this->container = $container;
+        $this->resourceRepo = $resourceRepo;
+        $this->userRepo = $userRepo;
+        $this->workspaceRepo = $workspaceRepo;
     }
 
     public function getDefaultRange()
@@ -71,17 +90,17 @@ class Manager
 
     public function getTopByCriteria ($range = null, $top_type = null, $max = 30)
     {
-        if($top_type == null) $top_type = 'top_users_connections';
-        $em = $this->container->get('doctrine.orm.entity_manager');
+        if($top_type == null) {
+            $top_type = 'top_users_connections';
+        }
         $listData = array();
+
         switch ($top_type) {
             case "top_extension":
-                $repository = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
-                $listData = $repository->findMimeTypesWithMostResources ($max);
+                $listData = $this->resourceRepo->findMimeTypesWithMostResources($max);
                 break;
             case "top_workspaces_resources":
-                $repository = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
-                $listData = $repository->workspacesWithMostResources ($max);
+                $listData = $this->workspaceRepo->findWorkspacesWithMostResources($max);
                 break;
             case "top_workspaces_connections":
                 $listData = $this->topWSByAction($range, 'ws_tool_read', $max);
@@ -96,12 +115,10 @@ class Manager
                 $listData = $this->topUsersByAction($range, 'user_login', $max);
                 break;
             case "top_users_workspaces_enrolled":
-                $repository = $em->getRepository('ClarolineCoreBundle:User');
-                $listData = $repository->findUsersEnrolledInMostWorkspaces ($max);
+                $listData = $this->userRepo->findUsersEnrolledInMostWorkspaces($max);
                 break;
             case "top_users_workspaces_owners":
-                $repository = $em->getRepository('ClarolineCoreBundle:User');
-                $listData = $repository->findUsersOwnersOfMostWorkspaces ($max);
+                $listData = $this->userRepo->findUsersOwnersOfMostWorkspaces($max);
                 break;
             case "top_media_views":
                 $listData = $this->topMediaByAction($range, 'resource_read', $max);

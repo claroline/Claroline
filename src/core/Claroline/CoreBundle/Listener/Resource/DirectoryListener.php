@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Listener\Resource;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -20,6 +19,7 @@ use Claroline\CoreBundle\Event\Event\ExportResourceTemplateEvent;
 use Claroline\CoreBundle\Event\Event\ImportResourceTemplateEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -27,6 +27,7 @@ use Doctrine\ORM\EntityManager;
  */
 class DirectoryListener
 {
+    private $em;
     private $container;
     private $roleManager;
     private $resourceManager;
@@ -40,9 +41,8 @@ class DirectoryListener
      *     "em"                 = @DI\Inject("doctrine.orm.entity_manager"),
      *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
      *     "resourceManager"    = @DI\Inject("claroline.manager.resource_manager"),
-     *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
+     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "security"           = @DI\Inject("security.context"),
-     *     "converter"          = @DI\Inject("claroline.resource.converter"),
      *     "formFactory"        = @DI\Inject("form.factory"),
      *     "templating"         = @DI\Inject("templating"),
      *     "container"          = @DI\Inject("service_container")
@@ -52,7 +52,7 @@ class DirectoryListener
         EntityManager $em,
         RoleManager $roleManager,
         ResourceManager $resourceManager,
-        EventDispatcher $eventDispatcher,
+        StrictDispatcher $eventDispatcher,
         SecurityContextInterface $security,
         FormFactoryInterface $formFactory,
         TwigEngine $templating,
@@ -159,8 +159,11 @@ class DirectoryListener
 
         foreach ($children as $child) {
             if ($child['type'] === 'directory') {
-                $newEvent = new ExportResourceTemplateEvent($resourceRepo->find($child['id']));
-                $this->eventDispatcher->dispatch("resource_directory_to_template", $newEvent);
+                $newEvent = $this->ed->dispatch(
+                    'resource_directory_to_template',
+                    'ExportResourceTemplate',
+                    array($resourceRepo->find($child['id']))
+                );
                 $descr = $newEvent->getConfig();
                 $dataChildren[] = $descr;
             }
@@ -204,14 +207,11 @@ class DirectoryListener
         $createdResources[$config['id']] = $directory->getId();
 
         foreach ($config['children'] as $child) {
-            $newEvent = new ImportResourceTemplateEvent(
-                $child,
-                $directory,
-                $event->getUser()
+            $newEvent = $this->eventDispatcher->dispatch(
+                'resource_directory_from_template',
+                'ImportResourceTemplate',
+                array($child, $directory, $event->getUser(), $createdResources)
             );
-            $newEvent->setCreatedResources($createdResources);
-            $this->eventDispatcher->dispatch("resource_directory_from_template", $newEvent);
-
             $childResources = $newEvent->getCreatedResources();
 
             foreach ($childResources as $key => $value) {
@@ -242,8 +242,11 @@ class DirectoryListener
             ->getChildren($resource, false, 'path', 'DESC');
 
         foreach ($children as $child) {
-            $event = new DeleteResourceEvent($child);
-            $this->eventDispatcher->dispatch("delete_{$child->getResourceType()->getName()}", $event);
+            $this->eventDispatcher->dispatch(
+                'delete_{$child->getResourceType()->getName()}',
+                'DeleteResource',
+                array($child)
+            );
         }
     }
 

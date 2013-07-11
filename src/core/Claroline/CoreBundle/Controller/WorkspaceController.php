@@ -4,21 +4,22 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Form\WorkspaceType;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Event\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceToolReadEvent;
 use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceDeleteEvent;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -31,8 +32,7 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class WorkspaceController extends Controller
 {
-    const ABSTRACT_WS_CLASS = 'ClarolineCoreBundle:Workspace\AbstractWorkspace';
-
+    private $workspaceManager;
     private $roleManager;
     private $tagManager;
     private $eventDispatcher;
@@ -43,25 +43,28 @@ class WorkspaceController extends Controller
 
     /**
      * @DI\InjectParams({
+     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
      *     "tagManager"         = @DI\Inject("claroline.manager.workspace_tag_manager"),
      *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
      *     "security"           = @DI\Inject("security.context"),
      *     "router"             = @DI\Inject("router"),
      *     "utils"              = @DI\Inject("claroline.security.utilities"),
-     *     "formFactory"        = @DI\Inject("form.factory")
+     *     "formFactory"        = @DI\Inject("claroline.form.factory")
      * })
      */
     public function __construct(
+        WorkspaceManager $workspaceManager,
         RoleManager $roleManager,
         WorkspaceTagManager $tagManager,
         EventDispatcher $eventDispatcher,
         SecurityContextInterface $security,
         UrlGeneratorInterface $router,
         Utilities $utils,
-        FormFactoryInterface $formFactory
+        FormFactory $formFactory
     )
     {
+        $this->workspaceManager = $workspaceManager;
         $this->roleManager = $roleManager;
         $this->tagManager = $tagManager;
         $this->eventDispatcher = $eventDispatcher;
@@ -120,9 +123,7 @@ class WorkspaceController extends Controller
         $token = $this->security->getToken();
         $user = $token->getUser();
         $roles = $this->utils->getRoles($token);
-
-        $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)
-            ->findByRoles($roles);
+        $workspaces = $this->workspaceManager->getWorkspacesByRoles($roles);
         $tags = $this->tagManager->getNonEmptyTagsByUser($user);
         $relTagWorkspace = $this->tagManager->getTagRelationsByUser($user);
         $tagWorkspaces = array();
@@ -214,7 +215,7 @@ class WorkspaceController extends Controller
     public function creationFormAction()
     {
         $this->assertIsGranted('ROLE_WS_CREATOR');
-        $form = $this->formFactory->create(new WorkspaceType());
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE);
 
         return array('form' => $form->createView());
     }
@@ -235,7 +236,7 @@ class WorkspaceController extends Controller
     public function createAction()
     {
         $this->assertIsGranted('ROLE_WS_CREATOR');
-        $form = $this->formFactory->create(new WorkspaceType());
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE);
         $form->handleRequest($this->getRequest());
 
         $templateDir = $this->container->getParameter('claroline.param.templates_directory');
@@ -250,8 +251,7 @@ class WorkspaceController extends Controller
             $config->setWorkspaceName($form->get('name')->getData());
             $config->setWorkspaceCode($form->get('code')->getData());
             $user = $this->security->getToken()->getUser();
-            $wsCreator = $this->get('claroline.workspace.creator');
-            $wsCreator->createWorkspace($config, $user);
+            $this->workspaceManager->create($config, $user);
             $this->get('claroline.security.token_updater')->update($this->security->getToken());
             $route = $this->router->generate('claro_workspace_list');
 
@@ -283,8 +283,11 @@ class WorkspaceController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $this->assertIsGranted('DELETE', $workspace);
-        $log = new LogWorkspaceDeleteEvent($workspace);
-        $this->eventDispatcher->dispatch('log', $log);
+        $this->eventDispatcher->dispatch(
+            'log',
+            'Log\LogWorkspaceDelete',
+            array($workspace)
+        );
         $em->remove($workspace);
         $em->flush();
 
@@ -358,18 +361,16 @@ class WorkspaceController extends Controller
     public function openToolAction($toolName, AbstractWorkspace $workspace)
     {
         $this->assertIsGranted($toolName, $workspace);
-        $event = new DisplayToolEvent($workspace);
-        $eventName = 'open_tool_workspace_'.$toolName;
-        $this->eventDispatcher->dispatch($eventName, $event);
-
-        if (is_null($event->getContent())) {
-            throw new \Exception(
-                "Tool '{$toolName}' didn't return any Response for tool event '{$eventName}'."
-            );
-        }
-
-        $log = new LogWorkspaceToolReadEvent($workspace, $toolName);
-        $this->eventDispatcher->dispatch('log', $log);
+        $event = $this->eventDispatcher->dispatch(
+            'open_tool_workspace_'.$toolName,
+            'DisplayTool',
+            array($workspace)
+        );
+        $this->eventDispatcher->dispatch(
+            'log',
+            'Log\LogWorkspaceToolRead',
+            array($workspace,$toolName)
+        );
 
         return new Response($event->getContent());
     }

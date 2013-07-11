@@ -193,16 +193,17 @@ class UserMessageRepository extends EntityRepository
             $messageIds[] = $message->getId();
         }
 
-        $idString = implode(', ', $messageIds);
-        $dql = "
+        $dql = '
             SELECT um FROM Claroline\CoreBundle\Entity\UserMessage um
             JOIN um.user u
             JOIN um.message m
-            WHERE m.id IN ({$idString})
-            AND u.id = {$user->getId()}
+            WHERE m.id IN (:messageIds)
+            AND u.id = :userId
             ORDER BY m.date DESC
-        ";
+        ';
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('messageIds', $messageIds);
+        $query->setParameter('userId', $user->getId());
 
         return $query->getResult();
     }

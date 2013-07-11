@@ -11,7 +11,7 @@ use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Database\Writer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -29,10 +29,10 @@ class RoleManager
      * @DI\InjectParams({
      *     "writer"   = @DI\Inject("claroline.database.writer"),
      *     "roleRepo" = @DI\Inject("role_repository"),
-     *     "sc" =       @DI\Inject("security.context"),
+     *     "sc" =       @DI\Inject("security.context")
      * })
      */
-    public function __construct(Writer $writer, RoleRepository $roleRepo, SecurityContext $sc)
+    public function __construct(Writer $writer, RoleRepository $roleRepo, SecurityContextInterface $sc)
     {
         $this->writer = $writer;
         $this->roleRepo = $roleRepo;
@@ -87,6 +87,11 @@ class RoleManager
             $ars->addRole($role);
             $this->writer->update($ars);
         }
+    }
+
+    public function getRole($roleId)
+    {
+        return $this->roleRepo->find($roleId);
     }
 
     public function associateRole(AbstractRoleSubject $ars, Role $role)

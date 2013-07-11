@@ -6,11 +6,12 @@ use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Symfony\Component\EventDispatcher\Event;
 
-class ConfigureWorkspaceToolEvent extends Event
+class ConfigureWorkspaceToolEvent extends Event implements DataConveyorEventInterface
 {
     private $content;
     private $tool;
     private $workspace;
+    private $isPopulated = false;
 
     /**
      * Constructor.
@@ -33,11 +34,17 @@ class ConfigureWorkspaceToolEvent extends Event
 
     public function setContent($content)
     {
+        $this->isPopulated = true;
         $this->content = $content;
     }
 
     public function getContent()
     {
         return $this->content;
+    }
+
+    public function isPopulated()
+    {
+        return $this->isPopulated;
     }
 }

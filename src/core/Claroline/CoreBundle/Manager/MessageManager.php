@@ -124,6 +124,11 @@ class MessageManager
         return $this->messageRepo->findAncestors($message);
     }
 
+    public function getNbUnreadMessages(User $user)
+    {
+        return $this->messageRepo->countUnread($user);
+    }
+
     public function markAsRead(User $user, array $messages)
     {
         $this->markMessages($user, $messages, self::MESSAGE_READ);

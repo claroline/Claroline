@@ -2,9 +2,9 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Claroline\CoreBundle\Library\Testing\AltRepositoryTestCase;
+use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 
-class GroupRepositoryTest extends AltRepositoryTestCase
+class GroupRepositoryTest extends RepositoryTestCase
 {
     private static $repo;
 
@@ -14,8 +14,8 @@ class GroupRepositoryTest extends AltRepositoryTestCase
         self::$repo = self::getRepository('ClarolineCoreBundle:Group');
         self::createWorkspace('ws_1');
         self::createRole('ROLE_1', self::get('ws_1'));
-        self::createGroup('group_1', array(self::get('ROLE_1')));
-        self::createGroup('group_2', array(self::get('ROLE_1')));
+        self::createGroup('group_1', array(), array(self::get('ROLE_1')));
+        self::createGroup('group_2', array(), array(self::get('ROLE_1')));
         self::createGroup('group_3');
         self::createGroup('group_4');
     }
