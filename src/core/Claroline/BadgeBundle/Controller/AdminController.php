@@ -46,13 +46,14 @@ class AdminController extends Controller
         /** @var Badge[] $badges */
         $badges = $badgeRepository->findAllOrderedByName($platformConfigHandler->getParameter('locale_language'));
 
-        foreach($badges as $badge)
-        {
-            $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
-        }
+        $language = $platformConfigHandler->getParameter('locale_language');
+
+        $badgeClaims = $this->getDoctrine()->getRepository('ClarolineBadgeBundle:BadgeClaim')->findAll();
 
         return array(
-            'badges' => $badges
+            'badges'      => $badges,
+            'badgeClaims' => $badgeClaims,
+            'language'    => $language
         );
     }
 

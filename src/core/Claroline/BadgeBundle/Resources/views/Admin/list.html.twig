@@ -10,11 +10,32 @@
         </h3>
     </div>
 
+    {% if 0 < badgeClaims|length %}
+    <div class="accordion" id="accordion2">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+                    {{ 'badge_current_claimed_badges'|transchoice(badgeClaims|length, {'%claimedBadgeCount%': badgeClaims|length}, 'platform') }}
+                </a>
+            </div>
+            <div id="collapseOne" class="accordion-body collapse">
+                {% for badgeClaim in badgeClaims %}
+                <div class="accordion-inner">
+                    <a href="{{ path('claro_view_badge', {'id': badgeClaim.badge.id}) }}" title="{{ badgeClaim.badge.name(language) }}">{{ badgeClaim.badge.name(language) }}</a> =>
+                    <a href="{{ path('claro_profile_view', {'userId': badgeClaim.user.id}) }}" title="{{ badgeClaim.user.firstname }} {{ badgeClaim.user.lasstname }}">{{ badgeClaim.user.firstname }} {{ badgeClaim.user.lasstname }}</a> =>
+                    {{ badgeClaim.claimedAt|date('date_format'|trans({}, 'platform')) }}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     <ul class="unstyled inline thumbnails badge_list">
     {% for badge in badges %}
         <li class="span2">
-            <a href="{{ path('claro_admin_badges_edit', {'id': badge.id}) }}" title="{{ badge.name }}" class="thumbnail">
-                <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" />
+            <a href="{{ path('claro_admin_badges_edit', {'id': badge.id}) }}" title="{{ badge.name(language) }}" class="thumbnail">
+                <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name(language) }}" />
             </a>
         </li>
     {% else %}
