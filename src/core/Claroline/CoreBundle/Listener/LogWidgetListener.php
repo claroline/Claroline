@@ -70,28 +70,12 @@ class LogWidgetListener
 
     /**
      * @DI\InjectParams({
-<<<<<<< HEAD
-     *     "logManager"  = @DI\Inject("claroline.log.manager"),
-     *     "context"     = @DI\Inject("security.context"),
-     *     "twig"        = @DI\Inject("templating"),
-     *     "ed"          = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "formFactory" = @DI\Inject("form.factory"),
-     *     "manager" = @DI\Inject("doctrine.orm.entity_manager")
-||||||| merged common ancestors
-     *     "logManager"  = @DI\Inject("claroline.log.manager"),
-     *     "context"     = @DI\Inject("security.context"),
-     *     "twig"        = @DI\Inject("templating"),
-     *     "ed"          = @DI\Inject("event_dispatcher"),
-     *     "formFactory" = @DI\Inject("form.factory"),
-     *     "manager" = @DI\Inject("doctrine.orm.entity_manager")
-=======
      *     "logManager"         = @DI\Inject("claroline.log.manager"),
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "context"            = @DI\Inject("security.context"),
      *     "twig"               = @DI\Inject("templating"),
-     *     "ed"                 = @DI\Inject("event_dispatcher"),
+     *     "ed"                 = @DI\Inject("claroline.event.event_dispatcher"),
      *     "formFactory"        = @DI\Inject("form.factory")
->>>>>>> af271bbf915cb67ed23b511fd373f9b3eb885f83
      * })
      */
     public function __construct(
