@@ -7,10 +7,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Message;
 use Claroline\CoreBundle\Entity\UserMessage;
-use Claroline\CoreBundle\Repository\MessageRepository;
-use Claroline\CoreBundle\Repository\UserMessageRepository;
-use Claroline\CoreBundle\Repository\UserRepository;
-use Claroline\CoreBundle\Database\Writer;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 
 /**
@@ -23,36 +20,26 @@ class MessageManager
     const MESSAGE_REMOVED = 'Removed';
     const MESSAGE_UNREMOVED = 'Unremoved';
 
-    private $messageRepo;
-    private $userMessageRepo;
-    private $userRepo;
-    private $writer;
+    private $om;
     private $pagerFactory;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "messageRepo"        = @DI\Inject("message_repository"),
-     *     "userMessageRepo"    = @DI\Inject("claroline.repository.user_message_repository"),
-     *     "userRepo"           = @DI\Inject("user_repository"),
-     *     "writer"             = @DI\Inject("claroline.database.writer"),
-     *     "pagerFactory"       = @DI\Inject("claroline.pager.pager_factory")
+     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
+     *     "pagerFactory"   = @DI\Inject("claroline.pager.pager_factory")
      * })
      */
     public function __construct(
-        UserMessageRepository $userMessageRepo,
-        MessageRepository $messageRepo,
-        UserRepository $userRepo,
-        Writer $writer,
+        ObjectManager $om,
         PagerFactory $pagerFactory
     )
     {
-        $this->userRepo = $userRepo;
-        $this->messageRepo = $messageRepo;
-        $this->writer = $writer;
-        $this->writer = $writer;
-        $this->userMessageRepo = $userMessageRepo;
+        $this->om = $om;
+        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
+        $this->messageRepo = $om->getRepository('ClarolineCoreBundle:Message');
+        $this->userMessageRepo = $om->getRepository('ClarolineCoreBundle:UserMessage');
         $this->pagerFactory = $pagerFactory;
     }
 
@@ -63,33 +50,30 @@ class MessageManager
         }
 
         $usernames = explode(';', $receiversString);
-        $receivers = $this->userRepo->findByUsernames($usernames); // throw ex if missing
+        $receivers = $this->userRepo->findByUsernames($usernames);
         $message->setSender($sender);
 
         if (null !== $parent) {
             $message->setParent($parent);
         }
 
-        $this->writer->suspendFlush();
-        $this->writer->create($message);
-
-        $userMessage = new UserMessage();
+        $this->om->persist($message);
+        $userMessage = $this->om->factory('Claroline\CoreBundle\Entity\UserMessage');
         $userMessage->setIsSent(true);
         $userMessage->setUser($sender);
         $userMessage->setMessage($message);
-        $this->writer->create($userMessage);
+        $this->om->persist($userMessage);
 
         foreach ($receivers as $receiver) {
-            $userMessage = new UserMessage();
+            $userMessage = $this->om->factory('Claroline\CoreBundle\Entity\UserMessage');
             $userMessage->setUser($receiver);
             $userMessage->setMessage($message);
-            $this->writer->create($userMessage);
+            $this->om->persist($userMessage);
         }
 
-        $this->writer->forceFlush();
+        $this->om->flush();
     }
 
-    // return pager
     public function getReceivedMessages(User $receiver, $search = '', $page = 1)
     {
         $query = $search === '' ?
@@ -99,7 +83,6 @@ class MessageManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
-    // return pager
     public function getSentMessages(User $sender, $search = '', $page = 1)
     {
         $query = $search === '' ?
@@ -109,7 +92,6 @@ class MessageManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
-    // return pager
     public function getRemovedMessages(User $user, $search = '', $page = 1)
     {
         $query = $search === '' ?
@@ -147,13 +129,12 @@ class MessageManager
     public function remove(User $user, array $messages)
     {
         $userMessages = $this->userMessageRepo->findByMessages($user, $messages);
-        $this->writer->suspendFlush();
 
         foreach ($userMessages as $userMessage) {
-            $this->writer->delete($userMessage);
+            $this->om->remove($userMessage);
         }
 
-        $this->writer->forceFlush();
+        $this->om->flush();
     }
 
     public function generateGroupQueryString(Group $group)
@@ -187,13 +168,12 @@ class MessageManager
     {
         $userMessages = $this->userMessageRepo->findByMessages($user, $messages);
         $method = 'markAs' . $flag;
-        $this->writer->suspendFlush();
 
         foreach ($userMessages as $userMessage) {
             $userMessage->$method();
-            $this->writer->update($userMessage);
+            $this->om->persist($userMessage);
         }
 
-        $this->writer->forceFlush();
+        $this->om->flush();
     }
 }
