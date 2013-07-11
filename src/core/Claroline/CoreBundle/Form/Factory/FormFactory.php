@@ -21,6 +21,9 @@ class FormFactory
     const TYPE_ADMIN_ANALYTICS_CONNECTIONS = 'admin_analytics_connections';
     const TYPE_ADMIN_ANALYTICS_TOP = 'admin_analytics_top';
     const TYPE_MAIL = 'mail';
+    const TYPE_RESOURCE_PERMS = 'resource_permissions';
+    const TYPE_RESOURCE_RENAME = 'resource_rename';
+    const TYPE_RESOURCE_PROPERTIES = 'resource_properties';
 
     private static $types = array(
         self::TYPE_MESSAGE => array(
@@ -62,6 +65,18 @@ class FormFactory
         ),
         self::TYPE_MAIL => array(
             'formType' => 'Claroline\CoreBundle\Form\MailType'
+        ),
+        self::TYPE_RESOURCE_PERMS => array(
+            'formType' => 'Claroline\CoreBundle\Form\ResourceRightType',
+            'entity' => 'Claroline\CoreBundle\Entity\Resource\ResourceRights'
+        ),
+        self::TYPE_RESOURCE_RENAME => array(
+            'formType' => 'Claroline\CoreBundle\Form\ResourceNameType',
+            'entity' => 'Claroline\CoreBundle\Entity\Resource\AbstractResource'
+        ),
+        self::TYPE_RESOURCE_PROPERTIES => array(
+            'formType' => 'Claroline\CoreBundle\Form\ResourcePropertiesType',
+            'entity' => 'Claroline\CoreBundle\Entity\Resource\AbstractResource'
         )
     );
 
