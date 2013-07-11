@@ -282,7 +282,7 @@ class ResourceController
             );
         }
 
-        //TODO waiting for define CustomActions
+        // TODO waiting for define CustomActions
         // $logevent = new ResourceLogEvent($ri, $action);
         // $this->get('event_dispatcher')->dispatch('log_resource', $logevent);
 

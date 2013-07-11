@@ -189,7 +189,7 @@ class RoleRepository extends EntityRepository
     {
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
-            WHERE r.name = 'ROLE_WS_{$roleType}_{$workspace->getId()}'
+            WHERE r.name = 'ROLE_WS_{$roleType}_{$workspace->getGuid()}'
         ";
         $query = $this->_em->createQuery($dql);
 
