@@ -24,7 +24,7 @@ class ActivityController extends Controller
     /**
      * @DI\InjectParams({
      *     "resourceManager"    = @DI\Inject("claroline.manager.resource_manager"),
-     *     "request"             = @DI\Inject("request")
+     *     "request"            = @DI\Inject("request")
      * })
      */
     public function __construct(
