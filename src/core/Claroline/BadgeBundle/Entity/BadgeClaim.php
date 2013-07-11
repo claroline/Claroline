@@ -93,7 +93,7 @@ class BadgeClaim
     /**
      * @param Badge $badge
      *
-     * @return UserBadge
+     * @return BadgeClaim
      */
     public function setBadge(Badge $badge)
     {
@@ -103,7 +103,7 @@ class BadgeClaim
     }
 
     /**
-     * @return UserBadge
+     * @return Badge
      */
     public function getBadge()
     {

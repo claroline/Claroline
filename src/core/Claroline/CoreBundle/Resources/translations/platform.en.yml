@@ -554,6 +554,7 @@ badge_form_change_image: "Change the image"
 badge_award_form_group: 'Group'
 badge_award_form_user: 'User'
 badge_expired_on_date: 'Expire the %expirationDate%'
+claim: 'Claim'
 claim_badge: 'Claim a badge'
 claim_badge_form: 'Claim badge form'
 badge_form_badge : 'Name of the claiming badge'
@@ -567,3 +568,7 @@ badge_award_confirm_title: "Validation of badge awarding"
 badge_award_confirm_message: "Are you sure you want to award badge <strong>%badgeName%</strong> to the user <strong>%user%</strong> ?"
 badge_dont_award_confirm_title: "Rejection of badge awarding"
 badge_dont_award_confirm_message: "Are you sure you don't want to award badge <strong>%badgeName%</strong> to the user <strong>%user%</strong> ?"
+badge_validate_award_success_message: "Validation of badge awarding made with success."
+badge_validate_award_error_message: "An error occured while validating badge awarding."
+badge_reject_award_success_message: "Reject of badge awarding made with success."
+badge_reject_award_error_message: "An error occured while rejecting badge awarding."
