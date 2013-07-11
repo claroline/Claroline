@@ -27,7 +27,7 @@ use Symfony\Component\Form\FormError;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
-/**User
+/**
  * Controller of the platform administration section (users, groups,
  * workspaces, platform settings, etc.).
  */
