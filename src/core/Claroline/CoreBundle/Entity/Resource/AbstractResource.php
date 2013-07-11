@@ -173,10 +173,6 @@ abstract class AbstractResource
      */
     protected $rights;
 
-    //The user icon.
-    //Used by some forms.
-    protected $userIcon;
-
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
      *     cascade={"persist"})
@@ -441,25 +437,6 @@ abstract class AbstractResource
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Sets a user icon.
-     * @param file $iconFile
-     */
-    public function setUserIcon($userIcon)
-    {
-        $this->userIcon = $userIcon;
-    }
-
-    /**
-     * Gets the user icon.
-     *
-     * @return file
-     */
-    public function getUserIcon()
-    {
-        return $this->userIcon;
     }
 
     /**

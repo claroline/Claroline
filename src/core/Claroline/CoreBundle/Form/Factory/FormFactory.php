@@ -29,6 +29,9 @@ class FormFactory
     const TYPE_CALENDAR = 'calendar';
     const TYPE_WORKSPACE_TAG = 'workspace_tag';
     const TYPE_ADMIN_WORKSPACE_TAG = 'admin_workspace_tag';
+    const TYPE_RESOURCE_PERMS = 'resource_permissions';
+    const TYPE_RESOURCE_RENAME = 'resource_rename';
+    const TYPE_RESOURCE_PROPERTIES = 'resource_properties';
 
     private static $types = array(
         self::TYPE_MESSAGE => array(
@@ -98,6 +101,18 @@ class FormFactory
         self::TYPE_ADMIN_WORKSPACE_TAG => array(
             'formType' => 'Claroline\CoreBundle\Form\AdminWorkspaceTagType',
             'entity' => 'Claroline\CoreBundle\Entity\Workspace\WorkspaceTag'
+        ),
+        self::TYPE_RESOURCE_PERMS => array(
+            'formType' => 'Claroline\CoreBundle\Form\ResourceRightType',
+            'entity' => 'Claroline\CoreBundle\Entity\Resource\ResourceRights'
+        ),
+        self::TYPE_RESOURCE_RENAME => array(
+            'formType' => 'Claroline\CoreBundle\Form\ResourceNameType',
+            'entity' => 'Claroline\CoreBundle\Entity\Resource\AbstractResource'
+        ),
+        self::TYPE_RESOURCE_PROPERTIES => array(
+            'formType' => 'Claroline\CoreBundle\Form\ResourcePropertiesType',
+            'entity' => 'Claroline\CoreBundle\Entity\Resource\AbstractResource'
         )
     );
 
