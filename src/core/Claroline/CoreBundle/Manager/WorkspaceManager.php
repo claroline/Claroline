@@ -10,7 +10,9 @@ use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
-use Claroline\CoreBundle\Database\Writer;
+use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -18,8 +20,6 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class WorkspaceManager
 {
-    /** @var Writer */
-    private $writer;
     /** @var RoleManager */
     private $roleManager;
     /** @var ResourceManager */
@@ -30,44 +30,52 @@ class WorkspaceManager
     private $roleRepo;
     /** @var ToolManager */
     private $toolManager;
-
+    /** @var StrictDispatcher */
+    private $dispatcher;
+    /** @var ObjectManager */
+    private $om;
+    /** @var ClaroUtilities */
+    private $ut;
+    
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "writer" = @DI\Inject("claroline.database.writer"),
-     *     "roleManager" = @DI\Inject("claroline.manager.role_manager"),
+     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
-     *     "toolManager" = @DI\Inject("claroline.manager.tool_manager"),
-     *     "resourceTypeRepo" = @DI\Inject("resource_type_repository"),
-     *     "roleRepo" = @DI\Inject("role_repository"),
+     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
+     *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "ut"              = @DI\Inject("claroline.utilities.misc")
      * })
      */
     public function __construct(
-        Writer $writer,
         RoleManager $roleManager,
         ResourceManager $resourceManager,
         ToolManager $toolManager,
-        ResourceTypeRepository $resourceTypeRepo,
-        RoleRepository $roleRepo
+        StrictDispatcher $dispatcher,
+        ObjectManager $om,
+        ClaroUtilities $ut
     )
     {
-        $this->writer = $writer;
         $this->roleManager = $roleManager;
         $this->resourceManager = $resourceManager;
-        $this->resourceTypeRepo = $resourceTypeRepo;
         $this->toolManager = $toolManager;
-        $this->roleRepo = $roleRepo;
+        $this->resourceTypeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
+        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
+        $this->dispatcher = $dispatcher;
+        $this->om = $om;
+        $this->ut = $ut;
     }
 
     public function create(Configuration $config, User $manager)
     {
-        $workspace = new SimpleWorkspace();
+        $this->om->startFlushSuite();
+        $workspace = $this->om->factory('Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace');
         $workspace->setName($config->getWorkspaceName());
         $workspace->setPublic($config->isPublic());
         $workspace->setCode($config->getWorkspaceCode());
-        $this->writer->create($workspace);
-        $this->writer->suspendFlush();
+        $workspace->setGuid($this->ut->generateGuid());
         $baseRoles = $this->roleManager->initWorkspaceBaseRole($config->getRoles(), $workspace);
         $baseRoles['ROLE_ANONYMOUS'] = $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS'));
         $this->roleManager->associateRole($manager, $baseRoles["ROLE_WS_MANAGER"]);
@@ -114,8 +122,10 @@ class WorkspaceManager
             $position++;
         }
 
-        $this->writer->forceFlush();
-
+        //$this->dispatcher->dispatch('log', 'Log\WorkspaceCreate', array($workspace));
+        $this->om->persist($workspace);
+        $this->om->endFlushSuite();
+//        
         return $workspace;
     }
 

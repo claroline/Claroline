@@ -3,7 +3,7 @@
         <li class="disabled">
             <a><b>{{ workspace.getName() }} </b><em>({{ workspace.getCode() }})</em></a>
         </li>
-        {% if is_granted('ROLE_WS_MANAGER_' ~ workspace.getId()) %}
+        {% if is_granted('ROLE_WS_MANAGER_' ~ workspace.getGuid()) %}
         <li>
 
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse">

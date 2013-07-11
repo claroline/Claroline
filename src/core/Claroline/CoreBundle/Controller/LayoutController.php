@@ -146,9 +146,9 @@ class LayoutController extends Controller
         if ($impersonatedRole === null) {
             $roleName = 'ROLE_ANONYMOUS';
         } else {
-            $workspaceId = substr($impersonatedRole, strripos($impersonatedRole, '_') + 1);
+            $guid = substr($impersonatedRole, strripos($impersonatedRole, '_') + 1);
             $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
-                ->find($workspaceId);
+                ->findOneByGuid($guid);
             $roleEntity = $this->roleManager->getRoleByName($impersonatedRole);
             $roleName = $roleEntity->getTranslationKey();
         }
