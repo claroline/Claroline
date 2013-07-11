@@ -29,7 +29,7 @@ class UserManagerTest extends MockeryTestCase
         $this->roleManager = m::mock('Claroline\CoreBundle\Manager\RoleManager');
         $this->workspaceManager = m::mock('Claroline\CoreBundle\Manager\WorkspaceManager');
         $this->toolManager = m::mock('Claroline\CoreBundle\Manager\ToolManager');
-        $this->ed = m::mock('Symfony\Component\EventDispatcher\EventDispatcher');
+        $this->ed = m::mock('Claroline\CoreBundle\Event\StrictDispatcher');
         $this->personalWsTemplateFile = 'template';
         $this->trans = m::mock('Symfony\Component\Translation\Translator');
         $this->ch = m::mock('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
@@ -69,7 +69,7 @@ class UserManagerTest extends MockeryTestCase
         $user->shouldReceive('getFirstName')
             ->once();
         $this->ed->shouldReceive('dispatch')
-            ->with('log', anInstanceOf('Claroline\CoreBundle\Event\Event\Log\LogUserCreateEvent'))
+            ->with('log', 'Log\LogUserCreate', $user)
             ->once();
 
         $manager->createUser($user);
