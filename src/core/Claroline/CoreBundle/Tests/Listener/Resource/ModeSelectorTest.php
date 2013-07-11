@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Library\Resource;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class ModeSelector extends WebTestCase
+class ModeSelectorTest extends WebTestCase
 {
     public function testModeDefaultValue()
     {

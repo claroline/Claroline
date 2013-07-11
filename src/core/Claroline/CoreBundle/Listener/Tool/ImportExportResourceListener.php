@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Event\Event\ExportToolEvent;
 use Claroline\CoreBundle\Event\Event\ExportResourceTemplateEvent;
 use Claroline\CoreBundle\Event\Event\ImportResourceTemplateEvent;
 use Claroline\CoreBundle\Event\Event\ImportToolEvent;
+use Claroline\CoreBundle\Manager\RoleManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -13,18 +14,27 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class ImportExportResourceListener
 {
+    private $roleManager;
+
     /**
      * @DI\InjectParams({
-     *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "ed" = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "manager" = @DI\Inject("claroline.manager.resource_manager")
+     *     "em"             = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "ed"             = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "manager"        = @DI\Inject("claroline.manager.resource_manager"),
+     *     "roleManager"    = @DI\Inject("claroline.manager.role_manager")
      * })
      */
-    public function __construct($em, $ed, $manager)
+    public function __construct(
+        $em,
+        $ed,
+        $manager,
+        RoleManager $roleManager
+    )
     {
         $this->em = $em;
         $this->ed = $ed;
         $this->manager = $manager;
+        $this->roleManager = $roleManager;
     }
 
     /**
@@ -60,7 +70,7 @@ class ImportExportResourceListener
         $resourceRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
         $root = $resourceRepo->findWorkspaceRoot($workspace);
 
-        $roles = $this->em->getRepository('ClarolineCoreBundle:Role')->findByWorkspace($workspace);
+        $roles = $this->roleManager->getRolesByWorkspace($workspace);
         $config['root_id'] = $root->getId();
 
         $dirType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('directory');

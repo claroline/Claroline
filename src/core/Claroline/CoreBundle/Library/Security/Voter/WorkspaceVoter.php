@@ -24,12 +24,16 @@ class WorkspaceVoter implements VoterInterface
 
     /**
      * @DI\InjectParams({
-     *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "translator" = @DI\Inject("translator"),
-     *     "ut" = @DI\Inject("claroline.security.utilities")
+     *     "em"             = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "translator"     = @DI\Inject("translator"),
+     *     "ut"             = @DI\Inject("claroline.security.utilities")
      * })
      */
-    public function __construct(EntityManager $em, Translator $translator, Utilities $ut)
+    public function __construct(
+        EntityManager $em,
+        Translator $translator,
+        Utilities $ut
+    )
     {
         $this->em = $em;
         $this->translator = $translator;
@@ -70,7 +74,8 @@ class WorkspaceVoter implements VoterInterface
      */
     private function canDo(AbstractWorkspace $workspace, TokenInterface $token, $action)
     {
-        $manager = $this->em->getRepository('ClarolineCoreBundle:Role')->findManagerRole($workspace);
+        $manager = $this->em->getRepository('ClarolineCoreBundle:Role')
+            ->findManagerRole($workspace);
         $roles = $this->ut->getRoles($token);
 
         if ($action === 'DELETE') {

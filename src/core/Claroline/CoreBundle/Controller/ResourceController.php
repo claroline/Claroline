@@ -3,9 +3,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use \Exception;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Translation\Translator;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -26,11 +24,8 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
-class ResourceController extends Controller
+class ResourceController
 {
-    const THUMB_PER_PAGE = 12;
-
-    private $formFactory;
     private $sc;
     private $resourceManager;
     private $rightsManager;
@@ -41,7 +36,6 @@ class ResourceController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "formFactory"     = @DI\Inject("claroline.form.factory"),
      *     "sc"              = @DI\Inject("security.context"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager"),
@@ -53,7 +47,6 @@ class ResourceController extends Controller
      */
     public function __construct
     (
-        FormFactory $formFactory,
         SecurityContext $sc,
         ResourceManager $resourceManager,
         RightsManager $rightsManager,
@@ -63,7 +56,6 @@ class ResourceController extends Controller
         StrictDispatcher $dispatcher
     )
     {
-        $this->formFactory = $formFactory;
         $this->sc = $sc;
         $this->resourceManager = $resourceManager;
         $this->translator = $translator;
@@ -173,7 +165,7 @@ class ResourceController extends Controller
         $resource = $this->getResource($resource);
         $this->checkAccess('OPEN', $collection);
         $event = $this->dispatcher->dispatch('open_'.$resourceType, 'OpenResource', array($resource));
-        $this->dispatcher->dispatch('log', 'Log\ResourceRead', array($resource));
+        $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($resource));
 
         return $event->getResponse();
     }
@@ -393,7 +385,7 @@ class ResourceController extends Controller
             $path = $this->resourceManager->getAncestors($directory);
             $resources = $this->resourceManager->getChildren($directory, $currentRoles);
             $creatableTypes = $this->rightsManager->getCreatableTypes($currentRoles, $directory);
-            $this->dispatcher->dispatch('log', 'Log\ResourceRead', array($directory));
+            $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($directory));
         }
 
         return new JsonResponse(

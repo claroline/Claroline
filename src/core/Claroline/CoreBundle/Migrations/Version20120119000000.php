@@ -9,7 +9,6 @@ class Version20120119000000 extends BundleMigration
 {
     public function up(Schema $schema)
     {
-        $this->createIconTypeTable($schema);
         $this->createResourceIconTable($schema);
         $this->createWorkspaceTable($schema);
         $this->createUserTable($schema);
@@ -71,7 +70,6 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_resource');
         $schema->dropTable('claro_resource_type');
         $schema->dropTable('claro_resource_icon');
-        $schema->dropTable('claro_resource_icon_type');
         $schema->dropTable('claro_extension');
         $schema->dropTable('claro_tool_instance');
         $schema->dropTable('claro_tool');
@@ -237,7 +235,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('name', 'string', array('length' => 255));
         $table->addColumn('translation_key', 'string', array('length' => 255, 'notnull' => true));
         $table->addColumn('is_read_only', 'boolean', array('notnull' => true));
-        $table->addColumn('type', 'integer', array('notnull' => false));
+        $table->addColumn('type', 'integer', array('notnull' => true));
         $table->addColumn('workspace_id', 'integer', array('notnull' => false));
 
         $table->addForeignKeyConstraint(
@@ -300,7 +298,8 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('name', 'string');
         $table->addColumn('is_exportable', 'boolean');
         $table->addColumn('plugin_id', 'integer', array('notnull' => false));
-        $table->addColumn('class', 'string', array('notnull' => false,'length' => 255));
+        // class should not be null (>< site bundle -> inherited type)
+        $table->addColumn('class', 'string', array('notnull' => false, 'length' => 255));
         $table->addColumn('parent_id', 'integer', array('notnull' => false));
         $table->addUniqueIndex(array('name'));
         $table->addForeignKeyConstraint(
@@ -580,39 +579,22 @@ class Version20120119000000 extends BundleMigration
         $this->storeTable($table);
     }
 
-    //shortcut_id goes to ~
     private function createResourceIconTable(Schema $schema)
     {
         $table = $schema->createTable('claro_resource_icon');
         $this->addId($table);
         $table->addColumn('icon_location', 'string', array('notnull' => false, 'length' => 255));
         $table->addColumn('relative_url', 'string', array('notnull' => false, 'length' => 255));
-        $table->addColumn('icon_type_id', 'integer', array('notnull' => false));
-        $table->addColumn('type', 'string', array('length' => 255));
+        $table->addColumn('mimeType', 'string', array('notnull' => true, 'length' => 255));
         $table->addColumn('is_shortcut', 'boolean');
         $table->addColumn('shortcut_id', 'integer', array('notnull' => false));
 
-        $table->addForeignKeyConstraint(
-            $this->getStoredTable('claro_resource_icon_type'),
-            array('icon_type_id'),
-            array('id'),
-            array('onDelete' => 'SET NULL')
-        );
         $table->addForeignKeyConstraint(
             $table,
             array('shortcut_id'),
             array('id'),
             array('onDelete' => 'SET NULL')
         );
-
-        $this->storeTable($table);
-    }
-
-    private function createIconTypeTable(Schema $schema)
-    {
-        $table = $schema->createTable('claro_resource_icon_type');
-        $this->addId($table);
-        $table->addColumn('type', 'text');
 
         $this->storeTable($table);
     }
