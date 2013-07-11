@@ -170,9 +170,8 @@ class ObjectManager extends ObjectManagerDecorator
      */
     public function findByIds($class, array $ids)
     {
-        $dql = 'SELECT object FROM :class object WHERE object.id IN (:ids)';
+        $dql = "SELECT object FROM {$class} object WHERE object.id IN (:ids)";
         $query = $this->wrapped->createQuery($dql);
-        $query->setParameter('class', $class);
         $query->setParameter('ids', $ids);
         $objects = $query->getResult();
 
@@ -196,9 +195,8 @@ class ObjectManager extends ObjectManagerDecorator
      */
     public function count($class)
     {
-        $dql = 'SELECT COUNT(object) FROM :class object';
+        $dql = "SELECT COUNT(object) FROM {$class} object";
         $query = $this->wrapped->createQuery($dql);
-        $query->setParameter('class', $class);
 
         return $query->getSingleScalarResult();
     }
