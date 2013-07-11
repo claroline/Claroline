@@ -76,7 +76,6 @@ class ExportResourceTemplateEvent extends Event implements DataConveyorEventInte
 
     public function isPopulated()
     {
-
         return $this->isPopulated;
     }
 }

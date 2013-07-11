@@ -7,7 +7,7 @@ use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\EventDispatcher\Event;
 
-class ImportToolEvent extends Event implements MandatoryEventInterface
+class ImportToolEvent extends Event
 {
     private $workspace;
     private $config;
@@ -69,7 +69,5 @@ class ImportToolEvent extends Event implements MandatoryEventInterface
     {
         $this->filePaths = $filePaths;
     }
-
-
 }
 
