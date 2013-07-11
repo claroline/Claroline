@@ -7,13 +7,12 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Event\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Entity\Event;
-use Claroline\CoreBundle\Form\CalendarType;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 
 /**
- * @DI\Service
+ * @DI\Service(scope="request")
  */
 class ToolListener
 {
