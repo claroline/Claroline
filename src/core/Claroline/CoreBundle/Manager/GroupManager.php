@@ -70,6 +70,52 @@ class GroupManager
         $this->writer->update($group);
     }
 
+    public function convertGroupsToArray(array $groups)
+    {
+        $content = array();
+        $i = 0;
+
+
+        foreach ($groups as $group) {
+            $content[$i]['id'] = $group->getId();
+            $content[$i]['name'] = $group->getName();
+
+            $rolesString = '';
+            $roles = $groups[$i]->getEntityRoles();
+            $rolesCount = count($roles);
+            $j = 0;
+
+            foreach ($roles as $role) {
+                $rolesString .= "{$this->translator->trans($role->getTranslationKey(), array(), 'platform')}";
+
+                if ($j < $rolesCount - 1) {
+                    $rolesString .= ' ,';
+                }
+                $j++;
+            }
+        }
+
+
+
+        for ($i = 0, $size = count($groups); $i < $size; $i++) {
+            $content[$i]['id'] = $groups[$i]->getId();
+            $content[$i]['name'] = $groups[$i]->getName();
+            $rolesString = '';
+            $roles = $groups[$i]->getEntityRoles();
+
+            for ($j = 0, $rolesCount = count($roles); $j < $rolesCount; $j++) {
+                $rolesString .= "{$this->translator->trans($roles[$j]->getTranslationKey(), array(), 'platform')}";
+                if ($j <= $rolesCount - 2) {
+                    $rolesString .= ' ,';
+                }
+            }
+            $content[$i]['roles'] = $rolesString;
+            $i++;
+        }
+
+        return $content;
+    }
+
     public function getWorkspaceOutsiders(AbstractWorkspace $workspace, $page)
     {
         $query = $this->groupRepo->findWorkspaceOutsiders($workspace, false);

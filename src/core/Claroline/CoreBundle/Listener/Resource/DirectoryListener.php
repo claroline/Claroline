@@ -27,6 +27,7 @@ use Doctrine\ORM\EntityManager;
  */
 class DirectoryListener
 {
+    private $em;
     private $container;
     private $roleManager;
     private $resourceManager;
@@ -42,7 +43,6 @@ class DirectoryListener
      *     "resourceManager"    = @DI\Inject("claroline.manager.resource_manager"),
      *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "security"           = @DI\Inject("security.context"),
-     *     "converter"          = @DI\Inject("claroline.resource.converter"),
      *     "formFactory"        = @DI\Inject("form.factory"),
      *     "templating"         = @DI\Inject("templating"),
      *     "container"          = @DI\Inject("service_container")
