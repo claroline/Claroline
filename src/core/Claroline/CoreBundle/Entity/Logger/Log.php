@@ -164,7 +164,7 @@ class Log
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -187,7 +187,7 @@ class Log
     /**
      * Get action
      *
-     * @return string 
+     * @return string
      */
     public function getAction()
     {
@@ -195,22 +195,23 @@ class Log
     }
 
     /**
-     * Set dateLog
+     * Sets the log creation date.
      *
-     * @param \DateTime $dateLog
-     * @return Log
+     * NOTE : creation date is already handled by the timestamp listener; this
+     *        setter exists mainly for testing purposes.
+     *
+     * @param \DateTime $date
      */
-    public function setDateLog($dateLog)
+    public function setDateLog(\DateTime $date)
     {
-        $this->dateLog = $dateLog;
-
-        return $this;
+        $this->dateLog = $date;
+        $this->shortDateLog = $date;
     }
 
     /**
      * Get dateLog
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDateLog()
     {
@@ -233,7 +234,7 @@ class Log
     /**
      * Get details
      *
-     * @return array 
+     * @return array
      */
     public function getDetails()
     {
@@ -256,7 +257,7 @@ class Log
     /**
      * Get doerType
      *
-     * @return string 
+     * @return string
      */
     public function getDoerType()
     {
@@ -279,7 +280,7 @@ class Log
     /**
      * Get doerIp
      *
-     * @return string 
+     * @return string
      */
     public function getDoerIp()
     {
@@ -302,7 +303,7 @@ class Log
     /**
      * Get childType
      *
-     * @return string 
+     * @return string
      */
     public function getChildType()
     {
@@ -325,7 +326,7 @@ class Log
     /**
      * Get childAction
      *
-     * @return string 
+     * @return string
      */
     public function getChildAction()
     {
@@ -348,7 +349,7 @@ class Log
     /**
      * Get doer
      *
-     * @return \Claroline\CoreBundle\Entity\User 
+     * @return \Claroline\CoreBundle\Entity\User
      */
     public function getDoer()
     {
@@ -381,7 +382,7 @@ class Log
     /**
      * Get doerPlatformRoles
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getDoerPlatformRoles()
     {
@@ -414,7 +415,7 @@ class Log
     /**
      * Get doerWorkspaceRoles
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getDoerWorkspaceRoles()
     {
@@ -437,7 +438,7 @@ class Log
     /**
      * Get receiver
      *
-     * @return \Claroline\CoreBundle\Entity\User 
+     * @return \Claroline\CoreBundle\Entity\User
      */
     public function getReceiver()
     {
@@ -460,7 +461,7 @@ class Log
     /**
      * Get receiverGroup
      *
-     * @return \Claroline\CoreBundle\Entity\Group 
+     * @return \Claroline\CoreBundle\Entity\Group
      */
     public function getReceiverGroup()
     {
@@ -483,7 +484,7 @@ class Log
     /**
      * Get owner
      *
-     * @return \Claroline\CoreBundle\Entity\User 
+     * @return \Claroline\CoreBundle\Entity\User
      */
     public function getOwner()
     {
@@ -506,7 +507,7 @@ class Log
     /**
      * Get workspace
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace 
+     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
      */
     public function getWorkspace()
     {
@@ -529,7 +530,7 @@ class Log
     /**
      * Get resource
      *
-     * @return \Claroline\CoreBundle\Entity\Resource\AbstractResource 
+     * @return \Claroline\CoreBundle\Entity\Resource\AbstractResource
      */
     public function getResource()
     {
@@ -552,7 +553,7 @@ class Log
     /**
      * Get resourceType
      *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceType 
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceType
      */
     public function getResourceType()
     {
@@ -575,7 +576,7 @@ class Log
     /**
      * Get role
      *
-     * @return \Claroline\CoreBundle\Entity\Role 
+     * @return \Claroline\CoreBundle\Entity\Role
      */
     public function getRole()
     {
@@ -598,7 +599,7 @@ class Log
     /**
      * Get toolName
      *
-     * @return string 
+     * @return string
      */
     public function getToolName()
     {

@@ -2,10 +2,10 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
-use Symfony\Component\HttpFoundation\Request;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -36,6 +36,11 @@ class MailController extends Controller
      *     "/form/{userId}",
      *     name="claro_mail_form"
      * )
+     * @EXT\ParamConverter(
+     *      "user",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"id" = "userId", "strictId" = true}
+     * )
      * @EXT\Template()
      *
      * Displays the mail form.
@@ -44,11 +49,11 @@ class MailController extends Controller
      *
      * @return Response
      */
-    public function formAction($userId)
+    public function formAction(User $user)
     {
         return array(
             'form' => $this->formFactory->create(FormFactory::TYPE_MAIL)->createView(),
-            'userId' => $userId
+            'userId' => $user->getId()
         );
     }
 

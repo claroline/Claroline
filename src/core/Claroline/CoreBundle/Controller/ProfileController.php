@@ -3,17 +3,47 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Event\Log\LogUserUpdateEvent;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Event\StrictDispatcher;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Controller of the user profile.
  */
 class ProfileController extends Controller
 {
+    private $userManager;
+    private $roleManager;
+    private $eventDispatcher;
+    private $security;
+
+    /**
+     * @DI\InjectParams({
+     *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
+     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
+     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "security"           = @DI\Inject("security.context")
+     * })
+     */
+    public function __construct(
+        UserManager $userManager,
+        RoleManager $roleManager,
+        StrictDispatcher $eventDispatcher,
+        SecurityContextInterface $security
+    )
+    {
+        $this->userManager = $userManager;
+        $this->roleManager = $roleManager;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->security = $security;
+    }
+
     private function isInRoles($role, $roles)
     {
         foreach ($roles as $current) {
@@ -26,12 +56,12 @@ class ProfileController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/form",
      *     name="claro_profile_form"
      * )
      *
-     * @Template("ClarolineCoreBundle:Profile:profileForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Profile:profileForm.html.twig")
      *
      * Displays an editable form of the current user's profile.
      *
@@ -39,22 +69,20 @@ class ProfileController extends Controller
      */
     public function formAction()
     {
-        $user = $this->get('security.context')->getToken()->getUser();
-        $roles = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Role')
-            ->findPlatformRoles($user);
+        $user = $this->security->getToken()->getUser();
+        $roles = $this->roleManager->getPlatformRoles($user);
         $form = $this->createForm(new ProfileType($roles), $user);
 
         return array('profile_form' => $form->createView());
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/update",
      *     name="claro_profile_update"
      * )
      *
-     * @Template("ClarolineCoreBundle:Profile:profileForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Profile:profileForm.html.twig")
      *
      * Updates the user's profile and redirects to the profile form.
      *
@@ -63,15 +91,13 @@ class ProfileController extends Controller
     public function updateAction()
     {
         $request = $this->get('request');
-        $user = $this->get('security.context')->getToken()->getUser();
-        $roles = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Role')
-            ->findPlatformRoles($user);
+        $user = $this->security->getToken()->getUser();
+        $roles = $this->roleManager->getPlatformRoles($user);
+
         $form = $this->get('form.factory')->create(new ProfileType($roles), $user);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $roleManager = $this->get('claroline.manager.role_manager');
             $user = $form->getData();
 
             $em = $this->getDoctrine()->getManager();
@@ -80,13 +106,11 @@ class ProfileController extends Controller
             $changeSet = $unitOfWork->getEntityChangeSet($user);
             $newRoles = $form->get('platformRoles')->getData();
 
-            $roleManager->resetRoles($user);
-            $roleManager->associateRoles($user, $newRoles);
-            $this->get('security.context')->getToken()->setUser($user);
+            $this->roleManager->resetRoles($user);
+            $this->roleManager->associateRoles($user, $newRoles);
+            $this->security->getToken()->setUser($user);
 
-            $newRoles = $this->get('doctrine.orm.entity_manager')
-                ->getRepository('ClarolineCoreBundle:Role')
-                ->findPlatformRoles($user);
+            $newRoles = $this->roleManager->getPlatformRoles($user);
 
             $rolesChangeSet = array();
             //Detect added
@@ -105,10 +129,10 @@ class ProfileController extends Controller
                 $changeSet['roles'] = $rolesChangeSet;
             }
 
-            $log = $this->get('claroline.event.event_dispatcher')->dispatch(
+            $this->eventDispatcher->dispatch(
                 'log',
-                'Log\UserUpdateEvent',
-                array($user,$changeSet)
+                'Log\LogUserUpdateEvent',
+                array($user, $changeSet)
             );
 
             return $this->redirect($this->generateUrl('claro_profile_form'));
@@ -118,12 +142,16 @@ class ProfileController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/view/{userId}",
      *     name="claro_profile_view"
      * )
-     *
-     * @Template("ClarolineCoreBundle:Profile:profile.html.twig")
+     * @EXT\ParamConverter(
+     *      "user",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"id" = "userId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Profile:profile.html.twig")
      *
      * Displays the public profile of an user.
      *
@@ -131,11 +159,8 @@ class ProfileController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function viewAction($userId)
+    public function viewAction(User $user)
     {
-        $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository('ClarolineCoreBundle:User')->find($userId);
-
         return array('user' => $user);
     }
 }
