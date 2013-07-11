@@ -23,7 +23,7 @@ class Exporter
      *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
      *     "ed" = @DI\Inject("event_dispatcher"),
      *     "templateDir" = @DI\Inject("%claroline.param.templates_directory%"),
-     *     "utils" = @DI\Inject("claroline.manager.resource_manager")
+     *     "utils" = @DI\Inject("claroline.utilities.misc")
      * })
      */
     public function __construct(EntityManager $em, $ed, $templateDir, $utils)

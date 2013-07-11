@@ -9,45 +9,69 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class RoleManagerTest extends MockeryTestCase
 {
-    private $writer;
     private $roleRepo;
     private $securityContext;
+    private $om;
 
     public function setUp()
     {
         parent::setUp();
-        $this->writer = m::mock('Claroline\CoreBundle\Database\Writer');
+        
         $this->roleRepo = m::mock('Claroline\CoreBundle\Repository\RoleRepository');
         $this->securityContext = m::mock('Symfony\Component\Security\Core\SecurityContextInterface');
+        $this->om = m::mock('Claroline\CoreBundle\Persistence\ObjectManager');
     }
 
     public function testCreateWorkspaceRole()
     {
         $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $this->writer->shouldReceive('create')
-            ->with(anInstanceOf('Claroline\CoreBundle\Entity\Role'))
-            ->once();
-        $this->getManager()->createWorkspaceRole('ROLE_WS_USER', 'user', $workspace);
+        $role = m::mock('Claroline\CoreBundle\Entity\Role');
+        $this->om->shouldReceive('factory')->once()->with('Claroline\CoreBundle\Entity\Role')
+            ->andReturn($role);
+        $this->om->shouldReceive('persist')->with($role)->once();
+        $role->shouldReceive('setName')->with('ROLE_WS_USER');
+        $role->shouldReceive('setTranslationKey')->with('user');
+        $role->shouldReceive('setReadOnly')->with(false);
+        $role->shouldReceive('setType')->with(Role::WS_ROLE);
+        $role->shouldReceive('setWorkspace')->with($workspace);
+        $this->om->shouldReceive('flush')->once();
 
-        $this->markTestIncomplete('Not tested thoroughly');
+        $this->assertEquals(
+            $role, 
+            $this->getManager()->createWorkspaceRole('ROLE_WS_USER', 'user', $workspace)
+        );
     }
 
     public function testCreateBaseRole()
     {
-        $this->writer->shouldReceive('create')
-            ->with(anInstanceOf('Claroline\CoreBundle\Entity\Role'))
-            ->once();
+        $role = m::mock('Claroline\CoreBundle\Entity\Role');
+        $this->om->shouldReceive('factory')->once()->with('Claroline\CoreBundle\Entity\Role')
+            ->andReturn($role);
+        
+        $this->om->shouldReceive('persist')->with($role)->once();
+        $role->shouldReceive('setName')->with('ROLE_WS_USER');
+        $role->shouldReceive('setTranslationKey')->with('user');
+        $role->shouldReceive('setReadOnly')->with(true);
+        $role->shouldReceive('setType')->with(Role::PLATFORM_ROLE);
+        $this->om->shouldReceive('flush')->once();
+        
         $this->getManager()->createBaseRole('ROLE_WS_USER', 'user');
-        $this->markTestIncomplete('Not tested thoroughly');
     }
 
     public function testCreateCustomRole()
     {
-        $this->writer->shouldReceive('create')
-            ->with(anInstanceOf('Claroline\CoreBundle\Entity\Role'))
-            ->once();
+        $role = m::mock('Claroline\CoreBundle\Entity\Role');
+        $this->om->shouldReceive('factory')->once()->with('Claroline\CoreBundle\Entity\Role')
+            ->andReturn($role);
+        
+        $this->om->shouldReceive('persist')->with($role)->once();
+        $role->shouldReceive('setName')->with('ROLE_WS_USER');
+        $role->shouldReceive('setTranslationKey')->with('user');
+        $role->shouldReceive('setReadOnly')->with(false);
+        $role->shouldReceive('setType')->with(Role::CUSTOM_ROLE);
+        $this->om->shouldReceive('flush')->once();
+        
         $this->getManager()->createCustomRole('ROLE_WS_USER', 'user');
-        $this->markTestIncomplete('Not tested thoroughly');
     }
 
     public function testSetRoleToRoleSubject()
@@ -56,16 +80,11 @@ class RoleManagerTest extends MockeryTestCase
         $ars = m::mock('Claroline\CoreBundle\Entity\AbstractRoleSubject');
         $roleName = 'ROLE_WS_USER';
 
-        $this->roleRepo->shouldReceive('findOneBy')
-            ->with(array('name' => $roleName))
-            ->once()
-            ->andReturn($role);
-        $ars->shouldReceive('addRole')
-            ->with($role)
-            ->once();
-        $this->writer->shouldReceive('update')
-            ->with($ars)
-            ->once();
+        $this->roleRepo->shouldReceive('findOneBy')->with(array('name' => $roleName))
+            ->once()->andReturn($role);
+        $ars->shouldReceive('addRole')->with($role)->once();
+        $this->om->shouldReceive('persist')->with($ars)->once();
+        $this->om->shouldReceive('flush')->once();
 
         $this->getManager()->setRoleToRoleSubject($ars, $roleName);
     }
@@ -75,12 +94,9 @@ class RoleManagerTest extends MockeryTestCase
         $role = m::mock('Claroline\CoreBundle\Entity\Role');
         $ars = m::mock('Claroline\CoreBundle\Entity\AbstractRoleSubject');
 
-        $ars->shouldReceive('addRole')
-            ->with($role)
-            ->once();
-        $this->writer->shouldReceive('update')
-            ->with($ars)
-            ->once();
+        $ars->shouldReceive('addRole')->with($role)->once();
+        $this->om->shouldReceive('persist')->with($ars)->once();
+        $this->om->shouldReceive('flush')->once();
 
         $this->getManager()->associateRole($ars, $role);
     }
@@ -90,12 +106,9 @@ class RoleManagerTest extends MockeryTestCase
         $role = m::mock('Claroline\CoreBundle\Entity\Role');
         $ars = m::mock('Claroline\CoreBundle\Entity\AbstractRoleSubject');
 
-        $ars->shouldReceive('removeRole')
-            ->with($role)
-            ->once();
-        $this->writer->shouldReceive('update')
-            ->with($ars)
-            ->once();
+        $ars->shouldReceive('removeRole')->with($role)->once();
+        $this->om->shouldReceive('persist')->with($ars)->once();
+        $this->om->shouldReceive('flush')->once();
 
         $this->getManager()->dissociateRole($ars, $role);
     }
@@ -107,15 +120,10 @@ class RoleManagerTest extends MockeryTestCase
         $ars = m::mock('Claroline\CoreBundle\Entity\AbstractRoleSubject');
         $roles = new ArrayCollection(array($roleOne, $roleTwo));
 
-        $ars->shouldReceive('addRole')
-            ->with($roleOne)
-            ->once();
-        $ars->shouldReceive('addRole')
-            ->with($roleTwo)
-            ->once();
-        $this->writer->shouldReceive('update')
-            ->with($ars)
-            ->once();
+        $ars->shouldReceive('addRole')->with($roleOne)->once();
+        $ars->shouldReceive('addRole')->with($roleTwo)->once();
+        $this->om->shouldReceive('persist')->with($ars)->once();
+        $this->om->shouldReceive('flush');
 
         $this->getManager()->associateRoles($ars, $roles);
     }
@@ -131,7 +139,8 @@ class RoleManagerTest extends MockeryTestCase
             'ROLE_WS_SUPERUSER' => 'superuser'
         );
 
-        $workspace->shouldReceive('getId')->times(2)->andReturn(1);
+        $this->om->shouldReceive('startFlushSuite')->once();
+        $workspace->shouldReceive('getGuid')->times(2)->andReturn(1);
         $manager->shouldReceive('createWorkspaceRole')
             ->with('ROLE_WS_USER_1', 'user', $workspace, false)
             ->once()
@@ -140,6 +149,7 @@ class RoleManagerTest extends MockeryTestCase
             ->with('ROLE_WS_SUPERUSER_1', 'superuser', $workspace, false)
             ->once()
             ->andReturn($roleSuperUser);
+        $this->om->shouldReceive('endFlushSuite')->once();
 
         $result = $manager->initWorkspaceBaseRole($roles, $workspace);
 
@@ -152,8 +162,11 @@ class RoleManagerTest extends MockeryTestCase
 
     private function getManager(array $mockedMethods = array())
     {
+        $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Role')
+            ->once()->andReturn($this->roleRepo);
+        
         if (count($mockedMethods) === 0) {
-            return new RoleManager($this->writer, $this->roleRepo, $this->securityContext);
+            return new RoleManager($this->securityContext, $this->om);
         }
 
         $stringMocked = '[';
@@ -167,7 +180,7 @@ class RoleManagerTest extends MockeryTestCase
 
         return m::mock(
             'Claroline\CoreBundle\Manager\RoleManager' . $stringMocked,
-            array($this->writer, $this->roleRepo, $this->securityContext)
+            array($this->securityContext, $this->om)
         );
     }
 }

@@ -105,6 +105,11 @@ abstract class AbstractWorkspace
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id",onDelete="SET NULL", nullable=true)
      */
     protected $creator;
+    
+    /**
+     * @ORM\Column(name="guid", type="string", length=255, unique=true)
+     */
+    protected $guid;
 
     public function __construct()
     {
@@ -187,5 +192,15 @@ abstract class AbstractWorkspace
     public function setCreator($creator)
     {
         $this->creator = $creator;
+    }
+    
+    public function setGuid($guid)
+    {
+        $this->guid = $guid;
+    }
+    
+    public function getGuid()
+    {
+        return $this->guid;
     }
 }

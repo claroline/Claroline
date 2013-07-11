@@ -13,9 +13,9 @@ class IconManagerTest extends MockeryTestCase
     private $repo;
     private $fileDir;
     private $thumbDir;
-    private $writer;
     private $rootDir;
     private $ut;
+    private $om;
     
     public function setUp()
     {
@@ -24,9 +24,9 @@ class IconManagerTest extends MockeryTestCase
         $this->repo = m::mock('Claroline\CoreBundle\Repository\ResourceIconRepository');
         $this->fileDir = 'path/to/filedir';
         $this->thumbDir = 'path/to/thumbdir';
-        $this->writer = m::mock('Claroline\CoreBundle\Database\Writer');
         $this->rootDor = 'path/to/rootDir';
         $this->ut = m::mock('Claroline\CoreBundle\Library\Utilities\ClaroUtilities');
+        $this->om = m::mock('Claroline\CoreBundle\Persistence\ObjectManager');
     }
     
     /**
@@ -59,9 +59,13 @@ class IconManagerTest extends MockeryTestCase
         $manager->shouldReceive('createFromFile')->once()
             ->with($this->fileDir . DIRECTORY_SEPARATOR . 'ABCDEFG.mp4', 'video')
             ->andReturn('path/to/thumbnail');
-        $manager->shouldReceive('getEntity')->once()->andReturn($icon);
-        $this->writer->shouldReceive('create')->once()->with($icon);
         $manager->shouldReceive('createShortcutIcon')->once()->with($icon);
+        $this->om->shouldReceive('startFlushSuite')->once();
+        $this->om->shouldReceive('endFlushSuite')->once();
+        $this->om->shouldReceive('persist')->with($icon)->once();
+        $this->om->shouldReceive('factory')->once()
+            ->with('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
+            ->andReturn($icon);
         
         $this->assertEquals($icon, $manager->getIcon($file));
     }
@@ -89,21 +93,23 @@ class IconManagerTest extends MockeryTestCase
         $manager = $this->getManager(array('getEntity'));
         $icon = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
         $shortcutIcon = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
+        $this->om->shouldReceive('factory')->once()
+            ->with('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
+            ->andReturn($shortcutIcon);
         $icon->shouldReceive('getIconLocation')->once()->andReturn('/path/to/icon/location');
         $icon->shouldReceive('getMimeType')->once()->andReturn('video/mp4');
-        $this->writer->shouldReceive('suspendFlush')->once();
+        $this->om->shouldReceive('startFlushSuite')->once();
         $this->thumbnailCreator->shouldReceive('shortcutThumbnail')->once()->with('/path/to/icon/location')
             ->andReturn('/path/to/bundles/shortcut/location');
-        $manager->shouldReceive('getEntity')->once()->with('Resource\ResourceIcon')->andReturn($shortcutIcon);
         $shortcutIcon->shouldReceive('setIconLocation')->with('/path/to/bundles/shortcut/location')->once();
         $shortcutIcon->shouldReceive('setRelativeUrl')->with('bundles/shortcut/location');
         $shortcutIcon->shouldReceive('setMimeType')->once()->with('video/mp4');
         $shortcutIcon->shouldReceive('setShortcut')->once()->with(true);
         $icon->shouldReceive('setShortcutIcon')->once()->with($shortcutIcon);
         $shortcutIcon->shouldReceive('setShortcutIcon')->once()->with($shortcutIcon);
-        $this->writer->shouldReceive('update')->once()->with($icon);
-        $this->writer->shouldReceive('create')->once()->with($shortcutIcon);
-        $this->writer->shouldReceive('forceFlush');
+        $this->om->shouldReceive('persist')->once()->with($icon);
+        $this->om->shouldReceive('persist')->once()->with($shortcutIcon);
+        $this->om->shouldReceive('endFlushSuite');
         
         $this->assertEquals($shortcutIcon, $manager->createShortcutIcon($icon));
     }
@@ -119,16 +125,19 @@ class IconManagerTest extends MockeryTestCase
         $file->shouldReceive('getClientOriginalName')->once()->andReturn('original/name.ext');
         $this->ut->shouldReceive('generateGuid')->andReturn('ABCDEF')->once();
         $file->shouldReceive('move')->once()->with($this->thumbDir, 'ABCDEF.ext');
-        $manager->shouldReceive('getEntity')->once()->andReturn($icon);
         $icon->shouldReceive('setIconLocation')->once()
             ->with($this->thumbDir . DIRECTORY_SEPARATOR . 'ABCDEF.ext');
         $icon->shouldReceive('setRelativeUrl')->once()
             ->with('thumbnails' . DIRECTORY_SEPARATOR . 'ABCDEF.ext');
         $icon->shouldReceive('setMimeType')->once()->with('custom');
         $icon->shouldReceive('setShortcut')->once()->with(false);
-        $this->writer->shouldReceive('create')->once()->with($icon);
         $manager->shouldReceive('createShortcutIcon')->once()->with($icon);
-        
+        $this->om->shouldReceive('startFlushSuite');
+        $this->om->shouldReceive('endFlushSuite');
+        $this->om->shouldReceive('persist')->once()->with($icon);
+        $this->om->shouldReceive('factory')->once()
+            ->with('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
+            ->andReturn($icon);
         $this->assertEquals($icon, $manager->createCustomIcon($file));
     }
     
@@ -171,8 +180,9 @@ class IconManagerTest extends MockeryTestCase
         $icon->shouldReceive('getMimeType')->once()->andReturn('custom');
         $manager->shouldReceive('removeImageFromThumbDir')->once()->with($icon);
         $manager->shouldReceive('removeImageFromThumbDir')->once()->with($shortcut);
-        $this->writer->shouldReceive('delete')->once()->with($shortcut);
-        $this->writer->shouldReceive('delete')->once()->with($icon);
+        $this->om->shouldReceive('remove')->once()->with($shortcut);
+        $this->om->shouldReceive('remove')->once()->with($icon);
+        $this->om->shouldReceive('flush')->once();
         
         $manager->delete($icon);
     }
@@ -181,14 +191,14 @@ class IconManagerTest extends MockeryTestCase
     public function testReplace()
     {
         $manager = $this->getManager(array('delete'));
-        $this->writer->shouldReceive('suspendFlush')->once();
+        $this->om->shouldReceive('startFlushSuite')->once();
         $icon = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
         $oldIcon = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
         $resource = m::mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
         $resource->shouldReceive('getIcon')->once()->andReturn($oldIcon);
         $resource->shouldReceive('setIcon')->once()->with($icon);
         $manager->shouldReceive('delete')->once()->with($oldIcon);
-        $this->writer->shouldReceive('forceFlush')->once();
+        $this->om->shouldReceive('endFlushSuite')->once();
         
         $this->assertEquals($resource, $manager->replace($resource, $icon));
     }
@@ -200,15 +210,17 @@ class IconManagerTest extends MockeryTestCase
     
     private function getManager(array $mockedMethods = array())
     {
+        $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Resource\ResourceIcon')
+            ->andReturn($this->repo);
+        
         if (count($mockedMethods) === 0) {
             return new IconManager(
                 $this->thumbnailCreator,
-                $this->repo,
                 $this->fileDir,
                 $this->thumbDir,
-                $this->writer,
                 $this->rootDir,
-                $this->ut
+                $this->ut,
+                $this->om
             );
         } else {
             $stringMocked = '[';
@@ -224,12 +236,11 @@ class IconManagerTest extends MockeryTestCase
                 'Claroline\CoreBundle\Manager\IconManager' . $stringMocked,
                 array(
                     $this->thumbnailCreator,
-                    $this->repo,
                     $this->fileDir,
                     $this->thumbDir,
-                    $this->writer,
                     $this->rootDir,
-                    $this->ut
+                    $this->ut,
+                    $this->om
                 )
             );
         }

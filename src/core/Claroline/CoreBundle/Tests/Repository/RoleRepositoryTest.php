@@ -16,9 +16,9 @@ class RoleRepositoryTest extends RepositoryTestCase
         self::createWorkspace('ws_1');
         self::createWorkspace('ws_2');
         self::createTool('tool_1');
-        self::createRole('ROLE_WS_VISITOR_' . self::get('ws_1')->getId(), self::get('ws_1'));
-        self::createRole('ROLE_WS_COLLABORATOR_' . self::get('ws_1')->getId(), self::get('ws_1'));
-        self::createRole('ROLE_WS_MANAGER_' . self::get('ws_1')->getId(), self::get('ws_1'));
+        self::createRole('ROLE_WS_VISITOR_' . self::get('ws_1')->getGuid(), self::get('ws_1'));
+        self::createRole('ROLE_WS_COLLABORATOR_' . self::get('ws_1')->getGuid(), self::get('ws_1'));
+        self::createRole('ROLE_WS_MANAGER_' . self::get('ws_1')->getGuid(), self::get('ws_1'));
         self::createRole('ROLE_WS_CUSTOM_1', self::get('ws_1'));
         self::createRole('ROLE_WS_CUSTOM_2', self::get('ws_1'));
         self::createRole('ROLE_PLATFORM_CUSTOM');
@@ -36,19 +36,19 @@ class RoleRepositoryTest extends RepositoryTestCase
     public function testFindVisitorRole()
     {
         $role = self::$repo->findVisitorRole(self::get('ws_1'));
-        $this->assertEquals('ROLE_WS_VISITOR_' . self::get('ws_1')->getId(), $role->getName());
+        $this->assertEquals('ROLE_WS_VISITOR_' . self::get('ws_1')->getGuid(), $role->getName());
     }
 
     public function testFindCollaboratorRole()
     {
         $role = self::$repo->findCollaboratorRole(self::get('ws_1'));
-        $this->assertEquals('ROLE_WS_COLLABORATOR_' . self::get('ws_1')->getId(), $role->getName());
+        $this->assertEquals('ROLE_WS_COLLABORATOR_' . self::get('ws_1')->getGuid(), $role->getName());
     }
 
     public function testFindManagerRole()
     {
         $role = self::$repo->findManagerRole(self::get('ws_1'));
-        $this->assertEquals('ROLE_WS_MANAGER_' . self::get('ws_1')->getId(), $role->getName());
+        $this->assertEquals('ROLE_WS_MANAGER_' . self::get('ws_1')->getGuid(), $role->getName());
     }
 
     public function testFindPlatformRoles()
