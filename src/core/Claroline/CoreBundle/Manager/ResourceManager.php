@@ -719,6 +719,11 @@ class ResourceManager
         return $this->resourceRepo->findWorkspaceRootsByUser($user);
     }
 
+    public function getWorkspaceRoot(AbstractWorkspace $workspace)
+    {
+        return $this->resourceRepo->findWorkspaceRoot($workspace);
+    }
+
     public function getAncestors(AbstractResource $resource)
     {
         return $this->resourceRepo->findAncestors($resource);
