@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\CoreBundle\Repository\WorkspaceTagRepository;
 use Claroline\CoreBundle\Repository\RelWorkspaceTagRepository;
 use Claroline\CoreBundle\Repository\WorkspaceTagHierarchyRepository;
@@ -23,6 +24,7 @@ class WorkspaceTagManager
     private $tagRepo;
     private $relTagRepo;
     private $tagHierarchyRepo;
+    private $workspaceRepo;
     private $writer;
     private $roleManager;
     private $em;
@@ -34,6 +36,7 @@ class WorkspaceTagManager
      *     "tagRepo"            = @DI\Inject("workspace_tag_repository"),
      *     "relTagRepo"         = @DI\Inject("rel_workspace_tag_repository"),
      *     "tagHierarchyRepo"   = @DI\Inject("workspace_tag_hierarchy_repository"),
+     *     "workspaceRepo"      = @DI\Inject("claroline.repository.workspace_repository"),
      *     "writer"             = @DI\Inject("claroline.database.writer"),
      *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
      *     "em"                 = @DI\Inject("doctrine.orm.entity_manager")
@@ -43,6 +46,7 @@ class WorkspaceTagManager
         WorkspaceTagRepository $tagRepo,
         RelWorkspaceTagRepository $relTagRepo,
         WorkspaceTagHierarchyRepository $tagHierarchyRepo,
+        WorkspaceRepository $workspaceRepo,
         Writer $writer,
         RoleManager $roleManager,
         EntityManager $em
@@ -51,6 +55,7 @@ class WorkspaceTagManager
         $this->tagRepo = $tagRepo;
         $this->relTagRepo = $relTagRepo;
         $this->tagHierarchyRepo = $tagHierarchyRepo;
+        $this->workspaceRepo = $workspaceRepo;
         $this->writer = $writer;
         $this->roleManager = $roleManager;
         $this->em = $em;
@@ -281,8 +286,7 @@ class WorkspaceTagManager
 
     public function getDatasForWorkspaceList($withRoles = true)
     {
-        $workspaces = $this->em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
-            ->findNonPersonal();
+        $workspaces = $this->workspaceRepo->findNonPersonal();
         $tags = $this->getNonEmptyAdminTags();
         $relTagWorkspace = $this->getTagRelationsByAdmin();
         $tagWorkspaces = array();

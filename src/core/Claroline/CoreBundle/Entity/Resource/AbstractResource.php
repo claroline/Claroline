@@ -173,10 +173,6 @@ abstract class AbstractResource
      */
     protected $rights;
 
-    //The user icon.
-    //Used by some forms.
-    protected $userIcon;
-
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
      *     cascade={"persist"})
@@ -254,6 +250,20 @@ abstract class AbstractResource
     }
 
     /**
+     * Sets the resource creation date.
+     *
+     * NOTE : creation date is already handled by the timestamp listener; this
+     *        setter exists mainly for testing purposes.
+     *
+     * @param \DateTime $date
+     */
+    public function setCreationDate(\DateTime $date)
+    {
+        $this->creationDate = $date;
+        $this->modificationDate = $date;
+    }
+
+    /**
      * Returns the resource modification date.
      *
      * @return \DateTime
@@ -262,6 +272,14 @@ abstract class AbstractResource
     {
         return $this->modificationDate;
     }
+
+
+
+    public function setModificationDate(\DateTime $date)
+    {
+        $this->modificationDate = $date;
+    }
+
 
     /**
      * Returns the resource type.
@@ -422,25 +440,6 @@ abstract class AbstractResource
     }
 
     /**
-     * Sets a user icon.
-     * @param file $iconFile
-     */
-    public function setUserIcon($userIcon)
-    {
-        $this->userIcon = $userIcon;
-    }
-
-    /**
-     * Gets the user icon.
-     *
-     * @return file
-     */
-    public function getUserIcon()
-    {
-        return $this->userIcon;
-    }
-
-    /**
      * Convert a path for display: remove ids.
      *
      * @param string $path
@@ -496,9 +495,5 @@ abstract class AbstractResource
     public function setMimeType($mimeType)
     {
         $this->mimeType = $mimeType;
-    }
-
-    public function __toString() {
-        return 'resource !!!';
     }
 }

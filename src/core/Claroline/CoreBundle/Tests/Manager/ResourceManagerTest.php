@@ -401,6 +401,32 @@ class ResourceManagerTest extends MockeryTestCase
     {
 
     }
+    
+    /**
+     * @group resource
+     */
+    public function testRename()
+    {
+        $resource = m::mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $resource->shouldReceive('setName')->once()->with('name');
+        $this->writer->shouldReceive('update')->once()->with($resource);
+        
+        $this->assertEquals($resource, $this->getManager()->rename($resource, 'name'));
+    }
+    
+    /**
+     * @group resource
+     */
+    public function testChangeIcon()
+    {
+        $resource = new \Claroline\CoreBundle\Entity\Resource\Directory();
+        $file = m::mock('Symfony\Component\HttpFoundation\File\UploadedFile');
+        $icon = new \Claroline\CoreBundle\Entity\Resource\ResourceIcon();
+        $this->iconManager->shouldReceive('createCustomIcon')->once()->with($file)->andReturn($icon);
+        $this->iconManager->shouldReceive('replace')->once()->with($resource, $icon);
+        
+        $this->assertEquals($icon, $this->getManager()->changeIcon($resource, $file));
+    }
 
     /**
      * @group resource
@@ -531,6 +557,7 @@ class ResourceManagerTest extends MockeryTestCase
             }
 
             $stringMocked .= ']';
+            
             return m::mock(
                 'Claroline\CoreBundle\Manager\ResourceManager' . $stringMocked,
                 array(

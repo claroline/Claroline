@@ -21,6 +21,17 @@ class FormFactory
     const TYPE_ADMIN_ANALYTICS_CONNECTIONS = 'admin_analytics_connections';
     const TYPE_ADMIN_ANALYTICS_TOP = 'admin_analytics_top';
     const TYPE_MAIL = 'mail';
+    const TYPE_WORKSPACE = 'workspace';
+    const TYPE_WORKSPACE_EDIT = 'workspace_edit';
+    const TYPE_WORKSPACE_TEMPLATE = 'workspace_template';
+    const TYPE_LOG_WORKSPACE_WIDGET_CONFIG = 'log_workspace_widget_config';
+    const TYPE_LOG_DESKTOP_WIDGET_CONFIG = 'log_desktop_widget_config';
+    const TYPE_CALENDAR = 'calendar';
+    const TYPE_WORKSPACE_TAG = 'workspace_tag';
+    const TYPE_ADMIN_WORKSPACE_TAG = 'admin_workspace_tag';
+    const TYPE_RESOURCE_PERMS = 'resource_permissions';
+    const TYPE_RESOURCE_RENAME = 'resource_rename';
+    const TYPE_RESOURCE_PROPERTIES = 'resource_properties';
 
     private static $types = array(
         self::TYPE_MESSAGE => array(
@@ -62,6 +73,46 @@ class FormFactory
         ),
         self::TYPE_MAIL => array(
             'formType' => 'Claroline\CoreBundle\Form\MailType'
+        ),
+        self::TYPE_WORKSPACE => array(
+            'formType' => 'Claroline\CoreBundle\Form\WorkspaceType'
+        ),
+        self::TYPE_WORKSPACE_EDIT => array(
+            'formType' => 'Claroline\CoreBundle\Form\WorkspaceEditType',
+            'entity' => 'Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace'
+        ),
+        self::TYPE_WORKSPACE_TEMPLATE => array(
+            'formType' => 'Claroline\CoreBundle\Form\WorkspaceTemplateType'
+        ),
+        self::TYPE_LOG_WORKSPACE_WIDGET_CONFIG => array(
+            'formType' => 'Claroline\CoreBundle\Form\LogWorkspaceWidgetConfigType'
+        ),
+        self::TYPE_LOG_DESKTOP_WIDGET_CONFIG => array(
+            'formType' => 'Claroline\CoreBundle\Form\LogDesktopWidgetConfigType'
+        ),
+        self::TYPE_CALENDAR => array(
+            'formType' => 'Claroline\CoreBundle\Form\CalendarType',
+            'entity' => 'Claroline\CoreBundle\Entity\Event'
+        ),
+        self::TYPE_WORKSPACE_TAG => array(
+            'formType' => 'Claroline\CoreBundle\Form\WorkspaceTagType',
+            'entity' => 'Claroline\CoreBundle\Entity\Workspace\WorkspaceTag'
+        ),
+        self::TYPE_ADMIN_WORKSPACE_TAG => array(
+            'formType' => 'Claroline\CoreBundle\Form\AdminWorkspaceTagType',
+            'entity' => 'Claroline\CoreBundle\Entity\Workspace\WorkspaceTag'
+        ),
+        self::TYPE_RESOURCE_PERMS => array(
+            'formType' => 'Claroline\CoreBundle\Form\ResourceRightType',
+            'entity' => 'Claroline\CoreBundle\Entity\Resource\ResourceRights'
+        ),
+        self::TYPE_RESOURCE_RENAME => array(
+            'formType' => 'Claroline\CoreBundle\Form\ResourceNameType',
+            'entity' => 'Claroline\CoreBundle\Entity\Resource\AbstractResource'
+        ),
+        self::TYPE_RESOURCE_PROPERTIES => array(
+            'formType' => 'Claroline\CoreBundle\Form\ResourcePropertiesType',
+            'entity' => 'Claroline\CoreBundle\Entity\Resource\AbstractResource'
         )
     );
 

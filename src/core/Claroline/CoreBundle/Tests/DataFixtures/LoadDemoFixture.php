@@ -58,7 +58,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         $this->manager = $manager;
         $this->setReferenceRepository($this->referenceRepo);
         $this->setReferences($manager);
-        $this->setRssReader($manager);
+        //$this->setRssReader($manager);
         $this->createUsers();
         $this->createGroups();
         //main users
@@ -172,7 +172,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
             )
         );
 
-        $this->createForums();
+        //$this->createForums();
         $this->createActivities();
         $this->createShortcuts($manager);
     }

@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Controller\Tool;
 use Doctrine\ORM\EntityRepository;
 use LogicException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -15,64 +15,47 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceRoleSubscribeEvent;
 use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceRoleUnsubscribeEvent;
-use Claroline\CoreBundle\Library\Resource\Converter;
-use Claroline\CoreBundle\Library\Utilities\PaginatorParser;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Pager\PagerFactory;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
 class GroupController extends Controller
 {
-    const ABSTRACT_WS_CLASS = 'ClarolineCoreBundle:Workspace\AbstractWorkspace';
-    const NUMBER_GROUP_PER_ITERATION = 25;
-
     private $groupManager;
     private $roleManager;
     private $userManager;
     private $eventDispatcher;
-    private $pagerFactory;
     private $security;
     private $router;
-    private $converter;
-    private $paginatorParser;
 
     /**
      * @DI\InjectParams({
      *     "groupManager"       = @DI\Inject("claroline.manager.group_manager"),
      *     "roleManager"       = @DI\Inject("claroline.manager.role_manager"),
      *     "userManager"       = @DI\Inject("claroline.manager.user_manager"),
-     *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
-     *     "pagerFactory"       = @DI\Inject("claroline.pager.pager_factory"),
+     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "security"           = @DI\Inject("security.context"),
-     *     "router"             = @DI\Inject("router"),
-     *     "converter"          = @DI\Inject("claroline.resource.converter"),
-     *     "paginatorParser"    = @DI\Inject("claroline.utilities.paginator_parser")
+     *     "router"             = @DI\Inject("router")
      * })
      */
     public function __construct(
         GroupManager $groupManager,
         RoleManager $roleManager,
         UserManager $userManager,
-        EventDispatcher $eventDispatcher,
-        PagerFactory $pagerFactory,
+        StrictDispatcher $eventDispatcher,
         SecurityContextInterface $security,
-        UrlGeneratorInterface $router,
-        Converter $converter,
-        PaginatorParser $paginatorParser
+        UrlGeneratorInterface $router
     )
     {
         $this->groupManager = $groupManager;
         $this->roleManager = $roleManager;
         $this->userManager = $userManager;
         $this->eventDispatcher = $eventDispatcher;
-        $this->pagerFactory = $pagerFactory;
         $this->security = $security;
         $this->router = $router;
-        $this->converter = $converter;
-        $this->paginatorParser = $paginatorParser;
     }
 
     /**
@@ -82,33 +65,27 @@ class GroupController extends Controller
      *     defaults={"page"=1, "search"=""},
      *     options = {"expose"=true}
      * )
-     *
      * @EXT\Method("GET")
-     *
      * @EXT\Route(
      *     "/{workspaceId}/groups/registered/page/{page}/search/{search}",
      *     name="claro_workspace_registered_group_list_search",
      *     defaults={"page"=1},
      *     options = {"expose"=true}
      * )
-     *
      * @EXT\Method("GET")
-     *
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
-     *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\group_management:registeredGroups.html.twig")
      */
     public function registeredGroupsListAction(AbstractWorkspace $workspace, $page, $search)
     {
         $this->checkRegistration($workspace);
-        $query = ($search == "") ?
-            $this->groupManager->getGroupsByWorkspace($workspace, true) :
-            $this->groupManager->getGroupsByWorkspaceAndName($workspace, $search, true);
-        $pager = $this->pagerFactory->createPager($query, $page);
+        $pager = $search === '' ?
+            $this->groupManager->getGroupsByWorkspace($workspace, $page) :
+            $this->groupManager->getGroupsByWorkspaceAndName($workspace, $search, $page);
 
         return array('workspace' => $workspace, 'pager' => $pager, 'search' => $search);
     }
@@ -120,33 +97,27 @@ class GroupController extends Controller
      *     defaults={"page"=1, "search"=""},
      *     options = {"expose"=true}
      * )
-     *
      * @EXT\Method("GET")
-     *
      * @EXT\Route(
      *     "/{workspaceId}/groups/unregistered/page/{page}/search/{search}",
      *     name="claro_workspace_unregistered_group_list_search",
      *     defaults={"page"=1},
      *     options = {"expose"=true}
      * )
-     *
      * @EXT\Method("GET")
-     *
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
-     *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\group_management:unregisteredGroups.html.twig")
      */
     public function unregiseredGroupsListAction(AbstractWorkspace $workspace, $page, $search)
     {
         $this->checkRegistration($workspace, false);
-        $query = ($search == "") ?
-            $this->groupManager->getWorkspaceOutsiders($workspace, true) :
-            $this->groupManager->getWorkspaceOutsidersByName($workspace, $search, true);
-        $pager = $this->pagerFactory->createPager($query, $page);
+        $pager = $search === '' ?
+            $this->groupManager->getWorkspaceOutsiders($workspace, $page) :
+            $this->groupManager->getWorkspaceOutsidersByName($workspace, $search, $page);
 
         return array('workspace' => $workspace, 'pager' => $pager, 'search' => $search);
     }
@@ -158,7 +129,6 @@ class GroupController extends Controller
      *     options={"expose"=true},
      *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$", "groupId"="^(?=.*[1-9].*$)\d*$"}
      * )
-     *
      * @EXT\Route(
      *     "/{workspaceId}/group/{groupId}",
      *     name="claro_workspace_tools_edit_group_parameters",
@@ -166,28 +136,20 @@ class GroupController extends Controller
      *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$", "groupId"="^(?=.*[1-9].*$)\d*$" }
      * )
      * @EXT\Method({"POST", "GET"})
-     *
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
-     *
      * @EXT\ParamConverter(
      *      "group",
      *      class="ClarolineCoreBundle:Group",
      *      options={"id" = "groupId", "strictId" = true}
      * )
-     *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\group_management:groupParameters.html.twig")
      *
      * Renders the group parameter page with its layout and
      * edit the group parameters for the selected workspace.
-     *
-     * @param integer $workspaceId the workspace id
-     * @param integer $groupId the group id
-     *
-     * @return Response
      */
     public function groupParametersAction(AbstractWorkspace $workspace, Group $group)
     {
@@ -232,12 +194,16 @@ class GroupController extends Controller
                 'claro_workspace_open_tool',
                 array('workspaceId' => $workspaceId, 'toolName' => 'group_management')
             );
-
-            $log = new LogWorkspaceRoleUnsubscribeEvent($role, null, $group);
-            $this->eventDispatcher->dispatch('log', $log);
-
-            $log = new LogWorkspaceRoleSubscribeEvent($newRole, null, $group);
-            $this->eventDispatcher->dispatch('log', $log);
+            $this->eventDispatcher->dispatch(
+                'log',
+                'Log\WorkspaceRoleUnsubscribe',
+                array($role, null, $group)
+            );
+            $this->eventDispatcher->dispatch(
+                'log',
+                'Log\WorkspaceRoleSubscribe',
+                array($newRole, null, $group)
+            );
 
             return new RedirectResponse($route);
         }
@@ -305,7 +271,6 @@ class GroupController extends Controller
      *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
      * )
      * @EXT\Method("PUT")
-     *
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
@@ -336,10 +301,7 @@ class GroupController extends Controller
             $this->eventDispatcher->dispatch('log', $log);
         }
 
-        $response = new Response($this->converter->jsonEncodeGroups($groups));
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
+        return new JsonResponse($this->groupManager->convertGroupsToArray($groups));
     }
 
     /**
@@ -387,18 +349,5 @@ class GroupController extends Controller
             || !$this->security->isGranted('group_management', $workspace)) {
             throw new AccessDeniedException();
         }
-    }
-
-    /**
-     * Most dql request required by this controller are paginated.
-     * This function transform the results of the repository in an array.
-     *
-     * @param Paginator $paginator the return value of the Repository using a paginator.
-     *
-     * @return array.
-     */
-    private function paginatorToArray($paginator)
-    {
-        return $this->paginatorParser->paginatorToArray($paginator);
     }
 }

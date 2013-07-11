@@ -1,8 +1,9 @@
 <?php
 
 namespace Claroline\CoreBundle\Event\Event\Log;
+use Claroline\CoreBundle\Event\Event\MandatoryEventInterface;
 
-class LogGroupUpdateEvent extends LogGenericEvent
+class LogGroupUpdateEvent extends LogGenericEvent implements MandatoryEventInterface
 {
     const ACTION = 'group_update';
 

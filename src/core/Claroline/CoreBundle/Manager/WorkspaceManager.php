@@ -4,13 +4,22 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Template;
+use Claroline\CoreBundle\Event\Event\ExportToolEvent;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Repository\AbstractResourceRepository;
+use Claroline\CoreBundle\Repository\OrderedToolRepository;
+use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
+use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Database\Writer;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Yaml\Yaml;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -20,16 +29,27 @@ class WorkspaceManager
 {
     /** @var Writer */
     private $writer;
+    /** @var OrderedToolRepository */
+    private $orderedToolRepo;
     /** @var RoleManager */
     private $roleManager;
     /** @var ResourceManager */
     private $resourceManager;
+    /** @var AbstractResourceRepository */
+    private $resourceRepo;
+    /** @var ResourceRightsRepository */
+    private $resourceRightsRepo;
     /** @var ResourceTypeRepository */
     private $resourceTypeRepo;
     /** @var RoleRepository */
     private $roleRepo;
+    /** @var WorkspaceRepository */
+    private $workspaceRepo;
     /** @var ToolManager */
     private $toolManager;
+    /** @var EventDispatcher */
+    private $eventDispatcher;
+    private $templateDir;
 
     /**
      * Constructor.
@@ -39,8 +59,14 @@ class WorkspaceManager
      *     "roleManager" = @DI\Inject("claroline.manager.role_manager"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "toolManager" = @DI\Inject("claroline.manager.tool_manager"),
+     *     "orderedToolRepo" = @DI\Inject("ordered_tool_repository"),
+     *     "resourceRepo" = @DI\Inject("resource_repository"),
+     *     "resourceRightsRepo" = @DI\Inject("resource_rights_repository"),
      *     "resourceTypeRepo" = @DI\Inject("resource_type_repository"),
+     *     "workspaceRepo" = @DI\Inject("claroline.repository.workspace_repository"),
      *     "roleRepo" = @DI\Inject("role_repository"),
+     *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
+     *     "templateDir" = @DI\Inject("%claroline.param.templates_directory%"),
      * })
      */
     public function __construct(
@@ -48,8 +74,14 @@ class WorkspaceManager
         RoleManager $roleManager,
         ResourceManager $resourceManager,
         ToolManager $toolManager,
+        AbstractResourceRepository $resourceRepo,
+        OrderedToolRepository $orderedToolRepo,
+        ResourceRightsRepository $resourceRightsRepo,
         ResourceTypeRepository $resourceTypeRepo,
-        RoleRepository $roleRepo
+        RoleRepository $roleRepo,
+        WorkspaceRepository $workspaceRepo,
+        EventDispatcher $eventDispatcher,
+        $templateDir
     )
     {
         $this->writer = $writer;
@@ -57,7 +89,13 @@ class WorkspaceManager
         $this->resourceManager = $resourceManager;
         $this->resourceTypeRepo = $resourceTypeRepo;
         $this->toolManager = $toolManager;
+        $this->orderedToolRepo = $orderedToolRepo;
+        $this->resourceRepo = $resourceRepo;
+        $this->resourceRightsRepo = $resourceRightsRepo;
         $this->roleRepo = $roleRepo;
+        $this->workspaceRepo = $workspaceRepo;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->templateDir = $templateDir;
     }
 
     public function create(Configuration $config, User $manager)
@@ -119,6 +157,87 @@ class WorkspaceManager
         return $workspace;
     }
 
+    public function createWorkspace(AbstractWorkspace $workspace)
+    {
+        $this->writer->create($workspace);
+    }
+
+    public function export(AbstractWorkspace $workspace, $configName)
+    {
+        if (!is_writable($this->templateDir)) {
+            throw new \Exception("{$this->templatir} is not writable");
+        }
+
+        $archive = new \ZipArchive();
+        $hash = $this->resourceManager->generateGuid();
+        $pathArch = $this->templateDir."{$hash}.zip";
+        $template = new Template();
+        $template->setHash("{$hash}.zip");
+        $template->setName($configName);
+        $archive->open($pathArch, \ZipArchive::CREATE);
+        $arTools = array();
+        $description = array();
+        $workspaceTools = $this->orderedToolRepo->findBy(array('workspace' => $workspace));
+        $roles = $this->roleRepo->findByWorkspace($workspace);
+        $root = $this->resourceRepo->findWorkspaceRoot($workspace);
+
+        foreach ($roles as $role) {
+            $name = rtrim(str_replace(range(0, 9), '', $role->getName()), '_');
+            $arRole[$name] = $role->getTranslationKey();
+        }
+
+        foreach ($roles as $role) {
+            $perms = $this->resourceRightsRepo
+                ->findMaximumRights(array($role->getName()), $root);
+            $perms['canCreate'] = $this->resourceRightsRepo
+                ->findCreationRights(array($role->getName()), $root);
+
+            $description['root_perms'][rtrim(str_replace(range(0, 9), '', $role->getName()), '_')] = $perms;
+        }
+
+        foreach ($workspaceTools as $workspaceTool) {
+
+            $tool = $workspaceTool->getTool();
+            $roles = $this->roleRepo->findByWorkspaceAndTool($workspace, $tool);
+            $arToolRoles = array();
+
+            foreach ($roles as $role) {
+                $arToolRoles[] = rtrim(str_replace(range(0, 9), '', $role->getName()), '_');
+            }
+
+            $arTools[$tool->getName()]['perms'] = $arToolRoles;
+            $arTools[$tool->getName()]['name'] = $workspaceTool->getName();
+
+            if ($workspaceTool->getTool()->isExportable()) {
+                $event = new ExportToolEvent($workspace);
+                $this->eventDispatcher->dispatch('tool_'.$tool->getName().'_to_template', $event);
+
+                if ($event->getConfig() === null) {
+                    throw new \Exception(
+                        'The event tool_' . $tool->getName() .
+                        '_to_template did not return any config.'
+                    );
+                }
+
+                $description['tools'][$tool->getName()] = $event->getConfig();
+                $description['tools'][$tool->getName()]['files'] = $event->getFilenamesFromArchive();
+
+                foreach ($event->getFiles() as $file) {
+                    $archive->addFile($file['original_path'], $file['archive_path']);
+                }
+            }
+        }
+
+        $description['roles'] = $arRole;
+        $description['creator_role'] = 'ROLE_WS_MANAGER';
+        $description['tools_infos'] = $arTools;
+        $description['name'] = $configName;
+        $yaml = Yaml::dump($description, 10);
+        $archive->addFromString('config.yml', $yaml);
+        $archive->close();
+        $this->writer->create($template);
+    }
+
     private function prepareRightsArray(array $rights, array $roles)
     {
         $preparedRightsArray = array();
@@ -149,5 +268,68 @@ class WorkspaceManager
         }
 
         return $realPaths;
+    }
+
+    /**
+     * Repository functions
+     */
+
+    public function getWorkspacesByUser(User $user)
+    {
+        return $this->workspaceRepo->findByUser($user);
+    }
+
+    public function getNonPersonalWorkspaces()
+    {
+        return $this->workspaceRepo->findNonPersonal();
+    }
+
+    public function getWorkspacesByAnonymous()
+    {
+        return $this->workspaceRepo->findByAnonymous();
+    }
+
+    public function getNbWorkspaces()
+    {
+        return $this->workspaceRepo->count();
+    }
+
+    public function getWorkspacesByRoles(array $roles)
+    {
+        return $this->workspaceRepo->findByRoles($roles);
+    }
+
+    public function getWorkspaceIdsByUserAndRoleNames(User $user, array $roleNames)
+    {
+        return $this->workspaceRepo->findIdsByUserAndRoleNames($user, $roleNames);
+    }
+
+    public function getWorkspacesByUserAndRoleNames(User $user, array $roleNames)
+    {
+        return $this->workspaceRepo->findByUserAndRoleNames($user, $roleNames);
+    }
+
+    public function getWorkspacesByUserAndRoleNamesNotIn(
+        User $user,
+        array $roleNames,
+        array $restrictionIds = null
+    )
+    {
+        return $this->workspaceRepo->findByUserAndRoleNamesNotIn($user, $roleNames, $restrictionIds);
+    }
+
+    public function getLatestWorkspacesByUser(User $user, array $roles, $max = 5)
+    {
+        return $this->workspaceRepo->findLatestWorkspacesByUser($user, $roles, $max);
+    }
+
+    public function getWorkspacesWithMostResources($max)
+    {
+        return $this->workspaceRepo->findWorkspacesWithMostResources($max);
+    }
+
+    public function getWorkspaceById($workspaceId)
+    {
+        return $this->workspaceRepo->find($workspaceId);
     }
 }

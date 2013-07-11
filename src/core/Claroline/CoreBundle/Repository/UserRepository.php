@@ -2,17 +2,17 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Group;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Database\MissingEntityException;
 
 class UserRepository extends EntityRepository implements UserProviderInterface
 {
@@ -20,35 +20,31 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     const WORKSPACE_ROLE = 2;
     const ALL_ROLES = 3;
 
-    /*
-     * UserProviderInterface method
+    /**
+     * @{inheritDoc}
      */
     public function loadUserByUsername($username)
     {
-        $dql = "SELECT u FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.username LIKE :username"
-            ;
-
+        $dql = '
+            SELECT u FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.username LIKE :username
+        ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('username', $username);
 
         try {
-
             $user = $query->getSingleResult();
-            // The Query::getSingleResult() method throws an exception
-            // if there is no record matching the criteria.
-
         } catch (NoResultException $e) {
             throw new UsernameNotFoundException(
-                sprintf('Unable to find an active admin AcmeUserBundle:User object identified by "%s".', $username)
+                sprintf('Unable to find an active user identified by "%s".', $username)
             );
         }
 
         return $user;
     }
 
-    /*
-     * UserProviderInterface method
+    /**
+     * @{inheritDoc}
      */
     public function refreshUser(UserInterface $user)
     {
@@ -58,14 +54,15 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $class));
         }
 
-        $dql = "SELECT u, groups, group_roles, roles, ws, pwu FROM Claroline\CoreBundle\Entity\User u
+        $dql = '
+            SELECT u, groups, group_roles, roles, ws, pwu FROM Claroline\CoreBundle\Entity\User u
             LEFT JOIN u.groups groups
             LEFT JOIN groups.roles group_roles
             LEFT JOIN u.roles roles
             LEFT JOIN roles.workspace ws
             LEFT JOIN ws.personalUser pwu
-            WHERE u.id = :userId";
-
+            WHERE u.id = :userId
+        ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userId', $user->getId());
         $user = $query->getSingleResult();
@@ -73,8 +70,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $user;
     }
 
-    /*
-     * UserProviderInterface method
+    /**
+     * @{inheritDoc}
      */
     public function supportsClass($class)
     {
@@ -82,64 +79,98 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
-     * Returns the users whose registered in a workspace for a role (including groups roles).
+     * Returns the users who have a given workspace role. The members of a group
+     * which has that role are also returned.
      *
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param AbstractWorkspace $workspace
+     * @param Role              $role
      *
-     * @return array
+     * @return array[User]
      */
     public function findByWorkspaceAndRole(AbstractWorkspace $workspace, Role $role)
     {
-        $dql = "
+        $dql = '
             SELECT DISTINCT u FROM Claroline\CoreBundle\Entity\User u
             LEFT JOIN u.roles wr WITH wr IN (
-                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ".Role::WS_ROLE."
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::WS_ROLE . "
             )
             LEFT JOIN wr.workspace w
-            WHERE w.id = {$workspace->getId()}";
-
-        if ($role != null) {
-            $dql .= " AND wr.id = {$role->getId()}";
-        }
-
+            WHERE w.id = {$workspace->getId()}
+            AND wr.id = {$role->getId()}
+        ";
         $query = $this->_em->createQuery($dql);
         $userResults = $query->getResult();
 
-        $dql = "
+        $dql = '
             SELECT DISTINCT u FROM Claroline\CoreBundle\Entity\User u
             JOIN u.groups g
             JOIN g.roles wr WITH wr IN (
-                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ".Role::WS_ROLE."
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = '. Role::WS_ROLE . "
             )
             LEFT JOIN wr.workspace w
-            WHERE w.id = {$workspace->getId()}";
-
-        if ($role != null) {
-            $dql .= " AND wr.id = {$role->getId()}";
-        }
-
+            WHERE w.id = {$workspace->getId()}
+            AND wr.id = {$role->getId()}
+        ";
         $query = $this->_em->createQuery($dql);
         $groupResults = $query->getResult();
 
         return array_merge($userResults, $groupResults);
-
     }
 
-    public function findWorkspaceOutsidersByName(AbstractWorkspace $workspace, $search, $getQuery = false)
+    /**
+     * Returns the users who are not members of a workspace. Users's groups are not
+     * taken into account.
+     *
+     * @param AbstractWorkspace $workspace
+     * @param boolean           $executeQuery
+     *
+     * @return array[User]|Query
+     */
+    public function findWorkspaceOutsiders(AbstractWorkspace $workspace, $executeQuery = true)
     {
-        $upperSearch = strtoupper($search);
-
-        $dql = "
+        $dql = '
             SELECT u, ws, r FROM Claroline\CoreBundle\Entity\User u
             LEFT JOIN u.personalWorkspace ws
             LEFT JOIN u.roles r
-            WITH r IN (SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ".Role::WS_ROLE.")
+            WITH r IN (SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::WS_ROLE . ')
             WHERE u NOT IN
             (
                 SELECT us FROM Claroline\CoreBundle\Entity\User us
                 LEFT JOIN us.roles wr WITH wr IN (
-                    SELECT pr2 from Claroline\CoreBundle\Entity\Role pr2 WHERE pr2.type = ".Role::WS_ROLE."
+                    SELECT pr2 from Claroline\CoreBundle\Entity\Role pr2 WHERE pr2.type = ' . Role::WS_ROLE . '
+                )
+                LEFT JOIN wr.workspace w
+                WHERE w.id = :id
+            )
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('id', $workspace->getId());
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    /**
+     * Returns the users who are not members of a workspace, filtered by a search on
+     * their name. Users's groups are not taken into account.
+     *
+     * @param AbstractWorkspace $workspace
+     * @param string            $search
+     * @param boolean           $executeQuery
+     *
+     * @return array[User]|Query
+     */
+    public function findWorkspaceOutsidersByName(AbstractWorkspace $workspace, $search, $executeQuery = true)
+    {
+        $dql = '
+            SELECT u, ws, r FROM Claroline\CoreBundle\Entity\User u
+            LEFT JOIN u.personalWorkspace ws
+            LEFT JOIN u.roles r
+            WITH r IN (SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::WS_ROLE . ')
+            WHERE u NOT IN
+            (
+                SELECT us FROM Claroline\CoreBundle\Entity\User us
+                LEFT JOIN us.roles wr WITH wr IN (
+                    SELECT pr2 from Claroline\CoreBundle\Entity\Role pr2 WHERE pr2.type = ' . Role::WS_ROLE . '
                 )
                 LEFT JOIN wr.workspace w
                 WHERE w.id = :id
@@ -148,50 +179,34 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 OR UPPER(u.lastName) LIKE :search
                 OR UPPER(u.username) LIKE :search
             )
-        ";
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('id', $workspace->getId())
-            ->setParameter('search', "%{$upperSearch}%");
-
-        return ($getQuery) ? $query: $query->getResult();
-    }
-
-    public function findWorkspaceOutsiders(AbstractWorkspace $workspace, $getQuery = false)
-    {
-        $dql = "
-            SELECT u, ws, r FROM Claroline\CoreBundle\Entity\User u
-            LEFT JOIN u.personalWorkspace ws
-            LEFT JOIN u.roles r
-            WITH r IN (SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ".Role::WS_ROLE.")
-            WHERE u NOT IN
-            (
-                SELECT us FROM Claroline\CoreBundle\Entity\User us
-                LEFT JOIN us.roles wr WITH wr IN (
-                    SELECT pr2 from Claroline\CoreBundle\Entity\Role pr2 WHERE pr2.type = ".Role::WS_ROLE."
-                )
-                LEFT JOIN wr.workspace w
-                WHERE w.id = :id
-            )
-        ";
-
+        ';
+        $upperSearch = strtoupper($search);
         $query = $this->_em->createQuery($dql);
         $query->setParameter('id', $workspace->getId());
+        $query->setParameter('search', "%{$upperSearch}%");
 
-        return ($getQuery) ? $query: $query->getResult();
+        return $executeQuery ? $query->getResult() : $query;
     }
 
-    public function findAll($getQuery = false)
+    /**
+     * Returns all the users.
+     *
+     * @param boolean $executeQuery
+     *
+     * @return array[User]|Query
+     */
+    public function findAll($executeQuery = true)
     {
-        if ($getQuery) {
-            $dql = 'SELECT u, r, pws from Claroline\CoreBundle\Entity\User u
-                        JOIN u.roles r WITH r IN (
-                        SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = '.Role::PLATFORM_ROLE.'
-                        )
-                        LEFT JOIN u.personalWorkspace pws';
-
-            //the join on role is required because this method is only fired in the administration
-            //and we only want the platform roles of a user.
+        if (!$executeQuery) {
+            $dql = '
+                SELECT u, r, pws from Claroline\CoreBundle\Entity\User u
+                JOIN u.roles r WITH r IN (
+                    SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::PLATFORM_ROLE . '
+                )
+                LEFT JOIN u.personalWorkspace pws
+            ';
+            // the join on role is required because this method is only called in the administration
+            // and we only want the platform roles of a user.
 
             return $this->_em->createQuery($dql);
         }
@@ -200,205 +215,251 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
-     * Search users whose firstname, lastname or username
-     * match $search.
+     * Search users whose first name, last name or username match a given search string.
      *
-     * @param string $search
-     * @param boolean $getQuery
+     * @param string    $search
+     * @param boolean   $executeQuery
+     *
+     * @return array[User]|Query
      */
-    public function findByName($search, $getQuery = false)
+    public function findByName($search, $executeQuery = true)
     {
         $upperSearch = strtoupper($search);
         $upperSearch = trim($upperSearch);
         $upperSearch = preg_replace('/\s+/', ' ', $upperSearch);
-
         $dql = "
             SELECT u, r, pws FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.roles r
-            JOIN u.personalWorkspace pws
+            LEFT JOIN u.roles r
+            LEFT JOIN u.personalWorkspace pws
             WHERE UPPER(u.lastName) LIKE :search
             OR UPPER(u.firstName) LIKE :search
             OR UPPER(u.username) LIKE :search
             OR CONCAT(UPPER(u.firstName), CONCAT(' ', UPPER(u.lastName))) LIKE :search
             OR CONCAT(UPPER(u.lastName), CONCAT(' ', UPPER(u.firstName))) LIKE :search
         ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('search', "%{$upperSearch}%");
 
-        $query = $this->_em->createQuery($dql)
-              ->setParameter('search', "%{$upperSearch}%");
-
-        return ($getQuery) ? $query: $query->getResult();
+        return $executeQuery ? $query->getResult() : $query;
     }
 
-    public function findByGroup(Group $group, $getQuery = false)
+    /**
+     * Returns the users of a group.
+     *
+     * @param Group     $group
+     * @param boolean   $executeQuery
+     *
+     * @return array[User]|Query
+     */
+    public function findByGroup(Group $group, $executeQuery = true)
     {
-        $dql = "
+        $dql = '
             SELECT DISTINCT u, g, pw, r from Claroline\CoreBundle\Entity\User u
             JOIN u.groups g
-            JOIN u.personalWorkspace pw
-            JOIN u.roles r WITH r IN (
-                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ".Role::PLATFORM_ROLE."
+            LEFT JOIN u.personalWorkspace pw
+            LEFT JOIN u.roles r WITH r IN (
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::PLATFORM_ROLE . '
             )
-            WHERE g.id = :groupId ORDER BY u.id";
-
+            WHERE g.id = :groupId ORDER BY u.id';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('groupId', $group->getId());
 
-        return ($getQuery) ? $query: $query->getResult();
+        return $executeQuery ? $query->getResult() : $query;
     }
 
-    public function findByNameAndGroup($search, Group $group, $getQuery = false)
+    /**
+     * Returns the users of a group whose first name, last name or username match
+     * a given search string.
+     *
+     * @param string    $search
+     * @param boolean   $executeQuery
+     *
+     * @return array[User]|Query
+     */
+    public function findByNameAndGroup($search, Group $group, $executeQuery = true)
     {
-        $upperSearch = strtoupper($search);
-
-        $dql = "
+        $dql = '
             SELECT DISTINCT u, g, pw, r from Claroline\CoreBundle\Entity\User u
             JOIN u.groups g
-            JOIN u.personalWorkspace pw
-            JOIN u.roles r WITH r IN (
-                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ".Role::PLATFORM_ROLE."
+            LEFT JOIN u.personalWorkspace pw
+            LEFT JOIN u.roles r WITH r IN (
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::PLATFORM_ROLE . '
             )
             WHERE g.id = :groupId
             AND (UPPER(u.username) LIKE :search
             OR UPPER(u.lastName) LIKE :search
             OR UPPER(u.firstName) LIKE :search)
             ORDER BY u.id
-        ";
+        ';
+        $upperSearch = strtoupper($search);
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('search', "%{$upperSearch}%");
+        $query->setParameter('groupId', $group->getId());
 
-        $query = $this->_em->createQuery($dql)
-            ->setParameter('search', "%{$upperSearch}%")
-            ->setParameter('groupId', $group->getId());
-
-        return ($getQuery) ? $query: $query->getResult();
+        return $executeQuery ? $query->getResult() : $query;
     }
 
-    public function findByWorkspace(AbstractWorkspace $workspace, $getQuery = false)
+    /**
+     * Returns the users who are members of a workspace. Users's groups are not
+     * taken into account.
+     *
+     * @param AbstractWorkspace $workspace
+     * @param boolean           $executeQuery
+     *
+     * @return array[User]|Query
+     */
+    public function findByWorkspace(AbstractWorkspace $workspace, $executeQuery = true)
     {
-        $dql = "
+        $dql = '
             SELECT wr, u, ws from Claroline\CoreBundle\Entity\User u
             JOIN u.roles wr WITH wr IN (
-                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ".Role::WS_ROLE."
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::WS_ROLE . '
             )
             LEFT JOIN wr.workspace w
-            JOIN u.personalWorkspace ws
-            WHERE w.id = :workspaceId";
-
+            LEFT JOIN u.personalWorkspace ws
+            WHERE w.id = :workspaceId
+        ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaceId', $workspace->getId());
 
-        return ($getQuery) ? $query: $query->getResult();
+        return $executeQuery ? $query->getResult() : $query;
     }
 
-    public function findByWorkspaceAndName(AbstractWorkspace $workspace, $search, $getQuery = false)
+    /**
+     * Returns the users of a workspace whose first name, last name or username
+     * match a given search string.
+     *
+     * @param AbstractWorkspace $workspace
+     * @param string            $search
+     * @param boolean           $executeQuery
+     *
+     * @return array[User]|Query
+     */
+    public function findByWorkspaceAndName(AbstractWorkspace $workspace, $search, $executeQuery = true)
     {
         $upperSearch = strtoupper($search);
-
-        $dql = "
+        $dql = '
             SELECT u, r, ws FROM Claroline\CoreBundle\Entity\User u
             JOIN u.roles r WITH r IN (
-                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ".Role::WS_ROLE."
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::WS_ROLE . '
             )
             LEFT JOIN r.workspace wol
-            JOIN u.personalWorkspace ws
-            WHERE wol.id = :workspaceId AND u IN (SELECT us FROM Claroline\CoreBundle\Entity\User us WHERE
-            UPPER(us.lastName) LIKE :search
-            OR UPPER(us.firstName) LIKE :search
-            OR UPPER(us.username) LIKE :search
+            LEFT JOIN u.personalWorkspace ws
+            WHERE wol.id = :workspaceId AND u IN (
+                SELECT us FROM Claroline\CoreBundle\Entity\User us
+                WHERE UPPER(us.lastName) LIKE :search
+                OR UPPER(us.firstName) LIKE :search
+                OR UPPER(us.username) LIKE :search
             )
-        ";
-
+        ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaceId', $workspace->getId())
               ->setParameter('search', "%{$upperSearch}%");
 
-        return ($getQuery) ? $query: $query->getResult();
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     /**
-     * Find users who are not registered in the group $group.
+     * Returns the users who are not members of a group.
      *
-     * @param \Claroline\CoreBundle\Entity\Group $group
-     * @param integer $offset
-     * @param integer $limit
+     * @param Group     $group
+     * @param boolean   $executeQuery
      *
-     * @return \Doctrine\ORM\Tools\Pagination\Paginator
+     * @return array[User]|Query
      */
-    public function findGroupOutsiders(Group $group, $getQuery = false)
+    public function findGroupOutsiders(Group $group, $executeQuery = true)
     {
-        $dql = "
+        $dql = '
             SELECT DISTINCT u, ws, r FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.personalWorkspace ws
-            JOIN u.roles r WITH r IN (
-                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ".Role::PLATFORM_ROLE."
+            LEFT JOIN u.personalWorkspace ws
+            LEFT JOIN u.roles r WITH r IN (
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::PLATFORM_ROLE . '
             )
             WHERE u NOT IN (
                 SELECT us FROM Claroline\CoreBundle\Entity\User us
                 JOIN us.groups gs
                 WHERE gs.id = :groupId
             ) ORDER BY u.id
-        ";
-
+        ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('groupId', $group->getId());
 
-        return ($getQuery) ? $query: $query->getResult();
+        return $executeQuery ? $query->getResult() : $query;
     }
 
-    public function findGroupOutsidersByName(Group $group, $search, $getQuery = false)
+    /**
+     * Returns the users who are not members of a group and whose first name, last
+     * name or username match a given search string.
+     *
+     * @param AbstractWorkspace $workspace
+     * @param string            $search
+     * @param boolean           $executeQuery
+     *
+     * @return array[User]|Query
+     */
+    public function findGroupOutsidersByName(Group $group, $search, $executeQuery = true)
     {
-        $search = strtoupper($search);
-
-        $dql = "
+        $dql = '
             SELECT DISTINCT u, ws, r FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.personalWorkspace ws
-            JOIN u.roles r WITH r IN (
-                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ".Role::PLATFORM_ROLE."
+            LEFT JOIN u.personalWorkspace ws
+            LEFT JOIN u.roles r WITH r IN (
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::PLATFORM_ROLE . '
             )
-            WHERE UPPER(u.lastName) LIKE :search
+            WHERE (
+                UPPER(u.lastName) LIKE :search
+                OR UPPER(u.firstName) LIKE :search
+                OR UPPER(u.lastName) LIKE :search
+            )
             AND u NOT IN (
                 SELECT us FROM Claroline\CoreBundle\Entity\User us
                 JOIN us.groups gr
                 WHERE gr.id = :groupId
             )
-            OR UPPER(u.firstName) LIKE :search
-            AND u NOT IN (
-                SELECT use FROM Claroline\CoreBundle\Entity\User use
-                JOIN use.groups gro
-                WHERE gro.id = :groupId
-            )
-            OR UPPER(u.lastName) LIKE :search
-            AND u NOT IN (
-                SELECT user FROM Claroline\CoreBundle\Entity\User user
-                JOIN user.groups grou
-                WHERE grou.id = :groupId
-            )";
-
+        ';
+        $search = strtoupper($search);
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('groupId', $group->getId())
-              ->setParameter('search', "%{$search}%");
+        $query->setParameter('groupId', $group->getId());
+        $query->setParameter('search', "%{$search}%");
 
-        return ($getQuery) ? $query: $query->getResult();
+        return $executeQuery ? $query->getResult() : $query;
     }
 
+    /**
+     * Returns all the users except a given one.
+     *
+     * @param User $excludedUser
+     *
+     * @return array[User]
+     */
     public function findAllExcept(User $excludedUser)
     {
         $dql = '
             SELECT u FROM Claroline\CoreBundle\Entity\User u
             WHERE u.id <> :userId
         ';
-
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userId', $excludedUser->getId());
 
         return $query->getResult();
     }
 
+    /**
+     * Returns users by their usernames.
+     *
+     * @param array $usernames
+     *
+     * @return array[User]
+     *
+     * @throws MissingEntityException if one or more users cannot be found
+     */
     public function findByUsernames(array $usernames)
     {
+        $usernameCount = count($usernames);
         $firstUsername = array_pop($usernames);
-
-        $dql = "SELECT u FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.username = :user_first";
-
+        $dql = '
+            SELECT u FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.username = :user_first
+        ';
 
         foreach ($usernames as $key => $username) {
             $dql .= " OR u.username = :user_{$key}" . PHP_EOL;
@@ -411,9 +472,20 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             $query->setParameter('user_' . $key, $username);
         }
 
-        return $query->getResult();
+        $result = $query->getResult();
+
+        if (($userCount = count($result)) !== $usernameCount) {
+            throw new MissingEntityException("{$userCount} out of {$usernameCount} users were found");
+        }
+
+        return $result;
     }
 
+    /**
+     * Counts the users.
+     *
+     * @return integer
+     */
     public function count()
     {
         $dql = "SELECT COUNT(u) FROM Claroline\CoreBundle\Entity\User u";
@@ -422,85 +494,66 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $query->getSingleScalarResult();
     }
 
-    public function findByIds(array $ids)
-    {
-        $firstId = array_pop($ids);
-        $dql = "SELECT u FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.id IN (:first_id";
-
-        foreach ($ids as $key => $id) {
-            $dql .= ", :id_{$key}" ;
-        }
-
-        $dql .= ')';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('first_id', $firstId);
-
-        foreach ($ids as $key => $id) {
-            $query->setParameter("id_{$key}", $id);
-        }
-
-        return $query->getResult();
-    }
-
     /**
-     * extract
+     * Returns the first name, last name, username and number of workspaces of
+     * each user enrolled in at least one workspace.
      *
-     * @param array $params
-     * @return DoctrineCollection
+     * @param integer $max
+     *
+     * @return array
      */
-    public function extract($params)
-    {
-        $search = $params['search'];
-        if ($search !== null) {
-
-            return $this->findByName($search, 0, 10);
-        }
-
-        return array();
-    }
-
-
-    public function findUsersEnrolledInMostWorkspaces ($max)
+    public function findUsersEnrolledInMostWorkspaces($max)
     {
         $dql = "
-            SELECT CONCAT(CONCAT(u.firstName,' '), u.lastName), u.username, COUNT( DISTINCT ws.id) AS total FROM
-                Claroline\CoreBundle\Entity\User u, Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace ws
-                WHERE CONCAT(CONCAT(u.id,':'), ws.id) IN
-                (SELECT CONCAT(CONCAT(u1.id,':'), ws1.id) FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace ws1
-                    JOIN ws1.roles r1
-                    JOIN r1.users u1
-                ) OR CONCAT(CONCAT(u.id,':'), ws.id) IN
-                (SELECT CONCAT(CONCAT(u2.id,':'), ws2.id) FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace ws2
-                    JOIN ws2.roles r2
-                    JOIN r2.groups g2
-                    JOIN g2.users u2
-                )
+            SELECT CONCAT(CONCAT(u.firstName, ' '), u.lastName), u.username, COUNT(DISTINCT ws.id) AS total
+            FROM Claroline\CoreBundle\Entity\User u, Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace ws
+            WHERE CONCAT(CONCAT(u.id,':'), ws.id) IN
+            (
+                SELECT CONCAT(CONCAT(u1.id, ':'), ws1.id)
+                FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace ws1
+                JOIN ws1.roles r1
+                JOIN r1.users u1
+            ) OR CONCAT(CONCAT(u.id, ':'), ws.id) IN
+            (
+                SELECT CONCAT(CONCAT(u2.id, ':'), ws2.id)
+                FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace ws2
+                JOIN ws2.roles r2
+                JOIN r2.groups g2
+                JOIN g2.users u2
+            )
             GROUP BY u.id
             ORDER BY total DESC
         ";
 
         $query = $this->_em->createQuery($dql);
-        if ($max >1)
-        {
+
+        if ($max > 1) {
             $query->setMaxResults($max);
         }
 
         return $query->getResult();
     }
 
-    public function findUsersOwnersOfMostWorkspaces ($max)
+    /**
+     * Returns the first name, last name, username and number of created workspaces
+     * of each user who has created at least one workspace.
+     *
+     * @param integer $max
+     *
+     * @return array
+     */
+    public function findUsersOwnersOfMostWorkspaces($max)
     {
         $dql = "
-            SELECT CONCAT(CONCAT(u.firstName,' '), u.lastName), u.username, COUNT( DISTINCT ws.id) AS total FROM
-                Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace ws
-                JOIN ws.creator u
+            SELECT CONCAT(CONCAT(u.firstName,' '), u.lastName), u.username, COUNT(DISTINCT ws.id) AS total
+            FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace ws
+            JOIN ws.creator u
             GROUP BY u.id
             ORDER BY total DESC
         ";
         $query = $this->_em->createQuery($dql);
-        if ($max >1)
-        {
+
+        if ($max > 1) {
             $query->setMaxResults($max);
         }
 
