@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Tests\DataFixtures;
+namespace Claroline\CoreBundle\DataFixtures\Demo;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;

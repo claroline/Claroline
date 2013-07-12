@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Tests\DataFixtures;
+namespace Claroline\CoreBundle\DataFixtures\Demo;
 
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -10,16 +10,19 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Claroline\CoreBundle\Library\Fixtures\LoggableFixture;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\ForumBundle\Tests\DataFixtures\LoadForumData;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadUserData;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadGroupData;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadDirectoryData;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadFileData;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadTextData;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadWorkspaceData;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadMessagesData;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadActivityData;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadShortcutData;
+use Claroline\ForumBundle\DataFixtures\Demo\LoadForumData;
+use Claroline\CoreBundle\DataFixtures\Demo\LoadUserData;
+use Claroline\CoreBundle\DataFixtures\Demo\LoadGroupData;
+use Claroline\CoreBundle\DataFixtures\Demo\LoadDirectoryData;
+use Claroline\CoreBundle\DataFixtures\Demo\LoadFileData;
+use Claroline\CoreBundle\DataFixtures\Demo\LoadTextData;
+use Claroline\CoreBundle\DataFixtures\Demo\LoadWorkspaceData;
+use Claroline\CoreBundle\DataFixtures\Demo\LoadMessagesData;
+use Claroline\CoreBundle\DataFixtures\Demo\LoadActivityData;
+use Claroline\CoreBundle\DataFixtures\Demo\LoadShortcutData;
+use Claroline\CoreBundle\DataFixtures\Demo\LoadContentData;
+use Claroline\CoreBundle\DataFixtures\Demo\LoadTypeData;
+use Claroline\CoreBundle\DataFixtures\Demo\LoadRegionData;
 
 class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
 {
@@ -37,7 +40,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
     public function __construct()
     {
         $ds = DIRECTORY_SEPARATOR;
-        $this->filepath = __DIR__."{$ds}DemoFiles{$ds}";
+        $this->filepath = __DIR__. "{$ds}files{$ds}";
     }
 
     public function setContainer(ContainerInterface $container = null)
@@ -84,6 +87,11 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         );
 
         $this->createUser($manager);
+
+        // homepage
+        $this->loadFixture(new LoadTypeData());
+        $this->loadFixture(new LoadContentData());
+        $this->loadFixture(new LoadRegionData());
 
         $end = time();
         $duration = $this->container->get('claroline.utilities.misc')->timeElapsed($end - $start);
@@ -180,7 +188,11 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
     private function loadFixture(AbstractFixture $fixture)
     {
         $fixture->setReferenceRepository($this->referenceRepo);
-        $fixture->setContainer($this->getContainer());
+
+        if ($fixture instanceof ContainerAwareInterface) {
+            $fixture->setContainer($this->getContainer());
+        }
+        
         $fixture->load($this->manager);
     }
 

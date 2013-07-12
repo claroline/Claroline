@@ -1,15 +1,14 @@
 <?php
 
-namespace Claroline\CoreBundle\DataFixtures;
+namespace Claroline\CoreBundle\DataFixtures\Demo;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Claroline\CoreBundle\Entity\Home\Content;
 use Claroline\CoreBundle\Entity\Home\Type;
 use Claroline\CoreBundle\Entity\Home\Content2Type;
 
-class Contents extends AbstractFixture implements OrderedFixtureInterface
+class LoadContentData extends AbstractFixture
 {
     public function load(ObjectManager $manager)
     {
@@ -21,14 +20,16 @@ class Contents extends AbstractFixture implements OrderedFixtureInterface
             'Youtube',
             'Vimeo',
             'Simple Website',
-            "Wikipedia"
+            'Wikipedia'
         );
+        
+        $textDir = __DIR__. '/files/homepage';
 
         $texts = array(
-            "http://fr.slideshare.net/batier/claroline-connect",
-            file_get_contents(__DIR__."/files/text1.txt", "r"),
+            'http://fr.slideshare.net/batier/claroline-connect',
+            file_get_contents("{$textDir}/text1.txt", 'r'),
             "http://www.youtube.com/watch?v=4mlWeQed0_I",
-            file_get_contents(__DIR__."/files/text4.txt", "r"),
+            file_get_contents("{$textDir}/text4.txt", 'r'),
             'http://youtu.be/4mlWeQed0_I',
             'http://vimeo.com/63773788',
             'http://www.opengraph.be/',
@@ -36,22 +37,20 @@ class Contents extends AbstractFixture implements OrderedFixtureInterface
         );
 
         $generated = array(
-            file_get_contents(__DIR__."/files/text2.txt", "r"),
+            file_get_contents("{$textDir}/text2.txt", 'r'),
             '',
-            file_get_contents(__DIR__."/files/text3.txt", "r"),
+            file_get_contents("{$textDir}/text3.txt", 'r'),
             '',
-            file_get_contents(__DIR__."/files/text3.txt", "r"),
-            file_get_contents(__DIR__."/files/text5.txt", "r"),
-            file_get_contents(__DIR__."/files/text6.txt", "r"),
-            file_get_contents(__DIR__."/files/text7.txt", "r")
+            file_get_contents("{$textDir}/text3.txt", 'r'),
+            file_get_contents("{$textDir}/text5.txt", 'r'),
+            file_get_contents("{$textDir}/text6.txt", 'r'),
+            file_get_contents("{$textDir}/text7.txt", 'r')
         );
 
         $types = array("home", "home", "home", "home", "opengraph", "opengraph", "opengraph", "opengraph");
-
         $sizes = array("span5", "span7", "span8", "span4", "span12", "span12", "span12", "span12");
 
         foreach ($titles as $i => $title) {
-
             $type = $manager->getRepository("ClarolineCoreBundle:Home\Type")->findOneBy(array('name' => $types[$i]));
 
             $content[$i] = new Content();
@@ -70,16 +69,9 @@ class Contents extends AbstractFixture implements OrderedFixtureInterface
             $contentType->setSize($sizes[$i]);
 
             $manager->persist($contentType);
-
             $manager->persist($content[$i]);
 
             $manager->flush();
-
         }
-    }
-
-    public function getOrder()
-    {
-        return 8; // the order in which fixtures will be loaded
     }
 }

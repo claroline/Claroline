@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Tests\DataFixtures;
+namespace Claroline\CoreBundle\DataFixtures\Demo;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Doctrine\Common\DataFixtures\AbstractFixture;

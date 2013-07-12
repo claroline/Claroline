@@ -1,10 +1,9 @@
 <?php
 
-namespace Claroline\CoreBundle\DataFixtures;
+namespace Claroline\CoreBundle\DataFixtures\Demo;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Claroline\CoreBundle\Entity\Home\Content;
 use Claroline\CoreBundle\Entity\Home\SubContent;
 use Claroline\CoreBundle\Entity\Home\Region;
@@ -12,7 +11,7 @@ use Claroline\CoreBundle\Entity\Home\Content2Region;
 use Claroline\CoreBundle\Entity\Home\Type;
 use Claroline\CoreBundle\Entity\Home\Content2Type;
 
-class Regions extends AbstractFixture implements OrderedFixtureInterface
+class LoadRegionData extends AbstractFixture
 {
     public function load(ObjectManager $manager)
     {
@@ -114,10 +113,5 @@ class Regions extends AbstractFixture implements OrderedFixtureInterface
         $manager->persist($contentRegion);
 
         $manager->flush();
-    }
-
-    public function getOrder()
-    {
-        return 9; // the order in which fixtures will be loaded
     }
 }

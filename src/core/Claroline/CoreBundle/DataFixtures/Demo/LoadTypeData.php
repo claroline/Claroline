@@ -1,13 +1,12 @@
 <?php
 
-namespace Claroline\CoreBundle\DataFixtures;
+namespace Claroline\CoreBundle\DataFixtures\Demo;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Claroline\CoreBundle\Entity\Home\Type;
 
-class Types extends AbstractFixture implements OrderedFixtureInterface
+class LoadTypeData extends AbstractFixture
 {
     public function load(ObjectManager $manager)
     {
@@ -21,10 +20,5 @@ class Types extends AbstractFixture implements OrderedFixtureInterface
         }
 
         $manager->flush();
-    }
-
-    public function getOrder()
-    {
-        return 7; // the order in which fixtures will be loaded
     }
 }

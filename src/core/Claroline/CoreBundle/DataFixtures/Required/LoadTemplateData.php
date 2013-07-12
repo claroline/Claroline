@@ -46,6 +46,6 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
      */
     public function getOrder()
     {
-        return 10;
+        return 7;
     }
 }
