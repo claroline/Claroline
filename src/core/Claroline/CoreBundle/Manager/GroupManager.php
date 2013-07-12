@@ -2,11 +2,11 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\CoreBundle\Database\Writer;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Repository\GroupRepository;
 use Claroline\CoreBundle\Pager\PagerFactory;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -15,6 +15,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 class GroupManager
 {
     private $writer;
+    /** @var GroupRepository */
     private $groupRepo;
     private $pagerFactory;
 
@@ -22,35 +23,36 @@ class GroupManager
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "groupRepo"      = @DI\Inject("claroline.repository.group_repository"),
-     *     "writer"         = @DI\Inject("claroline.database.writer"),
-     *     "pagerFactory"   = @DI\Inject("claroline.pager.pager_factory")
+     * "om"           = @DI\Inject("claroline.persistence.object_manager"),
+     * "pagerFactory" = @DI\Inject("claroline.pager.pager_factory")
      * })
      */
     public function __construct(
-        GroupRepository $groupRepo,
-        Writer $writer,
+        ObjectManager $om,
         PagerFactory $pagerFactory
     )
     {
-        $this->writer = $writer;
-        $this->groupRepo = $groupRepo;
+        $this->om = $om;
+        $this->groupRepo = $om->getRepository('ClarolineCoreBundle:Group');
         $this->pagerFactory = $pagerFactory;
     }
 
     public function insertGroup(Group $group)
     {
-        $this->writer->create($group);
+        $this->om->persist($group);
+        $this->om->flush();
     }
 
     public function deleteGroup(Group $group)
     {
-        $this->writer->delete($group);
+        $this->om->remove($group);
+        $this->om->flush();
     }
 
     public function updateGroup(Group $group)
     {
-        $this->writer->update($group);
+        $this->om->persist($group);
+        $this->om->flush();
     }
 
     public function addUsersToGroup(Group $group, array $users)
@@ -58,7 +60,9 @@ class GroupManager
         foreach ($users as $user) {
             $group->addUser($user);
         }
-        $this->writer->update($group);
+        
+        $this->om->persist($group);
+        $this->om->flush();
     }
 
     public function removeUsersFromGroup(Group $group, array $users)
@@ -67,7 +71,8 @@ class GroupManager
             $group->removeUser($user);
         }
 
-        $this->writer->update($group);
+        $this->om->persist($group);
+        $this->om->flush();
     }
 
     public function convertGroupsToArray(array $groups)

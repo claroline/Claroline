@@ -53,7 +53,7 @@ class AdministrationController extends Controller
      *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
      *     "configHandler"      = @DI\Inject("claroline.config.platform_config_handler"),
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
-     *     "analyticsManager"   = @DI\Inject("claroline.analytics.manager"),
+     *     "analyticsManager"   = @DI\Inject("claroline.manager.analytics_manager"),
      * })
      */
     public function __construct(
