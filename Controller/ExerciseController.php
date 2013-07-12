@@ -92,7 +92,7 @@ class ExerciseController extends Controller
                 )
             );
         } else {
-            return $this->redirect($this->generateUrl('ujm_exercise_index'));
+            return $this->redirect($this->generateUrl('ujm_exercise_open'));
         }
     }
 
@@ -643,6 +643,28 @@ class ExerciseController extends Controller
                 $numQuestionToDisplayed, $interactionToDisplay, $typeInterToDisplayed,
                 $response->getPaper()->getExercise()->getDispButtonInterrupt(), $workspace
             );
+        }
+    }
+    
+    public function docimologyAction($exerciseId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($exerciseId);
+        $this->checkAccess($exercise);
+        
+        if ($this->get('security.context')->isGranted('ROLE_WS_CREATOR')) {
+        
+            $workspace = $exercise->getWorkspace();
+
+            return $this->render(
+                    'UJMExoBundle:Exercise:docimology.html.twig',
+                    array(
+                        'workspace'   => $workspace,
+                        'exoID'       => $exerciseId
+                    )
+                );
+        } else {
+            return $this->redirect($this->generateUrl('ujm_exercise_open'));
         }
     }
 

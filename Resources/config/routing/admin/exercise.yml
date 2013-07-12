@@ -1,3 +1,7 @@
+ujm_exercise_docimology:
+     pattern:  /docimology/{exerciseId}
+     defaults: { _controller: "UJMExoBundle:Exercise:docimology" }
+
 ujm_exercise_edit:
     pattern:  /{id}/edit
     defaults: { _controller: "UJMExoBundle:Exercise:edit" }
