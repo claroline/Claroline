@@ -3,25 +3,22 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Claroline\CoreBundle\Event\Event\ConfigureWidgetWorkspaceEvent;
-use Claroline\CoreBundle\Event\StrictDispatcher;
-use Claroline\CoreBundle\Event\Event\ConfigureWidgetDesktopEvent;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
+use Claroline\CoreBundle\Entity\Widget\Widget;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
 class AdministrationWidgetController extends Controller
 {
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/widgets",
      *     name="claro_admin_widgets"
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Template("ClarolineCoreBundle:Administration:widgets.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration:widgets.html.twig")
      *
      * Displays the list of widget options for the administrator.
      *
@@ -42,58 +39,62 @@ class AdministrationWidgetController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/plugin/lock/{displayConfigId}",
      *     name="claro_admin_invert_widgetconfig_lock",
      *     options={"expose"=true}
      * )
-     * @Method("POST")
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *      "displayConfig",
+     *      class="ClarolineCoreBundle:Widget\DisplayConfig",
+     *      options={"id" = "displayConfigId", "strictId" = true}
+     * )
      *
      * Sets true|false to the widget displayConfig isLockedByAdmin option.
      *
-     * @param integer $displayConfigId
+     * @param DisplayConfig $displayConfig
      *
      * @return Response
      */
-    public function invertLockWidgetAction($displayConfigId)
+    public function invertLockWidgetAction(DisplayConfig $displayConfig)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $config = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
-            ->find($displayConfigId);
-        $config->invertLock();
-        $em->persist($config);
+        $displayConfig->invertLock();
+        $em->persist($displayConfig);
         $em->flush();
 
         return new Response('success', 204);
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "widget/{widgetId}/configuration/workspace",
      *     name="claro_admin_widget_configuration_workspace",
      *     options={"expose"=true}
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "widget",
+     *      class="ClarolineCoreBundle:Widget\Widget",
+     *      options={"id" = "widgetId", "strictId" = true}
+     * )
      *
      * Asks a widget to render its configuration form for a workspace.
      *
-     * @param type $widgetId the widget id.
+     * @param Widget $widget
      *
-     * @Template("ClarolineCoreBundle:Administration:widgetConfiguration.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration:widgetConfiguration.html.twig")
      *
      * @return Response
      *
      * @throws \Exception
      */
-    public function configureWorkspaceWidgetAction($widgetId)
+    public function configureWorkspaceWidgetAction(Widget $widget)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
-            ->find($widgetId);
-        
         $event = $this->get('claroline.event.event_dispatcher')->dispatch(
-            "widget_{$widget->getName()}_configuration_workspace", 
-            'ConfigureWidgetWorkspace', 
+            "widget_{$widget->getName()}_configuration_workspace",
+            'ConfigureWidgetWorkspace',
             array(null, true)
         );
 
@@ -101,57 +102,61 @@ class AdministrationWidgetController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "widget/{widgetId}/configuration/desktop",
      *     name="claro_admin_widget_configuration_desktop",
      *     options={"expose"=true}
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "widget",
+     *      class="ClarolineCoreBundle:Widget\Widget",
+     *      options={"id" = "widgetId", "strictId" = true}
+     * )
      *
      * Asks a widget to render its configuration form for a workspace.
      *
-     * @param type $widgetId the widget id.
+     * @param Widget $widget
      *
-     * @Template("ClarolineCoreBundle:Administration:widgetConfiguration.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration:widgetConfiguration.html.twig")
      *
      * @return Response
      *
      * @throws \Exception
      */
-    public function configureDesktopWidgetAction($widgetId)
+    public function configureDesktopWidgetAction(Widget $widget)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
-            ->find($widgetId);
-        
         $event = $this->get('claroline.event.event_dispatcher')->dispatch(
-                    "widget_{$widget->getName()}_configuration_desktop",
-                    "ConfigureWidgetDesktop",
-                    array(null, true)
-              );
-      
+            "widget_{$widget->getName()}_configuration_desktop",
+            "ConfigureWidgetDesktop",
+            array(null, true)
+        );
+
         return array('content' => $event->getContent());
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/plugin/visible/{displayConfigId}",
      *     name="claro_admin_invert_widgetconfig_visible",
      *     options={"expose"=true}
      * )
-     * @Method("POST")
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *      "displayConfig",
+     *      class="ClarolineCoreBundle:Widget\DisplayConfig",
+     *      options={"id" = "displayConfigId", "strictId" = true}
+     * )
      *
      * Sets true|false to the widget displayConfig isVisible option.
      *
-     * @param integer $displayConfigId
+     * @param DisplayConfig $displayConfig
      */
-    public function invertVisibleWidgetAction($displayConfigId)
+    public function invertVisibleWidgetAction(DisplayConfig $displayConfig)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $config = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
-            ->find($displayConfigId);
-        $config->invertVisible();
-        $em->persist($config);
+        $displayConfig->invertVisible();
+        $em->persist($displayConfig);
         $em->flush();
 
         return new Response('success', 204);
