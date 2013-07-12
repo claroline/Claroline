@@ -61,7 +61,7 @@ class PaperController extends Controller
     public function indexAction($exoID, $page)
     {
         $exoAdmin = false;
-        
+
         $user = $this->container->get('security.context')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
@@ -108,6 +108,12 @@ class PaperController extends Controller
             throw $this->createNotFoundException("Cette page n'existe pas.");
         }
 
+        if (count($paper) > 0) {
+            $display = $this->ctrlDisplayPaper($user, $paper[0], $subscription);
+        } else {
+            $display = 'all';
+        }
+
         return $this->render(
             'UJMExoBundle:Paper:index.html.twig',
             array(
@@ -115,7 +121,8 @@ class PaperController extends Controller
                 'papers'    => $papers,
                 'isAdmin'   => $exoAdmin,
                 'pager' => $pagerfanta,
-                'exoID' => $exoID
+                'exoID' => $exoID,
+                'display' => $display
             )
         );
     }
@@ -134,29 +141,9 @@ class PaperController extends Controller
 
         $worspace = $paper->getExercise()->getWorkspace();
 
-        if (($this->checkAccess($paper->getExercise())) && ($paper->getEnd() == null)) {
+        $display = $this->ctrlDisplayPaper($user, $paper, $subscription);
 
-            return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $paper->getExercise()->getId())));
-
-        } else if (((isset($subscription[0])) && ($subscription[0]->getAdmin() == 1)) || (($user->getId() == $paper->getUser()->getId()) &&
-            (($paper->getExercise()->getCorrectionMode() == 1) ||
-            (($paper->getExercise()->getCorrectionMode() == 3) &&
-            ($paper->getExercise()->getDateCorrection()->format('Y-m-d H:i:s') <= date("Y-m-d H:i:s"))) ||
-            (($paper->getExercise()->getCorrectionMode() == 2) &&
-            ($paper->getExercise()->getMaxAttemps() <= $this->container->get('UJM_Exo.exerciseServices')->getNbPaper(
-                $user->getId(), $paper->getExercise()->getId())
-            )
-            )
-            )
-            )
-        ) {
-
-            $display = 'all';
-
-        } else if (($user->getId() == $paper->getUser()->getId()) && ($paper->getExercise()->getMarkMode() == 2)) {
-            // If not allowed to see correction but mark can be displayed at the end of the assessment
-            $display = 'score';
-        } else {
+        if ((($this->checkAccess($paper->getExercise())) && ($paper->getEnd() == null)) || ($display == 'none')) {
             return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $paper->getExercise()->getId())));
         }
 
@@ -278,7 +265,7 @@ class PaperController extends Controller
 
         return $subscription;
     }
-    
+
     private function checkAccess($exo)
     {
         $collection = new ResourceCollection(array($exo));
@@ -286,5 +273,25 @@ class PaperController extends Controller
         if (!$this->get('security.context')->isGranted('OPEN', $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
+    }
+
+    private function ctrlDisplayPaper($user, $paper, $subscription)
+    {
+        $display = 'none';
+
+        if (((isset($subscription[0])) && ($subscription[0]->getAdmin() == 1)) ||
+            ($user->getId() == $paper->getUser()->getId()) &&
+            (($paper->getExercise()->getCorrectionMode() == 1) ||
+            (($paper->getExercise()->getCorrectionMode() == 3) &&
+            ($paper->getExercise()->getDateCorrection()->format('Y-m-d H:i:s') <= date("Y-m-d H:i:s"))) ||
+            (($paper->getExercise()->getCorrectionMode() == 2) &&
+            ($paper->getExercise()->getMaxAttemps() <= $this->container->get('UJM_Exo.exerciseServices')->getNbPaper($user->getId(),
+            $paper->getExercise()->getId())
+            )))) {
+                $display = 'all';
+        } else if (($user->getId() == $paper->getUser()->getId()) && ($paper->getExercise()->getMarkMode() == 2)) {
+            $display = 'score';
+        }
+        return $display;
     }
 }

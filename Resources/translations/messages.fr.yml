@@ -72,7 +72,8 @@ Finish: Terminer
 From: A partir du
 Group: Groupe
 Hint: Indice
-Interupt: Interrompu
+Interupt: Interrompre
+isInterupt: Interrompu
 Import: Importer
 Import questions: Importer des questions
 List: Liste

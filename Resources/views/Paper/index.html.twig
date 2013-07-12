@@ -75,10 +75,12 @@
                         <i class="icon-chevron-down" id="downE"  style="display: none;"></i>
                         {{ "End date" | trans }}
                     </th>
-                    <th style="text-align: center">{{ "Interupt" | trans }}
+                    <th style="text-align: center">{{ "isInterupt" | trans }}
                     </th>
-                    <th style="text-align: center">{{ "Actions" | trans }}
-                    </th>
+                    {% if display != 'none' %}
+                        <th style="text-align: center">{{ "Actions" | trans }}
+                        </th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -101,20 +103,22 @@
                     </td>
                     <td style="text-align: center; vertical-align: middle;">
                         {% if paper.interupt %}
-                            {{ paper.interupt }}
+                            {{ 'yes'|trans }}
                         {% else %}
                             {{ 'no'|trans }}
                         {% endif %}
                     </td>
-                    <td style="text-align: center; vertical-align: middle;">
-                        <ul style="text-align: center; vertical-align: middle; list-style-type: none; margin-left: 0;">
-                            <li>
-                                {% if ((paper.end) or (isAdmin == 1)) %}
-                                    <a href="{{ path('ujm_paper_show', { 'id': paper.id }) }}">{{ 'Show'|trans }}</a>
-                                {% endif %}
-                            </li>
-                        </ul>
-                    </td>
+                    {% if display != 'none' %}
+                        <td style="text-align: center; vertical-align: middle;">
+                            <ul style="text-align: center; vertical-align: middle; list-style-type: none; margin-left: 0;">
+                                <li>
+                                    {% if ((paper.end) or (isAdmin == 1)) %}
+                                        <a href="{{ path('ujm_paper_show', { 'id': paper.id }) }}">{{ 'Show'|trans }}</a>
+                                    {% endif %}
+                                </li>
+                            </ul>
+                        </td>
+                    {% endif %}
                 </tr>
             {% endfor %}
             </tbody>

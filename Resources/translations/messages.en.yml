@@ -73,6 +73,7 @@ From: From
 Group: Group
 Hint: Hint
 Interupt: Interupt
+isInterupt: Interupted
 Import: Import
 Import questions: Import questions
 List: List
