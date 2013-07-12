@@ -322,7 +322,7 @@ class ResourceManagerTest extends MockeryTestCase
         $this->om->shouldReceive('persist')->once()->with($child);
         $this->om->shouldReceive('flush')->once();
         $this->eventDispatcher->shouldReceive('dispatch')->once()
-            ->with('log', 'Log\ResourceMove', array($child, $parent));
+            ->with('log', 'Log\LogResourceMove', array($child, $parent));
         $manager->move($child, $parent);
     }
 
@@ -342,7 +342,7 @@ class ResourceManagerTest extends MockeryTestCase
         $this->om->shouldReceive('startFlushSuite')->once();
         $this->om->shouldReceive('endFlushSuite')->once();
         $this->eventDispatcher->shouldReceive('dispatch')->once()
-            ->with('log', 'Log\ResourceDelete', array($resource));
+            ->with('log', 'Log\LogResourceDelete', array($resource));
         $manager->delete($resource);
     }
 
@@ -402,7 +402,7 @@ class ResourceManagerTest extends MockeryTestCase
         $shortcut->shouldReceive('setName')->once();
         $shortcut->shouldReceive('setResource')->once()->with($target);
         $this->eventDispatcher->shouldReceive('dispatch')->once()
-            ->with('log', 'Log\ResourceCreate', array($shortcut));
+            ->with('log', 'Log\LogResourceCreate', array($shortcut));
         $manager->makeShortcut($target, $parent, $creator, $shortcut);
     }
 
@@ -416,12 +416,14 @@ class ResourceManagerTest extends MockeryTestCase
      */
     public function testRename()
     {
+        $manager = $this->getManager(array('logChangeSet'));
         $resource = m::mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
         $resource->shouldReceive('setName')->once()->with('name');
         $this->om->shouldReceive('persist')->once()->with($resource);
         $this->om->shouldReceive('flush')->once();
+        $manager->shouldReceive('logChangeSet')->once()->with($resource);
         
-        $this->assertEquals($resource, $this->getManager()->rename($resource, 'name'));
+        $this->assertEquals($resource, $manager->rename($resource, 'name'));
     }
     
     /**
@@ -429,13 +431,17 @@ class ResourceManagerTest extends MockeryTestCase
      */
     public function testChangeIcon()
     {
+        $manager = $this->getManager(array('logChangeSet'));
         $resource = new \Claroline\CoreBundle\Entity\Resource\Directory();
         $file = m::mock('Symfony\Component\HttpFoundation\File\UploadedFile');
         $icon = new \Claroline\CoreBundle\Entity\Resource\ResourceIcon();
         $this->iconManager->shouldReceive('createCustomIcon')->once()->with($file)->andReturn($icon);
         $this->iconManager->shouldReceive('replace')->once()->with($resource, $icon);
+        $this->om->shouldReceive('startFlushSuite')->once();
+        $this->om->shouldReceive('endFlushSuite')->once();
+        $manager->shouldReceive('logChangeSet')->once()->with($resource);
         
-        $this->assertEquals($icon, $this->getManager()->changeIcon($resource, $file));
+        $this->assertEquals($icon, $manager->changeIcon($resource, $file));
     }
 
     public function isPathValidProvider()
