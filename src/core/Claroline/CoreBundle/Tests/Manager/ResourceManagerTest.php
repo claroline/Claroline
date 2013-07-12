@@ -321,8 +321,8 @@ class ResourceManagerTest extends MockeryTestCase
         $child->shouldReceive('setName')->once()->with('name');
         $this->om->shouldReceive('persist')->once()->with($child);
         $this->om->shouldReceive('flush')->once();
-//        $this->eventDispatcher->shouldReceive('dispatch')->once()
-//            ->with('log', 'Log\ResourceMoveEvent', array($child, $parent));
+        $this->eventDispatcher->shouldReceive('dispatch')->once()
+            ->with('log', 'Log\ResourceMove', array($child, $parent));
         $manager->move($child, $parent);
     }
 
@@ -341,7 +341,8 @@ class ResourceManagerTest extends MockeryTestCase
         $this->om->shouldReceive('remove')->once()->with($resource);
         $this->om->shouldReceive('startFlushSuite')->once();
         $this->om->shouldReceive('endFlushSuite')->once();
-//        $this->eventDispatcher->shouldReceive('dispatch')->once()->with('log', 'Log\ResourceDeleteEvent', array($resource));
+        $this->eventDispatcher->shouldReceive('dispatch')->once()
+            ->with('log', 'Log\ResourceDelete', array($resource));
         $manager->delete($resource);
     }
 
@@ -400,7 +401,8 @@ class ResourceManagerTest extends MockeryTestCase
         $parent->shouldReceive('getWorkspace')->once()->andReturn($workspace);
         $shortcut->shouldReceive('setName')->once();
         $shortcut->shouldReceive('setResource')->once()->with($target);
-//        $this->eventDispatcher->shouldReceive('dispatch')->once()->with('log', 'Log\ResourceCreateEvent', array($shortcut));
+        $this->eventDispatcher->shouldReceive('dispatch')->once()
+            ->with('log', 'Log\ResourceCreate', array($shortcut));
         $manager->makeShortcut($target, $parent, $creator, $shortcut);
     }
 
