@@ -54,6 +54,11 @@
                 type: 'PUT'
             });
         });
+
+        $('#modal-cancel-button').click(function () {
+            $('#validation-box').modal('hide');
+            $('#validation-box-body').empty();
+        });
     }
 
     initEvents();
