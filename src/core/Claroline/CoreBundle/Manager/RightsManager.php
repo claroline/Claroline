@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
@@ -31,18 +32,22 @@ class RightsManager
     private $translator;
     /** @var ObjectManager */
     private $om;
+    /** @var StrictDispatcher */
+    private $dispatcher;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
      *     "translator" =    @DI\Inject("translator"),
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om" = @DI\Inject("claroline.persistence.object_manager"),
+     *     "dispatcher" = @DI\Inject("claroline.event.event_dispatcher")
      * })
      */
     public function __construct(
         Translator $translator,
-        ObjectManager $om
+        ObjectManager $om,
+        StrictDispatcher $dispatcher
     )
     {
         $this->rightsRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
@@ -51,6 +56,7 @@ class RightsManager
         $this->resourceTypeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
         $this->translator = $translator;
         $this->om = $om;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -81,7 +87,9 @@ class RightsManager
         $isRecursive
     )
     {
-        $this->om->startFlushSuite();
+        //Bugfix: If the flushSuite is uncommented, doctrine returns an error
+        //(ResourceRights duplicata)
+        //$this->om->startFlushSuite();
             
         $arRights = ($isRecursive) ?
             $this->updateRightsTree($role, $resource):
@@ -90,9 +98,10 @@ class RightsManager
         foreach ($arRights as $toUpdate) {
             $this->setPermissions($toUpdate, $permissions);
             $this->om->persist($toUpdate);
+            $this->logChangeSet($toUpdate);
         }
 
-        $this->om->endFlushSuite();
+        //$this->om->endFlushSuite();
 
         return $arRights;
     }
@@ -113,6 +122,7 @@ class RightsManager
         foreach ($arRights as $toUpdate) {
             $toUpdate->setCreatableResourceTypes($resourceTypes);
             $this->om->persist($toUpdate);
+            $this->logChangeSet($toUpdate);
         }
 
         $this->om->endFlushSuite();
@@ -176,7 +186,7 @@ class RightsManager
         }
         
         $this->om->flush();
-
+        
         return $finalRights;
     }
 
@@ -245,7 +255,6 @@ class RightsManager
             $rights->setCreatableResourceTypes($creations);
             $this->om->persist($rights);
         }
-        
         $this->om->endFlushSuite();
     }
 
@@ -267,5 +276,20 @@ class RightsManager
     public function getResourceTypes()
     {
        return $this->resourceTypeRepo->findAll();
+    }
+    
+    public function logChangeSet(ResourceRights $rights)
+    {
+        $uow = $this->om->getUnitOfWork();
+        $uow->computeChangeSets();
+        $changeSet = $uow->getEntityChangeSet($rights);
+
+        if (count($changeSet > 0)) {
+            $this->dispatcher->dispatch(
+                'log', 
+                'Log\LogWorkspaceRoleChangeRight', 
+                array($rights->getRole(), $rights->getResource(), $changeSet)
+            );
+        }
     }
 }
