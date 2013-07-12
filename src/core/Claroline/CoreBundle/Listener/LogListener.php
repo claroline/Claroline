@@ -11,6 +11,7 @@ use Claroline\CoreBundle\Event\Event\Log\LogNotRepeatableInterface;
 use Claroline\CoreBundle\Entity\Logger\Log;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Doctrine\ORM\EntityManager;
 
@@ -20,29 +21,27 @@ use Doctrine\ORM\EntityManager;
  */
 class LogListener
 {
-    private $em;
+    private $om;
     private $securityContext;
     private $container;
     private $roleManager;
 
     /**
      * @DI\InjectParams({
-     *     "em"             = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
      *     "context"        = @DI\Inject("security.context"),
      *     "container"      = @DI\Inject("service_container"),
      *     "roleManager"    = @DI\Inject("claroline.manager.role_manager")
      * })
-     *
-     * @param \Doctrine\ORM\EntityManager $em
      */
     public function __construct(
-        EntityManager $em,
+        ObjectManager $om,
         SecurityContextInterface $context,
         $container,
         RoleManager $roleManager
     )
     {
-        $this->em = $em;
+        $this->om = $om;
         $this->securityContext = $context;
         $this->container = $container;
         $this->roleManager = $roleManager;
@@ -50,8 +49,8 @@ class LogListener
 
     private function createLog(LogGenericEvent $event)
     {
-        $this->em->flush();
-
+        //why is the flush required ?
+        //$om->flush();
         //Add doer details
         $token = $this->securityContext->getToken();
         $doer = null;
@@ -167,8 +166,8 @@ class LogListener
         }
         $log->setDetails($details);
 
-        $this->em->persist($log);
-        $this->em->flush();
+        $this->om->persist($log);
+        $this->om->flush();
     }
 
     /**
