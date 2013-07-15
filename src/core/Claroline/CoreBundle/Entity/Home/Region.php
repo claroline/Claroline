@@ -7,8 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Region
  *
+ * @ORM\Entity()
  * @ORM\Table(name="claro_region")
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\RegionRepository")
  */
 class Region
 {

@@ -76,7 +76,7 @@ abstract class AbstractResource
      *     inversedBy="abstractResources",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     protected $resourceType;
 
@@ -86,7 +86,7 @@ abstract class AbstractResource
      *     inversedBy="abstractResources",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id",onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     protected $creator;
 
@@ -95,7 +95,7 @@ abstract class AbstractResource
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceIcon",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="icon_id", referencedColumnName="id",onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(name="icon_id", referencedColumnName="id",onDelete="CASCADE", nullable=true)
      */
     protected $icon;
 
@@ -121,7 +121,7 @@ abstract class AbstractResource
      *     fetch="EAGER"
      * )
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="SET NULL", nullable=true)
+     *   @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      * })
      */
     protected $parent;
@@ -172,10 +172,6 @@ abstract class AbstractResource
      * )
      */
     protected $rights;
-
-    //The user icon.
-    //Used by some forms.
-    protected $userIcon;
 
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
@@ -254,6 +250,20 @@ abstract class AbstractResource
     }
 
     /**
+     * Sets the resource creation date.
+     *
+     * NOTE : creation date is already handled by the timestamp listener; this
+     *        setter exists mainly for testing purposes.
+     *
+     * @param \DateTime $date
+     */
+    public function setCreationDate(\DateTime $date)
+    {
+        $this->creationDate = $date;
+        $this->modificationDate = $date;
+    }
+
+    /**
      * Returns the resource modification date.
      *
      * @return \DateTime
@@ -262,6 +272,14 @@ abstract class AbstractResource
     {
         return $this->modificationDate;
     }
+
+
+
+    public function setModificationDate(\DateTime $date)
+    {
+        $this->modificationDate = $date;
+    }
+
 
     /**
      * Returns the resource type.
@@ -311,16 +329,6 @@ abstract class AbstractResource
     public function getChildren()
     {
         return $this->children;
-    }
-
-    /**
-     * Adds a child resource.
-     *
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
-     */
-    public function addChild(AbstractResource $resource)
-    {
-        $this->children[] = $resource;
     }
 
     /**
@@ -429,25 +437,6 @@ abstract class AbstractResource
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Sets a user icon.
-     * @param file $iconFile
-     */
-    public function setUserIcon($userIcon)
-    {
-        $this->userIcon = $userIcon;
-    }
-
-    /**
-     * Gets the user icon.
-     *
-     * @return file
-     */
-    public function getUserIcon()
-    {
-        return $this->userIcon;
     }
 
     /**

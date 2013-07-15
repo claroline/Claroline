@@ -7,8 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Content2Region
  *
+ * @ORM\Entity()
  * @ORM\Table(name="claro_content2region")
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Content2RegionRepository")
  */
 class Content2Region
 {

@@ -3,96 +3,154 @@
 namespace Claroline\CoreBundle\Manager;
 
 use \Mockery as m;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\UserMessage;
 
 class MessageManagerTest extends MockeryTestCase
 {
-    /** @var MessageManager */
-    private $manager;
-    private $writer;
+    private $om;
+    private $pagerFactory;
     private $userRepo;
     private $messageRepo;
+    private $userMessageRepo;
+    private $manager;
 
     public function setUp()
     {
         parent::setUp();
-
-        $this->writer = m::mock('Claroline\CoreBundle\Writer\MessageWriter');
+        $this->om = m::mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->pagerFactory = m::mock('Claroline\CoreBundle\Pager\PagerFactory');
         $this->userRepo = m::mock('Claroline\CoreBundle\Repository\UserRepository');
         $this->messageRepo = m::mock('Claroline\CoreBundle\Repository\MessageRepository');
-        $this->manager = new MessageManager($this->userRepo, $this->messageRepo, $this->writer);
+        $this->userMessageRepo = m::mock('Claroline\CoreBundle\Repository\UserMessageRepository');
+        $this->om->shouldReceive('getRepository')
+            ->with('ClarolineCoreBundle:User')
+            ->andReturn($this->userRepo);
+        $this->om->shouldReceive('getRepository')
+            ->with('ClarolineCoreBundle:Message')
+            ->andReturn($this->messageRepo);
+        $this->om->shouldReceive('getRepository')
+            ->with('ClarolineCoreBundle:UserMessage')
+            ->andReturn($this->userMessageRepo);
+        $this->manager = new MessageManager($this->om, $this->pagerFactory);
     }
 
-    public function testCreate()
+    public function testSend()
     {
-        $this->markTestSkipped('error on create');
-        $user = m::mock('Claroline\CoreBundle\Entity\User');
-        $user1 = m::mock('Claroline\CoreBundle\Entity\User');
-        $user2 = m::mock('Claroline\CoreBundle\Entity\User');
+        $sender = new User();
+        $receiver1 = new User();
+        $receiver2 = new User();
         $msg = m::mock('Claroline\CoreBundle\Entity\Message');
+        $msgParent = m::mock('Claroline\CoreBundle\Entity\Message');
+        $userMessage1 = m::mock('Claroline\CoreBundle\Entity\UserMessage');
+        $userMessage2 = m::mock('Claroline\CoreBundle\Entity\UserMessage');
+        $userMessage3 = m::mock('Claroline\CoreBundle\Entity\UserMessage');
 
-        $this->userRepo
-            ->shouldReceive('findByUsernames')
-            ->with(array('username1', 'username2'))
-            ->andReturn(array($user1, $user2));
-        $this->writer
-            ->shouldReceive('create')
-            ->with($user, 'username1;username2', array($user1, $user2), 'content', 'object')
-            ->andReturn($msg);
-
-        //User $sender, $receiverString, array $receivers, $content, $object, Msg $parent = null
-        $this->manager->create($user, 'username1;username2', 'content', 'object');
-    }
-
-    public function testMarkAsRead()
-    {
-        $user = m::mock('Claroline\CoreBundle\Entity\User');
-        $msg = m::mock('Claroline\CoreBundle\Entity\Message');
-        $usrMsg = m::mock('Claroline\CoreBundle\Entity\UserMessage');
-
-        $this->messageRepo
-            ->shouldReceive('findUserMessages')
+        $msg->shouldReceive('getTo')->once()->andReturn('user1;user2');
+        $this->userRepo->shouldReceive('findByUsernames')
             ->once()
-            ->with($user, array($msg))
-            ->andReturn(array($usrMsg));
+            ->with(array('user1','user2'))
+            ->andReturn(array($receiver1, $receiver2));
+        $msg->shouldReceive('setSender')->once()->with($sender);
+        $msg->shouldReceive('setParent')->once()->with($msgParent);
+        $this->om->shouldReceive('persist')->once()->with($msg);
+        $this->om->shouldReceive('factory')
+            ->times(3)
+            ->with('Claroline\CoreBundle\Entity\UserMessage')
+            ->andReturn($userMessage1, $userMessage2, $userMessage3);
+        $userMessage1->shouldReceive('setIsSent')->once()->with(true);
+        $userMessage1->shouldReceive('setUser')->once()->with($sender);
+        $userMessage1->shouldReceive('setMessage')->once()->with($msg);
+        $userMessage2->shouldReceive('setUser')->once()->with($receiver1);
+        $userMessage2->shouldReceive('setMessage')->once()->with($msg);
+        $userMessage3->shouldReceive('setUser')->once()->with($receiver2);
+        $userMessage3->shouldReceive('setMessage')->once()->with($msg);
+        $this->om->shouldReceive('persist')->once()->with($userMessage1);
+        $this->om->shouldReceive('persist')->once()->with($userMessage2);
+        $this->om->shouldReceive('persist')->once()->with($userMessage3);
+        $this->om->shouldReceive('flush')->once();
 
-        $this->writer->shouldReceive('markAsRead')->once()->with($usrMsg);
-        $this->manager->markAsRead($user, array($msg));
+        $this->manager->send($sender, $msg, $msgParent);
     }
 
-    public function testMarkAsRemoved()
+    /**
+     * @dataProvider getMessagesProvider
+     */
+    public function testGetMessages($repoMethod, $managerMethod)
     {
         $user = m::mock('Claroline\CoreBundle\Entity\User');
-        $msg = m::mock('Claroline\CoreBundle\Entity\Message');
-        $usrMsg = m::mock('Claroline\CoreBundle\Entity\UserMessage');
-
-        $this->messageRepo
-            ->shouldReceive('findUserMessages')
-            ->once()
-            ->with($user, array($msg))
-            ->andReturn(array($usrMsg));
-
-        $this->writer->shouldReceive('markAsRemoved')->once()->with($usrMsg);
-
-        $this->manager->markAsRemoved($user, array($msg));
+        $query = new \Doctrine\ORM\Query(m::mock('Doctrine\ORM\EntityManager'));
+        $this->userMessageRepo->shouldReceive($repoMethod)->once()->with($user, '')->andReturn($query);
+        $this->pagerFactory->shouldReceive('createPager')->once()->with($query, 1)->andReturn('pager');
+        $this->assertEquals('pager', $this->manager->{$managerMethod}($user, '', 1));
     }
 
-    public function testMarkAsUnremoved()
+    /**
+     * @dataProvider findMessagesProvider
+     */
+    public function testFindMessages($repoMethod, $search, $managerMethod)
     {
         $user = m::mock('Claroline\CoreBundle\Entity\User');
-        $msg = m::mock('Claroline\CoreBundle\Entity\Message');
-        $usrMsg = m::mock('Claroline\CoreBundle\Entity\UserMessage');
+        $query = new \Doctrine\ORM\Query(m::mock('Doctrine\ORM\EntityManager'));
+        $this->userMessageRepo->shouldReceive($repoMethod)->once()->with($user, $search, false)->andReturn($query);
+        $this->pagerFactory->shouldReceive('createPager')->once()->with($query, 1)->andReturn('pager');
+        $this->assertEquals('pager', $this->manager->{$managerMethod}($user, $search, 1));
+    }
 
-        $this->messageRepo
-            ->shouldReceive('findUserMessages')
+    public function getMessagesProvider()
+    {
+        return array(
+            array('findReceived', 'getReceivedMessages'),
+            array('findSent', 'getSentMessages'),
+            array('findRemoved', 'getRemovedMessages')
+        );
+    }
+
+    public function findMessagesProvider()
+    {
+        return array(
+            array('findReceivedByObjectOrSender', 'foo', 'getReceivedMessages'),
+            array('findSentByObject', 'foo', 'getSentMessages'),
+            array('findRemovedByObjectOrSender', 'foo', 'getRemovedMessages')
+        );
+    }
+
+    /**
+     * @dataProvider testMarkAsReadProvider
+     */
+    public function testSetMarkAsRead($flag, $managerMethod)
+    {
+        $user = m::mock('Claroline\CoreBundle\Entity\User');
+        $usrMsg1 = m::mock('Claroline\CoreBundle\Entity\UserMessage');
+        $usrMsg2 = m::mock('Claroline\CoreBundle\Entity\UserMessage');
+        $this->userMessageRepo->shouldReceive('findByMessages')
             ->once()
-            ->with($user, array($msg))
-            ->andReturn(array($usrMsg));
+            ->with($user, array('message1', 'message2'))
+            ->andReturn(array($usrMsg1, $usrMsg2));
+        $usrMsg1->shouldReceive('markAs' . $flag)->once();
+        $usrMsg2->shouldReceive('markAs' . $flag)->once();
+        $this->om->shouldReceive('persist')->with($usrMsg1)->once();
+        $this->om->shouldReceive('persist')->with($usrMsg2)->once();
+        $this->om->shouldReceive('flush')->once();
+        $this->manager->{$managerMethod}($user, array('message1', 'message2'));
+    }
 
-        $this->writer->shouldReceive('markAsUnremoved')->once()->with($usrMsg);
+    public function testMarkAsReadProvider()
+    {
+        return array(
+            array('Read','markAsRead'),
+            array('Removed','markAsRemoved'),
+            array('Unremoved','markAsUnremoved')
+        );
+    }
 
-        $this->manager->markAsUnremoved($user, array($msg));
+    public function testGetConversation()
+    {
+        $msg = m::mock('Claroline\CoreBundle\Entity\Message');
+
+        $this->messageRepo->shouldReceive('findAncestors')->with($msg)->andReturn($msg);
+        $this->assertEquals($msg, $this->manager->getConversation($msg));
     }
 
     public function testRemove()
@@ -101,42 +159,24 @@ class MessageManagerTest extends MockeryTestCase
         $msg = m::mock('Claroline\CoreBundle\Entity\Message');
         $usrMsg = m::mock('Claroline\CoreBundle\Entity\UserMessage');
 
-        $this->messageRepo
-            ->shouldReceive('findUserMessages')
-            ->once()
-            ->with($user, array($msg))
-            ->andReturn(array($usrMsg));
-
-        $this->writer->shouldReceive('remove')->once()->with($usrMsg);
-
+        $this->userMessageRepo->shouldReceive('findByMessages')->once()->andReturn(array($usrMsg));
+        $this->om->shouldReceive('remove')->with($usrMsg)->once();
+        $this->om->shouldReceive('flush')->once();
         $this->manager->remove($user, array($msg));
     }
 
-    public function testGenerateGroupQueryString()
+    public function testgenerateGroupeQrStr()
     {
         $group = m::mock('Claroline\CoreBundle\Entity\Group');
-        $user1 = m::mock('Claroline\CoreBundle\Entity\User');
-        $user2 = m::mock('Claroline\CoreBundle\Entity\User');
+        $users = array();
 
-        $this->userRepo->shouldReceive('findByGroup')->with($group)->andReturn(array($user1, $user2));
-        $user1->shouldReceive('getId')->andReturn(1);
-        $user2->shouldReceive('getId')->andReturn(2);
+        for ($i = 0; $i < 3; $i++) {
+            $user = m::mock('Claroline\CoreBundle\Entity\User');
+            $user->shouldReceive('getId')->once()->andReturn($i);
+            $users[] = $user;
+            }
 
-        $urlParameters = $this->manager->generateGroupQueryString($group);
-        $this->assertEquals('?ids[]=1&ids[]=2', $urlParameters);
-    }
-
-    public function testGenerateStringTo()
-    {
-        $user1 = m::mock('Claroline\CoreBundle\Entity\User');
-        $user2 = m::mock('Claroline\CoreBundle\Entity\User');
-
-        $this->userRepo->shouldReceive('findByIds')->with(array(1, 2))->andReturn(array($user1, $user2));
-
-        $user1->shouldReceive('getUsername')->andReturn('user1');
-        $user2->shouldReceive('getUsername')->andReturn('user2');
-
-        $userString = $this->manager->generateStringTo(array(1, 2));
-        $this->assertEquals('user1;user2;', $userString);
-    }
+        $this->userRepo->shouldReceive('findByGroup')->once()->with($group)->andReturn($users);
+        $this->assertEquals('?ids[]=0&ids[]=1&ids[]=2', $this->manager->generateGroupQueryString($group));
+     }
 }

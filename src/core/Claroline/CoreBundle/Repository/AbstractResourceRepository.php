@@ -102,6 +102,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
                 ->whereRoleIn($roles)
                 ->whereCanOpen()
                 ->groupByResourceUserTypeAndIcon();
+
             $query = $this->_em->createQuery($builder->getDql());
             $query->setParameters($builder->getParameters());
             $children = $this->executeQuery($query);
@@ -145,6 +146,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
             ->whereParentIsNull()
             ->whereRoleIn($roles)
             ->whereCanOpen()
+            ->orderByName()
             ->getDql();
 
         $query = $this->_em->createQuery($dql);
@@ -173,7 +175,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
             $currentPath = $currentPath . $parts[$i] . '-' . $parts[$i + 1] . '`';
             $ancestor['path'] = $currentPath;
             $ancestor['name'] = $parts[$i];
-            $ancestor['id'] = (int)$parts[$i + 1];
+            $ancestor['id'] = (int) $parts[$i + 1];
             $ancestors[] = $ancestor;
         }
 
@@ -189,7 +191,6 @@ class AbstractResourceRepository extends MaterializedPathRepository
      * @param array $criteria      An array of search filters
      * @param array $roles         An array of user's roles
      * @param boolean $isRecursive Will the search follow links.
-     *
      *
      * @return array[array] An array of resources represented as arrays
      */
@@ -221,38 +222,85 @@ class AbstractResourceRepository extends MaterializedPathRepository
         return $resources;
     }
 
-    public function count()
+    /**
+     * Returns an array of different file types with the number of resources that
+     * belong to this type.
+     *
+     * @param integer $max
+     *
+     * @return array
+     */
+    public function findMimeTypesWithMostResources($max)
     {
-        $dql = "SELECT COUNT(w) FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w";
-        $query = $this->_em->createQuery($dql);
+        $qb = $this->createQueryBuilder('resource');
+        $qb->select('resource.mimeType, COUNT(resource.id) AS total')
+            ->where($qb->expr()->isNotNull('resource.mimeType'))
+            ->groupBy('resource.mimeType')
+            ->orderBy('total', 'DESC');
 
-        return $query->getSingleScalarResult();
+        if ($max > 1) {
+            $qb->setMaxResults($max);
+        }
+
+        return $qb->getQuery()->getResult();
     }
 
-    public function findResourcesByIds(array $ids)
+    /**
+     * Returns the workspace name and code of the resources whose ids are passed
+     * as argument.
+     *
+     * @param array $resourceIds
+     *
+     * @return array
+     *
+     * @throws \InvalidArgumentException if the resource ids array is empty
+     */
+    public function findWorkspaceInfoByIds(array $resourceIds)
     {
-        $dql = "SELECT resource from Claroline\CoreBundle\Entity\Resource\AbstractResource resource WHERE";
-
-        for ($i = 1, $size = count($ids); $i <= $size; $i++) {
-            $dql .= " resource.id = {$ids[$i-1]}";
-            if ($i !== $size ) {
-                $dql .= " OR ";
-            }
+        if (count($resourceIds) === 0) {
+            throw new \InvalidArgumentException('Resource ids array cannot be empty');
         }
 
+        $dql = '
+            SELECT r.id AS id, w.code AS code, w.name AS name
+            FROM Claroline\CoreBundle\Entity\Resource\AbstractResource r
+            JOIN r.workspace w
+            WHERE r.id IN (:resourceIds)
+            ORDER BY w.name ASC
+        ';
         $query = $this->_em->createQuery($dql);
-        $results = $query->getResult();
-        $orderedResult = array();
+        $query->setParameter('resourceIds', $resourceIds);
 
-        foreach ($ids as $id) {
-            foreach ($results as $res) {
-                if ($res->getId() == $id) {
-                    $orderedResult[] = $res;
-                }
-            }
+        return $query->getResult();
+    }
+
+    /**
+     * Returns all the shortcuts targeting a directory (recursive).
+     *
+     * @param array $criteria
+     * @param array $roles
+     *
+     * @return array[array] An array of resources represented as arrays
+     *
+     * @todo find a proper way to prevent infinite recursion
+     */
+    public function findRecursiveDirectoryShortcuts(array $criteria, array $roles = null)
+    {
+        $builder = new ResourceQueryBuilder();
+        $builder->selectAsArray();
+        $this->addFilters($builder, $criteria, $roles);
+        $dql = $builder->whereIsShortcut()->getDql();
+        $query = $this->_em->createQuery($dql);
+        $query->setParameters($builder->getParameters());
+        $results = $query->getResult();
+
+        foreach ($results as $result) {
+            $criteria['roots'] = array($result['target_path']);
+            $results = array_merge($this->findRecursiveDirectoryShortcuts($criteria, $roles, $results), $results);
+            $results = array_map('unserialize', array_unique(array_map('serialize', $results)));
         }
 
-        return $orderedResult;
+        return $results;
     }
 
     private function addFilters(ResourceQueryBuilder $builder,  array $criteria, array $roles = null)
@@ -285,31 +333,9 @@ class AbstractResourceRepository extends MaterializedPathRepository
         return $builder;
     }
 
-    public function findRecursiveDirectoryShortcuts(array $criteria, array $roles = null, $alreadyFound = array())
-    {
-        $builder = new ResourceQueryBuilder();
-        $builder->selectAsArray();
-        $this->addFilters($builder, $criteria, $roles);
-        $dql = $builder->whereIsShortcut()->getDql();
-        $query = $this->_em->createQuery($dql);
-        $query->setParameters($builder->getParameters());
-        $results = $query->getResult();
-
-        foreach ($results as $result) {
-            $criteria['roots'] = array($result['target_path']);
-            //Infinite loops are evil.
-            if (!in_array($result, $alreadyFound)) {
-                $results = array_merge($this->findRecursiveDirectoryShortcuts($criteria, $roles, $results), $results);
-                $results = array_map("unserialize", array_unique(array_map("serialize", $results)));
-            }
-        }
-
-        return $results;
-    }
-
     /**
      * Executes a DQL query and returns resources as entities or arrays.
-     * If it returns arrays, it add a "pathfordisplay" field in each item.
+     * If it returns arrays, it add a "pathfordisplay" field to each item.
      *
      * @param Query   $query    The query to execute
      * @param integer $offset   First row to start with
@@ -337,59 +363,6 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
             return $return;
         }
-
-        return $query->getResult();
-    }
-
-
-    /**
-     * Returns an array of different file types with the number of resources that
-     * belong in this type
-     *
-     * @return array
-     */
-    public function  mimeTypesWithMostResources ($max) 
-    {
-        $qb = $this
-            ->createQueryBuilder('resource')
-            ->select('resource.mimeType, COUNT(resource.id) AS total');
-
-        $qb->andWhere($qb->expr()->isNotNull('resource.mimeType'))
-        ->groupBy('resource.mimeType')
-        ->orderBy('total','DESC');
-        if ($max >1)
-        {
-            $qb->setMaxResults($max);
-        }
-        $query = $qb->getQuery();
-
-        return $query->getResult();
-    }
-
-    public function findWorkspaceInfoByIds(array $resourcesId)
-    {
-        if (count($resourcesId) === 0) {
-            throw new \InvalidArgumentException("Array argument cannot be empty");
-        }
-
-        $index = 0;
-        $eol = PHP_EOL;
-        $resourcesIdTest = "(";
-
-        foreach ($resourcesId as $resId) {
-            $resourcesIdTest .= $index > 0 ? "    OR " : "    ";
-            $resourcesIdTest .= "r.id = {$resId}{$eol}";
-            $index++;
-        }
-        $resourcesIdTest .= "){$eol}";
-        $dql = "
-            SELECT r.id AS id, w.code AS code, w.name AS name
-            FROM Claroline\CoreBundle\Entity\Resource\AbstractResource r
-            JOIN r.workspace w
-            WHERE {$resourcesIdTest}
-            ORDER BY w.name ASC
-        ";
-        $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
     }

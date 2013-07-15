@@ -6,9 +6,9 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Claroline\CoreBundle\Tests\DataFixtures\BatchInsert\LoadUsersData;
-use Claroline\CoreBundle\Tests\DataFixtures\BatchInsert\LoadWorkspacesData;
-use Claroline\CoreBundle\Tests\DataFixtures\BatchInsert\LoadResourcesData;
+use Claroline\CoreBundle\DataFixtures\BatchInsert\LoadUsersData;
+use Claroline\CoreBundle\DataFixtures\BatchInsert\LoadWorkspacesData;
+use Claroline\CoreBundle\DataFixtures\BatchInsert\LoadResourcesData;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 
 /**

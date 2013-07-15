@@ -4,17 +4,19 @@ namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Role;
 
 class ResourceRightsRepository extends EntityRepository
 {
     /**
+     * Returns the maximum rights on a given resource for a set of roles.
      * Used by the ResourceVoter.
      *
      * @param array[string]     $rights
      * @param AbstractResource  $resource
      *
-     * @return ResourceRights;
+     * @return array
      */
     public function findMaximumRights(array $roles, AbstractResource $resource)
     {
@@ -47,7 +49,16 @@ class ResourceRightsRepository extends EntityRepository
         return $query->getSingleResult();
     }
 
-    public function findCreationRights(array $roles, AbstractResource $resource)
+    /**
+     * Returns the resource types a set of roles is allowed to create in a given
+     * directory.
+     *
+     * @param array             $roles
+     * @param AbstractResource  $resource
+     *
+     * @return array
+     */
+    public function findCreationRights(array $roles, Directory $directory)
     {
         if (count($roles) === 0) {
             throw new \RuntimeException('Roles cannot be empty');
@@ -65,7 +76,7 @@ class ResourceRightsRepository extends EntityRepository
 
         foreach ($roles as $role) {
             $dql .= $index !== 0 ? ' OR ' : '';
-            $dql .= "resource.id = {$resource->getId()} AND role.name = '{$role}'";
+            $dql .= "resource.id = {$directory->getId()} AND role.name = '{$role}'";
             ++$index;
         }
 
@@ -74,6 +85,9 @@ class ResourceRightsRepository extends EntityRepository
         return $query->getArrayResult();
     }
 
+    /**
+     * @todo to be removed
+     */
     public function findNonAdminRights(AbstractResource $resource)
     {
         $dql = "
@@ -90,11 +104,11 @@ class ResourceRightsRepository extends EntityRepository
     }
 
     /**
-     * Find ResourceRights for each descendant of a resource.
+     * Returns all the resource rights of a resource and its descendants.
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     * @param AbstractResource $resource
      *
-     * @return array
+     * @return array[ResourceRights]
      */
     public function findRecursiveByResource(AbstractResource $resource)
     {

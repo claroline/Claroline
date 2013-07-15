@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Command\Dev;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadDemoFixture;
+use Claroline\CoreBundle\DataFixtures\Demo\LoadDemoFixture;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 
 class CreateDemoFixturesCommand extends ContainerAwareCommand
