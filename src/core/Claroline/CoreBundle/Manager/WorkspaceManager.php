@@ -170,7 +170,7 @@ class WorkspaceManager
 
         $this->om->startFlushSuite();
         $archive = new \ZipArchive();
-        $hash = $this->resourceManager->generateGuid();
+        $hash = $this->ut->generateGuid();
         $pathArch = $this->templateDir."{$hash}.zip";
         $template = new Template();
         $template->setHash("{$hash}.zip");
@@ -210,7 +210,11 @@ class WorkspaceManager
             $arTools[$tool->getName()]['name'] = $workspaceTool->getName();
 
             if ($workspaceTool->getTool()->isExportable()) {
-                $this->dispatcher->dispatch('tool_'.$tool->getName().'_to_template', 'ExportTool', array($workspace));
+                $event = $this->dispatcher->dispatch(
+                    "tool_{$tool->getName()}_to_template",
+                    'ExportTool',
+                    array($workspace)
+                );
                 $description['tools'][$tool->getName()] = $event->getConfig();
                 $description['tools'][$tool->getName()]['files'] = $event->getFilenamesFromArchive();
 
