@@ -2,14 +2,14 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
-use Claroline\CoreBundle\Library\Event\ConfigureWidgetWorkspaceEvent;
+use Claroline\CoreBundle\Event\Event\ConfigureWidgetWorkspaceEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Library\Event\ConfigureWidgetDesktopEvent;
+use Claroline\CoreBundle\Event\Event\ConfigureWidgetDesktopEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -157,9 +157,11 @@ class HomeController extends Controller
             throw new AccessDeniedException();
         }
 
-        $event = new ConfigureWidgetWorkspaceEvent($workspace);
-        $eventName = "widget_{$widget->getName()}_configuration_workspace";
-        $this->get('event_dispatcher')->dispatch($eventName, $event);
+        $event = $this->get('claroline.event.event_dispatcher')->dispatch(
+            "widget_{$widget->getName()}_configuration_workspace",
+            'ConfigureWidgetWorkspace',
+            array($workspace)
+        );
 
         if ($event->getContent() !== '') {
             if ($this->get('request')->isXMLHttpRequest()) {
@@ -175,7 +177,6 @@ class HomeController extends Controller
             );
         }
 
-        throw new \Exception("event {$eventName} didn't return any Response");
     }
 
     /**
@@ -259,9 +260,11 @@ class HomeController extends Controller
     public function desktopConfigureWidgetAction(Widget $widget)
     {
         $user = $this->get('security.context')->getToken()->getUser();
-        $event = new ConfigureWidgetDesktopEvent($user);
-        $eventName = "widget_{$widget->getName()}_configuration_desktop";
-        $this->get('event_dispatcher')->dispatch($eventName, $event);
+        $event = $this->get('claroline.event.event_dispatcher')->dispatch(
+            "widget_{$widget->getName()}_configuration_desktop",
+            'ConfigureWidgetDesktop',
+            array($user)
+        );
 
         if ($event->getContent() !== '') {
             if ($this->get('request')->isXMLHttpRequest()) {
@@ -276,8 +279,6 @@ class HomeController extends Controller
                 array('content' => $event->getContent(), 'tool' => $this->getHomeTool())
             );
         }
-
-        throw new \Exception("event $eventName didn't return any Response");
     }
 
     private function getHomeTool()

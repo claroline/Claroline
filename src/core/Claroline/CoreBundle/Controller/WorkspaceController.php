@@ -3,19 +3,26 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
-use Claroline\CoreBundle\Form\WorkspaceType;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
-use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
-use Claroline\CoreBundle\Library\Event\LogWorkspaceToolReadEvent;
-use Claroline\CoreBundle\Library\Event\LogWorkspaceDeleteEvent;
+use Claroline\CoreBundle\Event\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Event\Event\DisplayWidgetEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceToolReadEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceDeleteEvent;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Library\Security\Utilities;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Manager\WorkspaceTagManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * This controller is able to:
@@ -25,17 +32,57 @@ use Claroline\CoreBundle\Library\Event\LogWorkspaceDeleteEvent;
  */
 class WorkspaceController extends Controller
 {
-    const ABSTRACT_WS_CLASS = 'ClarolineCoreBundle:Workspace\AbstractWorkspace';
+    private $workspaceManager;
+    private $roleManager;
+    private $tagManager;
+    private $eventDispatcher;
+    private $security;
+    private $router;
+    private $utils;
+    private $formFactory;
 
     /**
-     * @Route(
+     * @DI\InjectParams({
+     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
+     *     "tagManager"         = @DI\Inject("claroline.manager.workspace_tag_manager"),
+     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "security"           = @DI\Inject("security.context"),
+     *     "router"             = @DI\Inject("router"),
+     *     "utils"              = @DI\Inject("claroline.security.utilities"),
+     *     "formFactory"        = @DI\Inject("claroline.form.factory")
+     * })
+     */
+    public function __construct(
+        WorkspaceManager $workspaceManager,
+        RoleManager $roleManager,
+        WorkspaceTagManager $tagManager,
+        StrictDispatcher $eventDispatcher,
+        SecurityContextInterface $security,
+        UrlGeneratorInterface $router,
+        Utilities $utils,
+        FormFactory $formFactory
+    )
+    {
+        $this->workspaceManager = $workspaceManager;
+        $this->roleManager = $roleManager;
+        $this->tagManager = $tagManager;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->security = $security;
+        $this->router = $router;
+        $this->utils= $utils;
+        $this->formFactory = $formFactory;
+    }
+
+    /**
+     * @EXT\Route(
      *     "/",
      *     name="claro_workspace_list",
      *     options={"expose"=true}
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Template()
+     * @EXT\Template()
      *
      * Renders the workspace list page with its claroline layout.
      *
@@ -43,7 +90,7 @@ class WorkspaceController extends Controller
      */
     public function listAction()
     {
-        $datas = $this->get('claroline.workspace.organizer')->getDatasForWorkspaceList(false);
+        $datas = $this->tagManager->getDatasForWorkspaceList(false);
 
         return array(
             'workspaces' => $datas['workspaces'],
@@ -56,14 +103,14 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/user",
      *     name="claro_workspace_by_user",
      *     options={"expose"=true}
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Template()
+     * @EXT\Template()
      *
      * Renders the registered workspace list for a user.
      *
@@ -73,17 +120,12 @@ class WorkspaceController extends Controller
     {
         $this->assertIsGranted('ROLE_USER');
         $em = $this->get('doctrine.orm.entity_manager');
-        $token = $this->get('security.context')->getToken();
+        $token = $this->security->getToken();
         $user = $token->getUser();
-        $roles = $this->get('claroline.security.utilities')->getRoles($token);
-
-        $workspaces = $em->getRepository(self::ABSTRACT_WS_CLASS)
-            ->findByRoles($roles);
-        $tags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findNonEmptyTagsByUser($user);
-        $relTagWorkspace = $em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findByUser($user);
-
+        $roles = $this->utils->getRoles($token);
+        $workspaces = $this->workspaceManager->getWorkspacesByRoles($roles);
+        $tags = $this->tagManager->getNonEmptyTagsByUser($user);
+        $relTagWorkspace = $this->tagManager->getTagRelationsByUser($user);
         $tagWorkspaces = array();
 
         foreach ($relTagWorkspace as $tagWs) {
@@ -93,10 +135,8 @@ class WorkspaceController extends Controller
             }
             $tagWorkspaces[$tagWs['tag_id']][] = $tagWs['rel_ws_tag'];
         }
-        $tagsHierarchy = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTagHierarchy')
-            ->findAllByUser($user);
-        $rootTags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findRootTags($user);
+        $tagsHierarchy = $this->tagManager->getAllHierarchiesByUser($user);
+        $rootTags = $this->tagManager->getRootTags($user);
         $hierarchy = array();
 
         // create an array : tagId => [direct_children_id]
@@ -116,8 +156,7 @@ class WorkspaceController extends Controller
         // create an array indicating which tag is displayable
         // a tag is displayable if it or one of his children contains is associated to a workspace
         $displayable = array();
-        $allTags = $em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findByUser($user);
+        $allTags = $this->tagManager->getTagsByUser($user);
 
         foreach ($allTags as $oneTag) {
             $oneTagId = $oneTag->getId();
@@ -161,13 +200,13 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/new/form",
      *     name="claro_workspace_creation_form"
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Template()
+     * @EXT\Template()
      *
      * Renders the workspace creation form.
      *
@@ -176,8 +215,7 @@ class WorkspaceController extends Controller
     public function creationFormAction()
     {
         $this->assertIsGranted('ROLE_WS_CREATOR');
-        $form = $this->get('form.factory')
-            ->create(new WorkspaceType());
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE);
 
         return array('form' => $form->createView());
     }
@@ -185,20 +223,20 @@ class WorkspaceController extends Controller
     /**
      * Creates a workspace from a form sent by POST.
      *
-     * @Route(
+     * @EXT\Route(
      *     "/",
      *     name="claro_workspace_create"
      * )
-     * @Method("POST")
+     * @EXT\Method("POST")
      *
-     * @Template("ClarolineCoreBundle:Workspace:creationForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Workspace:creationForm.html.twig")
+     *
      * @return RedirectResponse
      */
     public function createAction()
     {
         $this->assertIsGranted('ROLE_WS_CREATOR');
-        $form = $this->get('form.factory')
-            ->create(new WorkspaceType());
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE);
         $form->handleRequest($this->getRequest());
 
         $templateDir = $this->container->getParameter('claroline.param.templates_directory');
@@ -212,11 +250,10 @@ class WorkspaceController extends Controller
             $config->setWorkspaceType($type);
             $config->setWorkspaceName($form->get('name')->getData());
             $config->setWorkspaceCode($form->get('code')->getData());
-            $user = $this->get('security.context')->getToken()->getUser();
-            $wsCreator = $this->get('claroline.workspace.creator');
-            $wsCreator->createWorkspace($config, $user);
-            $this->get('claroline.security.token_updater')->update($this->get('security.context')->getToken());
-            $route = $this->get('router')->generate('claro_workspace_list');
+            $user = $this->security->getToken()->getUser();
+            $this->workspaceManager->create($config, $user);
+            $this->get('claroline.security.token_updater')->update($this->security->getToken());
+            $route = $this->router->generate('claro_workspace_list');
 
             return new RedirectResponse($route);
         }
@@ -225,25 +262,32 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspaceId}",
      *     name="claro_workspace_delete",
      *     options={"expose"=true},
      *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
      * )
-     * @Method("DELETE")
+     * @EXT\Method("DELETE")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
      *
      * @param integer $workspaceId
      *
      * @return Response
      */
-    public function deleteAction($workspaceId)
+    public function deleteAction(AbstractWorkspace $workspace)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
         $this->assertIsGranted('DELETE', $workspace);
-        $log = new LogWorkspaceDeleteEvent($workspace);
-        $this->get('event_dispatcher')->dispatch('log', $log);
+        $this->eventDispatcher->dispatch(
+            'log',
+            'Log\LogWorkspaceDelete',
+            array($workspace)
+        );
         $em->remove($workspace);
         $em->flush();
 
@@ -251,7 +295,12 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * @Template()
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\Template()
      *
      * Renders the left tool bar. Not routed.
      *
@@ -259,7 +308,7 @@ class WorkspaceController extends Controller
      *
      * @return Response
      */
-    public function renderToolListAction($workspaceId, $_breadcrumbs)
+    public function renderToolListAction(AbstractWorkspace $workspace, $_breadcrumbs)
     {
         $em = $this->get('doctrine.orm.entity_manager');
 
@@ -272,56 +321,35 @@ class WorkspaceController extends Controller
             }
             $workspace = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
                 ->find($rootId)->getWorkspace();
-        } else {
-            $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
-                ->find($workspaceId);
         }
 
-        if (!$this->get('security.context')->isGranted('OPEN', $workspace)) {
+        if (!$this->security->isGranted('OPEN', $workspace)) {
             throw new AccessDeniedException();
         }
 
-        $currentRoles = $this->get('claroline.security.utilities')
-            ->getRoles($this->get('security.context')->getToken());
+        $currentRoles = $this->utils->getRoles($this->security->getToken());
 
-        $workspaceOrderTools = $em->getRepository('ClarolineCoreBundle:Tool\WorkspaceOrderedTool')
-            ->findBy(array('workspace' => $workspace));
-
-        $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->findDisplayedByRolesAndWorkspace($currentRoles, $workspace);
-        $toolsWithTranslation = array();
-
-        foreach ($tools as $tool) {
-            $toolWithTranslation['tool'] = $tool;
-            $found = false;
-
-            foreach ($workspaceOrderTools as $workspaceOrderedTool) {
-                if ($workspaceOrderedTool->getTool() === $tool) {
-                    $toolWithTranslation['name'] = $workspaceOrderedTool->getName();
-                    $found = true;
-                }
-            }
-
-            if (!$found) {
-                $toolWithTranslation['name'] = $tool->getName();
-            }
-
-            $toolsWithTranslation[] = $toolWithTranslation;
-        }
+        $orderedTools = $em->getRepository('ClarolineCoreBundle:Tool\OrderedTool')
+            ->findByWorkspaceAndRoles($workspace, $currentRoles);
 
         return array(
-            'toolsWithTranslation' => $toolsWithTranslation,
+            'orderedTools' => $orderedTools,
             'workspace' => $workspace
         );
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspaceId}/open/tool/{toolName}",
      *     name="claro_workspace_open_tool",
      *     options={"expose"=true}
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
      *
      * Opens a tool.
      *
@@ -330,36 +358,36 @@ class WorkspaceController extends Controller
      *
      * @return Response
      */
-    public function openToolAction($toolName, $workspaceId)
+    public function openToolAction($toolName, AbstractWorkspace $workspace)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
-            ->find($workspaceId);
         $this->assertIsGranted($toolName, $workspace);
-        $event = new DisplayToolEvent($workspace);
-        $eventName = 'open_tool_workspace_'.$toolName;
-        $this->get('event_dispatcher')->dispatch($eventName, $event);
-
-        if (is_null($event->getContent())) {
-            throw new \Exception(
-                "Tool '{$toolName}' didn't return any Response for tool event '{$eventName}'."
-            );
-        }
-
-        $log = new LogWorkspaceToolReadEvent($workspace, $toolName);
-        $this->get('event_dispatcher')->dispatch('log', $log);
+        $event = $this->eventDispatcher->dispatch(
+            'open_tool_workspace_'.$toolName,
+            'DisplayTool',
+            array($workspace)
+        );
+        $this->eventDispatcher->dispatch(
+            'log',
+            'Log\LogWorkspaceToolRead',
+            array($workspace,$toolName)
+        );
 
         return new Response($event->getContent());
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspaceId}/widgets",
      *     name="claro_workspace_widgets"
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
      *
-     * @Template("ClarolineCoreBundle:Widget:widgets.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Widget:widgets.html.twig")
      *
      * Display registered widgets.
      *
@@ -369,25 +397,21 @@ class WorkspaceController extends Controller
      *
      * @todo Reduce the number of sql queries for this action (-> dql)
      */
-    public function widgetsAction($workspaceId)
+    public function widgetsAction(AbstractWorkspace $workspace)
     {
         // No right checking is done : security is delegated to each widget renderer
         // Is that a good idea ?
-        $responsesString = '';
         $configs = $this->get('claroline.widget.manager')
-            ->generateWorkspaceDisplayConfig($workspaceId);
-        $em = $this->getDoctrine()->getManager();
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
+            ->generateWorkspaceDisplayConfig($workspace->getId());
 
-        $rightToConfigure = $this->get('security.context')->isGranted('parameters', $workspace);
+        $rightToConfigure = $this->security->isGranted('parameters', $workspace);
 
         $widgets = array();
 
         foreach ($configs as $config) {
             if ($config->isVisible()) {
                 $eventName = "widget_{$config->getWidget()->getName()}_workspace";
-                $event = new DisplayWidgetEvent($workspace);
-                $this->get('event_dispatcher')->dispatch($eventName, $event);
+                $event = $this->eventDispatcher->dispatch($eventName, 'DisplayWidget', array($workspace));
 
                 if ($event->hasContent()) {
                     $widget['id'] = $config->getWidget()->getId();
@@ -398,8 +422,8 @@ class WorkspaceController extends Controller
                     }
                     $widget['content'] = $event->getContent();
                     $widget['configurable'] = (
-                        $rightToConfigure 
-                        and $config->isLocked() !== true 
+                        $rightToConfigure
+                        and $config->isLocked() !== true
                         and $config->getWidget()->isConfigurable()
                     );
 
@@ -411,16 +435,21 @@ class WorkspaceController extends Controller
         return array(
             'widgets' => $widgets,
             'isDesktop' => false,
-            'workspaceId' => $workspaceId
+            'workspaceId' => $workspace->getId()
         );
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspaceId}/open",
      *     name="claro_workspace_open"
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
      *
      * Open the first tool of a workspace.
      *
@@ -428,24 +457,23 @@ class WorkspaceController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function openAction($workspaceId)
+    public function openAction(AbstractWorkspace $workspace)
     {
         $em = $this->getDoctrine()->getManager();
-        $workspace = $em->getRepository(self::ABSTRACT_WS_CLASS)->find($workspaceId);
 
         if ('anon.' != $this->get('security.context')->getToken()->getUser()) {
-            $roles = $em->getRepository('ClarolineCoreBundle:Role')->findByWorkspace($workspace);
+            $roles = $this->roleManager->getRolesByWorkspace($workspace);
             $foundRole = null;
 
             foreach ($roles as $wsRole) {
-                foreach ($this->get('security.context')->getToken()->getUser()->getRoles() as $userRole) {
+                foreach ($this->security->getToken()->getUser()->getRoles() as $userRole) {
                     if ($userRole == $wsRole->getName()) {
                         $foundRole = $userRole;
                     }
                 }
             }
 
-            $isAdmin = $this->get('security.context')->getToken()->getUser()->hasRole('ROLE_ADMIN');
+            $isAdmin = $this->security->getToken()->getUser()->hasRole('ROLE_ADMIN');
 
             if ($foundRole === null && !$isAdmin) {
                 throw new AccessDeniedException('No role found in that workspace');
@@ -470,17 +498,42 @@ class WorkspaceController extends Controller
             throw new AccessDeniedException("No tool found for role {$foundRole}");
         }
 
-        $route = $this->get('router')->generate(
+        $route = $this->router->generate(
             'claro_workspace_open_tool',
-            array('workspaceId' => $workspaceId, 'toolName' => $openedTool[0]->getName())
+            array('workspaceId' => $workspace->getId(), 'toolName' => $openedTool[0]->getName())
         );
 
         return new RedirectResponse($route);
     }
 
+    /**
+     * @EXT\Route(
+     *     "/search/role/code/{code}",
+     *     name="claro_resource_find_role_by_code",
+     *     options={"expose"=true}
+     * )
+     */
+    public function findRoleByWorkspaceCodeAction($code)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $roles = $em->getRepository('ClarolineCoreBundle:Role')->findByWorkspaceCodeTag($code);
+        $arWorkspace = array();
+
+        foreach ($roles as $role) {
+            $arWorkspace[$role->getWorkspace()->getCode()][$role->getName()] = array(
+                'name' => $role->getName(),
+                'translation_key' => $role->getTranslationKey(),
+                'id' => $role->getId(),
+                'workspace' => $role->getWorkspace()->getName()
+            );
+        }
+
+        return new JsonResponse($arWorkspace);
+    }
+
     private function assertIsGranted($attributes, $object = null)
     {
-        if (false === $this->get('security.context')->isGranted($attributes, $object)) {
+        if (false === $this->security->isGranted($attributes, $object)) {
             throw new AccessDeniedException();
         }
     }

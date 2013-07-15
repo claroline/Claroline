@@ -231,7 +231,7 @@ class WorkspaceTagRepository extends EntityRepository
         }
         $tagsTest .= "){$eol}";
 
-        $dql = '
+        $dql = "
             SELECT DISTINCT t
             FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTag t
             WHERE t.user IS NULL
@@ -244,7 +244,7 @@ class WorkspaceTagRepository extends EntityRepository
                 AND {$tagsTest}
             )
             ORDER BY t.name
-        ';
+        ";
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
@@ -271,7 +271,7 @@ class WorkspaceTagRepository extends EntityRepository
         }
         $tagsTest .= "){$eol}";
 
-        $dql = '
+        $dql = "
             SELECT DISTINCT t
             FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTag t
             WHERE t.user = :user
@@ -284,7 +284,7 @@ class WorkspaceTagRepository extends EntityRepository
                 AND {$tagsTest}
             )
             ORDER BY t.name
-        ';
+        ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('user', $user);
 
