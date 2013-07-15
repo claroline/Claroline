@@ -9,8 +9,8 @@ mysql:
   encoding: utf8
 script: phpunit -c app --testsuite core
 before_script:
-  - cp app/config/parameters.yml.dist app/config/parameters.yml
-  - sed -i 's/root/travis/' app/config/parameters.yml
+  - cp app/config/local/parameters.yml.dist app/config/local/parameters.yml
+  - sed -i 's/root/travis/' app/config/local/parameters.yml
   - composer --prefer-source --dev install
   - php app/console doctrine:database:create --env=test
   - php app/console claroline:install --env=test
