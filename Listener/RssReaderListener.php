@@ -97,12 +97,14 @@ class RssReaderListener extends ContainerAware
             $form = $this->container->get('form.factory')->create(new ConfigType, new Config());
 
             $content = $this->container->get('templating')->render(
-                'ClarolineRssReaderBundle::formCreate.html.twig', array(
-                'form' => $form->createView(),
-                'workspaceId' => $workspaceId,
-                'isDefault' => $event->isDefault(),
-                'isDesktop' => false,
-                'userId' => 0,
+                'ClarolineRssReaderBundle::formCreate.html.twig',
+                array(
+                    'form' => $form->createView(),
+                    'workspaceId' => $workspaceId,
+                    'isDefault' => $event->isDefault(),
+                    'isDesktop' => false,
+                    'userId' => 0,
+                    'noCancelButton' => true
                 )
             );
         } else {
@@ -136,12 +138,14 @@ class RssReaderListener extends ContainerAware
             $form = $this->container->get('form.factory')->create(new ConfigType, new Config());
 
             $content = $this->container->get('templating')->render(
-                'ClarolineRssReaderBundle::formCreate.html.twig', array(
-                'form' => $form->createView(),
-                'workspaceId' => 0,
-                'isDefault' => $event->isDefault(),
-                'isDesktop' => true,
-                'userId' => $userId,
+                'ClarolineRssReaderBundle::formCreate.html.twig',
+                array(
+                    'form' => $form->createView(),
+                    'workspaceId' => 0,
+                    'isDefault' => $event->isDefault(),
+                    'isDesktop' => true,
+                    'userId' => $userId,
+                    'noCancelButton' => true
                 )
             );
         } else {
