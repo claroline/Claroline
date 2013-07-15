@@ -7,3 +7,4 @@ services:
             - { name: kernel.event_listener, event: create_form_icap_blog, method: onCreateForm }
             - { name: kernel.event_listener, event: create_icap_blog, method: onCreate }
             - { name: kernel.event_listener, event: open_icap_blog, method: onOpen }
+            - { name: kernel.event_listener, event: delete_icap_blog, method: onDelete }

@@ -25,7 +25,7 @@ class BlogOptions
     /**
      * @var Blog
      *
-     * @ORM\OneToOne(targetEntity="Blog", inversedBy="options")
+     * @ORM\OneToOne(targetEntity="Blog", inversedBy="options", cascade={"persist"})
      */
     protected $blog;
 

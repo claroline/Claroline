@@ -21,7 +21,7 @@ class Blog extends AbstractResource
     /**
      * @var Post[]
      *
-     * @ORM\OneToMany(targetEntity="ICAP\BlogBundle\Entity\Post", mappedBy="blog")
+     * @ORM\OneToMany(targetEntity="ICAP\BlogBundle\Entity\Post", mappedBy="blog", cascade={"persist"})
      * @ORM\OrderBy({"creationDate" = "ASC"})
      */
     protected $posts;
@@ -29,7 +29,7 @@ class Blog extends AbstractResource
     /**
      * @var BlogOptions
      *
-     * @ORM\OneToOne(targetEntity="BlogOptions", mappedBy="blog")
+     * @ORM\OneToOne(targetEntity="BlogOptions", mappedBy="blog", cascade={"persist"})
      */
     protected $options;
 

@@ -2,13 +2,13 @@
 
 namespace ICAP\BlogBundle\Listener;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
-use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Event\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Event\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Event\OpenResourceEvent;
-use ICAP\BlogBundle\Form\BlogType;
 use ICAP\BlogBundle\Entity\Blog;
+use ICAP\BlogBundle\Form\BlogType;
+use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class BlogListener extends ContainerAware
@@ -69,6 +69,14 @@ class BlogListener extends ContainerAware
                 array('blogId' => $event->getResource()->getId())
             );
         $event->setResponse(new RedirectResponse($route));
+        $event->stopPropagation();
+    }
+
+    /**
+     * @param DeleteResourceEvent $event
+     */
+    public function onDelete(DeleteResourceEvent $event)
+    {
         $event->stopPropagation();
     }
 }
