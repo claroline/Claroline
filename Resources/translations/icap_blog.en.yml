@@ -1,17 +1,17 @@
-icap_blog_form_name: "Name"
-icaplyon1simpletagbundle_taggabletype_taggable_title: "Title"
-icaplyon1simpletagbundle_taggabletype_taggable_content: "Content"
-icaplyon1simpletagbundle_taggabletype_tags: "Tags"
-new_post: "New post"
-no_post: "No post."
-add_new_post: "Add new post"
-back_to_workspace: "Back to workspace"
-icap_blog_options_form_authorize_comment: "Authorize comments"
-icap_blog_post_add_success: "Post added with success"
-icap_blog_post_add_error: "An error occured while adding post"
-no_tags: "No tags"
-comments: "comments"
-see_comments: "See the comments"
-publish: "Publish"
-publish: "Unpublish"
-written_by: "Written by"
+icap_blog_form_name: 'Name'
+icaplyon1simpletagbundle_taggabletype_taggable_title: 'Title'
+icaplyon1simpletagbundle_taggabletype_taggable_content: 'Content'
+new_post: 'New post'
+no_post: 'No post.'
+add_new_post: 'Add new post'
+back_to_workspace: 'Back to workspace'
+icap_blog_options_form_authorize_comment: 'Authorize comments'
+icap_blog_post_add_success: 'Post added with success'
+icap_blog_post_add_error: 'An error occured while adding post'
+no_tags: 'No tags'
+comments: 'comments'
+see_comments: 'See the comments'
+publish: 'Publish'
+publish: 'Unpublish'
+written_by: 'Written by'
+Post: 'Post'

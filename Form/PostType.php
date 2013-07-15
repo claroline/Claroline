@@ -12,14 +12,20 @@ class PostType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title', 'ckeditor', array(
-                'config' => array(
+            ->add('title', 'textarea', array(
+                'attr' => array(
+                    'class'      => 'tinymce',
+                    'data-theme' => 'small'
+                    )
                 )
-            ))
-            ->add('content', 'ckeditor', array(
-                'config' => array(
+            )
+            ->add('content', 'textarea', array(
+                'attr' => array(
+                    'class'      => 'tinymce',
+                    'data-theme' => 'medium'
+                    )
                 )
-            ))
+            )
         ;
     }
 

@@ -1,17 +1,17 @@
-icap_blog_form_name: "Nom"
-icaplyon1simpletagbundle_taggabletype_taggable_title: "Titre"
-icaplyon1simpletagbundle_taggabletype_taggable_content: "Contenu"
-icaplyon1simpletagbundle_taggabletype_tags: "Tags"
-new_post: "Nouvel article"
-no_post: "Aucun article."
+icap_blog_form_name: 'Nom'
+icaplyon1simpletagbundle_taggabletype_taggable_title: 'Titre'
+icaplyon1simpletagbundle_taggabletype_taggable_content: 'Contenu'
+new_post: 'Nouvel article'
+no_post: 'Aucun article.'
 add_new_post: "Ajout d'un article"
 back_to_workspace: "Retour à l'espace de travail"
-icap_blog_options_form_authorize_comment: "Commentaires autorisés"
-icap_blog_post_add_success: "Article ajouté avec succès"
+icap_blog_options_form_authorize_comment: 'Commentaires autorisés'
+icap_blog_post_add_success: 'Article ajouté avec succès'
 icap_blog_post_add_error: "Erreur lors de l'ajout de l'article"
-no_tags: "Aucun tags"
-comments: "commentaires"
-see_comments: "Voir les commentaires"
-publish: "Publier"
-unpublish: "Dépublier"
-written_by: "Ecrit par"
+no_tags: 'Aucun tags'
+comments: 'commentaires'
+see_comments: 'Voir les commentaires'
+publish: 'Publier'
+unpublish: 'Dépublier'
+written_by: 'Ecrit par'
+Post: 'Article'
