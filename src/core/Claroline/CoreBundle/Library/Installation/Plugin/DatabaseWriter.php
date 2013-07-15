@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Library\Installation\Plugin;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Claroline\CoreBundle\Library\PluginBundle;
-use Claroline\CoreBundle\Library\Resource\IconCreator;
+use Claroline\CoreBundle\Manager\IconManager;
 use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Theme\Theme;
@@ -38,15 +38,9 @@ class DatabaseWriter
     /**
      * Constructor.
      *
-     * @param SymfonyValidator  $validator
-     * @param EntityManager     $em
-     * @param IconCreator       $im
-     * @param KernelInterface   $kernel
-     * @param string            $templateDir
-     *
      * @DI\InjectParams({
      *     "em"             = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "im"             = @DI\Inject("claroline.resource.icon_creator"),
+     *     "im"             = @DI\Inject("claroline.manager.icon_manager"),
      *     "fileSystem"     = @DI\Inject("filesystem"),
      *     "kernel"         = @DI\Inject("kernel"),
      *     "templateDir"    = @DI\Inject("%claroline.param.templates_directory%")
@@ -54,7 +48,7 @@ class DatabaseWriter
      */
     public function __construct(
         EntityManager $em,
-        IconCreator $im,
+        IconManager $im,
         Filesystem $fileSystem,
         KernelInterface $kernel,
         $templateDir
@@ -89,9 +83,8 @@ class DatabaseWriter
             $iconWebDir = "bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons";
             $pluginEntity->setIcon("{$iconWebDir}{$ds}{$pluginConfiguration['icon']}");
         } else {
-            $defaultIcon = $this->em
-                ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
-                ->findOneBy(array('iconType' => IconType::DEFAULT_ICON));
+            $defaultIcon = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
+                ->findOneByMimeType('custom/default');
             $pluginEntity->setIcon($defaultIcon->getRelativeUrl());
         }
 
@@ -212,15 +205,7 @@ class DatabaseWriter
     private function persistIcons(array $resource, ResourceType $resourceType, PluginBundle $plugin)
     {
         $resourceIcon = new ResourceIcon();
-
-        $defaultIcon = $this->em
-            ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
-            ->findOneBy(array('iconType' => IconType::DEFAULT_ICON));
-        $defaultIconType = $this->em
-            ->getRepository('ClarolineCoreBundle:Resource\IconType')
-            ->findOneBy(array('type' => 'type'));
-        $resourceIcon->setIconType($defaultIconType);
-        $resourceIcon->setType($resourceType->getName());
+        $resourceIcon->setMimeType('custom/' . $resourceType->getName());
         $ds = DIRECTORY_SEPARATOR;
 
         if (isset($resource['icon'])) {
@@ -238,6 +223,9 @@ class DatabaseWriter
                 "bundles/{$plugin->getAssetsFolder()}/images/icons/{$resource['icon']}"
             );
         } else {
+            $defaultIcon = $this->em
+                ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
+                ->findOneByMimeType('custom/default');
             $resourceIcon->setIconLocation($defaultIcon->getIconLocation());
             $resourceIcon->setRelativeUrl($defaultIcon->getRelativeUrl());
         }
@@ -262,7 +250,6 @@ class DatabaseWriter
     {
         $resourceType = new ResourceType();
         $resourceType->setName($resource['name']);
-        $resourceType->setBrowsable($resource['is_browsable']);
         $resourceType->setExportable($resource['is_exportable']);
         $resourceType->setPlugin($pluginEntity);
         $resourceClass = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')

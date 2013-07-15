@@ -34,11 +34,13 @@ class Message
     protected $content;
 
     /**
+     * @todo rename the property to "sender" and the join column to "sender_id"
+     *
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE" , nullable=false)
+     * @ORM\JoinColumn(name="sender_id", referencedColumnName="id", onDelete="CASCADE" , nullable=false)
      */
     protected $user;
 
@@ -114,10 +116,7 @@ class Message
      */
     protected $senderUsername;
 
-    /**
-     * @ORM\Column(type="string", name="receiver_username")
-     */
-    protected $receiverUsername;
+    protected $to;
 
     public function __construct()
     {
@@ -149,19 +148,33 @@ class Message
         $this->content = $content;
     }
 
-    public function getUser()
+    public function getSender()
     {
         return $this->user;
     }
 
-    public function setUser($user)
+    public function setSender(User $sender)
     {
-        $this->user = $user;
+        $this->user = $sender;
+        $this->senderUsername = $sender->getUsername();
     }
 
     public function getDate()
     {
         return $this->date;
+    }
+
+    /**
+     * Sets the message creation date.
+     *
+     * NOTE : creation date is already handled by the timestamp listener; this
+     *        setter exists mainly for testing purposes.
+     *
+     * @param \DateTime $date
+     */
+    public function setDate(\DateTime $date)
+    {
+        $this->date = $date;
     }
 
     public function isRemoved()
@@ -189,7 +202,7 @@ class Message
         return $this->parent;
     }
 
-    public function setParent($parent)
+    public function setParent(Message $parent)
     {
         $this->parent = $parent;
     }
@@ -229,23 +242,9 @@ class Message
         $this->to = $to;
     }
 
-    public function setSenderUsername($senderUsername)
-    {
-        $this->senderUsername = $senderUsername;
-    }
-
     public function getSenderUsername()
     {
         return $this->senderUsername;
     }
 
-    public function setReceiverUsername($receiverUsername)
-    {
-        $this->receiverUsername = $receiverUsername;
-    }
-
-    public function getReceiverUsername()
-    {
-        return $this->receiverUsername;
-    }
 }

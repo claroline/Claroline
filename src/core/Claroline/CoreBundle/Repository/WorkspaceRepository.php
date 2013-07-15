@@ -7,65 +7,92 @@ use Doctrine\ORM\EntityRepository;
 
 class WorkspaceRepository extends EntityRepository
 {
+    /**
+     * Returns the workspaces a user is member of.
+     *
+     * @param User $user
+     *
+     * @return array[AbstractWorkspace]
+     */
     public function findByUser(User $user)
     {
-        $dql = "
+        $dql = '
             SELECT w, r FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
             JOIN w.roles r
             JOIN r.users u
             WHERE u.id = :userId
-        ";
+        ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userId', $user->getId());
 
         return $query->getResult();
     }
 
+    /**
+     * Returns the workspaces which are not a user's personal workspace.
+     *
+     * @return array[AbstractWorkspace]
+     */
     public function findNonPersonal()
     {
-        $dql = "
+        $dql = '
             SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
             WHERE w.id NOT IN (
                 SELECT w1.id FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w1
                 JOIN w1.personalUser pu
             )
-        ";
-
+        ';
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
     }
 
+    /**
+     * Returns the workspaces whose at least one tool is accessible to anonymous users.
+     *
+     * @return array[AbstractWorkspace]
+     */
     public function findByAnonymous()
     {
         $dql = "
             SELECT DISTINCT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
-            JOIN w.workspaceOrderedTools wot
-            JOIN wot.workspaceToolRoles wtr
-            JOIN wtr.role r
-            WHERE r.name = 'ROLE_ANONYMOUS'";
+            JOIN w.orderedTools ot
+            JOIN ot.roles r
+            WHERE r.name = 'ROLE_ANONYMOUS'
+        ";
+        $query = $this->_em->createQuery($dql);
 
-            $query = $this->_em->createQuery($dql);
-
-            return $query->getResult();
+        return $query->getResult();
     }
 
+    /**
+     * Counts the workspaces.
+     *
+     * @return integer
+     */
     public function count()
     {
-        $dql = "SELECT COUNT(w) FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w";
+        $dql = 'SELECT COUNT(w) FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w';
         $query = $this->_em->createQuery($dql);
 
         return $query->getSingleScalarResult();
     }
 
+    /**
+     * Returns the workspaces whose at least one tool is accessible to one of the given roles.
+     *
+     * @param array[string] $roles
+     *
+     * @return array[AbstractWorkspace]
+     */
     public function findByRoles(array $roles)
     {
         $dql = "
             SELECT DISTINCT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
-            JOIN w.workspaceOrderedTools wot
-            JOIN wot.workspaceToolRoles wtr
-            JOIN wtr.role r
-            WHERE r.name = '{$roles[0]}'";
+            JOIN w.orderedTools ot
+            JOIN ot.roles r
+            WHERE r.name = '{$roles[0]}'
+        ";
 
         for ($i = 1, $size = count($roles); $i < $size; $i++) {
             $dql .= " OR r.name = '{$roles[$i]}'";
@@ -76,89 +103,76 @@ class WorkspaceRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findIdsByUserAndRoleNames($user, $roleNames)
+    /**
+     * Returns the ids of the workspaces a user is member of, filtered by a set of roles
+     * the user must have in those workspaces. Role names are actually prefixes of the
+     * target role (e.g. 'ROLE_WS_COLLABORATOR' instead of 'ROLE_WS_COLLABORATOR_123').
+     *
+     * @param User          $user
+     * @param array[string] $roleNames
+     *
+     * @return array
+     */
+    public function findIdsByUserAndRoleNames(User $user, array $roleNames)
     {
-        $rolesRestriction = "";
-        $first = true;
-        foreach ($roleNames as $roleName) {
-            if ($first) {
-                $first = false;
-                $rolesRestriction .= "( r.name like '".$roleName."_%'";
-            } else {
-                $rolesRestriction .= "OR r.name like '".$roleName."_%'";
-            }
-        }
-        $rolesRestriction .= " )";
-
-        $dql = "
-            SELECT w.id FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
-            JOIN w.roles r
-            JOIN r.users u
-            WHERE u.id = :userId
-            AND ".$rolesRestriction;
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('userId', $user->getId());
-
-        return $query->getResult();
+        return $this->doFindByUserAndRoleNames($user, $roleNames, true);
     }
 
-    public function findByUserAndRoleNames($user, $roleNames)
+    /**
+     * Returns the workspaces a user is member of, filtered by a set of roles the user
+     * must have in those workspaces. Role names are actually prefixes of the target
+     * role (e.g. 'ROLE_WS_COLLABORATOR' instead of 'ROLE_WS_COLLABORATOR_123').
+     *
+     * @param User          $user
+     * @param array[string] $roleNames
+     *
+     * @return array[AbstractWorkspace]
+     */
+    public function findByUserAndRoleNames(User $user, array $roleNames)
     {
-        $rolesRestriction = "";
-        $first = true;
-        foreach ($roleNames as $roleName) {
-            if ($first) {
-                $first = false;
-                $rolesRestriction .= "( r.name like '".$roleName."_%'";
-            } else {
-                $rolesRestriction .= "OR r.name like '".$roleName."_%'";
-            }
-        }
-        $rolesRestriction .= " )";
-
-        $dql = "
-            SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
-            JOIN w.roles r
-            JOIN r.users u
-            WHERE u.id = :userId
-            AND ".$rolesRestriction." 
-            ORDER BY w.name";
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('userId', $user->getId());
-
-        return $query->getResult();
+        return $this->doFindByUserAndRoleNames($user, $roleNames);
     }
 
-    public function findByUserAndRoleNamesNotIn($user, $roleNames, $restrictionIds)
+    /**
+     * Returns the workspaces a user is member of, filtered by a set of roles the user
+     * must have in those workspaces, and optionnaly excluding workspaces by id. Role
+     * names are actually prefixes of the target role (e.g. 'ROLE_WS_COLLABORATOR'
+     * instead of 'ROLE_WS_COLLABORATOR_123').
+     *
+     * @param User              $user
+     * @param array[string]     $roleNames
+     * @param array[integer]    $restrictionIds
+     *
+     * @return array[AbstractWorkspace]
+     */
+    public function findByUserAndRoleNamesNotIn(User $user, array $roleNames, array $restrictionIds = null)
     {
-        if ($restrictionIds === null || count($restrictionIds) == 0) {
-
+        if ($restrictionIds === null || count($restrictionIds) === 0) {
             return $this->findByUserAndRoleNames($user, $roleNames);
         }
 
-        $rolesRestriction = "";
+        $rolesRestriction = '';
         $first = true;
+
         foreach ($roleNames as $roleName) {
             if ($first) {
                 $first = false;
-                $rolesRestriction .= "( r.name like '".$roleName."_%'";
+                $rolesRestriction .= "(r.name like '{$roleName}_%'";
             } else {
-                $rolesRestriction .= "OR r.name like '".$roleName."_%'";
+                $rolesRestriction .= " OR r.name like '{$roleName}_%'";
             }
         }
-        $rolesRestriction .= " )";
 
+        $rolesRestriction .= ')';
         $dql = "
             SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
             JOIN w.roles r
             JOIN r.users u
             WHERE u.id = :userId
-            AND ".$rolesRestriction." 
+            AND {$rolesRestriction}
             AND w.id NOT IN (:restrictionIds)
-            ORDER BY w.name";
-
+            ORDER BY w.name
+        ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userId', $user->getId());
         $query->setParameter('restrictionIds', $restrictionIds);
@@ -166,7 +180,16 @@ class WorkspaceRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findLatestWorkspaceByUser(User $user, array $roles, $size = 5)
+    /**
+     * Returns the latest workspaces a user has visited.
+     *
+     * @param User          $user
+     * @param array[string] $roles
+     * @param integer       $max
+     *
+     * @return array
+     */
+    public function findLatestWorkspacesByUser(User $user, array $roles, $max = 5)
     {
         $dql = "
             SELECT DISTINCT w AS workspace, MAX(l.dateLog) AS max_date
@@ -178,7 +201,6 @@ class WorkspaceRepository extends EntityRepository
             AND u.id = :userId
             AND (
         ";
-
         $index = 0;
         $eol = PHP_EOL;
 
@@ -187,35 +209,67 @@ class WorkspaceRepository extends EntityRepository
             $dql .= "r.name = '{$role}'{$eol}";
             $index++;
         }
-        $dql .= ")";
-        $dql .= "
+
+        $dql .= ')
             GROUP BY w.id
             ORDER BY max_date DESC
-        ";
-
+        ';
         $query = $this->_em->createQuery($dql);
-        $query->setMaxResults($size);
+        $query->setMaxResults($max);
         $query->setParameter('userId', $user->getId());
 
         return $query->getResult();
     }
 
-    public function workspacesWithMostResources($max) 
+    /**
+     * Returns the name, code and number of resources of each workspace.
+     *
+     * @param integer $max
+     *
+     * @return array
+     */
+    public function findWorkspacesWithMostResources($max)
     {
         $qb = $this
             ->createQueryBuilder('ws')
             ->select('ws.name, ws.code, COUNT(rs.id) AS total')
-            ->leftJoin('Claroline\CoreBundle\Entity\Resource\AbstractResource','rs','WITH','ws = rs.workspace')
+            ->leftJoin('Claroline\CoreBundle\Entity\Resource\AbstractResource', 'rs', 'WITH', 'ws = rs.workspace')
             ->groupBy('ws.id')
             ->orderBy('total','DESC');
 
-        if ($max >1)
-        {
+        if ($max > 1) {
             $qb->setMaxResults($max);
         }
-        $query = $qb->getQuery();
-        $result = $query->getResult();
 
-        return $result;
+        return $qb->getQuery()->getResult();
+    }
+
+    private function doFindByUserAndRoleNames(User $user, array $roleNames, $idsOnly = false)
+    {
+        $rolesRestriction = '';
+        $first = true;
+
+        foreach ($roleNames as $roleName) {
+            if ($first) {
+                $first = false;
+                $rolesRestriction .= "(r.name like '{$roleName}_%'";
+            } else {
+                $rolesRestriction .= " OR r.name like '{$roleName}_%'";
+            }
+        }
+
+        $rolesRestriction .= ')';
+        $select = $idsOnly ? 'w.id' : 'w';
+        $dql = "
+            SELECT {$select} FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            JOIN w.roles r
+            JOIN r.users u
+            WHERE u.id = :userId
+            AND {$rolesRestriction}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('userId', $user->getId());
+
+        return $query->getResult();
     }
 }

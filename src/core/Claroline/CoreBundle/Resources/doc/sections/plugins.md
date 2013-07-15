@@ -86,7 +86,6 @@ plugin:
   resources:
     - class: 'Claroline\ExampleBundle\Entity\Example'
       name: 'claroline_example'
-      is_browsable: 'true'
       is_exportable: 'false'
       icon: 'res_text.png'
 
@@ -104,7 +103,7 @@ platform administrations wich will fire an event in wich you can send a form
 and set some general parameters of your plugin.
 
 The event name format is plugin_options_myvendormybundle and the $event class
-is use *Claroline\CoreBundle\Library\Event\PluginOptionsEvent*.
+is use *Claroline\CoreBundle\Event\Event\PluginOptionsEvent*.
 
 This $event will be asking you to return a response. Your twig file must
 extends as following if you want to keep the administration layout:
