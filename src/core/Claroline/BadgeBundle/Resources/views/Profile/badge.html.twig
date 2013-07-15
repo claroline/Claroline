@@ -3,6 +3,7 @@
 {% block content %}
     <div class="border badge_container">
         <h3 class="sub-section-header">
+            <a href="{{ path('claro_profile_view_badges') }}" class="pull-right side_link" data-toggle="tooltip" data-placement="bottom" title="{{ 'back_to_my_badges'|trans({}, 'platform') }}"><i class="icon-reply"></i></a>
             <span class="badge badge-info accordion-toggle" data-toggle="tooltip" title="{{ 'badge_form_version'|trans({}, 'platform') }} {{ badge.version }}">{{ badge.version }}</span>
             {{ 'badge'|trans({}, 'platform') }} "{{ badge.name }}"
             {% if badge.expiredAt is not null %}
@@ -20,4 +21,13 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script type="text/javascript">
+    $(function(){
+        $('[data-toggle=tooltip]').tooltip();
+    });
+</script>
 {% endblock %}
