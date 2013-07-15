@@ -1,0 +1,106 @@
+{% macro showTag(tagsList, tagWorkspaces, hierarchy, index, displayable) %}
+{% for tag in tagsList %}
+    {% if displayable[tag.getId()] %}
+    {% set currentIndex = index ~ "-" ~ tag.getId() %}
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a  class="accordion-toggle"
+                data-toggle="collapse"
+                href="#collapse-{{ currentIndex }}"
+            >
+                <i class="icon-align-justify"></i>
+                {{ tag.getName() }}
+                <i class="icon-chevron-down pull-right"></i>
+            </a>
+        </div>
+        <div id="collapse-{{ currentIndex }}" class="accordion-body collapse">
+            <div class="accordion-inner">
+                {% if hierarchy[tag.getId()]|length > 0 %}
+                {{ _self.showTag(hierarchy[tag.getId()], tagWorkspaces, hierarchy, currentIndex, displayable) }}
+                {% endif %}
+                <ul>
+                    {% for relWorkspaceTag in tagWorkspaces[tag.id] %}
+                    {% set workspace = relWorkspaceTag.getWorkspace() %}
+                    <li class="row-workspace row-workspace-id-{{ workspace.getId() }}">
+                        {% set granted = is_granted('home', workspace) %}
+                        {% if granted == true %}
+                        <a href="{{ path('claro_workspace_open',
+                           {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
+                           id="link-home-{{ workspace.getId() }}"
+                        >
+                        {% endif %}
+                        <i class="icon-book"></i>
+                        {{ workspace.getName() }}
+                        <span class="workspace-code">({{ workspace.getCode() }})</span>
+                        {% if granted %}</a>{% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endfor %}
+{% endmacro %}
+
+{% from _self import showTag %}
+
+{% extends 'ClarolineCoreBundle:WorkspaceTag:layout.html.twig' %}
+
+{% block section_content %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-book',
+                'name': 'my_workspaces'|trans({}, 'platform'),
+                'href': '#'
+            }
+        ])
+    }}
+
+    <div class="margin widget">
+        <a href="{{ path('claro_workspace_manage_tag') }}">
+            <button type="button" class="btn">{{ 'tags_management'|trans({}, 'platform') }}</button>
+        </a>
+
+        <hr>
+        <div class="accordion" id="accordion-all">
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a  class="accordion-toggle"
+                        data-toggle="collapse"
+                        data-parent="#accordion-all"
+                        href="#collapse-all"
+                    >
+                        <i class="icon-align-justify"></i>
+                        {{ 'all_my_workspaces'|trans({}, 'platform') }}
+                        <i class="icon-chevron-down pull-right"></i>
+                    </a>
+                </div>
+                <div id="collapse-all" class="accordion-body collapse {% if tags|length == 0 %}in{% endif %}">
+                    <div class="accordion-inner">
+                        <ul>
+                            {% for workspace in workspaces %}
+                            <li class="row-workspace row-workspace-id-{{ workspace.getId() }}">
+                                {% set granted = is_granted('home', workspace) %}
+                                {% if granted == true %}
+                                <a  href="{{ path('claro_workspace_open',
+                                    {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
+                                    id="link-home-{{ workspace.getId() }}"
+                                >
+                                {% endif %}
+                                   <i class="icon-book"></i>
+                                   {{ workspace.getName() }}
+                                   <span class="workspace-code">({{ workspace.getCode() }})</span>
+                                {% if granted%}</a>{% endif %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable) }}
+    </div>
+{% endblock %}

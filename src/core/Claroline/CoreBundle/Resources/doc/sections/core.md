@@ -1,43 +1,67 @@
 [[Documentation index]][1]
 
-Core
-====
+Core architecture
+=================
 
-core = 1 bundle
-provides:
-    platform organization (main sections, navigation, auth, logs)
-    base model (ws, usr, rsc)
-    plugin system
+- [Introduction](#introduction)
+- [Directory structure](#directory-structure)
+- [Platform organization](#platform-organization)
+- [Model](#model)
+- [Plugin system](#plugin-system)
+
+Introduction
+------------
+
+The **ClarolineCoreBundle** is a single bundle that provides:
+
+- Platform organization (main sections, navigation, authentication, logs).
+- Base model (Workspace, Users, Resources).
+- Plugin system.
 
 
 Directory structure
 -------------------
 
-classic bundle
-special dirs:
-    command (dev)
-    library (services)
-    res/less...
+The directory structure have some differences of a classic bundle, there is
+some special directories as follows:
+
+<pre>
+bundle
+|-- Command                 (Dev commands)
+|-- Library                 (Services)
+|-- Migrations              (Data Base description)
+|-- Resources
+|   +-- views
+|       |-- less            (Themes)
+|       |-- less-generated  (Generated themes)
++-- Templating              (Overwriting of a Symfony Class)
+</pre>
 
 Platform organization
 ---------------------
 
-sections (controller + layout)
+Sections (controller + layout):
+
+<pre>
 base -> core::layout -> admin/desktop/workspace::layout -> ...
+</pre>
 
 Model
 -----
 
-ws
-usr/gp
-rsrc
-roles/permissions
+- Workspace
+- User/Group
+- Resource
+- Roles/Permissions
 
 Plugin system
 -------------
 
-modular system
-plugins in their own repository
+The [Claroline plugins][2] was designed as a modular system and they must be in
+heir own repositories.
 
+[[Documentation index]][1]
 
 [1]: ../index.md
+[2]: plugins.md
+

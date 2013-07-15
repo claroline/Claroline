@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * The following script makes the app/config_prod.yml use monolog production settings.
+ *
+ * It is used only by the automated demo job on Jenkins.
+ */
+
+require_once __DIR__ . '/../../vendor/autoload.php';
+
+use Symfony\Component\Yaml\Yaml;
+
+$prodConfigFile = __DIR__ . '/../config/config_prod.yml';
+$config = Yaml::parse(file_get_contents($prodConfigFile));
+$config['monolog'] = array(
+    'handlers' => array(
+        'main' => array(
+            'type' => 'fingers_crossed',
+            'action_level' => 'error',
+            'handler' => 'grouped'
+        ),
+        'grouped' => array(
+            'type' => 'group',
+            'members' => array('streamed', 'buffered')
+        ),
+        'streamed' => array(
+            'type' => 'stream',
+            'path' => '%kernel.logs_dir%/%kernel.environment%.log',
+            'level' => 'debug'
+        ),
+        'buffered' => array(
+            'type' =>  'buffer',
+            'handler' => 'swift'
+        ),
+        'swift' => array(
+            'type' => 'swift_mailer',
+            'from_email' => 'dev@claroline.net',
+            'to_email' => 'dev@claroline.net',
+            'subject' => 'An Error Occurred!',
+            'level' => 'debug'
+        )
+    )
+);
+file_put_contents($prodConfigFile, Yaml::dump($config, 4));

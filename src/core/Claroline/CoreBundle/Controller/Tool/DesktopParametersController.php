@@ -3,59 +3,71 @@
 namespace Claroline\CoreBundle\Controller\Tool;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Claroline\CoreBundle\Entity\Tool\DesktopTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
-use Claroline\CoreBundle\Library\Event\ConfigureDesktopToolEvent;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\Event\ConfigureDesktopToolEvent;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\Request;
+use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Manager\ToolManager;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use JMS\DiExtraBundle\Annotation as DI;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 class DesktopParametersController extends Controller
 {
+    private $request;
+    private $router;
+    private $toolManager;
+
     /**
-     * @Route(
+     * @DI\InjectParams({
+     *     "request"      = @DI\Inject("request"),
+     *     "urlGenerator" = @DI\Inject("router"),
+     *     "toolManager"  = @DI\Inject("claroline.manager.tool_manager"),
+     *     "ed"           = @DI\Inject("claroline.event.event_dispatcher")
+     * })
+     */
+    public function __construct(
+        Request $request,
+        UrlGeneratorInterface $router,
+        ToolManager $toolManager,
+        StrictDispatcher $ed
+    )
+    {
+        $this->request = $request;
+        $this->router = $router;
+        $this->toolManager = $toolManager;
+        $this->ed = $ed;
+    }
+
+    /**
+     * @EXT\Route(
      *     "/tools",
      *     name="claro_tool_properties"
      * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\parameters:toolProperties.html.twig")
+     * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
      *
      * Displays the tools configuration page.
      *
      * @return Response
      */
-    public function desktopConfigureToolAction()
+    public function desktopConfigureToolAction(User $user)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $user = $this->get('security.context')->getToken()->getUser();
-        $orderedToolList = array();
-        $desktopTools = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')->findBy(array('user' => $user));
-
-        foreach ($desktopTools as $desktopTool) {
-            $desktopTool->getTool()->setVisible(true);
-            $orderedToolList[$desktopTool->getOrder()] = $desktopTool->getTool();
-        }
-
-        $undisplayedTools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->findDesktopUndisplayedToolsByUser($user);
-
-        foreach ($undisplayedTools as $tool) {
-            $tool->setVisible(false);
-        }
-
-        $tools = $this->get('claroline.utilities.misc')->arrayFill($orderedToolList, $undisplayedTools);
-
-        return $this->render(
-            'ClarolineCoreBundle:Tool\desktop\parameters:tool_properties.html.twig',
-            array('tools' => $tools)
-        );
+        return array('tools' => $this->toolManager->getDesktopToolsConfigurationArray($user));
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/remove/tool/{tool}",
      *     name="claro_tool_desktop_remove",
      *     options={"expose"=true}
      * )
-     * @Method("POST")
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter("tool", class="ClarolineCoreBundle:Tool\Tool", options={"id"="tool", "strictId"=true})
+     * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
      *
      * Remove a tool from the desktop.
      *
@@ -65,30 +77,21 @@ class DesktopParametersController extends Controller
      *
      * @throws \Exception
      */
-    public function desktopRemoveToolAction(Tool $tool)
+    public function desktopRemoveToolAction(Tool $tool, User $user)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $user = $this->get('security.context')->getToken()->getUser();
-
-        if ($tool->getName() === 'parameters') {
-            throw new \Exception('You cannot remove the parameter tool from the desktop.');
-        }
-
-        $desktopTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
-            ->findOneBy(array('user' => $user, 'tool' => $tool));
-        $em->remove($desktopTool);
-        $em->flush();
+        $this->toolManager->removeDesktopTool($tool, $user);
 
         return new Response('success', 204);
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/add/tool/{tool}/position/{position}",
      *     name="claro_tool_desktop_add",
      *     options={"expose"=true}
      * )
-     * @Method("POST")
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
      *
      * Add a tool to the desktop.
      *
@@ -98,82 +101,43 @@ class DesktopParametersController extends Controller
      *
      * @throws \Exception
      */
-    public function desktopAddToolAction(Tool $tool, $position)
+    public function desktopAddToolAction(Tool $tool, $position, User $user)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $user = $this->get('security.context')->getToken()->getUser();
-        $switchTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
-            ->findOneBy(array('user' => $user, 'order' => $position));
-        if ($switchTool != null) {
-            throw new \RuntimeException('A tool already exists at this position');
-        }
-        $desktopTool = new DesktopTool();
-        $desktopTool->setUser($user);
-        $desktopTool->setTool($tool);
-        $desktopTool->setOrder($position);
-        $em->persist($desktopTool);
-        $em->flush();
+        $this->toolManager->addDesktopTool($tool, $user, $position, $tool->getName());
 
         return new Response('success', 204);
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/move/tool/{tool}/position/{position}",
      *     name="claro_tool_desktop_move",
      *     options={"expose"=true}
      * )
-     * @Method("POST")
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
      *
      * This method switch the position of a tool with an other one.
      *
      * @param Tool $tool
      * @param integer $position
+     * @param User $user
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function desktopMoveToolAction(Tool $tool, $position)
+    public function desktopMoveToolAction(Tool $tool, $position, User $user)
     {
-         $em = $this->get('doctrine.orm.entity_manager');
-         $user = $this->get('security.context')->getToken()->getUser();
-         $movingTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
-            ->findOneBy(array('user' => $user, 'tool' => $tool));
-         $switchTool = $em->getRepository('ClarolineCoreBundle:Tool\DesktopTool')
-            ->findOneBy(array('user' => $user, 'order' => $position));
+        $this->toolManager->move($tool, $position, $user, null);
 
-        //if a tool is already at this position, he must go "far away"
-        if ($switchTool !== null) {
-            //go far away ! Integrety constraints.
-            $switchTool->setOrder('99');
-            $em->persist($switchTool);
-        }
-
-        $em->flush();
-
-        //the tool must exists
-        if ($movingTool !== null) {
-            $newPosition = $movingTool->getOrder();
-            $movingTool->setOrder(intval($position));
-            $em->persist($movingTool);
-        }
-
-         //put the original tool back.
-        if ($switchTool !== null) {
-            $switchTool->setOrder($newPosition);
-            $em->persist($switchTool);
-        }
-
-        $em->flush();
-
-        return new Response('<body>success</body>');
+        return new Response('success', 204);
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "tool/{tool}/config",
      *     name="claro_desktop_tool_config"
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
      * @param Tool $tool
      *
@@ -181,15 +145,11 @@ class DesktopParametersController extends Controller
      */
     public function openDesktopToolConfig(Tool $tool)
     {
-        $event = new ConfigureDesktopToolEvent($tool);
-        $eventName = strtolower('configure_desktop_tool_' . $tool->getName());
-        $this->get('event_dispatcher')->dispatch($eventName, $event);
-
-        if (is_null($event->getContent())) {
-            throw new \Exception(
-                "Tool '{$tool->getName()}' didn't return any Response for tool event '{$eventName}'."
-            );
-        }
+        $event = $this->ed->dispatch(
+            strtolower('configure_desktop_tool_' . $tool->getName()),
+            'ConfigureDesktopTool',
+            array($tool)
+        );
 
         return new Response($event->getContent());
     }

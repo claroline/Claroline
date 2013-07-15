@@ -14,7 +14,17 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
  * Base entity for all resources.
  *
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\AbstractResourceRepository")
- * @ORM\Table(name="claro_resource")
+ * @ORM\Table(
+ *      name="claro_resource",
+ *      uniqueConstraints={
+ *          @ORM\UniqueConstraint(
+ *          name="next_id",columns={"next_id"}
+ *          ),
+ *          @ORM\UniqueConstraint(
+ *          name="previous_id",columns={"previous_id"}
+ *          )
+ *      }
+ * )
  * @ORM\InheritanceType("JOINED")
  * @Gedmo\Tree(type="materializedPath")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
@@ -44,7 +54,7 @@ abstract class AbstractResource
      *     inversedBy="abstractResources",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="license_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="license_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     protected $license;
 
@@ -66,7 +76,7 @@ abstract class AbstractResource
      *     inversedBy="abstractResources",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     protected $resourceType;
 
@@ -76,7 +86,7 @@ abstract class AbstractResource
      *     inversedBy="abstractResources",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     protected $creator;
 
@@ -85,7 +95,7 @@ abstract class AbstractResource
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceIcon",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="icon_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="icon_id", referencedColumnName="id",onDelete="CASCADE", nullable=true)
      */
     protected $icon;
 
@@ -111,7 +121,7 @@ abstract class AbstractResource
      *     fetch="EAGER"
      * )
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="SET NULL")
+     *   @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      * })
      */
     protected $parent;
@@ -145,13 +155,13 @@ abstract class AbstractResource
      *      targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
      *      inversedBy="resources"
      * )
-     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id",onDelete="CASCADE", nullable=false)
      */
     protected $workspace;
 
     /**
      * @Gedmo\TreePath(separator="`")
-     * @ORM\Column(name="path", type="string", length=3000, nullable=true)
+     * @ORM\Column(name="path", type="string", length=3000, nullable=false)
      */
     protected $path;
 
@@ -163,21 +173,17 @@ abstract class AbstractResource
      */
     protected $rights;
 
-    //The user icon.
-    //Used by some forms.
-    protected $userIcon;
-
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
      *     cascade={"persist"})
-     * @ORM\JoinColumn(name="next_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="next_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     protected $next;
 
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
      *     cascade={"persist"})
-     * @ORM\JoinColumn(name="previous_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="previous_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     protected $previous;
 
@@ -244,6 +250,20 @@ abstract class AbstractResource
     }
 
     /**
+     * Sets the resource creation date.
+     *
+     * NOTE : creation date is already handled by the timestamp listener; this
+     *        setter exists mainly for testing purposes.
+     *
+     * @param \DateTime $date
+     */
+    public function setCreationDate(\DateTime $date)
+    {
+        $this->creationDate = $date;
+        $this->modificationDate = $date;
+    }
+
+    /**
      * Returns the resource modification date.
      *
      * @return \DateTime
@@ -252,6 +272,14 @@ abstract class AbstractResource
     {
         return $this->modificationDate;
     }
+
+
+
+    public function setModificationDate(\DateTime $date)
+    {
+        $this->modificationDate = $date;
+    }
+
 
     /**
      * Returns the resource type.
@@ -301,16 +329,6 @@ abstract class AbstractResource
     public function getChildren()
     {
         return $this->children;
-    }
-
-    /**
-     * Adds a child resource.
-     *
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
-     */
-    public function addChild(AbstractResource $resource)
-    {
-        $this->children[] = $resource;
     }
 
     /**
@@ -419,25 +437,6 @@ abstract class AbstractResource
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Sets a user icon.
-     * @param file $iconFile
-     */
-    public function setUserIcon($userIcon)
-    {
-        $this->userIcon = $userIcon;
-    }
-
-    /**
-     * Gets the user icon.
-     *
-     * @return file
-     */
-    public function getUserIcon()
-    {
-        return $this->userIcon;
     }
 
     /**

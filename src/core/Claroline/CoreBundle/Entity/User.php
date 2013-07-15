@@ -1,4 +1,4 @@
-<?php
+<?php //
 
 namespace Claroline\CoreBundle\Entity;
 
@@ -11,13 +11,17 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
-use Claroline\CoreBundle\Entity\WorkspaceRole;
 use Claroline\CoreBundle\Entity\Role;
 // TODO: Implements AdvancedUserInterface
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\UserRepository")
- * @ORM\Table(name="claro_user")
+ * @ORM\Table(
+ *      name="claro_user",
+ *      uniqueConstraints={
+ *          @ORM\UniqueConstraint(name="user", columns={"username"})
+ *      }
+ * )
  * @DoctrineAssert\UniqueEntity("username")
  */
 class User extends AbstractRoleSubject implements Serializable, UserInterface, EquatableInterface
@@ -85,10 +89,10 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      * @ORM\JoinTable(
      *     name="claro_user_group",
      *     joinColumns={
-     *         @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     *         @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      *     },
      *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="group_id", referencedColumnName="id")
+     *         @ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      *     }
      * )
      */
@@ -102,10 +106,10 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      * @ORM\JoinTable(
      *     name="claro_user_role",
      *     joinColumns={
-     *         @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     *         @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      *     },
      *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="role_id", referencedColumnName="id")
+     *         @ORM\JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      *     }
      * )
      */
@@ -125,7 +129,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      *     inversedBy="personalUser",
      *     cascade={"remove"}
      * )
-     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", onDelete="SET NULL", nullable=false)
      */
     protected $personalWorkspace;
 
@@ -145,11 +149,11 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\DesktopTool",
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\OrderedTool",
      *     mappedBy="user"
      * )
      */
-    protected $desktopTools;
+    protected $orderedTools;
 
     public function __construct()
     {
@@ -159,7 +163,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $this->groups = new ArrayCollection();
         $this->abstractResources = new ArrayCollection();
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
-        $this->desktopTools = new ArrayCollection();
+        $this->orderedTools = new ArrayCollection();
     }
 
     public function getId()
@@ -250,14 +254,6 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         return $roleNames;
     }
 
-    public function addRole(Role $role)
-    {
-        parent::addRole($role);
-        if ($role instanceof WorkspaceRole) {
-            $role->addUser($this);
-        }
-    }
-
     public function eraseCredentials()
     {
         $this->plainPassword = null;
@@ -345,6 +341,19 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         return $this->created;
     }
 
+    /**
+     * Sets the user creation date.
+     *
+     * NOTE : creation date is already handled by the timestamp listener; this
+     *        setter exists mainly for testing purposes.
+     *
+     * @param \DateTime $date
+     */
+    public function setCreationDate(\DateTime $date)
+    {
+        $this->created = $date;
+    }
+
     public function getPlatformRole()
     {
         $roles = $this->getEntityRoles();
@@ -378,8 +387,8 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $this->roles->add($platformRole);
     }
 
-    public function getDesktopTools()
+    public function getOrderedTools()
     {
-        return $this->desktopTools;
+        return $this->orderedTools;
     }
 }

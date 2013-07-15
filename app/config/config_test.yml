@@ -21,12 +21,6 @@ doctrine:
         dbname:   %test_database_name%
         user:     %test_database_user%
         password: %test_database_password%
-    orm:
-        mappings:
-            claroline_core_stubs:
-                type: annotation
-                dir: %kernel.root_dir%/../src/core/Claroline/CoreBundle/Tests/Stub/Entity
-                prefix: Claroline\CoreBundle\Tests\Stub\Entity
 
 parameters:
     test.client.class: Claroline\CoreBundle\Library\Testing\TransactionalTestClient

@@ -33,7 +33,7 @@
     {{ parent() }}
     {% javascripts
        vars=["locale"]
-      "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/remove_group_confirm.html.twigjs"
+      "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/removeGroupConfirm.html.twigjs"
        filter="twig_js"
     %}
     <script language="javascript" src="{{ asset_url }}"></script>
@@ -45,15 +45,16 @@
     <div class="margin">
         {{
         macros.breadcrumbs([
-                {
+               {
+                    'icon': 'icon-user',
                     'name': 'users_management'|trans({}, 'platform'),
                     'href': path('claro_admin_users_management')
                 },
-                {'name':'groups_list'|trans({}, 'platform'), 'href':'#'}
+                {'name':'groups_list'|trans({}, 'platform'), 'href':''}
             ])
         }}
         <div class="search-bar">
-            <button class="btn btn-secondary delete-group-button pull-left"><i class="icon-trash"></i> {{ 'delete'|trans({}, 'platform') }}</button>
+            <button class="btn btn-secondary delete-groups-button pull-left"><i class="icon-trash"></i> {{ 'delete'|trans({}, 'platform') }}</button>
 
             <div class="input-append pull-right">
                 <input class="input-medium" type="text" id="search-group-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">

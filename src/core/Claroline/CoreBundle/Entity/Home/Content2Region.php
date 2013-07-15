@@ -7,8 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Content2Region
  *
+ * @ORM\Entity()
  * @ORM\Table(name="claro_content2region")
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Content2RegionRepository")
  */
 class Content2Region
 {
@@ -37,30 +37,32 @@ class Content2Region
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(name="content_id", nullable=false, onDelete="CASCADE")
     */
     private $content;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Region")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(name="region_id", nullable=false, onDelete="CASCADE")
     */
     private $region;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="size", type="string", length=255)
+     * @ORM\Column(name="size", type="string", length=30)
      */
     private $size;
 
     /**
     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content2Region")
+    * @ORM\JoinColumn(name="next_id", nullable=true, onDelete="CASCADE")
     */
     private $next;
 
     /**
     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content2Region")
+    * @ORM\JoinColumn(name="back_id", nullable=true, onDelete="CASCADE")
     */
     private $back;
 

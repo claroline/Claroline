@@ -56,7 +56,7 @@ First you must define a listener to catch the event.
         ...
     }
 
-You can know for wich workspace the configuration change is asked using
+You can know for which workspace the configuration change is asked using
 
     $workspace = $event->getWorkspace();
 
@@ -75,9 +75,46 @@ You'll need to return the configuration form html to the kernel.
     $event->setContent($content);
     $event->stopPropagation();
 
-The action of the form should redirect to one of your controller wich will persist the modification to the configuration.
+**your_form.html.twig:**
+
+    {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
+    <form class="form-horizontal" id="rss-reader-form" action="{{ path('claro_rss_config_update', {'configId': rssConfig.getId(), 'redirectToHome': app.request.isXMLHttpRequest ? 1 : 0})}} " method="post" {{ form_enctype(form) }}>
+        <fieldset>
+            {{ form_widget(form) }}
+        </fieldset>
+
+        {{ macros.flashBox() }}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            <a href="{{ path('claro_workspace_list') }}">
+                <button type="button" class="btn  claro-widget-form-cancel">{{ 'cancel'|trans({}, 'platform') }}</button>
+            </a>
+        </div>
+    </form>
+
+The cancel button must have **claro-widget-form-cancel** for ajax form's injection.
+
+The action of the form should redirect to one of your controller which will persist the modification to the configuration.
+To know if the form is call from widget's list with ajax add **redirectToHome** parameter to your route.
+    
+    'redirectToHome': app.request.isXMLHttpRequest ? 1 : 0
+
+**controller class:**
+
 You'll have to take care of the redirection once the change are persisted.
 You'll want to redirect to these routes depending on the context:
+
+    if ($redirectToHome !== 0) {
+        if ($workspaceId === 0) {
+            return $this->redirect($this->generateUrl('claro_desktop_open', array()));
+        } else {
+            return $this->redirect(
+                $this->generateUrl(
+                    'claro_workspace_open_tool', array('workspaceId' => $workspaceId, 'toolName' => 'home')
+                )
+            );
+        }
+    }
 
     if ($config->getWorkspace() != null) {
         $url = $this->generateUrl(
@@ -95,6 +132,7 @@ You'll want to redirect to these routes depending on the context:
     return new RedirectResponse($this->generateUrl('claro_desktop_open'));
 
 *In this snippet, the $config var is an entity of the plugin widget configuration table.*
+
 
 #### Desktop
 
@@ -152,7 +190,7 @@ Define a listener in your listeners.yml file
 
 Simply set a string in the $event->setContent() method.
 
-    use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
+    use Claroline\CoreBundle\Event\Event\DisplayWidgetEvent;
     ...
     function onWorkspaceDisplay(DisplayWidgetEvent $event)
     {

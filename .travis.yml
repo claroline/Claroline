@@ -1,0 +1,24 @@
+language: php
+php:
+  - "5.4"
+  - "5.3"
+env:
+  - DB=mysql
+  - DB=pgsql
+mysql:
+  adapter: mysql2
+  database: claroline_test
+  username: travis
+  encoding: utf8
+postgres:
+  adapter: postgresql
+  database: claroline_test
+  username: postgres
+script: phpunit -c app --testsuite core
+before_script:
+  - cp app/config/local/parameters.yml.dist app/config/local/parameters.yml
+  - sh -c "if ['$DB' = 'mysql']; then sed -i 's/root/travis/' app/config/local/parameters.yml; fi"
+  - sh -c "if ['$DB' = 'pgsql']; then sed -i 's/root/postgres/; s/pdo_mysql/pdo_pgsql' app/config/local/parameters.yml; fi"
+  - composer --prefer-source --dev install
+  - php app/console doctrine:database:create --env=test
+  - php app/console claroline:install --env=test

@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Resource\Revision;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * TextManager will redirect to this controller once a directory is "open" or "edit".
@@ -148,6 +149,8 @@ class TextController extends Controller
      *     name="claro_text_history"
      * )
      *
+     * @Template()
+     *
      * Shows the diff between every text version. This function is a test.
      *
      * @param integer $textId
@@ -178,14 +181,11 @@ class TextController extends Controller
             $d++;
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Text:history.html.twig',
-            array(
-                'differences' => $differences,
-                'original' => $revisions[$size]->getContent(),
-                'workspace' => $text->getWorkspace(),
-                '_resource' => $text
-            )
+        return array(
+            'differences' => $differences,
+            'original' => $revisions[$size]->getContent(),
+            'workspace' => $text->getWorkspace(),
+            '_resource' => $text
         );
     }
 
@@ -195,6 +195,8 @@ class TextController extends Controller
      *     name="claro_text_edit_form"
      * )
      *
+     * @Template()
+     *
      * Displays the text edition form.
      *
      * @param integer $textId
@@ -203,16 +205,14 @@ class TextController extends Controller
      */
     public function editFormAction($textId)
     {
-        $textRepo = $this->container->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\Text');
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $textRepo = $em->getRepository('ClarolineCoreBundle:Resource\Text');
+        $revisionRepo = $em->getRepository('ClarolineCoreBundle:Resource\Revision');
         $text = $textRepo->find($textId);
 
-        return $this->render(
-            'ClarolineCoreBundle:Text:edit.html.twig',
-            array(
-                'text' => $textRepo->getLastRevision($text)->getContent(),
-                '_resource' => $text
-            )
+        return array(
+            'text' => $revisionRepo->getLastRevision($text)->getContent(),
+            '_resource' => $text
         );
     }
 

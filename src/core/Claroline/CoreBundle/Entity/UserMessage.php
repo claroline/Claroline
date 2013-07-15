@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\UserMessageRepository")
  * @ORM\Table(name="claro_user_message")
  */
 class UserMessage
@@ -22,6 +22,7 @@ class UserMessage
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     inversedBy="userMessages"
      * )
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE",  nullable=true)
      */
     private $user;
 
@@ -30,6 +31,7 @@ class UserMessage
      *     targetEntity="Claroline\CoreBundle\Entity\Message",
      *     inversedBy="userMessages"
      * )
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE", nullable=true)
      */
     private $message;
 
@@ -48,11 +50,11 @@ class UserMessage
      */
     protected $isSent;
 
-    public function __construct($isSent = false)
+    public function __construct()
     {
         $this->isRead = false;
         $this->isRemoved = false;
-        $this->isSent = $isSent;
+        $this->isSent = false;
     }
 
     public function getId()
@@ -88,6 +90,11 @@ class UserMessage
     public function isSent()
     {
         return $this->isSent;
+    }
+
+    public function setIsSent($isSent)
+    {
+        $this->isSent = $isSent;
     }
 
     public function getMessage()

@@ -2,57 +2,82 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
 use Claroline\CoreBundle\Entity\Resource\Activity;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Controller of the user's desktop.
  */
 class ActivityController extends Controller
 {
+    private $resourceManager;
+    private $request;
+
     /**
-     * @Route(
+     * @DI\InjectParams({
+     *     "resourceManager"    = @DI\Inject("claroline.manager.resource_manager"),
+     *     "request"            = @DI\Inject("request")
+     * })
+     */
+    public function __construct(
+        ResourceManager $resourceManager,
+        Request $request
+    )
+    {
+        $this->resourceManager = $resourceManager;
+        $this->request = $request;
+    }
+
+    /**
+     * @EXT\Route(
      *    "/{activityId}/add/resource/{resourceId}",
      *    name="claro_activity_add_resource",
           options={"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *      "resource",
+     *      class="ClarolineCoreBundle:Resource\AbstractResource",
+     *      options={"id" = "resourceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "activity",
+     *      class="ClarolineCoreBundle:Resource\Activity",
+     *      options={"id" = "activityId", "strictId" = true}
+     * )
      *
      * Adds a resource to an activity.
      *
-     * @param type $resourceId the resource id
-     * @param type $activityId the activity id
+     * @param AbstractResource $resource
+     * @param Activity $activity
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function addResourceAction($resourceId, $activityId)
+    public function addResourceAction(AbstractResource $resource, Activity $activity)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $repoResource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
-        $resource = $repoResource->find($resourceId);
-        $activity = $repoResource->find($activityId);
         $link = new ResourceActivity();
         $link->setActivity($activity);
         $link->setResource($resource);
         $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
-            ->findBy(array('activity' => $activityId));
+            ->findBy(array('activity' => $activity->getId()));
         $order = count($resourceActivities);
         $link->setSequenceOrder($order);
         $em->persist($link);
         $em->flush();
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $jsonResource = $this->get('claroline.resource.converter')
-            ->toJson($resource, $this->get('security.context')->getToken());
-        $response->setContent($jsonResource);
 
-        return $response;
+        return new JsonResponse(array($this->resourceManager->toArray($resource)));
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{activityId}/remove/resource/{resourceId}",
      *     name="claro_activity_remove_resource",
      *     options={"expose"=true}
@@ -77,7 +102,7 @@ class ActivityController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{activityId}/set/sequence",
      *     name="claro_activity_set_sequence",
      *     options={"expose"=true}
@@ -87,7 +112,7 @@ class ActivityController extends Controller
      * It takes an array of resourceIds as parameter (querystring: ids[]=1&ids[]=2 ...)
      *
      * @param type $activityId the activity id
-     * 
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function setSequenceOrderAction($activityId)
@@ -95,7 +120,7 @@ class ActivityController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
             ->findBy(array('activity' => $activityId));
-        $params = $this->get('request')->query->all();
+        $params = $this->request->query->all();
 
         foreach ($resourceActivities as $resourceActivity) {
             foreach ($params['ids'] as $key => $id) {
@@ -112,24 +137,29 @@ class ActivityController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *    "/leftmenu/{activityId}",
      *    name="claro_activity_left_menu",
      *    options={"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *      "activity",
+     *      class="ClarolineCoreBundle:Resource\Activity",
+     *      options={"id" = "activityId", "strictId" = true}
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Activity/player:leftMenu.html.twig")
      *
      * Renders the left menu of the activity player.
      * Called from an iframe.
      *
-     * @param type $activityId the activity id
+     * @param Activity $activity
      *
      * @return Response
      */
-    public function renderLeftMenuAction($activityId)
+    public function renderLeftMenuAction(Activity $activity)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $activity = $em->getRepository('ClarolineCoreBundle:Resource\Activity')
-            ->find($activityId);
         $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
             ->findResourceActivities($activity);
         $totalSteps = $this->countSteps($activity, 0);
@@ -137,69 +167,69 @@ class ActivityController extends Controller
         $totalItems++;
         $items = array('resource' => $activity, 'step' => 1, 'resources' => $this->getItems($activity));
 
-        return $this->render(
-            'ClarolineCoreBundle:Activity/player:left_menu.html.twig',
-            array(
-                'resourceActivities' => $resourceActivities,
-                'activity' => $activity,
-                'items' => $items,
-                'totalSteps' => $totalSteps,
-                'totalItems' => $totalItems
-            )
+        return array(
+            'resourceActivities' => $resourceActivities,
+            'activity' => $activity,
+            'items' => $items,
+            'totalSteps' => $totalSteps,
+            'totalItems' => $totalItems
         );
     }
 
     /**
-     * @Route (
+     * @EXT\Route (
      *     "/player/{activityId}",
      *     name="claro_activity_show_player"
      * )
+     * @EXT\ParamConverter(
+     *      "activity",
+     *      class="ClarolineCoreBundle:Resource\Activity",
+     *      options={"id" = "activityId", "strictId" = true}
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Activity/player:activity.html.twig")
      *
      * Shows the player layout.
      *
-     * @param type $activityId the activity.
+     * @param Activity $activity
      *
      * @return Response
      */
-    public function showPlayerAction($activityId)
+    public function showPlayerAction(Activity $activity)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $activity = $em->getRepository('ClarolineCoreBundle:Resource\Activity')
-            ->find($activityId);
         $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
             ->findResourceActivities($activity);
-
-        return $this->render(
-            'ClarolineCoreBundle:Activity/player:activity.html.twig',
-            array(
-                'activity' => $activity,
-                'resource' => $resourceActivities[0]->getResource()
-            )
+        $resource = isset($resourceActivities[0]) ? $resourceActivities[0]->getResource(): null;
+        
+        return array(
+            'activity' => $activity,
+            'resource' => $resource
         );
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/instructions/{activityId}",
      *     name="claro_activity_show_instructions"
      * )
-
+     * @EXT\ParamConverter(
+     *      "activity",
+     *      class="ClarolineCoreBundle:Resource\Activity",
+     *      options={"id" = "activityId", "strictId" = true}
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Activity/player:instructions.html.twig")
+     *
      * Show the instructions of an activity.
      *
-     * @param type $activityId the activity id
+     * @param Activity $activity
      *
      * @return Response
      */
-    public function showInstructionsAction($activityId)
+    public function showInstructionsAction(Activity $activity)
     {
-        $activity = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\Activity')
-            ->find($activityId);
-
-        return $this->render(
-            'ClarolineCoreBundle:Activity\player:instructions.html.twig',
-            array('instructions' => $activity)
-        );
+        return array('instructions' => $activity);
     }
 
     /**

@@ -2,12 +2,13 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\CoreBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
+use Claroline\CoreBundle\Event\Event\DisplayWidgetEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Claroline\CoreBundle\Event\Event\DisplayToolEvent;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 /**
  * Controller of the user's desktop.
@@ -15,18 +16,19 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 class DesktopController extends Controller
 {
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/widgets",
      *     name="claro_desktop_widgets"
      * )
+     * @EXT\Template("ClarolineCoreBundle:Widget:widgets.html.twig")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * Displays registered widgets.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function widgetsAction()
+    public function widgetsAction(User $user)
     {
-        $user = $this->get('security.context')->getToken()->getUser();
         $configs = $this->get('claroline.widget.manager')
             ->generateDesktopDisplayConfig($user->getId());
 
@@ -35,47 +37,53 @@ class DesktopController extends Controller
             ->getRepository('ClarolineCoreBundle:Widget\Widget')
             ->findAll();
 
+        $widgets = array();
+
+        //TODO get Parameters' Tool configuration
+
         foreach ($configs as $config) {
             if ($config->isVisible()) {
-                $eventName = "widget_{$config->getWidget()->getName()}_desktop";
-                $event = new DisplayWidgetEvent();
-                $this->get('event_dispatcher')->dispatch($eventName, $event);
+                $event = $this->get('claroline.event.event_dispatcher')->dispatch(
+                    "widget_{$config->getWidget()->getName()}_desktop",
+                    'DisplayWidget'
+                );
+
                 if ($event->hasContent()) {
+                    $widget['id'] = $config->getWidget()->getId();
                     if ($event->hasTitle()) {
-                        $responsesString[$event->getTitle()] = $event->getContent();
+                        $widget['title'] = $event->getTitle();
                     } else {
-                        $responsesString[strtolower($config->getWidget()->getName())] = $event->getContent();
+                        $widget['title'] = strtolower($config->getWidget()->getName());
                     }
+                    $widget['content'] = $event->getContent();
+                    $widget['configurable'] = ($config->isLocked() !== true and $config->getWidget()->isConfigurable());
+
+                    $widgets[] = $widget;
                 }
             }
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Widget:widgets.html.twig',
-            array('widgets' => $responsesString)
+        return array(
+            'widgets' => $widgets,
+            'isDesktop' => true
         );
     }
 
     /**
+     * @EXT\Template()
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
      * Renders the left tool bar. Not routed.
      *
      * @return Response
      */
-    public function renderToolListAction()
+    public function renderToolListAction(User $user)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $user = $this->get('security.context')->getToken()->getUser();
-        $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->findDesktopDisplayedToolsByUser($user);
-
-        return $this->render(
-            'ClarolineCoreBundle:Desktop:tool_list.html.twig',
-            array('tools' => $tools)
-        );
+        return array('tools' => $this->get('claroline.manager.tool_manager')->getDisplayedDesktopOrderedTools($user));
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "tool/open/{toolName}",
      *     name="claro_desktop_open_tool",
      *     options={"expose"=true}
@@ -90,34 +98,30 @@ class DesktopController extends Controller
      */
     public function openToolAction($toolName)
     {
-        $event = new DisplayToolEvent();
-        $eventName = 'open_tool_desktop_'.$toolName;
-        $this->get('event_dispatcher')->dispatch($eventName, $event);
-
-        if (is_null($event->getContent())) {
-            throw new \Exception(
-                "Tool '{$toolName}' didn't return any Response for tool event '{$eventName}'."
-            );
-        }
+        $event = $this->get('claroline.event.event_dispatcher')->dispatch(
+            'open_tool_desktop_'.$toolName,
+            'DisplayTool'
+        );
 
         return new Response($event->getContent());
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/open",
      *     name="claro_desktop_open"
      * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * Opens the desktop.
      *
      * @return Response
      */
-    public function openAction()
+    public function openAction(User $user)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $openedTool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->findDesktopDisplayedToolsByUser($this->get('security.context')->getToken()->getUser());
+            ->findDesktopDisplayedToolsByUser($user);
 
         $route = $this->get('router')->generate(
             'claro_desktop_open_tool',

@@ -13,6 +13,17 @@ class LogWorkspaceWidgetConfig
 {
     /**
      * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @ORM\Column(type="boolean", name="is_default", nullable=false)
+     */
+    protected $isDefault = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
      * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
      */
@@ -218,6 +229,38 @@ class LogWorkspaceWidgetConfig
             and $this->getWsRoleUpdate() === true;
     }
 
+    public function hasAllRestriction()
+    {
+        return count($this->getActionRestriction()) === 0;
+    }
+
+    public function copy (LogWorkspaceWidgetConfig $source = null) {
+        if ($source !== null) {
+            $this->setResourceCopy($source->getResourceCopy());
+            $this->setResourceCreate($source->getResourceCreate());
+            $this->setResourceShortcut($source->getResourceShortcut());
+            $this->setResourceRead($source->getResourceRead());
+            $this->setWsToolRead($source->getWsToolRead());
+            $this->setResourceExport($source->getResourceExport());
+            $this->setResourceUpdate($source->getResourceUpdate());
+            $this->setResourceUpdateRename($source->getResourceUpdateRename());
+            $this->setResourceChildUpdate($source->getResourceChildUpdate());
+            $this->setResourceDelete($source->getResourceDelete());
+            $this->setResourceMove($source->getResourceMove());
+            $this->setWsRoleSubscribeUser($source->getWsRoleSubscribeUser());
+            $this->setWsRoleSubscribeGroup($source->getWsRoleSubscribeGroup());
+            $this->setWsRoleUnsubscribeUser($source->getWsRoleUnsubscribeUser());
+            $this->setWsRoleUnsubscribeGroup($source->getWsRoleUnsubscribeGroup());
+            $this->setWsRoleChangeRight($source->getWsRoleChangeRight());
+            $this->setWsRoleCreate($source->getWsRoleCreate());
+            $this->setWsRoleDelete($source->getWsRoleDelete());
+            $this->setWsRoleUpdate($source->getWsRoleUpdate());
+
+            $this->setAmount($source->getAmount());
+            $this->setWorkspace($source->getWorkspace());
+        }
+    }
+
     /**
      * Get id
      *
@@ -226,6 +269,29 @@ class LogWorkspaceWidgetConfig
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set isDefault
+     *
+     * @param boolean $isDefault
+     * @return LogWorkspaceWidgetConfig
+     */
+    public function setIsDefault($isDefault)
+    {
+        $this->isDefault = $isDefault;
+    
+        return $this;
+    }
+
+    /**
+     * Get isDefault
+     *
+     * @return boolean 
+     */
+    public function getIsDefault()
+    {
+        return $this->isDefault;
     }
 
     /**

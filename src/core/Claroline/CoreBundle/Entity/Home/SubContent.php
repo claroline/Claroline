@@ -7,8 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * SubContent
  *
+ * @ORM\Entity()
  * @ORM\Table(name="claro_subcontent")
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\SubContentRepository")
  */
 class SubContent
 {
@@ -37,30 +37,32 @@ class SubContent
 
      /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(name="father_id", nullable=false, onDelete="CASCADE")
     */
     private $father;
 
      /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(name="child_id", nullable=false, onDelete="CASCADE")
     */
     private $child;
 
         /**
      * @var string
      *
-     * @ORM\Column(name="size", type="string", length=255)
+     * @ORM\Column(name="size", type="string", nullable=true, length=255)
      */
     private $size;
 
     /**
     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\SubContent")
+    *  @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
     */
     private $next;
 
     /**
     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\SubContent")
+    *  @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
     */
     private $back;
 
