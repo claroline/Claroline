@@ -34,8 +34,7 @@
         "fortawesome/fontawesome": "dev-master",
         "xaguilars/bootstrap-colorpicker": "dev-master",
         "zenstruck/form-bundle": "dev-master",
-        "icap-lyon1/simple-tag-bundle": "dev-master",
-        "egeloen/ckeditor-bundle": "2.*"
+        "icap-lyon1/simple-tag-bundle": "dev-master"
     },
     "require-dev": {
         "mockery/mockery": "dev-master@dev",
