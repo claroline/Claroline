@@ -13,8 +13,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceRoleSubscribeEvent;
-use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceRoleUnsubscribeEvent;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
@@ -244,7 +242,7 @@ class UserController extends Controller
      *     options={"expose"=true},
      *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
      * )
-     * @EXT\Method("PUT")
+     * @EXT\Method({"PUT", "GET"})
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
@@ -273,8 +271,11 @@ class UserController extends Controller
 
             if (is_null($userRole)) {
                 $this->roleManager->associateRole($user, $role);
-                $log = new LogWorkspaceRoleSubscribeEvent($role, $user);
-                $this->eventDispatcher->dispatch('log', $log);
+                $this->eventDispatcher->dispatch(
+                    'log',
+                    'Log\LogWorkspaceRoleSubscribe',
+                    array($role, $user)
+                );
             }
         }
 
@@ -288,7 +289,7 @@ class UserController extends Controller
      *     options={"expose"=true},
      *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
      * )
-     * @EXT\Method("DELETE")
+     * @EXT\Method({"DELETE", "GET"})
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
@@ -317,9 +318,11 @@ class UserController extends Controller
             foreach ($roles as $role) {
                 if ($user->hasRole($role->getName())) {
                     $this->roleManager->dissociateRole($user, $role);
-
-                    $log = new LogWorkspaceRoleUnsubscribeEvent($role, $user);
-                    $this->eventDispatcher->dispatch('log', $log);
+                    $this->eventDispatcher->dispatch(
+                        'log',
+                        'Log\LogWorkspaceRoleUnsubscribe',
+                        array($role, $user)
+                    );
                 }
             }
         }
