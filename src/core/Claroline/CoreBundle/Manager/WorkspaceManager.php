@@ -6,7 +6,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Workspace\Template;
-use Claroline\CoreBundle\Event\Event\ExportToolEvent;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Repository\AbstractResourceRepository;
@@ -19,7 +18,6 @@ use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Yaml\Yaml;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -120,7 +118,6 @@ class WorkspaceManager
             $preparedRights
         );
 
-        $filePaths = $this->extractFiles($config);
         $toolsConfig = $config->getToolsConfiguration();
         $toolsPermissions = $config->getToolsPermissions();
 
@@ -134,17 +131,18 @@ class WorkspaceManager
             }
 
             $confTool = isset($toolsConfig[$toolName]) ?  $toolsConfig[$toolName] : array();
-
+            
             $this->toolManager->import(
                 $confTool,
                 $rolesToAdd,
-                $filePaths,
+                $baseRoles,
                 $perms['name'],
                 $workspace,
                 $root,
                 $this->toolManager->findOneByName($toolName),
                 $manager,
-                $position
+                $position,
+                $config->getArchive()
             );
             $position++;
         }
@@ -179,7 +177,7 @@ class WorkspaceManager
         $archive->open($pathArch, \ZipArchive::CREATE);
         $arTools = array();
         $description = array();
-        $workspaceTools = $this->orderedToolRepo->findBy(array('workspace' => $workspace));
+        $workspaceTools = $this->orderedToolRepo->findBy(array('workspace' => $workspace), array('order' => 'ASC'));
         $roles = $this->roleRepo->findByWorkspace($workspace);
         $root = $this->resourceRepo->findWorkspaceRoot($workspace);
 
@@ -246,25 +244,6 @@ class WorkspaceManager
         }
 
         return $preparedRightsArray;
-    }
-
-    private function extractFiles(Configuration $config)
-    {
-        $archpath = $config->getArchive();
-        $extractPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('claro_ws_tmp_', true);
-        $archive = new \ZipArchive();
-        $archive->open($archpath);
-        $archive->extractTo($extractPath);
-        $realPaths = array();
-        $confTools = $config->getToolsConfiguration();
-
-        if (isset($confTools['files'])) {
-            foreach ($config['files'] as $path) {
-                $realPaths[] = $extractPath . DIRECTORY_SEPARATOR . $path;
-            }
-        }
-
-        return $realPaths;
     }
 
     /**
