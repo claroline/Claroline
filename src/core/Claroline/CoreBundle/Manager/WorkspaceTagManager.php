@@ -96,7 +96,7 @@ class WorkspaceTagManager
 
     public function createTagHierarchy(WorkspaceTag $tag, WorkspaceTag $parent, $level)
     {
-        $tagHierarchy = $this->om->factory('ClarolineCoreBundle:Workspace\WorkspaceTagHierarchy');
+        $tagHierarchy = $this->om->factory('Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy');
         $tagHierarchy->setTag($tag);
         $tagHierarchy->setParent($parent);
         $tagHierarchy->setLevel($level);
