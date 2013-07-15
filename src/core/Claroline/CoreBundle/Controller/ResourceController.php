@@ -133,7 +133,7 @@ class ResourceController
             return new JsonResponse($resourcesArray);
         }
 
-        return new Response(setContent($event->getErrorFormContent()));
+        return new Response($event->getErrorFormContent());
     }
 
     /**
