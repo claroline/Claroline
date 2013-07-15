@@ -6,20 +6,18 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 class ResourceManagerController extends Controller
 {
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/workspace/{workspace}/rights/form/role/{role}",
      *     name="claro_workspace_resource_rights_creation_form"
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Template("ClarolineCoreBundle:Tool\workspace\resource_manager:resourceRightsCreation.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\resource_manager:resourceRightsCreation.html.twig")
      *
      * @param AbstractWorkspace $workspace
      * @param Role $role
