@@ -12,7 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
-use Claroline\CoreBundle\Entity\WorkspaceRole;
 use Claroline\CoreBundle\Entity\Role;
 // TODO: Implements AdvancedUserInterface
 
@@ -185,11 +184,11 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      * @var DesktopTool[]|ArrayCollection
      *
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\DesktopTool",
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\OrderedTool",
      *     mappedBy="user"
      * )
      */
-    protected $desktopTools;
+    protected $orderedTools;
 
     /**
      * @var UserBadge[]|ArrayCollection
@@ -215,7 +214,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $this->groups            = new ArrayCollection();
         $this->abstractResources = new ArrayCollection();
         $this->salt              = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
-        $this->desktopTools      = new ArrayCollection();
+        $this->orderedTools      = new ArrayCollection();
         $this->userBadges        = new ArrayCollection();
     }
 
@@ -366,23 +365,6 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         return $roleNames;
     }
 
-    /**
-     * @param Role $role
-     * @return User
-     */
-    public function addRole(Role $role)
-    {
-        parent::addRole($role);
-        if ($role instanceof WorkspaceRole) {
-            $role->addUser($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return User
-     */
     public function eraseCredentials()
     {
         $this->plainPassword = null;
@@ -526,6 +508,19 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     }
 
     /**
+     * Sets the user creation date.
+     *
+     * NOTE : creation date is already handled by the timestamp listener; this
+     *        setter exists mainly for testing purposes.
+     *
+     * @param \DateTime $date
+     */
+    public function setCreationDate(\DateTime $date)
+    {
+        $this->created = $date;
+    }
+
+    /**
      * @return mixed
      */
     public function getPlatformRole()
@@ -561,12 +556,9 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $this->roles->add($platformRole);
     }
 
-    /**
-     * @return DesktopTool[]|ArrayCollection
-     */
-    public function getDesktopTools()
+    public function getOrderedTools()
     {
-        return $this->desktopTools;
+        return $this->orderedTools;
     }
 
     /**

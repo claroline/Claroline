@@ -1029,17 +1029,19 @@
             });
         },
         download: function (resourceIds) {
-            window.location = this.parameters.appPath + '/resource/export?' + $.param({ids: resourceIds});
+            window.location = this.parameters.appPath + '/resource/download?' + $.param({ids: resourceIds});
         },
         open: function (resourceType, resourceId, directoryHistory) {
             var _path = '';
             for (var i = 0; i < directoryHistory.length; i++) {
-                if (i === 0) {
-                    _path += '?';
-                } else {
-                    _path += '&';
+                    if (directoryHistory[i].id !== 0) {
+                    if (i === 0) {
+                        _path += '?';
+                    } else {
+                        _path += '&';
+                    }
+                    _path += '_breadcrumbs[]=' + directoryHistory[i].id;
                 }
-                _path += '_breadcrumbs[]=' + directoryHistory[i].id;
             }
 
             window.location = this.parameters.appPath + '/resource/open/' + resourceType + '/' +

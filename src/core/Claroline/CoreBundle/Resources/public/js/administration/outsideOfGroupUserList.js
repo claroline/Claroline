@@ -36,14 +36,12 @@
                 array[i] = element.value;
                 i++;
             });
-            parameters.userIds = array;
+            parameters.ids = array;
             var route = Routing.generate('claro_admin_multiadd_user_to_group', {'groupId': groupId});
             route += '?' + $.param(parameters);
             $.ajax({
                 url: route,
                 success: function () {
-                    $('#validation-box').modal('hide');
-                    $('#validation-box-body').empty();
                     $('.delete-users-button').attr('disabled', 'disabled');
                     $('#deleting').hide();
                     $('.add-users-button').attr('disabled', 'disabled');
@@ -53,6 +51,13 @@
                 },
                 type: 'PUT'
             });
+            $('#validation-box').modal('hide');
+            $('#validation-box-body').empty();
+        });
+
+        $('#modal-cancel-button').click(function () {
+            $('#validation-box').modal('hide');
+            $('#validation-box-body').empty();
         });
     }
 

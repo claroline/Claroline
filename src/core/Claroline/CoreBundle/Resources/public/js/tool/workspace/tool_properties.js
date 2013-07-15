@@ -26,7 +26,7 @@
         if (isCurrentElementChecked) {
             route = Routing.generate(
                 'claro_tool_workspace_add',
-                { 'toolId' : toolId, 'position': rowIndex, 'workspaceId': wsId, 'roleId': roleId }
+                { 'toolId' : toolId, 'workspaceId': wsId, 'roleId': roleId }
             );
         } else {
             route = Routing.generate(

@@ -38,7 +38,7 @@
                 array[i] = element.value;
                 i++;
             });
-            parameters.userIds = array;
+            parameters.ids = array;
             var route = Routing.generate('claro_admin_multidelete_user_from_group', {'groupId': groupId});
             route += '?' + $.param(parameters);
             $.ajax({
@@ -47,11 +47,11 @@
                     $('.chk-user:checked').each(function (index, element) {
                         $(element).parent().parent().remove();
                     });
-                    $('#validation-box').modal('hide');
-                    $('#validation-box-body').empty();
                 },
                 type: 'DELETE'
             });
+            $('#validation-box').modal('hide');
+            $('#validation-box-body').empty();
         });
     }
 

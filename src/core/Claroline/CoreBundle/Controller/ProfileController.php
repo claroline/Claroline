@@ -2,21 +2,50 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Claroline\CoreBundle\Entity\User;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Form\ProfileType;
-use Claroline\CoreBundle\Library\Event\LogUserUpdateEvent;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\Event\Log\LogUserUpdateEvent;
+use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Event\StrictDispatcher;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\DiExtraBundle\Annotation as DI;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
  * Controller of the user profile.
  */
 class ProfileController extends Controller
 {
+    private $userManager;
+    private $roleManager;
+    private $eventDispatcher;
+    private $security;
+
+    /**
+     * @DI\InjectParams({
+     *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
+     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
+     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "security"           = @DI\Inject("security.context")
+     * })
+     */
+    public function __construct(
+        UserManager $userManager,
+        RoleManager $roleManager,
+        StrictDispatcher $eventDispatcher,
+        SecurityContextInterface $security
+    )
+    {
+        $this->userManager = $userManager;
+        $this->roleManager = $roleManager;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->security = $security;
+    }
+
     private function isInRoles($role, $roles)
     {
         foreach ($roles as $current) {
@@ -29,12 +58,12 @@ class ProfileController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/form",
      *     name="claro_profile_form"
      * )
      *
-     * @Template("ClarolineCoreBundle:Profile:profileForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Profile:profileForm.html.twig")
      *
      * Displays an editable form of the current user's profile.
      *
@@ -42,22 +71,20 @@ class ProfileController extends Controller
      */
     public function formAction()
     {
-        $user = $this->get('security.context')->getToken()->getUser();
-        $roles = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Role')
-            ->findPlatformRoles($user);
+        $user = $this->security->getToken()->getUser();
+        $roles = $this->roleManager->getPlatformRoles($user);
         $form = $this->createForm(new ProfileType($roles), $user);
 
         return array('profile_form' => $form->createView());
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/update",
      *     name="claro_profile_update"
      * )
      *
-     * @Template("ClarolineCoreBundle:Profile:profileForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Profile:profileForm.html.twig")
      *
      * Updates the user's profile and redirects to the profile form.
      *
@@ -66,15 +93,13 @@ class ProfileController extends Controller
     public function updateAction()
     {
         $request = $this->get('request');
-        $user = $this->get('security.context')->getToken()->getUser();
-        $roles = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Role')
-            ->findPlatformRoles($user);
+        $user = $this->security->getToken()->getUser();
+        $roles = $this->roleManager->getPlatformRoles($user);
+
         $form = $this->get('form.factory')->create(new ProfileType($roles), $user);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-
             $user = $form->getData();
 
             $em = $this->getDoctrine()->getManager();
@@ -82,15 +107,12 @@ class ProfileController extends Controller
             $unitOfWork->computeChangeSets();
             $changeSet = $unitOfWork->getEntityChangeSet($user);
             $newRoles = $form->get('platformRoles')->getData();
-            $user = $this->resetRoles($user);
-            $user = $this->addRoles($user, $newRoles);
-            $em->persist($user);
-            $em->flush();
-            $this->get('security.context')->getToken()->setUser($user);
 
-            $newRoles = $this->get('doctrine.orm.entity_manager')
-                ->getRepository('ClarolineCoreBundle:Role')
-                ->findPlatformRoles($user);
+            $this->roleManager->resetRoles($user);
+            $this->roleManager->associateRoles($user, $newRoles);
+            $this->security->getToken()->setUser($user);
+
+            $newRoles = $this->roleManager->getPlatformRoles($user);
 
             $rolesChangeSet = array();
             //Detect added
@@ -109,8 +131,11 @@ class ProfileController extends Controller
                 $changeSet['roles'] = $rolesChangeSet;
             }
 
-            $log = new LogUserUpdateEvent($user, $changeSet);
-            $this->get('event_dispatcher')->dispatch('log', $log);
+            $this->eventDispatcher->dispatch(
+                'log',
+                'Log\LogUserUpdateEvent',
+                array($user, $changeSet)
+            );
 
             return $this->redirect($this->generateUrl('claro_profile_form'));
         }
@@ -119,13 +144,16 @@ class ProfileController extends Controller
     }
 
     /**
-     * @Route(
-     *     "/view/{userId}/{page}",
-     *           name="claro_profile_view"
+     * @EXT\Route(
+     *     "/view/{userId}",
+     *     name="claro_profile_view"
      * )
-     *
-     * @Template("ClarolineCoreBundle:Profile:profile.html.twig")
-     * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"id" = "userId"})
+     * @EXT\ParamConverter(
+     *      "user",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"id" = "userId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Profile:profile.html.twig")
      *
      * Displays the public profile of an user.
      *
@@ -153,33 +181,5 @@ class ProfileController extends Controller
             'pager'    => $pager,
             'language' => $platformConfigHandler->getParameter('locale_language')
         );
-    }
-
-    private function addRoles(User $user, $newRoles)
-    {
-        foreach ($newRoles as $role) {
-            $user->addRole($role);
-        }
-
-        return $user;
-    }
-
-    private function resetRoles(User $user)
-    {
-        $userRole = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Role')
-            ->findOneByName('ROLE_USER');
-
-        $roles = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Role')
-            ->findPlatformRoles($user);
-
-        foreach ($roles as $role) {
-            if ($role !== $userRole) {
-                $user->removeRole($role);
-            }
-        }
-
-        return $user;
     }
 }

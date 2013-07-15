@@ -4,8 +4,7 @@ namespace Claroline\CoreBundle\Listener;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Event\LogUserLoginEvent;
-use Claroline\CoreBundle\Library\User\Creator;
+use Claroline\CoreBundle\Event\Event\Log\LogUserLoginEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -19,7 +18,6 @@ class AuthenticationSuccessListener
 {
     private $securityContext;
     private $eventDispatcher;
-    private $creator;
     private $trans;
     private $ch;
     private $personalWsTemplateFile;
@@ -28,8 +26,7 @@ class AuthenticationSuccessListener
     /**
      * @DI\InjectParams({
      *     "context"    = @DI\Inject("security.context"),
-     *     "ed"         = @DI\Inject("event_dispatcher"),
-     *     "creator" = @DI\Inject("claroline.user.creator"),
+     *     "ed"         = @DI\Inject("claroline.event.event_dispatcher"),
      *     "trans" = @DI\Inject("translator"),
      *     "ch" = @DI\Inject("claroline.config.platform_config_handler"),
      *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
@@ -41,7 +38,6 @@ class AuthenticationSuccessListener
     public function __construct(
         SecurityContextInterface $context,
         $ed,
-        Creator $creator,
         Translator $trans,
         PlatformConfigurationHandler $ch,
         EntityManager $em,
@@ -50,7 +46,6 @@ class AuthenticationSuccessListener
     {
         $this->securityContext = $context;
         $this->eventDispatcher = $ed;
-        $this->creator = $creator;
         $this->ch = $ch;
         $this->trans = $trans;
         $this->personalWsTemplateFile = $personalWsTemplateFile."default.zip";
@@ -65,8 +60,8 @@ class AuthenticationSuccessListener
     public function onAuthenticationSuccess()
     {
         $user = $this->securityContext->getToken()->getUser();
-        $log = new LogUserLoginEvent($user);
-        $this->eventDispatcher->dispatch('log', $log);
+
+        $this->eventDispatcher->dispatch('log', 'Log\LogUserLogin', array($user));
 
         if ($user instanceof User && $user->getPersonalWorkspace() === null) {
             $this->creator->setPersonalWorkspace($user);

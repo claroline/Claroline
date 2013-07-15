@@ -26,24 +26,26 @@ class Configuration
     private $permsRootConfig;
     private $templateFile;
 
-    public function __construct($template)
+    public function __construct($template, $full = true)
     {
-        $this->templateFile = $template;
-        $this->workspaceType = self::TYPE_SIMPLE;
-        $archive = new \ZipArchive();
+        if ($full) {
+            $this->templateFile = $template;
+            $this->workspaceType = self::TYPE_SIMPLE;
+            $archive = new \ZipArchive();
 
-        if (true === $code = $archive->open($template)) {
-            $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
-            $archive->close();
-            $this->setCreatorRole($parsedFile['creator_role']);
-            $this->setRoles($parsedFile['roles']);
-            $this->setToolsPermissions($parsedFile['tools_infos']);
-            $this->setToolsConfiguration($parsedFile['tools']);
-            $this->setPermsRootConfiguration($parsedFile['root_perms']);
-        } else {
-            throw new \Exception(
-                "Couldn't open template archive '{$template}' (error {$code})"
-            );
+            if (true === $code = $archive->open($template)) {
+                $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
+                $archive->close();
+                $this->setCreatorRole($parsedFile['creator_role']);
+                $this->setRoles($parsedFile['roles']);
+                $this->setToolsPermissions($parsedFile['tools_infos']);
+                $this->setToolsConfiguration($parsedFile['tools']);
+                $this->setPermsRootConfiguration($parsedFile['root_perms']);
+            } else {
+                throw new \Exception(
+                    "Couldn't open template archive '{$template}' (error {$code})"
+                );
+            }
         }
     }
 
