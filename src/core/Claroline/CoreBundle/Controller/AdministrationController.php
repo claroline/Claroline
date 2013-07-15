@@ -16,9 +16,9 @@ use Claroline\CoreBundle\Event\Event\Log\LogGroupRemoveUserEvent;
 use Claroline\CoreBundle\Event\Event\Log\LogGroupDeleteEvent;
 use Claroline\CoreBundle\Event\Event\Log\LogGroupUpdateEvent;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
-use Claroline\CoreBundle\Library\Analytics\Manager;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\UnwritableException;
+use Claroline\CoreBundle\Manager\AnalyticsManager;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
@@ -65,7 +65,7 @@ class AdministrationController extends Controller
         EventDispatcher $eventDispatcher,
         PlatformConfigurationHandler $configHandler,
         FormFactory $formFactory,
-        Manager $analyticsManager
+        AnalyticsManager $analyticsManager
     )
     {
         $this->userManager = $userManager;
