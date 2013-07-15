@@ -2,34 +2,70 @@
 
 namespace Claroline\CoreBundle\Listener\Resource;
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Form\DirectoryType;
 use Claroline\CoreBundle\Entity\Resource\Directory;
-use Claroline\CoreBundle\Library\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Library\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
-use Claroline\CoreBundle\Library\Event\ExportResourceTemplateEvent;
-use Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent;
+use Claroline\CoreBundle\Event\Event\CreateFormResourceEvent;
+use Claroline\CoreBundle\Event\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Event\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Event\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Event\Event\ExportResourceTemplateEvent;
+use Claroline\CoreBundle\Event\Event\ImportResourceTemplateEvent;
+use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Event\StrictDispatcher;
+use Doctrine\ORM\EntityManager;
 
 /**
  * @DI\Service
  */
-class DirectoryListener implements ContainerAwareInterface
+class DirectoryListener
 {
+    private $em;
     private $container;
+    private $roleManager;
+    private $resourceManager;
+    private $security;
+    private $eventDispatcher;
+    private $formFactory;
+    private $templating;
 
     /**
      * @DI\InjectParams({
-     *     "container" = @DI\Inject("service_container")
+     *     "em"                 = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
+     *     "resourceManager"    = @DI\Inject("claroline.manager.resource_manager"),
+     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "security"           = @DI\Inject("security.context"),
+     *     "formFactory"        = @DI\Inject("form.factory"),
+     *     "templating"         = @DI\Inject("templating"),
+     *     "container"          = @DI\Inject("service_container")
      * })
-     *
-     * @param ContainerInterface $container
      */
-    public function setContainer(ContainerInterface $container = null)
+    public function __construct(
+        EntityManager $em,
+        RoleManager $roleManager,
+        ResourceManager $resourceManager,
+        StrictDispatcher $eventDispatcher,
+        SecurityContextInterface $security,
+        FormFactoryInterface $formFactory,
+        TwigEngine $templating,
+        ContainerInterface $container
+    )
     {
+        $this->em = $em;
+        $this->roleManager = $roleManager;
+        $this->resourceManager = $resourceManager;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->security = $security;
+        $this->formFactory = $formFactory;
+        $this->templating = $templating;
         $this->container = $container;
     }
 
@@ -40,8 +76,8 @@ class DirectoryListener implements ContainerAwareInterface
      */
     public function onCreateForm(CreateFormResourceEvent $event)
     {
-        $form = $this->container->get('form.factory')->create(new DirectoryType, new Directory());
-        $response = $this->container->get('templating')->render(
+        $form = $this->formFactory->create(new DirectoryType, new Directory());
+        $response = $this->templating->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
@@ -60,19 +96,17 @@ class DirectoryListener implements ContainerAwareInterface
     public function onCreate(CreateResourceEvent $event)
     {
         $request = $this->container->get('request');
-        $form = $this->container
-            ->get('form.factory')
-            ->create(new DirectoryType(), new Directory());
+        $form = $this->formFactory->create(new DirectoryType(), new Directory());
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $event->setResource($form->getData());
+            $event->setResources(array($form->getData()));
             $event->stopPropagation();
 
             return;
         }
 
-        $content = $this->container->get('templating')->render(
+        $content = $this->templating->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
@@ -91,7 +125,7 @@ class DirectoryListener implements ContainerAwareInterface
     public function onOpen(OpenResourceEvent $event)
     {
         $dir = $event->getResource();
-        $file = $this->container->get('claroline.resource.exporter')->exportResources(array($dir->getId()));
+        $file = $this->resourceManager->download(array($dir));
         $response = new StreamedResponse();
 
         $response->setCallBack(
@@ -117,18 +151,19 @@ class DirectoryListener implements ContainerAwareInterface
      */
     public function onExportTemplate(ExportResourceTemplateEvent $event)
     {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $resourceRepo = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
+        $resourceRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
         $resource = $event->getResource();
         //@todo one request to retrieve every directory and not needing a condition.
         $children = $resourceRepo->findChildren($resource, array('ROLE_ADMIN'));
         $dataChildren = array();
-        $ed = $this->container->get('event_dispatcher');
 
         foreach ($children as $child) {
             if ($child['type'] === 'directory') {
-                $newEvent = new ExportResourceTemplateEvent($resourceRepo->find($child['id']));
-                $ed->dispatch("resource_directory_to_template", $newEvent);
+                $newEvent = $this->eventDispatcher->dispatch(
+                    'resource_directory_to_template',
+                    'ExportResourceTemplate',
+                    array($resourceRepo->find($child['id']))
+                );
                 $descr = $newEvent->getConfig();
                 $dataChildren[] = $descr;
             }
@@ -136,15 +171,19 @@ class DirectoryListener implements ContainerAwareInterface
 
         $config = array('type' => 'directory', 'name' => $resource->getName(), 'id' => $resource->getId());
         $config['children'] = $dataChildren;
-        $roles = $em->getRepository('ClarolineCoreBundle:Role')->findByWorkspace($resource->getWorkspace());
+        $roles = $this->roleManager->getRolesByWorkspace($resource->getWorkspace());
 
         foreach ($roles as $role) {
-            $perms = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
+            $perms = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
                 ->findMaximumRights(array($role->getName()), $resource);
-            $perms['canCreate'] = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
-                ->findCreationRights(array($role->getName()), $resource);
+            if (get_class($resource) === 'Claroline\CoreBundle\Entity\Resource\Directory') {
+                $perms['canCreate'] = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
+                    ->findCreationRights(array($role->getName()), $resource);
+            } else {
+                $perms['canCreate'] = array();
+            }
 
-            $config['perms'][rtrim(str_replace(range(0, 9), '', $role->getName()), '_')] = $perms;
+            $config['perms'][$this->roleManager->getRoleBaseName($role->getName())] = $perms;
         }
 
         $event->setConfig($config);
@@ -159,28 +198,26 @@ class DirectoryListener implements ContainerAwareInterface
     public function onImportTemplate(ImportResourceTemplateEvent $event)
     {
         $config = $event->getConfig();
-        $manager = $this->container->get('claroline.resource.manager');
+        $manager = $this->container->get('claroline.manager.resource_manager');
         $directory = new Directory();
         $directory->setName($config['name']);
         $manager->create(
             $directory,
-            $event->getParent()->getId(),
-            $config['type'],
+            $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName($config['type']),
             $event->getUser(),
+            $event->getWorkspace(),
+            $event->getParent(),
+            null,
             $config['perms']
         );
-        $ed = $this->container->get('event_dispatcher');
         $createdResources[$config['id']] = $directory->getId();
 
         foreach ($config['children'] as $child) {
-            $newEvent = new ImportResourceTemplateEvent(
-                $child,
-                $directory,
-                $event->getUser()
+            $newEvent = $this->eventDispatcher->dispatch(
+                'resource_directory_from_template',
+                'ImportResourceTemplate',
+                array($child, $directory, $event->getUser(), $createdResources)
             );
-            $newEvent->setCreatedResources($createdResources);
-            $ed->dispatch("resource_directory_from_template", $newEvent);
-
             $childResources = $newEvent->getCreatedResources();
 
             foreach ($childResources as $key => $value) {
@@ -190,5 +227,48 @@ class DirectoryListener implements ContainerAwareInterface
 
         $event->setCreatedResources($createdResources);
         $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("delete_directory")
+     *
+     * @param DeleteResourceEvent $event
+     *
+     * Removes a directory.
+     */
+    public function delete(DeleteResourceEvent $event)
+    {
+        $resource = $event->getResource();
+
+        if ($resource->getParent() === null) {
+            throw new \LogicException('Root directory cannot be removed');
+        }
+
+        $children = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
+            ->getChildren($resource, false, 'path', 'DESC');
+
+        foreach ($children as $child) {
+            $this->eventDispatcher->dispatch(
+                'delete_{$child->getResourceType()->getName()}',
+                'DeleteResource',
+                array($child)
+            );
+        }
+    }
+
+    /**
+     * @DI\Observe("copy_directory")
+     *
+     * @param CopyResourceEvent $event
+     *
+     * Copy a directory.
+     */
+    public function copy(CopyResourceEvent $event)
+    {
+        $resourceCopy = new Directory();
+        $dirType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+            ->findOneByName('directory');
+        $resourceCopy->setResourceType($dirType);
+        $event->setCopy($resourceCopy);
     }
 }

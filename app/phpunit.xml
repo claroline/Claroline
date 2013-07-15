@@ -20,10 +20,63 @@
     </php>
 
     <testsuites>
+
         <testsuite name="Claronext test suite">
             <directory>../src/core/*/*Bundle/Tests</directory>
             <directory>../src/plugin/*/*Bundle/Tests</directory>
         </testsuite>
+
+        <testsuite name="core">
+            <directory>../src/core/Claroline/CoreBundle/Tests/Converter</directory>
+            <directory>../src/core/Claroline/CoreBundle/Tests/Controller</directory>
+            <!--<directory>../src/core/Claroline/CoreBundle/Tests/Database</directory>-->
+            <directory>../src/core/Claroline/CoreBundle/Tests/Event</directory>
+            <directory>../src/core/Claroline/CoreBundle/Tests/Form</directory>
+            <directory>../src/core/Claroline/CoreBundle/Tests/Library</directory>
+            <directory>../src/core/Claroline/CoreBundle/Tests/Listener</directory>
+            <directory>../src/core/Claroline/CoreBundle/Tests/Manager</directory>
+            <directory>../src/core/Claroline/CoreBundle/Tests/Persistence</directory>
+            <directory>../src/core/Claroline/CoreBundle/Tests/Repository</directory>
+            <directory>../src/core/Claroline/CoreBundle/Tests/Twig</directory>
+
+            <!-- TO BE REWRITTEN IN UNIT STYLE -->
+
+            <!--
+            <directory>../src/core/Claroline/CoreBundle/Tests/Controller</directory>
+            <directory>../src/core/Claroline/CoreBundle/Tests/Entity</directory> SOME NEED TO BE REMOVED
+            <file>../src/core/Claroline/CoreBundle/Tests/Library/Installation/Plugin/DatabaseWriterTest.php</file>
+            <file>../src/core/Claroline/CoreBundle/Tests/Library/Installation/Plugin/MigratorTest.php</file>
+            <directory>../src/core/Claroline/CoreBundle/Tests/Library/Security/Voter</directory>
+            <directory>../src/core/Claroline/CoreBundle/Tests/Listener</directory>
+            -->
+
+            <!-- TO BE TESTED -->
+
+            <!--
+            <directory>../src/core/Claroline/CoreBundle/Tests/Library/Analytics</directory>
+            <directory>../src/core/Claroline/CoreBundle/Tests/Library/Home</directory>
+            <directory>../src/core/Claroline/CoreBundle/Tests/Library/Log</directory>
+            <file>../src/core/Claroline/CoreBundle/Tests/Library/Resource/ModeAccessor.php</file>
+            <file>../src/core/Claroline/CoreBundle/Tests/Library/Security/TokenUpdater.php</file>
+            <file>../src/core/Claroline/CoreBundle/Tests/Library/Security/Utilities.php</file>
+            <directory>../src/core/Claroline/CoreBundle/Tests/Library/Templating</directory>
+            <directory>../src/core/Claroline/CoreBundle/Tests/Library/Themes</directory>
+            <directory>../src/core/Claroline/CoreBundle/Tests/Library/Utilities</directory>
+            <directory>../src/core/Claroline/CoreBundle/Tests/Library/Widget</directory>
+            <directory>../src/core/Claroline/CoreBundle/Tests/Library/Workspace</directory>
+            <file>../src/core/Claroline/CoreBundle/Tests/Manager/GroupManagerTest.php</file>
+            <file>../src/core/Claroline/CoreBundle/Tests/Manager/WorkspaceManagerTest.php</file>
+            <file>../src/core/Claroline/CoreBundle/Tests/Manager/WorkspaceTagManagerTest.php</file>
+            <directory>../src/core/Claroline/CoreBundle/Tests/Pager</directory>
+            <file>../src/core/Claroline/CoreBundle/Tests/Repository/ActivityRepositoryTest.php</file>
+            <file>../src/core/Claroline/CoreBundle/Tests/Repository/EventRepositoryTest.php</file>
+            <file>../src/core/Claroline/CoreBundle/Tests/Repository/LogRepositoryTest.php</file>
+            <file>../src/core/Claroline/CoreBundle/Tests/Twig/HomeExtensionTest.php</file>
+            <file>../src/core/Claroline/CoreBundle/Tests/Twig/WorkspaceAccessExtensionTest.php</file>
+            <directory>../src/core/Claroline/CoreBundle/Tests/Validator</directory>
+            -->
+        </testsuite>
+
     </testsuites>
 
     <filter>

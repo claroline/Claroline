@@ -47,16 +47,19 @@ class ConfigurationChecker implements CheckerInterface
 
             return $errors;
         }
+
         $names = array();
-        $listTool = array();
         $listResource = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
+
         foreach ($listResource as $resource) {
-                $names[] = $resource->getName();
+            $names[] = $resource->getName();
         }
 
+        $tools = array();
         $listTool = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool')->findAll();
+
         foreach ($listTool as $tool) {
-                $tools[] = $tool->getName();
+            $tools[] = $tool->getName();
         }
 
         $processor = new Processor();

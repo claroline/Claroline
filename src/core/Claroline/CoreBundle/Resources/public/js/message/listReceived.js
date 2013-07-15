@@ -34,7 +34,7 @@
             var parameters = {},
                 i = 0,
                 array = [],
-                route =  Routing.generate('claro_message_delete_to');
+                route =  Routing.generate('claro_message_soft_delete');
 
             $('.chk-delete:checked').each(function (index, element) {
                 array[i] = element.value;

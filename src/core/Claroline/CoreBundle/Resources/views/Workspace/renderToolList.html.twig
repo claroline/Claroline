@@ -3,7 +3,7 @@
         <li class="disabled">
             <a><b>{{ workspace.getName() }} </b><em>({{ workspace.getCode() }})</em></a>
         </li>
-        {% if is_granted('ROLE_WS_MANAGER_' ~ workspace.getId()) %}
+        {% if is_granted('ROLE_WS_MANAGER_' ~ workspace.getGuid()) %}
         <li>
 
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse">
@@ -28,11 +28,11 @@
             </div>
         </li>
         {% endif %}
-        {% for toolWithTranslation in toolsWithTranslation %}
-        <li{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': toolWithTranslation['tool'].getName()}) | compareRoute | raw }}>
-            <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': toolWithTranslation['tool'].getName()}) }}">
-                <i class="{{ toolWithTranslation['tool'].getClass() }}"></i>
-                <span>{{ toolWithTranslation['name'] }}</span>
+        {% for orderedTool in orderedTools %}
+        <li{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': orderedTool.getTool().getName()}) | compareRoute | raw }}>
+            <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': orderedTool.getTool().getName()}) }}">
+                <i class="{{ orderedTool.getTool().getClass() }}"></i>
+                <span>{{ orderedTool.getName() }}</span>
                 <i class="icon-chevron-right pull-right"></i>
             </a>
             </li>

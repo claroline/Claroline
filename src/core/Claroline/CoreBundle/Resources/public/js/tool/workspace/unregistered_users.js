@@ -42,14 +42,14 @@
             $.ajax({
                 url: route,
                 success: function () {
-                    $('#validation-box').modal('hide');
-                    $('#validation-box-body').empty();
                     $('.chk-user:checked').each(function (index, element) {
                         $(element).parent().parent().remove();
                     });
                 },
                 type: 'PUT'
             });
+            $('#validation-box').modal('hide');
+            $('#validation-box-body').empty();
         });
     }
 

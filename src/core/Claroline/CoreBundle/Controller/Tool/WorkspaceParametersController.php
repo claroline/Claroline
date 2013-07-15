@@ -2,28 +2,60 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Controller\Tool\AbstractParametersController;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Tool\Tool;
-use Claroline\CoreBundle\Library\Event\ConfigureWorkspaceToolEvent;
-use Claroline\CoreBundle\Form\WorkspaceEditType;
-use Claroline\CoreBundle\Form\WorkspaceTemplateType;
+use Claroline\CoreBundle\Event\Event\ConfigureWorkspaceToolEvent;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
+use JMS\DiExtraBundle\Annotation as DI;
 
 class WorkspaceParametersController extends AbstractParametersController
 {
+    private $workspaceManager;
+    private $security;
+    private $eventDispatcher;
+    private $formFactory;
+    private $router;
+
     /**
-     * @Route(
+     * @DI\InjectParams({
+     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "security"           = @DI\Inject("security.context"),
+     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
+     *     "router"             = @DI\Inject("router")
+     * })
+     */
+    public function __construct(
+        WorkspaceManager $workspaceManager,
+        SecurityContextInterface $security,
+        StrictDispatcher $eventDispatcher,
+        FormFactory $formFactory,
+        UrlGeneratorInterface $router
+    )
+    {
+        $this->workspaceManager = $workspaceManager;
+        $this->security = $security;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->formFactory = $formFactory;
+        $this->router = $router;
+    }
+
+    /**
+     * @EXT\Route(
      *     "/{workspace}/form/export",
      *     name="claro_workspace_export_form"
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Template("ClarolineCoreBundle:Tool\workspace\parameters:template.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:template.html.twig")
      *
      * @param AbstractWorkspace $workspace
      *
@@ -32,7 +64,7 @@ class WorkspaceParametersController extends AbstractParametersController
     public function workspaceExportFormAction(AbstractWorkspace $workspace)
     {
         $this->checkAccess($workspace);
-        $form = $this->get('form.factory')->create(new WorkspaceTemplateType());
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_TEMPLATE);
 
         return array(
             'form' => $form->createView(),
@@ -41,13 +73,13 @@ class WorkspaceParametersController extends AbstractParametersController
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspace}/export",
      *     name="claro_workspace_export"
      * )
-     * @Method("POST")
+     * @EXT\Method("POST")
      *
-     * @Template("ClarolineCoreBundle:Tool\workspace\parameters:template.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:template.html.twig")
      *
      * @param AbstractWorkspace $workspace
      *
@@ -57,13 +89,13 @@ class WorkspaceParametersController extends AbstractParametersController
     {
         $this->checkAccess($workspace);
         $request = $this->getRequest();
-        $form = $this->createForm(new WorkspaceTemplateType());
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_TEMPLATE);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $name = $form->get('name')->getData();
-            $this->get('claroline.workspace.exporter')->export($workspace, $name);
-            $route = $this->get('router')->generate(
+            $this->workspaceManager->export($workspace, $name);
+            $route = $this->router->generate(
                 'claro_workspace_open_tool',
                 array('toolName' => 'parameters', 'workspaceId' => $workspace->getId())
             );
@@ -78,13 +110,13 @@ class WorkspaceParametersController extends AbstractParametersController
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspace}/editform",
      *     name="claro_workspace_edit_form"
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Template("ClarolineCoreBundle:Tool\workspace\parameters:workspaceEdit.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:workspaceEdit.html.twig")
      *
      * @param AbstractWorkspace $workspace
      *
@@ -93,7 +125,7 @@ class WorkspaceParametersController extends AbstractParametersController
     public function workspaceEditFormAction(AbstractWorkspace $workspace)
     {
         $this->checkAccess($workspace);
-        $form = $this->createForm(new WorkspaceEditType(), $workspace);
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array(), $workspace);
 
         return array(
             'form' => $form->createView(),
@@ -101,15 +133,14 @@ class WorkspaceParametersController extends AbstractParametersController
         );
     }
 
-
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspace}/edit",
      *     name="claro_workspace_edit"
      * )
-     * @Method("POST")
+     * @EXT\Method("POST")
      *
-     * @Template("ClarolineCoreBundle:Tool\workspace\parameters:workspaceEdit.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:workspaceEdit.html.twig")
      *
      * @param AbstractWorkspace $workspace
      *
@@ -117,21 +148,18 @@ class WorkspaceParametersController extends AbstractParametersController
      */
     public function workspaceEditAction(AbstractWorkspace $workspace)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-
-        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
+        if (!$this->security->isGranted('parameters', $workspace)) {
             throw new AccessDeniedException();
         }
 
         $wsRegisteredName = $workspace->getName();
         $wsRegisteredCode = $workspace->getCode();
-        $form = $this->createForm(new WorkspaceEditType(), $workspace);
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array(), $workspace);
         $request = $this->getRequest();
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em->persist($workspace);
-            $em->flush();
+            $this->workspaceManager->createWorkspace($workspace);
 
             return $this->redirect(
                 $this->generateUrl(
@@ -154,30 +182,25 @@ class WorkspaceParametersController extends AbstractParametersController
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspace}/tool/{tool}/config",
      *     name="claro_workspace_tool_config"
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
      * @param AbstractWorkspace $workspace
      * @param Tool $tool
      *
-     * @return Response
+     * @return Response 
      */
     public function openWorkspaceToolConfig(AbstractWorkspace $workspace, Tool $tool)
     {
         $this->checkAccess($workspace);
-
-        $event = new ConfigureWorkspaceToolEvent($tool, $workspace);
-        $eventName = strtolower('configure_workspace_tool_' . $tool->getName());
-        $this->get('event_dispatcher')->dispatch($eventName, $event);
-
-        if (is_null($event->getContent())) {
-            throw new \Exception(
-                "Tool '{$tool->getName()}' didn't return any Response for tool event '{$eventName}'."
-            );
-        }
+        $event = $this->eventDispatcher->dispatch(
+            strtolower('configure_workspace_tool_' . $tool->getName()),
+            'ConfigureWorkspaceTool',
+            array($tool,$workspace)
+        );
 
         return new Response($event->getContent());
     }
