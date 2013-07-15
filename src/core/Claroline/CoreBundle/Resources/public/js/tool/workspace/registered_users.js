@@ -55,11 +55,11 @@
                     $('.chk-delete-user:checked').each(function (index, element) {
                         $(element).parent().parent().remove();
                     });
-                    $('#validation-box').modal('hide');
-                    $('#validation-box-body').empty();
                 },
                 type: 'DELETE'
             });
+            $('#validation-box').modal('hide');
+            $('#validation-box-body').empty();
         });
 
         $('#modal-cancel-button').click(function () {

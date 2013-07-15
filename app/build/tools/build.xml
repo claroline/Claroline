@@ -52,8 +52,6 @@
         <exec executable="php" failonerror="true">
             <arg path="${appdir}/console" />
             <arg value="claroline:install" />
-            <arg value="--with-fixtures" />
-            <arg value="--with-plugins" />
             <arg value="--env=test" />
         </exec>
         <exec executable="php" failonerror="true">
@@ -71,7 +69,11 @@
             <arg path="${appdir}/phpunit.xml" />
             <arg value="--log-junit" />
             <arg path="${appdir}/build/logs/junit.xml" />
+            <arg value="--coverage-html"/>
+            <arg path="${appdir}/build/coverage" />
             <arg value="--verbose" />
+            <arg value="--testsuite" />
+            <arg value="core" />
         </exec>
     </target>
 
