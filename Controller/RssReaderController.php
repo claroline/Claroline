@@ -132,7 +132,8 @@ class RssReaderController extends Controller
         $workspace = $rssConfig->getWorkspace();
 
         if ($workspace !== null && !$security->isGranted('parameters', $workspace)
-            || $security->getToken()->getUser() !== $rssConfig->getUser()) {
+            || !$security->isGranted('ROLE_ADMIN')
+                && $security->getToken()->getUser() !== $rssConfig->getUser()) {
             throw new AccessDeniedException();
         }
     }
