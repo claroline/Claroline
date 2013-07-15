@@ -5,9 +5,10 @@ namespace Claroline\CoreBundle\Listener\Tool;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Event\Event\ExportToolEvent;
 use Claroline\CoreBundle\Event\Event\ExportResourceTemplateEvent;
-use Claroline\CoreBundle\Event\Event\ImportResourceTemplateEvent;
 use Claroline\CoreBundle\Event\Event\ImportToolEvent;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\RightsManager;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -16,26 +17,33 @@ use JMS\DiExtraBundle\Annotation as DI;
 class ImportExportResourceListener
 {
     private $roleManager;
+    private $em;
+    private $ed;
+    private $resourceManager;
+    private $rightsManager;
 
     /**
      * @DI\InjectParams({
-     *     "em"             = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "ed"             = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "manager"        = @DI\Inject("claroline.manager.resource_manager"),
-     *     "roleManager"    = @DI\Inject("claroline.manager.role_manager")
+     *     "em"              = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "ed"              = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
+     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
+     *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager"),
      * })
      */
     public function __construct(
         $em,
         $ed,
-        $manager,
-        RoleManager $roleManager
+        ResourceManager $resourceManager,
+        RoleManager $roleManager,
+        RightsManager $rightsManager
     )
     {
         $this->em = $em;
         $this->ed = $ed;
-        $this->manager = $manager;
+        $this->resourceManager = $resourceManager;
         $this->roleManager = $roleManager;
+        $this->rightsManager = $rightsManager;
     }
 
     /**
@@ -50,8 +58,23 @@ class ImportExportResourceListener
         $root = $event->getRoot();
         $createdResources = array();
         $createdResources[$config['root_id']] = $root->getId();
-        $createdResources = $this->loadDirectories($config, $createdResources, $event->getRoot(), $event->getUser(), $event->getWorkspace());
-        $this->loadFiles($config, $createdResources, $event->getFiles(), $event->getRoot(), $event->getUser(), $event->getWorkspace());
+        $createdResources = $this->loadDirectories(
+            $config, 
+            $createdResources, 
+            $event->getRoot(), 
+            $event->getUser(), 
+            $event->getWorkspace(), 
+            $event->getRoles()
+        );
+        $this->loadFiles(
+            $config, 
+            $createdResources, 
+            $event->getFilePaths(), 
+            $event->getRoot(), 
+            $event->getUser(), 
+            $event->getWorkspace(), 
+            $event->getRoles()
+        );
     }
 
     /**
@@ -231,14 +254,14 @@ class ImportExportResourceListener
      *
      * @return array
      */
-    private function loadDirectories($config, $createdResources, $root, $user, AbstractWorkspace $workspace)
+    private function loadDirectories($config, $createdResources, $root, $user, AbstractWorkspace $workspace, array $roles)
     {
         if (isset($config['directory'])) {
             foreach ($config['directory'] as $resource) {
                 $newEvent = $this->ed->dispatch(
                     "resource_{$resource['type']}_from_template",
                     'ImportResourceTemplate',
-                    array($resource, $root, $user, $workspace)
+                    array($resource, $root, $user, $workspace, $roles)
                 );
 
                 $childResources = $newEvent->getCreatedResources();
@@ -252,12 +275,10 @@ class ImportExportResourceListener
         return $createdResources;
     }
 
-    private function loadFiles($config, $createdResources, $requiredFiles, $root, $user, AbstractWorkspace $workspace)
+    private function loadFiles($config, $createdResources, $requiredFiles, $root, $user, AbstractWorkspace $workspace, array $roles)
     {
         foreach ($config['resources'] as $resource) {
 
-            $newEvent = new ImportResourceTemplateEvent($resource, $root, $user, $workspace);
-            $newEvent->setCreatedResources($createdResources);
             $fileContent = array();
 
             if (isset($resource['files'])) {
@@ -272,27 +293,25 @@ class ImportExportResourceListener
                 }
             }
 
-            $newEvent->setFiles($fileContent);
-
-            $this->ed->dispatch("resource_{$resource['type']}_from_template", $newEvent);
+            $newEvent = $this->ed->dispatch(
+                "resource_{$resource['type']}_from_template", 
+                'ImportResourceTemplate', 
+                array($resource, $root, $user, $workspace, $roles, $createdResources, $fileContent)
+            );
+                
             $resourceEntity = $newEvent->getResource();
-
-            if ($resourceEntity !== null) {
-                $resourceEntity->setName($resource['name']);
-                $this->manager->create(
-                    $resourceEntity,
-                    $createdResources[$resource['parent']],
-                    $resource['type'],
-                    $user,
-                    $resource['perms']
-                );
-                $createdResources[$resource['id']] = $resourceEntity;
-            } else {
-                throw new \Exception(
-                    "The event import_{$resource['type']}_template did not set" .
-                    " any resource"
-                );
-            }
+            $resourceEntity->setName($resource['name']);
+            $this->resourceManager->create(
+                $resourceEntity,
+                $this->resourceManager->getResourceTypeByName($resource['type']),
+                $user,
+                $workspace,
+                $createdResources[$resource['parent']],
+                null,
+                $this->rightsManager->addRolesToPermsArray($roles, $resource['perms'])
+            );
+            
+            $createdResources[$resource['id']] = $resourceEntity; 
         }
     }
 }
