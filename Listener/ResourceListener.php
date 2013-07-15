@@ -8,8 +8,8 @@ use Claroline\CoreBundle\Library\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Library\Event\DownloadResourceEvent;
-use Claroline\ExampleBundle\Entity\Example;
-use Claroline\ExampleBundle\Form\ExampleType;
+/*use Claroline\ExampleBundle\Entity\Example;
+use Claroline\ExampleBundle\Form\ExampleType;*/
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Claroline\CoreBundle\Library\Event\PluginOptionsEvent;
@@ -32,7 +32,7 @@ class ResourceListener extends ContainerAware
         $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig', array(
             'form' => $form->createView(),
-            'resourceType' => 'innova_path'
+            'resourceType' => 'claroline_example'
             )
         );
 
@@ -62,7 +62,7 @@ class ResourceListener extends ContainerAware
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'innova_path'
+                'resourceType' => 'claroline_example'
             )
         );
         //give it back to the event.

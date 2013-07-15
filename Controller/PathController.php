@@ -10,7 +10,7 @@ class PathController extends Controller
 {
     /**
      * @Route(
-     *     "/path/{id}",
+     *     "/workspace/{id}",
      *     name = "innova_path"
      * )
      *

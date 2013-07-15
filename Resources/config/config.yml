@@ -2,25 +2,8 @@ plugin:
   has_options: false
   icon: res_file.png
 
-  widgets:
-    - name: claroline_mywidget1
-      is_configurable: false
-#    - name: claroline_mywidget2
-#      is_configurable: false
-
-  resources:
-    - class: Claroline\ExampleBundle\Entity\Example
-      name: claroline_example
-      is_browsable: true
-      icon: res_file.png
-
   tools:
-    - name: claroline_mytool
+    - name: innova_path
       #icon: res_text.png
       is_displayable_in_workspace: true
       is_displayable_in_desktop: true
-  themes:
-    - name: "ExampleBundle Theme"
-      path: less/example/theme.html.twig
-
-
