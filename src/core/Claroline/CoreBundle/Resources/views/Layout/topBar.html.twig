@@ -117,12 +117,18 @@
                         </ul>
                     </li>
                     {% endif %}
-
-                    <li class="dropdown">
-
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="icon-user"></i> {{ username }}<b class="caret"></b>
-                    </a>
+                    {% if (register_target is empty)  and  isLogged == false %}
+                         <li>
+                            <a href="{{ login_target }}" id="link-login">
+                                {{ 'login'|trans({}, 'platform') }}
+                            </a>
+                            </li>
+                    {% else %}
+                        <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="icon-user"></i> {{ username }}<b class="caret"></b>
+                        </a>
+                    {% endif %}
                     <ul class="dropdown-menu">
                         {% if isLogged %}
                             <li>
@@ -183,13 +189,13 @@
                                     {{ 'register'|trans({}, 'platform') }}
                                 </a>
                                 </li>
-                                <li class="divider"></li>
-                            {% endif %}
+                                <li class="divider"></li> 
                             <li>
                             <a href="{{ login_target }}" id="link-login">
                                 {{ 'login'|trans({}, 'platform') }}
                             </a>
                             </li>
+                            {% endif %}
                         {% endif %}
                     </ul>
                     </li>

@@ -132,7 +132,7 @@ class LayoutController extends Controller
             $personalWs = $user->getPersonalWorkspace();
             $workspaces = $this->findWorkspacesFromLogs();
         } else {
-            $username = $this->translator->trans('anonymous', array(), 'platform');
+            $username = $this->translator->trans('log_login', array(), 'platform');
             $workspaces = $this->workspaceManager->getWorkspacesByAnonymous();
 
             if (true === $this->configHandler->getParameter('allow_self_registration')) {
