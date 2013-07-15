@@ -1,41 +1,42 @@
 <?php
-namespace Claroline\CoreBundle\Library\Analytics;
+namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Repository\AbstractResourceRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
+use Claroline\CoreBundle\Repository\LogRepository;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * @DI\Service("claroline.analytics.manager")
+ * @DI\Service("claroline.manager.analytics_manager")
  */
-class Manager
+class AnalyticsManager
 {
-    private $container;
+    /** @var AbstractResourceRepository */
     private $resourceRepo;
+    /** @var UserRepository */
     private $userRepo;
+    /** @var WorkspaceRepository */
     private $workspaceRepo;
+    /** @var LogRepository */
+    private $logRepository;
 
     /**
      * @DI\InjectParams({
-     *     "container"      = @DI\Inject("service_container"),
-     *     "resourceRepo"   = @DI\Inject("resource_repository"),
-     *     "userRepo"       = @DI\Inject("user_repository"),
-     *     "workspaceRepo"  = @DI\Inject("claroline.repository.workspace_repository")
+     *     "om" = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(
-        $container,
-        AbstractResourceRepository $resourceRepo,
-        UserRepository $userRepo,
-        WorkspaceRepository $workspaceRepo
+        ObjectManager $om
     )
     {
-        $this->container = $container;
-        $this->resourceRepo = $resourceRepo;
-        $this->userRepo = $userRepo;
-        $this->workspaceRepo = $workspaceRepo;
+        $this->om = $om;
+        $this->resourceRepo = $om->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
+        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
+        $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
+        $this->logRepository = $om->getRepository('ClarolineCoreBundle:Logger\Log');
+        
     }
 
     public function getDefaultRange()
@@ -72,9 +73,7 @@ class Manager
         $userSearch = null;
         $workspaceIds = null;
         $actionsRestriction = null;
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $repository = $em->getRepository('ClarolineCoreBundle:Logger\Log');
-        $chartData = $repository->countByDayFilteredLogs(
+        $chartData = $this->logRepository->countByDayFilteredLogs(
             $action,
             $range,
             $userSearch,
@@ -133,9 +132,7 @@ class Manager
     {
         if($range === null) $range = $this->getYesterdayRange();
         if($action === null) $action = 'ws_tool_read';
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $repository = $em->getRepository('ClarolineCoreBundle:Logger\Log');
-        $resultData = $repository->topWSByAction($range, $action, $max);
+        $resultData = $this->logRepository->topWSByAction($range, $action, $max);
 
         return $resultData;
     }
@@ -144,9 +141,7 @@ class Manager
     {
         if($range === null) $range = $this->getYesterdayRange();
         if($action === null) $action = 'resource_read';
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $repository = $em->getRepository('ClarolineCoreBundle:Logger\Log');
-        $resultData = $repository->topMediaByAction($range, $action, $max);
+        $resultData = $this->logRepository->topMediaByAction($range, $action, $max);
 
         return $resultData;
     }
@@ -155,9 +150,7 @@ class Manager
     {
         if($range === null) $range = $this->getYesterdayRange();
         if($action === null) $action = 'resource_read';
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $repository = $em->getRepository('ClarolineCoreBundle:Logger\Log');
-        $resultData = $repository->topResourcesByAction($range, $action, $max);
+        $resultData = $this->logRepository->topResourcesByAction($range, $action, $max);
 
         return $resultData;
     }
@@ -166,18 +159,14 @@ class Manager
     {
         if($range === null) $range = $this->getYesterdayRange();
         if($action === null) $action = 'user_login';
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $repository = $em->getRepository('ClarolineCoreBundle:Logger\Log');
-        $resultData = $repository->topUsersByAction($range, $action, $max);
+        $resultData = $this->logRepository->topUsersByAction($range, $action, $max);
 
         return $resultData;
     }
 
     public function getActiveUsers()
     {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $repository = $em->getRepository('ClarolineCoreBundle:Logger\Log');
-        $resultData = $repository->activeUsers();
+        $resultData = $this->logRepository->activeUsers();
 
         return $resultData;
     }
