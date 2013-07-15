@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Repository\GroupRepository;
 use Claroline\CoreBundle\Pager\PagerFactory;
+use Symfony\Component\Translation\Translator;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -17,6 +18,7 @@ class GroupManager
     private $writer;
     private $groupRepo;
     private $pagerFactory;
+    private $translator;
 
     /**
      * Constructor.
@@ -24,18 +26,21 @@ class GroupManager
      * @DI\InjectParams({
      *     "groupRepo"      = @DI\Inject("claroline.repository.group_repository"),
      *     "writer"         = @DI\Inject("claroline.database.writer"),
-     *     "pagerFactory"   = @DI\Inject("claroline.pager.pager_factory")
+     *     "pagerFactory"   = @DI\Inject("claroline.pager.pager_factory"),
+     *     "translator"         = @DI\Inject("translator")
      * })
      */
     public function __construct(
         GroupRepository $groupRepo,
         Writer $writer,
-        PagerFactory $pagerFactory
+        PagerFactory $pagerFactory,
+        Translator $translator
     )
     {
         $this->writer = $writer;
         $this->groupRepo = $groupRepo;
         $this->pagerFactory = $pagerFactory;
+        $this->translator = $translator;
     }
 
     public function insertGroup(Group $group)

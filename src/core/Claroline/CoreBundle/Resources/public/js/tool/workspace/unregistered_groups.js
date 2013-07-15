@@ -33,7 +33,6 @@
                     $('.chk-grp:checked').each(function (index, element) {
                         $(element).parent().parent().remove();
                     });
-                    $('.add-groups-button').attr('disabled', 'disabled');
                 },
                 type: 'PUT'
             });
