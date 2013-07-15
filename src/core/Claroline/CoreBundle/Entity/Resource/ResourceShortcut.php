@@ -6,7 +6,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceShortcutRepository")
  * @ORM\Table(name="claro_resource_shortcut")
  */
 class ResourceShortcut extends AbstractResource

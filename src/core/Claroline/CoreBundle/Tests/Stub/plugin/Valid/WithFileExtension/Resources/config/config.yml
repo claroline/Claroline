@@ -4,4 +4,3 @@ plugin:
   resources:
     - class: Claroline\CoreBundle\Entity\Resource\File
       name: resourceA
-      is_browsable: false

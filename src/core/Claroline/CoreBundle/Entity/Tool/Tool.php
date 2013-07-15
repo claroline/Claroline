@@ -39,28 +39,39 @@ class Tool
     /**
      * @ORM\Column(name="is_workspace_required", type="boolean")
      */
-    protected $isWorkspaceRequired;
+    protected $isWorkspaceRequired = false;
 
     /**
      * @ORM\Column(name="is_desktop_required", type="boolean")
      */
-    protected $isDesktopRequired;
+    protected $isDesktopRequired = false;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\WorkspaceOrderedTool",
-     *     mappedBy="tool"
-     * )
+     * @ORM\Column(name="is_displayable_in_workspace", type="boolean")
      */
-    protected $workspaceOrderedTools;
+    protected $isDisplayableInWorkspace = true;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\DesktopTool",
-     *     mappedBy="tool"
-     * )
+     * @ORM\Column(name="is_displayable_in_desktop", type="boolean")
      */
-    protected $desktopTools;
+    protected $isDisplayableInDesktop = true;
+
+    /**
+     * @ORM\Column(type="boolean", name="is_exportable")
+     */
+    protected $isExportable = false;
+
+    /**
+     * @ORM\Column(type="boolean", name="has_options")
+     */
+    protected $hasOptions = false;
+
+    /**
+     * Unmapped var used for the tool configuration.
+     *
+     * @var boolean
+     */
+    private $isVisible = true;
 
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
@@ -69,31 +80,9 @@ class Tool
     protected $plugin;
 
     /**
-     * @ORM\Column(name="is_displayable_in_workspace", type="boolean")
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Tool\OrderedTool", mappedBy="tool")
      */
-    protected $isDisplayableInWorkspace;
-
-    /**
-     * @ORM\Column(name="is_displayable_in_desktop", type="boolean")
-     */
-    protected $isDisplayableInDesktop;
-
-    /**
-     * @ORM\Column(type="boolean", name="is_exportable")
-     */
-    protected $isExportable;
-
-    /**
-     * @ORM\Column(type="boolean", name="has_options")
-     */
-    protected $hasOptions;
-
-    /**
-     * Unmapped var used for the tool configuration.
-     *
-     * @var boolean
-     */
-    private $isVisible;
+    protected $orderedTools;
 
     public function getId()
     {
@@ -160,11 +149,6 @@ class Tool
         return $this->isVisible;
     }
 
-    public function removeDesktopTool($dt)
-    {
-        $this->desktopTools->removeElement($dt);
-    }
-
     public function setPlugin($plugin)
     {
         $this->plugin = $plugin;
@@ -214,5 +198,9 @@ class Tool
     {
         return $this->hasOptions;
     }
-}
 
+    public function getOrderedTools()
+    {
+        return $this->orderedTools;
+    }
+}

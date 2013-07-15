@@ -7,7 +7,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -52,27 +51,27 @@ class ResourceRights
     /**
      * @ORM\Column(type="boolean", name="can_delete")
      */
-    protected $canDelete;
+    protected $canDelete = false;
 
     /**
      * @ORM\Column(type="boolean", name="can_open")
      */
-    protected $canOpen;
+    protected $canOpen = false;
 
     /**
      * @ORM\Column(type="boolean", name="can_edit")
      */
-    protected $canEdit;
+    protected $canEdit = false;
 
     /**
      * @ORM\Column(type="boolean", name="can_copy")
      */
-    protected $canCopy;
+    protected $canCopy = false;
 
     /**
      * @ORM\Column(type="boolean", name="can_export")
      */
-    protected $canExport;
+    protected $canExport = false;
 
     /**
      * @ORM\ManyToMany(
@@ -180,34 +179,15 @@ class ResourceRights
         $this->setCanExport($originalRights->canExport());
     }
 
-    //required by the form builder
-    public function getCanOpen()
+    public function getPermissions()
     {
-        return $this->canOpen;
-    }
-
-    //required by the form builder
-    public function getCanDelete()
-    {
-        return $this->canDelete;
-    }
-
-    //required by the form builder
-    public function getCanExport()
-    {
-        return $this->canExport;
-    }
-
-    //required by the form builder
-    public function getCanEdit()
-    {
-        return $this->canEdit;
-    }
-
-    //required by the form builder
-    public function getCanCopy()
-    {
-        return $this->canCopy;
+        return array(
+            'canOpen' => $this->canOpen,
+            'canEdit' => $this->canEdit,
+            'canDelete' => $this->canDelete,
+            'canCopy' => $this->canCopy,
+            'canExport' => $this->canExport,
+        );
     }
 
     public function getCreatableResourceTypes()
