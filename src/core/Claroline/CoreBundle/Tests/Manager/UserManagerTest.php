@@ -23,8 +23,8 @@ class UserManagerTest extends MockeryTestCase
     public function setUp()
     {
         parent::setUp();
-        
-        $this->userRepo = m::mock('Claroline\CoreBundle\Repository\User');
+
+        $this->userRepo = m::mock('Claroline\CoreBundle\Repository\UserRepository');
         $this->roleManager = m::mock('Claroline\CoreBundle\Manager\RoleManager');
         $this->workspaceManager = m::mock('Claroline\CoreBundle\Manager\WorkspaceManager');
         $this->toolManager = m::mock('Claroline\CoreBundle\Manager\ToolManager');
@@ -103,7 +103,7 @@ class UserManagerTest extends MockeryTestCase
         $roleOne = m::mock('Claroline\CoreBundle\Entity\Role');
         $roleTwo = m::mock('Claroline\CoreBundle\Entity\Role');
         $roles = new ArrayCollection(array($roleOne, $roleTwo));
-        
+
         $this->om->shouldReceive('startFlushSuite')->once();
         $this->om->shouldReceive('endFlushSuite')->once();
 
@@ -176,11 +176,21 @@ class UserManagerTest extends MockeryTestCase
         $manager->importUsers($users);
     }
 
+    public function testGetUserByUserName()
+    {
+        $this->userRepo->shouldReceive('loadUserByUsername')
+            ->once()
+            ->with('john')
+            ->andReturn('User');
+        $manager = $this->getManager();
+        $this->assertEquals('User', $manager->getUserByUsername('john'));
+    }
+
     private function getManager(array $mockedMethods = array())
     {
         $this->om->shouldReceive('getRepository')->once()
             ->with('ClarolineCoreBundle:User')->andReturn($this->userRepo);
-        
+
         if (count($mockedMethods) === 0) {
             return new UserManager(
                 $this->roleManager,
