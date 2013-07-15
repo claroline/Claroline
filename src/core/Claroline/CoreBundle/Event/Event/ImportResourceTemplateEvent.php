@@ -16,13 +16,16 @@ class ImportResourceTemplateEvent extends Event
     private $user;
     private $files;
     private $workspace;
+    private $roles;
 
     public function __construct(
         array $config, 
         AbstractResource $parent, 
         User $user,
         AbstractWorkspace $workspace,
-        array $createdResources = array()
+        array $roles,
+        array $createdResources = array(),
+        array $files = array()
         
     )
     {
@@ -32,6 +35,8 @@ class ImportResourceTemplateEvent extends Event
         $this->createdResources = $createdResources;
         $this->files = array();
         $this->workspace = $workspace;
+        $this->roles = $roles;
+        $this->files = $files;
     }
 
     public function getConfig()
@@ -106,5 +111,10 @@ class ImportResourceTemplateEvent extends Event
     public function setFiles($files)
     {
         $this->files = $files;
+    }
+    
+    public function getRoles()
+    {
+        return $this->roles;
     }
 }

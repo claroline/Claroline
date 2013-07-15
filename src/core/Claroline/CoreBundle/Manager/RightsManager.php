@@ -12,6 +12,7 @@ use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\AbstractResourceRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Translation\Translator;
 
@@ -34,20 +35,24 @@ class RightsManager
     private $om;
     /** @var StrictDispatcher */
     private $dispatcher;
+    /** @var RoleManager */
+    private $roleManager;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "translator" =    @DI\Inject("translator"),
-     *     "om" = @DI\Inject("claroline.persistence.object_manager"),
-     *     "dispatcher" = @DI\Inject("claroline.event.event_dispatcher")
+     *     "translator"  =    @DI\Inject("translator"),
+     *     "om"          = @DI\Inject("claroline.persistence.object_manager"),
+     *     "dispatcher"  = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "roleManager" = @DI\Inject("claroline.manager.role_manager")
      * })
      */
     public function __construct(
         Translator $translator,
         ObjectManager $om,
-        StrictDispatcher $dispatcher
+        StrictDispatcher $dispatcher,
+        RoleManager $roleManager
     )
     {
         $this->rightsRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
@@ -57,6 +62,7 @@ class RightsManager
         $this->translator = $translator;
         $this->om = $om;
         $this->dispatcher = $dispatcher;
+        $this->roleManager = $roleManager;
     }
 
     /**
@@ -200,6 +206,31 @@ class RightsManager
 
         return $rights;
     }
+    
+    /**
+     * Takes an array of Role.
+     * Parse each key of the $perms array
+     * and add the entry 'role' where it is needed.
+     * 
+     * @param array $baseRoles
+     * @param array $perms
+     * @return array
+     */
+    public function addRolesToPermsArray(array $baseRoles, array $perms)
+    {
+        $initializedArray = array();
+        
+        foreach ($perms as $roleBaseName => $data) {
+            foreach ($baseRoles as $baseRole) {
+                if ($this->roleManager->getRoleBaseName($baseRole->getName()) === $roleBaseName) {
+                    $data['role'] = $baseRole;
+                    $initializedArray[$roleBaseName] = $data;
+                }
+            }
+        }
+        
+        return $initializedArray;
+    }
 
     public function getOneByRoleAndResource(Role $role, AbstractResource $resource)
     {
@@ -212,18 +243,6 @@ class RightsManager
         }
 
         return $resourceRights;
-    }
-
-    /**
-     * Returns every ResourceRights of a resource on 1 level if the role linked is not 'ROLE_ADMIN'
-     *
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
-     *
-     * @return array
-     */
-    public function getNonAdminRights(AbstractResource $resource)
-    {
-        return $this->rightsRepo->findNonAdminRights($resource);
     }
 
     public function getCreatableTypes(array $roles, Directory $directory)
@@ -273,11 +292,6 @@ class RightsManager
         $this->om->flush();
     }
 
-    public function getResourceTypes()
-    {
-       return $this->resourceTypeRepo->findAll();
-    }
-    
     public function logChangeSet(ResourceRights $rights)
     {
         $uow = $this->om->getUnitOfWork();
@@ -291,5 +305,32 @@ class RightsManager
                 array($rights->getRole(), $rights->getResource(), $changeSet)
             );
         }
+    }
+    
+    /**
+     * Returns every ResourceRights of a resource on 1 level if the role linked is not 'ROLE_ADMIN'
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     *
+     * @return array
+     */
+    public function getNonAdminRights(AbstractResource $resource)
+    {
+        return $this->rightsRepo->findNonAdminRights($resource);
+    }
+    
+    public function getResourceTypes()
+    {
+       return $this->resourceTypeRepo->findAll();
+    }
+    
+    public function getMaximumRights(array $roles, AbstractResource $resource)
+    {
+        return $this->rightsRepo->findMaximumRights($roles, $resource);
+    }
+    
+    public function getCreationRights(array $roles, AbstractResource $resource)
+    {
+        return $this->rightsRepo->findCreationRights($roles, $resource);
     }
 }
