@@ -72,7 +72,7 @@
             <arg value="--coverage-html"/>
             <arg path="${appdir}/build/coverage" />
             <arg value="--verbose" />
-            <arg value="--testuite" />
+            <arg value="--testsuite" />
             <arg value="core" />
         </exec>
     </target>
