@@ -1,4 +1,4 @@
-{% extends "ClarolineBadgeBundle:Admin:layout.html.twig" %}
+{% extends "ClarolineCoreBundle:Administration:ajaxLayout.html.twig" %}
 
 {% block content %}
     <form action="{{ path('claro_admin_badges_award', {'id': badge.id}) }}" method="post" class="form-horizontal" id="award_form">
