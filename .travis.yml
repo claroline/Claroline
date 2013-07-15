@@ -1,9 +1,16 @@
 language: php
 php:
-  - "5.5"
   - "5.4"
   - "5.3"
-script: phpunit -c app/
+mysql:
+  adapter: mysql2
+  database: claroline_test
+  username: travis
+  encoding: utf8
+script: phpunit -c app --testsuite core
 before_script:
   - cp app/config/parameters.yml.dist app/config/parameters.yml
+  - sed -i 's/root/travis/' app/config/parameters.yml
   - composer --prefer-source --dev install
+  - php app/console doctrine:database:create --env=test
+  - php app/console claroline:install --env=test
