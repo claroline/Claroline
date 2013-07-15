@@ -1,5 +1,5 @@
 services:
-  claroline.listener.example_listener:
+  innova.listener.path_listener:
     class: Innova\PathBundle\Listener\ResourceListener
     calls:
       - [setContainer, ["@service_container"]]
@@ -28,7 +28,7 @@ services:
       #... more to come.
 
 
-  claroline.listener.example_widget:
+  innova.listener.path_widget:
     class: Innova\PathBundle\Listener\WidgetListener
     calls:
       - [setContainer, ["@service_container"]]
@@ -39,10 +39,10 @@ services:
       - { name: kernel.event_listener, event: widget_claroline_mywidget2_workspace, method: onDisplay }
       - { name: kernel.event_listener, event: widget_claroline_mywidget1_configuration, method: onConfigure }
 
-  claroline.listener.example_tool:
+  innova.listener.path_tool:
     class: Innova\PathBundle\Listener\ToolListener
     calls:
       - [setContainer, ["@service_container"]]
     tags:
-      - { name: kernel.event_listener, event: open_tool_workspace_claroline_mytool, method: onWorkspaceOpen }
-      - { name: kernel.event_listener, event: open_tool_desktop_claroline_mytool, method: onDesktopOpen }
+      - { name: kernel.event_listener, event: open_tool_workspace_innova_path, method: onWorkspaceOpen }
+      - { name: kernel.event_listener, event: open_tool_desktop_innova_path, method: onDesktopOpen }

@@ -17,11 +17,11 @@ class ToolListener extends ContainerAware
         $event->setContent($this->desktop());
     }
 
-    private function workspace($workspaceId)
+    private function workspace($id)
     {
         //if you want to keep the context, you must retrieve the workspace.
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($id);
 
         return $this->container->get('templating')->render(
             'InnovaPathBundle::workspaceTool.html.twig', array('workspace' => $workspace)
