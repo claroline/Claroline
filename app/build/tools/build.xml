@@ -71,7 +71,11 @@
             <arg path="${appdir}/phpunit.xml" />
             <arg value="--log-junit" />
             <arg path="${appdir}/build/logs/junit.xml" />
+            <arg value="--coverage-html"/>
+            <arg path="${appdir}/build/coverage" />
             <arg value="--verbose" />
+            <arg value="--testuite" />
+            <arg value="core" />
         </exec>
     </target>
 
