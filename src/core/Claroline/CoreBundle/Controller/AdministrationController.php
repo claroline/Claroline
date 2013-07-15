@@ -582,10 +582,12 @@ class AdministrationController extends Controller
      */
     public function updatePlatformSettingsAction()
     {
+        $platformConfig = $this->configHandler->getPlatformConfig();
         $request = $this->get('request');
         $form = $this->formFactory->create(
             FormFactory::TYPE_PLATFORM_PARAMETERS,
-            array($this->getThemes())
+            array($this->getThemes()),
+            $platformConfig
         );
         $form->handleRequest($request);
 
