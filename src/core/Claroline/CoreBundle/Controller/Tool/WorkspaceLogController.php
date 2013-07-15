@@ -2,10 +2,9 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 /**
  * Display logs in workspace's tool.
@@ -13,22 +12,28 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class WorkspaceLogController extends Controller
 {
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/{workspaceId}",
      *     name="claro_workspace_logs_show",
      *     requirements={"workspaceId" = "\d+"},
      *     defaults={"page" = 1}
      * )
-     * @Route(
+     * @EXT\Route(
      *     "/{workspaceId}/{page}",
      *     name="claro_workspace_logs_show_paginated",
      *     requirements={"workspaceId" = "\d+", "page" = "\d+"},
      *     defaults={"page" = 1}
      * )
      *
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Template("ClarolineCoreBundle:Tool/workspace/logs:logList.html.twig")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Tool/workspace/logs:logList.html.twig")
      *
      * Displays logs list using filter parameteres and page number
      *
@@ -38,11 +43,8 @@ class WorkspaceLogController extends Controller
      *
      * @throws \Exception
      */
-    public function logListAction($workspaceId, $page)
+    public function logListAction(AbstractWorkspace $workspace, $page)
     {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-
         return $this->get('claroline.log.manager')->getWorkspaceList($workspace, $page);
     }
 }

@@ -18,9 +18,9 @@ Project setup
 ### Requirements
 
 - PHP >= 5.3.3
-- PHP extensions :
+- PHP extensions:
     - fileinfo (for mime type detection)
-    - Optionaly :
+    - Optionaly:
         - [gd][1] (for simple icon creation)
         - [ffmpeg][2] (for video thumbnail creation)
 - A global installation of [composer][3] (for dependency management)
@@ -66,7 +66,14 @@ Open your browser and go to *[site]/web/app.php* for production environment or
 
 ### Quick update
 
-To update your installation to the last development state, use :
+To update your installation to the last development state, use:
+
+```sh
+$ git pull
+$ git submodule update
+```
+
+Or in the event of new plugins:
 
 ```sh
 $ git pull
@@ -79,7 +86,7 @@ Then launch the installation script mentioned above:
 $ php app/dev/raw_install
 ```
 
-***Warning*** : this is a quick dev tool, it will drop existing databases
+***Warning***: this is a quick dev tool, it will drop existing databases
 (both prod and test) and create new ones.
 
 ### Plugin installation
@@ -91,7 +98,7 @@ $ php app/console claroline:plugin:install [vendor] [bundle short name]
 $ php app/console claroline:plugin:uninstall [vendor] [bundle short name]
 ```
 
-A new plugin can be added to the module list with :
+A new plugin can be added to the module list with:
 
 ```sh
 $ git submodule add http://github.com/vendor/bundle.git src/plugin/Vendor/bundle

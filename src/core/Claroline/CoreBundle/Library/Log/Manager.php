@@ -9,8 +9,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Claroline\CoreBundle\Form\DataTransformer\DateRangeToTextTransformer;
 use Claroline\CoreBundle\Form\WorkspaceLogFilterType;
 use Claroline\CoreBundle\Form\AdminLogFilterType;
-use Claroline\CoreBundle\Library\Event\LogCreateDelegateViewEvent;
-use Claroline\CoreBundle\Library\Event\LogResourceChildUpdateEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogCreateDelegateViewEvent;
+use Claroline\CoreBundle\Event\Event\Log\LogResourceChildUpdateEvent;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\CoreBundle\Entity\Logger\LogWorkspaceWidgetConfig;
@@ -27,8 +27,8 @@ class Manager
 
     protected function isAllowedToViewLogs($workspace)
     {
-        return ($this->container->get('security.context')->isGranted('ROLE_WS_COLLABORATOR_'.$workspace->getId()) === true
-            || $this->container->get('security.context')->isGranted('ROLE_WS_MANAGER_'.$workspace->getId()) === true);
+        return ($this->container->get('security.context')->isGranted('ROLE_WS_COLLABORATOR_'.$workspace->getGuid()) === true
+            || $this->container->get('security.context')->isGranted('ROLE_WS_MANAGER_'.$workspace->getGuid()) === true);
     }
 
     protected function renderLogs($logs)

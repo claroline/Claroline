@@ -31,7 +31,7 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
             "LEFT JOIN resource.next next{$eol}" .
             "LEFT JOIN resource.previous previous{$eol}" .
             "LEFT JOIN resource.parent parent{$eol}" .
-            "JOIN resource.icon icon{$eol}";
+            "LEFT JOIN resource.icon icon{$eol}";
         $this->assertEquals($expectedDql, $dql);
     }
 
@@ -49,7 +49,6 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
             "    parent.id as parent_id,{$eol}" .
             "    creator.username as creator_username,{$eol}" .
             "    resourceType.name as type,{$eol}" .
-            "    resourceType.isBrowsable as is_browsable,{$eol}" .
             "    previous.id as previous_id,{$eol}" .
             "    next.id as next_id,{$eol}" .
             "    icon.relativeUrl as large_icon,{$eol}" .
@@ -60,7 +59,7 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
             "LEFT JOIN resource.next next{$eol}" .
             "LEFT JOIN resource.previous previous{$eol}" .
             "LEFT JOIN resource.parent parent{$eol}" .
-            "JOIN resource.icon icon{$eol}";
+            "LEFT JOIN resource.icon icon{$eol}";
 
         $this->assertEquals($expectedDql, $dql);
 
@@ -73,7 +72,6 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
             "    parent.id as parent_id,{$eol}" .
             "    creator.username as creator_username,{$eol}" .
             "    resourceType.name as type,{$eol}" .
-            "    resourceType.isBrowsable as is_browsable,{$eol}" .
             "    previous.id as previous_id,{$eol}" .
             "    next.id as next_id,{$eol}" .
             "    icon.relativeUrl as large_icon,{$eol}" .
@@ -87,7 +85,7 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
             "LEFT JOIN resource.next next{$eol}" .
             "LEFT JOIN resource.previous previous{$eol}" .
             "LEFT JOIN resource.parent parent{$eol}" .
-            "JOIN resource.icon icon{$eol}" .
+            "LEFT JOIN resource.icon icon{$eol}" .
             "LEFT JOIN resource.rights rights{$eol}" .
             "JOIN rights.role rightRole{$eol}";
         $this->assertEquals($expectedDql, $dql);
@@ -137,7 +135,7 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
             "LEFT JOIN resource.next next{$eol}" .
             "LEFT JOIN resource.previous previous{$eol}" .
             "LEFT JOIN resource.parent parent{$eol}" .
-            "JOIN resource.icon icon{$eol}" .
+            "LEFT JOIN resource.icon icon{$eol}" .
             "LEFT JOIN resource.rights rights{$eol}" .
             "JOIN rights.role rightRole{$eol}" .
             "WHERE resource.workspace = :workspace_id{$eol}" .
