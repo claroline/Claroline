@@ -4,11 +4,11 @@ namespace ICAP\BlogBundle\Listener;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Claroline\CoreBundle\Entity\Resource\File;
-use Claroline\CoreBundle\Library\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Library\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
-use ICAP\BlogBundle\Form;
-use ICAP\BlogBundle\Entity;
+use Claroline\CoreBundle\Event\Event\CreateFormResourceEvent;
+use Claroline\CoreBundle\Event\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Event\Event\OpenResourceEvent;
+use ICAP\BlogBundle\Form\BlogType;
+use ICAP\BlogBundle\Entity\Blog;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class BlogListener extends ContainerAware
@@ -18,9 +18,9 @@ class BlogListener extends ContainerAware
      */
     public function onCreateForm(CreateFormResourceEvent $event)
     {
-        $form = $this->container->get('form.factory')->create(new Form\BlogType(), new Entity\Blog());
+        $form = $this->container->get('form.factory')->create(new BlogType(), new Blog());
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:create_form.html.twig',
+            'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'icap_blog'
@@ -36,18 +36,18 @@ class BlogListener extends ContainerAware
     public function onCreate(CreateResourceEvent $event)
     {
         $request = $this->container->get('request');
-        $form = $this->container->get('form.factory')->create(new Form\BlogType(), new Entity\Blog());
+        $form = $this->container->get('form.factory')->create(new BlogType(), new Blog());
         $form->bind($request);
 
         if ($form->isValid()) {
-            $event->setResource($form->getData());
+            $event->setResources(array($form->getData()));
             $event->stopPropagation();
 
             return;
         }
 
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:create_form.html.twig',
+            'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'icap_blog'
