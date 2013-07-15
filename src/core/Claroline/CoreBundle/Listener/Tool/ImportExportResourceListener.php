@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Listener\Tool;
 
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Event\Event\ExportToolEvent;
 use Claroline\CoreBundle\Event\Event\ExportResourceTemplateEvent;
 use Claroline\CoreBundle\Event\Event\ImportResourceTemplateEvent;
@@ -49,8 +50,8 @@ class ImportExportResourceListener
         $root = $event->getRoot();
         $createdResources = array();
         $createdResources[$config['root_id']] = $root->getId();
-        $createdResources = $this->loadDirectories($config, $createdResources, $event->getRoot(), $event->getUser());
-        $this->loadFiles($config, $createdResources, $event->getFiles(), $event->getRoot(), $event->getUser());
+        $createdResources = $this->loadDirectories($config, $createdResources, $event->getRoot(), $event->getUser(), $event->getWorkspace());
+        $this->loadFiles($config, $createdResources, $event->getFiles(), $event->getRoot(), $event->getUser(), $event->getWorkspace());
     }
 
     /**
@@ -110,7 +111,7 @@ class ImportExportResourceListener
                         ->findMaximumRights(array($role->getName()), $root);
                     $perms['canCreate'] = array();
 
-                    $dataResources['perms'][rtrim(str_replace(range(0, 9), '', $role->getName()), '_')] = $perms;
+                    $dataResources['perms'][$this->roleManager->getRoleBaseName($role->getName())] = $perms;
                 }
 
                 $dataResources['parent'] = $resource['parent_id'];
@@ -230,14 +231,14 @@ class ImportExportResourceListener
      *
      * @return array
      */
-    private function loadDirectories($config, $createdResources, $root, $user)
+    private function loadDirectories($config, $createdResources, $root, $user, AbstractWorkspace $workspace)
     {
         if (isset($config['directory'])) {
             foreach ($config['directory'] as $resource) {
                 $newEvent = $this->ed->dispatch(
                     "resource_{$resource['type']}_from_template",
                     'ImportResourceTemplate',
-                    array($resource, $root, $user)
+                    array($resource, $root, $user, $workspace)
                 );
 
                 $childResources = $newEvent->getCreatedResources();
@@ -251,11 +252,11 @@ class ImportExportResourceListener
         return $createdResources;
     }
 
-    private function loadFiles($config, $createdResources, $requiredFiles, $root, $user)
+    private function loadFiles($config, $createdResources, $requiredFiles, $root, $user, AbstractWorkspace $workspace)
     {
         foreach ($config['resources'] as $resource) {
 
-            $newEvent = new ImportResourceTemplateEvent($resource, $root, $user);
+            $newEvent = new ImportResourceTemplateEvent($resource, $root, $user, $workspace);
             $newEvent->setCreatedResources($createdResources);
             $fileContent = array();
 

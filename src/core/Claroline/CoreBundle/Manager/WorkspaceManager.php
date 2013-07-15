@@ -165,7 +165,7 @@ class WorkspaceManager
     public function export(AbstractWorkspace $workspace, $configName)
     {
         if (!is_writable($this->templateDir)) {
-            throw new \Exception("{$this->templatir} is not writable");
+            throw new \Exception("{$this->templateDir} is not writable");
         }
 
         $this->om->startFlushSuite();
@@ -175,6 +175,7 @@ class WorkspaceManager
         $template = new Template();
         $template->setHash("{$hash}.zip");
         $template->setName($configName);
+        $this->om->persist($template);
         $archive->open($pathArch, \ZipArchive::CREATE);
         $arTools = array();
         $description = array();
@@ -183,7 +184,7 @@ class WorkspaceManager
         $root = $this->resourceRepo->findWorkspaceRoot($workspace);
 
         foreach ($roles as $role) {
-            $name = rtrim(str_replace(range(0, 9), '', $role->getName()), '_');
+            $name = $this->roleManager->getRoleBaseName($role->getName());
             $arRole[$name] = $role->getTranslationKey();
         }
 
@@ -193,7 +194,7 @@ class WorkspaceManager
             $perms['canCreate'] = $this->resourceRightsRepo
                 ->findCreationRights(array($role->getName()), $root);
 
-            $description['root_perms'][rtrim(str_replace(range(0, 9), '', $role->getName()), '_')] = $perms;
+            $description['root_perms'][$this->roleManager->getRoleBaseName($role->getName())] = $perms;
         }
 
         foreach ($workspaceTools as $workspaceTool) {
@@ -203,7 +204,7 @@ class WorkspaceManager
             $arToolRoles = array();
 
             foreach ($roles as $role) {
-                $arToolRoles[] = rtrim(str_replace(range(0, 9), '', $role->getName()), '_');
+                $arToolRoles[] = $this->roleManager->getRoleBaseName($role->getName());
             }
 
             $arTools[$tool->getName()]['perms'] = $arToolRoles;
