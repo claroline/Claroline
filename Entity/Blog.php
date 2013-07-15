@@ -3,16 +3,18 @@
 namespace ICAP\BlogBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\BlogOptions;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use ICAP\BlogBundle\Entity\BlogOptions;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="icap__blog")
  * @ORM\Entity(repositoryClass="ICAP\BlogBundle\Repository\BlogRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class Blog extends AbstractResource
 {
@@ -74,5 +76,19 @@ class Blog extends AbstractResource
     public function getOptions()
     {
         return $this->options;
+    }
+
+    /**
+     * @ORM\PostPersist
+     */
+    public function postPersist(LifecycleEventArgs $args)
+    {
+        $entityManager = $args->getEntityManager();
+
+        $blogOptions = new BlogOptions();
+        $blogOptions->setBlog($this);
+
+        $entityManager->persist($blogOptions);
+        $entityManager->flush($blogOptions);
     }
 }
