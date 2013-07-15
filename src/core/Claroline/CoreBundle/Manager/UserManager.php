@@ -30,7 +30,7 @@ class UserManager
     private $toolManager;
     private $ed;
     private $personalWsTemplateFile;
-    private $trans;
+    private $translator;
     private $ch;
     private $pagerFactory;
     private $om;
@@ -44,7 +44,7 @@ class UserManager
      *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
      *     "ed"                     = @DI\Inject("claroline.event.event_dispatcher"),
      *     "personalWsTemplateFile" = @DI\Inject("%claroline.param.templates_directory%"),
-     *     "trans"                  = @DI\Inject("translator"),
+     *     "translator"                  = @DI\Inject("translator"),
      *     "ch"                     = @DI\Inject("claroline.config.platform_config_handler"),
      *     "pagerFactory"           = @DI\Inject("claroline.pager.pager_factory"),
      *     "om"                     = @DI\Inject("claroline.persistence.object_manager")
@@ -56,7 +56,7 @@ class UserManager
         ToolManager $toolManager,
         StrictDispatcher $ed,
         $personalWsTemplateFile,
-        Translator $trans,
+        Translator $translator,
         PlatformConfigurationHandler $ch,
         PagerFactory $pagerFactory,
         ObjectManager $om
@@ -68,7 +68,7 @@ class UserManager
         $this->toolManager = $toolManager;
         $this->ed = $ed;
         $this->personalWsTemplateFile = $personalWsTemplateFile."default.zip";
-        $this->trans = $trans;
+        $this->translator = $translator;
         $this->ch = $ch;
         $this->pagerFactory = $pagerFactory;
         $this->om = $om;
@@ -152,7 +152,7 @@ class UserManager
             $this->om->persist($user);
             $this->ed->dispatch('log', 'Log\LogUserCreateEvent', $newUser);
         }
-        
+
         $this->om->endFlushSuite();
     }
 
@@ -161,8 +161,8 @@ class UserManager
         $config = Configuration::fromTemplate($this->personalWsTemplateFile);
         $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
         $locale = $this->ch->getParameter('locale_language');
-        $this->trans->setLocale($locale);
-        $personalWorkspaceName = $this->trans->trans('personal_workspace', array(), 'platform');
+        $this->translator->setLocale($locale);
+        $personalWorkspaceName = $this->translator->trans('personal_workspace', array(), 'platform');
         $config->setWorkspaceName($personalWorkspaceName);
         $config->setWorkspaceCode($user->getUsername());
 

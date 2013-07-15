@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Repository\GroupRepository;
 use Claroline\CoreBundle\Pager\PagerFactory;
+use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -18,23 +19,27 @@ class GroupManager
     /** @var GroupRepository */
     private $groupRepo;
     private $pagerFactory;
+    private $translator;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
      * "om"           = @DI\Inject("claroline.persistence.object_manager"),
-     * "pagerFactory" = @DI\Inject("claroline.pager.pager_factory")
+     * "pagerFactory" = @DI\Inject("claroline.pager.pager_factory"),
+     * "translator"   = @DI\Inject("translator")
      * })
      */
     public function __construct(
         ObjectManager $om,
-        PagerFactory $pagerFactory
+        PagerFactory $pagerFactory,
+        Translator $translator
     )
     {
         $this->om = $om;
         $this->groupRepo = $om->getRepository('ClarolineCoreBundle:Group');
         $this->pagerFactory = $pagerFactory;
+        $this->translator = $translator;
     }
 
     public function insertGroup(Group $group)
@@ -60,7 +65,7 @@ class GroupManager
         foreach ($users as $user) {
             $group->addUser($user);
         }
-        
+
         $this->om->persist($group);
         $this->om->flush();
     }
