@@ -28,15 +28,14 @@
             $.ajax({
                 url: route,
                 success: function () {
-                    $('#validation-box').modal('hide');
-                    $('#validation-box-body').empty();
                     $('.chk-grp:checked').each(function (index, element) {
                         $(element).parent().parent().remove();
                     });
-                    $('.add-groups-button').attr('disabled', 'disabled');
                 },
                 type: 'PUT'
             });
+            $('#validation-box').modal('hide');
+            $('#validation-box-body').empty();
         });
 
         $('#search-group-button').click(function () {

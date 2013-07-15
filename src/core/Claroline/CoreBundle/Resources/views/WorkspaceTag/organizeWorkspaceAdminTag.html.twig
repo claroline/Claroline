@@ -1,0 +1,65 @@
+{% macro showTagHierarchy(tagsList, tagsHierarchy) %}
+    <div>
+        <ul>
+        {% for tag in tagsList %}
+            <li class="hierarchy-tag-{{tag.getId()}}">
+                <a href="{{ path('claro_workspace_admin_tag_check_children', {'tagId':tag.getId()}) }}">
+                {{ tag.getName() }}
+                </a>
+                {% if tagsHierarchy[tag.getId()]|length > 0 %}
+                    {{ _self.showTagHierarchy(tagsHierarchy[tag.getId()], tagsHierarchy) }}
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+{% endmacro %}
+
+{% from _self import showTagHierarchy %}
+
+{% extends 'ClarolineCoreBundle:WorkspaceTag:layout.html.twig' %}
+
+{% block section_content %}
+
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-book',
+                'name': 'all_workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_list')
+            },
+            {
+                'name': 'admin_tags_management'|trans({}, 'platform'),
+                'href': path('claro_workspace_manage_admin_tag')
+            },
+            {
+                'name': 'admin_tags_organization'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+
+    <div class="margin">
+        <table class="table table-striped table-bordered table-condensed">
+            <tr>
+                <th>{{ 'admin_tags_hierarchy'|trans({}, 'platform') }}</th>
+                <th>{{ 'admin_tags_list'|trans({}, 'platform') }}</th>
+            </tr>
+            <tr>
+                <td>
+                    {{ showTagHierarchy(rootTags, hierarchy) }}
+                </td>
+                <td>
+                    <ul>
+                    {% for tag in tags %}
+                        <li>
+                            <a href="{{ path('claro_workspace_admin_tag_check_children', {'tagId':tag.getId()}) }}">
+                            {{ tag.getName() }}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+{% endblock %}

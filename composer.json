@@ -7,8 +7,8 @@
     "require": {
         "php": ">=5.3.3",
         "symfony/symfony": "2.3.*",
-        "doctrine/orm": ">=2.2.3,<2.4-dev",
-        "doctrine/doctrine-bundle": "1.2.*",
+        "doctrine/orm": ">=2.2,<2.5-dev",
+        "doctrine/doctrine-bundle": ">=2.1",
         "twig/extensions": "1.0.*",
         "symfony/assetic-bundle": "2.3.*",
         "symfony/swiftmailer-bundle": "2.3.*",
@@ -38,7 +38,8 @@
         "egeloen/ckeditor-bundle": "2.*"
     },
     "require-dev": {
-        "mockery/mockery": "dev-master@dev"
+        "mockery/mockery": "dev-master@dev",
+        "hamcrest/hamcrest": "1.1.0"
     },
     "repositories": [
         {
@@ -49,6 +50,11 @@
                 "dist": {
                     "url": "https://github.com/FortAwesome/Font-Awesome/zipball/master",
                     "type": "zip"
+                },
+                "source": {
+                    "url": "https://github.com/FortAwesome/Font-Awesome.git",
+                    "type": "git",
+                    "reference": "master"
                 }
             }
         },
@@ -60,6 +66,27 @@
                 "dist": {
                     "url": "https://github.com/xaguilars/bootstrap-colorpicker/archive/master.zip",
                     "type": "zip"
+                },
+                "source": {
+                    "url": "https://github.com/xaguilars/bootstrap-colorpicker",
+                    "type": "git",
+                    "reference": "master"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "hamcrest/hamcrest",
+                "version": "1.1.0",
+                "dist": {
+                    "type": "zip",
+                    "url": "https://hamcrest.googlecode.com/files/hamcrest-php-1.1.0.zip"
+                },
+                "include-path": ["Hamcrest-1.1.0/"],
+                "autoload": {
+                    "psr-0": { "Hamcrest_": "Hamcrest-1.1.0/" },
+                    "files": ["Hamcrest-1.1.0/Hamcrest/Hamcrest.php"]
                 }
             }
         }

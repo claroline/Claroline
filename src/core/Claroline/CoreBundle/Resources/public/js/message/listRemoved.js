@@ -29,7 +29,7 @@
             });
             parameters.ids = array;
 
-            var route = Routing.generate('claro_message_delete_trash');
+            var route = Routing.generate('claro_message_delete');
             route +=  '?' + $.param(parameters);
             $.ajax({
                 url: route,

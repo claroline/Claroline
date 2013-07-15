@@ -5,19 +5,11 @@ namespace Claroline\CoreBundle\Entity\Theme;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Type
- *
+ * @ORM\Entity()
  * @ORM\Table(name="claro_theme")
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ThemeRepository")
  */
 class Theme
 {
-    public function __construct($name = null, $path = null)
-    {
-        $this->setName($name);
-        $this->setPath($path);
-    }
-
     /**
      * @var integer
      *
@@ -43,10 +35,15 @@ class Theme
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
-     * @ORM\JoinColumn(name="plugin_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="plugin_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     protected $plugin;
 
+    public function __construct($name = null, $path = null)
+    {
+        $this->setName($name);
+        $this->setPath($path);
+    }
 
     /**
      * Get id

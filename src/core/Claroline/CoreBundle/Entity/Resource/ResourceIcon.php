@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Resource\IconType;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceIconRepository")
  * @ORM\Table(name="claro_resource_icon")
  */
 class ResourceIcon
@@ -20,34 +20,29 @@ class ResourceIcon
     protected $id;
 
     /**
-     * @ORM\Column(type="string", name="icon_location")
+     * @ORM\Column(type="string", name="icon_location", nullable=true, length=255)
      */
     protected $iconLocation;
 
     /**
-     * @ORM\Column(type="string", name="type")
+     * @ORM\Column(type="string", name="mimeType", length=255)
      */
-    protected $type;
+    protected $mimeType;
 
     /**
      * @ORM\Column(type="boolean", name="is_shortcut")
      */
-    protected $isShortcut;
+    protected $isShortcut = false;
 
     /**
-     * @ORM\Column(type="string", name="relative_url")
+     * @ORM\Column(type="string", name="relative_url", nullable=true, length=255)
+     * The url from the /web folder.
      */
     protected $relativeUrl;
 
     /**
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\IconType")
-     * @ORM\JoinColumn(name="icon_type_id", referencedColumnName="id")
-     */
-    protected $iconType;
-
-    /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceIcon")
-     * @ORM\JoinColumn(name="shortcut_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="shortcut_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     protected $shortcutIcon;
 
@@ -74,26 +69,16 @@ class ResourceIcon
         $this->iconLocation = $iconLocation;
     }
 
-    public function setIconType(IconType $iconType)
+    public function getMimeType()
     {
-        $this->iconType = $iconType;
+        return $this->mimeType;
     }
-
-    public function getIconType()
+    
+    public function setMimeType($mimeType)
     {
-        return $this->iconType;
+        $this->mimeType = $mimeType;
     }
-
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-    public function getType()
-    {
-        return $this->type;
-    }
-
+    
     public function isShortcut()
     {
         return $this->isShortcut;

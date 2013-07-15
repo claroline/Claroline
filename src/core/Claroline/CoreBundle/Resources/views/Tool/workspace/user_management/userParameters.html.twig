@@ -1,0 +1,32 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block section_content %}
+
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-user',
+                'name': 'user_management'|trans({}, 'tools'),
+                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'user_management'})
+            },
+            {
+                'name': user.getUsername(),
+                'href': ''
+            }
+        ])
+    }}
+
+    <form class="form-horizontal" action="{{path('claro_workspace_tools_edit_user_parameters',{'workspaceId':workspace.getId(), 'userId':user.getId()})}}" method="post" {{ form_enctype(form) }} id="user-parameters">
+        <fieldset>
+            <legend>{{ 'user_parameters'|trans({}, 'platform') }} :</legend>
+            {{ form_widget(form) }}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+                <a href="{{ path('claro_workspace_open_tool',
+                    {'workspaceId': workspace.getId(), 'toolName': 'user_management'}) }}">
+                    <button type="button" class="btn">{{ 'cancel'|trans({}, 'platform') }}</button>
+                </a>
+            </div>
+        </fieldset>
+    </form>
+{% endblock %}

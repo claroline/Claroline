@@ -34,7 +34,7 @@
     {{ parent() }}
     {% javascripts
     vars=["locale"]
-    "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/remove_user_confirm.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/removeUserConfirm.html.twigjs"
     filter="twig_js"
     %}
 
@@ -48,6 +48,7 @@
         {{
             macros.breadcrumbs([
                 {
+                    'icon': 'icon-user',
                     'name': 'users_management'|trans({}, 'platform'),
                     'href': path('claro_admin_users_management')
                 },
@@ -57,7 +58,7 @@
                 },
                 {
                     'name':  group.getName(),
-                    'href': '#'
+                    'href': ''
                 }
             ])
         }}
@@ -65,7 +66,7 @@
         <div class="search-bar">
             <a id="link_add_user_to_group" class="btn btn-secondary" href="{{ path('claro_admin_outside_of_group_user_list', {'groupId' : group.getId()}) }}"><i class="icon-plus"></i> {{ 'add_user'|trans({}, 'platform') }}</a>
             <button class="btn btn-secondary delete-users-button"><i class="icon-trash"></i> {{ 'delete'|trans({}, 'platform') }}</button>
-            <a class="btn btn-secondary" id="link-send-message" href="{{ path('claro_message_form_for_group', {'groupId': group.getId()}) }}"><i class="icon-envelope"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
+            <a class="btn btn-secondary" id="link-send-message" href="{{ path('claro_message_form_for_group', {'group': group.getId()}) }}"><i class="icon-envelope"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
 
             <div class="input-append pull-right">
                 <input class="input-medium" type="text" id="search-user-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
@@ -110,7 +111,7 @@
         <p>
             <a id="link_add_user_to_group" class="btn btn-secondary" href="{{ path('claro_admin_outside_of_group_user_list', {'groupId' : group.getId()}) }}"><i class="icon-plus"></i> {{ 'add_user'|trans({}, 'platform') }}</a>
             <button class="btn btn-secondary delete-users-button"><i class="icon-trash"></i> {{ 'delete'|trans({}, 'platform') }}</button>
-            <a class="btn btn-secondary" id="link-send-message" href="{{ path('claro_message_form_for_group', {'groupId': group.getId()}) }}"><i class="icon-envelope"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
+            <a class="btn btn-secondary" id="link-send-message" href="{{ path('claro_message_form_for_group', {'group': group.getId()}) }}"><i class="icon-envelope"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
 
         </p>
 

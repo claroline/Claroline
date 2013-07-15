@@ -36,6 +36,7 @@
         <exec executable="composer" failonerror="true">
             <arg value="install" />
             <arg value="--dev" />
+            <arg value="--prefer-source" />
         </exec>
         <exec executable="php" failonerror="true">
             <arg path="${appdir}/console" />
