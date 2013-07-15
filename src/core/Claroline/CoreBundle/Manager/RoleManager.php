@@ -252,4 +252,16 @@ class RoleManager
 
         return $roles;
     }
+    
+    public function getRoleBaseName($roleName)
+    {
+        $substr = explode('_', $roleName);
+        $roleName = array_shift($substr);
+        
+        for ($i = 0; $i < count($substr) - 1; $i++) {
+            $roleName .= '_' . $substr[$i];
+        }
+        
+        return $roleName;
+    }
 }
