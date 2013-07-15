@@ -10,31 +10,12 @@ class UserBadgeRepository extends EntityRepository
 {
     /**
      * @param Badge $badge
-     *
-     * @return int
-     */
-    public function deleteByBadge(Badge $badge)
-    {
-        return $this->getEntityManager()
-            ->createQuery('DELETE FROM CLaroline\BadgeBundle\Entity\UserBadge ub where ub.badge = :badgeId')
-            ->setParameter(':badgeId', $badge->getId())
-            ->execute()
-        ;
-    }
-
-    /**
-     * @param Badge $badge
      * @param User  $user
      *
-     * @return int
+     * @return \Claroline\BadgeBundle\Entity\UserBadge|null
      */
-    public function deleteByBadgeAndUser(Badge $badge, User $user)
+    public function findOneByBadgeAndUser(Badge $badge, User $user)
     {
-        return $this->getEntityManager()
-            ->createQuery('DELETE FROM CLaroline\BadgeBundle\Entity\UserBadge ub where ub.badge = :badgeId AND ub.user = :userId')
-            ->setParameter(':badgeId', $badge->getId())
-            ->setParameter(':userId', $user->getId())
-            ->execute()
-        ;
+        return $this->findOneBy(array('badge' => $badge, 'user' => $user));
     }
 }

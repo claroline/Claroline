@@ -270,12 +270,14 @@ class AdminController extends Controller
         /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
         $translator = $this->get('translator');
         try {
+            $doctrine = $this->getDoctrine();
+            /** @var \Doctrine\ORM\EntityManager $entityManager */
+            $entityManager = $doctrine->getManager();
 
-            $nbRows = $this->getDoctrine()->getRepository('ClarolineBadgeBundle:UserBadge')->deleteByBadgeAndUser($badge, $user);
+            $userBadge = $doctrine->getRepository('ClarolineBadgeBundle:UserBadge')->findOneByBadgeAndUser($badge, $user);
 
-            if(0 == $nbRows) {
-                throw new \InvalidArgumentException('No awarded badge deletion occured.');
-            }
+            $entityManager->remove($userBadge);
+            $entityManager->flush();
 
             $this->get('session')->getFlashBag()->add('success', $translator->trans('badge_unaward_success_message', array(), 'platform'));
         }

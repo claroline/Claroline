@@ -29,7 +29,7 @@ class BadgeRepository extends EntityRepository
             ->setParameter('badgeId', $badge->getId())
         ;
 
-        return ($getQuery) ? $query: $query->getResult();
+        return $getQuery ? $query: $query->getResult();
     }
 
     /**
@@ -52,7 +52,7 @@ class BadgeRepository extends EntityRepository
             ->setParameter('userId', $user->getId())
         ;
 
-        return ($getQuery) ? $query: $query->getResult();
+        return $getQuery ? $query: $query->getResult();
     }
 
     /**
@@ -114,7 +114,7 @@ class BadgeRepository extends EntityRepository
             ->setParameter('name', "%{$name}%")
         ;
 
-        return ($getQuery) ? $query: $query->getResult();
+        return $getQuery ? $query: $query->getResult();
     }
 
     /**

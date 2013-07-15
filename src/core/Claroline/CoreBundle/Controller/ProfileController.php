@@ -145,9 +145,13 @@ class ProfileController extends Controller
             ->setCurrentPage($page)
         ;
 
+        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
+        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
+
         return array(
-            'user'  => $user,
-            'pager' => $pager
+            'user'     => $user,
+            'pager'    => $pager,
+            'language' => $platformConfigHandler->getParameter('locale_language')
         );
     }
 
