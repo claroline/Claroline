@@ -398,6 +398,10 @@ function DATE(x){
 
     dx = new Date(yx, (parseInt(mx) - 1), dx, hx, mix, sx);
 
+    if (dx == 'Invalid Date') {
+        dx = new Date(0000, 00, 00, 00, 00, 00);
+    }
+
     return (dx);
 }
 
@@ -449,23 +453,24 @@ function sortTable(tid, col, ord, type) {
             sorter.push([lines[i], iconLabel]);
         // Sort numbers
         } else if (type == 'numPaper'){
-            sorter.push([lines[i].getElementsByTagName('td')[col].textContent.toLowerCase()]);
+            sorter.push([lines[i].getElementsByTagName('td')[col].textContent.toLowerCase().trim()]);
         // Sort string
         } else {
             sorter.push([lines[i], lines[i].getElementsByTagName('td')[col].textContent.toLowerCase()]);
         }
-
     }
 
     // Sort the rows
     sorter.sort(ord);
 
+    var temp = -1;
     // If numbers, get only numbers at first and after sort, get the entire row to sort it right
     if (type == 'numPaper') {
         for (var x = 0 ; x < sorter.length ; x++) {
            for (var z = 0 ; z < sorter.length ; z++ ) {
-               if (sorter[x] == lines[z].getElementsByTagName('td')[col].textContent.toLowerCase()) {
-                   sorter[x] = [lines[z], lines[z].getElementsByTagName('td')[col].textContent.toLowerCase()];
+               if (sorter[x] == lines[z].getElementsByTagName('td')[col].textContent.toLowerCase().trim() && z != temp) {
+                   sorter[x] = [lines[z], lines[z].getElementsByTagName('td')[col].textContent.toLowerCase().trim()];
+                   temp = z;
                }
             }
         }

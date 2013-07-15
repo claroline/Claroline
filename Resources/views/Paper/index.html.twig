@@ -100,10 +100,10 @@
                         {{ paper.numpaper }}
                     </td>
                     <td style="text-align: center; vertical-align: middle;">
-                        {% if paper.start %}{{ paper.start|date(format) }}{% endif %}
+                        {% if paper.start %}{{ paper.start|date(format) }}{% else %}-{% endif %}
                     </td>
                     <td style="text-align: center; vertical-align: middle;">
-                        {% if paper.end %}{{ paper.end|date(format) }}{% endif %}
+                        {% if paper.end %}{{ paper.end|date(format) }}{% else %}-{% endif %}
                     </td>
                     <td style="text-align: center; vertical-align: middle;">
                         {% if paper.interupt %}
