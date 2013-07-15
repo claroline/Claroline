@@ -3,5 +3,55 @@
 {% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
 
 {% block section_content %}
-    Your content goes here XXX
+        <div class="row">
+        <div class="span9 parcoursTree">
+            <div class="row">
+                <div class="span9" id="title_test_bob">
+                    <h3>Parcours :</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div id="" class="span9">
+                        <form action="" method="post" accept-charset="utf-8" id="form_test_bob">
+                            <select name="path-id" id="path-id">
+                                {% for path in paths %}
+                                    <option value="{{ path.id }}">{{ path.name }}</option>
+                                {% endfor %}
+                            </select>
+                        <input type="submit" class="btn clickParcoursTree">
+                    </form>
+
+
+                </div>
+            </div>
+            <div class="well">
+                    <button id="save" class="btn btn-primary pull-right">Sauvegarder</button>
+                    <span id="save_callback" class="notifications top-left"></span>
+
+                    <!--<button id="back" class="btn pull-right">Back</button>-->
+                <div id="left_tree">
+                    
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="span6 ressourcesTypes">
+            <h3>Ressources types :</h3>
+            <h4 class="nameRessourcesTypes"></h4>
+
+            <div id="abstractRessourcesDisplay">
+
+            </div>
+
+        </div> -->
+
+
+        <!-- <div class="span4 ressourcesReelles">
+            <h3>Ressources réelles :</h3>
+            <h4 class="nameRessourcesReelles"></h4>
+            <div class="well" id="concreteRessourcesDisplay">
+                
+            </div>
+        </div> -->
+    </div>
 {% endblock %}
