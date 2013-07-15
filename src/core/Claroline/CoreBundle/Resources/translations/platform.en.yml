@@ -561,6 +561,7 @@ badge_form_badge : 'Name of the claiming badge'
 badge_claim_success_message: 'Badge claimed with success.'
 badge_claim_error_message: 'An error occured while claiming a badge.'
 badge_already_claim_message: 'You already made a claim for this badge.'
+badge_already_award_message: "You can't claim a badge that you already own."
 badge_current_claimed_badges: '%claimedBadgeCount% claim for badge|%claimedBadgeCount% claims for badge'
 badge_validate_award: "Valide badge awarding"
 badge_reject_award: "Reject badge awarding"

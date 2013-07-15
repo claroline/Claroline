@@ -50,7 +50,11 @@ class ProfileController extends Controller
                         throw new \InvalidArgumentException(sprintf("No badge found with name '%s'", $badgeName));
                     }
 
-                    if($user->hasClaimedFor($badge)) {
+
+                    if($user->hasBadge($badge)) {
+                        $this->get('session')->getFlashBag()->add('alert', $translator->trans('badge_already_award_message', array(), 'platform'));
+                    }
+                    elseif($user->hasClaimedFor($badge)) {
                         $this->get('session')->getFlashBag()->add('alert', $translator->trans('badge_already_claim_message', array(), 'platform'));
                     }
                     else {
