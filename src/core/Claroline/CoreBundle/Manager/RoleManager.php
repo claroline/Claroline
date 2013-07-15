@@ -255,6 +255,10 @@ class RoleManager
     
     public function getRoleBaseName($roleName)
     {
+        if ($roleName === 'ROLE_ANONYMOUS') {
+            return $roleName;
+        }
+        
         $substr = explode('_', $roleName);
         $roleName = array_shift($substr);
         
