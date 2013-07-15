@@ -52,8 +52,6 @@
         <exec executable="php" failonerror="true">
             <arg path="${appdir}/console" />
             <arg value="claroline:install" />
-            <arg value="--with-fixtures" />
-            <arg value="--with-plugins" />
             <arg value="--env=test" />
         </exec>
         <exec executable="php" failonerror="true">
