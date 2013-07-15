@@ -5,7 +5,6 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Entity\Workspace\Template;
 use Claroline\CoreBundle\Event\Event\ExportToolEvent;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -17,7 +16,9 @@ use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
-use Claroline\CoreBundle\Database\Writer;
+use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Yaml\Yaml;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -27,8 +28,6 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class WorkspaceManager
 {
-    /** @var Writer */
-    private $writer;
     /** @var OrderedToolRepository */
     private $orderedToolRepo;
     /** @var RoleManager */
@@ -47,65 +46,63 @@ class WorkspaceManager
     private $workspaceRepo;
     /** @var ToolManager */
     private $toolManager;
-    /** @var EventDispatcher */
-    private $eventDispatcher;
+    /** @var StrictDispatcher */
+    private $dispatcher;
+    /** @var ObjectManager */
+    private $om;
+    /** @var ClaroUtilities */
+    private $ut;
+    /** @var string */
     private $templateDir;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "writer" = @DI\Inject("claroline.database.writer"),
-     *     "roleManager" = @DI\Inject("claroline.manager.role_manager"),
+     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
-     *     "toolManager" = @DI\Inject("claroline.manager.tool_manager"),
-     *     "orderedToolRepo" = @DI\Inject("ordered_tool_repository"),
-     *     "resourceRepo" = @DI\Inject("resource_repository"),
-     *     "resourceRightsRepo" = @DI\Inject("resource_rights_repository"),
-     *     "resourceTypeRepo" = @DI\Inject("resource_type_repository"),
-     *     "workspaceRepo" = @DI\Inject("claroline.repository.workspace_repository"),
-     *     "roleRepo" = @DI\Inject("role_repository"),
-     *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
-     *     "templateDir" = @DI\Inject("%claroline.param.templates_directory%"),
+     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
+     *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "ut"              = @DI\Inject("claroline.utilities.misc"),
+     *     "templateDir"     = @DI\Inject("%claroline.param.templates_directory%")
      * })
      */
+
     public function __construct(
-        Writer $writer,
         RoleManager $roleManager,
         ResourceManager $resourceManager,
         ToolManager $toolManager,
-        AbstractResourceRepository $resourceRepo,
-        OrderedToolRepository $orderedToolRepo,
-        ResourceRightsRepository $resourceRightsRepo,
-        ResourceTypeRepository $resourceTypeRepo,
-        RoleRepository $roleRepo,
-        WorkspaceRepository $workspaceRepo,
-        EventDispatcher $eventDispatcher,
+        StrictDispatcher $dispatcher,
+        ObjectManager $om,
+        ClaroUtilities $ut,
         $templateDir
     )
     {
-        $this->writer = $writer;
         $this->roleManager = $roleManager;
         $this->resourceManager = $resourceManager;
-        $this->resourceTypeRepo = $resourceTypeRepo;
         $this->toolManager = $toolManager;
-        $this->orderedToolRepo = $orderedToolRepo;
-        $this->resourceRepo = $resourceRepo;
-        $this->resourceRightsRepo = $resourceRightsRepo;
-        $this->roleRepo = $roleRepo;
-        $this->workspaceRepo = $workspaceRepo;
-        $this->eventDispatcher = $eventDispatcher;
+        $this->ut = $ut;
+        $this->om = $om;
+        $this->dispatcher = $dispatcher;
         $this->templateDir = $templateDir;
+        $this->resourceTypeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
+        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
+        $this->orderedToolRepo = $om->getRepository('ClarolineCoreBundle:Tool\OrderedTool');
+        $this->resourceRepo = $om->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
+        $this->resourceRightsRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
+        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
+        $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
     }
 
     public function create(Configuration $config, User $manager)
     {
-        $workspace = new SimpleWorkspace();
+        $this->om->startFlushSuite();
+        $workspace = $this->om->factory('Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace');
         $workspace->setName($config->getWorkspaceName());
         $workspace->setPublic($config->isPublic());
         $workspace->setCode($config->getWorkspaceCode());
-        $this->writer->create($workspace);
-        $this->writer->suspendFlush();
+        $workspace->setGuid($this->ut->generateGuid());
         $baseRoles = $this->roleManager->initWorkspaceBaseRole($config->getRoles(), $workspace);
         $baseRoles['ROLE_ANONYMOUS'] = $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS'));
         $this->roleManager->associateRole($manager, $baseRoles["ROLE_WS_MANAGER"]);
@@ -152,28 +149,33 @@ class WorkspaceManager
             $position++;
         }
 
-        $this->writer->forceFlush();
+        $this->dispatcher->dispatch('log', 'Log\LogWorkspaceCreate', array($workspace));
+        $this->om->persist($workspace);
+        $this->om->endFlushSuite();
 
         return $workspace;
     }
 
     public function createWorkspace(AbstractWorkspace $workspace)
     {
-        $this->writer->create($workspace);
+        $this->om->persist($workspace);
+        $this->om->flush($workspace);
     }
 
     public function export(AbstractWorkspace $workspace, $configName)
     {
         if (!is_writable($this->templateDir)) {
-            throw new \Exception("{$this->templatir} is not writable");
+            throw new \Exception("{$this->templateDir} is not writable");
         }
 
+        $this->om->startFlushSuite();
         $archive = new \ZipArchive();
-        $hash = $this->resourceManager->generateGuid();
+        $hash = $this->ut->generateGuid();
         $pathArch = $this->templateDir."{$hash}.zip";
         $template = new Template();
         $template->setHash("{$hash}.zip");
         $template->setName($configName);
+        $this->om->persist($template);
         $archive->open($pathArch, \ZipArchive::CREATE);
         $arTools = array();
         $description = array();
@@ -182,7 +184,7 @@ class WorkspaceManager
         $root = $this->resourceRepo->findWorkspaceRoot($workspace);
 
         foreach ($roles as $role) {
-            $name = rtrim(str_replace(range(0, 9), '', $role->getName()), '_');
+            $name = $this->roleManager->getRoleBaseName($role->getName());
             $arRole[$name] = $role->getTranslationKey();
         }
 
@@ -192,7 +194,7 @@ class WorkspaceManager
             $perms['canCreate'] = $this->resourceRightsRepo
                 ->findCreationRights(array($role->getName()), $root);
 
-            $description['root_perms'][rtrim(str_replace(range(0, 9), '', $role->getName()), '_')] = $perms;
+            $description['root_perms'][$this->roleManager->getRoleBaseName($role->getName())] = $perms;
         }
 
         foreach ($workspaceTools as $workspaceTool) {
@@ -202,23 +204,18 @@ class WorkspaceManager
             $arToolRoles = array();
 
             foreach ($roles as $role) {
-                $arToolRoles[] = rtrim(str_replace(range(0, 9), '', $role->getName()), '_');
+                $arToolRoles[] = $this->roleManager->getRoleBaseName($role->getName());
             }
 
             $arTools[$tool->getName()]['perms'] = $arToolRoles;
             $arTools[$tool->getName()]['name'] = $workspaceTool->getName();
 
             if ($workspaceTool->getTool()->isExportable()) {
-                $event = new ExportToolEvent($workspace);
-                $this->eventDispatcher->dispatch('tool_'.$tool->getName().'_to_template', $event);
-
-                if ($event->getConfig() === null) {
-                    throw new \Exception(
-                        'The event tool_' . $tool->getName() .
-                        '_to_template did not return any config.'
-                    );
-                }
-
+                $event = $this->dispatcher->dispatch(
+                    "tool_{$tool->getName()}_to_template",
+                    'ExportTool',
+                    array($workspace)
+                );
                 $description['tools'][$tool->getName()] = $event->getConfig();
                 $description['tools'][$tool->getName()]['files'] = $event->getFilenamesFromArchive();
 
@@ -235,7 +232,7 @@ class WorkspaceManager
         $yaml = Yaml::dump($description, 10);
         $archive->addFromString('config.yml', $yaml);
         $archive->close();
-        $this->writer->create($template);
+        $this->om->endFlushSuite();
     }
 
     private function prepareRightsArray(array $rights, array $roles)
@@ -331,5 +328,10 @@ class WorkspaceManager
     public function getWorkspaceById($workspaceId)
     {
         return $this->workspaceRepo->find($workspaceId);
+    }
+
+    public function getOneByGuid($guid)
+    {
+        return $this->workspaceRepo->findOneByGuid($guid);
     }
 }

@@ -15,6 +15,7 @@ class ObjectManager extends ObjectManagerDecorator
     private $flushSuiteLevel = 0;
     private $supportsTransactions = false;
     private $hasEventManager = false;
+    private $hasUnitOfWork = false;
 
     /**
      * Constructor.
@@ -28,6 +29,7 @@ class ObjectManager extends ObjectManagerDecorator
         $this->wrapped = $om;
         $this->supportsTransactions
             = $this->hasEventManager
+            = $this->hasUnitOfWork
             = $om instanceof EntityManagerInterface;
     }
 
@@ -49,6 +51,16 @@ class ObjectManager extends ObjectManagerDecorator
     public function hasEventManager()
     {
         return $this->hasEventManager;
+    }
+
+    /**
+     * Checks if the underlying manager has an unit of work.
+     *
+     * @return boolean
+     */
+    public function hasUnitOfWork()
+    {
+        return $this->hasUnitOfWork;
     }
 
     /**
@@ -139,6 +151,21 @@ class ObjectManager extends ObjectManagerDecorator
     }
 
     /**
+     * Returns the unit of work.
+     *
+     * @todo remove this method if possible
+     *
+     * @throws UnsupportedMethodException if the method is not supported by
+     *                                    the underlying object manager
+     */
+    public function getUnitOfWork()
+    {
+        $this->assertIsSupported($this->hasUnitOfWork, __METHOD__);
+
+        return $this->wrapped->getUnitOfWork();
+    }
+
+    /**
      * Returns an instance of a class.
      *
      * Note: this is a convenience method intended to ease unit testing, as objects
@@ -170,9 +197,8 @@ class ObjectManager extends ObjectManagerDecorator
      */
     public function findByIds($class, array $ids)
     {
-        $dql = 'SELECT object FROM :class object WHERE object.id IN (:ids)';
+        $dql = "SELECT object FROM {$class} object WHERE object.id IN (:ids)";
         $query = $this->wrapped->createQuery($dql);
-        $query->setParameter('class', $class);
         $query->setParameter('ids', $ids);
         $objects = $query->getResult();
 
@@ -196,9 +222,8 @@ class ObjectManager extends ObjectManagerDecorator
      */
     public function count($class)
     {
-        $dql = 'SELECT COUNT(object) FROM :class object';
+        $dql = "SELECT COUNT(object) FROM {$class} object";
         $query = $this->wrapped->createQuery($dql);
-        $query->setParameter('class', $class);
 
         return $query->getSingleScalarResult();
     }

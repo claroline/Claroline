@@ -121,7 +121,7 @@ class RoleRepository extends EntityRepository
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
             JOIN r.workspace ws
             JOIN r.users user
-            WHERE ws.id = {$workspace->getId()}
+            WHERE ws.guid = '{$workspace->getGuid()}'
             AND r.name != 'ROLE_ADMIN'
             AND user.id = {$user->getId()}
         ";
@@ -145,7 +145,7 @@ class RoleRepository extends EntityRepository
             JOIN ws.orderedTools ot
             JOIN ot.roles r_2
             JOIN ot.tool tool
-            WHERE ws.id = {$workspace->getId()}
+            WHERE ws.guid = '{$workspace->getGuid()}'
             AND tool.id = {$tool->getId()}
             AND r.id = r_2.id
             AND r.name != 'ROLE_ADMIN'
@@ -189,7 +189,7 @@ class RoleRepository extends EntityRepository
     {
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
-            WHERE r.name = 'ROLE_WS_{$roleType}_{$workspace->getId()}'
+            WHERE r.name = 'ROLE_WS_{$roleType}_{$workspace->getGuid()}'
         ";
         $query = $this->_em->createQuery($dql);
 

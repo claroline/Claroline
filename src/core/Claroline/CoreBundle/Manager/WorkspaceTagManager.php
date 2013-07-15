@@ -12,8 +12,7 @@ use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\CoreBundle\Repository\WorkspaceTagRepository;
 use Claroline\CoreBundle\Repository\RelWorkspaceTagRepository;
 use Claroline\CoreBundle\Repository\WorkspaceTagHierarchyRepository;
-use Claroline\CoreBundle\Database\Writer;
-use Doctrine\ORM\EntityManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -21,98 +20,97 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class WorkspaceTagManager
 {
+    /** @var WorkspaceTagRepository */
     private $tagRepo;
+    /** @var RelWorkspaceTagRepository */
     private $relTagRepo;
+    /** @var WorkspaceTagHierarchyRepository */
     private $tagHierarchyRepo;
+    /** @var WorkspaceRepository */
     private $workspaceRepo;
-    private $writer;
     private $roleManager;
-    private $em;
+    private $om;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "tagRepo"            = @DI\Inject("workspace_tag_repository"),
-     *     "relTagRepo"         = @DI\Inject("rel_workspace_tag_repository"),
-     *     "tagHierarchyRepo"   = @DI\Inject("workspace_tag_hierarchy_repository"),
-     *     "workspaceRepo"      = @DI\Inject("claroline.repository.workspace_repository"),
-     *     "writer"             = @DI\Inject("claroline.database.writer"),
-     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
-     *     "em"                 = @DI\Inject("doctrine.orm.entity_manager")
+     *     "roleManager" = @DI\Inject("claroline.manager.role_manager"),
+     *     "om"          = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __contruct(
-        WorkspaceTagRepository $tagRepo,
-        RelWorkspaceTagRepository $relTagRepo,
-        WorkspaceTagHierarchyRepository $tagHierarchyRepo,
-        WorkspaceRepository $workspaceRepo,
-        Writer $writer,
         RoleManager $roleManager,
-        EntityManager $em
+        ObjectManager $om
     )
     {
-        $this->tagRepo = $tagRepo;
-        $this->relTagRepo = $relTagRepo;
-        $this->tagHierarchyRepo = $tagHierarchyRepo;
-        $this->workspaceRepo = $workspaceRepo;
-        $this->writer = $writer;
+        $this->tagRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag');
+        $this->relTagRepo = $om->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag');
+        $this->tagHierarchyRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTagHierarchy');
+        $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
         $this->roleManager = $roleManager;
-        $this->em = $em;
+        $this->om = $om;
     }
 
     public function insert(WorkspaceTag $tag)
     {
-        $this->writer->create($tag);
+        $this->om->persist($tag);
+        $this->om->flush();
     }
 
     public function createTag($name, User $user = null)
     {
-        $tag = new WorkspaceTag();
+        $tag = $this->om->factory('Claroline\CoreBundle\Entity\Workspace\WorkspaceTag');
         $tag->setName($name);
         $tag->setUser($user);
-        $this->writer->create($tag);
+        $this->om->persist($tag);
+        $this->om->flush();
 
         return $tag;
     }
 
     public function createTagRelation(WorkspaceTag $tag, AbstractWorkspace $workspace)
     {
-        $relWorkspaceTag = new RelWorkspaceTag();
+        $relWorkspaceTag = $this->om->factory('Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag');
         $relWorkspaceTag->setTag($tag);
         $relWorkspaceTag->setWorkspace($workspace);
-        $this->writer->create($relWorkspaceTag);
+        $this->om->persist($relWorkspaceTag);
+        $this->om->flush();
 
         return $relWorkspaceTag;
     }
 
     public function deleteTagRelation(RelWorkspaceTag $relWorkspaceTag)
     {
-        $this->writer->delete($relWorkspaceTag);
+        $this->om->remove($relWorkspaceTag);
+        $this->om->persist();
     }
 
     public function deleteRelWorkspaceTag(WorkspaceTag $tag, AbstractWorkspace $workspace)
     {
         $relWorkspaceTag = $this->relTagRepo->findBy(array('tag' => $tag, 'workspace' => $workspace));
 
-        $this->writer->delete($relWorkspaceTag);
+        $this->om->remove($relWorkspaceTag);
+        $this->om->persist();
     }
 
     public function createTagHierarchy(WorkspaceTag $tag, WorkspaceTag $parent, $level)
     {
-        $tagHierarchy = new WorkspaceTagHierarchy();
+        $tagHierarchy = $this->om->factory('Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy');
         $tagHierarchy->setTag($tag);
         $tagHierarchy->setParent($parent);
         $tagHierarchy->setLevel($level);
         $tagHierarchy->setUser($tag->getUser());
-        $this->writer->create($tagHierarchy);
+        $this->om->persist($tagHierarchy);
+        $this->om->flush();
 
         return $tagHierarchy;
     }
 
     public function deleteTagHierarchy(WorkspaceTagHierarchy $tagHierarchy)
     {
-        $this->writer->delete($tagHierarchy);
+        $this->om->remove($tagHierarchy);
+        $this->om->persist();
     }
 
     public function getNonEmptyTagsByUser(User $user)

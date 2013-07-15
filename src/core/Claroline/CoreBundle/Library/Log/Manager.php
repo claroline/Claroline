@@ -27,8 +27,8 @@ class Manager
 
     protected function isAllowedToViewLogs($workspace)
     {
-        return ($this->container->get('security.context')->isGranted('ROLE_WS_COLLABORATOR_'.$workspace->getId()) === true
-            || $this->container->get('security.context')->isGranted('ROLE_WS_MANAGER_'.$workspace->getId()) === true);
+        return ($this->container->get('security.context')->isGranted('ROLE_WS_COLLABORATOR_'.$workspace->getGuid()) === true
+            || $this->container->get('security.context')->isGranted('ROLE_WS_MANAGER_'.$workspace->getGuid()) === true);
     }
 
     protected function renderLogs($logs)

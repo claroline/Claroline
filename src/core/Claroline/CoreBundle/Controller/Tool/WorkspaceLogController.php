@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 

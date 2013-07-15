@@ -200,10 +200,11 @@ class ActivityController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
             ->findResourceActivities($activity);
-
+        $resource = isset($resourceActivities[0]) ? $resourceActivities[0]->getResource(): null;
+        
         return array(
             'activity' => $activity,
-            'resource' => $resourceActivities[0]->getResource()
+            'resource' => $resource
         );
     }
 
