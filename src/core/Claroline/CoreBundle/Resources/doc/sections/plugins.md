@@ -86,7 +86,6 @@ plugin:
   resources:
     - class: 'Claroline\ExampleBundle\Entity\Example'
       name: 'claroline_example'
-      is_browsable: 'true'
       is_exportable: 'false'
       icon: 'res_text.png'
 

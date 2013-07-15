@@ -31,13 +31,12 @@
                     $('.chk-group:checked').each(function (index, element) {
                         $(element).parent().parent().remove();
                     });
-                    $('#validation-box').modal('hide');
-                    $('#validation-box-body').empty();
-                    $('.delete-groups-button').attr('disabled', 'disabled');
                     $('#deleting').hide();
                 },
                 type: 'DELETE'
             });
+            $('#validation-box').modal('hide');
+            $('#validation-box-body').empty();
         });
 
         $('#modal-cancel-button').click(function () {

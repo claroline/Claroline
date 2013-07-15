@@ -10,7 +10,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 class UserManagerTest extends MockeryTestCase
 {
     private $userRepo;
-    private $writer;
     private $roleManager;
     private $workspaceManager;
     private $toolManager;
@@ -18,30 +17,30 @@ class UserManagerTest extends MockeryTestCase
     private $personalWsTemplateFile;
     private $trans;
     private $ch;
-    private $genericRepo;
     private $pagerFactory;
+    private $om;
 
     public function setUp()
     {
         parent::setUp();
-        $this->writer = m::mock('Claroline\CoreBundle\Database\Writer');
+
         $this->userRepo = m::mock('Claroline\CoreBundle\Repository\UserRepository');
         $this->roleManager = m::mock('Claroline\CoreBundle\Manager\RoleManager');
         $this->workspaceManager = m::mock('Claroline\CoreBundle\Manager\WorkspaceManager');
         $this->toolManager = m::mock('Claroline\CoreBundle\Manager\ToolManager');
-        $this->ed = m::mock('Symfony\Component\EventDispatcher\EventDispatcher');
+        $this->ed = m::mock('Claroline\CoreBundle\Event\StrictDispatcher');
         $this->personalWsTemplateFile = 'template';
         $this->trans = m::mock('Symfony\Component\Translation\Translator');
         $this->ch = m::mock('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
-        $this->genericRepo = m::mock('Claroline\CoreBundle\Database\GenericRepository');
         $this->pagerFactory = m::mock('Claroline\CoreBundle\Pager\PagerFactory');
+        $this->om = m::mock('Claroline\CoreBundle\Persistence\ObjectManager');
     }
 
     public function testInsert()
     {
         $user = m::mock('Claroline\CoreBundle\Entity\User');
-        $this->writer->shouldReceive('create')->with($user)->once();
-
+        $this->om->shouldReceive('persist')->with($user)->once();
+        $this->om->shouldReceive('flush')->once();
         $this->getManager()->insertUser($user);
     }
 
@@ -61,15 +60,11 @@ class UserManagerTest extends MockeryTestCase
         $this->roleManager->shouldReceive('setRoleToRoleSubject')
             ->with($user, PlatformRoles::USER)
             ->once();
-        $this->writer->shouldReceive('create')
-            ->with($user)
-            ->once();
-        $user->shouldReceive('getLastName')
-            ->once();
-        $user->shouldReceive('getFirstName')
-            ->once();
+        $this->om->shouldReceive('startFlushSuite')->once();
+        $this->om->shouldReceive('endFlushSuite')->once();
+        $this->om->shouldReceive('persist')->with($user)->once();
         $this->ed->shouldReceive('dispatch')
-            ->with('log', anInstanceOf('Claroline\CoreBundle\Event\Event\Log\LogUserCreateEvent'))
+            ->with('log', 'Log\LogUserCreate', array($user))
             ->once();
 
         $manager->createUser($user);
@@ -78,8 +73,8 @@ class UserManagerTest extends MockeryTestCase
     public function testDeleteUser()
     {
         $user = m::mock('Claroline\CoreBundle\Entity\User');
-        $this->writer->shouldReceive('delete')->with($user)->once();
-
+        $this->om->shouldReceive('remove')->with($user)->once();
+        $this->om->shouldReceive('flush')->once();
         $this->getManager()->deleteUser($user);
     }
 
@@ -89,26 +84,13 @@ class UserManagerTest extends MockeryTestCase
         $user = m::mock('Claroline\CoreBundle\Entity\User');
         $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
 
-        $manager->shouldReceive('setPersonalWorkspace')
-            ->with($user)
-            ->once()
-            ->andReturn($workspace);
-        $this->toolManager->shouldReceive('addRequiredToolsToUser')
-            ->with($user)
-            ->once();
-        $this->roleManager->shouldReceive('setRoleToRoleSubject')
-            ->with($user, 'MY_ROLE')
-            ->once();
-        $this->writer->shouldReceive('create')
-            ->with($user)
-            ->once();
-        $user->shouldReceive('getLastName')
-            ->once();
-        $user->shouldReceive('getFirstName')
-            ->once();
-        $this->ed->shouldReceive('dispatch')
-            ->with('log', anInstanceOf('Claroline\CoreBundle\Event\Event\Log\LogUserCreateEvent'))
-            ->once();
+        $this->om->shouldReceive('startFlushSuite')->once();
+        $this->om->shouldReceive('endFlushSuite')->once();
+        $manager->shouldReceive('setPersonalWorkspace')->with($user)->once()->andReturn($workspace);
+        $this->toolManager->shouldReceive('addRequiredToolsToUser')->with($user)->once();
+        $this->roleManager->shouldReceive('setRoleToRoleSubject')->with($user, 'MY_ROLE')->once();
+        $this->om->shouldReceive('persist')->with($user)->once();
+        $this->ed->shouldReceive('dispatch')->with('log', 'Log\LogUserCreate', array($user))->once();
 
         $manager->createUserWithRole($user, 'MY_ROLE');
     }
@@ -122,6 +104,9 @@ class UserManagerTest extends MockeryTestCase
         $roleTwo = m::mock('Claroline\CoreBundle\Entity\Role');
         $roles = new ArrayCollection(array($roleOne, $roleTwo));
 
+        $this->om->shouldReceive('startFlushSuite')->once();
+        $this->om->shouldReceive('endFlushSuite')->once();
+
         $manager->shouldReceive('setPersonalWorkspace')
             ->with($user)
             ->once()
@@ -132,15 +117,11 @@ class UserManagerTest extends MockeryTestCase
         $this->roleManager->shouldReceive('associateRoles')
             ->with($user, $roles)
             ->once();
-        $this->writer->shouldReceive('create')
+        $this->om->shouldReceive('persist')
             ->with($user)
             ->once();
-        $user->shouldReceive('getLastName')
-            ->once();
-        $user->shouldReceive('getFirstName')
-            ->once();
         $this->ed->shouldReceive('dispatch')
-            ->with('log', anInstanceOf('Claroline\CoreBundle\Event\Event\Log\LogUserCreateEvent'))
+            ->with('log', 'Log\LogUserCreate', array($user))
             ->once();
 
         $manager->insertUserWithRoles($user, $roles);
@@ -195,12 +176,23 @@ class UserManagerTest extends MockeryTestCase
         $manager->importUsers($users);
     }
 
+    public function testGetUserByUserName()
+    {
+        $this->userRepo->shouldReceive('loadUserByUsername')
+            ->once()
+            ->with('john')
+            ->andReturn('User');
+        $manager = $this->getManager();
+        $this->assertEquals('User', $manager->getUserByUsername('john'));
+    }
+
     private function getManager(array $mockedMethods = array())
     {
+        $this->om->shouldReceive('getRepository')->once()
+            ->with('ClarolineCoreBundle:User')->andReturn($this->userRepo);
+
         if (count($mockedMethods) === 0) {
             return new UserManager(
-                $this->userRepo,
-                $this->writer,
                 $this->roleManager,
                 $this->workspaceManager,
                 $this->toolManager,
@@ -208,8 +200,8 @@ class UserManagerTest extends MockeryTestCase
                 $this->personalWsTemplateFile,
                 $this->trans,
                 $this->ch,
-                $this->genericRepo,
-                $this->pagerFactory
+                $this->pagerFactory,
+                $this->om
             );
         }
 
@@ -225,8 +217,6 @@ class UserManagerTest extends MockeryTestCase
         return m::mock(
             'Claroline\CoreBundle\Manager\UserManager' . $stringMocked,
             array(
-                $this->userRepo,
-                $this->writer,
                 $this->roleManager,
                 $this->workspaceManager,
                 $this->toolManager,
@@ -234,8 +224,8 @@ class UserManagerTest extends MockeryTestCase
                 $this->personalWsTemplateFile,
                 $this->trans,
                 $this->ch,
-                $this->genericRepo,
-                $this->pagerFactory
+                $this->pagerFactory,
+                $this->om
             )
         );
     }

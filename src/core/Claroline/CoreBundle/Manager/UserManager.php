@@ -10,126 +10,125 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Repository\UserRepository;
-use Claroline\CoreBundle\Database\Writer;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
-use Claroline\CoreBundle\Event\Event\Log\LogUserCreateEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Database\GenericRepository;
 use Claroline\CoreBundle\Pager\PagerFactory;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 
 /**
  * @DI\Service("claroline.manager.user_manager")
  */
 class UserManager
 {
+    /** @var UserRepository */
     private $userRepo;
-    private $writer;
     private $roleManager;
     private $workspaceManager;
     private $toolManager;
     private $ed;
     private $personalWsTemplateFile;
-    private $trans;
+    private $translator;
     private $ch;
-    private $genericRepo;
     private $pagerFactory;
+    private $om;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "userRepo" =               @DI\Inject("user_repository"),
-     *     "writer" =                 @DI\Inject("claroline.database.writer"),
-     *     "roleManager" =            @DI\Inject("claroline.manager.role_manager"),
-     *     "workspaceManager" =       @DI\Inject("claroline.manager.workspace_manager"),
-     *     "toolManager" =            @DI\Inject("claroline.manager.tool_manager"),
-     *     "ed" =                     @DI\Inject("claroline.event.event_dispatcher"),
+     *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
+     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
+     *     "ed"                     = @DI\Inject("claroline.event.event_dispatcher"),
      *     "personalWsTemplateFile" = @DI\Inject("%claroline.param.templates_directory%"),
-     *     "trans"                  = @DI\Inject("translator"),
+     *     "translator"                  = @DI\Inject("translator"),
      *     "ch"                     = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "genericRepo"            = @DI\Inject("claroline.database.generic_repository"),
-     *     "pagerFactory"           = @DI\Inject("claroline.pager.pager_factory")
+     *     "pagerFactory"           = @DI\Inject("claroline.pager.pager_factory"),
+     *     "om"                     = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(
-        UserRepository $userRepo,
-        Writer $writer,
         RoleManager $roleManager,
         WorkspaceManager $workspaceManager,
         ToolManager $toolManager,
         StrictDispatcher $ed,
         $personalWsTemplateFile,
-        Translator $trans,
+        Translator $translator,
         PlatformConfigurationHandler $ch,
-        GenericRepository $genericRepo,
-        PagerFactory $pagerFactory
+        PagerFactory $pagerFactory,
+        ObjectManager $om
     )
     {
-        $this->userRepo = $userRepo;
-        $this->writer = $writer;
+        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->roleManager = $roleManager;
         $this->workspaceManager = $workspaceManager;
         $this->toolManager = $toolManager;
         $this->ed = $ed;
         $this->personalWsTemplateFile = $personalWsTemplateFile."default.zip";
-        $this->trans = $trans;
+        $this->translator = $translator;
         $this->ch = $ch;
-        $this->genericRepo = $genericRepo;
         $this->pagerFactory = $pagerFactory;
+        $this->om = $om;
     }
 
     public function insertUser(User $user)
     {
-        $this->writer->create($user);
+        $this->om->persist($user);
+        $this->om->flush();
     }
 
     public function createUser(User $user)
     {
+        $this->om->startFlushSuite();
         $this->setPersonalWorkspace($user);
         $this->toolManager->addRequiredToolsToUser($user);
         $this->roleManager->setRoleToRoleSubject($user, PlatformRoles::USER);
-
-        $this->writer->create($user);
-
+        $this->om->persist($user);
         $this->ed->dispatch('log', 'Log\LogUserCreate', array($user));
+        $this->om->endFlushSuite();
 
         return $user;
     }
 
     public function deleteUser(User $user)
     {
-        $this->writer->delete($user);
+        $this->om->remove($user);
+        $this->om->flush();
     }
 
     public function createUserWithRole(User $user, $roleName)
     {
+        $this->om->startFlushSuite();
         $this->setPersonalWorkspace($user);
         $this->toolManager->addRequiredToolsToUser($user);
         $this->roleManager->setRoleToRoleSubject($user, $roleName);
-
-        $this->writer->create($user);
-        $this->ed->dispatch('log', 'Log\LogUserCreateEvent', array($user));
+        $this->om->persist($user);
+        $this->ed->dispatch('log', 'Log\LogUserCreate', array($user));
+        $this->om->endFlushSuite();
 
         return $user;
     }
 
     public function insertUserWithRoles(User $user, ArrayCollection $roles)
     {
+        $this->om->startFlushSuite();
         $this->setPersonalWorkspace($user);
         $this->toolManager->addRequiredToolsToUser($user);
         $this->roleManager->associateRoles($user, $roles);
-
-        $this->writer->create($user);
-        $this->ed->dispatch('log', 'Log\LogUserCreateEvent', array($user));
+        $this->om->persist($user);
+        $this->ed->dispatch('log', 'Log\LogUserCreate', array($user));
+        $this->om->endFlushSuite();
     }
 
     public function importUsers($users)
     {
         $roleName = PlatformRoles::USER;
+        $this->om->startFlushSuite();
 
+        //batch processing. Require a counter to flush every ~150 users.
         foreach ($users as $user) {
             $firstName = $user[0];
             $lastName = $user[1];
@@ -150,9 +149,11 @@ class UserManager
             $this->toolManager->addRequiredToolsToUser($newUser);
             $this->roleManager->setRoleToRoleSubject($newUser, $roleName);
 
-            $this->writer->create($newUser);
+            $this->om->persist($user);
             $this->ed->dispatch('log', 'Log\LogUserCreateEvent', $newUser);
         }
+
+        $this->om->endFlushSuite();
     }
 
     public function setPersonalWorkspace(User $user)
@@ -160,14 +161,15 @@ class UserManager
         $config = Configuration::fromTemplate($this->personalWsTemplateFile);
         $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
         $locale = $this->ch->getParameter('locale_language');
-        $this->trans->setLocale($locale);
-        $personalWorkspaceName = $this->trans->trans('personal_workspace', array(), 'platform');
+        $this->translator->setLocale($locale);
+        $personalWorkspaceName = $this->translator->trans('personal_workspace', array(), 'platform');
         $config->setWorkspaceName($personalWorkspaceName);
         $config->setWorkspaceCode($user->getUsername());
 
         $workspace = $this->workspaceManager->create($config, $user);
         $user->setPersonalWorkspace($workspace);
-        $this->writer->update($user);
+        $this->om->persist($user);
+        $this->om->flush();
     }
 
     public function convertUsersToArray(array $users)
@@ -304,7 +306,7 @@ class UserManager
 
     public function getUsersByIds(array $ids)
     {
-        return $this->genericRepo->findByIds('Claroline\CoreBundle\Entity\User', $ids);
+        return $this->om->findByIds('Claroline\CoreBundle\Entity\User', $ids);
     }
 
     public function getUsersEnrolledInMostWorkspaces ($max)

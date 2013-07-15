@@ -2,19 +2,19 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\CoreBundle\Database\Writer;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Repository\ResourceIconRepository;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Library\Utilities\ThumbnailCreator;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service("claroline.manager.icon_manager")
  */
-class IconManager extends AbstractManager
+class IconManager
 {
     /** @var ThumbnailCreator */
     private $creator;
@@ -24,41 +24,39 @@ class IconManager extends AbstractManager
     private $fileDir;
     /** @var string */
     private $thumbDir;
-    /** @var Writer */
-    private $writer;
     /** @var string */
     private $rootDir;
     /** @var ClaroUtilities */
     private $ut;
+    /** @var ObjectManager */
+    private $om;
 
     /**
      * @DI\InjectParams({
      *     "creator"  = @DI\Inject("claroline.utilities.thumbnail_creator"),
-     *     "repo"     = @DI\Inject("claroline.repository.icon_repository"),
      *     "fileDir"  = @DI\Inject("%claroline.param.files_directory%"),
      *     "thumbDir" = @DI\Inject("%claroline.param.thumbnails_directory%"),
-     *     "writer"   = @DI\Inject("claroline.database.writer"),
      *     "rootDir"  = @DI\Inject("%kernel.root_dir%"),
-     *     "ut"       = @DI\Inject("claroline.utilities.misc")
+     *     "ut"       = @DI\Inject("claroline.utilities.misc"),
+     *     "om"       = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(
         ThumbnailCreator $creator,
-        ResourceIconRepository $repo,
         $fileDir,
         $thumbDir,
-        Writer $writer,
         $rootDir,
-        ClaroUtilities $ut
+        ClaroUtilities $ut,
+        ObjectManager $om
     )
     {
         $this->creator = $creator;
-        $this->repo = $repo;
+        $this->repo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceIcon');
         $this->fileDir = $fileDir;
         $this->thumbDir = $thumbDir;
-        $this->writer = $writer;
         $this->rootDir = $rootDir;
         $this->ut = $ut;
+        $this->om = $om;
     }
 
     /**
@@ -76,21 +74,24 @@ class IconManager extends AbstractManager
         $ds = DIRECTORY_SEPARATOR;
         // if video or img => generate the thumbnail, otherwise find an existing one.
         if (($mimeElements[0] === 'video' || $mimeElements[0] === 'image')) {
+            $this->om->startFlushSuite();
             $thumbnailPath = $this->createFromFile($this->fileDir. $ds . $resource->getHashName(), $mimeElements[0]);
 
             if ($thumbnailPath !== null) {
                 $thumbnailName = pathinfo($thumbnailPath, PATHINFO_BASENAME);
                 $relativeUrl = "thumbnails/{$thumbnailName}";
-                $icon = $this->getEntity('Resource\ResourceIcon');
+                $icon = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
                 $icon->setMimeType('custom');
                 $icon->setIconLocation($thumbnailPath);
                 $icon->setRelativeUrl($relativeUrl);
                 $icon->setShortcut(false);
-                $this->writer->create($icon);
+                $this->om->persist($icon);
                 $this->createShortcutIcon($icon);
-
+                $this->om->endFlushSuite();
+                
                 return $icon;
             }
+            $this->om->endFlushSuite();
         }
         
         //default & fallback
@@ -133,7 +134,7 @@ class IconManager extends AbstractManager
      */
     public function createShortcutIcon(ResourceIcon $icon)
     {
-        $this->writer->suspendFlush();
+        $this->om->startFlushSuite();
         
         $ds = DIRECTORY_SEPARATOR;
         try {
@@ -143,7 +144,7 @@ class IconManager extends AbstractManager
             . "{$ds}web{$ds}bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}shortcut-default.png";
         }
 
-        $shortcutIcon = $this->getEntity('Resource\ResourceIcon');
+        $shortcutIcon = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
         $shortcutIcon->setIconLocation($shortcutLocation);
         
         if (strstr($shortcutLocation, "bundles")) {
@@ -158,10 +159,10 @@ class IconManager extends AbstractManager
         $shortcutIcon->setShortcut(true);
         $icon->setShortcutIcon($shortcutIcon);
         $shortcutIcon->setShortcutIcon($shortcutIcon);
-        $this->writer->update($icon);
-        $this->writer->create($shortcutIcon);
+        $this->om->persist($icon);
+        $this->om->persist($shortcutIcon);
 
-        $this->writer->forceFlush();
+        $this->om->endFlushSuite();
         
         return $shortcutIcon;
 
@@ -177,19 +178,21 @@ class IconManager extends AbstractManager
      */
     public function createCustomIcon(UploadedFile $file)
     {
+        $this->om->startFlushSuite();
         $ds = DIRECTORY_SEPARATOR;
         $iconName = $file->getClientOriginalName();
         $extension = pathinfo($iconName, PATHINFO_EXTENSION);
         $hashName = $this->ut->generateGuid() . "." . $extension;
         $file->move($this->thumbDir, $hashName);
         //entity creation
-        $icon = $this->getEntity('Resource\ResourceIcon');
+        $icon = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
         $icon->setIconLocation("{$this->thumbDir}{$ds}{$hashName}");
         $icon->setRelativeUrl("thumbnails/{$hashName}");
         $icon->setMimeType('custom');
         $icon->setShortcut(false);
-        $this->writer->create($icon);
+        $this->om->persist($icon);
         $this->createShortcutIcon($icon);
+        $this->om->endFlushSuite();
 
         return $icon;
     }
@@ -235,18 +238,19 @@ class IconManager extends AbstractManager
             $shortcut = $icon->getShortcutIcon();
             $this->removeImageFromThumbDir($icon);
             $this->removeImageFromThumbDir($shortcut);
-            $this->writer->delete($shortcut);
-            $this->writer->delete($icon);
+            $this->om->remove($shortcut);
+            $this->om->remove($icon);
+            $this->om->flush();
         } 
     }
     
     public function replace(AbstractResource $resource, ResourceIcon $icon)
     {
-        $this->writer->suspendFlush();
+        $this->om->startFlushSuite();
         $oldIcon = $resource->getIcon();
         $this->delete($oldIcon);
         $resource->setIcon($icon);
-        $this->writer->forceFlush();
+        $this->om->endFlushSuite();
         
         return $resource;
     }

@@ -159,7 +159,7 @@ class DirectoryListener
 
         foreach ($children as $child) {
             if ($child['type'] === 'directory') {
-                $newEvent = $this->ed->dispatch(
+                $newEvent = $this->eventDispatcher->dispatch(
                     'resource_directory_to_template',
                     'ExportResourceTemplate',
                     array($resourceRepo->find($child['id']))
@@ -176,10 +176,14 @@ class DirectoryListener
         foreach ($roles as $role) {
             $perms = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
                 ->findMaximumRights(array($role->getName()), $resource);
-            $perms['canCreate'] = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
-                ->findCreationRights(array($role->getName()), $resource);
+            if (get_class($resource) === 'Claroline\CoreBundle\Entity\Resource\Directory') {
+                $perms['canCreate'] = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
+                    ->findCreationRights(array($role->getName()), $resource);
+            } else {
+                $perms['canCreate'] = array();
+            }
 
-            $config['perms'][rtrim(str_replace(range(0, 9), '', $role->getName()), '_')] = $perms;
+            $config['perms'][$this->roleManager->getRoleBaseName($role->getName())] = $perms;
         }
 
         $event->setConfig($config);
@@ -194,14 +198,16 @@ class DirectoryListener
     public function onImportTemplate(ImportResourceTemplateEvent $event)
     {
         $config = $event->getConfig();
-        $manager = $this->container->get('claroline.resource.manager');
+        $manager = $this->container->get('claroline.manager.resource_manager');
         $directory = new Directory();
         $directory->setName($config['name']);
         $manager->create(
             $directory,
-            $event->getParent()->getId(),
-            $config['type'],
+            $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName($config['type']),
             $event->getUser(),
+            $event->getWorkspace(),
+            $event->getParent(),
+            null,
             $config['perms']
         );
         $createdResources[$config['id']] = $directory->getId();
