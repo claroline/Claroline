@@ -67,7 +67,7 @@ class LogController extends Controller
             $config = new LogWorkspaceWidgetConfig();
         }
         $config->setIsDefault($isDefault);
-        
+
         $config->setResourceCopy($data['creation'] === true);
         $config->setResourceCreate($data['creation'] === true);
         $config->setResourceShortcut($data['creation'] === true);
@@ -219,7 +219,11 @@ class LogController extends Controller
 
             return $this->redirect(
                 $this->generateUrl(
-                    'claro_workspace_open_tool', array('workspaceId' => $workspaceId, 'toolName' => 'home')
+                    'claro_workspace_open_tool',
+                    array(
+                        'workspaceId' => $workspace->getId(),
+                        'toolName' => 'home'
+                    )
                 )
             );
         }
