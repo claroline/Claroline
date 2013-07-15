@@ -156,7 +156,7 @@ class HomeListener
             $widgetArray['is_visible'] = $config->isVisible();
             if ($config->getWidget()->isExportable()) {
                 $newEvent = $this->ed->dispatch(
-                    'widget_{$config->getWidget()->getName()}_to_template',
+                    "widget_{$config->getWidget()->getName()}_to_template",
                     'ExportWidgetConfig',
                     array($config->getWidget(), $workspace)
                 );
