@@ -153,7 +153,7 @@ class DirectoryListener
     {
         $resource = $event->getResource();
         //@todo one request to retrieve every directory and not needing a condition.
-        $children = get_class($resource) === 'Claroline\CoreBundle\Entity\Resource\Directory' ?
+        $children = $resource instanceof Claroline\CoreBundle\Entity\Resource\Directory ?
             $this->resourceManager->getChildren($resource, array('ROLE_ADMIN')): array();
         $dataChildren = array();
 
@@ -175,7 +175,7 @@ class DirectoryListener
 
         foreach ($roles as $role) {
             $perms = $this->rightsManager->getMaximumRights(array($role->getName()), $resource);
-            $perms['canCreate'] = (get_class($resource) === 'Claroline\CoreBundle\Entity\Resource\Directory') ?
+            $perms['canCreate'] = ($resource instanceof Claroline\CoreBundle\Entity\Resource\Directory) ?
                 $this->rightsManager->getCreationRights(array($role->getName()), $resource): array();
 
             $config['perms'][$this->roleManager->getRoleBaseName($role->getName())] = $perms;
