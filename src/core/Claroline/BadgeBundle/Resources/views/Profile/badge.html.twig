@@ -1,69 +1,23 @@
 {% extends "ClarolineBadgeBundle::layout.html.twig" %}
 
 {% block content %}
-    {{ macros.flashBox() }}
-
-    <div class="span12 border">
-        <div class="row margin">
-            <h3 class="sub-section-header">
-                {{ 'my_badges'|trans({}, 'platform') }}
-                <a href="{{ path('claro_claim_badge', {'id': user.id}) }}" class="btn btn-small" data-toggle="tooltip" data-placement="right" title="{{ 'claim_badge'|trans({}, 'platform') }}"><i class="icon-plus"></i></a>
-            </h3>
-
-            {% if 0 < badgeClaims|length %}
-            <div class="accordion" id="accordion2">
-                <div class="accordion-group">
-                    <div class="accordion-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
-                            {{ 'badge_current_claimed_badges'|transchoice(badgeClaims|length, {'%claimedBadgeCount%': badgeClaims|length}, 'platform') }}
-                        </a>
-                    </div>
-                    <div id="collapseOne" class="accordion-body collapse">
-                        {% for badgeClaim in badgeClaims %}
-                        <div class="accordion-inner">
-                            <a href="{{ path('claro_view_badge', {'id': badgeClaim.badge.id}) }}" title="{{ badgeClaim.badge.name(language) }}">{{ badgeClaim.badge.name(language) }}</a> {{ badgeClaim.claimedAt|date('date_format'|trans({}, 'platform')) }}
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
+    <div class="border badge_container">
+        <h3 class="sub-section-header">
+            <span class="badge badge-info accordion-toggle" data-toggle="tooltip" title="{{ 'badge_form_version'|trans({}, 'platform') }} {{ badge.version }}">{{ badge.version }}</span>
+            {{ 'badge'|trans({}, 'platform') }} "{{ badge.name }}"
+            {% if badge.expiredAt is not null %}
+            <small>{{ 'badge_expired_on_date'|trans({'%expirationDate%': badge.expiredAt|date('date_format'|trans({}, 'platform'))}, 'platform') }}</small>
+            {% endif %}
+        </h3>
+        <p>Attribué le {{ userBadge.issuedAt|date('date_format'|trans({}, 'platform')) }} par <a href="{{ path('claro_profile_view', {'userId': userBadge.issuer.id}) }}" title="{{ userBadge.issuer.firstname }} {{ userBadge.issuer.lastname }}">{{ userBadge.issuer.firstname }} {{ userBadge.issuer.lastname }}</a></p>
+        <div class="media">
+            <a class="pull-left" href="#">
+                <img class="media-object badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" />
+            </a>
+            <div class="media-body">
+                <h4 class="media-heading">{{ badge.description }}</h4>
+                {{ badge.criteria|raw }}
             </div>
-            {% endif %}
-
-            <ul class="unstyled inline thumbnails badge_user_list">
-            {% for badge in pager.currentPageResults %}
-                <li>
-                    <a href="{{ path('claro_view_badge', {'id': badge.id}) }}" title="{{ badge.name(language) }}" class="thumbnail">
-                        <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name(language) }}" />
-                    </a>
-                </li>
-            {% else %}
-                <li>{{ 'no_badges'|trans({}, 'platform') }}</li>
-            {% endfor %}
-            </ul>
-
-            {% if pager.haveToPaginate %}
-            {{
-                pagerfanta(
-                    pager,
-                    'twitter_bootstrap_translated',
-                    {
-                        'proximity' : 1,
-                        'routeName': 'claro_profile_view_badges',
-                        'routeParams': {}
-                    }
-                )
-            }}
-            {% endif %}
-
         </div>
     </div>
-{% endblock %}
-
-{% block javascripts %}
-{{ parent() }}
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('[data-toggle=tooltip]').tooltip();
-    });
-</script>
 {% endblock %}

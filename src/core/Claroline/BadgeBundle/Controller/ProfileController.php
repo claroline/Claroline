@@ -2,6 +2,7 @@
 
 namespace Claroline\BadgeBundle\Controller;
 
+use Claroline\BadgeBundle\Entity\Badge;
 use Claroline\BadgeBundle\Entity\BadgeClaim;
 use Claroline\BadgeBundle\Form\ClaimBadgeType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -80,10 +81,31 @@ class ProfileController extends Controller
     }
 
     /**
+     * @Route("/view/{id}", name="claro_profile_view_badge")
+     * @Template()
+     */
+    public function badgeAction(Badge $badge)
+    {
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $userBadge = $this->getDoctrine()->getRepository('ClarolineBadgeBundle:UserBadge')->findOneByBadgeAndUser($badge, $user);
+
+        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
+        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
+
+        $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
+
+        return array(
+            'userBadge' => $userBadge,
+            'badge'     => $badge
+        );
+    }
+
+    /**
      * @Route("/{page}", name="claro_profile_view_badges")
      * @Template()
      */
-    public function badgeAction($page = 1)
+    public function badgesAction($page = 1)
     {
         $user = $this->get('security.context')->getToken()->getUser();
 
