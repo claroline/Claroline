@@ -9,6 +9,7 @@ class RightsManagerTest extends MockeryTestCase
 {
     private $rightsRepo;
     private $resourceRepo;
+    private $roleManager;
     private $roleRepo;
     private $resourceTypeRepo;
     private $translator;
@@ -20,6 +21,7 @@ class RightsManagerTest extends MockeryTestCase
         parent::setUp();
 
         $this->rightsRepo = m::mock('Claroline\CoreBundle\Repository\ResourceRightsRepository');
+        $this->roleManager = m::mock('Claroline\CoreBundle\Manager\RoleManager');
         $this->resourceRepo = m::mock('Claroline\CoreBundle\Repository\AbstractResourceRepository');
         $this->roleRepo = m::mock('Claroline\CoreBundle\Repository\RoleRepository');
         $this->resourceTypeRepo = m::mock('Claroline\CoreBundle\Repository\ResourceTypeRepository');
@@ -209,7 +211,8 @@ class RightsManagerTest extends MockeryTestCase
             return new RightsManager(
                 $this->translator,
                 $this->om,
-                $this->dispatcher
+                $this->dispatcher,
+                $this->roleManager
             );
         } else {
             $stringMocked = '[';
@@ -226,7 +229,8 @@ class RightsManagerTest extends MockeryTestCase
                 array(
                     $this->translator,
                     $this->om,
-                    $this->dispatcher
+                    $this->dispatcher,
+                    $this->roleManager
                 )
             );
         }
