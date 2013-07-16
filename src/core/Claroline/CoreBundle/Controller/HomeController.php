@@ -1,530 +1,177 @@
 <?php
-
 namespace Claroline\CoreBundle\Controller;
-
+use Claroline\CoreBundle\Entity\Home\Content2Region;
+use Claroline\CoreBundle\Entity\Home\Content2Type;
+use Claroline\CoreBundle\Entity\Home\Content;
+use Claroline\CoreBundle\Entity\Home\SubContent;
+use Claroline\CoreBundle\Entity\Home\Type;
+use Claroline\CoreBundle\Manager\HomeManager;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
+use JMS\SecurityExtraBundle\Annotation\Secure;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Claroline\CoreBundle\Entity\Home\Content;
-use Claroline\CoreBundle\Entity\Home\SubContent;
-use Claroline\CoreBundle\Entity\Home\Content2Type;
-use Claroline\CoreBundle\Entity\Home\Content2Region;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use JMS\SecurityExtraBundle\Annotation\Secure;
-
 /**
- * @TODO Finish de doc
+ * @TODO doc
  */
-class HomeController extends Controller
+class HomeController
 {
+    private $manager;
+    private $request;
+    private $security;
+    private $templating;
+    private $homeService;
+
     /**
-     * Get content by id, if the content does not exists an error is given.
-     * This method require claroline.common.home_service.
-     *
-     * @route(
-     *     "/content/{id}/{type}/{father}",
-     *     requirements={"id" = "\d+"},
-     *     name="claroline_get_content_by_id_and_type",
-     *     defaults={"type" = "home", "father" = null})
-     *
-     * @param \String $id The id of the content.
-     * @param \String $type The type of the content, this parameter is optional, but this parameter could be usefull
-     *                      because the contents can have different twigs templates and sizes by their type.
-     * @param \Integer $father The id of father content.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @see Claroline\CoreBundle\Library\Home\HomeService()
+     * @InjectParams({
+     *     "manager"        = @Inject("claroline.manager.home_manager"),
+     *     "security"       = @Inject("security.context"),
+     *     "request"        = @Inject("request"),
+     *     "templating"     = @Inject("templating"),
+     *     "homeService"    = @Inject("claroline.common.home_service")
+     * })
      */
-    public function contentAction($id, $type = "default", $father = null)
+    public function __construct(HomeManager $manager, Request $request, $security, $templating, $homeService)
     {
-        $variables = array(
-            "type" => $type,
-            "size" => "span12"
-        );
-
-        $manager = $this->getDoctrine()->getManager();
-
-        $content = $manager->getRepository("ClarolineCoreBundle:Home\Content")->find($id);
-        $type = $manager->getRepository("ClarolineCoreBundle:Home\Type")->findOneBy(array('name' => $type));
-
-        if ($content) {
-
-            if ($father) {
-
-                $variables["father"] = $father;
-
-                $father = $manager->getRepository("ClarolineCoreBundle:Home\Content")->find($father);
-
-                $subContent = $manager->getRepository("ClarolineCoreBundle:Home\SubContent")->findOneBy(
-                    array('child' => $content, 'father' => $father)
-                );
-
-                $variables["size"] = $subContent->getSize();
-
-            } else {
-
-                $contentType = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(
-                    array('content' => $content, 'type' => $type)
-                );
-
-                $variables["size"] = $contentType->getSize();
-            }
-
-            $variables["menu"] = $this->menuAction($id, $variables["size"], $variables["type"], $father)->getContent();
-            $variables["content"] = $content;
-
-            return $this->render(
-                $this->container->get('claroline.common.home_service')->defaultTemplate(
-                    "ClarolineCoreBundle:Home/types:".$variables["type"].".html.twig"
-                ),
-                $variables
-            );
-        }
-
-        return $this->render('ClarolineCoreBundle:Home\:error.html.twig', array('path' => "Content ".$id));
+        $this->manager = $manager;
+        $this->request = $request;
+        $this->security = $security;
+        $this->templating = $templating;
+        $this->homeService = $homeService;
     }
 
     /**
-     * Render the layout of contents by type, if the type does not exists an error is given.
+     * Get content by id
      *
-     * @param \String $type The type of contents.
+     * @Route(
+     *     "/content/{content}/{type}/{father}",
+     *     requirements={"content" = "\d+"},
+     *     name="claroline_get_content_by_id_and_type",
+     *     defaults={"type" = "home", "father" = null}
+     * )
+     *
+     * @ParamConverter("content", class = "ClarolineCoreBundle:Home\Content", options = {"id" = "content"})
+     * @ParamConverter("father", class = "ClarolineCoreBundle:Home\Content", options = {"id" = "father"})
+     * @ParamConverter("type", class = "ClarolineCoreBundle:Home\Type", options = {"mapping" : {"type": "name"}})
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function contentAction(Content $content, Type $type, Content $father = null)
+    {
+        return $this->render(
+            'ClarolineCoreBundle:Home/types:'.(is_object($type) ? $type->getName() : 'home' ).'.html.twig',
+            $this->manager->getContent($content, $type, $father),
+            true
+        );
+    }
+
+    /**
+     * Render the home page of the platform
+     *
+     * @Route("/type/{type}", name="claro_get_content_by_type")
+     * @Route("/", name="claro_index", defaults={"type" = "home"})
+     * @Template("ClarolineCoreBundle:Home:home.html.twig")
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function homeAction($type)
+    {
+        return array(
+            'region' => $this->renderRegions($this->manager->getRegionContents()),
+            'content' => $this->typeAction($type)->getContent()
+        );
+    }
+
+    /**
+     * Render the layout of contents by type.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function typeAction($type, $father = null, $region = null)
     {
-        $content = $this->getContentByType($type, $father, $region);
+        $array = $this->manager->contentLayout($type, $father, $region);
 
-        $variables = array();
-
-        if ($content) {
-
-            $variables["content"] = $content;
-            $variables["creator"] = $this->creatorAction($type, null, null, $father)->getContent();
-
-            $variables = $this->isDefinedPush($variables, "father", $father);
-            $variables = $this->isDefinedPush($variables, "region", $region);
-
-            return $this->render("ClarolineCoreBundle:Home:layout.html.twig", $variables);
+        if ($array) {
+            return $this->render('ClarolineCoreBundle:Home:layout.html.twig', $this->renderContent($array));
         }
 
         return $this->render('ClarolineCoreBundle:Home:error.html.twig', array('path' => $type));
     }
 
     /**
+     * Render the page of types administration.
      *
-     * @route("/types", name="claroline_types_manager")
+     * @Route("/types", name="claroline_types_manager")
      * @Secure(roles="ROLE_ADMIN")
      *
      * @Template("ClarolineCoreBundle:Home:home.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function typesAction()
     {
-        $manager = $this->getDoctrine()->getManager();
+        $types = $this->manager->getTypes();
 
-        $types = $manager->getRepository("ClarolineCoreBundle:Home\Type")->findAll();
-
-        $variables = array(
-            "region" => $this->getRegions(),
-            "content" => $this->render(
-                "ClarolineCoreBundle:Home:types.html.twig",
+        return array(
+            'region' => $this->renderRegions($this->manager->getRegionContents()),
+            'content' => $this->render(
+                'ClarolineCoreBundle:Home:types.html.twig',
                 array('types' => $types)
             )->getContent()
         );
-
-        return $variables;
     }
 
     /**
-     * @route("/type/{type}", name="claro_get_content_by_type")
-     * @route("/", name="claro_index")
+     * Render the page of the creator box.
      *
-     * @Template("ClarolineCoreBundle:Home:home.html.twig")
-     */
-    public function homeAction($type = "home", $father = null)
-    {
-        $variables = array(
-            "region" => $this->getRegions(),
-            "content" => $this->typeAction($type, $father)->getContent()
-        );
-
-        return $variables;
-    }
-
-    public function getRegions()
-    {
-        $tmp = array();
-
-        $manager = $this->getDoctrine()->getManager();
-
-        $regions = $manager->getRepository("ClarolineCoreBundle:Home\Region")->findAll();
-
-        foreach ($regions as $region) {
-
-            $content = "";
-
-            $first = $manager->getRepository("ClarolineCoreBundle:Home\Content2Region")->findOneBy(
-                array('back' => null, 'region' => $region)
-            );
-
-            for ($i = 0; $first != null; $i++) {
-
-                $contentType = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(
-                    array('content' => $first->getContent())
-                );
-
-                if ($contentType) {
-                    $type = $contentType->getType()->getName();
-                } else {
-                    $type = "default";
-                }
-
-                //@TODO Need content rights for admin user
-                if (!(!$this->get('security.context')->isGranted('ROLE_ADMIN') and
-                    $type == "menu" and
-                    $first->getContent()->getTitle() == 'Administration')
-                ) {
-                    $content .= $this->render(
-                        $this->container->get('claroline.common.home_service')->defaultTemplate(
-                            "ClarolineCoreBundle:Home/types:".$type.".html.twig"
-                        ),
-                        array(
-                            'content' => $first->getContent(),
-                            'size' => $first->getSize(),
-                            'menu' => "",
-                            'type' => $type,
-                            'region' => $region->getName()
-                        )
-                    )->getContent();
-                }
-
-                $first = $first->getNext();
-            }
-
-            if ($content != "") {
-                $tmp[$region->getName()] = $content;
-            }
-        }
-
-        return $tmp;
-    }
-
-    /**
-     * Create new content by POST method. This is used by ajax.
-     * The response is the id of the new content in success, otherwise the response is the false word in a string.
+     * @Route("/content/creator/{type}/{id}/{father}", name="claroline_content_creator", defaults={"father" = null})
      *
-     * @route("/content/create", name="claroline_content_create")
-     * @Secure(roles="ROLE_ADMIN")
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function createAction()
-    {
-        $request = $this->get('request');
-        $response = "false";
-
-        if ($request->get('title') or $request->get('text')) {
-
-            $manager = $this->getDoctrine()->getManager();
-
-            $content = new Content();
-
-            $content->setTitle($request->get('title'));
-            $content->setContent($request->get('text'));
-            $content->setGeneratedContent($request->get('generated'));
-
-            $manager->persist($content);
-
-            if ($request->get('father')) {
-                $father = $manager->getRepository("ClarolineCoreBundle:Home\Content")->find($request->get('father'));
-
-                $first = $manager->getRepository("ClarolineCoreBundle:Home\SubContent")->findOneBy(
-                    array('back' => null, 'father' => $father)
-                );
-
-                $subContent = new SubContent($first);
-                $subContent->setFather($father);
-                $subContent->SetChild($content);
-
-                $manager->persist($subContent);
-
-            } else {
-
-                $type = $manager->getRepository("ClarolineCoreBundle:Home\Type")->findOneBy(
-                    array('name' => $request->get('type'))
-                );
-
-                $first = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(
-                    array('back' => null, 'type' => $type)
-                );
-
-                $contentType = new Content2Type($first);
-
-                $contentType->setContent($content);
-                $contentType->setType($type);
-
-                $manager->persist($contentType);
-            }
-
-            $manager->flush();
-
-            $response = $content->getId();
-        }
-
-        return new Response($response);
-    }
-
-    /**
-     * Update a content by POST method. This is used by ajax.
-     * The response is the word true in a string in success, otherwise false.
-     *
-     * @route("/content/update/{id}", name="claroline_content_update")
-     * @Secure(roles="ROLE_ADMIN")
-     *
-     * @param \String $id The id of the content.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function updateAction($id)
-    {
-        $manager = $this->getDoctrine()->getManager();
-
-        $content = $manager->getRepository("ClarolineCoreBundle:Home\Content")->findOneBy(array('id' => $id));
-
-        $request = $this->get('request');
-
-        $content->setTitle($request->get('title'));
-        $content->setContent($request->get('text'));
-        $content->setGeneratedContent($request->get('generated_content'));
-
-        if ($request->get('size') and $request->get('type')) {
-            $type = $manager->getRepository("ClarolineCoreBundle:Home\Type")->findOneBy(
-                array('name' => $request->get('type'))
-            );
-
-            $contentType = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(
-                array('content' => $content, 'type' => $type)
-            );
-
-            $contentType->setSize($request->get('size'));
-            $manager->persist($contentType);
-        }
-
-        $content->setModified();
-
-        $manager->persist($content);
-        $manager->flush();
-
-        return new Response("true");
-    }
-
-    /**
-     * Reorder contents in types. This method is used by ajax.
-     * The response is the word true in a string in success, otherwise false.
-     *
-     * @param \String $type The type of the content.
-     * @param \String $a The id of the content 1.
-     * @param \String $b The id of the content 2.
-     *
-     * @route(
-     *     "/content/reorder/{type}/{a}/{b}",
-     *     requirements={"a" = "\d+"},
-     *     name="claroline_content_reorder")
-     *
-     * @Secure(roles="ROLE_ADMIN")
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function reorderAction($type, $a, $b)
-    {
-        $manager = $this->getDoctrine()->getManager();
-
-        $a = $manager->getRepository("ClarolineCoreBundle:Home\Content")->find($a);
-        $b = $manager->getRepository("ClarolineCoreBundle:Home\Content")->find($b);
-
-        $type = $manager->getRepository("ClarolineCoreBundle:Home\Type")->findOneBy(array('name' => $type));
-
-        $a = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(
-            array(
-                'type' => $type,
-                'content' => $a
-            )
-        );
-
-        $a->detach();
-
-        if ($b) {
-            $b = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(
-                array(
-                    'type' => $type,
-                    'content' => $b
-                )
-            );
-
-            $a->setBack($b->getBack());
-            $a->setNext($b);
-
-            if ($b->getBack()) {
-                $b->getBack()->setNext($a);
-            }
-
-            $b->setBack($a);
-
-        } else {
-            $b = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(
-                array(
-                    'type' => $type,
-                    'next' => null
-                )
-            );
-
-            $a->setNext($b->getNext());
-            $a->setBack($b);
-
-            $b->setNext($a);
-        }
-
-        $manager->persist($a);
-        $manager->persist($b);
-
-        $manager->flush();
-
-        return new Response("true");
-    }
-
-    /**
-     * Delete a content by POST method. This is used by ajax.
-     * The response is the word true in a string in success, otherwise false.
-     *
-     * @route("/content/delete/{id}", name="claroline_content_delete")
-     * @Secure(roles="ROLE_ADMIN")
-     *
-     * @param \String $id The id of the content.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function deleteAction($id)
-    {
-        $manager = $this->getDoctrine()->getManager();
-
-        $content = $manager->getRepository("ClarolineCoreBundle:Home\Content")->find($id);
-
-        $this->deleNodeEntity("ClarolineCoreBundle:Home\Content2Type", array('content' => $content));
-
-        $this->deleNodeEntity(
-            "ClarolineCoreBundle:Home\SubContent", array('father' => $content),
-            function ($entity) {
-                $this->deleteAction($entity->getChild()->getId());
-            }
-        );
-
-        $this->deleNodeEntity("ClarolineCoreBundle:Home\SubContent", array('child' => $content));
-        $this->deleNodeEntity("ClarolineCoreBundle:Home\Content2Region", array('content' => $content));
-
-        $manager->remove($content);
-        $manager->flush();
-
-        return new Response("true");
-    }
-
-    /**
-     * @route(
-     *     "/region/{region}/{id}",
-     *     requirements={"id" = "\d+"},
-     *     name="claroline_content_to_region"
-     * )
-     *
-     * @Secure(roles="ROLE_ADMIN")
-     *
-     */
-    public function contentToRegionAction($region, $id)
-    {
-        $manager = $this->getDoctrine()->getManager();
-
-        $content = $manager->getRepository("ClarolineCoreBundle:Home\Content")->find($id);
-        $region = $manager->getRepository("ClarolineCoreBundle:Home\Region")->findOneBy(
-            array("name" => $region)
-        );
-
-        $first = $manager->getRepository("ClarolineCoreBundle:Home\Content2Region")->findOneBy(
-            array("back" => null, "region" => $region)
-        );
-
-        $contentRegion = new Content2Region($first);
-        $contentRegion->setRegion($region);
-        $contentRegion->setContent($content);
-
-        $manager->persist($contentRegion);
-        $manager->flush();
-
-        return new Response("true");
-    }
-
-    /**
-     * Render the HTML of the creator box.
-     *
-     * @param \String $type The type of the content to create.
-     *
-     * @route(
-     *     "/content/creator/{type}/{id}/{father}",
-     *     name="claroline_content_creator",
-     *     defaults={"father" = null}
-     * )
+     * @param string $type The type of the content to create.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function creatorAction($type, $id = null, $content = null, $father = null)
     {
         //cant use @Secure(roles="ROLE_ADMIN") annotation beacause this method is called in anonymous mode
+        if ($this->security->isGranted('ROLE_ADMIN')) {
 
-        if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
-
-            $path = $this->container->get('claroline.common.home_service')->defaultTemplate(
-                "ClarolineCoreBundle:Home/types:".$type.".creator.twig"
+            return $this->render(
+                'ClarolineCoreBundle:Home/types:'.$type.'.creator.twig',
+                $this->manager->getCreator($type, $id, $content, $father),
+                true
             );
-
-            $variables = array('type' => $type);
-
-            if ($id and !$content) {
-                $manager = $this->getDoctrine()->getManager();
-
-                $variables["content"] = $manager->getRepository("ClarolineCoreBundle:Home\Content")->find($id);
-            }
-
-            $variables = $this->isDefinedPush($variables, "father", $father);
-
-            return $this->render($path, $variables);
         }
 
-        return new Response();
+        return new Response(); //return void and not an exeption
     }
 
     /**
-     * Render the HTML of the menu in a content.
+     * Render the page of the menu.
      *
-     * @param \String $id The id of the content.
-     * @param \String $size The size (span12) of the content.
-     * @param \String $type The type of the content.
+     * @param string $id The id of the content.
+     * @param string $size The size (span12) of the content.
+     * @param string $type The type of the content.
+     *
+     * @Template("ClarolineCoreBundle:Home:menu.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function menuAction($id, $size, $type, $father = null)
     {
-        $variables = array('id' => $id, 'size' => $size, 'type' => $type);
-
-        $variables = $this->isDefinedPush($variables, "father", $father, "getId");
-
-        return $this->render('ClarolineCoreBundle:Home:menu.html.twig', $variables);
+        return $this->manager->getMenu($id, $size, $type, $father);
     }
 
     /**
      * Render the HTML of the menu of sizes of the contents.
      *
-     * @param \String $id The id of the content.
-     * @param \String $size The size (span12) of the content.
-     * @param \String $type The type of the content.
+     * @param string $id The id of the content.
+     * @param string $size The size (span12) of the content.
+     * @param string $type The type of the content.
      *
-     * @route("/content/size/{id}/{size}/{type}", name="claroline_content_size")
+     * @Route("/content/size/{id}/{size}/{type}", name="claroline_content_size")
      *
      * @Template("ClarolineCoreBundle:Home:sizes.html.twig")
      *
@@ -538,40 +185,31 @@ class HomeController extends Controller
     /**
      * Render the HTML of a content generated by an external url with Open Grap meta tags
      *
-     * @route("/content/graph", name="claroline_content_graph")
+     * @Route("/content/graph", name="claroline_content_graph")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function graphAction()
     {
-        $response = "false";
-        $request = $this->get('request');
-
-        $url = $request->get("generated_content_url");
-
-        $graph = $this->container->get('claroline.common.graph_service')->get($url);
+        $graph = $this->manager->getGraph($this->request->get('generated_content_url'));
 
         if (isset($graph['type'])) {
-            $response = $this->render(
-                $this->container->get('claroline.common.home_service')->defaultTemplate(
-                    "ClarolineCoreBundle:Home/graph:".$graph['type'].".html.twig"
-                ),
-                array('content' => $graph)
-            )->getContent();
+            return $this->render(
+                'ClarolineCoreBundle:Home/graph:'.$graph['type'].'.html.twig',
+                array('content' => $graph),
+                true
+            );
         }
 
-        return new Response($response);
+        return new Response('false');
     }
 
     /**
      * Render the HTML of the regions.
      *
-     * @route(
-     *     "/content/region/{id}",
-     *     name="claroline_region"
-     * )
+     * @Route("/content/region/{id}", name="claroline_region")
      *
-     * @param \String $id The id of the content.
+     * @param string $id The id of the content.
      *
      * @Template("ClarolineCoreBundle:Home:regions.html.twig")
      *
@@ -579,112 +217,204 @@ class HomeController extends Controller
      */
     public function regionAction($id)
     {
+
         return array('id' => $id);
     }
 
     /**
-     * Get Content by type.
-     * This method return an array with the content on success or null if the type does not exist.
+     * Render the HTML of the content.
      *
-     * @param \String $type  Name of the type.
-     *
-     * @return \Array
+     * @return array
      */
-    public function getContentByType($type = "home", $father = null, $region)
+    public function renderContent($array)
     {
-        $manager = $this->getDoctrine()->getManager();
+        $tmp = '';
 
-        $type = $manager->getRepository("ClarolineCoreBundle:Home\Type")->findOneBy(array('name' => $type));
-
-        if ($type) {
-            if ($father) {
-
-                $father = $manager->getRepository("ClarolineCoreBundle:Home\Content")->find($father);
-
-                $first = $manager->getRepository("ClarolineCoreBundle:Home\SubContent")->findOneBy(
-                    array('back' => null, 'father' => $father)
-                );
-
-            } else {
-                $first = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(
-                    array('back' => null, 'type' => $type)
-                );
+        if (isset($array['content']) and isset($array['type']) and is_array($array['content'])) {
+            foreach ($array['content'] as $content) {
+                $tmp .= $this->render(
+                    'ClarolineCoreBundle:Home/types:'.$content['type'].'.html.twig', $content, true
+                )->getContent();
             }
-
-            if ($first) {
-                $content = " ";
-
-                for ($i = 0; $i < $type->getMaxContentPage() and $first != null; $i++) {
-                    $variables = array();
-
-                    $variables["content"] = $first->getContent();
-                    $variables["size"] = $first->getSize();
-                    $variables["type"] = $type->getName();
-                    $variables["menu"] = $this->menuAction(
-                        $first->getContent()->getId(),
-                        $first->getSize(),
-                        $type->getName(),
-                        $father
-                    )->getContent();
-
-                    $variables = $this->isDefinedPush($variables, "father", $father, "getId");
-                    $variables = $this->isDefinedPush($variables, "region", $region);
-
-                    $content .= $this->render(
-                        $this->container->get('claroline.common.home_service')->defaultTemplate(
-                            "ClarolineCoreBundle:Home/types:".$type->getName().".html.twig"
-                        ),
-                        $variables
-                    )->getContent();
-
-                    $first = $first->getNext();
-                }
-
-                return $content;
-            }
-
-            return " "; // Not yet content
-        }
-
-        return null;
-    }
-
-    /**
-     *  Reduce "overall complexity"
-     *
-     *  @Secure(roles="ROLE_ADMIN")
-     *
-     */
-    private function deleNodeEntity($name, $search, $function = null)
-    {
-        $manager = $this->getDoctrine()->getManager();
-
-        $entities = $manager->getRepository($name)->findBy($search);
-
-        foreach ($entities as $entity) {
-            $entity->detach();
-
-            if ($function) {
-                $function($entity);
-            }
-
-            $manager->remove($entity);
-        }
-    }
-
-    /**
-     *  Reduce "overall complexity"
-     *
-     */
-    private function isDefinedPush($array, $name, $variable, $method = null)
-    {
-        if ($method and $variable) {
-            $array[$name] = $variable->$method();
-        } elseif ($variable) {
-            $array[$name] = $variable;
+            $array['content'] = $tmp;
         }
 
         return $array;
     }
-}
 
+    /**
+     * Render the HTML of the regions.
+     *
+     * @return string
+     */
+    public function renderRegions($regions)
+    {
+        $tmp = array();
+
+        foreach ($regions as $name => $region) {
+            $tmp[$name] = '';
+
+            foreach ($region as $variables) {
+                //@TODO Need content rights for admin users
+                if (!(!$this->security->isGranted('ROLE_ADMIN') and
+                    $variables['type'] == 'menu' and
+                    $variables['content']->getTitle() == 'Administration')
+                ) {
+                    $tmp[$name] .= $this->render(
+                        'ClarolineCoreBundle:Home/types:'.$variables['type'].'.html.twig', $variables, true
+                    )->getContent();
+                }
+            }
+        }
+
+        return $tmp;
+    }
+
+    /**
+     * Create new content by POST method. This is used by ajax.
+     * The response is the id of the new content in success, otherwise the response is the false word in a string.
+     *
+     * @Route("/content/create", name="claroline_content_create")
+     * @Secure(roles="ROLE_ADMIN")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function createAction()
+    {
+        if ($id = $this->manager->createContent(
+            $this->request->get('title'),
+            $this->request->get('text'),
+            $this->request->get('generated'),
+            $this->request->get('type'),
+            $this->request->get('father')
+        )) {
+
+            return new Response($id);
+        }
+
+        return new Response('false'); //useful in ajax
+    }
+
+    /**
+     * Update a content by POST method. This is used by ajax.
+     * The response is the word true in a string in success, otherwise false.
+     *
+     * @Route("/content/update/{content}", name="claroline_content_update")
+     * @Secure(roles="ROLE_ADMIN")
+     *
+     * @ParamConverter("content", class = "ClarolineCoreBundle:Home\Content", options = {"id" = "content"})
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function updateAction($content)
+    {
+        try {
+            $this->manager->UpdateContent(
+                $content,
+                $this->request->get('title'),
+                $this->request->get('text'),
+                $this->request->get('generated'),
+                $this->request->get('size'),
+                $this->request->get('type')
+            );
+
+            return new Response('true');
+        } catch (\Exeption $e) {
+
+            return new Response('false'); //useful in ajax
+        }
+    }
+
+    /**
+     * Reorder contents in types. This method is used by ajax.
+     * The response is the word true in a string in success, otherwise false.
+     *
+     * @param string $type The type of the content.
+     * @param string $a The id of the content 1.
+     * @param string $b The id of the content 2.
+     *
+     * @Route("/content/reorder/{type}/{a}/{b}", requirements={"a" = "\d+"}, name="claroline_content_reorder")
+     *
+     * @Secure(roles="ROLE_ADMIN")
+     *
+     * @ParamConverter("type", class = "ClarolineCoreBundle:Home\Type", options = {"mapping": {"type": "name"}})
+     *
+     * @ParamConverter("a", class = "ClarolineCoreBundle:Home\Content", options = {"id" = "a"})
+     * @ParamConverter("b", class = "ClarolineCoreBundle:Home\Content", options = {"id" = "b"})
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function reorderAction($type, $a, Content $b = null)
+    {
+        try {
+            $this->manager->reorderContent($type, $a, $b);
+
+            return new Response('true');
+        } catch (\Exeption $e) {
+
+            return new Response('false'); //useful in ajax
+        }
+    }
+
+    /**
+     * Delete a content by POST method. This is used by ajax.
+     * The response is the word true in a string in success, otherwise false.
+     *
+     * @Route("/content/delete/{content}", name="claroline_content_delete")
+     * @Secure(roles="ROLE_ADMIN")
+     *
+     * @ParamConverter("content", class = "ClarolineCoreBundle:Home\Content", options = {"id" = "content"})
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteAction($content)
+    {
+        try {
+            $this->manager->deleteContent($content);
+
+            return new Response('true');
+        } catch (\Exeption $e) {
+
+            return new Response('false'); //useful in ajax
+        }
+    }
+
+    /**
+     * Put a content into a region in front page as left, right, footer. This is sueful for menus.
+     *
+     * @Route("/region/{region}/{content}", requirements={"content" = "\d+"}, name="claroline_content_to_region")
+     *
+     * @ParamConverter("region", class = "ClarolineCoreBundle:Home\Region", options = {"mapping": {"region": "name"}})
+     * @ParamConverter("content", class = "ClarolineCoreBundle:Home\Content", options = {"id" = "content"})
+     *
+     * @Secure(roles="ROLE_ADMIN")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function contentToRegionAction($region, $content)
+    {
+        try {
+            $this->manager->contentToRegion($region, $content);
+
+            return new Response('true');
+        } catch (\Exeption $e) {
+
+            return new Response('false'); //useful in ajax
+        }
+    }
+
+    /**
+     * Extends templating render
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function render($template, $array, $default = false)
+    {
+
+        if ($default) {
+            $template = $this->homeService->defaultTemplate($template);
+        }
+
+        return new Response($this->templating->render($template, $array));
+    }
+}
