@@ -2,9 +2,10 @@
 
 namespace Claroline\CoreBundle\Event\Event;
 
+use Symfony\Component\EventDispatcher\Event;
+use Claroline\CoreBundle\Event\DataConveyorEventInterface;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Symfony\Component\EventDispatcher\Event;
 
 class ConfigureWorkspaceToolEvent extends Event implements DataConveyorEventInterface
 {

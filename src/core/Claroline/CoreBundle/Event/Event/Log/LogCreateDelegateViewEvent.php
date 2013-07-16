@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Event\Event\Log;
 
 use Symfony\Component\EventDispatcher\Event;
-use Claroline\CoreBundle\Event\Event\DataConveyorEventInterface;
+use Claroline\CoreBundle\Event\DataConveyorEventInterface;
 /**
  *
  */
