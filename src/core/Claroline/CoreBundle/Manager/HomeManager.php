@@ -104,7 +104,7 @@ class HomeManager
      * Get Content by type.
      * This method return a string with the content on success or null if the type does not exist.
      *
-     * @return \String
+     * @return string
      */
     public function getContentByType($type, $father = null, $region = null)
     {
@@ -347,7 +347,7 @@ class HomeManager
     /**
      * Delete a node entity and link together the next and back entities.
      *
-     * @return \String The word "true" useful in ajax.
+     * @return string The word "true" useful in ajax.
      */
     public function deleNodeEntity($entity, $search, $function = null)
     {
@@ -368,7 +368,7 @@ class HomeManager
     /**
      * Put a content in a region of home page as left, right, footer or header, this is useful for menus.
      *
-     * @return \String The word "true" useful in ajax.
+     * @return string The word "true" useful in ajax.
      */
     public function contentToRegion($region, $content)
     {
@@ -402,9 +402,9 @@ class HomeManager
     /**
      * Get the variables of the menu.
      *
-     * @param \String $id The id of the content.
-     * @param \String $size The size (span12) of the content.
-     * @param \String $type The type of the content.
+     * @param string $id The id of the content.
+     * @param string $size The size (span12) of the content.
+     * @param string $type The type of the content.
      *
      * @return \Array
      */
