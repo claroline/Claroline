@@ -90,7 +90,10 @@ class ResourceManager
     }
 
     /**
-     * define the array rights
+     * array $rights should be defined that way:
+     * array('ROLE_WS_XXX' => array('canOpen' => true, 'canEdit' => false, ... 
+     * 'canCreate' => array('directory', ...), role => $entity))
+     *  
      */
     public function create(
         AbstractResource $resource,
@@ -661,11 +664,6 @@ class ResourceManager
         return $copy;
     }
 
-    public function getResourceTypeByName($name)
-    {
-        return $this->resourceTypeRepo->findOneByName($name);
-    }
-
     /**
      * Convert a ressource into an array (mainly used to be serialized and sent to the manager.js as
      * a json response)
@@ -715,46 +713,6 @@ class ResourceManager
         }
 
         return $resourceArray;
-    }
-
-    public function getRoots(User $user)
-    {
-        return $this->resourceRepo->findWorkspaceRootsByUser($user);
-    }
-
-    public function getWorkspaceRoot(AbstractWorkspace $workspace)
-    {
-        return $this->resourceRepo->findWorkspaceRoot($workspace);
-    }
-
-    public function getAncestors(AbstractResource $resource)
-    {
-        return $this->resourceRepo->findAncestors($resource);
-    }
-
-    public function getChildren(Directory $directory, array $roles, $isSorted = true)
-    {
-        $children = $this->resourceRepo->findChildren($directory, $roles);
-
-        return ($isSorted) ? $this->sort($children): $children;
-    }
-
-    public function getDescendants(Directory $directory)
-    {
-        return $this->resourceRepo->findDescendants($directory);
-    }
-
-    public function getByCriteria(array $criteria, array $userRoles, $isRecursive)
-    {
-        return $this->resourceRepo->findByCriteria($criteria, $userRoles, $isRecursive);
-    }
-
-    public function getByIds(array $ids)
-    {
-        return $this->om->findByIds(
-            'Claroline\CoreBundle\Entity\Resource\AbstractResource',
-            $ids
-        );
     }
 
     /**
@@ -910,5 +868,60 @@ class ResourceManager
                 array($resource, $changeSet)
             );
         }
+    }
+    
+    public function getResource($id)
+    {
+        return $this->resourceRepo->find($id);
+    }
+    
+    public function getRoots(User $user)
+    {
+        return $this->resourceRepo->findWorkspaceRootsByUser($user);
+    }
+
+    public function getWorkspaceRoot(AbstractWorkspace $workspace)
+    {
+        return $this->resourceRepo->findWorkspaceRoot($workspace);
+    }
+
+    public function getAncestors(AbstractResource $resource)
+    {
+        return $this->resourceRepo->findAncestors($resource);
+    }
+
+    public function getChildren(Directory $directory, array $roles, $isSorted = true)
+    {
+        $children = $this->resourceRepo->findChildren($directory, $roles);
+
+        return ($isSorted) ? $this->sort($children): $children;
+    }
+    
+    public function getAllChildren(AbstractResource $resource, $includeStartNode)
+    {
+        return $this->resourceRepo->getChildren($resource, $includeStartNode, 'path', 'DESC');
+    }
+
+    public function getDescendants(Directory $directory)
+    {
+        return $this->resourceRepo->findDescendants($directory);
+    }
+
+    public function getByCriteria(array $criteria, array $userRoles, $isRecursive)
+    {
+        return $this->resourceRepo->findByCriteria($criteria, $userRoles, $isRecursive);
+    }
+
+    public function getResourceTypeByName($name)
+    {
+        return $this->resourceTypeRepo->findOneByName($name);
+    }
+    
+    public function getByIds(array $ids)
+    {
+        return $this->om->findByIds(
+            'Claroline\CoreBundle\Entity\Resource\AbstractResource',
+            $ids
+        );
     }
 }

@@ -175,3 +175,5 @@ stfalcon_tinymce:
             remove_linebreaks: false
             inline_styles: false
             convert_fonts_to_spans: false
+
+be_simple_sso_auth: ~
