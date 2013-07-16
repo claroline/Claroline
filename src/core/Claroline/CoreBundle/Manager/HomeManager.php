@@ -1,7 +1,5 @@
 <?php
-
 namespace Claroline\CoreBundle\Manager;
-
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\Service;
@@ -10,7 +8,6 @@ use Claroline\CoreBundle\Entity\Home\Content;
 use Claroline\CoreBundle\Entity\Home\SubContent;
 use Claroline\CoreBundle\Entity\Home\Content2Type;
 use Claroline\CoreBundle\Entity\Home\Content2Region;
-
 /**
  * @Service("claroline.manager.home_manager")
  */
@@ -19,14 +16,12 @@ class HomeManager
     private $graph;
     private $manager;
     private $homeService;
-
     private $type;
     private $region;
     private $content;
     private $subContent;
     private $contentType;
     private $contentRegion;
-
     /**
      * @InjectParams({
      *     "graph"          = @Inject("claroline.common.graph_service"),
@@ -40,7 +35,6 @@ class HomeManager
         $this->graph = $graph;
         $this->manager = $persistence;
         $this->homeService = $homeService;
-
         $this->type = $manager->getRepository('ClarolineCoreBundle:Home\Type');
         $this->region = $manager->getRepository('ClarolineCoreBundle:Home\Region');
         $this->content = $manager->getRepository('ClarolineCoreBundle:Home\Content');
@@ -52,22 +46,17 @@ class HomeManager
     /**
      * Get Content
      *
-     * @return \Array
+     * @return array
      */
     public function getContent($content, $type, $father = null)
     {
         $array = array('type' => $type->getName(), 'size' => 'span12');
 
         if ($father) {
-
             $array['father'] = $father->getId();
-
             $subContent = $this->subContent->findOneBy(array('child' => $content, 'father' => $father));
-
             $array['size'] = $subContent->getSize();
-
         } else {
-
             $contentType = $this->contentType->findOneBy(array('content' => $content, 'type' => $type));
             $array['size'] = $contentType->getSize();
         }
@@ -80,7 +69,7 @@ class HomeManager
     /**
      * Return the layout of contents by his type.
      *
-     * @return \Array
+     * @return array
      */
     public function contentLayout($type, $father = null, $region = null)
     {
@@ -88,11 +77,9 @@ class HomeManager
         $array = null;
 
         if ($content) {
-
             $array = array();
             $array['content'] = $content;
             $array['type'] = $type;
-
             $array = $this->homeService->isDefinedPush($array, 'father', $father);
             $array = $this->homeService->isDefinedPush($array, 'region', $region);
         }
@@ -109,18 +96,15 @@ class HomeManager
     public function getContentByType($type, $father = null, $region = null)
     {
         $array = array();
-
         $type = $this->type->findOneBy(array('name' => $type));
 
         if ($type) {
+
             if ($father) {
-
                 $father = $this->content->find($father);
-
                 $first = $this->subContent->findOneBy(
                     array('back' => null, 'father' => $father)
                 );
-
             } else {
                 $first = $this->contentType->findOneBy(
                     array('back' => null, 'type' => $type)
@@ -128,19 +112,14 @@ class HomeManager
             }
 
             if ($first) {
-
                 for ($i = 0; $i < $type->getMaxContentPage() and $first != null; $i++) {
                     $variables = array();
-
                     $variables['content'] = $first->getContent();
                     $variables['size'] = $first->getSize();
                     $variables['type'] = $type->getName();
-
                     $variables = $this->homeService->isDefinedPush($variables, 'father', $father, 'getId');
                     $variables = $this->homeService->isDefinedPush($variables, 'region', $region);
-
                     $array[] = $variables;
-
                     $first = $first->getNext();
                 }
             }
@@ -152,20 +131,17 @@ class HomeManager
     /**
      * Get the content of the regions of the front page.
      *
-     * @return \Array The content of regions.
+     * @return array The content of regions.
      */
     public function getRegionContents()
     {
         $array = array();
-
         $regions = $this->region->findAll();
 
         foreach ($regions as $region) {
-
             $first = $this->contentRegion->findOneBy(array('back' => null, 'region' => $region));
 
             while ($first != null) {
-
                 $contentType = $this->contentType->findOneBy(array('content' => $first->getContent()));
 
                 if ($contentType) {
@@ -192,7 +168,7 @@ class HomeManager
     /**
      * Get the types
      *
-     * @return \Array An array of Type entity.
+     * @return array An array of Type entity.
      */
     public function getTypes()
     {
@@ -202,7 +178,7 @@ class HomeManager
     /**
      * Get the open graph contents of a web page by his URL
      *
-     * @return \Array
+     * @return array
      */
     public function getGraph($url)
     {
@@ -216,36 +192,27 @@ class HomeManager
      */
     public function createContent($title, $text, $generated = null, $type = null, $father = null)
     {
+
         if ($title or $text) {
-
             $content = new Content();
-
             $content->setTitle($title);
             $content->setContent($text);
             $content->setGeneratedContent($generated);
-
             $this->manager->persist($content);
 
             if ($father) {
-
                 $father = $this->content->find($father);
                 $first = $this->subContent->findOneBy(array('back' => null, 'father' => $father));
-
                 $subContent = new SubContent($first);
                 $subContent->setFather($father);
                 $subContent->SetChild($content);
-
                 $this->manager->persist($subContent);
-
             } else {
-
                 $type = $this->type->findOneBy(array('name' => $type));
                 $first = $this->contentType->findOneBy(array('back' => null, 'type' => $type));
-
                 $contentType = new Content2Type($first);
                 $contentType->setContent($content);
                 $contentType->setType($type);
-
                 $this->manager->persist($contentType);
             }
 
@@ -269,16 +236,13 @@ class HomeManager
         $content->setGeneratedContent($generated);
 
         if ($size and $type) {
-
             $type = $this->type->findOneBy(array('name' => $type));
             $contentType = $this->contentType->findOneBy(array('content' => $content, 'type' => $type));
             $contentType->setSize($size);
-
             $this->manager->persist($contentType);
         }
 
         $content->setModified();
-
         $this->manager->persist($content);
         $this->manager->flush();
     }
@@ -294,9 +258,7 @@ class HomeManager
         $a->detach();
 
         if ($b) {
-
             $b = $this->contentType->findOneBy(array('type' => $type, 'content' => $b));
-
             $a->setBack($b->getBack());
             $a->setNext($b);
 
@@ -305,14 +267,10 @@ class HomeManager
             }
 
             $b->setBack($a);
-
         } else {
-
             $b = $this->contentType->findOneBy(array('type' => $type, 'next' => null));
-
             $a->setNext($b->getNext());
             $a->setBack($b);
-
             $b->setNext($a);
         }
 
@@ -329,17 +287,14 @@ class HomeManager
     public function deleteContent($content)
     {
         $this->deleNodeEntity($this->contentType, array('content' => $content));
-
         $this->deleNodeEntity(
             $this->subContent, array('father' => $content),
             function ($entity) {
                 $this->deleteContent($entity->getChild());
             }
         );
-
         $this->deleNodeEntity($this->subContent, array('child' => $content));
         $this->deleNodeEntity($this->contentRegion, array('content' => $content));
-
         $this->manager->remove($content);
         $this->manager->flush();
     }
@@ -363,6 +318,7 @@ class HomeManager
             $this->manager->remove($entity);
             $this->manager->flush();
         }
+
     }
 
     /**
@@ -373,11 +329,9 @@ class HomeManager
     public function contentToRegion($region, $content)
     {
         $first = $this->contentRegion->findOneBy(array('back' => null, 'region' => $region));
-
         $contentRegion = new Content2Region($first);
         $contentRegion->setRegion($region);
         $contentRegion->setContent($content);
-
         $this->manager->persist($contentRegion);
         $this->manager->flush();
     }
@@ -385,14 +339,13 @@ class HomeManager
     /**
      * Get the creator of contents.
      *
-     * @return \Array
+     * @return array
      */
     public function getCreator($type, $id = null, $content = null, $father = null)
     {
         $variables = array('type' => $type);
 
         if ($id and !$content) {
-
             $variables['content'] = $this->content->find($id);
         }
 
@@ -406,7 +359,7 @@ class HomeManager
      * @param string $size The size (span12) of the content.
      * @param string $type The type of the content.
      *
-     * @return \Array
+     * @return array
      */
     public function getMenu($id, $size, $type, $father = null)
     {

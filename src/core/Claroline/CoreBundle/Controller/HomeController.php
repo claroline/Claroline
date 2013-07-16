@@ -1,7 +1,5 @@
 <?php
-
 namespace Claroline\CoreBundle\Controller;
-
 use Claroline\CoreBundle\Entity\Home\Content2Region;
 use Claroline\CoreBundle\Entity\Home\Content2Type;
 use Claroline\CoreBundle\Entity\Home\Content;
@@ -17,7 +15,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
 /**
  * @TODO doc
  */
@@ -78,7 +75,6 @@ class HomeController
      * @Route("/type/{type}", name="claro_get_content_by_type")
      * @Route("/", name="claro_index", defaults={"type" = "home"})
      * @Template("ClarolineCoreBundle:Home:home.html.twig")
-
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function homeAction($type)
@@ -127,6 +123,7 @@ class HomeController
             )->getContent()
         );
     }
+
     /**
      * Render the page of the creator box.
      *
@@ -139,7 +136,6 @@ class HomeController
     public function creatorAction($type, $id = null, $content = null, $father = null)
     {
         //cant use @Secure(roles="ROLE_ADMIN") annotation beacause this method is called in anonymous mode
-
         if ($this->security->isGranted('ROLE_ADMIN')) {
 
             return $this->render(
@@ -167,7 +163,6 @@ class HomeController
     {
         return $this->manager->getMenu($id, $size, $type, $father);
     }
-
 
     /**
      * Render the HTML of the menu of sizes of the contents.
@@ -222,27 +217,25 @@ class HomeController
      */
     public function regionAction($id)
     {
+
         return array('id' => $id);
     }
 
     /**
      * Render the HTML of the content.
      *
-     * @return \Array
+     * @return array
      */
     public function renderContent($array)
     {
         $tmp = '';
 
         if (isset($array['content']) and isset($array['type']) and is_array($array['content'])) {
-
             foreach ($array['content'] as $content) {
-
                 $tmp .= $this->render(
                     'ClarolineCoreBundle:Home/types:'.$content['type'].'.html.twig', $content, true
                 )->getContent();
             }
-
             $array['content'] = $tmp;
         }
 
@@ -259,11 +252,9 @@ class HomeController
         $tmp = array();
 
         foreach ($regions as $name => $region) {
-
             $tmp[$name] = '';
 
             foreach ($region as $variables) {
-
                 //@TODO Need content rights for admin users
                 if (!(!$this->security->isGranted('ROLE_ADMIN') and
                     $variables['type'] == 'menu' and
@@ -297,6 +288,7 @@ class HomeController
             $this->request->get('type'),
             $this->request->get('father')
         )) {
+
             return new Response($id);
         }
 
@@ -317,7 +309,6 @@ class HomeController
     public function updateAction($content)
     {
         try {
-
             $this->manager->UpdateContent(
                 $content,
                 $this->request->get('title'),
@@ -328,7 +319,6 @@ class HomeController
             );
 
             return new Response('true');
-
         } catch (\Exeption $e) {
 
             return new Response('false'); //useful in ajax
@@ -357,11 +347,9 @@ class HomeController
     public function reorderAction($type, $a, Content $b = null)
     {
         try {
-
             $this->manager->reorderContent($type, $a, $b);
 
             return new Response('true');
-
         } catch (\Exeption $e) {
 
             return new Response('false'); //useful in ajax
@@ -382,11 +370,9 @@ class HomeController
     public function deleteAction($content)
     {
         try {
-
             $this->manager->deleteContent($content);
 
             return new Response('true');
-
         } catch (\Exeption $e) {
 
             return new Response('false'); //useful in ajax
@@ -408,11 +394,9 @@ class HomeController
     public function contentToRegionAction($region, $content)
     {
         try {
-
             $this->manager->contentToRegion($region, $content);
 
             return new Response('true');
-
         } catch (\Exeption $e) {
 
             return new Response('false'); //useful in ajax
@@ -426,6 +410,7 @@ class HomeController
      */
     public function render($template, $array, $default = false)
     {
+
         if ($default) {
             $template = $this->homeService->defaultTemplate($template);
         }
@@ -433,4 +418,3 @@ class HomeController
         return new Response($this->templating->render($template, $array));
     }
 }
-
