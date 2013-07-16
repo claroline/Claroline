@@ -9,7 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Database\GenericRepository;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Database\MissingEntityException;
 
 /**
@@ -21,16 +21,16 @@ use Claroline\CoreBundle\Database\MissingEntityException;
  */
 class MultipleIdsConverter implements ParamConverterInterface
 {
-    private $repo;
+    private $om;
 
     /**
      * @DI\InjectParams({
-     *     "repo" = @DI\Inject("claroline.database.generic_repository")
+     *     "om" = @DI\Inject("doctrine.orm.entity_manager")
      * })
      */
-    public function __construct(GenericRepository $repo)
+    public function __construct(ObjectManager $om)
     {
-        $this->repo = $repo;
+        $this->om = $om;
     }
 
     /**
@@ -53,7 +53,7 @@ class MultipleIdsConverter implements ParamConverterInterface
         if ($request->query->has('ids')) {
             if (is_array($ids = $request->query->get('ids'))) {
                 try {
-                    $entities = $this->repo->findByIds($entityClass, $ids);
+                    $entities = $this->om->findByIds($entityClass, $ids);
                     $request->attributes->set($parameter, $entities);
 
                     return true;
