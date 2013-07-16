@@ -37,7 +37,7 @@ use Claroline\CoreBundle\Entity\Logger\Log;
  */
 abstract class RepositoryTestCase extends WebTestCase
 {
-    protected static $om;
+    private static $om;
     private static $client;
     private static $references;
     private static $time;
