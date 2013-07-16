@@ -43,10 +43,10 @@ class ToolManager
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "ed"         = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "utilities"  = @DI\Inject("claroline.utilities.misc"),
-     *     "translator" = @DI\Inject("translator"),
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager")
+     *     "ed"          = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "utilities"   = @DI\Inject("claroline.utilities.misc"),
+     *     "translator"  = @DI\Inject("translator"),
+     *     "om"          = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(
@@ -110,7 +110,7 @@ class ToolManager
             array($workspace, $config, $rootDir, $manager, $filePaths, $generatedRoles)
         );
     }
-
+    
     public function addWorkspaceTool(Tool $tool, $position, $name, AbstractWorkspace $workspace)
     {
         $switchTool = $this->orderedToolRepo->findOneBy(array('workspace' => $workspace, 'order' => $position));
