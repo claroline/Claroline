@@ -263,6 +263,8 @@ class HomeController
                     $tmp[$name] .= $this->render(
                         'ClarolineCoreBundle:Home/types:'.$variables['type'].'.html.twig', $variables, true
                     )->getContent();
+                } else {
+                    unset($tmp[$name]);
                 }
             }
         }
