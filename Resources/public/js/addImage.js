@@ -73,12 +73,12 @@ function ValidName(message, label, path, messageA) {
             } else {
                 uniqueName = true;
             }
+            
+            if (correctName === true && uniqueName === true) {
+                document.getElementById('uploadForm').submit();
+            }
         }
     });
-
-    if (correctName === true && uniqueName === true) {
-        document.getElementById('uploadForm').submit();
-    }
 }
 
 // --> If activate followed functions, can not move or resize the pop up ...
