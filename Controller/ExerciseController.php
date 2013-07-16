@@ -657,8 +657,8 @@ class ExerciseController extends Controller
             $workspace = $exercise->getWorkspace();
 
             $marks = $this->container->get('ujm.exercise_services')->getExerciseHistoMarks($exerciseId);
-            $tabMarks= array();
-            for($i=0; $i<=20; $i++){
+            $tabMarks = array();
+            for($i = 0; $i <= 20; $i++){
                 $tabMarks[$i] = 0;
             }
             
