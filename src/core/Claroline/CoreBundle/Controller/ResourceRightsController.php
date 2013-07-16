@@ -5,8 +5,6 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use Claroline\CoreBundle\Event\Event\LogWorkspaceRoleChangeRightEvent;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\RoleManager;

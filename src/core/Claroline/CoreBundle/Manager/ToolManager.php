@@ -7,12 +7,11 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
-use Claroline\CoreBundle\Database\Writer;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
 use Claroline\CoreBundle\Repository\ToolRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
-use Claroline\CoreBundle\Event\Event\ImportToolEvent;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Exception\ToolPositionAlreadyOccupiedException;
 use Claroline\CoreBundle\Manager\Exception\UnremovableToolException;
@@ -25,8 +24,6 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class ToolManager
 {
-    /** @var Writer */
-    private $writer;
     /** @var OrderedToolRepository */
     private $orderedToolRepo;
     /** @var RoleRepository */
@@ -39,48 +36,44 @@ class ToolManager
     private $utilities;
     /** @var Translator */
     private $translator;
-
+    /** @var ObjectManager */
+    private $om;
+    
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "writer"          = @DI\Inject("claroline.database.writer"),
-     *     "orderedToolRepo" = @DI\Inject("ordered_tool_repository"),
-     *     "toolRepo"        = @DI\Inject("tool_repository"),
-     *     "ed"              = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "utilities"       = @DI\Inject("claroline.utilities.misc"),
-     *     "roleRepo"        = @DI\Inject("role_repository"),
-     *     "translator"      = @DI\Inject("translator")
+     *     "ed"         = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "utilities"  = @DI\Inject("claroline.utilities.misc"),
+     *     "translator" = @DI\Inject("translator"),
+     *     "om"         = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(
-        Writer $writer,
-        OrderedToolRepository $orderedToolRepo,
-        ToolRepository $toolRepo,
         StrictDispatcher $ed,
         ClaroUtilities $utilities,
-        RoleRepository $roleRepo,
-        Translator $translator
+        Translator $translator,
+        ObjectManager $om
     )
     {
-        $this->writer = $writer;
-        $this->orderedToolRepo = $orderedToolRepo;
-        $this->toolRepo = $toolRepo;
+        $this->orderedToolRepo = $om->getRepository('ClarolineCoreBundle:Tool\OrderedTool');
+        $this->toolRepo = $om->getRepository('ClarolineCoreBundle:Tool\Tool');
+        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
         $this->ed = $ed;
         $this->utilities = $utilities;
-        $this->roleRepo = $roleRepo;
         $this->translator = $translator;
+        $this->om = $om;
     }
 
     public function create(Tool $tool)
     {
-        $this->writer->create($tool);
+        $this->om->persist($tool);
+        $this->om->flush();
     }
 
     /**
      * Import a tool in a workspace from the template archive.
      *
-     * @param array             $perms
      * @param array             $config
      * @param array             $roles
      * @param string            $name
@@ -93,13 +86,14 @@ class ToolManager
     public function import(
         array $config,
         array $roles,
-        array $filePaths,
+        array $generatedRoles,
         $name,
         AbstractWorkspace $workspace,
         AbstractResource $rootDir,
         Tool $tool,
         User $manager,
-        $position
+        $position,
+        $archive
     )
     {
         $this->configChecker($config);
@@ -108,10 +102,12 @@ class ToolManager
         foreach ($roles as $role) {
             $this->addRoleToOrderedTool($otr, $role);
         }
+        
+        $filePaths = $this->extractFiles($archive, $config);
 
         $this->ed->dispatch(
             'tool_' . $tool->getName() . '_from_template', 'ImportTool',
-            array($workspace, $config, $rootDir, $manager, $filePaths)
+            array($workspace, $config, $rootDir, $manager, $filePaths, $generatedRoles)
         );
     }
 
@@ -123,12 +119,13 @@ class ToolManager
             throw new ToolPositionAlreadyOccupiedException('A tool already exists at this position');
         }
 
-        $orderedTool = new OrderedTool();
+        $orderedTool = $this->om->factory('Claroline\CoreBundle\Entity\Tool\OrderedTool');
         $orderedTool->setWorkspace($workspace);
         $orderedTool->setName($name);
         $orderedTool->setOrder($position);
         $orderedTool->setTool($tool);
-        $this->writer->create($orderedTool);
+        $this->om->persist($orderedTool);
+        $this->om->flush();
 
         return $orderedTool;
     }
@@ -137,26 +134,30 @@ class ToolManager
     {
         $otr = $this->orderedToolRepo->findOneBy(array('tool' => $tool, 'workspace' => $workspace));
         $otr->addRole($role);
-        $this->writer->update($otr);
+        $this->om->persist($otr);
+        $this->om->flush();
     }
 
     public function addRoleToOrderedTool(OrderedTool $otr, Role $role)
     {
         $otr->addRole($role);
-        $this->writer->update($otr);
+        $this->om->persist($otr);
+        $this->om->flush();
     }
 
     public function removeRole(Tool $tool, Role $role, AbstractWorkspace $workspace)
     {
         $otr = $this->orderedToolRepo->findOneBy(array('tool' => $tool, 'workspace' => $workspace));
         $otr->removeRole($role);
-        $this->writer->update($otr);
+        $this->om->persist($otr);
+        $this->om->flush();
     }
 
     public function removeRoleFromOrderedTool(OrderedTool $otr, Role $role)
     {
         $otr->removeRole($role);
-        $this->writer->update($otr);
+        $this->om->persist($otr);
+        $this->om->flush();
     }
 
     public function getDisplayedDesktopOrderedTools(User $user)
@@ -309,7 +310,8 @@ class ToolManager
         }
 
         $orderedTool = $this->orderedToolRepo->findOneBy(array('user' => $user, 'tool' => $tool));
-        $this->writer->delete($orderedTool);
+        $this->om->remove($orderedTool);
+        $this->om->flush();
     }
 
     public function addDesktopTool(Tool $tool, User $user, $position, $name)
@@ -320,12 +322,13 @@ class ToolManager
             throw new ToolPositionAlreadyOccupiedException('A tool already exists at this position');
         }
 
-        $desktopTool = new OrderedTool();
+        $desktopTool = $this->om->factory('Claroline\CoreBundle\Entity\Tool\OrderedTool');
         $desktopTool->setUser($user);
         $desktopTool->setTool($tool);
         $desktopTool->setOrder($position);
         $desktopTool->setName($name);
-        $this->writer->create($desktopTool);
+        $this->om->persist($desktopTool);
+        $this->om->flush();
     }
 
     public function move(Tool $tool, $position, User $user = null, AbstractWorkspace $workspace = null)
@@ -335,25 +338,25 @@ class ToolManager
          $switchTool = $this->orderedToolRepo
              ->findOneBy(array('user' => $user, 'order' => $position, 'workspace' => $workspace));
 
-         $this->writer->suspendFlush();
          $newPosition = $movingTool->getOrder();
          //if a tool is already at this position, he must go "far away"
          $switchTool->setOrder($newPosition);
          $movingTool->setOrder(intval($position));
-         $this->writer->update($switchTool);
-         $this->writer->update($movingTool);
-
-         $this->writer->forceFlush();
+         $this->om->persist($switchTool);
+         $this->om->persist($movingTool);
+         $this->om->flush();
     }
 
     public function editOrderedTool(OrderedTool $ot)
     {
-        $this->writer->update($ot);
+        $this->om->persist($ot);
+        $this->om->flush();
     }
 
     public function editTool(Tool $tool)
     {
-        $this->writer->update($tool);
+        $this->om->persist($tool);
+        $this->om->flush();
     }
 
     public function findOneByName($name)
@@ -392,12 +395,15 @@ class ToolManager
         $requiredTools[] = $this->toolRepo->findOneBy(array('name' => 'parameters'));
 
         $position = 1;
+        $this->om->startFlushSuite();
 
         foreach ($requiredTools as $requiredTool) {
             $this->addDesktopTool($requiredTool, $user, $position, $requiredTool->getName());
             $position++;
         }
-        $this->writer->update($user);
+        
+        $this->om->persist($user);
+        $this->om->endFlushSuite($user);
     }
 
     public function getOneToolByName($name)
@@ -408,5 +414,22 @@ class ToolManager
     public function getToolByCriterias(array $criterias)
     {
         return $this->toolRepo->findBy($criterias);
+    }
+    
+    public function extractFiles($archpath, $confTools)
+    {
+        $extractPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('claro_ws_tmp_', true);
+        $archive = new \ZipArchive();
+        $archive->open($archpath);
+        $archive->extractTo($extractPath);
+        $realPaths = array();
+        
+        if (isset($confTools['files'])) {
+            foreach ($confTools['files'] as $path) {
+                $realPaths[] = $extractPath . DIRECTORY_SEPARATOR . $path;
+            }
+        }
+
+        return $realPaths;
     }
 }

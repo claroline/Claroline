@@ -26,8 +26,19 @@
             <directory>../src/plugin/*/*Bundle/Tests</directory>
         </testsuite>
 
-        <!-- see https://github.com/sebastianbergmann/phpunit/pull/959 -->
         <testsuite name="core">
+            <directory>../src/core/Claroline/CoreBundle/Tests/Converter</directory>
+            <directory>../src/core/Claroline/CoreBundle/Tests/Controller</directory>
+            <!--<directory>../src/core/Claroline/CoreBundle/Tests/Database</directory>-->
+            <directory>../src/core/Claroline/CoreBundle/Tests/Event</directory>
+            <directory>../src/core/Claroline/CoreBundle/Tests/Form</directory>
+            <directory>../src/core/Claroline/CoreBundle/Tests/Library</directory>
+            <directory>../src/core/Claroline/CoreBundle/Tests/Listener</directory>
+            <directory>../src/core/Claroline/CoreBundle/Tests/Manager</directory>
+            <directory>../src/core/Claroline/CoreBundle/Tests/Persistence</directory>
+            <directory>../src/core/Claroline/CoreBundle/Tests/Repository</directory>
+            <directory>../src/core/Claroline/CoreBundle/Tests/Twig</directory>
+
             <!-- TO BE REWRITTEN IN UNIT STYLE -->
 
             <!--
@@ -64,28 +75,8 @@
             <file>../src/core/Claroline/CoreBundle/Tests/Twig/WorkspaceAccessExtensionTest.php</file>
             <directory>../src/core/Claroline/CoreBundle/Tests/Validator</directory>
             -->
-
-            <file>../src/core/Claroline/CoreBundle/Tests/Controller/MessageControllerTest.php</file>
-            <directory>../src/core/Claroline/CoreBundle/Tests/Converter</directory>
-            <directory>../src/core/Claroline/CoreBundle/Tests/Database</directory>
-            <directory>../src/core/Claroline/CoreBundle/Tests/Event</directory>
-            <directory>../src/core/Claroline/CoreBundle/Tests/Form</directory>
-            <directory>../src/core/Claroline/CoreBundle/Tests/Library/Configuration</directory>
-            <directory>../src/core/Claroline/CoreBundle/Tests/Library/Installation/Core</directory>
-            <file>../src/core/Claroline/CoreBundle/Tests/Library/Installation/Plugin/ConfigurationFileWriterTest.php</file>
-            <file>../src/core/Claroline/CoreBundle/Tests/Library/Installation/Plugin/InstallerTest.php</file>
-            <file>../src/core/Claroline/CoreBundle/Tests/Library/Installation/Plugin/LoaderTest.php</file>
-            <file>../src/core/Claroline/CoreBundle/Tests/Library/Installation/Plugin/RecorderTest.php</file>
-            <file>../src/core/Claroline/CoreBundle/Tests/Library/Installation/Plugin/ResourceCheckerTest.php</file>
-            <file>../src/core/Claroline/CoreBundle/Tests/Library/Installation/Plugin/RoutingCheckerTest.php</file>
-            <file>../src/core/Claroline/CoreBundle/Tests/Library/Installation/Plugin/ValidatorTest.php</file>
-            <file>../src/core/Claroline/CoreBundle/Tests/Library/Resource/QueryStringWriterTest.php</file>
-            <directory>../src/core/Claroline/CoreBundle/Tests/Library/Testing</directory>
-            <file>../src/core/Claroline/CoreBundle/Tests/Listener/QueryStringHandlerTest.php</file>
-            <directory>../src/core/Claroline/CoreBundle/Tests/Manager</directory>
-            <directory>../src/core/Claroline/CoreBundle/Tests/Repository</directory>
-            <file>../src/core/Claroline/CoreBundle/Tests/Twig/ResourceModeExtensionTest.php</file>
         </testsuite>
+
     </testsuites>
 
     <filter>

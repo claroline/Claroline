@@ -16,9 +16,9 @@ use Claroline\CoreBundle\Event\Event\Log\LogGroupRemoveUserEvent;
 use Claroline\CoreBundle\Event\Event\Log\LogGroupDeleteEvent;
 use Claroline\CoreBundle\Event\Event\Log\LogGroupUpdateEvent;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
-use Claroline\CoreBundle\Library\Analytics\Manager;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\UnwritableException;
+use Claroline\CoreBundle\Manager\AnalyticsManager;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
@@ -53,7 +53,7 @@ class AdministrationController extends Controller
      *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
      *     "configHandler"      = @DI\Inject("claroline.config.platform_config_handler"),
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
-     *     "analyticsManager"   = @DI\Inject("claroline.analytics.manager"),
+     *     "analyticsManager"   = @DI\Inject("claroline.manager.analytics_manager"),
      * })
      */
     public function __construct(
@@ -65,7 +65,7 @@ class AdministrationController extends Controller
         EventDispatcher $eventDispatcher,
         PlatformConfigurationHandler $configHandler,
         FormFactory $formFactory,
-        Manager $analyticsManager
+        AnalyticsManager $analyticsManager
     )
     {
         $this->userManager = $userManager;
@@ -582,10 +582,12 @@ class AdministrationController extends Controller
      */
     public function updatePlatformSettingsAction()
     {
+        $platformConfig = $this->configHandler->getPlatformConfig();
         $request = $this->get('request');
         $form = $this->formFactory->create(
             FormFactory::TYPE_PLATFORM_PARAMETERS,
-            array($this->getThemes())
+            array($this->getThemes()),
+            $platformConfig
         );
         $form->handleRequest($request);
 
