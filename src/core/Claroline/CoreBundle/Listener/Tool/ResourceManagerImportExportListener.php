@@ -14,7 +14,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 /**
  * @DI\Service
  */
-class ImportExportResourceListener
+class ResourceManagerImportExportListener
 {
     private $roleManager;
     private $em;
