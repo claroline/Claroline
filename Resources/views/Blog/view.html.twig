@@ -19,7 +19,7 @@
                         <a href="#" data-toggle="tooltip" title="{{ 'edit'|trans({}, 'platform') }}" data-placement="top" data-original-title="{{ 'edit'|trans({}, 'platform') }}" class="btn btn-small">
                             <i class="icon-edit"></i>
                         </a>
-                        <a href="#" data-toggle="tooltip" title="{{ 'delete'|trans({}, 'platform') }}" data-placement="top" data-original-title="{{ 'delete'|trans({}, 'platform') }}" class="btn btn-small btn-danger">
+                        <a href="{{ path('icap_blog_post_delete', {'blogId': _resource.id, 'postSlug': post.slug}) }}" class="btn btn-small btn-danger delete" data-confirm-title="{{ 'post_deletion_confirm_title'|trans({}, 'icap_blog') }}" data-confirm-message="{{ 'post_deletion_confirm_message'|trans({'%postName%': post.title}, 'icap_blog') }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-toggle="tooltip" title="{{ 'delete'|trans({}, 'platform') }}" data-placement="top" data-original-title="{{ 'delete'|trans({}, 'platform') }}">
                             <i class="icon-trash"></i>
                         </a>
                         {% if isPublished %}
@@ -33,7 +33,7 @@
                         {% endif %}
                     </div>
                 {% endif %}
-                <h1>{{ post.title|raw }}</h1>
+                <h1>{{ post.title }}</h1>
                 {% set author = post.author %}
                 {{ 'written_by'|trans }} <a href="#" rel="author" title="{{ author.firstname ~ ' ' ~ author.lastname }}">{{ author.firstname ~ ' ' ~ author.lastname }}</a>
                 {% if isPublished %}

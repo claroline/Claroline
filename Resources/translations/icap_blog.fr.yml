@@ -8,6 +8,8 @@ back_to_workspace: "Retour à l'espace de travail"
 icap_blog_options_form_authorize_comment: 'Commentaires autorisés'
 icap_blog_post_add_success: 'Article ajouté avec succès'
 icap_blog_post_add_error: "Erreur lors de l'ajout de l'article"
+icap_blog_post_delete_success: 'Article supprimé avec succès'
+icap_blog_post_delete_error: "Erreur lors de la suppression de l'article"
 no_tags: 'Aucun tags'
 comments: 'commentaires'
 see_comments: 'Voir les commentaires'
@@ -15,3 +17,5 @@ publish: 'Publier'
 unpublish: 'Dépublier'
 written_by: 'Ecrit par'
 Post: 'Article'
+post_deletion_confirm_title: "Suppression d'un article"
+post_deletion_confirm_message: "Etes-vous sûr de vouloir supprimer l'article <strong>%postName%</strong> ?"

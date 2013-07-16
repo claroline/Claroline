@@ -14,11 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
 class PostController extends Controller
 {
     /**
-     * @Route(
-     *      "/{blogId}/post/new",
-     *      name="icap_blog_post_new",
-     *      requirements={"blogId" = "\d+"}
-     * )
+     * @Route("/{blogId}/post/new", name="icap_blog_post_new", requirements={"blogId" = "\d+"})
+     *
      * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
      * @Template()
      */
@@ -57,5 +54,36 @@ class PostController extends Controller
             '_resource' => $blog,
             'form'      => $form->createView()
         );
+    }
+
+    /**
+     * @Route("/{blogId}/post/delete/{postSlug}", name="icap_blog_post_delete", requirements={"blogId" = "\d+"})
+     *
+     * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
+     * @ParamConverter("post", class="ICAPBlogBundle:Post", options={"slug" = "postSlug"})
+     * @Template()
+     */
+    public function deleteAction(Blog $blog, Post $post)
+    {
+        $this->checkAccess("EDIT", $blog);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $translator    = $this->get('translator');
+        $flashBag      = $this->get('session')->getFlashBag();
+
+        try {
+            $this->get("icaplyon1_simpletag.manager")->removeAllTags($post);
+
+            $entityManager->remove($post);
+            $entityManager->flush();
+
+            $flashBag->add('success', $translator->trans('icap_blog_post_delete_success', array(), 'icap_blog'));
+        }
+        catch(\Exception $exception)
+        {
+            $flashBag->add('error', $translator->trans('icap_blog_post_delete_error', array(), 'icap_blog'));
+        }
+
+        return $this->redirect($this->generateUrl('icap_blog_view', array('blogId' => $blog->getId())));
     }
 }

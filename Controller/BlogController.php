@@ -76,7 +76,7 @@ class BlogController extends Controller
         $form = $this->createForm(new BlogOptionsType(), new BlogOptions());
 
         if("POST" === $request->getMethod()) {
-            $form->bind($request);
+            $form->submit($request);
             if ($form->isValid()) {
                 return $this->redirect($this->generateUrl('icap_blog_configure', array('blogId' => $blog->getId())));
             }
