@@ -3,6 +3,8 @@
 namespace Claroline\CoreBundle\Event\Event;
 
 use Symfony\Component\EventDispatcher\Event;
+use Claroline\CoreBundle\Event\DataConveyorEventInterface;
+use Claroline\CoreBundle\Event\MandatoryEventInterface;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 /**
