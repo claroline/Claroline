@@ -39,14 +39,15 @@ class ToolRepositoryTest extends RepositoryTestCase
 
     public function testFindDesktopUndisplayedToolsByUser()
     {
-        $this->markTestSkipped('Unskip and test when issue #34 is closed');
         $result = self::$repo->findDesktopUndisplayedToolsByUser(self::get('john'));
+        $this->assertEquals(1, count($result));
+        $this->assertEquals(self::get('tool_1'), $result[0]);
     }
 
     public function testFindUndisplayedToolsByWorkspace()
     {
-        $this->markTestSkipped('Unskip and test when issue #34 is closed');
         $result = self::$repo->findUndisplayedToolsByWorkspace(self::get('ws_1'));
+        $this->assertEquals(0, count($result));
     }
 
     public function testFindDisplayedToolsByWorkspace()

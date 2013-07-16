@@ -15,7 +15,6 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class GroupManager
 {
-    private $writer;
     /** @var GroupRepository */
     private $groupRepo;
     private $pagerFactory;
