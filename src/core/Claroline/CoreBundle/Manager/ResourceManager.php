@@ -91,9 +91,9 @@ class ResourceManager
 
     /**
      * array $rights should be defined that way:
-     * array('ROLE_WS_XXX' => array('canOpen' => true, 'canEdit' => false, ... 
+     * array('ROLE_WS_XXX' => array('canOpen' => true, 'canEdit' => false, ...
      * 'canCreate' => array('directory', ...), role => $entity))
-     *  
+     *
      */
     public function create(
         AbstractResource $resource,
@@ -108,20 +108,20 @@ class ResourceManager
         $this->om->startFlushSuite();
         $this->checkResourcePrepared($resource);
         $name = $this->getUniqueName($resource, $parent);
-        
+
         if ($resource->getMimeType() === null) {
             $resource->setMimeType('custom/' . $resourceType->getName());
         }
-        
+
         $previous = $this->resourceRepo->findOneBy(array('parent' => $parent, 'next' => null));
-        
+
         if ($previous) {
             $previous->setNext($resource);
         }
         if ($icon === null) {
             $icon = $this->iconManager->getIcon($resource, $icon);
         }
-        
+
         $resource->setCreator($creator);
         $resource->setWorkspace($workspace);
         $resource->setResourceType($resourceType);
@@ -286,9 +286,9 @@ class ResourceManager
             $parent,
             $target->getIcon()->getShortcutIcon()
         );
-        
+
         $this->dispatcher->dispatch('log', 'Log\LogResourceCreate', array($shortcut));
-        
+
         return $shortcut;
     }
 
@@ -486,7 +486,7 @@ class ResourceManager
             $lastChild->setNext($resource);
             $this->om->persist($lastChild);
         }
-        
+
         $this->om->flush();
     }
 
@@ -509,7 +509,7 @@ class ResourceManager
             $previous->setNext($next);
             $this->om->persist($previous);
         }
-        
+
         $this->om->flush();
     }
 
@@ -567,7 +567,8 @@ class ResourceManager
         return true;
     }
 
-    public function areAncestorsDirectory(array $ancestors) {
+    public function areAncestorsDirectory(array $ancestors)
+    {
         array_pop($ancestors);
 
         foreach ($ancestors as $ancestor) {
@@ -575,6 +576,7 @@ class ResourceManager
                 return false;
             }
         }
+
         return true;
     }
 
@@ -660,7 +662,7 @@ class ResourceManager
 
         $this->dispatcher->dispatch('log', 'Log\LogResourceCopy', array($copy, $resource));
         $this->om->flush();
-        
+
         return $copy;
     }
 
@@ -833,17 +835,17 @@ class ResourceManager
 
         return $path;
     }
-    
+
     public function rename(AbstractResource $resource, $name)
     {
         $resource->setName($name);
         $this->om->persist($resource);
         $this->logChangeSet($resource);
         $this->om->flush();
-        
+
         return $resource;
     }
-    
+
     public function changeIcon(AbstractResource $resource, UploadedFile $file)
     {
         $this->om->startFlushSuite();
@@ -851,10 +853,10 @@ class ResourceManager
         $this->iconManager->replace($resource, $icon);
         $this->logChangeSet($resource);
         $this->om->endFlushSuite();
-        
+
         return $icon;
     }
-    
+
     public function logChangeSet(AbstractResource $resource)
     {
         $uow = $this->om->getUnitOfWork();
@@ -863,18 +865,18 @@ class ResourceManager
 
         if (count($changeSet > 0)) {
             $this->dispatcher->dispatch(
-                'log', 
-                'Log\LogResourceUpdate', 
+                'log',
+                'Log\LogResourceUpdate',
                 array($resource, $changeSet)
             );
         }
     }
-    
+
     public function getResource($id)
     {
         return $this->resourceRepo->find($id);
     }
-    
+
     public function getRoots(User $user)
     {
         return $this->resourceRepo->findWorkspaceRootsByUser($user);
@@ -896,7 +898,7 @@ class ResourceManager
 
         return ($isSorted) ? $this->sort($children): $children;
     }
-    
+
     public function getAllChildren(AbstractResource $resource, $includeStartNode)
     {
         return $this->resourceRepo->getChildren($resource, $includeStartNode, 'path', 'DESC');
@@ -916,7 +918,7 @@ class ResourceManager
     {
         return $this->resourceTypeRepo->findOneByName($name);
     }
-    
+
     public function getByIds(array $ids)
     {
         return $this->om->findByIds(

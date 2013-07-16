@@ -52,4 +52,19 @@ class HomeService
 
         return $path;
     }
+
+    /**
+     *  Reduce some "overall complexity"
+     */
+    public function isDefinedPush($array, $name, $variable, $method = null)
+    {
+        if ($method and $variable) {
+            $array[$name] = $variable->$method();
+        } elseif ($variable) {
+            $array[$name] = $variable;
+        }
+
+        return $array;
+    }
+
 }
