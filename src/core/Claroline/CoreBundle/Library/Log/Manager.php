@@ -11,8 +11,6 @@ use Claroline\CoreBundle\Form\WorkspaceLogFilterType;
 use Claroline\CoreBundle\Form\AdminLogFilterType;
 use Claroline\CoreBundle\Event\Event\Log\LogCreateDelegateViewEvent;
 use Claroline\CoreBundle\Event\Event\Log\LogResourceChildUpdateEvent;
-use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\CoreBundle\Entity\Logger\LogWorkspaceWidgetConfig;
 use Claroline\CoreBundle\Entity\Logger\LogDesktopWidgetConfig;
 
@@ -191,7 +189,7 @@ class Manager
             $defaultConfig = new LogWorkspaceWidgetConfig();
             $defaultConfig->setWorkspace(null);
             $defaultConfig->setIsDefault(true);
-        } 
+        }
 
         // Complete missing configs
         foreach ($workspaces as $workspace) {
@@ -211,7 +209,7 @@ class Manager
             }
         }
 
-        // Remove configs which hasAllRestriction 
+        // Remove configs which hasAllRestriction
         $configsCleaned = array();
         foreach ($configs as $config) {
             if ($config->hasAllRestriction() === false) {
@@ -221,7 +219,6 @@ class Manager
         $configs = $configsCleaned;
 
         if (count($configs) === 0) {
-
             return null;
         }
 
@@ -237,7 +234,7 @@ class Manager
             'listItemViews' => $views,
             'chartData' => $chartData,
             'logAmount' => $desktopConfig->getAmount(),
-            'isDesktop' => true, 
+            'isDesktop' => true,
             'title' => $this->container->get('translator')->trans(
                 'Overview of recent activities of your workspaces',
                 array(),
@@ -249,7 +246,6 @@ class Manager
     public function getWorkspaceWidgetList($workspace)
     {
         if (!$this->isAllowedToViewLogs($workspace)) {
-
             return null;
         }
         $em = $this->container->get('doctrine.orm.entity_manager');
@@ -267,13 +263,12 @@ class Manager
         }
 
         if ($config->hasAllRestriction()) {
-            
             return null;
         }
         $query = $repository->findLogsThroughConfigs(array($config), $config->getAmount());
         $logs = $query->getResult();
         $chartData = $repository->countByDayThroughConfigs(array($config), $this->getDefaultRange());
-    
+
         //List item delegation
         $views = $this->renderLogs($logs);
 
@@ -356,7 +351,7 @@ class Manager
             $action = $data['action'];
             $range = $dateRangeToTextTransformer->reverseTransform($data['range']);
             $userSearch = $data['user'];
-        } else if (array_key_exists('filter', $data)) {
+        } elseif (array_key_exists('filter', $data)) {
             $decodeFilter = json_decode(urldecode($data['filter']));
             if ($decodeFilter !== null) {
                 $action = $decodeFilter->action;
@@ -413,7 +408,6 @@ class Manager
         //List item delegation
         $views = $this->renderLogs($pager->getCurrentPageResults());
         //$views = array();
-
         return array(
             'pager' => $pager,
             'listItemViews' => $views,
@@ -454,7 +448,8 @@ class Manager
             ->findOneBy(array('user' => $user, 'isDefault' => false));
     }
 
-    public function getDefaultDesktopWidgetConfig() {
+    public function getDefaultDesktopWidgetConfig()
+    {
         $em = $this->container->get('doctrine.orm.entity_manager');
 
         return $em
@@ -471,7 +466,8 @@ class Manager
             ->findOneBy(array('workspace' => $workspace, 'isDefault' => false));
     }
 
-    public function getDefaultWorkspaceWidgetConfig() {
+    public function getDefaultWorkspaceWidgetConfig()
+    {
         $em = $this->container->get('doctrine.orm.entity_manager');
 
         return $em

@@ -77,7 +77,7 @@ class RightsManagerTest extends MockeryTestCase
     public function testNonRecursiveCreate()
     {
         $manager = $this->getManager(array('getEntity', 'setPermissions'));
-        
+
         $perms = array(
             'canCopy' => true,
             'canOpen' => false,
@@ -85,7 +85,7 @@ class RightsManagerTest extends MockeryTestCase
             'canEdit' => false,
             'canExport' => true
         );
-        
+
         $types = array(
             new \Claroline\CoreBundle\Entity\Resource\ResourceType(),
             new \Claroline\CoreBundle\Entity\Resource\ResourceType(),
@@ -111,7 +111,7 @@ class RightsManagerTest extends MockeryTestCase
     public function testEditPerms()
     {
         $manager = $this->getManager(array('getOneByRoleAndResource', 'setPermissions', 'logChangeSet'));
-        
+
         $perms = array(
             'canCopy' => true,
             'canOpen' => false,
@@ -129,7 +129,7 @@ class RightsManagerTest extends MockeryTestCase
         $this->om->shouldReceive('persist')->once()->with($rights);
 //        $this->om->shouldReceive('endFlushSuite')->once();
         $manager->shouldReceive('logChangeSet')->once()->with($rights);
-        
+
         $manager->editPerms($perms, $role, $resource, false);
     }
 
@@ -156,7 +156,7 @@ class RightsManagerTest extends MockeryTestCase
         $this->om->shouldReceive('persist')->once()->with($rights);
         $this->om->shouldReceive('endFlushSuite')->once();
         $manager->shouldReceive('logChangeSet')->once()->with($rights);
-        
+
         $manager->editCreationRights($types, $role, $resource, false);
     }
 
@@ -206,7 +206,7 @@ class RightsManagerTest extends MockeryTestCase
             ->andReturn($this->roleRepo);
         $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Resource\ResourceType')
             ->andReturn($this->resourceTypeRepo);
-        
+
         if (count($mockedMethods) === 0) {
             return new RightsManager(
                 $this->translator,

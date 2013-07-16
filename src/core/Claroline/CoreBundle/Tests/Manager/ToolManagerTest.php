@@ -420,7 +420,7 @@ class ToolManagerTest extends MockeryTestCase
             ->with('ClarolineCoreBundle:Tool\Tool')->andReturn($this->toolRepo);
         $this->om->shouldReceive('getRepository')->once()
             ->with('ClarolineCoreBundle:Role')->andReturn($this->roleRepo);
-                
+
         if (count($mockedMethods) === 0) {
             return new ToolManager(
                 $this->ed,

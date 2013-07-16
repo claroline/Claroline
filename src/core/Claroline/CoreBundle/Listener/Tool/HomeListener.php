@@ -3,8 +3,6 @@
 namespace Claroline\CoreBundle\Listener\Tool;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Event\Event\ExportWidgetConfigEvent;
-use Claroline\CoreBundle\Event\Event\ImportWidgetConfigEvent;
 use Claroline\CoreBundle\Event\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\Event\ExportToolEvent;
 use Claroline\CoreBundle\Event\Event\ImportToolEvent;
@@ -198,4 +196,3 @@ class HomeListener
         return $this->templating->render('ClarolineCoreBundle:Tool\desktop\home:info.html.twig');
     }
 }
-

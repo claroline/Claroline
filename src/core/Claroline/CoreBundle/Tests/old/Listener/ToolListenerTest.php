@@ -53,4 +53,3 @@ class ToolListenerTest extends FunctionalTestCase
         $this->assertEquals(2, count($event->getFiles()));
     }
 }
-

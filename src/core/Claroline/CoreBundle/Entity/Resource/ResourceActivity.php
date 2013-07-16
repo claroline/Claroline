@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
-use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -14,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  *          name="user",columns={"activity_id","resource_id"}
  *          )
  *      }
- *      
+ *
  * )
  */
 class ResourceActivity

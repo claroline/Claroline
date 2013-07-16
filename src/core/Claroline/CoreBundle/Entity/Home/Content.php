@@ -62,7 +62,6 @@ class Content
      */
     private $modified;
 
-
     /**
      * Get id
      *
@@ -76,7 +75,7 @@ class Content
     /**
      * Set title
      *
-     * @param string $title
+     * @param  string  $title
      * @return Content
      */
     public function setTitle($title)
@@ -101,7 +100,7 @@ class Content
     /**
      * Set content
      *
-     * @param string $content
+     * @param  string  $content
      * @return Content
      */
     public function setContent($content)
@@ -126,7 +125,7 @@ class Content
     /**
      * Set created
      *
-     * @param \DateTime $created
+     * @param  \DateTime $created
      * @return Content
      */
     public function setCreated($created)
@@ -149,7 +148,7 @@ class Content
     /**
      * Set modified
      *
-     * @param \DateTime $modified
+     * @param  \DateTime $modified
      * @return Content
      */
     public function setModified($modified = null)
@@ -176,7 +175,7 @@ class Content
     /**
      * Set generated_content
      *
-     * @param string $generatedContent
+     * @param  string  $generatedContent
      * @return Content
      */
     public function setGeneratedContent($generatedContent)

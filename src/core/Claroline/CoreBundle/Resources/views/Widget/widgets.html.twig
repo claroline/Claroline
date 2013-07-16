@@ -22,14 +22,14 @@
                     </a>
                     {% if widget.configurable %}
                         {% if isDesktop %}
-                            <a 
+                            <a
                                 href="{{ path('claro_desktop_widget_configuration', {'widget': widget.id}) }}"
                                 class="pull-right"
                                 id="edit-widget{{ widget.id }}">
                                 <i class="icon-edit"></i> {{ 'edit'|trans({}, 'platform') }}
                             </a>
                         {% else %}
-                            <a 
+                            <a
                                 href="{{ path('claro_workspace_widget_configuration', {'workspace': workspaceId, 'widget': widget.id}) }}"
                                 class="pull-right"
                                 id="edit-widget{{ widget.id }}">

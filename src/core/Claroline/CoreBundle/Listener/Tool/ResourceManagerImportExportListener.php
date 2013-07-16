@@ -49,7 +49,7 @@ class ResourceManagerImportExportListener
     /**
      * @DI\Observe("tool_resource_manager_from_template")
      *
-     * @param ImportToolEvent $event
+     * @param  ImportToolEvent $event
      * @throws Exception
      */
     public function onImportResource(ImportToolEvent $event)
@@ -59,20 +59,20 @@ class ResourceManagerImportExportListener
         $createdResources = array();
         $createdResources[$config['root_id']] = $root->getId();
         $createdResources = $this->loadDirectories(
-            $config, 
-            $createdResources, 
-            $event->getRoot(), 
-            $event->getUser(), 
-            $event->getWorkspace(), 
+            $config,
+            $createdResources,
+            $event->getRoot(),
+            $event->getUser(),
+            $event->getWorkspace(),
             $event->getRoles()
         );
         $this->loadFiles(
-            $config, 
-            $createdResources, 
-            $event->getFilePaths(), 
-            $event->getRoot(), 
-            $event->getUser(), 
-            $event->getWorkspace(), 
+            $config,
+            $createdResources,
+            $event->getFilePaths(),
+            $event->getRoot(),
+            $event->getUser(),
+            $event->getWorkspace(),
             $event->getRoles()
         );
     }
@@ -212,7 +212,7 @@ class ResourceManagerImportExportListener
     /**
      * Search a resource by Id in the $config array (for the template export)
      *
-     * @param array $config
+     * @param array   $config
      * @param integer $id
      *
      * @return the key wich was found for the resourceId.
@@ -232,7 +232,7 @@ class ResourceManagerImportExportListener
      * Shift by one to the right the element on an array after the key $key.
      *
      * @param array $config
-     * @param type $key
+     * @param type  $key
      */
     private function shift(array $config, $key)
     {
@@ -249,7 +249,7 @@ class ResourceManagerImportExportListener
     /**
      * Load directories from a template config file.
      *
-     * @param array $config the config file.
+     * @param array $config           the config file.
      * @param array $createdResources the list of already created resource [$id] => [$entity]
      *
      * @return array
@@ -294,11 +294,11 @@ class ResourceManagerImportExportListener
             }
 
             $newEvent = $this->ed->dispatch(
-                "resource_{$resource['type']}_from_template", 
-                'ImportResourceTemplate', 
+                "resource_{$resource['type']}_from_template",
+                'ImportResourceTemplate',
                 array($resource, $root, $user, $workspace, $roles, $createdResources, $fileContent)
             );
-                
+
             $resourceEntity = $newEvent->getResource();
             $resourceEntity->setName($resource['name']);
             $this->resourceManager->create(
@@ -310,8 +310,8 @@ class ResourceManagerImportExportListener
                 null,
                 $this->rightsManager->addRolesToPermsArray($roles, $resource['perms'])
             );
-            
-            $createdResources[$resource['id']] = $resourceEntity; 
+
+            $createdResources[$resource['id']] = $resourceEntity;
         }
     }
 }

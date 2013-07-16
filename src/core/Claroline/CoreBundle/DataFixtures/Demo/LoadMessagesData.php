@@ -7,7 +7,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Fixtures\LoggableFixture;
 use Claroline\CoreBundle\Entity\Message;
-use Claroline\CoreBundle\Entity\UserMessage;
 
 class LoadMessagesData extends LoggableFixture implements ContainerAwareInterface
 {

@@ -37,14 +37,14 @@ class StrictDispatcher
      * an event class located in the core event directory, without the first path
      * segments and the "Event" suffix.
      *
-     * @param string    $eventName              Name of the event
-     * @param string    $shortEventClassName    Short name of the event class
-     * @param array     $eventArgs              Parameters to be passed to the event object constructor
+     * @param string $eventName           Name of the event
+     * @param string $shortEventClassName Short name of the event class
+     * @param array  $eventArgs           Parameters to be passed to the event object constructor
      *
      * @return Symfony\Component\EventDispatcher\Event
      *
      * @throws MissingEventClassException if no event class matches the short class name
-     * @throws MandatoryEventException if the event is mandatory but have no listener observing it
+     * @throws MandatoryEventException    if the event is mandatory but have no listener observing it
      * @throws NotPopulatedEventException if the event is supposed to be populated with data but it isn't
      */
     public function dispatch($eventName, $shortEventClassName, array $eventArgs = array())

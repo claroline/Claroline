@@ -55,7 +55,6 @@ class TextController extends Controller
         }
 
         if ($maxlen == 0) {
-
             return array(array('d' => $old, 'i' => $new));
         }
 

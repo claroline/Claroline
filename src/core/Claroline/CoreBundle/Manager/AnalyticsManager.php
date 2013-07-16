@@ -36,7 +36,7 @@ class AnalyticsManager
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
         $this->logRepository = $om->getRepository('ClarolineCoreBundle:Logger\Log');
-        
+
     }
 
     public function getDefaultRange()
@@ -81,6 +81,7 @@ class AnalyticsManager
             $workspaceIds,
             $unique
         );
+
         return array(
             "chartData" => $chartData,
             "range" => $range
@@ -89,7 +90,7 @@ class AnalyticsManager
 
     public function getTopByCriteria ($range = null, $top_type = null, $max = 30)
     {
-        if($top_type == null) {
+        if ($top_type == null) {
             $top_type = 'top_users_connections';
         }
         $listData = array();

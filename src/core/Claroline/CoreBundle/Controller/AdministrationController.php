@@ -928,7 +928,7 @@ class AdministrationController extends Controller
         $criteria_form->bind($request);
 
         $range = $criteria_form->get('range')->getData();
-        if($range===null) {
+        if ($range===null) {
             $range = $this->analyticsManager->getDefaultRange();
         }
         $top_type_temp = $criteria_form->get('top_type')->getData();

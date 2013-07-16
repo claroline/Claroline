@@ -155,8 +155,8 @@ class GroupRepository extends EntityRepository
     /**
      * Returns all the groups whose name match a search string.
      *
-     * @param string    $search
-     * @param boolean   $executeQuery
+     * @param string  $search
+     * @param boolean $executeQuery
      *
      * @return array[Group]|Query
      */

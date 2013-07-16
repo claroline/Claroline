@@ -247,5 +247,3 @@ class ToolListener
         return $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
     }
 }
-
-

@@ -12,8 +12,8 @@ class HomeService
     /**
      * Verify if a twig template exists, If the template does not exists a default path will be return;
      *
-     * @param \String $path The path of the twig template separated by : just as the path for $this->render(...)
-     * @return Return \String
+     * @param  \String $path The path of the twig template separated by : just as the path for $this->render(...)
+     * @return Return  \String
      */
     public function defaultTemplate($path)
     {

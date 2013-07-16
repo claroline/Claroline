@@ -347,7 +347,7 @@ class WorkspaceTagController extends Controller
      * Add Tag to Workspace
      *
      * @param AbstractWorkspace $workspace
-     * @param string $tagName
+     * @param string            $tagName
      *
      * @return Response
      */
@@ -400,9 +400,9 @@ class WorkspaceTagController extends Controller
      *
      * Remove Tag from Workspace
      *
-     * @param User $userId
+     * @param User              $userId
      * @param AbstractWorkspace $workspace
-     * @param WorkspaceTag $workspaceTag
+     * @param WorkspaceTag      $workspaceTag
      *
      * @return Response
      */
@@ -648,7 +648,7 @@ class WorkspaceTagController extends Controller
      * Create hierarchy link between given admin tag and a given list of admin tags
      *
      * @param WorkspaceTag $tag
-     * @param string $childrenString
+     * @param string       $childrenString
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -697,7 +697,7 @@ class WorkspaceTagController extends Controller
      * Create hierarchy link between given tag and a given list of tags
      *
      * @param WorkspaceTag $tag
-     * @param string $childrenString
+     * @param string       $childrenString
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -747,7 +747,7 @@ class WorkspaceTagController extends Controller
      * Create hierarchy link between given admin tag and a given list of admin tags
      *
      * @param WorkspaceTag $tag
-     * @param string $childrenString
+     * @param string       $childrenString
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -843,7 +843,7 @@ class WorkspaceTagController extends Controller
      * Create hierarchy link between given tag and a given list of tags
      *
      * @param integer $tagId
-     * @param string $childrenString
+     * @param string  $childrenString
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

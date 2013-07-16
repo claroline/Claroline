@@ -2,14 +2,12 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
-use Claroline\CoreBundle\Event\Event\ConfigureWidgetWorkspaceEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Event\Event\ConfigureWidgetDesktopEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -97,7 +95,7 @@ class HomeController extends Controller
      * yet, it's created here.
      *
      * @param AbstractWorkspace workspace
-     * @param Widget $widget
+     * @param Widget        $widget
      * @param DisplayConfig $adminConfig The displayConfig defined by the administrator: it's the
      * configuration entity for widgets
      *
@@ -147,7 +145,7 @@ class HomeController extends Controller
      * Asks a widget to render its configuration page for a workspace.
      *
      * @param AbstractWorkspace $workspace
-     * @param Widget $widget
+     * @param Widget            $widget
      *
      * @return Response
      */
@@ -214,7 +212,7 @@ class HomeController extends Controller
      *
      * Inverts the visibility boolean for a widget for the current user.
      *
-     * @param Widget $widget the widget
+     * @param Widget        $widget      the widget
      * @param DisplayConfig $adminConfig the display config (the configuration entity for widgets)
      *
      * @return \Symfony\Component\HttpFoundation\Response

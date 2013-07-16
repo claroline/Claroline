@@ -40,11 +40,11 @@ class TemplateBuilder
     }
 
     /**
-     * @param mixed   $content the file content
+     * @param mixed   $content  the file content
      * @param string  $hashName the file hashname
      * @param string  $fileName the file name
      * @param integer $parentId the parent directory id (root = 1)
-     * @param integer $fileId the file id
+     * @param integer $fileId   the file id
      */
     public function addFile($filePath, $hashName, $fileName, $parentId, $fileId)
     {

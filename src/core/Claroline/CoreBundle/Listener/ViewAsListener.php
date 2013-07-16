@@ -7,7 +7,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Security\Token\ViewAsToken;
 use Claroline\CoreBundle\Manager\RoleManager;

@@ -43,8 +43,9 @@ class LogCreateDelegateViewEvent extends Event implements DataConveyorEventInter
     {
         return $this->log;
     }
-    
-    public function isPopulated() {
+
+    public function isPopulated()
+    {
        return $this->isPopulated;
     }
 }
