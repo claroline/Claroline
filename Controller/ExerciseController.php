@@ -660,21 +660,8 @@ class ExerciseController extends Controller
             $exoScoreMax = $this->container->get('ujm.exercise_services')->getExerciseTotalScore($exerciseId);
             
             $marks = $this->container->get('ujm.exercise_services')->getExerciseHistoMarks($exerciseId);
-<<<<<<< HEAD
+
             $tabMarks= array();
-            /*for($i=0; $i<=20; $i++){
-=======
-            $tabMarks = array();
-            for($i = 0; $i <= 20; $i++){
->>>>>>> 30f5fd5591102837a43283b35abbbe844b5b3dc5
-                $tabMarks[$i] = 0;
-            }
-            
-            foreach($marks as $mark){
-                $tabMarks[$mark["noteExo"]] += 1;           
-            }
-            
-            $tabMarks = implode(",", $tabMarks);*/
             
             $scoreList = '';
             foreach($marks as $mark){
