@@ -648,6 +648,7 @@ class ExerciseController extends Controller
     
     public function docimologyAction($exerciseId)
     {
+        $maxY = 4;
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($exerciseId);
         $this->checkAccess($exercise);
@@ -656,9 +657,11 @@ class ExerciseController extends Controller
         
             $workspace = $exercise->getWorkspace();
 
+            $exoScoreMax = $this->container->get('ujm.exercise_services')->getExerciseTotalScore($exerciseId);
+            
             $marks = $this->container->get('ujm.exercise_services')->getExerciseHistoMarks($exerciseId);
             $tabMarks= array();
-            for($i=0; $i<=20; $i++){
+            /*for($i=0; $i<=20; $i++){
                 $tabMarks[$i] = 0;
             }
             
@@ -666,14 +669,40 @@ class ExerciseController extends Controller
                 $tabMarks[$mark["noteExo"]] += 1;           
             }
             
-            $tabMarks = implode(",", $tabMarks);
+            $tabMarks = implode(",", $tabMarks);*/
+            
+            $scoreList = '';
+            foreach($marks as $mark){
+                $score = round(($mark["noteExo"]/$exoScoreMax) * 20, 2);
+                
+                if(isset($tabMarks[$score])){
+                    $tabMarks[$score] += 1; 
+                } else{
+                    if($scoreList == '')
+                    {
+                        $scoreList = $score;
+                    } else {
+                        $scoreList .= ','.$score;
+                    }
+                    $tabMarks[$score] = 1; 
+                    
+                }
+            }
+
+            if(max($tabMarks) > 4){
+                $maxY = max($tabMarks);
+            }
+            
+            $frequencyMarks = implode(",", $tabMarks);//echo $frequencyMarks;die();
             
             return $this->render(
                     'UJMExoBundle:Exercise:docimology.html.twig',
                     array(
-                        'workspace'   => $workspace,
-                        'exoID'       => $exerciseId,
-                        'histoMarks'  => $tabMarks
+                        'workspace'      => $workspace,
+                        'exoID'          => $exerciseId,
+                        'scoreList'      => $scoreList,
+                        'frequencyMarks' => $frequencyMarks,
+                        'maxY'           => $maxY
                     )
                 );
         } else {

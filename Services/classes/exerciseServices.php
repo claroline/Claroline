@@ -317,12 +317,86 @@ class exerciseServices
         return $resu;
     }
     
-    public function getExerciseHistoMarks($exoID){
+    public function getExerciseHistoMarks($exoID)
+    {
         $papers = $this->doctrine
                        ->getManager()
                        ->getRepository('UJMExoBundle:Exercise')
                        ->getExerciseMarks($exoID);
         
         return $papers;
+    }
+    
+    public function getExerciseTotalScore($exoID)
+    {
+        $exoTotalScore = 0;
+        
+        $eqs = $this->doctrine
+                          ->getManager()
+                          ->getRepository('UJMExoBundle:ExerciseQuestion')
+                           ->findBy(array('exercise' => $exoID));
+        
+        foreach($eqs as $eq){
+            $interaction = $this->doctrine
+                                ->getManager()
+                                ->getRepository('UJMExoBundle:Interaction')
+                                ->getInteraction($eq->getQuestion()->getId());//echo $interaction[0]->getInvite();
+            
+            switch ($interaction[0]->getType()){
+                case 'InteractionQCM':
+                    $scoreMax = $this->qcmMaxScore($interaction[0]);
+                    break;
+                case 'InteractionGraphic':
+                    $scoreMax = $this->graphicMaxScore($interaction[0]);
+                    break;
+            }
+            
+            $exoTotalScore += $scoreMax;
+        }
+        
+        return $exoTotalScore;
+    }
+    
+    private function qcmMaxScore($interaction)
+    {
+        $scoreMax = 0;
+        
+        $interQCM = $this->doctrine
+                         ->getManager()
+                         ->getRepository('UJMExoBundle:InteractionQCM')
+                         ->getInteractionQCM($interaction->getId());
+        
+        if (!$interQCM[0]->getWeightResponse()) {
+            $scoreMax = $interQCM[0]->getScoreRightResponse();
+        } else {
+            foreach ($interQCM[0]->getChoices() as $choice) {
+                if ($choice->getRightResponse()) {
+                    $scoreMax += $choice->getWeight();
+                }
+            }
+        }
+        
+        return $scoreMax;
+    }
+    
+    private function graphicMaxScore($interaction)
+    {
+        $scoreMax = 0;
+        
+        $interGraphic = $this->doctrine
+                         ->getManager()
+                         ->getRepository('UJMExoBundle:InteractionGraphic')
+                         ->getInteractionGraphic($interaction->getId());
+        
+        $rightCoords = $this->doctrine
+                         ->getManager()
+                         ->getRepository('UJMExoBundle:Coords')
+                         ->findBy(array('interactionGraphic' => $interGraphic[0]->getId()));
+        
+        foreach ($rightCoords as $score) {
+            $scoreMax += $score->getScoreCoords(); // Score max
+        }
+        
+        return $scoreMax;
     }
 }

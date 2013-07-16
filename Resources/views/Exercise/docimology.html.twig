@@ -38,7 +38,7 @@
 {% block section_content %}
 <h1>{{ "Docimology" | trans }}</h1>
 <a href="{{ path('ujm_exercise_open', { 'exerciseId': exoID }) }}" ><i class="icon-arrow-left"></i> {{ "Back" | trans }}</a>
-<div id="histoMarks" style="height:300px;width:100%; "></div>
+<div id="histoMarks" style="height:100%;width:100%; "></div>
 
 {% endblock %}
 
@@ -50,13 +50,14 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
-    var s1 = [{{ histoMarks }}];
+    var s1 = [{{ frequencyMarks }}];
     // Can specify a custom tick Array.
     // Ticks should match up one for each y value (category) in the series.
-    var marks = new Array();
+    /*var marks = new Array();
     for(var i = 0 ; i<=20 ; i++){
         marks[i] = i;
-    }
+    }*/
+    var marks = [{{ scoreList }}];
      
     var plot1 = $.jqplot('histoMarks', [s1], {
     
@@ -91,8 +92,9 @@ $(document).ready(function(){
             // Pad the y axis just a little so bars can get close to, but
             // not touch, the grid boundaries.  1.2 is the default padding.
             yaxis: {
-                pad: 1.05,
+                pad: 1,
                 min: 0,
+                max: {{ maxY }},
                 tickOptions: {formatString: '%d'}
             }
         },
