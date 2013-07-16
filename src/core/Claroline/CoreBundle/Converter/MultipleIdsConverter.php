@@ -9,8 +9,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Persistence\MissingObjectException;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Database\MissingEntityException;
 
 /**
  * @DI\Service()
@@ -25,7 +25,7 @@ class MultipleIdsConverter implements ParamConverterInterface
 
     /**
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("doctrine.orm.entity_manager")
+     *     "om" = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(ObjectManager $om)
@@ -57,7 +57,7 @@ class MultipleIdsConverter implements ParamConverterInterface
                     $request->attributes->set($parameter, $entities);
 
                     return true;
-                } catch (MissingEntityException $ex) {
+                } catch (MissingObjectException $ex) {
                     throw new NotFoundHttpException($ex->getMessage());
                 }
             }

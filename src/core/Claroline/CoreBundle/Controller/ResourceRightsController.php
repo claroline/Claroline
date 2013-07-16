@@ -34,7 +34,7 @@ class ResourceRightsController
      *     "wsTagManager"  = @DI\Inject("claroline.manager.workspace_tag_manager"),
      *     "templating"    = @DI\Inject("templating"),
      *     "roleManager"   = @DI\Inject("claroline.manager.role_manager"),
-     *     "om"            = @DI\Inject("doctrine.orm.entity_manager")
+     *     "om"            = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(

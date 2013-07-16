@@ -95,7 +95,7 @@ class MultipleIdsConverterTest extends MockeryTestCase
         $this->request->query->set('ids', array(1, 2));
         $this->om->shouldReceive('findByIds')
             ->once()
-            ->andThrow('Claroline\CoreBundle\Database\MissingEntityException');
+            ->andThrow('Claroline\CoreBundle\Persistence\MissingObjectException');
         $this->converter->apply($this->request, $this->configuration);
     }
 
