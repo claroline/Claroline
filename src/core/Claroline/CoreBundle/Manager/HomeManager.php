@@ -5,7 +5,6 @@ namespace Claroline\CoreBundle\Manager;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\Service;
-use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Home\Type;
 use Claroline\CoreBundle\Entity\Home\Content;
 use Claroline\CoreBundle\Entity\Home\SubContent;
@@ -18,9 +17,7 @@ use Claroline\CoreBundle\Entity\Home\Content2Region;
 class HomeManager
 {
     private $graph;
-    private $writer;
-    private $security;
-    private $templating;
+    private $manager;
     private $homeService;
 
     private $type;
@@ -34,18 +31,14 @@ class HomeManager
      * @InjectParams({
      *     "graph"          = @Inject("claroline.common.graph_service"),
      *     "homeService"    = @Inject("claroline.common.home_service"),
-     *     "templating"     = @Inject("templating"),
      *     "manager"        = @Inject("doctrine"),
-     *     "security"       = @Inject("security.context"),
-     *     "writer"         = @Inject("claroline.database.writer")
+     *     "persistence"    = @Inject("claroline.persistence.object_manager")
      * })
      */
-    public function __construct($graph, $homeService, $templating, $manager, $security, $writer)
+    public function __construct($graph, $homeService, $manager, $persistence)
     {
         $this->graph = $graph;
-        $this->writer = $writer;
-        $this->security = $security;
-        $this->templating = $templating;
+        $this->manager = $persistence;
         $this->homeService = $homeService;
 
         $this->type = $manager->getRepository('ClarolineCoreBundle:Home\Type');
@@ -54,20 +47,6 @@ class HomeManager
         $this->subContent = $manager->getRepository('ClarolineCoreBundle:Home\SubContent');
         $this->contentType = $manager->getRepository('ClarolineCoreBundle:Home\Content2Type');
         $this->contentRegion = $manager->getRepository('ClarolineCoreBundle:Home\Content2Region');
-    }
-
-    /**
-     * Alias of templating render
-     *
-     * @return Symfony\Component\HttpFoundation\Response
-     */
-    public function render($template, $array, $default = false)
-    {
-        if ($default) {
-            $template = $this->homeService->defaultTemplate($template);
-        }
-
-        return new Response($this->templating->render($template, $array));
     }
 
     /**
@@ -93,66 +72,44 @@ class HomeManager
             $array['size'] = $contentType->getSize();
         }
 
-        $array['menu'] = $this->getMenu(
-            $content->getId(), $array['size'], $array['type'], $father
-        )->getContent();
-
         $array['content'] = $content;
 
         return $array;
     }
 
     /**
-     * Render the page of the menu.
+     * Return the layout of contents by his type.
      *
-     * @param \String $id The id of the content.
-     * @param \String $size The size (span12) of the content.
-     * @param \String $type The type of the content.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function getMenu($id, $size, $type, $father = null)
-    {
-        $variables = array('id' => $id, 'size' => $size, 'type' => $type);
-
-        $variables = $this->homeService->isDefinedPush($variables, 'father', $father, 'getId');
-
-        return $this->render('ClarolineCoreBundle:Home:menu.html.twig', $variables);
-    }
-
-    /**
-     * Render the layout of contents by his type.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Array
      */
     public function contentLayout($type, $father = null, $region = null)
     {
         $content = $this->getContentByType($type, $father, $region);
-
-        $variables = array();
+        $array = null;
 
         if ($content) {
 
-            $variables['content'] = $content;
-            $variables['creator'] = $this->getCreator($type, null, null, $father)->getContent();
+            $array = array();
+            $array['content'] = $content;
+            $array['type'] = $type;
 
-            $variables = $this->homeService->isDefinedPush($variables, 'father', $father);
-            $variables = $this->homeService->isDefinedPush($variables, 'region', $region);
-
-            return $this->render('ClarolineCoreBundle:Home:layout.html.twig', $variables);
+            $array = $this->homeService->isDefinedPush($array, 'father', $father);
+            $array = $this->homeService->isDefinedPush($array, 'region', $region);
         }
 
-        return $this->render('ClarolineCoreBundle:Home:error.html.twig', array('path' => $type));
+        return $array;
     }
 
     /**
      * Get Content by type.
-     * This method return an array with the content on success or null if the type does not exist.
+     * This method return a string with the content on success or null if the type does not exist.
      *
-     * @return \Array
+     * @return \String
      */
     public function getContentByType($type, $father = null, $region = null)
     {
+        $array = array();
+
         $type = $this->type->findOneBy(array('name' => $type));
 
         if ($type) {
@@ -171,7 +128,6 @@ class HomeManager
             }
 
             if ($first) {
-                $content = ' ';
 
                 for ($i = 0; $i < $type->getMaxContentPage() and $first != null; $i++) {
                     $variables = array();
@@ -179,48 +135,32 @@ class HomeManager
                     $variables['content'] = $first->getContent();
                     $variables['size'] = $first->getSize();
                     $variables['type'] = $type->getName();
-                    $variables['menu'] = $this->getMenu(
-                        $first->getContent()->getId(),
-                        $first->getSize(),
-                        $type->getName(),
-                        $father
-                    )->getContent();
 
                     $variables = $this->homeService->isDefinedPush($variables, 'father', $father, 'getId');
                     $variables = $this->homeService->isDefinedPush($variables, 'region', $region);
 
-                    $content .= $this->render(
-                        'ClarolineCoreBundle:Home/types:'.$type->getName().'.html.twig',
-                        $variables,
-                        true
-                    )->getContent();
+                    $array[] = $variables;
 
                     $first = $first->getNext();
                 }
-
-                return $content;
             }
-
-            return ' '; // Not yet content
         }
 
-        return null;
+        return $array;
     }
 
     /**
      * Get the content of the regions of the front page.
      *
-     * @return \String The content of regions.
+     * @return \Array The content of regions.
      */
-    public function getRegions()
+    public function getRegionContents()
     {
-        $tmp = array();
+        $array = array();
 
         $regions = $this->region->findAll();
 
         foreach ($regions as $region) {
-
-            $content = '';
 
             $first = $this->contentRegion->findOneBy(array('back' => null, 'region' => $region));
 
@@ -234,33 +174,19 @@ class HomeManager
                     $type = 'default';
                 }
 
-                //@TODO Need content rights for admin users
-                if (!(!$this->security->isGranted('ROLE_ADMIN') and
-                    $type == 'menu' and
-                    $first->getContent()->getTitle() == 'Administration')
-                ) {
-                    $content .= $this->render(
-                        'ClarolineCoreBundle:Home/types:'.$type.'.html.twig',
-                        array(
-                            'content' => $first->getContent(),
-                            'size' => $first->getSize(),
-                            'menu' => '',
-                            'type' => $type,
-                            'region' => $region->getName()
-                        ),
-                        true
-                    )->getContent();
-                }
+                $array[$region->getName()][] = array(
+                    'content' => $first->getContent(),
+                    'size' => $first->getSize(),
+                    'menu' => '',
+                    'type' => $type,
+                    'region' => $region->getName()
+                );
 
                 $first = $first->getNext();
             }
-
-            if ($content != '') {
-                $tmp[$region->getName()] = $content;
-            }
         }
 
-        return $tmp;
+        return $array;
     }
 
     /**
@@ -274,51 +200,13 @@ class HomeManager
     }
 
     /**
-     * Render the creator of contents.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function getCreator($type, $id = null, $content = null, $father = null)
-    {
-        //cant use @Secure(roles="ROLE_ADMIN") annotation beacause this method is called in anonymous mode
-
-        if ($this->security->isGranted('ROLE_ADMIN')) {
-
-            $variables = array('type' => $type);
-
-            if ($id and !$content) {
-
-                $variables['content'] = $this->content->find($id);
-            }
-
-            $variables = $this->homeService->isDefinedPush($variables, 'father', $father);
-
-            return $this->render('ClarolineCoreBundle:Home/types:'.$type.'.creator.twig', $variables, true);
-        }
-
-        return new Response(); //return void and not an exeption
-    }
-
-    /**
      * Get the open graph contents of a web page by his URL
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Array
      */
     public function getGraph($url)
     {
-        $response = 'false';
-
-        $graph = $this->graph->get($url);
-
-        if (isset($graph['type'])) {
-            $response = $this->render(
-                'ClarolineCoreBundle:Home/graph:'.$graph['type'].'.html.twig',
-                array('content' => $graph),
-                true
-            )->getContent();
-        }
-
-        return new Response($response);
+        return $this->graph->get($url);
     }
 
     /**
@@ -328,8 +216,6 @@ class HomeManager
      */
     public function createContent($title, $text, $generated = null, $type = null, $father = null)
     {
-        $response = 'false';
-
         if ($title or $text) {
 
             $content = new Content();
@@ -338,9 +224,7 @@ class HomeManager
             $content->setContent($text);
             $content->setGeneratedContent($generated);
 
-            $this->writer->suspendFlush();
-
-            $this->writer->create($content);
+            $this->manager->persist($content);
 
             if ($father) {
 
@@ -351,7 +235,7 @@ class HomeManager
                 $subContent->setFather($father);
                 $subContent->SetChild($content);
 
-                $this->writer->create($subContent);
+                $this->manager->persist($subContent);
 
             } else {
 
@@ -362,21 +246,21 @@ class HomeManager
                 $contentType->setContent($content);
                 $contentType->setType($type);
 
-                $this->writer->create($contentType);
+                $this->manager->persist($contentType);
             }
 
-            $this->writer->forceFlush();
+            $this->manager->flush();
 
-            $response = $content->getId();
+            return $content->getId();
         }
 
-        return new Response($response);
+        return null;
     }
 
     /**
      * Update a content.
      *
-     * @return \String The word "true" useful in ajax.
+     * @return This function doesn't return anything.
      */
     public function updateContent($content, $title, $text, $generated = null, $size = null, $type = null)
     {
@@ -384,29 +268,25 @@ class HomeManager
         $content->setContent($text);
         $content->setGeneratedContent($generated);
 
-        $this->writer->suspendFlush();
-
         if ($size and $type) {
 
             $type = $this->type->findOneBy(array('name' => $type));
             $contentType = $this->contentType->findOneBy(array('content' => $content, 'type' => $type));
             $contentType->setSize($size);
 
-            $this->writer->update($contentType);
+            $this->manager->persist($contentType);
         }
 
         $content->setModified();
 
-        $this->writer->update($content);
-        $this->writer->forceFlush();
-
-        return new Response('true');
+        $this->manager->persist($content);
+        $this->manager->flush();
     }
 
     /**
      * Reorder Contents.
      *
-     * @return \String The word "true" useful in ajax.
+     * @return This function doesn't return anything.
      */
     public function reorderContent($type, $a, $b = null)
     {
@@ -436,18 +316,15 @@ class HomeManager
             $b->setNext($a);
         }
 
-        //$this->writer->suspendFlush();
-        $this->writer->update($a);
-        $this->writer->update($b);
-        //$this->writer->forceFlush();
-
-        return new Response('true');
+        $this->manager->persist($a);
+        $this->manager->persist($b);
+        $this->manager->flush();
     }
 
     /**
      * Delete a content and his childs.
      *
-     * @return \String The word "true" useful in ajax.
+     * @return This function doesn't return anything.
      */
     public function deleteContent($content)
     {
@@ -463,9 +340,8 @@ class HomeManager
         $this->deleNodeEntity($this->subContent, array('child' => $content));
         $this->deleNodeEntity($this->contentRegion, array('content' => $content));
 
-        $this->writer->delete($content);
-
-        return new Response('true');
+        $this->manager->remove($content);
+        $this->manager->flush();
     }
 
     /**
@@ -484,7 +360,8 @@ class HomeManager
                 $function($entity);
             }
 
-            $this->writer->delete($entity);
+            $this->manager->remove($entity);
+            $this->manager->flush();
         }
     }
 
@@ -501,8 +378,40 @@ class HomeManager
         $contentRegion->setRegion($region);
         $contentRegion->setContent($content);
 
-        $this->writer->create($contentRegion);
+        $this->manager->persist($contentRegion);
+        $this->manager->flush();
+    }
 
-        return new Response('true');
+    /**
+     * Get the creator of contents.
+     *
+     * @return \Array
+     */
+    public function getCreator($type, $id = null, $content = null, $father = null)
+    {
+        $variables = array('type' => $type);
+
+        if ($id and !$content) {
+
+            $variables['content'] = $this->content->find($id);
+        }
+
+        return $this->homeService->isDefinedPush($variables, 'father', $father);
+    }
+
+    /**
+     * Get the variables of the menu.
+     *
+     * @param \String $id The id of the content.
+     * @param \String $size The size (span12) of the content.
+     * @param \String $type The type of the content.
+     *
+     * @return \Array
+     */
+    public function getMenu($id, $size, $type, $father = null)
+    {
+        $variables = array('id' => $id, 'size' => $size, 'type' => $type);
+
+        return $this->homeService->isDefinedPush($variables, 'father', $father);
     }
 }
