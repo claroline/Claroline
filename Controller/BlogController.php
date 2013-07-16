@@ -51,8 +51,11 @@ class BlogController extends Controller
             throw new NotFoundHttpException();
         }
 
+        $user = $this->get('security.context')->getToken()->getUser();
+
         return array(
             '_resource' => $blog,
+            'user'      => $user,
             'pager'     => $pager
         );
     }

@@ -5,6 +5,7 @@ namespace ICAP\BlogBundle\Controller;
 use ICAP\BlogBundle\Entity\Blog;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class Controller extends BaseController
 {

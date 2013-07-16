@@ -6,7 +6,7 @@
         <div class="please-wait">
             <span class="label label-warning"> {{ 'please_wait'|trans({}, 'platform') }} </span>
         </div>
-        {% render controller('ICAPBlogBundle:Layout:topBar', {'blogId': _resource.id}) %}
+        {% render controller('ClarolineCoreBundle:Layout:topBar', {'blogId': _resource.id}) %}
 
         <div id="grid" class="container container-fluid">
             {% if has_role('ROLE_USURPATE_WORKSPACE_ROLE') %}
@@ -15,6 +15,33 @@
             {% block sectionHeader %}
             &nbsp;
             {% endblock %}
+            {% if is_granted('ROLE_ADMIN') %}
+                <div class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="icon-eye-open"></i>{{ 'show_as'|trans({}, 'platform') }}
+                        <b class="caret"></b>
+                    </a>
+
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                        {% if has_role_access_to_workspace('ROLE_ANONYMOUS', _resource.workspace.id) %}
+                            <li>
+                                <a href="?view_as=ROLE_ANONYMOUS_{{ _resource.workspace.id }}">
+                                    {{ 'anonymous'|trans({}, 'platform') }}
+                                </a>
+                            </li>
+                        {% endif %}
+                        {% for role in user.personalWorkspace.roles %}
+                            {% if has_role_access_to_workspace(role.getName(), _resource.workspace.id) %}
+                                <li>
+                                    <a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}?view_as={{ role.getName() }}">
+                                        {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
 
             <div class="row-fluid content">
                 <div class="hero-unit">
