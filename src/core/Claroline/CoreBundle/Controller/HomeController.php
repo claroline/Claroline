@@ -132,7 +132,7 @@ class HomeController
      *
      * @Route("/content/creator/{type}/{id}/{father}", name="claroline_content_creator", defaults={"father" = null})
      *
-     * @param \String $type The type of the content to create.
+     * @param string $type The type of the content to create.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -155,9 +155,9 @@ class HomeController
     /**
      * Render the page of the menu.
      *
-     * @param \String $id The id of the content.
-     * @param \String $size The size (span12) of the content.
-     * @param \String $type The type of the content.
+     * @param string $id The id of the content.
+     * @param string $size The size (span12) of the content.
+     * @param string $type The type of the content.
      *
      * @Template("ClarolineCoreBundle:Home:menu.html.twig")
      *
@@ -172,9 +172,9 @@ class HomeController
     /**
      * Render the HTML of the menu of sizes of the contents.
      *
-     * @param \String $id The id of the content.
-     * @param \String $size The size (span12) of the content.
-     * @param \String $type The type of the content.
+     * @param string $id The id of the content.
+     * @param string $size The size (span12) of the content.
+     * @param string $type The type of the content.
      *
      * @Route("/content/size/{id}/{size}/{type}", name="claroline_content_size")
      *
@@ -214,7 +214,7 @@ class HomeController
      *
      * @Route("/content/region/{id}", name="claroline_region")
      *
-     * @param \String $id The id of the content.
+     * @param string $id The id of the content.
      *
      * @Template("ClarolineCoreBundle:Home:regions.html.twig")
      *
@@ -252,7 +252,7 @@ class HomeController
     /**
      * Render the HTML of the regions.
      *
-     * @return \String
+     * @return string
      */
     public function renderRegions($regions)
     {
@@ -339,9 +339,9 @@ class HomeController
      * Reorder contents in types. This method is used by ajax.
      * The response is the word true in a string in success, otherwise false.
      *
-     * @param \String $type The type of the content.
-     * @param \String $a The id of the content 1.
-     * @param \String $b The id of the content 2.
+     * @param string $type The type of the content.
+     * @param string $a The id of the content 1.
+     * @param string $b The id of the content 2.
      *
      * @Route("/content/reorder/{type}/{a}/{b}", requirements={"a" = "\d+"}, name="claroline_content_reorder")
      *
