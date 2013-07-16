@@ -16,6 +16,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @TODO doc
@@ -24,17 +25,26 @@ class HomeController
 {
     private $manager;
     private $request;
+    private $security;
+    private $templating;
+    private $homeService;
 
     /**
      * @InjectParams({
-     *     "manager" = @Inject("claroline.manager.home_manager"),
-     *     "request" = @Inject("request")
+     *     "manager"        = @Inject("claroline.manager.home_manager"),
+     *     "security"       = @Inject("security.context"),
+     *     "request"        = @Inject("request"),
+     *     "templating"     = @Inject("templating"),
+     *     "homeService"    = @Inject("claroline.common.home_service")
      * })
      */
-    public function __construct(HomeManager $manager, Request $request)
+    public function __construct(HomeManager $manager, Request $request, $security, $templating, $homeService)
     {
         $this->manager = $manager;
         $this->request = $request;
+        $this->security = $security;
+        $this->templating = $templating;
+        $this->homeService = $homeService;
     }
 
     /**
@@ -55,7 +65,7 @@ class HomeController
      */
     public function contentAction(Content $content, Type $type, Content $father = null)
     {
-        return $this->manager->render(
+        return $this->render(
             'ClarolineCoreBundle:Home/types:'.(is_object($type) ? $type->getName() : 'home' ).'.html.twig',
             $this->manager->getContent($content, $type, $father),
             true
@@ -74,8 +84,8 @@ class HomeController
     public function homeAction($type)
     {
         return array(
-            "region" => $this->manager->getRegions(),
-            "content" => $this->manager->contentLayout($type)->getContent()
+            'region' => $this->renderRegions($this->manager->getRegionContents()),
+            'content' => $this->typeAction($type)->getContent()
         );
     }
 
@@ -86,7 +96,13 @@ class HomeController
      */
     public function typeAction($type, $father = null, $region = null)
     {
-        return $this->manager->contentLayout($type, $father, $region);
+        $array = $this->manager->contentLayout($type, $father, $region);
+
+        if ($array) {
+            return $this->render('ClarolineCoreBundle:Home:layout.html.twig', $this->renderContent($array));
+        }
+
+        return $this->render('ClarolineCoreBundle:Home:error.html.twig', array('path' => $type));
     }
 
     /**
@@ -104,9 +120,9 @@ class HomeController
         $types = $this->manager->getTypes();
 
         return array(
-            "region" => $this->manager->getRegions(),
-            "content" => $this->manager->render(
-                "ClarolineCoreBundle:Home:types.html.twig",
+            'region' => $this->renderRegions($this->manager->getRegionContents()),
+            'content' => $this->render(
+                'ClarolineCoreBundle:Home:types.html.twig',
                 array('types' => $types)
             )->getContent()
         );
@@ -122,8 +138,36 @@ class HomeController
      */
     public function creatorAction($type, $id = null, $content = null, $father = null)
     {
-        return $this->manager->getCreator($type, $id, $content, $father);
+        //cant use @Secure(roles="ROLE_ADMIN") annotation beacause this method is called in anonymous mode
+
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+
+            return $this->render(
+                'ClarolineCoreBundle:Home/types:'.$type.'.creator.twig',
+                $this->manager->getCreator($type, $id, $content, $father),
+                true
+            );
+        }
+
+        return new Response(); //return void and not an exeption
     }
+
+    /**
+     * Render the page of the menu.
+     *
+     * @param \String $id The id of the content.
+     * @param \String $size The size (span12) of the content.
+     * @param \String $type The type of the content.
+     *
+     * @Template("ClarolineCoreBundle:Home:menu.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function menuAction($id, $size, $type, $father = null)
+    {
+        return $this->manager->getMenu($id, $size, $type, $father);
+    }
+
 
     /**
      * Render the HTML of the menu of sizes of the contents.
@@ -152,7 +196,17 @@ class HomeController
      */
     public function graphAction()
     {
-        return $this->manager->getGraph($this->request->get("generated_content_url"));
+        $graph = $this->manager->getGraph($this->request->get('generated_content_url'));
+
+        if (isset($graph['type'])) {
+            return $this->render(
+                'ClarolineCoreBundle:Home/graph:'.$graph['type'].'.html.twig',
+                array('content' => $graph),
+                true
+            );
+        }
+
+        return new Response('false');
     }
 
     /**
@@ -172,6 +226,60 @@ class HomeController
     }
 
     /**
+     * Render the HTML of the content.
+     *
+     * @return \Array
+     */
+    public function renderContent($array)
+    {
+        $tmp = '';
+
+        if (isset($array['content']) and isset($array['type']) and is_array($array['content'])) {
+
+            foreach ($array['content'] as $content) {
+
+                $tmp .= $this->render(
+                    'ClarolineCoreBundle:Home/types:'.$content['type'].'.html.twig', $content, true
+                )->getContent();
+            }
+
+            $array['content'] = $tmp;
+        }
+
+        return $array;
+    }
+
+    /**
+     * Render the HTML of the regions.
+     *
+     * @return \String
+     */
+    public function renderRegions($regions)
+    {
+        $tmp = array();
+
+        foreach ($regions as $name => $region) {
+
+            $tmp[$name] = '';
+
+            foreach ($region as $variables) {
+
+                //@TODO Need content rights for admin users
+                if (!(!$this->security->isGranted('ROLE_ADMIN') and
+                    $variables['type'] == 'menu' and
+                    $variables['content']->getTitle() == 'Administration')
+                ) {
+                    $tmp[$name] .= $this->render(
+                        'ClarolineCoreBundle:Home/types:'.$variables['type'].'.html.twig', $variables, true
+                    )->getContent();
+                }
+            }
+        }
+
+        return $tmp;
+    }
+
+    /**
      * Create new content by POST method. This is used by ajax.
      * The response is the id of the new content in success, otherwise the response is the false word in a string.
      *
@@ -182,13 +290,17 @@ class HomeController
      */
     public function createAction()
     {
-        return $this->manager->createContent(
+        if ($id = $this->manager->createContent(
             $this->request->get('title'),
             $this->request->get('text'),
             $this->request->get('generated'),
             $this->request->get('type'),
             $this->request->get('father')
-        );
+        )) {
+            return new Response($id);
+        }
+
+        return new Response('false'); //useful in ajax
     }
 
     /**
@@ -204,14 +316,23 @@ class HomeController
      */
     public function updateAction($content)
     {
-        return $this->manager->UpdateContent(
-            $content,
-            $this->request->get('title'),
-            $this->request->get('text'),
-            $this->request->get('generated'),
-            $this->request->get('size'),
-            $this->request->get('type')
-        );
+        try {
+
+            $this->manager->UpdateContent(
+                $content,
+                $this->request->get('title'),
+                $this->request->get('text'),
+                $this->request->get('generated'),
+                $this->request->get('size'),
+                $this->request->get('type')
+            );
+
+            return new Response('true');
+
+        } catch (\Exeption $e) {
+
+            return new Response('false'); //useful in ajax
+        }
     }
 
     /**
@@ -235,7 +356,16 @@ class HomeController
      */
     public function reorderAction($type, $a, Content $b = null)
     {
-        return $this->manager->reorderContent($type, $a, $b);
+        try {
+
+            $this->manager->reorderContent($type, $a, $b);
+
+            return new Response('true');
+
+        } catch (\Exeption $e) {
+
+            return new Response('false'); //useful in ajax
+        }
     }
 
     /**
@@ -251,7 +381,16 @@ class HomeController
      */
     public function deleteAction($content)
     {
-        return $this->manager->deleteContent($content);
+        try {
+
+            $this->manager->deleteContent($content);
+
+            return new Response('true');
+
+        } catch (\Exeption $e) {
+
+            return new Response('false'); //useful in ajax
+        }
     }
 
     /**
@@ -268,8 +407,30 @@ class HomeController
      */
     public function contentToRegionAction($region, $content)
     {
-        return $this->manager->contentToRegion($region, $content);
+        try {
+
+            $this->manager->contentToRegion($region, $content);
+
+            return new Response('true');
+
+        } catch (\Exeption $e) {
+
+            return new Response('false'); //useful in ajax
+        }
     }
 
+    /**
+     * Extends templating render
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function render($template, $array, $default = false)
+    {
+        if ($default) {
+            $template = $this->homeService->defaultTemplate($template);
+        }
+
+        return new Response($this->templating->render($template, $array));
+    }
 }
 
