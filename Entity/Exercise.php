@@ -43,7 +43,7 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 /**
  * UJM\ExoBundle\Entity\Exercise
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\ExerciseRepository")
  * @ORM\Table(name="ujm_exercise")
  */
 class Exercise extends AbstractResource

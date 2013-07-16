@@ -656,11 +656,24 @@ class ExerciseController extends Controller
         
             $workspace = $exercise->getWorkspace();
 
+            $marks = $this->container->get('ujm.exercise_services')->getExerciseHistoMarks($exerciseId);
+            $tabMarks= array();
+            for($i=0; $i<=20; $i++){
+                $tabMarks[$i] = 0;
+            }
+            
+            foreach($marks as $mark){
+                $tabMarks[$mark["noteExo"]] += 1;           
+            }
+            
+            $tabMarks = implode(",", $tabMarks);
+            
             return $this->render(
                     'UJMExoBundle:Exercise:docimology.html.twig',
                     array(
                         'workspace'   => $workspace,
-                        'exoID'       => $exerciseId
+                        'exoID'       => $exerciseId,
+                        'histoMarks'  => $tabMarks
                     )
                 );
         } else {

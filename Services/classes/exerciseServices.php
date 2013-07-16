@@ -316,4 +316,13 @@ class exerciseServices
 
         return $resu;
     }
+    
+    public function getExerciseHistoMarks($exoID){
+        $papers = $this->doctrine
+                       ->getManager()
+                       ->getRepository('UJMExoBundle:Exercise')
+                       ->getExerciseMarks($exoID);
+        
+        return $papers;
+    }
 }
