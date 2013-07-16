@@ -645,48 +645,48 @@ class ExerciseController extends Controller
             );
         }
     }
-    
+
     public function docimologyAction($exerciseId)
     {
         $maxY = 4;
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($exerciseId);
         $this->checkAccess($exercise);
-        
+
         if ($this->get('security.context')->isGranted('ROLE_WS_CREATOR')) {
-        
+
             $workspace = $exercise->getWorkspace();
 
             $exoScoreMax = $this->container->get('ujm.exercise_services')->getExerciseTotalScore($exerciseId);
-            
+
             $marks = $this->container->get('ujm.exercise_services')->getExerciseHistoMarks($exerciseId);
 
             $tabMarks= array();
-            
+
             $scoreList = '';
             foreach($marks as $mark){
                 $score = round(($mark["noteExo"]/$exoScoreMax) * 20, 2);
-                
-                if(isset($tabMarks[$score])){
-                    $tabMarks[$score] += 1; 
+
+                if(isset($tabMarks[(string)$score])){
+                    $tabMarks[(string)$score] += 1;
                 } else{
                     if($scoreList == '')
                     {
-                        $scoreList = $score;
+                        $scoreList = (string)$score;
                     } else {
-                        $scoreList .= ','.$score;
+                        $scoreList .= ','.(string)$score;
                     }
-                    $tabMarks[$score] = 1; 
-                    
+                    $tabMarks[(string)$score] = 1;
+
                 }
             }
 
             if(max($tabMarks) > 4){
                 $maxY = max($tabMarks);
             }
-            
+
             $frequencyMarks = implode(",", $tabMarks);//echo $frequencyMarks;die();
-            
+
             return $this->render(
                     'UJMExoBundle:Exercise:docimology.html.twig',
                     array(
