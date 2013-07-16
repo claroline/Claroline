@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
@@ -11,6 +12,7 @@ use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\AbstractResourceRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Translation\Translator;
 
@@ -31,18 +33,26 @@ class RightsManager
     private $translator;
     /** @var ObjectManager */
     private $om;
+    /** @var StrictDispatcher */
+    private $dispatcher;
+    /** @var RoleManager */
+    private $roleManager;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "translator" =    @DI\Inject("translator"),
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "translator"  =    @DI\Inject("translator"),
+     *     "om"          = @DI\Inject("claroline.persistence.object_manager"),
+     *     "dispatcher"  = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "roleManager" = @DI\Inject("claroline.manager.role_manager")
      * })
      */
     public function __construct(
         Translator $translator,
-        ObjectManager $om
+        ObjectManager $om,
+        StrictDispatcher $dispatcher,
+        RoleManager $roleManager
     )
     {
         $this->rightsRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
@@ -51,6 +61,8 @@ class RightsManager
         $this->resourceTypeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
         $this->translator = $translator;
         $this->om = $om;
+        $this->dispatcher = $dispatcher;
+        $this->roleManager = $roleManager;
     }
 
     /**
@@ -81,7 +93,9 @@ class RightsManager
         $isRecursive
     )
     {
-        $this->om->startFlushSuite();
+        //Bugfix: If the flushSuite is uncommented, doctrine returns an error
+        //(ResourceRights duplicata)
+        //$this->om->startFlushSuite();
             
         $arRights = ($isRecursive) ?
             $this->updateRightsTree($role, $resource):
@@ -90,9 +104,10 @@ class RightsManager
         foreach ($arRights as $toUpdate) {
             $this->setPermissions($toUpdate, $permissions);
             $this->om->persist($toUpdate);
+            $this->logChangeSet($toUpdate);
         }
 
-        $this->om->endFlushSuite();
+        //$this->om->endFlushSuite();
 
         return $arRights;
     }
@@ -113,6 +128,7 @@ class RightsManager
         foreach ($arRights as $toUpdate) {
             $toUpdate->setCreatableResourceTypes($resourceTypes);
             $this->om->persist($toUpdate);
+            $this->logChangeSet($toUpdate);
         }
 
         $this->om->endFlushSuite();
@@ -176,7 +192,7 @@ class RightsManager
         }
         
         $this->om->flush();
-
+        
         return $finalRights;
     }
 
@@ -190,6 +206,31 @@ class RightsManager
 
         return $rights;
     }
+    
+    /**
+     * Takes an array of Role.
+     * Parse each key of the $perms array
+     * and add the entry 'role' where it is needed.
+     * 
+     * @param array $baseRoles
+     * @param array $perms
+     * @return array
+     */
+    public function addRolesToPermsArray(array $baseRoles, array $perms)
+    {
+        $initializedArray = array();
+        
+        foreach ($perms as $roleBaseName => $data) {
+            foreach ($baseRoles as $baseRole) {
+                if ($this->roleManager->getRoleBaseName($baseRole->getName()) === $roleBaseName) {
+                    $data['role'] = $baseRole;
+                    $initializedArray[$roleBaseName] = $data;
+                }
+            }
+        }
+        
+        return $initializedArray;
+    }
 
     public function getOneByRoleAndResource(Role $role, AbstractResource $resource)
     {
@@ -202,18 +243,6 @@ class RightsManager
         }
 
         return $resourceRights;
-    }
-
-    /**
-     * Returns every ResourceRights of a resource on 1 level if the role linked is not 'ROLE_ADMIN'
-     *
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
-     *
-     * @return array
-     */
-    public function getNonAdminRights(AbstractResource $resource)
-    {
-        return $this->rightsRepo->findNonAdminRights($resource);
     }
 
     public function getCreatableTypes(array $roles, Directory $directory)
@@ -245,7 +274,6 @@ class RightsManager
             $rights->setCreatableResourceTypes($creations);
             $this->om->persist($rights);
         }
-        
         $this->om->endFlushSuite();
     }
 
@@ -264,8 +292,45 @@ class RightsManager
         $this->om->flush();
     }
 
+    public function logChangeSet(ResourceRights $rights)
+    {
+        $uow = $this->om->getUnitOfWork();
+        $uow->computeChangeSets();
+        $changeSet = $uow->getEntityChangeSet($rights);
+
+        if (count($changeSet > 0)) {
+            $this->dispatcher->dispatch(
+                'log', 
+                'Log\LogWorkspaceRoleChangeRight', 
+                array($rights->getRole(), $rights->getResource(), $changeSet)
+            );
+        }
+    }
+    
+    /**
+     * Returns every ResourceRights of a resource on 1 level if the role linked is not 'ROLE_ADMIN'
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     *
+     * @return array
+     */
+    public function getNonAdminRights(AbstractResource $resource)
+    {
+        return $this->rightsRepo->findNonAdminRights($resource);
+    }
+    
     public function getResourceTypes()
     {
        return $this->resourceTypeRepo->findAll();
+    }
+    
+    public function getMaximumRights(array $roles, AbstractResource $resource)
+    {
+        return $this->rightsRepo->findMaximumRights($roles, $resource);
+    }
+    
+    public function getCreationRights(array $roles, AbstractResource $resource)
+    {
+        return $this->rightsRepo->findCreationRights($roles, $resource);
     }
 }

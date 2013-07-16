@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Event\Event;
 use Symfony\Component\EventDispatcher\Event;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 class ImportResourceTemplateEvent extends Event
 {
@@ -14,12 +15,18 @@ class ImportResourceTemplateEvent extends Event
     private $createdResources;
     private $user;
     private $files;
+    private $workspace;
+    private $roles;
 
     public function __construct(
         array $config, 
         AbstractResource $parent, 
         User $user,
-        array $createdResources = array()
+        AbstractWorkspace $workspace,
+        array $roles,
+        array $createdResources = array(),
+        array $files = array()
+        
     )
     {
         $this->parent = $parent;
@@ -27,6 +34,9 @@ class ImportResourceTemplateEvent extends Event
         $this->user = $user;
         $this->createdResources = $createdResources;
         $this->files = array();
+        $this->workspace = $workspace;
+        $this->roles = $roles;
+        $this->files = $files;
     }
 
     public function getConfig()
@@ -84,6 +94,11 @@ class ImportResourceTemplateEvent extends Event
     {
         return $this->files;
     }
+    
+    public function getWorkspace()
+    {
+        return $this->workspace;
+    }
 
     /**
      * Expects an array of files.
@@ -96,5 +111,10 @@ class ImportResourceTemplateEvent extends Event
     public function setFiles($files)
     {
         $this->files = $files;
+    }
+    
+    public function getRoles()
+    {
+        return $this->roles;
     }
 }

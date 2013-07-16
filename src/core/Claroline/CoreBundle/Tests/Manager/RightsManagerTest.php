@@ -9,20 +9,24 @@ class RightsManagerTest extends MockeryTestCase
 {
     private $rightsRepo;
     private $resourceRepo;
+    private $roleManager;
     private $roleRepo;
     private $resourceTypeRepo;
     private $translator;
     private $om;
+    private $dispatcher;
 
     public function setUp()
     {
         parent::setUp();
 
         $this->rightsRepo = m::mock('Claroline\CoreBundle\Repository\ResourceRightsRepository');
+        $this->roleManager = m::mock('Claroline\CoreBundle\Manager\RoleManager');
         $this->resourceRepo = m::mock('Claroline\CoreBundle\Repository\AbstractResourceRepository');
         $this->roleRepo = m::mock('Claroline\CoreBundle\Repository\RoleRepository');
         $this->resourceTypeRepo = m::mock('Claroline\CoreBundle\Repository\ResourceTypeRepository');
         $this->translator = m::mock('Symfony\Component\Translation\Translator');
+        $this->dispatcher = m::mock('Claroline\CoreBundle\Event\StrictDispatcher');
         $this->om = m::mock('Claroline\CoreBundle\Persistence\ObjectManager');
     }
 
@@ -106,8 +110,8 @@ class RightsManagerTest extends MockeryTestCase
      */
     public function testEditPerms()
     {
-        $manager = $this->getManager(array('getOneByRoleAndResource', 'setPermissions'));
-
+        $manager = $this->getManager(array('getOneByRoleAndResource', 'setPermissions', 'logChangeSet'));
+        
         $perms = array(
             'canCopy' => true,
             'canOpen' => false,
@@ -119,11 +123,13 @@ class RightsManagerTest extends MockeryTestCase
         $resource = m::mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
         $rights = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceRights');
         $role = m::mock('Claroline\CoreBundle\Entity\Role');
-        $this->om->shouldReceive('startFlushSuite')->once();
+//        $this->om->shouldReceive('startFlushSuite')->once();
         $manager->shouldReceive('getOneByRoleAndResource')->once()->with($role, $resource)->andReturn($rights);
         $manager->shouldReceive('setPermissions')->once()->with($rights, $perms);
         $this->om->shouldReceive('persist')->once()->with($rights);
-        $this->om->shouldReceive('endFlushSuite')->once();
+//        $this->om->shouldReceive('endFlushSuite')->once();
+        $manager->shouldReceive('logChangeSet')->once()->with($rights);
+        
         $manager->editPerms($perms, $role, $resource, false);
     }
 
@@ -132,7 +138,7 @@ class RightsManagerTest extends MockeryTestCase
      */
     public function testEditCreationRights()
     {
-        $manager = $this->getManager(array('getOneByRoleAndResource', 'setPermissions'));
+        $manager = $this->getManager(array('getOneByRoleAndResource', 'setPermissions', 'logChangeSet'));
 
         $types = array(
             new \Claroline\CoreBundle\Entity\Resource\ResourceType(),
@@ -149,6 +155,8 @@ class RightsManagerTest extends MockeryTestCase
         $rights->shouldReceive('setCreatableResourceTypes')->once()->with($types);
         $this->om->shouldReceive('persist')->once()->with($rights);
         $this->om->shouldReceive('endFlushSuite')->once();
+        $manager->shouldReceive('logChangeSet')->once()->with($rights);
+        
         $manager->editCreationRights($types, $role, $resource, false);
     }
 
@@ -202,7 +210,9 @@ class RightsManagerTest extends MockeryTestCase
         if (count($mockedMethods) === 0) {
             return new RightsManager(
                 $this->translator,
-                $this->om
+                $this->om,
+                $this->dispatcher,
+                $this->roleManager
             );
         } else {
             $stringMocked = '[';
@@ -218,7 +228,9 @@ class RightsManagerTest extends MockeryTestCase
                 'Claroline\CoreBundle\Manager\RightsManager' . $stringMocked,
                 array(
                     $this->translator,
-                    $this->om
+                    $this->om,
+                    $this->dispatcher,
+                    $this->roleManager
                 )
             );
         }

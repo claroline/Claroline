@@ -90,7 +90,10 @@ class ResourceManager
     }
 
     /**
-     * define the array rights
+     * array $rights should be defined that way:
+     * array('ROLE_WS_XXX' => array('canOpen' => true, 'canEdit' => false, ...
+     * 'canCreate' => array('directory', ...), role => $entity))
+     *
      */
     public function create(
         AbstractResource $resource,
@@ -129,7 +132,7 @@ class ResourceManager
         $resource->setIcon($icon);
         $this->setRights($resource, $parent, $rights);
         $this->om->persist($resource);
-        //$this->dispatcher->dispatch('log', 'Log\ResourceCreateEvent', array($resource));
+        $this->dispatcher->dispatch('log', 'Log\LogResourceCreate', array($resource));
         $this->om->endFlushSuite();
 
         return $resource;
@@ -275,9 +278,7 @@ class ResourceManager
             $shortcut->setResource($target->getResource());
         }
 
-        //$this->dispatcher->dispatch('log', 'Log\ResourceCreateEvent', array($shortcut));
-
-        return $this->create(
+        $shortcut = $this->create(
             $shortcut,
             $target->getResourceType(),
             $creator,
@@ -285,6 +286,10 @@ class ResourceManager
             $parent,
             $target->getIcon()->getShortcutIcon()
         );
+
+        $this->dispatcher->dispatch('log', 'Log\LogResourceCreate', array($shortcut));
+
+        return $shortcut;
     }
 
 
@@ -454,7 +459,7 @@ class ResourceManager
             $child->setName($this->getUniqueName($child, $parent));
             $this->om->persist($child);
             $this->om->flush();
-            //$this->dispatcher->dispatch('log', 'Log\ResourceMoveEvent', array($child, $parent));
+            $this->dispatcher->dispatch('log', 'Log\LogResourceMove', array($child, $parent));
 
             return $child;
         } catch (UnexpectedValueException $e) {
@@ -655,15 +660,10 @@ class ResourceManager
             $this->om->persist($last);
         }
 
-        //$this->dispatcher->dispatch('log', 'Log\ResourceCopyEvent', array($copy, $resource));
+        $this->dispatcher->dispatch('log', 'Log\LogResourceCopy', array($copy, $resource));
         $this->om->flush();
 
         return $copy;
-    }
-
-    public function getResourceTypeByName($name)
-    {
-        return $this->resourceTypeRepo->findOneByName($name);
     }
 
     /**
@@ -717,46 +717,6 @@ class ResourceManager
         return $resourceArray;
     }
 
-    public function getRoots(User $user)
-    {
-        return $this->resourceRepo->findWorkspaceRootsByUser($user);
-    }
-
-    public function getWorkspaceRoot(AbstractWorkspace $workspace)
-    {
-        return $this->resourceRepo->findWorkspaceRoot($workspace);
-    }
-
-    public function getAncestors(AbstractResource $resource)
-    {
-        return $this->resourceRepo->findAncestors($resource);
-    }
-
-    public function getChildren(Directory $directory, array $roles, $isSorted = true)
-    {
-        $children = $this->resourceRepo->findChildren($directory, $roles);
-
-        return ($isSorted) ? $this->sort($children): $children;
-    }
-
-    public function getDescendants(Directory $directory)
-    {
-        return $this->resourceRepo->findDescendants($directory);
-    }
-
-    public function getByCriteria(array $criteria, array $userRoles, $isRecursive)
-    {
-        return $this->resourceRepo->findByCriteria($criteria, $userRoles, $isRecursive);
-    }
-
-    public function getByIds(array $ids)
-    {
-        return $this->om->findByIds(
-            'Claroline\CoreBundle\Entity\Resource\AbstractResource',
-            $ids
-        );
-    }
-
     /**
      * Removes a resource.
      *
@@ -766,9 +726,9 @@ class ResourceManager
     {
         $this->om->startFlushSuite();
         $this->removePosition($resource);
-        $this->dispatcher->dispatch('delete_'.$resource->getResourceType()->getName(), 'DeleteResource', array($resource));
+        $this->dispatcher->dispatch("delete_{$resource->getResourceType()->getName()}", 'DeleteResource', array($resource));
         $this->om->remove($resource);
-        //$this->dispatcher->dispatch('log', 'Log\ResourceDeleteEvent', array($resource));
+        $this->dispatcher->dispatch('log', 'Log\LogResourceDelete', array($resource));
         $this->om->endFlushSuite();
     }
 
@@ -880,6 +840,7 @@ class ResourceManager
     {
         $resource->setName($name);
         $this->om->persist($resource);
+        $this->logChangeSet($resource);
         $this->om->flush();
 
         return $resource;
@@ -887,9 +848,82 @@ class ResourceManager
 
     public function changeIcon(AbstractResource $resource, UploadedFile $file)
     {
+        $this->om->startFlushSuite();
         $icon = $this->iconManager->createCustomIcon($file);
         $this->iconManager->replace($resource, $icon);
+        $this->logChangeSet($resource);
+        $this->om->endFlushSuite();
 
         return $icon;
+    }
+
+    public function logChangeSet(AbstractResource $resource)
+    {
+        $uow = $this->om->getUnitOfWork();
+        $uow->computeChangeSets();
+        $changeSet = $uow->getEntityChangeSet($resource);
+
+        if (count($changeSet > 0)) {
+            $this->dispatcher->dispatch(
+                'log',
+                'Log\LogResourceUpdate',
+                array($resource, $changeSet)
+            );
+        }
+    }
+
+    public function getResource($id)
+    {
+        return $this->resourceRepo->find($id);
+    }
+
+    public function getRoots(User $user)
+    {
+        return $this->resourceRepo->findWorkspaceRootsByUser($user);
+    }
+
+    public function getWorkspaceRoot(AbstractWorkspace $workspace)
+    {
+        return $this->resourceRepo->findWorkspaceRoot($workspace);
+    }
+
+    public function getAncestors(AbstractResource $resource)
+    {
+        return $this->resourceRepo->findAncestors($resource);
+    }
+
+    public function getChildren(Directory $directory, array $roles, $isSorted = true)
+    {
+        $children = $this->resourceRepo->findChildren($directory, $roles);
+
+        return ($isSorted) ? $this->sort($children): $children;
+    }
+
+    public function getAllChildren(AbstractResource $resource, $includeStartNode)
+    {
+        return $this->resourceRepo->getChildren($resource, $includeStartNode, 'path', 'DESC');
+    }
+
+    public function getDescendants(Directory $directory)
+    {
+        return $this->resourceRepo->findDescendants($directory);
+    }
+
+    public function getByCriteria(array $criteria, array $userRoles, $isRecursive)
+    {
+        return $this->resourceRepo->findByCriteria($criteria, $userRoles, $isRecursive);
+    }
+
+    public function getResourceTypeByName($name)
+    {
+        return $this->resourceTypeRepo->findOneByName($name);
+    }
+
+    public function getByIds(array $ids)
+    {
+        return $this->om->findByIds(
+            'Claroline\CoreBundle\Entity\Resource\AbstractResource',
+            $ids
+        );
     }
 }

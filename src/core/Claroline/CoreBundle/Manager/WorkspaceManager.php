@@ -6,7 +6,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Workspace\Template;
-use Claroline\CoreBundle\Event\Event\ExportToolEvent;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Repository\AbstractResourceRepository;
@@ -19,7 +18,6 @@ use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Yaml\Yaml;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -68,7 +66,7 @@ class WorkspaceManager
      *     "templateDir"     = @DI\Inject("%claroline.param.templates_directory%")
      * })
      */
-        
+
     public function __construct(
         RoleManager $roleManager,
         ResourceManager $resourceManager,
@@ -120,7 +118,6 @@ class WorkspaceManager
             $preparedRights
         );
 
-        $filePaths = $this->extractFiles($config);
         $toolsConfig = $config->getToolsConfiguration();
         $toolsPermissions = $config->getToolsPermissions();
 
@@ -134,17 +131,18 @@ class WorkspaceManager
             }
 
             $confTool = isset($toolsConfig[$toolName]) ?  $toolsConfig[$toolName] : array();
-
+            
             $this->toolManager->import(
                 $confTool,
                 $rolesToAdd,
-                $filePaths,
+                $baseRoles,
                 $perms['name'],
                 $workspace,
                 $root,
                 $this->toolManager->findOneByName($toolName),
                 $manager,
-                $position
+                $position,
+                $config->getArchive()
             );
             $position++;
         }
@@ -165,25 +163,26 @@ class WorkspaceManager
     public function export(AbstractWorkspace $workspace, $configName)
     {
         if (!is_writable($this->templateDir)) {
-            throw new \Exception("{$this->templatir} is not writable");
+            throw new \Exception("{$this->templateDir} is not writable");
         }
 
         $this->om->startFlushSuite();
         $archive = new \ZipArchive();
-        $hash = $this->resourceManager->generateGuid();
+        $hash = $this->ut->generateGuid();
         $pathArch = $this->templateDir."{$hash}.zip";
         $template = new Template();
         $template->setHash("{$hash}.zip");
         $template->setName($configName);
+        $this->om->persist($template);
         $archive->open($pathArch, \ZipArchive::CREATE);
         $arTools = array();
         $description = array();
-        $workspaceTools = $this->orderedToolRepo->findBy(array('workspace' => $workspace));
+        $workspaceTools = $this->orderedToolRepo->findBy(array('workspace' => $workspace), array('order' => 'ASC'));
         $roles = $this->roleRepo->findByWorkspace($workspace);
         $root = $this->resourceRepo->findWorkspaceRoot($workspace);
 
         foreach ($roles as $role) {
-            $name = rtrim(str_replace(range(0, 9), '', $role->getName()), '_');
+            $name = $this->roleManager->getRoleBaseName($role->getName());
             $arRole[$name] = $role->getTranslationKey();
         }
 
@@ -193,7 +192,7 @@ class WorkspaceManager
             $perms['canCreate'] = $this->resourceRightsRepo
                 ->findCreationRights(array($role->getName()), $root);
 
-            $description['root_perms'][rtrim(str_replace(range(0, 9), '', $role->getName()), '_')] = $perms;
+            $description['root_perms'][$this->roleManager->getRoleBaseName($role->getName())] = $perms;
         }
 
         foreach ($workspaceTools as $workspaceTool) {
@@ -203,14 +202,18 @@ class WorkspaceManager
             $arToolRoles = array();
 
             foreach ($roles as $role) {
-                $arToolRoles[] = rtrim(str_replace(range(0, 9), '', $role->getName()), '_');
+                $arToolRoles[] = $this->roleManager->getRoleBaseName($role->getName());
             }
 
             $arTools[$tool->getName()]['perms'] = $arToolRoles;
             $arTools[$tool->getName()]['name'] = $workspaceTool->getName();
 
             if ($workspaceTool->getTool()->isExportable()) {
-                $this->dispatcher->dispatch('tool_'.$tool->getName().'_to_template', 'ExportTool', array($workspace));
+                $event = $this->dispatcher->dispatch(
+                    "tool_{$tool->getName()}_to_template",
+                    'ExportTool',
+                    array($workspace)
+                );
                 $description['tools'][$tool->getName()] = $event->getConfig();
                 $description['tools'][$tool->getName()]['files'] = $event->getFilenamesFromArchive();
 
@@ -241,25 +244,6 @@ class WorkspaceManager
         }
 
         return $preparedRightsArray;
-    }
-
-    private function extractFiles(Configuration $config)
-    {
-        $archpath = $config->getArchive();
-        $extractPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('claro_ws_tmp_', true);
-        $archive = new \ZipArchive();
-        $archive->open($archpath);
-        $archive->extractTo($extractPath);
-        $realPaths = array();
-        $confTools = $config->getToolsConfiguration();
-
-        if (isset($confTools['files'])) {
-            foreach ($config['files'] as $path) {
-                $realPaths[] = $extractPath . DIRECTORY_SEPARATOR . $path;
-            }
-        }
-
-        return $realPaths;
     }
 
     /**
@@ -323,5 +307,10 @@ class WorkspaceManager
     public function getWorkspaceById($workspaceId)
     {
         return $this->workspaceRepo->find($workspaceId);
+    }
+
+    public function getOneByGuid($guid)
+    {
+        return $this->workspaceRepo->findOneByGuid($guid);
     }
 }

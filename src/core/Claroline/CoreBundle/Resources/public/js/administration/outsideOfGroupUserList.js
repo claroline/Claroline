@@ -42,8 +42,6 @@
             $.ajax({
                 url: route,
                 success: function () {
-                    $('#validation-box').modal('hide');
-                    $('#validation-box-body').empty();
                     $('.delete-users-button').attr('disabled', 'disabled');
                     $('#deleting').hide();
                     $('.add-users-button').attr('disabled', 'disabled');
@@ -53,6 +51,13 @@
                 },
                 type: 'PUT'
             });
+            $('#validation-box').modal('hide');
+            $('#validation-box-body').empty();
+        });
+
+        $('#modal-cancel-button').click(function () {
+            $('#validation-box').modal('hide');
+            $('#validation-box-body').empty();
         });
     }
 

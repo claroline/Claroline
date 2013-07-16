@@ -13,8 +13,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceRoleSubscribeEvent;
-use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceRoleUnsubscribeEvent;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
@@ -222,7 +220,7 @@ class GroupController extends Controller
      *     options={"expose"=true},
      *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
      * )
-     * @EXT\Method("DELETE")
+     * @EXT\Method({"DELETE", "GET"})
      *
      * @EXT\ParamConverter(
      *      "workspace",
@@ -253,9 +251,11 @@ class GroupController extends Controller
             foreach ($roles as $role) {
                 if ($group->hasRole($role->getName())) {
                     $this->roleManager->dissociateRole($group, $role);
-
-                    $log = new LogWorkspaceRoleUnsubscribeEvent($role, null, $group);
-                    $this->eventDispatcher->dispatch('log', $log);
+                    $this->eventDispatcher->dispatch(
+                        'log',
+                        'Log\LogWorkspaceRoleUnsubscribe',
+                        array($role, null, $group)
+                    );
                 }
             }
         }
@@ -270,7 +270,7 @@ class GroupController extends Controller
      *     options={"expose"=true},
      *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
      * )
-     * @EXT\Method("PUT")
+     * @EXT\Method({"PUT", "GET"})
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
@@ -296,9 +296,11 @@ class GroupController extends Controller
 
         foreach ($groups as $group) {
             $this->roleManager->associateRole($group, $role);
-
-            $log = new LogWorkspaceRoleSubscribeEvent($role, null, $group);
-            $this->eventDispatcher->dispatch('log', $log);
+            $this->eventDispatcher->dispatch(
+                'log',
+                'Log\LogWorkspaceRoleSubscribe',
+                array($role, null, $group)
+            );
         }
 
         return new JsonResponse($this->groupManager->convertGroupsToArray($groups));

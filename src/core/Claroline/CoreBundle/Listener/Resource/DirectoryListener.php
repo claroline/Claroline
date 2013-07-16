@@ -19,18 +19,18 @@ use Claroline\CoreBundle\Event\Event\ExportResourceTemplateEvent;
 use Claroline\CoreBundle\Event\Event\ImportResourceTemplateEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Event\StrictDispatcher;
-use Doctrine\ORM\EntityManager;
 
 /**
  * @DI\Service
  */
 class DirectoryListener
 {
-    private $em;
     private $container;
     private $roleManager;
     private $resourceManager;
+    private $rightsManager;
     private $security;
     private $eventDispatcher;
     private $formFactory;
@@ -38,20 +38,20 @@ class DirectoryListener
 
     /**
      * @DI\InjectParams({
-     *     "em"                 = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
-     *     "resourceManager"    = @DI\Inject("claroline.manager.resource_manager"),
-     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "security"           = @DI\Inject("security.context"),
-     *     "formFactory"        = @DI\Inject("form.factory"),
-     *     "templating"         = @DI\Inject("templating"),
-     *     "container"          = @DI\Inject("service_container")
+     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
+     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
+     *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager"),
+     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "security"        = @DI\Inject("security.context"),
+     *     "formFactory"     = @DI\Inject("form.factory"),
+     *     "templating"      = @DI\Inject("templating"),
+     *     "container"       = @DI\Inject("service_container")
      * })
      */
     public function __construct(
-        EntityManager $em,
         RoleManager $roleManager,
         ResourceManager $resourceManager,
+        RightsManager $rightsManager,
         StrictDispatcher $eventDispatcher,
         SecurityContextInterface $security,
         FormFactoryInterface $formFactory,
@@ -59,9 +59,9 @@ class DirectoryListener
         ContainerInterface $container
     )
     {
-        $this->em = $em;
         $this->roleManager = $roleManager;
         $this->resourceManager = $resourceManager;
+        $this->rightsManager = $rightsManager;
         $this->eventDispatcher = $eventDispatcher;
         $this->security = $security;
         $this->formFactory = $formFactory;
@@ -151,18 +151,18 @@ class DirectoryListener
      */
     public function onExportTemplate(ExportResourceTemplateEvent $event)
     {
-        $resourceRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
         $resource = $event->getResource();
         //@todo one request to retrieve every directory and not needing a condition.
-        $children = $resourceRepo->findChildren($resource, array('ROLE_ADMIN'));
+        $children = $resource instanceof Claroline\CoreBundle\Entity\Resource\Directory ?
+            $this->resourceManager->getChildren($resource, array('ROLE_ADMIN')): array();
         $dataChildren = array();
 
         foreach ($children as $child) {
             if ($child['type'] === 'directory') {
-                $newEvent = $this->ed->dispatch(
+                $newEvent = $this->eventDispatcher->dispatch(
                     'resource_directory_to_template',
                     'ExportResourceTemplate',
-                    array($resourceRepo->find($child['id']))
+                    array($this->resourceManager->getResource($child['id']))
                 );
                 $descr = $newEvent->getConfig();
                 $dataChildren[] = $descr;
@@ -174,12 +174,11 @@ class DirectoryListener
         $roles = $this->roleManager->getRolesByWorkspace($resource->getWorkspace());
 
         foreach ($roles as $role) {
-            $perms = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
-                ->findMaximumRights(array($role->getName()), $resource);
-            $perms['canCreate'] = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
-                ->findCreationRights(array($role->getName()), $resource);
+            $perms = $this->rightsManager->getMaximumRights(array($role->getName()), $resource);
+            $perms['canCreate'] = ($resource instanceof Claroline\CoreBundle\Entity\Resource\Directory) ?
+                $this->rightsManager->getCreationRights(array($role->getName()), $resource): array();
 
-            $config['perms'][rtrim(str_replace(range(0, 9), '', $role->getName()), '_')] = $perms;
+            $config['perms'][$this->roleManager->getRoleBaseName($role->getName())] = $perms;
         }
 
         $event->setConfig($config);
@@ -194,23 +193,25 @@ class DirectoryListener
     public function onImportTemplate(ImportResourceTemplateEvent $event)
     {
         $config = $event->getConfig();
-        $manager = $this->container->get('claroline.resource.manager');
+        $manager = $this->container->get('claroline.manager.resource_manager');
         $directory = new Directory();
         $directory->setName($config['name']);
         $manager->create(
             $directory,
-            $event->getParent()->getId(),
-            $config['type'],
+            $this->resourceManager->getResourceTypeByName($config['type']),
             $event->getUser(),
-            $config['perms']
+            $event->getWorkspace(),
+            $event->getParent(),
+            null,
+            $this->rightsManager->addRolesToPermsArray($event->getRoles(), $config['perms'])
         );
-        $createdResources[$config['id']] = $directory->getId();
+        $createdResources[$config['id']] = $directory;
 
         foreach ($config['children'] as $child) {
             $newEvent = $this->eventDispatcher->dispatch(
                 'resource_directory_from_template',
                 'ImportResourceTemplate',
-                array($child, $directory, $event->getUser(), $createdResources)
+                array($child, $directory, $event->getUser(), $event->getWorkspace(), $event->getRoles(), $createdResources)
             );
             $childResources = $newEvent->getCreatedResources();
 
@@ -238,8 +239,7 @@ class DirectoryListener
             throw new \LogicException('Root directory cannot be removed');
         }
 
-        $children = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\AbstractResource')
-            ->getChildren($resource, false, 'path', 'DESC');
+        $children = $this->resourceManager->getAllChildren($resource, false);
 
         foreach ($children as $child) {
             $this->eventDispatcher->dispatch(
@@ -260,8 +260,7 @@ class DirectoryListener
     public function copy(CopyResourceEvent $event)
     {
         $resourceCopy = new Directory();
-        $dirType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-            ->findOneByName('directory');
+        $dirType = $this->resourceManager->getResourceTypeByName('directory');
         $resourceCopy->setResourceType($dirType);
         $event->setCopy($resourceCopy);
     }
