@@ -34,7 +34,7 @@ class LogRepository extends EntityRepository
                 'resource_update',
                 'resource_shortcut',
                 'resource_child_update');
-        } else if ($action == 'ws_role_all') {
+        } elseif ($action == 'ws_role_all') {
             $action = array('ws_role_create',
                 'ws_role_delete',
                 'ws_role_update',
@@ -43,22 +43,23 @@ class LogRepository extends EntityRepository
                 'ws_role_unsubscribe_user',
                 'ws_role_subscribe_group',
                 'ws_role_unsubscribe_group');
-        } else if ($action == 'group_all') {
+        } elseif ($action == 'group_all') {
             $action = array('group_add_user', 'group_create', 'group_delete', 'group_remove_user', 'group_update');
-        } else if ($action == 'user_all') {
+        } elseif ($action == 'user_all') {
             $action = array('user_create', 'user_delete', 'user_login', 'user_update');
-        } else if ($action == 'workspace_all') {
+        } elseif ($action == 'workspace_all') {
             $action = array('workspace_create', 'workspace_delete', 'workspace_update');
-        } else if ($action == 'all' or $action === null) {
+        } elseif ($action == 'all' or $action === null) {
             $action = $actionsRestriction;
         } else {
             $action = array($action);
         }
 
-        if($action !== null){
+        if ($action !== null) {
             $qb->andWhere("log.action IN (:action)");
             $qb->setParameter('action', $action);
         }
+
         return $qb;
     }
 
@@ -129,7 +130,7 @@ class LogRepository extends EntityRepository
             $workspaceId = $config->getWorkspace()->getId();
             $actionRestriction = $config->getActionRestriction();
             if (count($actionRestriction) > 0) {
-                foreach($config->getActionRestriction() as $action) {
+                foreach ($config->getActionRestriction() as $action) {
                     $qb->orWhere('log.action = :action'.$actionIndex.' AND workspace.id = :workspace'.$workspaceId);
                     $qb->setParameter('action'.$actionIndex, $action);
                     $actionIndex++;
@@ -184,7 +185,6 @@ class LogRepository extends EntityRepository
     public function countByDayThroughConfigs($configs, $range)
     {
         if ($configs === null || count($configs) == 0) {
-
             return null;
         }
 
@@ -199,7 +199,6 @@ class LogRepository extends EntityRepository
 
         return $this->extractChartData($qb->getQuery()->getResult(), $range);
     }
-
 
     public function countByDayFilteredLogs($action, $range, $userSearch, $actionsRestriction, $workspaceIds = null)
     {
@@ -223,7 +222,6 @@ class LogRepository extends EntityRepository
     public function findLogsThroughConfigs($configs, $maxResult = -1)
     {
         if ($configs === null || count($configs) == 0) {
-
             return null;
         }
 
@@ -393,10 +391,9 @@ class LogRepository extends EntityRepository
             ->select('ws.id, ws.name, ws.code, count(log.id) AS actions')
             ->leftJoin('log.workspace','ws')
             ->groupBy('ws')
-            ->orderBy('actions', 'DESC');            
-        
-        if ($max >1)
-        {
+            ->orderBy('actions', 'DESC');
+
+        if ($max >1) {
             $qb->setMaxResults($max);
         }
 
@@ -417,10 +414,9 @@ class LogRepository extends EntityRepository
             ->andWhere('resource_type.name=:fileType')
             ->groupBy('resource')
             ->orderBy('actions', 'DESC')
-            ->setParameter('fileType','file');            
-        
-        if ($max >1)
-        {
+            ->setParameter('fileType','file');
+
+        if ($max >1) {
             $qb->setMaxResults($max);
         }
 
@@ -429,7 +425,7 @@ class LogRepository extends EntityRepository
         $query = $qb->getQuery();
 
         return $query->getResult();
-    }    
+    }
 
     public function topResourcesByAction ($range, $action, $max)
     {
@@ -438,10 +434,9 @@ class LogRepository extends EntityRepository
             ->select('resource.id, resource.name, count(log.id) AS actions')
             ->leftJoin('log.resource','resource')
             ->groupBy('resource')
-            ->orderBy('actions', 'DESC');     
-        
-        if ($max >1)
-        {
+            ->orderBy('actions', 'DESC');
+
+        if ($max >1) {
             $qb->setMaxResults($max);
         }
 
@@ -459,10 +454,9 @@ class LogRepository extends EntityRepository
             ->select("doer.id, CONCAT(CONCAT(doer.firstName,' '), doer.lastName) AS name, doer.username, count(log.id) AS actions")
             ->leftJoin('log.doer','doer')
             ->groupBy('doer')
-            ->orderBy('actions', 'DESC');     
-        
-        if ($max >1)
-        {
+            ->orderBy('actions', 'DESC');
+
+        if ($max >1) {
             $qb->setMaxResults($max);
         }
 

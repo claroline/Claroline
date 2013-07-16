@@ -410,7 +410,7 @@ class ResourceManagerTest extends MockeryTestCase
     {
 
     }
-    
+
     /**
      * @group resource
      */
@@ -422,10 +422,10 @@ class ResourceManagerTest extends MockeryTestCase
         $this->om->shouldReceive('persist')->once()->with($resource);
         $this->om->shouldReceive('flush')->once();
         $manager->shouldReceive('logChangeSet')->once()->with($resource);
-        
+
         $this->assertEquals($resource, $manager->rename($resource, 'name'));
     }
-    
+
     /**
      * @group resource
      */
@@ -440,7 +440,7 @@ class ResourceManagerTest extends MockeryTestCase
         $this->om->shouldReceive('startFlushSuite')->once();
         $this->om->shouldReceive('endFlushSuite')->once();
         $manager->shouldReceive('logChangeSet')->once()->with($resource);
-        
+
         $this->assertEquals($icon, $manager->changeIcon($resource, $file));
     }
 
@@ -549,7 +549,7 @@ class ResourceManagerTest extends MockeryTestCase
             ->andReturn($this->roleRepo);
         $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Resource\ResourceShortcut')
             ->andReturn($this->shortcutRepo);
-        
+
         if (count($mockedMethods) === 0) {
             return new ResourceManager(
                 $this->roleManager,
@@ -568,7 +568,7 @@ class ResourceManagerTest extends MockeryTestCase
             }
 
             $stringMocked .= ']';
-            
+
             return m::mock(
                 'Claroline\CoreBundle\Manager\ResourceManager' . $stringMocked,
                 array(

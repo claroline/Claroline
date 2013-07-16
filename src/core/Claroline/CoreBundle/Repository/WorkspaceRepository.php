@@ -139,9 +139,9 @@ class WorkspaceRepository extends EntityRepository
      * names are actually prefixes of the target role (e.g. 'ROLE_WS_COLLABORATOR'
      * instead of 'ROLE_WS_COLLABORATOR_123').
      *
-     * @param User              $user
-     * @param array[string]     $roleNames
-     * @param array[integer]    $restrictionIds
+     * @param User           $user
+     * @param array[string]  $roleNames
+     * @param array[integer] $restrictionIds
      *
      * @return array[AbstractWorkspace]
      */

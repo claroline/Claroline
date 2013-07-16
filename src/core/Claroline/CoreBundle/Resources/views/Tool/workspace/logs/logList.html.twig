@@ -3,12 +3,12 @@
 {% block section_content %}
     {% set filterFormAction = path('claro_workspace_logs_show', {'workspaceId': workspace.id}) %}
     {% set pagination %}
-        {{ 
+        {{
             pagerfanta(
-                pager, 
-                'twitter_bootstrap_translated', 
+                pager,
+                'twitter_bootstrap_translated',
                 {
-                    'proximity' : 1, 
+                    'proximity' : 1,
                     'routeName': 'claro_workspace_logs_show_paginated',
                     'routeParams': {'workspaceId': workspace.id, 'filter': filter}
                 }

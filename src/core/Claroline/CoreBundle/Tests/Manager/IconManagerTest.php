@@ -16,7 +16,7 @@ class IconManagerTest extends MockeryTestCase
     private $rootDir;
     private $ut;
     private $om;
-    
+
     public function setUp()
     {
         parent::setUp();
@@ -28,7 +28,7 @@ class IconManagerTest extends MockeryTestCase
         $this->ut = m::mock('Claroline\CoreBundle\Library\Utilities\ClaroUtilities');
         $this->om = m::mock('Claroline\CoreBundle\Persistence\ObjectManager');
     }
-    
+
     /**
      * @group resource
      */
@@ -41,7 +41,7 @@ class IconManagerTest extends MockeryTestCase
         $manager->shouldReceive('searchIcon')->once()->andReturn($icon);
         $this->assertEquals($icon, $manager->getIcon($dir));
     }
-    
+
     /**
      * @group resource
      */
@@ -66,10 +66,10 @@ class IconManagerTest extends MockeryTestCase
         $this->om->shouldReceive('factory')->once()
             ->with('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
             ->andReturn($icon);
-        
+
         $this->assertEquals($icon, $manager->getIcon($file));
     }
-    
+
     /**
      * @group resource
      */
@@ -81,10 +81,10 @@ class IconManagerTest extends MockeryTestCase
         $this->repo->shouldReceive('findOneByMimeType')->with($mimeType)->once()->andReturn(null);
         $this->repo->shouldReceive('findOneByMimeType')->with('video')->once()->andReturn(null);
         $this->repo->shouldReceive('findOneByMimeType')->with('custom/default')->once()->andReturn($icon);
-        
+
         $this->assertEquals($icon, $this->getManager()->searchIcon($mimeType));
     }
-    
+
     /**
      * @group resource
      */
@@ -110,10 +110,10 @@ class IconManagerTest extends MockeryTestCase
         $this->om->shouldReceive('persist')->once()->with($icon);
         $this->om->shouldReceive('persist')->once()->with($shortcutIcon);
         $this->om->shouldReceive('endFlushSuite');
-        
+
         $this->assertEquals($shortcutIcon, $manager->createShortcutIcon($icon));
     }
-    
+
     /**
      * @group resource
      */
@@ -140,7 +140,7 @@ class IconManagerTest extends MockeryTestCase
             ->andReturn($icon);
         $this->assertEquals($icon, $manager->createCustomIcon($file));
     }
-    
+
     /**
      * @group resource
      */
@@ -152,10 +152,10 @@ class IconManagerTest extends MockeryTestCase
         $this->thumbnailCreator->shouldReceive('fromVideo')->once()
             ->with($filePath, $this->thumbDir . DIRECTORY_SEPARATOR . 'GUID.png', 100, 100)
             ->andReturn('path/to/thumbnail');
-        
+
         $this->assertEquals('path/to/thumbnail', $this->getManager()->createFromFile($filePath, $baseMime));
     }
-    
+
     /**
      * @group resource
      */
@@ -167,10 +167,10 @@ class IconManagerTest extends MockeryTestCase
         $this->thumbnailCreator->shouldReceive('fromImage')->once()
             ->with($filePath, $this->thumbDir . DIRECTORY_SEPARATOR . 'GUID.png', 100, 100)
             ->andReturn('path/to/thumbnail');
-        
+
         $this->assertEquals('path/to/thumbnail', $this->getManager()->createFromFile($filePath, $baseMime));
     }
-    
+
     public function testDeleteCustom()
     {
         $manager = $this->getManager(array('removeImageFromThumbDir'));
@@ -183,11 +183,10 @@ class IconManagerTest extends MockeryTestCase
         $this->om->shouldReceive('remove')->once()->with($shortcut);
         $this->om->shouldReceive('remove')->once()->with($icon);
         $this->om->shouldReceive('flush')->once();
-        
+
         $manager->delete($icon);
     }
- 
-   
+
     public function testReplace()
     {
         $manager = $this->getManager(array('delete'));
@@ -199,20 +198,20 @@ class IconManagerTest extends MockeryTestCase
         $resource->shouldReceive('setIcon')->once()->with($icon);
         $manager->shouldReceive('delete')->once()->with($oldIcon);
         $this->om->shouldReceive('endFlushSuite')->once();
-        
+
         $this->assertEquals($resource, $manager->replace($resource, $icon));
     }
-    
+
     public function testRemoveImageFromThumbDir()
     {
         $this->markTestSkipped('Requires stubs');
     }
-    
+
     private function getManager(array $mockedMethods = array())
     {
         $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Resource\ResourceIcon')
             ->andReturn($this->repo);
-        
+
         if (count($mockedMethods) === 0) {
             return new IconManager(
                 $this->thumbnailCreator,
@@ -231,7 +230,7 @@ class IconManagerTest extends MockeryTestCase
             }
 
             $stringMocked .= ']';
-            
+
             return m::mock(
                 'Claroline\CoreBundle\Manager\IconManager' . $stringMocked,
                 array(

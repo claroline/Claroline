@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Entity\Workspace;
 
-use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 

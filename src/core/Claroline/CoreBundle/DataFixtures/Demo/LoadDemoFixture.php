@@ -192,7 +192,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         if ($fixture instanceof ContainerAwareInterface) {
             $fixture->setContainer($this->getContainer());
         }
-        
+
         $fixture->load($this->manager);
     }
 

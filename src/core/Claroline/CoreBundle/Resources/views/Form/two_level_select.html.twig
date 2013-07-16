@@ -1,14 +1,14 @@
-{% extends 'form_div_layout.html.twig' %} 
+{% extends 'form_div_layout.html.twig' %}
 
 {% block twolevelselect_widget %}
-    {% spaceless %} 
+    {% spaceless %}
         {{ block('choice_widget') }}
         <script type="text/javascript">
             $(document).ready(function () {
                 var firstLevelOptions = "";
                 var firstLevelOptionsHtml = [];
                 var secondLevelOptionsHtml = [];
-                
+
                 var onClickFirstLevel = function (elt) {
                     if (elt.hasClass('first-level')) {
                         $("#{{ form.vars['id'] }}").html(firstLevelOptionsHtml[elt.val()]);
@@ -25,11 +25,11 @@
                     $(element).addClass("first-level");
                     firstLevelOptions += element.outerHTML;
                     $(element).removeClass("first-level");
-                    firstLevelOptionsHtml[$(this).val()] = element.outerHTML; 
+                    firstLevelOptionsHtml[$(this).val()] = element.outerHTML;
                 });
                 $("#{{ form.vars['id'] }} > optgroup").each(function (index) {
                     firstLevelOptions += "<option class='second-level' value='group_"+index+"'>"+$(this).attr("label")+"</option>";
-                    secondLevelOptionsHtml["group_"+index] = $(this).html(); 
+                    secondLevelOptionsHtml["group_"+index] = $(this).html();
                 });
                 $("#{{ form.vars['id'] }}").before("<select id='{{ form.vars['id'] }}_first_level' class='input-medium'>"+firstLevelOptions+"</select> <span> : </<span> ");
                 $("#{{ form.vars['id'] }}").css("margin-left", "5px");
@@ -60,5 +60,5 @@
                 }
             });
         </script>
-    {% endspaceless %} 
-{% endblock %} 
+    {% endspaceless %}
+{% endblock %}

@@ -361,9 +361,9 @@ class WorkspaceTagManager
     /**
      * Checks if given tag or at least one of its children is associated to a workspace
      *
-     * @param integer $tagId
-     * @param array $tagWorkspaces
-     * @param array $hierarchy
+     * @param  integer $tagId
+     * @param  array   $tagWorkspaces
+     * @param  array   $hierarchy
      * @return boolean
      */
     private function isTagDisplayable($tagId, array $tagWorkspaces, array $hierarchy)

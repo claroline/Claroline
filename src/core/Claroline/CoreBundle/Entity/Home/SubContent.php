@@ -79,7 +79,7 @@ class SubContent
     /**
      * Set size
      *
-     * @param string $size
+     * @param  string     $size
      * @return SubContent
      */
     public function setSize($size)
@@ -102,7 +102,7 @@ class SubContent
     /**
      * Set father
      *
-     * @param \Claroline\CoreBundle\Entity\Home\Content $father
+     * @param  \Claroline\CoreBundle\Entity\Home\Content $father
      * @return SubContent
      */
     public function setFather(\Claroline\CoreBundle\Entity\Home\Content $father)
@@ -125,7 +125,7 @@ class SubContent
     /**
      * Set child
      *
-     * @param \Claroline\CoreBundle\Entity\Home\Content $child
+     * @param  \Claroline\CoreBundle\Entity\Home\Content $child
      * @return SubContent
      */
     public function setChild(\Claroline\CoreBundle\Entity\Home\Content $child)
@@ -158,7 +158,7 @@ class SubContent
     /**
      * Set next
      *
-     * @param \Claroline\CoreBundle\Entity\Home\SubContent $next
+     * @param  \Claroline\CoreBundle\Entity\Home\SubContent $next
      * @return SubContent
      */
     public function setNext(\Claroline\CoreBundle\Entity\Home\SubContent $next = null)
@@ -181,7 +181,7 @@ class SubContent
     /**
      * Set back
      *
-     * @param \Claroline\CoreBundle\Entity\Home\SubContent $back
+     * @param  \Claroline\CoreBundle\Entity\Home\SubContent $back
      * @return SubContent
      */
     public function setBack(\Claroline\CoreBundle\Entity\Home\SubContent $back = null)

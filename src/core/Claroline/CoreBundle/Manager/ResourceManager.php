@@ -292,7 +292,6 @@ class ResourceManager
         return $shortcut;
     }
 
-
     /**
      * @todo
      * Define the $rights array.
@@ -445,8 +444,8 @@ class ResourceManager
     /**
      * Moves a resource.
      *
-     * @param Abstractesource  $child
-     * @param Abstractesource  $parent
+     * @param Abstractesource $child
+     * @param Abstractesource $parent
      */
     public function move(AbstractResource $child, AbstractResource $parent)
     {
@@ -559,7 +558,6 @@ class ResourceManager
             }
 
             if (!$continue) {
-
                 return false;
             }
         }
@@ -787,7 +785,7 @@ class ResourceManager
     /**
      * Returns every children of every resource (includes the startnode).
      *
-     * @param array $resources
+     * @param  array      $resources
      * @return type
      * @throws \Exception
      */
