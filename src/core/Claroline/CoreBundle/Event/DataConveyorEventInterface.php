@@ -9,7 +9,7 @@ namespace Claroline\CoreBundle\Event;
 interface DataConveyorEventInterface
 {
     /**
-     * Checks if the event has been populated?
+     * Checks if the event has been populated.
      *
      * @return boolean
      */
