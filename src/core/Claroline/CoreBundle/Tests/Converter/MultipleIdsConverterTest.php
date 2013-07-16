@@ -10,15 +10,15 @@ class MultipleIdsConverterTest extends MockeryTestCase
 {
     private $request;
     private $configuration;
-    private $repo;
+    private $om;
     private $converter;
 
     protected function setUp()
     {
         $this->request = m::mock('Symfony\Component\HttpFoundation\Request');
         $this->configuration = m::mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter');
-        $this->repo = m::mock('Claroline\CoreBundle\Database\GenericRepository');
-        $this->converter = new MultipleIdsConverter($this->repo);
+        $this->om = m::mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->converter = new MultipleIdsConverter($this->om);
     }
 
     public function testSupportsAcceptsOnlyParamConverterConfiguration()
@@ -93,7 +93,7 @@ class MultipleIdsConverterTest extends MockeryTestCase
         $this->configuration->shouldReceive('getClass')->once()->andReturn('Foo\Entity');
         $this->request->query = new ParameterBag();
         $this->request->query->set('ids', array(1, 2));
-        $this->repo->shouldReceive('findByIds')
+        $this->om->shouldReceive('findByIds')
             ->once()
             ->andThrow('Claroline\CoreBundle\Database\MissingEntityException');
         $this->converter->apply($this->request, $this->configuration);
@@ -107,7 +107,7 @@ class MultipleIdsConverterTest extends MockeryTestCase
         $this->request->query = new ParameterBag();
         $this->request->attributes = new ParameterBag();
         $this->request->query->set('ids', array(1, 2));
-        $this->repo->shouldReceive('findByIds')
+        $this->om->shouldReceive('findByIds')
             ->once()
             ->with('Foo\Entity', array(1, 2))
             ->andReturn($entities);
