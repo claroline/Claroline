@@ -65,7 +65,6 @@
             <directory>../src/core/Claroline/CoreBundle/Tests/Library/Widget</directory>
             <directory>../src/core/Claroline/CoreBundle/Tests/Library/Workspace</directory>
             <file>../src/core/Claroline/CoreBundle/Tests/Manager/GroupManagerTest.php</file>
-            <file>../src/core/Claroline/CoreBundle/Tests/Manager/WorkspaceManagerTest.php</file>
             <file>../src/core/Claroline/CoreBundle/Tests/Manager/WorkspaceTagManagerTest.php</file>
             <directory>../src/core/Claroline/CoreBundle/Tests/Pager</directory>
             <file>../src/core/Claroline/CoreBundle/Tests/Repository/ActivityRepositoryTest.php</file>
