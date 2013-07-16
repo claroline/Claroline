@@ -1,7 +1,8 @@
 <?php
 
 namespace Claroline\CoreBundle\Event\Event\Log;
-use Claroline\CoreBundle\Event\Event\MandatoryEventInterface;
+
+use Claroline\CoreBundle\Event\MandatoryEventInterface;
 
 class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent implements MandatoryEventInterface
 {
