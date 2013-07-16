@@ -2,9 +2,7 @@
 
 namespace ICAP\BlogBundle\Entity;
 
-use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
