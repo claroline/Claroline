@@ -45,12 +45,14 @@ class ToolManagerTest extends MockeryTestCase
      */
     public function testImport()
     {
-        $manager = $this->getManager(array('createOrderedTool', 'addRoleToOrderedTool', 'addWorkspaceTool'));
+        $manager = $this->getManager(array('createOrderedTool', 'addRoleToOrderedTool', 'addWorkspaceTool', 'extractFiles'));
         $role1 = m::mock('Claroline\CoreBundle\Entity\Role');
         $role2 = m::mock('Claroline\CoreBundle\Entity\Role');
         $config = array();
         $files = array('path');
         $roles = array($role1, $role2);
+        $genRoles = array($role1, $role2);
+        $arch = 'path/to/arch';
         $name = 'toolName';
         $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
         $resource = m::mock('Claroline\CoreBundle\Entity\Resource\Directory');
@@ -58,7 +60,7 @@ class ToolManagerTest extends MockeryTestCase
         $position = 1;
         $tool = m::mock('Claroline\CoreBundle\Entity\Tool\Tool');
         $orderedTool = m::mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
-
+        $manager->shouldReceive('extractFiles')->once()->with($arch, $config)->andReturn($files);
         $manager->shouldReceive('addWorkspaceTool')->with($tool, $position, $name, $workspace)
             ->once()->andReturn($orderedTool);
         $manager->shouldReceive('addRoleToOrderedTool')->times(2);
@@ -66,7 +68,7 @@ class ToolManagerTest extends MockeryTestCase
         $this->ed->shouldReceive('dispatch')->once()
             ->with('tool_claro_tool_from_template', 'ImportTool', m::any());
 
-        $manager->import($config, $roles, $files, $name, $workspace, $resource, $tool, $userManager, $position);
+        $manager->import($config, $roles, $genRoles, $name, $workspace, $resource, $tool, $userManager, $position, $arch);
     }
 
     /**
