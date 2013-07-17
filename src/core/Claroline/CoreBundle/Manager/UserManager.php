@@ -2,21 +2,21 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Symfony\Component\Translation\Translator;
-use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Claroline\CoreBundle\Entity\User;
+use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
-use Doctrine\Common\Collections\ArrayCollection;
-use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service("claroline.manager.user_manager")
