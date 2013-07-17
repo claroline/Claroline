@@ -58,6 +58,9 @@ class Version20120119000000 extends BundleMigration
         $this->createLogWorkspaceWidgetConfigTable($schema);
         $this->createLogDesktopWidgetConfigTable($schema);
         $this->createLogHiddenWorkspaceWidgetConfigTable($schema);
+        $this->createNodeTypeTable($schema);
+        $this->createNodeTable($schema);
+        $this->createNodeLinkTable($schema);
     }
 
     public function down(Schema $schema)
@@ -114,6 +117,9 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_content2region');
         $schema->dropTable('claro_workspace_template');
         $schema->dropTable('claro_theme');
+        $schema->dropTable('claro_node');
+        $schema->dropTable('claro_nodelink');
+        $schema->dropTable('claro_nodetype');
     }
 
     private function createUserTable(Schema $schema)
@@ -1317,5 +1323,83 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('hash', 'string');
         $table->addColumn('name', 'string');
         $table->addUniqueIndex(array('hash'));
+    }
+
+    private function createNodeTypeTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_nodetype');
+
+        $this->addId($table);
+        $table->addColumn('name', 'string', array('length' => 255));
+
+        $this->storeTable($table);
+    }
+
+    private function createNodeTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_node');
+
+        $this->addId($table);
+        $table->addColumn('name', 'string', array('length' => 255, 'notnull' => false));
+        $table->addColumn('value', 'text', array('notnull' => false));
+        $table->addColumn('created', 'datetime');
+        $table->addColumn('modified', 'datetime');
+        $table->addColumn('type_id', 'integer', array('notnull' => false));
+
+        $this->storeTable($table);
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_nodetype'),
+            array('type_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+    }
+
+    private function createNodeLinkTable(Schema $schema)
+    {
+        $table = $schema->createTable('claro_nodelink');
+        $this->addId($table);
+        $table->addColumn('a_id', 'integer', array('notnull' => true));
+        $table->addColumn('b_id', 'integer', array('notnull' => true));
+        $table->addColumn('size', 'integer', array('notnull' => false));
+        $table->addColumn('next_id', 'integer', array('notnull' => false));
+        $table->addColumn('back_id', 'integer', array('notnull' => false));
+        $table->addColumn('type_id', 'integer', array('notnull' => false));
+
+        $this->storeTable($table);
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_node'),
+            array('a_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+        $table->addForeignKeyConstraint(
+            $schema->getTable('claro_node'),
+            array('b_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_nodelink'),
+            array('next_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+        $table->addForeignKeyConstraint(
+            $schema->getTable('claro_nodelink'),
+            array('back_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+
+        $table->addForeignKeyConstraint(
+            $this->getStoredTable('claro_nodetype'),
+            array('type_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
     }
 }
