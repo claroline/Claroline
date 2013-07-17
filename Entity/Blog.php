@@ -43,13 +43,19 @@ class Blog extends AbstractResource
      */
     public function setPosts(ArrayCollection $posts)
     {
+        /** @var \ICAP\BlogBundle\Entity\Post[] $posts */
+        foreach($posts as $post)
+        {
+            $post->setBlog($this);
+        }
+
         $this->posts = $posts;
 
         return $this;
     }
 
     /**
-     * @return \Doctrine\Common\Collections\Collection|Post[]
+     * @return ArrayCollection|Post[]
      */
     public function getPosts()
     {

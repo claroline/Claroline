@@ -267,10 +267,29 @@ class Post extends Statusable implements TaggableInterface
         $this->comments->removeElement($comments);
     }
 
+    /***
+     * Set comments
+     *
+     * @param ArrayCollection $comments
+     * @return Post
+     */
+    public function setComments(ArrayCollection $comments)
+    {
+        /** @var \ICAP\BlogBundle\Entity\Comment[] $comments */
+        foreach($comments as $comment)
+        {
+            $comment->setPost($this);
+        }
+
+        $this->comments = $comments;
+
+        return $this;
+    }
+
     /**
      * Get comments
      *
-     * @return Comment[]
+     * @return ArrayCollection|Comment[]
      */
     public function getComments()
     {

@@ -2,11 +2,15 @@
 
 namespace ICAP\BlogBundle\Listener;
 
+use Claroline\CoreBundle\Event\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Event\OpenResourceEvent;
+use Doctrine\Common\Collections\ArrayCollection;
 use ICAP\BlogBundle\Entity\Blog;
+use ICAP\BlogBundle\Entity\Comment;
+use ICAP\BlogBundle\Entity\Post;
 use ICAP\BlogBundle\Form\BlogType;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -77,6 +81,52 @@ class BlogListener extends ContainerAware
      */
     public function onDelete(DeleteResourceEvent $event)
     {
+        $event->stopPropagation();
+    }
+
+    public function onCopy(CopyResourceEvent $event)
+    {
+        $entityManager = $this->container->get('doctrine.orm.entity_manager');
+        /** @var \ICAP\BlogBundle\Entity\Blog $blog */
+        $blog      = $event->getResource();
+
+        $newBlog = new Blog();
+        $newBlog->setName($blog->getName());
+
+        $newPosts = new ArrayCollection();
+
+        foreach ($blog->getPosts() as $post) {
+            /** @var \ICAp\BlogBundle\Entity\Post $newPost */
+            $newPost = new Post();
+            $newPost
+                ->setTitle($post->getTitle())
+                ->setContent($post->getContent())
+                ->setAuthor($post->getAuthor())
+            ;
+
+            $newPosts->add($newPost);
+
+            $newComments = new ArrayCollection();
+
+            foreach ($post->getComments() as $comment) {
+                /** @var \ICAp\BlogBundle\Entity\Comment $newComment */
+                $newComment = new Comment();
+                $newComment
+                    ->setAuthor($comment->getAuthor())
+                    ->setMessage($comment->getMessage())
+                ;
+
+                $newComments->add($newComment);
+            }
+
+            $newPost->setComments($newComments);
+        }
+
+        $newBlog->setPosts($newPosts);
+
+        $entityManager->persist($newBlog);
+
+        $event->setCopy($newBlog);
         $event->stopPropagation();
     }
 }

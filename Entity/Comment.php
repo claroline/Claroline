@@ -61,7 +61,7 @@ class Comment extends Statusable
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
