@@ -276,9 +276,7 @@ abstract class RepositoryTestCase extends WebTestCase
             $activity->addResourceActivity($activityResource);
         }
 
-
         $activity->setCreationDate(self::$time);
-
 
         self::create($name, $activity);
         self::$om->endFlushSuite();
@@ -304,7 +302,7 @@ abstract class RepositoryTestCase extends WebTestCase
             $rights->addCreatableResourceType($type);
         }
 
-        self::create("resource_right/{$role->getName()}-{$resource->getName()}" , $rights);
+        self::create("resource_right/{$role->getName()}-{$resource->getName()}", $rights);
     }
 
     protected static function createTool($name)
@@ -460,11 +458,11 @@ abstract class RepositoryTestCase extends WebTestCase
     /**
      * Sets the common properties of a resource.
      *
-     * @param AbstractResource $resource
-     * @param ResourceType $type
-     * @param User $creator
+     * @param AbstractResource  $resource
+     * @param ResourceType      $type
+     * @param User              $creator
      * @param AbstractWorkspace $workspace
-     * @param Directory $parent
+     * @param Directory         $parent
      *
      * @return AbstractResource
      */

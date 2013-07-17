@@ -211,7 +211,14 @@ class DirectoryListener
             $newEvent = $this->eventDispatcher->dispatch(
                 'resource_directory_from_template',
                 'ImportResourceTemplate',
-                array($child, $directory, $event->getUser(), $event->getWorkspace(), $event->getRoles(), $createdResources)
+                array(
+                    $child,
+                    $directory,
+                    $event->getUser(),
+                    $event->getWorkspace(),
+                    $event->getRoles(),
+                    $createdResources
+                )
             );
             $childResources = $newEvent->getCreatedResources();
 

@@ -3,7 +3,6 @@
 namespace Invalid\UnloadableResourceClass2\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 /**
  * @ORM\Entity

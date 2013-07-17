@@ -159,7 +159,7 @@ class WorkspaceManager
     }
 
     /**
-     * @param string $configName
+     * @param  string      $configName
      * @return \ZipArchive
      */
     public function createArchive($configName)

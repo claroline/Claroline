@@ -203,7 +203,7 @@ class WorkspaceParametersController extends Controller
      * @EXT\Method("GET")
      *
      * @param AbstractWorkspace $workspace
-     * @param Tool $tool
+     * @param Tool              $tool
      *
      * @return Response
      */

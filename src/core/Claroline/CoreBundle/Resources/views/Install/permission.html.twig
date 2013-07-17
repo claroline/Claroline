@@ -1,4 +1,4 @@
- {% extends 'ClarolineCoreBundle:Install:layout.html.twig' %} 
+ {% extends 'ClarolineCoreBundle:Install:layout.html.twig' %}
     {% block content %}
      <div class="span3">
          <h3> Progression</h3>
@@ -40,14 +40,14 @@
                     <td>{{ 'permission'|trans({}, 'install') }} </td>
                     <td> [{{'folders'|trans({}, 'install')}} {{key}}]</td>
                     <td> {% if value == 'KO'%}
-                       <span style="color:#FF0000"> {{value}} </span>  
+                       <span style="color:#FF0000"> {{value}} </span>
                         {% else %}
                             {{value}}
                          {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
-                
+
             </tbody>
         </table>
         <p>

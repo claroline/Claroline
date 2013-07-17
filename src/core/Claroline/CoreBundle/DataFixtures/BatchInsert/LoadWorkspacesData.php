@@ -79,4 +79,3 @@ class LoadWorkspacesData extends LoggableFixture implements ContainerAwareInterf
     }
 
 }
-

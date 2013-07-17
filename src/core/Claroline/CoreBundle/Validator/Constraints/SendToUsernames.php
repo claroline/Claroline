@@ -16,4 +16,3 @@ class SendToUsernames extends Constraint
         return 'send_to_username_validator';
     }
 }
-

@@ -1,10 +1,10 @@
-{% extends 'ClarolineCoreBundle:Install:layout.html.twig' %} 
+{% extends 'ClarolineCoreBundle:Install:layout.html.twig' %}
 {% block content %}
 <div class="span3">
     <h3> Progression</h3>
     <ol class="nav nav-list">
-           {%block naviguation %}    
-           {{ parent()}}    
+           {%block naviguation %}
+           {{ parent()}}
             {%endblock %}
         </ol>
         <p>  Progression</p>
@@ -26,7 +26,7 @@
                 {{ form_label(form.dbPassword, "Mot de passe") }}
                 {{ form_widget(form.dbPassword) }} <em><span class="muted"> ex : secret</span> <em>
                 <br />
-                {{ form_rest(form) }}    
+                {{ form_rest(form) }}
                  {% if exist is defined %}
                       <span class="label label-important">{{ 'exist'|trans({}, 'install') }} <input type="checkbox" name="exist" value="0"/> </span><br />
                     {% endif %}
@@ -39,8 +39,8 @@
     <div class="span3">
          <h3> {{ 'hint'|trans({}, 'install') }}</h3>
         <div class="action">
-        <div class="well">{{ 'hint_2'|trans({}, 'install') }}</div> 
-        <div class="well">{{ 'hint_3'|trans({}, 'install') }}</div> 
+        <div class="well">{{ 'hint_2'|trans({}, 'install') }}</div>
+        <div class="well">{{ 'hint_3'|trans({}, 'install') }}</div>
         </div>
     </div>
     {% if app.session.getFlashes() is defined %}
@@ -55,7 +55,6 @@
         </div>
 
     </div>
-    
-   
-{% endblock %}
 
+
+{% endblock %}

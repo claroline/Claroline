@@ -24,7 +24,7 @@
         <form id="top_criteria" action="{{ path('claro_admin_analytics_top') }}" method="POST" class="form-inline">
             {{ form_widget(form_criteria) }}
             <div> <input type="submit" value="{{ 'Show'|trans({}, 'platform') }}" class="btn btn-primary"/> </div>
-        </form> 
+        </form>
     </div>
     <div class="margin clearfix">
         <div class="results_list">
@@ -40,5 +40,5 @@
                 {% endfor %}
             </table>
         </div>
-    </div> 
+    </div>
 {% endblock %}

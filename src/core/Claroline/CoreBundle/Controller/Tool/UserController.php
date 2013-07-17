@@ -168,7 +168,7 @@ class UserController extends Controller
      * edit the user parameters for the selected workspace.
      *
      * @param integer $workspaceId the workspace id
-     * @param integer $userId     the user id
+     * @param integer $userId      the user id
      *
      * @return Response
      */
@@ -334,7 +334,7 @@ class UserController extends Controller
      * Checks if the role manager of the user can be changed.
      * There should be awlays at least one manager of a workspace.
      *
-     * @param array $userIds an array of user ids
+     * @param array             $userIds   an array of user ids
      * @param AbstractWorkspace $workspace the relevant workspace
      *
      * @throws LogicException

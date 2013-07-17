@@ -66,7 +66,7 @@ class WorkspaceController extends Controller
         $this->eventDispatcher = $eventDispatcher;
         $this->security = $security;
         $this->router = $router;
-        $this->utils= $utils;
+        $this->utils = $utils;
         $this->formFactory = $formFactory;
     }
 

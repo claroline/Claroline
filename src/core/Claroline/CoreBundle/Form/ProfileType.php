@@ -7,7 +7,6 @@ use Claroline\CoreBundle\Entity\Role;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 
-
 class ProfileType extends BaseProfileType
 {
     private $grantRole;

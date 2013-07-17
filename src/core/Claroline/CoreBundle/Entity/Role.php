@@ -7,7 +7,6 @@ use Symfony\Component\Security\Core\Role\RoleInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
@@ -70,7 +69,7 @@ class Role implements RoleInterface
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\OrderedTool",
      *     mappedBy="roles"
      * )
-     * 
+     *
      */
     protected $orderedTools;
 

@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Event\Event\Log;
 
-class LogWorkspaceToolUpdateEvent extends LogGenericEvent
+class LogWorkspaceUpdateEvent extends LogGenericEvent
 {
     const ACTION = 'workspace_update';
 
