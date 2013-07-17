@@ -158,7 +158,7 @@ class Version20120119000000 extends BundleMigration
         $table = $schema->createTable('claro_group');
 
         $this->addId($table);
-        $table->addColumn('name', 'string', array('length' => 50, 'notnull' => true));
+        $table->addColumn('name', 'string', array('length' => 255, 'notnull' => true));
         $table->addUniqueIndex(array('name'));
 
         $this->storeTable($table);
