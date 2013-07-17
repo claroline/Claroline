@@ -1,0 +1,36 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block section_content %}
+    <div class="margin">
+        {{
+        macros.breadcrumbs([
+                {
+                    'icon': 'icon-user',
+                    'name': 'users_management'|trans({}, 'platform'),
+                    'href': path('claro_admin_users_management')
+                },
+                {
+                    'name': 'groups_list'|trans({}, 'platform'),
+                    'href': path('claro_admin_group_list')
+                },
+                {
+                    'name':  group.getName(),
+                    'href': path('claro_admin_user_of_group_list', {'groupId': group.getId()})
+                },
+                {
+                    'name': 'import_users'|trans({}, 'platform'),
+                    'href': ''
+                }
+        ])
+        }}
+    </div>
+    {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
+    <form class="form-horizontal" action="{{ path('claro_admin_import_users_into_group', {'groupId': group.getId()}) }}" method="post" {{ form_enctype(form) }} >
+        <fieldset>
+            {{ form_widget(form) }}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            </div>
+        </fieldset>
+    </form>
+{% endblock %}

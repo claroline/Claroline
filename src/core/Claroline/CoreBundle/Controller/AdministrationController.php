@@ -711,7 +711,7 @@ class AdministrationController extends Controller
      *     name="claro_admin_import_users"
      * )
      *
-     * @EXT\Method("POST")
+     * @EXT\Method({"POST", "GET"})
      *
      * @EXT\Template("ClarolineCoreBundle:Administration:importUsersForm.html.twig")
      *
@@ -737,6 +737,73 @@ class AdministrationController extends Controller
         }
 
         return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
+     *    "group/{groupId}/management/import/form",
+     *     name="claro_admin_import_users_into_group_form"
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "group",
+     *      class="ClarolineCoreBundle:Group",
+     *      options={"id" = "groupId", "strictId" = true}
+     * )
+     *
+     * @EXT\Template()
+     *
+     * @return Response
+     */
+    public function importUsersIntoGroupFormAction(Group $group)
+    {
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT);
+
+        return array('form' => $form->createView(), 'group' => $group);
+    }
+
+    /**
+     * @EXT\Route(
+     *    "group/{groupId}/management/import",
+     *     name="claro_admin_import_users_into_group"
+     * )
+     * @EXT\Method({"POST", "GET"})
+     * @EXT\ParamConverter(
+     *      "group",
+     *      class="ClarolineCoreBundle:Group",
+     *      options={"id" = "groupId", "strictId" = true}
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Administration:importUsersIntoGroupForm.html.twig")
+     *
+     * @return Response
+     */
+    public function importUsersIntoGroupAction(Group $group)
+    {
+        $request = $this->get('request');
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $file = $form->get('file')->getData();
+            $lines = str_getcsv(file_get_contents($file), PHP_EOL, ',');
+
+            foreach ($lines as $line) {
+                $users[] = str_getcsv($line);
+            }
+
+            $this->userManager->importUsers($users);
+            $this->groupManager->importUsers($group, $users);
+
+            return $this->redirect(
+                $this->generateUrl(
+                    'claro_admin_user_of_group_list',
+                    array('groupId' => $group->getId())
+                )
+            );
+        }
+
+        return array('form' => $form->createView(), 'group' => $group);
     }
 
     /**
