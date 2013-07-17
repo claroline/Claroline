@@ -45,7 +45,7 @@ class ExerciseListener extends ContainerAware
         $form = $this->container
             ->get('form.factory')
             ->create(new ExerciseType, new Exercise());
-        $form->bindRequest($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em = $this->container->get('doctrine.orm.entity_manager');
@@ -100,7 +100,13 @@ class ExerciseListener extends ContainerAware
 
     public function onDisplayDesktop(DisplayToolEvent $event)
     {
-        $response = $this->container->get('http_kernel')->forward('UJMExoBundle:Question:index', array());
+        //$response = $this->container->get('http_kernel')->forward('UJMExoBundle:Question:index', array());
+        /*$subRequest = $this->container->get('request')->*/
+        
+        
+        $subRequest = $this->container->get('request')->duplicate(array(), null, array("_controller" => 'UJMExoBundle:Question:index'));
+        $response = $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        
         $event->setContent($response->getContent());
     }
 }

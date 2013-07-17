@@ -142,7 +142,7 @@ class HintController extends Controller
         $entity  = new Hint();
         $request = $this->getRequest();
         $form    = $this->createForm(new HintType(), $entity);
-        $form->bindRequest($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -232,7 +232,7 @@ class HintController extends Controller
         $form = $this->createDeleteForm($id);
         $request = $this->getRequest();
 
-        $form->bindRequest($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

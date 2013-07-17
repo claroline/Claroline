@@ -120,7 +120,7 @@ class InteractionGraphicController extends Controller
         $interGraph = new InteractionGraphic();
         $request = $this->getRequest();
         $form = $this->createForm(new InteractionGraphicType($user), $interGraph);
-        $form->bindRequest($request);
+        $form->handleRequest($request);
 
         $exoID = $this->container->get('request')->request->get('exercise');
 
@@ -331,7 +331,7 @@ class InteractionGraphicController extends Controller
         $form = $this->createDeleteForm($id);
         $request = $this->getRequest();
 
-        $form->bindRequest($request);
+        $form->handleRequest($request);
 
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->find($id);

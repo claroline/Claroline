@@ -309,7 +309,7 @@ class QuestionController extends Controller
         $entity  = new Question();
         $request = $this->getRequest();
         $form    = $this->createForm(new QuestionType(), $entity);
-        $form->bindRequest($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

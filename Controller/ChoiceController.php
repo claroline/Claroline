@@ -115,7 +115,7 @@ class ChoiceController extends Controller
         $entity  = new Choice();
         $request = $this->getRequest();
         $form    = $this->createForm(new ChoiceType(), $entity);
-        $form->bindRequest($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -205,7 +205,7 @@ class ChoiceController extends Controller
         $form = $this->createDeleteForm($id);
         $request = $this->getRequest();
 
-        $form->bindRequest($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
