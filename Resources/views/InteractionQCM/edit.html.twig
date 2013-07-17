@@ -47,7 +47,7 @@
     <form onsubmit="return check_form('{{ "nbr_choices" | trans }}', '{{ "answer_coched" | trans }}', '{{ "label_empty" | trans }}', '{{ "point_answers" | trans }}', '{{ "point_answer" | trans }}', '{{ "invite_question" | trans }}');" action="{{ path('ujm_interactionqcm_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
         {{ form_widget(edit_form) }}
         <p>
-            <button type="submit" id="button_submit">{{ "Create" | trans }}</button>
+            <button type="submit" id="button_submit">{{ "Edit" | trans }}</button>
         </p>
     </form>
 

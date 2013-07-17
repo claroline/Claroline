@@ -118,14 +118,15 @@ class exerciseServices
         return $res;
 
     }
-
+    
     public function qcmMark(\UJM\ExoBundle\Entity\InteractionQCM $interQCM, array $response, $allChoices, $penality)
     {
         $score = 0;
+        $scoreMax = $this->qcmMaxScore($interQCM->getInteraction());
 
         $rightChoices = array();
         $markByChoice = array();
-
+        
         if (!$interQCM->getWeightResponse()) {
             foreach ($allChoices as $choice) {
                 if ($choice->getRightResponse()) {
@@ -144,18 +145,14 @@ class exerciseServices
             if ($score < 0) {
                 $score = 0;
             }
-            $score .= '/'.$interQCM->getScoreRightResponse();
+            
+            $score .= '/'.$scoreMax;
         } else {
             //points par réponse
-            $scoreMax = 0;
-
             foreach ($allChoices as $choice) {
                 $markByChoice[(string) $choice->getId()] = $choice->getWeight();
-                if ($choice->getRightResponse()) {
-                    $scoreMax += $choice->getWeight();
-                }
             }
-
+            
             foreach ($response as $res) {
                 $score += $markByChoice[$res];
             }
@@ -217,17 +214,25 @@ class exerciseServices
 
     public function responseGraphic($request, $paperID = 0)
     {
-        $point = 0;
         $answers = $request->request->get('answers'); // Answer of the student
         $graphId = $request->request->get('graphId'); // Id of the graphic interaction
         $max = $request->request->get('nbpointer'); // Number of answer zones
+        
         $em = $this->doctrine->getManager();
-        $rightCoords = $em->getRepository('UJMExoBundle:Coords')->findBy(array('interactionGraphic' => $graphId));
+        
+        $rightCoords = $em->getRepository('UJMExoBundle:Coords')
+            ->findBy(array('interactionGraphic' => $graphId));
+        
+        $interG = $em->getRepository('UJMExoBundle:InteractionGraphic')
+            ->find($graphId);
+        
+        $doc = $em->getRepository('UJMExoBundle:Document')
+            ->findOneBy(array('id' => $interG->getDocument()));
+        
         $verif = array();
-        $z = 0;
+        $point = $z = $total = 0;
 
         $coords = preg_split('[;]', $answers); // Divide the answer zones into cells
-        $total = 0;
 
         for ($i = 0; $i < $max - 1; $i++) {
             for ($j = 0; $j < $max - 1; $j++) {
@@ -248,11 +253,8 @@ class exerciseServices
                     }
                 }
             }
-            $total += $rightCoords[$i]->getScoreCoords(); // Score max
+            $total += $this->graphicMaxScore($interG->getInteraction()); // Score max
         }
-
-        $interG = $em->getRepository('UJMExoBundle:InteractionGraphic')->find($graphId);
-        $doc = $em->getRepository('UJMExoBundle:Document')->findOneBy(array('id' => $interG->getDocument()));
 
         $penalty = 0;
 
