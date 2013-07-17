@@ -159,5 +159,3 @@ class HomeControllerTest extends MockeryTestCase
         );
     }
 }
-
-

@@ -56,7 +56,7 @@ class ActivityController extends Controller
      * Adds a resource to an activity.
      *
      * @param AbstractResource $resource
-     * @param Activity $activity
+     * @param Activity         $activity
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -201,7 +201,7 @@ class ActivityController extends Controller
         $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
             ->findResourceActivities($activity);
         $resource = isset($resourceActivities[0]) ? $resourceActivities[0]->getResource(): null;
-        
+
         return array(
             'activity' => $activity,
             'resource' => $resource
@@ -237,7 +237,7 @@ class ActivityController extends Controller
      * Each step is a resource.
      *
      * @param Activity $activity
-     * @param integer $countItems
+     * @param integer  $countItems
      *
      * @return integer
      */
@@ -259,7 +259,7 @@ class ActivityController extends Controller
      * An item is either an activity (instruction) or a resource.
      *
      * @param Activity $activity
-     * @param integer $countItems
+     * @param integer  $countItems
      *
      * @return integer
      */

@@ -24,11 +24,11 @@ class Installer
     /**
      * Constructor.
      *
-     * @param Loader            $loader
-     * @param Validator         $validator
-     * @param Migrator          $migrator
-     * @param Recorder          $recorder
-     * @param KernelInterface   $kernel
+     * @param Loader          $loader
+     * @param Validator       $validator
+     * @param Migrator        $migrator
+     * @param Recorder        $recorder
+     * @param KernelInterface $kernel
      *
      * @DI\InjectParams({
      *     "loader" = @DI\Inject("claroline.plugin.loader"),

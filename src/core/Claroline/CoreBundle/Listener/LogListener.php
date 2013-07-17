@@ -13,8 +13,6 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Doctrine\ORM\EntityManager;
-
 
 /**
  * @DI\Service
@@ -177,7 +175,6 @@ class LogListener
     {
         if ($this->securityContext->getToken() === null) {
             //Only if have a user session;
-
             return false;
         }
 
@@ -215,7 +212,6 @@ class LogListener
 
             return $is;
         } else {
-
             return false;
         }
     }

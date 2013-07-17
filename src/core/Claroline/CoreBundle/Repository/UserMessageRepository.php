@@ -10,8 +10,8 @@ class UserMessageRepository extends EntityRepository
     /**
      * Finds UserMessage marked as sent by a user.
      *
-     * @param User      $user
-     * @param boolean   $executeQuery
+     * @param User    $user
+     * @param boolean $executeQuery
      *
      * @return array[UserMessage]|Query
      */
@@ -34,8 +34,8 @@ class UserMessageRepository extends EntityRepository
     /**
      * Finds UserMessage received by a user.
      *
-     * @param User      $user
-     * @param boolean   $executeQuery
+     * @param User    $user
+     * @param boolean $executeQuery
      *
      * @return array[UserMessage]|Query
      */
@@ -58,8 +58,8 @@ class UserMessageRepository extends EntityRepository
     /**
      * Finds UserMessage removed by a user.
      *
-     * @param User      $user
-     * @param boolean   $executeQuery
+     * @param User    $user
+     * @param boolean $executeQuery
      *
      * @return array[UserMessage]|Query
      */
@@ -82,9 +82,9 @@ class UserMessageRepository extends EntityRepository
      * Finds UserMessage received by a user, filtered by a search
      * on the object or on the username of the sender.
      *
-     * @param User      $receiver
-     * @param string    $objectOrSenderUsernameSearch
-     * @param boolean   $executeQuery
+     * @param User    $receiver
+     * @param string  $objectOrSenderUsernameSearch
+     * @param boolean $executeQuery
      *
      * @return array[UserMessage]|Query
      */
@@ -117,9 +117,9 @@ class UserMessageRepository extends EntityRepository
     /**
      * Finds UserMessage sent by a user, filtered by a search on the object.
      *
-     * @param User      $sender
-     * @param string    $objectSearch
-     * @param boolean   $executeQuery
+     * @param User    $sender
+     * @param string  $objectSearch
+     * @param boolean $executeQuery
      *
      * @return array[UserMessage]|Query
      */
@@ -146,9 +146,9 @@ class UserMessageRepository extends EntityRepository
      * Finds UserMessage removed by a user, filtered by a search
      * on the object or on the username of the sender.
      *
-     * @param User      $user
-     * @param string    $objectOrSenderUsernameSearch
-     * @param boolean   $executeQuery
+     * @param User    $user
+     * @param string  $objectOrSenderUsernameSearch
+     * @param boolean $executeQuery
      *
      * @return array[UserMessage]|Query
      */
@@ -180,8 +180,8 @@ class UserMessageRepository extends EntityRepository
     /**
      * Finds UserMessage received or sent by a user, filtered by specific messages.
      *
-     * @param User              $user
-     * @param array[Message]    $messages
+     * @param User           $user
+     * @param array[Message] $messages
      *
      * @return array[UserMessage]
      */

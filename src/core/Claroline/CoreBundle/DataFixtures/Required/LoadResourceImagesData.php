@@ -1,13 +1,12 @@
 <?php
 
-namespace Claroline\CoreBundle\DataFixtures;
+namespace Claroline\CoreBundle\DataFixtures\Required;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Resource\IconType;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 
 /**

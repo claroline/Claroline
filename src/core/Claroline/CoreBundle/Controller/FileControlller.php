@@ -10,7 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 class FileControlller extends Controller
 {
-	/**
+    /**
      * @Route(
      *     "resource/img/{imageId}",
      *     name="claro_file_get_image",
