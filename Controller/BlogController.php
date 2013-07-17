@@ -2,6 +2,7 @@
 
 namespace ICAP\BlogBundle\Controller;
 
+use Claroline\CoreBundle\Entity\User;
 use ICAP\BlogBundle\Entity\Blog;
 use ICAP\BlogBundle\Entity\BlogOptions;
 use ICAP\BlogBundle\Entity\Post;
@@ -25,9 +26,10 @@ class BlogController extends Controller
      *      requirements={"blogId" = "\d+", "page" = "\d+"}, defaults={"page" = 1}
      * )
      * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
+     * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function viewAction(Blog $blog, $page)
+    public function viewAction(Blog $blog, $page, User $user)
     {
         $this->checkAccess("OPEN", $blog);
 
@@ -50,8 +52,6 @@ class BlogController extends Controller
         } catch (NotValidCurrentPageException $e) {
             throw new NotFoundHttpException();
         }
-
-        $user = $this->get('security.context')->getToken()->getUser();
 
         return array(
             '_resource' => $blog,
