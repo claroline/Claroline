@@ -26,6 +26,7 @@
         "mikey179/vfsStream": "dev-master",
         "stfalcon/tinymce-bundle": "dev-master",
         "claroline/front-end-bundle": "dev-master",
+        "claroline/taxonomy-bundle": "dev-master",
         "jms/twig-js-bundle": "dev-master",
         "white-october/pagerfanta-bundle": "dev-master",
         "idci/exporter-bundle": "dev-master",
@@ -89,6 +90,14 @@
                     "files": ["Hamcrest-1.1.0/Hamcrest/Hamcrest.php"]
                 }
             }
+        },
+        {
+            "type": "vcs",
+            "url": "http://github.com/claroline/FrontEndBundle"
+        },
+        {
+            "type": "vcs",
+            "url": "http://github.com/claroline/TaxonomyBundle"
         }
     ],
     "scripts": {
