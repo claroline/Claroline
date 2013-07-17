@@ -4,10 +4,8 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Claroline\CoreBundle\Event\Event\DisplayWidgetEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Claroline\CoreBundle\Event\Event\DisplayToolEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 /**

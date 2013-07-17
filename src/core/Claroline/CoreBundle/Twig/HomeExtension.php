@@ -119,7 +119,6 @@ class HomeExtension extends \Twig_Extension
     {
         if ((isset($_SERVER['PATH_INFO']) && $_SERVER['PATH_INFO'] === $link)
             || (!isset($_SERVER['PATH_INFO']) && $link == '/')) {
-
             return ' active'; //the white space is nedded
         }
 
@@ -147,4 +146,3 @@ class HomeExtension extends \Twig_Extension
 
     }
 }
-

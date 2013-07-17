@@ -130,4 +130,3 @@ class ActivityListenerTest extends FunctionalTestCase
         $this->loadFixture(new LoadActivityData($name, $parent, $author, $ids));
     }
 }
-

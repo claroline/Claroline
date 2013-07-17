@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
-use \Exception;
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;

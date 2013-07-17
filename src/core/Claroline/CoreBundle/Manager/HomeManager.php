@@ -355,7 +355,7 @@ class HomeManager
     /**
      * Get the variables of the menu.
      *
-     * @param string $id The id of the content.
+     * @param string $id   The id of the content.
      * @param string $size The size (span12) of the content.
      * @param string $type The type of the content.
      *

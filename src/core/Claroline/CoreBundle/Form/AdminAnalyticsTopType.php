@@ -5,7 +5,6 @@ namespace Claroline\CoreBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Claroline\CoreBundle\Validator\Constraints\AdminWorkspaceTagUniqueName;
 
 class AdminAnalyticsTopType extends AbstractType
 {
@@ -28,7 +27,7 @@ class AdminAnalyticsTopType extends AbstractType
                         'top_users_workspaces_owners' => 'top_users_workspaces_owners',
                         'top_users_workspaces_enrolled' => 'top_users_workspaces_enrolled',
                         'top_users_connections' => 'top_users_connections',
-                        'top_media_views' => 'top_media_views'                        
+                        'top_media_views' => 'top_media_views'
                     )
                 )
             )

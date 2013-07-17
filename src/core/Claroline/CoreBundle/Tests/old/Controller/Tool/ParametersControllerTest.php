@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Controller\Tool;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
-use Claroline\CoreBundle\Library\Installation\Plugin\Loader;
 
 class ParametersControllerTest extends FunctionalTestCase
 {

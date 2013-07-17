@@ -32,9 +32,9 @@ class LoadFileData extends AbstractFixture implements ContainerAwareInterface
      *
      * Each created file will be referenced with a 'file/[file name]' label.
      *
-     * @param string    $creator    Username of the creator of the file(s)
-     * @param string    $directory  Name of the directory where the file(s) should be created
-     * @param array     $files      File names (or paths) to be created
+     * @param string $creator   Username of the creator of the file(s)
+     * @param string $directory Name of the directory where the file(s) should be created
+     * @param array  $files     File names (or paths) to be created
      */
     public function __construct($creator, $directory, array $files)
     {

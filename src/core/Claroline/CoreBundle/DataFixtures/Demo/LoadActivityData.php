@@ -19,10 +19,10 @@ class LoadActivityData extends AbstractFixture implements ContainerAwareInterfac
     /**
      * Constructor.
      *
-     * @param string $name     The activity name
-     * @param string $parent   The parent reference(without 'directory/')
-     * @param type $creator    The creator reference(without 'user/')
-     * @param array $resources an array of resource ids.
+     * @param string $name      The activity name
+     * @param string $parent    The parent reference(without 'directory/')
+     * @param type   $creator   The creator reference(without 'user/')
+     * @param array  $resources an array of resource ids.
      */
     public function __construct($name, $parent, $creator, array $resources)
     {
@@ -69,6 +69,4 @@ class LoadActivityData extends AbstractFixture implements ContainerAwareInterfac
         $manager->flush();
         $this->addReference('activity/'.$this->name, $activity);
     }
-
 }
-
