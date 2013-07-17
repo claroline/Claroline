@@ -73,11 +73,27 @@ class BlogController extends Controller
     {
         $this->checkAccess("EDIT", $blog);
 
-        $form = $this->createForm(new BlogOptionsType(), new BlogOptions());
+        $blogOptions = $blog->getOptions();
+
+        $form = $this->createForm(new BlogOptionsType(), $blogOptions);
 
         if("POST" === $request->getMethod()) {
             $form->submit($request);
             if ($form->isValid()) {
+                $entityManager = $this->getDoctrine()->getManager();
+                $translator = $this->get('translator');
+                $flashBag = $this->get('session')->getFlashBag();
+
+                try {
+                    $entityManager->persist($blogOptions);
+                    $entityManager->flush();
+
+                    $flashBag->add('success', $translator->trans('icap_blog_post_configure_success', array(), 'icap_blog'));
+                }
+                catch(\Exception $exception) {
+                    $flashBag->add('error', $translator->trans('icap_blog_post_configure_error', array(), 'icap_blog'));
+                }
+
                 return $this->redirect($this->generateUrl('icap_blog_configure', array('blogId' => $blog->getId())));
             }
         }

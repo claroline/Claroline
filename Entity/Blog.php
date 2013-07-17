@@ -83,6 +83,14 @@ class Blog extends AbstractResource
     }
 
     /**
+     * @return bool
+     */
+    public function isCommentsAuthorized()
+    {
+        return $this->getOptions()->getAuthorizeComment();
+    }
+
+    /**
      * @ORM\PostPersist
      */
     public function postPersist(LifecycleEventArgs $args)

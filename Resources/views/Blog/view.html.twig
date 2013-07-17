@@ -50,7 +50,7 @@
                     <li>{{ 'no_tags'|trans }}</li>
                 {% endfor %}
                 </ul>
-                <a href="#" class="pull-right" title="{{ 'see_comments'|trans }}"><i class="icon-comments"></i> {{ post.comments|length }} {{ 'comments'|trans }}</a>
+                {% if _resource.isCommentsAuthorized %}<a href="#" class="pull-right" title="{{ 'see_comments'|trans }}"><i class="icon-comments"></i> {{ post.comments|length }} {{ 'comments'|trans }}</a>{% endif %}
             </footer>
         </article>
     {% else %}

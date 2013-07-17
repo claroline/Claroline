@@ -71,6 +71,8 @@ class Version20130530152255 extends BundleMigration
         $table->addColumn('auto_publish_post', 'boolean');
         $table->addColumn('auto_publish_comment', 'boolean');
 
+        $table->addUniqueIndex(array('blog_id'));
+
         $table->addForeignKeyConstraint(
             $schema->getTable('icap__blog'),
             array('blog_id'),
