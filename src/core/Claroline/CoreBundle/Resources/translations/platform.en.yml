@@ -363,6 +363,7 @@ rights: Rights
 rights_management: 'Rights Management'
 role: Role
 roles: Roles
+role_creation: Role creation
 save: Save
 save_as_template: Save as template
 search: Search
@@ -457,6 +458,8 @@ workspace_form_template: Template
 workspace_form_type: Type
 workspace_order_tool_edit_form_name: Name
 workspace_resource: Resources
+workspace_role_type_form_translationKey: Name
+workspace_role_type_form_requireDir: Create a directory
 workspace_tag_form_name: Name
 workspace_template_form_name: Name
 workspace_tools: Tools

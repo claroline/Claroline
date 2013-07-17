@@ -32,6 +32,7 @@ class FormFactory
     const TYPE_RESOURCE_PERMS = 'resource_permissions';
     const TYPE_RESOURCE_RENAME = 'resource_rename';
     const TYPE_RESOURCE_PROPERTIES = 'resource_properties';
+    const TYPE_WORKSPACE_ROLE = 'workspace_role';
 
     private static $types = array(
         self::TYPE_MESSAGE => array(
@@ -113,6 +114,9 @@ class FormFactory
         self::TYPE_RESOURCE_PROPERTIES => array(
             'formType' => 'Claroline\CoreBundle\Form\ResourcePropertiesType',
             'entity' => 'Claroline\CoreBundle\Entity\Resource\AbstractResource'
+        ),
+        self::TYPE_WORKSPACE_ROLE => array(
+            'formType' => 'Claroline\CoreBundle\Form\WorkspaceRoleType'
         )
     );
 

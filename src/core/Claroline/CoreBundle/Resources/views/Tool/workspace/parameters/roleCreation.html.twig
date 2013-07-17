@@ -1,0 +1,46 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/clarolinecore/js/tool/workspace/tool_properties.js') }}" type="text/javascript"></script>
+{% endblock %}
+
+{% block section_content %}
+
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
+            },
+            {
+                'name': 'roles'|trans({}, 'platform'),
+                'href': path('claro_workspace_roles', {'workspace': workspace.getId()})
+            },
+            {
+                'name': 'creation'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+
+    <div class="wrapper">
+    <form class="form-horizontal" 
+          action="{{ path('claro_workspace_role_create', {'workspace': workspace.getId()} ) }}" 
+          method="post" {{ form_enctype(form) }} 
+          id="workspace-role-creation"
+      >
+        <fieldset>
+            <legend>{{ 'role_creation'|trans({}, 'platform') }} :</legend>
+            {{ form_widget(form) }}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+                <a href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()}) }}">
+                    <button type="button" class="btn">{{ 'cancel'|trans({}, 'platform') }}</button>
+                </a>
+            </div>
+        </fieldset>
+    </form>
+    </div>
+{% endblock %}

@@ -363,6 +363,7 @@ rights: Droits
 rights_management: 'Gestion des droits'
 role: Rôle
 roles: Rôles
+role_creation: Créer un rôle
 save: Sauvegarder
 save_as_template: Sauvegarder comme modèle
 search: Rechercher
@@ -460,6 +461,8 @@ workspace_form_template: Modèle
 workspace_form_type: Type
 workspace_order_tool_edit_form_name: Nom
 workspace_resource: Ressources
+workspace_role_type_form_translationKey: Nom
+workspace_role_type_form_requireDir: Créer un répertoire
 workspace_tag_form_name: Nom
 workspace_template_form_name: Nom
 workspace_tools: Outils
