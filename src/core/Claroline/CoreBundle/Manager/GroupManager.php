@@ -105,7 +105,11 @@ class GroupManager
             );
 
             if (is_null($existingUser)) {
-                $nonImportedUsers[] = $username;
+                $nonImportedUsers[] = array(
+                    'username' => $username,
+                    'firstName' => $firstName,
+                    'lastName' => $lastName
+                );
             }
             else {
                 $toImport[] = $existingUser;

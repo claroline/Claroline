@@ -158,7 +158,11 @@ class UserManager
                 $this->ed->dispatch('log', 'Log\LogUserCreate', array($newUser));
             }
             else {
-                $nonImportedUsers[] = $username;
+                $nonImportedUsers[] = array(
+                    'username' => $username,
+                    'firstName' => $firstName,
+                    'lastName' => $lastName
+                );
             }
         }
 
