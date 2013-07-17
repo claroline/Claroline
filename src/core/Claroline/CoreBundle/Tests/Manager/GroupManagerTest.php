@@ -179,9 +179,10 @@ class GroupManagerTest extends MockeryTestCase
             ->andReturn($query);
         $this->pagerFactory->shouldReceive('createPager')
             ->with($query, 1)
-            ->once();
+            ->once()
+            ->andReturn('pager');
 
-        $this->getManager()->getWorkspaceOutsiders($workspace, 1);
+        $this->assertEquals('pager', $this->getManager()->getWorkspaceOutsiders($workspace, 1));
     }
 
     public function testGetWorkspaceOutsidersByName()
@@ -196,9 +197,10 @@ class GroupManagerTest extends MockeryTestCase
             ->andReturn($query);
         $this->pagerFactory->shouldReceive('createPager')
             ->with($query, 1)
-            ->once();
+            ->once()
+            ->andReturn('pager');
 
-        $this->getManager()->getWorkspaceOutsidersByName($workspace, 'search', 1);
+        $this->assertEquals('pager', $this->getManager()->getWorkspaceOutsidersByName($workspace, 'search', 1));
     }
 
     public function testGetGroupsByWorkspace()
@@ -213,9 +215,10 @@ class GroupManagerTest extends MockeryTestCase
             ->andReturn($query);
         $this->pagerFactory->shouldReceive('createPager')
             ->with($query, 1)
-            ->once();
+            ->once()
+            ->andReturn('pager');
 
-        $this->getManager()->getGroupsByWorkspace($workspace, 1);
+        $this->assertEquals('pager', $this->getManager()->getGroupsByWorkspace($workspace, 1));
     }
 
     public function testGetGroupsByWorkspaceAndName()
@@ -230,9 +233,10 @@ class GroupManagerTest extends MockeryTestCase
             ->andReturn($query);
         $this->pagerFactory->shouldReceive('createPager')
             ->with($query, 1)
-            ->once();
+            ->once()
+            ->andReturn('pager');
 
-        $this->getManager()->getGroupsByWorkspaceAndName($workspace, 'search', 1);
+        $this->assertEquals('pager', $this->getManager()->getGroupsByWorkspaceAndName($workspace, 'search', 1));
     }
 
     public function testGetGroups()
@@ -246,9 +250,10 @@ class GroupManagerTest extends MockeryTestCase
             ->andReturn($query);
         $this->pagerFactory->shouldReceive('createPager')
             ->with($query, 1)
-            ->once();
+            ->once()
+            ->andReturn('pager');
 
-        $this->getManager()->getGroups(1);
+        $this->assertEquals('pager', $this->getManager()->getGroups(1));
     }
 
     public function testGetGroupsByName()
@@ -262,9 +267,10 @@ class GroupManagerTest extends MockeryTestCase
             ->andReturn($query);
         $this->pagerFactory->shouldReceive('createPager')
             ->with($query, 1)
-            ->once();
+            ->once()
+            ->andReturn('pager');
 
-        $this->getManager()->getGroupsByName('search', 1);
+        $this->assertEquals('pager', $this->getManager()->getGroupsByName('search', 1));
     }
 
     private function getManager(array $mockedMethods = array())
