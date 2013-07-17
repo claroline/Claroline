@@ -4,8 +4,10 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Event\Event\PluginOptionsEvent;
@@ -23,7 +25,6 @@ use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
-use Symfony\Component\Form\FormError;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -42,6 +43,7 @@ class AdministrationController extends Controller
     private $configHandler;
     private $formFactory;
     private $analyticsManager;
+    private $translator;
 
     /**
      * @DI\InjectParams({
@@ -54,6 +56,7 @@ class AdministrationController extends Controller
      *     "configHandler"      = @DI\Inject("claroline.config.platform_config_handler"),
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
      *     "analyticsManager"   = @DI\Inject("claroline.manager.analytics_manager"),
+     *     "translator"         = @DI\Inject("translator")
      * })
      */
     public function __construct(
@@ -65,7 +68,8 @@ class AdministrationController extends Controller
         EventDispatcher $eventDispatcher,
         PlatformConfigurationHandler $configHandler,
         FormFactory $formFactory,
-        AnalyticsManager $analyticsManager
+        AnalyticsManager $analyticsManager,
+        Translator $translator
     )
     {
         $this->userManager = $userManager;
@@ -77,6 +81,7 @@ class AdministrationController extends Controller
         $this->configHandler = $configHandler;
         $this->formFactory = $formFactory;
         $this->analyticsManager = $analyticsManager;
+        $this->translator = $translator;
     }
 
     /**
@@ -731,9 +736,19 @@ class AdministrationController extends Controller
                 $users[] = str_getcsv($line);
             }
 
-            $this->userManager->importUsers($users);
+            $nonImportedUsers = $this->userManager->importUsers($users);
 
-            return $this->redirect($this->generateUrl('claro_admin_users_management'));
+            foreach ($nonImportedUsers as $nonImportedUser) {
+                $this->get('session')->getFlashBag()->add(
+                    'error',
+                    $nonImportedUser['firstName'] . ' ' .
+                    $nonImportedUser['lastName'] . ' [' .
+                    $nonImportedUser['username'] . '] ' .
+                    $this->translator->trans('has_not_been_imported', array(), 'platform')
+                );
+            }
+
+            return $this->redirect($this->generateUrl('claro_admin_user_list'));
         }
 
         return array('form' => $form->createView());
@@ -793,7 +808,17 @@ class AdministrationController extends Controller
             }
 
             $this->userManager->importUsers($users);
-            $this->groupManager->importUsers($group, $users);
+            $nonImportedUsers = $this->groupManager->importUsers($group, $users);
+
+            foreach ($nonImportedUsers as $nonImportedUser) {
+                $this->get('session')->getFlashBag()->add(
+                    'error',
+                    $nonImportedUser['firstName'] . ' ' .
+                    $nonImportedUser['lastName'] . ' [' .
+                    $nonImportedUser['username'] . '] ' .
+                    $this->translator->trans('has_not_been_imported_into_the_group', array(), 'platform')
+                );
+            }
 
             return $this->redirect(
                 $this->generateUrl(

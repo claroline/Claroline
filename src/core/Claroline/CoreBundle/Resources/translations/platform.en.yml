@@ -95,7 +95,9 @@ group_form_ownedRoles: Roles
 group_form_platformRole: Role
 group_parameter: 'Group parameter'
 groups: Groups
-groups_list: "Groups list"
+groups_list: 'Groups list'
+has_not_been_imported: 'has not been imported'
+has_not_been_imported_into_the_group: 'has not been imported into the group'
 history: History
 home: Home
 id: Id
