@@ -10,11 +10,39 @@ class PathController extends Controller
 {
     /**
      * @Route(
-     *     "/workspace/{id}",
+     *     "/workspace",
      *     name = "innova_path"
      * )
      *
-     * @Template("InnovaPathBundle::resource.html.twig")
+     * @Template("InnovaPathBundle::desktopTool.html.twig")
+     *
+     *
+     * @return Response
+     */
+    public function indexAction()
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        //get the resource
+        // $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($id);
+
+        $em = $this->getDoctrine()->getManager();
+        $paths = $em->getRepository('InnovaPathBundle:Path')->findAll();
+
+        //get the text.
+        // return array('_resource' => $resource);
+        return array(
+            'paths' => $paths,
+        );
+    }
+
+
+    /**
+     * @Route(
+     *     "/workspace/{id}",
+     *     name = "innova_path_open"
+     * )
+     *
+     * @Template("InnovaPathBundle::desktopTool.html.twig")
      *
      * @param integer $id
      *
@@ -24,9 +52,15 @@ class PathController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         //get the resource
-        $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($id);
+        // $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($id);
+
+        $em = $this->getDoctrine()->getManager();
+        $paths = $em->getRepository('InnovaPathBundle:Path')->findAll();
 
         //get the text.
-        return array('_resource' => $resource);
+        // return array('_resource' => $resource);
+        return array(
+            'paths' => $paths,
+        );
     }
 }
