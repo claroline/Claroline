@@ -37,9 +37,9 @@ class AbstractResourceRepository extends MaterializedPathRepository
     /**
      * Returns the descendants of a resource.
      *
-     * @param AbstractResource  $resource           The resource node to start with
-     * @param boolean           $includeStartNode   Whether the given resource should be included in the result
-     * @param string            $filterResourceType A resource type to filter the results
+     * @param AbstractResource $resource           The resource node to start with
+     * @param boolean          $includeStartNode   Whether the given resource should be included in the result
+     * @param string           $filterResourceType A resource type to filter the results
      *
      * @return array[AbstractResource]
      */
@@ -66,8 +66,8 @@ class AbstractResourceRepository extends MaterializedPathRepository
     /**
      * Returns the immediate children of a resource that are openable by any of the given roles.
      *
-     * @param AbstractResource  $parent The id of the parent of the requested children
-     * @param array[string]     $roles  An array of roles
+     * @param AbstractResource $parent The id of the parent of the requested children
+     * @param array[string]    $roles  An array of roles
      *
      * @throw InvalidArgumentException if the array of roles is empty
      *
@@ -188,8 +188,8 @@ class AbstractResourceRepository extends MaterializedPathRepository
      * these roles are matched.
      * WARNING: the recursive search is far from being optimized.
      *
-     * @param array $criteria      An array of search filters
-     * @param array $roles         An array of user's roles
+     * @param array   $criteria    An array of search filters
+     * @param array   $roles       An array of user's roles
      * @param boolean $isRecursive Will the search follow links.
      *
      * @return array[array] An array of resources represented as arrays
@@ -337,10 +337,10 @@ class AbstractResourceRepository extends MaterializedPathRepository
      * Executes a DQL query and returns resources as entities or arrays.
      * If it returns arrays, it add a "pathfordisplay" field to each item.
      *
-     * @param Query   $query    The query to execute
-     * @param integer $offset   First row to start with
-     * @param integer $numrows  Maximum number of rows to return
-     * @param boolean $asArray  Whether the resources must be returned as arrays or as objects
+     * @param Query   $query   The query to execute
+     * @param integer $offset  First row to start with
+     * @param integer $numrows Maximum number of rows to return
+     * @param boolean $asArray Whether the resources must be returned as arrays or as objects
      *
      * @return array[AbstractResource|array]
      */

@@ -91,7 +91,6 @@ class MailController extends Controller
         }
 
         // add success/error message...
-
         return array(
             'form' => $form->createView(),
             'userId' => $user->getId()

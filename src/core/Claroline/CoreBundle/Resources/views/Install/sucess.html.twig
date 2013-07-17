@@ -1,9 +1,9 @@
-{% extends 'ClarolineCoreBundle:Install:layout.html.twig' %} 
+{% extends 'ClarolineCoreBundle:Install:layout.html.twig' %}
 {% block content %}
 <div class="span3">
     <h3> Progression</h3>
     <ol class="nav nav-list">
-     {%block naviguation %}        
+     {%block naviguation %}
         {%endblock %}
     </ol>
     <p>  Progression</p>
@@ -23,12 +23,12 @@
 <div class="span2">
     <h3> {{ 'hint'|trans({}, 'install') }}</h3>
     <div class="action">
-          
+
     </div>
-  
+
     </div>
 <div class="span12">
-  
+
      {% if app.session.getFlashes() is defined %}
         <div class="alert alert-error">
 {% for key, flash in app.session.getFlashes() %}
@@ -41,4 +41,3 @@
 </div>
 
 {% endblock %}
-

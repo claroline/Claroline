@@ -1,6 +1,6 @@
-{% extends 'form_div_layout.html.twig' %} 
+{% extends 'form_div_layout.html.twig' %}
 
-{% block simpleautocomplete_widget %} 
+{% block simpleautocomplete_widget %}
     {% spaceless %}
         {% block simpleautocomplete_assets %}
             <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/css/common/jquery-ui-bootstrap/jquery-ui-1.9.2.custom.css') }}'/>
@@ -29,7 +29,7 @@
                                 if (data.status == 200) {
                                     var result = eval(data.responseText);
                                     response(
-                                        $.map( 
+                                        $.map(
                                             result, function( item ) {
                                                 return { label: item.label, value: item.label };
                                             }
@@ -40,7 +40,7 @@
                         });
                     }
                 });
-            });          
+            });
         </script>
-    {% endspaceless %} 
+    {% endspaceless %}
 {% endblock %}

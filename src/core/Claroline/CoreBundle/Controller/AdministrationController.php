@@ -846,20 +846,20 @@ class AdministrationController extends Controller
     public function analyticsConnectionsAction()
     {
         $request = $this->get('request');
-        $criteria_form = $this->formFactory->create(FormFactory::TYPE_ADMIN_ANALYTICS_CONNECTIONS);
-        $clone_form = clone $criteria_form;
-        $criteria_form->bind($request);
+        $criteriaForm = $this->formFactory->create(FormFactory::TYPE_ADMIN_ANALYTICS_CONNECTIONS);
+        $cloneForm = clone $criteriaForm;
+        $criteriaForm->bind($request);
         $unique = false;
-        if ($criteria_form->isValid()) {
-            $range = $criteria_form->get('range')->getData();
-            $unique = ($criteria_form->get('unique')->getData()=='true') ? true : false;
+        if ($criteriaForm->isValid()) {
+            $range = $criteriaForm->get('range')->getData();
+            $unique = $criteriaForm->get('unique')->getData() === 'true';
         }
         $actionsForRange = $this->analyticsManager
-            ->getDailyActionNumberForDateRange($range, 'user_login',$unique);
+            ->getDailyActionNumberForDateRange($range, 'user_login', $unique);
         if ($range === null) {
-            $clone_form->get('range')->setData($actionsForRange['range']);
-            $clone_form->get('unique')->setData($unique);
-            $criteria_form = $clone_form;
+            $cloneForm->get('range')->setData($actionsForRange['range']);
+            $cloneForm->get('unique')->setData($unique);
+            $criteriaForm = $cloneForm;
         }
 
         $connections = $actionsForRange['chartData'];
@@ -867,7 +867,7 @@ class AdministrationController extends Controller
 
         return array(
             'connections' => $connections,
-            'form_criteria' => $criteria_form->createView(),
+            'form_criteria' => $criteriaForm->createView(),
             'activeUsers' => $activeUsers
         );
     }
@@ -920,31 +920,31 @@ class AdministrationController extends Controller
      *
      * @throws \Exception
      */
-    public function analyticsTopAction($top_type)
+    public function analyticsTopAction($topType)
     {
         $request = $this->get('request');
-        $criteria_form = $this->formFactory->create(FormFactory::TYPE_ADMIN_ANALYTICS_TOP);
-        $clone_form = clone $criteria_form;
-        $criteria_form->bind($request);
+        $criteriaForm = $this->formFactory->create(FormFactory::TYPE_ADMIN_ANALYTICS_TOP);
+        $cloneForm = clone $criteriaForm;
+        $criteriaForm->bind($request);
 
-        $range = $criteria_form->get('range')->getData();
-        if($range===null) {
+        $range = $criteriaForm->get('range')->getData();
+        if ($range === null) {
             $range = $this->analyticsManager->getDefaultRange();
         }
-        $top_type_temp = $criteria_form->get('top_type')->getData();
-        $top_type = ($top_type_temp !== null) ? $top_type_temp : $top_type;
-        $max = $criteria_form->get('top_number')->getData();
-        $max = ($max!==null)?intval($max):30;
+        $topTypeTemp = $criteriaForm->get('top_type')->getData();
+        $topType = $topTypeTemp !== null ? $topTypeTemp : $topType;
+        $max = $criteriaForm->get('top_number')->getData();
+        $max = $max !== null ? intval($max) : 30;
 
-        $listData = $this->analyticsManager->getTopByCriteria($range, $top_type, $max);
+        $listData = $this->analyticsManager->getTopByCriteria($range, $topType, $max);
 
-        $clone_form->get('range')->setData($range);
-        $clone_form->get('top_type')->setData($top_type);
-        $clone_form->get('top_number')->setData($max);
-        $criteria_form = $clone_form;
+        $cloneForm->get('range')->setData($range);
+        $cloneForm->get('top_type')->setData($topType);
+        $cloneForm->get('top_number')->setData($max);
+        $criteriaForm = $cloneForm;
 
         return array(
-            'form_criteria' => $criteria_form->createView(),
+            'form_criteria' => $criteriaForm->createView(),
             'list_data' => $listData
         );
     }

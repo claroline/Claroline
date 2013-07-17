@@ -123,8 +123,8 @@ class ResourceQueryBuilder
     /**
      * Filters resources whose path begins with a given path.
      *
-     * @param string    $path
-     * @param boolean   $includeGivenPath
+     * @param string  $path
+     * @param boolean $includeGivenPath
      *
      * @return ResourceQueryBuilder
      */

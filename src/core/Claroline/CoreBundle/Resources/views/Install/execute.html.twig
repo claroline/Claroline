@@ -1,9 +1,9 @@
- {% extends 'ClarolineCoreBundle:Install:layout.html.twig' %} 
-{% block content %} 
+ {% extends 'ClarolineCoreBundle:Install:layout.html.twig' %}
+{% block content %}
 <div class="span3">
     <h3> Progression</h3>
     <ol class="nav nav-list">
-        {%block naviguation %}      
+        {%block naviguation %}
          {{ parent() }}
         {%endblock %}
     </ol>
@@ -22,17 +22,17 @@
                         <li><strong> {{ 'language'|trans({}, 'install') }}</strong> :{{ value.locale }} </li>
                     </ul>
                 </fieldset>
-                <fieldset> 
+                <fieldset>
                     <legend> {{ 'database'|trans({}, 'install') }} </legend>
-                    <ul>        
+                    <ul>
                         <li><strong> {{ 'db_host'|trans({}, 'install') }}</strong> :{{ value.dbHost }}</li>
                         <li><strong>{{ 'db_name'|trans({}, 'install') }}</strong> :{{ value.dbName }}</li>
                         <li><strong>{{ 'username'|trans({}, 'install') }}</strong> :{{ value.dbUser }}</li>
                         <li><strong>{{ 'password'|trans({}, 'install') }}</strong> :{{ value.dbPassword }}</li>
-                        <li><strong>{{ 'driver'|trans({}, 'install') }}</strong> :{{ value.dbDriver }}</li>         
+                        <li><strong>{{ 'driver'|trans({}, 'install') }}</strong> :{{ value.dbDriver }}</li>
                     </ul>
                 </fieldset>
-                <fieldset> 
+                <fieldset>
                     <legend> {{ 'administrator_profil'|trans({}, 'install') }} </legend>
                     <ul>
                         <li><strong>{{'admin_form_lastName'|trans({}, 'platform') }}</strong> <span class="orange"> :{{ value.lastName }} </span></li>
@@ -41,12 +41,12 @@
                         <li><strong>{{'admin_form_plainPassword_first'|trans({}, 'platform') }} </strong> :{{ value.plainPassword.first }}</li>
                         <li><strong>Adresse E-mail</strong> :{{ value.mail }}</li>
                     </ul>
-                </fieldset>      
+                </fieldset>
                 <input type="submit" value="{{ 'next'|trans({}, 'install') }}" class="btn btn-primary"/>
             </form>
             <form action="{{ path('claro_showAdminForm') }}" method="post" >
                 <input type="submit" name="submit" value="{{ 'back'|trans({}, 'install') }}" class="btn"/>
-            </form>  
+            </form>
         </form>
 
 

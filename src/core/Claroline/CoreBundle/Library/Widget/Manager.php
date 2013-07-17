@@ -233,4 +233,3 @@ class Manager
         return $configs;
     }
 }
-

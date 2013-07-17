@@ -28,7 +28,6 @@ class ResourceCheckerTest extends WebTestCase
         $this->assertContains("config.yml file missing", $errors[0]->getMessage());
     }
 
-
     public function testCheckerReturnsAnErrorOnMissingResourceKey()
     {
         $pluginFqcn = 'Invalid\MissingResourceKey1\InvalidMissingResourceKey1';

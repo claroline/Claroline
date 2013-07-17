@@ -40,7 +40,6 @@ class Type
      */
     private $maxContentPage;
 
-
     /**
      * Get id
      *
@@ -54,7 +53,7 @@ class Type
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string $name
      * @return Type
      */
     public function setName($name)
@@ -77,7 +76,7 @@ class Type
     /**
      * Set max_content_page
      *
-     * @param integer $maxContentPage
+     * @param  integer $maxContentPage
      * @return Type
      */
     public function setMaxContentPage($maxContentPage)

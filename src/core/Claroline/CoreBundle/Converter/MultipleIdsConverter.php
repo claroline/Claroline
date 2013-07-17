@@ -37,8 +37,8 @@ class MultipleIdsConverter implements ParamConverterInterface
      * @{inheritDoc}
      *
      * @throws InvalidConfigurationException if the name or class parameters are missing
-     * @throws NotFoundHttpException if one or more entities cannot be retreived
-     * @throws BadRequestHttpException if there is no "ids" array parameter in the query string
+     * @throws NotFoundHttpException         if one or more entities cannot be retreived
+     * @throws BadRequestHttpException       if there is no "ids" array parameter in the query string
      */
     public function apply(Request $request, ConfigurationInterface $configuration)
     {

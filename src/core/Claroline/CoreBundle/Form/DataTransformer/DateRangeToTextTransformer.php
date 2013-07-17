@@ -30,7 +30,6 @@ class DateRangeToTextTransformer implements DataTransformerInterface
                 $endDate = $dateArray[1];
             }
         } else {
-
             return null;
         }
 
@@ -47,7 +46,7 @@ class DateRangeToTextTransformer implements DataTransformerInterface
      * Transforms a string to an array of 2 dates.
      *
      * @param  string $string
-     * @return array of strings (names for tags)
+     * @return array  of strings (names for tags)
      */
     public function reverseTransform($string)
     {
@@ -64,7 +63,6 @@ class DateRangeToTextTransformer implements DataTransformerInterface
                 $endDate = strtotime($array[1]);
             }
         } else {
-
             return null;
         }
 

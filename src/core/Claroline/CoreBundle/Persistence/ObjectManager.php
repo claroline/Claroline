@@ -186,8 +186,8 @@ class ObjectManager extends ObjectManagerDecorator
     /**
      * Finds a set of objects by their ids.
      *
-     * @param string    $objectClass
-     * @param array     $ids
+     * @param string $objectClass
+     * @param array  $ids
      *
      * @return array[object]
      *

@@ -39,8 +39,8 @@ class ThemeService
     /**
      * Get the themes of the platform.
      *
-     * @param \String $filter Return only themes in a folder in views (Example: less-generated)
-     * @return \Array An array of Claroline\CoreBundle\Entity\Theme\Theme entities
+     * @param  \String $filter Return only themes in a folder in views (Example: less-generated)
+     * @return \Array  An array of Claroline\CoreBundle\Entity\Theme\Theme entities
      */
     public function getThemes($filter = null)
     {
@@ -56,7 +56,7 @@ class ThemeService
 
             if ($filter and isset($path[1]) and $path[1] == $filter ) {
                 $tmp[$theme->getId()] = $theme;
-            } else if (!$filter) {
+            } elseif (!$filter) {
                 $tmp[$theme->getId()] = $theme;
             }
         }
