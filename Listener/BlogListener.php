@@ -81,19 +81,29 @@ class BlogListener extends ContainerAware
      */
     public function onDelete(DeleteResourceEvent $event)
     {
+        $entityManager = $this->container->get('doctrine.orm.entity_manager');
+        $entityManager->remove($event->getResource());
         $event->stopPropagation();
     }
 
     public function onCopy(CopyResourceEvent $event)
     {
         $entityManager = $this->container->get('doctrine.orm.entity_manager');
+        /** @var \ICAPLyon1\Bundle\SimpleTagBundle\Service\Manager $tagManager */
+        $tagManager = $this->container->get("icaplyon1_simpletag.manager");
         /** @var \ICAP\BlogBundle\Entity\Blog $blog */
-        $blog      = $event->getResource();
+        $blog = $event->getResource();
+
+        $user = $this->container->get('security.context')->getToken()->getUser();
 
         $newBlog = new Blog();
         $newBlog->setName($blog->getName());
+        $newBlog->setResourceType($blog->getResourceType());
+        $newBlog->setCreator($user);
+        $newBlog->setWorkspace($blog->getWorkspace());
 
-        $newPosts = new ArrayCollection();
+        $entityManager->persist($newBlog);
+        $entityManager->flush($newBlog);
 
         foreach ($blog->getPosts() as $post) {
             /** @var \ICAp\BlogBundle\Entity\Post $newPost */
@@ -102,11 +112,15 @@ class BlogListener extends ContainerAware
                 ->setTitle($post->getTitle())
                 ->setContent($post->getContent())
                 ->setAuthor($post->getAuthor())
+                ->setBlog($newBlog)
             ;
 
-            $newPosts->add($newPost);
+            $postTags = $tagManager->getTags($post);
 
-            $newComments = new ArrayCollection();
+            $entityManager->persist($newPost);
+            $entityManager->flush($newPost);
+
+            $tagManager->addTags($postTags, $newPost);
 
             foreach ($post->getComments() as $comment) {
                 /** @var \ICAp\BlogBundle\Entity\Comment $newComment */
@@ -114,15 +128,10 @@ class BlogListener extends ContainerAware
                 $newComment
                     ->setAuthor($comment->getAuthor())
                     ->setMessage($comment->getMessage())
+                    ->setPost($newPost)
                 ;
-
-                $newComments->add($newComment);
             }
-
-            $newPost->setComments($newComments);
         }
-
-        $newBlog->setPosts($newPosts);
 
         $entityManager->persist($newBlog);
 
