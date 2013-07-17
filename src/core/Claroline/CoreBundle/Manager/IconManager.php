@@ -62,7 +62,7 @@ class IconManager
     /**
      * Create (if possible) and|or returns an icon for a resource
      *
-     * @param File    $resource  the file
+     * @param File $resource the file
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceIcon
      *
@@ -88,12 +88,12 @@ class IconManager
                 $this->om->persist($icon);
                 $this->createShortcutIcon($icon);
                 $this->om->endFlushSuite();
-                
+
                 return $icon;
             }
             $this->om->endFlushSuite();
         }
-        
+
         //default & fallback
         return $this->searchIcon($resource->getMimeType());
     }
@@ -104,7 +104,7 @@ class IconManager
      *
      * @param string $mimeType
      *
-     * @return  \Claroline\CoreBundle\Entity\Resource\ResourceIcon
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceIcon
      */
     public function searchIcon($mimeType)
     {
@@ -135,7 +135,7 @@ class IconManager
     public function createShortcutIcon(ResourceIcon $icon)
     {
         $this->om->startFlushSuite();
-        
+
         $ds = DIRECTORY_SEPARATOR;
         try {
             $shortcutLocation = $this->creator->shortcutThumbnail($icon->getIconLocation());
@@ -146,13 +146,13 @@ class IconManager
 
         $shortcutIcon = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
         $shortcutIcon->setIconLocation($shortcutLocation);
-        
+
         if (strstr($shortcutLocation, "bundles")) {
             $tmpRelativeUrl = strstr($shortcutLocation, "bundles");
         } else {
             $tmpRelativeUrl = strstr($shortcutLocation, "thumbnails");
         }
-        
+
         $relativeUrl = str_replace('\\', '/', $tmpRelativeUrl);
         $shortcutIcon->setRelativeUrl($relativeUrl);
         $shortcutIcon->setMimeType($icon->getMimeType());
@@ -163,7 +163,7 @@ class IconManager
         $this->om->persist($shortcutIcon);
 
         $this->om->endFlushSuite();
-        
+
         return $shortcutIcon;
 
     }
@@ -196,17 +196,17 @@ class IconManager
 
         return $icon;
     }
-    
+
     /**
      * Creates an image from a file.
-     * 
+     *
      * @param string $filePath
      * @param string $baseMime (image|video)
-     * 
+     *
      * @return $thumnnailPath
      */
     public function createFromFile($filePath, $baseMime)
-    {        
+    {
         $ds = DIRECTORY_SEPARATOR;
         $newPath = $this->thumbDir. $ds . $this->ut->generateGuid() . ".png";
 
@@ -228,12 +228,12 @@ class IconManager
                 //error handling ? $thumbnailPath = null
             }
         }
-        
+
         return $thumbnailPath;
     }
-    
+
     public function delete(ResourceIcon $icon)
-    {        
+    {
         if ($icon->getMimeType() === 'custom') {
             $shortcut = $icon->getShortcutIcon();
             $this->removeImageFromThumbDir($icon);
@@ -241,9 +241,9 @@ class IconManager
             $this->om->remove($shortcut);
             $this->om->remove($icon);
             $this->om->flush();
-        } 
+        }
     }
-    
+
     public function replace(AbstractResource $resource, ResourceIcon $icon)
     {
         $this->om->startFlushSuite();
@@ -251,14 +251,14 @@ class IconManager
         $this->delete($oldIcon);
         $resource->setIcon($icon);
         $this->om->endFlushSuite();
-        
+
         return $resource;
     }
-    
+
     public function removeImageFromThumbDir(ResourceIcon $icon)
     {
         $pathName = $this->thumbDir . DIRECTORY_SEPARATOR . $icon->getIconLocation();
-            
+
         if (file_exists($pathName)) {
             unlink($pathName);
         }

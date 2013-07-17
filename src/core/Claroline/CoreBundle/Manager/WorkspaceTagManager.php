@@ -39,7 +39,7 @@ class WorkspaceTagManager
      *     "om"          = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
-    public function __contruct(
+    public function __construct(
         RoleManager $roleManager,
         ObjectManager $om
     )
@@ -185,7 +185,7 @@ class WorkspaceTagManager
 
     public function getTagsByUser(User $user = null)
     {
-        return $this->tagRepo->findBy(array('user' => $user), array('name' => 'ASC'));;
+        return $this->tagRepo->findBy(array('user' => $user), array('name' => 'ASC'));
     }
 
     public function getTagByNameAndUser($name, User $user = null)
@@ -214,7 +214,7 @@ class WorkspaceTagManager
         User $user
     )
     {
-        return $this->relTagRepo->findOneByWorkspaceAndTagAndUser($workspace,$tag, $user);
+        return $this->relTagRepo->findOneByWorkspaceAndTagAndUser($workspace, $tag, $user);
     }
 
     public function getAdminTagRelationByWorkspaceAndTag(AbstractWorkspace $workspace, WorkspaceTag $tag)
@@ -361,9 +361,9 @@ class WorkspaceTagManager
     /**
      * Checks if given tag or at least one of its children is associated to a workspace
      *
-     * @param integer $tagId
-     * @param array $tagWorkspaces
-     * @param array $hierarchy
+     * @param  integer $tagId
+     * @param  array   $tagWorkspaces
+     * @param  array   $hierarchy
      * @return boolean
      */
     private function isTagDisplayable($tagId, array $tagWorkspaces, array $hierarchy)

@@ -50,13 +50,13 @@ class ResourceRightsRepositoryTest extends RepositoryTestCase
 
     public function testFindRecursiveByResource()
     {
-        $rights =  self::$repo->findRecursiveByResource(self::get('dir_1'));
+        $rights = self::$repo->findRecursiveByResource(self::get('dir_1'));
         $this->assertEquals(3, count($rights));
     }
 
     public function testFindRecursiveByResourceAndRole()
     {
-        $rights =  self::$repo->findRecursiveByResourceAndRole(self::get('dir_1'), self::get('ROLE_1'));
+        $rights = self::$repo->findRecursiveByResourceAndRole(self::get('dir_1'), self::get('ROLE_1'));
         $this->assertEquals(2, count($rights));
     }
 }

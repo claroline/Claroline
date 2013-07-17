@@ -155,7 +155,7 @@ class ResourceRightsController
      * allowed for creation.
      *
      * @param AbstractResource $resource the resource
-     * @param Role $role                 the role for which the form is displayed
+     * @param Role             $role     the role for which the form is displayed
      *
      * @return Response
      *
@@ -185,8 +185,8 @@ class ResourceRightsController
      * array of resource type ids to be passed by POST method. Only the types
      * passed in the request will be allowed.
      *
-     * @param AbstractResource $resource      the resource
-     * @param Role             $role          the role for which the form is displayed
+     * @param AbstractResource $resource the resource
+     * @param Role             $role     the role for which the form is displayed
      *
      * @return Response
      *
@@ -236,8 +236,8 @@ class ResourceRightsController
      * - for MOVE / COPY $collection->setAttributes(array('parent' => $parent))
      *  where $parent is the new parent entity.
      *
-     * @param string                $permission
-     * @param ResourceCollection    $collection
+     * @param  string                $permission
+     * @param  ResourceCollection    $collection
      * @throws AccessDeniedException if the current user is not allowed to edit the resource
      */
     private function checkAccess($permission, ResourceCollection $collection)

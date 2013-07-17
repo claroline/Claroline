@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Entity\Workspace;
 
 use \RuntimeException;
-use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;

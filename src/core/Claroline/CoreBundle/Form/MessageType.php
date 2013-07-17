@@ -8,15 +8,14 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Claroline\CoreBundle\Validator\Constraints\SendToUsernames;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-
 class MessageType extends AbstractType
 {
     /**
      * Constructor.
      *
-     * @param string $username
-     * @param string $object
-     * @param boolean $isFast indicate if the message is an answer of a previous message
+     * @param string  $username
+     * @param string  $object
+     * @param boolean $isFast   indicate if the message is an answer of a previous message
      * (no need to show the object nor the username).
      *
      * @throws \Exception

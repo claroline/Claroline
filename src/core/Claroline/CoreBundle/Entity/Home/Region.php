@@ -28,7 +28,6 @@ class Region
      */
     private $name;
 
-
     /**
      * Get id
      *
@@ -42,7 +41,7 @@ class Region
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string $name
      * @return Region
      */
     public function setName($name)

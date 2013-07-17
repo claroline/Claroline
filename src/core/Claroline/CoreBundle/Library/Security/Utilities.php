@@ -4,8 +4,6 @@ namespace Claroline\CoreBundle\Library\Security;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
-use Claroline\CoreBundle\Library\Security\Token\ViewAsToken;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -48,7 +46,7 @@ class Utilities
      * Takes the array of checked ids from the rights form (ie rights_form.html.twig) and
      * transforms them into a easy to use permission array.
 
-     * @param array $checks
+     * @param array  $checks
      * @param string $typeOfRight
      *
      * @return array
@@ -99,8 +97,8 @@ class Utilities
      * Adds the missing permissions to an array of permissions, setting missing
      * ones to false.
      *
-     * @param array     $permissions    The array of permissions
-     * @param string    $target         The target of the right ('resource' or 'workspace')
+     * @param array  $permissions The array of permissions
+     * @param string $target      The target of the right ('resource' or 'workspace')
      *
      * @return array
      */

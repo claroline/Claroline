@@ -82,7 +82,6 @@ class Event
     public function getStart()
     {
         if (is_null($this->start)) {
-
             return $this->start;
 
         } else {
@@ -109,7 +108,6 @@ class Event
     public function getEnd()
     {
         if (is_null($this->end)) {
-
             return $this->end;
 
         } else {
@@ -141,7 +139,6 @@ class Event
     {
         $this->description = $description;
     }
-
 
     public function getWorkspace()
     {

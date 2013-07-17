@@ -57,16 +57,16 @@
     {{ parent() }}
     <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/excanvas.min.js') }}"></script><![endif]-->
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/jquery.jqplot.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.pieRenderer.min.js') }}"></script>    
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.pieRenderer.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasTextRenderer.min.js') }}"></script>
-    
+
     <script type="text/javascript">
         var chartData = [];
         {% for resource in resourceCount %}
             chartData.push(["{{resource.name|trans({}, 'resource')}}",{{resource.total}}]);
         {% endfor %}
         var bg_color = "transparent";
-        if ($.browser.msie && parseInt($.browser.version, 10) <= 8) bg_color = "#fff"; 
+        if ($.browser.msie && parseInt($.browser.version, 10) <= 8) bg_color = "#fff";
         $(document).ready(function(){
             $(".accordion-body").bind("hide", function(){
                 var arrowIcon = $(this).parents(".accordion-group").find(".icon-chevron-up");
@@ -91,13 +91,13 @@
                             shadow: false,
                             background: bg_color,
                             useNegativeColors: false
-                        },                                                      
+                        },
                         highlighter: {
                             show: false
                         },
                         cursor: {
                             show: false,
-                            zoom: false, 
+                            zoom: false,
                             showTooltip: false
                         },
                         seriesDefaults: {
@@ -111,7 +111,7 @@
                                 dataLabelFormatString: '%.1f%%',
                                 highlightMouseOver:false
                             },
-                            shadow:false 
+                            shadow:false
                         },
                         legend:{
                             location: 's',
@@ -124,7 +124,7 @@
                             },
                             backgroundColor:bg_color,
                             placement:'outsideGrid'
-                        }, 
+                        },
                     }
                 );
             }
