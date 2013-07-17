@@ -126,7 +126,7 @@ class GroupManager
             $content[$i]['name'] = $group->getName();
 
             $rolesString = '';
-            $roles = $groups[$i]->getEntityRoles();
+            $roles = $group->getEntityRoles();
             $rolesCount = count($roles);
             $j = 0;
 
@@ -137,19 +137,6 @@ class GroupManager
                     $rolesString .= ' ,';
                 }
                 $j++;
-            }
-        }
-        for ($i = 0, $size = count($groups); $i < $size; $i++) {
-            $content[$i]['id'] = $groups[$i]->getId();
-            $content[$i]['name'] = $groups[$i]->getName();
-            $rolesString = '';
-            $roles = $groups[$i]->getEntityRoles();
-
-            for ($j = 0, $rolesCount = count($roles); $j < $rolesCount; $j++) {
-                $rolesString .= "{$this->translator->trans($roles[$j]->getTranslationKey(), array(), 'platform')}";
-                if ($j <= $rolesCount - 2) {
-                    $rolesString .= ' ,';
-                }
             }
             $content[$i]['roles'] = $rolesString;
             $i++;
