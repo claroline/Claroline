@@ -29,18 +29,18 @@
     </style>
     <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
 {% endblock %}
-{% block section_content %}    
+{% block section_content %}
     {% include 'ClarolineCoreBundle:Administration:analytics_navbar.html.twig'%}
     <div class="margin">
         <h1>{{activeUsers}}</h1>
         <p><i class="icon-user"></i> {{'users_connected_once'|trans({}, 'platform')}}</p>
     </div>
-    
+
     <div class="margin clearfix">
         <form id="connections_criteria" action="{{ path('claro_admin_analytics_connections') }}" method="POST" class="form-inline">
             {{ form_widget(form_criteria) }}
             <div> <input type="submit" value="{{ 'Show actions'|trans({}, 'platform') }}" class="btn btn-primary"/> </div>
-        </form>    
+        </form>
     </div>
 
     <div class="margin">
@@ -48,7 +48,7 @@
         <div id="connections-line-chart" class="line-chart"></div>
         <br/>
         <div class="count_by_day_chart_legend"><i class="icon-hand-up"></i> <em>{{ 'Draw an area on the graph to zoom, double-click to cancel'|trans({}, 'platform') }}</em></div>
-    </div>   
+    </div>
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
@@ -64,7 +64,7 @@
     <script type="text/javascript">
         var chartData = {{ connections|json_encode|raw }};
         var bg_color = "transparent";
-        if ($.browser.msie && parseInt($.browser.version, 10) <= 8) bg_color = "#fff"; 
+        if ($.browser.msie && parseInt($.browser.version, 10) <= 8) bg_color = "#fff";
             $(document).ready(function(){
                 if (chartData.length>0) {
                     var actionsPlot = $.jqplot(
@@ -111,7 +111,7 @@
                             },
                             cursor: {
                                 show: true,
-                                zoom: true, 
+                                zoom: true,
                                 showTooltip: false
                             },
                             seriesDefaults: {

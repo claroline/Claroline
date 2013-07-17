@@ -68,9 +68,9 @@ class RightsManager
     /**
      * Create a new ResourceRight
      *
-     * @param array $permissions
-     * @param boolean $isRecursive
-     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param array                                                  $permissions
+     * @param boolean                                                $isRecursive
+     * @param \Claroline\CoreBundle\Entity\Role                      $role
      * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
      */
     public function create(
@@ -96,7 +96,7 @@ class RightsManager
         //Bugfix: If the flushSuite is uncommented, doctrine returns an error
         //(ResourceRights duplicata)
         //$this->om->startFlushSuite();
-            
+
         $arRights = ($isRecursive) ?
             $this->updateRightsTree($role, $resource):
             array($this->getOneByRoleAndResource($role, $resource));
@@ -108,7 +108,6 @@ class RightsManager
         }
 
         //$this->om->endFlushSuite();
-
         return $arRights;
     }
 
@@ -138,30 +137,30 @@ class RightsManager
 
     public function copy(AbstractResource $original, AbstractResource $resource)
     {
-       $originalRights = $this->rightsRepo->findBy(array('resource' => $original));
-       $created = array();
-       $this->om->startFlushSuite();
+        $originalRights = $this->rightsRepo->findBy(array('resource' => $original));
+        $created = array();
+        $this->om->startFlushSuite();
 
-       foreach ($originalRights as $originalRight) {
-           $created[] = $this->create(
-               $originalRight->getPermissions(),
-               $originalRight->getRole(),
-               $resource,
-               false,
-               $originalRight->getCreatableResourceTypes()->toArray()
-           );
-       }
+        foreach ($originalRights as $originalRight) {
+            $created[] = $this->create(
+                $originalRight->getPermissions(),
+                $originalRight->getRole(),
+                $resource,
+                false,
+                $originalRight->getCreatableResourceTypes()->toArray()
+            );
+        }
 
-       $this->om->endFlushSuite();
+        $this->om->endFlushSuite();
 
-       return $created;
+        return $created;
     }
 
     /**
      * Create rights wich weren't created for every descendants and returns every rights of
      * every descendants (include rights wich weren't created).
      *
-     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param \Claroline\CoreBundle\Entity\Role                      $role
      * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceRights
@@ -190,9 +189,9 @@ class RightsManager
                 $finalRights[] = $rights;
             }
         }
-        
+
         $this->om->flush();
-        
+
         return $finalRights;
     }
 
@@ -206,20 +205,20 @@ class RightsManager
 
         return $rights;
     }
-    
+
     /**
      * Takes an array of Role.
      * Parse each key of the $perms array
      * and add the entry 'role' where it is needed.
-     * 
-     * @param array $baseRoles
-     * @param array $perms
+     *
+     * @param  array $baseRoles
+     * @param  array $perms
      * @return array
      */
     public function addRolesToPermsArray(array $baseRoles, array $perms)
     {
         $initializedArray = array();
-        
+
         foreach ($perms as $roleBaseName => $data) {
             foreach ($baseRoles as $baseRole) {
                 if ($this->roleManager->getRoleBaseName($baseRole->getName()) === $roleBaseName) {
@@ -228,7 +227,7 @@ class RightsManager
                 }
             }
         }
-        
+
         return $initializedArray;
     }
 
@@ -264,7 +263,8 @@ class RightsManager
         Role $role,
         AbstractResource $resource,
         array $creations = array()
-    ) {
+    )
+    {
         $this->om->startFlushSuite();
         //will create every rights with the role and the resource already set.
         $resourceRights = $this->updateRightsTree($role, $resource);
@@ -274,6 +274,7 @@ class RightsManager
             $rights->setCreatableResourceTypes($creations);
             $this->om->persist($rights);
         }
+
         $this->om->endFlushSuite();
     }
 
@@ -282,7 +283,8 @@ class RightsManager
         Role $role,
         AbstractResource $resource,
         array $creations = array()
-    ) {
+    )
+    {
         $rights = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceRights');
         $rights->setRole($role);
         $rights->setResource($resource);
@@ -300,13 +302,13 @@ class RightsManager
 
         if (count($changeSet > 0)) {
             $this->dispatcher->dispatch(
-                'log', 
-                'Log\LogWorkspaceRoleChangeRight', 
+                'log',
+                'Log\LogWorkspaceRoleChangeRight',
                 array($rights->getRole(), $rights->getResource(), $changeSet)
             );
         }
     }
-    
+
     /**
      * Returns every ResourceRights of a resource on 1 level if the role linked is not 'ROLE_ADMIN'
      *
@@ -318,17 +320,17 @@ class RightsManager
     {
         return $this->rightsRepo->findNonAdminRights($resource);
     }
-    
+
     public function getResourceTypes()
     {
-       return $this->resourceTypeRepo->findAll();
+        return $this->resourceTypeRepo->findAll();
     }
-    
+
     public function getMaximumRights(array $roles, AbstractResource $resource)
     {
         return $this->rightsRepo->findMaximumRights($roles, $resource);
     }
-    
+
     public function getCreationRights(array $roles, AbstractResource $resource)
     {
         return $this->rightsRepo->findCreationRights($roles, $resource);

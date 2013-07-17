@@ -114,7 +114,7 @@ class ResourceVoter implements VoterInterface
      * Checks if the resourceType name $resourceType is in the
      * $rightsCreation array.
      *
-     * @param array $rightsCreation
+     * @param array  $rightsCreation
      * @param string $resourceType
      *
      * @return boolean
@@ -166,8 +166,8 @@ class ResourceVoter implements VoterInterface
      * Checks if the current token has the right to do the action $action.
      *
      * @param AbstractResource $resource
-     * @param TokenInterface $token
-     * @param string $action
+     * @param TokenInterface   $token
+     * @param string           $action
      *
      * @return boolean
      */
@@ -185,9 +185,9 @@ class ResourceVoter implements VoterInterface
      * Checks if the a resource whole type is $type
      * can be created in the directory $resource by the $token
      *
-     * @param string $type
+     * @param string           $type
      * @param AbstractResource $resource
-     * @param TokenInterface $token
+     * @param TokenInterface   $token
      *
      * @return array
      */
@@ -233,8 +233,8 @@ class ResourceVoter implements VoterInterface
      * Checks if the array of resources can be moved to the resource $parent
      * by the $token.
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $parent
-     * @param array $resources
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource               $parent
+     * @param array                                                                $resources
      * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
      *
      * @return array
@@ -289,8 +289,8 @@ class ResourceVoter implements VoterInterface
      * Checks if the array of resources can be copied to the resource $parent
      * by the $token.
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $parent
-     * @param type $resources
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource               $parent
+     * @param type                                                                 $resources
      * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
      *
      * @return array

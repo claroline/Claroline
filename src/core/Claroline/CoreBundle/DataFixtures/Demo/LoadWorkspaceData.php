@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class LoadWorkspaceData extends AbstractFixture implements ContainerAwareInterface
 {
     private $workspaces;
-    static private $codeDiscrCount = 1;
+    private static $codeDiscrCount = 1;
 
     /**
      * Constructor. Expects an associative array where each key is an unique workspace

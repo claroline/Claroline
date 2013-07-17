@@ -7,7 +7,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use JMS\DiExtraBundle\Annotation as DI;
 
 class AdministrationWidgetController extends Controller
 {

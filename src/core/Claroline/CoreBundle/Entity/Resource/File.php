@@ -2,9 +2,7 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
-use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
-use Claroline\CoreBundle\Entity\Resource\MimeType;
 
 /**
  * @ORM\Entity

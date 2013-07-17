@@ -49,7 +49,7 @@ class ResourceTypeRepository extends EntityRepository
             ->select('type.id, type.name, COUNT(rs.id) AS total')
             ->leftJoin('Claroline\CoreBundle\Entity\Resource\AbstractResource', 'rs', 'WITH', 'type = rs.resourceType')
             ->groupBy('type.id')
-            ->orderBy('total','DESC');
+            ->orderBy('total', 'DESC');
 
         return $qb->getQuery()->getResult();
     }

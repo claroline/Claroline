@@ -31,4 +31,3 @@ class ImportWidgetConfigEvent extends Event
         return $this->archive;
     }
 }
-

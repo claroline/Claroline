@@ -348,7 +348,7 @@ resources: Ressources
 resources_most_downloaded: Ressources les plus téléchargés
 resources_rights: 'Droits des ressources'
 resources_usage_ratio: Taux d'utilisation des resources
-resources_usage_list: Liste d'utilisation des resources 
+resources_usage_list: Liste d'utilisation des resources
 resource_right_form_canCopy: Copier
 resource_right_form_canDelete: Supprimer
 resource_right_form_canEdit: Editer
@@ -510,4 +510,3 @@ Draw an area on the graph to zoom, double-click to cancel: 'Tracez une zone sur 
 Overview of recent activities of your workspaces: 'Aperçu des activités récentes de vos espaces de travail'
 Overview of recent activities in %workspaceName%: 'Aperçu des activités récentes de %workspaceName%'
 Overview of all recent activities in %workspaceName%: 'Aperçu de toutes les activités récentes de %workspaceName%'
-

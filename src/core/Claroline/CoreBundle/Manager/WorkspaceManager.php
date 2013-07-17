@@ -129,7 +129,7 @@ class WorkspaceManager
             }
 
             $confTool = isset($toolsConfig[$toolName]) ?  $toolsConfig[$toolName] : array();
-            
+
             $this->toolManager->import(
                 $confTool,
                 $rolesToAdd,
@@ -157,9 +157,9 @@ class WorkspaceManager
         $this->om->persist($workspace);
         $this->om->flush($workspace);
     }
-    
+
     /**
-     * @param string $configName
+     * @param  string      $configName
      * @return \ZipArchive
      */
     public function createArchive($configName)
@@ -173,10 +173,10 @@ class WorkspaceManager
         $this->om->persist($template);
         $this->om->flush();
         $archive->open($pathArch, \ZipArchive::CREATE);
-        
+
         return $archive;
     }
-    
+
     public function export(AbstractWorkspace $workspace, $configName)
     {
         if (!is_writable($this->templateDir)) {
@@ -197,29 +197,29 @@ class WorkspaceManager
         $archive->close();
         $this->om->endFlushSuite();
     }
-    
+
     public function exportRolesSection(AbstractWorkspace $workspace)
     {
         $description = array();
-        
+
         $roles = $this->roleRepo->findByWorkspace($workspace);
-        
+
         foreach ($roles as $role) {
             $name = $this->roleManager->getRoleBaseName($role->getName());
             $arRole[$name] = $role->getTranslationKey();
         }
-        
+
         $description['roles'] = $arRole;
-        
+
         return $description;
     }
-    
+
     public function exportRootPermsSection(AbstractWorkspace $workspace)
     {
         $description = array();
         $root = $this->resourceRepo->findWorkspaceRoot($workspace);
         $roles = $this->roleRepo->findByWorkspace($workspace);
-        
+
         foreach ($roles as $role) {
             $perms = $this->resourceRightsRepo
                 ->findMaximumRights(array($role->getName()), $root);
@@ -228,19 +228,19 @@ class WorkspaceManager
 
             $description['root_perms'][$this->roleManager->getRoleBaseName($role->getName())] = $perms;
         }
-        
+
         return $description;
     }
-    
+
     public function exportToolsInfosSection(AbstractWorkspace $workspace)
     {
         $arTools = array();
         $description = array();
         $workspaceTools = $this->orderedToolRepo->findBy(array('workspace' => $workspace), array('order' => 'ASC'));
-        
+
         foreach ($workspaceTools as $workspaceTool) {
             $tool = $workspaceTool->getTool();
-           
+
             $roles = $this->roleRepo->findByWorkspaceAndTool($workspace, $tool);
             $arToolRoles = array();
 
@@ -252,17 +252,17 @@ class WorkspaceManager
             $toolsInfos['name'] = $workspaceTool->getName();
             $arTools[$tool->getName()] = $toolsInfos;
         }
-        
+
         $description['tools_infos'] = $arTools;
-        
+
         return $description;
     }
-    
+
     public function exportToolsSection(AbstractWorkspace $workspace, $archive)
     {
         $description = array();
         $workspaceTools = $this->orderedToolRepo->findBy(array('workspace' => $workspace), array('order' => 'ASC'));
-        
+
         foreach ($workspaceTools as $workspaceTool) {
             $tool = $workspaceTool->getTool();
 
@@ -280,7 +280,7 @@ class WorkspaceManager
                 }
             }
         }
-        
+
         return $description;
     }
 
