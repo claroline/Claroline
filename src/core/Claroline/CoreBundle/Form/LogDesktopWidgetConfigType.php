@@ -14,10 +14,17 @@ class LogDesktopWidgetConfigType extends AbstractType
 
         if (is_array($workspaces)) {
             foreach ($workspaces as $workspace) {
-                $builder->add($workspace->getId(), 'checkbox', array('required' => false, 'label' => $workspace->getName()));
+                $builder->add(
+                    $workspace->getId(),
+                    'checkbox',
+                    array('required' => false, 'label' => $workspace->getName())
+                );
             }
         }
-        $builder->add('amount', 'choice', array(
+        $builder->add(
+            'amount',
+            'choice',
+            array(
                 'choices' => array(
                     '1' => '1',
                     '5' => '5',
@@ -37,9 +44,11 @@ class LogDesktopWidgetConfigType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'workspaces' => array(),
-            'translation_domain' => 'platform'
-        ));
+        $resolver->setDefaults(
+            array(
+                'workspaces' => array(),
+                'translation_domain' => 'platform'
+            )
+        );
     }
 }

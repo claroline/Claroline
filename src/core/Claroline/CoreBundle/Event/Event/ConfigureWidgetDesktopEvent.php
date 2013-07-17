@@ -52,8 +52,8 @@ class ConfigureWidgetDesktopEvent extends Event implements DataConveyorEventInte
         return $this->isDefault;
     }
 
-    public function isPopulated() {
+    public function isPopulated()
+    {
         return $this->isPopulated;
     }
 }
-

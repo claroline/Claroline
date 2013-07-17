@@ -56,7 +56,8 @@ class DisplayWidgetEvent extends Event implements DataConveyorEventInterface
         return $this->workspace;
     }
 
-    public function isPopulated() {
+    public function isPopulated()
+    {
         return $this->isPopulated;
     }
 }

@@ -42,5 +42,3 @@ class OpenResourceEvent extends Event implements MandatoryEventInterface, DataCo
         return $this->isPopulated;
     }
 }
-
-

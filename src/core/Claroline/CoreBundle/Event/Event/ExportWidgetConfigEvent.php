@@ -41,8 +41,8 @@ class ExportWidgetConfigEvent extends Event implements DataConveyorEventInterfac
         return $this->workspace;
     }
 
-    public function isPopulated() {
+    public function isPopulated()
+    {
         return $this->isPopulated;
     }
 }
-

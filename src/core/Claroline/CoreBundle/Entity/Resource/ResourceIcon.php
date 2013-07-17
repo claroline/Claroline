@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Entity\Resource;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Claroline\CoreBundle\Entity\Resource\IconType;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceIconRepository")
@@ -73,12 +72,12 @@ class ResourceIcon
     {
         return $this->mimeType;
     }
-    
+
     public function setMimeType($mimeType)
     {
         $this->mimeType = $mimeType;
     }
-    
+
     public function isShortcut()
     {
         return $this->isShortcut;

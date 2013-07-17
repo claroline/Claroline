@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
 {% endblock %}
 {% block section_content %}
-    
+
     {% include 'ClarolineCoreBundle:Administration:analytics_navbar.html.twig'%}
 
     <div class="accordion widget">
@@ -49,7 +49,7 @@
         </div>
 
         <h3>
-            {{'yesterday_activity'|trans({}, 'platform')}}            
+            {{'yesterday_activity'|trans({}, 'platform')}}
         </h3>
 
         <div class="accordion-group widget">
@@ -115,7 +115,7 @@
             </div>
         </div>
 
-    </div>   
+    </div>
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
@@ -131,7 +131,7 @@
     <script type="text/javascript">
         var chartData = {{ barChartData|json_encode|raw }};
         var bg_color = "transparent";
-        if ($.browser.msie && parseInt($.browser.version, 10) <= 8) bg_color = "#fff"; 
+        if ($.browser.msie && parseInt($.browser.version, 10) <= 8) bg_color = "#fff";
         $(document).ready(function(){
             $(".accordion-body").bind("hide", function(){
                 var arrowIcon = $(this).parents(".accordion-group").find(".icon-chevron-up");
@@ -195,7 +195,7 @@
                         },
                         cursor: {
                             show: false,
-                            zoom: false, 
+                            zoom: false,
                             style:"pointer"
                         },
                         seriesDefaults: {
@@ -209,7 +209,7 @@
                                 barDirection: 'vertical',
                                 barWidth: 20
                             },
-                            shadow:false 
+                            shadow:false
                         }
                     }
                 );
