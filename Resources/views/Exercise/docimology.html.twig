@@ -32,74 +32,92 @@
  # The fact that you are presently reading this means that you have had
  # knowledge of the CeCILL license and that you accept its terms.
 #}
- 
+
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
 {% block section_content %}
-<h1>{{ "Docimology" | trans }}</h1>
-<a href="{{ path('ujm_exercise_open', { 'exerciseId': exoID }) }}" ><i class="icon-arrow-left"></i> {{ "Back" | trans }}</a>
-<div id="histoMarks" style="height:100%;width:100%; "></div>
+    <style>
+        .jqplot-title {
+            margin-bottom: 10px;
+            font-size: large;
+            font-weight: bold;
+        }
 
+        .jqplot-xaxis {
+            margin-top: 10px;
+        }
+
+        .jqplot-yaxis {
+            margin-right: 30px;
+            margin-left: 10px;
+        }
+
+        .jqplot-yaxis-tick {
+            left: 35px;
+        }
+
+        .jqplot-xaxis-tick {
+            margin-bottom: 10px;
+        }
+    </style>
+
+    <h1>{{ "Docimology" | trans }}</h1>
+    <a href="{{ path('ujm_exercise_open', { 'exerciseId': exoID }) }}" ><i class="icon-arrow-left"></i> {{ "Back" | trans }}</a>
+    <hr>
+    <div id="histoMarks" style="height:100%; width:100%;"></div>
+    <hr>
 {% endblock %}
 
 {% block javascripts %}
-<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/jquery.jqplot.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.barRenderer.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.categoryAxisRenderer.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.pointLabels.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/jquery.jqplot.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.barRenderer.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.pointLabels.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.categoryAxisRenderer.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasTextRenderer.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasAxisLabelRenderer.min.js') }}"></script>
 
-<script type="text/javascript">
-$(document).ready(function(){
-    var s1 = [{{ frequencyMarks }}];
-    // Can specify a custom tick Array.
-    // Ticks should match up one for each y value (category) in the series.
-    /*var marks = new Array();
-    for(var i = 0 ; i<=20 ; i++){
-        marks[i] = i;
-    }*/
-    var marks = [{{ scoreList }}];
-     
-    var plot1 = $.jqplot('histoMarks', [s1], {
-    
-        title:'{{ "HistoMarks" | trans }}',
-        
-        // The "seriesDefaults" option is an options object that will
-        // be applied to all series in the chart.
-        seriesDefaults:{
-            renderer:$.jqplot.BarRenderer,
-            rendererOptions: {fillToZero: true}
-        },
-        // Custom labels for the series are specified with the "label"
-        // option on the series option.  Here a series option object
-        // is specified for each series.
-        series:[
-            {label:'{{ "Mark" | trans }}'},
-        ],
-        // Show the legend and put it outside the grid, but inside the
-        // plot container, shrinking the grid to accomodate the legend.
-        // A value of "outside" would not shrink the grid and allow
-        // the legend to overflow the container.
-        /*legend: {
-            show: true,
-            placement: 'insideGrid'
-        },*/
-        axes: {
-            // Use a category axis on the x axis and use our custom ticks.
-            xaxis: {
-                renderer: $.jqplot.CategoryAxisRenderer,
-                ticks: marks
-            },
-            // Pad the y axis just a little so bars can get close to, but
-            // not touch, the grid boundaries.  1.2 is the default padding.
-            yaxis: {
-                pad: 1,
-                min: 0,
-                max: {{ maxY }},
-                tickOptions: {formatString: '%d'}
-            }
-        },
-    });
-});
-</script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var s1 = [{{ frequencyMarks }}];
+            var marks = [{{ scoreList }}];
 
+            $.jqplot('histoMarks', [s1], {
+                title:'{{ "HistoMarks" | trans }}',
+
+                series:[{renderer:$.jqplot.BarRenderer}],
+
+                seriesDefaults:{
+                    color: '#06A1E3',
+                    rendererOptions: {fillToZero: true}
+                },
+
+                axes: {
+                    xaxis: {
+                        label: '{{ 'Mark'|trans }}',
+                        labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                        labelOptions:{
+                            fontFamily:'Helvetica',
+                            fontSize: '14pt'
+                        },
+                        renderer: $.jqplot.CategoryAxisRenderer,
+                        ticks: marks,
+                        tickOptions: {showGridline: false}
+                    },
+
+                    yaxis: {
+                        label: '{{ 'frequency'|trans }}',
+                        labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                        labelOptions:{
+                            fontFamily:'Helvetica',
+                            fontSize: '14pt'
+                        },
+                        pad: 1,
+                        min: 0,
+                        max: {{ maxY }},
+                        tickOptions: {formatString: '%d'}
+                    }
+                }
+            });
+        });
+    </script>
 {% endblock %}

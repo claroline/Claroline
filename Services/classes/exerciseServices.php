@@ -118,7 +118,7 @@ class exerciseServices
         return $res;
 
     }
-    
+
     public function qcmMark(\UJM\ExoBundle\Entity\InteractionQCM $interQCM, array $response, $allChoices, $penality)
     {
         $score = 0;
@@ -126,7 +126,7 @@ class exerciseServices
 
         $rightChoices = array();
         $markByChoice = array();
-        
+
         if (!$interQCM->getWeightResponse()) {
             foreach ($allChoices as $choice) {
                 if ($choice->getRightResponse()) {
@@ -137,7 +137,7 @@ class exerciseServices
             $result = array_diff($response, $rightChoices);
             $resultBis = array_diff($rightChoices, $response);
 
-            if ( (count($result) == 0) && (count($resultBis) == 0) ) {
+            if ((count($result) == 0) && (count($resultBis) == 0)) {
                 $score = $interQCM->getScoreRightResponse() - $penality;
             } else {
                 $score = $interQCM->getScoreFalseResponse() - $penality;
@@ -145,14 +145,14 @@ class exerciseServices
             if ($score < 0) {
                 $score = 0;
             }
-            
+
             $score .= '/'.$scoreMax;
         } else {
             //points par réponse
             foreach ($allChoices as $choice) {
                 $markByChoice[(string) $choice->getId()] = $choice->getWeight();
             }
-            
+
             foreach ($response as $res) {
                 $score += $markByChoice[$res];
             }
@@ -217,18 +217,18 @@ class exerciseServices
         $answers = $request->request->get('answers'); // Answer of the student
         $graphId = $request->request->get('graphId'); // Id of the graphic interaction
         $max = $request->request->get('nbpointer'); // Number of answer zones
-        
+
         $em = $this->doctrine->getManager();
-        
+
         $rightCoords = $em->getRepository('UJMExoBundle:Coords')
             ->findBy(array('interactionGraphic' => $graphId));
-        
+
         $interG = $em->getRepository('UJMExoBundle:InteractionGraphic')
             ->find($graphId);
-        
+
         $doc = $em->getRepository('UJMExoBundle:Document')
             ->findOneBy(array('id' => $interG->getDocument()));
-        
+
         $verif = array();
         $point = $z = $total = 0;
 
@@ -318,32 +318,32 @@ class exerciseServices
 
         return $resu;
     }
-    
+
     public function getExerciseHistoMarks($exoID)
     {
         $papers = $this->doctrine
-                       ->getManager()
-                       ->getRepository('UJMExoBundle:Exercise')
-                       ->getExerciseMarks($exoID);
-        
+            ->getManager()
+            ->getRepository('UJMExoBundle:Exercise')
+            ->getExerciseMarks($exoID);
+
         return $papers;
     }
-    
+
     public function getExerciseTotalScore($exoID)
     {
         $exoTotalScore = 0;
-        
+
         $eqs = $this->doctrine
-                          ->getManager()
-                          ->getRepository('UJMExoBundle:ExerciseQuestion')
-                           ->findBy(array('exercise' => $exoID));
-        
+            ->getManager()
+            ->getRepository('UJMExoBundle:ExerciseQuestion')
+            ->findBy(array('exercise' => $exoID));
+
         foreach($eqs as $eq){
             $interaction = $this->doctrine
-                                ->getManager()
-                                ->getRepository('UJMExoBundle:Interaction')
-                                ->getInteraction($eq->getQuestion()->getId());//echo $interaction[0]->getInvite();
-            
+                ->getManager()
+                ->getRepository('UJMExoBundle:Interaction')
+                ->getInteraction($eq->getQuestion()->getId());//echo $interaction[0]->getInvite();
+
             switch ($interaction[0]->getType()){
                 case 'InteractionQCM':
                     $scoreMax = $this->qcmMaxScore($interaction[0]);
@@ -352,22 +352,22 @@ class exerciseServices
                     $scoreMax = $this->graphicMaxScore($interaction[0]);
                     break;
             }
-            
+
             $exoTotalScore += $scoreMax;
         }
-        
+
         return $exoTotalScore;
     }
-    
+
     private function qcmMaxScore($interaction)
     {
         $scoreMax = 0;
-        
+
         $interQCM = $this->doctrine
-                         ->getManager()
-                         ->getRepository('UJMExoBundle:InteractionQCM')
-                         ->getInteractionQCM($interaction->getId());
-        
+            ->getManager()
+            ->getRepository('UJMExoBundle:InteractionQCM')
+            ->getInteractionQCM($interaction->getId());
+
         if (!$interQCM[0]->getWeightResponse()) {
             $scoreMax = $interQCM[0]->getScoreRightResponse();
         } else {
@@ -377,28 +377,28 @@ class exerciseServices
                 }
             }
         }
-        
+
         return $scoreMax;
     }
-    
+
     private function graphicMaxScore($interaction)
     {
         $scoreMax = 0;
-        
+
         $interGraphic = $this->doctrine
-                         ->getManager()
-                         ->getRepository('UJMExoBundle:InteractionGraphic')
-                         ->getInteractionGraphic($interaction->getId());
-        
+            ->getManager()
+            ->getRepository('UJMExoBundle:InteractionGraphic')
+            ->getInteractionGraphic($interaction->getId());
+
         $rightCoords = $this->doctrine
-                         ->getManager()
-                         ->getRepository('UJMExoBundle:Coords')
-                         ->findBy(array('interactionGraphic' => $interGraphic[0]->getId()));
-        
+            ->getManager()
+            ->getRepository('UJMExoBundle:Coords')
+            ->findBy(array('interactionGraphic' => $interGraphic[0]->getId()));
+
         foreach ($rightCoords as $score) {
             $scoreMax += $score->getScoreCoords(); // Score max
         }
-        
+
         return $scoreMax;
     }
 }

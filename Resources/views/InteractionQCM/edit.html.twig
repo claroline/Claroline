@@ -52,7 +52,7 @@
     </form>
 
 {# lien vers category #}
-<a href="#" style="margin: 5px 5px 5px 5px;" id="lien_category">{{ "Create a new category" | trans }}</a> 
+<a href="#" style="margin: 5px 5px 5px 5px;" id="lien_category">{{ "Create a new category" | trans }}</a>
 
 <div id="popupEA">
     <div id="popupContainer" class="hiddenCat"> <a id="close" class="hiddenCat" title="close popup">{{ "close" | trans }}</a><h1>{{ "response" | trans }}</h1><div id="div_input_popup"><textarea id="input_popup" class="tinymce" data-theme="medium"></textarea></div></div><div id="overlayEffect"> </div>
@@ -89,9 +89,9 @@ $(document).ready(function() {
     insertStyle();
     addFormChoiceEdit('{{ "Multiple response" | trans }}', '{{ "Unique response" | trans }}', '{{ "add" | trans }}', '{{ "Response number" | trans }}', '{{ "Response" | trans }}', '{{ "point" | trans }}', '{{ "comment" | trans }}', '{{ "expected response" | trans }}', '{{ "order" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}', '{{ nbResponses }}', '{{entity.typeQCM.id}}', '{{ "Choice.positionForce" | trans }}', '{{ asset('bundles/ujmexo/images/delete.png') }}');
     choiceCSSEdit('{{ asset('bundles/ujmexo/images/delete.png') }}', {{ nbResponses }});
-    editionAv();		
+    editionAv();
     hintCSSEdit();
-    addFormHintEdit('{{ "add hint" | trans }}',  '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');    
+    addFormHintEdit('{{ "add hint" | trans }}',  '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');
 });
 </script>
 
