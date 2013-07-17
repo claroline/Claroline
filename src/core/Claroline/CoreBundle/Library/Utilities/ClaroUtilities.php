@@ -57,7 +57,6 @@ class ClaroUtilities
         return $filledArray;
     }
 
-
     /**
      * From http://php.net/manual/en/function.time.php
      *
@@ -88,7 +87,7 @@ class ClaroUtilities
 
         return join(' ', $ret);
     }
-    
+
     /**
      * Generates a globally unique identifier.
      *

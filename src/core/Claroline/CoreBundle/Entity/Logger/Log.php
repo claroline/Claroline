@@ -22,7 +22,6 @@ class Log
      */
     protected $id;
 
-
     /**
      * @ORM\Column(type="string", name="action", nullable=false)
      */
@@ -174,7 +173,7 @@ class Log
     /**
      * Set action
      *
-     * @param string $action
+     * @param  string $action
      * @return Log
      */
     public function setAction($action)
@@ -221,7 +220,7 @@ class Log
     /**
      * Set details
      *
-     * @param array $details
+     * @param  array $details
      * @return Log
      */
     public function setDetails($details)
@@ -244,7 +243,7 @@ class Log
     /**
      * Set doerType
      *
-     * @param string $doerType
+     * @param  string $doerType
      * @return Log
      */
     public function setDoerType($doerType)
@@ -267,7 +266,7 @@ class Log
     /**
      * Set doerIp
      *
-     * @param string $doerIp
+     * @param  string $doerIp
      * @return Log
      */
     public function setDoerIp($doerIp)
@@ -290,7 +289,7 @@ class Log
     /**
      * Set childType
      *
-     * @param string $childType
+     * @param  string $childType
      * @return Log
      */
     public function setChildType($childType)
@@ -313,7 +312,7 @@ class Log
     /**
      * Set childAction
      *
-     * @param string $childAction
+     * @param  string $childAction
      * @return Log
      */
     public function setChildAction($childAction)
@@ -336,7 +335,7 @@ class Log
     /**
      * Set doer
      *
-     * @param \Claroline\CoreBundle\Entity\User $doer
+     * @param  \Claroline\CoreBundle\Entity\User $doer
      * @return Log
      */
     public function setDoer(\Claroline\CoreBundle\Entity\User $doer = null)
@@ -359,7 +358,7 @@ class Log
     /**
      * Add doerPlatformRoles
      *
-     * @param \Claroline\CoreBundle\Entity\Role $doerPlatformRoles
+     * @param  \Claroline\CoreBundle\Entity\Role $doerPlatformRoles
      * @return Log
      */
     public function addDoerPlatformRole(\Claroline\CoreBundle\Entity\Role $doerPlatformRoles)
@@ -392,7 +391,7 @@ class Log
     /**
      * Add doerWorkspaceRoles
      *
-     * @param \Claroline\CoreBundle\Entity\Role $doerWorkspaceRoles
+     * @param  \Claroline\CoreBundle\Entity\Role $doerWorkspaceRoles
      * @return Log
      */
     public function addDoerWorkspaceRole(\Claroline\CoreBundle\Entity\Role $doerWorkspaceRoles)
@@ -425,7 +424,7 @@ class Log
     /**
      * Set receiver
      *
-     * @param \Claroline\CoreBundle\Entity\User $receiver
+     * @param  \Claroline\CoreBundle\Entity\User $receiver
      * @return Log
      */
     public function setReceiver(\Claroline\CoreBundle\Entity\User $receiver = null)
@@ -448,7 +447,7 @@ class Log
     /**
      * Set receiverGroup
      *
-     * @param \Claroline\CoreBundle\Entity\Group $receiverGroup
+     * @param  \Claroline\CoreBundle\Entity\Group $receiverGroup
      * @return Log
      */
     public function setReceiverGroup(\Claroline\CoreBundle\Entity\Group $receiverGroup = null)
@@ -471,7 +470,7 @@ class Log
     /**
      * Set owner
      *
-     * @param \Claroline\CoreBundle\Entity\User $owner
+     * @param  \Claroline\CoreBundle\Entity\User $owner
      * @return Log
      */
     public function setOwner(\Claroline\CoreBundle\Entity\User $owner = null)
@@ -494,7 +493,7 @@ class Log
     /**
      * Set workspace
      *
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param  \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
      * @return Log
      */
     public function setWorkspace(\Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace = null)
@@ -517,7 +516,7 @@ class Log
     /**
      * Set resource
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     * @param  \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
      * @return Log
      */
     public function setResource(\Claroline\CoreBundle\Entity\Resource\AbstractResource $resource = null)
@@ -540,7 +539,7 @@ class Log
     /**
      * Set resourceType
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceType $resourceType
+     * @param  \Claroline\CoreBundle\Entity\Resource\ResourceType $resourceType
      * @return Log
      */
     public function setResourceType(\Claroline\CoreBundle\Entity\Resource\ResourceType $resourceType = null)
@@ -563,7 +562,7 @@ class Log
     /**
      * Set role
      *
-     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param  \Claroline\CoreBundle\Entity\Role $role
      * @return Log
      */
     public function setRole(\Claroline\CoreBundle\Entity\Role $role = null)
@@ -586,7 +585,7 @@ class Log
     /**
      * Set toolName
      *
-     * @param string $toolName
+     * @param  string $toolName
      * @return Log
      */
     public function setToolName($toolName)

@@ -35,7 +35,7 @@ class AuthenticatedUserConverter implements ParamConverterInterface
      * @{inheritDoc}
      *
      * @throws InvalidConfigurationException if the parameter name is missing
-     * @throws AccessDeniedHttpException if the current user is not authenticated
+     * @throws AccessDeniedHttpException     if the current user is not authenticated
      */
     public function apply(Request $request, ConfigurationInterface $configuration)
     {

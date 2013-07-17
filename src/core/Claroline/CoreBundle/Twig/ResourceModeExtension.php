@@ -72,8 +72,8 @@ class ResourceModeExtension extends Twig_Extension
      * related to the resource context (mode, workspace, breadcrumbs) were passed
      * in the current request, they will be appended to the generated url.
      *
-     * @param string    $name       The route's name
-     * @param array     $parameters The route's parameters
+     * @param  string $name       The route's name
+     * @param  array  $parameters The route's parameters
      * @return string
      */
     public function getPath($name, $parameters = array())
@@ -86,8 +86,8 @@ class ResourceModeExtension extends Twig_Extension
      * related to the resource context (mode, workspace, breadcrumbs) were passed
      * in the current request, they will be appended to the generated url.
      *
-     * @param string    $name       The route's name
-     * @param array     $parameters The route's parameters
+     * @param  string $name       The route's name
+     * @param  array  $parameters The route's parameters
      * @return string
      */
     public function getUrl($name, $parameters = array())

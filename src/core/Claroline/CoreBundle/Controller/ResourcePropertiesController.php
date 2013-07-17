@@ -17,10 +17,9 @@ use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
-
 class ResourcePropertiesController extends Controller
 {
-    
+
     private $formFactory;
     private $sc;
     private $resourceManager;
@@ -51,7 +50,7 @@ class ResourcePropertiesController extends Controller
         $this->request = $request;
         $this->dispatcher = $dispatcher;
     }
-    
+
     /**
      * @EXT\Route(
      *     "/rename/form/{resourceId}",
@@ -108,7 +107,7 @@ class ResourcePropertiesController extends Controller
 
         if ($form->isValid()) {
             $this->resourceManager->rename($resource, $form->get('name')->getData());
-            
+
             return new JsonResponse(array($resource->getName()));
         }
 
@@ -130,7 +129,7 @@ class ResourcePropertiesController extends Controller
      *      class="ClarolineCoreBundle:Resource\AbstractResource",
      *      options={"id" = "resourceId", "strictId" = true}
      * )
-     * 
+     *
      * Displays the resource properties form.
      *
      * @param integer $resourceId the resource id
@@ -180,7 +179,7 @@ class ResourcePropertiesController extends Controller
             if ($file) {
                 $icon = $this->resourceManager->changeIcon($resource, $file);
             }
-            
+
             $this->resourceManager->rename($resource, $name);
 
             $content = "{";
@@ -190,7 +189,7 @@ class ResourcePropertiesController extends Controller
 
             $content .= ', "name": "' . $resource->getName() . '"';
             $content .= '}';
-            
+
             return new JsonResponse(array($content));
         }
 
@@ -210,7 +209,7 @@ class ResourcePropertiesController extends Controller
      *  where $parent is the new parent entity.
      *
      *
-     * @param string $permission
+     * @param string             $permission
      * @param ResourceCollection $collection
      *
      * @throws AccessDeniedException
@@ -222,4 +221,3 @@ class ResourcePropertiesController extends Controller
         }
     }
 }
-

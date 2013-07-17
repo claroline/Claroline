@@ -2,8 +2,6 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Claroline\CoreBundle\Controller\Tool\AbstractParametersController;
 

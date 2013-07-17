@@ -207,7 +207,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             ';
             // the join on role is required because this method is only called in the administration
             // and we only want the platform roles of a user.
-
             return $this->_em->createQuery($dql);
         }
 
@@ -217,8 +216,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     /**
      * Search users whose first name, last name or username match a given search string.
      *
-     * @param string    $search
-     * @param boolean   $executeQuery
+     * @param string  $search
+     * @param boolean $executeQuery
      *
      * @return array[User]|Query
      */
@@ -246,8 +245,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     /**
      * Returns the users of a group.
      *
-     * @param Group     $group
-     * @param boolean   $executeQuery
+     * @param Group   $group
+     * @param boolean $executeQuery
      *
      * @return array[User]|Query
      */
@@ -271,8 +270,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * Returns the users of a group whose first name, last name or username match
      * a given search string.
      *
-     * @param string    $search
-     * @param boolean   $executeQuery
+     * @param string  $search
+     * @param boolean $executeQuery
      *
      * @return array[User]|Query
      */
@@ -362,8 +361,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     /**
      * Returns the users who are not members of a group.
      *
-     * @param Group     $group
-     * @param boolean   $executeQuery
+     * @param Group   $group
+     * @param boolean $executeQuery
      *
      * @return array[User]|Query
      */

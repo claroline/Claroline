@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Entity\Logger;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -35,7 +34,8 @@ class LogDesktopWidgetConfig
      */
     protected $amount = 5;
 
-    public function copy (LogDesktopWidgetConfig $source = null) {
+    public function copy (LogDesktopWidgetConfig $source = null)
+    {
         if ($source !== null) {
             $this->setIsDefault($source->getIsDefault());
             $this->setAmount($source->getAmount());
@@ -46,7 +46,7 @@ class LogDesktopWidgetConfig
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -56,20 +56,20 @@ class LogDesktopWidgetConfig
     /**
      * Set isDefault
      *
-     * @param boolean $isDefault
+     * @param  boolean                $isDefault
      * @return LogDesktopWidgetConfig
      */
     public function setIsDefault($isDefault)
     {
         $this->isDefault = $isDefault;
-    
+
         return $this;
     }
 
     /**
      * Get isDefault
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsDefault()
     {
@@ -79,20 +79,20 @@ class LogDesktopWidgetConfig
     /**
      * Set amount
      *
-     * @param integer $amount
+     * @param  integer                $amount
      * @return LogDesktopWidgetConfig
      */
     public function setAmount($amount)
     {
         $this->amount = $amount;
-    
+
         return $this;
     }
 
     /**
      * Get amount
      *
-     * @return integer 
+     * @return integer
      */
     public function getAmount()
     {
@@ -102,20 +102,20 @@ class LogDesktopWidgetConfig
     /**
      * Set user
      *
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param  \Claroline\CoreBundle\Entity\User $user
      * @return LogDesktopWidgetConfig
      */
     public function setUser(\Claroline\CoreBundle\Entity\User $user = null)
     {
         $this->user = $user;
-    
+
         return $this;
     }
 
     /**
      * Get user
      *
-     * @return \Claroline\CoreBundle\Entity\User 
+     * @return \Claroline\CoreBundle\Entity\User
      */
     public function getUser()
     {

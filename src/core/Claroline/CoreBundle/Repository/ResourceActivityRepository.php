@@ -28,5 +28,3 @@ class ResourceActivityRepository extends EntityRepository
         return $query->getResult();
     }
 }
-
-
