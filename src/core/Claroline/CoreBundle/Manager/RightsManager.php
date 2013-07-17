@@ -137,23 +137,23 @@ class RightsManager
 
     public function copy(AbstractResource $original, AbstractResource $resource)
     {
-       $originalRights = $this->rightsRepo->findBy(array('resource' => $original));
-       $created = array();
-       $this->om->startFlushSuite();
+        $originalRights = $this->rightsRepo->findBy(array('resource' => $original));
+        $created = array();
+        $this->om->startFlushSuite();
 
-       foreach ($originalRights as $originalRight) {
-           $created[] = $this->create(
-               $originalRight->getPermissions(),
-               $originalRight->getRole(),
-               $resource,
-               false,
-               $originalRight->getCreatableResourceTypes()->toArray()
-           );
-       }
+        foreach ($originalRights as $originalRight) {
+            $created[] = $this->create(
+                $originalRight->getPermissions(),
+                $originalRight->getRole(),
+                $resource,
+                false,
+                $originalRight->getCreatableResourceTypes()->toArray()
+            );
+        }
 
-       $this->om->endFlushSuite();
+        $this->om->endFlushSuite();
 
-       return $created;
+        return $created;
     }
 
     /**
@@ -263,7 +263,8 @@ class RightsManager
         Role $role,
         AbstractResource $resource,
         array $creations = array()
-    ) {
+    )
+    {
         $this->om->startFlushSuite();
         //will create every rights with the role and the resource already set.
         $resourceRights = $this->updateRightsTree($role, $resource);
@@ -273,6 +274,7 @@ class RightsManager
             $rights->setCreatableResourceTypes($creations);
             $this->om->persist($rights);
         }
+
         $this->om->endFlushSuite();
     }
 
@@ -281,7 +283,8 @@ class RightsManager
         Role $role,
         AbstractResource $resource,
         array $creations = array()
-    ) {
+    )
+    {
         $rights = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceRights');
         $rights->setRole($role);
         $rights->setResource($resource);
@@ -320,7 +323,7 @@ class RightsManager
 
     public function getResourceTypes()
     {
-       return $this->resourceTypeRepo->findAll();
+        return $this->resourceTypeRepo->findAll();
     }
 
     public function getMaximumRights(array $roles, AbstractResource $resource)

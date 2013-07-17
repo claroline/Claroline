@@ -35,7 +35,6 @@ class DisplayToolEvent extends Event implements DataConveyorEventInterface
 
     public function isPopulated()
     {
-       return $this->isPopulated;
+        return $this->isPopulated;
     }
-
 }

@@ -302,7 +302,7 @@ abstract class RepositoryTestCase extends WebTestCase
             $rights->addCreatableResourceType($type);
         }
 
-        self::create("resource_right/{$role->getName()}-{$resource->getName()}" , $rights);
+        self::create("resource_right/{$role->getName()}-{$resource->getName()}", $rights);
     }
 
     protected static function createTool($name)

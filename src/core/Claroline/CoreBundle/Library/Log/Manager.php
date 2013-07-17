@@ -23,122 +23,6 @@ class Manager
 
     private $container;
 
-    protected function isAllowedToViewLogs($workspace)
-    {
-        return ($this->container->get('security.context')->isGranted('ROLE_WS_COLLABORATOR_'.$workspace->getGuid()) === true
-            || $this->container->get('security.context')->isGranted('ROLE_WS_MANAGER_'.$workspace->getGuid()) === true);
-    }
-
-    protected function renderLogs($logs)
-    {
-        //List item delegation
-        $views = array();
-        foreach ($logs as $log) {
-            if ($log->getAction() === LogResourceChildUpdateEvent::ACTION) {
-                $eventName = 'create_log_list_item_'.$log->getResourceType()->getName();
-                $event = new LogCreateDelegateViewEvent($log);
-                $this->container->get('event_dispatcher')->dispatch($eventName, $event);
-
-                if ($event->getResponseContent() === "") {
-                    throw new \Exception(
-                        "Event '{$eventName}' didn't receive any response."
-                    );
-                }
-
-                $views[$log->getId().''] = $event->getResponseContent();
-            }
-        }
-
-        return $views;
-    }
-
-    protected function getAdminActionRestriction()
-    {
-        return array(
-            'group_add_user',
-            'group_create',
-            'group_delete',
-            'group_remove_user',
-            'group_update',
-            'user_create',
-            'user_delete',
-            'user_login',
-            'user_update',
-            'workspace_create',
-            'workspace_delete',
-            'workspace_update'
-        );
-    }
-
-    protected function getWorkspaceActionRestriction()
-    {
-        return array(
-            'resource_create',
-            'resource_delete',
-            'resource_update',
-            'resource_child_update',
-            'resource_move',
-            'resource_shortcut',
-            'resource_read',
-            'resource_export',
-            'resource_child_update',
-            'resource_copy',
-            'ws_role_create',
-            'ws_role_delete',
-            'ws_role_update',
-            'ws_role_change_right',
-            'ws_role_subscribe_user',
-            'ws_role_unsubscribe_user',
-            'ws_role_subscribe_group',
-            'ws_role_unsubscribe_group',
-            'ws_tool_read'
-        );
-    }
-
-    protected function getDefaultRange()
-    {
-        //By default last thirty days :
-        $startDate = new \DateTime('now');
-        $startDate->setTime(0, 0, 0);
-        $startDate->sub(new \DateInterval('P29D')); // P29D means a period of 29 days
-
-        $endDate = new \DateTime('now');
-        $endDate->setTime(23, 59, 59);
-
-        return array($startDate->getTimestamp(), $endDate->getTimestamp());
-    }
-
-    protected function getYesterdayRange()
-    {
-        //By default last thirty days :
-        $startDate = new \DateTime('now');
-        $startDate->setTime(0, 0, 0);
-        $startDate->sub(new \DateInterval('P1D')); // P1D means a period of 1 days
-
-        $endDate = new \DateTime('now');
-        $endDate->setTime(23, 59, 59);
-        $endDate->sub(new \DateInterval('P1D')); // P1D means a period of 1 days
-
-        return array($startDate->getTimestamp(), $endDate->getTimestamp());
-    }
-
-    protected function getAdminOrCollaboratorWorkspaceIds()
-    {
-        $workspaceIds = array();
-        $loggedUser = $this->container->get('security.context')->getToken()->getUser();
-        $workspaceIdsResult = $this
-            ->container
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
-            ->findIdsByUserAndRoleNames($loggedUser, array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'));
-
-        foreach ($workspaceIdsResult as $line) {
-            $workspaceIds[] = $line['id'];
-        }
-
-        return $workspaceIds;
-    }
-
     /**
      * @DI\InjectParams({
      *     "container" = @DI\Inject("service_container")
@@ -194,13 +78,15 @@ class Manager
         // Complete missing configs
         foreach ($workspaces as $workspace) {
             $config = null;
-            $i = 0;
-            while ($i < count($configs) && $config == null) {
-                $current = $configs[$i++];
+
+            for ($i = 0, $countConfigs = count($configs); $i < $countConfigs && $config === null; ++$i) {
+                $current = $config[$i];
+
                 if ($current->getWorkspace()->getId() == $workspace->getId()) {
                     $config = $current;
                 }
             }
+
             if ($config === null) {
                 $config = new LogWorkspaceWidgetConfig();
                 $config->copy($defaultConfig);
@@ -211,11 +97,13 @@ class Manager
 
         // Remove configs which hasAllRestriction
         $configsCleaned = array();
+
         foreach ($configs as $config) {
             if ($config->hasAllRestriction() === false) {
                 $configsCleaned[] = $config;
             }
         }
+
         $configs = $configsCleaned;
 
         if (count($configs) === 0) {
@@ -473,5 +361,123 @@ class Manager
         return $em
             ->getRepository('ClarolineCoreBundle:Logger\LogWorkspaceWidgetConfig')
             ->findOneBy(array('workspace' => null, 'isDefault' => true));
+    }
+
+    protected function isAllowedToViewLogs($workspace)
+    {
+        $security = $this->container->get('security.context');
+
+        return $security->isGranted('ROLE_WS_COLLABORATOR_' . $workspace->getGuid())
+            || $security->isGranted('ROLE_WS_MANAGER_'.$workspace->getGuid());
+    }
+
+    protected function renderLogs($logs)
+    {
+        //List item delegation
+        $views = array();
+        foreach ($logs as $log) {
+            if ($log->getAction() === LogResourceChildUpdateEvent::ACTION) {
+                $eventName = 'create_log_list_item_'.$log->getResourceType()->getName();
+                $event = new LogCreateDelegateViewEvent($log);
+                $this->container->get('event_dispatcher')->dispatch($eventName, $event);
+
+                if ($event->getResponseContent() === "") {
+                    throw new \Exception(
+                        "Event '{$eventName}' didn't receive any response."
+                    );
+                }
+
+                $views[$log->getId().''] = $event->getResponseContent();
+            }
+        }
+
+        return $views;
+    }
+
+    protected function getAdminActionRestriction()
+    {
+        return array(
+            'group_add_user',
+            'group_create',
+            'group_delete',
+            'group_remove_user',
+            'group_update',
+            'user_create',
+            'user_delete',
+            'user_login',
+            'user_update',
+            'workspace_create',
+            'workspace_delete',
+            'workspace_update'
+        );
+    }
+
+    protected function getWorkspaceActionRestriction()
+    {
+        return array(
+            'resource_create',
+            'resource_delete',
+            'resource_update',
+            'resource_child_update',
+            'resource_move',
+            'resource_shortcut',
+            'resource_read',
+            'resource_export',
+            'resource_child_update',
+            'resource_copy',
+            'ws_role_create',
+            'ws_role_delete',
+            'ws_role_update',
+            'ws_role_change_right',
+            'ws_role_subscribe_user',
+            'ws_role_unsubscribe_user',
+            'ws_role_subscribe_group',
+            'ws_role_unsubscribe_group',
+            'ws_tool_read'
+        );
+    }
+
+    protected function getDefaultRange()
+    {
+        //By default last thirty days :
+        $startDate = new \DateTime('now');
+        $startDate->setTime(0, 0, 0);
+        $startDate->sub(new \DateInterval('P29D')); // P29D means a period of 29 days
+
+        $endDate = new \DateTime('now');
+        $endDate->setTime(23, 59, 59);
+
+        return array($startDate->getTimestamp(), $endDate->getTimestamp());
+    }
+
+    protected function getYesterdayRange()
+    {
+        //By default last thirty days :
+        $startDate = new \DateTime('now');
+        $startDate->setTime(0, 0, 0);
+        $startDate->sub(new \DateInterval('P1D')); // P1D means a period of 1 days
+
+        $endDate = new \DateTime('now');
+        $endDate->setTime(23, 59, 59);
+        $endDate->sub(new \DateInterval('P1D')); // P1D means a period of 1 days
+
+        return array($startDate->getTimestamp(), $endDate->getTimestamp());
+    }
+
+    protected function getAdminOrCollaboratorWorkspaceIds()
+    {
+        $workspaceIds = array();
+        $loggedUser = $this->container->get('security.context')->getToken()->getUser();
+        $workspaceIdsResult = $this
+            ->container
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
+            ->findIdsByUserAndRoleNames($loggedUser, array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'));
+
+        foreach ($workspaceIdsResult as $line) {
+            $workspaceIds[] = $line['id'];
+        }
+
+        return $workspaceIds;
     }
 }

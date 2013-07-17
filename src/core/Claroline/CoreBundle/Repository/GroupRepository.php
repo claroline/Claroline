@@ -143,10 +143,10 @@ class GroupRepository extends EntityRepository
     public function findAll($executeQuery = true)
     {
         if (!$executeQuery) {
-            return $this->_em->createQuery('
-                SELECT g, r FROM Claroline\CoreBundle\Entity\Group g
-                LEFT JOIN g.roles r
-            ');
+            return $this->_em->createQuery(
+                'SELECT g, r FROM Claroline\CoreBundle\Entity\Group g
+                 LEFT JOIN g.roles r'
+            );
         }
 
         return parent::findAll();

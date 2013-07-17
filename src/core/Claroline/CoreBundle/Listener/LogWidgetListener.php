@@ -172,7 +172,8 @@ class LogWidgetListener
 
         $form = $this->formFactory->create(new LogWorkspaceWidgetConfigType(), $data);
         $content = $this->twig->render(
-                'ClarolineCoreBundle:Log:config_workspace_widget_form.html.twig', array(
+            'ClarolineCoreBundle:Log:config_workspace_widget_form.html.twig',
+            array(
                 'form' => $form->createView(),
                 'workspace' => $event->getWorkspace(),
                 'isDefault' => $event->isDefault() ? 1 : 0
@@ -231,7 +232,8 @@ class LogWidgetListener
                 array('workspaces' => $workspaces)
             );
         $content = $this->twig->render(
-                'ClarolineCoreBundle:Log:config_desktop_widget_form.html.twig', array(
+            'ClarolineCoreBundle:Log:config_desktop_widget_form.html.twig',
+            array(
                 'form' => $form->createView(),
                 'isDefault' => $event->isDefault() ? 1 : 0
             )

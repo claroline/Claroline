@@ -26,7 +26,6 @@ class ImportResourceTemplateEvent extends Event
         array $roles,
         array $createdResources = array(),
         array $files = array()
-
     )
     {
         $this->parent = $parent;
