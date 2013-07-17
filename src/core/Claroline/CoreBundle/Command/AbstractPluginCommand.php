@@ -15,7 +15,7 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
     /**
      * Installs a plugin using the claroline plugin installer.
      *
-     * @param string $fqcn
+     * @param string          $fqcn
      * @param OutputInterface $output
      *
      * @return boolean True if the installation succeed, false otherwise
@@ -40,7 +40,7 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
     /**
      * Uninstalls a plugin using the claroline plugin installer.
      *
-     * @param string $fqcn
+     * @param string          $fqcn
      * @param OutputInterface $output
      *
      * @return boolean True if the uninstallation succeed, false otherwise
@@ -66,7 +66,7 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
      * Helper method parsing the plugin directory and applying the "installPlugin"
      * or "uninstallPlugin" methods of this class on each plugin found.
      *
-     * @param string $methodName "installPlugin" or "uninstallPlugin"
+     * @param string          $methodName "installPlugin" or "uninstallPlugin"
      * @param OutputInterface $output
      *
      * @return boolean True if the callback method has succeeded at least once, false otherwise

@@ -22,7 +22,7 @@ class LoadContentData extends AbstractFixture
             'Simple Website',
             'Wikipedia'
         );
-        
+
         $textDir = __DIR__. '/files/homepage';
 
         $texts = array(

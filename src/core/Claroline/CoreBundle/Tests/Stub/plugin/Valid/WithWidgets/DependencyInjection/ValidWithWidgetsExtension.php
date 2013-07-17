@@ -16,4 +16,3 @@ class ValidWithWidgetsExtension extends Extension
         $loader->load('listeners.yml');
     }
 }
-

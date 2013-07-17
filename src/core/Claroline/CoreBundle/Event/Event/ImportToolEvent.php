@@ -17,7 +17,7 @@ class ImportToolEvent extends Event
     private $roles;
 
     /**
-     * 
+     *
      * @param AbstractWorkspace $workspace The workspace
      * @param array             $config    The config array from the template
      * @param Directory         $root      The workspace root
@@ -87,10 +87,9 @@ class ImportToolEvent extends Event
     {
         $this->filePaths = $filePaths;
     }
-    
+
     public function getRoles()
     {
         return $this->roles;
     }
 }
-

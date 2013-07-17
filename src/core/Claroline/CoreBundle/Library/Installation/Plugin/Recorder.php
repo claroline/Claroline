@@ -20,8 +20,8 @@ class Recorder
     /**
      * Constructor.
      *
-     * @param ConfigurationFileWriter   $configWriter
-     * @param DatabaseWriter            $dbWriter
+     * @param ConfigurationFileWriter $configWriter
+     * @param DatabaseWriter          $dbWriter
      *
      * @DI\InjectParams({
      *     "configWriter" = @DI\Inject("claroline.plugin.recorder_configuration_file_writer"),

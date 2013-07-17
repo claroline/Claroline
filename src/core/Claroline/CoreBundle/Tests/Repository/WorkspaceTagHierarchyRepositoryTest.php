@@ -120,15 +120,15 @@ class WorkspaceTagHierarchyRepositoryTest extends RepositoryTestCase
         $this->assertEquals(4, count($tagHierarchies));
 
         $tag = self::get('tag_1');
-        $parents1 = array($tag->getId());
-        $tagHierarchies1 = self::$repo->findAdminHierarchiesByParents($parents1);
-        $this->assertEquals(6, count($tagHierarchies1));
-        $this->assertEquals($tag, $tagHierarchies1[0]->getParent());
-        $this->assertEquals($tag, $tagHierarchies1[1]->getParent());
-        $this->assertEquals($tag, $tagHierarchies1[2]->getParent());
-        $this->assertEquals($tag, $tagHierarchies1[3]->getParent());
-        $this->assertEquals($tag, $tagHierarchies1[4]->getParent());
-        $this->assertEquals($tag, $tagHierarchies1[5]->getParent());
+        $parentsA = array($tag->getId());
+        $tagHierarchiesA = self::$repo->findAdminHierarchiesByParents($parentsA);
+        $this->assertEquals(6, count($tagHierarchiesA));
+        $this->assertEquals($tag, $tagHierarchiesA[0]->getParent());
+        $this->assertEquals($tag, $tagHierarchiesA[1]->getParent());
+        $this->assertEquals($tag, $tagHierarchiesA[2]->getParent());
+        $this->assertEquals($tag, $tagHierarchiesA[3]->getParent());
+        $this->assertEquals($tag, $tagHierarchiesA[4]->getParent());
+        $this->assertEquals($tag, $tagHierarchiesA[5]->getParent());
     }
 
     public function testFindHierarchiesByParents()

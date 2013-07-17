@@ -19,16 +19,20 @@ class LogWorkspaceWidgetConfigType extends AbstractType
             ->add('delete', 'checkbox', array('required' => false))
             ->add('move', 'checkbox', array('required' => false))
             ->add('subscribe', 'checkbox', array('required' => false))
-            ->add('amount', 'choice', array(
-                'choices' => array(
-                    '1' => '1',
-                    '5' => '5',
-                    '10' => '10',
-                    '15' => '15',
-                    '20' => '20'
-                ),
-                'required' => true
-            ));
+            ->add(
+                'amount',
+                'choice',
+                array(
+                    'choices' => array(
+                        '1' => '1',
+                        '5' => '5',
+                        '10' => '10',
+                        '15' => '15',
+                        '20' => '20'
+                    ),
+                    'required' => true
+                )
+            );
     }
 
     public function getName()
@@ -38,8 +42,6 @@ class LogWorkspaceWidgetConfigType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'translation_domain' => 'platform'
-        ));
+        $resolver->setDefaults(array('translation_domain' => 'platform'));
     }
 }
