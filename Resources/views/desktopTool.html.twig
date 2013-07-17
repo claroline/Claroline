@@ -3,5 +3,50 @@
 {% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
 
 {% block section_content %}
-    Your content goes here XXX
+
+
+<div class="row-fluid">
+    <ul class="breadcrumb">
+        <li><a href="#">Editeur</a></li>
+    </ul>
+</div>
+    <div class="row-fluid">
+        <div class="margin">
+            <div class="span6">
+                <div class="row-fluid">
+                    <h3>Parcours :</h3>
+                </div>
+                <div class="row-fluid">
+                    <form action="" method="post" accept-charset="utf-8" id="form_test_bob">
+                            <select name="path-id" id="path-id">
+                                {% for path in paths %}
+                                    <option value="{{ path.id }}">{{ path.name }}</option>
+                                {% endfor %}
+                            </select>
+                        <input type="submit" class="btn clickParcoursTree">
+                    </form>
+                </div> 
+                <div class="row-fluid">
+                    <div class="well">
+                    <button id="save" class="btn btn-primary pull-right">Sauvegarder</button>
+                    <span id="save_callback" class="notifications top-left"></span>
+
+                    <!--<button id="back" class="btn pull-right">Back</button>-->
+                <div id="left_tree">
+                    
+                </div>
+            </div>
+                </div>               
+
+            </div>
+            <div class="span6">
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, itaque, a asperiores quam deleniti expedita ipsa quibusdam nihil sit eveniet libero sequi repellat ipsam inventore culpa ducimus tempore dicta fuga!
+                </p>
+            </div>
+                
+        </div> 
+    </div>
+
+    
 {% endblock %}
