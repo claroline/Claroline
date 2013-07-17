@@ -102,6 +102,7 @@ id: Id
 informations: Informations
 instructions: Consignes
 import: Importer
+import_users: 'Importer des utilisateurs'
 import_user_file_file: Importer depuis fichier
 last_30_days_activity: Activités des 30 derniers jours
 last_name: Nom
@@ -348,7 +349,7 @@ resources: Ressources
 resources_most_downloaded: Ressources les plus téléchargés
 resources_rights: 'Droits des ressources'
 resources_usage_ratio: Taux d'utilisation des resources
-resources_usage_list: Liste d'utilisation des resources 
+resources_usage_list: Liste d'utilisation des resources
 resource_right_form_canCopy: Copier
 resource_right_form_canDelete: Supprimer
 resource_right_form_canEdit: Editer

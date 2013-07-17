@@ -44,7 +44,7 @@ class UserManager
      *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
      *     "ed"                     = @DI\Inject("claroline.event.event_dispatcher"),
      *     "personalWsTemplateFile" = @DI\Inject("%claroline.param.templates_directory%"),
-     *     "translator"                  = @DI\Inject("translator"),
+     *     "translator"             = @DI\Inject("translator"),
      *     "ch"                     = @DI\Inject("claroline.config.platform_config_handler"),
      *     "pagerFactory"           = @DI\Inject("claroline.pager.pager_factory"),
      *     "om"                     = @DI\Inject("claroline.persistence.object_manager")
@@ -123,8 +123,9 @@ class UserManager
         $this->om->endFlushSuite();
     }
 
-    public function importUsers($users)
+    public function importUsers(array $users)
     {
+        $nonImportedUsers = array();
         $roleName = PlatformRoles::USER;
         $this->om->startFlushSuite();
 
@@ -134,26 +135,36 @@ class UserManager
             $lastName = $user[1];
             $username = $user[2];
             $pwd = $user[3];
-            $code = $user[4];
-            $email = isset($user[5])? $user[5] : null;
+            $email = $user[4];
+            $code = isset($user[5])? $user[5] : null;
+            $phone = isset($user[6])? $user[6] : null;
+            $existingUser = $this->userRepo->findOneByUsername($username);
 
-            $newUser = new User();
-            $newUser->setFirstName($firstName);
-            $newUser->setLastName($lastName);
-            $newUser->setUsername($username);
-            $newUser->setPlainPassword($pwd);
-            $newUser->setAdministrativeCode($code);
-            $newUser->setMail($email);
+            if (is_null($existingUser)) {
+                $newUser = $this->om->factory('Claroline\CoreBundle\Entity\User');;
+                $newUser->setFirstName($firstName);
+                $newUser->setLastName($lastName);
+                $newUser->setUsername($username);
+                $newUser->setPlainPassword($pwd);
+                $newUser->setMail($email);
+                $newUser->setAdministrativeCode($code);
+                $newUser->setPhone($phone);
 
-            $this->setPersonalWorkspace($newUser);
-            $this->toolManager->addRequiredToolsToUser($newUser);
-            $this->roleManager->setRoleToRoleSubject($newUser, $roleName);
+                $this->setPersonalWorkspace($newUser);
+                $this->toolManager->addRequiredToolsToUser($newUser);
+                $this->roleManager->setRoleToRoleSubject($newUser, $roleName);
 
-            $this->om->persist($user);
-            $this->ed->dispatch('log', 'Log\LogUserCreateEvent', $newUser);
+                $this->om->persist($newUser);
+                $this->ed->dispatch('log', 'Log\LogUserCreate', array($newUser));
+            }
+            else {
+                $nonImportedUsers[] = $username;
+            }
         }
 
         $this->om->endFlushSuite();
+
+        return $nonImportedUsers;
     }
 
     public function setPersonalWorkspace(User $user)

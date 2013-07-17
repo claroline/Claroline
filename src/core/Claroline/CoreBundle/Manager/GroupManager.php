@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Repository\GroupRepository;
+use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -15,9 +16,11 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class GroupManager
 {
-    private $writer;
+    private $om;
     /** @var GroupRepository */
     private $groupRepo;
+    /** @var UserRepository */
+    private $userRepo;
     private $pagerFactory;
     private $translator;
 
@@ -38,6 +41,7 @@ class GroupManager
     {
         $this->om = $om;
         $this->groupRepo = $om->getRepository('ClarolineCoreBundle:Group');
+        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->pagerFactory = $pagerFactory;
         $this->translator = $translator;
     }
@@ -63,7 +67,9 @@ class GroupManager
     public function addUsersToGroup(Group $group, array $users)
     {
         foreach ($users as $user) {
-            $group->addUser($user);
+            if (!$group->containsUser($user)) {
+                $group->addUser($user);
+            }
         }
 
         $this->om->persist($group);
@@ -80,11 +86,40 @@ class GroupManager
         $this->om->flush();
     }
 
+    public function importUsers(Group $group, array $users)
+    {
+        $toImport = array();
+        $nonImportedUsers = array();
+
+        foreach ($users as $user) {
+            $firstName = $user[0];
+            $lastName = $user[1];
+            $username = $user[2];
+
+            $existingUser = $this->userRepo->findOneBy(
+                array(
+                    'username' => $username,
+                    'firstName' => $firstName,
+                    'lastName' => $lastName
+                )
+            );
+
+            if (is_null($existingUser)) {
+                $nonImportedUsers[] = $username;
+            }
+            else {
+                $toImport[] = $existingUser;
+            }
+        }
+        $this->addUsersToGroup($group, $toImport);
+
+        return $nonImportedUsers;
+    }
+
     public function convertGroupsToArray(array $groups)
     {
         $content = array();
         $i = 0;
-
 
         foreach ($groups as $group) {
             $content[$i]['id'] = $group->getId();
@@ -104,9 +139,6 @@ class GroupManager
                 $j++;
             }
         }
-
-
-
         for ($i = 0, $size = count($groups); $i < $size; $i++) {
             $content[$i]['id'] = $groups[$i]->getId();
             $content[$i]['name'] = $groups[$i]->getName();
