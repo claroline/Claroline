@@ -45,9 +45,12 @@ class DispatcherTest extends MockeryTestCase
     public function testDispatch()
     {
         $dispatcher = new EventDispatcher();
-        $dispatcher->addListener('test_populated', function(Event $event){
-            $event->setResponseContent('content');
-        });
+        $dispatcher->addListener(
+            'test_populated',
+            function (Event $event) {
+                $event->setResponseContent('content');
+            }
+        );
         $claroDispatcher = new StrictDispatcher($dispatcher);
         $event = $claroDispatcher->dispatch('test_populated', 'CreateFormResource', array());
         $this->assertEquals('content', $event->getResponseContent());

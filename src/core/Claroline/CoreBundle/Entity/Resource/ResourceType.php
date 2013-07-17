@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Entity\Resource;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Claroline\CoreBundle\Entity\Plugin;
 
 /**

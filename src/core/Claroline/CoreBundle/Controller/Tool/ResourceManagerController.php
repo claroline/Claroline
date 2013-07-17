@@ -20,7 +20,7 @@ class ResourceManagerController extends Controller
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\resource_manager:resourceRightsCreation.html.twig")
      *
      * @param AbstractWorkspace $workspace
-     * @param Role $role
+     * @param Role              $role
      *
      * @return Response
      */

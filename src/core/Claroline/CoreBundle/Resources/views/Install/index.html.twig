@@ -1,4 +1,4 @@
-{% extends 'ClarolineCoreBundle:Install:layout.html.twig' %} 
+{% extends 'ClarolineCoreBundle:Install:layout.html.twig' %}
     {% block content %}
      <div class="span3">
         <h3> Progression</h3>
@@ -15,7 +15,7 @@
 
         {%block data %}
             <form action="{{path('claro_permission')}}" method="get" name="language_form">
-              <p>choose your language 
+              <p>choose your language
               <select name="lg">
                 <option value ='fr'> français</option>
                 <option value ='en'> english</option>
@@ -38,4 +38,3 @@
 </div>
 
 {% endblock %}
-

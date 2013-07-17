@@ -37,7 +37,6 @@ class WorkspaceTagRepository extends EntityRepository
         return $query->getResult();
     }
 
-
     public function findNonEmptyAdminTagsByWorspaces(array $workspaces)
     {
         if (count($workspaces) === 0) {

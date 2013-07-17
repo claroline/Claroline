@@ -6,12 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use JMS\SecurityExtraBundle\Annotation\Secure;
-use Assetic\AssetWriter;
-use Assetic\Extension\Twig\TwigFormulaLoader;
-use Assetic\Extension\Twig\TwigResource;
 use Claroline\CoreBundle\Library\Themes\ThemeParameters;
-use Claroline\CoreBundle\Library\Themes\ThemeCompile;
 
 class ThemeController extends Controller
 {

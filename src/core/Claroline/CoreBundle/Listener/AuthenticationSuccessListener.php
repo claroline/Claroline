@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Listener;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Event\Event\Log\LogUserLoginEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Security\Core\SecurityContextInterface;

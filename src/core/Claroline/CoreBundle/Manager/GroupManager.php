@@ -84,7 +84,6 @@ class GroupManager
         $content = array();
         $i = 0;
 
-
         foreach ($groups as $group) {
             $content[$i]['id'] = $group->getId();
             $content[$i]['name'] = $group->getName();
@@ -103,8 +102,6 @@ class GroupManager
                 $j++;
             }
         }
-
-
 
         for ($i = 0, $size = count($groups); $i < $size; $i++) {
             $content[$i]['id'] = $groups[$i]->getId();

@@ -58,7 +58,8 @@ class ConfigureWidgetWorkspaceEvent extends Event implements DataConveyorEventIn
         $this->isDefault = $bool;
     }
 
-    public function isPopulated() {
+    public function isPopulated()
+    {
         return $this->isPopulated;
     }
 }

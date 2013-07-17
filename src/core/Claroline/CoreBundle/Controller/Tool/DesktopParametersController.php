@@ -5,7 +5,6 @@ namespace Claroline\CoreBundle\Controller\Tool;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\Event\ConfigureDesktopToolEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Claroline\CoreBundle\Event\StrictDispatcher;
@@ -119,9 +118,9 @@ class DesktopParametersController extends Controller
      *
      * This method switch the position of a tool with an other one.
      *
-     * @param Tool $tool
+     * @param Tool    $tool
      * @param integer $position
-     * @param User $user
+     * @param User    $user
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

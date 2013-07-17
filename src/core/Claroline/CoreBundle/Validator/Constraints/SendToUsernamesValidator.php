@@ -43,5 +43,3 @@ class SendToUsernamesValidator extends ConstraintValidator
         }
     }
 }
-
-

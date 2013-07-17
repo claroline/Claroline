@@ -69,25 +69,17 @@ class PlatformInstallCommand extends ContainerAwareCommand
         $aclCommand->run(new ArrayInput(array('command' => 'init:acl')), $output);
 
         if ($input->getOption('with-fixtures') && ($environment === 'prod' || $environment === 'dev')) {
-
-                $fixturesPath = $kernel->getRootDir()
-                    . '/../src/core/Claroline/CoreBundle/DataFixtures/Required';
-//                $fixturesPath = $environment === 'test'
-//                    ? $coreBundleDirectory.'/Tests/DataFixtures/Required'
-//                    : $coreBundleDirectory.'/DataFixtures';
-//
-//
-
-                $output->writeln("Loading {$environment} fixtures...");
-                $fixtureCommand = $this->getApplication()->find('doctrine:fixtures:load');
-                $fixtureInput = new ArrayInput(
-                    array(
-                        'command' => 'doctrine:fixtures:load',
-                        '--fixtures' => $fixturesPath,
-                        '--append' => true
-                    )
-                );
-                $fixtureCommand->run($fixtureInput, $output);
+            $fixturesPath = "{$kernel->getRootDir()}/../src/core/Claroline/CoreBundle/DataFixtures/Required";
+            $output->writeln("Loading {$environment} fixtures...");
+            $fixtureCommand = $this->getApplication()->find('doctrine:fixtures:load');
+            $fixtureInput = new ArrayInput(
+                array(
+                    'command' => 'doctrine:fixtures:load',
+                    '--fixtures' => $fixturesPath,
+                    '--append' => true
+                )
+            );
+            $fixtureCommand->run($fixtureInput, $output);
         }
 
         if ($input->getOption('with-plugins')) {
