@@ -190,7 +190,10 @@ class LayoutController extends Controller
         );
     }
 
-    private function isImpersonated()
+    /**
+     * @return bool
+     */
+    protected function isImpersonated()
     {
         foreach ($this->security->getToken()->getRoles() as $role) {
             if ($role instanceof \Symfony\Component\Security\Core\Role\SwitchUserRole) {
@@ -201,7 +204,10 @@ class LayoutController extends Controller
         return false;
     }
 
-    private function findWorkspacesFromLogs()
+    /**
+     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[]
+     */
+    protected function findWorkspacesFromLogs()
     {
         $token = $this->security->getToken();
         $user = $token->getUser();
