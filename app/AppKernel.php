@@ -30,7 +30,8 @@ class AppKernel extends Kernel
             new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
             new IDCI\Bundle\ExporterBundle\IDCIExporterBundle(),
             new Zenstruck\Bundle\FormBundle\ZenstruckFormBundle(),
-            new BeSimple\SsoAuthBundle\BeSimpleSsoAuthBundle(),
+            new ICAPLyon1\Bundle\SimpleTagBundle\ICAPLyon1SimpleTagBundle(),
+            new BeSimple\SsoAuthBundle\BeSimpleSsoAuthBundle()
         );
 
         if (file_exists(__DIR__ . '/config/local/plugin/bundles')) {
@@ -41,6 +42,7 @@ class AppKernel extends Kernel
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
+            $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
         }
 
         return $bundles;
