@@ -255,7 +255,11 @@ class LogController extends Controller
             $config->setUser($user);
         }
 
-        $form = $this->get('form.factory')->create(new LogDesktopWidgetConfigType(), null, array('workspaces' => $workspaces));
+        $form = $this->get('form.factory')->create(
+            new LogDesktopWidgetConfigType(),
+            null,
+            array('workspaces' => $workspaces)
+        );
         $form->bind($this->getRequest());
 
         if ($form->isValid()) {
@@ -279,9 +283,15 @@ class LogController extends Controller
             $em->persist($config);
             $em->flush();
 
-            $this->get('session')->getFlashBag()->add('success', $this->translator->trans('Your changes have been saved', array(), 'platform'));
+            $this->get('session')->getFlashBag()->add(
+                'success',
+                $this->translator->trans('Your changes have been saved', array(), 'platform')
+            );
         } else {
-            $this->get('session')->getFlashBag()->add('error', $this->translator->trans('The form is not valid', array(), 'platform'));
+            $this->get('session')->getFlashBag()->add(
+                'error',
+                $this->translator->trans('The form is not valid', array(), 'platform')
+            );
         }
         $tool = $this->toolManager->getOneToolByName('home');
 

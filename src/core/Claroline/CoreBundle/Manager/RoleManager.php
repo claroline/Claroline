@@ -261,7 +261,7 @@ class RoleManager
         $substr = explode('_', $roleName);
         $roleName = array_shift($substr);
 
-        for ($i = 0; $i < count($substr) - 1; $i++) {
+        for ($i = 0, $countSubstr = count($substr) - 1; $i < $countSubstr; $i++) {
             $roleName .= '_' . $substr[$i];
         }
 

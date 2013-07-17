@@ -164,7 +164,7 @@ abstract class AbstractWorkspace
 
     public function getOrderedTools()
     {
-       return $this->orderedTools;
+        return $this->orderedTools;
     }
 
     public function addOrderedTool(OrderedTool $tool)

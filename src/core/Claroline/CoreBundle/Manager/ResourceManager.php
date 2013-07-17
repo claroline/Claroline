@@ -330,7 +330,7 @@ class ResourceManager
         $resourceTypes = $this->resourceTypeRepo->findAll();
 
         $this->rightsManager->create(
-             array(
+            array(
                 'canDelete' => true,
                 'canOpen' => true,
                 'canEdit' => true,
@@ -341,11 +341,10 @@ class ResourceManager
             $resource,
             false,
             $resourceTypes
-
         );
 
         $this->rightsManager->create(
-             array(
+            array(
                 'canDelete' => false,
                 'canOpen' => false,
                 'canEdit' => false,
@@ -724,7 +723,11 @@ class ResourceManager
     {
         $this->om->startFlushSuite();
         $this->removePosition($resource);
-        $this->dispatcher->dispatch("delete_{$resource->getResourceType()->getName()}", 'DeleteResource', array($resource));
+        $this->dispatcher->dispatch(
+            "delete_{$resource->getResourceType()->getName()}",
+            'DeleteResource',
+            array($resource)
+        );
         $this->om->remove($resource);
         $this->dispatcher->dispatch('log', 'Log\LogResourceDelete', array($resource));
         $this->om->endFlushSuite();

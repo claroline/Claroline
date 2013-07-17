@@ -254,7 +254,14 @@ class ResourceManagerImportExportListener
      *
      * @return array
      */
-    private function loadDirectories($config, $createdResources, $root, $user, AbstractWorkspace $workspace, array $roles)
+    private function loadDirectories(
+        $config,
+        $createdResources,
+        $root,
+        $user,
+        AbstractWorkspace $workspace,
+        array $roles
+    )
     {
         if (isset($config['directory'])) {
             foreach ($config['directory'] as $resource) {
@@ -275,7 +282,15 @@ class ResourceManagerImportExportListener
         return $createdResources;
     }
 
-    private function loadFiles($config, $createdResources, $requiredFiles, $root, $user, AbstractWorkspace $workspace, array $roles)
+    private function loadFiles(
+        $config,
+        $createdResources,
+        $requiredFiles,
+        $root,
+        $user,
+        AbstractWorkspace $workspace,
+        array $roles
+    )
     {
         foreach ($config['resources'] as $resource) {
 

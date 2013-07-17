@@ -59,7 +59,7 @@ class LayoutController extends Controller
         $this->workspaceManager = $workspaceManager;
         $this->router = $router;
         $this->security = $security;
-        $this->utils= $utils;
+        $this->utils = $utils;
         $this->translator = $translator;
         $this->configHandler = $configHandler;
     }
