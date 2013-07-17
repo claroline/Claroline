@@ -15,7 +15,7 @@ class UserManagerTest extends MockeryTestCase
     private $toolManager;
     private $ed;
     private $personalWsTemplateFile;
-    private $trans;
+    private $translator;
     private $ch;
     private $pagerFactory;
     private $om;
@@ -30,7 +30,7 @@ class UserManagerTest extends MockeryTestCase
         $this->toolManager = m::mock('Claroline\CoreBundle\Manager\ToolManager');
         $this->ed = m::mock('Claroline\CoreBundle\Event\StrictDispatcher');
         $this->personalWsTemplateFile = 'template';
-        $this->trans = m::mock('Symfony\Component\Translation\Translator');
+        $this->translator = m::mock('Symfony\Component\Translation\Translator');
         $this->ch = m::mock('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
         $this->pagerFactory = m::mock('Claroline\CoreBundle\Pager\PagerFactory');
         $this->om = m::mock('Claroline\CoreBundle\Persistence\ObjectManager');
@@ -129,7 +129,6 @@ class UserManagerTest extends MockeryTestCase
 
     public function testImportUsers()
     {
-//        $this->markTestSkipped('Cannot because it contains magic methods');
         $roleName = PlatformRoles::USER;
         $manager = $this->getManager(array('setPersonalWorkspace'));
         $user = m::mock('Claroline\CoreBundle\Entity\User');
@@ -213,6 +212,51 @@ class UserManagerTest extends MockeryTestCase
         $manager->importUsers($users);
     }
 
+    public function testConvertUsersToArray()
+    {
+        $userA = m::mock('Claroline\CoreBundle\Entity\User');
+        $userB = m::mock('Claroline\CoreBundle\Entity\User');
+        $roleAA = m::mock('Claroline\CoreBundle\Entity\Role');
+        $roleAB = m::mock('Claroline\CoreBundle\Entity\Role');
+        $roleBA = m::mock('Claroline\CoreBundle\Entity\Role');
+        $roleBB = m::mock('Claroline\CoreBundle\Entity\Role');
+
+        $userA->shouldReceive('getId')->once()->andReturn(1);
+        $userA->shouldReceive('getUsername')->once()->andReturn('username_1');
+        $userA->shouldReceive('getLastName')->once()->andReturn('lastname_1');
+        $userA->shouldReceive('getFirstName')->once()->andReturn('firstname_1');
+        $userA->shouldReceive('getAdministrativeCode')->once()->andReturn('code_1');
+        $userA->shouldReceive('getEntityRoles')->once()->andReturn(array($roleAA, $roleAB));
+        $roleAA->shouldReceive('getTranslationKey')->once()->andReturn('ROLE_AA');
+        $this->translator->shouldReceive('trans')
+            ->with('ROLE_AA', array(), 'platform')
+            ->once()
+            ->andReturn('ROLE_AA_TRAD');
+        $roleAB->shouldReceive('getTranslationKey')->once()->andReturn('ROLE_AB');
+        $this->translator->shouldReceive('trans')
+            ->with('ROLE_AB', array(), 'platform')
+            ->once()
+            ->andReturn('ROLE_AB_TRAD');
+        $userB->shouldReceive('getId')->once()->andReturn(2);
+        $userB->shouldReceive('getUsername')->once()->andReturn('username_2');
+        $userB->shouldReceive('getLastName')->once()->andReturn('lastname_2');
+        $userB->shouldReceive('getFirstName')->once()->andReturn('firstname_2');
+        $userB->shouldReceive('getAdministrativeCode')->once()->andReturn('code_2');
+        $userB->shouldReceive('getEntityRoles')->once()->andReturn(array($roleBA, $roleBB));
+        $roleBA->shouldReceive('getTranslationKey')->once()->andReturn('ROLE_BA');
+        $this->translator->shouldReceive('trans')
+            ->with('ROLE_BA', array(), 'platform')
+            ->once()
+            ->andReturn('ROLE_BA_TRAD');
+        $roleBB->shouldReceive('getTranslationKey')->once()->andReturn('ROLE_BB');
+        $this->translator->shouldReceive('trans')
+            ->with('ROLE_BB', array(), 'platform')
+            ->once()
+            ->andReturn('ROLE_BB_TRAD');
+
+        $this->getManager()->convertUsersToArray(array($userA, $userB));
+    }
+
     public function testGetUserByUserName()
     {
         $this->userRepo->shouldReceive('loadUserByUsername')
@@ -235,7 +279,7 @@ class UserManagerTest extends MockeryTestCase
                 $this->toolManager,
                 $this->ed,
                 $this->personalWsTemplateFile,
-                $this->trans,
+                $this->translator,
                 $this->ch,
                 $this->pagerFactory,
                 $this->om
@@ -259,7 +303,7 @@ class UserManagerTest extends MockeryTestCase
                 $this->toolManager,
                 $this->ed,
                 $this->personalWsTemplateFile,
-                $this->trans,
+                $this->translator,
                 $this->ch,
                 $this->pagerFactory,
                 $this->om

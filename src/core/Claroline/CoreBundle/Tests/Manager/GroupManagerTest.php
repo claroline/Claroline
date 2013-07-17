@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use \Mockery as m;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -125,6 +126,145 @@ class GroupManagerTest extends MockeryTestCase
             ->once();
 
         $manager->importUsers($group, $users);
+    }
+
+    public function testConvertGroupsToArray()
+    {
+        $groupA = m::mock('Claroline\CoreBundle\Entity\Group');
+        $groupB = m::mock('Claroline\CoreBundle\Entity\Group');
+        $roleAA = m::mock('Claroline\CoreBundle\Entity\Role');
+        $roleAB = m::mock('Claroline\CoreBundle\Entity\Role');
+        $roleBA = m::mock('Claroline\CoreBundle\Entity\Role');
+        $roleBB = m::mock('Claroline\CoreBundle\Entity\Role');
+
+        $groupA->shouldReceive('getId')->once()->andReturn(1);
+        $groupA->shouldReceive('getName')->once()->andReturn('group_1');
+        $groupA->shouldReceive('getEntityRoles')->once()->andReturn(array($roleAA, $roleAB));
+        $roleAA->shouldReceive('getTranslationKey')->once()->andReturn('ROLE_AA');
+        $this->translator->shouldReceive('trans')
+            ->with('ROLE_AA', array(), 'platform')
+            ->once()
+            ->andReturn('ROLE_AA_TRAD');
+        $roleAB->shouldReceive('getTranslationKey')->once()->andReturn('ROLE_AB');
+        $this->translator->shouldReceive('trans')
+            ->with('ROLE_AB', array(), 'platform')
+            ->once()
+            ->andReturn('ROLE_AB_TRAD');
+        $groupB->shouldReceive('getId')->once()->andReturn(2);
+        $groupB->shouldReceive('getName')->once()->andReturn('group_2');
+        $groupB->shouldReceive('getEntityRoles')->once()->andReturn(array($roleBA, $roleBB));
+        $roleBA->shouldReceive('getTranslationKey')->once()->andReturn('ROLE_BA');
+        $this->translator->shouldReceive('trans')
+            ->with('ROLE_BA', array(), 'platform')
+            ->once()
+            ->andReturn('ROLE_BA_TRAD');
+        $roleBB->shouldReceive('getTranslationKey')->once()->andReturn('ROLE_BB');
+        $this->translator->shouldReceive('trans')
+            ->with('ROLE_BB', array(), 'platform')
+            ->once()
+            ->andReturn('ROLE_BB_TRAD');
+
+        $this->getManager()->convertGroupsToArray(array($groupA, $groupB));
+    }
+
+    public function testGetWorkspaceOutsiders()
+    {
+        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $em = m::mock('Doctrine\ORM\EntityManager');
+        $query = new \Doctrine\ORM\Query($em);
+
+        $this->groupRepo->shouldReceive('findWorkspaceOutsiders')
+            ->with($workspace, false)
+            ->once()
+            ->andReturn($query);
+        $this->pagerFactory->shouldReceive('createPager')
+            ->with($query, 1)
+            ->once();
+
+        $this->getManager()->getWorkspaceOutsiders($workspace, 1);
+    }
+
+    public function testGetWorkspaceOutsidersByName()
+    {
+        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $em = m::mock('Doctrine\ORM\EntityManager');
+        $query = new \Doctrine\ORM\Query($em);
+
+        $this->groupRepo->shouldReceive('findWorkspaceOutsidersByName')
+            ->with($workspace, 'search', false)
+            ->once()
+            ->andReturn($query);
+        $this->pagerFactory->shouldReceive('createPager')
+            ->with($query, 1)
+            ->once();
+
+        $this->getManager()->getWorkspaceOutsidersByName($workspace, 'search', 1);
+    }
+
+    public function testGetGroupsByWorkspace()
+    {
+        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $em = m::mock('Doctrine\ORM\EntityManager');
+        $query = new \Doctrine\ORM\Query($em);
+
+        $this->groupRepo->shouldReceive('findByWorkspace')
+            ->with($workspace, false)
+            ->once()
+            ->andReturn($query);
+        $this->pagerFactory->shouldReceive('createPager')
+            ->with($query, 1)
+            ->once();
+
+        $this->getManager()->getGroupsByWorkspace($workspace, 1);
+    }
+
+    public function testGetGroupsByWorkspaceAndName()
+    {
+        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $em = m::mock('Doctrine\ORM\EntityManager');
+        $query = new \Doctrine\ORM\Query($em);
+
+        $this->groupRepo->shouldReceive('findByWorkspaceAndName')
+            ->with($workspace, 'search', false)
+            ->once()
+            ->andReturn($query);
+        $this->pagerFactory->shouldReceive('createPager')
+            ->with($query, 1)
+            ->once();
+
+        $this->getManager()->getGroupsByWorkspaceAndName($workspace, 'search', 1);
+    }
+
+    public function testGetGroups()
+    {
+        $em = m::mock('Doctrine\ORM\EntityManager');
+        $query = new \Doctrine\ORM\Query($em);
+
+        $this->groupRepo->shouldReceive('findAll')
+            ->with(false)
+            ->once()
+            ->andReturn($query);
+        $this->pagerFactory->shouldReceive('createPager')
+            ->with($query, 1)
+            ->once();
+
+        $this->getManager()->getGroups(1);
+    }
+
+    public function testGetGroupsByName()
+    {
+        $em = m::mock('Doctrine\ORM\EntityManager');
+        $query = new \Doctrine\ORM\Query($em);
+
+        $this->groupRepo->shouldReceive('findByName')
+            ->with('search', false)
+            ->once()
+            ->andReturn($query);
+        $this->pagerFactory->shouldReceive('createPager')
+            ->with($query, 1)
+            ->once();
+
+        $this->getManager()->getGroupsByName('search', 1);
     }
 
     private function getManager(array $mockedMethods = array())
