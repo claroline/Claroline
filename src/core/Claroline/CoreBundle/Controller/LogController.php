@@ -7,7 +7,6 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Translation\Translator;
-use Claroline\CoreBundle\Event\Event\Log\LogCreateDelegateViewEvent;
 use Claroline\CoreBundle\Event\Event\Log\LogResourceChildUpdateEvent;
 use Claroline\CoreBundle\Form\LogWorkspaceWidgetConfigType;
 use Claroline\CoreBundle\Form\LogDesktopWidgetConfigType;
@@ -124,13 +123,11 @@ class LogController extends Controller
     {
         if ($log->getAction() === LogResourceChildUpdateEvent::ACTION ) {
 
-
             $event = $this->eventDispatcher->dispatch(
                 'create_log_details_'.$log->getResourceType()->getName(),
                 'Log\LogCreateDelegateView',
                 array($log)
             );
-
 
             return new Response($event->getResponseContent());
         }
@@ -151,8 +148,8 @@ class LogController extends Controller
      */
     public function updateLogWorkspaceWidgetConfig($isDefault, $workspaceId, $redirectToHome)
     {
-        $isDefault = (boolean)$isDefault;
-        $redirectToHome = (boolean)$redirectToHome;
+        $isDefault = (boolean) $isDefault;
+        $redirectToHome = (boolean) $redirectToHome;
 
         $em = $this->getDoctrine()->getManager();
 
@@ -202,8 +199,7 @@ class LogController extends Controller
                     'claro_admin_widget_configuration_workspace', array('widgetId' => $widget->getId())
                 )
             );
-        } else if ($redirectToHome === false) {
-
+        } elseif ($redirectToHome === false) {
             return $this->render(
                 'ClarolineCoreBundle:Log:config_workspace_form_update.html.twig', array(
                 'form' => $form->createView(),
@@ -213,7 +209,6 @@ class LogController extends Controller
                 )
             );
         } else {
-
             return $this->redirect(
                 $this->generateUrl(
                     'claro_workspace_open_tool', array('workspaceId' => $workspaceId, 'toolName' => 'home')
@@ -232,8 +227,8 @@ class LogController extends Controller
      */
     public function updateDesktopWidgetConfig($isDefault, $redirectToHome)
     {
-        $isDefault = (bool)$isDefault;
-        $redirectToHome = (bool)$redirectToHome;
+        $isDefault = (bool) $isDefault;
+        $redirectToHome = (bool) $redirectToHome;
 
         $em = $this->getDoctrine()->getManager();
 
@@ -260,7 +255,11 @@ class LogController extends Controller
             $config->setUser($user);
         }
 
-        $form = $this->get('form.factory')->create(new LogDesktopWidgetConfigType(), null, array('workspaces' => $workspaces));
+        $form = $this->get('form.factory')->create(
+            new LogDesktopWidgetConfigType(),
+            null,
+            array('workspaces' => $workspaces)
+        );
         $form->bind($this->getRequest());
 
         if ($form->isValid()) {
@@ -284,9 +283,15 @@ class LogController extends Controller
             $em->persist($config);
             $em->flush();
 
-            $this->get('session')->getFlashBag()->add('success', $this->translator->trans('Your changes have been saved', array(), 'platform'));
+            $this->get('session')->getFlashBag()->add(
+                'success',
+                $this->translator->trans('Your changes have been saved', array(), 'platform')
+            );
         } else {
-            $this->get('session')->getFlashBag()->add('error', $this->translator->trans('The form is not valid', array(), 'platform'));
+            $this->get('session')->getFlashBag()->add(
+                'error',
+                $this->translator->trans('The form is not valid', array(), 'platform')
+            );
         }
         $tool = $this->toolManager->getOneToolByName('home');
 
@@ -299,8 +304,7 @@ class LogController extends Controller
                     'claro_admin_widget_configuration_desktop', array('widgetId' => $widget->getId())
                 )
             );
-        } else if ($redirectToHome === false) {
-
+        } elseif ($redirectToHome === false) {
             return $this->render(
                 'ClarolineCoreBundle:Log:config_desktop_form_update.html.twig', array(
                     'form' => $form->createView(),
@@ -309,7 +313,6 @@ class LogController extends Controller
                 )
             );
         } else {
-
             return $this->redirect($this->generateUrl('claro_desktop_open', array()));
         }
     }

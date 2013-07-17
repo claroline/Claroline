@@ -2,8 +2,10 @@
 
 namespace Claroline\CoreBundle\Event\Event;
 
-use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\EventDispatcher\Event;
+use Claroline\CoreBundle\Event\DataConveyorEventInterface;
+use Claroline\CoreBundle\Entity\User;
+
 /**
  * Event dispatched when a widget is configured.
  */
@@ -49,9 +51,9 @@ class ConfigureWidgetDesktopEvent extends Event implements DataConveyorEventInte
     {
         return $this->isDefault;
     }
-    
-    public function isPopulated() {
+
+    public function isPopulated()
+    {
         return $this->isPopulated;
     }
 }
-

@@ -12,10 +12,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
-use Claroline\CoreBundle\Event\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Event\Event\DisplayWidgetEvent;
-use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceToolReadEvent;
-use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceDeleteEvent;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -70,7 +66,7 @@ class WorkspaceController extends Controller
         $this->eventDispatcher = $eventDispatcher;
         $this->security = $security;
         $this->router = $router;
-        $this->utils= $utils;
+        $this->utils = $utils;
         $this->formFactory = $formFactory;
     }
 

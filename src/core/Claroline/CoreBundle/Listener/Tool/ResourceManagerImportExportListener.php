@@ -14,7 +14,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 /**
  * @DI\Service
  */
-class ImportExportResourceListener
+class ResourceManagerImportExportListener
 {
     private $roleManager;
     private $em;
@@ -49,7 +49,7 @@ class ImportExportResourceListener
     /**
      * @DI\Observe("tool_resource_manager_from_template")
      *
-     * @param ImportToolEvent $event
+     * @param  ImportToolEvent $event
      * @throws Exception
      */
     public function onImportResource(ImportToolEvent $event)
@@ -59,20 +59,20 @@ class ImportExportResourceListener
         $createdResources = array();
         $createdResources[$config['root_id']] = $root->getId();
         $createdResources = $this->loadDirectories(
-            $config, 
-            $createdResources, 
-            $event->getRoot(), 
-            $event->getUser(), 
-            $event->getWorkspace(), 
+            $config,
+            $createdResources,
+            $event->getRoot(),
+            $event->getUser(),
+            $event->getWorkspace(),
             $event->getRoles()
         );
         $this->loadFiles(
-            $config, 
-            $createdResources, 
-            $event->getFilePaths(), 
-            $event->getRoot(), 
-            $event->getUser(), 
-            $event->getWorkspace(), 
+            $config,
+            $createdResources,
+            $event->getFilePaths(),
+            $event->getRoot(),
+            $event->getUser(),
+            $event->getWorkspace(),
             $event->getRoles()
         );
     }
@@ -212,7 +212,7 @@ class ImportExportResourceListener
     /**
      * Search a resource by Id in the $config array (for the template export)
      *
-     * @param array $config
+     * @param array   $config
      * @param integer $id
      *
      * @return the key wich was found for the resourceId.
@@ -232,7 +232,7 @@ class ImportExportResourceListener
      * Shift by one to the right the element on an array after the key $key.
      *
      * @param array $config
-     * @param type $key
+     * @param type  $key
      */
     private function shift(array $config, $key)
     {
@@ -249,12 +249,19 @@ class ImportExportResourceListener
     /**
      * Load directories from a template config file.
      *
-     * @param array $config the config file.
+     * @param array $config           the config file.
      * @param array $createdResources the list of already created resource [$id] => [$entity]
      *
      * @return array
      */
-    private function loadDirectories($config, $createdResources, $root, $user, AbstractWorkspace $workspace, array $roles)
+    private function loadDirectories(
+        $config,
+        $createdResources,
+        $root,
+        $user,
+        AbstractWorkspace $workspace,
+        array $roles
+    )
     {
         if (isset($config['directory'])) {
             foreach ($config['directory'] as $resource) {
@@ -275,7 +282,15 @@ class ImportExportResourceListener
         return $createdResources;
     }
 
-    private function loadFiles($config, $createdResources, $requiredFiles, $root, $user, AbstractWorkspace $workspace, array $roles)
+    private function loadFiles(
+        $config,
+        $createdResources,
+        $requiredFiles,
+        $root,
+        $user,
+        AbstractWorkspace $workspace,
+        array $roles
+    )
     {
         foreach ($config['resources'] as $resource) {
 
@@ -294,11 +309,11 @@ class ImportExportResourceListener
             }
 
             $newEvent = $this->ed->dispatch(
-                "resource_{$resource['type']}_from_template", 
-                'ImportResourceTemplate', 
+                "resource_{$resource['type']}_from_template",
+                'ImportResourceTemplate',
                 array($resource, $root, $user, $workspace, $roles, $createdResources, $fileContent)
             );
-                
+
             $resourceEntity = $newEvent->getResource();
             $resourceEntity->setName($resource['name']);
             $this->resourceManager->create(
@@ -310,8 +325,8 @@ class ImportExportResourceListener
                 null,
                 $this->rightsManager->addRolesToPermsArray($roles, $resource['perms'])
             );
-            
-            $createdResources[$resource['id']] = $resourceEntity; 
+
+            $createdResources[$resource['id']] = $resourceEntity;
         }
     }
 }

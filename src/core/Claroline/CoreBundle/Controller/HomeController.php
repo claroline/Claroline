@@ -1,9 +1,6 @@
 <?php
 namespace Claroline\CoreBundle\Controller;
-use Claroline\CoreBundle\Entity\Home\Content2Region;
-use Claroline\CoreBundle\Entity\Home\Content2Type;
 use Claroline\CoreBundle\Entity\Home\Content;
-use Claroline\CoreBundle\Entity\Home\SubContent;
 use Claroline\CoreBundle\Entity\Home\Type;
 use Claroline\CoreBundle\Manager\HomeManager;
 use JMS\DiExtraBundle\Annotation\Inject;
@@ -137,7 +134,6 @@ class HomeController
     {
         //cant use @Secure(roles="ROLE_ADMIN") annotation beacause this method is called in anonymous mode
         if ($this->security->isGranted('ROLE_ADMIN')) {
-
             return $this->render(
                 'ClarolineCoreBundle:Home/types:'.$type.'.creator.twig',
                 $this->manager->getCreator($type, $id, $content, $father),
@@ -151,7 +147,7 @@ class HomeController
     /**
      * Render the page of the menu.
      *
-     * @param string $id The id of the content.
+     * @param string $id   The id of the content.
      * @param string $size The size (span12) of the content.
      * @param string $type The type of the content.
      *
@@ -167,7 +163,7 @@ class HomeController
     /**
      * Render the HTML of the menu of sizes of the contents.
      *
-     * @param string $id The id of the content.
+     * @param string $id   The id of the content.
      * @param string $size The size (span12) of the content.
      * @param string $type The type of the content.
      *
@@ -217,7 +213,6 @@ class HomeController
      */
     public function regionAction($id)
     {
-
         return array('id' => $id);
     }
 
@@ -263,6 +258,8 @@ class HomeController
                     $tmp[$name] .= $this->render(
                         'ClarolineCoreBundle:Home/types:'.$variables['type'].'.html.twig', $variables, true
                     )->getContent();
+                } else {
+                    unset($tmp[$name]);
                 }
             }
         }
@@ -288,7 +285,6 @@ class HomeController
             $this->request->get('type'),
             $this->request->get('father')
         )) {
-
             return new Response($id);
         }
 
@@ -320,7 +316,6 @@ class HomeController
 
             return new Response('true');
         } catch (\Exeption $e) {
-
             return new Response('false'); //useful in ajax
         }
     }
@@ -330,8 +325,8 @@ class HomeController
      * The response is the word true in a string in success, otherwise false.
      *
      * @param string $type The type of the content.
-     * @param string $a The id of the content 1.
-     * @param string $b The id of the content 2.
+     * @param string $a    The id of the content 1.
+     * @param string $b    The id of the content 2.
      *
      * @Route("/content/reorder/{type}/{a}/{b}", requirements={"a" = "\d+"}, name="claroline_content_reorder")
      *
@@ -351,7 +346,6 @@ class HomeController
 
             return new Response('true');
         } catch (\Exeption $e) {
-
             return new Response('false'); //useful in ajax
         }
     }
@@ -374,7 +368,6 @@ class HomeController
 
             return new Response('true');
         } catch (\Exeption $e) {
-
             return new Response('false'); //useful in ajax
         }
     }
@@ -398,7 +391,6 @@ class HomeController
 
             return new Response('true');
         } catch (\Exeption $e) {
-
             return new Response('false'); //useful in ajax
         }
     }

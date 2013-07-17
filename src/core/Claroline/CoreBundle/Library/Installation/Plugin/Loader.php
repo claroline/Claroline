@@ -38,7 +38,7 @@ class Loader
     /**
      * Searches a plugin bundle by its FQCN and returns an instance of it.
      *
-     * @param string $pluginFqcn
+     * @param  string           $pluginFqcn
      * @throws RuntimeException if the plugin class cannot be found or instantiated
      *
      * @return PluginBundle

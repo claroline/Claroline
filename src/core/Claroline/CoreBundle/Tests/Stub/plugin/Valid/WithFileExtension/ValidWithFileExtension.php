@@ -7,4 +7,3 @@ use Claroline\CoreBundle\Library\PluginBundle;
 class ValidWithFileExtension extends PluginBundle
 {
 }
-

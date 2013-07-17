@@ -6,7 +6,6 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Doctrine\ORM\EntityManager;
 
 class Configuration implements ConfigurationInterface
 {

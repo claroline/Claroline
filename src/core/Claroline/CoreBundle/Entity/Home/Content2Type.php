@@ -79,7 +79,7 @@ class Content2Type
     /**
      * Set size
      *
-     * @param string $size
+     * @param  string       $size
      * @return Content2Type
      */
     public function setSize($size)
@@ -102,7 +102,7 @@ class Content2Type
     /**
      * Set content
      *
-     * @param \Claroline\CoreBundle\Entity\Home\Content $content
+     * @param  \Claroline\CoreBundle\Entity\Home\Content $content
      * @return Content2Type
      */
     public function setContent(\Claroline\CoreBundle\Entity\Home\Content $content)
@@ -125,7 +125,7 @@ class Content2Type
     /**
      * Set type
      *
-     * @param \Claroline\CoreBundle\Entity\Home\Type $type
+     * @param  \Claroline\CoreBundle\Entity\Home\Type $type
      * @return Content2Type
      */
     public function setType(\Claroline\CoreBundle\Entity\Home\Type $type)
@@ -148,7 +148,7 @@ class Content2Type
     /**
      * Set next
      *
-     * @param \Claroline\CoreBundle\Entity\Home\Content2Type $next
+     * @param  \Claroline\CoreBundle\Entity\Home\Content2Type $next
      * @return Content2Type
      */
     public function setNext($next)
@@ -171,7 +171,7 @@ class Content2Type
     /**
      * Set back
      *
-     * @param \Claroline\CoreBundle\Entity\Home\Content2Type $back
+     * @param  \Claroline\CoreBundle\Entity\Home\Content2Type $back
      * @return Content2Type
      */
     public function setBack($back)

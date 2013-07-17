@@ -37,17 +37,15 @@ use Claroline\CoreBundle\Entity\Logger\Log;
  */
 abstract class RepositoryTestCase extends WebTestCase
 {
-    protected static $writer;
+    private static $om;
     private static $client;
-    private static $em;
     private static $references;
     private static $time;
 
     public static function setUpBeforeClass()
     {
         self::$client = static::createClient();
-        self::$em = self::$client->getContainer()->get('doctrine.orm.entity_manager');
-        self::$writer = self::$client->getContainer()->get('claroline.database.writer');
+        self::$om = self::$client->getContainer()->get('claroline.persistence.object_manager');
         self::$references = array();
         self::$time = new \DateTime();
         self::$client->beginTransaction();
@@ -68,7 +66,7 @@ abstract class RepositoryTestCase extends WebTestCase
      */
     protected static function getRepository($entityClass)
     {
-        return self::$em->getRepository($entityClass);
+        return self::$om->getRepository($entityClass);
     }
 
     /**
@@ -264,7 +262,7 @@ abstract class RepositoryTestCase extends WebTestCase
         $activity->setCreator($creator);
         $activity->setWorkspace($parent->getWorkspace());
         $activity->setParent($parent);
-        self::$writer->suspendFlush();
+        self::$om->startFlushSuite();
 
         for ($i = 0, $count = count($resources); $i < $count; ++$i) {
             $activityResource = new ResourceActivity();
@@ -278,12 +276,10 @@ abstract class RepositoryTestCase extends WebTestCase
             $activity->addResourceActivity($activityResource);
         }
 
-
         $activity->setCreationDate(self::$time);
 
-
         self::create($name, $activity);
-        self::$writer->forceFlush();
+        self::$om->endFlushSuite();
     }
 
     protected static function createResourceRights(
@@ -306,7 +302,7 @@ abstract class RepositoryTestCase extends WebTestCase
             $rights->addCreatableResourceType($type);
         }
 
-        self::create("resource_right/{$role->getName()}-{$resource->getName()}" , $rights);
+        self::create("resource_right/{$role->getName()}-{$resource->getName()}", $rights);
     }
 
     protected static function createTool($name)
@@ -373,7 +369,7 @@ abstract class RepositoryTestCase extends WebTestCase
             $message->setParent($parent);
         }
 
-        self::$writer->suspendFlush();
+        self::$om->startFlushSuite();
         self::create($alias, $message);
 
         $userMessage = new UserMessage();
@@ -394,7 +390,7 @@ abstract class RepositoryTestCase extends WebTestCase
             self::create($alias . '/' . $receiver->getUsername(), $userMessage);
         }
 
-        self::$writer->forceFlush();
+        self::$om->endFlushSuite();
     }
 
     protected static function createPlugin($vendor, $bundle)
@@ -419,7 +415,8 @@ abstract class RepositoryTestCase extends WebTestCase
             $log->setWorkspace($workspace);
         }
 
-        self::$writer->create($log);
+        self::$om->persist($log);
+        self::$om->flush();
     }
 
     protected static function createWorkspaceTag($name, User $user = null)
@@ -437,7 +434,8 @@ abstract class RepositoryTestCase extends WebTestCase
         $tagRelation->setTag($tag);
         $tagRelation->setWorkspace($workspace);
 
-        self::$writer->create($tagRelation);
+        self::$om->persist($tagRelation);
+        self::$om->flush();
     }
 
     protected static function createWorkspaceTagHierarchy(
@@ -453,17 +451,18 @@ abstract class RepositoryTestCase extends WebTestCase
         $tagHierarchy->setLevel($level);
         $tagHierarchy->setUser($user);
 
-        self::$writer->create($tagHierarchy);
+        self::$om->persist($tagHierarchy);
+        self::$om->flush();
     }
 
     /**
      * Sets the common properties of a resource.
      *
-     * @param AbstractResource $resource
-     * @param ResourceType $type
-     * @param User $creator
+     * @param AbstractResource  $resource
+     * @param ResourceType      $type
+     * @param User              $creator
      * @param AbstractWorkspace $workspace
-     * @param Directory $parent
+     * @param Directory         $parent
      *
      * @return AbstractResource
      */
@@ -493,7 +492,7 @@ abstract class RepositoryTestCase extends WebTestCase
      */
     private static function disableTimestampableListener()
     {
-        $eventManager = self::$em->getConnection()->getEventManager();
+        $eventManager = self::$om->getEventManager();
 
         foreach ($eventManager->getListeners() as $listeners) {
             foreach ($listeners as $listener) {
@@ -529,7 +528,8 @@ abstract class RepositoryTestCase extends WebTestCase
      */
     private static function create($reference, $entity)
     {
-        self::$writer->create($entity);
+        self::$om->persist($entity);
+        self::$om->flush();
         self::set($reference, $entity);
     }
 }

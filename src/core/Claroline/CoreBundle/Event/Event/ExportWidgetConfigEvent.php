@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Event\Event;
 
 use Symfony\Component\EventDispatcher\Event;
+use Claroline\CoreBundle\Event\DataConveyorEventInterface;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
@@ -40,8 +41,8 @@ class ExportWidgetConfigEvent extends Event implements DataConveyorEventInterfac
         return $this->workspace;
     }
 
-    public function isPopulated() {
+    public function isPopulated()
+    {
         return $this->isPopulated;
     }
 }
-

@@ -415,8 +415,8 @@ abstract class AbstractResource
     /**
      * Sets the resource name.
      *
-     * @param string $name
-     * @throws an exception if the name contains the path separator ('/').
+     * @param  string $name
+     * @throws an     exception if the name contains the path separator ('/').
      */
     public function setName($name)
     {
