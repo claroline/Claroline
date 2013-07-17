@@ -293,7 +293,7 @@ class UserManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
-    public function getGroupOutsidersByName(Group $group, $search, $getQuery = false)
+    public function getGroupOutsidersByName(Group $group, $search, $page)
     {
         $query = $this->userRepo->findGroupOutsidersByName($group, $search, false);
 
@@ -320,12 +320,12 @@ class UserManager
         return $this->om->findByIds('Claroline\CoreBundle\Entity\User', $ids);
     }
 
-    public function getUsersEnrolledInMostWorkspaces ($max)
+    public function getUsersEnrolledInMostWorkspaces($max)
     {
         return $this->userRepo->findUsersEnrolledInMostWorkspaces($max);
     }
 
-    public function getUsersOwnersOfMostWorkspaces ($max)
+    public function getUsersOwnersOfMostWorkspaces($max)
     {
         return $this->userRepo->findUsersOwnersOfMostWorkspaces($max);
     }

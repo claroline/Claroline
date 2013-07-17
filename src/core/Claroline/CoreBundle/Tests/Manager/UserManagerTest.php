@@ -267,6 +267,298 @@ class UserManagerTest extends MockeryTestCase
         $this->assertEquals('User', $manager->getUserByUsername('john'));
     }
 
+    public function testRefreshUser()
+    {
+        $user = m::mock('Symfony\Component\Security\Core\User\UserInterface');
+
+        $this->userRepo->shouldReceive('refreshUser')
+            ->once()
+            ->with($user);
+
+        $this->getManager()->refreshUser($user);
+    }
+
+    public function testGetUserByWorkspaceAndRole()
+    {
+        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $role = m::mock('Claroline\CoreBundle\Entity\Role');
+        $userA = m::mock('Claroline\CoreBundle\Entity\User');
+        $userB = m::mock('Claroline\CoreBundle\Entity\User');
+        $users = array($userA, $userB);
+
+        $this->userRepo->shouldReceive('findByWorkspaceAndRole')
+            ->once()
+            ->with($workspace, $role)
+            ->andReturn($users);
+
+        $this->assertEquals($users, $this->getManager()->getUserByWorkspaceAndRole($workspace, $role));
+    }
+
+    public function testGetWorkspaceOutsidersByName()
+    {
+        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $em = m::mock('Doctrine\ORM\EntityManager');
+        $query = new \Doctrine\ORM\Query($em);
+
+        $this->userRepo->shouldReceive('findWorkspaceOutsidersByName')
+            ->with($workspace, 'search', false)
+            ->once()
+            ->andReturn($query);
+        $this->pagerFactory->shouldReceive('createPager')
+            ->with($query, 1)
+            ->once()
+            ->andReturn('pager');
+
+        $this->assertEquals('pager', $this->getManager()->getWorkspaceOutsidersByName($workspace, 'search', 1));
+    }
+
+    public function testGetWorkspaceOutsiders()
+    {
+        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $em = m::mock('Doctrine\ORM\EntityManager');
+        $query = new \Doctrine\ORM\Query($em);
+
+        $this->userRepo->shouldReceive('findWorkspaceOutsiders')
+            ->with($workspace, false)
+            ->once()
+            ->andReturn($query);
+        $this->pagerFactory->shouldReceive('createPager')
+            ->with($query, 1)
+            ->once()
+            ->andReturn('pager');
+
+        $this->assertEquals('pager', $this->getManager()->getWorkspaceOutsiders($workspace, 1));
+    }
+
+    public function testGetAllUsers()
+    {
+        $em = m::mock('Doctrine\ORM\EntityManager');
+        $query = new \Doctrine\ORM\Query($em);
+
+        $this->userRepo->shouldReceive('findAll')
+            ->with(false)
+            ->once()
+            ->andReturn($query);
+        $this->pagerFactory->shouldReceive('createPager')
+            ->with($query, 1)
+            ->once()
+            ->andReturn('pager');
+
+        $this->assertEquals('pager', $this->getManager()->getAllUsers(1));
+    }
+
+    public function testGetUsersByName()
+    {
+        $em = m::mock('Doctrine\ORM\EntityManager');
+        $query = new \Doctrine\ORM\Query($em);
+
+        $this->userRepo->shouldReceive('findByName')
+            ->with('search', false)
+            ->once()
+            ->andReturn($query);
+        $this->pagerFactory->shouldReceive('createPager')
+            ->with($query, 1)
+            ->once()
+            ->andReturn('pager');
+
+        $this->assertEquals('pager', $this->getManager()->getUsersByName('search', 1));
+    }
+
+    public function testGetUsersByGroup()
+    {
+        $group = m::mock('Claroline\CoreBundle\Entity\Group');
+        $em = m::mock('Doctrine\ORM\EntityManager');
+        $query = new \Doctrine\ORM\Query($em);
+
+        $this->userRepo->shouldReceive('findByGroup')
+            ->with($group, false)
+            ->once()
+            ->andReturn($query);
+        $this->pagerFactory->shouldReceive('createPager')
+            ->with($query, 1)
+            ->once()
+            ->andReturn('pager');
+
+        $this->assertEquals('pager', $this->getManager()->getUsersByGroup($group, 1));
+    }
+
+    public function testGetUsersByNameAndGroup()
+    {
+        $group = m::mock('Claroline\CoreBundle\Entity\Group');
+        $em = m::mock('Doctrine\ORM\EntityManager');
+        $query = new \Doctrine\ORM\Query($em);
+
+        $this->userRepo->shouldReceive('findByNameAndGroup')
+            ->with('search', $group, false)
+            ->once()
+            ->andReturn($query);
+        $this->pagerFactory->shouldReceive('createPager')
+            ->with($query, 1)
+            ->once()
+            ->andReturn('pager');
+
+        $this->assertEquals('pager', $this->getManager()->getUsersByNameAndGroup('search', $group, 1));
+    }
+
+    public function testGetUsersByWorkspace()
+    {
+        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $em = m::mock('Doctrine\ORM\EntityManager');
+        $query = new \Doctrine\ORM\Query($em);
+
+        $this->userRepo->shouldReceive('findByWorkspace')
+            ->with($workspace, false)
+            ->once()
+            ->andReturn($query);
+        $this->pagerFactory->shouldReceive('createPager')
+            ->with($query, 1)
+            ->once()
+            ->andReturn('pager');
+
+        $this->assertEquals('pager', $this->getManager()->getUsersByWorkspace($workspace, 1));
+    }
+
+    public function testGetUsersByWorkspaceAndName()
+    {
+        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $em = m::mock('Doctrine\ORM\EntityManager');
+        $query = new \Doctrine\ORM\Query($em);
+
+        $this->userRepo->shouldReceive('findByWorkspaceAndName')
+            ->with($workspace, 'search', false)
+            ->once()
+            ->andReturn($query);
+        $this->pagerFactory->shouldReceive('createPager')
+            ->with($query, 1)
+            ->once()
+            ->andReturn('pager');
+
+        $this->assertEquals('pager', $this->getManager()->getUsersByWorkspaceAndName($workspace, 'search', 1));
+    }
+
+    public function testGetGroupOutsiders()
+    {
+        $group = m::mock('Claroline\CoreBundle\Entity\Group');
+        $em = m::mock('Doctrine\ORM\EntityManager');
+        $query = new \Doctrine\ORM\Query($em);
+
+        $this->userRepo->shouldReceive('findGroupOutsiders')
+            ->with($group, false)
+            ->once()
+            ->andReturn($query);
+        $this->pagerFactory->shouldReceive('createPager')
+            ->with($query, 1)
+            ->once()
+            ->andReturn('pager');
+
+        $this->assertEquals('pager', $this->getManager()->getGroupOutsiders($group, 1));
+    }
+
+    public function testGetGroupOutsidersByName()
+    {
+        $group = m::mock('Claroline\CoreBundle\Entity\Group');
+        $em = m::mock('Doctrine\ORM\EntityManager');
+        $query = new \Doctrine\ORM\Query($em);
+
+        $this->userRepo->shouldReceive('findGroupOutsidersByName')
+            ->with($group, 'search', false)
+            ->once()
+            ->andReturn($query);
+        $this->pagerFactory->shouldReceive('createPager')
+            ->with($query, 1)
+            ->once()
+            ->andReturn('pager');
+
+        $this->assertEquals('pager', $this->getManager()->getGroupOutsidersByName($group, 'search', 1));
+    }
+
+    public function testGetAllUsersExcept()
+    {
+        $excludedUser = m::mock('Claroline\CoreBundle\Entity\User');
+        $users = array('userA', 'userB');
+
+        $this->userRepo->shouldReceive('findAllExcept')
+            ->with($excludedUser)
+            ->once()
+            ->andReturn($users);
+
+        $this->assertEquals($users, $this->getManager()->getAllUsersExcept($excludedUser));
+    }
+
+    public function testGetUsersByUsernames()
+    {
+        $users = array('userA', 'userB');
+        $usernames = array('username_a', 'username_b');
+
+        $this->userRepo->shouldReceive('findByUsernames')
+            ->with($usernames)
+            ->once()
+            ->andReturn($users);
+
+        $this->assertEquals($users, $this->getManager()->getUsersByUsernames($usernames));
+    }
+
+    public function testGetNbUsers()
+    {
+        $this->userRepo->shouldReceive('count')
+            ->once()
+            ->andReturn(4);
+
+        $this->assertEquals(4, $this->getManager()->getNbUsers());
+    }
+
+    public function testGetUsersByIds()
+    {
+        $ids = array(1, 3, 4);
+        $users = array('userA', 'userC', 'userD');
+
+        $this->om->shouldReceive('findByIds')
+            ->with('Claroline\CoreBundle\Entity\User', $ids)
+            ->once()
+            ->andReturn($users);
+
+        $this->assertEquals($users, $this->getManager()->getUsersByIds($ids));
+    }
+
+    public function testGetUsersEnrolledInMostWorkspaces()
+    {
+        $max = 3;
+        $users = array('userA', 'userB', 'userC');
+
+        $this->userRepo->shouldReceive('findUsersEnrolledInMostWorkspaces')
+            ->with($max)
+            ->once()
+            ->andReturn($users);
+
+        $this->assertEquals($users, $this->getManager()->getUsersEnrolledInMostWorkspaces($max));
+    }
+
+    public function testGetUsersOwnersOfMostWorkspaces()
+    {
+        $max = 3;
+        $users = array('userA', 'userB', 'userC');
+
+        $this->userRepo->shouldReceive('findUsersOwnersOfMostWorkspaces')
+            ->with($max)
+            ->once()
+            ->andReturn($users);
+
+        $this->assertEquals($users, $this->getManager()->getUsersOwnersOfMostWorkspaces($max));
+    }
+
+    public function testGetUserById()
+    {
+        $userId = 1;
+        $user = 'User';
+
+        $this->userRepo->shouldReceive('find')
+            ->with($userId)
+            ->once()
+            ->andReturn($user);
+
+        $this->assertEquals($user, $this->getManager()->getUserById($userId));
+    }
+
     private function getManager(array $mockedMethods = array())
     {
         $this->om->shouldReceive('getRepository')->once()
