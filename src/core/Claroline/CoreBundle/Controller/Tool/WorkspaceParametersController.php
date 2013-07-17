@@ -5,47 +5,63 @@ namespace Claroline\CoreBundle\Controller\Tool;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Claroline\CoreBundle\Controller\Tool\AbstractParametersController;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Tool\Tool;
-use Claroline\CoreBundle\Event\Event\ConfigureWorkspaceToolEvent;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
-class WorkspaceParametersController extends AbstractParametersController
+class WorkspaceParametersController extends Controller
 {
     private $workspaceManager;
+    private $roleManager;
+    private $resourceManager;
     private $security;
     private $eventDispatcher;
     private $formFactory;
     private $router;
+    private $request;
 
     /**
      * @DI\InjectParams({
-     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "security"           = @DI\Inject("security.context"),
-     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
-     *     "router"             = @DI\Inject("router")
+     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
+     *     "resourceManager"  = @DI\Inject("claroline.manager.resource_manager"),
+     *     "security"         = @DI\Inject("security.context"),
+     *     "eventDispatcher"  = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "formFactory"      = @DI\Inject("claroline.form.factory"),
+     *     "router"           = @DI\Inject("router"),
+     *     "request"          = @DI\Inject("request")
      * })
      */
     public function __construct(
         WorkspaceManager $workspaceManager,
+        RoleManager $roleManager,
+        ResourceManager $resourceManager,
         SecurityContextInterface $security,
         StrictDispatcher $eventDispatcher,
         FormFactory $formFactory,
-        UrlGeneratorInterface $router
+        UrlGeneratorInterface $router,
+        Request $request
     )
     {
         $this->workspaceManager = $workspaceManager;
+        $this->roleManager = $roleManager;
+        $this->resourceManager = $resourceManager;
         $this->security = $security;
         $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
         $this->router = $router;
+        $this->request = $request;
     }
 
     /**
@@ -88,9 +104,8 @@ class WorkspaceParametersController extends AbstractParametersController
     public function workspaceExportAction(AbstractWorkspace $workspace)
     {
         $this->checkAccess($workspace);
-        $request = $this->getRequest();
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_TEMPLATE);
-        $form->handleRequest($request);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $name = $form->get('name')->getData();
@@ -155,8 +170,7 @@ class WorkspaceParametersController extends AbstractParametersController
         $wsRegisteredName = $workspace->getName();
         $wsRegisteredCode = $workspace->getCode();
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array(), $workspace);
-        $request = $this->getRequest();
-        $form->handleRequest($request);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $this->workspaceManager->createWorkspace($workspace);
@@ -191,7 +205,7 @@ class WorkspaceParametersController extends AbstractParametersController
      * @param AbstractWorkspace $workspace
      * @param Tool $tool
      *
-     * @return Response 
+     * @return Response
      */
     public function openWorkspaceToolConfig(AbstractWorkspace $workspace, Tool $tool)
     {
@@ -203,5 +217,122 @@ class WorkspaceParametersController extends AbstractParametersController
         );
 
         return new Response($event->getContent());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspace}/roles/config",
+     *     name="claro_workspace_roles"
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:roles.html.twig")
+     */
+    public function configureRolePageAction(AbstractWorkspace $workspace)
+    {
+        $this->checkAccess($workspace);
+        $roles = $this->roleManager->getRolesByWorkspace($workspace);
+
+        return array('workspace' => $workspace, 'roles' => $roles);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspace}/roles/create/form",
+     *     name="claro_workspace_role_create_form"
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:roleCreation.html.twig")
+     */
+    public function createRoleFormAction(AbstractWorkspace $workspace)
+    {
+        $this->checkAccess($workspace);
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_ROLE);
+
+        return array('workspace' => $workspace, 'form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspace}/roles/create",
+     *     name="claro_workspace_role_create"
+     * )
+     * @EXT\Method("POST")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:roleCreation.html.twig")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     */
+    public function createRoleAction(AbstractWorkspace $workspace, User $user)
+    {
+        $this->checkAccess($workspace);
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_ROLE);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $name = $form->get('translationKey')->getData();
+            $requireDir = $form->get('requireDir')->getData();
+            $role = $this->roleManager
+                ->createWorkspaceRole('ROLE_WS_' . strtoupper($name) . '_' . $workspace->getGuid(), $name, $workspace);
+
+            if ($requireDir) {
+                $resourceTypes = $this->resourceManager->getAllResourceTypes();
+                $creations = array();
+
+                foreach ($resourceTypes as $resourceType) {
+                    $creations[] = array('name' => $resourceType->getName());
+                }
+
+
+                $this->resourceManager->create(
+                    $this->resourceManager->createResource(
+                        'Claroline\CoreBundle\Entity\Resource\Directory',
+                        $name
+                    ),
+                    $this->resourceManager->getResourceTypeByName('directory'),
+                    $user,
+                    $workspace,
+                    $this->resourceManager->getWorkspaceRoot($workspace),
+                    null,
+                    array(
+                        'ROLE_WS_' .  strtoupper($name) => array(
+                            'canOpen' => true,
+                            'canEdit' => true,
+                            'canCopy' => true,
+                            'canDelete' => true,
+                            'canExport' => true,
+                            'canCreate' => $creations,
+                            'role' => $role
+                        ),
+                        'ROLE_WS_MANAGER' => array(
+                            'canOpen' => true,
+                            'canEdit' => true,
+                            'canCopy' => true,
+                            'canDelete' => true,
+                            'canExport' => true,
+                            'canCreate' => $creations,
+                            'role' => $this->roleManager->getManagerRole($workspace)
+                        )
+                    )
+                );
+            }
+        }
+
+        return array('form' => $form->createView(), 'workspace' => $workspace);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/role/{role}/remove",
+     *     name="claro_workspace_role_create"
+     * )
+     * @EXT\Method("GET")
+     */
+    public function removeRole(Role $role)
+    {
+    }
+
+    private function checkAccess(AbstractWorkspace $workspace)
+    {
+        if (!$this->security->isGranted('parameters', $workspace)) {
+            throw new AccessDeniedException();
+        }
     }
 }

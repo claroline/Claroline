@@ -38,7 +38,7 @@ class ToolManager
     private $translator;
     /** @var ObjectManager */
     private $om;
-    
+
     /**
      * Constructor.
      *
@@ -102,7 +102,7 @@ class ToolManager
         foreach ($roles as $role) {
             $this->addRoleToOrderedTool($otr, $role);
         }
-        
+
         $filePaths = $this->extractFiles($archive, $config);
 
         $this->ed->dispatch(
@@ -110,7 +110,7 @@ class ToolManager
             array($workspace, $config, $rootDir, $manager, $filePaths, $generatedRoles)
         );
     }
-    
+
     public function addWorkspaceTool(Tool $tool, $position, $name, AbstractWorkspace $workspace)
     {
         $switchTool = $this->orderedToolRepo->findOneBy(array('workspace' => $workspace, 'order' => $position));
@@ -401,7 +401,7 @@ class ToolManager
             $this->addDesktopTool($requiredTool, $user, $position, $requiredTool->getName());
             $position++;
         }
-        
+
         $this->om->persist($user);
         $this->om->endFlushSuite($user);
     }
@@ -415,7 +415,7 @@ class ToolManager
     {
         return $this->toolRepo->findBy($criterias);
     }
-    
+
     public function extractFiles($archpath, $confTools)
     {
         $extractPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('claro_ws_tmp_', true);
@@ -423,7 +423,7 @@ class ToolManager
         $archive->open($archpath);
         $archive->extractTo($extractPath);
         $realPaths = array();
-        
+
         if (isset($confTools['files'])) {
             foreach ($confTools['files'] as $path) {
                 $realPaths[] = $extractPath . DIRECTORY_SEPARATOR . $path;

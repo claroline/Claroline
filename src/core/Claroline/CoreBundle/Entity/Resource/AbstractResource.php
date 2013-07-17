@@ -178,7 +178,7 @@ abstract class AbstractResource
      *     cascade={"persist"})
      * @ORM\JoinColumn(name="next_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
-    protected $next;
+    protected $next = null;
 
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",

@@ -159,6 +159,13 @@ class RoleManager
         return $entityRoles;
     }
 
+    public function remove(Role $role)
+    {
+        if ($role->isReadOnly()) {
+            throw new RoleReadOnlyException('This role cannot be modified nor removed');
+        }
+    }
+
     public function findWorkspaceRoles(AbstractWorkspace $workspace)
     {
         return array_merge(

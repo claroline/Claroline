@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Manager\Exception\MissingResourceNameException;
 use Claroline\CoreBundle\Manager\Exception\ResourceTypeNotFoundException;
 use Claroline\CoreBundle\Manager\Exception\RightsException;
 use Claroline\CoreBundle\Manager\Exception\ExportResourceException;
+use Claroline\CoreBundle\Manager\Exception\WrongClassException;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -128,7 +129,6 @@ class ResourceManager
         $resource->setParent($parent);
         $resource->setName($name);
         $resource->setPrevious($previous);
-        $resource->setNext(null);
         $resource->setIcon($icon);
         $this->setRights($resource, $parent, $rights);
         $this->om->persist($resource);
@@ -872,6 +872,19 @@ class ResourceManager
         }
     }
 
+    public function createResource($class, $name) {
+
+        $entity = $this->om->factory($class);
+
+        if ($entity instanceof \Claroline\CoreBundle\Entity\Resource\AbstractResource) {
+            $entity->setName($name);
+
+            return $entity;
+        } else {
+            throw new WrongClassException("{$class} doesn't extends Claroline\CoreBundle\Entity\Resource\AbstractResource.");
+        }
+    }
+
     public function getResource($id)
     {
         return $this->resourceRepo->find($id);
@@ -917,6 +930,11 @@ class ResourceManager
     public function getResourceTypeByName($name)
     {
         return $this->resourceTypeRepo->findOneByName($name);
+    }
+
+    public function getAllResourceTypes()
+    {
+        return $this->resourceTypeRepo->findAll();
     }
 
     public function getByIds(array $ids)
