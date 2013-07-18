@@ -29,7 +29,6 @@
         <testsuite name="core">
             <directory>../src/core/Claroline/CoreBundle/Tests/Converter</directory>
             <directory>../src/core/Claroline/CoreBundle/Tests/Controller</directory>
-            <!--<directory>../src/core/Claroline/CoreBundle/Tests/Database</directory>-->
             <directory>../src/core/Claroline/CoreBundle/Tests/Event</directory>
             <directory>../src/core/Claroline/CoreBundle/Tests/Form</directory>
             <directory>../src/core/Claroline/CoreBundle/Tests/Library</directory>
@@ -65,7 +64,6 @@
             <directory>../src/core/Claroline/CoreBundle/Tests/Library/Widget</directory>
             <directory>../src/core/Claroline/CoreBundle/Tests/Library/Workspace</directory>
             <file>../src/core/Claroline/CoreBundle/Tests/Manager/GroupManagerTest.php</file>
-            <file>../src/core/Claroline/CoreBundle/Tests/Manager/WorkspaceManagerTest.php</file>
             <file>../src/core/Claroline/CoreBundle/Tests/Manager/WorkspaceTagManagerTest.php</file>
             <directory>../src/core/Claroline/CoreBundle/Tests/Pager</directory>
             <file>../src/core/Claroline/CoreBundle/Tests/Repository/ActivityRepositoryTest.php</file>

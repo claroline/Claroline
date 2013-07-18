@@ -14,13 +14,24 @@ class ImportToolEvent extends Event
     private $root;
     private $files;
     private $filePaths;
+    private $roles;
 
+    /**
+     *
+     * @param AbstractWorkspace $workspace The workspace
+     * @param array             $config    The config array from the template
+     * @param Directory         $root      The workspace root
+     * @param User              $user      The creator
+     * @param array             $filePaths The requireded files from the template
+     * @param array             $roles     The role list wich is needed for the creation;
+     */
     public function __construct(
         AbstractWorkspace $workspace,
-        $config,
+        array $config,
         Directory $root,
         User $user,
-        $filePaths
+        array $filePaths,
+        array $roles
     )
     {
         $this->workspace = $workspace;
@@ -28,6 +39,7 @@ class ImportToolEvent extends Event
         $this->root = $root;
         $this->user = $user;
         $this->filePaths = $filePaths;
+        $this->roles = $roles;
     }
 
     public function getWorkspace()
@@ -60,14 +72,24 @@ class ImportToolEvent extends Event
         return $this->files;
     }
 
+    /**
+     * extracted files from the archive.
+     */
     public function getFilePaths()
     {
         return $this->filePaths;
     }
 
+    /**
+     * extracted files from the archive.
+     */
     public function setFilePaths($filePaths)
     {
         $this->filePaths = $filePaths;
     }
-}
 
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+}

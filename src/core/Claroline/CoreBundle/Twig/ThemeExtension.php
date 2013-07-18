@@ -65,4 +65,3 @@ class ThemeExtension extends \Twig_Extension
 
     }
 }
-

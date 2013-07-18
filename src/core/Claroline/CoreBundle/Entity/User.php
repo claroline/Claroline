@@ -216,6 +216,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $this->salt              = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
         $this->orderedTools      = new ArrayCollection();
         $this->userBadges        = new ArrayCollection();
+        $this->badgeClaims       = new ArrayCollection();
     }
 
     /**

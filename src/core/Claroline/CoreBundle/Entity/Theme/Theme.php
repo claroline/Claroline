@@ -58,7 +58,7 @@ class Theme
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string $name
      * @return Theme
      */
     public function setName($name)
@@ -81,7 +81,7 @@ class Theme
     /**
      * Set path
      *
-     * @param string $path
+     * @param  string $path
      * @return Theme
      */
     public function setPath($path)

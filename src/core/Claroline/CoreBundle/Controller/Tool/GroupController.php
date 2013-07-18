@@ -310,7 +310,7 @@ class GroupController extends Controller
      * Checks if the role manager of the group can be changed.
      * There should be awlays at least one manager of a workspace.
      *
-     * @param array $groupIds an array of group ids.
+     * @param array             $groupIds  an array of group ids.
      * @param AbstractWorkspace $workspace the relevant workspace
      *
      * @throws LogicException

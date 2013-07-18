@@ -164,8 +164,9 @@ class ResourceManagerListener
             array(
                 'workspace' => $workspace,
                 'resource' => $resource,
-                'roleRights' => $roleRights,
+                'resourceRights' => $roleRights,
                 'workspaces' => $datas['workspaces'],
+                'isDir' => true,
                 'tags' => $datas['tags'],
                 'tagWorkspaces' => $datas['tagWorkspaces'],
                 'hierarchy' => $datas['hierarchy'],

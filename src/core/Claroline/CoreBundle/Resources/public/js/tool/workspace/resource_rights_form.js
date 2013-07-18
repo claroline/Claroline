@@ -84,8 +84,9 @@
                 processData: false,
                 contentType: false,
                 success: function (form) {
-                    $('#form-right-wrapper').empty();
-                    $('#form-right-wrapper').append(form);
+                    $('#modal-check-role').empty();
+                    $('#modal-check-role').append(form);
+                    $('#modal-check-resource-right-box').modal('show');
                 }
             });
         }

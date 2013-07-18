@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Entity\Logger;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -234,7 +233,8 @@ class LogWorkspaceWidgetConfig
         return count($this->getActionRestriction()) === 0;
     }
 
-    public function copy (LogWorkspaceWidgetConfig $source = null) {
+    public function copy (LogWorkspaceWidgetConfig $source = null)
+    {
         if ($source !== null) {
             $this->setResourceCopy($source->getResourceCopy());
             $this->setResourceCreate($source->getResourceCreate());
@@ -264,7 +264,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -274,20 +274,20 @@ class LogWorkspaceWidgetConfig
     /**
      * Set isDefault
      *
-     * @param boolean $isDefault
+     * @param  boolean                  $isDefault
      * @return LogWorkspaceWidgetConfig
      */
     public function setIsDefault($isDefault)
     {
         $this->isDefault = $isDefault;
-    
+
         return $this;
     }
 
     /**
      * Get isDefault
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsDefault()
     {
@@ -297,7 +297,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Set amount
      *
-     * @param integer $amount
+     * @param  integer                  $amount
      * @return LogWorkspaceWidgetConfig
      */
     public function setAmount($amount)
@@ -310,7 +310,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Get amount
      *
-     * @return integer 
+     * @return integer
      */
     public function getAmount()
     {
@@ -320,7 +320,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Set resourceCopy
      *
-     * @param boolean $resourceCopy
+     * @param  boolean                  $resourceCopy
      * @return LogWorkspaceWidgetConfig
      */
     public function setResourceCopy($resourceCopy)
@@ -333,7 +333,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Get resourceCopy
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getResourceCopy()
     {
@@ -343,7 +343,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Set resourceCreate
      *
-     * @param boolean $resourceCreate
+     * @param  boolean                  $resourceCreate
      * @return LogWorkspaceWidgetConfig
      */
     public function setResourceCreate($resourceCreate)
@@ -356,7 +356,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Get resourceCreate
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getResourceCreate()
     {
@@ -366,7 +366,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Set resourceShortcut
      *
-     * @param boolean $resourceShortcut
+     * @param  boolean                  $resourceShortcut
      * @return LogWorkspaceWidgetConfig
      */
     public function setResourceShortcut($resourceShortcut)
@@ -379,7 +379,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Get resourceShortcut
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getResourceShortcut()
     {
@@ -389,7 +389,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Set resourceRead
      *
-     * @param boolean $resourceRead
+     * @param  boolean                  $resourceRead
      * @return LogWorkspaceWidgetConfig
      */
     public function setResourceRead($resourceRead)
@@ -402,7 +402,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Get resourceRead
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getResourceRead()
     {
@@ -412,7 +412,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Set wsToolRead
      *
-     * @param boolean $wsToolRead
+     * @param  boolean                  $wsToolRead
      * @return LogWorkspaceWidgetConfig
      */
     public function setWsToolRead($wsToolRead)
@@ -425,7 +425,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Get wsToolRead
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getWsToolRead()
     {
@@ -435,7 +435,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Set resourceExport
      *
-     * @param boolean $resourceExport
+     * @param  boolean                  $resourceExport
      * @return LogWorkspaceWidgetConfig
      */
     public function setResourceExport($resourceExport)
@@ -448,7 +448,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Get resourceExport
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getResourceExport()
     {
@@ -458,7 +458,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Set resourceUpdate
      *
-     * @param boolean $resourceUpdate
+     * @param  boolean                  $resourceUpdate
      * @return LogWorkspaceWidgetConfig
      */
     public function setResourceUpdate($resourceUpdate)
@@ -471,7 +471,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Get resourceUpdate
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getResourceUpdate()
     {
@@ -481,7 +481,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Set resourceUpdateRename
      *
-     * @param boolean $resourceUpdateRename
+     * @param  boolean                  $resourceUpdateRename
      * @return LogWorkspaceWidgetConfig
      */
     public function setResourceUpdateRename($resourceUpdateRename)
@@ -494,7 +494,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Get resourceUpdateRename
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getResourceUpdateRename()
     {
@@ -504,7 +504,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Set resourceChildUpdate
      *
-     * @param boolean $resourceChildUpdate
+     * @param  boolean                  $resourceChildUpdate
      * @return LogWorkspaceWidgetConfig
      */
     public function setResourceChildUpdate($resourceChildUpdate)
@@ -517,7 +517,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Get resourceChildUpdate
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getResourceChildUpdate()
     {
@@ -527,7 +527,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Set resourceDelete
      *
-     * @param boolean $resourceDelete
+     * @param  boolean                  $resourceDelete
      * @return LogWorkspaceWidgetConfig
      */
     public function setResourceDelete($resourceDelete)
@@ -540,7 +540,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Get resourceDelete
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getResourceDelete()
     {
@@ -550,7 +550,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Set resourceMove
      *
-     * @param boolean $resourceMove
+     * @param  boolean                  $resourceMove
      * @return LogWorkspaceWidgetConfig
      */
     public function setResourceMove($resourceMove)
@@ -563,7 +563,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Get resourceMove
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getResourceMove()
     {
@@ -573,7 +573,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Set wsRoleSubscribeUser
      *
-     * @param boolean $wsRoleSubscribeUser
+     * @param  boolean                  $wsRoleSubscribeUser
      * @return LogWorkspaceWidgetConfig
      */
     public function setWsRoleSubscribeUser($wsRoleSubscribeUser)
@@ -586,7 +586,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Get wsRoleSubscribeUser
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getWsRoleSubscribeUser()
     {
@@ -596,7 +596,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Set wsRoleSubscribeGroup
      *
-     * @param boolean $wsRoleSubscribeGroup
+     * @param  boolean                  $wsRoleSubscribeGroup
      * @return LogWorkspaceWidgetConfig
      */
     public function setWsRoleSubscribeGroup($wsRoleSubscribeGroup)
@@ -609,7 +609,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Get wsRoleSubscribeGroup
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getWsRoleSubscribeGroup()
     {
@@ -619,7 +619,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Set wsRoleUnsubscribeUser
      *
-     * @param boolean $wsRoleUnsubscribeUser
+     * @param  boolean                  $wsRoleUnsubscribeUser
      * @return LogWorkspaceWidgetConfig
      */
     public function setWsRoleUnsubscribeUser($wsRoleUnsubscribeUser)
@@ -632,7 +632,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Get wsRoleUnsubscribeUser
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getWsRoleUnsubscribeUser()
     {
@@ -642,7 +642,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Set wsRoleUnsubscribeGroup
      *
-     * @param boolean $wsRoleUnsubscribeGroup
+     * @param  boolean                  $wsRoleUnsubscribeGroup
      * @return LogWorkspaceWidgetConfig
      */
     public function setWsRoleUnsubscribeGroup($wsRoleUnsubscribeGroup)
@@ -655,7 +655,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Get wsRoleUnsubscribeGroup
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getWsRoleUnsubscribeGroup()
     {
@@ -665,7 +665,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Set wsRoleChangeRight
      *
-     * @param boolean $wsRoleChangeRight
+     * @param  boolean                  $wsRoleChangeRight
      * @return LogWorkspaceWidgetConfig
      */
     public function setWsRoleChangeRight($wsRoleChangeRight)
@@ -678,7 +678,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Get wsRoleChangeRight
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getWsRoleChangeRight()
     {
@@ -688,7 +688,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Set wsRoleCreate
      *
-     * @param boolean $wsRoleCreate
+     * @param  boolean                  $wsRoleCreate
      * @return LogWorkspaceWidgetConfig
      */
     public function setWsRoleCreate($wsRoleCreate)
@@ -701,7 +701,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Get wsRoleCreate
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getWsRoleCreate()
     {
@@ -711,7 +711,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Set wsRoleDelete
      *
-     * @param boolean $wsRoleDelete
+     * @param  boolean                  $wsRoleDelete
      * @return LogWorkspaceWidgetConfig
      */
     public function setWsRoleDelete($wsRoleDelete)
@@ -724,7 +724,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Get wsRoleDelete
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getWsRoleDelete()
     {
@@ -734,7 +734,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Set wsRoleUpdate
      *
-     * @param boolean $wsRoleUpdate
+     * @param  boolean                  $wsRoleUpdate
      * @return LogWorkspaceWidgetConfig
      */
     public function setWsRoleUpdate($wsRoleUpdate)
@@ -747,7 +747,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Get wsRoleUpdate
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getWsRoleUpdate()
     {
@@ -757,7 +757,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Set workspace
      *
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param  \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
      * @return LogWorkspaceWidgetConfig
      */
     public function setWorkspace(\Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace = null)
@@ -770,7 +770,7 @@ class LogWorkspaceWidgetConfig
     /**
      * Get workspace
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace 
+     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
      */
     public function getWorkspace()
     {

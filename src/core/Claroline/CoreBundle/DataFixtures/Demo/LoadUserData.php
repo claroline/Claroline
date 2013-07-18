@@ -75,8 +75,8 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface
                 $this->addReference("workspace/{$names}", $user->getPersonalWorkspace());
                 $this->addReference(
                     "directory/{$names}",
-                $resourceRepo->findWorkspaceRoot($user->getPersonalWorkspace())
-            );
+                    $resourceRepo->findWorkspaceRoot($user->getPersonalWorkspace())
+                );
             } else {
                 $userCreator->insertUser($user);
             }

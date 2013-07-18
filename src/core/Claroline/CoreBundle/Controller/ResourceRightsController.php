@@ -5,16 +5,14 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use Claroline\CoreBundle\Event\Event\LogWorkspaceRoleChangeRightEvent;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContext;
-use Claroline\CoreBundle\Database\GenericRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -26,7 +24,7 @@ class ResourceRightsController
     private $wsTagManager;
     private $templating;
     private $roleManager;
-    private $genericRepo;
+    private $om;
 
     /**
      * @DI\InjectParams({
@@ -36,7 +34,7 @@ class ResourceRightsController
      *     "wsTagManager"  = @DI\Inject("claroline.manager.workspace_tag_manager"),
      *     "templating"    = @DI\Inject("templating"),
      *     "roleManager"   = @DI\Inject("claroline.manager.role_manager"),
-     *     "genericRepo"   = @DI\Inject("claroline.database.generic_repository")
+     *     "om"            = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(
@@ -46,7 +44,7 @@ class ResourceRightsController
         WorkspaceTagManager $wsTagManager,
         TwigEngine $templating,
         RoleManager $roleManager,
-        GenericRepository $genericRepo
+        ObjectManager $om
     )
     {
         $this->rightsManager = $rightsManager;
@@ -55,7 +53,7 @@ class ResourceRightsController
         $this->wsTagManager = $wsTagManager;
         $this->templating = $templating;
         $this->roleManager = $roleManager;
-        $this->genericRepo = $genericRepo;
+        $this->om = $om;
     }
 
     /**
@@ -157,7 +155,7 @@ class ResourceRightsController
      * allowed for creation.
      *
      * @param AbstractResource $resource the resource
-     * @param Role $role                 the role for which the form is displayed
+     * @param Role             $role     the role for which the form is displayed
      *
      * @return Response
      *
@@ -187,8 +185,8 @@ class ResourceRightsController
      * array of resource type ids to be passed by POST method. Only the types
      * passed in the request will be allowed.
      *
-     * @param AbstractResource $resource      the resource
-     * @param Role             $role          the role for which the form is displayed
+     * @param AbstractResource $resource the resource
+     * @param Role             $role     the role for which the form is displayed
      *
      * @return Response
      *
@@ -202,7 +200,7 @@ class ResourceRightsController
         $ids = $this->request->request->get('resourceTypes');
         $resourceTypes = $ids === null ?
             array() :
-            $this->genericRepo->findByIds('ClarolineCoreBundle:Resource\ResourceType', array_keys($ids));
+            $this->om->findByIds('ClarolineCoreBundle:Resource\ResourceType', array_keys($ids));
         $this->rightsManager->editCreationRights($resourceTypes, $role, $resource, $isRecursive);
 
         return new Response("success");
@@ -238,8 +236,8 @@ class ResourceRightsController
      * - for MOVE / COPY $collection->setAttributes(array('parent' => $parent))
      *  where $parent is the new parent entity.
      *
-     * @param string                $permission
-     * @param ResourceCollection    $collection
+     * @param  string                $permission
+     * @param  ResourceCollection    $collection
      * @throws AccessDeniedException if the current user is not allowed to edit the resource
      */
     private function checkAccess($permission, ResourceCollection $collection)

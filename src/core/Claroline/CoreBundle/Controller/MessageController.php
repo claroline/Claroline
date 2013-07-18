@@ -136,9 +136,9 @@ class MessageController
      * Displays the messages received by a user, optionally filtered by a search
      * on the object or the sender username.
      *
-     * @param User      $receiver
-     * @param integer   $page
-     * @param string    $search
+     * @param User    $receiver
+     * @param integer $page
+     * @param string  $search
      *
      * @return Response
      */
@@ -170,9 +170,9 @@ class MessageController
      * Displays the messages sent by a user, optionally filtered by a search
      * on the object.
      *
-     * @param User      $sender
-     * @param integer   $page
-     * @param string    $search
+     * @param User    $sender
+     * @param integer $page
+     * @param string  $search
      *
      * @return Response
      */
@@ -205,9 +205,9 @@ class MessageController
      * Displays the messages removed by a user, optionally filtered by a search
      * on the object or the sender username.
      *
-     * @param User      $user
-     * @param integer   $page
-     * @param string    $search
+     * @param User    $user
+     * @param integer $page
+     * @param string  $search
      *
      * @return Response
      */
@@ -260,8 +260,8 @@ class MessageController
      *
      * Moves messages from the list of sent or received messages to the trash bin.
      *
-     * @param User              $user
-     * @param array[Message]    $messages
+     * @param User           $user
+     * @param array[Message] $messages
      *
      * @return Response
      */
@@ -284,8 +284,8 @@ class MessageController
      *
      * Deletes permanently a set of messages received or sent by a user.
      *
-     * @param User              $user
-     * @param array[Message]    $messages
+     * @param User           $user
+     * @param array[Message] $messages
      *
      * @return Response
      */
@@ -307,8 +307,8 @@ class MessageController
      *
      * Restores messages previously moved to the trash bin.
      *
-     * @param User              $user
-     * @param array[Message]    $messages
+     * @param User           $user
+     * @param array[Message] $messages
      *
      * @return Response
      */
@@ -329,8 +329,8 @@ class MessageController
      *
      * Marks a message as read.
      *
-     * @param User      $user
-     * @param Message   $message
+     * @param User    $user
+     * @param Message $message
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

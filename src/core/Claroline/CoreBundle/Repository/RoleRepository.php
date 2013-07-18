@@ -87,8 +87,8 @@ class RoleRepository extends EntityRepository
     /**
      * Returns the first role found of a user or a group in a workspace.
      *
-     * @param AbstractRoleSubject   $subject    The subject of the role
-     * @param AbstractWorkspace     $workspace  The workspace the role should be bound to
+     * @param AbstractRoleSubject $subject   The subject of the role
+     * @param AbstractWorkspace   $workspace The workspace the role should be bound to
      *
      * @return null|Role
      */
@@ -110,8 +110,8 @@ class RoleRepository extends EntityRepository
     /**
      * Returns the unique role of a user in a workspace.
      *
-     * @param User              $user       The subject of the role
-     * @param AbstractWorkspace $workspace  The workspace the role should be bound to
+     * @param User              $user      The subject of the role
+     * @param AbstractWorkspace $workspace The workspace the role should be bound to
      *
      * @return null|Role
      */
@@ -135,7 +135,7 @@ class RoleRepository extends EntityRepository
      * Returns the roles which have access to a workspace tool.
      *
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param \Claroline\CoreBundle\Entity\Tool\Tool $tool
+     * @param \Claroline\CoreBundle\Entity\Tool\Tool                   $tool
      */
     public function findByWorkspaceAndTool(AbstractWorkspace $workspace, Tool $tool)
     {
