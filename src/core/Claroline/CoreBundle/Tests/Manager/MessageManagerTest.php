@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use \Mockery as m;
+use Mockery as m;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\UserMessage;
@@ -39,36 +39,36 @@ class MessageManagerTest extends MockeryTestCase
     public function testSend()
     {
         $sender = new User();
-        $receiver1 = new User();
-        $receiver2 = new User();
+        $receiverA = new User();
+        $receiverB = new User();
         $msg = m::mock('Claroline\CoreBundle\Entity\Message');
         $msgParent = m::mock('Claroline\CoreBundle\Entity\Message');
-        $userMessage1 = m::mock('Claroline\CoreBundle\Entity\UserMessage');
-        $userMessage2 = m::mock('Claroline\CoreBundle\Entity\UserMessage');
-        $userMessage3 = m::mock('Claroline\CoreBundle\Entity\UserMessage');
+        $userMessageA = m::mock('Claroline\CoreBundle\Entity\UserMessage');
+        $userMessageB = m::mock('Claroline\CoreBundle\Entity\UserMessage');
+        $userMessageC = m::mock('Claroline\CoreBundle\Entity\UserMessage');
 
         $msg->shouldReceive('getTo')->once()->andReturn('user1;user2');
         $this->userRepo->shouldReceive('findByUsernames')
             ->once()
             ->with(array('user1','user2'))
-            ->andReturn(array($receiver1, $receiver2));
+            ->andReturn(array($receiverA, $receiverB));
         $msg->shouldReceive('setSender')->once()->with($sender);
         $msg->shouldReceive('setParent')->once()->with($msgParent);
         $this->om->shouldReceive('persist')->once()->with($msg);
         $this->om->shouldReceive('factory')
             ->times(3)
             ->with('Claroline\CoreBundle\Entity\UserMessage')
-            ->andReturn($userMessage1, $userMessage2, $userMessage3);
-        $userMessage1->shouldReceive('setIsSent')->once()->with(true);
-        $userMessage1->shouldReceive('setUser')->once()->with($sender);
-        $userMessage1->shouldReceive('setMessage')->once()->with($msg);
-        $userMessage2->shouldReceive('setUser')->once()->with($receiver1);
-        $userMessage2->shouldReceive('setMessage')->once()->with($msg);
-        $userMessage3->shouldReceive('setUser')->once()->with($receiver2);
-        $userMessage3->shouldReceive('setMessage')->once()->with($msg);
-        $this->om->shouldReceive('persist')->once()->with($userMessage1);
-        $this->om->shouldReceive('persist')->once()->with($userMessage2);
-        $this->om->shouldReceive('persist')->once()->with($userMessage3);
+            ->andReturn($userMessageA, $userMessageB, $userMessageC);
+        $userMessageA->shouldReceive('setIsSent')->once()->with(true);
+        $userMessageA->shouldReceive('setUser')->once()->with($sender);
+        $userMessageA->shouldReceive('setMessage')->once()->with($msg);
+        $userMessageB->shouldReceive('setUser')->once()->with($receiverA);
+        $userMessageB->shouldReceive('setMessage')->once()->with($msg);
+        $userMessageC->shouldReceive('setUser')->once()->with($receiverB);
+        $userMessageC->shouldReceive('setMessage')->once()->with($msg);
+        $this->om->shouldReceive('persist')->once()->with($userMessageA);
+        $this->om->shouldReceive('persist')->once()->with($userMessageB);
+        $this->om->shouldReceive('persist')->once()->with($userMessageC);
         $this->om->shouldReceive('flush')->once();
 
         $this->manager->send($sender, $msg, $msgParent);
@@ -122,16 +122,16 @@ class MessageManagerTest extends MockeryTestCase
     public function testSetMarkAsRead($flag, $managerMethod)
     {
         $user = m::mock('Claroline\CoreBundle\Entity\User');
-        $usrMsg1 = m::mock('Claroline\CoreBundle\Entity\UserMessage');
-        $usrMsg2 = m::mock('Claroline\CoreBundle\Entity\UserMessage');
+        $usrMsgA = m::mock('Claroline\CoreBundle\Entity\UserMessage');
+        $usrMsgB = m::mock('Claroline\CoreBundle\Entity\UserMessage');
         $this->userMessageRepo->shouldReceive('findByMessages')
             ->once()
             ->with($user, array('message1', 'message2'))
-            ->andReturn(array($usrMsg1, $usrMsg2));
-        $usrMsg1->shouldReceive('markAs' . $flag)->once();
-        $usrMsg2->shouldReceive('markAs' . $flag)->once();
-        $this->om->shouldReceive('persist')->with($usrMsg1)->once();
-        $this->om->shouldReceive('persist')->with($usrMsg2)->once();
+            ->andReturn(array($usrMsgA, $usrMsgB));
+        $usrMsgA->shouldReceive('markAs' . $flag)->once();
+        $usrMsgB->shouldReceive('markAs' . $flag)->once();
+        $this->om->shouldReceive('persist')->with($usrMsgA)->once();
+        $this->om->shouldReceive('persist')->with($usrMsgB)->once();
         $this->om->shouldReceive('flush')->once();
         $this->manager->{$managerMethod}($user, array('message1', 'message2'));
     }

@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Event\Event;
 
 use Symfony\Component\EventDispatcher\Event;
+use Claroline\CoreBundle\Event\DataConveyorEventInterface;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 class DisplayWidgetEvent extends Event implements DataConveyorEventInterface
@@ -54,8 +55,9 @@ class DisplayWidgetEvent extends Event implements DataConveyorEventInterface
     {
         return $this->workspace;
     }
-    
-    public function isPopulated() {
+
+    public function isPopulated()
+    {
         return $this->isPopulated;
     }
 }

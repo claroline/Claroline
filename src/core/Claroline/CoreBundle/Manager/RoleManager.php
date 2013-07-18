@@ -19,7 +19,6 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class RoleManager
 {
-    private $writer;
     /** @var RoleRepository */
     private $roleRepo;
     private $sc;
@@ -142,7 +141,7 @@ class RoleManager
     public function initWorkspaceBaseRole(array $roles, AbstractWorkspace $workspace)
     {
         $this->om->startFlushSuite();
-        
+
         $entityRoles = array();
 
         foreach ($roles as $name => $translation) {
@@ -154,9 +153,9 @@ class RoleManager
             );
             $entityRoles[$name] = $role;
         }
-        
+
         $this->om->endFlushSuite();
-        
+
         return $entityRoles;
     }
 
@@ -252,16 +251,20 @@ class RoleManager
 
         return $roles;
     }
-    
+
     public function getRoleBaseName($roleName)
     {
+        if ($roleName === 'ROLE_ANONYMOUS') {
+            return $roleName;
+        }
+
         $substr = explode('_', $roleName);
         $roleName = array_shift($substr);
-        
-        for ($i = 0; $i < count($substr) - 1; $i++) {
+
+        for ($i = 0, $countSubstr = count($substr) - 1; $i < $countSubstr; $i++) {
             $roleName .= '_' . $substr[$i];
         }
-        
+
         return $roleName;
     }
 }

@@ -52,6 +52,7 @@ class Version20120119000000 extends BundleMigration
         $this->createContent2RegionTable($schema);
         $this->createWorkspaceTemplateTable($schema);
         $this->createThemeTable($schema);
+        $this->createTagTable($schema);
         $this->createLogTable($schema);
         $this->createLogDoerPlatformRolesTable($schema);
         $this->createLogDoerWorkspaceRolesTable($schema);
@@ -118,6 +119,7 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_content2region');
         $schema->dropTable('claro_workspace_template');
         $schema->dropTable('claro_theme');
+        $schema->dropTable('icap__tag');
         $schema->dropTable('claro_badge');
         $schema->dropTable('claro_badge_translation');
         $schema->dropTable('claro_user_badge');
@@ -1324,6 +1326,32 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('hash', 'string');
         $table->addColumn('name', 'string');
         $table->addUniqueIndex(array('hash'));
+    }
+
+    private function createTagTable(Schema $schema)
+    {
+        $tagTable = $schema->createTable('icap__tag');
+        $this->addId($tagTable);
+        $tagTable->addColumn('name', 'string', array('length' => 255));
+        $tagTable->addUniqueIndex(array('name'));
+
+        $this->storeTable($tagTable);
+
+        $associatedTagTable = $schema->createTable('icap__associated_tag');
+        $this->addId($associatedTagTable);
+        $associatedTagTable->addColumn('hash', 'string', array('length' => 64));
+        $associatedTagTable->addColumn('taggableClass', 'string', array('length' => 255));
+        $associatedTagTable->addColumn('taggableId', 'integer');
+        $associatedTagTable->addColumn('tag_id', 'integer', array('notnull' => true));
+
+        $associatedTagTable->addForeignKeyConstraint(
+            $this->getStoredTable('icap__tag'),
+            array('tag_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+
+        $this->storeTable($associatedTagTable);
     }
 
     private function createBadgeTable(Schema $schema)

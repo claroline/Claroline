@@ -38,15 +38,15 @@ class ToolManager
     private $translator;
     /** @var ObjectManager */
     private $om;
-    
+
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "ed"         = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "utilities"  = @DI\Inject("claroline.utilities.misc"),
-     *     "translator" = @DI\Inject("translator"),
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager")
+     *     "ed"          = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "utilities"   = @DI\Inject("claroline.utilities.misc"),
+     *     "translator"  = @DI\Inject("translator"),
+     *     "om"          = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(
@@ -74,7 +74,6 @@ class ToolManager
     /**
      * Import a tool in a workspace from the template archive.
      *
-     * @param array             $perms
      * @param array             $config
      * @param array             $roles
      * @param string            $name
@@ -87,13 +86,14 @@ class ToolManager
     public function import(
         array $config,
         array $roles,
-        array $filePaths,
+        array $generatedRoles,
         $name,
         AbstractWorkspace $workspace,
         AbstractResource $rootDir,
         Tool $tool,
         User $manager,
-        $position
+        $position,
+        $archive
     )
     {
         $this->configChecker($config);
@@ -103,9 +103,11 @@ class ToolManager
             $this->addRoleToOrderedTool($otr, $role);
         }
 
+        $filePaths = $this->extractFiles($archive, $config);
+
         $this->ed->dispatch(
             'tool_' . $tool->getName() . '_from_template', 'ImportTool',
-            array($workspace, $config, $rootDir, $manager, $filePaths)
+            array($workspace, $config, $rootDir, $manager, $filePaths, $generatedRoles)
         );
     }
 
@@ -399,7 +401,7 @@ class ToolManager
             $this->addDesktopTool($requiredTool, $user, $position, $requiredTool->getName());
             $position++;
         }
-        
+
         $this->om->persist($user);
         $this->om->endFlushSuite($user);
     }
@@ -412,5 +414,22 @@ class ToolManager
     public function getToolByCriterias(array $criterias)
     {
         return $this->toolRepo->findBy($criterias);
+    }
+
+    public function extractFiles($archpath, $confTools)
+    {
+        $extractPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('claro_ws_tmp_', true);
+        $archive = new \ZipArchive();
+        $archive->open($archpath);
+        $archive->extractTo($extractPath);
+        $realPaths = array();
+
+        if (isset($confTools['files'])) {
+            foreach ($confTools['files'] as $path) {
+                $realPaths[] = $extractPath . DIRECTORY_SEPARATOR . $path;
+            }
+        }
+
+        return $realPaths;
     }
 }

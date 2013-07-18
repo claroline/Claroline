@@ -65,8 +65,8 @@ class WorkspaceVoter implements VoterInterface
      * Checks if the current token has the right to do the action $action.
      *
      * @param AbstractWorkspace $workspace
-     * @param TokenInterface $token
-     * @param string $action
+     * @param TokenInterface    $token
+     * @param string            $action
      *
      * @return boolean
      *

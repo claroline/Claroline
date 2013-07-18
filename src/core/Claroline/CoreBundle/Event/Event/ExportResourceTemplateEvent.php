@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Event\Event;
 
 use Symfony\Component\EventDispatcher\Event;
+use Claroline\CoreBundle\Event\DataConveyorEventInterface;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 class ExportResourceTemplateEvent extends Event implements DataConveyorEventInterface

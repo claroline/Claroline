@@ -66,8 +66,6 @@ class ValidatorTest extends WebTestCase
         $loader = new Loader($pluginDirectory);
         $plugin = $loader->load($pluginFqcn);
         $errors = $validator->validate($plugin);
-
-        if (count($errors) > 0) var_dump($errors);
         $this->assertEquals(0, count($errors));
     }
 

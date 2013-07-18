@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
-
 class WorkspaceToolsParametersController extends AbstractParametersController
 {
     private $toolManager;

@@ -25,22 +25,20 @@ class ResourceTypeRepositoryTest extends RepositoryTestCase
 
     public function testFindPluginResourceTypes()
     {
-        $this->markTestSkipped('Unskip when issue #34 is resolved');
         $this->assertEquals(2, count(self::$repo->findPluginResourceTypes()));
     }
 
     public function testFindPluginResourceNameFqcns()
     {
-        $this->markTestSkipped('Unskip when issue #34 is resolved');
         $types = self::$repo->findPluginResourceNameFqcns();
-        $this->assertEquals(2, $types);
-        $this->assertEquals('type_2Class', $types[1]);
-        $this->assertEquals('type_3Class', $types[2]);
+        $this->assertEquals(2, count($types));
+        $this->assertEquals(2, count($types));
+        $this->assertEquals('type_2Class', $types[0]['class']);
+        $this->assertEquals('type_3Class', $types[1]['class']);
     }
 
     public function testCountResourcesByType()
     {
-        $this->markTestSkipped('Unskip when issue #34 is resolved');
         $types = self::$repo->countResourcesByType();
         $this->assertEquals(3, count($types));
         $this->assertEquals(1, $types[0]['total']);

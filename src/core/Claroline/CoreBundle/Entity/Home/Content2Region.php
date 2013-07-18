@@ -66,7 +66,6 @@ class Content2Region
     */
     private $back;
 
-
     /**
      * Get id
      *
@@ -80,7 +79,7 @@ class Content2Region
     /**
      * Set size
      *
-     * @param string $size
+     * @param  string         $size
      * @return Content2Region
      */
     public function setSize($size)
@@ -103,7 +102,7 @@ class Content2Region
     /**
      * Set content
      *
-     * @param \Claroline\CoreBundle\Entity\Home\Content $content
+     * @param  \Claroline\CoreBundle\Entity\Home\Content $content
      * @return Content2Region
      */
     public function setContent(\Claroline\CoreBundle\Entity\Home\Content $content)
@@ -126,7 +125,7 @@ class Content2Region
     /**
      * Set region
      *
-     * @param \Claroline\CoreBundle\Entity\Home\Region $region
+     * @param  \Claroline\CoreBundle\Entity\Home\Region $region
      * @return Content2Region
      */
     public function setRegion(\Claroline\CoreBundle\Entity\Home\Region $region)
@@ -149,7 +148,7 @@ class Content2Region
     /**
      * Set next
      *
-     * @param \Claroline\CoreBundle\Entity\Home\Content2Region $next
+     * @param  \Claroline\CoreBundle\Entity\Home\Content2Region $next
      * @return Content2Region
      */
     public function setNext(\Claroline\CoreBundle\Entity\Home\Content2Region $next = null)
@@ -172,7 +171,7 @@ class Content2Region
     /**
      * Set back
      *
-     * @param \Claroline\CoreBundle\Entity\Home\Content2Region $back
+     * @param  \Claroline\CoreBundle\Entity\Home\Content2Region $back
      * @return Content2Region
      */
     public function setBack(\Claroline\CoreBundle\Entity\Home\Content2Region $back = null)

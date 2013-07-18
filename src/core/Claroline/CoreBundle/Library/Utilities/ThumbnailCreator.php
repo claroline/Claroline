@@ -15,7 +15,7 @@ class ThumbnailCreator
     private $isGdLoaded;
     private $isFfmpegLoaded;
     private $ut;
-    
+
     /**
      * @DI\InjectParams({
      *     "kernelRootDir" = @DI\Inject("%kernel.root_dir%"),
@@ -170,4 +170,3 @@ class ThumbnailCreator
         return "{$this->thumbnailDir}{$ds}{$name}";
     }
 }
-
