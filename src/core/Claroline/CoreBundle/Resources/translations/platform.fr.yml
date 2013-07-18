@@ -558,6 +558,7 @@ badge_award_info_no_group_message: "Aucun groupe sélectionné pour l'attributio
 claim: 'Réclamer'
 claim_badge: 'Réclamer un badge'
 claim_badge_form: 'Formulaire de réclamation de badge'
+badge_not_found_with_name: "Aucun badge avec le nom '%badgeName%' n'a pu être retrouvé."
 badge_form_badge : 'Nom du badge à réclamer'
 badge_claim_success_message: 'Réclamation de badge effectué avec succès.'
 badge_claim_error_message: 'Erreur lors de la réclamation de badge.'

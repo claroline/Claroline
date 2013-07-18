@@ -558,6 +558,7 @@ badge_expired_on_date: 'Expire the %expirationDate%'
 claim: 'Claim'
 claim_badge: 'Claim a badge'
 claim_badge_form: 'Claim badge form'
+badge_not_found_with_name: "No badge found with the name '%badgeName%'."
 badge_form_badge : 'Name of the claiming badge'
 badge_claim_success_message: 'Badge claimed with success.'
 badge_claim_error_message: 'An error occured while claiming a badge.'
