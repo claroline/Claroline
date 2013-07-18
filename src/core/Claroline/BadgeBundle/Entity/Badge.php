@@ -446,7 +446,7 @@ class Badge
     protected function getUploadRootDir()
     {
         $ds = DIRECTORY_SEPARATOR;
-        return sprintf('%s%s..%s..%s..%s..%s..%sweb%s%s', __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir());
+        return realpath(sprintf('%s%s..%s..%s..%s..%s..%sweb%s%s', __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir()));
     }
 
     /**
