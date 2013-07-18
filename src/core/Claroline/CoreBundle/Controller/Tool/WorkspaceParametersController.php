@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -313,6 +314,13 @@ class WorkspaceParametersController extends Controller
                     )
                 );
             }
+
+            $route = $this->router->generate(
+                'claro_workspace_roles',
+                array('workspace' => $workspace->getId())
+            );
+
+            return new RedirectResponse($route);
         }
 
         return array('form' => $form->createView(), 'workspace' => $workspace);
@@ -320,13 +328,84 @@ class WorkspaceParametersController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/role/{role}/remove",
-     *     name="claro_workspace_role_create"
+     *     "/{workspace}/role/{role}/remove",
+     *     name="claro_workspace_role_remove"
      * )
      * @EXT\Method("GET")
      */
-    public function removeRole(Role $role)
+    public function removeRoleAction(AbstractWorkspace $workspace, Role $role)
     {
+        $this->checkAccess($workspace);
+        $this->roleManager->remove($role);
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspace}/role/{role}/parameters",
+     *     name="claro_workspace_role_parameters"
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:roleParameters.html.twig")
+     */
+    public function roleParametersAction(Role $role, AbstractWorkspace $workspace)
+    {
+        $this->checkAccess($workspace);
+
+        return array('role' => $role, 'workspace' => $workspace);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspace}/role/{role}/edit/form",
+     *     name="claro_workspace_role_edit_form"
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:roleEdit.html.twig")
+     */
+    public function editRoleFormAction(Role $role, AbstractWorkspace $workspace)
+    {
+        $this->checkAccess($workspace);
+        $form = $this->formFactory->create(FormFactory::TYPE_ROLE_TRANSLATION, array(), $role);
+
+        return array('workspace' => $workspace, 'form' => $form->createView(), 'role' => $role);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspace}/role/{role}/edit",
+     *     name="claro_workspace_role_edit"
+     * )
+     * @EXT\Method("POST")
+     */
+    public function editRoleAction(Role $role, AbstractWorkspace $workspace)
+    {
+        $this->checkAccess($workspace);
+        $form = $this->formFactory->create(FormFactory::TYPE_ROLE_TRANSLATION, array(), $role);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->roleManager->edit($role);
+            $route = $this->router->generate(
+                'claro_workspace_role_parameters',
+                array('role' => $role->getId(), 'workspace' => $workspace->getId())
+            );
+
+            return new RedirectResponse($route);
+        }
+
+        return array('workspace' => $workspace, 'form' => $form->createView(), 'role' => $role);
+    }
+
+    public function listGroupsForRoleAction(Role $role, AbstractWorkspace $workspace)
+    {
+        
+    }
+
+    public function listUsersForRoleAction(Role $role, AbstractWorkspace $workspace)
+    {
+
     }
 
     private function checkAccess(AbstractWorkspace $workspace)

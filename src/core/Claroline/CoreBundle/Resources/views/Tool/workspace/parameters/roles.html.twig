@@ -2,7 +2,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('bundles/clarolinecore/js/tool/workspace/tool_properties.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/clarolinecore/js/tool/workspace/roles.js') }}" type="text/javascript"></script>
 {% endblock %}
 
 {% block section_content %}
@@ -27,7 +27,6 @@
         <table  class="table-striped table-bordered table-condensed">
             <thead>
                 <th> {{ 'name'|trans({}, 'platform') }} </th>
-                <th> {{ 'users'|trans({}, 'platform') }} </th>
                 <th> {{ 'edit'|trans({}, 'platform') }} </th>
                 <th> {{ 'delete'|trans({}, 'platform') }} </th>
             </thead>
@@ -35,9 +34,8 @@
                 {% for role in roles %}
                     <tr>
                         <td> {{ role.getTranslationKey }} </td>
-                        <td> <a href='#' class='btn btn-secondary'> {{ 'users'|trans({}, 'platform') }} </a> </td>
-                        <td> <a href='#' class='btn btn-secondary'> {{ 'edit'|trans({}, 'platform') }} </a> </td>
-                        <td> <a href='#' class='btn btn-secondary'> {{ 'delete'|trans({}, 'platform') }} </a> </td>
+                        <td> <a href='{{ path('claro_workspace_role_parameters', {'workspace': workspace.getId(), 'role': role.getId()} ) }}' class='role-edit-btn btn btn-secondary'> {{ 'edit'|trans({}, 'platform') }} </a> </td>
+                        <td> <a href='{{ path('claro_workspace_role_remove', {'workspace': workspace.getId(), 'role': role.getId()} ) }}' class='role-delete-btn btn btn-secondary {% if role.isReadOnly %} disabled {% endif %}'> {{ 'delete'|trans({}, 'platform') }} </a> </td>
                     </tr>
                 {% endfor %}
             </tbody>

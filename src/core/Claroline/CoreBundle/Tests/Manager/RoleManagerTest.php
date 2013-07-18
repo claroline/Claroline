@@ -132,11 +132,11 @@ class RoleManagerTest extends MockeryTestCase
     {
         $manager = $this->getManager(array('createWorkspaceRole'));
         $roleUser = m::mock('Claroline\CoreBundle\Entity\Role');
-        $roleSuperUser = m::mock('Claroline\CoreBundle\Entity\Role');
+        $roleManager = m::mock('Claroline\CoreBundle\Entity\Role');
         $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
         $roles = array(
             'ROLE_WS_USER' => 'user',
-            'ROLE_WS_SUPERUSER' => 'superuser'
+            'ROLE_WS_MANAGER' => 'superuser'
         );
 
         $this->om->shouldReceive('startFlushSuite')->once();
@@ -146,18 +146,37 @@ class RoleManagerTest extends MockeryTestCase
             ->once()
             ->andReturn($roleUser);
         $manager->shouldReceive('createWorkspaceRole')
-            ->with('ROLE_WS_SUPERUSER_1', 'superuser', $workspace, false)
+            ->with('ROLE_WS_MANAGER_1', 'superuser', $workspace, true)
             ->once()
-            ->andReturn($roleSuperUser);
+            ->andReturn($roleManager);
         $this->om->shouldReceive('endFlushSuite')->once();
 
         $result = $manager->initWorkspaceBaseRole($roles, $workspace);
 
         $expectedResult = array(
             'ROLE_WS_USER' => $roleUser,
-            'ROLE_WS_SUPERUSER' => $roleSuperUser
+            'ROLE_WS_MANAGER' => $roleManager
         );
         $this->assertEquals($result, $expectedResult);
+    }
+
+    public function testRemove()
+    {
+        $role = m::mock('Claroline\CoreBundle\Entity\Role');
+        $role->shouldReceive('isReadOnly')->once()->andReturn(false);
+        $this->om->shouldReceive('remove')->with($role);
+        $this->om->shouldReceive('flush');
+        $this->getManager()->remove($role);
+    }
+
+    /**
+     * @expectedException \Claroline\CoreBundle\Manager\Exception\RoleReadOnlyException
+     */
+    public function testRemoveThrowsExceptionIfReadOnly()
+    {
+        $role = m::mock('Claroline\CoreBundle\Entity\Role');
+        $role->shouldReceive('isReadOnly')->once()->andReturn(true);
+        $this->getManager()->remove($role);
     }
 
     private function getManager(array $mockedMethods = array())

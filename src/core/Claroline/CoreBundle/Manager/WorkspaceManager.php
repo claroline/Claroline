@@ -93,6 +93,7 @@ class WorkspaceManager
 
     public function create(Configuration $config, User $manager)
     {
+        $config->check();
         $this->om->startFlushSuite();
         $workspace = $this->om->factory('Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace');
         $workspace->setName($config->getWorkspaceName());
@@ -300,7 +301,7 @@ class WorkspaceManager
     /**
      * Repository functions
      */
-    
+
     public function getWorkspacesByUser(User $user)
     {
         return $this->workspaceRepo->findByUser($user);

@@ -327,6 +327,7 @@ registered_groups: 'Groupes enregistrés'
 registered_users: 'Utilisateurs enregistrés'
 remove_group_s_confirm_message: 'groupe(s) supprimé(s)'
 remove_user_s_confirm_message: 'utilisateur(s) supprimé(s)'
+remove_messages_confirm_message: 'message(s) supprimé(s)'
 rename: Renommer
 reset: Réinitialiser
 resource: Ressource
@@ -358,6 +359,7 @@ resource_right_form_canView: Voir
 resource_right_form_canExport: Exporter
 resource_right_form_isRecursive: Appliquer au contenu du répertoire et aux sous-répertoires
 restore : Restaurer
+restore_messages_confirm_message: message(s) restaurés
 results: Résultats
 rights: Droits
 rights_management: 'Gestion des droits'

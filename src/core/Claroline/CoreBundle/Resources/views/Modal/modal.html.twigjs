@@ -1,7 +1,7 @@
 {% twig_js name="ModalWindow" %}
 
-<div class="modal">
-    <div class="modal-header">
+<div class="modal claroline {% if isHidden %}hide fade{% endif %}">
+    <div class="modal-header claroline">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         {% if header is defined %}
             <h3>{{ header }}</h3>
@@ -9,9 +9,9 @@
             </br>
         {% endif %}
     </div>
-    <div class="modal-body">{{ body|raw }}</div>
+    <div class="modal-body claroline">{{ body|raw }}</div>
     {% if footer is defined %}
-        <div class="modal-footer">
+        <div class="modal-footer claroline">
             {{ footer|raw }}
         </div>
     {% endif %}

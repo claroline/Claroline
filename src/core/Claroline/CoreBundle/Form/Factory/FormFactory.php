@@ -33,6 +33,7 @@ class FormFactory
     const TYPE_RESOURCE_RENAME = 'resource_rename';
     const TYPE_RESOURCE_PROPERTIES = 'resource_properties';
     const TYPE_WORKSPACE_ROLE = 'workspace_role';
+    const TYPE_ROLE_TRANSLATION = 'workspace_role_translation';
 
     private static $types = array(
         self::TYPE_MESSAGE => array(
@@ -117,6 +118,10 @@ class FormFactory
         ),
         self::TYPE_WORKSPACE_ROLE => array(
             'formType' => 'Claroline\CoreBundle\Form\WorkspaceRoleType'
+        ),
+        self::TYPE_ROLE_TRANSLATION => array(
+            'formType' => 'Claroline\CoreBundle\Form\RoleTranslationType',
+            'entity' => 'Claroline\CoreBundle\Entity\Role'
         )
     );
 

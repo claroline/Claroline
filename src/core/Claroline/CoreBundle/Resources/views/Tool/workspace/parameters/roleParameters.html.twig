@@ -1,0 +1,30 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block section_content %}
+
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
+            },
+            {
+                'name': 'roles'|trans({}, 'platform'),
+                'href': path('claro_workspace_roles', {'workspace': workspace.getId()})
+            },
+            {
+                'name': role.getTranslationKey()|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+
+    <div>
+        <ul>
+            <li> <a href="{{ path('claro_workspace_role_edit_form', {'workspace': workspace.getId(), 'role': role.getId()}) }}"> {{ 'edit'|trans({}, 'platform') }} </a></li>
+            <li> <a href="#"> {{ 'users'|trans({}, 'platform') }} </a></li>
+            <li> <a href="#"> {{ 'groups'|trans({}, 'platform') }} </a></li>
+        </ul>
+    </div>
+{% endblock %}
