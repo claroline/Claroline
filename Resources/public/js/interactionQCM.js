@@ -232,7 +232,7 @@ function choiceCSSEdit(sourceImageDel, nbResponses) {
         $('#newTable').append('<tr class="ligne_choice" >  </tr>');
         $('#newTable .ligne_choice:last').append($(this));
     });
-
+    
     $('#newTable .ligne_choice').each(function (index) {
         $(this).append('<td class="colonne_choice" >  </td>');
         $(this).children('td').first().append($(this).children('div').children('label').first());
@@ -379,6 +379,15 @@ function choiceCSSEdit(sourceImageDel, nbResponses) {
             $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').removeAttr('disabled');
         }
     });
+    
+    if (!$('#ujm_exobundle_interactionqcmtype_weightResponse').is(':checked')) {
+         /*$("*[id$='_weight']").each(function (index) {
+             
+         });*/
+        $('#newTable .ligne_choice').each(function (index) {
+                $(this).contents('td:nth-child(3)').find('input').attr('disabled', 'disabled');
+            });
+    }
 }
 
 //check form
