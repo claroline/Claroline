@@ -146,7 +146,7 @@ class ProfileController extends Controller
     /**
      * @EXT\Route(
      *     "/view/{userId}",
-     *     name="claro_profile_view"
+     *      name="claro_profile_view"
      * )
      * @EXT\ParamConverter(
      *      "user",
@@ -158,20 +158,19 @@ class ProfileController extends Controller
      * Displays the public profile of an user.
      *
      * @param \Claroline\CoreBundle\Entity\User $user
-     *
      * @param int                               $page
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function viewAction(User $user, $page = 1)
     {
-        $query = $this->getDoctrine()->getRepository('ClarolineBadgeBundle:Badge')->findByUser($user, true);
+        $query = $this->getDoctrine()->getRepository('ClarolineBadgeBundle:Badge')->findByUser($user, false);
         $adapter = new DoctrineORMAdapter($query);
         $pager   = new Pagerfanta($adapter);
-        $pager
-            ->setMaxPerPage(10)
-            ->setCurrentPage($page)
-        ;
+
+        try {
+            $pager->setCurrentPage($page);
+        } catch (NotValidCurrentPageException $exception) {
+            throw new NotFoundHttpException();
+        }
 
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
