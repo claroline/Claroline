@@ -49,7 +49,7 @@ class BlogController extends Controller
 
         try {
             $pager->setCurrentPage($page);
-        } catch (NotValidCurrentPageException $e) {
+        } catch (NotValidCurrentPageException $exception) {
             throw new NotFoundHttpException();
         }
 
