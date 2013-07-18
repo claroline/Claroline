@@ -4,12 +4,14 @@ namespace UJM\ExoBundle\Listener;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-use Claroline\CoreBundle\Library\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Library\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
-use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
+
+use Claroline\CoreBundle\Event\Event\CreateFormResourceEvent;
+use Claroline\CoreBundle\Event\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Event\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Event\Event\OpenResourceEvent;
 
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Form\ExerciseType;
@@ -63,7 +65,7 @@ class ExerciseListener extends ContainerAware
             $em->persist($exercise);
             $em->persist($subscription);
 
-            $event->setResource($exercise);
+            $event->setResources(array($exercise));
             $event->stopPropagation();
 
             return;
