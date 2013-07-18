@@ -20,11 +20,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class BlogController extends Controller
 {
     /**
-     * @Route(
-     *      "/{blogId}/{page}",
-     *      name="icap_blog_view",
-     *      requirements={"blogId" = "\d+", "page" = "\d+"}, defaults={"page" = 1}
-     * )
+     * @Route("/{blogId}/{page}", name="icap_blog_view", requirements={"blogId" = "\d+", "page" = "\d+"}, defaults={"page" = 1})
      * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
@@ -61,11 +57,7 @@ class BlogController extends Controller
     }
 
     /**
-     * @Route(
-     *      "/configure/{blogId}",
-     *      name="icap_blog_configure",
-     *      requirements={"blogId" = "\d+"}
-     * )
+     * @Route("/configure/{blogId}", name="icap_blog_configure", requirements={"blogId" = "\d+"})
      * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
      * @Template()
      */
