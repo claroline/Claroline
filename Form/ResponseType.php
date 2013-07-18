@@ -39,6 +39,7 @@ namespace UJM\ExoBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ResponseType extends AbstractType
 {
@@ -51,6 +52,13 @@ class ResponseType extends AbstractType
             //->add('paper')
             //->add('interaction')
         ;
+    }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => 'UJM\ExoBundle\Entity\Response',
+        ));
     }
 
     public function getName()

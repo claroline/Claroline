@@ -55,7 +55,7 @@ function hintCSSEdit() {
     $("*[id$='_interaction_hints']").after('<table style="border: 1px solid black;" id="newTable2"><tr> <th>Num indice</th> <th>Indice</th> <th>penalité</th> <th>------</th> </tr></table>');
 
     //creer une ligne
-    $("*[id$='_interaction_hints']").children('div').each(function (index) {
+    $("*[id$='_interaction_hints']").children().first().children('div').each(function (index) {
             $('#newTable2').append('<tr class="ligne_choice2" >  </tr>');
             $('#newTable2 .ligne_choice2:last').append($(this));
         }

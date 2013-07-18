@@ -68,7 +68,7 @@ class InteractionQCMHandler
     public function processAdd()
     {
         if ( $this->request->getMethod() == 'POST' ) {
-            $this->form->bindRequest($this->request);
+            $this->form->handleRequest($this->request);
 
             if ( $this->form->isValid() ) {
                 $this->onSuccessAdd($this->form->getData());
@@ -141,7 +141,7 @@ class InteractionQCMHandler
         }
 
         if ( $this->request->getMethod() == 'POST' ) {
-            $this->form->bindRequest($this->request);
+            $this->form->handleRequest($this->request);
 
             if ( $this->form->isValid() ) {
                 $this->onSuccessUpdate($this->form->getData(), $originalChoices, $originalHints);

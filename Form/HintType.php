@@ -39,6 +39,7 @@ namespace UJM\ExoBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class HintType extends AbstractType
 {
@@ -57,15 +58,16 @@ class HintType extends AbstractType
             );
     }
 
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => 'UJM\ExoBundle\Entity\Hint',
+        ));
+    }
+
     public function getName()
     {
         return 'ujm_exobundle_hinttype';
     }
 
-    public function getDefaultOptions(array $options)
-    {
-        return array(
-            'data_class' => 'UJM\ExoBundle\Entity\Hint'
-        );
-    }
 }

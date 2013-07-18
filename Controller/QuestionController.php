@@ -457,7 +457,7 @@ class QuestionController extends Controller
 
         $request = $this->getRequest();
 
-        $editForm->bindRequest($request);
+        $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);

@@ -254,7 +254,7 @@ class InteractionGraphicController extends Controller
 
         $request = $this->getRequest();
 
-        $editForm->bindRequest($request);
+        $editForm->handleRequest($request);
 
         $width = $this->get('request')->get('imgwidth'); // Get the width of the image
         $height = $this->get('request')->get('imgheight'); // Get the height of the image

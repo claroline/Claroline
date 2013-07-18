@@ -39,6 +39,7 @@ namespace UJM\ExoBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 use Claroline\CoreBundle\Entity\User;
 
@@ -104,6 +105,13 @@ class InteractionQCMType extends AbstractType
                     'allow_delete' => true
                 )
             );
+    }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => 'UJM\ExoBundle\Entity\InteractionQCM',
+        ));
     }
 
     public function getName()

@@ -228,7 +228,7 @@ function choiceCSS(sourceImageDel) {
 
 function choiceCSSEdit(sourceImageDel, nbResponses) {
     //"use strict";
-    $('#ujm_exobundle_interactionqcmtype_choices').children('div').each(function (index) {
+    $('#ujm_exobundle_interactionqcmtype_choices').children().first().children('div').each(function (index) {
         $('#newTable').append('<tr class="ligne_choice" >  </tr>');
         $('#newTable .ligne_choice:last').append($(this));
     });

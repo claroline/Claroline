@@ -39,6 +39,7 @@ namespace UJM\ExoBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ChoiceType extends AbstractType
 {
@@ -78,15 +79,16 @@ class ChoiceType extends AbstractType
             );
     }
 
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => 'UJM\ExoBundle\Entity\Choice',
+        ));
+    }
+
     public function getName()
     {
         return 'ujm_exobundle_choicetype';
     }
 
-    public function getDefaultOptions(array $options)
-    {
-        return array(
-            'data_class' => 'UJM\ExoBundle\Entity\Choice'
-        );
-    }
 }

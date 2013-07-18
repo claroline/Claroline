@@ -39,6 +39,7 @@ namespace UJM\ExoBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class TypeQCMType extends AbstractType
 {
@@ -46,6 +47,13 @@ class TypeQCMType extends AbstractType
     {
         $builder
             ->add('value');
+    }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => 'UJM\ExoBundle\Entity\TypeQCM',
+        ));
     }
 
     public function getName()
