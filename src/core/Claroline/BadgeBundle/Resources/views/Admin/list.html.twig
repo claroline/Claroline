@@ -52,7 +52,7 @@
     {% endif %}
 
     <ul class="unstyled inline thumbnails badge_list">
-    {% for badge in badges %}
+    {% for badge in pager %}
         <li class="span2">
             <a href="{{ path('claro_admin_badges_edit', {'id': badge.id}) }}" title="{{ badge.name(language) }}" class="thumbnail">
                 <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name(language) }}" />
@@ -62,6 +62,20 @@
         <li>{{ 'no_badges'|trans({}, 'platform') }}</li>
     {% endfor %}
     </ul>
+    {% if pager.haveToPaginate %}
+    <div>
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_admin_badges'
+                }
+            )
+        }}
+    </div>
+    {%  endif %}
 {% endblock %}
 
 {% block javascripts %}

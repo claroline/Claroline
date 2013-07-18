@@ -27,11 +27,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 class AdminController extends Controller
 {
     /**
-     * @Route("/", name="claro_admin_badges")
+     * @Route("/{page}", name="claro_admin_badges", requirements={"page" = "\d+"}, defaults={"page" = 1})
      *
      * @Template
      */
-    public function listAction()
+    public function listAction($page)
     {
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
@@ -41,14 +41,23 @@ class AdminController extends Controller
             ->getRepository('ClarolineBadgeBundle:Badge');
 
         /** @var Badge[] $badges */
-        $badges = $badgeRepository->findAllOrderedByName($platformConfigHandler->getParameter('locale_language'));
+        $badgeQuery = $badgeRepository->findOrderedByName($platformConfigHandler->getParameter('locale_language'), false);
 
         $language = $platformConfigHandler->getParameter('locale_language');
 
         $badgeClaims = $this->getDoctrine()->getRepository('ClarolineBadgeBundle:BadgeClaim')->findAll();
 
+        $adapter = new DoctrineORMAdapter($badgeQuery);
+        $pager   = new PagerFanta($adapter);
+
+        try {
+            $pager->setCurrentPage($page);
+        } catch (NotValidCurrentPageException $exception) {
+            throw new NotFoundHttpException();
+        }
+
         return array(
-            'badges'      => $badges,
+            'pager'       => $pager,
             'badgeClaims' => $badgeClaims,
             'language'    => $language
         );
@@ -117,13 +126,15 @@ class AdminController extends Controller
 
         $doctrine = $this->getDoctrine();
 
-        $query   = $doctrine->getRepository('ClarolineBadgeBundle:Badge')->findUsers($badge, true);
+        $query   = $doctrine->getRepository('ClarolineBadgeBundle:Badge')->findUsers($badge, false);
         $adapter = new DoctrineORMAdapter($query);
         $pager   = new Pagerfanta($adapter);
-        $pager
-            ->setMaxPerPage(10)
-            ->setCurrentPage($page)
-        ;
+
+        try {
+            $pager->setCurrentPage($page);
+        } catch (NotValidCurrentPageException $exception) {
+            throw new NotFoundHttpException();
+        }
 
         $form = $this->createForm(new BadgeType(), $badge);
 
