@@ -19,11 +19,6 @@ class ClaimBadgeType extends AbstractType
                 'format'           => 'jsonp',
                 'mapped'           => false
             ))
-            ->add('user', 'hidden', array(
-                'property_path' => 'user.id',
-                'mapped'        => false,
-                'data'          => $options['user_id']
-            ))
         ;
     }
 
@@ -38,8 +33,7 @@ class ClaimBadgeType extends AbstractType
         ->setDefaults(
             array(
                 'data_class'         => 'Claroline\BadgeBundle\Entity\BadgeClaim',
-                'translation_domain' => 'platform',
-                'user_id'            => null
+                'translation_domain' => 'platform'
             )
         );
     }
