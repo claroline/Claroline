@@ -5,6 +5,7 @@ namespace Claroline\BadgeBundle\Controller;
 use Claroline\BadgeBundle\Entity\Badge;
 use Claroline\BadgeBundle\Entity\BadgeClaim;
 use Claroline\BadgeBundle\Form\ClaimBadgeType;
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\NoResultException;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
@@ -101,20 +102,21 @@ class ProfileController extends Controller
     }
 
     /**
-     * @Route("/{page}", name="claro_profile_view_badges")
+     * @Route("/{page}", name="claro_profile_view_badges", requirements={"page" = "\d+"}, defaults={"page" = 1})
+     * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function badgesAction($page = 1)
+    public function badgesAction($page, User $user)
     {
-        $user = $this->get('security.context')->getToken()->getUser();
-
-        $query = $this->getDoctrine()->getRepository('ClarolineBadgeBundle:Badge')->findByUser($user, true);
+        $query = $this->getDoctrine()->getRepository('ClarolineBadgeBundle:Badge')->findByUser($user, false);
         $adapter = new DoctrineORMAdapter($query);
         $pager   = new Pagerfanta($adapter);
-        $pager
-            ->setMaxPerPage(10)
-            ->setCurrentPage($page)
-        ;
+
+        try {
+            $pager->setCurrentPage($page);
+        } catch (NotValidCurrentPageException $exception) {
+            throw new NotFoundHttpException();
+        }
 
         $badgeClaims = $this->getDoctrine()->getRepository('ClarolineBadgeBundle:BadgeClaim')->findByUser($user);
 
