@@ -52,6 +52,7 @@ class Version20120119000000 extends BundleMigration
         $this->createContent2RegionTable($schema);
         $this->createWorkspaceTemplateTable($schema);
         $this->createThemeTable($schema);
+        $this->createTagTable($schema);
         $this->createLogTable($schema);
         $this->createLogDoerPlatformRolesTable($schema);
         $this->createLogDoerWorkspaceRolesTable($schema);
@@ -120,6 +121,7 @@ class Version20120119000000 extends BundleMigration
         $schema->dropTable('claro_node');
         $schema->dropTable('claro_nodelink');
         $schema->dropTable('claro_nodetype');
+        $schema->dropTable('icap__tag');
     }
 
     private function createUserTable(Schema $schema)
@@ -1401,5 +1403,30 @@ class Version20120119000000 extends BundleMigration
             array('id'),
             array('onDelete' => 'CASCADE')
         );
+
+    private function createTagTable(Schema $schema)
+    {
+        $tagTable = $schema->createTable('icap__tag');
+        $this->addId($tagTable);
+        $tagTable->addColumn('name', 'string', array('length' => 255));
+        $tagTable->addUniqueIndex(array('name'));
+
+        $this->storeTable($tagTable);
+
+        $associatedTagTable = $schema->createTable('icap__associated_tag');
+        $this->addId($associatedTagTable);
+        $associatedTagTable->addColumn('hash', 'string', array('length' => 64));
+        $associatedTagTable->addColumn('taggableClass', 'string', array('length' => 255));
+        $associatedTagTable->addColumn('taggableId', 'integer');
+        $associatedTagTable->addColumn('tag_id', 'integer', array('notnull' => true));
+
+        $associatedTagTable->addForeignKeyConstraint(
+            $this->getStoredTable('icap__tag'),
+            array('tag_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+
+        $this->storeTable($associatedTagTable);
     }
 }

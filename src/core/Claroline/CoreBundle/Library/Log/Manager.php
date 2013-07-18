@@ -80,7 +80,7 @@ class Manager
             $config = null;
 
             for ($i = 0, $countConfigs = count($configs); $i < $countConfigs && $config === null; ++$i) {
-                $current = $config[$i];
+                $current = $configs[$i];
 
                 if ($current->getWorkspace()->getId() == $workspace->getId()) {
                     $config = $current;
