@@ -3,10 +3,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use \Mockery as m;
-use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
-use Doctrine\Common\Collections\ArrayCollection;
 
 class GroupManagerTest extends MockeryTestCase
 {
@@ -15,6 +12,7 @@ class GroupManagerTest extends MockeryTestCase
     private $userRepo;
     private $pagerFactory;
     private $translator;
+    private $eventDispatcher;
 
     public function setUp()
     {
@@ -25,6 +23,7 @@ class GroupManagerTest extends MockeryTestCase
         $this->userRepo = m::mock('Claroline\CoreBundle\Repository\UserRepository');
         $this->pagerFactory = m::mock('Claroline\CoreBundle\Pager\PagerFactory');
         $this->translator = m::mock('Symfony\Component\Translation\Translator');
+        $this->eventDispatcher = m::mock('Claroline\CoreBundle\Event\StrictDispatcher');
     }
 
     public function testInsertGroup()
@@ -48,10 +47,23 @@ class GroupManagerTest extends MockeryTestCase
     public function testUpdateGroup()
     {
         $group = m::mock('Claroline\CoreBundle\Entity\Group');
+        $role = m::mock('Claroline\CoreBundle\Entity\Role');
+        $unitOfWork = m::mock('Doctrine\ORM\UnitOfWork');
+        $changeSet = array();
+
+        $this->om->shouldReceive('getUnitOfWork')->once()->andReturn($unitOfWork);
+        $unitOfWork->shouldReceive('computeChangeSets')->once();
+        $unitOfWork->shouldReceive('getEntityChangeSet')->with($group)->once()->andReturn($changeSet);
+        $group->shouldReceive('getPlatformRole')->once()->andReturn($role);
+        $role->shouldReceive('getTranslationKey')->once()->andReturn('new_key');
+        $changeSet['platformRole'] = array('old_key', 'new_key');
+        $this->eventDispatcher->shouldReceive('dispatch')
+            ->with('log', 'Log\LogGroupUpdate', array($group, $changeSet))
+            ->once();
         $this->om->shouldReceive('persist')->with($group)->once();
         $this->om->shouldReceive('flush')->once();
 
-        $this->getManager()->updateGroup($group);
+        $this->getManager()->updateGroup($group, 'old_key');
     }
 
     public function testAddUsersToGroup()
@@ -65,6 +77,13 @@ class GroupManagerTest extends MockeryTestCase
         $group->shouldReceive('containsUser')->with($userB)->once()->andReturn(false);
         $group->shouldReceive('addUser')->with($userA)->once();
         $group->shouldReceive('addUser')->with($userB)->once();
+        $this->eventDispatcher->shouldReceive('dispatch')
+            ->with('log', 'Log\LogGroupAddUser', array($group, $userA))
+            ->once();
+        $this->eventDispatcher->shouldReceive('dispatch')
+            ->with('log', 'Log\LogGroupAddUser', array($group, $userB))
+            ->once();
+
         $this->om->shouldReceive('persist')->with($group)->once();
         $this->om->shouldReceive('flush')->once();
 
@@ -284,7 +303,8 @@ class GroupManagerTest extends MockeryTestCase
             return new GroupManager(
                 $this->om,
                 $this->pagerFactory,
-                $this->translator
+                $this->translator,
+                $this->eventDispatcher
             );
         }
 
@@ -302,7 +322,8 @@ class GroupManagerTest extends MockeryTestCase
             array(
                 $this->om,
                 $this->pagerFactory,
-                $this->translator
+                $this->translator,
+                $this->eventDispatcher
             )
         );
     }
