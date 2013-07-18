@@ -149,8 +149,8 @@ class UserManager
             $this->toolManager->addRequiredToolsToUser($newUser);
             $this->roleManager->setRoleToRoleSubject($newUser, $roleName);
 
-            $this->om->persist($user);
-            $this->ed->dispatch('log', 'Log\LogUserCreateEvent', $newUser);
+            $this->om->persist($newUser);
+            $this->ed->dispatch('log', 'Log\LogUserCreate', array($newUser));
         }
 
         $this->om->endFlushSuite();
@@ -282,9 +282,9 @@ class UserManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
-    public function getGroupOutsidersByName(Group $group, $search, $getQuery = false)
+    public function getGroupOutsidersByName(Group $group, $page, $search, $getQuery = false)
     {
-        $query = $this->userRepo->findGroupOutsidersByName($group, $search, false);
+        $query = $this->userRepo->findGroupOutsidersByName($group, $search, $getQuery);
 
         return $this->pagerFactory->createPager($query, $page);
     }

@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Library\Workspace;
 
 use \RuntimeException;
 use Symfony\Component\Yaml\Yaml;
+use Claroline\CoreBundle\Library\Workspace\Exception\BaseRoleException;
 
 class Configuration
 {
@@ -95,6 +96,30 @@ class Configuration
 
         if (!is_string($this->workspaceName) || 0 === strlen($this->workspaceName)) {
             throw new RuntimeException('Workspace name must be a non empty string');
+        }
+
+        $this->checkRoles($this->getRoles());
+    }
+
+    /**
+     * Require an array of role:
+     * array('ROLE_WS_COLLABORATOR' => 'translation')
+     * @param type $roles
+     */
+    public function checkRoles(array $roles)
+    {
+        $mandatoryRoles = \Claroline\CoreBundle\Entity\Role::getMandatoryWsRoles();
+        $manadatoryCount = count($mandatoryRoles);
+        $found = 0;
+
+        foreach (array_keys($roles) as $roleName) {
+            if (in_array($roleName, $mandatoryRoles)) {
+                $found++;
+            }
+        }
+
+        if ($found !== $manadatoryCount) {
+            throw new BaseRoleException('One or more base roles are missing');
         }
     }
 

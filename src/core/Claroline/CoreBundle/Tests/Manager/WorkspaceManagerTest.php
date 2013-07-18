@@ -76,6 +76,7 @@ class WorkspaceManagerTest extends MockeryTestCase
         $config->shouldReceive('getToolsConfiguration')->once()->andReturn($tools);
         $config->shouldReceive('getToolsPermissions')->once()->andReturn($toolsInfos);
         $config->shouldReceive('getArchive')->times(2)->andReturn(new \ZipArchive());
+        $config->shouldReceive('check')->once();
 
         $this->ut->shouldReceive('generateGuid')->once()->andReturn('guid');
 

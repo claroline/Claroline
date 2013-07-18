@@ -26,6 +26,16 @@
 {% endif %}
 {% endmacro %}
 
+{% macro displayControls(workspaceId) %}
+    {% if app.user %}
+        <button class="btn btn-secondary action-button" data-action="add">
+            <i class="icon-plus"></i>
+            {{ 'add'|trans({}, 'platform') }}
+        </button>
+    {% endif %}
+{% endmacro %}
+
+{% from _self import displayControls %}
 {% from _self import renderPager %}
 
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
@@ -35,11 +45,22 @@
     {% javascripts
         vars=["locale"]
         "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/addUserConfirm.html.twigjs"
-    filter="twig_js"
+        "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
+        "@ClarolineCoreBundle/Resources/views/Modal/validationFooter.html.twigjs"
+        filter="twig_js"
     %}
     <script language="javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
-    <script src='{{ asset('bundles/clarolinecore/js/tool/workspace/unregistered_users.js') }}' type="text/javascript"></script>
+    <script src='{{ asset('bundles/clarolinecore/js/table.js') }}' type="text/javascript"></script>
+    <script>
+        parameters = {};
+        parameters.route = {};
+        parameters.route.action = {};
+        parameters.route.normal = {"route": "claro_workspace_unregistered_user_list", "parameters": {'workspaceId': {{ workspace.getId() }} }};
+        parameters.route.search = {"route": "claro_workspace_unregistered_user_list_search", "parameters": {'workspaceId': {{ workspace.getId() }} }};
+        parameters.route.action.add = {"route": "claro_workspace_multiadd_user", "parameters": {'workspaceId': {{ workspace.getId() }} }, "confirmTemplate": addUserConfirm};
+        Claroline.Table.initialize(parameters);
+    </script>
 {% endblock %}
 
 {% block section_content %}
@@ -58,15 +79,10 @@
         ])
     }}
 
-    <div id="twig-attributes"
-        data-workspaceId="{{workspace.getId()}}">
-    </div>
-
     <div class="margin search-bar">
-        <button class="btn btn-secondary add-users-button"><i class="icon-plus"></i> {{ 'add'|trans({}, 'platform') }}</button>
-
+        {{ displayControls(workspace.getId()) }}
         <div class="input-append pull-right">
-            <input class="input-medium" type="text" id="search-user-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
+            <input class="input-medium" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
             <button class="filter btn" type="button" id="search-button">
                 <i class="icon-search"></i>
             </button>
@@ -81,7 +97,7 @@
                     <th>{{ 'username'|trans({}, 'platform') }}</th>
                     <th>{{ 'last_name'|trans({}, 'platform') }}</th>
                     <th>{{ 'first_name'|trans({}, 'platform') }}</th>
-                    <th></th>
+                    <th><input type="checkbox" name="all" id="check-all-items"></input></th>
                 </thead>
                 <tbody id="user-table-checkboxes-body">
                     {% for user in pager.currentPageResults %}
@@ -90,7 +106,7 @@
                             <td>{{ user.lastname }}</td>
                             <td>{{ user.firstname }}</td>
                             <td>
-                                <input type="checkbox" value="{{ user.id }}" class="chk-user" align="center"></input>
+                                <input type="checkbox" value="{{ user.id }}" class="chk-item" align="center"></input>
                             </td>
                         </tr>
                     {% endfor %}
@@ -101,19 +117,6 @@
     <div class="margin">
 
         {{ renderPager(search, workspace.getId(), pager) }}
-        <button class="btn btn-secondary add-users-button"><i class="icon-plus"></i> {{ 'add'|trans({}, 'platform') }}</button>
-    </div>
-    <!-------------- modal box ------------------------------------------------>
-    <div id="validation-box" class="modal hide fade">
-        <div class="modal-header">
-        </div>
-        <div class="modal-body" id="modal-body">
-            <div id="validation-box-body">
-            </div>
-        </div>
-        <div class="modal-footer">
-            <input type="button" id="modal-valid-button" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-            <input type="button" id="modal-cancel-button" class="btn btn-secondary" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
-        </div>
+        {{ displayControls(workspace.getId()) }}
     </div>
 {% endblock %}

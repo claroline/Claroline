@@ -14,7 +14,11 @@
                 'href': path('claro_workspace_roles', {'workspace': workspace.getId()})
             },
             {
-                'name': 'creation'|trans({}, 'platform'),
+                'name': role.getTranslationKey()|trans({}, 'platform'),
+                'href': path('claro_workspace_role_parameters', {'workspace': workspace.getId(), 'role': role.getId()})
+            },
+            {
+                'name': 'edit'|trans({}, 'platform'),
                 'href': ''
             }
         ])
@@ -22,7 +26,7 @@
 
     <div class="wrapper">
     <form class="form-horizontal"
-          action="{{ path('claro_workspace_role_create', {'workspace': workspace.getId()} ) }}"
+          action="{{ path('claro_workspace_role_edit', {'workspace': workspace.getId(), 'role': role.getId()} ) }}"
           method="post" {{ form_enctype(form) }}
           id="workspace-role-creation"
       >
@@ -31,7 +35,7 @@
             {{ form_widget(form) }}
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-                <a href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()}) }}">
+                <a href="{{ path('claro_workspace_role_parameters', {'workspace': workspace.getId(), 'role': role.getId()} ) }}">
                     <button type="button" class="btn">{{ 'cancel'|trans({}, 'platform') }}</button>
                 </a>
             </div>

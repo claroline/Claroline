@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Manager\Exception\RoleReadOnlyException;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -62,7 +63,6 @@ class RoleManager
         $role->setTranslationKey($translationKey);
         $role->setReadOnly($isReadOnly);
         $role->setType(Role::PLATFORM_ROLE);
-
         $this->om->persist($role);
         $this->om->flush();
 
@@ -145,11 +145,12 @@ class RoleManager
         $entityRoles = array();
 
         foreach ($roles as $name => $translation) {
+            $isReadOnly = (in_array($name, Role::getMandatoryWsRoles())) ? true: false;
             $role = $this->createWorkspaceRole(
                 "{$name}_{$workspace->getGuid()}",
                 $translation,
                 $workspace,
-                false
+                $isReadOnly
             );
             $entityRoles[$name] = $role;
         }
@@ -164,6 +165,15 @@ class RoleManager
         if ($role->isReadOnly()) {
             throw new RoleReadOnlyException('This role cannot be modified nor removed');
         }
+
+        $this->om->remove($role);
+        $this->om->flush();
+    }
+
+    public function edit(Role $role)
+    {
+        $this->om->persist($role);
+        $this->om->flush();
     }
 
     public function findWorkspaceRoles(AbstractWorkspace $workspace)

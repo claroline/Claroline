@@ -28,14 +28,12 @@
 
 {% macro displayControls(workspaceId) %}
 {% if app.user %}
-    <button id="delete-group-button"
-        class="btn btn-secondary delete-groups-button">
+    <button class="btn btn-secondary action-button" data-action="remove">
         <i class="icon-trash"></i>
         {{ 'delete'|trans({}, 'platform') }}
     </button>
     <a class="btn btn-secondary"
-        href="{{ path('claro_workspace_unregistered_group_list', {'workspaceId': workspaceId}) }}"
-        id="add-user-link">
+        href="{{ path('claro_workspace_unregistered_group_list', {'workspaceId': workspaceId}) }}">
         <i class="icon-plus"></i>
         {{ 'add_group'|trans({}, 'platform') }}
     </a>
@@ -52,11 +50,22 @@
     {% javascripts
         vars=["locale"]
         "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/removeGroupConfirm.html.twigjs"
+        "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
+        "@ClarolineCoreBundle/Resources/views/Modal/validationFooter.html.twigjs"
         filter="twig_js"
     %}
     <script language="javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
-    <script src='{{ asset('bundles/clarolinecore/js/tool/workspace/registered_groups.js') }}' type="text/javascript"></script>
+    <script src='{{ asset('bundles/clarolinecore/js/table.js') }}' type="text/javascript"></script>
+    <script>
+        parameters = {};
+        parameters.route = {};
+        parameters.route.action = {};
+        parameters.route.normal = {"route": "claro_workspace_registered_group_list", "parameters": {'workspaceId': {{ workspace.getId() }} }};
+        parameters.route.search = {"route": "claro_workspace_registered_group_list_search", "parameters": {'workspaceId': {{ workspace.getId() }} }};
+        parameters.route.action.remove = {"route": "claro_workspace_delete_groups", "parameters": {'workspaceId': {{ workspace.getId() }} }, "confirmTemplate": removeGroupConfirm};
+        Claroline.Table.initialize(parameters);
+    </script>
 {% endblock %}
 
 {% block section_content %}
@@ -73,15 +82,11 @@
 
 
     <div class="margin">
-        <div id="twig-attributes"
-            data-workspaceId="{{ workspace.getId() }}">
-        </div>
-
         <div class="search-bar">
             {{ displayControls(workspace.getId()) }}
             <div class="input-append pull-right">
-                <input class="input-medium" type="text" id="search-group-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
-                <button class="filter btn" type="button" id="search-group-button">
+                <input class="input-medium" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
+                <button class="filter btn" type="button" id="search-button">
                     <i class="icon-search"></i>
                 </button>
             </div>
@@ -94,12 +99,12 @@
                 <th>{{ 'role'|trans({}, 'platform') }}</th>
                 {% if app.user %}
                     <th>{{ 'parameters'|trans({}, 'platform') }}</th>
-                    <th></th>
+                    <th><input type="checkbox" name="all" id="check-all-items"></input></th>
                 {% endif %}
             </thead>
             <tbody id="group-table-body">
                 {% for group in pager.currentPageResults %}
-                    <tr class="row-group" data-group-id={{ group.id }}>
+                    <tr class="row-group">
                         <td align="center">{{ group.name }}</td>
                         <td align="center">
                             {% for role in group.getEntityRoles() %}
@@ -110,10 +115,10 @@
                         </td>
                         {% if app.user %}
                             <td>
-                                <button class="btn btn-secondary button-parameters-group">{{ 'parameters'|trans({}, 'platform') }}</button>
+                                <a class="btn btn-secondary" href=" {{ path('claro_workspace_tools_show_group_parameters', {'groupId': group.getId(), 'workspaceId': workspace.getId()} ) }}">{{ 'parameters'|trans({}, 'platform') }}</a>
                             </td>
                             <td>
-                                <input type="checkbox" class="chk-group" value="{{ group.id }}"></input>
+                                <input type="checkbox" class="chk-item" value="{{ group.id }}"></input>
                             </td>
                         {% endif %}
                     </tr>
@@ -122,17 +127,5 @@
         </table>
         {{ renderPager(search, workspace.getId(), pager) }}
         {{ displayControls(workspace.getId()) }}
-    </div>
-    <!-------------- modal box ------------------------------------------------>
-    <div id="validation-box" class="modal hide fade">
-        <div class="modal-header">
-        </div>
-        <div class="modal-body" id="modal-body">
-            <div id="validation-box-body"></div>
-        </div>
-        <div class="modal-footer">
-            <input type="button" id="modal-valid-button" class="btn btn-primary" value="{{'ok'|trans({}, 'platform') }}"/>
-            <input type="button" id="modal-cancel-button" class="btn btn-secondary" value="{{'cancel'|trans({}, 'platform') }}"/>
-        </div>
     </div>
 {% endblock %}

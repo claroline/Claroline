@@ -329,6 +329,7 @@ class ResourceManager
 
         $resourceTypes = $this->resourceTypeRepo->findAll();
 
+        //@todo remove this line and grant edit requests in the resourceManager.
         $this->rightsManager->create(
             array(
                 'canDelete' => true,

@@ -144,6 +144,15 @@ class WorkspaceParametersControllerTest extends MockeryTestCase
         $this->assertEquals($expectedResult, $this->controller->createRoleAction($workspace, $user));
     }
 
+    public function testRemoveRole()
+    {
+        $role = new \Claroline\CoreBundle\Entity\Role();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $this->checkAccess($workspace);
+        $this->roleManager->shouldReceive('remove')->once()->with($role);
+        $this->controller->removeRole($workspace, $role);
+    }
+
     private function checkAccess(\Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace)
     {
         $this->security->shouldReceive('isGranted')->with('parameters', $workspace)->once()->andReturn(true);
