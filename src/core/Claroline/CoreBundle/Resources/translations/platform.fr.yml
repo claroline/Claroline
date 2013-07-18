@@ -106,6 +106,7 @@ instructions: Consignes
 import: Importer
 import_users: 'Importer des utilisateurs'
 import_user_file_file: Importer depuis fichier
+invalid_csv_file: 'Le fichier CSV n''est pas valide'
 last_30_days_activity: Activités des 30 derniers jours
 last_name: Nom
 link: Lien

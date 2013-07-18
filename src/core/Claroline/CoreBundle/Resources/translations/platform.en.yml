@@ -106,6 +106,7 @@ instructions: Instructions
 import: Import
 import_user_file_file: Import from a file
 import_users: 'Import users'
+invalid_csv_file: 'Invalid CSV file'
 last_30_days_activity: Activity over the last 30 days
 last_name: 'Last name'
 link: Link

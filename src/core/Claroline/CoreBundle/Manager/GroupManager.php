@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Repository\GroupRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Pager\PagerFactory;
@@ -23,20 +24,23 @@ class GroupManager
     private $userRepo;
     private $pagerFactory;
     private $translator;
+    private $eventDispatcher;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     * "om"           = @DI\Inject("claroline.persistence.object_manager"),
-     * "pagerFactory" = @DI\Inject("claroline.pager.pager_factory"),
-     * "translator"   = @DI\Inject("translator")
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "pagerFactory"    = @DI\Inject("claroline.pager.pager_factory"),
+     *     "translator"      = @DI\Inject("translator"),
+     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher")
      * })
      */
     public function __construct(
         ObjectManager $om,
         PagerFactory $pagerFactory,
-        Translator $translator
+        Translator $translator,
+        StrictDispatcher $eventDispatcher
     )
     {
         $this->om = $om;
@@ -44,6 +48,7 @@ class GroupManager
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->pagerFactory = $pagerFactory;
         $this->translator = $translator;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function insertGroup(Group $group)
@@ -58,8 +63,18 @@ class GroupManager
         $this->om->flush();
     }
 
-    public function updateGroup(Group $group)
+    public function updateGroup(Group $group, $oldPlatformRoleTransactionKey)
     {
+        $unitOfWork = $this->om->getUnitOfWork();
+        $unitOfWork->computeChangeSets();
+        $changeSet = $unitOfWork->getEntityChangeSet($group);
+        $newPlatformRoleTransactionKey = $group->getPlatformRole()->getTranslationKey();
+
+        if ($oldPlatformRoleTransactionKey !== $newPlatformRoleTransactionKey) {
+            $changeSet['platformRole'] = array($oldPlatformRoleTransactionKey, $newPlatformRoleTransactionKey);
+        }
+        $this->eventDispatcher->dispatch('log', 'Log\LogGroupUpdate', array($group, $changeSet));
+
         $this->om->persist($group);
         $this->om->flush();
     }
@@ -69,6 +84,7 @@ class GroupManager
         foreach ($users as $user) {
             if (!$group->containsUser($user)) {
                 $group->addUser($user);
+                $this->eventDispatcher->dispatch('log', 'Log\LogGroupAddUser', array($group, $user));
             }
         }
 

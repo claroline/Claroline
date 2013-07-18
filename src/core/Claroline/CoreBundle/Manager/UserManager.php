@@ -141,7 +141,7 @@ class UserManager
             $existingUser = $this->userRepo->findOneByUsername($username);
 
             if (is_null($existingUser)) {
-                $newUser = $this->om->factory('Claroline\CoreBundle\Entity\User');;
+                $newUser = $this->om->factory('Claroline\CoreBundle\Entity\User');
                 $newUser->setFirstName($firstName);
                 $newUser->setLastName($lastName);
                 $newUser->setUsername($username);
