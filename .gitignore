@@ -33,5 +33,4 @@ web/css/*
 web/js/*
 web/themes/*
 web/thumbnails/*
-web/twig.js
 web/vendor/*
