@@ -5,6 +5,7 @@ namespace Claroline\BadgeBundle\Controller;
 use Claroline\BadgeBundle\Entity\Badge;
 use Claroline\BadgeBundle\Entity\BadgeClaim;
 use Claroline\BadgeBundle\Form\ClaimBadgeType;
+use Doctrine\ORM\NoResultException;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -47,11 +48,6 @@ class ProfileController extends Controller
 
                     $badge = $entityManager->getRepository('ClarolineBadgeBundle:Badge')->findOneByName($badgeName);
 
-                    if(null === $badge) {
-                        throw new \InvalidArgumentException(sprintf("No badge found with name '%s'", $badgeName));
-                    }
-
-
                     if($user->hasBadge($badge)) {
                         $this->get('session')->getFlashBag()->add('alert', $translator->trans('badge_already_award_message', array(), 'platform'));
                     }
@@ -66,6 +62,9 @@ class ProfileController extends Controller
 
                         $this->get('session')->getFlashBag()->add('success', $translator->trans('badge_claim_success_message', array(), 'platform'));
                     }
+                }
+                catch(NoResultException $exception) {
+                    $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_not_found_with_name', array('%badgeName%' => $badgeName), 'platform'));
                 }
                 catch(\Exception $exception) {
                     $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_claim_error_message', array(), 'platform'));
