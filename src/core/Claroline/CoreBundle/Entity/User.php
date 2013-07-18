@@ -194,15 +194,21 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      * @var UserBadge[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Claroline\BadgeBundle\Entity\UserBadge", mappedBy="user", cascade={"all"})
-     * @ORM\JoinTable(name="claro_user_badge")
      */
     protected $userBadges;
+
+    /**
+     * @var UserBadge[]|ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Claroline\BadgeBundle\Entity\UserBadge", mappedBy="issuer", cascade={"all"})
+     */
+    protected $issuedBadges;
 
     /**
      * @var BadgeClaim[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Claroline\BadgeBundle\Entity\BadgeClaim", mappedBy="user", cascade={"all"})
-     * @ORM\JoinTable(name="claro_badge_claim")
+     * @ORM\JoinColumn(name="badge_claim_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     protected $badgeClaims;
 
@@ -216,6 +222,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $this->salt              = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
         $this->orderedTools      = new ArrayCollection();
         $this->userBadges        = new ArrayCollection();
+        $this->issuedBadges      = new ArrayCollection();
         $this->badgeClaims       = new ArrayCollection();
     }
 

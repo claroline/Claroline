@@ -29,7 +29,7 @@ class UserBadge
     /**
      * @var User
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User", inversedBy="user")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User", inversedBy="userBadges")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
     */
     protected $user;
@@ -37,7 +37,7 @@ class UserBadge
     /**
      * @var Badge
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\BadgeBundle\Entity\Badge", inversedBy="badge")
+     * @ORM\ManyToOne(targetEntity="Claroline\BadgeBundle\Entity\Badge", inversedBy="userBadges")
      * @ORM\JoinColumn(name="badge_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
     */
     protected $badge;
@@ -54,10 +54,9 @@ class UserBadge
      * @var User $issuer
      *
      * @Gedmo\Blameable(on="create")
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User", inversedBy="issuer")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User", inversedBy="issuedBadges")
      * @ORM\JoinColumn(name="issuer_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
     */
-
     protected $issuer;
 
     /**
