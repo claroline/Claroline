@@ -115,9 +115,9 @@ abstract class AbstractWorkspace
     protected $selfRegistration;
 
     /**
-     * @ORM\Column(name="self_unsubscribe", type="boolean", nullable=true)
+     * @ORM\Column(name="self_unregistration", type="boolean", nullable=true)
      */
-    protected $selfUnsubscribe;
+    protected $selfUnregistration;
 
     public function __construct()
     {
@@ -211,7 +211,7 @@ abstract class AbstractWorkspace
     {
         return $this->guid;
     }
-    
+
     public function setSelfRegistration($selfRegistration)
     {
         $this->selfRegistration = $selfRegistration;
@@ -222,13 +222,13 @@ abstract class AbstractWorkspace
         return $this->selfRegistration;
     }
 
-    public function setSelfUnsubscribe($selfUnsubscribe)
+    public function setSelfUnregistration($selfUnregistration)
     {
-        $this->selfUnsubscribe = $selfUnsubscribe;
+        $this->selfUnregistration = $selfUnregistration;
     }
 
-    public function getSelfUnsubscribe()
+    public function getSelfUnregistration()
     {
-        return $this->selfUnsubscribe;
+        return $this->selfUnregistration;
     }
 }

@@ -10,6 +10,8 @@ class WorkspaceEditType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder->add('selfRegistration', 'checkbox', array('required' => false));
+        $builder->add('selfUnregistration', 'checkbox', array('required' => false));
         $builder->add('name', 'text', array('required' => true));
         $builder->add('code', 'text', array('required' => true));
     }

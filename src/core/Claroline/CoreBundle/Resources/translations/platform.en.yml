@@ -451,6 +451,8 @@ workspace_delete_confirm_message: 'Are you sure you want to delete this workspac
 workspace_delete_confirm_title: 'Delete Confirm'
 workspace_edit_form_code: Code
 workspace_edit_form_name: Name
+workspace_edit_form_selfRegistration: 'Public registration'
+workspace_edit_form_selfUnregistration: 'Public unregistration'
 workspace_form_code: Code
 workspace_form_name: Name
 workspace_form_template: Template
