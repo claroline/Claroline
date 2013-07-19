@@ -196,12 +196,12 @@ class InteractionQCMHandler
         $this->em->persist($interQCM->getInteraction());
 
         // On persiste tous les choices de l'interaction QCM.
-        $ord = 1;
+        //$ord = 1;
         foreach ($interQCM->getChoices() as $choice) {
-            $choice->setOrdre($ord);
+            //$choice->setOrdre($ord);
             $interQCM->addChoice($choice);
             $this->em->persist($choice);
-            $ord++;
+            //$ord++;
         }
 
         //On persite tous les hints de l'entité interaction
