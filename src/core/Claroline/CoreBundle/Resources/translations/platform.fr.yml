@@ -454,6 +454,8 @@ workspace_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer cet espac
 workspace_delete_confirm_title: 'Confirmation de suppression'
 workspace_edit_form_code: Code
 workspace_edit_form_name: Nom
+workspace_edit_form_selfRegistration: 'Inscription publique'
+workspace_edit_form_selfUnregistration: 'Désinscription publique'
 workspace_form_code: Code
 workspace_form_name: Nom
 workspace_form_template: Modèle
