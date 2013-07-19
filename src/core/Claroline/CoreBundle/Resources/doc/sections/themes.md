@@ -48,7 +48,7 @@ the *path* of the output file that will be stored in the *web* directory.
 {% stylesheets
     debug=false
     filter="lessphp"
-    output="bundles/clarolinecore/css/themes/examplebundle-theme/bootstrap.css"
+    output="themes/examplebundle-theme/bootstrap.css"
     "@ClarolineExampleBundle/Resources/views/less/example/common.less"
 %}
     <link href="{{ asset_url }}" rel="stylesheet" media="screen">

@@ -3,21 +3,21 @@
 {% block stylesheets %}
     {{ parent() }}
 
-    {% stylesheets debug=false output='bundles/clarolinecore/css/bootstrap-colorpicker/css/bootstrap-colorpicker.css'
+    {% stylesheets debug=false output='vendor/bootstrap-colorpicker/css/bootstrap-colorpicker.css'
     '../vendor/xaguilars/bootstrap-colorpicker/css/bootstrap-colorpicker.css'
     %}
         <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
     {% endstylesheets %}
 
-    {% image debug=false output='bundles/clarolinecore/css/bootstrap-colorpicker/img/bootstrap-colorpicker/alpha.png'
+    {% image debug=false output='vendor/bootstrap-colorpicker/img/bootstrap-colorpicker/alpha.png'
         '../vendor/xaguilars/bootstrap-colorpicker/img/bootstrap-colorpicker/alpha.png' %}
     {% endimage %}
 
-    {% image debug=false output='bundles/clarolinecore/css/bootstrap-colorpicker/img/bootstrap-colorpicker/hue.png'
+    {% image debug=false output='vendor/bootstrap-colorpicker/img/bootstrap-colorpicker/hue.png'
         '../vendor/xaguilars/bootstrap-colorpicker/img/bootstrap-colorpicker/hue.png' %}
     {% endimage %}
 
-    {% image debug=false output='bundles/clarolinecore/css/bootstrap-colorpicker/img/bootstrap-colorpicker/saturation.png'
+    {% image debug=false output='vendor/bootstrap-colorpicker/img/bootstrap-colorpicker/saturation.png'
         '../vendor/xaguilars/bootstrap-colorpicker/img/bootstrap-colorpicker/saturation.png' %}
     {% endimage %}
 
@@ -47,18 +47,6 @@
                                 <input type="text" id="theme-name"{% if theme is defined %} value="{{ theme.getName() }}"{% endif %}>
                             </td>
                         </tr>
-                        <!--<tr>
-                            <th>{{ "Backgorund image" | trans({}, "") }}:</th>
-                        </tr>
-                        <tr>
-                            <td><input type="file" id="theme-background"></td>
-                        </tr>
-                        <tr>
-                            <th>{{ "Backgorund of the top bar" | trans({}, "") }}:</th>
-                        </tr>
-                        <tr>
-                            <td><input type="file" id="theme-topbar"></td>
-                        </tr>-->
                         <tr>
                             <td class="form-actions" colspan="2">
                                 <button class="btn save btn-primary"{% if theme is defined %} data-id="{{ theme.getId() }}"{% endif %}><i class="icon-ok"></i> {{ "Save" | trans({}, "") }}</button>
@@ -96,7 +84,7 @@
                             {% for name,array in parameters.getParameters() %}
                                 {% if loop.index is divisibleby(2) %}<div class="row-fluid">{% endif %}
                                     <div class="span6">
-                                        <h4>{{ name }} {{ loop.index }}</h4>
+                                        <h4>{{ name }}</h4>
                                         <table class="table table-bordered table-striped">
                                             {% for code,value in array %}
                                                 <tr>
@@ -119,7 +107,7 @@
 {% block javascripts %}
     {{ parent() }}
 
-    {% javascripts debug=false output='bundles/clarolinecore/css/bootstrap-colorpicker/js/bootstrap-colorpicker.js'
+    {% javascripts debug=false output='vendor/bootstrap-colorpicker/js/bootstrap-colorpicker.js'
     '../vendor/xaguilars/bootstrap-colorpicker/js/bootstrap-colorpicker.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>

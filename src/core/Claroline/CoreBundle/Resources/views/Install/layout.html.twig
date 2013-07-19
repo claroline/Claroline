@@ -1,10 +1,9 @@
 {% extends '::base.html.twig' %}
 
-{% set themePath = 'bundles/clarolinecore/css/themes/' ~ config.getParameter('theme') %}
+{% set themePath = 'themes/' ~ config.getParameter('theme') %}
 {% block stylesheets %}
     <link rel='stylesheet' type='text/css' href='{{ asset(themePath ~ '/bootstrap.css') }}'/>
-    <link rel='stylesheet' type='text/css' href='{{ asset(themePath ~ '/bootstrap-responsive.css') }}'/>
-    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/css/font-awesome.css') }}'/>
+    <link rel='stylesheet' type='text/css' href='{{ asset('vendor/fortawesome/fontawesome/font-awesome.css') }}'/>
 {% endblock %}
 
 {% block favicon %}
