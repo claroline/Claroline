@@ -1,4 +1,4 @@
-{% macro renderPager(search, workspaceId, pager) %}
+{% macro renderPager(search, workspaceId, roleId, pager) %}
     {% if search == '' %}
     {{
         pagerfanta(
@@ -6,8 +6,8 @@
             'twitter_bootstrap_translated',
             {
                 'proximity' : 1,
-                'routeName': 'claro_workspace_registered_user_list',
-                'routeParams': {'workspaceId': workspaceId}
+                'routeName': 'claro_workspace_role_users',
+                'routeParams': {'workspace': workspaceId, 'role': roleId}
             }
         )
     }}
@@ -18,23 +18,21 @@
                 'twitter_bootstrap_translated',
                 {
                     'proximity' : 1,
-                    'routeName': 'claro_workspace_registered_user_list_search',
-                    'routeParams': {'search': search, 'workspaceId': workspaceId}
+                    'routeName': 'claro_workspace_role_users_search',
+                    'routeParams': {'search': search, 'workspace': workspaceId, 'role': roleId}
                 }
             )
         }}
     {% endif %}
 {% endmacro %}
 
-{% macro displayControls(workspaceId) %}
+{% macro displayControls(workspaceId, roleId) %}
     {% if app.user %}
         <button class="btn btn-secondary action-button" data-action="remove">
             <i class="icon-trash"></i>
             {{ 'delete'|trans({}, 'platform') }}
         </button>
-        <a class="btn btn-secondary"
-           href="{{ path('claro_workspace_unregistered_user_list', {'workspaceId': workspaceId}) }}">
-            <i class="icon-plus"></i>
+        <a href="{{ path('claro_workspace_unregistered_role_users', {'workspace': workspaceId, 'role': roleId} ) }}" class="btn btn-secondary">
             {{ 'add_user'|trans({}, 'platform') }}
         </a>
     {% endif %}
@@ -61,9 +59,9 @@
         parameters = {};
         parameters.route = {};
         parameters.route.action = {};
-        parameters.route.normal = {"route": "claro_workspace_registered_user_list", "parameters": {'workspaceId': {{ workspace.getId() }} }};
-        parameters.route.search = {"route": "claro_workspace_registered_user_list_search", "parameters": {'workspaceId': {{ workspace.getId() }} }};
-        parameters.route.action.remove = {"route": "claro_workspace_delete_users", "parameters": {'workspaceId': {{ workspace.getId() }} }, 'confirmTemplate': removeUserConfirm};
+        parameters.route.normal = {"route": "claro_workspace_role_users", "parameters": {'workspace': {{ workspace.getId() }}, 'role': {{ role.getId() }} }};
+        parameters.route.search = {"route": "claro_workspace_role_users_search", "parameters": {'workspace': {{ workspace.getId() }}, 'role': {{ role.getId() }}  }};
+       parameters.route.action.remove = {"route": "claro_workspace_remove_role_from_user", "parameters": {'workspace': {{ workspace.getId() }}, 'role': {{ role.getId() }} }, 'confirmTemplate': removeUserConfirm};
         Claroline.Table.initialize(parameters);
     </script>
 {% endblock %}
@@ -73,9 +71,21 @@
     {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-user',
-                'name': 'user_management'|trans({}, 'tools'),
-                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'user_management'})
+                'icon': 'icon-cog',
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
+            },
+            {
+                'name': 'roles'|trans({}, 'platform'),
+                'href': path('claro_workspace_roles', {'workspace': workspace.getId()})
+            },
+            {
+                'name': role.getTranslationKey()|trans({}, 'platform'),
+                'href': path('claro_workspace_role_parameters', {'workspace': workspace.getId(), 'role': role.getId()})
+            },
+            {
+                'name': 'users'|trans({}, 'platform'),
+                'href': ''
             }
         ])
     }}
@@ -83,7 +93,7 @@
     {{ macros.flashBox() }}
     <div class="margin">
         <div class="search-bar">
-            {{ displayControls(workspace.getId()) }}
+            {{ displayControls(workspace.getId(), role.getId()) }}
             <div class="input-append pull-right">
                 <input class="input-medium" type="text" id="search-items-txt"  placeholder="{{ 'search'|trans({}, 'platform') }}">
                 <button class="filter btn" type="button" id="search-button">
@@ -91,7 +101,7 @@
                 </button>
             </div>
         </div>
-        {{ renderPager(search, workspace.getId(), pager) }}
+        {{ renderPager(search, workspace.getId(), role.getId(), pager) }}
         <table class="table table-striped table-bordered table-condensed">
             <thead>
                 <tr>
@@ -99,9 +109,7 @@
                     <td>{{ 'last_name'|trans({}, 'platform') }}</td>
                     <td>{{ 'first_name'|trans({}, 'platform') }}</td>
                     <td>{{ 'mail'|trans({}, 'platform') }}</td>
-                    <td>{{ 'role'|trans({}, 'platform') }}</td>
                     {% if app.user %}
-                        <td>{{ 'parameters'|trans({}, 'platform') }}</td>
                         <th><input type="checkbox" name="all" id="check-all-items"></input></th>
                     {% endif %}
                 </tr>
@@ -113,17 +121,7 @@
                         <td>{{ user.lastname }}</td>
                         <td>{{ user.firstname }}</td>
                         <td>{{ user.mail }} </td>
-                        <td>{% for role in user.getEntityRoles() %}
-                            {% if role.getWorkspace() == workspace %}
-                                {{ role.getTranslationKey()|trans({}, 'platform') }} {% if not loop.last %},{% endif %}
-                            {% endif %}
-                            {% endfor %}
-                        </td>
                         {% if app.user %}
-                            <td>
-                                <a href="{{ path('claro_workspace_tools_show_user_parameters', {'userId': user.getId(), 'workspaceId': workspace.getId()} ) }}"
-                                   class="btn btn-secondary">{{ 'parameters'|trans({}, 'platform') }} </a>
-                            </td>
                             <td>
                                 <input type="checkbox" value="{{ user.id }}" class="chk-item" align="center"></input>
                             </td>
@@ -132,7 +130,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        {{ renderPager(search, workspace.getId(), pager) }}
-        {{ displayControls(workspace.getId()) }}
+        {{ renderPager(search, workspace.getId(), role.getId(), pager) }}
+        {{ displayControls(workspace.getId(), role.getId()) }}
     </div>
 {% endblock %}

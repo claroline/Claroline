@@ -1,4 +1,4 @@
-{% macro renderPager(search, workspaceId, pager) %}
+{% macro renderPager(search, workspaceId, roleId, pager) %}
 {% if search == '' %}
     {{
         pagerfanta(
@@ -6,8 +6,8 @@
             'twitter_bootstrap_translated',
             {
                 'proximity' : 1,
-                'routeName': 'claro_workspace_registered_group_list',
-                'routeParams': {'workspaceId': workspaceId}
+                'routeName': 'claro_workspace_role_groups',
+                'routeParams': {'workspace': workspaceId, 'role': roleId}
             }
         )
     }}
@@ -18,25 +18,22 @@
             'twitter_bootstrap_translated',
             {
                 'proximity' : 1,
-                'routeName': 'claro_workspace_registered_group_list_search',
-                'routeParams': {'search': search, 'workspaceId': workspaceId}
+                'routeName': 'claro_workspace_role_groups_search',
+                'routeParams': {'search': search, 'workspace': workspaceId, 'role': roleId}
             }
         )
     }}
 {% endif %}
 {% endmacro %}
 
-{% macro displayControls(workspaceId) %}
+{% macro displayControls(workspaceId, roleId) %}
 {% if app.user %}
     <button class="btn btn-secondary action-button" data-action="remove">
         <i class="icon-trash"></i>
         {{ 'delete'|trans({}, 'platform') }}
     </button>
-    <a class="btn btn-secondary"
-        href="{{ path('claro_workspace_unregistered_group_list', {'workspaceId': workspaceId}) }}">
-        <i class="icon-plus"></i>
-        {{ 'add_group'|trans({}, 'platform') }}
-    </a>
+    <a href="{{ path('claro_workspace_unregistered_role_groups', {'workspace': workspaceId, 'role': roleId} ) }}" class="btn btn-secondary">
+    {{ 'add'|trans({}, 'platform') }}</a>
 {% endif %}
 {% endmacro %}
 
@@ -61,29 +58,39 @@
         parameters = {};
         parameters.route = {};
         parameters.route.action = {};
-        parameters.route.normal = {"route": "claro_workspace_registered_group_list", "parameters": {'workspaceId': {{ workspace.getId() }} }};
-        parameters.route.search = {"route": "claro_workspace_registered_group_list_search", "parameters": {'workspaceId': {{ workspace.getId() }} }};
-        parameters.route.action.remove = {"route": "claro_workspace_delete_groups", "parameters": {'workspaceId': {{ workspace.getId() }} }, "confirmTemplate": removeGroupConfirm};
+        parameters.route.normal = {"route": "claro_workspace_role_groups", "parameters": {'workspace': {{ workspace.getId() }}, 'role': {{ role.getId() }} }};
+        parameters.route.search = {"route": "claro_workspace_role_groups_search", "parameters": {'workspace': {{ workspace.getId() }}, 'role': {{ role.getId() }} }};
+        parameters.route.action.remove = {"route": "claro_workspace_remove_role_from_group", "parameters": {'workspace': {{ workspace.getId() }}, 'role': {{ role.getId() }} }, "confirmTemplate": removeGroupConfirm};
         Claroline.Table.initialize(parameters);
     </script>
 {% endblock %}
 
 {% block section_content %}
-
-    {{
+        {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-th-list',
-                'name': 'group_management'|trans({}, 'tools'),
-                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'group_management'})
+                'icon': 'icon-cog',
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
+            },
+            {
+                'name': 'roles'|trans({}, 'platform'),
+                'href': path('claro_workspace_roles', {'workspace': workspace.getId()})
+            },
+            {
+                'name': role.getTranslationKey()|trans({}, 'platform'),
+                'href': path('claro_workspace_role_parameters', {'workspace': workspace.getId(), 'role': role.getId()})
+            },
+            {
+                'name': 'groups'|trans({}, 'platform'),
+                'href': ''
             }
         ])
     }}
 
-
     <div class="margin">
         <div class="search-bar">
-            {{ displayControls(workspace.getId()) }}
+            {{ displayControls(workspace.getId(), role.getId()) }}
             <div class="input-append pull-right">
                 <input class="input-medium" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
                 <button class="filter btn" type="button" id="search-button">
@@ -91,14 +98,13 @@
                 </button>
             </div>
         </div>
-        {{ renderPager(search, workspace.getId(), pager) }}
+        {{ renderPager(search, workspace.getId(), role.getId(), pager) }}
 
         <table class="table table-striped table-bordered table-condensed">
             <thead>
                 <th>{{ 'name'|trans({}, 'platform') }}</th>
                 <th>{{ 'role'|trans({}, 'platform') }}</th>
                 {% if app.user %}
-                    <th>{{ 'parameters'|trans({}, 'platform') }}</th>
                     <th><input type="checkbox" name="all" id="check-all-items"></input></th>
                 {% endif %}
             </thead>
@@ -115,9 +121,6 @@
                         </td>
                         {% if app.user %}
                             <td>
-                                <a class="btn btn-secondary" href=" {{ path('claro_workspace_tools_show_group_parameters', {'groupId': group.getId(), 'workspaceId': workspace.getId()} ) }}">{{ 'parameters'|trans({}, 'platform') }}</a>
-                            </td>
-                            <td>
                                 <input type="checkbox" class="chk-item" value="{{ group.id }}"></input>
                             </td>
                         {% endif %}
@@ -125,7 +128,8 @@
                 {% endfor %}
             </tbody>
         </table>
-        {{ renderPager(search, workspace.getId(), pager) }}
-        {{ displayControls(workspace.getId()) }}
+        {{ renderPager(search, workspace.getId(), role.getId(), pager) }}
+        {{ displayControls(workspace.getId(), role.getId()) }}
     </div>
 {% endblock %}
+

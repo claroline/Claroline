@@ -533,6 +533,76 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $query->getResult();
     }
 
+    public function findByRole(Role $role, $getQuery = false)
+    {
+        $dql = "
+            SELECT u FROM Claroline\CoreBundle\Entity\User u
+            JOIN u.roles r
+            WHERE r.id = :roleId
+            ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roleId', $role->getId());
+        
+        return ($getQuery) ? $query: $query->getResult();
+    }
+
+    public function findOutsidersByRole(Role $role, $getQuery = false)
+    {
+        $dql = "
+            SELECT u FROM Claroline\CoreBundle\Entity\User u
+                WHERE u.id NOT IN (SELECT u2.id FROM Claroline\CoreBundle\Entity\User u2
+                JOIN u2.roles r
+                WHERE r.id = :roleId)
+            ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roleId', $role->getId());
+
+        return ($getQuery) ? $query: $query->getResult();
+    }
+
+    public function findByRoleAndName(Role $role, $search, $getQuery = false)
+    {
+        $dql = "
+            SELECT u FROM Claroline\CoreBundle\Entity\User u
+            JOIN u.roles r
+            WHERE r.id = :roleId
+            AND (UPPER(u.username) LIKE :search
+            OR UPPER(u.lastName) LIKE :search
+            OR UPPER(u.firstName) LIKE :search)
+            ORDER BY u.id
+            ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roleId', $role->getId());
+        $search = strtoupper($search);
+        $query->setParameter('search', "%{$search}%");
+
+        return ($getQuery) ? $query: $query->getResult();
+    }
+
+    public function findOutsidersByRoleAndName(Role $role, $search, $getQuery = false)
+    {
+        $dql = "
+            SELECT u FROM Claroline\CoreBundle\Entity\User u
+                WHERE u.id NOT IN (SELECT u2.id FROM Claroline\CoreBundle\Entity\User u2
+                JOIN u2.roles r
+                WHERE r.id = :roleId)
+                AND (UPPER(u.username) LIKE :search
+                OR UPPER(u.lastName) LIKE :search
+                OR UPPER(u.firstName) LIKE :search)
+                ORDER BY u.id
+            ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roleId', $role->getId());
+        $search = strtoupper($search);
+        $query->setParameter('search', "%{$search}%");
+
+        return ($getQuery) ? $query: $query->getResult();
+    }
+
     /**
      * Returns the first name, last name, username and number of created workspaces
      * of each user who has created at least one workspace.
