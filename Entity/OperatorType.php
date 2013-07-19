@@ -36,7 +36,7 @@ class OperatorType
     private $description;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Acivity")
+     * @ORM\ManyToMany(targetEntity="\Claroline\CoreBundle\Entity\Resource\Activity")
      * @ORM\JoinTable(name="innova_operatortype_activitiy",
      *      joinColumns={@ORM\JoinColumn(name="operatortype_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="activity_id", referencedColumnName="id", unique=true)}
