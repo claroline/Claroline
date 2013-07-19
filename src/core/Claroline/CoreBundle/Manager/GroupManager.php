@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Repository\GroupRepository;
 use Claroline\CoreBundle\Pager\PagerFactory;
@@ -162,5 +163,53 @@ class GroupManager
         $query = $this->groupRepo->findByName($search, false);
 
         return $this->pagerFactory->createPager($query, $page);
+    }
+
+    public function removeRoleFromGroups(Role $role, array $groups)
+    {
+        foreach ($groups as $group) {
+            $group->removeRole($role);
+            $this->om->persist($group);
+        }
+
+        $this->om->flush();
+    }
+
+    public function addRoleToGroups(Role $role, array $groups)
+    {
+        foreach ($groups as $group) {
+            $group->addRole($role);
+            $this->om->persist($group);
+        }
+
+        $this->om->flush();
+    }
+
+    public function getGroupsByRole(Role $role, $getPager = false, $page = 1)
+    {
+         $res = $this->groupRepo->findByRole($role, $getPager);
+
+         return ($getPager) ? $this->pagerFactory->createPager($res, $page): $res;
+    }
+
+    public function getGroupsByRoleAndName(Role $role, $search, $getPager = false, $page = 1)
+    {
+        $res = $this->groupRepo->findByRoleAndName($role, $search, $getPager);
+
+        return ($getPager) ? $this->pagerFactory->createPager($res, $page): $res;
+    }
+
+    public function getGroupsOutsiderByRole(Role $role, $getPager = false, $page = 1)
+    {
+         $res = $this->groupRepo->findOutsidersByRole($role, $getPager);
+
+         return ($getPager) ? $this->pagerFactory->createPager($res, $page): $res;
+    }
+
+    public function getGroupsOutsiderByRoleAndName(Role $role, $search, $getPager = false, $page = 1)
+    {
+        $res = $this->groupRepo->findOutsidersByRoleAndName($role, $search, $getPager);
+
+        return ($getPager) ? $this->pagerFactory->createPager($res, $page): $res;
     }
 }

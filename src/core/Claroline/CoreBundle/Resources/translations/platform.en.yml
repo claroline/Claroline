@@ -437,6 +437,7 @@ users: Users
 users_connected_once: users connected at least once
 users_visits: Users' connections
 unwritable_file_exception: "The file %path% is not writable."
+unregistered: Unregistered
 validate: Validate
 view: View
 views: Views

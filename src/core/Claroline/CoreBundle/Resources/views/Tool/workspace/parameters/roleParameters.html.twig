@@ -23,8 +23,8 @@
     <div>
         <ul>
             <li> <a href="{{ path('claro_workspace_role_edit_form', {'workspace': workspace.getId(), 'role': role.getId()}) }}"> {{ 'edit'|trans({}, 'platform') }} </a></li>
-            <li> <a href="#"> {{ 'users'|trans({}, 'platform') }} </a></li>
-            <li> <a href="#"> {{ 'groups'|trans({}, 'platform') }} </a></li>
+            <li> <a href="{{ path('claro_workspace_role_users', {'workspace': workspace.getId(), 'role': role.getId()}) }}"> {{ 'users'|trans({}, 'platform') }} </a></li>
+            <li> <a href="{{ path('claro_workspace_role_groups', {'workspace': workspace.getId(), 'role': role.getId()}) }}"> {{ 'groups'|trans({}, 'platform') }} </a></li>
         </ul>
     </div>
 {% endblock %}

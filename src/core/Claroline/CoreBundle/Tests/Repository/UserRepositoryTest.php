@@ -177,4 +177,36 @@ class UserRepositoryTest extends RepositoryTestCase
     {
         $this->markTestSkipped('A slight modification of workspace fixture is needed to test this method');
     }
+
+    public function testFindByRole()
+    {
+        $users = self::$repo->findByRole(self::get('ROLE_1'));
+        $this->assertEquals(2, count($users));
+        $users = self::$repo->findByRole(self::get('ROLE_2'));
+        $this->assertEquals(1, count($users));
+    }
+
+    public function testFindOutsidersByRole()
+    {
+        $users = self::$repo->findOutsidersByRole(self::get('ROLE_1'));
+        $this->assertEquals(2, count($users));
+        $users = self::$repo->findOutsidersByRole(self::get('ROLE_2'));
+        $this->assertEquals(3, count($users));
+    }
+
+    public function testFindByRoleAndName()
+    {
+        $users = self::$repo->findByRoleAndName(self::get('ROLE_1'), 'o');
+        $this->assertEquals(2, count($users));
+        $users = self::$repo->findByRoleAndName(self::get('ROLE_1'), 'j');
+        $this->assertEquals(1, count($users));
+    }
+
+   public function testFindOutsidersByRoleAndName()
+    {
+        $users = self::$repo->findOutsidersByRoleAndName(self::get('ROLE_2'), 'j');
+        $this->assertEquals(2, count($users));
+        $users = self::$repo->findOutsidersByRoleAndName(self::get('ROLE_2'), 'b');
+        $this->assertEquals(1, count($users));
+    }
 }

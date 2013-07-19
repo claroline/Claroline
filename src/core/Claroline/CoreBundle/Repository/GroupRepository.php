@@ -174,4 +174,68 @@ class GroupRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
+    public function findByRole(Role $role, $getQuery = false)
+    {
+        $dql = "
+            SELECT g FROM Claroline\CoreBundle\Entity\Group g
+            JOIN g.roles r
+            WHERE r.id = :roleId
+            ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roleId', $role->getId());
+
+        return $getQuery ? $query: $query->getResult();
+    }
+
+    public function findOutsidersByRole(Role $role, $getQuery = false)
+    {
+        $dql = "
+            SELECT g FROM Claroline\CoreBundle\Entity\Group g
+                WHERE g.id NOT IN (SELECT g2.id FROM Claroline\CoreBundle\Entity\Group g2
+                JOIN g2.roles r
+                WHERE r.id = :roleId)
+            ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roleId', $role->getId());
+
+        return $getQuery ? $query: $query->getResult();
+    }
+
+    public function findByRoleAndName(Role $role, $name, $getQuery = false)
+    {
+        $search = strtoupper($name);
+        $dql = "
+            SELECT g FROM Claroline\CoreBundle\Entity\Group g
+            JOIN g.roles r
+            WHERE r.id = :roleId
+            AND UPPER(g.name) LIKE :search
+            ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roleId', $role->getId());
+        $query->setParameter('search', "%{$search}%");
+
+        return $getQuery ? $query: $query->getResult();
+    }
+
+    public function findOutsidersByRoleAndName(Role $role, $name, $getQuery = false)
+    {
+        $search = strtoupper($name);
+        $dql = "
+            SELECT g FROM Claroline\CoreBundle\Entity\Group g
+                WHERE g.id NOT IN (SELECT g2.id FROM Claroline\CoreBundle\Entity\Group g2
+                JOIN g2.roles r
+                WHERE r.id = :roleId)
+            AND UPPER(g.name) LIKE :search
+            ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roleId', $role->getId());
+        $query->setParameter('search', "%{$search}%");
+
+        return $getQuery ? $query: $query->getResult();
+    }
 }

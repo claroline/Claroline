@@ -172,6 +172,26 @@ class UserManager
         $this->om->flush();
     }
 
+    public function removeRoleFromUsers(Role $role, array $users)
+    {
+        foreach ($users as $user) {
+            $user->removeRole($role);
+            $this->om->persist($user);
+        }
+
+        $this->om->flush();
+    }
+
+    public function addRoleToUsers(Role $role, array $users)
+    {
+        foreach ($users as $user) {
+            $user->addRole($role);
+            $this->om->persist($user);
+        }
+
+        $this->om->flush();
+    }
+
     public function convertUsersToArray(array $users)
     {
         $content = array();
@@ -322,5 +342,33 @@ class UserManager
     public function getUserById($userId)
     {
         return $this->userRepo->find($userId);
+    }
+
+    public function getUsersByRole(Role $role, $getPager = false, $page = 1)
+    {
+         $res = $this->userRepo->findByRole($role, $getPager);
+
+         return ($getPager) ? $this->pagerFactory->createPager($res, $page): $res;
+    }
+
+    public function getUsersByRoleAndName(Role $role, $search, $getPager = false, $page = 1)
+    {
+        $res = $this->userRepo->findByRoleAndName($role, $search, $getPager);
+
+        return ($getPager) ? $this->pagerFactory->createPager($res, $page): $res;
+    }
+
+    public function getUsersOutsiderByRole(Role $role, $getPager = false, $page = 1)
+    {
+         $res = $this->userRepo->findOutsidersByRole($role, $getPager);
+
+         return ($getPager) ? $this->pagerFactory->createPager($res, $page): $res;
+    }
+
+    public function getUsersOutsiderByRoleAndName(Role $role, $search, $getPager = false, $page = 1)
+    {
+        $res = $this->userRepo->findOutsidersByRoleAndName($role, $search, $getPager);
+
+        return ($getPager) ? $this->pagerFactory->createPager($res, $page): $res;
     }
 }

@@ -418,6 +418,7 @@ type: Type
 type_s: Type(s)
 unique connections: 'Nb Cnx. uniques'
 unregister: Désinscription
+unregistered: Non inscrit
 unregistered_groups: 'Groupes non enregistrés'
 unregistered_users: 'Utilisateurs non enregistrés'
 unwritable_file_exception: "Vous n'avez pas la permission d'écrire dans le fichier %path%."
