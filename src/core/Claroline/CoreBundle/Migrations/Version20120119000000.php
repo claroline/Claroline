@@ -205,6 +205,8 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('code', 'string', array('length' => 255));
         $table->addColumn('user_id', 'integer', array('notnull' => false));
         $table->addColumn('guid', 'string', array('length' => 255));
+        $table->addColumn('self_registration', 'boolean', array('notnull' => false));
+        $table->addColumn('self_unsubscribe', 'boolean', array('notnull' => false));
         $table->addUniqueIndex(array('code'));
         $table->addUniqueIndex(array('guid'));
 

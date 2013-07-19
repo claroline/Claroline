@@ -109,6 +109,16 @@ abstract class AbstractWorkspace
      */
     protected $guid;
 
+    /**
+     * @ORM\Column(name="self_registration", type="boolean", nullable=true)
+     */
+    protected $selfRegistration;
+
+    /**
+     * @ORM\Column(name="self_unsubscribe", type="boolean", nullable=true)
+     */
+    protected $selfUnsubscribe;
+
     public function __construct()
     {
         $this->roles = new ArrayCollection();
@@ -200,5 +210,25 @@ abstract class AbstractWorkspace
     public function getGuid()
     {
         return $this->guid;
+    }
+    
+    public function setSelfRegistration($selfRegistration)
+    {
+        $this->selfRegistration = $selfRegistration;
+    }
+
+    public function getSelfRegistration()
+    {
+        return $this->selfRegistration;
+    }
+
+    public function setSelfUnsubscribe($selfUnsubscribe)
+    {
+        $this->selfUnsubscribe = $selfUnsubscribe;
+    }
+
+    public function getSelfUnsubscribe()
+    {
+        return $this->selfUnsubscribe;
     }
 }
