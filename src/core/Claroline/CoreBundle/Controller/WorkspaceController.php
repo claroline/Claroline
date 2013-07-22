@@ -115,7 +115,6 @@ class WorkspaceController extends Controller
     public function listWorkspacesByUserAction()
     {
         $this->assertIsGranted('ROLE_USER');
-        $em = $this->get('doctrine.orm.entity_manager');
         $token = $this->security->getToken();
         $user = $token->getUser();
         $roles = $this->utils->getRoles($token);
@@ -195,6 +194,39 @@ class WorkspaceController extends Controller
         return $displayable;
     }
 
+
+    /**
+     * @EXT\Route(
+     *     "/displayable",
+     *     name="claro_list_displayable_workspaces",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     *
+     * @EXT\Template()
+     *
+     * Renders the displayable workspace list.
+     *
+     * @return Response
+     */
+    public function listDisplayableWorkspacesAction()
+    {
+        $this->assertIsGranted('ROLE_USER');
+        $token = $this->security->getToken();
+        $user = $token->getUser();
+        $datas = $this->tagManager->getDatasForDisplayableWorkspaceList();
+
+        return array(
+            'user' => $user,
+            'workspaces' => $datas['workspaces'],
+            'tags' => $datas['tags'],
+            'tagWorkspaces' => $datas['tagWorkspaces'],
+            'hierarchy' => $datas['hierarchy'],
+            'rootTags' => $datas['rootTags'],
+            'displayable' => $datas['displayable']
+        );
+    }
+
     /**
      * @EXT\Route(
      *     "/new/form",
@@ -246,6 +278,7 @@ class WorkspaceController extends Controller
             $config->setWorkspaceType($type);
             $config->setWorkspaceName($form->get('name')->getData());
             $config->setWorkspaceCode($form->get('code')->getData());
+            $config->setDisplayable($form->get('displayable')->getData());
             $user = $this->security->getToken()->getUser();
             $this->workspaceManager->create($config, $user);
             $this->get('claroline.security.token_updater')->update($this->security->getToken());

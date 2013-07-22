@@ -40,6 +40,7 @@ analytics_home: Vue de l'ensemble
 analytics_connections: Visites utilisateurs
 analytics_resources: Contenu plateforme
 analytics_top: Top des activités
+available_workspaces: 'Espaces d''activités disponibles'
 by: par
 cancel: Annuler
 choose_resource_form_type: 'Type de ressource'
@@ -321,8 +322,10 @@ profile_form_platformRoles: Rôles
 profile_form_username: 'Nom d''utilisateur'
 properties: Propriétés
 public: Publique
+public_workspaces: 'Espaces d''activités publiques'
 recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'
 register: Inscription
+register_to_a_workspace: 'S''inscrire à un espace d''activités'
 registered_groups: 'Groupes enregistrés'
 registered_users: 'Utilisateurs enregistrés'
 remove_group_s_confirm_message: 'groupe(s) supprimé(s)'
@@ -453,10 +456,12 @@ workspace_delete: 'Supprimer l''espace d''activités'
 workspace_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer cet espace d''activités ?'
 workspace_delete_confirm_title: 'Confirmation de suppression'
 workspace_edit_form_code: Code
+workspace_edit_form_displayable: Publique
 workspace_edit_form_name: Nom
 workspace_edit_form_selfRegistration: 'Inscription publique'
 workspace_edit_form_selfUnregistration: 'Désinscription publique'
 workspace_form_code: Code
+workspace_form_displayable: Publique
 workspace_form_name: Nom
 workspace_form_template: Modèle
 workspace_form_type: Type

@@ -54,6 +54,11 @@ abstract class AbstractWorkspace
     protected $isPublic = true;
 
     /**
+     * @ORM\Column(name="displayable", type="boolean", nullable=true)
+     */
+    protected $displayable;
+
+    /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
      *     mappedBy="workspace"
@@ -210,6 +215,16 @@ abstract class AbstractWorkspace
     public function getGuid()
     {
         return $this->guid;
+    }
+
+    public function setDisplayable($displayable)
+    {
+        $this->displayable = $displayable;
+    }
+
+    public function isDisplayable()
+    {
+        return $this->displayable;
     }
 
     public function setSelfRegistration($selfRegistration)
