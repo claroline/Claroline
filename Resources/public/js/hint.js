@@ -1,3 +1,7 @@
+$(".form-collection-add").each(function (index) {
+    $(this).hide();
+});
+    
 //css hint
 function hintCSS() {
     //"use strict";
