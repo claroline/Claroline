@@ -315,3 +315,10 @@ infiny: Indefinite
 allQuestion: All
 creationDate: Creation Date
 frequency: Frequency
+
+#Forms
+ujm_exobundle_interactiongraphictype_document: Documents
+ujm_exobundle_interactiongraphictype_interaction_hints: Hints 
+ujm_exobundle_interactionqcmtype_choices: Choices
+ujm_exobundle_interactionqcmtype_interaction: QCM
+ujm_exobundle_interactionqcmtype_interaction_hints: Hints 
