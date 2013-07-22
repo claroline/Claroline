@@ -45,6 +45,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/frontend/fluidvids/fluidvids.js') }}"></script>
     {% if is_granted('ROLE_ADMIN') %}
         <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/js/jquery-ui-1.9.2.custom.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/home/content.js') }}"></script>
