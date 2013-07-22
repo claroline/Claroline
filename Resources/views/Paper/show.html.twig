@@ -56,7 +56,7 @@
 
             {% set interInfo = getInterTwig(interaction.id, 'InteractionQCM') %}
             {% set interQCM =  interInfo['question'] %}
-
+            {{ interQCM.sortChoices() }}
 
                 <div>
 
