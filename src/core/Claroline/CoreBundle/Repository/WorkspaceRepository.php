@@ -272,4 +272,22 @@ class WorkspaceRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+
+    /**
+     * Returns the workspaces which are visible for each user.
+     *
+     * @return array[AbstractWorkspace]
+     */
+    public function findDisplayableWorkspaces()
+    {
+        $dql = '
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            WHERE w.displayable = true
+        ';
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
 }

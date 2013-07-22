@@ -22,7 +22,7 @@
                     {% for relWorkspaceTag in tagWorkspaces[tag.id] %}
                     {% set workspace = relWorkspaceTag.getWorkspace() %}
                     <li class="row-workspace row-workspace-id-{{ workspace.getId() }}">
-                        {% set granted = is_granted('home', workspace) %}
+                        {% set granted = has_access_to_workspace(workspace.getId(), app.security.getToken()) %}
                         {% if granted == true %}
                         <a href="{{ path('claro_workspace_open',
                            {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
@@ -48,25 +48,31 @@
 {% extends 'ClarolineCoreBundle:WorkspaceTag:layout.html.twig' %}
 
 {% block section_content %}
+
     {{
         macros.breadcrumbs([
             {
                 'icon': 'icon-book',
                 'name': 'my_workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_by_user')
+            },
+            {
+                'icon': 'icon-book',
+                'name': 'public_workspaces'|trans({}, 'platform'),
                 'href': '#'
             }
         ])
     }}
 
     <div class="margin widget">
-        <a href="{{ path('claro_workspace_manage_tag') }}">
-            <button type="button" class="btn">{{ 'tags_management'|trans({}, 'platform') }}</button>
-        </a>
-        <a href="{{ path('claro_list_displayable_workspaces') }}">
-            <button type="button" class="btn">{{ 'register_to_a_workspace'|trans({}, 'platform') }}</button>
-        </a>
 
+    {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('claro_workspace_manage_admin_tag') }}">
+            <button type="button" class="btn">{{ 'admin_tags_management'|trans({}, 'platform') }}</button>
+        </a>
         <hr>
+    {% endif %}
+
         <div class="accordion" id="accordion-all">
             <div class="accordion-group">
                 <div class="accordion-heading">
@@ -76,7 +82,7 @@
                         href="#collapse-all"
                     >
                         <i class="icon-align-justify"></i>
-                        {{ 'all_my_workspaces'|trans({}, 'platform') }}
+                        {{ 'available_workspaces'|trans({}, 'platform') }}
                         <i class="icon-chevron-down pull-right"></i>
                     </a>
                 </div>
@@ -85,16 +91,16 @@
                         <ul>
                             {% for workspace in workspaces %}
                             <li class="row-workspace row-workspace-id-{{ workspace.getId() }}">
-                                {% set granted = is_granted('home', workspace) %}
+                                {% set granted = has_access_to_workspace(workspace.getId(), app.security.getToken()) %}
                                 {% if granted == true %}
-                                <a  href="{{ path('claro_workspace_open',
-                                    {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
-                                    id="link-home-{{ workspace.getId() }}"
+                                <a href="{{ path('claro_workspace_open',
+                                   {'workspaceId': workspace.getId()}) }}"
+                                   id="link-home-{{ workspace.getId() }}"
                                 >
                                 {% endif %}
-                                   <i class="icon-book"></i>
-                                   {{ workspace.getName() }}
-                                   <span class="workspace-code">({{ workspace.getCode() }})</span>
+                                <i class="icon-book"></i>
+                                {{ workspace.getName() }}
+                                <span class="workspace-code">({{ workspace.getCode() }})</span>
                                 {% if granted%}</a>{% endif %}
                             </li>
                             {% endfor %}
@@ -104,6 +110,6 @@
             </div>
         </div>
 
-        {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable) }}
+    {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable) }}
     </div>
 {% endblock %}
