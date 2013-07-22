@@ -79,13 +79,12 @@
                             </h3>
                             <div id="informations" class="collapse out">
                                 <p>
-                                    Date de création :29/05/2013 16:00<br />
-                                    Commentaires autorisés: Oui<br />
-                                    Commentaires anonymes autorisés: Non<br />
-                                    Nb d'article/pages : 5<br />
-                                    Publication automatique des billets: Non<br />
-                                    Publication automatique des commentaires: Non<br />
-                                    <i class="icon-rss-sign"></i> <span class="subscribeToRssFeedsText">S'abonner au flux du blog :</span><a href="#" id="flux_ATOM"><img src="../css/blog/images/RSS_atom.jpg" alt="Flux ATOM"></a> , <a href="#" id="flux_RSS20"><img src="../css/blog/images/RSS_2-0.jpg" alt="Flux RSS 2.0"></a> .
+                                    Date de création :{{ _resource.creationDate|date('date_format'|trans({}, 'platform')) }}<br />
+                                    Commentaires autorisés: {% if _resource.options.authorizeComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
+                                    Commentaires anonymes autorisés: {% if _resource.options.authorizeAnonymousComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
+                                    Nb d'article/pages : {{ _resource.options.postPerPage }}<br />
+                                    Publication automatique des billets: {% if _resource.options.autoPublishPost %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
+                                    Publication automatique des commentaires: {% if _resource.options.autoPublishComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
                                 </p>
                             </div>
                         </div>

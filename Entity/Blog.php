@@ -33,7 +33,7 @@ class Blog extends AbstractResource
 
     public function __construct()
     {
-        $this->posts  = new ArrayCollection();
+        $this->posts = new ArrayCollection();
     }
 
     /**
