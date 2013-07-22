@@ -34,6 +34,13 @@ class BlogController extends Controller
         $query = $postRepository
             ->createQueryBuilder('post')
             ->andWhere('post.blog = :blogId')
+        ;
+
+        if(!$this->isUserGranted("EDIT", $blog)) {
+            $query->andWhere('post.publicationDate IS NOT NULL');
+        }
+
+        $query
             ->setParameter('blogId', $blog->getId())
             ->orderBy('post.publicationDate', 'ASC')
         ;

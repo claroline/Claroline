@@ -19,9 +19,24 @@ class Controller extends BaseController
     protected function checkAccess($permission, Blog $blog)
     {
         $collection = new ResourceCollection(array($blog));
-
         if (!$this->get('security.context')->isGranted($permission, $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
+    }
+    /**
+     * @param string $permission
+     *
+     * @param Blog   $blog
+     *
+     * @return bool
+     */
+    protected function isUserGranted($permission, Blog $blog)
+    {
+        $checkPermission = false;
+        if ($this->get('security.context')->isGranted($permission, new ResourceCollection(array($blog)))) {
+            $checkPermission = true;
+        }
+
+        return $checkPermission;
     }
 }
