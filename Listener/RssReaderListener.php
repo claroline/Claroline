@@ -47,13 +47,10 @@ class RssReaderListener extends ContainerAware
 
     public function onDesktopDisplay(DisplayWidgetEvent $event)
     {
-        $repo = $this->container
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineRssReaderBundle:Config');
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $repo = $em->getRepository('ClarolineRssReaderBundle:Config');
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $widget = $this->container
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Widget\Widget')
+        $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
             ->findOneBy(array('name' => 'claroline_rssreader'));
         $rssconfig = $repo->findOneBy(array('user' => $user));
         $isDefaultConfig = $this->container
@@ -72,7 +69,16 @@ class RssReaderListener extends ContainerAware
             return;
         }
 
-        $content = $this->getRssContent($rssconfig);
+        try {
+            $content = $this->getRssContent($rssconfig);
+        } catch (\Exception $e) {
+            $em->remove($rssconfig);
+            $em->flush();
+            $event->setContent($this->container->get('translator')->trans('url_not_defined', array(), 'rss_reader'));
+            $event->stopPropagation();
+
+            return;
+        }
         $event->setContent($content);
         $event->stopPropagation();
     }
@@ -97,12 +103,14 @@ class RssReaderListener extends ContainerAware
             $form = $this->container->get('form.factory')->create(new ConfigType, new Config());
 
             $content = $this->container->get('templating')->render(
-                'ClarolineRssReaderBundle::formCreate.html.twig', array(
-                'form' => $form->createView(),
-                'workspaceId' => $workspaceId,
-                'isDefault' => $event->isDefault(),
-                'isDesktop' => false,
-                'userId' => 0,
+                'ClarolineRssReaderBundle::formCreate.html.twig',
+                array(
+                    'form' => $form->createView(),
+                    'workspaceId' => $workspaceId,
+                    'isDefault' => $event->isDefault(),
+                    'isDesktop' => false,
+                    'userId' => 0,
+                    'noCancelButton' => true
                 )
             );
         } else {
@@ -136,12 +144,14 @@ class RssReaderListener extends ContainerAware
             $form = $this->container->get('form.factory')->create(new ConfigType, new Config());
 
             $content = $this->container->get('templating')->render(
-                'ClarolineRssReaderBundle::formCreate.html.twig', array(
-                'form' => $form->createView(),
-                'workspaceId' => 0,
-                'isDefault' => $event->isDefault(),
-                'isDesktop' => true,
-                'userId' => $userId,
+                'ClarolineRssReaderBundle::formCreate.html.twig',
+                array(
+                    'form' => $form->createView(),
+                    'workspaceId' => 0,
+                    'isDefault' => $event->isDefault(),
+                    'isDesktop' => true,
+                    'userId' => $userId,
+                    'noCancelButton' => true
                 )
             );
         } else {
