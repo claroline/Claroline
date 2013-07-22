@@ -60,21 +60,28 @@ function insertStyle() {
         }
     });
 
+    if($('#ujm_exobundle_interactionqcmtype_weightResponse').is(':checked')) {
+        $('#ujm_exobundle_interactionqcmtype_weightResponse').attr('checked', true);
+        $('#newTable .ligne_choice').each(function (index) {
+            $(this).contents('td:nth-child(3)').find('input').removeAttr('disabled');
+        });
+        $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').attr('disabled', 'disabled');
+        $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').attr('disabled', 'disabled');
+    }
 
-    //Assign points by response is chiked
     $('#ujm_exobundle_interactionqcmtype_weightResponse').live('click', function () {
         if ($(this).is(':checked')) {
             $('#newTable .ligne_choice').each(function (index) {
                 $(this).contents('td:nth-child(3)').find('input').removeAttr('disabled');
             });
             $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').attr('disabled', 'disabled');
-            $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').prop('value', '');
+            $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').attr('disabled', 'disabled');
         } else {
             $('#newTable .ligne_choice').each(function (index) {
-                $(this).contents('td:nth-child(3)').find('input').attr('disabled', 'disabled');
-                $(this).contents('td:nth-child(3)').find('input').prop('value', '');
+               $(this).contents('td:nth-child(3)').find('input').attr('disabled', 'disabled');
             });
             $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').removeAttr('disabled');
+            $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').removeAttr('disabled');
         }
     });
 
@@ -232,7 +239,7 @@ function choiceCSSEdit(sourceImageDel, nbResponses) {
         $('#newTable').append('<tr class="ligne_choice" >  </tr>');
         $('#newTable .ligne_choice:last').append($(this));
     });
-    
+
     $('#newTable .ligne_choice').each(function (index) {
         $(this).append('<td class="colonne_choice" >  </td>');
         $(this).children('td').first().append($(this).children('div').children('label').first());
@@ -356,33 +363,9 @@ function choiceCSSEdit(sourceImageDel, nbResponses) {
         $(this).contents('td:nth-child(2)').hide();
     });
 
-    //vérifier si le champs Points for correct answer est remplie
-    if (!$('#ujm_exobundle_interactionqcmtype_scoreRightResponse').val()) {
-            //cocher Assign points by response
-        $('#ujm_exobundle_interactionqcmtype_weightResponse').attr('checked', true);
-        $('#newTable .ligne_choice').each(function (index) {
-            $(this).contents('td:nth-child(3)').find('input').removeAttr('disabled');
-        });
-        $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').attr('disabled', 'disabled');
-    }
-
-    $('#ujm_exobundle_interactionqcmtype_weightResponse').live('click', function () {
-        if ($(this).is(':checked')) {
-            $('#newTable .ligne_choice').each(function (index) {
-                $(this).contents('td:nth-child(3)').find('input').removeAttr('disabled');
-            });
-            $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').attr('disabled', 'disabled');
-        } else {
-            $('#newTable .ligne_choice').each(function (index) {
-                $(this).contents('td:nth-child(3)').find('input').attr('disabled', 'disabled');
-            });
-            $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').removeAttr('disabled');
-        }
-    });
-    
     if (!$('#ujm_exobundle_interactionqcmtype_weightResponse').is(':checked')) {
          /*$("*[id$='_weight']").each(function (index) {
-             
+
          });*/
         $('#newTable .ligne_choice').each(function (index) {
                 $(this).contents('td:nth-child(3)').find('input').attr('disabled', 'disabled');
