@@ -34,3 +34,6 @@
 [submodule "src/plugin/Claroline/ActivityToolBundle"]
 	path = src/plugin/Claroline/ActivityToolBundle
 	url = https://github.com/claroline/ActivityToolBundle.git
+[submodule "src/plugin/ICAP/BlogBundle"]
+	path = src/plugin/ICAP/BlogBundle
+	url = https://github.com/iCAPLyon1/BlogBundle.git
