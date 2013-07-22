@@ -97,11 +97,6 @@ class PlatformInstallCommand extends ContainerAwareCommand
         );
         $assetCommand->run($assetInput, $output);
 
-        $fileSystem->copy(
-            "{$kernel->getRootDir()}/../vendor/jms/twig-js/twig.js",
-            "{$kernel->getRootDir()}/../web/twig.js"
-        );
-
         $asseticCommand = $this->getApplication()->find('assetic:dump');
         $asseticInput = new ArrayInput(array('command' => 'assetic:dump'));
         $asseticCommand->run($asseticInput, $output);
