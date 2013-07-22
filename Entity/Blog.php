@@ -91,6 +91,22 @@ class Blog extends AbstractResource
     }
 
     /**
+     * @return array|\Claroline\CoreBundle\Entity\User[]
+     */
+    public function getAuthors()
+    {
+        $authors = array();
+
+        foreach($this->getPosts() as $post)
+        {
+            $postAuthor                           = $post->getAuthor();
+            $authors[$postAuthor->getUsername()]  = $postAuthor;
+        }
+
+        return $authors;
+    }
+
+    /**
      * @ORM\PostPersist
      */
     public function postPersist(LifecycleEventArgs $args)

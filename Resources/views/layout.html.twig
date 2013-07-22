@@ -91,7 +91,7 @@
                         <div class="well">
                             <h3>Nuage de tag</h3>
                             {{ for }}
-                            <ul class="nav nav-pills">
+                            <ul class="inline">
                                 {% for tag in all_tags() %}
                                 <li><a href="#" title="{{ tag }}">{{ tag }}</a></li>
                                 {% else %}
@@ -101,9 +101,10 @@
                         </div>
                         <div class="well">
                             <h3>Rédacteurs</h3>
-                            <ul>
-                                <li><a href="#" title="Moi">Moi</a></li>
-                                <li><a href="#" title="Toi">Toi</a></li>
+                            <ul class="inline">
+                                {% for author in _resource.authors %}
+                                <li><a href="#" title="{{ author.firstname ~ ' ' ~ author.lastname }}">{{ author.firstname ~ ' ' ~ author.lastname }}</a></li>
+                                {% endfor %}
                             </ul>
                         </div>
                         <div class="well">
