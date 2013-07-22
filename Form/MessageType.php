@@ -4,13 +4,14 @@ namespace Claroline\ForumBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class MessageType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
-            'content', 
+            'content',
             'textarea',
             array(
                 'attr' => array(
@@ -26,10 +27,12 @@ class MessageType extends AbstractType
         return 'forum_message_form';
     }
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array(
-            'translation_domain' => 'forum'
+        $resolver->setDefaults(
+            array(
+                'translation_domain' => 'forum'
+            )
         );
     }
 }

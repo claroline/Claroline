@@ -4,6 +4,7 @@ namespace Claroline\ForumBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class SubjectType extends AbstractType
 {
@@ -19,10 +20,12 @@ class SubjectType extends AbstractType
         return 'forum_subject_form';
     }
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array(
-            'translation_domain' => 'forum'
+        $resolver->setDefaults(
+            array(
+                'translation_domain' => 'forum'
+            )
         );
     }
 }
