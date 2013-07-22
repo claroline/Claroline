@@ -4,6 +4,7 @@ namespace Claroline\RssReaderBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ConfigType extends AbstractType
 {
@@ -17,10 +18,12 @@ class ConfigType extends AbstractType
         return 'rss_form';
     }
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array(
-            'translation_domain' => 'rss_reader'
+        $resolver->setDefaults(
+            array(
+                'translation_domain' => 'rss_reader'
+            )
         );
     }
 }
