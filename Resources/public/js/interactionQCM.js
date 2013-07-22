@@ -221,7 +221,7 @@ function choiceCSS(sourceImageDel) {
         $('#newTable .ligne_choice:last').contents('td:nth-child(3)').find('input').attr('disabled', 'disabled');
     }
 
-    $('td:hidden').find('input').attr('value', '1');
+    //$('td:hidden').find('input').attr('value', '1');
 
     if($('#ujm_exobundle_interactionqcmtype_typeQCM').val() == 2) {
         $('#newTable .ligne_choice').each(function (index) {
@@ -516,5 +516,6 @@ function addChoice(sourceImageDel) {
         $($container.attr('data-prototype').replace(/__name__/g, index))
     );
     $('#ujm_exobundle_interactionqcmtype_choices_' + index + '_weight').width(50);
+    $('#ujm_exobundle_interactionqcmtype_choices_'+index+'_ordre').attr("value",index+1);
     choiceCSS(sourceImageDel);
 }
