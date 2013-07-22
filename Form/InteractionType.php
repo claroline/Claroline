@@ -101,9 +101,11 @@ class InteractionType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'UJM\ExoBundle\Entity\Interaction',
-        ));
+        $resolver->setDefaults(
+            array(
+                'data_class' => 'UJM\ExoBundle\Entity\Interaction',
+            )
+        );
     }
 
     public function getName()

@@ -50,9 +50,11 @@ class CategoryType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'UJM\ExoBundle\Entity\Category',
-        ));
+        $resolver->setDefaults(
+            array(
+                'data_class' => 'UJM\ExoBundle\Entity\Category',
+            )
+        );
     }
 
     public function getName()

@@ -338,7 +338,7 @@ class exerciseServices
             ->getRepository('UJMExoBundle:ExerciseQuestion')
             ->findBy(array('exercise' => $exoID));
 
-        foreach($eqs as $eq){
+        foreach ($eqs as $eq) {
             $interaction = $this->doctrine
                 ->getManager()
                 ->getRepository('UJMExoBundle:Interaction')

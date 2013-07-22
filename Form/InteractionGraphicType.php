@@ -70,8 +70,7 @@ class InteractionGraphicType extends AbstractType
                         return $repository->createQueryBuilder('d')
                             ->where('d.user = ?1')
                             ->andwhere('d.type = \'.png\' OR d.type = \'.jpeg\' OR d.type = \'.jpg\' OR d.type = \'.gif\' OR d.type = \'.bmp\'')
-                            ->setParameter(1, $id)
-                        ;
+                            ->setParameter(1, $id);
                     },
                 )
             );
@@ -79,9 +78,11 @@ class InteractionGraphicType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'UJM\ExoBundle\Entity\InteractionGraphic',
-        ));
+        $resolver->setDefaults(
+            array(
+                'data_class' => 'UJM\ExoBundle\Entity\InteractionGraphic',
+            )
+        );
     }
 
     public function getName()

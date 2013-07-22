@@ -16,7 +16,7 @@ function SortQuestions(type, array) {
 
 function selectArrows(array) {
     // Select the matching arrows of the right array (e.g. if two arrays in one page
-    if (array == 'QuestionArray' || array == 'QuestionArrayMy'){
+    if (array == 'QuestionArray' || array == 'QuestionArrayMy') {
         upC = document.getElementById('upC');
         upTi = document.getElementById('upTi');
         upTy = document.getElementById('upTy');
@@ -44,14 +44,14 @@ function selectArrows(array) {
     }
 
     if (array == 'UserArray') {
-       upU = document.getElementById('upU');
-       upN = document.getElementById('upN');
-       upS = document.getElementById('upS');
-       upE = document.getElementById('upE');
-       downU = document.getElementById('downU');
-       downN = document.getElementById('downN');
-       downS = document.getElementById('downS');
-       downE = document.getElementById('downE');
+        upU = document.getElementById('upU');
+        upN = document.getElementById('upN');
+        upS = document.getElementById('upS');
+        upE = document.getElementById('upE');
+        downU = document.getElementById('downU');
+        downN = document.getElementById('downN');
+        downS = document.getElementById('downS');
+        downE = document.getElementById('downE');
     }
 
     if (array == 'user-table') {

@@ -5,8 +5,8 @@ var allowclose = true; // Allow the pop up to be closed
 var inputselected = false; // If the input is selected, the pop up cannot be closed
 
 // Display or not the button to upload
-list.style.display = "none";
-button.style.display = "block";
+list.style.display = 'none';
+button.style.display = 'block';
 
 
 // Resize the pop up to show all the component
@@ -20,8 +20,8 @@ window.onload = function () {
 // Put the new image into the drop-down list
 function ChangeList(idDoc, label, type, NotImageMesssage) {
 
-    list.style.display = "none";
-    button.style.display = "block";
+    list.style.display = 'none';
+    button.style.display = 'block';
 
     if (type == '.png' || type == '.jpeg' || type == '.jpg' || type == '.gif' || type =='.bmp') {
         this_select = window.opener.InterGraphForm.ujm_exobundle_interactiongraphictype_document;
@@ -41,8 +41,8 @@ function ChangeList(idDoc, label, type, NotImageMesssage) {
 
 // Display the loading message
 function DisplayMessage() {
-    list.style.display = "block";
-    button.style.display = "none";
+    list.style.display = 'block';
+    button.style.display = 'none';
 }
 
 // To check if the label of the image is valid
@@ -73,7 +73,7 @@ function ValidName(message, label, path, messageA) {
             } else {
                 uniqueName = true;
             }
-            
+
             if (correctName === true && uniqueName === true) {
                 document.getElementById('uploadForm').submit();
             }

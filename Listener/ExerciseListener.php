@@ -104,11 +104,10 @@ class ExerciseListener extends ContainerAware
     {
         //$response = $this->container->get('http_kernel')->forward('UJMExoBundle:Question:index', array());
         /*$subRequest = $this->container->get('request')->*/
-        
-        
+
         $subRequest = $this->container->get('request')->duplicate(array(), null, array("_controller" => 'UJMExoBundle:Question:index'));
         $response = $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-        
+
         $event->setContent($response->getContent());
     }
 }

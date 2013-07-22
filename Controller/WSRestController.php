@@ -92,13 +92,12 @@ class WSRestController extends Controller
                 $document->setType(strrchr($file, '.'));
                 $document->setUser($this->container->get('security.context')->getToken()->getUser());
 
-
                 if ($redirection == 1 || ($redirection == 0 && (
                         $document->getType() == '.png' ||
                         $document->getType() == '.jpeg' ||
                         $document->getType() == '.jpg' ||
                         $document->getType() == '.gif' ||
-                        $document->getType() =='.bmp'))
+                        $document->getType() == '.bmp'))
                 ) {
 
                     $em->persist($document);
@@ -143,15 +142,16 @@ class WSRestController extends Controller
                     $listDoc = $pagerDoc
                         ->setMaxPerPage($maxPage)
                         ->setCurrentPage($page2Go)
-                        ->getCurrentPageResults()
-                    ;
+                        ->getCurrentPageResults();
                 } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
                     throw $this->createNotFoundException("Cette page n'existe pas.");
                 }
 
-                return $this->render('UJMExoBundle:Question:manageImg.html.twig', array(
-                    'listDoc' => $listDoc,
-                    'pagerDoc' => $pagerDoc,
+                return $this->render(
+                    'UJMExoBundle:Question:manageImg.html.twig',
+                    array(
+                        'listDoc' => $listDoc,
+                        'pagerDoc' => $pagerDoc
                     )
                 );
             }
@@ -176,14 +176,17 @@ class WSRestController extends Controller
 
                 $list = $repository->findBy(array('user' => $user->getId()));
 
-                for ($i = 0; $i < count($list); $i++) {
-                    if ($list[$i]->getLabel() ==  $label) {
+                $end = count($list);
+
+                for ($i = 0; $i < $end; $i++) {
+                    if ($list[$i]->getLabel() == $label) {
                         $response = 'already';
                         break;
                     }
                 }
             }
         }
+
         return new Response($response);
     }
 }

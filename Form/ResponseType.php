@@ -56,9 +56,11 @@ class ResponseType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'UJM\ExoBundle\Entity\Response',
-        ));
+        $resolver->setDefaults(
+            array(
+                'data_class' => 'UJM\ExoBundle\Entity\Response',
+            )
+        );
     }
 
     public function getName()

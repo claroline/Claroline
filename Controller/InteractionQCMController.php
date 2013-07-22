@@ -134,10 +134,20 @@ class InteractionQCMController extends Controller
         if ($formHandler->processAdd()) {
             //return $this->redirect($this->generateUrl('question_show', array(
             //  'id' => $interQCM->getInteraction()->getQuestion()->getId(), 'paper' => 0)) );
+
+//            $this->form->getData()
+
+            $category2Find = $interQCM->getInteraction()->getQuestion()->getCategory();
+            $title2Find = $interQCM->getInteraction()->getQuestion()->getTitle();
+
             if ($exoID == -1) {
-                return $this->redirect($this->generateUrl('ujm_question_index'));
+                return $this->redirect($this->generateUrl('ujm_question_index', array(
+                    'category2Find' => $category2Find, 'title2Find' => $title2Find))
+                );
             } else {
-                return $this->redirect($this->generateUrl('ujm_exercise_questions', array('id' => $exoID)));
+                return $this->redirect($this->generateUrl('ujm_exercise_questions', array(
+                    'id' => $exoID, 'category2Find' => $category2Find, 'title2Find' => $title2Find))
+                );
             }
         }
 
@@ -240,7 +250,7 @@ class InteractionQCMController extends Controller
         $em->remove($entity);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('ujm_question_index', array('pageNow'=> $pageNow)));
+        return $this->redirect($this->generateUrl('ujm_question_index', array('pageNow' => $pageNow)));
     }
 
     private function createDeleteForm($id)

@@ -89,6 +89,7 @@ class DocumentRepository extends EntityRepository
              $query = $this->_em->createQuery($dql)
                 ->setParameter('search', "%{$labelToFind}%");
         }
+
         return $query->getResult();
     }
 }

@@ -109,9 +109,11 @@ class InteractionQCMType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'UJM\ExoBundle\Entity\InteractionQCM',
-        ));
+        $resolver->setDefaults(
+            array(
+                'data_class' => 'UJM\ExoBundle\Entity\InteractionQCM',
+            )
+        );
     }
 
     public function getName()

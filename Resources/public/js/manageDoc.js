@@ -14,9 +14,9 @@ function ChangeName(oldname) {
         document.getElementById('oldName').value = oldname;
     } else {
         document.getElementById('UpdateName').style.display = 'none';
-        document.getElementById('newlabel').value = "";
+        document.getElementById('newlabel').value = '';
         document.getElementById('updateSubmit').disabled = false;
-        document.getElementById('oldName').value = "";
+        document.getElementById('oldName').value = '';
     }
 }
 
@@ -58,12 +58,12 @@ function sortDocument(type, path, page) {
         },
         cache: false,
         success: function (data) {
-          document.getElementById('sorting').innerHTML = data;
-       }
+            document.getElementById('sorting').innerHTML = data;
+        }
     });
 }
 
-function searchDoc(path, page){
+function searchDoc(path, page) {
 
     var labelToFind = document.getElementById('labelToFind').value;
 
@@ -76,7 +76,7 @@ function searchDoc(path, page){
         },
         cache: false,
         success: function (data) {
-          document.getElementById('sorting').innerHTML = data;
-       }
+            document.getElementById('sorting').innerHTML = data;
+        }
     });
 }

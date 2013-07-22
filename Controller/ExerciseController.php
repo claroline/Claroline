@@ -212,7 +212,10 @@ class ExerciseController extends Controller
             }
 
             if ($category2Find != '' && $title2Find != '' && $category2Find != 'z' && $title2Find != 'z') {
-                $i = 1 ; $pos = 0 ; $temp = 0;
+                $i = 1 ;
+                $pos = 0 ;
+                $temp = 0;
+
                 foreach ($Interactions as $interaction) {
                     if ($interaction->getQuestion()->getCategory() == $category2Find) {
                         $temp = $i;
@@ -240,14 +243,12 @@ class ExerciseController extends Controller
                     $interactions = $pagerQuestion
                         ->setMaxPerPage($max)
                         ->setCurrentPage($page)
-                        ->getCurrentPageResults()
-                    ;
+                        ->getCurrentPageResults();
                 } else {
                     $interactions = $pagerQuestion
                         ->setMaxPerPage($max)
                         ->setCurrentPage($pageNow)
-                        ->getCurrentPageResults()
-                    ;
+                        ->getCurrentPageResults();
                 }
             } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
                 throw $this->createNotFoundException("Cette page n'existe pas.");
@@ -311,13 +312,14 @@ class ExerciseController extends Controller
                 ->getRepository('UJMExoBundle:Interaction')
                 ->getUserInteractionImport($this->getDoctrine()->getManager(), $uid, $exoID);
 
-
             $shared = $em->getRepository('UJMExoBundle:Share')
                     ->getUserInteractionSharedImport($exoID, $uid, $em);
 
             $SharedWithMe = array();
 
-            for ($i = 0; $i < count($shared); $i++) {
+            $end = count($shared);
+
+            for ($i = 0; $i < $end; $i++) {
                 $SharedWithMe[] = $em->getRepository('UJMExoBundle:Interaction')
                     ->findOneBy(array('question' => $shared[$i]->getQuestion()->getId()));
             }
@@ -336,15 +338,13 @@ class ExerciseController extends Controller
                 $interactions = $pagerfantaMy
                     ->setMaxPerPage($max)
                     ->setCurrentPage($pagerMy)
-                    ->getCurrentPageResults()
-                ;
+                    ->getCurrentPageResults();
 
                 // Test if my shared questions array exists (try) and affects the matching results (which page, how many per page ...)
                 $sharedWithMe = $pagerfantaShared
                     ->setMaxPerPage($max)
                     ->setCurrentPage($pagerShared)
-                    ->getCurrentPageResults()
-                ;
+                    ->getCurrentPageResults();
             } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
                 // If page don't exist
                 throw $this->createNotFoundException("Cette page n'existe pas.");
@@ -355,6 +355,10 @@ class ExerciseController extends Controller
             } else {
                 // If new item > max per page, display next page
                 $rest = $nbItem % $maxPage;
+
+                if ($nbItem == 0) {
+                    $page2Go = 0;
+                }
 
                 if ($rest == 0) {
                     $page2Go += 1;
@@ -408,8 +412,13 @@ class ExerciseController extends Controller
 
             $em->flush();
 
-            return $this->redirect($this->generateUrl('ujm_exercise_questions', array(
-                'id' => $exoID, 'pageNow' => $page2go))
+            return $this->redirect($this->generateUrl(
+                'ujm_exercise_questions',
+                    array(
+                        'id' => $exoID,
+                        'pageNow' => $page2go
+                    )
+                )
             );
         } else {
             return $this->redirect($this->generateUrl('ujm_exercise_import_question', array('exoID' => $exoID)));
@@ -440,8 +449,13 @@ class ExerciseController extends Controller
 
             $em->flush();
 
-            return $this->redirect($this->generateUrl('ujm_exercise_questions', array(
-                'id' => $exoID, 'pageNow' => $page2go))
+            return $this->redirect($this->generateUrl(
+                    'ujm_exercise_questions',
+                    array(
+                        'id' => $exoID,
+                        'pageNow' => $page2go
+                    )
+                )
             );
         } else {
             return $this->redirect($this->generateUrl('ujm_exercise_import_question', array('exoID' => $exoID)));
@@ -476,8 +490,13 @@ class ExerciseController extends Controller
             }
         }
 
-        return $this->redirect($this->generateUrl('ujm_exercise_questions', array(
-            'id' => $exoID, 'pageNow'=>$pageNow))
+        return $this->redirect($this->generateUrl(
+                'ujm_exercise_questions',
+                array(
+                    'id' => $exoID,
+                    'pageNow' => $pageNow
+                )
+            )
         );
     }
 
@@ -504,7 +523,7 @@ class ExerciseController extends Controller
             $tabOrderInter = array();
 
             $dql = 'SELECT max(p.numPaper) FROM UJM\ExoBundle\Entity\Paper p '
-                 . 'WHERE p.exercise='.$id.' AND p.user='.$uid;
+                . 'WHERE p.exercise='.$id.' AND p.user='.$uid;
             $query = $em->createQuery($dql);
             $maxNumPaper = $query->getResult();
 
@@ -632,7 +651,7 @@ class ExerciseController extends Controller
 
         if ($numQuestionToDisplayed == 'finish') {
             return $this->finishExercise();
-        } elseif ($numQuestionToDisplayed == 'interupt') {
+        } else if ($numQuestionToDisplayed == 'interupt') {
             return $this->interuptExercise();
         } else {
             $interactionToDisplayedID = $tabOrderInter[$numQuestionToDisplayed - 1];
@@ -661,42 +680,42 @@ class ExerciseController extends Controller
 
             $marks = $this->container->get('ujm.exercise_services')->getExerciseHistoMarks($exerciseId);
 
-            $tabMarks= array();
+            $tabMarks = array();
 
             $scoreList = '';
-            foreach($marks as $mark){
-                $score = round(($mark["noteExo"]/$exoScoreMax) * 20, 2);
 
-                if(isset($tabMarks[(string)$score])){
-                    $tabMarks[(string)$score] += 1;
-                } else{
-                    if($scoreList == '')
-                    {
-                        $scoreList = (string)$score;
+            foreach ($marks as $mark) {
+                $score = round(($mark["noteExo"] / $exoScoreMax) * 20, 2);
+
+                if (isset($tabMarks[(string) $score])) {
+                    $tabMarks[(string) $score] += 1;
+                } else {
+                    if ($scoreList == '') {
+                        $scoreList = (string) $score;
                     } else {
-                        $scoreList .= ','.(string)$score;
+                        $scoreList .= ','.(string) $score;
                     }
-                    $tabMarks[(string)$score] = 1;
+                    $tabMarks[(string) $score] = 1;
 
                 }
             }
 
-            if(max($tabMarks) > 4){
+            if (max($tabMarks) > 4) {
                 $maxY = max($tabMarks);
             }
 
             $frequencyMarks = implode(",", $tabMarks);//echo $frequencyMarks;die();
 
             return $this->render(
-                    'UJMExoBundle:Exercise:docimology.html.twig',
-                    array(
-                        'workspace'      => $workspace,
-                        'exoID'          => $exerciseId,
-                        'scoreList'      => $scoreList,
-                        'frequencyMarks' => $frequencyMarks,
-                        'maxY'           => $maxY
-                    )
-                );
+                'UJMExoBundle:Exercise:docimology.html.twig',
+                array(
+                    'workspace'      => $workspace,
+                    'exoID'          => $exerciseId,
+                    'scoreList'      => $scoreList,
+                    'frequencyMarks' => $frequencyMarks,
+                    'maxY'           => $maxY
+                )
+            );
         } else {
             return $this->redirect($this->generateUrl('ujm_exercise_open'));
         }

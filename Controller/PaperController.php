@@ -76,9 +76,9 @@ class PaperController extends Controller
             $exoAdmin = true;
         }
 
-//        if (count($subscription) < 1) {
-//            return $this->redirect($this->generateUrl('exercise_show', array('id' => $exoID)));
-//        }
+        /*if (count($subscription) < 1) {
+            return $this->redirect($this->generateUrl('exercise_show', array('id' => $exoID)));
+        }*/
 
         if ($exoAdmin === true) {
             $paper = $this->getDoctrine()
@@ -99,11 +99,10 @@ class PaperController extends Controller
         $pagerfanta = new Pagerfanta($adapter);
 
         try {
-           $papers = $pagerfanta
+            $papers = $pagerfanta
                 ->setMaxPerPage($max)
                 ->setCurrentPage($page)
-                ->getCurrentPageResults()
-            ;
+                ->getCurrentPageResults();
         } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
             throw $this->createNotFoundException("Cette page n'existe pas.");
         }
@@ -287,11 +286,14 @@ class PaperController extends Controller
             (($paper->getExercise()->getCorrectionMode() == 2) &&
             ($paper->getExercise()->getMaxAttemps() <= $this->container->get('UJM_Exo.exerciseServices')->getNbPaper($user->getId(),
             $paper->getExercise()->getId())
-            )))) {
-                $display = 'all';
+            ))
+            )
+        ) {
+            $display = 'all';
         } else if (($user->getId() == $paper->getUser()->getId()) && ($paper->getExercise()->getMarkMode() == 2)) {
             $display = 'score';
         }
+
         return $display;
     }
 }

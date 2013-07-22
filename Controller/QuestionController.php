@@ -131,13 +131,17 @@ class QuestionController extends Controller
 
         $SharedWithMe = array();
 
-        for ($i = 0; $i < count($shared); $i++) {
+        $end = count($shared);
+
+        for ($i = 0; $i < $end; $i++) {
             $SharedWithMe[] = $em->getRepository('UJMExoBundle:Interaction')
                 ->findOneBy(array('question' => $shared[$i]->getQuestion()->getId()));
         }
 
         if ($category2Find != '' && $title2Find != '' && $category2Find != 'z' && $title2Find != 'z') {
-            $i = 1 ; $pos = 0 ; $temp = 0;
+            $i = 1 ;
+            $pos = 0 ;
+            $temp = 0;
             foreach ($Interactions as $interaction) {
                 if ($interaction->getQuestion()->getCategory() == $category2Find) {
                     $temp = $i;
@@ -171,22 +175,19 @@ class QuestionController extends Controller
                 $interactions = $pagerfantaMy
                     ->setMaxPerPage($max)
                     ->setCurrentPage($pagerMy)
-                    ->getCurrentPageResults()
-                ;
+                    ->getCurrentPageResults();
             } else {
                 $interactions = $pagerfantaMy
                     ->setMaxPerPage($max)
                     ->setCurrentPage($pageNow)
-                    ->getCurrentPageResults()
-                ;
+                    ->getCurrentPageResults();
             }
 
             // Test if my shared questions array exists (try) and affects the matching results (which page, how many per page ...)
             $sharedWithMe = $pagerfantaShared
                 ->setMaxPerPage($max)
                 ->setCurrentPage($pagerShared)
-                ->getCurrentPageResults()
-            ;
+                ->getCurrentPageResults();
         } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
             // If page don't exist
             throw $this->createNotFoundException("Cette page n'existe pas.");
@@ -382,9 +383,9 @@ class QuestionController extends Controller
                         ->getRepository('UJMExoBundle:InteractionGraphic')
                         ->getInteractionGraphic($interaction[0]->getId());
 
-                    $position = $em->getRepository(
-                        'UJMExoBundle:Coords')->findBy(array(
-                        'interactionGraphic' => $interactionGraph[0]->getId())
+                    $position = $em->getRepository('UJMExoBundle:Coords')->findBy(
+                        array('interactionGraphic' => $interactionGraph[0]->getId()
+                        )
                     );
 
                     $editForm = $this->createForm(
@@ -521,7 +522,7 @@ class QuestionController extends Controller
                     return $this->forward(
                         'UJMExoBundle:InteractionQCM:delete', array(
                             'id' => $interactionQCM[0]->getId(),
-                            'pageNow'=> $pageNow
+                            'pageNow' => $pageNow
                         )
                     );
 
@@ -534,7 +535,7 @@ class QuestionController extends Controller
                     return $this->forward(
                         'UJMExoBundle:InteractionGraphic:delete', array(
                             'id' => $interactionGraph[0]->getId(),
-                            'pageNow'=> $pageNow
+                            'pageNow' => $pageNow
                         )
                     );
 
@@ -547,7 +548,7 @@ class QuestionController extends Controller
                     return $this->forward(
                         'UJMExoBundle:InteractionHole:delete', array(
                             'id' => $interactionHole[0]->getId(),
-                            'pageNow'=> $pageNow
+                            'pageNow' => $pageNow
                         )
                     );
 
@@ -699,8 +700,7 @@ class QuestionController extends Controller
                 $userList = $pagerUserSearch
                     ->setMaxPerPage($max)
                     ->setCurrentPage($page)
-                    ->getCurrentPageResults()
-                ;
+                    ->getCurrentPageResults();
             } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
                 throw $this->createNotFoundException("Cette page n'existe pas.");
             }
@@ -712,7 +712,8 @@ class QuestionController extends Controller
                 'pagerUserSearch' => $pagerUserSearch,
                 'search' => $search,
                 'questionID' => $questionID
-            ));
+                )
+            );
 
             // If request is ajax (first display of the first search result (page = 1))
             if ($request->isXmlHttpRequest()) {
@@ -735,7 +736,8 @@ class QuestionController extends Controller
             return $this->render(
                 'UJMExoBundle:Question:search.html.twig', array(
                 'userList' => '',
-            ));
+                )
+            );
         }
     }
 
@@ -795,15 +797,16 @@ class QuestionController extends Controller
             $listDoc = $pagerDoc
                 ->setMaxPerPage($max)
                 ->setCurrentPage($page)
-                ->getCurrentPageResults()
-            ;
+                ->getCurrentPageResults();
         } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
             throw $this->createNotFoundException("Cette page n'existe pas.");
         }
 
-        return $this->render('UJMExoBundle:Question:manageImg.html.twig', array(
-            'listDoc' => $listDoc,
-            'pagerDoc' => $pagerDoc
+        return $this->render(
+            'UJMExoBundle:Question:manageImg.html.twig',
+            array(
+                'listDoc' => $listDoc,
+                'pagerDoc' => $pagerDoc
             )
         );
     }
@@ -854,15 +857,16 @@ class QuestionController extends Controller
                 $listDoc = $pagerDoc
                     ->setMaxPerPage($maxPage)
                     ->setCurrentPage($pageNow)
-                    ->getCurrentPageResults()
-                ;
+                    ->getCurrentPageResults();
             } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
                 throw $this->createNotFoundException("Cette page n'existe pas.");
             }
 
-            return $this->render('UJMExoBundle:Question:manageImg.html.twig', array(
-                'listDoc' => $listDoc,
-                'pagerDoc' => $pagerDoc,
+            return $this->render(
+                'UJMExoBundle:Question:manageImg.html.twig',
+                array(
+                    'listDoc' => $listDoc,
+                    'pagerDoc' => $pagerDoc,
                 )
             );
 
@@ -876,7 +880,9 @@ class QuestionController extends Controller
             $page = $request->query->get('page', 1);
             $show = $request->query->get('show', 0);
 
-            for ($i = 0; $i < count($entity); $i++) {
+            $end = count($entity);
+
+            for ($i = 0; $i < $end; $i++) {
 
                 $response = $em->getRepository('UJMExoBundle:Response')->findBy(
                     array('interaction' => $entity[$i]->getInteraction()->getId())
@@ -906,23 +912,24 @@ class QuestionController extends Controller
                 $entities = $pagerDelDoc
                     ->setMaxPerPage($max)
                     ->setCurrentPage($page)
-                    ->getCurrentPageResults()
-                ;
+                    ->getCurrentPageResults();
             } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
                 throw $this->createNotFoundException("Cette page n'existe pas.");
             }
 
-            return $this->render('UJMExoBundle:Question:safeDelete.html.twig', array(
-                'listGraph' => $entities,
-                'label' => $label,
-                'questionWithResponse' => $questionWithResponse,
-                'linkpaper' => $linkPaper,
-                'dontdisplay' => $dontdisplay,
-                'pagerDelDoc' => $pagerDelDoc,
-                'pageNow' => $pageNow,
-                'maxPage' => $maxPage,
-                'nbItem' => $nbItem,
-                'show' => $show
+            return $this->render(
+                'UJMExoBundle:Question:safeDelete.html.twig',
+                array(
+                    'listGraph' => $entities,
+                    'label' => $label,
+                    'questionWithResponse' => $questionWithResponse,
+                    'linkpaper' => $linkPaper,
+                    'dontdisplay' => $dontdisplay,
+                    'pagerDelDoc' => $pagerDelDoc,
+                    'pageNow' => $pageNow,
+                    'maxPage' => $maxPage,
+                    'nbItem' => $nbItem,
+                    'show' => $show
                 )
             );
         }
@@ -946,7 +953,9 @@ class QuestionController extends Controller
 
         $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->findBy(array('document' => $listDoc));
 
-        for ($i = 0; $i < count($entity); $i++) {
+        $end = count($entity);
+
+        for ($i = 0; $i < $end; $i++) {
             $em->remove($entity[$i]);
         }
 
@@ -1007,8 +1016,7 @@ class QuestionController extends Controller
                 $listDocSort = $pagerSortDoc
                     ->setMaxPerPage($max)
                     ->setCurrentPage($page)
-                    ->getCurrentPageResults()
-                ;
+                    ->getCurrentPageResults();
             } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
                 throw $this->createNotFoundException("Cette page n'existe pas.");
             }
@@ -1021,7 +1029,8 @@ class QuestionController extends Controller
                 'labelToFind' => $searchLabel,
                 'whichAction' => 'sort',
                 'doctype' => $type
-            ));
+                )
+            );
 
             // If request is ajax (first display of the first search result (page = 1))
             if ($request->isXmlHttpRequest()) {
@@ -1034,14 +1043,16 @@ class QuestionController extends Controller
                 return $this->render(
                     'UJMExoBundle:Question:manageImg.html.twig', array(
                     'divResultSearch' => $divResultSearch
-                ));
+                    )
+                );
             }
         } else {
             return $this->render(
                 'UJMExoBundle:Question:sortDoc.html.twig', array(
                 'listFindDoc' => '',
                 'whichAction' => 'sort'
-            ));
+                )
+            );
         }
     }
 
@@ -1071,8 +1082,7 @@ class QuestionController extends Controller
                 $listFindDoc = $pagerFindDoc
                     ->setMaxPerPage($max)
                     ->setCurrentPage($page)
-                    ->getCurrentPageResults()
-                ;
+                    ->getCurrentPageResults();
             } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
                 throw $this->createNotFoundException("Cette page n'existe pas.");
             }
@@ -1084,7 +1094,8 @@ class QuestionController extends Controller
                 'pagerFindDoc' => $pagerFindDoc,
                 'labelToFind' => $labelToFind,
                 'whichAction' => 'search'
-            ));
+                )
+            );
 
             // If request is ajax (first display of the first search result (page = 1))
             if ($request->isXmlHttpRequest()) {
@@ -1097,14 +1108,16 @@ class QuestionController extends Controller
                 return $this->render(
                     'UJMExoBundle:Question:manageImg.html.twig', array(
                     'divResultSearch' => $divResultSearch
-                ));
+                    )
+                );
             }
         } else {
             return $this->render(
                 'UJMExoBundle:Question:sortDoc.html.twig', array(
                 'listFindDoc' => '',
                 'whichAction' => 'search'
-            ));
+                )
+            );
         }
     }
 
@@ -1129,7 +1142,9 @@ class QuestionController extends Controller
             $MatchingName = $em->getRepository('ClarolineCoreBundle:User')->findByName($UserName);
             $question = $em->getRepository('UJMExoBundle:Question')->findOneBy(array('id' => $QuestionID));
 
-            for ($i = 0; $i < count($MatchingName); $i++) {
+            $end = count($MatchingName);
+
+            for ($i = 0; $i < $end; $i++) {
                 if ($MatchingName[$i]->getFirstName() == $UserFname) {
                     $user = $MatchingName[$i];
                     break;
@@ -1138,7 +1153,7 @@ class QuestionController extends Controller
 
             // Share the question
             $share = new Share($user, $question);
-            $share->setAllowToModify(0); // false
+            $share->setAllowToModify(0); // False
 
             if ($creator->getId() == $user->getId()) {
                 $self = true;
@@ -1152,7 +1167,8 @@ class QuestionController extends Controller
             if ($this->alreadySharedAction($share, $em) == false && $self == false) {
                 $em->persist($share);
                 $em->flush();
-            return new \Symfony\Component\HttpFoundation\Response('no;'.$this->generateUrl('ujm_question_index'));
+
+                return new \Symfony\Component\HttpFoundation\Response('no;'.$this->generateUrl('ujm_question_index'));
             } else {
                 return new \Symfony\Component\HttpFoundation\Response($message);
             }
@@ -1168,8 +1184,12 @@ class QuestionController extends Controller
         $alreadyShared = $em->getRepository('UJMExoBundle:Share')->findAll();
         $already = false;
 
-        for ($i = 0; $i < count($alreadyShared); $i++) {
-            if ($alreadyShared[$i]->getUser() == $ToShare->getUser() && $alreadyShared[$i]->getQuestion() == $ToShare->getQuestion()) {
+        $end = count($alreadyShared);
+
+        for ($i = 0; $i < $end; $i++) {
+            if ($alreadyShared[$i]->getUser() == $ToShare->getUser() &&
+                $alreadyShared[$i]->getQuestion() == $ToShare->getQuestion()
+            ) {
                $already = true;
                break;
             }
@@ -1228,7 +1248,9 @@ class QuestionController extends Controller
                     case 'Category':
                         $Questions = $QuestionRepository->findByCategory($user->getId(), $whatToFind);
 
-                        for ($i = 0; $i < count($Questions); $i++) {
+                        $end = count($Questions);
+
+                        for ($i = 0; $i < $end; $i++) {
                             $ListQuestions[] = $InteractionRepository->findOneBy(array('question' => $Questions[$i]->getId()));
                         }
                         break;
@@ -1238,9 +1260,11 @@ class QuestionController extends Controller
                         break;
 
                     case 'Title':
-                         $Questions = $QuestionRepository->findByTitle($user->getId(), $whatToFind);
+                        $Questions = $QuestionRepository->findByTitle($user->getId(), $whatToFind);
 
-                        for ($i = 0; $i < count($Questions); $i++) {
+                        $end = count($Questions);
+
+                        for ($i = 0; $i < $end; $i++) {
                             $ListQuestions[] = $InteractionRepository->findOneBy(array('question' => $Questions[$i]->getId()));
                         }
                         break;
@@ -1279,8 +1303,7 @@ class QuestionController extends Controller
                     $listQuestions = $pagerSearch
                         ->setMaxPerPage($max)
                         ->setCurrentPage($page)
-                        ->getCurrentPageResults()
-                    ;
+                        ->getCurrentPageResults();
                 } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
                     throw $this->createNotFoundException("Cette page n'existe pas.");
                 }
@@ -1295,7 +1318,8 @@ class QuestionController extends Controller
                     'whatToFind'  => $whatToFind,
                     'questionWithResponse' => $questionWithResponse,
                     'alreadyShared' => $alreadyShared
-                ));
+                    )
+                );
 
                 // If request is ajax (first display of the first search result (page = 1))
                 if ($request->isXmlHttpRequest()) {
@@ -1308,7 +1332,8 @@ class QuestionController extends Controller
                     return $this->render(
                         'UJMExoBundle:Question:searchQuestion.html.twig', array(
                         'divResultSearch' => $divResultSearch
-                    ));
+                        )
+                    );
                 }
             // Shared with user's database
             } else if ($where == 'shared') {
@@ -1317,7 +1342,9 @@ class QuestionController extends Controller
                         $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
                             ->findByCategoryShared($user->getId(), $whatToFind);
 
-                        for ($i = 0; $i < count($sharedQuestion); $i++) {
+                        $end = count($sharedQuestion);
+
+                        for ($i = 0; $i < $end; $i++) {
                             $ListQuestions[] = $em->getRepository('UJMExoBundle:Interaction')
                                 ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
                         }
@@ -1327,7 +1354,9 @@ class QuestionController extends Controller
                         $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
                             ->findByTypeShared($user->getId(), $whatToFind);
 
-                        for ($i = 0; $i < count($sharedQuestion); $i++) {
+                        $end = count($sharedQuestion);
+
+                        for ($i = 0; $i < $end; $i++) {
                             $ListQuestions[] = $em->getRepository('UJMExoBundle:Interaction')
                                 ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
                         }
@@ -1337,17 +1366,21 @@ class QuestionController extends Controller
                         $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
                             ->findByTitleShared($user->getId(), $whatToFind);
 
-                        for ($i = 0; $i < count($sharedQuestion); $i++) {
+                        $end = count($sharedQuestion);
+
+                        for ($i = 0; $i < $end; $i++) {
                             $ListQuestions[] = $em->getRepository('UJMExoBundle:Interaction')
                                 ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
                         }
                         break;
 
-                     case 'Contain':
+                    case 'Contain':
                         $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
                             ->findByContainShared($user->getId(), $whatToFind);
 
-                        for ($i = 0; $i < count($sharedQuestion); $i++) {
+                        $end = count($sharedQuestion);
+
+                        for ($i = 0; $i < $end; $i++) {
                             $ListQuestions[] = $em->getRepository('UJMExoBundle:Interaction')
                                 ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
                         }
@@ -1362,8 +1395,7 @@ class QuestionController extends Controller
                     $listQuestions = $pagerSearch
                         ->setMaxPerPage($max)
                         ->setCurrentPage($page)
-                        ->getCurrentPageResults()
-                    ;
+                        ->getCurrentPageResults();
                 } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
                     throw $this->createNotFoundException("Cette page n'existe pas.");
                 }
@@ -1376,7 +1408,8 @@ class QuestionController extends Controller
                     'pagerSearch' => $pagerSearch,
                     'type'        => $type,
                     'whatToFind'  => $whatToFind
-                ));
+                    )
+                );
 
                 // If request is ajax (first display of the first search result (page = 1))
                 if ($request->isXmlHttpRequest()) {
@@ -1389,14 +1422,16 @@ class QuestionController extends Controller
                     return $this->render(
                         'UJMExoBundle:Question:searchQuestion.html.twig', array(
                         'divResultSearch' => $divResultSearch
-                    ));
+                        )
+                    );
                 }
             }
         } else {
             return $this->render(
                 'UJMExoBundle:Question:SearchQuestionType.html.twig', array(
                 'listQuestions' => '',
-            ));
+                )
+            );
         }
     }
 }

@@ -51,9 +51,11 @@ class TypeQCMType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'UJM\ExoBundle\Entity\TypeQCM',
-        ));
+        $resolver->setDefaults(
+            array(
+                'data_class' => 'UJM\ExoBundle\Entity\TypeQCM',
+            )
+        );
     }
 
     public function getName()

@@ -174,12 +174,22 @@ class InteractionGraphicController extends Controller
             $title2Find = $interGraph->getInteraction()->getQuestion()->getTitle();
 
             if ($exoID == -1) {
-                return $this->redirect($this->generateUrl('ujm_question_index', array(
-                    'category2Find' => $category2Find, 'title2Find' => $title2Find))
+                return $this->redirect($this->generateUrl(
+                    'ujm_question_index', array(
+                        'category2Find' => $category2Find,
+                        'title2Find' => $title2Find
+                        )
+                    )
                 );
             } else {
-                return $this->redirect($this->generateUrl('ujm_exercise_questions', array(
-                    'id' => $exoID, 'category2Find' => $category2Find, 'title2Find' => $title2Find))
+                return $this->redirect($this->generateUrl(
+                    'ujm_exercise_questions',
+                    array(
+                        'id' => $exoID,
+                        'category2Find' => $category2Find,
+                        'title2Find' => $title2Find
+                        )
+                    )
                 );
             }
         }
@@ -230,7 +240,7 @@ class InteractionGraphicController extends Controller
      */
     public function updateAction($id)
     {
-        $originalHints=array();
+        $originalHints = array();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -298,10 +308,9 @@ class InteractionGraphicController extends Controller
             }
 
             foreach ($CoordsToDel as $ctd) {
-
-            // if you wanted to delete the Hint entirely, you can also do that
-            $em->remove($ctd);
-        }
+                // if you wanted to delete the Hint entirely, you can also do that
+                $em->remove($ctd);
+            }
 
             for ($i = 0; $i < $lengthCoord; $i++) {
                 $em->persist($allCoords[$i]);
@@ -391,7 +400,7 @@ class InteractionGraphicController extends Controller
             ${'co'.$i}->setInteractionGraphic($interGraph);
             ${'co'.$i}->setSize(${'size'.$i});
 
-            $result[$i]=${'co'.$i};
+            $result[$i] = ${'co'.$i};
         }
 
         return $result;
