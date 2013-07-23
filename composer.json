@@ -19,7 +19,8 @@
         "doctrine/migrations": "*"
     },
     "require-dev": {
-        "jdorn/sql-formatter": "~1.0"
+        "jdorn/sql-formatter": "~1.0",
+        "mockery/mockery": "dev-master@dev"
     },
     "autoload": {
         "psr-0": { "Claroline\\MigrationBundle": "" }
