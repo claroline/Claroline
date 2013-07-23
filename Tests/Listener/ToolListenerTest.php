@@ -13,20 +13,20 @@ class ToolListenerTest extends MockeryTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->container = m::mock('Symfony\Component\DependencyInjection\ContainerInterface');
+        $this->container = $this->mock('Symfony\Component\DependencyInjection\ContainerInterface');
         $this->toolListener = new ToolListener();
         $this->toolListener->setContainer($this->container);
     }
 
     public function testFetchActivitiesDatasForDesktopTool()
     {
-        $em = m::mock('Doctrine\ORM\EntityManager');
-        $sc = m::mock('Symfony\Component\Security\Core\SecurityContext');
-        $ut = m::mock('Claroline\CoreBundle\Library\Security\Utilities');
-        $token = m::mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
-        $activityRepo = m::mock('Claroline\CoreBundle\Repository\ActivityRepository');
-        $resourceRepo = m::mock('Claroline\CoreBundle\Repository\AbstractResourceRepository');
-        $startDate = m::mock('\DateTime');
+        $em = $this->mock('Doctrine\ORM\EntityManager');
+        $sc = $this->mock('Symfony\Component\Security\Core\SecurityContext');
+        $ut = $this->mock('Claroline\CoreBundle\Library\Security\Utilities');
+        $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $activityRepo = $this->mock('Claroline\CoreBundle\Repository\ActivityRepository');
+        $resourceRepo = $this->mock('Claroline\CoreBundle\Repository\AbstractResourceRepository');
+        $startDate = $this->mock('\DateTime');
 
         $this->container->shouldReceive('get')
             ->with('doctrine.orm.entity_manager')
@@ -139,15 +139,15 @@ class ToolListenerTest extends MockeryTestCase
 
     public function testFetchActivitiesDatasForWorkspaceTool()
     {
-        $em = m::mock('Doctrine\ORM\EntityManager');
-        $sc = m::mock('Symfony\Component\Security\Core\SecurityContext');
-        $ut = m::mock('Claroline\CoreBundle\Library\Security\Utilities');
-        $token = m::mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
-        $activityRepo = m::mock('Claroline\CoreBundle\Repository\ActivityRepository');
-        $resourceRepo = m::mock('Claroline\CoreBundle\Repository\AbstractResourceRepository');
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $root = m::mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
-        $startDate = m::mock('\DateTime');
+        $em = $this->mock('Doctrine\ORM\EntityManager');
+        $sc = $this->mock('Symfony\Component\Security\Core\SecurityContext');
+        $ut = $this->mock('Claroline\CoreBundle\Library\Security\Utilities');
+        $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $activityRepo = $this->mock('Claroline\CoreBundle\Repository\ActivityRepository');
+        $resourceRepo = $this->mock('Claroline\CoreBundle\Repository\AbstractResourceRepository');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $root = $this->mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $startDate = $this->mock('\DateTime');
 
         $this->container->shouldReceive('get')
             ->with('doctrine.orm.entity_manager')
