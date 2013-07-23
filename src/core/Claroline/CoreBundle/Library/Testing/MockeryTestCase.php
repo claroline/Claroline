@@ -27,14 +27,16 @@ abstract class MockeryTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Creates a mock. This method will create the mock once and return
-     * clones to reduce the memory foot print.
+     * Creates a mock. This method will delegate to Mockery::mock() and possibly
+     * store the created mock and return a clone of it to reduce the memory footprint.
+     * Its usage remains the same than the original.
      *
      * @param mixed $class
+     * @param mixed $parameters
      *
      * @return object
      */
-    protected function mock($class)
+    protected function mock($class, $parameters = null)
     {
         // ensure mockery is initialized in the data providers, which are
         // called before the setUp method
@@ -43,17 +45,21 @@ abstract class MockeryTestCase extends \PHPUnit_Framework_TestCase
             self::$isMockeryInitialized = true;
         }
 
+        if (is_string($class) && isset(self::$mocks[$class])) {
+            return clone self::$mocks[$class];
+        }
+
+        $mock = $parameters === null ? m::mock($class) : m::mock($class, $parameters);
+
         // ensure the class can be cloned safely
         if (!$this->isCloneable($class)) {
-            return m::mock($class);
+            return $mock;
         }
 
         // keep the orginal mock before returning a clone
-        if (!isset(self::$mocks[$class])) {
-            self::$mocks[$class] = m::mock($class);
-        }
+        self::$mocks[$class] = $mock;
 
-        return clone self::$mocks[$class];
+        return clone $mock;
     }
 
     private function initMockery()
@@ -64,7 +70,9 @@ abstract class MockeryTestCase extends \PHPUnit_Framework_TestCase
 
     private function isCloneable($class)
     {
-        if (!is_string($class) || in_array($class, self::$nonCloneableClasses)) {
+        if (!is_string($class) // probably a final class mock
+            || in_array($class, self::$nonCloneableClasses) // already checked
+            || false !== strpos($class, '[')) { // partial mock
             return false;
         }
 

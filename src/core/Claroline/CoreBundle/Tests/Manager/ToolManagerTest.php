@@ -404,7 +404,7 @@ class ToolManagerTest extends MockeryTestCase
 
             $stringMocked .= ']';
 
-            return m::mock(
+            return $this->mock(
                 'Claroline\CoreBundle\Manager\ToolManager' . $stringMocked,
                 array(
                     $this->ed,
