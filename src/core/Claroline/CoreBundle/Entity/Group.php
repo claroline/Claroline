@@ -29,7 +29,7 @@ class Group extends AbstractRoleSubject
     protected $id;
 
     /**
-     * @ORM\Column(name="name", type="string", length=50, nullable=false)
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
      * @Assert\NotBlank()
      */
     protected $name;

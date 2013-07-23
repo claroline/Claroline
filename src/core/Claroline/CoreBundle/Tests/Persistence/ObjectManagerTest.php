@@ -13,7 +13,7 @@ class ObjectManagerTest extends MockeryTestCase
      */
     public function testHasSupportMethods($managerClass, $method, $returnValue)
     {
-        $om = new ObjectManager(m::mock($managerClass));
+        $om = new ObjectManager($this->mock($managerClass));
         $this->assertEquals($returnValue, $om->{$method}());
     }
 
@@ -23,7 +23,7 @@ class ObjectManagerTest extends MockeryTestCase
      */
     public function testWrappedManagerDependentMethodsThrowAnExceptionOnUnsupportedMethods($method)
     {
-        $om = new ObjectManager(m::mock('Doctrine\Common\Persistence\ObjectManager'));
+        $om = new ObjectManager($this->mock('Doctrine\Common\Persistence\ObjectManager'));
         $om->{$method}();
     }
 
@@ -32,8 +32,8 @@ class ObjectManagerTest extends MockeryTestCase
      */
     public function testTransactionMethods($method)
     {
-        $oom = m::mock('Doctrine\ORM\EntityManagerInterface');
-        $cn = m::mock('Doctrine\DBAL\Connection');
+        $oom = $this->mock('Doctrine\ORM\EntityManagerInterface');
+        $cn = $this->mock('Doctrine\DBAL\Connection');
         $oom->shouldReceive('getConnection')->once()->andReturn($cn);
         $cn->shouldReceive($method)->once();
         $om = new ObjectManager($oom);
@@ -42,7 +42,7 @@ class ObjectManagerTest extends MockeryTestCase
 
     public function testGetEventManager()
     {
-        $oom = m::mock('Doctrine\ORM\EntityManagerInterface');
+        $oom = $this->mock('Doctrine\ORM\EntityManagerInterface');
         $oom->shouldReceive('getEventManager')->once()->andReturn('evm');
         $om = new ObjectManager($oom);
         $this->assertEquals('evm', $om->getEventManager());
@@ -50,7 +50,7 @@ class ObjectManagerTest extends MockeryTestCase
 
     public function testGetUnitOfWork()
     {
-        $oom = m::mock('Doctrine\ORM\EntityManagerInterface');
+        $oom = $this->mock('Doctrine\ORM\EntityManagerInterface');
         $oom->shouldReceive('getUnitOfWork')->once()->andReturn('uow');
         $om = new ObjectManager($oom);
         $this->assertEquals('uow', $om->getUnitOfWork());
@@ -61,13 +61,13 @@ class ObjectManagerTest extends MockeryTestCase
      */
     public function testEndFlushSuiteThrowsAnExceptionIfNoSuiteHasBeenStarted()
     {
-        $om = new ObjectManager(m::mock('Doctrine\Common\Persistence\ObjectManager'));
+        $om = new ObjectManager($this->mock('Doctrine\Common\Persistence\ObjectManager'));
         $om->endFlushSuite();
     }
 
     public function testFlushCallsWrappedManagerFlushIfNoFlushSuiteIsActive()
     {
-        $oom = m::mock('Doctrine\Common\Persistence\ObjectManager');
+        $oom = $this->mock('Doctrine\Common\Persistence\ObjectManager');
         $oom->shouldReceive('flush')->once();
         $om = new ObjectManager($oom);
         $om->flush();
@@ -75,7 +75,7 @@ class ObjectManagerTest extends MockeryTestCase
 
     public function testFlushHasNoEffectIfAFlushSuiteIsActive()
     {
-        $oom = m::mock('Doctrine\Common\Persistence\ObjectManager');
+        $oom = $this->mock('Doctrine\Common\Persistence\ObjectManager');
         $oom->shouldReceive('flush')->never();
         $om = new ObjectManager($oom);
         $om->startFlushSuite();
@@ -84,7 +84,7 @@ class ObjectManagerTest extends MockeryTestCase
 
     public function testNestedFlushSuites()
     {
-        $oom = m::mock('Doctrine\Common\Persistence\ObjectManager');
+        $oom = $this->mock('Doctrine\Common\Persistence\ObjectManager');
         $oom->shouldReceive('flush')->once();
         $om = new ObjectManager($oom);
         $om->startFlushSuite();
@@ -100,7 +100,7 @@ class ObjectManagerTest extends MockeryTestCase
 
     public function testFactory()
     {
-        $om = new ObjectManager(m::mock('Doctrine\Common\Persistence\ObjectManager'));
+        $om = new ObjectManager($this->mock('Doctrine\Common\Persistence\ObjectManager'));
         $this->assertInstanceOf('stdClass', $om->factory('stdClass'));
     }
 
@@ -109,8 +109,8 @@ class ObjectManagerTest extends MockeryTestCase
      */
     public function testFindByIdsThrowsAnExceptionIfSomeEntitiesCannotBeRetreived()
     {
-        $oom = m::mock('Doctrine\ORM\EntityManager');
-        $query = m::mock(new Query($oom)); // proxied partial mock (class is final)
+        $oom = $this->mock('Doctrine\ORM\EntityManager');
+        $query = $this->mock(new Query($oom)); // proxied partial mock (class is final)
         $oom->shouldReceive('createQuery')->once()->andReturn($query);
         $query->shouldReceive('getResult')->once()->andReturn(array('object 1'));
         $om = new ObjectManager($oom);
@@ -119,8 +119,8 @@ class ObjectManagerTest extends MockeryTestCase
 
     public function testFindByIds()
     {
-        $oom = m::mock('Doctrine\ORM\EntityManager');
-        $query = m::mock(new Query($oom));
+        $oom = $this->mock('Doctrine\ORM\EntityManager');
+        $query = $this->mock(new Query($oom));
         $oom->shouldReceive('createQuery')
             ->once()
             ->with('SELECT object FROM Foo\Bar object WHERE object.id IN (:ids)')
@@ -133,8 +133,8 @@ class ObjectManagerTest extends MockeryTestCase
 
     public function testCount()
     {
-        $oom = m::mock('Doctrine\ORM\EntityManager');
-        $query = m::mock(new Query($oom));
+        $oom = $this->mock('Doctrine\ORM\EntityManager');
+        $query = $this->mock(new Query($oom));
         $oom->shouldReceive('createQuery')
             ->once()
             ->with('SELECT COUNT(object) FROM Foo\Bar object')

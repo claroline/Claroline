@@ -18,17 +18,17 @@ class GroupManagerTest extends MockeryTestCase
     {
         parent::setUp();
 
-        $this->om = m::mock('Claroline\CoreBundle\Persistence\ObjectManager');
-        $this->groupRepo = m::mock('Claroline\CoreBundle\Repository\GroupRepository');
-        $this->userRepo = m::mock('Claroline\CoreBundle\Repository\UserRepository');
-        $this->pagerFactory = m::mock('Claroline\CoreBundle\Pager\PagerFactory');
-        $this->translator = m::mock('Symfony\Component\Translation\Translator');
-        $this->eventDispatcher = m::mock('Claroline\CoreBundle\Event\StrictDispatcher');
+        $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->groupRepo = $this->mock('Claroline\CoreBundle\Repository\GroupRepository');
+        $this->userRepo = $this->mock('Claroline\CoreBundle\Repository\UserRepository');
+        $this->pagerFactory = $this->mock('Claroline\CoreBundle\Pager\PagerFactory');
+        $this->translator = $this->mock('Symfony\Component\Translation\Translator');
+        $this->eventDispatcher = $this->mock('Claroline\CoreBundle\Event\StrictDispatcher');
     }
 
     public function testInsertGroup()
     {
-        $group = m::mock('Claroline\CoreBundle\Entity\Group');
+        $group = $this->mock('Claroline\CoreBundle\Entity\Group');
         $this->om->shouldReceive('persist')->with($group)->once();
         $this->om->shouldReceive('flush')->once();
 
@@ -37,7 +37,7 @@ class GroupManagerTest extends MockeryTestCase
 
     public function testDeleteGroup()
     {
-        $group = m::mock('Claroline\CoreBundle\Entity\Group');
+        $group = $this->mock('Claroline\CoreBundle\Entity\Group');
         $this->om->shouldReceive('remove')->with($group)->once();
         $this->om->shouldReceive('flush')->once();
 
@@ -46,9 +46,9 @@ class GroupManagerTest extends MockeryTestCase
 
     public function testUpdateGroup()
     {
-        $group = m::mock('Claroline\CoreBundle\Entity\Group');
-        $role = m::mock('Claroline\CoreBundle\Entity\Role');
-        $unitOfWork = m::mock('Doctrine\ORM\UnitOfWork');
+        $group = $this->mock('Claroline\CoreBundle\Entity\Group');
+        $role = $this->mock('Claroline\CoreBundle\Entity\Role');
+        $unitOfWork = $this->mock('Doctrine\ORM\UnitOfWork');
         $changeSet = array();
 
         $this->om->shouldReceive('getUnitOfWork')->once()->andReturn($unitOfWork);
@@ -68,9 +68,9 @@ class GroupManagerTest extends MockeryTestCase
 
     public function testAddUsersToGroup()
     {
-        $group = m::mock('Claroline\CoreBundle\Entity\Group');
-        $userA = m::mock('Claroline\CoreBundle\Entity\User');
-        $userB = m::mock('Claroline\CoreBundle\Entity\User');
+        $group = $this->mock('Claroline\CoreBundle\Entity\Group');
+        $userA = $this->mock('Claroline\CoreBundle\Entity\User');
+        $userB = $this->mock('Claroline\CoreBundle\Entity\User');
         $users = array($userA, $userB);
 
         $group->shouldReceive('containsUser')->with($userA)->once()->andReturn(false);
@@ -92,9 +92,9 @@ class GroupManagerTest extends MockeryTestCase
 
     public function testRemoveUsersFromGroup()
     {
-        $group = m::mock('Claroline\CoreBundle\Entity\Group');
-        $userA = m::mock('Claroline\CoreBundle\Entity\User');
-        $userB = m::mock('Claroline\CoreBundle\Entity\User');
+        $group = $this->mock('Claroline\CoreBundle\Entity\Group');
+        $userA = $this->mock('Claroline\CoreBundle\Entity\User');
+        $userB = $this->mock('Claroline\CoreBundle\Entity\User');
         $users = array($userA, $userB);
 
         $group->shouldReceive('removeUser')->with($userA)->once();
@@ -107,8 +107,8 @@ class GroupManagerTest extends MockeryTestCase
 
     public function testImportUsers()
     {
-        $group = m::mock('Claroline\CoreBundle\Entity\Group');
-        $user = m::mock('Claroline\CoreBundle\Entity\User');
+        $group = $this->mock('Claroline\CoreBundle\Entity\Group');
+        $user = $this->mock('Claroline\CoreBundle\Entity\User');
         $manager = $this->getManager(array('addUsersToGroup'));
         $users = array(
             array(
@@ -149,12 +149,12 @@ class GroupManagerTest extends MockeryTestCase
 
     public function testConvertGroupsToArray()
     {
-        $groupA = m::mock('Claroline\CoreBundle\Entity\Group');
-        $groupB = m::mock('Claroline\CoreBundle\Entity\Group');
-        $roleAA = m::mock('Claroline\CoreBundle\Entity\Role');
-        $roleAB = m::mock('Claroline\CoreBundle\Entity\Role');
-        $roleBA = m::mock('Claroline\CoreBundle\Entity\Role');
-        $roleBB = m::mock('Claroline\CoreBundle\Entity\Role');
+        $groupA = $this->mock('Claroline\CoreBundle\Entity\Group');
+        $groupB = $this->mock('Claroline\CoreBundle\Entity\Group');
+        $roleAA = $this->mock('Claroline\CoreBundle\Entity\Role');
+        $roleAB = $this->mock('Claroline\CoreBundle\Entity\Role');
+        $roleBA = $this->mock('Claroline\CoreBundle\Entity\Role');
+        $roleBB = $this->mock('Claroline\CoreBundle\Entity\Role');
 
         $groupA->shouldReceive('getId')->once()->andReturn(1);
         $groupA->shouldReceive('getName')->once()->andReturn('group_1');
@@ -188,8 +188,8 @@ class GroupManagerTest extends MockeryTestCase
 
     public function testGetWorkspaceOutsiders()
     {
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $em = m::mock('Doctrine\ORM\EntityManager');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $em = $this->mock('Doctrine\ORM\EntityManager');
         $query = new \Doctrine\ORM\Query($em);
 
         $this->groupRepo->shouldReceive('findWorkspaceOutsiders')
@@ -206,8 +206,8 @@ class GroupManagerTest extends MockeryTestCase
 
     public function testGetWorkspaceOutsidersByName()
     {
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $em = m::mock('Doctrine\ORM\EntityManager');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $em = $this->mock('Doctrine\ORM\EntityManager');
         $query = new \Doctrine\ORM\Query($em);
 
         $this->groupRepo->shouldReceive('findWorkspaceOutsidersByName')
@@ -224,8 +224,8 @@ class GroupManagerTest extends MockeryTestCase
 
     public function testGetGroupsByWorkspace()
     {
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $em = m::mock('Doctrine\ORM\EntityManager');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $em = $this->mock('Doctrine\ORM\EntityManager');
         $query = new \Doctrine\ORM\Query($em);
 
         $this->groupRepo->shouldReceive('findByWorkspace')
@@ -242,8 +242,8 @@ class GroupManagerTest extends MockeryTestCase
 
     public function testGetGroupsByWorkspaceAndName()
     {
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $em = m::mock('Doctrine\ORM\EntityManager');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $em = $this->mock('Doctrine\ORM\EntityManager');
         $query = new \Doctrine\ORM\Query($em);
 
         $this->groupRepo->shouldReceive('findByWorkspaceAndName')
@@ -260,7 +260,7 @@ class GroupManagerTest extends MockeryTestCase
 
     public function testGetGroups()
     {
-        $em = m::mock('Doctrine\ORM\EntityManager');
+        $em = $this->mock('Doctrine\ORM\EntityManager');
         $query = new \Doctrine\ORM\Query($em);
 
         $this->groupRepo->shouldReceive('findAll')
@@ -277,7 +277,7 @@ class GroupManagerTest extends MockeryTestCase
 
     public function testGetGroupsByName()
     {
-        $em = m::mock('Doctrine\ORM\EntityManager');
+        $em = $this->mock('Doctrine\ORM\EntityManager');
         $query = new \Doctrine\ORM\Query($em);
 
         $this->groupRepo->shouldReceive('findByName')
@@ -317,7 +317,7 @@ class GroupManagerTest extends MockeryTestCase
 
         $stringMocked .= ']';
 
-        return m::mock(
+        return $this->mock(
             'Claroline\CoreBundle\Manager\GroupManager' . $stringMocked,
             array(
                 $this->om,

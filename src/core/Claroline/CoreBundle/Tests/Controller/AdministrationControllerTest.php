@@ -27,17 +27,17 @@ class AdministrationControllerTest extends MockeryTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->userManager = m::mock('Claroline\CoreBundle\Manager\UserManager');
-        $this->roleManager = m::mock('Claroline\CoreBundle\Manager\RoleManager');
-        $this->groupManager = m::mock('Claroline\CoreBundle\Manager\GroupManager');
-        $this->workspaceManager = m::mock('Claroline\CoreBundle\Manager\WorkspaceManager');
-        $this->security = m::mock('Symfony\Component\Security\Core\SecurityContextInterface');
-        $this->eventDispatcher = m::mock('Claroline\CoreBundle\Event\StrictDispatcher');
-        $this->configHandler = m::mock('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
-        $this->formFactory = m::mock('Claroline\CoreBundle\Form\Factory\FormFactory');
-        $this->analyticsManager = m::mock('Claroline\CoreBundle\Manager\AnalyticsManager');
-        $this->translator = m::mock('Symfony\Component\Translation\Translator');
-        $this->request = m::mock('Symfony\Component\HttpFoundation\Request');
+        $this->userManager = $this->mock('Claroline\CoreBundle\Manager\UserManager');
+        $this->roleManager = $this->mock('Claroline\CoreBundle\Manager\RoleManager');
+        $this->groupManager = $this->mock('Claroline\CoreBundle\Manager\GroupManager');
+        $this->workspaceManager = $this->mock('Claroline\CoreBundle\Manager\WorkspaceManager');
+        $this->security = $this->mock('Symfony\Component\Security\Core\SecurityContextInterface');
+        $this->eventDispatcher = $this->mock('Claroline\CoreBundle\Event\StrictDispatcher');
+        $this->configHandler = $this->mock('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
+        $this->formFactory = $this->mock('Claroline\CoreBundle\Form\Factory\FormFactory');
+        $this->analyticsManager = $this->mock('Claroline\CoreBundle\Manager\AnalyticsManager');
+        $this->translator = $this->mock('Symfony\Component\Translation\Translator');
+        $this->request = $this->mock('Symfony\Component\HttpFoundation\Request');
     }
 
     public function testIndexAction()
@@ -51,7 +51,7 @@ class AdministrationControllerTest extends MockeryTestCase
         $roleA = new Role();
         $roleB = new Role();
         $roles = array($roleA, $roleB);
-        $form = m::mock('Symfony\Component\Form\Form');
+        $form = $this->mock('Symfony\Component\Form\Form');
 
         $this->roleManager->shouldReceive('getPlatformRoles')
             ->with($user)
@@ -82,8 +82,8 @@ class AdministrationControllerTest extends MockeryTestCase
         $roleD = new Role();
         $roles = array($roleA, $roleB);
         $newRoles = new ArrayCollection(array($roleC, $roleD));
-        $form = m::mock('Symfony\Component\Form\Form');
-        $formInterface = m::mock('Symfony\Component\Form\FormInterface');
+        $form = $this->mock('Symfony\Component\Form\Form');
+        $formInterface = $this->mock('Symfony\Component\Form\FormInterface');
 
         $this->roleManager->shouldReceive('getPlatformRoles')
             ->with($currentUser)
@@ -263,7 +263,7 @@ class AdministrationControllerTest extends MockeryTestCase
 
     public function testGroupCreationFormAction()
     {
-        $form = m::mock('Symfony\Component\Form\Form');
+        $form = $this->mock('Symfony\Component\Form\Form');
 
         $this->formFactory->shouldReceive('create')
             ->with(FormFactory::TYPE_GROUP)
@@ -282,8 +282,8 @@ class AdministrationControllerTest extends MockeryTestCase
     public function testCreateGroupAction()
     {
         $controller = $this->getController(array('redirect', 'generateUrl'));
-        $form = m::mock('Symfony\Component\Form\Form');
-        $group = m::mock('Claroline\CoreBundle\Entity\Group');
+        $form = $this->mock('Symfony\Component\Form\Form');
+        $group = $this->mock('Claroline\CoreBundle\Entity\Group');
         $role = new Role();
 
         $this->formFactory->shouldReceive('create')
@@ -389,7 +389,7 @@ class AdministrationControllerTest extends MockeryTestCase
     public function testGroupSettingsFormAction()
     {
         $group = new Group();
-        $form = m::mock('Symfony\Component\Form\Form');
+        $form = $this->mock('Symfony\Component\Form\Form');
 
         $this->formFactory->shouldReceive('create')
             ->with(FormFactory::TYPE_GROUP_SETTINGS, array(), $group)
@@ -408,10 +408,10 @@ class AdministrationControllerTest extends MockeryTestCase
     public function testUpdateGroupSettingsAction()
     {
         $controller = $this->getController(array('redirect', 'generateUrl'));
-        $group = m::mock('Claroline\CoreBundle\Entity\Group');
-        $newGroup = m::mock('Claroline\CoreBundle\Entity\Group');
-        $role = m::mock('Claroline\CoreBundle\Entity\Role');
-        $form = m::mock('Symfony\Component\Form\Form');
+        $group = $this->mock('Claroline\CoreBundle\Entity\Group');
+        $newGroup = $this->mock('Claroline\CoreBundle\Entity\Group');
+        $role = $this->mock('Claroline\CoreBundle\Entity\Role');
+        $form = $this->mock('Symfony\Component\Form\Form');
 
         $group->shouldReceive('getPlatformRole')
             ->once()
@@ -462,7 +462,7 @@ class AdministrationControllerTest extends MockeryTestCase
 
     public function testPluginParametersAction()
     {
-        $event = m::mock('Claroline\CoreBundle\Event\Event\PluginOptionsEvent');
+        $event = $this->mock('Claroline\CoreBundle\Event\Event\PluginOptionsEvent');
 
         $this->eventDispatcher->shouldReceive('dispatch')
             ->with('plugin_options_domain', 'PluginOptions', array())
@@ -482,7 +482,7 @@ class AdministrationControllerTest extends MockeryTestCase
 
     public function testImportUsersFormAction()
     {
-        $form = m::mock('Symfony\Component\Form\Form');
+        $form = $this->mock('Symfony\Component\Form\Form');
 
         $this->formFactory->shouldReceive('create')
             ->with(FormFactory::TYPE_USER_IMPORT)
@@ -502,8 +502,8 @@ class AdministrationControllerTest extends MockeryTestCase
 
     public function testImportUsersIntoGroupFormAction()
     {
-        $group = m::mock('Claroline\CoreBundle\Entity\Group');
-        $form = m::mock('Symfony\Component\Form\Form');
+        $group = $this->mock('Claroline\CoreBundle\Entity\Group');
+        $form = $this->mock('Symfony\Component\Form\Form');
 
         $this->formFactory->shouldReceive('create')
             ->with(FormFactory::TYPE_USER_IMPORT)
@@ -552,7 +552,7 @@ class AdministrationControllerTest extends MockeryTestCase
 
         $stringMocked .= ']';
 
-        return m::mock(
+        return $this->mock(
             'Claroline\CoreBundle\Controller\AdministrationController' . $stringMocked,
             array(
                 $this->userManager,
