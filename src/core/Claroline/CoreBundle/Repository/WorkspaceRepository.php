@@ -273,7 +273,6 @@ class WorkspaceRepository extends EntityRepository
         return $query->getResult();
     }
 
-
     /**
      * Returns the workspaces which are visible for each user.
      *
@@ -285,6 +284,25 @@ class WorkspaceRepository extends EntityRepository
             SELECT w
             FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
             WHERE w.displayable = true
+        ';
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
+
+    /**
+     * Returns the workspaces which are visible for each user
+     * and allowing self-registration.
+     *
+     * @return array[AbstractWorkspace]
+     */
+    public function findWorkspacesWithSelfRegistration()
+    {
+        $dql = '
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            WHERE w.displayable = true
+            AND w.selfRegistration = true
         ';
         $query = $this->_em->createQuery($dql);
 

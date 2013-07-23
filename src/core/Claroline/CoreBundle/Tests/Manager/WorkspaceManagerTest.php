@@ -76,6 +76,7 @@ class WorkspaceManagerTest extends MockeryTestCase
         $config->shouldReceive('getToolsConfiguration')->once()->andReturn($tools);
         $config->shouldReceive('getToolsPermissions')->once()->andReturn($toolsInfos);
         $config->shouldReceive('getArchive')->times(2)->andReturn(new \ZipArchive());
+        $config->shouldReceive('isDisplayable')->once()->andReturn('displayable');
 
         $this->ut->shouldReceive('generateGuid')->once()->andReturn('guid');
 
@@ -85,6 +86,7 @@ class WorkspaceManagerTest extends MockeryTestCase
         $workspace->shouldReceive('setPublic')->once()->with(true);
         $workspace->shouldReceive('setCode')->once()->with('wscode');
         $workspace->shouldReceive('setGuid')->once()->with('guid');
+        $workspace->shouldReceive('setDisplayable')->once()->with('displayable');
         $workspace->shouldReceive('getName')->once()->andReturn('wsname');
         $workspace->shouldReceive('getCode')->once()->andReturn('wscode');
 

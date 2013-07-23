@@ -463,10 +463,12 @@ workspace_form_name: Name
 workspace_form_template: Template
 workspace_form_type: Type
 workspace_order_tool_edit_form_name: Name
+workspace_registration_confirm_title: 'Do you really want to register to this workspace ?'
 workspace_resource: Resources
 workspace_tag_form_name: Name
 workspace_template_form_name: Name
 workspace_tools: Tools
+workspace_unregistration_confirm_title: 'Do you really want to unregister from this workspace ?'
 workspace_welcome: Welcome
 workspaces: Workspaces
 ws_creator: 'Workspace creator'

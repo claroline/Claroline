@@ -466,10 +466,12 @@ workspace_form_name: Nom
 workspace_form_template: Modèle
 workspace_form_type: Type
 workspace_order_tool_edit_form_name: Nom
+workspace_registration_confirm_title: 'Voulez-vous vous inscrire à cet espace d''activités ?'
 workspace_resource: Ressources
 workspace_tag_form_name: Nom
 workspace_template_form_name: Nom
 workspace_tools: Outils
+workspace_unregistration_confirm_title: 'Voulez-vous vous désinscrire de cet espace d''activités ?'
 workspace_welcome: Accueil
 workspaces: 'Espaces d''activités'
 ws_creator: 'Créateur d''espaces'

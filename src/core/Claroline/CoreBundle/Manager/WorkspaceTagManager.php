@@ -83,15 +83,25 @@ class WorkspaceTagManager
     public function deleteTagRelation(RelWorkspaceTag $relWorkspaceTag)
     {
         $this->om->remove($relWorkspaceTag);
-        $this->om->persist();
+        $this->om->flush();
     }
 
     public function deleteRelWorkspaceTag(WorkspaceTag $tag, AbstractWorkspace $workspace)
     {
-        $relWorkspaceTag = $this->relTagRepo->findBy(array('tag' => $tag, 'workspace' => $workspace));
+        $relWorkspaceTag = $this->relTagRepo->findOneBy(array('tag' => $tag, 'workspace' => $workspace));
 
         $this->om->remove($relWorkspaceTag);
-        $this->om->persist();
+        $this->om->flush();
+    }
+
+    public function deleteAllRelationsFromWorkspaceAndUser(AbstractWorkspace $workspace, User $user)
+    {
+        $relations = $this->relTagRepo->findByWorkspaceAndUser($workspace, $user);
+
+        foreach ($relations as $relation) {
+            $this->om->remove($relation);
+        }
+        $this->om->flush();
     }
 
     public function createTagHierarchy(WorkspaceTag $tag, WorkspaceTag $parent, $level)
@@ -110,7 +120,7 @@ class WorkspaceTagManager
     public function deleteTagHierarchy(WorkspaceTagHierarchy $tagHierarchy)
     {
         $this->om->remove($tagHierarchy);
-        $this->om->persist();
+        $this->om->flush();
     }
 
     public function getNonEmptyTagsByUser(User $user)
@@ -359,14 +369,13 @@ class WorkspaceTagManager
     }
 
     /**
-     * Returns all datas necessary to display the list of all workspaces visible for all users.
+     * Returns all datas necessary to display the list of all workspaces visible for all users
+     * that are open for self-registration.
      */
-    public function getDatasForDisplayableWorkspaceList()
+    public function getDatasForSelfRegistrationWorkspaceList()
     {
-//        $workspaces = $this->workspaceRepo->findNonPersonal();
-        $workspaces = $this->workspaceRepo->findDisplayableWorkspaces();
+        $workspaces = $this->workspaceRepo->findWorkspacesWithSelfRegistration();
         $tags = $this->getNonEmptyAdminTags();
-//        $relTagWorkspace = $this->getTagRelationsByAdmin();
         $relTagWorkspace = $this->getTagRelationsByAdminAndWorkspaces($workspaces);
         $tagWorkspaces = array();
 

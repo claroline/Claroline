@@ -197,8 +197,8 @@ class WorkspaceController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/displayable",
-     *     name="claro_list_displayable_workspaces",
+     *     "/displayable/selfregistration",
+     *     name="claro_list_workspaces_with_self_registration",
      *     options={"expose"=true}
      * )
      * @EXT\Method("GET")
@@ -209,12 +209,12 @@ class WorkspaceController extends Controller
      *
      * @return Response
      */
-    public function listDisplayableWorkspacesAction()
+    public function listWorkspacesWithSelfRegistrationAction()
     {
         $this->assertIsGranted('ROLE_USER');
         $token = $this->security->getToken();
         $user = $token->getUser();
-        $datas = $this->tagManager->getDatasForDisplayableWorkspaceList();
+        $datas = $this->tagManager->getDatasForSelfRegistrationWorkspaceList();
 
         return array(
             'user' => $user,
