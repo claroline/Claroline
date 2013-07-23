@@ -85,6 +85,7 @@ files: Fichiers
 filter: Filtrer
 find_workspaces: 'Tous les espaces'
 first_name: Prénom
+forgot_password: 'Mot de passe oublié ?'
 form_role: Rôle
 from: Depuis
 from_message: De
@@ -249,6 +250,7 @@ copiable: 'Copiable'
 editable: 'Modifiable'
 yes: 'oui'
 no: 'non'
+no_email: 'Ce mail ne correspond pas a unitilisateur inscrit'
 login: Connexion
 login_failure: 'La connexion a échoué. Vérifiez que votre nom d''utilisateur et votre mot de passe sont corrects.'
 logout: Déconnexion
@@ -295,6 +297,7 @@ owner: Propriétaire
 owner_s: Propriétaire(s)
 parameters: Paramètres
 password: 'Mot de passe'
+password_ok : 'Votre mot de passe à été modifié , vous pouvez vous connecter'
 paste: Coller
 path: Emplacement
 permissions: Permissions

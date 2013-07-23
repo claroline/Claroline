@@ -72,7 +72,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     protected $phone;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=false, unique=true)
      */
     protected $mail;
 
@@ -154,6 +154,17 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      * )
      */
     protected $orderedTools;
+    /**
+    *
+    *@ORM\Column(name="reset_password", type="string", nullable=true)
+    */
+    protected $resetPassword;
+
+    /**
+     * @ORM\Column(name="time",type="integer", nullable=true)
+     *
+    */
+    protected $time;
 
     public function __construct()
     {
@@ -218,6 +229,10 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
 
     public function setPassword($password)
     {
+        if (null === $password) {
+
+            return;
+       }
         $this->password = $password;
     }
 
@@ -391,4 +406,22 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     {
         return $this->orderedTools;
     }
+    
+    public function getResetPassword() {
+        return $this->resetPassword;
+    }
+
+    public function setResetPassword($resetPassword) {
+        $this->resetPassword = $resetPassword;
+    }
+
+    public function getTime() {
+        return $this->time;
+    }
+
+    public function setTime($time) {
+        $this->time = $time;
+    }
+
+
 }
