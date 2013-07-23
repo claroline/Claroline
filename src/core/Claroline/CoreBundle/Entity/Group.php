@@ -132,4 +132,9 @@ class Group extends AbstractRoleSubject
 
         $this->roles->add($platformRole);
     }
+
+    public function containsUser(User $user)
+    {
+        return $this->users->contains($user);
+    }
 }
