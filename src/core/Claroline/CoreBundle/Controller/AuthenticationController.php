@@ -106,8 +106,7 @@ class AuthenticationController
             $link = $this->
                 router->
                     generate('claro_security_reset_password', array('hash' => $user->getResetPassword()));
-            $data = '<p> You asked to reset your password 
-                , click on this link to reset it
+            $data = '<p> 
                  <a href="'.$link.'" /> click me</a> </p>';
 
             $message = \Swift_Message::newInstance()
@@ -163,7 +162,7 @@ class AuthenticationController
             return array( 'user' => $user);
         } else {
 
-            return array('error' => 'link is outdated');
+            return array('error' => $this->translator->trans('link_outdated', array(), 'platform'));
         }
 
     }
@@ -181,7 +180,6 @@ class AuthenticationController
     */
     public function newPasswordAction()
     {
-
         $plainPassword = $this->request->get('pwd');
         $id = $this->request->get('id');
         $user = $this->userManager->getUserById($id);
@@ -198,8 +196,8 @@ class AuthenticationController
         } else {
 
             return array(
-                'error' => 'passwords mismatchs'
-                );
+                'error' => $this->translator->trans('password_missmatch', array(), 'platform')
+            );
         }
     }
 }

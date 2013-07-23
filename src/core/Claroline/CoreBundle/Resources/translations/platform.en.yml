@@ -250,6 +250,7 @@ copiable: 'Copiable'
 editable: 'Editable'
 yes: 'yes'
 no: 'no'
+link_outdated : 'link is no more valid'
 login: Login
 login_failure: 'Login has failed. Check your username and password are correct.'
 logout: Logout
@@ -302,6 +303,8 @@ path: Path
 permissions: Permissions
 personal_workspace: 'Personal workspace'
 phone: Phone
+password_email_message: 'You asked to reset your password click on this link to reset it'
+password_missmatch : 'passwords missmatched'
 password_ok : 'Your password has been changed, you can login now'
 platform_parameters: 'Platform parameters'
 platform_parameters_form_localLanguage: Langue
