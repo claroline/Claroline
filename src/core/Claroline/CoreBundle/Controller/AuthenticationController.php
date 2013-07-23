@@ -33,8 +33,8 @@ class AuthenticationController
      *     "userManager"    = @DI\Inject("claroline.manager.user_manager"),
      *     "encoderFactory" = @DI\Inject("security.encoder_factory"),
      *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
-     *     "mailer"      = @DI\Inject("mailer"),
-     *     "router"             = @DI\Inject("router")
+     *     "mailer"         = @DI\Inject("mailer"),
+     *     "router"         = @DI\Inject("router")
      * })
     */
     public function __construct(
@@ -77,35 +77,36 @@ class AuthenticationController
 
         $lastUsername = $this->request->getSession()->get(SecurityContext::LAST_USERNAME);
 
-            return array(
-                'last_username' => $lastUsername,
-                'error' => $error
-            );
+        return array(
+            'last_username' => $lastUsername,
+            'error' => $error
+        );
     }
 
     /**
-    *@Route(
+     * @Route(
      *     "/sendemail",
      *     name="claro_security_send_token",
      *     options={"expose"=true}
      * )
-     *@Method("POST")
-    *@Template("ClarolineCoreBundle:Authentication:forgotPassword.html.twig")
-    */
+     * @Method("POST")
+     * @Template("ClarolineCoreBundle:Authentication:forgotPassword.html.twig")
+     */
     public function sendEmailAction()
     {
         $email = $this->request->get('email');
-
         $user = $this->userManager->getUserbyEmail($email);
-        if (! empty($user)) {
+
+        if (!empty($user)) {
             $user->setTime(time());
             $password = sha1(rand(1000, 10000).$user->getUsername().$user->getSalt());
             $user->setResetPassword($password);
             $this->om->persist($user);
             $this->om->flush();
-            $link = $this->
-                router->
-                    generate('claro_security_reset_password', array('hash' => $user->getResetPassword()));
+            $link = $this->router->generate(
+                'claro_security_reset_password',
+                array('hash' => $user->getResetPassword())
+            );
             $data = '<p> 
                  <a href="'.$link.'" /> click me</a> </p>';
 
@@ -117,66 +118,59 @@ class AuthenticationController
             $this->mailer->send($message);
 
             return array('user' => $user);
-
-        } else {
-            return array(
-                'error' => $this->translator->trans('no_email', array(), 'platform'),
-                'user' => ''
-            );
         }
+
+        return array(
+            'error' => $this->translator->trans('no_email', array(), 'platform'),
+            'user' => ''
+        );
     }
     /**
-    *@Route(
+     * @Route(
      *     "/reset",
      *     name="claro_security_forgot_password",
      *     options={"expose"=true}
      * )
-     *
-    *@Template("ClarolineCoreBundle:Authentication:forgotPassword.html.twig")
+     * @Template("ClarolineCoreBundle:Authentication:forgotPassword.html.twig")
     */
     public function forgotPasswordAction()
     {
         return array();
     }
     /**
-    *@Route(
+     * @Route(
      *     "/newpassword/{hash}/",
      *     name="claro_security_reset_password",
      *     options={"expose"=true}
      * )
-     *@Method("GET")
-    *@Template("ClarolineCoreBundle:Authentication:resetPassword.html.twig")
+     * @Method("GET")
+     * @Template("ClarolineCoreBundle:Authentication:resetPassword.html.twig")
     */
-    public function resetPasswordAction( $hash)
+    public function resetPasswordAction($hash)
     {
         $user = $this->userManager->getResetPassword($hash);
-        if (empty($user)) {
 
+        if (empty($user)) {
             return array('error' => $this->translator->trans('no_email', array(), 'platform'));
         }
 
         $currentTime = time();
         // the link is valide for 24h
-        if ($currentTime - (3600 * 24) < $user->getTime() ) {
-
+        if ($currentTime - (3600 * 24) < $user->getTime()) {
             return array( 'user' => $user);
-        } else {
+        } 
 
-            return array('error' => $this->translator->trans('link_outdated', array(), 'platform'));
-        }
-
+        return array('error' => $this->translator->trans('link_outdated', array(), 'platform'));
     }
 
     /**
-    *@Route(
+     * @Route(
      *     "/validatepassword",
      *     name="claro_security_new_password",
      *     options={"expose"=true}
      * )
-     *@Method("POST")
-     *
-     *
-    *@Template("ClarolineCoreBundle:Authentication:resetPassword.html.twig")
+     * @Method("POST")
+     * @Template("ClarolineCoreBundle:Authentication:resetPassword.html.twig")
     */
     public function newPasswordAction()
     {
@@ -184,7 +178,8 @@ class AuthenticationController
         $id = $this->request->get('id');
         $user = $this->userManager->getUserById($id);
         $repeat = $this->request->get('repeat');
-        if ( $plainPassword === $repeat) {
+
+        if ($plainPassword === $repeat) {
             $user->setPlainPassword($plainPassword);
             $this->om->persist($user);
             $this->om->flush();
@@ -192,12 +187,11 @@ class AuthenticationController
             return array(
                 'message' => $this->translator->trans('password_ok', array(), 'platform'),
                 'user' => $user
-                );
-        } else {
-
-            return array(
-                'error' => $this->translator->trans('password_missmatch', array(), 'platform')
             );
-        }
+        } 
+
+        return array(
+            'error' => $this->translator->trans('password_missmatch', array(), 'platform')
+        );
     }
 }
