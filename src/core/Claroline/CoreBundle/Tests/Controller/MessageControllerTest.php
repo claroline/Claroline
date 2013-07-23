@@ -21,11 +21,11 @@ class MessageControllerTest extends MockeryTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->form = m::mock('Symfony\Component\Form\Form');
-        $this->request = m::mock('Symfony\Component\HttpFoundation\Request');
-        $this->router = m::mock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
-        $this->formFactory = m::mock('Claroline\CoreBundle\Form\Factory\FormFactory');
-        $this->messageManager = m::mock('Claroline\CoreBundle\Manager\MessageManager');
+        $this->form = $this->mock('Symfony\Component\Form\Form');
+        $this->request = $this->mock('Symfony\Component\HttpFoundation\Request');
+        $this->router = $this->mock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
+        $this->formFactory = $this->mock('Claroline\CoreBundle\Form\Factory\FormFactory');
+        $this->messageManager = $this->mock('Claroline\CoreBundle\Manager\MessageManager');
         $this->controller = new MessageController(
             $this->request,
             $this->router,
