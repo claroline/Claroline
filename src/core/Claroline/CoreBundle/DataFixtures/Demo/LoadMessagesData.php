@@ -34,25 +34,25 @@ class LoadMessagesData extends LoggableFixture implements ContainerAwareInterfac
 
     public function load(ObjectManager $manager)
     {
-        /**
-        foreach ($this->messages as $data) {
-            $parent = null;
-            if (isset($data['parent'])) {
-                $parent = $this->getReference('message/'.$data['parent']);
-            }
+        $messageManager = $this->container->get('claroline.manager.message_manager');
+        $generator = $this->container->get('claroline.utilities.lipsum_generator');
 
-            $message = $this->container->get('claroline.manager.message_manager')->create(
+        foreach ($this->messages as $data) {
+            $message  = new Message();
+            $message->setContent($generator->generateLipsum(150, true));
+            $message->setObject($data['object']);
+            $message->setTo($data['to']);
+            $parent = isset($data['parent']) ?
+                $this->getReference('message/' . $data['parent']) :
+                null;
+            $messageManager->send(
                 $this->getReference('user/' . $data['from']),
-                $data['to'],
-                $this->container->get('claroline.utilities.lipsum_generator')->generateLipsum(150, true),
-                $data['object'],
+                $message,
                 $parent
             );
-
             $this->addReference('message/' . $data['object'], $message);
         }
 
         $manager->flush();
-        */
     }
 }
