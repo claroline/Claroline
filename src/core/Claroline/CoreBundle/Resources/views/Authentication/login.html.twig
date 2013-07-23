@@ -29,6 +29,7 @@
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">{{ 'login'|trans({}, 'platform') }}</button>
             </div>
+            <p> <a href ="{{ path('claro_security_forgot_password')}}">{{ 'forgot_password'|trans({}, 'platform') }} </a></p>
         </fieldset>
     </form>
 {% endblock %}

@@ -68,6 +68,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface
             $user->setLastName($lastName);
             $user->setUserName($username);
             $user->setPlainPassword($username);
+            $user->setMail($username.'@claroline.net');
             $roleManager->associateRole($user, $this->getReference("role/{$role}"));
 
             if ($this->withWorkspace) {
@@ -75,8 +76,8 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface
                 $this->addReference("workspace/{$names}", $user->getPersonalWorkspace());
                 $this->addReference(
                     "directory/{$names}",
-                $resourceRepo->findWorkspaceRoot($user->getPersonalWorkspace())
-            );
+                    $resourceRepo->findWorkspaceRoot($user->getPersonalWorkspace())
+                );
             } else {
                 $userCreator->insertUser($user);
             }
