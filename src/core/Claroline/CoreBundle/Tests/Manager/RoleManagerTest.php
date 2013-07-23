@@ -178,7 +178,7 @@ class RoleManagerTest extends MockeryTestCase
 
         $stringMocked .= ']';
 
-        return m::mock(
+        return $this->mock(
             'Claroline\CoreBundle\Manager\RoleManager' . $stringMocked,
             array($this->securityContext, $this->om)
         );

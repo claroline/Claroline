@@ -213,7 +213,7 @@ class UserManagerTest extends MockeryTestCase
 
         $stringMocked .= ']';
 
-        return m::mock(
+        return $this->mock(
             'Claroline\CoreBundle\Manager\UserManager' . $stringMocked,
             array(
                 $this->roleManager,

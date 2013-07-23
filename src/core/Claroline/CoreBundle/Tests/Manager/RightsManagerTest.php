@@ -207,7 +207,7 @@ class RightsManagerTest extends MockeryTestCase
 
             $stringMocked .= ']';
 
-            return m::mock(
+            return $this->mock(
                 'Claroline\CoreBundle\Manager\RightsManager' . $stringMocked,
                 array(
                     $this->translator,

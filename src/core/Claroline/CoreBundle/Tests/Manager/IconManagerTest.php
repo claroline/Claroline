@@ -231,7 +231,7 @@ class IconManagerTest extends MockeryTestCase
 
             $stringMocked .= ']';
 
-            return m::mock(
+            return $this->mock(
                 'Claroline\CoreBundle\Manager\IconManager' . $stringMocked,
                 array(
                     $this->thumbnailCreator,
