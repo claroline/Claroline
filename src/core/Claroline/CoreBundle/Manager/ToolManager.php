@@ -432,4 +432,14 @@ class ToolManager
 
         return $realPaths;
     }
+
+    public function getOrderedToolsByWorkspaceAndRoles(AbstractWorkspace $workspace, array $roles)
+    {
+        return $this->orderedToolRepo->findByWorkspaceAndRoles($workspace, $roles);
+    }
+
+    public function getDisplayedByRolesAndWorkspace(array $roles, AbstractWorkspace $workspace)
+    {
+        return $this->toolRepo->findDisplayedByRolesAndWorkspace($roles, $workspace);
+    }
 }

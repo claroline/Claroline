@@ -131,6 +131,24 @@ class WorkspaceManagerTest extends MockeryTestCase
         $this->assertEquals($workspace, $wManager->create($config, $manager));
     }
 
+    public function testCreateWorkspace()
+    {
+        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $this->om->shouldReceive('persist')->once()->with($workspace);
+        $this->om->shouldReceive('flush')->once();
+
+        $this->getManager()->createWorkspace($workspace);
+    }
+
+    public function testDeleteWorkspace()
+    {
+        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $this->om->shouldReceive('remove')->once()->with($workspace);
+        $this->om->shouldReceive('flush')->once();
+
+        $this->getManager()->deleteWorkspace($workspace);
+    }
+
     public function testExport()
     {
         $manager = $this->getManager(

@@ -156,7 +156,13 @@ class WorkspaceManager
     public function createWorkspace(AbstractWorkspace $workspace)
     {
         $this->om->persist($workspace);
-        $this->om->flush($workspace);
+        $this->om->flush();
+    }
+
+    public function deleteWorkspace(AbstractWorkspace $workspace)
+    {
+        $this->om->remove($workspace);
+        $this->om->flush();
     }
 
     /**
