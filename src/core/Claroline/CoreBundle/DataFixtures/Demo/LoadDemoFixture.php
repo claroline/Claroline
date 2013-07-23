@@ -131,7 +131,8 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         $groupNames = $this->getGroupNames();
 
         for ($i = 0; $i < self::NB_GROUPS; $i++) {
-            $names[] = $groupClasses[array_rand($groupClasses)]." - "
+            $names[] = $groupClasses[array_rand($groupClasses)]
+                . ' - '
                 . $groupNames[array_rand($groupNames)];
         }
 
@@ -390,31 +391,6 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
             $this->manager->flush();
         }
     }
-
-//    public function setRssReader(ObjectManager $manager)
-//    {
-//        $rssConfig = new \Claroline\RssReaderBundle\Entity\Config();
-//        $rssConfig->setUrl('http://www.lesoir.be/feed/Actualit%C3%A9/Vie%20du%20net/destination_principale_block');
-//        $rssConfig->setDefault(true);
-//        $rssConfig->setDesktop(true);
-//        $manager->persist($rssConfig);
-//        $manager->flush();
-//    }
-//
-//    public function createUser(ObjectManager $manager)
-//    {
-//        $roleManager = $this->container->get('claroline.manager.role_manager');
-//        $this->loadFixture(
-//            new LoadUserData(array('John Smith' => 'user'))
-//        );
-//
-//        //grant user to personnal workspace Jane Doe.
-//        $collaboratorRole = $manager->getRepository('ClarolineCoreBundle:Role')
-//            ->findCollaboratorRole($this->getReference('user/Jane Doe')->getPersonalWorkspace());
-//
-//        $user = $this->getReference('user/John Smith');
-//        $roleManager->associateRole($user, $collaboratorRole);
-//    }
 
     private function getFirstNames()
     {
