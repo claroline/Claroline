@@ -80,7 +80,7 @@ abstract class MockeryTestCase extends \PHPUnit_Framework_TestCase
 
         // native php objects may not be cloneable, and we cannot rely on any
         // custom __clone implementation (ex: Symfony's Request object)
-        if (!$rClass->isCloneable() || $rClass->hasMethod('__clone')) {
+        if ($rClass->isInternal() || $rClass->hasMethod('__clone')) {
             self::$nonCloneableClasses[] = $class;
             return false;
         }
