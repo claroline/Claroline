@@ -99,6 +99,7 @@ class WorkspaceManager
         $workspace->setPublic($config->isPublic());
         $workspace->setCode($config->getWorkspaceCode());
         $workspace->setGuid($this->ut->generateGuid());
+        $workspace->setDisplayable($config->isDisplayable());
         $baseRoles = $this->roleManager->initWorkspaceBaseRole($config->getRoles(), $workspace);
         $baseRoles['ROLE_ANONYMOUS'] = $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS'));
         $this->roleManager->associateRole($manager, $baseRoles["ROLE_WS_MANAGER"]);
@@ -155,7 +156,13 @@ class WorkspaceManager
     public function createWorkspace(AbstractWorkspace $workspace)
     {
         $this->om->persist($workspace);
-        $this->om->flush($workspace);
+        $this->om->flush();
+    }
+
+    public function deleteWorkspace(AbstractWorkspace $workspace)
+    {
+        $this->om->remove($workspace);
+        $this->om->flush();
     }
 
     /**
