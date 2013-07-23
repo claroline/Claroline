@@ -118,7 +118,8 @@
         ]
     },
     "config": {
-        "bin-dir": "bin"
+        "bin-dir": "bin",
+        "github-protocols": ["https", "http", "git"]
     },
     "minimum-stability": "dev",
     "extra": {
