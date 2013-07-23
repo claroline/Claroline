@@ -83,15 +83,25 @@ class WorkspaceTagManager
     public function deleteTagRelation(RelWorkspaceTag $relWorkspaceTag)
     {
         $this->om->remove($relWorkspaceTag);
-        $this->om->persist();
+        $this->om->flush();
     }
 
     public function deleteRelWorkspaceTag(WorkspaceTag $tag, AbstractWorkspace $workspace)
     {
-        $relWorkspaceTag = $this->relTagRepo->findBy(array('tag' => $tag, 'workspace' => $workspace));
+        $relWorkspaceTag = $this->relTagRepo->findOneBy(array('tag' => $tag, 'workspace' => $workspace));
 
         $this->om->remove($relWorkspaceTag);
-        $this->om->persist();
+        $this->om->flush();
+    }
+
+    public function deleteAllRelationsFromWorkspaceAndUser(AbstractWorkspace $workspace, User $user)
+    {
+        $relations = $this->relTagRepo->findByWorkspaceAndUser($workspace, $user);
+
+        foreach ($relations as $relation) {
+            $this->om->remove($relation);
+        }
+        $this->om->flush();
     }
 
     public function createTagHierarchy(WorkspaceTag $tag, WorkspaceTag $parent, $level)
@@ -110,7 +120,7 @@ class WorkspaceTagManager
     public function deleteTagHierarchy(WorkspaceTagHierarchy $tagHierarchy)
     {
         $this->om->remove($tagHierarchy);
-        $this->om->persist();
+        $this->om->flush();
     }
 
     public function getNonEmptyTagsByUser(User $user)
@@ -354,6 +364,65 @@ class WorkspaceTagManager
         $datas['rootTags'] = $rootTags;
         $datas['displayable'] = $displayable;
         $datas['workspaceRoles'] = $workspaceRoles;
+
+        return $datas;
+    }
+
+    /**
+     * Returns all datas necessary to display the list of all workspaces visible for all users
+     * that are open for self-registration.
+     */
+    public function getDatasForSelfRegistrationWorkspaceList()
+    {
+        $workspaces = $this->workspaceRepo->findWorkspacesWithSelfRegistration();
+        $tags = $this->getNonEmptyAdminTags();
+        $relTagWorkspace = $this->getTagRelationsByAdminAndWorkspaces($workspaces);
+        $tagWorkspaces = array();
+
+        // create an array: tagId => [associated_workspace_relation]
+        foreach ($relTagWorkspace as $tagWs) {
+
+            if (empty($tagWorkspaces[$tagWs['tag_id']])) {
+                $tagWorkspaces[$tagWs['tag_id']] = array();
+            }
+            $tagWorkspaces[$tagWs['tag_id']][] = $tagWs['rel_ws_tag'];
+        }
+
+        $tagsHierarchy = $this->getAllAdminHierarchies();
+        $rootTags = $this->getAdminRootTags();
+        $hierarchy = array();
+
+        // create an array : tagId => [direct_children_id]
+        foreach ($tagsHierarchy as $tagHierarchy) {
+
+            if ($tagHierarchy->getLevel() === 1) {
+
+                if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
+                    !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
+
+                    $hierarchy[$tagHierarchy->getParent()->getId()] = array();
+                }
+                $hierarchy[$tagHierarchy->getParent()->getId()][] = $tagHierarchy->getTag();
+            }
+        }
+
+        // create an array indicating which tag is displayable
+        // a tag is displayable if it or one of his children contains is associated to a workspace
+        $displayable = array();
+        $allAdminTags = $this->getTagsByUser(null);
+
+        foreach ($allAdminTags as $adminTag) {
+            $adminTagId = $adminTag->getId();
+            $displayable[$adminTagId] = $this->isTagDisplayable($adminTagId, $tagWorkspaces, $hierarchy);
+        }
+
+        $datas = array();
+        $datas['workspaces'] = $workspaces;
+        $datas['tags'] = $tags;
+        $datas['tagWorkspaces'] = $tagWorkspaces;
+        $datas['hierarchy'] = $hierarchy;
+        $datas['rootTags'] = $rootTags;
+        $datas['displayable'] = $displayable;
 
         return $datas;
     }

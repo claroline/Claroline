@@ -54,6 +54,11 @@ abstract class AbstractWorkspace
     protected $isPublic = true;
 
     /**
+     * @ORM\Column(name="displayable", type="boolean", nullable=true)
+     */
+    protected $displayable;
+
+    /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
      *     mappedBy="workspace"
@@ -108,6 +113,16 @@ abstract class AbstractWorkspace
      * @ORM\Column(name="guid", type="string", length=255, unique=true)
      */
     protected $guid;
+
+    /**
+     * @ORM\Column(name="self_registration", type="boolean", nullable=true)
+     */
+    protected $selfRegistration;
+
+    /**
+     * @ORM\Column(name="self_unregistration", type="boolean", nullable=true)
+     */
+    protected $selfUnregistration;
 
     public function __construct()
     {
@@ -200,5 +215,35 @@ abstract class AbstractWorkspace
     public function getGuid()
     {
         return $this->guid;
+    }
+
+    public function setDisplayable($displayable)
+    {
+        $this->displayable = $displayable;
+    }
+
+    public function isDisplayable()
+    {
+        return $this->displayable;
+    }
+
+    public function setSelfRegistration($selfRegistration)
+    {
+        $this->selfRegistration = $selfRegistration;
+    }
+
+    public function getSelfRegistration()
+    {
+        return $this->selfRegistration;
+    }
+
+    public function setSelfUnregistration($selfUnregistration)
+    {
+        $this->selfUnregistration = $selfUnregistration;
+    }
+
+    public function getSelfUnregistration()
+    {
+        return $this->selfUnregistration;
     }
 }
