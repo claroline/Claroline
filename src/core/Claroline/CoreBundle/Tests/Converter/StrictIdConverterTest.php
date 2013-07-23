@@ -15,21 +15,21 @@ class StrictIdConverterTest extends MockeryTestCase
 
     protected function setUp()
     {
-        $this->request = m::mock('Symfony\Component\HttpFoundation\Request');
-        $this->configuration = m::mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter');
-        $this->em = m::mock('Doctrine\ORM\EntityManager');
+        $this->request = $this->mock('Symfony\Component\HttpFoundation\Request');
+        $this->configuration = $this->mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter');
+        $this->em = $this->mock('Doctrine\ORM\EntityManager');
         $this->converter = new StrictIdConverter($this->em);
     }
 
     public function testSupportsAcceptsOnlyParamConverterConfiguration()
     {
-        $configuration = m::mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface');
+        $configuration = $this->mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface');
         $this->assertFalse($this->converter->supports($configuration));
     }
 
     public function testSupportsAcceptsOnlyAStrictIdParameterSetToTrue()
     {
-        $configuration = m::mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter');
+        $configuration = $this->mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter');
         $configuration->shouldReceive('getOptions')->times(3)->andReturn(
             array('some_other_option'),
             array('strictId' => false),
@@ -118,7 +118,7 @@ class StrictIdConverterTest extends MockeryTestCase
         $this->configuration->shouldReceive('isOptional')->once()->andReturn(false);
         $this->request->attributes = new ParameterBag();
         $this->request->attributes->set('someId', 1);
-        $repo = m::mock('Doctrine\ORM\EntityRepository');
+        $repo = $this->mock('Doctrine\ORM\EntityRepository');
         $this->em->shouldReceive('getRepository')->with('Foo\Entity')->once()->andReturn($repo);
         $repo->shouldReceive('find')->with(1)->andReturn(null);
         $this->converter->apply($this->request, $this->configuration);
@@ -132,7 +132,7 @@ class StrictIdConverterTest extends MockeryTestCase
         $this->configuration->shouldReceive('getOptions')->once()->andReturn(array('id' => 'someId'));
         $this->request->attributes = new ParameterBag();
         $this->request->attributes->set('someId', 1);
-        $repo = m::mock('Doctrine\ORM\EntityRepository');
+        $repo = $this->mock('Doctrine\ORM\EntityRepository');
         $this->em->shouldReceive('getRepository')->with('Foo\Entity')->once()->andReturn($repo);
         $repo->shouldReceive('find')->with(1)->andReturn($entity);
         $this->assertTrue($this->converter->apply($this->request, $this->configuration));
