@@ -20,6 +20,7 @@ class PostType extends AbstractType
                     )
                 )
             )
+            ->add('tags', 'tags')
         ;
     }
 

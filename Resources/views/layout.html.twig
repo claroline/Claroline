@@ -92,8 +92,8 @@
                             <h3>Nuage de tag</h3>
                             {{ for }}
                             <ul class="inline">
-                                {% for tag in all_tags() %}
-                                <li><a href="#" title="{{ tag }}">{{ tag }}</a></li>
+                                {% for tag in blog_tags(_resource) %}
+                                <li><a href="{{ path('icap_blog_view_by_tag', {'blogId': _resource.id, 'tagName': tag}) }}" title="{{ tag }}">{{ tag }}</a></li>
                                 {% else %}
                                 <li>{{ 'no_tags'|trans({}, 'icap_blog') }}</li>
                                 {% endfor %}

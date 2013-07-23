@@ -18,6 +18,7 @@ class Version20130530152255 extends BundleMigration
             ->createBlogOptionsTable($schema)
             ->createBlogPostTable($schema)
             ->createBlogCommentTable($schema)
+            ->createTagTable($schema)
         ;
     }
 
@@ -157,5 +158,44 @@ class Version20130530152255 extends BundleMigration
         $this->storeTable($table);
 
         return $this;
+    }
+
+    /**
+     * Create the 'icap__blog_tag' table.
+     *
+     * @param \Doctrine\DBAL\Schema\Schema $schema
+     *
+     * @return Version20130530152255
+     */
+    private function createTagTable(Schema $schema)
+    {
+        $tagTable = $schema->createTable('icap__blog_tag');
+        $this->addId($tagTable);
+        $tagTable->addColumn('name', 'string', array('length' => 255));
+
+        $tagTable->addUniqueIndex(array('name'));
+
+        $this->storeTable($tagTable);
+
+        $associatedTagTable = $schema->createTable('icap__blog_post_tag');
+        $associatedTagTable->addColumn('post_id', 'integer', array('notnull' => true));
+        $associatedTagTable->addColumn('tag_id', 'integer', array('notnull' => true));
+
+        $associatedTagTable->setPrimaryKey(array('post_id', 'tag_id'));
+
+        $associatedTagTable->addForeignKeyConstraint(
+            $this->getStoredTable('icap__blog_post'),
+            array('post_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+        $associatedTagTable->addForeignKeyConstraint(
+            $schema->getTable('icap__blog_tag'),
+            array('tag_id'),
+            array('id'),
+            array('onDelete' => 'CASCADE')
+        );
+
+        $this->storeTable($associatedTagTable);
     }
 }

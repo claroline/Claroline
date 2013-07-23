@@ -1,0 +1,16 @@
+services:
+    icap.blog.manager.tag:
+        class: ICAP\BlogBundle\Manager\TagManager
+        arguments: [@doctrine.orm.entity_manager,  @form.factory]
+
+    icap.blog.type.tags:
+        class: ICAP\BlogBundle\Form\TagsType
+        arguments: [@icap.blog.manager.tag]
+        tags:
+            - { name: form.type, alias: tags }
+
+    icap.blog.twig.icapblogtag_extension:
+        class: ICAP\BlogBundle\Twig\ICAPBlogTagExtension
+        arguments: [@icap.blog.manager.tag]
+        tags:
+            - { name: twig.extension }

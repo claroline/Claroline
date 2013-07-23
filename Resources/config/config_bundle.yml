@@ -1,0 +1,14 @@
+twig:
+    form:
+        resources:
+            - 'ICAPBlogBundle:Form:fields.html.twig'
+
+idci_exporter:
+    entities:
+        icap_blog_tag:
+            class: 'ICAP\BlogBundle\Entity\Tag'
+            formats:
+                json:
+                    transformer:
+                        options:
+                            template_name_format: 'export.json.twig'

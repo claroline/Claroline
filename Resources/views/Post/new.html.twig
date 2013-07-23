@@ -12,7 +12,20 @@
     </form>
 {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/frontend/jquery/plugin/tag-it/tag-it.css') }}"/>
+{% endblock %}
+
 {% block javascripts %}
 {{ parent() }}
 {{ tinymce_init() }}
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/tag-it/tag-it.js') }}"></script>
+<script type="text/javascript">
+    $(function() {
+        $(".tags").tagit();
+    });
+
+</script>
 {% endblock %}

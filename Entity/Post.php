@@ -91,9 +91,18 @@ class Post extends Statusable implements TaggableInterface
      */
     protected $blog;
 
+    /**
+     * @var PostTag[]|ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="ICAP\BlogBundle\Entity\Tag", inversedBy="posts", cascade={"persist"})
+     * @ORM\JoinTable(name="icap__blog_post_tag")
+     */
+    protected $tags;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->tags     = new ArrayCollection();
     }
 
     /**
@@ -261,10 +270,14 @@ class Post extends Statusable implements TaggableInterface
      * Remove comments
      *
      * @param Comment $comments
+     *
+     * @return Post
      */
     public function removeComment(Comment $comments)
     {
         $this->comments->removeElement($comments);
+
+        return $this;
     }
 
     /***
@@ -348,5 +361,49 @@ class Post extends Statusable implements TaggableInterface
     public function isPublished()
     {
         return (null !== $this->getPublicationDate());
+    }
+
+    /**
+     * @param \ICAP\BlogBundle\Entity\PostTag[]|\Doctrine\Common\Collections\ArrayCollection $postTags
+     *
+     * @return Post
+     */
+    public function setTags($postTags)
+    {
+        $this->tags = $postTags;
+
+        return $this;
+    }
+
+    /**
+     * @return \ICAP\BlogBundle\Entity\PostTag[]|\Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @param Tag $tag
+     *
+     * @return Post
+     */
+    public function addTag(Tag $tag)
+    {
+        $this->tags->add($tag);
+
+        return $this;
+    }
+
+    /**
+     * @param Tag $tag
+     *
+     * @return Post
+     */
+    public function removeTag(Tag $tag)
+    {
+        $this->tags->remove($tag);
+
+        return $this;
     }
 }

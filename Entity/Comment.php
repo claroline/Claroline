@@ -14,7 +14,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Comment extends Statusable
 {
-
     /**
      * @var int $id
      *

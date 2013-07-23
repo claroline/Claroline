@@ -7,6 +7,7 @@ use ICAP\BlogBundle\Entity\Blog;
 use ICAP\BlogBundle\Entity\BlogOptions;
 use ICAP\BlogBundle\Entity\Post;
 use ICAP\BlogBundle\Form\BlogOptionsType;
+use ICAPLyon1\Bundle\SimpleTagBundle\Entity\Tag;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
@@ -21,11 +22,13 @@ class BlogController extends Controller
 {
     /**
      * @Route("/{blogId}/{page}", name="icap_blog_view", requirements={"blogId" = "\d+", "page" = "\d+"}, defaults={"page" = 1})
+     * @Route("/{blogId}/{tagName}/{page}", name="icap_blog_view_by_tag", requirements={"blogId" = "\d+", "page" = "\d+"}, defaults={"page" = 1})
      * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
+     * @ParamConverter("tag", class="ICAPBlogBundle:Tag", options={"mapping": {"tagName": "name"}})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function viewAction(Blog $blog, $page, User $user)
+    public function viewAction(Blog $blog, $page, User $user, Tag $tag = null)
     {
         $this->checkAccess("OPEN", $blog);
 

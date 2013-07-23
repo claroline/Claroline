@@ -1,6 +1,7 @@
 icap_blog_form_name: 'Nom'
-icaplyon1simpletagbundle_taggabletype_taggable_title: 'Titre'
-icaplyon1simpletagbundle_taggabletype_taggable_content: 'Contenu'
+icap_blog_post_form_title: 'Titre'
+icap_blog_post_form_content: 'Contenu'
+icap_blog_post_form_tags: 'Tags'
 new_post: 'Nouvel article'
 no_post: 'Aucun article.'
 add_new_post: "Ajout d'un article"

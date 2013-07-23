@@ -29,21 +29,27 @@ class PostController extends Controller
             ->setAuthor($this->getUser())
         ;
 
-        /** @var \ICAPLyon1\Bundle\SimpleTagBundle\Service\Manager $simpleTagManager */
-        $simpleTagManager = $this->get('icaplyon1_simpletag.manager');
-        $form = $simpleTagManager->createForm(new PostType(), $post);
+        $form = $this->createForm(new PostType(), $post);
 
         if("POST" === $request->getMethod()) {
-            $form->bind($request);
+            $form->handleRequest($request);
             if ($form->isValid()) {
                 $translator = $this->get('translator');
                 $flashBag = $this->get('session')->getFlashBag();
+                $entityManager = $this->getDoctrine()->getManager();
+
                 try {
-                    $post = $this->get('icaplyon1_simpletag.manager')->processForm($form);
+                    $entityManager->persist($post);
+                    $entityManager->flush();
+
                     $flashBag->add('success', $translator->trans('icap_blog_post_add_success', array(), 'icap_blog'));
                 }
                 catch(\Exception $exception)
                 {
+                    echo "<pre>";
+                    var_dump($exception->getMessage());
+                    echo "</pre>" . PHP_EOL;
+                    die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
                     $flashBag->add('error', $translator->trans('icap_blog_post_add_error', array(), 'icap_blog'));
                 }
                 return $this->redirect($this->generateUrl('icap_blog_view', array('blogId' => $blog->getId())));
@@ -72,8 +78,6 @@ class PostController extends Controller
         $flashBag      = $this->get('session')->getFlashBag();
 
         try {
-            $this->get("icaplyon1_simpletag.manager")->removeAllTags($post);
-
             $entityManager->remove($post);
             $entityManager->flush();
 

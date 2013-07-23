@@ -107,6 +107,26 @@ class Blog extends AbstractResource
     }
 
     /**
+     * @return array
+     */
+    public function getTags()
+    {
+        $tags = new ArrayCollection();
+
+        foreach($this->getPosts() as $post)
+        {
+            foreach($post->getTags() as $tag)
+            {
+                if(!$tags->contains($tag)) {
+                    $tags->add($tag);
+                }
+            }
+        }
+
+        return $tags;
+    }
+
+    /**
      * @ORM\PostPersist
      */
     public function postPersist(LifecycleEventArgs $args)
