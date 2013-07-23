@@ -26,16 +26,16 @@ class WorkspaceControllerTest extends MockeryTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->resourceManager = m::mock('Claroline\CoreBundle\Manager\ResourceManager');
-        $this->roleManager = m::mock('Claroline\CoreBundle\Manager\RoleManager');
-        $this->tagManager = m::mock('Claroline\CoreBundle\Manager\WorkspaceTagManager');
-        $this->toolManager = m::mock('Claroline\CoreBundle\Manager\ToolManager');
-        $this->workspaceManager = m::mock('Claroline\CoreBundle\Manager\WorkspaceManager');
-        $this->eventDispatcher = m::mock('Claroline\CoreBundle\Event\StrictDispatcher');
-        $this->security = m::mock('Symfony\Component\Security\Core\SecurityContextInterface');
-        $this->router = m::mock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
-        $this->utils = m::mock('Claroline\CoreBundle\Library\Security\Utilities');
-        $this->formFactory = m::mock('Claroline\CoreBundle\Form\Factory\FormFactory');
+        $this->resourceManager = $this->mock('Claroline\CoreBundle\Manager\ResourceManager');
+        $this->roleManager = $this->mock('Claroline\CoreBundle\Manager\RoleManager');
+        $this->tagManager = $this->mock('Claroline\CoreBundle\Manager\WorkspaceTagManager');
+        $this->toolManager = $this->mock('Claroline\CoreBundle\Manager\ToolManager');
+        $this->workspaceManager = $this->mock('Claroline\CoreBundle\Manager\WorkspaceManager');
+        $this->eventDispatcher = $this->mock('Claroline\CoreBundle\Event\StrictDispatcher');
+        $this->security = $this->mock('Symfony\Component\Security\Core\SecurityContextInterface');
+        $this->router = $this->mock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
+        $this->utils = $this->mock('Claroline\CoreBundle\Library\Security\Utilities');
+        $this->formFactory = $this->mock('Claroline\CoreBundle\Form\Factory\FormFactory');
     }
 
     public function testListAction()
@@ -68,14 +68,14 @@ class WorkspaceControllerTest extends MockeryTestCase
     public function testListWorkspacesByUserAction()
     {
         $controller = $this->getController(array('assertIsGranted', 'isTagDisplayable'));
-        $token = m::mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $user = new User();
         $roles = array('ROLE_A', 'ROLE_B');
         $workspaces = array('worksapce_1', 'workspace_2');
-        $tagA = m::mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTag');
-        $tagB = m::mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTag');
-        $tagC = m::mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTag');
-        $tagD = m::mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTag');
+        $tagA = $this->mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTag');
+        $tagB = $this->mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTag');
+        $tagC = $this->mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTag');
+        $tagD = $this->mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTag');
         $tags = array($tagA, $tagB, $tagC);
         $allTags = array($tagA, $tagB, $tagC, $tagD);
         $relTagWorkspace = array(
@@ -84,10 +84,10 @@ class WorkspaceControllerTest extends MockeryTestCase
             array('tag_id' => 2, 'rel_ws_tag' => 'relation_3'),
             array('tag_id' => 3, 'rel_ws_tag' => 'relation_4')
         );
-        $tagHierarchyA = m::mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy');
-        $tagHierarchyB = m::mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy');
-        $tagHierarchyC = m::mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy');
-        $tagHierarchyD = m::mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy');
+        $tagHierarchyA = $this->mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy');
+        $tagHierarchyB = $this->mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy');
+        $tagHierarchyC = $this->mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy');
+        $tagHierarchyD = $this->mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy');
         $tagsHierarchy = array($tagHierarchyA, $tagHierarchyB, $tagHierarchyC, $tagHierarchyD);
         $rootTags = array($tagA);
 
@@ -142,7 +142,7 @@ class WorkspaceControllerTest extends MockeryTestCase
     public function testListWorkspacesWithSelfRegistrationAction()
     {
         $controller = $this->getController(array('assertIsGranted'));
-        $token = m::mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $user = new User();
         $datas = array(
             'workspaces' => 'workspaces',
@@ -178,7 +178,7 @@ class WorkspaceControllerTest extends MockeryTestCase
     public function testCreationFormAction()
     {
         $controller = $this->getController(array('assertIsGranted'));
-        $form = m::mock('Symfony\Component\Form\Form');
+        $form = $this->mock('Symfony\Component\Form\Form');
 
         $this->security
             ->shouldReceive('isGranted')
@@ -203,7 +203,7 @@ class WorkspaceControllerTest extends MockeryTestCase
     public function testDeleteAction()
     {
         $controller = $this->getController(array('assertIsGranted'));
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
 
         $this->security
             ->shouldReceive('isGranted')
@@ -224,11 +224,11 @@ class WorkspaceControllerTest extends MockeryTestCase
 
     public function testRenderToolListActionWithBreadcrumbs()
     {
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $workspaceA = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $resource = m::mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspaceA = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $resource = $this->mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
         $breadcrumbs = array(0, 0);
-        $token = m::mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $roles = array('ROLE_1', 'ROLE_2');
         $orderedTools = array('ordered_tool_1', 'ordered_tool_2');
 
@@ -261,8 +261,8 @@ class WorkspaceControllerTest extends MockeryTestCase
 
     public function testRenderToolListActionWithoutBreadcrumbs()
     {
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $token = m::mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $roles = array('ROLE_1', 'ROLE_2');
         $orderedTools = array('ordered_tool_1', 'ordered_tool_2');
 
@@ -289,8 +289,8 @@ class WorkspaceControllerTest extends MockeryTestCase
     {
         $controller = $this->getController(array('assertIsGranted'));
         $toolName = 'tool_name';
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $event = m::mock('Claroline\CoreBundle\Event\Event\DisplayToolEvent');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $event = $this->mock('Claroline\CoreBundle\Event\Event\DisplayToolEvent');
 
         $this->security
             ->shouldReceive('isGranted')
@@ -329,14 +329,14 @@ class WorkspaceControllerTest extends MockeryTestCase
 
     public function testOpenActionAdmin()
     {
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $admin = m::mock('Claroline\CoreBundle\Entity\User');
-        $token = m::mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
-        $roleA = m::mock('Claroline\CoreBundle\Entity\Role');
-        $roleB = m::mock('Claroline\CoreBundle\Entity\Role');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $admin = $this->mock('Claroline\CoreBundle\Entity\User');
+        $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $roleA = $this->mock('Claroline\CoreBundle\Entity\Role');
+        $roleB = $this->mock('Claroline\CoreBundle\Entity\Role');
         $roles = array($roleA, $roleB);
         $userRoles = array('ROLE_A', 'ROLE_C');
-        $openedTool = m::mock('Claroline\CoreBundle\Entity\Tool\Tool');
+        $openedTool = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
 
         $this->security->shouldReceive('getToken')->times(4)->andReturn($token);
         $token->shouldReceive('getUser')->once()->andReturn('admin');
@@ -374,14 +374,14 @@ class WorkspaceControllerTest extends MockeryTestCase
 
     public function testOpenActionUser()
     {
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $user = m::mock('Claroline\CoreBundle\Entity\User');
-        $token = m::mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
-        $roleA = m::mock('Claroline\CoreBundle\Entity\Role');
-        $roleB = m::mock('Claroline\CoreBundle\Entity\Role');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $user = $this->mock('Claroline\CoreBundle\Entity\User');
+        $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $roleA = $this->mock('Claroline\CoreBundle\Entity\Role');
+        $roleB = $this->mock('Claroline\CoreBundle\Entity\Role');
         $roles = array($roleA, $roleB);
         $userRoles = array('ROLE_A', 'ROLE_C');
-        $openedTool = m::mock('Claroline\CoreBundle\Entity\Tool\Tool');
+        $openedTool = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
 
         $this->security->shouldReceive('getToken')->times(4)->andReturn($token);
         $token->shouldReceive('getUser')->once()->andReturn('user');
@@ -419,9 +419,9 @@ class WorkspaceControllerTest extends MockeryTestCase
 
     public function testOpenActionAnonymous()
     {
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $token = m::mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
-        $openedTool = m::mock('Claroline\CoreBundle\Entity\Tool\Tool');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $openedTool = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
 
         $this->security->shouldReceive('getToken')->times(1)->andReturn($token);
         $token->shouldReceive('getUser')->once()->andReturn('anon.');
@@ -449,11 +449,11 @@ class WorkspaceControllerTest extends MockeryTestCase
 
     public function testFindRoleByWorkspaceCodeAction()
     {
-        $roleA = m::mock('Claroline\CoreBundle\Entity\Role');
-        $roleB = m::mock('Claroline\CoreBundle\Entity\Role');
+        $roleA = $this->mock('Claroline\CoreBundle\Entity\Role');
+        $roleB = $this->mock('Claroline\CoreBundle\Entity\Role');
         $roles = array($roleA, $roleB);
-        $workspaceA = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $workspaceB = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspaceA = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspaceB = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
         $arWorkspace = array(
             'code_A' => array(
                 'ROLE_A' => array(
@@ -524,7 +524,7 @@ class WorkspaceControllerTest extends MockeryTestCase
 
         $stringMocked .= ']';
 
-        return m::mock(
+        return $this->mock(
             'Claroline\CoreBundle\Controller\WorkspaceController' . $stringMocked,
             array(
                 $this->workspaceManager,
