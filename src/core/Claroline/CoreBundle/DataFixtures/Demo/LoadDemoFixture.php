@@ -354,8 +354,8 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         $this->loadFixture(
             new LoadMessagesData(
                 array(
-                    array('from' => 'John Doe', 'to' => 'Jane Doe', 'object' => 'Welcome !'),
-                    array('to' => 'John Doe', 'from' => 'Jane Doe', 'object' => 'I have a problem.')
+                    array('from' => 'John Doe', 'to' => 'JaneDoe', 'object' => 'Welcome !'),
+                    array('to' => 'JohnDoe', 'from' => 'Jane Doe', 'object' => 'I have a problem.')
                 )
             )
         );
