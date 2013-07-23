@@ -1,4 +1,4 @@
-!
+nbproject/*
 !.gitempty
 !placeholder
 *~
@@ -19,7 +19,6 @@ bin/*
 catalog.xml
 files/*
 files/tmp/*
-nbproject/*
 src/core/Claroline/CoreBundle/Resources/views/less-generated/*
 templates/*
 test/files/*

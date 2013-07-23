@@ -23,22 +23,21 @@ class UserManagerTest extends MockeryTestCase
     public function setUp()
     {
         parent::setUp();
-
-        $this->userRepo = m::mock('Claroline\CoreBundle\Repository\UserRepository');
-        $this->roleManager = m::mock('Claroline\CoreBundle\Manager\RoleManager');
-        $this->workspaceManager = m::mock('Claroline\CoreBundle\Manager\WorkspaceManager');
-        $this->toolManager = m::mock('Claroline\CoreBundle\Manager\ToolManager');
-        $this->ed = m::mock('Claroline\CoreBundle\Event\StrictDispatcher');
+        $this->userRepo = $this->mock('Claroline\CoreBundle\Repository\UserRepository');
+        $this->roleManager = $this->mock('Claroline\CoreBundle\Manager\RoleManager');
+        $this->workspaceManager = $this->mock('Claroline\CoreBundle\Manager\WorkspaceManager');
+        $this->toolManager = $this->mock('Claroline\CoreBundle\Manager\ToolManager');
+        $this->ed = $this->mock('Claroline\CoreBundle\Event\StrictDispatcher');
         $this->personalWsTemplateFile = 'template';
-        $this->translator = m::mock('Symfony\Component\Translation\Translator');
-        $this->ch = m::mock('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
-        $this->pagerFactory = m::mock('Claroline\CoreBundle\Pager\PagerFactory');
-        $this->om = m::mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->translator = $this->mock('Symfony\Component\Translation\Translator');
+        $this->ch = $this->mock('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
+        $this->pagerFactory = $this->mock('Claroline\CoreBundle\Pager\PagerFactory');
+        $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
     }
 
     public function testInsertUser()
     {
-        $user = m::mock('Claroline\CoreBundle\Entity\User');
+        $user = $this->mock('Claroline\CoreBundle\Entity\User');
         $this->om->shouldReceive('persist')->with($user)->once();
         $this->om->shouldReceive('flush')->once();
         $this->getManager()->insertUser($user);
@@ -47,8 +46,8 @@ class UserManagerTest extends MockeryTestCase
     public function testCreateUser()
     {
         $manager = $this->getManager(array('setPersonalWorkspace'));
-        $user = m::mock('Claroline\CoreBundle\Entity\User');
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $user = $this->mock('Claroline\CoreBundle\Entity\User');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
 
         $manager->shouldReceive('setPersonalWorkspace')
             ->with($user)
@@ -72,7 +71,7 @@ class UserManagerTest extends MockeryTestCase
 
     public function testDeleteUser()
     {
-        $user = m::mock('Claroline\CoreBundle\Entity\User');
+        $user = $this->mock('Claroline\CoreBundle\Entity\User');
         $this->om->shouldReceive('remove')->with($user)->once();
         $this->om->shouldReceive('flush')->once();
         $this->getManager()->deleteUser($user);
@@ -81,8 +80,8 @@ class UserManagerTest extends MockeryTestCase
     public function testCreateUserWithRole()
     {
         $manager = $this->getManager(array('setPersonalWorkspace'));
-        $user = m::mock('Claroline\CoreBundle\Entity\User');
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $user = $this->mock('Claroline\CoreBundle\Entity\User');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
 
         $this->om->shouldReceive('startFlushSuite')->once();
         $this->om->shouldReceive('endFlushSuite')->once();
@@ -98,10 +97,10 @@ class UserManagerTest extends MockeryTestCase
     public function testInsertUserWithRoles()
     {
         $manager = $this->getManager(array('setPersonalWorkspace'));
-        $user = m::mock('Claroline\CoreBundle\Entity\User');
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $roleOne = m::mock('Claroline\CoreBundle\Entity\Role');
-        $roleTwo = m::mock('Claroline\CoreBundle\Entity\Role');
+        $user = $this->mock('Claroline\CoreBundle\Entity\User');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $roleOne = $this->mock('Claroline\CoreBundle\Entity\Role');
+        $roleTwo = $this->mock('Claroline\CoreBundle\Entity\Role');
         $roles = new ArrayCollection(array($roleOne, $roleTwo));
 
         $this->om->shouldReceive('startFlushSuite')->once();
@@ -131,9 +130,11 @@ class UserManagerTest extends MockeryTestCase
     {
         $roleName = PlatformRoles::USER;
         $manager = $this->getManager(array('setPersonalWorkspace'));
-        $user = m::mock('Claroline\CoreBundle\Entity\User');
-        $existingUser = m::mock('Claroline\CoreBundle\Entity\User');
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+
+        $user = $this->mock('Claroline\CoreBundle\Entity\User');
+        $existingUser = $this->mock('Claroline\CoreBundle\Entity\User');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+
         $users = array(
             array(
                 'first_name_1',
@@ -214,12 +215,12 @@ class UserManagerTest extends MockeryTestCase
 
     public function testConvertUsersToArray()
     {
-        $userA = m::mock('Claroline\CoreBundle\Entity\User');
-        $userB = m::mock('Claroline\CoreBundle\Entity\User');
-        $roleAA = m::mock('Claroline\CoreBundle\Entity\Role');
-        $roleAB = m::mock('Claroline\CoreBundle\Entity\Role');
-        $roleBA = m::mock('Claroline\CoreBundle\Entity\Role');
-        $roleBB = m::mock('Claroline\CoreBundle\Entity\Role');
+        $userA = $this->mock('Claroline\CoreBundle\Entity\User');
+        $userB = $this->mock('Claroline\CoreBundle\Entity\User');
+        $roleAA = $this->mock('Claroline\CoreBundle\Entity\Role');
+        $roleAB = $this->mock('Claroline\CoreBundle\Entity\Role');
+        $roleBA = $this->mock('Claroline\CoreBundle\Entity\Role');
+        $roleBB = $this->mock('Claroline\CoreBundle\Entity\Role');
 
         $userA->shouldReceive('getId')->once()->andReturn(1);
         $userA->shouldReceive('getUsername')->once()->andReturn('username_1');
@@ -269,7 +270,7 @@ class UserManagerTest extends MockeryTestCase
 
     public function testRefreshUser()
     {
-        $user = m::mock('Symfony\Component\Security\Core\User\UserInterface');
+        $user = $this->mock('Symfony\Component\Security\Core\User\UserInterface');
 
         $this->userRepo->shouldReceive('refreshUser')
             ->once()
@@ -280,10 +281,10 @@ class UserManagerTest extends MockeryTestCase
 
     public function testGetUserByWorkspaceAndRole()
     {
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $role = m::mock('Claroline\CoreBundle\Entity\Role');
-        $userA = m::mock('Claroline\CoreBundle\Entity\User');
-        $userB = m::mock('Claroline\CoreBundle\Entity\User');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $role = $this->mock('Claroline\CoreBundle\Entity\Role');
+        $userA = $this->mock('Claroline\CoreBundle\Entity\User');
+        $userB = $this->mock('Claroline\CoreBundle\Entity\User');
         $users = array($userA, $userB);
 
         $this->userRepo->shouldReceive('findByWorkspaceAndRole')
@@ -296,8 +297,8 @@ class UserManagerTest extends MockeryTestCase
 
     public function testGetWorkspaceOutsidersByName()
     {
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $em = m::mock('Doctrine\ORM\EntityManager');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $em = $this->mock('Doctrine\ORM\EntityManager');
         $query = new \Doctrine\ORM\Query($em);
 
         $this->userRepo->shouldReceive('findWorkspaceOutsidersByName')
@@ -314,8 +315,8 @@ class UserManagerTest extends MockeryTestCase
 
     public function testGetWorkspaceOutsiders()
     {
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $em = m::mock('Doctrine\ORM\EntityManager');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $em = $this->mock('Doctrine\ORM\EntityManager');
         $query = new \Doctrine\ORM\Query($em);
 
         $this->userRepo->shouldReceive('findWorkspaceOutsiders')
@@ -332,7 +333,7 @@ class UserManagerTest extends MockeryTestCase
 
     public function testGetAllUsers()
     {
-        $em = m::mock('Doctrine\ORM\EntityManager');
+        $em = $this->mock('Doctrine\ORM\EntityManager');
         $query = new \Doctrine\ORM\Query($em);
 
         $this->userRepo->shouldReceive('findAll')
@@ -349,7 +350,7 @@ class UserManagerTest extends MockeryTestCase
 
     public function testGetUsersByName()
     {
-        $em = m::mock('Doctrine\ORM\EntityManager');
+        $em = $this->mock('Doctrine\ORM\EntityManager');
         $query = new \Doctrine\ORM\Query($em);
 
         $this->userRepo->shouldReceive('findByName')
@@ -366,8 +367,8 @@ class UserManagerTest extends MockeryTestCase
 
     public function testGetUsersByGroup()
     {
-        $group = m::mock('Claroline\CoreBundle\Entity\Group');
-        $em = m::mock('Doctrine\ORM\EntityManager');
+        $group = $this->mock('Claroline\CoreBundle\Entity\Group');
+        $em = $this->mock('Doctrine\ORM\EntityManager');
         $query = new \Doctrine\ORM\Query($em);
 
         $this->userRepo->shouldReceive('findByGroup')
@@ -384,8 +385,8 @@ class UserManagerTest extends MockeryTestCase
 
     public function testGetUsersByNameAndGroup()
     {
-        $group = m::mock('Claroline\CoreBundle\Entity\Group');
-        $em = m::mock('Doctrine\ORM\EntityManager');
+        $group = $this->mock('Claroline\CoreBundle\Entity\Group');
+        $em = $this->mock('Doctrine\ORM\EntityManager');
         $query = new \Doctrine\ORM\Query($em);
 
         $this->userRepo->shouldReceive('findByNameAndGroup')
@@ -402,8 +403,8 @@ class UserManagerTest extends MockeryTestCase
 
     public function testGetUsersByWorkspace()
     {
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $em = m::mock('Doctrine\ORM\EntityManager');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $em = $this->mock('Doctrine\ORM\EntityManager');
         $query = new \Doctrine\ORM\Query($em);
 
         $this->userRepo->shouldReceive('findByWorkspace')
@@ -420,8 +421,8 @@ class UserManagerTest extends MockeryTestCase
 
     public function testGetUsersByWorkspaceAndName()
     {
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $em = m::mock('Doctrine\ORM\EntityManager');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $em = $this->mock('Doctrine\ORM\EntityManager');
         $query = new \Doctrine\ORM\Query($em);
 
         $this->userRepo->shouldReceive('findByWorkspaceAndName')
@@ -438,8 +439,8 @@ class UserManagerTest extends MockeryTestCase
 
     public function testGetGroupOutsiders()
     {
-        $group = m::mock('Claroline\CoreBundle\Entity\Group');
-        $em = m::mock('Doctrine\ORM\EntityManager');
+        $group = $this->mock('Claroline\CoreBundle\Entity\Group');
+        $em = $this->mock('Doctrine\ORM\EntityManager');
         $query = new \Doctrine\ORM\Query($em);
 
         $this->userRepo->shouldReceive('findGroupOutsiders')
@@ -456,8 +457,8 @@ class UserManagerTest extends MockeryTestCase
 
     public function testGetGroupOutsidersByName()
     {
-        $group = m::mock('Claroline\CoreBundle\Entity\Group');
-        $em = m::mock('Doctrine\ORM\EntityManager');
+        $group = $this->mock('Claroline\CoreBundle\Entity\Group');
+        $em = $this->mock('Doctrine\ORM\EntityManager');
         $query = new \Doctrine\ORM\Query($em);
 
         $this->userRepo->shouldReceive('findGroupOutsidersByName')
@@ -474,7 +475,7 @@ class UserManagerTest extends MockeryTestCase
 
     public function testGetAllUsersExcept()
     {
-        $excludedUser = m::mock('Claroline\CoreBundle\Entity\User');
+        $excludedUser = $this->mock('Claroline\CoreBundle\Entity\User');
         $users = array('userA', 'userB');
 
         $this->userRepo->shouldReceive('findAllExcept')
@@ -587,7 +588,7 @@ class UserManagerTest extends MockeryTestCase
 
         $stringMocked .= ']';
 
-        return m::mock(
+        return $this->mock(
             'Claroline\CoreBundle\Manager\UserManager' . $stringMocked,
             array(
                 $this->roleManager,
