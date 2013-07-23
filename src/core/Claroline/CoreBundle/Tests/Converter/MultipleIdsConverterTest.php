@@ -15,21 +15,21 @@ class MultipleIdsConverterTest extends MockeryTestCase
 
     protected function setUp()
     {
-        $this->request = m::mock('Symfony\Component\HttpFoundation\Request');
-        $this->configuration = m::mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter');
-        $this->om = m::mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->request = $this->mock('Symfony\Component\HttpFoundation\Request');
+        $this->configuration = $this->mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter');
+        $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
         $this->converter = new MultipleIdsConverter($this->om);
     }
 
     public function testSupportsAcceptsOnlyParamConverterConfiguration()
     {
-        $configuration = m::mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface');
+        $configuration = $this->mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface');
         $this->assertFalse($this->converter->supports($configuration));
     }
 
     public function testSupportsAcceptsOnlyAnMultipleIdsParameterSetToTrue()
     {
-        $configuration = m::mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter');
+        $configuration = $this->mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter');
         $configuration->shouldReceive('getOptions')->times(3)->andReturn(
             array('some_other_option'),
             array('multipleIds' => false),
