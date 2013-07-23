@@ -332,7 +332,7 @@ class QuestionController extends Controller
      * Displays a form to edit an existing Question entity.
      *
      */
-    public function editAction($id)
+    public function editAction($id, $form = null)
     {
         $question = $this->controlUserQuestion($id);
 
@@ -360,12 +360,16 @@ class QuestionController extends Controller
                     //fired a sort function
                     $interactionQCM[0]->sortChoices();
 
-                    $editForm = $this->createForm(
-                        new InteractionQCMType(
-                            $this->container->get('security.context')
-                                ->getToken()->getUser()
-                        ), $interactionQCM[0]
-                    );
+                    if ($form == null) {
+                        $editForm = $this->createForm(
+                            new InteractionQCMType(
+                                $this->container->get('security.context')
+                                    ->getToken()->getUser()
+                            ), $interactionQCM[0]
+                        );
+                    } else {
+                        $editForm = $form;
+                    }
                     $deleteForm = $this->createDeleteForm($interactionQCM[0]->getId());
 
                     return $this->render(

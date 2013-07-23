@@ -87,6 +87,12 @@ class InteractionQCMHandler
         $interQCM->getInteraction()->getQuestion()->setUser($this->user);
         $interQCM->getInteraction()->setType('InteractionQCM');
 
+        $pointsWrong = str_replace(',', '.', $interQCM->getScoreFalseResponse());
+        $pointsRight = str_replace(',', '.', $interQCM->getScoreRightResponse());
+
+        $interQCM->setScoreFalseResponse($pointsWrong);
+        $interQCM->setScoreRightResponse($pointsRight);
+
         $this->em->persist($interQCM);
         $this->em->persist($interQCM->getInteraction()->getQuestion());
         $this->em->persist($interQCM->getInteraction());
@@ -190,6 +196,12 @@ class InteractionQCMHandler
             // if you wanted to delete the Hint entirely, you can also do that
             $this->em->remove($hint);
         }
+
+        $pointsWrong = str_replace(',', '.', $interQCM->getScoreFalseResponse());
+        $pointsRight = str_replace(',', '.', $interQCM->getScoreRightResponse());
+
+        $interQCM->setScoreFalseResponse($pointsWrong);
+        $interQCM->setScoreRightResponse($pointsRight);
 
         $this->em->persist($interQCM);
         $this->em->persist($interQCM->getInteraction()->getQuestion());

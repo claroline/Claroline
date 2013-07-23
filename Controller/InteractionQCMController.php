@@ -132,11 +132,6 @@ class InteractionQCMController extends Controller
         );
 
         if ($formHandler->processAdd()) {
-            //return $this->redirect($this->generateUrl('question_show', array(
-            //  'id' => $interQCM->getInteraction()->getQuestion()->getId(), 'paper' => 0)) );
-
-//            $this->form->getData()
-
             $category2Find = $interQCM->getInteraction()->getQuestion()->getCategory();
             $title2Find = $interQCM->getInteraction()->getQuestion()->getTitle();
 
@@ -151,11 +146,20 @@ class InteractionQCMController extends Controller
             }
         }
 
-        return $this->render(
+        $formWithError = $this->render(
             'UJMExoBundle:InteractionQCM:new.html.twig', array(
             'entity' => $interQCM,
             'form'   => $form->createView(),
             'exoID'  => $exoID,
+            'error'  => true
+            )
+        );
+
+        $formWithError = substr($formWithError, strrpos($formWithError, 'GMT') + 3);
+
+        return $this->render(
+            'UJMExoBundle:Question:new.html.twig', array(
+            'formWithError' => $formWithError
             )
         );
     }
@@ -218,13 +222,10 @@ class InteractionQCMController extends Controller
             return $this->redirect($this->generateUrl('ujm_question_index'));
         }
 
-        $deleteForm = $this->createDeleteForm($id);
-
-        return $this->render(
-            'UJMExoBundle:InteractionQCM:edit.html.twig', array(
-            'entity'      => $interQCM,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+        return $this->forward(
+            'UJMExoBundle:Question:edit', array(
+                'id' => $interQCM->getInteraction()->getQuestion()->getId(),
+                'form' => $editForm
             )
         );
     }

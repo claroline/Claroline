@@ -22,3 +22,17 @@ services:
     ujm.exercise_services:
         class: UJM\ExoBundle\Services\classes\exerciseServices
         arguments: [@doctrine]
+
+    ujm.exercise.validator.isvalidqcmglobalmark:
+        class: UJM\ExoBundle\Validator\Constraints\isValidQCMGlobalMarkValidator
+        arguments: [@request]
+        scope: request
+        tags:
+            - { name: validator.constraint_validator, alias: ujm.exercise_isvalidqcmglobalmark }
+
+    ujm.exercise.validator.isvalidqcmmark:
+        class: UJM\ExoBundle\Validator\Constraints\isValidQCMMarkValidator
+        arguments: [@request]
+        scope: request
+        tags:
+            - { name: validator.constraint_validator, alias: ujm.exercise_isvalidqcmmark }

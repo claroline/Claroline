@@ -33,6 +33,8 @@
  # knowledge of the CeCILL license and that you accept its terms.
 #}
 
+<link href="{{ asset('bundles/ujmexo/css/errorValidation.css') }}" type="text/css" rel="stylesheet" />
+
 <form class="well label_bold" onsubmit="return check_form('{{ "nbr_choices" | trans }}', '{{ "answer_coched" | trans }}', '{{ "label_empty" | trans }}', '{{ "point_answers" | trans }}', '{{ "point_answer" | trans }}', '{{ "invite_question" | trans }}');" action="{{ path('ujm_interactionqcm_create') }}" method="post" {{ form_enctype(form) }}>
     {{ form_widget(form) }}
     <p>
@@ -42,7 +44,7 @@
 </form>
 
 {# lien vers category #}
-<a href="#" style="margin: 5px 5px 5px 5px;" id="lien_category">{{ "Create a new category" | trans }}</a> 
+<a href="#" style="margin: 5px 5px 5px 5px;" id="lien_category">{{ "Create a new category" | trans }}</a>
 
 <div id="popupEA">
     <div id="popupContainer" class="hiddenCat"> <a id="close" class="hiddenCat" title="close popup">{{ "close" | trans }}</a><h1>Réponse</h1><div id="div_input_popup"><textarea id="input_popup" class="tinymce" data-theme="medium"></textarea></div></div><div id="overlayEffect"> </div>
@@ -62,14 +64,23 @@
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/category_pop.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/hint.js') }}"></script>
 
-
-{# functions javascript  #}
-<script type="text/javascript">
-    
-    linkCategory('{{ path('ujm_category_new_pop') }}');
-    insertStyle();
-    editionAv();
-    addFormChoice('{{ "Multiple response" | trans }}', '{{ "Unique response" | trans }}', '{{ "add" | trans }}', '{{ "Response number" | trans }}', '{{ "Response" | trans }}', '{{ "point" | trans }}', '{{ "comment" | trans }}', '{{ "expected response" | trans }}', '{{ "order" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}', '{{ asset('bundles/ujmexo/images/delete.png') }}', '{{ "Choice.positionForce" | trans }}');
-    addFormHint('{{ "add hint" | trans }}', '{{ "hint number" | trans }}', '{{ "Hint" | trans }}', '{{ "Penalty" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');    
-</script>
-
+{# functions javascript #}
+{% if error is defined %}
+    <script type="text/javascript">
+        linkCategory('{{ path('ujm_category_new_pop') }}');
+        insertStyle();
+        addFormChoiceEdit('{{ "Multiple response" | trans }}', '{{ "Unique response" | trans }}', '{{ "add" | trans }}', '{{ "Response number" | trans }}', '{{ "Response" | trans }}', '{{ "point" | trans }}', '{{ "comment" | trans }}', '{{ "expected response" | trans }}', '{{ "order" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}', '0', '{{entity.typeQCM.id}}', '{{ "Choice.positionForce" | trans }}', '{{ asset('bundles/ujmexo/images/delete.png') }}');
+        choiceCSSEdit('{{ asset('bundles/ujmexo/images/delete.png') }}', '0');
+        editionAv();
+        hintCSSEdit();
+        addFormHintEdit('{{ "add hint" | trans }}',  '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');
+    </script>
+{% else %}
+    <script type="text/javascript">
+        linkCategory('{{ path('ujm_category_new_pop') }}');
+        insertStyle();
+        editionAv();
+        addFormChoice('{{ "Multiple response" | trans }}', '{{ "Unique response" | trans }}', '{{ "add" | trans }}', '{{ "Response number" | trans }}', '{{ "Response" | trans }}', '{{ "point" | trans }}', '{{ "comment" | trans }}', '{{ "expected response" | trans }}', '{{ "order" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}', '{{ asset('bundles/ujmexo/images/delete.png') }}', '{{ "Choice.positionForce" | trans }}');
+        addFormHint('{{ "add hint" | trans }}', '{{ "hint number" | trans }}', '{{ "Hint" | trans }}', '{{ "Penalty" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');
+    </script>
+{% endif %}

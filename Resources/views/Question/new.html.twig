@@ -56,6 +56,9 @@
 </form>
 
 <div id="formulaire_interactions">
+    {% if formWithError is defined %}
+        {{ formWithError | raw }}
+    {% endif %}
 </div>
 
 

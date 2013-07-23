@@ -112,6 +112,7 @@ class InteractionQCMType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class' => 'UJM\ExoBundle\Entity\InteractionQCM',
+                'cascade_validation' => true
             )
         );
     }

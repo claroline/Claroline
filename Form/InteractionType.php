@@ -104,6 +104,7 @@ class InteractionType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class' => 'UJM\ExoBundle\Entity\Interaction',
+                'cascade_validation' => true
             )
         );
     }
