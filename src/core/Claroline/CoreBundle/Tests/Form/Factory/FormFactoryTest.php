@@ -13,7 +13,7 @@ class FormFactoryTest extends MockeryTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->formFactory = m::mock('Symfony\Component\Form\FormFactoryInterface');
+        $this->formFactory = $this->mock('Symfony\Component\Form\FormFactoryInterface');
         $this->factory = new FormFactory($this->formFactory);
         $rFactory = new \ReflectionClass($this->factory);
         $rTypes = $rFactory->getProperty('types');

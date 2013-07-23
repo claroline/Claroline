@@ -12,25 +12,28 @@ class AuthenticatedUserConverterTest extends MockeryTestCase
     private $request;
     private $configuration;
     private $securityContext;
+    private $token;
     private $converter;
 
     protected function setUp()
     {
-        $this->request = m::mock('Symfony\Component\HttpFoundation\Request');
-        $this->configuration = m::mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter');
-        $this->securityContext = m::mock('Symfony\Component\Security\Core\SecurityContextInterface');
+        $this->request = $this->mock('Symfony\Component\HttpFoundation\Request');
+        $this->configuration = $this->mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter');
+        $this->securityContext = $this->mock('Symfony\Component\Security\Core\SecurityContextInterface');
+        $this->token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $this->securityContext->shouldReceive('getToken')->andReturn($this->token);
         $this->converter = new AuthenticatedUserConverter($this->securityContext);
     }
 
     public function testSupportsAcceptsOnlyParamConverterConfiguration()
     {
-        $configuration = m::mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface');
+        $configuration = $this->mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface');
         $this->assertFalse($this->converter->supports($configuration));
     }
 
     public function testSupportsAcceptsOnlyAnAuthenticatedUserParameterSetToTrue()
     {
-        $configuration = m::mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter');
+        $configuration = $this->mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter');
         $configuration->shouldReceive('getOptions')->times(3)->andReturn(
             array('some_other_option'),
             array('authenticatedUser' => false),
@@ -57,7 +60,7 @@ class AuthenticatedUserConverterTest extends MockeryTestCase
     public function testApplyThrowsAnExceptionIfThereIsNoAuthenticatedUser()
     {
         $this->configuration->shouldReceive('getName')->once()->andReturn('user');
-        $this->securityContext->shouldReceive('getToken->getUser')->andReturn('anon.');
+        $this->token->shouldReceive('getUser')->andReturn('anon.');
         $this->converter->apply($this->request, $this->configuration);
     }
 
@@ -66,7 +69,7 @@ class AuthenticatedUserConverterTest extends MockeryTestCase
         $user = new User();
         $this->request->attributes = new ParameterBag();
         $this->configuration->shouldReceive('getName')->once()->andReturn('user');
-        $this->securityContext->shouldReceive('getToken->getUser')->andReturn($user);
+        $this->token->shouldReceive('getUser')->andReturn($user);
         $this->assertEquals(true, $this->converter->apply($this->request, $this->configuration));
         $this->assertEquals($user, $this->request->attributes->get('user'));
     }
