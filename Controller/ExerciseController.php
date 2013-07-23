@@ -665,7 +665,7 @@ class ExerciseController extends Controller
         }
     }
 
-    public function docimologyAction($exerciseId)
+    public function docimologyAction($exerciseId, $nbPapers)
     {
         $maxY = 4;
         $em = $this->getDoctrine()->getManager();
@@ -711,6 +711,7 @@ class ExerciseController extends Controller
                 array(
                     'workspace'      => $workspace,
                     'exoID'          => $exerciseId,
+                    'nbPapers'       => $nbPapers,
                     'scoreList'      => $scoreList,
                     'frequencyMarks' => $frequencyMarks,
                     'maxY'           => $maxY

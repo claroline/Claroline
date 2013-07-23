@@ -42,7 +42,7 @@
     <a href="{{ path('ujm_exercise_open', { 'exerciseId': exoID }) }}" ><i class="icon-arrow-left"></i> {{ "Back" | trans }}</a>
     {% if isAdmin %}
         &nbsp;|&nbsp;
-        <a href="{{ path('ujm_exercise_docimology', { 'exerciseId': exoID }) }}" >{{ "Docimology" | trans }}</a>
+        <a href="{{ path('ujm_exercise_docimology', { 'exerciseId': exoID, 'nbPapers': pager.getNbResults }) }}" >{{ "Docimology" | trans }}</a>
     {% endif %}
     <br/><br/>
 

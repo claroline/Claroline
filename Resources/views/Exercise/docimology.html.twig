@@ -63,9 +63,11 @@
 
     <h1>{{ "Docimology" | trans }}</h1>
     <a href="{{ path('ujm_exercise_open', { 'exerciseId': exoID }) }}" ><i class="icon-arrow-left"></i> {{ "Back" | trans }}</a>
-    <hr>
+    <br/><br/>
+    {{ "Number of papers" | trans }}: {{ nbPapers }}
+    <hr/>
     <div id="histoMarks" style="height:100%; width:100%;"></div>
-    <hr>
+    <hr/>
 {% endblock %}
 
 {% block javascripts %}

@@ -1,5 +1,5 @@
 ujm_exercise_docimology:
-     pattern:  /docimology/{exerciseId}
+     pattern:  /docimology/{exerciseId}/{nbPapers}
      defaults: { _controller: "UJMExoBundle:Exercise:docimology" }
 
 ujm_exercise_edit:
