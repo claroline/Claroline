@@ -14,16 +14,16 @@ class QueryStringHandlerTest extends MockeryTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->writer = m::mock('Claroline\CoreBundle\Library\Resource\QueryStringWriter');
-        $this->accessor = m::mock('Claroline\CoreBundle\Library\Resource\ModeAccessor');
+        $this->writer = $this->mock('Claroline\CoreBundle\Library\Resource\QueryStringWriter');
+        $this->accessor = $this->mock('Claroline\CoreBundle\Library\Resource\ModeAccessor');
 
         $this->handler = new QueryStringHandler($this->accessor, $this->writer);
     }
 
     public function testHandlerSetsThePathModeFlagToTrueIfNeeded()
     {
-        $request = m::mock('Symfony\Component\HttpFoundation\Request');
-        $event = m::mock('Symfony\Component\HttpKernel\Event\GetResponseEvent');
+        $request = $this->mock('Symfony\Component\HttpFoundation\Request');
+        $event = $this->mock('Symfony\Component\HttpKernel\Event\GetResponseEvent');
 
         $event->shouldReceive('getRequest')->andReturn($request);
         $request->shouldReceive('get')->with('_mode')->andReturn('path');
@@ -34,8 +34,8 @@ class QueryStringHandlerTest extends MockeryTestCase
 
     public function testHandlerReappendsQueryStringParametersToRedirectUrl()
     {
-        $response = m::mock('Symfony\Component\HttpFoundation\RedirectResponse');
-        $event = m::mock('Symfony\Component\HttpKernel\Event\FilterResponseEvent');
+        $response = $this->mock('Symfony\Component\HttpFoundation\RedirectResponse');
+        $event = $this->mock('Symfony\Component\HttpKernel\Event\FilterResponseEvent');
 
         $event->shouldReceive('getResponse')->andReturn($response);
         $response->shouldReceive('getTargetUrl')->andReturn('foo/url');

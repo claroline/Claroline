@@ -27,18 +27,18 @@ class HomeManagerTest extends MockeryTestCase
     {
         parent::setUp();
 
-        $this->graph = m::mock('Claroline\CoreBundle\Library\Home\GraphService');
-        $this->manager = m::mock('Claroline\CoreBundle\Persistence\ObjectManager');
-        $this->registry = m::mock('Doctrine\Bundle\DoctrineBundle\Registry');
-        $this->homeService = m::mock('Claroline\CoreBundle\Library\Home\HomeService');
-        $this->repository = m::mock('Doctrine\ORM\EntityRepository');
+        $this->graph = $this->mock('Claroline\CoreBundle\Library\Home\GraphService');
+        $this->manager = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->registry = $this->mock('Doctrine\Bundle\DoctrineBundle\Registry');
+        $this->homeService = $this->mock('Claroline\CoreBundle\Library\Home\HomeService');
+        $this->repository = $this->mock('Doctrine\ORM\EntityRepository');
 
-        $this->type = m::mock('Claroline\CoreBundle\Entity\Home\Type');
-        $this->region = m::mock('Claroline\CoreBundle\Entity\Home\Region');
-        $this->content = m::mock('Claroline\CoreBundle\Entity\Home\Content');
-        $this->subContent = m::mock('Claroline\CoreBundle\Entity\Home\SubContent');
-        $this->contentType = m::mock('Claroline\CoreBundle\Entity\Home\Content2Type');
-        $this->contentRegion = m::mock('Claroline\CoreBundle\Entity\Home\Content2Region');
+        $this->type = $this->mock('Claroline\CoreBundle\Entity\Home\Type');
+        $this->region = $this->mock('Claroline\CoreBundle\Entity\Home\Region');
+        $this->content = $this->mock('Claroline\CoreBundle\Entity\Home\Content');
+        $this->subContent = $this->mock('Claroline\CoreBundle\Entity\Home\SubContent');
+        $this->contentType = $this->mock('Claroline\CoreBundle\Entity\Home\Content2Type');
+        $this->contentRegion = $this->mock('Claroline\CoreBundle\Entity\Home\Content2Region');
 
         $this->registry->shouldReceive('getRepository')->times(6)->andReturn($this->repository);
 
