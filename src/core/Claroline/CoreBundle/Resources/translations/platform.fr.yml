@@ -258,6 +258,7 @@ logout: Déconnexion
 mail: Mail
 mail_form_content: Contenu
 mail_form_object: Objet
+mail_sent : 'Un email vient de vous être envoyé, vérifier votre dossier spam au cas où vous ne verrais pas l''email'
 manage_rights: 'Gérer les droits'
 manager: Gestionnaire
 media_most_viewed: Media les plus consultés

@@ -103,7 +103,7 @@ class AuthenticationController
             $user->setResetPassword($password);
             $this->om->persist($user);
             $this->om->flush();
-            $link = $this->router->generate(
+            $link = $_SERVER['HTTP_ORIGIN'].$this->router->generate(
                 'claro_security_reset_password',
                 array('hash' => $user->getResetPassword())
             );
@@ -158,7 +158,7 @@ class AuthenticationController
         // the link is valide for 24h
         if ($currentTime - (3600 * 24) < $user->getTime()) {
             return array( 'user' => $user);
-        } 
+        }
 
         return array('error' => $this->translator->trans('link_outdated', array(), 'platform'));
     }
@@ -188,7 +188,7 @@ class AuthenticationController
                 'message' => $this->translator->trans('password_ok', array(), 'platform'),
                 'user' => $user
             );
-        } 
+        }
 
         return array(
             'error' => $this->translator->trans('password_missmatch', array(), 'platform')

@@ -257,6 +257,7 @@ logout: Logout
 mail: Mail
 mail_form_content: Content
 mail_form_object: Object
+mail_sent : 'A email has been sent to your adress , check your inbox mail and your spam box'
 manage_rights: 'Manage rights'
 manager: Manager
 media_most_viewed: Most viewed media
