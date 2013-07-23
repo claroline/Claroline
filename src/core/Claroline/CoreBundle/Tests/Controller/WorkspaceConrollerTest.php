@@ -3,15 +3,12 @@
 namespace Claroline\CoreBundle\Controller;
 
 use \Mockery as m;
-//use Claroline\CoreBundle\Entity\Group;
-//use Claroline\CoreBundle\Entity\Role;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
-//use Doctrine\Common\Collections\ArrayCollection;
 
 class WorkspaceControllerTest extends MockeryTestCase
 {
