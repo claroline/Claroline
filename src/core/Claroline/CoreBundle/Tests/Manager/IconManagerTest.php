@@ -20,13 +20,13 @@ class IconManagerTest extends MockeryTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->thumbnailCreator = m::mock('Claroline\CoreBundle\Library\Utilities\ThumbnailCreator');
-        $this->repo = m::mock('Claroline\CoreBundle\Repository\ResourceIconRepository');
+        $this->thumbnailCreator = $this->mock('Claroline\CoreBundle\Library\Utilities\ThumbnailCreator');
+        $this->repo = $this->mock('Claroline\CoreBundle\Repository\ResourceIconRepository');
         $this->fileDir = 'path/to/filedir';
         $this->thumbDir = 'path/to/thumbdir';
         $this->rootDor = 'path/to/rootDir';
-        $this->ut = m::mock('Claroline\CoreBundle\Library\Utilities\ClaroUtilities');
-        $this->om = m::mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->ut = $this->mock('Claroline\CoreBundle\Library\Utilities\ClaroUtilities');
+        $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
     }
 
     /**
@@ -35,7 +35,7 @@ class IconManagerTest extends MockeryTestCase
     public function testGetIconForDirectory()
     {
         $manager = $this->getManager(array('searchIcon'));
-        $dir = m::mock('Claroline\CoreBundle\Entity\Resource\Directory');
+        $dir = $this->mock('Claroline\CoreBundle\Entity\Resource\Directory');
         $dir->shouldReceive('getMimeType')->andReturn('custom/directory');
         $icon = new ResourceIcon();
         $manager->shouldReceive('searchIcon')->once()->andReturn($icon);
@@ -48,10 +48,10 @@ class IconManagerTest extends MockeryTestCase
     public function testGetIconForFile()
     {
         $manager = $this->getManager(array('createFromFile', 'createShortcutIcon', 'getEntity'));
-        $file = m::mock('Claroline\CoreBundle\Entity\Resource\File');
+        $file = $this->mock('Claroline\CoreBundle\Entity\Resource\File');
         $file->shouldReceive('getMimeType')->once()->andReturn('video/mp4');
         $file->shouldReceive('getHashName')->once()->andReturn('ABCDEFG.mp4');
-        $icon = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
+        $icon = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
         $icon->shouldReceive('setMimeType')->once()->with('custom');
         $icon->shouldReceive('setIconLocation')->once()->with('path/to/thumbnail');
         $icon->shouldReceive('setRelativeUrl')->once()->with('thumbnails/thumbnail');
@@ -91,8 +91,8 @@ class IconManagerTest extends MockeryTestCase
     public function testCreateShortcutIcon()
     {
         $manager = $this->getManager(array('getEntity'));
-        $icon = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
-        $shortcutIcon = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
+        $icon = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
+        $shortcutIcon = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
         $this->om->shouldReceive('factory')->once()
             ->with('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
             ->andReturn($shortcutIcon);
@@ -120,8 +120,8 @@ class IconManagerTest extends MockeryTestCase
     public function testCreateCustomnIcon()
     {
         $manager = $this->getManager(array('getEntity', 'createShortcutIcon'));
-        $icon = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
-        $file = m::mock('Symfony\Component\HttpFoundation\File\UploadedFile');
+        $icon = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
+        $file = $this->mock('Symfony\Component\HttpFoundation\File\UploadedFile');
         $file->shouldReceive('getClientOriginalName')->once()->andReturn('original/name.ext');
         $this->ut->shouldReceive('generateGuid')->andReturn('ABCDEF')->once();
         $file->shouldReceive('move')->once()->with($this->thumbDir, 'ABCDEF.ext');
@@ -174,8 +174,8 @@ class IconManagerTest extends MockeryTestCase
     public function testDeleteCustom()
     {
         $manager = $this->getManager(array('removeImageFromThumbDir'));
-        $icon = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
-        $shortcut = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
+        $icon = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
+        $shortcut = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
         $icon->shouldReceive('getShortcutIcon')->once()->andReturn($shortcut);
         $icon->shouldReceive('getMimeType')->once()->andReturn('custom');
         $manager->shouldReceive('removeImageFromThumbDir')->once()->with($icon);
@@ -191,9 +191,9 @@ class IconManagerTest extends MockeryTestCase
     {
         $manager = $this->getManager(array('delete'));
         $this->om->shouldReceive('startFlushSuite')->once();
-        $icon = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
-        $oldIcon = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
-        $resource = m::mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $icon = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
+        $oldIcon = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
+        $resource = $this->mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
         $resource->shouldReceive('getIcon')->once()->andReturn($oldIcon);
         $resource->shouldReceive('setIcon')->once()->with($icon);
         $manager->shouldReceive('delete')->once()->with($oldIcon);
@@ -231,7 +231,7 @@ class IconManagerTest extends MockeryTestCase
 
             $stringMocked .= ']';
 
-            return m::mock(
+            return $this->mock(
                 'Claroline\CoreBundle\Manager\IconManager' . $stringMocked,
                 array(
                     $this->thumbnailCreator,

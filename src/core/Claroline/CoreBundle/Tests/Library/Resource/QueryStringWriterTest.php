@@ -14,10 +14,10 @@ class QueryStringWriterTest extends MockeryTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->accessor = m::mock('Claroline\CoreBundle\Library\Resource\ModeAccessor');
-        $this->container = m::mock('Symfony\Component\DependencyInjection\ContainerInterface');
-        $this->query = m::mock('Symfony\Component\HttpFoundation\ParameterBag');
-        $request = m::mock('Symfony\Component\HttpFoundation\Request');
+        $this->accessor = $this->mock('Claroline\CoreBundle\Library\Resource\ModeAccessor');
+        $this->container = $this->mock('Symfony\Component\DependencyInjection\ContainerInterface');
+        $this->query = $this->mock('Symfony\Component\HttpFoundation\ParameterBag');
+        $request = $this->mock('Symfony\Component\HttpFoundation\Request');
         $request->query = $this->query;
         $this->container->shouldReceive('get')->with('request')->andReturn($request);
     }

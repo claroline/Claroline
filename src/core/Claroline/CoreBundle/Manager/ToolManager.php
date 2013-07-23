@@ -223,7 +223,7 @@ class ToolManager
                     $isVisible = false;
                     //is the tool visible for a role in a workspace ?
                     foreach ($orderedTool->getRoles() as $toolRole) {
-                        if ($toolRole == $role) {
+                        if ($toolRole === $role) {
                             $isVisible = true;
                         }
                     }

@@ -14,7 +14,7 @@ class DispatcherTest extends MockeryTestCase
      */
     public function testDispatchThrowsExceptionOnInvalidClass()
     {
-        $dispatcher = m::mock('Symfony\Component\EventDispatcher\EventDispatcher');
+        $dispatcher = $this->mock('Symfony\Component\EventDispatcher\EventDispatcher');
         $claroDispatcher = new StrictDispatcher($dispatcher);
         $claroDispatcher->dispatch('noClass', 'FakeClass', array());
     }
@@ -24,7 +24,7 @@ class DispatcherTest extends MockeryTestCase
      */
     public function testDispatchThrowsExceptionOnMandatoryNotObserved()
     {
-        $dispatcher = m::mock('Symfony\Component\EventDispatcher\EventDispatcher');
+        $dispatcher = $this->mock('Symfony\Component\EventDispatcher\EventDispatcher');
         $claroDispatcher = new StrictDispatcher($dispatcher);
         $dispatcher->shouldReceive('hasListeners')->once()->andReturn(false);
         $claroDispatcher->dispatch('notObserved', 'CreateFormResource', array());
@@ -35,7 +35,7 @@ class DispatcherTest extends MockeryTestCase
      */
     public function testDispatchThrowsExceptionOnConveyorNotPopulated()
     {
-        $dispatcher = m::mock('Symfony\Component\EventDispatcher\EventDispatcher');
+        $dispatcher = $this->mock('Symfony\Component\EventDispatcher\EventDispatcher');
         $claroDispatcher = new StrictDispatcher($dispatcher);
         $dispatcher->shouldReceive('hasListeners')->once()->andReturn(true);
         $dispatcher->shouldReceive('dispatch')->once();
