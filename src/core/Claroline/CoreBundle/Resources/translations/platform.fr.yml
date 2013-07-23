@@ -95,14 +95,18 @@ group_form_ownedRoles: Rôles
 group_form_platformRole: Role
 group_parameter: 'Paramètres du groupe'
 groups: Groupes
-groups_list: "Liste des groupes"
+groups_list: 'Liste des groupes'
+has_not_been_imported: 'n''a pas été importé(e)'
+has_not_been_imported_into_the_group: 'n''a pas été importé(e) dans le groupe'
 history: Historique
 home: Accueil
 id: Id
 informations: Informations
 instructions: Consignes
 import: Importer
+import_users: 'Importer des utilisateurs'
 import_user_file_file: Importer depuis fichier
+invalid_csv_file: 'Le fichier CSV n''est pas valide'
 last_30_days_activity: Activités des 30 derniers jours
 last_name: Nom
 link: Lien
