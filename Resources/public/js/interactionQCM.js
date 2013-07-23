@@ -132,8 +132,10 @@ function insertStyle() {
 function choiceCSS(sourceImageDel) {
     //"use strict";
     $('#ujm_exobundle_interactionqcmtype_choices').children('div').each(function (index) {
-        $('#newTable').append('<tr class="ligne_choice" >  </tr>');
-        $('#newTable .ligne_choice:last').append($(this));
+        if(!$(this).hasClass('form-collection')) {
+            $('#newTable').append('<tr class="ligne_choice" >  </tr>');
+            $('#newTable .ligne_choice:last').append($(this));
+        }
     });
 
     $('#newTable .ligne_choice:last').append('<td class="colonne_choice" >  </td>');
@@ -510,12 +512,31 @@ function addFormChoiceEdit(multipleResponse, uniqueResponse, add, responseNumber
 function addChoice(sourceImageDel) {
     //"use strict";
     var $container = $('#ujm_exobundle_interactionqcmtype_choices');
+    var i = 0;
+    var y = 0;
+    var index = 0;
+    
     index = $('#newTable .ligne_choice').length;
+
+
+    $('#newTable .ligne_choice').each(function (index) {
+        if(i < parseInt($(this).contents('td:nth-child(2)').children('div').children('input').attr('value'))) {
+            i = parseInt($(this).contents('td:nth-child(2)').children('div').children('input').attr('value'));
+        }
+        y = y + 1;
+        $(this).contents('td:nth-child(2)').children('div').children('input').attr('value',y);
+    });
+    index = i + 1;
+    while($('#ujm_exobundle_interactionqcmtype_choices_'+index+'_ordre').length > 0) {
+        index = index + 1;
+    }
+
 
     $container.append(
         $($container.attr('data-prototype').replace(/__name__/g, index))
     );
     $('#ujm_exobundle_interactionqcmtype_choices_' + index + '_weight').width(50);
-    $('#ujm_exobundle_interactionqcmtype_choices_'+index+'_ordre').attr("value",index+1);
+    $('#ujm_exobundle_interactionqcmtype_choices_'+index+'_ordre').attr("value",y+1);
+    
     choiceCSS(sourceImageDel);
 }
