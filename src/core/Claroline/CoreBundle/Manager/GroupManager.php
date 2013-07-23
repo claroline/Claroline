@@ -4,7 +4,9 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Repository\GroupRepository;
+use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -15,30 +17,38 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class GroupManager
 {
+    private $om;
     /** @var GroupRepository */
     private $groupRepo;
+    /** @var UserRepository */
+    private $userRepo;
     private $pagerFactory;
     private $translator;
+    private $eventDispatcher;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     * "om"           = @DI\Inject("claroline.persistence.object_manager"),
-     * "pagerFactory" = @DI\Inject("claroline.pager.pager_factory"),
-     * "translator"   = @DI\Inject("translator")
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "pagerFactory"    = @DI\Inject("claroline.pager.pager_factory"),
+     *     "translator"      = @DI\Inject("translator"),
+     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher")
      * })
      */
     public function __construct(
         ObjectManager $om,
         PagerFactory $pagerFactory,
-        Translator $translator
+        Translator $translator,
+        StrictDispatcher $eventDispatcher
     )
     {
         $this->om = $om;
         $this->groupRepo = $om->getRepository('ClarolineCoreBundle:Group');
+        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->pagerFactory = $pagerFactory;
         $this->translator = $translator;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function insertGroup(Group $group)
@@ -53,8 +63,18 @@ class GroupManager
         $this->om->flush();
     }
 
-    public function updateGroup(Group $group)
+    public function updateGroup(Group $group, $oldPlatformRoleTransactionKey)
     {
+        $unitOfWork = $this->om->getUnitOfWork();
+        $unitOfWork->computeChangeSets();
+        $changeSet = $unitOfWork->getEntityChangeSet($group);
+        $newPlatformRoleTransactionKey = $group->getPlatformRole()->getTranslationKey();
+
+        if ($oldPlatformRoleTransactionKey !== $newPlatformRoleTransactionKey) {
+            $changeSet['platformRole'] = array($oldPlatformRoleTransactionKey, $newPlatformRoleTransactionKey);
+        }
+        $this->eventDispatcher->dispatch('log', 'Log\LogGroupUpdate', array($group, $changeSet));
+
         $this->om->persist($group);
         $this->om->flush();
     }
@@ -62,7 +82,10 @@ class GroupManager
     public function addUsersToGroup(Group $group, array $users)
     {
         foreach ($users as $user) {
-            $group->addUser($user);
+            if (!$group->containsUser($user)) {
+                $group->addUser($user);
+                $this->eventDispatcher->dispatch('log', 'Log\LogGroupAddUser', array($group, $user));
+            }
         }
 
         $this->om->persist($group);
@@ -79,6 +102,40 @@ class GroupManager
         $this->om->flush();
     }
 
+    public function importUsers(Group $group, array $users)
+    {
+        $toImport = array();
+        $nonImportedUsers = array();
+
+        foreach ($users as $user) {
+            $firstName = $user[0];
+            $lastName = $user[1];
+            $username = $user[2];
+
+            $existingUser = $this->userRepo->findOneBy(
+                array(
+                    'username' => $username,
+                    'firstName' => $firstName,
+                    'lastName' => $lastName
+                )
+            );
+
+            if (is_null($existingUser)) {
+                $nonImportedUsers[] = array(
+                    'username' => $username,
+                    'firstName' => $firstName,
+                    'lastName' => $lastName
+                );
+            }
+            else {
+                $toImport[] = $existingUser;
+            }
+        }
+        $this->addUsersToGroup($group, $toImport);
+
+        return $nonImportedUsers;
+    }
+
     public function convertGroupsToArray(array $groups)
     {
         $content = array();
@@ -89,7 +146,7 @@ class GroupManager
             $content[$i]['name'] = $group->getName();
 
             $rolesString = '';
-            $roles = $groups[$i]->getEntityRoles();
+            $roles = $group->getEntityRoles();
             $rolesCount = count($roles);
             $j = 0;
 
@@ -100,20 +157,6 @@ class GroupManager
                     $rolesString .= ' ,';
                 }
                 $j++;
-            }
-        }
-
-        for ($i = 0, $size = count($groups); $i < $size; $i++) {
-            $content[$i]['id'] = $groups[$i]->getId();
-            $content[$i]['name'] = $groups[$i]->getName();
-            $rolesString = '';
-            $roles = $groups[$i]->getEntityRoles();
-
-            for ($j = 0, $rolesCount = count($roles); $j < $rolesCount; $j++) {
-                $rolesString .= "{$this->translator->trans($roles[$j]->getTranslationKey(), array(), 'platform')}";
-                if ($j <= $rolesCount - 2) {
-                    $rolesString .= ' ,';
-                }
             }
             $content[$i]['roles'] = $rolesString;
             $i++;

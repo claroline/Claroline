@@ -3,18 +3,14 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Event\Event\PluginOptionsEvent;
-use Claroline\CoreBundle\Event\Event\Log\LogUserDeleteEvent;
-use Claroline\CoreBundle\Event\Event\Log\LogGroupCreateEvent;
-use Claroline\CoreBundle\Event\Event\Log\LogGroupAddUserEvent;
-use Claroline\CoreBundle\Event\Event\Log\LogGroupRemoveUserEvent;
-use Claroline\CoreBundle\Event\Event\Log\LogGroupDeleteEvent;
-use Claroline\CoreBundle\Event\Event\Log\LogGroupUpdateEvent;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\UnwritableException;
@@ -23,7 +19,6 @@ use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
-use Symfony\Component\Form\FormError;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -42,6 +37,8 @@ class AdministrationController extends Controller
     private $configHandler;
     private $formFactory;
     private $analyticsManager;
+    private $translator;
+    private $request;
 
     /**
      * @DI\InjectParams({
@@ -50,10 +47,12 @@ class AdministrationController extends Controller
      *     "groupManager"       = @DI\Inject("claroline.manager.group_manager"),
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "security"           = @DI\Inject("security.context"),
-     *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
+     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "configHandler"      = @DI\Inject("claroline.config.platform_config_handler"),
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
      *     "analyticsManager"   = @DI\Inject("claroline.manager.analytics_manager"),
+     *     "translator"         = @DI\Inject("translator"),
+     *     "request"            = @DI\Inject("request")
      * })
      */
     public function __construct(
@@ -62,10 +61,12 @@ class AdministrationController extends Controller
         GroupManager $groupManager,
         WorkspaceManager $workspaceManager,
         SecurityContextInterface $security,
-        EventDispatcher $eventDispatcher,
+        StrictDispatcher $eventDispatcher,
         PlatformConfigurationHandler $configHandler,
         FormFactory $formFactory,
-        AnalyticsManager $analyticsManager
+        AnalyticsManager $analyticsManager,
+        Translator $translator,
+        Request $request
     )
     {
         $this->userManager = $userManager;
@@ -77,6 +78,8 @@ class AdministrationController extends Controller
         $this->configHandler = $configHandler;
         $this->formFactory = $formFactory;
         $this->analyticsManager = $analyticsManager;
+        $this->translator = $translator;
+        $this->request = $request;
     }
 
     /**
@@ -127,10 +130,9 @@ class AdministrationController extends Controller
      */
     public function createUserAction(User $currentUser)
     {
-        $request = $this->get('request');
         $roles = $this->roleManager->getPlatformRoles($currentUser);
-        $form = $this->formFactory->create(FormFactory::TYPE_USER, array($roles), new User());
-        $form->handleRequest($request);
+        $form = $this->formFactory->create(FormFactory::TYPE_USER, array($roles));
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $user = $form->getData();
@@ -164,9 +166,7 @@ class AdministrationController extends Controller
     {
         foreach ($users as $user) {
             $this->userManager->deleteUser($user);
-
-            $log = new LogUserDeleteEvent($user);
-            $this->eventDispatcher->dispatch('log', $log);
+            $this->eventDispatcher->dispatch('log', 'Log\LogUserDelete', array($user));
         }
 
         return new Response('user(s) removed', 204);
@@ -291,7 +291,7 @@ class AdministrationController extends Controller
     {
         $pager = $search === '' ?
             $this->userManager->getGroupOutsiders($group, $page) :
-            $this->userManager->getGroupOutsidersByName($group, $page, $search);
+            $this->userManager->getGroupOutsidersByName($group, $search, $page);
 
         return array('pager' => $pager, 'search' => $search, 'group' => $group);
     }
@@ -330,18 +330,15 @@ class AdministrationController extends Controller
      */
     public function createGroupAction()
     {
-        $request = $this->get('request');
         $form = $this->formFactory->create(FormFactory::TYPE_GROUP, array());
-        $form->handleRequest($request);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $group = $form->getData();
             $userRole = $this->roleManager->getRoleByName('ROLE_USER');
             $group->setPlatformRole($userRole);
             $this->groupManager->insertGroup($group);
-
-            $log = new LogGroupCreateEvent($group);
-            $this->eventDispatcher->dispatch('log', $log);
+            $this->eventDispatcher->dispatch('log', 'Log\LogGroupCreate', array($group));
 
             return $this->redirect($this->generateUrl('claro_admin_group_list'));
         }
@@ -379,8 +376,7 @@ class AdministrationController extends Controller
         $this->groupManager->addUsersToGroup($group, $users);
 
         foreach ($users as $user) {
-            $log = new LogGroupAddUserEvent($group, $user);
-            $this->eventDispatcher->dispatch('log', $log);
+            $this->eventDispatcher->dispatch('log', 'Log\LogGroupAddUser', array($group, $user));
         }
 
         return new Response('success', 204);
@@ -416,8 +412,7 @@ class AdministrationController extends Controller
         $this->groupManager->removeUsersFromGroup($group, $users);
 
         foreach ($users as $user) {
-            $log = new LogGroupRemoveUserEvent($group, $user);
-            $this->eventDispatcher->dispatch('log', $log);
+            $this->eventDispatcher->dispatch('log', 'Log\LogGroupRemoveUser', array($group, $user));
         }
 
         return new Response('user removed', 204);
@@ -444,9 +439,7 @@ class AdministrationController extends Controller
     {
         foreach ($groups as $group) {
             $this->groupManager->deleteGroup($group);
-
-            $log = new LogGroupDeleteEvent($group);
-            $this->eventDispatcher->dispatch('log', $log);
+            $this->eventDispatcher->dispatch('log', 'Log\LogGroupDelete', array($group));
         }
 
         return new Response('groups removed', 204);
@@ -504,31 +497,14 @@ class AdministrationController extends Controller
      */
     public function updateGroupSettingsAction(Group $group)
     {
-        $request = $this->get('request');
-        $em = $this->getDoctrine()->getManager();
-
         $oldPlatformRoleTransactionKey = $group->getPlatformRole()->getTranslationKey();
 
         $form = $this->formFactory->create(FormFactory::TYPE_GROUP_SETTINGS, array(), $group);
-        $form->handleRequest($request);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $group = $form->getData();
-
-            $unitOfWork = $em->getUnitOfWork();
-            $unitOfWork->computeChangeSets();
-            $changeSet = $unitOfWork->getEntityChangeSet($group);
-
-            //The changeSet don't manage manyToMany
-            $newPlatformRoleTransactionKey = $group->getPlatformRole()->getTranslationKey();
-
-            if ($oldPlatformRoleTransactionKey !== $newPlatformRoleTransactionKey) {
-                $changeSet['platformRole'] = array($oldPlatformRoleTransactionKey, $newPlatformRoleTransactionKey);
-            }
-            $this->groupManager->updateGroup($group);
-
-            $log = new LogGroupUpdateEvent($group, $changeSet);
-            $this->eventDispatcher->dispatch('log', $log);
+            $this->groupManager->updateGroup($group, $oldPlatformRoleTransactionKey);
 
             return $this->redirect($this->generateUrl('claro_admin_group_list'));
         }
@@ -583,13 +559,12 @@ class AdministrationController extends Controller
     public function updatePlatformSettingsAction()
     {
         $platformConfig = $this->configHandler->getPlatformConfig();
-        $request = $this->get('request');
         $form = $this->formFactory->create(
             FormFactory::TYPE_PLATFORM_PARAMETERS,
             array($this->getThemes()),
             $platformConfig
         );
-        $form->handleRequest($request);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             try {
@@ -658,15 +633,8 @@ class AdministrationController extends Controller
      */
     public function pluginParametersAction($domain)
     {
-        $event = new PluginOptionsEvent();
         $eventName = "plugin_options_{$domain}";
-        $this->eventDispatcher->dispatch($eventName, $event);
-
-        if (!$event->getResponse() instanceof Response) {
-            throw new \Exception(
-                "Custom event '{$eventName}' didn't return any Response."
-            );
-        }
+        $event = $this->eventDispatcher->dispatch($eventName, 'PluginOptions', array());
 
         return $event->getResponse();
     }
@@ -711,7 +679,7 @@ class AdministrationController extends Controller
      *     name="claro_admin_import_users"
      * )
      *
-     * @EXT\Method("POST")
+     * @EXT\Method({"POST", "GET"})
      *
      * @EXT\Template("ClarolineCoreBundle:Administration:importUsersForm.html.twig")
      *
@@ -719,24 +687,137 @@ class AdministrationController extends Controller
      */
     public function importUsers()
     {
-        $request = $this->get('request');
+        $validFile = true;
         $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT);
-        $form->handleRequest($request);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $file = $form->get('file')->getData();
             $lines = str_getcsv(file_get_contents($file), PHP_EOL, ',');
 
             foreach ($lines as $line) {
+                $linesTab = explode(',', $line);
+                $nbElements = count($linesTab);
+
+                if ($nbElements < 5) {
+                    $validFile = false;
+                    $this->get('session')->getFlashBag()->add(
+                        'error',
+                        $this->translator->trans('invalid_csv_file', array(), 'platform')
+                    );
+                    break;
+                }
                 $users[] = str_getcsv($line);
             }
 
-            $this->userManager->importUsers($users);
+            if ($validFile) {
+                $nonImportedUsers = $this->userManager->importUsers($users);
 
-            return $this->redirect($this->generateUrl('claro_admin_users_management'));
+                foreach ($nonImportedUsers as $nonImportedUser) {
+                    $this->get('session')->getFlashBag()->add(
+                        'error',
+                        $nonImportedUser['firstName'] . ' ' .
+                        $nonImportedUser['lastName'] . ' [' .
+                        $nonImportedUser['username'] . '] ' .
+                        $this->translator->trans('has_not_been_imported', array(), 'platform')
+                    );
+                }
+
+                return $this->redirect($this->generateUrl('claro_admin_user_list'));
+            }
         }
 
         return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
+     *    "group/{groupId}/management/import/form",
+     *     name="claro_admin_import_users_into_group_form"
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "group",
+     *      class="ClarolineCoreBundle:Group",
+     *      options={"id" = "groupId", "strictId" = true}
+     * )
+     *
+     * @EXT\Template()
+     *
+     * @return Response
+     */
+    public function importUsersIntoGroupFormAction(Group $group)
+    {
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT);
+
+        return array('form' => $form->createView(), 'group' => $group);
+    }
+
+    /**
+     * @EXT\Route(
+     *    "group/{groupId}/management/import",
+     *     name="claro_admin_import_users_into_group"
+     * )
+     * @EXT\Method({"POST", "GET"})
+     * @EXT\ParamConverter(
+     *      "group",
+     *      class="ClarolineCoreBundle:Group",
+     *      options={"id" = "groupId", "strictId" = true}
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Administration:importUsersIntoGroupForm.html.twig")
+     *
+     * @return Response
+     */
+    public function importUsersIntoGroupAction(Group $group)
+    {
+        $validFile = true;
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $file = $form->get('file')->getData();
+            $lines = str_getcsv(file_get_contents($file), PHP_EOL, ',');
+
+            foreach ($lines as $line) {
+                $linesTab = explode(',', $line);
+                $nbElements = count($linesTab);
+
+                if ($nbElements < 5) {
+                    $validFile = false;
+                    $this->get('session')->getFlashBag()->add(
+                        'error',
+                        $this->translator->trans('invalid_csv_file', array(), 'platform')
+                    );
+                    break;
+                }
+                $users[] = str_getcsv($line);
+            }
+
+            if ($validFile) {
+                $this->userManager->importUsers($users);
+                $nonImportedUsers = $this->groupManager->importUsers($group, $users);
+
+                foreach ($nonImportedUsers as $nonImportedUser) {
+                    $this->get('session')->getFlashBag()->add(
+                        'error',
+                        $nonImportedUser['firstName'] . ' ' .
+                        $nonImportedUser['lastName'] . ' [' .
+                        $nonImportedUser['username'] . '] ' .
+                        $this->translator->trans('has_not_been_imported_into_the_group', array(), 'platform')
+                    );
+                }
+
+                return $this->redirect(
+                    $this->generateUrl(
+                        'claro_admin_user_of_group_list',
+                        array('groupId' => $group->getId())
+                    )
+                );
+            }
+        }
+
+        return array('form' => $form->createView(), 'group' => $group);
     }
 
     /**
@@ -845,10 +926,9 @@ class AdministrationController extends Controller
      */
     public function analyticsConnectionsAction()
     {
-        $request = $this->get('request');
         $criteriaForm = $this->formFactory->create(FormFactory::TYPE_ADMIN_ANALYTICS_CONNECTIONS);
         $cloneForm = clone $criteriaForm;
-        $criteriaForm->bind($request);
+        $criteriaForm->bind($this->request);
         $unique = false;
         if ($criteriaForm->isValid()) {
             $range = $criteriaForm->get('range')->getData();
@@ -922,10 +1002,9 @@ class AdministrationController extends Controller
      */
     public function analyticsTopAction($topType)
     {
-        $request = $this->get('request');
         $criteriaForm = $this->formFactory->create(FormFactory::TYPE_ADMIN_ANALYTICS_TOP);
         $cloneForm = clone $criteriaForm;
-        $criteriaForm->bind($request);
+        $criteriaForm->bind($this->request);
 
         $range = $criteriaForm->get('range')->getData();
         if ($range === null) {
