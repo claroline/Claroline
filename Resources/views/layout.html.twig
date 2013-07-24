@@ -118,8 +118,8 @@
                         <div class="well">
                             <h3>Rédacteurs</h3>
                             <ul class="inline">
-                                {% for author in _resource.authors %}
-                                <li><a href="{{ path('icap_blog_view_filter', {'blogId': _resource.id, 'filter': author.username}) }}" title="{{ author.firstname ~ ' ' ~ author.lastname }}">{{ author.firstname ~ ' ' ~ author.lastname }}</a></li>
+                                {% for author in blog_authors(_resource) %}
+                                <li><a href="{{ path('icap_blog_view_filter', {'blogId': _resource.id, 'filter': author.username}) }}" title="{{ author.firstName ~ ' ' ~ author.lastName }}">{{ author.firstName ~ ' ' ~ author.lastName }}</a></li>
                                 {% endfor %}
                             </ul>
                         </div>

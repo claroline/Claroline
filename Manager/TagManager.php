@@ -5,36 +5,29 @@ namespace ICAP\BlogBundle\Manager;
 use Doctrine\ORM\EntityManager;
 use ICAP\BlogBundle\Entity\Blog;
 use ICAP\BlogBundle\Entity\Tag;
+use ICAP\BlogBundle\Repository\TagRepository;
 
 class TagManager
 {
-    /** @var \Doctrine\ORM\EntityManager */
-    protected $entityManager;
+    /** @var \ICAP\BlogBundle\Repository\TagRepository */
+    protected $tagRepository;
 
     /**
      * Constructor
      *
-     * @param EntityManager $entityManager
+     * @param \ICAP\BlogBundle\Repository\TagRepository $tagRepository
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(TagRepository $tagRepository)
     {
-        $this->entityManager = $entityManager;
-    }
-
-    /**
-     * @return EntityManager
-     */
-    public function getEntityManager()
-    {
-        return $this->entityManager;
+        $this->tagRepository = $tagRepository;
     }
 
     /**
      * @return \ICAP\BlogBundle\Repository\TagRepository
      */
-    protected function getTagRepository()
+    public function getTagRepository()
     {
-        return $this->getEntityManager()->getRepository('ICAPBlogBundle:Tag');
+        return $this->tagRepository;
     }
 
     /**
@@ -109,17 +102,5 @@ class TagManager
         $tag->setName($name);
 
         return $tag;
-    }
-
-    /**
-     * @param Blog $blog
-     *
-     * @return Tag[]|\Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getTagsByBlog(Blog $blog)
-    {
-        $tagRepository = $this->getTagRepository();
-
-        return $tagRepository->findByBlog($blog);
     }
 }

@@ -1,16 +1,39 @@
+parameters:
+    icap.blog.manager.tag.class:     ICAP\BlogBundle\Manager\TagManager
+    icap.blog.type.tags.class:       ICAP\BlogBundle\Form\TagsType
+    icap.blog.twig.extension.class:  ICAP\BlogBundle\Twig\ICAPBlogExtension
+    icap.blog.tag.class:             ICAP\BlogBundle\Entity\Tag
+    icap.blog.tag_repository.class:  ICAP\BlogBundle\Repository\TagRepository
+    icap.blog.post.class:            ICAP\BlogBundle\Entity\Post
+    icap.blog.post_repository.class: ICAP\BlogBundle\Repository\PostRepository
+
 services:
+    icap.blog.tag_repository:
+        class:           "%icap.blog.tag_repository.class%"
+        factory_service: doctrine.orm.entity_manager
+        factory_method:  getRepository
+        arguments:
+            - "%icap.blog.tag.class%"
+
+    icap.blog.post_repository:
+        class:           "%icap.blog.post_repository.class%"
+        factory_service: doctrine.orm.entity_manager
+        factory_method:  getRepository
+        arguments:
+            - "%icap.blog.post.class%"
+
     icap.blog.manager.tag:
-        class: ICAP\BlogBundle\Manager\TagManager
-        arguments: [@doctrine.orm.entity_manager,  @form.factory]
+        class: "%icap.blog.manager.tag.class%"
+        arguments: [@icap.blog.tag_repository]
 
     icap.blog.type.tags:
-        class: ICAP\BlogBundle\Form\TagsType
+        class: "%icap.blog.type.tags.class%"
         arguments: [@icap.blog.manager.tag]
         tags:
             - { name: form.type, alias: tags }
 
-    icap.blog.twig.icapblogtag_extension:
-        class: ICAP\BlogBundle\Twig\ICAPBlogTagExtension
-        arguments: [@icap.blog.manager.tag]
+    icap.blog.twig.extension:
+        class: "%icap.blog.twig.extension.class%"
+        arguments: [@icap.blog.tag_repository, @icap.blog.post_repository]
         tags:
             - { name: twig.extension }
