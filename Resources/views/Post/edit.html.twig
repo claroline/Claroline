@@ -1,0 +1,33 @@
+{% extends 'ICAPBlogBundle::layout.html.twig' %}
+
+{% block title %}{{ _resource.getName() }} - {{ "edit_post"|trans({}, 'icap_blog') }}{% endblock %}
+
+{% block content %}
+    <form action="{{ _path('icap_blog_post_edit', {'blogId':_resource.getId(), 'postSlug': post.slug}) }}" method="post" {{ form_enctype(form) }} id="edit_post_form">
+        {{ form_widget(form) }}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
+            <a href="{{ path("icap_blog_view", {"blogId": _resource.id}) }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-danger">{{ 'cancel'|trans({}, 'platform') }}</a>
+        </div>
+    </form>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/css/common/jquery-ui-bootstrap/jquery-ui-1.9.2.custom.css') }}'/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/frontend/jquery/plugin/tag-it/tag-it.css') }}"/>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+{{ tinymce_init() }}
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/tag-it/tag-it.js') }}"></script>
+<script type="text/javascript">
+    $(function() {
+        $(".tags").tagit({
+            'availableTags' : ["{{ blog_tags(_resource)|join('","')|raw }}"]
+        });
+    });
+</script>
+{% endblock %}
