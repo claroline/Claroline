@@ -53,8 +53,6 @@ class AuthenticationControllerTest extends MockeryTestCase
             ->with('HTTP_ORIGIN')
             ->andReturn('http://jorgeaimejquery');
         $this->request->server = $parameterBag;
-
-        $password = '??';
         $this->om->shouldReceive('persist')->once()->with($user);
         $this->om->shouldReceive('flush')->once();
         $this->router->shouldReceive('generate')
@@ -68,13 +66,5 @@ class AuthenticationControllerTest extends MockeryTestCase
                 && $message->getBody() === '<p><a href="http://jorgeaimejquery/reset/123"/>Click me</a></p>';
         }));
         $this->assertEquals(array('user' => $user), $this->controller->sendEmailAction());
-    }
-
-    public function resetPasswordAction()
-    {
-         $user = m::mock('Claroline\CoreBundle\Entity\User');
-         $this->userManager->shouldReceive('getResetPassword')->once()->with('toto');
-         $user->shouldReceive('getTime')->once()->with(123123);
-         $this->controler->resetPassword('toto');
     }
 }
