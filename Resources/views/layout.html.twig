@@ -52,7 +52,11 @@
 
             <div class="row-fluid content">
                 <div class="hero-unit">
-                    <h1>{{ _resource.name }}</h1>
+                    <h1><a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" title="{{ _resource.name }}">{{ _resource.name }}</a></h1>
+
+                    <a href="{{ path('claro_desktop_open_tool', {"toolName": "resource_manager"}) ~ "#resources/" ~ personalWorkspace.id }}">
+                        <small>{{ 'back_to_workspace'|trans({}, 'icap_blog') }}</small>
+                    </a>
                 </div>
                 {{ macros.flashBox() }}
                 <div class="row-fluid">
