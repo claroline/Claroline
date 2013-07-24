@@ -15,12 +15,19 @@ icap_blog_post_add_success: 'Article ajouté avec succès'
 icap_blog_post_add_error: "Erreur lors de l'ajout de l'article"
 icap_blog_post_delete_success: 'Article supprimé avec succès'
 icap_blog_post_delete_error: "Erreur lors de la suppression de l'article"
+icap_blog_post_edit_success: 'Article modifié avec succès'
+icap_blog_post_edit_error: "Erreur lors de la modification de l'article"
+icap_blog_post_publish_success: 'Article publié avec succès'
+icap_blog_post_publish_error: "Erreur lors de la publication de l'article"
+icap_blog_post_unpublish_success: 'Article dépublié avec succès'
+icap_blog_post_unpublish_error: "Erreur lors de la dépublication de l'article"
 no_tags: 'Aucun tags'
 comments: 'commentaires'
 see_comments: 'Voir les commentaires'
 publish: 'Publier'
 unpublish: 'Dépublier'
 written_by: 'Ecrit par'
+published_on: 'Publié le'
 Post: 'Article'
 post_deletion_confirm_title: "Suppression d'un article"
 post_deletion_confirm_message: "Etes-vous sûr de vouloir supprimer l'article <strong>%postName%</strong> ?"

@@ -27,7 +27,7 @@ class Statusable
     /**
      * @param integer $status
      *
-     * @return Comment
+     * @return Statusable
      * @throws \InvalidArgumentException
      */
     public function setStatus($status)

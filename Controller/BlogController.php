@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Entity\User;
 use ICAP\BlogBundle\Entity\Blog;
 use ICAP\BlogBundle\Entity\BlogOptions;
 use ICAP\BlogBundle\Entity\Post;
+use ICAP\BlogBundle\Entity\Statusable;
 use ICAP\BlogBundle\Form\BlogOptionsType;
 use ICAPLyon1\Bundle\SimpleTagBundle\Entity\Tag;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -40,7 +41,11 @@ class BlogController extends Controller
         ;
 
         if(!$this->isUserGranted("EDIT", $blog)) {
-            $query->andWhere('post.publicationDate IS NOT NULL');
+            $query
+                ->andWhere('post.publicationDate IS NOT NULL')
+                ->andWhere('post.status = :publishedStatus')
+                ->setParameter('publishedStatus', Statusable::STATUS_PUBLISHED)
+            ;
         }
 
         $query

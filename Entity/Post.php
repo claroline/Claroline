@@ -406,4 +406,22 @@ class Post extends Statusable implements TaggableInterface
 
         return $this;
     }
+
+    /**
+     * @return Post
+     */
+    public function publish()
+    {
+        return $this->setStatus(self::STATUS_PUBLISHED);
+    }
+
+    /**
+     * @return Post
+     */
+    public function unpublish()
+    {
+        $this->publicationDate = null;
+
+        return $this->setStatus(self::STATUS_UNPUBLISHED);
+    }
 }

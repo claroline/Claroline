@@ -23,11 +23,11 @@
                             <i class="icon-trash"></i>
                         </a>
                         {% if isPublished %}
-                        <a href="#" data-toggle="tooltip" title="{{ 'unpublish'|trans }}" data-placement="top" data-original-title="{{ 'unpublish'|trans }}" class="btn btn-small">
+                        <a href="{{ path('icap_blog_post_unpublish', {'blogId': _resource.id, 'postSlug': post.slug}) }}" data-toggle="tooltip" title="{{ 'unpublish'|trans }}" data-placement="top" data-original-title="{{ 'unpublish'|trans }}" class="btn btn-small">
                             <i class="icon-eye-close"></i>
                         </a>
                         {% else %}
-                        <a href="#" data-toggle="tooltip" title="{{ 'publish'|trans }}" data-placement="top" data-original-title="{{ 'publish'|trans }}" class="btn btn-small">
+                        <a href="{{ path('icap_blog_post_publish', {'blogId': _resource.id, 'postSlug': post.slug}) }}" data-toggle="tooltip" title="{{ 'publish'|trans }}" data-placement="top" data-original-title="{{ 'publish'|trans }}" class="btn btn-small">
                             <i class="icon-eye-open"></i>
                         </a>
                         {% endif %}
@@ -37,7 +37,7 @@
                 {% set author = post.author %}
                 {{ 'written_by'|trans }} <a href="#" rel="author" title="{{ author.firstname ~ ' ' ~ author.lastname }}">{{ author.firstname ~ ' ' ~ author.lastname }}</a>
                 {% if isPublished %}
-, <time>{{ post.publicationDate|date("d/m/Y") }}</time>
+, {{ 'published_on'|trans }} <time>{{ post.publicationDate|date("d/m/Y") }}</time>
                 {% endif %}
             </header>
             <div class="content">{{ post.content|raw }}</div>

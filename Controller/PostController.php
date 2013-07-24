@@ -127,4 +127,67 @@ class PostController extends Controller
 
         return $this->redirect($this->generateUrl('icap_blog_view', array('blogId' => $blog->getId())));
     }
+
+    /**
+     * @Route("/{blogId}/post/publish/{postSlug}", name="icap_blog_post_publish", requirements={"blogId" = "\d+"})
+     *
+     * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
+     * @ParamConverter("post", class="ICAPBlogBundle:Post", options={"slug" = "postSlug"})
+     * @Template()
+     */
+    public function publishAction(Blog $blog, Post $post)
+    {
+        $post->publish();
+
+        $translator = $this->get('translator');
+
+        $messages   = array(
+            'success' => $translator->trans('icap_blog_post_publish_success', array(), 'icap_blog'),
+            'error'   => $translator->trans('icap_blog_post_publish_error', array(), 'icap_blog')
+        );
+
+        return $this->changePublishStatus($blog, $post, $messages);
+    }
+
+    /**
+     * @Route("/{blogId}/post/unpublish/{postSlug}", name="icap_blog_post_unpublish", requirements={"blogId" = "\d+"})
+     *
+     * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
+     * @ParamConverter("post", class="ICAPBlogBundle:Post", options={"slug" = "postSlug"})
+     * @Template()
+     */
+    public function unpublishAction(Blog $blog, Post $post)
+    {
+        $post->unpublish();
+
+        $translator = $this->get('translator');
+
+        $messages   = array(
+            'success' => $translator->trans('icap_blog_post_unpublish_success', array(), 'icap_blog'),
+            'error'   => $translator->trans('icap_blog_post_unpublish_error', array(), 'icap_blog')
+        );
+
+        return $this->changePublishStatus($blog, $post, $messages);
+    }
+
+    protected function changePublishStatus(Blog $blog, Post $post, array $messages)
+    {
+        $this->checkAccess("EDIT", $blog);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $flashBag      = $this->get('session')->getFlashBag();
+
+        try {
+            $entityManager->persist($post);
+            $entityManager->flush();
+
+            $flashBag->add('success', $messages['success']);
+        }
+        catch(\Exception $exception)
+        {
+            $flashBag->add('error', $messages['error']);
+        }
+
+        return $this->redirect($this->generateUrl('icap_blog_view', array('blogId' => $blog->getId())));
+    }
 }
