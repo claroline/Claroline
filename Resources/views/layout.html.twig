@@ -72,14 +72,26 @@
                             <p class="muted"><small>Recherche dans les titres, contenus et mots clés des billets.</small></p>
                         </form>
                         <div class="well">
-                            <h3>Info bar</h3>
+                            <h3>
+                                Info bar
+                                {% if is_granted('ROLE_ADMIN') or is_granted('EDIT', blog) %}
+                                <a href="{{ path('icap_blog_edit_infos', {'blogId': _resource.id}) }}" title="{{ 'edit_blog_infos'|trans({}, 'icap_blog') }}" class="btn btn-mini">
+                                    <i class="icon-edit"></i>
+                                </a>
+                                {% endif %}
+                            </h3>
+                            <div>
+                                <p>
+                                    {{ _resource.infos|raw }}
+                                </p>
+                            </div>
                         </div>
                         <div class="well collapse in">
                             <h3>
                                 Informations
-                            <button type="button" class="btn btn-mini pull-right" data-toggle="collapse" data-target="#informations">
-                                <i class="icon-chevron-down"></i>
-                            </button>
+                                <button type="button" class="btn btn-mini pull-right" data-toggle="collapse" data-target="#informations">
+                                    <i class="icon-chevron-down"></i>
+                                </button>
                             </h3>
                             <div id="informations" class="collapse out">
                                 <p>

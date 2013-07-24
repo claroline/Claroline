@@ -6,14 +6,13 @@ use Claroline\CoreBundle\Entity\User;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use ICAPLyon1\Bundle\SimpleTagBundle\Entity\TaggableInterface;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="icap__blog_post")
  * @ORM\Entity(repositoryClass="ICAP\BlogBundle\Repository\PostRepository")
  */
-class Post extends Statusable implements TaggableInterface
+class Post extends Statusable
 {
     /**
      * @var int $id

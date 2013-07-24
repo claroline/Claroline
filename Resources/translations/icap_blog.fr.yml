@@ -2,6 +2,7 @@ icap_blog_form_name: 'Nom'
 icap_blog_post_form_title: 'Titre'
 icap_blog_post_form_content: 'Contenu'
 icap_blog_post_form_tags: 'Tags'
+icap_blog_infos_form_infos: 'Informations'
 new_post: 'Nouvel article'
 no_post: 'Aucun article.'
 add_new_post: "Ajout d'un article"
@@ -39,3 +40,6 @@ icap_blog_post_configure_error: 'Erreur lors de la configuration du blog'
 delete_filter: 'Supprimer le filtre'
 post_filtered_by_tag: "Liste des articles filtrés par le tag <strong>%tagName%</strong>"
 post_filtered_by_author: "Liste des articles filtrés par l'auteur <strong>%authorName%</strong>"
+edit_blog_infos: 'Modifer les informations du blog'
+icap_blog_edit_infos_success: 'Informations du blog modifiées avec succès'
+icap_blog_edit_infos_error: 'Erreur lors de la modification des informations du blog'

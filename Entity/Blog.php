@@ -31,6 +31,13 @@ class Blog extends AbstractResource
      */
     protected $options;
 
+    /**
+     * @var string $infos
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $infos;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -107,23 +114,23 @@ class Blog extends AbstractResource
     }
 
     /**
-     * @return array
+     * @param string $infos
+     *
+     * @return Blog
      */
-    public function getTags()
+    public function setInfos($infos)
     {
-        $tags = new ArrayCollection();
+        $this->infos = $infos;
 
-        foreach($this->getPosts() as $post)
-        {
-            foreach($post->getTags() as $tag)
-            {
-                if(!$tags->contains($tag)) {
-                    $tags->add($tag);
-                }
-            }
-        }
+        return $this;
+    }
 
-        return $tags;
+    /**
+     * @return string
+     */
+    public function getInfos()
+    {
+        return $this->infos;
     }
 
     /**

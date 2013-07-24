@@ -7,6 +7,7 @@ use ICAP\BlogBundle\Entity\Blog;
 use ICAP\BlogBundle\Entity\BlogOptions;
 use ICAP\BlogBundle\Entity\Post;
 use ICAP\BlogBundle\Entity\Statusable;
+use ICAP\BlogBundle\Form\BlogInfosType;
 use ICAP\BlogBundle\Form\BlogOptionsType;
 use ICAP\BlogBundle\Entity\Tag;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -129,6 +130,44 @@ class BlogController extends Controller
                 }
 
                 return $this->redirect($this->generateUrl('icap_blog_configure', array('blogId' => $blog->getId())));
+            }
+        }
+
+        return array(
+            '_resource' => $blog,
+            'form'      => $form->createView()
+        );
+    }
+
+    /**
+     * @Route("/edit/{blogId}", name="icap_blog_edit_infos", requirements={"blogId" = "\d+"})
+     * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
+     * @Template()
+     */
+    public function editAction(Request $request, Blog $blog)
+    {
+        $this->checkAccess("EDIT", $blog);
+
+        $form = $this->createForm(new BlogInfosType(), $blog);
+
+        if("POST" === $request->getMethod()) {
+            $form->submit($request);
+            if ($form->isValid()) {
+                $entityManager = $this->getDoctrine()->getManager();
+                $translator = $this->get('translator');
+                $flashBag = $this->get('session')->getFlashBag();
+
+                try {
+                    $entityManager->persist($blog);
+                    $entityManager->flush();
+
+                    $flashBag->add('success', $translator->trans('icap_blog_edit_infos_success', array(), 'icap_blog'));
+                }
+                catch(\Exception $exception) {
+                    $flashBag->add('error', $translator->trans('icap_blog_edit_infos_error', array(), 'icap_blog'));
+                }
+
+                return $this->redirect($this->generateUrl('icap_blog_view', array('blogId' => $blog->getId())));
             }
         }
 

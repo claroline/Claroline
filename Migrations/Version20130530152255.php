@@ -49,6 +49,7 @@ class Version20130530152255 extends BundleMigration
     {
         $table = $schema->createTable('icap__blog');
         $this->addId($table);
+        $table->addColumn('infos', 'text');
 
         $this->storeTable($table);
 

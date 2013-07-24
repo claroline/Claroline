@@ -2,6 +2,7 @@ icap_blog_form_name: 'Name'
 icap_blog_post_form_title: 'Title'
 icap_blog_post_form_content: 'Content'
 icap_blog_post_form_tags: 'Tags'
+icap_blog_infos_form_infos: 'Information'
 new_post: 'New post'
 no_post: 'No post.'
 add_new_post: 'Add new post'
@@ -39,3 +40,6 @@ icap_blog_post_configure_error: 'An error occured while configuring the blog'
 delete_filter: 'Delete filter'
 post_filtered_by_tag: "Post list filtred by tag <strong>%tagName%</strong>"
 post_filtered_by_author: "Post list filtred by author <strong>%authorName%</strong>"
+edit_blog_infos: "Edit blog's information"
+icap_blog_edit_infos_success: 'Blog information edited with success'
+icap_blog_edit_infos_error: 'An error occured while editing blog information'
