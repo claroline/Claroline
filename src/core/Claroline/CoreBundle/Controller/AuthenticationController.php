@@ -26,6 +26,7 @@ class AuthenticationController
     private $encoderFactory;
     private $om;
     private $mailer;
+    private $translator;
 
     /**
      * @DI\InjectParams({
@@ -34,7 +35,8 @@ class AuthenticationController
      *     "encoderFactory" = @DI\Inject("security.encoder_factory"),
      *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
      *     "mailer"         = @DI\Inject("mailer"),
-     *     "router"         = @DI\Inject("router")
+     *     "router"         = @DI\Inject("router"),
+     *     "translator"         = @DI\Inject("translator"),
      * })
     */
     public function __construct(
@@ -43,7 +45,8 @@ class AuthenticationController
         EncoderFactory $encoderFactory,
         ObjectManager $om,
         \Swift_Mailer $mailer,
-        UrlGeneratorInterface $router
+        UrlGeneratorInterface $router,
+        Translator $translator
     )
     {
         $this->request = $request;
@@ -52,6 +55,7 @@ class AuthenticationController
         $this->om = $om;
         $this->mailer = $mailer;
         $this->router = $router;
+        $this->translator = $translator;
     }
     /**
      * @Route(
@@ -99,21 +103,20 @@ class AuthenticationController
 
         if (!empty($user)) {
             $user->setTime(time());
-            $password = sha1(rand(1000, 10000).$user->getUsername().$user->getSalt());
+            $password = sha1(rand(1000, 10000) . $user->getUsername() . $user->getSalt());
             $user->setResetPassword($password);
             $this->om->persist($user);
             $this->om->flush();
-            $link = $_SERVER['HTTP_ORIGIN'].$this->router->generate(
+            $link = $this->request->server->get('HTTP_ORIGIN') . $this->router->generate(
                 'claro_security_reset_password',
                 array('hash' => $user->getResetPassword())
             );
-            $data = '<p> 
-                 <a href="'.$link.'" /> click me</a> </p>';
+            $data = '<p><a href="' . $link . '"/>Click me</a></p>';
 
             $message = \Swift_Message::newInstance()
                 ->setSubject('Reset Your Password')
                 ->setFrom('noreply@claroline.net')
-                ->setTo($user->getMail())
+                ->setTo($email)
                 ->setBody($data, 'text/html');
             $this->mailer->send($message);
 

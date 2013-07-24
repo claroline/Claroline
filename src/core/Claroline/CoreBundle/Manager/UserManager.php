@@ -324,7 +324,7 @@ class UserManager
         return $this->userRepo->find($userId);
     }
 
-    public function getUserbyEmail($email)
+    public function getUserByEmail($email)
     {
         return $this->userRepo->findOneByMail($email);
     }
