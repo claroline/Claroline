@@ -79,12 +79,12 @@
                             </h3>
                             <div id="informations" class="collapse out">
                                 <p>
-                                    Date de création :{{ _resource.creationDate|date('date_format'|trans({}, 'platform')) }}<br />
-                                    Commentaires autorisés: {% if _resource.options.authorizeComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
-                                    Commentaires anonymes autorisés: {% if _resource.options.authorizeAnonymousComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
+                                    Date de création : {{ _resource.creationDate|date('date_format'|trans({}, 'platform')) }}<br />
+                                    Commentaires autorisés : {% if _resource.options.authorizeComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
+                                    Commentaires anonymes autorisés : {% if _resource.options.authorizeAnonymousComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
                                     Nb d'article/pages : {{ _resource.options.postPerPage }}<br />
-                                    Publication automatique des billets: {% if _resource.options.autoPublishPost %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
-                                    Publication automatique des commentaires: {% if _resource.options.autoPublishComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
+                                    Publication automatique des billets : {% if _resource.options.autoPublishPost %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
+                                    Publication automatique des commentaires : {% if _resource.options.autoPublishComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
                                 </p>
                             </div>
                         </div>
