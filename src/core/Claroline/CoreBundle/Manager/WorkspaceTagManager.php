@@ -294,7 +294,7 @@ class WorkspaceTagManager
 
     public function getDatasForWorkspaceList($withRoles = true)
     {
-        $workspaces = $this->workspaceRepo->findNonPersonal();
+        $workspaces = $this->workspaceRepo->findDisplayableWorkspaces();
         $tags = $this->getNonEmptyAdminTags();
         $relTagWorkspace = $this->getTagRelationsByAdmin();
         $tagWorkspaces = array();
