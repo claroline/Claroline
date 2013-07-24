@@ -158,13 +158,13 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     *
     *@ORM\Column(name="reset_password", type="string", nullable=true)
     */
-    protected $resetPassword;
+    protected $resetPasswordHash;
 
     /**
-     * @ORM\Column(name="time",type="integer", nullable=true)
+     * @ORM\Column(name="hash_time",type="integer", nullable=true)
      *
     */
-    protected $time;
+    protected  $hashTime;
 
     public function __construct()
     {
@@ -406,24 +406,24 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     {
         return $this->orderedTools;
     }
+
+    public function getResetPasswordHash()
+    {
+        return $this->resetPasswordHash;
+    }
+
+    public function setResetPasswordHash($resetPasswordHash)
+    {
+        $this->resetPasswordHash = $resetPasswordHash;
+    }
     
-    public function getResetPassword() 
-    {
-        return $this->resetPassword;
+    public function getHashTime() {
+        return $this->hashTime;
     }
 
-    public function setResetPassword($resetPassword) 
-    {
-        $this->resetPassword = $resetPassword;
+    public function setHashTime($hashTime) {
+        $this->hashTime = $hashTime;
     }
 
-    public function getTime() 
-    {
-        return $this->time;
-    }
 
-    public function setTime($time) 
-    {
-        $this->time = $time;
-    }
 }

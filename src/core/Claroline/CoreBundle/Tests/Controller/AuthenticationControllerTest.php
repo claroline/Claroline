@@ -44,9 +44,9 @@ class AuthenticationControllerTest extends MockeryTestCase
             ->andReturn($user);
         $user->shouldReceive('getUsername')->once()->andReturn('toto');
         $user->shouldReceive('getSalt')->once()->andReturn('fsdf');
-        $user->shouldReceive('setTime')->once()->with(intValue());
-        $user->shouldReceive('setResetPassword')->once()->with(stringValue());
-        $user->shouldReceive('getResetPassword')->once()->andReturn('123');
+        $user->shouldReceive('setHashTime')->once()->with(intValue());
+        $user->shouldReceive('setResetPasswordHash')->once()->with(stringValue());
+        $user->shouldReceive('getResetPasswordHash')->once()->andReturn('123');
         $parameterBag = $this->mock('Symfony\Component\HttpFoundation\ServerBag');
         $parameterBag->shouldReceive('get')
             ->once()
