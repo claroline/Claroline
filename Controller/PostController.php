@@ -46,10 +46,6 @@ class PostController extends Controller
                 }
                 catch(\Exception $exception)
                 {
-                    echo "<pre>";
-                    var_dump($exception->getMessage());
-                    echo "</pre>" . PHP_EOL;
-                    die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
                     $flashBag->add('error', $translator->trans('icap_blog_post_add_error', array(), 'icap_blog'));
                 }
                 return $this->redirect($this->generateUrl('icap_blog_view', array('blogId' => $blog->getId())));
