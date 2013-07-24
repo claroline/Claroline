@@ -36,3 +36,4 @@ post_deletion_confirm_message: "Are you sure you want to delete the post <strong
 configure_blog: 'Configuration of the blog'
 icap_blog_post_configure_success: 'Blog configured with success'
 icap_blog_post_configure_error: 'An error occured while configuring the blog'
+delete_filter: 'Delete filter'

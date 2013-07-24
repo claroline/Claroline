@@ -8,7 +8,7 @@ use ICAP\BlogBundle\Entity\BlogOptions;
 use ICAP\BlogBundle\Entity\Post;
 use ICAP\BlogBundle\Entity\Statusable;
 use ICAP\BlogBundle\Form\BlogOptionsType;
-use ICAPLyon1\Bundle\SimpleTagBundle\Entity\Tag;
+use ICAP\BlogBundle\Entity\Tag;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
@@ -35,6 +35,7 @@ class BlogController extends Controller
 
         $postRepository = $this->getDoctrine()->getRepository('ICAPBlogBundle:Post');
 
+        /** @var \Doctrine\ORM\QueryBuilder $query */
         $query = $postRepository
             ->createQueryBuilder('post')
             ->andWhere('post.blog = :blogId')
@@ -45,6 +46,14 @@ class BlogController extends Controller
                 ->andWhere('post.publicationDate IS NOT NULL')
                 ->andWhere('post.status = :publishedStatus')
                 ->setParameter('publishedStatus', Statusable::STATUS_PUBLISHED)
+            ;
+        }
+
+        if(null !== $tag) {
+            $query
+                ->join('post.tags', 't')
+                ->andWhere('t.id = :tagId')
+                ->setParameter('tagId', $tag->getId())
             ;
         }
 
@@ -67,7 +76,8 @@ class BlogController extends Controller
         return array(
             '_resource' => $blog,
             'user'      => $user,
-            'pager'     => $pager
+            'pager'     => $pager,
+            'tag'       => $tag
         );
     }
 

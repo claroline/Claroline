@@ -10,6 +10,12 @@
             {{ 'new_post'|trans }}
         </a>
     </p>
+    {% if tag is not null %}
+    <div class="alert alert-info">
+        <a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" class="close" data-toggle="tooltip" title="{{ 'delete_filter'|trans({}, 'icap_blog') }}" data-placement="top" data-original-title="{{ 'delete_filter'|trans({}, 'icap_blog') }}">&times;</a>
+        Liste des articles triés par le tag <strong>{{ tag.name }}</strong>
+    </div>
+    {% endif %}
     {% for post in pager %}
         {% set isPublished = post.isPublished %}
         <article{% if not isPublished %} class="draft"{% endif %}>

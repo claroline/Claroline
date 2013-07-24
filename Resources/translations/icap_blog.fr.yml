@@ -36,3 +36,4 @@ post_deletion_confirm_message: "Etes-vous sûr de vouloir supprimer l'article <s
 configure_blog: 'Configuration du blog'
 icap_blog_post_configure_success: 'Blog configuré avec succès'
 icap_blog_post_configure_error: 'Erreur lors de la configuration du blog'
+delete_filter: 'Supprimer le filtre'
