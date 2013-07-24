@@ -7,13 +7,6 @@ use ICAP\BlogBundle\Entity\Blog;
 
 class TagRepository extends EntityRepository
 {
-    public function extract($params)
-    {
-        $q = $this->extractQuery($params);
-
-        return is_null($q) ? array() : $q->getResult();
-    }
-
     /**
      * @param Blog $blog
      * @param bool $executeQuery
