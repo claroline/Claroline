@@ -97,7 +97,7 @@
                             {{ for }}
                             <ul class="inline">
                                 {% for tag in blog_tags(_resource) %}
-                                <li><a href="{{ path('icap_blog_view_by_tag', {'blogId': _resource.id, 'tagName': tag}) }}" title="{{ tag }}">{{ tag }}</a></li>
+                                <li><a href="{{ path('icap_blog_view_filter', {'blogId': _resource.id, 'filter': tag}) }}" title="{{ tag }}">{{ tag }}</a></li>
                                 {% else %}
                                 <li>{{ 'no_tags'|trans({}, 'icap_blog') }}</li>
                                 {% endfor %}
@@ -107,7 +107,7 @@
                             <h3>Rédacteurs</h3>
                             <ul class="inline">
                                 {% for author in _resource.authors %}
-                                <li><a href="#" title="{{ author.firstname ~ ' ' ~ author.lastname }}">{{ author.firstname ~ ' ' ~ author.lastname }}</a></li>
+                                <li><a href="{{ path('icap_blog_view_filter', {'blogId': _resource.id, 'filter': author.username}) }}" title="{{ author.firstname ~ ' ' ~ author.lastname }}">{{ author.firstname ~ ' ' ~ author.lastname }}</a></li>
                                 {% endfor %}
                             </ul>
                         </div>

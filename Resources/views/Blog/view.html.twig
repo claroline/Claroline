@@ -13,7 +13,13 @@
     {% if tag is not null %}
     <div class="alert alert-info">
         <a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" class="close" data-toggle="tooltip" title="{{ 'delete_filter'|trans({}, 'icap_blog') }}" data-placement="top" data-original-title="{{ 'delete_filter'|trans({}, 'icap_blog') }}">&times;</a>
-        Liste des articles triés par le tag <strong>{{ tag.name }}</strong>
+        {{ "post_filtered_by_tag"|trans({'%tagName%': tag.name}, 'icap_blog')|raw }}.
+    </div>
+    {% endif %}
+    {% if author is not null %}
+    <div class="alert alert-info">
+        <a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" class="close" data-toggle="tooltip" title="{{ 'delete_filter'|trans({}, 'icap_blog') }}" data-placement="top" data-original-title="{{ 'delete_filter'|trans({}, 'icap_blog') }}">&times;</a>
+        {{ "post_filtered_by_author"|trans({'%authorName%': author.firstname ~ ' ' ~ author.lastname}, 'icap_blog')|raw }}.
     </div>
     {% endif %}
     {% for post in pager %}

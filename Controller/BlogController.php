@@ -23,17 +23,27 @@ class BlogController extends Controller
 {
     /**
      * @Route("/{blogId}/{page}", name="icap_blog_view", requirements={"blogId" = "\d+", "page" = "\d+"}, defaults={"page" = 1})
-     * @Route("/{blogId}/{tagName}/{page}", name="icap_blog_view_by_tag", requirements={"blogId" = "\d+", "page" = "\d+"}, defaults={"page" = 1})
+     * @Route("/{blogId}/{filter}/{page}", name="icap_blog_view_filter", requirements={"blogId" = "\d+", "page" = "\d+"}, defaults={"page" = 1})
      * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
-     * @ParamConverter("tag", class="ICAPBlogBundle:Tag", options={"mapping": {"tagName": "name"}})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function viewAction(Blog $blog, $page, User $user, Tag $tag = null)
+    public function viewAction(Blog $blog, $page, User $user, $filter = null)
     {
         $this->checkAccess("OPEN", $blog);
 
         $postRepository = $this->getDoctrine()->getRepository('ICAPBlogBundle:Post');
+
+        $tag    = null;
+        $author = null;
+
+        if(null !== $filter) {
+            $tag = $this->getDoctrine()->getRepository('ICAPBlogBundle:Tag')->findOneByName($filter);
+
+            if(null === $tag) {
+                $author = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByUsername($filter);
+            }
+        }
 
         /** @var \Doctrine\ORM\QueryBuilder $query */
         $query = $postRepository
@@ -54,6 +64,12 @@ class BlogController extends Controller
                 ->join('post.tags', 't')
                 ->andWhere('t.id = :tagId')
                 ->setParameter('tagId', $tag->getId())
+            ;
+        }
+        elseif(null !== $author) {
+            $query
+                ->andWhere('post.author = :authorId')
+                ->setParameter('authorId', $author->getId())
             ;
         }
 
@@ -77,7 +93,8 @@ class BlogController extends Controller
             '_resource' => $blog,
             'user'      => $user,
             'pager'     => $pager,
-            'tag'       => $tag
+            'tag'       => $tag,
+            'author'    => $author
         );
     }
 

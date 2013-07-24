@@ -37,3 +37,5 @@ configure_blog: 'Configuration du blog'
 icap_blog_post_configure_success: 'Blog configuré avec succès'
 icap_blog_post_configure_error: 'Erreur lors de la configuration du blog'
 delete_filter: 'Supprimer le filtre'
+post_filtered_by_tag: "Liste des articles filtrés par le tag <strong>%tagName%</strong>"
+post_filtered_by_author: "Liste des articles filtrés par l'auteur <strong>%authorName%</strong>"
