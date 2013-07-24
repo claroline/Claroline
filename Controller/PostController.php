@@ -29,33 +29,14 @@ class PostController extends Controller
             ->setAuthor($this->getUser())
         ;
 
-        $form = $this->createForm(new PostType(), $post);
+        $translator = $this->get('translator');
 
-        if("POST" === $request->getMethod()) {
-            $form->handleRequest($request);
-            if ($form->isValid()) {
-                $translator = $this->get('translator');
-                $flashBag = $this->get('session')->getFlashBag();
-                $entityManager = $this->getDoctrine()->getManager();
-
-                try {
-                    $entityManager->persist($post);
-                    $entityManager->flush();
-
-                    $flashBag->add('success', $translator->trans('icap_blog_post_add_success', array(), 'icap_blog'));
-                }
-                catch(\Exception $exception)
-                {
-                    $flashBag->add('error', $translator->trans('icap_blog_post_add_error', array(), 'icap_blog'));
-                }
-                return $this->redirect($this->generateUrl('icap_blog_view', array('blogId' => $blog->getId())));
-            }
-        }
-
-        return array(
-            '_resource' => $blog,
-            'form'      => $form->createView()
+        $messages = array(
+            'success' => $translator->trans('icap_blog_post_add_success', array(), 'icap_blog'),
+            'error'   =>$translator->trans('icap_blog_post_add_error', array(), 'icap_blog')
         );
+
+        return $this->persistPost($request, $blog, $post, $messages);
     }
 
     /**
@@ -69,12 +50,23 @@ class PostController extends Controller
     {
         $this->checkAccess("EDIT", $blog);
 
+        $translator = $this->get('translator');
+
+        $messages = array(
+            'success' => $translator->trans('icap_blog_post_edit_success', array(), 'icap_blog'),
+            'error'   =>$translator->trans('icap_blog_post_edit_error', array(), 'icap_blog')
+        );
+
+        return $this->persistPost($request, $blog, $post, $messages);
+    }
+
+    protected function persistPost(Request $request, Blog $blog, Post $post, array $messages)
+    {
         $form = $this->createForm(new PostType(), $post);
 
         if("POST" === $request->getMethod()) {
             $form->handleRequest($request);
             if ($form->isValid()) {
-                $translator = $this->get('translator');
                 $flashBag = $this->get('session')->getFlashBag();
                 $entityManager = $this->getDoctrine()->getManager();
 
@@ -82,11 +74,11 @@ class PostController extends Controller
                     $entityManager->persist($post);
                     $entityManager->flush();
 
-                    $flashBag->add('success', $translator->trans('icap_blog_post_edit_success', array(), 'icap_blog'));
+                    $flashBag->add('success', $messages['success']);
                 }
                 catch(\Exception $exception)
                 {
-                    $flashBag->add('error', $translator->trans('icap_blog_post_edit_error', array(), 'icap_blog'));
+                    $flashBag->add('error', $messages['error']);
                 }
                 return $this->redirect($this->generateUrl('icap_blog_view', array('blogId' => $blog->getId())));
             }
@@ -170,6 +162,13 @@ class PostController extends Controller
         return $this->changePublishStatus($blog, $post, $messages);
     }
 
+    /**
+     * @param Blog  $blog
+     * @param Post  $post
+     * @param array $messages
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     protected function changePublishStatus(Blog $blog, Post $post, array $messages)
     {
         $this->checkAccess("EDIT", $blog);
