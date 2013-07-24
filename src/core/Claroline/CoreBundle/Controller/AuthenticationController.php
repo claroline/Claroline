@@ -158,7 +158,8 @@ class AuthenticationController
         }
 
         $currentTime = time();
-        // the link is valide for 24h
+        
+        // the link is valid for 24h
         if ($currentTime - (3600 * 24) < $user->getTime()) {
             return array( 'user' => $user);
         }
