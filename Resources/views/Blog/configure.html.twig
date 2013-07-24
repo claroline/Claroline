@@ -4,10 +4,12 @@
 
 {% block content %}
     <form action="{{ _path('icap_blog_configure', {'blogId':_resource.id}) }}" method="post" {{ form_enctype(form) }} id="new_post_form" class="form-horizontal">
-       {{ form_widget(form) }}
+        <legend>{{ "configure_blog"|trans({}, 'icap_blog') }}</legend>
+        {{ form_widget(form) }}
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">{{ 'configure'|trans({}, 'platform') }}</button>
             <a href="{{ path("icap_blog_view", {"blogId": _resource.id}) }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-danger">{{ 'cancel'|trans({}, 'platform') }}</a>
+            <a href="{{ path("icap_blog_view", {"blogId": _resource.id}) }}" title="{{ 'back_to_blog'|trans({}, 'icap_blog') }}" class="btn">{{ 'back_to_blog'|trans({}, 'icap_blog') }}</a>
         </div>
     </form>
 {% endblock %}

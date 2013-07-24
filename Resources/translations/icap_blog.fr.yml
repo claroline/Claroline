@@ -5,7 +5,9 @@ icap_blog_post_form_tags: 'Tags'
 new_post: 'Nouvel article'
 no_post: 'Aucun article.'
 add_new_post: "Ajout d'un article"
+edit_post: "Edition de l'article '%postTitle%'"
 back_to_workspace: "Retour à l'espace de travail"
+back_to_blog: 'Retour au blog'
 icap_blog_options_form_authorize_comment: 'Commentaires autorisés'
 icap_blog_options_form_authorize_anonymous_comment: 'Commentaires anonymes autorisés ?'
 icap_blog_options_form_post_per_page: "Articles par page"
