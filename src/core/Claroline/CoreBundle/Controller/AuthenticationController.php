@@ -102,14 +102,14 @@ class AuthenticationController
         $user = $this->userManager->getUserbyEmail($email);
 
         if (!empty($user)) {
-            $user->setTime(time());
+            $user->setHashTime(time());
             $password = sha1(rand(1000, 10000) . $user->getUsername() . $user->getSalt());
-            $user->setResetPassword($password);
+            $user->setResetPasswordHash($password);
             $this->om->persist($user);
             $this->om->flush();
             $link = $this->request->server->get('HTTP_ORIGIN') . $this->router->generate(
                 'claro_security_reset_password',
-                array('hash' => $user->getResetPassword())
+                array('hash' => $user->getResetPasswordHash())
             );
             $data = '<p><a href="' . $link . '"/>Click me</a></p>';
 
@@ -151,16 +151,16 @@ class AuthenticationController
     */
     public function resetPasswordAction($hash)
     {
-        $user = $this->userManager->getResetPassword($hash);
+        $user = $this->userManager->getResetPasswordHash($hash);
 
         if (empty($user)) {
             return array('error' => $this->translator->trans('no_email', array(), 'platform'));
         }
 
         $currentTime = time();
-        
+
         // the link is valid for 24h
-        if ($currentTime - (3600 * 24) < $user->getTime()) {
+        if ($currentTime - (3600 * 24) < $user->getHashTime()) {
             return array( 'user' => $user);
         }
 
