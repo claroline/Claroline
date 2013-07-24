@@ -89,7 +89,7 @@ class AuthenticationController
 
     /**
      * @Route(
-     *     "/sendemail",
+     *     "/sendmail",
      *     name="claro_security_send_token",
      *     options={"expose"=true}
      * )
@@ -136,9 +136,11 @@ class AuthenticationController
      * )
      * @Template("ClarolineCoreBundle:Authentication:forgotPassword.html.twig")
     */
+
     public function forgotPasswordAction()
     {
         return array();
+
     }
     /**
      * @Route(
@@ -147,6 +149,7 @@ class AuthenticationController
      *     options={"expose"=true}
      * )
      * @Method("GET")
+     *
      * @Template("ClarolineCoreBundle:Authentication:resetPassword.html.twig")
     */
     public function resetPasswordAction($hash)
@@ -174,6 +177,7 @@ class AuthenticationController
      *     options={"expose"=true}
      * )
      * @Method("POST")
+     *
      * @Template("ClarolineCoreBundle:Authentication:resetPassword.html.twig")
     */
     public function newPasswordAction()

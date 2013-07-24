@@ -34,6 +34,7 @@ class AuthenticationControllerTest extends MockeryTestCase
             $this->translator
         );
     }
+
     public function testSendEmailAction()
     {
         $user = $this->mock('Claroline\CoreBundle\Entity\User');

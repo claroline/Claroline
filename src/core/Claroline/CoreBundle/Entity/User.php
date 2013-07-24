@@ -154,16 +154,15 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      * )
      */
     protected $orderedTools;
+
     /**
-    *
-    *@ORM\Column(name="reset_password", type="string", nullable=true)
-    */
+     * @ORM\Column(name="reset_password", type="string", nullable=true)
+     */
     protected $resetPasswordHash;
 
     /**
      * @ORM\Column(name="hash_time",type="integer", nullable=true)
-     *
-    */
+     */
     protected  $hashTime;
 
     public function __construct()
@@ -230,9 +229,9 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     public function setPassword($password)
     {
         if (null === $password) {
-
             return;
-       }
+        }
+        
         $this->password = $password;
     }
 
