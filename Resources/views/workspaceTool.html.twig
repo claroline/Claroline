@@ -41,3 +41,13 @@
         </div> 
     </div>
 {% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+    <script type="text/javascript" src='{{ asset('bundles/innovapath/js/script.js') }}'></script>
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/innovapath/css/style.css') }}" />
+{% endblock %}
