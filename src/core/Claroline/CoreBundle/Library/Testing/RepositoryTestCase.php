@@ -175,6 +175,17 @@ abstract class RepositoryTestCase extends WebTestCase
         self::create($name, $workspace);
     }
 
+    protected static function createDisplayableWorkspace($name, $selfRegistration)
+    {
+        $workspace = new SimpleWorkspace();
+        $workspace->setName($name);
+        $workspace->setCode($name . 'Code');
+        $workspace->setDisplayable(true);
+        $workspace->setSelfRegistration($selfRegistration);
+        $workspace->setGuid(self::$client->getContainer()->get('claroline.utilities.misc')->generateGuid());
+        self::create($name, $workspace);
+    }
+
     protected static function createResourceType($name, $isExportable = true, Plugin $plugin = null)
     {
         $type = new ResourceType();

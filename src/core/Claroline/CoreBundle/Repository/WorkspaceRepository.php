@@ -284,6 +284,7 @@ class WorkspaceRepository extends EntityRepository
             SELECT w
             FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
             WHERE w.displayable = true
+            ORDER BY w.name
         ';
         $query = $this->_em->createQuery($dql);
 
@@ -303,6 +304,7 @@ class WorkspaceRepository extends EntityRepository
             FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
             WHERE w.displayable = true
             AND w.selfRegistration = true
+            ORDER BY w.name
         ';
         $query = $this->_em->createQuery($dql);
 
