@@ -14,6 +14,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/css/common/jquery-ui-bootstrap/jquery-ui-1.9.2.custom.css') }}'/>
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/frontend/jquery/plugin/tag-it/tag-it.css') }}"/>
 {% endblock %}
 
@@ -24,8 +25,9 @@
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/tag-it/tag-it.js') }}"></script>
 <script type="text/javascript">
     $(function() {
-        $(".tags").tagit();
+        $(".tags").tagit({
+            'availableTags' : ["{{ blog_tags(_resource)|join('","')|raw }}"]
+        });
     });
-
 </script>
 {% endblock %}
