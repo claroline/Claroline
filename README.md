@@ -7,3 +7,5 @@ Doctrine Migrations integration bundle providing :
 - Generation for multiple target platforms
 - API allowing to execute migrations programmaticaly
 - ...
+
+[![Build Status](https://secure.travis-ci.org/claroline/MigrationBundle.png?branch=master)](http://travis-ci.org/claroline/MigrationBundle)

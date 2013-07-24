@@ -4,8 +4,8 @@ namespace Claroline\MigrationBundle\Generator;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Doctrine\ORM\EntityManager;
-use Doctrine\DBAL\Schema\Schema;
 use Doctrine\ORM\Tools\SchemaTool;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 
 class Generator
 {
@@ -13,41 +13,32 @@ class Generator
     const QUERIES_DOWN = 'down';
 
     private $em;
+    private $schemaTool;
 
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, SchemaTool $tool)
     {
         $this->em = $em;
+        $this->schemaTool = $tool;
     }
 
-    // TODO :
-    // remove hardcoded platform
-    // return false if sync
-    // keep generated schema in cache for susbsequent calls
-    public function generateMigrationQueries(Bundle $bundle, array $platforms)
+    /**
+     * Generates bundle migration queries (up and down) for a given SQL platform.
+     *
+     * @param Symfony\Component\HttpKernel\Bundle\Bundle    $bundle
+     * @param Doctrine\DBAL\Platforms\AbstractPlatform      $platform
+     *
+     * @return array
+     *
+     * @todo keep generated schemas in cache for susbsequent calls
+     */
+    public function generateMigrationQueries(Bundle $bundle, AbstractPlatform $platform)
     {
         $metadata = $this->em->getMetadataFactory()->getAllMetadata();
-        $bundleTables = array();
-
-        foreach ($metadata as $entityMetadata) {
-            if (0 === strpos($entityMetadata->name, $bundle->getNamespace())) {
-                $bundleTables[] = $entityMetadata->getTableName();
-            }
-        }
-
-        $tool = new SchemaTool($this->em);
         $fromSchema = $this->em->getConnection()->getSchemaManager()->createSchema();
-        $toSchema = $tool->getSchemaFromMetadata($metadata);
-        $filterSchema = function (Schema $schema, array $bundleTables) {
-            foreach ($schema->getTables() as $table) {
-                if (!in_array($table->getName(), $bundleTables)) {
-                    $schema->dropTable($table->getName());
-                }
-            }
-        };
-        $filterSchema($fromSchema, $bundleTables);
-        $filterSchema($toSchema, $bundleTables);
+        $toSchema = $this->schemaTool->getSchemaFromMetadata($metadata);
 
-        $platform = new \Doctrine\DBAL\Platforms\MySqlPlatform();
+        $bundleTables = $this->getBundleTables($bundle, $metadata);
+        $this->filterSchemas(array($fromSchema, $toSchema), $bundleTables);
 
         $upQueries = $fromSchema->getMigrateToSql($toSchema, $platform);
         $downQueries = $fromSchema->getMigrateFromSql($toSchema, $platform);
@@ -56,5 +47,29 @@ class Generator
             self::QUERIES_UP => $upQueries,
             self::QUERIES_DOWN => $downQueries
         );
+    }
+
+    private function getBundleTables(Bundle $bundle, array $metadata)
+    {
+        $bundleTables = array();
+
+        foreach ($metadata as $entityMetadata) {
+            if (0 === strpos($entityMetadata->name, $bundle->getNamespace())) {
+                $bundleTables[] = $entityMetadata->getTableName();
+            }
+        }
+
+        return $bundleTables;
+    }
+
+    private function filterSchemas(array $schemas, array $bundleTables)
+    {
+        foreach ($schemas as $schema) {
+            foreach ($schema->getTables() as $table) {
+                if (!in_array($table->getName(), $bundleTables)) {
+                    $schema->dropTable($table->getName());
+                }
+            }
+        }
     }
 }
