@@ -13,9 +13,9 @@ class ResourceModeExtensionTest extends MockeryTestCase
     protected function setUp()
     {
         parent::setUp();
-        $writer = m::mock('Claroline\CoreBundle\Library\Resource\QueryStringWriter');
-        $accessor = m::mock('Claroline\CoreBundle\Library\Resource\ModeAccessor');
-        $this->generator = m::mock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
+        $writer = $this->mock('Claroline\CoreBundle\Library\Resource\QueryStringWriter');
+        $accessor = $this->mock('Claroline\CoreBundle\Library\Resource\ModeAccessor');
+        $this->generator = $this->mock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
 
         $writer->shouldReceive('getQueryString')->andReturnValues(array('', 'a=1&b=2'));
 

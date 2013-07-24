@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Entity\Workspace;
 
-use \RuntimeException;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Doctrine\ORM\Mapping as ORM;
@@ -55,6 +54,11 @@ abstract class AbstractWorkspace
     protected $isPublic = true;
 
     /**
+     * @ORM\Column(name="displayable", type="boolean", nullable=true)
+     */
+    protected $displayable;
+
+    /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
      *     mappedBy="workspace"
@@ -80,7 +84,6 @@ abstract class AbstractWorkspace
      */
     protected $orderedTools;
 
-
     /**
      * @ORM\OneToMany(
      * targetEntity="Claroline\CoreBundle\Entity\Role",
@@ -105,11 +108,21 @@ abstract class AbstractWorkspace
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id",onDelete="SET NULL", nullable=true)
      */
     protected $creator;
-    
+
     /**
      * @ORM\Column(name="guid", type="string", length=255, unique=true)
      */
     protected $guid;
+
+    /**
+     * @ORM\Column(name="self_registration", type="boolean", nullable=true)
+     */
+    protected $selfRegistration;
+
+    /**
+     * @ORM\Column(name="self_unregistration", type="boolean", nullable=true)
+     */
+    protected $selfUnregistration;
 
     public function __construct()
     {
@@ -166,7 +179,7 @@ abstract class AbstractWorkspace
 
     public function getOrderedTools()
     {
-       return $this->orderedTools;
+        return $this->orderedTools;
     }
 
     public function addOrderedTool(OrderedTool $tool)
@@ -193,14 +206,44 @@ abstract class AbstractWorkspace
     {
         $this->creator = $creator;
     }
-    
+
     public function setGuid($guid)
     {
         $this->guid = $guid;
     }
-    
+
     public function getGuid()
     {
         return $this->guid;
+    }
+
+    public function setDisplayable($displayable)
+    {
+        $this->displayable = $displayable;
+    }
+
+    public function isDisplayable()
+    {
+        return $this->displayable;
+    }
+
+    public function setSelfRegistration($selfRegistration)
+    {
+        $this->selfRegistration = $selfRegistration;
+    }
+
+    public function getSelfRegistration()
+    {
+        return $this->selfRegistration;
+    }
+
+    public function setSelfUnregistration($selfUnregistration)
+    {
+        $this->selfUnregistration = $selfUnregistration;
+    }
+
+    public function getSelfUnregistration()
+    {
+        return $this->selfUnregistration;
     }
 }

@@ -139,9 +139,9 @@ class WorkspaceRepository extends EntityRepository
      * names are actually prefixes of the target role (e.g. 'ROLE_WS_COLLABORATOR'
      * instead of 'ROLE_WS_COLLABORATOR_123').
      *
-     * @param User              $user
-     * @param array[string]     $roleNames
-     * @param array[integer]    $restrictionIds
+     * @param User           $user
+     * @param array[string]  $roleNames
+     * @param array[integer] $restrictionIds
      *
      * @return array[AbstractWorkspace]
      */
@@ -235,7 +235,7 @@ class WorkspaceRepository extends EntityRepository
             ->select('ws.name, ws.code, COUNT(rs.id) AS total')
             ->leftJoin('Claroline\CoreBundle\Entity\Resource\AbstractResource', 'rs', 'WITH', 'ws = rs.workspace')
             ->groupBy('ws.id')
-            ->orderBy('total','DESC');
+            ->orderBy('total', 'DESC');
 
         if ($max > 1) {
             $qb->setMaxResults($max);
@@ -269,6 +269,42 @@ class WorkspaceRepository extends EntityRepository
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userId', $user->getId());
+
+        return $query->getResult();
+    }
+
+    /**
+     * Returns the workspaces which are visible for each user.
+     *
+     * @return array[AbstractWorkspace]
+     */
+    public function findDisplayableWorkspaces()
+    {
+        $dql = '
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            WHERE w.displayable = true
+        ';
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
+
+    /**
+     * Returns the workspaces which are visible for each user
+     * and allowing self-registration.
+     *
+     * @return array[AbstractWorkspace]
+     */
+    public function findWorkspacesWithSelfRegistration()
+    {
+        $dql = '
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            WHERE w.displayable = true
+            AND w.selfRegistration = true
+        ';
+        $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
     }

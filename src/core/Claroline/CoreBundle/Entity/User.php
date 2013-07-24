@@ -407,21 +407,23 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         return $this->orderedTools;
     }
     
-    public function getResetPassword() {
+    public function getResetPassword() 
+    {
         return $this->resetPassword;
     }
 
-    public function setResetPassword($resetPassword) {
+    public function setResetPassword($resetPassword) 
+    {
         $this->resetPassword = $resetPassword;
     }
 
-    public function getTime() {
+    public function getTime() 
+    {
         return $this->time;
     }
 
-    public function setTime($time) {
+    public function setTime($time) 
+    {
         $this->time = $time;
     }
-
-
 }

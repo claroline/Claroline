@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Yaml\Yaml;
 use Claroline\CoreBundle\Validator\Constraints\WorkspaceUniqueCode;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
@@ -42,6 +41,7 @@ class WorkspaceType extends AbstractType
                 'property' => 'name'
             )
         );
+        $builder->add('displayable', 'checkbox', array('required' => false));
     }
 
     public function getName()

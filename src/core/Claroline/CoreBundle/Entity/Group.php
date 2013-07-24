@@ -29,7 +29,7 @@ class Group extends AbstractRoleSubject
     protected $id;
 
     /**
-     * @ORM\Column(name="name", type="string", length=50, nullable=false)
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
      * @Assert\NotBlank()
      */
     protected $name;
@@ -131,5 +131,10 @@ class Group extends AbstractRoleSubject
         }
 
         $this->roles->add($platformRole);
+    }
+
+    public function containsUser(User $user)
+    {
+        return $this->users->contains($user);
     }
 }

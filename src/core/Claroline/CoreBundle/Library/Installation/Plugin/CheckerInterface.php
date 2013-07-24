@@ -17,5 +17,5 @@ interface CheckerInterface
      *
      * @return null|array[ValidationError]
      */
-    function check(PluginBundle $plugin);
+    public function check(PluginBundle $plugin);
 }

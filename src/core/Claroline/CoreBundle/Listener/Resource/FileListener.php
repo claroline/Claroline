@@ -15,7 +15,6 @@ use Claroline\CoreBundle\Event\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Event\DownloadResourceEvent;
-use Claroline\CoreBundle\Event\Event\PlayFileEvent;
 use Claroline\CoreBundle\Event\Event\ExportResourceTemplateEvent;
 use Claroline\CoreBundle\Event\Event\ImportResourceTemplateEvent;
 
@@ -155,10 +154,10 @@ class FileListener implements ContainerAwareInterface
     {
         $ds = DIRECTORY_SEPARATOR;
         $file = $event->getResource();
-        $eventName = strtolower(str_replace('/', '_', 'play_file_'.$mimeType));
-        $this->container->get('claroline.event.event_dispatcher')
+        $mimeType = $file->getMimeType();
+        $playEvent = $this->container->get('claroline.event.event_dispatcher')
                 ->dispatch(
-                    strtolower(str_replace('/', '_', 'play_file_'.$mimeType)),
+                    strtolower(str_replace('/', '_', 'play_file_' . $mimeType)),
                     'PlayFile',
                     array($file)
                 );
@@ -166,10 +165,9 @@ class FileListener implements ContainerAwareInterface
         if ($playEvent->getResponse() instanceof Response) {
             $response = $playEvent->getResponse();
         } else {
-            $fallBackPlayEvent = new PlayFileEvent($file);
             $mimeElements = explode('/', $mimeType);
             $baseType = strtolower($mimeElements[0]);
-            $fallBackPlayEventName = 'play_file_'.$baseType;
+            $fallBackPlayEventName = 'play_file_' . $baseType;
             $fallBackPlayEvent = $this->container->get('claroline.event.event_dispatcher')
                     ->dispatch($fallBackPlayEventName, 'PlayFile', array($file));
             if ($fallBackPlayEvent->getResponse() instanceof Response) {

@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace Claroline\CoreBundle\DataFixtures\BatchInsert;
 
@@ -25,7 +25,6 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
     private $user;
     private $suffixName;
     private $totalResources;
-
 
     public function __construct($depth, $numberFiles, $numberDirectory, $numberRoots)
     {

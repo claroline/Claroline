@@ -81,7 +81,7 @@ abstract class FixtureTestCase extends TransactionalTestCase
     /**
      * Returns an object previously stored in the fixture reference repository.
      *
-     * @param string $name Label of the fixture object to retrieve.
+     * @param  string $name Label of the fixture object to retrieve.
      * @return object
      */
     protected function getFixtureReference($name)
@@ -110,10 +110,10 @@ abstract class FixtureTestCase extends TransactionalTestCase
      *
      * Note : dynamic loading of fixture classes only works for fixture located in the core bundle.
      *
-     * @param string    $name       Name of the method being called
-     * @param array     $arguments  Arguments of the method being called
+     * @param  string      $name      Name of the method being called
+     * @param  array       $arguments Arguments of the method being called
      * @return null|object
-     * @throws Exception if a valid call to loadFixture or getFixtureReference cannot be made
+     * @throws Exception   if a valid call to loadFixture or getFixtureReference cannot be made
      */
     public function __call($name, $arguments)
     {

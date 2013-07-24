@@ -22,8 +22,8 @@ class LoadDirectoryData extends AbstractFixture implements ContainerAwareInterfa
      *
      * Each directory will be referenced with a 'directory/[directory name]' label.
      *
-     * @param string    $creator    Username of the creator of the resource
-     * @param array     $paths              Directory paths to be created
+     * @param string $creator Username of the creator of the resource
+     * @param array  $paths   Directory paths to be created
      */
     public function __construct($creator, array $paths)
     {

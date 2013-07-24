@@ -285,7 +285,6 @@ class ResourceController
         // TODO waiting for define CustomActions
         // $logevent = new ResourceLogEvent($ri, $action);
         // $this->get('event_dispatcher')->dispatch('log_resource', $logevent);
-
         return $event->getResponse();
     }
 
@@ -598,7 +597,7 @@ class ResourceController
      * - for MOVE / COPY $collection->setAttributes(array('parent' => $parent))
      *  where $parent is the new parent entity.
      *
-     * @param string $permission
+     * @param string             $permission
      * @param ResourceCollection $collection
      *
      * @throws AccessDeniedException

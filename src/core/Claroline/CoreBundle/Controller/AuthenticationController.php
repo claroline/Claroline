@@ -198,4 +198,4 @@ class AuthenticationController
             'error' => $this->translator->trans('password_missmatch', array(), 'platform')
         );
     }
-}
+ }

@@ -15,11 +15,11 @@
 
     {% block logDetailsContext %}
         <h3>{{'log_context'|trans({}, 'platform')}}</h3>
-        
+
         {% include 'ClarolineCoreBundle:Log:view_details_doer.html.twig' %}
 
         {% include 'ClarolineCoreBundle:Log:view_details_role.html.twig' %}
-            
+
         {% include 'ClarolineCoreBundle:Log:view_details_receiver_user.html.twig' %}
 
         {% include 'ClarolineCoreBundle:Log:view_details_receiver_group.html.twig' %}

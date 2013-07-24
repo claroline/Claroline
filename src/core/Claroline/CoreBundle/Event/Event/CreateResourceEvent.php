@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Event\Event;
 
 use Symfony\Component\EventDispatcher\Event;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Event\DataConveyorEventInterface;
 
 /**
  * Event dispatched by the resource controller when a resource creation is asked.
