@@ -59,6 +59,19 @@
         .jqplot-xaxis-tick {
             margin-bottom: 10px;
         }
+        
+        table.jqplot-table-legend {
+            position: absolute;
+            border: #006080 double thick;
+            left: 80%;
+            margin-left: 20px;
+            width: 100px;
+            top: 0px;
+        }
+        
+        .jqplot-table-legend jqplot-table-legend-swatch {
+            width: 20px;
+            }
     </style>
 
     <h1>{{ "Docimology" | trans }}</h1>
@@ -68,6 +81,16 @@
     <hr/>
     <div id="histoMarks" style="height:100%; width:100%;"></div>
     <hr/>
+    <div id="graph2" style="height:100%; width:80%;"></div>
+    <hr/>
+    <div id="questionList">
+        <h4>{{ "List of question" | trans }}</h4>
+        <ol>
+            {% for questionTitle in questionsList %}
+                <li>{{ questionTitle }}</li>
+            {% endfor %}
+        </ol>
+    </div>
 {% endblock %}
 
 {% block javascripts %}
@@ -80,6 +103,7 @@
 
     <script type="text/javascript">
         $(document).ready(function(){
+            /*********************************histo mark******************************************************/
             var s1 = [{{ frequencyMarks }}];
             var marks = [{{ scoreList }}];
 
@@ -119,6 +143,66 @@
                         tickOptions: {formatString: '%d'}
                     }
                 }
+            });
+            
+            /*********************************Graph 2******************************************************/
+            
+            /*var s1 = [2, 6, 7, 10];
+            var s2 = [7, 5, 3, 4];
+            var s3 = [14, 9, 3, 8];*/
+
+            {% set series = '' %}
+            {% set i = 1 %}
+            {% for serie in seriesResponsesTab %}
+                {% set sname = 's' ~ i %}
+                    var {{ sname }} = [{{ serie }}];
+                {% if series == '' %}
+                    {% set series = 's' ~ i %}
+                {% else %}
+                    {% set series = series ~ ',' ~ 's' ~ i %}
+                {% endif %}
+                {% set i = i + 1 %}
+            {% endfor %}
+
+            plot3 = $.jqplot('graph2', [{{ series }}], {
+                // Tell the plot to stack the bars.
+                stackSeries: true,
+                captureRightClick: true,
+                
+                seriesDefaults:{
+                    renderer:$.jqplot.BarRenderer,
+                    rendererOptions: {
+                        // Put a 30 pixel margin between bars.
+                        barMargin: 30,
+                        // Highlight bars when mouse button pressed.
+                        // Disables default highlighting on mouse over.
+                        highlightMouseDown: true   
+                    },
+                    pointLabels: {show: true}
+                },
+                axes: {
+                    xaxis: {
+                        renderer: $.jqplot.CategoryAxisRenderer
+                    },
+                    yaxis: {
+                      // Don't pad out the bottom of the data range.  By default,
+                      // axes scaled as if data extended 10% above and below the
+                      // actual range to prevent data points right on grid boundaries.
+                      // Don't want to do that here.
+                      padMin: 0
+                    }
+                },
+                legend: {
+                    show: true,
+                    location: 'e',
+                    placement: 'outside',
+                },
+                series:[
+                    {label:'Correct', color: 'red'}, 
+                    {label:'partially', color: 'blue'}, 
+                    {label:'wrong', color: 'green'}, 
+                    {label:'no answer', color: 'yellow'}
+                ],
             });
         });
     </script>

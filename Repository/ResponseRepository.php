@@ -76,4 +76,19 @@ class ResponseRepository extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    /**
+     * Send the reponses for an exercise and an interaction
+     *
+     */
+    public function getExerciseInterResponses($exoId, $interId)
+    {
+        $dql = 'SELECT r.mark, count(r.mark) as nb
+            FROM UJM\ExoBundle\Entity\Response r, UJM\ExoBundle\Entity\Interaction i, UJM\ExoBundle\Entity\Question q, UJM\ExoBundle\Entity\Paper p
+            WHERE r.interaction=i.id AND i.question=q.id AND r.paper=p.id AND p.exercise='.$exoId.' AND r.interaction ='.$interId.' group by r.mark';
+
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
 }

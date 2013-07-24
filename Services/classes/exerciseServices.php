@@ -359,7 +359,7 @@ class exerciseServices
         return $exoTotalScore;
     }
 
-    private function qcmMaxScore($interaction)
+    public function qcmMaxScore($interaction)
     {
         $scoreMax = 0;
 
@@ -381,7 +381,7 @@ class exerciseServices
         return $scoreMax;
     }
 
-    private function graphicMaxScore($interaction)
+    public function graphicMaxScore($interaction)
     {
         $scoreMax = 0;
 
