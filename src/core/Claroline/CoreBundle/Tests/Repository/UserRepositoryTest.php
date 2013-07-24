@@ -143,7 +143,7 @@ class UserRepositoryTest extends RepositoryTestCase
     }
 
     /**
-     * @expectedException Claroline\CoreBundle\Database\MissingEntityException
+     * @expectedException Claroline\CoreBundle\Persistence\MissingObjectException
      */
     public function testFindByUsernamesThrowsAnExceptionIfAUserIsMissing()
     {

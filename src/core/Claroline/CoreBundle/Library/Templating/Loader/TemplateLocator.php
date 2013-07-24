@@ -19,10 +19,10 @@ class TemplateLocator extends baseTemplateLocator
     /**
      * Constructor.
      *
-     * @param FileLocatorInterface          $locator  A FileLocatorInterface instance
-     * @param PlatformConfigurationHandler  $configHandler Claroline platform configuration handler service
-     * @param ThemeService                  $themeService Claroline theme service
-     * @param string                        $cacheDir The cache path
+     * @param FileLocatorInterface         $locator       A FileLocatorInterface instance
+     * @param PlatformConfigurationHandler $configHandler Claroline platform configuration handler service
+     * @param ThemeService                 $themeService  Claroline theme service
+     * @param string                       $cacheDir      The cache path
      */
     public function __construct(FileLocatorInterface $locator, $configHandler, $themeService, $cacheDir = null)
     {
@@ -85,4 +85,3 @@ class TemplateLocator extends baseTemplateLocator
         }
     }
 }
-

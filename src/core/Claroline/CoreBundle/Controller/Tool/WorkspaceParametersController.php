@@ -11,7 +11,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Controller\Tool\AbstractParametersController;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Tool\Tool;
-use Claroline\CoreBundle\Event\Event\ConfigureWorkspaceToolEvent;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -189,9 +188,9 @@ class WorkspaceParametersController extends AbstractParametersController
      * @EXT\Method("GET")
      *
      * @param AbstractWorkspace $workspace
-     * @param Tool $tool
+     * @param Tool              $tool
      *
-     * @return Response 
+     * @return Response
      */
     public function openWorkspaceToolConfig(AbstractWorkspace $workspace, Tool $tool)
     {

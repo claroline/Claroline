@@ -2,7 +2,8 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use \Mockery as m;
+use Mockery as m;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
@@ -18,18 +19,15 @@ class ToolManagerTest extends MockeryTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->orderedToolRepo = m::mock('Claroline\CoreBundle\Repository\OrderedToolRepository');
-        $this->toolRepo = m::mock('Claroline\CoreBundle\Repository\ToolRepository');
-        $this->ed = m::mock('Claroline\CoreBundle\Event\StrictDispatcher');
-        $this->utilities = m::mock('Claroline\CoreBundle\Library\Utilities\ClaroUtilities');
-        $this->roleRepo = m::mock('Claroline\CoreBundle\Repository\RoleRepository');
-        $this->translator = m::mock('Symfony\Component\Translation\Translator');
-        $this->om = m::mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->orderedToolRepo = $this->mock('Claroline\CoreBundle\Repository\OrderedToolRepository');
+        $this->toolRepo = $this->mock('Claroline\CoreBundle\Repository\ToolRepository');
+        $this->ed = $this->mock('Claroline\CoreBundle\Event\StrictDispatcher');
+        $this->utilities = $this->mock('Claroline\CoreBundle\Library\Utilities\ClaroUtilities');
+        $this->roleRepo = $this->mock('Claroline\CoreBundle\Repository\RoleRepository');
+        $this->translator = $this->mock('Symfony\Component\Translation\Translator');
+        $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
     }
 
-    /**
-     * @group tool
-     */
     public function testCreate()
     {
         $tool = new Tool();
@@ -39,26 +37,26 @@ class ToolManagerTest extends MockeryTestCase
         $manager->create($tool);
     }
 
-    /**
-     * @group tool
-     * @group workspace
-     */
     public function testImport()
     {
-        $manager = $this->getManager(array('createOrderedTool', 'addRoleToOrderedTool', 'addWorkspaceTool'));
-        $role1 = m::mock('Claroline\CoreBundle\Entity\Role');
-        $role2 = m::mock('Claroline\CoreBundle\Entity\Role');
+        $manager = $this->getManager(
+            array('createOrderedTool', 'addRoleToOrderedTool', 'addWorkspaceTool', 'extractFiles')
+        );
+        $roleA = $this->mock('Claroline\CoreBundle\Entity\Role');
+        $roleB = $this->mock('Claroline\CoreBundle\Entity\Role');
         $config = array();
         $files = array('path');
-        $roles = array($role1, $role2);
+        $roles = array($roleA, $roleB);
+        $genRoles = array($roleA, $roleB);
+        $arch = 'path/to/arch';
         $name = 'toolName';
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $resource = m::mock('Claroline\CoreBundle\Entity\Resource\Directory');
-        $userManager = m::mock('Claroline\CoreBundle\Entity\User');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $resource = $this->mock('Claroline\CoreBundle\Entity\Resource\Directory');
+        $userManager = $this->mock('Claroline\CoreBundle\Entity\User');
         $position = 1;
-        $tool = m::mock('Claroline\CoreBundle\Entity\Tool\Tool');
-        $orderedTool = m::mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
-
+        $tool = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
+        $orderedTool = $this->mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
+        $manager->shouldReceive('extractFiles')->once()->with($arch, $config)->andReturn($files);
         $manager->shouldReceive('addWorkspaceTool')->with($tool, $position, $name, $workspace)
             ->once()->andReturn($orderedTool);
         $manager->shouldReceive('addRoleToOrderedTool')->times(2);
@@ -66,18 +64,27 @@ class ToolManagerTest extends MockeryTestCase
         $this->ed->shouldReceive('dispatch')->once()
             ->with('tool_claro_tool_from_template', 'ImportTool', m::any());
 
-        $manager->import($config, $roles, $files, $name, $workspace, $resource, $tool, $userManager, $position);
+        $manager->import(
+            $config,
+            $roles,
+            $genRoles,
+            $name,
+            $workspace,
+            $resource,
+            $tool,
+            $userManager,
+            $position,
+            $arch
+        );
     }
 
     /**
-     * @group tool
-     * @group workspace
      * @dataProvider addWorkspaceToolProvider
      */
     public function testAddWorkspaceTool($switchTool, $isExceptionExpected)
     {
-        $tool = m::mock('Claroline\CoreBundle\Entity\Tool\Tool');
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $tool = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
         $position = 1;
 
         $this->orderedToolRepo->shouldReceive('findOneBy')->once()
@@ -86,7 +93,7 @@ class ToolManagerTest extends MockeryTestCase
         if ($isExceptionExpected) {
             $this->setExpectedException('Claroline\CoreBundle\Manager\Exception\ToolPositionAlreadyOccupiedException');
         } else {
-            $otr = m::mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
+            $otr = $this->mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
             $this->om->shouldReceive('factory')->once()
                 ->with('Claroline\CoreBundle\Entity\Tool\OrderedTool')->andReturn($otr);
             $otr->shouldReceive('setWorkspace')->once()->with($workspace);
@@ -100,15 +107,12 @@ class ToolManagerTest extends MockeryTestCase
         $this->getManager()->addWorkspaceTool($tool, 1, 'tool', $workspace);
     }
 
-    /**
-     * @group tool
-     */
     public function testAddRole()
     {
-        $tool = m::mock('Claroline\CoreBundle\Entity\Tool\Tool');
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $otr = m::mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
-        $role = m::mock('Claroline\CoreBundle\Entity\Role');
+        $tool = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $otr = $this->mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
+        $role = $this->mock('Claroline\CoreBundle\Entity\Role');
 
         $this->orderedToolRepo->shouldReceive('findOneBy')->once()
             ->with(array('tool' => $tool, 'workspace' => $workspace))->andReturn($otr);
@@ -118,13 +122,10 @@ class ToolManagerTest extends MockeryTestCase
         $this->getManager()->addRole($tool, $role, $workspace);
     }
 
-    /**
-     * @group tool
-     */
     public function testAddRoleOrderedTool()
     {
-        $otr = m::mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
-        $role = m::mock('Claroline\CoreBundle\Entity\Role');
+        $otr = $this->mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
+        $role = $this->mock('Claroline\CoreBundle\Entity\Role');
 
         $otr->shouldReceive('addRole')->once()->with($role);
         $this->om->shouldReceive('persist')->with($otr)->once();
@@ -132,15 +133,12 @@ class ToolManagerTest extends MockeryTestCase
         $this->getManager()->addRoleToOrderedTool($otr, $role);
     }
 
-    /**
-     * @group tool
-     */
     public function testRemoveRole()
     {
-        $tool = m::mock('Claroline\CoreBundle\Entity\Tool\Tool');
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $otr = m::mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
-        $role = m::mock('Claroline\CoreBundle\Entity\Role');
+        $tool = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $otr = $this->mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
+        $role = $this->mock('Claroline\CoreBundle\Entity\Role');
 
         $this->orderedToolRepo->shouldReceive('findOneBy')->once()
             ->with(array('tool' => $tool, 'workspace' => $workspace))->andReturn($otr);
@@ -150,13 +148,10 @@ class ToolManagerTest extends MockeryTestCase
         $this->getManager()->removeRole($tool, $role, $workspace);
     }
 
-    /**
-     * @group tool
-     */
     public function testRemoveRoleFromOrderedTool()
     {
-        $otr = m::mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
-        $role = m::mock('Claroline\CoreBundle\Entity\Role');
+        $otr = $this->mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
+        $role = $this->mock('Claroline\CoreBundle\Entity\Role');
 
         $otr->shouldReceive('removeRole')->once()->with($role);
         $this->om->shouldReceive('persist')->with($otr)->once();
@@ -164,69 +159,60 @@ class ToolManagerTest extends MockeryTestCase
         $this->getManager()->removeRoleFromOrderedTool($otr, $role);
     }
 
-    /**
-     * @group tool
-     * @group user
-     */
     public function testGetDisplayedDesktopOrderedTools()
     {
-        $user = m::mock('Claroline\CoreBundle\Entity\User');
+        $user = $this->mock('Claroline\CoreBundle\Entity\User');
 
         $this->toolRepo->shouldReceive('findDesktopDisplayedToolsByUser')->with($user)->once();
         $this->getManager()->getDisplayedDesktopOrderedTools($user);
     }
 
-    /**
-     * @group tool
-     * @group user
-     */
     public function testGetDesktopToolsConfigurationArray()
     {
-        $user = m::mock('Claroline\CoreBundle\Entity\User');
-        $desktopTool1 = m::mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
-        $desktopTool3 = m::mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
-        $undisplayedTool = m::mock('Claroline\CoreBundle\Entity\Tool\Tool');
-        $tool1 = m::mock('Claroline\CoreBundle\Entity\Tool\Tool');
-        $tool3 = m::mock('Claroline\CoreBundle\Entity\Tool\Tool');
+        $user = $this->mock('Claroline\CoreBundle\Entity\User');
+        $desktopToolA = $this->mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
+        $desktopToolB = $this->mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
+        $undisplayedTool = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
+        $toolA = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
+        $toolB = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
 
         m::getConfiguration()->allowMockingNonExistentMethods(true);
         $this->orderedToolRepo->shouldReceive('findByUser')->once()->with($user)
-            ->andReturn(array($desktopTool1, $desktopTool3));
+            ->andReturn(array($desktopToolA, $desktopToolB));
         m::getConfiguration()->allowMockingNonExistentMethods(false);
         //unmapped field
-        $desktopTool1->shouldReceive('getOrder')->once()->andReturn(1);
-        $desktopTool1->shouldReceive('getTool')->times(2)->andReturn($tool1);
-        $desktopTool3->shouldReceive('getOrder')->once()->andReturn(3);
-        $desktopTool3->shouldReceive('getTool')->times(2)->andReturn($tool3);
-        $tool1->shouldReceive('setVisible')->once()->with(true);
-        $tool3->shouldReceive('setVisible')->once()->with(true);
+        $desktopToolA->shouldReceive('getOrder')->once()->andReturn(1);
+        $desktopToolA->shouldReceive('getTool')->times(2)->andReturn($toolA);
+        $desktopToolB->shouldReceive('getOrder')->once()->andReturn(3);
+        $desktopToolB->shouldReceive('getTool')->times(2)->andReturn($toolB);
+        $toolA->shouldReceive('setVisible')->once()->with(true);
+        $toolB->shouldReceive('setVisible')->once()->with(true);
 
         $this->toolRepo->shouldReceive('findDesktopUndisplayedToolsByUser')
             ->once()->with($user)->andReturn(array($undisplayedTool));
         $undisplayedTool->shouldReceive('setVisible')->once()->with(false);
         $this->utilities->shouldReceive('arrayFill')
-            ->with(array('1' => $tool1, '3' => $tool3), array($undisplayedTool))->once();
+            ->with(array('1' => $toolA, '3' => $toolB), array($undisplayedTool))->once();
 
         $this->getManager()->getDesktopToolsConfigurationArray($user);
     }
 
     /**
-     * @group tool
-     * @group user
      * @dataProvider removeDesktopToolProvider
-     *
      */
     public function testRemoveDesktopTool($name, $isExceptionExpected)
     {
-        $removedTool = m::mock('Claroline\CoreBundle\Entity\Tool\Tool');
-        $user = m::mock('Claroline\CoreBundle\Entity\User');
-        $ot = m::mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
+        $removedTool = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
+        $user = $this->mock('Claroline\CoreBundle\Entity\User');
+        $ot = $this->mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
         $removedTool->shouldReceive('getName')->once()->andReturn($name);
 
         if ($isExceptionExpected) {
             $this->setExpectedException('Claroline\CoreBundle\Manager\Exception\UnremovableToolException');
         } else {
-            $this->orderedToolRepo->shouldReceive('findOneBy')->once()->with(array('user' => $user, 'tool' => $removedTool))
+            $this->orderedToolRepo->shouldReceive('findOneBy')
+                ->once()
+                ->with(array('user' => $user, 'tool' => $removedTool))
                 ->andReturn($ot);
             $this->om->shouldReceive('remove')->once();
             $this->om->shouldReceive('flush');
@@ -236,14 +222,12 @@ class ToolManagerTest extends MockeryTestCase
     }
 
     /**
-     * @group tool
-     * @group user
      * @dataProvider addDesktopToolProvider
      */
     public function testAddDesktopTool($switchTool, $isExceptionExpected)
     {
-        $user = m::mock('Claroline\CoreBundle\Entity\User');
-        $tool = m::mock('Claroline\CoreBundle\Entity\Tool\Tool');
+        $user = $this->mock('Claroline\CoreBundle\Entity\User');
+        $tool = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
         $position = 1;
 
         $this->orderedToolRepo->shouldReceive('findOneBy')->once()
@@ -252,7 +236,7 @@ class ToolManagerTest extends MockeryTestCase
         if ($isExceptionExpected) {
             $this->setExpectedException('Claroline\CoreBundle\Manager\Exception\ToolPositionAlreadyOccupiedException');
         } else {
-            $otr = m::mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
+            $otr = $this->mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
             $otr->shouldReceive('setUser')->once()->with($user);
             $otr->shouldReceive('setTool')->once()->with($tool);
             $otr->shouldReceive('setOrder')->once()->with($position);
@@ -267,17 +251,14 @@ class ToolManagerTest extends MockeryTestCase
 
     }
 
-    /**
-     * @group tool
-     */
     public function testMove()
     {
-        $user = m::mock('Claroline\CoreBundle\Entity\User');
-        $tool = m::mock('Claroline\CoreBundle\Entity\Tool\Tool');
+        $user = $this->mock('Claroline\CoreBundle\Entity\User');
+        $tool = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
         $position = 1;
-        $movingTool = m::mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
-        $switchTool = m::mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $movingTool = $this->mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
+        $switchTool = $this->mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
 
         $this->orderedToolRepo->shouldReceive('findOneBy')->once()
             ->with(array('user' => $user, 'tool' => $tool, 'workspace' => $workspace))->andReturn($movingTool);
@@ -292,22 +273,18 @@ class ToolManagerTest extends MockeryTestCase
         $this->getManager()->move($tool, $position, $user, $workspace);
     }
 
-    /**
-     * @group tool
-     * @group workspace
-     */
     public function testAddMissingWorkspaceTools()
     {
         $manager = $this->getManager(array('getWorkspaceRoles', 'addWorkspaceTool'));
 
-        $tool = m::mock('Claroline\CoreBundle\Entity\Tool\Tool');
+        $tool = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
         $tool->shouldReceive('isDisplayableInWorkspace')->andReturn(true);
         $tool->shouldReceive('getName')->andReturn('displayedName');
-        $role1 = m::mock('Claroline\CoreBundle\Entity\Role');
-        $role1->shouldReceive('getId')->andReturn(1);
-        $role2 = m::mock('Claroline\CoreBundle\Entity\Role');
-        $role2->shouldReceive('getId')->andReturn(2);
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $roleA = $this->mock('Claroline\CoreBundle\Entity\Role');
+        $roleA->shouldReceive('getId')->andReturn(1);
+        $roleB = $this->mock('Claroline\CoreBundle\Entity\Role');
+        $roleB->shouldReceive('getId')->andReturn(2);
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
 
         $expected = array(
             array(
@@ -319,7 +296,7 @@ class ToolManagerTest extends MockeryTestCase
             )
         );
 
-        $manager->shouldReceive('getWorkspaceRoles')->with($workspace)->once()->andReturn(array($role1, $role2));
+        $manager->shouldReceive('getWorkspaceRoles')->with($workspace)->once()->andReturn(array($roleA, $roleB));
 
         $this->toolRepo->shouldReceive('countDisplayedToolsByWorkspace')->once()->andReturn(2);
         $this->toolRepo->shouldReceive('findUndisplayedToolsByWorkspace')->once()->andReturn(array($tool));
@@ -331,25 +308,21 @@ class ToolManagerTest extends MockeryTestCase
         $this->assertEquals($expected, $manager->addMissingWorkspaceTools($workspace));
     }
 
-    /**
-     * @group tool
-     * @group workspace
-     */
     public function testGetWorkspaceExistingTools()
     {
         $manager = $this->getManager(array('getWorkspaceRoles'));
 
-        $tool = m::mock('Claroline\CoreBundle\Entity\Tool\Tool');
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $role1 = m::mock('Claroline\CoreBundle\Entity\Role');
-        $role1->shouldReceive('getId')->andReturn(1);
-        $role2 = m::mock('Claroline\CoreBundle\Entity\Role');
-        $role2->shouldReceive('getId')->andReturn(2);
+        $tool = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $roleA = $this->mock('Claroline\CoreBundle\Entity\Role');
+        $roleA->shouldReceive('getId')->andReturn(1);
+        $roleB = $this->mock('Claroline\CoreBundle\Entity\Role');
+        $roleB->shouldReceive('getId')->andReturn(2);
 
-        $ot = m::mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
+        $ot = $this->mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
         $ot->shouldReceive('getTool')->andReturn($tool);
         $tool->shouldReceive('isDisplayableInWorkspace')->andReturn(true);
-        $ot->shouldReceive('getRoles')->andReturn(array($role1));
+        $ot->shouldReceive('getRoles')->andReturn(array($roleA));
         $ot->shouldReceive('getOrder')->andReturn(1);
         $ot->shouldReceive('getName')->andReturn('displayedName');
 
@@ -364,22 +337,58 @@ class ToolManagerTest extends MockeryTestCase
         );
 
         $this->orderedToolRepo->shouldReceive('findBy')->andReturn(array($ot))->once();
-        $manager->shouldReceive('getWorkspaceRoles')->with($workspace)->once()->andReturn(array($role1, $role2));
+        $manager->shouldReceive('getWorkspaceRoles')->with($workspace)->once()->andReturn(array($roleA, $roleB));
         $this->assertEquals($expected, $manager->getWorkspaceExistingTools($workspace));
     }
 
-    /**
-     * @group tool
-     * @group workspace
-     */
     public function testGetWorkspaceToolsConfigurationArray()
     {
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
         $manager = $this->getManager(array('addMissingWorkspaceTools', 'getWorkspaceExistingTools'));
         $manager->shouldReceive('addMissingWorkspaceTools')->with($workspace)->once()->andReturn(array('1'));
         $manager->shouldReceive('getWorkspaceExistingTools')->with($workspace)->once()->andReturn(array('2'));
         $expected = array('2', '1');
         $this->assertEquals($expected, $manager->getWorkspaceToolsConfigurationArray($workspace));
+    }
+
+    public function testGetOrderedToolsByWorkspaceAndRoles()
+    {
+        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $roleA = new Role();
+        $roleB = new Role();
+        $roles = array($roleA, $roleB);
+        $orderedTools = array('ordered_tool_1', 'ordered_tool_2');
+
+        $this->orderedToolRepo
+            ->shouldReceive('findByWorkspaceAndRoles')
+            ->with($workspace, $roles)
+            ->once()
+            ->andReturn($orderedTools);
+
+        $this->assertEquals(
+            $orderedTools,
+            $this->getManager()->getOrderedToolsByWorkspaceAndRoles($workspace, $roles)
+        );
+    }
+
+    public function testGetDisplayedByRolesAndWorkspace()
+    {
+        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $roleA = new Role();
+        $roleB = new Role();
+        $roles = array($roleA, $roleB);
+        $tools = array('tool_1', 'tool_2');
+
+        $this->toolRepo
+            ->shouldReceive('findDisplayedByRolesAndWorkspace')
+            ->with($roles, $workspace)
+            ->once()
+            ->andReturn($tools);
+
+        $this->assertEquals(
+            $tools,
+            $this->getManager()->getDisplayedByRolesAndWorkspace($roles, $workspace)
+        );
     }
 
     public function removeDesktopToolProvider()
@@ -392,7 +401,7 @@ class ToolManagerTest extends MockeryTestCase
 
     public function addDesktopToolProvider()
     {
-        $switchTool = m::mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
+        $switchTool = $this->mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
 
         return array(
             array('switchTool' => $switchTool, 'isExceptionExpected' => true),
@@ -402,7 +411,7 @@ class ToolManagerTest extends MockeryTestCase
 
     public function addWorkspaceToolProvider()
     {
-        $switchTool = m::mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
+        $switchTool = $this->mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
 
         return array(
             array('switchTool' => $switchTool, 'isExceptionExpected' => true),
@@ -418,7 +427,7 @@ class ToolManagerTest extends MockeryTestCase
             ->with('ClarolineCoreBundle:Tool\Tool')->andReturn($this->toolRepo);
         $this->om->shouldReceive('getRepository')->once()
             ->with('ClarolineCoreBundle:Role')->andReturn($this->roleRepo);
-                
+
         if (count($mockedMethods) === 0) {
             return new ToolManager(
                 $this->ed,
@@ -436,7 +445,7 @@ class ToolManagerTest extends MockeryTestCase
 
             $stringMocked .= ']';
 
-            return m::mock(
+            return $this->mock(
                 'Claroline\CoreBundle\Manager\ToolManager' . $stringMocked,
                 array(
                     $this->ed,

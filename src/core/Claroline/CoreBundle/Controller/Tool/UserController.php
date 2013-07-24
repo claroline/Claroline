@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -26,6 +27,7 @@ class UserController extends Controller
 
     private $userManager;
     private $roleManager;
+    private $workspaceTagManager;
     private $eventDispatcher;
     private $pagerFactory;
     private $security;
@@ -33,17 +35,19 @@ class UserController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
-     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
-     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "pagerFactory"       = @DI\Inject("claroline.pager.pager_factory"),
-     *     "security"           = @DI\Inject("security.context"),
-     *     "router"             = @DI\Inject("router")
+     *     "userManager"         = @DI\Inject("claroline.manager.user_manager"),
+     *     "roleManager"         = @DI\Inject("claroline.manager.role_manager"),
+     *     "workspaceTagManager" = @DI\Inject("claroline.manager.workspace_tag_manager"),
+     *     "eventDispatcher"     = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "pagerFactory"        = @DI\Inject("claroline.pager.pager_factory"),
+     *     "security"            = @DI\Inject("security.context"),
+     *     "router"              = @DI\Inject("router")
      * })
      */
     public function __construct(
         UserManager $userManager,
         RoleManager $roleManager,
+        WorkspaceTagManager $workspaceTagManager,
         StrictDispatcher $eventDispatcher,
         PagerFactory $pagerFactory,
         SecurityContextInterface $security,
@@ -52,6 +56,7 @@ class UserController extends Controller
     {
         $this->userManager = $userManager;
         $this->roleManager = $roleManager;
+        $this->workspaceTagManager = $workspaceTagManager;
         $this->eventDispatcher = $eventDispatcher;
         $this->pagerFactory = $pagerFactory;
         $this->security = $security;
@@ -168,7 +173,7 @@ class UserController extends Controller
      * edit the user parameters for the selected workspace.
      *
      * @param integer $workspaceId the workspace id
-     * @param integer $userId     the user id
+     * @param integer $userId      the user id
      *
      * @return Response
      */
@@ -284,6 +289,53 @@ class UserController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/{workspaceId}/add/user/{userId}",
+     *     name="claro_workspace_add_user",
+     *     options={"expose"=true},
+     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
+     * )
+     * @EXT\Method({"POST", "GET"})
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "user",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"id" = "userId", "strictId" = true}
+     * )
+     *
+     * Adds a user to a workspace.
+     *
+     * @param AbstractWorkspace $workspace
+     * @param User $user
+     *
+     * @return Response
+     */
+    public function addUserAction(AbstractWorkspace $workspace, User $user)
+    {
+        $role = $this->roleManager->getCollaboratorRole($workspace);
+
+        $userRole = $this->roleManager->getWorkspaceRoleForUser($user, $workspace);
+
+        if (is_null($userRole)) {
+            $this->roleManager->associateRole($user, $role);
+            $this->eventDispatcher->dispatch(
+                'log',
+                'Log\LogWorkspaceRoleSubscribe',
+                array($role, $user)
+            );
+        }
+
+        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+        $this->securityContext->setToken($token);
+
+        return new JsonResponse($this->userManager->convertUsersToArray(array($user)));
+    }
+
+    /**
+     * @EXT\Route(
      *     "/{workspaceId}/users",
      *     name="claro_workspace_delete_users",
      *     options={"expose"=true},
@@ -304,7 +356,8 @@ class UserController extends Controller
      * Removes many users from a workspace.
      * It uses a query string of groupIds as parameter (ids[]=1&ids[]=2)
      *
-     * @param integer $workspaceId the workspace id
+     * @param AbstractWorkspace $workspaceId
+     * @param User $userId
      *
      * @return Response
      */
@@ -331,10 +384,59 @@ class UserController extends Controller
     }
 
     /**
+     * @EXT\Route(
+     *     "/{workspaceId}/users/{userId}",
+     *     name="claro_workspace_delete_user",
+     *     options={"expose"=true},
+     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
+     * )
+     * @EXT\Method({"DELETE", "GET"})
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "user",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"id" = "userId", "strictId" = true}
+     * )
+     *
+     * Removes an user from a workspace.
+     *
+     * @param AbstractWorkspace $workspace
+     * @param User $userId
+     *
+     * @return Response
+     */
+    public function removeUserAction(AbstractWorkspace $workspace, User $user)
+    {
+        $roles = $this->roleManager->getRolesByWorkspace($workspace);
+        $this->checkRemoveManagerRoleIsValid(array($user), $workspace);
+
+        foreach ($roles as $role) {
+            if ($user->hasRole($role->getName())) {
+                $this->roleManager->dissociateRole($user, $role);
+                $this->eventDispatcher->dispatch(
+                    'log',
+                    'Log\LogWorkspaceRoleUnsubscribe',
+                    array($role, $user)
+                );
+            }
+        }
+        $this->workspaceTagManager->deleteAllRelationsFromWorkspaceAndUser($workspace, $user);
+
+        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+        $this->securityContext->setToken($token);
+
+        return new Response("success", 204);
+    }
+
+    /**
      * Checks if the role manager of the user can be changed.
      * There should be awlays at least one manager of a workspace.
      *
-     * @param array $userIds an array of user ids
+     * @param array             $userIds   an array of user ids
      * @param AbstractWorkspace $workspace the relevant workspace
      *
      * @throws LogicException

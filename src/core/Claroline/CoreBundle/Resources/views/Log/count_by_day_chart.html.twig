@@ -32,7 +32,7 @@
 <script type="text/javascript">
     var chartData = {{ chartData|json_encode|raw }};
     var bg_color = "transparent";
-    if ($.browser.msie && parseInt($.browser.version, 10) <= 8) bg_color = "#fff"; 
+    if ($.browser.msie && parseInt($.browser.version, 10) <= 8) bg_color = "#fff";
     $(document).ready(function(){
         if (chartData.length>0) {
             var actionsPlot = $.jqplot(
@@ -79,7 +79,7 @@
                     },
                     cursor: {
                         show: true,
-                        zoom: true, 
+                        zoom: true,
                         showTooltip: false
                     },
                     seriesDefaults: {
