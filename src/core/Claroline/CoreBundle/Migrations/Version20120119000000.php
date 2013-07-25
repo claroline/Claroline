@@ -134,7 +134,7 @@ class Version20120119000000 extends BundleMigration
         $table->addColumn('workspace_id', 'integer', array('notnull' => false));
         $table->addColumn('creation_date', 'datetime');
         $table->addColumn('reset_password', 'string', array('notnull' => false));
-        $table->addColumn('time', 'integer', array('notnull' => false));
+        $table->addColumn('hash_time', 'integer', array('notnull' => false));
         $table->addUniqueIndex(array('username'));
         $table->addUniqueIndex(array('mail'));
 
