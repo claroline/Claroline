@@ -319,16 +319,6 @@ class exerciseServices
         return $resu;
     }
 
-    public function getExerciseHistoMarks($exoID)
-    {
-        $papers = $this->doctrine
-            ->getManager()
-            ->getRepository('UJMExoBundle:Exercise')
-            ->getExerciseMarks($exoID);
-
-        return $papers;
-    }
-
     public function getExerciseTotalScore($exoID)
     {
         $exoTotalScore = 0;
@@ -357,6 +347,42 @@ class exerciseServices
         }
 
         return $exoTotalScore;
+    }
+    
+    public function getExercisePaperTotalScore($paperID)
+    {
+        $exercisePaperTotalScore = 0;
+        $paper = $interaction = $this->doctrine
+                                     ->getManager()
+                                     ->getRepository('UJMExoBundle:Paper')
+                                     ->find($paperID);
+        
+        $interQuestions = $paper->getOrdreQuestion();
+        $interQuestions = substr($interQuestions, 0, strlen($interQuestions) - 1);
+        $interQuestionsTab = explode(";", $interQuestions);
+        
+        foreach ($interQuestionsTab as $interQuestion) {
+            $interaction = $this->doctrine->getManager()->getRepository('UJMExoBundle:Interaction')->find($interQuestion);
+            switch ( $interaction->getType()) {
+                case "InteractionQCM":
+                    $exercisePaperTotalScore += $this->qcmMaxScore($interaction);
+                    break;
+
+                case "InteractionGraphic":
+                    $exercisePaperTotalScore += $this->graphicMaxScore($interaction);
+                    break;
+
+                case "InteractionHole":
+
+                    break;
+
+                case "InteractionOpen":
+
+                    break;
+            }
+        }
+        
+        return $exercisePaperTotalScore;
     }
 
     public function qcmMaxScore($interaction)

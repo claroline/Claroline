@@ -673,13 +673,19 @@ class ExerciseController extends Controller
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($exerciseId);
         $this->checkAccess($exercise);
+        
+        $eqs = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(
+                                                                        array('exercise' => $exerciseId),
+                                                                        array('ordre' => 'ASC')
+                                                                    );
 
         if ($this->get('security.context')->isGranted('ROLE_WS_CREATOR')) {
 
             $workspace = $exercise->getWorkspace();
 
             $histoMark = $this->histoMark($exerciseId);
-            $tabHistoSuccess= $this->histoSuccess($exerciseId);
+            $histoSuccess= $this->histoSuccess($exerciseId, $eqs);
+            $histoDiscrimination = $this->histoDiscrimination($exerciseId, $eqs);
 
             return $this->render(
                 'UJMExoBundle:Exercise:docimology.html.twig',
@@ -690,8 +696,8 @@ class ExerciseController extends Controller
                     'scoreList'             => $histoMark['scoreList'],
                     'frequencyMarks'        => $histoMark['frequencyMarks'],
                     'maxY'                  => $histoMark['maxY'],
-                    'questionsList'         => $tabHistoSuccess['questionList'],
-                    'seriesResponsesTab'    => $tabHistoSuccess['seriesResponsesTab']
+                    'questionsList'         => $histoSuccess['questionsList'],
+                    'seriesResponsesTab'    => $histoSuccess['seriesResponsesTab']
                 )
             );
         } else {
@@ -912,29 +918,29 @@ class ExerciseController extends Controller
 
     private function histoMark ($exerciseId)
     {
+        $em = $this->getDoctrine()->getManager();
         $maxY = 4;
-        $exoScoreMax = $this->container->get('ujm.exercise_services')->getExerciseTotalScore($exerciseId);
-        $marks = $this->container->get('ujm.exercise_services')->getExerciseHistoMarks($exerciseId);
+        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exerciseId);
+        if ($exercise->getNbQuestion == 0) {
+            $exoScoreMax = $this->container->get('ujm.exercise_services')->getExerciseTotalScore($exerciseId);
+        }
+        //$marks = $this->container->get('ujm.exercise_services')->getExerciseHistoMarks($exerciseId);
+        $marks = $em->getRepository('UJMExoBundle:Exercise')->getExerciseMarks($exerciseId);        
         $tabMarks = array();
-        $scoreList = '';
         $histoMark = array();
 
         foreach ($marks as $mark) {
+            //if ($exercise->getNbQuestion > 0) {
+                $exoScoreMax = $this->container->get('ujm.exercise_services')->getExercisePaperTotalScore($mark['paper']);
+            //}
             $score = round(($mark["noteExo"] / $exoScoreMax) * 20, 2);
 
-            if (isset($tabMarks[(string) $score])) {
-                $tabMarks[(string) $score] += 1;
-            } else {
-                if ($scoreList == '') {
-                    $scoreList = (string) $score;
-                } else {
-                    $scoreList .= ','.(string) $score;
-                }
-                $tabMarks[(string) $score] = 1;
-
-            }
+            $tabMarks[(string) $score] += 1;
         }
-
+        
+        ksort($tabMarks);
+        $scoreList = implode(",", array_keys($tabMarks));//echo $scoreList;die();
+        
         if (max($tabMarks) > 4) {
             $maxY = max($tabMarks);
         }
@@ -948,7 +954,7 @@ class ExerciseController extends Controller
         return $histoMark;
     }
 
-    private function histoSuccess ($exerciseId)
+    private function histoSuccess ($exerciseId, $eqs)
     {
         $em = $this->getDoctrine()->getManager();
         $exerciseSer = $this->container->get('ujm.exercise_services');
@@ -961,9 +967,8 @@ class ExerciseController extends Controller
         $seriesResponsesTab[3] = '';
         $responsesTab;
         $questionList = array();
-        $tabHistoSuccess = array();
+        $histoSuccess = array();
 
-        $eqs = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(array('exercise' => $exerciseId));
         foreach ($eqs as $eq) {
             $questionList[] = $eq->getQuestion()->getTitle();
 
@@ -1022,10 +1027,16 @@ class ExerciseController extends Controller
             $s = substr($s, 0, strlen($s) - 1);
         }
 
-        $tabHistoSuccess['questionsList'] = $questionList;
-        $tabHistoSuccess['seriesResponsesTab'] = $seriesResponsesTab;
+        $histoSuccess['questionsList'] = $questionList;
+        $histoSuccess['seriesResponsesTab'] = $seriesResponsesTab;
 
-        return $tabHistoSuccess;
+        return $histoSuccess;
 
+    }
+    
+    private function histoDiscrimination ($exerciseId, $weqs)
+    {
+        $tabScoreExo = array();
+        
     }
 }
