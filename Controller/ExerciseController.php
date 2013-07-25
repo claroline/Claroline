@@ -753,16 +753,16 @@ class ExerciseController extends Controller
             //no response
             $papers = $em->getRepository('UJMExoBundle:Paper')->getExerciseAllPapers($exerciseId);
             foreach ($papers as $paper) {
-                $questions = $paper->getOrdreQuestion();
-                $questions = substr($questions, 0, strlen($questions) - 1);
+                $interQuestions = $paper->getOrdreQuestion();
+                $interQuestions = substr($interQuestions, 0, strlen($interQuestions) - 1);
 
-                $questionsTab = explode(";", $questions);
-                foreach ($questionsTab as $question) {
-                    $flag = $em->getRepository('UJMExoBundle:Response')->findOneBy(array('interaction' => $question,
+                $interQuestionsTab = explode(";", $interQuestions);
+                foreach ($interQuestionsTab as $interQuestion) {
+                    $flag = $em->getRepository('UJMExoBundle:Response')->findOneBy(array('interaction' => $interQuestion,
                                                                                          'paper' => $paper->getId()));
                     if (!$flag) {
-                        $interaction = $em->getRepository('UJMExoBundle:Interaction')->getInteraction($question);
-                        $questionsResponsesTab[$interaction[0]->getQuestion()->getId()]['noResponse'] += 1;
+                        $interaction = $em->getRepository('UJMExoBundle:Interaction')->find($interQuestion);
+                        $questionsResponsesTab[$interaction->getQuestion()->getId()]['noResponse'] += 1;
                     }
                 }
             }
