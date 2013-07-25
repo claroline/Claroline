@@ -73,6 +73,10 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
 
     /**
      * @ORM\Column(type="string", nullable=false, unique=true)
+     * @Assert\NotBlank()
+     * @Assert\Email(
+     *     checkMX = false
+     * )
      */
     protected $mail;
 
