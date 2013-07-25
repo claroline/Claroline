@@ -673,7 +673,7 @@ class ExerciseController extends Controller
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($exerciseId);
         $this->checkAccess($exercise);
-        
+
         $eqs = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(
                                                                         array('exercise' => $exerciseId),
                                                                         array('ordre' => 'ASC')
@@ -921,26 +921,30 @@ class ExerciseController extends Controller
         $em = $this->getDoctrine()->getManager();
         $maxY = 4;
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exerciseId);
-        if ($exercise->getNbQuestion == 0) {
+        if ($exercise->getNbQuestion() == 0) {
             $exoScoreMax = $this->container->get('ujm.exercise_services')->getExerciseTotalScore($exerciseId);
         }
         //$marks = $this->container->get('ujm.exercise_services')->getExerciseHistoMarks($exerciseId);
-        $marks = $em->getRepository('UJMExoBundle:Exercise')->getExerciseMarks($exerciseId);        
+        $marks = $em->getRepository('UJMExoBundle:Exercise')->getExerciseMarks($exerciseId);
         $tabMarks = array();
         $histoMark = array();
 
         foreach ($marks as $mark) {
-            if ($exercise->getNbQuestion > 0) {
+            if ($exercise->getNbQuestion() > 0) {
                 $exoScoreMax = $this->container->get('ujm.exercise_services')->getExercisePaperTotalScore($mark['paper']);
             }
             $score = round(($mark["noteExo"] / $exoScoreMax) * 20, 2);
 
-            $tabMarks[(string) $score] += 1;
+            if (isset($tabMarks[(string) $score])) {
+                $tabMarks[(string) $score] += 1;
+            } else {
+                $tabMarks[(string) $score] = 1;
+            }
         }
-        
+
         ksort($tabMarks);
         $scoreList = implode(",", array_keys($tabMarks));//echo $scoreList;die();
-        
+
         if (max($tabMarks) > 4) {
             $maxY = max($tabMarks);
         }
@@ -1033,10 +1037,10 @@ class ExerciseController extends Controller
         return $histoSuccess;
 
     }
-    
+
     private function histoDiscrimination ($exerciseId, $weqs)
     {
         $tabScoreExo = array();
-        
+
     }
 }
