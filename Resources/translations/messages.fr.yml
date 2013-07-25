@@ -325,3 +325,9 @@ ujm_exobundle_interactiongraphictype_interaction_hints: Indices
 ujm_exobundle_interactionqcmtype_choices: Choix
 ujm_exobundle_interactionqcmtype_interaction: QCM
 ujm_exobundle_interactionqcmtype_interaction_hints: Indices 
+
+
+correct: Correcte
+partially: Partiellement correcte
+wrong: Fausse
+no answer: Pas de réponse

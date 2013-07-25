@@ -324,3 +324,8 @@ ujm_exobundle_interactiongraphictype_interaction_hints: Hints
 ujm_exobundle_interactionqcmtype_choices: Choices
 ujm_exobundle_interactionqcmtype_interaction: QCM
 ujm_exobundle_interactionqcmtype_interaction_hints: Hints 
+
+correct: Correct
+partially: Partiallyt correct
+wrong: Wrong
+no answer: No answer

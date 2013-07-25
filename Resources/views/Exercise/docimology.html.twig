@@ -62,16 +62,21 @@
         
         table.jqplot-table-legend {
             position: absolute;
-            border: #006080 double thick;
+            border: #06A1E3 double thick;
             left: 80%;
             margin-left: 20px;
-            width: 100px;
             top: 0px;
         }
         
-        table.jqplot-table-legend jqplot-table-legend-swatch {
+        div.jqplot-table-legend-swatch {
+            margin: 10px;
             width: 20px;
-            }
+            height: 20px;
+        }
+        
+        td.jqplot-table-legend.jqplot-table-legend-label {
+            padding-right: 10px;
+        }
     </style>
 
     <h1>{{ "Docimology" | trans }}</h1>
@@ -166,48 +171,52 @@
 
             plot3 = $.jqplot('histoSuccess', [{{ series }}], {
                 title:'{{ "HistoSucces" | trans }}',
-                // Tell the plot to stack the bars.
+
                 stackSeries: true,
                 captureRightClick: true,
                 
                 seriesDefaults:{
                     renderer:$.jqplot.BarRenderer,
+                    
                     rendererOptions: {
-                        // Put a 30 pixel margin between bars.
                         barMargin: 30,
-                        // Highlight bars when mouse button pressed.
-                        // Disables default highlighting on mouse over.
                         highlightMouseDown: true, 
-                        showDataLabels: true,
                         fillToZero: true
                     },
                     
-                    showDataLabels: true,
-                    showMarker: true,
-                    
-                    pointLabels: {show: true},
+                    pointLabels: {
+                        show: true,
+                        hideZeros: true
+                    },
                     
                 },
                 axes: {
+                    
                     xaxis: {
                         label: '{{ 'Question'|trans }}',
                         renderer: $.jqplot.CategoryAxisRenderer,
+                        
                         labelOptions:{
                             fontFamily:'Helvetica',
                             fontSize: '14pt'
                         },
+                        
                         tickOptions: {showGridline: false}
                     },
+                    
                     yaxis: {
                         label: '{{ 'frequency'|trans }}',
                         labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                        
                         labelOptions:{
                             fontFamily:'Helvetica',
                             fontSize: '14pt'
                         },
+                        
                         pad: 1,
                         min: 0,
                         max: {{ maxY2 }},
+                        
                         tickOptions: {formatString: '%d'}
                     }
                 },
@@ -215,14 +224,13 @@
                     show: true,
                     location: 'e',
                     placement: 'outside',
-                    showSwatch: true,
-                    showSwatches: true
                 },
+                
                 series:[
-                    {label:'Correct', color: 'green'}, 
-                    {label:'partially', color: 'blue'}, 
-                    {label:'wrong', color: 'red'}, 
-                    {label:'no answer', color: 'yellow'}
+                    {label:'{{ 'correct'|trans }}', color: 'green'}, 
+                    {label:'{{ 'partially'|trans }}', color: 'blue'}, 
+                    {label:'{{ 'wrong'|trans }}', color: 'red'}, 
+                    {label:'{{ 'no answer'|trans }}', color: 'yellow'}
                 ],
             });
         });
