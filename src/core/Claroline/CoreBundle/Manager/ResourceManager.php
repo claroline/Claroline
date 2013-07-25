@@ -544,16 +544,11 @@ class ResourceManager
         $continue = true;
 
         for ($i = 0, $size = count($ancestors); $i < $size; $i++) {
-
             if (isset($ancestors[$i + 1])) {
-                if ($ancestors[$i + 1]->getParent() == $ancestors[$i]) {
+                if ($ancestors[$i + 1]->getParent() === $ancestors[$i]) {
                     $continue = true;
                 } else {
-                    if ($this->hasLinkTo($ancestors[$i], $ancestors[$i + 1])) {
-                        $continue = true;
-                    } else {
-                        $continue = false;
-                    }
+                    $continue = $this->hasLinkTo($ancestors[$i], $ancestors[$i + 1]);
                 }
             }
 

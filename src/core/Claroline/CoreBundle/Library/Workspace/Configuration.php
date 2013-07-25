@@ -15,6 +15,7 @@ class Configuration
     private $workspaceName;
     private $workspaceCode;
     private $isPublic;
+    private $displayable;
     /**
      * If you want to use the role_anonymous from the platform, use
      * 'ROLE_ANONYMOUS'.
@@ -191,5 +192,15 @@ class Configuration
     public function getPermsRootConfiguration()
     {
         return $this->permsRootConfig;
+    }
+
+    public function setDisplayable($displayable)
+    {
+        $this->displayable = $displayable;
+    }
+
+    public function isDisplayable()
+    {
+        return $this->displayable;
     }
 }

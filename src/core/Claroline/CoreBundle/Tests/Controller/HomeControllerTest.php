@@ -12,11 +12,9 @@ class HomeControllerTest extends MockeryTestCase
     private $type;
     private $region;
     private $content;
-
     private $manager;
     private $request;
     private $security;
-    //private $response;
     private $templating;
     private $homeService;
 
@@ -25,18 +23,14 @@ class HomeControllerTest extends MockeryTestCase
     public function setUp()
     {
         parent::setUp();
-
-        $this->type = m::mock('Claroline\CoreBundle\Entity\Home\Type');
-        $this->region = m::mock('Claroline\CoreBundle\Entity\Home\Region');
-        $this->content = m::mock('Claroline\CoreBundle\Entity\Home\Content');
-
-        $this->manager = m::mock('Claroline\CoreBundle\Manager\HomeManager');
-        $this->request = m::mock('Symfony\Component\HttpFoundation\Request');
-        $this->security = m::mock('Symfony\Component\Security\Core\SecurityContextInterface');
-        //$this->response = m::mock('Symfony\Component\HttpFoundation\ResponseInterface');
-        $this->templating = m::mock('Symfony\Bundle\TwigBundle\Debug\TimedTwigEngine');
-        $this->homeService = m::mock('Claroline\CoreBundle\Library\Home\HomeService');
-
+        $this->type = $this->mock('Claroline\CoreBundle\Entity\Home\Type');
+        $this->region = $this->mock('Claroline\CoreBundle\Entity\Home\Region');
+        $this->content = $this->mock('Claroline\CoreBundle\Entity\Home\Content');
+        $this->manager = $this->mock('Claroline\CoreBundle\Manager\HomeManager');
+        $this->request = $this->mock('Symfony\Component\HttpFoundation\Request');
+        $this->security = $this->mock('Symfony\Component\Security\Core\SecurityContextInterface');
+        $this->templating = $this->mock('Symfony\Bundle\TwigBundle\Debug\TimedTwigEngine');
+        $this->homeService = $this->mock('Claroline\CoreBundle\Library\Home\HomeService');
         $this->controller = new HomeController(
             $this->manager, $this->request, $this->security, $this->templating, $this->homeService
         );

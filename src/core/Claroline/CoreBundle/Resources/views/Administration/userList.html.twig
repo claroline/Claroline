@@ -31,6 +31,12 @@
             <i class="icon-trash"></i>
             {{ 'delete'|trans({}, 'platform') }}
         </button>
+        <a  class="btn btn-secondary"
+            href="{{ path('claro_admin_import_users_form') }}"
+        >
+            <i class="icon-user"></i>
+            {{ 'import_users'|trans({}, 'platform') }}
+        </a>
     {% endif %}
 {% endmacro %}
 
@@ -64,16 +70,22 @@
 
 {% block section_content %}
     <div class="margin">
-    {{
-    macros.breadcrumbs([
-        {
+        <div>
+            {{ macros.flashBox() }}
+        </div>
+        {{
+        macros.breadcrumbs([
+            {
                 'icon': 'icon-user',
                 'name': 'users_management'|trans({}, 'platform'),
                 'href': path('claro_admin_users_management')
             },
-            {'name':'users_list'|trans({}, 'platform'), 'href':''}
+            {
+                'name':'users_list'|trans({}, 'platform'),
+                'href':''
+            }
         ])
-    }}
+        }}
         <div class="search-bar">
             {{ displayControls(workspace.getId()) }}
             <div class="input-append pull-right">

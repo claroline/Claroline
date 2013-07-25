@@ -41,6 +41,7 @@ class WorkspaceType extends AbstractType
                 'property' => 'name'
             )
         );
+        $builder->add('displayable', 'checkbox', array('required' => false));
     }
 
     public function getName()
