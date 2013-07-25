@@ -344,11 +344,36 @@ class UserManager
         return $this->userRepo->find($userId);
     }
 
-    public function getUsersByRole(Role $role, $getPager = false, $page = 1)
+    public function getUsersByRoles(array $roles, $page = 0)
     {
-         $res = $this->userRepo->findByRole($role, $getPager);
+        $getPager = ($page === 0) ? false: true;
+        $res = $this->userRepo->findByRoles($roles, $getPager);
 
-         return ($getPager) ? $this->pagerFactory->createPager($res, $page): $res;
+        return ($page !== 0) ? $this->pagerFactory->createPager($res, $page): $res;
+    }
+
+    public function getOutsidersByWorkspaceRoles(array $roles, AbstractWorkspace $workspace, $page = 0)
+    {
+        $getPager = ($page === 0) ? false: true;
+        $res = $this->userRepo->findOutsidersByWorkspaceRoles($roles, $workspace, $getPager);
+
+        return ($page !== 0) ? $this->pagerFactory->createPager($res, $page): $res;
+    }
+
+    public function getUsersByRolesAndName(array $roles, $name, $page = 0)
+    {
+        $getPager = ($page === 0) ? false: true;
+        $res = $this->userRepo->findByRolesAndName($roles,$name,  $getPager);
+
+        return ($page !== 0) ? $this->pagerFactory->createPager($res, $page): $res;
+    }
+
+    public function getOutsidersByWorkspaceRolesAndName(array $roles, $name, AbstractWorkspace $workspace, $page = 0)
+    {
+        $getPager = ($page === 0) ? false: true;
+        $res = $this->userRepo->findOutsidersByWorkspaceRolesAndName($roles, $name, $workspace, $getPager);
+
+        return ($page !== 0) ? $this->pagerFactory->createPager($res, $page): $res;
     }
 
     public function getUsersByRoleAndName(Role $role, $search, $getPager = false, $page = 1)

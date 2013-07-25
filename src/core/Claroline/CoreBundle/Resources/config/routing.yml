@@ -102,16 +102,6 @@ claro_workspace_tool_resources_properties:
     prefix: workspaces/tool/properties
     type: annotation
 
-claro_workspace_tool_user:
-    resource: "@ClarolineCoreBundle/Controller/Tool/UserController.php"
-    prefix: workspaces/tool/user_management
-    type: annotation
-
-claro_workspace_tool_group:
-    resource: "@ClarolineCoreBundle/Controller/Tool/GroupController.php"
-    prefix: workspaces/tool/group_management
-    type: annotation
-
 claro_workspace_tool_calendar:
     resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceCalendarController.php"
     prefix: workspaces/tool/calendar
@@ -120,6 +110,11 @@ claro_workspace_tool_calendar:
 claro_workspace_tool_logs:
     resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceLogController.php"
     prefix: workspaces/tool/logs
+    type: annotation
+
+claro_workspace_roles:
+    resource: "@ClarolineCoreBundle/Controller/Tool/RolesController.php"
+    prefix: workspaces/tools/roles/
     type: annotation
 
 claro_admin:

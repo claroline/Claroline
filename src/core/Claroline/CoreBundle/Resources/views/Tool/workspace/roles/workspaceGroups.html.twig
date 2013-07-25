@@ -7,7 +7,7 @@
             {
                 'proximity' : 1,
                 'routeName': 'claro_workspace_registered_group_list',
-                'routeParams': {'workspaceId': workspaceId}
+                'routeParams': {'workspace': workspaceId}
             }
         )
     }}
@@ -19,7 +19,7 @@
             {
                 'proximity' : 1,
                 'routeName': 'claro_workspace_registered_group_list_search',
-                'routeParams': {'search': search, 'workspaceId': workspaceId}
+                'routeParams': {'search': search, 'workspace': workspaceId}
             }
         )
     }}
@@ -28,15 +28,6 @@
 
 {% macro displayControls(workspaceId) %}
 {% if app.user %}
-    <button class="btn btn-secondary action-button" data-action="remove">
-        <i class="icon-trash"></i>
-        {{ 'delete'|trans({}, 'platform') }}
-    </button>
-    <a class="btn btn-secondary"
-        href="{{ path('claro_workspace_unregistered_group_list', {'workspaceId': workspaceId}) }}">
-        <i class="icon-plus"></i>
-        {{ 'add_group'|trans({}, 'platform') }}
-    </a>
 {% endif %}
 {% endmacro %}
 
@@ -61,25 +52,19 @@
         parameters = {};
         parameters.route = {};
         parameters.route.action = {};
-        parameters.route.normal = {"route": "claro_workspace_registered_group_list", "parameters": {'workspaceId': {{ workspace.getId() }} }};
-        parameters.route.search = {"route": "claro_workspace_registered_group_list_search", "parameters": {'workspaceId': {{ workspace.getId() }} }};
-        parameters.route.action.remove = {"route": "claro_workspace_delete_groups", "parameters": {'workspaceId': {{ workspace.getId() }} }, "confirmTemplate": removeGroupConfirm};
+        parameters.route.normal = {"route": "claro_workspace_registered_group_list", "parameters": {'workspace': {{ workspace.getId() }} }};
+        parameters.route.search = {"route": "claro_workspace_registered_group_list_search", "parameters": {'workspace': {{ workspace.getId() }} }};
         Claroline.Table.initialize(parameters);
     </script>
 {% endblock %}
 
 {% block section_content %}
 
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'icon-th-list',
-                'name': 'group_management'|trans({}, 'tools'),
-                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'group_management'})
-            }
-        ])
-    }}
-
+    <ul class="nav nav-tabs">
+        <li class="active"> <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'roles'}) }}">{{ 'roles'|trans({}, 'platform') }}</a> </li>
+        <li> <a href="{{ path('claro_workspace_registered_user_list', {'workspace': workspace.getId() }) }}"> {{'users'|trans({}, 'platform') }} </a> </li>
+        <li> <a href="#" {{'groups'|trans({}, 'platform') }} </a> {{'groups'|trans({}, 'platform') }} </a> </li>
+    </ul>
 
     <div class="margin">
         <div class="search-bar">
@@ -97,10 +82,6 @@
             <thead>
                 <th>{{ 'name'|trans({}, 'platform') }}</th>
                 <th>{{ 'role'|trans({}, 'platform') }}</th>
-                {% if app.user %}
-                    <th>{{ 'parameters'|trans({}, 'platform') }}</th>
-                    <th><input type="checkbox" name="all" id="check-all-items"></input></th>
-                {% endif %}
             </thead>
             <tbody id="group-table-body">
                 {% for group in pager.currentPageResults %}
@@ -113,14 +94,6 @@
                                 {% endif %}
                             {% endfor %}
                         </td>
-                        {% if app.user %}
-                            <td>
-                                <a class="btn btn-secondary" href=" {{ path('claro_workspace_tools_show_group_parameters', {'groupId': group.getId(), 'workspaceId': workspace.getId()} ) }}">{{ 'parameters'|trans({}, 'platform') }}</a>
-                            </td>
-                            <td>
-                                <input type="checkbox" class="chk-item" value="{{ group.id }}"></input>
-                            </td>
-                        {% endif %}
                     </tr>
                 {% endfor %}
             </tbody>
