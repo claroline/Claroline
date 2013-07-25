@@ -165,7 +165,7 @@ class ExerciseController extends Controller
         }
 
         $nbQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')->getCountQuestion($exerciseId);
-        
+
         return $this->render(
             'UJMExoBundle:Exercise:show.html.twig',
             array(
@@ -670,17 +670,6 @@ class ExerciseController extends Controller
 
     public function docimologyAction($exerciseId, $nbPapers)
     {
-        $exerciseSer = $this->container->get('ujm.exercise_services');
-        $scoreMax = 0;
-        $questionsResponsesTab = array();
-        $seriesResponsesTab = array();
-        $seriesResponsesTab[0] = '';
-        $seriesResponsesTab[1] = '';
-        $seriesResponsesTab[2] = '';
-        $seriesResponsesTab[3] = '';
-        $responsesTab;
-        $questionList = array();
-        $maxY = 4;
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($exerciseId);
         $this->checkAccess($exercise);
@@ -689,95 +678,8 @@ class ExerciseController extends Controller
 
             $workspace = $exercise->getWorkspace();
 
-            $exoScoreMax = $this->container->get('ujm.exercise_services')->getExerciseTotalScore($exerciseId);
-
-            $marks = $this->container->get('ujm.exercise_services')->getExerciseHistoMarks($exerciseId);
-
-            $tabMarks = array();
-
-            $scoreList = '';
-
-            foreach ($marks as $mark) {
-                $score = round(($mark["noteExo"] / $exoScoreMax) * 20, 2);
-
-                if (isset($tabMarks[(string) $score])) {
-                    $tabMarks[(string) $score] += 1;
-                } else {
-                    if ($scoreList == '') {
-                        $scoreList = (string) $score;
-                    } else {
-                        $scoreList .= ','.(string) $score;
-                    }
-                    $tabMarks[(string) $score] = 1;
-
-                }
-            }
-
-            if (max($tabMarks) > 4) {
-                $maxY = max($tabMarks);
-            }
-
-            $frequencyMarks = implode(",", $tabMarks);//echo $frequencyMarks;die();
-
-
-            $eqs = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(array('exercise' => $exerciseId));
-            foreach ($eqs as $eq) {
-                $questionList[] = $eq->getQuestion()->getTitle();
-
-                $interaction = $em->getRepository('UJMExoBundle:Interaction')->getInteraction($eq->getQuestion()->getId());
-                $responses = $em->getRepository('UJMExoBundle:Response')
-                                ->getExerciseInterResponses($exerciseId, $interaction[0]->getId());
-                switch ( $interaction[0]->getType()) {
-                    case "InteractionQCM":
-                        $scoreMax = $exerciseSer->qcmMaxScore($interaction[0]);
-                        $responsesTab = $this->responseStatus($responses, $scoreMax);
-                        break;
-
-                    case "InteractionGraphic":
-                        $scoreMax = $exerciseSer->graphicMaxScore($interaction[0]);
-                        $responsesTab = $this->responseStatus($responses, $scoreMax);
-                        break;
-
-                    case "InteractionHole":
-
-                        break;
-
-                    case "InteractionOpen":
-
-                        break;
-                }
-                $questionsResponsesTab[$eq->getQuestion()->getId()] = $responsesTab;
-
-            }
-
-            //no response
-            $papers = $em->getRepository('UJMExoBundle:Paper')->getExerciseAllPapers($exerciseId);
-            foreach ($papers as $paper) {
-                $interQuestions = $paper->getOrdreQuestion();
-                $interQuestions = substr($interQuestions, 0, strlen($interQuestions) - 1);
-
-                $interQuestionsTab = explode(";", $interQuestions);
-                foreach ($interQuestionsTab as $interQuestion) {
-                    $flag = $em->getRepository('UJMExoBundle:Response')->findOneBy(array('interaction' => $interQuestion,
-                                                                                         'paper' => $paper->getId()));
-                    if (!$flag) {
-                        $interaction = $em->getRepository('UJMExoBundle:Interaction')->find($interQuestion);
-                        $questionsResponsesTab[$interaction->getQuestion()->getId()]['noResponse'] += 1;
-                    }
-                }
-            }
-
-            //creation serie for the graph jqplot
-            foreach ($questionsResponsesTab as $responses) {
-                $seriesResponsesTab[0] .= (string) $responses['correct'].',';
-                $seriesResponsesTab[1] .= (string) $responses['partiallyRight'].',';
-                $seriesResponsesTab[2] .= (string) $responses['wrong'].',';
-                $seriesResponsesTab[3] .= (string) $responses['noResponse'].',';
-            }
-
-            foreach ($seriesResponsesTab as $s) {
-                $s = substr($s, 0, strlen($s) - 1);
-            }
+            $histoMark = $this->histoMark($exerciseId);
+            $tabHistoSuccess= $this->histoSuccess($exerciseId);
 
             return $this->render(
                 'UJMExoBundle:Exercise:docimology.html.twig',
@@ -785,11 +687,11 @@ class ExerciseController extends Controller
                     'workspace'             => $workspace,
                     'exoID'                 => $exerciseId,
                     'nbPapers'              => $nbPapers,
-                    'scoreList'             => $scoreList,
-                    'frequencyMarks'        => $frequencyMarks,
-                    'maxY'                  => $maxY,
-                    'questionsList'         => $questionList,
-                    'seriesResponsesTab'    => $seriesResponsesTab
+                    'scoreList'             => $histoMark['scoreList'],
+                    'frequencyMarks'        => $histoMark['frequencyMarks'],
+                    'maxY'                  => $histoMark['maxY'],
+                    'questionsList'         => $tabHistoSuccess['questionList'],
+                    'seriesResponsesTab'    => $tabHistoSuccess['seriesResponsesTab']
                 )
             );
         } else {
@@ -1006,5 +908,124 @@ class ExerciseController extends Controller
         if (!$this->get('security.context')->isGranted('OPEN', $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
+    }
+
+    private function histoMark ($exerciseId)
+    {
+        $maxY = 4;
+        $exoScoreMax = $this->container->get('ujm.exercise_services')->getExerciseTotalScore($exerciseId);
+        $marks = $this->container->get('ujm.exercise_services')->getExerciseHistoMarks($exerciseId);
+        $tabMarks = array();
+        $scoreList = '';
+        $histoMark = array();
+
+        foreach ($marks as $mark) {
+            $score = round(($mark["noteExo"] / $exoScoreMax) * 20, 2);
+
+            if (isset($tabMarks[(string) $score])) {
+                $tabMarks[(string) $score] += 1;
+            } else {
+                if ($scoreList == '') {
+                    $scoreList = (string) $score;
+                } else {
+                    $scoreList .= ','.(string) $score;
+                }
+                $tabMarks[(string) $score] = 1;
+
+            }
+        }
+
+        if (max($tabMarks) > 4) {
+            $maxY = max($tabMarks);
+        }
+
+        $frequencyMarks = implode(",", $tabMarks);
+
+        $histoMark['maxY']           = $maxY;
+        $histoMark['scoreList']      = $scoreList;
+        $histoMark['frequencyMarks'] = $frequencyMarks;
+
+        return $histoMark;
+    }
+
+    private function histoSuccess ($exerciseId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $exerciseSer = $this->container->get('ujm.exercise_services');
+        $scoreMax = 0;
+        $questionsResponsesTab = array();
+        $seriesResponsesTab = array();
+        $seriesResponsesTab[0] = '';
+        $seriesResponsesTab[1] = '';
+        $seriesResponsesTab[2] = '';
+        $seriesResponsesTab[3] = '';
+        $responsesTab;
+        $questionList = array();
+        $tabHistoSuccess = array();
+
+        $eqs = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(array('exercise' => $exerciseId));
+        foreach ($eqs as $eq) {
+            $questionList[] = $eq->getQuestion()->getTitle();
+
+            $interaction = $em->getRepository('UJMExoBundle:Interaction')->getInteraction($eq->getQuestion()->getId());
+            $responses = $em->getRepository('UJMExoBundle:Response')
+                            ->getExerciseInterResponses($exerciseId, $interaction[0]->getId());
+            switch ( $interaction[0]->getType()) {
+                case "InteractionQCM":
+                    $scoreMax = $exerciseSer->qcmMaxScore($interaction[0]);
+                    $responsesTab = $this->responseStatus($responses, $scoreMax);
+                    break;
+
+                case "InteractionGraphic":
+                    $scoreMax = $exerciseSer->graphicMaxScore($interaction[0]);
+                    $responsesTab = $this->responseStatus($responses, $scoreMax);
+                    break;
+
+                case "InteractionHole":
+
+                    break;
+
+                case "InteractionOpen":
+
+                    break;
+            }
+            $questionsResponsesTab[$eq->getQuestion()->getId()] = $responsesTab;
+
+        }
+
+        //no response
+        $papers = $em->getRepository('UJMExoBundle:Paper')->getExerciseAllPapers($exerciseId);
+        foreach ($papers as $paper) {
+            $interQuestions = $paper->getOrdreQuestion();
+            $interQuestions = substr($interQuestions, 0, strlen($interQuestions) - 1);
+
+            $interQuestionsTab = explode(";", $interQuestions);
+            foreach ($interQuestionsTab as $interQuestion) {
+                $flag = $em->getRepository('UJMExoBundle:Response')->findOneBy(array('interaction' => $interQuestion,
+                                                                                     'paper' => $paper->getId()));
+                if (!$flag) {
+                    $interaction = $em->getRepository('UJMExoBundle:Interaction')->find($interQuestion);
+                    $questionsResponsesTab[$interaction->getQuestion()->getId()]['noResponse'] += 1;
+                }
+            }
+        }
+
+        //creation serie for the graph jqplot
+        foreach ($questionsResponsesTab as $responses) {
+            $seriesResponsesTab[0] .= (string) $responses['correct'].',';
+            $seriesResponsesTab[1] .= (string) $responses['partiallyRight'].',';
+            $seriesResponsesTab[2] .= (string) $responses['wrong'].',';
+            $seriesResponsesTab[3] .= (string) $responses['noResponse'].',';
+        }
+
+        foreach ($seriesResponsesTab as $s) {
+            $s = substr($s, 0, strlen($s) - 1);
+        }
+
+        $tabHistoSuccess['questionsList'] = $questionList;
+        $tabHistoSuccess['seriesResponsesTab'] = $seriesResponsesTab;
+
+        return $tabHistoSuccess;
+
     }
 }
