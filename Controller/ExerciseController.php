@@ -674,6 +674,10 @@ class ExerciseController extends Controller
         $scoreMax = 0;
         $questionsResponsesTab = array();
         $seriesResponsesTab = array();
+        $seriesResponsesTab[0] = '';
+        $seriesResponsesTab[1] = '';
+        $seriesResponsesTab[2] = '';
+        $seriesResponsesTab[3] = '';
         $responsesTab;
         $questionList = array();
         $maxY = 4;
