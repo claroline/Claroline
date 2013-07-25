@@ -11,7 +11,6 @@ class WriterTest extends MockeryTestCase
     private $twigEnvironment;
     private $twigEngine;
     private $fileSystem;
-    private $bundle;
 
     protected function setUp()
     {
@@ -36,7 +35,7 @@ class WriterTest extends MockeryTestCase
     public function testWriteMigrationClasses()
     {
         $this->markTestSkipped('vfsstream should be used here');
-        
+
         $bundle = m::mock('Symfony\Component\HttpKernel\Bundle\Bundle');
         $this->twigEnvironment->shouldReceive('addExtension');
 
