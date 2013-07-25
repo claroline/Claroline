@@ -59,4 +59,19 @@ class ExerciseQuestionRepository extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
+    
+    /**
+     * Number of question for an exercise
+     *
+     */
+    public function getCountQuestion($exoId)
+    {
+        $dql = 'SELECT count(eq.question) as nbq
+                FROM UJM\ExoBundle\Entity\ExerciseQuestion eq
+                WHERE eq.exercise='.$exoId;
+
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getSingleResult();
+    }
 }

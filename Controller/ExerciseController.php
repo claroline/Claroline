@@ -164,6 +164,8 @@ class ExerciseController extends Controller
             $allowToCompose = 1;
         }
 
+        $nbQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')->getCountQuestion($exerciseId);
+        
         return $this->render(
             'UJMExoBundle:Exercise:show.html.twig',
             array(
@@ -171,7 +173,8 @@ class ExerciseController extends Controller
                 'entity'         => $exercise,
                 'exoAdmin'       => $exoAdmin,
                 'allowToCompose' => $allowToCompose,
-                'userId'         => $user->getId()
+                'userId'         => $user->getId(),
+                'nbQuestion'     => $nbQuestions['nbq']
             )
         );
     }

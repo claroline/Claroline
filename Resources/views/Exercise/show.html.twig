@@ -182,7 +182,7 @@
 </table>
 
 <ul class="record_actions">
-    {% if allowToCompose == 1 %}
+    {% if allowToCompose == 1 and nbQuestion > 0 %}
         <li>
             <a href="{{ path('ujm_exercise_paper', { 'id': entity.id }) }}">{{ "Compose" | trans }}</a>
         </li>
