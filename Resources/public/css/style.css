@@ -21,3 +21,6 @@ article footer {
 article footer ul {
   margin: 0;
 }
+article .highlight {
+  background-color: #DFFF00;
+}
