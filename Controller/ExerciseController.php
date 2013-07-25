@@ -1131,7 +1131,7 @@ class ExerciseController extends Controller
                 $tabCoeffQ[] = 0;
             }
         }
-        var_dump($tabCoeffQ);die();
+        //var_dump($tabCoeffQ);die();
     }
 
     private function sd_square($x, $mean)
