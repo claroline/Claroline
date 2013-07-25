@@ -697,7 +697,8 @@ class ExerciseController extends Controller
                     'frequencyMarks'        => $histoMark['frequencyMarks'],
                     'maxY'                  => $histoMark['maxY'],
                     'questionsList'         => $histoSuccess['questionsList'],
-                    'seriesResponsesTab'    => $histoSuccess['seriesResponsesTab']
+                    'seriesResponsesTab'    => $histoSuccess['seriesResponsesTab'],
+                    'maxY2'                 => $histoSuccess['maxY']
                 )
             );
         } else {
@@ -972,6 +973,7 @@ class ExerciseController extends Controller
         $responsesTab;
         $questionList = array();
         $histoSuccess = array();
+        $maxY = 4;
 
         foreach ($eqs as $eq) {
             $questionList[] = $eq->getQuestion()->getTitle();
@@ -1020,7 +1022,11 @@ class ExerciseController extends Controller
         }
 
         //creation serie for the graph jqplot
-        foreach ($questionsResponsesTab as $responses) {
+        foreach ($questionsResponsesTab as $responses) { 
+            $tot = (int) $responses['correct'] + (int) $responses['partiallyRight'] + (int) $responses['wrong'] + (int) $responses['noResponse'];
+            if ($tot > $maxY ) {
+                $maxY = $tot;
+            }
             $seriesResponsesTab[0] .= (string) $responses['correct'].',';
             $seriesResponsesTab[1] .= (string) $responses['partiallyRight'].',';
             $seriesResponsesTab[2] .= (string) $responses['wrong'].',';
@@ -1033,6 +1039,7 @@ class ExerciseController extends Controller
 
         $histoSuccess['questionsList'] = $questionList;
         $histoSuccess['seriesResponsesTab'] = $seriesResponsesTab;
+        $histoSuccess['maxY'] = $maxY;
 
         return $histoSuccess;
 

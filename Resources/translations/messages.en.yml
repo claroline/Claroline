@@ -74,6 +74,7 @@ From: From
 Group: Group
 Hint: Hint
 HistoMarks: Marks' histogram
+HistoSucces: Success' histogram
 Interupt: Interupt
 isInterupt: Interupted
 Import: Import

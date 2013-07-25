@@ -69,7 +69,7 @@
             top: 0px;
         }
         
-        .jqplot-table-legend jqplot-table-legend-swatch {
+        table.jqplot-table-legend jqplot-table-legend-swatch {
             width: 20px;
             }
     </style>
@@ -165,6 +165,7 @@
             {% endfor %}
 
             plot3 = $.jqplot('histoSuccess', [{{ series }}], {
+                title:'{{ "HistoSucces" | trans }}',
                 // Tell the plot to stack the bars.
                 stackSeries: true,
                 captureRightClick: true,
@@ -176,26 +177,46 @@
                         barMargin: 30,
                         // Highlight bars when mouse button pressed.
                         // Disables default highlighting on mouse over.
-                        highlightMouseDown: true   
+                        highlightMouseDown: true, 
+                        showDataLabels: true,
+                        fillToZero: true
                     },
-                    pointLabels: {show: true}
+                    
+                    showDataLabels: true,
+                    showMarker: true,
+                    
+                    pointLabels: {show: true},
+                    
                 },
                 axes: {
                     xaxis: {
-                        renderer: $.jqplot.CategoryAxisRenderer
+                        label: '{{ 'Question'|trans }}',
+                        renderer: $.jqplot.CategoryAxisRenderer,
+                        labelOptions:{
+                            fontFamily:'Helvetica',
+                            fontSize: '14pt'
+                        },
+                        tickOptions: {showGridline: false}
                     },
                     yaxis: {
-                      // Don't pad out the bottom of the data range.  By default,
-                      // axes scaled as if data extended 10% above and below the
-                      // actual range to prevent data points right on grid boundaries.
-                      // Don't want to do that here.
-                      padMin: 0
+                        label: '{{ 'frequency'|trans }}',
+                        labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                        labelOptions:{
+                            fontFamily:'Helvetica',
+                            fontSize: '14pt'
+                        },
+                        pad: 1,
+                        min: 0,
+                        max: {{ maxY2 }},
+                        tickOptions: {formatString: '%d'}
                     }
                 },
                 legend: {
                     show: true,
                     location: 'e',
                     placement: 'outside',
+                    showSwatch: true,
+                    showSwatches: true
                 },
                 series:[
                     {label:'Correct', color: 'green'}, 
