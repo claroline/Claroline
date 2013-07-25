@@ -930,9 +930,9 @@ class ExerciseController extends Controller
         $histoMark = array();
 
         foreach ($marks as $mark) {
-            //if ($exercise->getNbQuestion > 0) {
+            if ($exercise->getNbQuestion > 0) {
                 $exoScoreMax = $this->container->get('ujm.exercise_services')->getExercisePaperTotalScore($mark['paper']);
-            //}
+            }
             $score = round(($mark["noteExo"] / $exoScoreMax) * 20, 2);
 
             $tabMarks[(string) $score] += 1;
