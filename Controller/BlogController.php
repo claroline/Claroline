@@ -38,7 +38,7 @@ class BlogController extends Controller
             return $this->redirect($this->generateUrl('icap_blog_view_search', array('blogId' => $blog->getId(), 'search' => $search)));
         }
 
-        $postRepository = $this->getDoctrine()->getRepository('ICAPBlogBundle:Post');
+        $postRepository = $this->get('icap.blog.post_repository');
 
         $tag    = null;
         $author = null;
@@ -114,13 +114,11 @@ class BlogController extends Controller
     {
         $this->checkAccess("OPEN", $blog);
 
-        $postRepository = $this->getDoctrine()->getRepository('ICAPBlogBundle:Post');
+        /** @var \ICAp\BlogBundle\Repository\PostRepository $postRepository */
+        $postRepository = $this->get('icap.blog.post_repository');
 
         /** @var \Doctrine\ORM\QueryBuilder $query */
-        $query = $postRepository
-            ->createQueryBuilder('post')
-            ->andWhere('post.blog = :blogId')
-        ;
+        $query = $postRepository->searchByBlog($blog, $search, false);
 
         if(!$this->isUserGranted("EDIT", $blog)) {
             $query
@@ -129,14 +127,6 @@ class BlogController extends Controller
                 ->setParameter('publishedStatus', Statusable::STATUS_PUBLISHED)
             ;
         }
-
-        $query
-            ->andWhere('post.title LIKE :search')
-            ->orWhere('post.content LIKE :search')
-            ->setParameter('search', '%' . $search . '%')
-            ->setParameter('blogId', $blog->getId())
-            ->orderBy('post.publicationDate', 'ASC')
-        ;
 
         $adapter = new DoctrineORMAdapter($query);
         $pager   = new PagerFanta($adapter);

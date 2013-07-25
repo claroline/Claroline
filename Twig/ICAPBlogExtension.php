@@ -75,7 +75,9 @@ class ICAPBlogExtension extends \Twig_Extension
 
         foreach($searchParameters as $searchParameter)
         {
-            $returnHighlightedString = preg_replace('/(' . $searchParameter . ')/','<strong>\1</strong>', $returnHighlightedString);
+            if(strlen($searchParameter) > 3) {
+                $returnHighlightedString = preg_replace('/(' . $searchParameter . ')/','<strong>\1</strong>', $returnHighlightedString);
+            }
         }
 
         return $returnHighlightedString;
