@@ -158,4 +158,9 @@ class FormFactory
 
         return $this->factory->create($formType, $entityVar);
     }
+
+    public function createFormBuilder($data = null, array $options = array())
+    {
+        return $this->factory->createBuilder('form', $data, $options);
+    }
 }

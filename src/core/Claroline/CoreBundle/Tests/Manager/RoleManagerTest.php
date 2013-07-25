@@ -10,16 +10,22 @@ use Doctrine\Common\Collections\ArrayCollection;
 class RoleManagerTest extends MockeryTestCase
 {
     private $roleRepo;
+    private $userRepo;
+    private $groupRepo;
     private $securityContext;
     private $om;
+    private $dispatcher;
 
     public function setUp()
     {
         parent::setUp();
 
         $this->roleRepo = m::mock('Claroline\CoreBundle\Repository\RoleRepository');
+        $this->userRepo = m::mock('Claroline\CoreBundle\Repository\UserRepository');
+        $this->groupRepo = m::mock('Claroline\CoreBundle\Repository\GroupRepository');
         $this->securityContext = m::mock('Symfony\Component\Security\Core\SecurityContextInterface');
         $this->om = m::mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->dispatcher = m::mock('Claroline\CoreBundle\Event\StrictDispatcher');
     }
 
     public function testCreateWorkspaceRole()
@@ -95,8 +101,10 @@ class RoleManagerTest extends MockeryTestCase
         $ars = m::mock('Claroline\CoreBundle\Entity\AbstractRoleSubject');
 
         $ars->shouldReceive('addRole')->with($role)->once();
+        $this->om->shouldReceive('startFlushSuite')->once();
         $this->om->shouldReceive('persist')->with($ars)->once();
-        $this->om->shouldReceive('flush')->once();
+        $this->om->shouldReceive('endFlushSuite')->once();
+        $this->dispatcher->shouldReceive('dispatch')->once();
 
         $this->getManager()->associateRole($ars, $role);
     }
@@ -107,25 +115,27 @@ class RoleManagerTest extends MockeryTestCase
         $ars = m::mock('Claroline\CoreBundle\Entity\AbstractRoleSubject');
 
         $ars->shouldReceive('removeRole')->with($role)->once();
+        $this->om->shouldReceive('startFlushSuite')->once();
         $this->om->shouldReceive('persist')->with($ars)->once();
-        $this->om->shouldReceive('flush')->once();
+        $this->om->shouldReceive('endFlushSuite')->once();
+        $this->dispatcher->shouldReceive('dispatch')->once();
+
 
         $this->getManager()->dissociateRole($ars, $role);
     }
 
     public function testAssociateRoles()
     {
+        $manager = $this->getManager(array('associateRole'));
         $roleOne = m::mock('Claroline\CoreBundle\Entity\Role');
         $roleTwo = m::mock('Claroline\CoreBundle\Entity\Role');
         $ars = m::mock('Claroline\CoreBundle\Entity\AbstractRoleSubject');
         $roles = new ArrayCollection(array($roleOne, $roleTwo));
-
-        $ars->shouldReceive('addRole')->with($roleOne)->once();
-        $ars->shouldReceive('addRole')->with($roleTwo)->once();
+        $manager->shouldReceive('associateRole')->times(2);
         $this->om->shouldReceive('persist')->with($ars)->once();
         $this->om->shouldReceive('flush');
 
-        $this->getManager()->associateRoles($ars, $roles);
+        $manager->associateRoles($ars, $roles);
     }
 
     public function testInitBaseWorkspaceRole()
@@ -170,6 +180,43 @@ class RoleManagerTest extends MockeryTestCase
     }
 
     /**
+     * @expectedException \LogicException
+     */
+    public function testCheckWorkspaceRoleEditionThrowsExceptionForUser( )
+    {
+        $this->markTestSkipped();
+        $roleManager = $this->getManager(array('getManagerRole'));
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
+        $managerRole = m::mock('Claroline\CoreBundle\Entity\Role');
+        $collaboratorRole = m::mock('Claroline\CoreBundle\Entity\Role');
+        $roles = array($collaboratorRole);
+        $user = m::mock('Claroline\CoreBundle\Entity\User');
+
+        $roleManager->shouldReceive('getManagerRole')->once()->with($workspace)->andReturn($managerRole);
+        $managerRole->shouldReceive('getName')->andReturn('ROLE_WS_MANAGER');
+        $user->shouldReceive('hasRole')->with('ROLE_WS_MANAGER')->andReturn(true);
+        $this->groupRepo->shouldReceive('findByRole')->andReturn(array());
+        $this->userRepo->shouldReceive('findByRole')->andReturn(array($user));
+
+        $roleManager->checkWorkspaceRoleEditionIsValid(array($user), $workspace, $roles);
+    }
+
+    public function testDissociateWorkspaceRole()
+    {
+
+    }
+
+    public function testResetWorkspaceRoles()
+    {
+
+    }
+
+    public function testEditSubjectWorkspaceRoles()
+    {
+
+    }
+
+    /**
      * @expectedException \Claroline\CoreBundle\Manager\Exception\RoleReadOnlyException
      */
     public function testRemoveThrowsExceptionIfReadOnly()
@@ -183,9 +230,13 @@ class RoleManagerTest extends MockeryTestCase
     {
         $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Role')
             ->once()->andReturn($this->roleRepo);
+        $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:User')
+            ->once()->andReturn($this->userRepo);
+        $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Group')
+            ->once()->andReturn($this->groupRepo);
 
         if (count($mockedMethods) === 0) {
-            return new RoleManager($this->securityContext, $this->om);
+            return new RoleManager($this->securityContext, $this->om, $this->dispatcher);
         }
 
         $stringMocked = '[';
@@ -199,7 +250,7 @@ class RoleManagerTest extends MockeryTestCase
 
         return m::mock(
             'Claroline\CoreBundle\Manager\RoleManager' . $stringMocked,
-            array($this->securityContext, $this->om)
+            array($this->securityContext, $this->om, $this->dispatcher)
         );
     }
 }

@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 
 class RoleRepository extends EntityRepository
@@ -107,15 +108,47 @@ class RoleRepository extends EntityRepository
         return null;
     }
 
+    public function findByUserAndWorkspace(User $user, AbstractWorkspace $workspace)
+    {
+        $dql = "
+            SELECT r FROM Claroline\CoreBundle\Entity\Role r
+            JOIN r.users u
+            JOIN r.workspace w
+            WHERE u.id = :userId AND w.id = :workspaceId
+            ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('userId', $user->getId());
+        $query->setParameter('workspaceId', $workspace->getId());
+
+        return $query->getResult();
+    }
+
+    public function findByGroupAndWorkspace(Group $group, AbstractWorkspace $workspace)
+    {
+        $dql = "
+            SELECT r FROM Claroline\CoreBundle\Entity\Role r
+            JOIN r.groups g
+            JOIN r.workspace w
+            WHERE g.id = :groupId AND w.id = :workspaceId
+            ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('groupId', $group->getId());
+        $query->setParameter('workspaceId', $workspace->getId());
+
+        return $query->getResult();
+    }
+
     /**
-     * Returns the unique role of a user in a workspace.
+     * Returns the roles of a user in a workspace.
      *
      * @param User              $user      The subject of the role
      * @param AbstractWorkspace $workspace The workspace the role should be bound to
      *
      * @return null|Role
      */
-    public function findWorkspaceRoleForUser(User $user, AbstractWorkspace $workspace)
+    public function findWorkspaceRolesForUser(User $user, AbstractWorkspace $workspace)
     {
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
@@ -128,7 +161,7 @@ class RoleRepository extends EntityRepository
 
         $query = $this->_em->createQuery($dql);
 
-        return $query->getOneOrNullResult();
+        return $query->getResult();
     }
 
     /**
