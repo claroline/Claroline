@@ -678,14 +678,15 @@ class ExerciseController extends Controller
                                                                         array('exercise' => $exerciseId),
                                                                         array('ordre' => 'ASC')
                                                                     );
+        $papers = $em->getRepository('UJMExoBundle:Paper')->getExerciseAllPapers($exerciseId);
 
         if ($this->get('security.context')->isGranted('ROLE_WS_CREATOR')) {
 
             $workspace = $exercise->getWorkspace();
 
             $histoMark = $this->histoMark($exerciseId);
-            $histoSuccess= $this->histoSuccess($exerciseId, $eqs);
-            $histoDiscrimination = $this->histoDiscrimination($exerciseId, $eqs);
+            $histoSuccess= $this->histoSuccess($exerciseId, $eqs, $papers);
+            $histoDiscrimination = $this->histoDiscrimination($exerciseId, $eqs, $papers);
 
             return $this->render(
                 'UJMExoBundle:Exercise:docimology.html.twig',
@@ -926,7 +927,7 @@ class ExerciseController extends Controller
             $exoScoreMax = $this->container->get('ujm.exercise_services')->getExerciseTotalScore($exerciseId);
         }
         //$marks = $this->container->get('ujm.exercise_services')->getExerciseHistoMarks($exerciseId);
-        $marks = $em->getRepository('UJMExoBundle:Exercise')->getExerciseMarks($exerciseId);
+        $marks = $em->getRepository('UJMExoBundle:Exercise')->getExerciseMarks($exerciseId, 'noteExo');
         $tabMarks = array();
         $histoMark = array();
 
@@ -959,7 +960,7 @@ class ExerciseController extends Controller
         return $histoMark;
     }
 
-    private function histoSuccess ($exerciseId, $eqs)
+    private function histoSuccess ($exerciseId, $eqs, $papers)
     {
         $em = $this->getDoctrine()->getManager();
         $exerciseSer = $this->container->get('ujm.exercise_services');
@@ -980,7 +981,7 @@ class ExerciseController extends Controller
 
             $interaction = $em->getRepository('UJMExoBundle:Interaction')->getInteraction($eq->getQuestion()->getId());
             $responses = $em->getRepository('UJMExoBundle:Response')
-                            ->getExerciseInterResponses($exerciseId, $interaction[0]->getId());
+                            ->getExerciseInterResponsesWithCount($exerciseId, $interaction[0]->getId());
             switch ( $interaction[0]->getType()) {
                 case "InteractionQCM":
                     $scoreMax = $exerciseSer->qcmMaxScore($interaction[0]);
@@ -1005,7 +1006,6 @@ class ExerciseController extends Controller
         }
 
         //no response
-        $papers = $em->getRepository('UJMExoBundle:Paper')->getExerciseAllPapers($exerciseId);
         foreach ($papers as $paper) {
             $interQuestions = $paper->getOrdreQuestion();
             $interQuestions = substr($interQuestions, 0, strlen($interQuestions) - 1);
@@ -1022,7 +1022,7 @@ class ExerciseController extends Controller
         }
 
         //creation serie for the graph jqplot
-        foreach ($questionsResponsesTab as $responses) { 
+        foreach ($questionsResponsesTab as $responses) {
             $tot = (int) $responses['correct'] + (int) $responses['partiallyRight'] + (int) $responses['wrong'] + (int) $responses['noResponse'];
             if ($tot > $maxY ) {
                 $maxY = $tot;
@@ -1045,9 +1045,105 @@ class ExerciseController extends Controller
 
     }
 
-    private function histoDiscrimination ($exerciseId, $weqs)
+    private function histoDiscrimination ($exerciseId, $eqs, $papers)
     {
+        $em = $this->getDoctrine()->getManager();
         $tabScoreExo = array();
+        $tabScoreQ = array();
+        $tabScoreAverageQ = array();
+        $productMarginMark = array();
+        $tabCoeffQ = array();
+        $scoreAverageExo = 0;
+        $marks = $em->getRepository('UJMExoBundle:Exercise')->getExerciseMarks($exerciseId, 'paper');
+        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exerciseId);
+
+        //Array of exercise's scores
+        foreach ($marks as $mark) {
+            if ($exercise->getNbQuestion() > 0) {
+                $exoScoreMax = $this->container->get('ujm.exercise_services')->getExercisePaperTotalScore($mark['paper']);
+            } else {
+                $exoScoreMax = $this->container->get('ujm.exercise_services')->getExerciseTotalScore($exerciseId);
+            }
+            $tabScoreExo[] = ($mark["noteExo"] / $exoScoreMax) * 20;
+        }
+        //var_dump($tabScoreExo);
+
+        //Average exercise's score
+        foreach ($tabScoreExo as $se) {
+            $scoreAverageExo += (float) $se;
+        }
+
+        $scoreAverageExo = $scoreAverageExo / count($tabScoreExo);
+
+        //Array of each question's score
+        foreach ($eqs as $eq) {
+            $interaction = $em->getRepository('UJMExoBundle:Interaction')->getInteraction($eq->getQuestion()->getId());
+            $responses = $em->getRepository('UJMExoBundle:Response')
+                            ->getExerciseInterResponses($exerciseId, $interaction[0]->getId());
+            foreach ($responses as $response) {
+                $tabScoreQ[$eq->getQuestion()->getId()][] = $response['mark'];
+            }
+            while (count($tabScoreQ[$eq->getQuestion()->getId()]) < 12) {
+                $tabScoreQ[$eq->getQuestion()->getId()][] = 0;
+            }
+        }
+        //var_dump($tabScoreQ);die();
+
+        //Array of average of each question's score
+        foreach ($eqs as $eq) {
+            $allScoreQ = $tabScoreQ[$eq->getQuestion()->getId()];
+            $sm = 0;
+            foreach ($allScoreQ as $sq) {
+                $sm += $sq;
+            }
+            $sm = $sm / count($papers);
+            $tabScoreAverageQ[$eq->getQuestion()->getId()] = $sm;
+        }
+        //var_dump($tabScoreAverageQ);die();
+
+        //Array of (x-Mx)(y-My)
+        foreach ($eqs as $eq) {
+            $i = 0;
+            $allScoreQ = $tabScoreQ[$eq->getQuestion()->getId()];
+            foreach ($allScoreQ as $sq) {
+                $productMarginMark[$eq->getQuestion()->getId()][] = ($sq - $tabScoreAverageQ[$eq->getQuestion()->getId()]) * ($tabScoreExo[$i] - $scoreAverageExo);
+                $i++;
+            }
+        }
+        //var_dump($productMarginMark);die();
+
+        foreach ($eqs as $eq) {
+            $productMarginMarkQ = $productMarginMark[$eq->getQuestion()->getId()];
+            $sumPenq = 0;
+            $coeff = null;
+            $standardDeviationQ = null;
+            $standardDeviationE = $this->sd($tabScoreExo);
+            $n = count($productMarginMarkQ);
+            foreach ($productMarginMarkQ as $penq) {
+                $sumPenq += $penq;
+            }
+            $sumPenq = round($sumPenq, 3);
+            $standardDeviationQ = $this->sd($tabScoreQ[$eq->getQuestion()->getId()]);
+            $nSxSy = $n * $standardDeviationQ * $standardDeviationE;
+            if ($nSxSy != 0) {
+                $tabCoeffQ[] = round($sumPenq / ($nSxSy), 3);
+            } else {
+                $tabCoeffQ[] = 0;
+            }
+        }
+        var_dump($tabCoeffQ);die();
+    }
+
+    private function sd_square($x, $mean)
+    {
+        return pow($x - $mean,2);
 
     }
+
+    private function sd($array)
+    {
+
+        return sqrt(array_sum(array_map(array($this, "sd_square"), $array, array_fill(0, count($array), (array_sum($array) / count($array))))) / (count($array) - 1));
+    }
+
 }
