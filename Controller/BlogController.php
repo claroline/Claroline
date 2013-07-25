@@ -33,6 +33,11 @@ class BlogController extends Controller
     {
         $this->checkAccess("OPEN", $blog);
 
+        $search = $this->getRequest()->get('search');
+        if(null !== $search && '' !== $search) {
+            return $this->redirect($this->generateUrl('icap_blog_view_search', array('blogId' => $blog->getId(), 'search' => $search)));
+        }
+
         $postRepository = $this->getDoctrine()->getRepository('ICAPBlogBundle:Post');
 
         $tag    = null;
@@ -96,6 +101,59 @@ class BlogController extends Controller
             'pager'     => $pager,
             'tag'       => $tag,
             'author'    => $author
+        );
+    }
+
+    /**
+     * @Route("/{blogId}/search/{search}/{page}", name="icap_blog_view_search", requirements={"blogId" = "\d+", "page" = "\d+"}, defaults={"page" = 1})
+     * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
+     * @ParamConverter("user", options={"authenticatedUser" = true})
+     * @Template()
+     */
+    public function viewSearchAction(Blog $blog, $page, User $user, $search)
+    {
+        $this->checkAccess("OPEN", $blog);
+
+        $postRepository = $this->getDoctrine()->getRepository('ICAPBlogBundle:Post');
+
+        /** @var \Doctrine\ORM\QueryBuilder $query */
+        $query = $postRepository
+            ->createQueryBuilder('post')
+            ->andWhere('post.blog = :blogId')
+        ;
+
+        if(!$this->isUserGranted("EDIT", $blog)) {
+            $query
+                ->andWhere('post.publicationDate IS NOT NULL')
+                ->andWhere('post.status = :publishedStatus')
+                ->setParameter('publishedStatus', Statusable::STATUS_PUBLISHED)
+            ;
+        }
+
+        $query
+            ->andWhere('post.title LIKE :search')
+            ->orWhere('post.content LIKE :search')
+            ->setParameter('search', '%' . $search . '%')
+            ->setParameter('blogId', $blog->getId())
+            ->orderBy('post.publicationDate', 'ASC')
+        ;
+
+        $adapter = new DoctrineORMAdapter($query);
+        $pager   = new PagerFanta($adapter);
+
+        $pager->setMaxPerPage($blog->getOptions()->getPostPerPage());
+
+        try {
+            $pager->setCurrentPage($page);
+        } catch (NotValidCurrentPageException $exception) {
+            throw new NotFoundHttpException();
+        }
+
+        return array(
+            '_resource' => $blog,
+            'user'      => $user,
+            'pager'     => $pager,
+            'search'    => $search
         );
     }
 

@@ -1,0 +1,80 @@
+{% extends 'ICAPBlogBundle::layout.html.twig' %}
+
+{% trans_default_domain "icap_blog" %}
+
+{% block title %}{{ _resource.name }}{% endblock %}
+
+{% block content %}
+    <p>
+        <a href="{{ _path('icap_blog_post_new', {'blogId': _resource.id}) }}" class="btn">
+            {{ 'new_post'|trans }}
+        </a>
+    </p>
+    {% if search is not null %}
+    <div class="alert alert-info">
+        <a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" class="close" data-toggle="tooltip" title="{{ 'delete_filter'|trans({}, 'icap_blog') }}" data-placement="top" data-original-title="{{ 'delete_filter'|trans({}, 'icap_blog') }}">&times;</a>
+        {{ "post_filtered_by_search"|trans({'%authorName%': author.firstname ~ ' ' ~ author.lastname}, 'icap_blog')|raw }}.
+    </div>
+    {% endif %}
+    {% for post in pager %}
+        {% set isPublished = post.isPublished %}
+        <article{% if not isPublished %} class="draft"{% endif %}>
+            <header>
+                {% if is_granted('EDIT', blog) %}
+                    <div class="btn-group pull-right">
+                        <a href="{{ path('icap_blog_post_edit', {'blogId': _resource.id, 'postSlug': post.slug}) }}" data-toggle="tooltip" title="{{ 'edit'|trans({}, 'platform') }}" data-placement="top" data-original-title="{{ 'edit'|trans({}, 'platform') }}" class="btn btn-small">
+                            <i class="icon-edit"></i>
+                        </a>
+                        <a href="{{ path('icap_blog_post_delete', {'blogId': _resource.id, 'postSlug': post.slug}) }}" class="btn btn-small btn-danger delete" data-confirm-title="{{ 'post_deletion_confirm_title'|trans({}, 'icap_blog') }}" data-confirm-message="{{ 'post_deletion_confirm_message'|trans({'%postName%': post.title}, 'icap_blog') }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-toggle="tooltip" title="{{ 'delete'|trans({}, 'platform') }}" data-placement="top" data-original-title="{{ 'delete'|trans({}, 'platform') }}">
+                            <i class="icon-trash"></i>
+                        </a>
+                        {% if isPublished %}
+                        <a href="{{ path('icap_blog_post_unpublish', {'blogId': _resource.id, 'postSlug': post.slug}) }}" data-toggle="tooltip" title="{{ 'unpublish'|trans }}" data-placement="top" data-original-title="{{ 'unpublish'|trans }}" class="btn btn-small">
+                            <i class="icon-eye-close"></i>
+                        </a>
+                        {% else %}
+                        <a href="{{ path('icap_blog_post_publish', {'blogId': _resource.id, 'postSlug': post.slug}) }}" data-toggle="tooltip" title="{{ 'publish'|trans }}" data-placement="top" data-original-title="{{ 'publish'|trans }}" class="btn btn-small">
+                            <i class="icon-eye-open"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                <h1>{{ post.title }}</h1>
+                {% set author = post.author %}
+                {{ 'written_by'|trans }} <a href="#" rel="author" title="{{ author.firstname ~ ' ' ~ author.lastname }}">{{ author.firstname ~ ' ' ~ author.lastname }}</a>
+                {% if isPublished %}
+, {{ 'published_on'|trans }} <time>{{ post.publicationDate|date("d/m/Y") }}</time>
+                {% endif %}
+            </header>
+            <div class="content">{{ post.content|raw }}</div>
+            <footer>
+                <ul class="unstyled inline pull-left">
+                    <li><i class="icon-tags"></i></li>
+                {% for tag in post.tags %}
+                    <li><a href="#" title="{{ tag.name }}">{{ tag.name }}</a></li>
+                {% else %}
+                    <li>{{ 'no_tags'|trans }}</li>
+                {% endfor %}
+                </ul>
+                {% if _resource.isCommentsAuthorized %}<a href="#" class="pull-right" title="{{ 'see_comments'|trans }}"><i class="icon-comments"></i> {{ post.comments|length }} {{ 'comments'|trans }}</a>{% endif %}
+            </footer>
+        </article>
+    {% else %}
+        <span>{{ 'no_post'|trans }}</span>
+    {% endfor %}
+    {% if pager.haveToPaginate %}
+    <div>
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'icap_blog_view',
+                    'routeParams': {'blogId': _resource.id}
+                }
+            )
+        }}
+    </div>
+    {%  endif %}
+{% endblock %}

@@ -64,12 +64,12 @@
                         {% block content %}{% endblock %}
                     </section>
                     <aside class="span4">
-                        <form class="form-search well">
+                        <form action="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" method="get" class="form-search well">
                             <div class="input-prepend">
                                 <label for="search_query" ><span class="add-on"><i class="icon-search"></i></span></label>
-                                <input type="text" id="search_query" placeholder="Recherche...">
+                                <input type="text" name="search" id="search_query" placeholder="Recherche..." {% if search is defined %}value="{{ search }}" {% endif %}/>
                             </div>
-                            <p class="muted"><small>Recherche dans les titres, contenus et mots clés des billets.</small></p>
+                            <p class="muted"><small>Recherche dans les titres, contenus.</small></p>
                         </form>
                         <div class="well">
                             <h3>

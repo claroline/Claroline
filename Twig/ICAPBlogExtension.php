@@ -48,6 +48,13 @@ class ICAPBlogExtension extends \Twig_Extension
         );
     }
 
+    public function getFilters()
+    {
+        return array(
+            'highlight'  => new \Twig_Filter_Method($this, 'highlight'),
+        );
+    }
+
     public function getTagsByBlog(Blog $blog)
     {
         return $this->getTagRepository()->findByBlog($blog);
@@ -56,5 +63,21 @@ class ICAPBlogExtension extends \Twig_Extension
     public function getAuthorsByBlog(Blog $blog)
     {
         return $this->getPostRepository()->findAuthorsByBlog($blog);
+    }
+
+    public function highlight($sentence, $search)
+    {
+        $searchParameters = explode(' ', $search);
+
+        array_walk($searchParameters, '');
+
+        $returnHighlightedString = $sentence;
+
+        foreach($searchParameters as $searchParameter)
+        {
+            $returnHighlightedString = preg_replace('/(' . $searchParameter . ')/','<strong>\1</strong>', $returnHighlightedString);
+        }
+
+        return $returnHighlightedString;
     }
 }

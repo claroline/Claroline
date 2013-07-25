@@ -38,8 +38,9 @@ configure_blog: 'Configuration du blog'
 icap_blog_post_configure_success: 'Blog configuré avec succès'
 icap_blog_post_configure_error: 'Erreur lors de la configuration du blog'
 delete_filter: 'Supprimer le filtre'
-post_filtered_by_tag: "Liste des articles filtrés par le tag <strong>%tagName%</strong>"
+post_filtered_by_tag: 'Liste des articles filtrés par le tag <strong>%tagName%</strong>'
 post_filtered_by_author: "Liste des articles filtrés par l'auteur <strong>%authorName%</strong>"
+post_filtered_by_search: 'Liste des articles filtrés par la recherche <strong>%searchTerms%</strong>'
 edit_blog_infos: 'Modifer les informations du blog'
 icap_blog_edit_infos_success: 'Informations du blog modifiées avec succès'
 icap_blog_edit_infos_error: 'Erreur lors de la modification des informations du blog'
