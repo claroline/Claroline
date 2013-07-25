@@ -40,6 +40,7 @@ analytics_home: Vue de l'ensemble
 analytics_connections: Visites utilisateurs
 analytics_resources: Contenu plateforme
 analytics_top: Top des activités
+available_workspaces: 'Espaces d''activités disponibles'
 by: par
 cancel: Annuler
 choose_resource_form_type: 'Type de ressource'
@@ -95,14 +96,18 @@ group_form_ownedRoles: Rôles
 group_form_platformRole: Role
 group_parameter: 'Paramètres du groupe'
 groups: Groupes
-groups_list: "Liste des groupes"
+groups_list: 'Liste des groupes'
+has_not_been_imported: 'n''a pas été importé(e)'
+has_not_been_imported_into_the_group: 'n''a pas été importé(e) dans le groupe'
 history: Historique
 home: Accueil
 id: Id
 informations: Informations
 instructions: Consignes
 import: Importer
+import_users: 'Importer des utilisateurs'
 import_user_file_file: Importer depuis fichier
+invalid_csv_file: 'Le fichier CSV n''est pas valide'
 last_30_days_activity: Activités des 30 derniers jours
 last_name: Nom
 link: Lien
@@ -321,8 +326,10 @@ profile_form_platformRoles: Rôles
 profile_form_username: 'Nom d''utilisateur'
 properties: Propriétés
 public: Publique
+public_workspaces: 'Espaces d''activités publiques'
 recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'
 register: Inscription
+register_to_a_workspace: 'S''inscrire à un espace d''activités'
 registered_groups: 'Groupes enregistrés'
 registered_users: 'Utilisateurs enregistrés'
 remove_group_s_confirm_message: 'groupe(s) supprimé(s)'
@@ -457,18 +464,24 @@ workspace_delete: 'Supprimer l''espace d''activités'
 workspace_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer cet espace d''activités ?'
 workspace_delete_confirm_title: 'Confirmation de suppression'
 workspace_edit_form_code: Code
+workspace_edit_form_displayable: Publique
 workspace_edit_form_name: Nom
+workspace_edit_form_selfRegistration: 'Inscription publique'
+workspace_edit_form_selfUnregistration: 'Désinscription publique'
 workspace_form_code: Code
+workspace_form_displayable: Publique
 workspace_form_name: Nom
 workspace_form_template: Modèle
 workspace_form_type: Type
 workspace_order_tool_edit_form_name: Nom
+workspace_registration_confirm_title: 'Voulez-vous vous inscrire à cet espace d''activités ?'
 workspace_resource: Ressources
 workspace_role_type_form_translationKey: Nom
 workspace_role_type_form_requireDir: Créer un répertoire
 workspace_tag_form_name: Nom
 workspace_template_form_name: Nom
 workspace_tools: Outils
+workspace_unregistration_confirm_title: 'Voulez-vous vous désinscrire de cet espace d''activités ?'
 workspace_welcome: Accueil
 workspaces: 'Espaces d''activités'
 ws_creator: 'Créateur d''espaces'

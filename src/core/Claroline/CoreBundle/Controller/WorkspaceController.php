@@ -14,7 +14,9 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Security\Utilities;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -29,8 +31,10 @@ use JMS\DiExtraBundle\Annotation as DI;
 class WorkspaceController extends Controller
 {
     private $workspaceManager;
+    private $resourceManager;
     private $roleManager;
     private $tagManager;
+    private $toolManager;
     private $eventDispatcher;
     private $security;
     private $router;
@@ -40,8 +44,10 @@ class WorkspaceController extends Controller
     /**
      * @DI\InjectParams({
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "resourceManager"    = @DI\Inject("claroline.manager.resource_manager"),
      *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
      *     "tagManager"         = @DI\Inject("claroline.manager.workspace_tag_manager"),
+     *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
      *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "security"           = @DI\Inject("security.context"),
      *     "router"             = @DI\Inject("router"),
@@ -51,8 +57,10 @@ class WorkspaceController extends Controller
      */
     public function __construct(
         WorkspaceManager $workspaceManager,
+        ResourceManager $resourceManager,
         RoleManager $roleManager,
         WorkspaceTagManager $tagManager,
+        ToolManager $toolManager,
         StrictDispatcher $eventDispatcher,
         SecurityContextInterface $security,
         UrlGeneratorInterface $router,
@@ -61,8 +69,10 @@ class WorkspaceController extends Controller
     )
     {
         $this->workspaceManager = $workspaceManager;
+        $this->resourceManager = $resourceManager;
         $this->roleManager = $roleManager;
         $this->tagManager = $tagManager;
+        $this->toolManager = $toolManager;
         $this->eventDispatcher = $eventDispatcher;
         $this->security = $security;
         $this->router = $router;
@@ -115,7 +125,6 @@ class WorkspaceController extends Controller
     public function listWorkspacesByUserAction()
     {
         $this->assertIsGranted('ROLE_USER');
-        $em = $this->get('doctrine.orm.entity_manager');
         $token = $this->security->getToken();
         $user = $token->getUser();
         $roles = $this->utils->getRoles($token);
@@ -195,6 +204,39 @@ class WorkspaceController extends Controller
         return $displayable;
     }
 
+
+    /**
+     * @EXT\Route(
+     *     "/displayable/selfregistration",
+     *     name="claro_list_workspaces_with_self_registration",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     *
+     * @EXT\Template()
+     *
+     * Renders the displayable workspace list.
+     *
+     * @return Response
+     */
+    public function listWorkspacesWithSelfRegistrationAction()
+    {
+        $this->assertIsGranted('ROLE_USER');
+        $token = $this->security->getToken();
+        $user = $token->getUser();
+        $datas = $this->tagManager->getDatasForSelfRegistrationWorkspaceList();
+
+        return array(
+            'user' => $user,
+            'workspaces' => $datas['workspaces'],
+            'tags' => $datas['tags'],
+            'tagWorkspaces' => $datas['tagWorkspaces'],
+            'hierarchy' => $datas['hierarchy'],
+            'rootTags' => $datas['rootTags'],
+            'displayable' => $datas['displayable']
+        );
+    }
+
     /**
      * @EXT\Route(
      *     "/new/form",
@@ -246,6 +288,7 @@ class WorkspaceController extends Controller
             $config->setWorkspaceType($type);
             $config->setWorkspaceName($form->get('name')->getData());
             $config->setWorkspaceCode($form->get('code')->getData());
+            $config->setDisplayable($form->get('displayable')->getData());
             $user = $this->security->getToken()->getUser();
             $this->workspaceManager->create($config, $user);
             $this->get('claroline.security.token_updater')->update($this->security->getToken());
@@ -277,15 +320,13 @@ class WorkspaceController extends Controller
      */
     public function deleteAction(AbstractWorkspace $workspace)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
         $this->assertIsGranted('DELETE', $workspace);
         $this->eventDispatcher->dispatch(
             'log',
             'Log\LogWorkspaceDelete',
             array($workspace)
         );
-        $em->remove($workspace);
-        $em->flush();
+        $this->workspaceManager->deleteWorkspace($workspace);
 
         return new Response('success', 204);
     }
@@ -306,8 +347,6 @@ class WorkspaceController extends Controller
      */
     public function renderToolListAction(AbstractWorkspace $workspace, $_breadcrumbs)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-
         if ($_breadcrumbs != null) {
             //for manager.js, id = 0 => "no root".
             if ($_breadcrumbs[0] != 0) {
@@ -315,8 +354,7 @@ class WorkspaceController extends Controller
             } else {
                 $rootId = $_breadcrumbs[1];
             }
-            $workspace = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-                ->find($rootId)->getWorkspace();
+            $workspace = $this->resourceManager->getResource($rootId)->getWorkspace();
         }
 
         if (!$this->security->isGranted('OPEN', $workspace)) {
@@ -325,8 +363,7 @@ class WorkspaceController extends Controller
 
         $currentRoles = $this->utils->getRoles($this->security->getToken());
 
-        $orderedTools = $em->getRepository('ClarolineCoreBundle:Tool\OrderedTool')
-            ->findByWorkspaceAndRoles($workspace, $currentRoles);
+        $orderedTools = $this->toolManager->getOrderedToolsByWorkspaceAndRoles($workspace, $currentRoles);
 
         return array(
             'orderedTools' => $orderedTools,
@@ -358,14 +395,14 @@ class WorkspaceController extends Controller
     {
         $this->assertIsGranted($toolName, $workspace);
         $event = $this->eventDispatcher->dispatch(
-            'open_tool_workspace_'.$toolName,
+            'open_tool_workspace_' . $toolName,
             'DisplayTool',
             array($workspace)
         );
         $this->eventDispatcher->dispatch(
             'log',
             'Log\LogWorkspaceToolRead',
-            array($workspace,$toolName)
+            array($workspace, $toolName)
         );
 
         return new Response($event->getContent());
@@ -455,9 +492,7 @@ class WorkspaceController extends Controller
      */
     public function openAction(AbstractWorkspace $workspace)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        if ('anon.' != $this->get('security.context')->getToken()->getUser()) {
+        if ('anon.' != $this->security->getToken()->getUser()) {
             $roles = $this->roleManager->getRolesByWorkspace($workspace);
             $foundRole = null;
 
@@ -477,17 +512,20 @@ class WorkspaceController extends Controller
 
             if ($isAdmin) {
                 //admin always open the home.
-                $openedTool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-                    ->findBy(array('name' => 'home'));
+                $openedTool = array($this->toolManager->getOneToolByName('home'));
             } else {
-                $openedTool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-                    ->findDisplayedByRolesAndWorkspace(array($foundRole), $workspace);
+                $openedTool = $this->toolManager->getDisplayedByRolesAndWorkspace(
+                    array($foundRole),
+                    $workspace
+                );
             }
 
         } else {
             $foundRole = 'ROLE_ANONYMOUS';
-            $openedTool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')
-                ->findDisplayedByRolesAndWorkspace(array('ROLE_ANONYMOUS'), $workspace);
+            $openedTool = $this->toolManager->getDisplayedByRolesAndWorkspace(
+                array('ROLE_ANONYMOUS'),
+                $workspace
+            );
         }
 
         if ($openedTool == null) {
@@ -511,8 +549,7 @@ class WorkspaceController extends Controller
      */
     public function findRoleByWorkspaceCodeAction($code)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $roles = $em->getRepository('ClarolineCoreBundle:Role')->findByWorkspaceCodeTag($code);
+        $roles = $this->roleManager->getRolesBySearchOnWorkspaceAndTag($code);
         $arWorkspace = array();
 
         foreach ($roles as $role) {
@@ -525,6 +562,102 @@ class WorkspaceController extends Controller
         }
 
         return new JsonResponse($arWorkspace);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspaceId}/add/user/{userId}",
+     *     name="claro_workspace_add_user",
+     *     options={"expose"=true},
+     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
+     * )
+     * @EXT\Method({"POST", "GET"})
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "user",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"id" = "userId", "strictId" = true}
+     * )
+     *
+     * Adds a user to a workspace.
+     *
+     * @param AbstractWorkspace $workspace
+     * @param User $user
+     *
+     * @return Response
+     */
+    public function addUserAction(AbstractWorkspace $workspace, User $user)
+    {
+        $role = $this->roleManager->getCollaboratorRole($workspace);
+
+        $userRole = $this->roleManager->getWorkspaceRoleForUser($user, $workspace);
+
+        if (is_null($userRole)) {
+            $this->roleManager->associateRole($user, $role);
+            $this->eventDispatcher->dispatch(
+                'log',
+                'Log\LogWorkspaceRoleSubscribe',
+                array($role, $user)
+            );
+        }
+
+        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+        $this->securityContext->setToken($token);
+
+        return new JsonResponse($this->userManager->convertUsersToArray(array($user)));
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspaceId}/users/{userId}",
+     *     name="claro_workspace_delete_user",
+     *     options={"expose"=true},
+     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
+     * )
+     * @EXT\Method({"DELETE", "GET"})
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "user",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"id" = "userId", "strictId" = true}
+     * )
+     *
+     * Removes an user from a workspace.
+     *
+     * @param AbstractWorkspace $workspace
+     * @param User $userId
+     *
+     * @return Response
+     */
+    public function removeUserAction(AbstractWorkspace $workspace, User $user)
+    {
+        $roles = $this->roleManager->getRolesByWorkspace($workspace);
+        $this->checkRemoveManagerRoleIsValid(array($user), $workspace);
+
+        foreach ($roles as $role) {
+            if ($user->hasRole($role->getName())) {
+                $this->roleManager->dissociateRole($user, $role);
+                $this->eventDispatcher->dispatch(
+                    'log',
+                    'Log\LogWorkspaceRoleUnsubscribe',
+                    array($role, $user)
+                );
+            }
+        }
+        $this->workspaceTagManager->deleteAllRelationsFromWorkspaceAndUser($workspace, $user);
+
+        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+        $this->securityContext->setToken($token);
+
+        return new Response("success", 204);
     }
 
     private function assertIsGranted($attributes, $object = null)

@@ -31,6 +31,7 @@
         <a class="btn btn-secondary" href="{{ path('claro_admin_outside_of_group_user_list', {'groupId' : group.getId()}) }}"><i class="icon-plus"></i> {{ 'add_user'|trans({}, 'platform') }}</a>
         <a class="btn btn-secondary" id="link-send-message" href="{{ path('claro_message_form_for_group', {'group': group.getId()}) }}"><i class="icon-envelope"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
         <button class="btn btn-secondary action-button" data-action="remove"><i class="icon-trash"></i> {{ 'delete'|trans({}, 'platform') }}</button>
+        <a class="btn btn-secondary" id="import-users-into-group" href="{{ path('claro_admin_import_users_into_group_form', {'groupId': group.getId()}) }}"><i class="icon-user"></i> {{ 'import_users'|trans({}, 'platform') }}</a>
     {% endif %}
 {% endmacro %}
 
@@ -64,6 +65,9 @@
 
 {% block section_content %}
     <div class="margin">
+        <div>
+            {{ macros.flashBox() }}
+        </div>
         {{
             macros.breadcrumbs([
                 {

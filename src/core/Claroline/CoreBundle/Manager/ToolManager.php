@@ -223,7 +223,7 @@ class ToolManager
                     $isVisible = false;
                     //is the tool visible for a role in a workspace ?
                     foreach ($orderedTool->getRoles() as $toolRole) {
-                        if ($toolRole == $role) {
+                        if ($toolRole === $role) {
                             $isVisible = true;
                         }
                     }
@@ -431,5 +431,15 @@ class ToolManager
         }
 
         return $realPaths;
+    }
+
+    public function getOrderedToolsByWorkspaceAndRoles(AbstractWorkspace $workspace, array $roles)
+    {
+        return $this->orderedToolRepo->findByWorkspaceAndRoles($workspace, $roles);
+    }
+
+    public function getDisplayedByRolesAndWorkspace(array $roles, AbstractWorkspace $workspace)
+    {
+        return $this->toolRepo->findDisplayedByRolesAndWorkspace($roles, $workspace);
     }
 }
