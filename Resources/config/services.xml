@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="claroline.migration_manager.class">Claroline\MigrationBundle\Library\Manager</parameter>
+        <parameter key="claroline.migration_generator.class">Claroline\MigrationBundle\Library\Generator</parameter>
+        <parameter key="claroline.migration_writer.class">Claroline\MigrationBundle\Library\Writer</parameter>
+        <parameter key="claroline.migration_schema_tool.class">Doctrine\ORM\Tools\SchemaTool</parameter>
+    </parameters>
+
+    <services>
+        <service id="claroline.migration.manager" class="%claroline.migration_manager.class%">
+            <argument type="service" id="kernel" />
+            <argument type="service" id="claroline.migration.generator" />
+            <argument type="service" id="claroline.migration.writer" />
+        </service>
+        <service id="claroline.migration.generator" class="%claroline.migration_generator.class%">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="claroline.migration.doctrine_schema_tool" />
+        </service>
+        <service id="claroline.migration.writer" class="%claroline.migration_writer.class%">
+            <argument type="service" id="filesystem" />
+            <argument type="service" id="twig" />
+            <argument type="service" id="templating" />
+        </service>
+        <service id="claroline.migration.doctrine_schema_tool" class="%claroline.migration_schema_tool.class%">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+        </service>
+    </services>
+
+</container>

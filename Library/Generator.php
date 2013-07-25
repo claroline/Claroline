@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\MigrationBundle\Generator;
+namespace Claroline\MigrationBundle\Library;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Doctrine\ORM\EntityManager;
@@ -14,6 +14,7 @@ class Generator
 
     private $em;
     private $schemaTool;
+    private $schemas = array();
 
     public function __construct(EntityManager $em, SchemaTool $tool)
     {
@@ -28,16 +29,14 @@ class Generator
      * @param Doctrine\DBAL\Platforms\AbstractPlatform      $platform
      *
      * @return array
-     *
-     * @todo keep generated schemas in cache for susbsequent calls
      */
     public function generateMigrationQueries(Bundle $bundle, AbstractPlatform $platform)
     {
-        $metadata = $this->em->getMetadataFactory()->getAllMetadata();
-        $fromSchema = $this->em->getConnection()->getSchemaManager()->createSchema();
-        $toSchema = $this->schemaTool->getSchemaFromMetadata($metadata);
+        $schemas = $this->getSchemas();
+        $fromSchema = $schemas['fromSchema'];
+        $toSchema = $schemas['toSchema'];
 
-        $bundleTables = $this->getBundleTables($bundle, $metadata);
+        $bundleTables = $this->getBundleTables($bundle, $schemas['metadata']);
         $this->filterSchemas(array($fromSchema, $toSchema), $bundleTables);
 
         $upQueries = $fromSchema->getMigrateToSql($toSchema, $platform);
@@ -46,6 +45,29 @@ class Generator
         return array(
             self::QUERIES_UP => $upQueries,
             self::QUERIES_DOWN => $downQueries
+        );
+    }
+
+    /**
+     * Returns the "from" an "to" schemas and the metadata used to generate them.
+     *
+     * Note: this method is public for testing purposes only
+     *
+     * @return array
+     */
+    public function getSchemas()
+    {
+        if (count($this->schemas) === 0) {
+            $this->schemas['metadata'] = $this->em->getMetadataFactory()->getAllMetadata();
+            $this->schemas['fromSchema'] = $this->em->getConnection()->getSchemaManager()->createSchema();
+            $this->schemas['toSchema'] = $this->schemaTool->getSchemaFromMetadata($this->schemas['metadata']);
+        }
+
+        // cloning schemas is much more ligther than re-generating them for each platform
+        return array(
+            'fromSchema' => clone $this->schemas['fromSchema'],
+            'toSchema' => clone $this->schemas['toSchema'],
+            'metadata' => $this->schemas['metadata']
         );
     }
 

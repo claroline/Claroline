@@ -2,7 +2,7 @@
 
 namespace Claroline\MigrationBundle\Twig;
 
-use Claroline\MigrationBundle\Generator\SqlFormatter as Formatter;
+use Claroline\MigrationBundle\Library\SqlFormatter as Formatter;
 
 /**
  * Adds a 'formatSql' function to the Twig environment.
@@ -66,7 +66,7 @@ class SqlFormatterExtension extends \Twig_Extension
         $indentedLines = array();
 
         foreach ($sql as $line) {
-            $indentedLines[] = $indent . $line;
+            $indentedLines[] = $indent . str_replace('"', '\"', $line);
         }
 
         return implode("\n", $indentedLines);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\MigrationBundle\Generator;
+namespace Claroline\MigrationBundle\Library;
 
 use \SqlFormatter as BaseFormatter;
 
