@@ -81,7 +81,7 @@
     <hr/>
     <div id="histoMarks" style="height:100%; width:100%;"></div>
     <hr/>
-    <div id="graph2" style="height:100%; width:80%;"></div>
+    <div id="histoSuccess" style="height:100%; width:80%;"></div>
     <hr/>
     <div id="questionList">
         <h4>{{ "List of question" | trans }}</h4>
@@ -145,7 +145,7 @@
                 }
             });
             
-            /*********************************Graph 2******************************************************/
+            /*********************************histoSuccess******************************************************/
             
             /*var s1 = [2, 6, 7, 10];
             var s2 = [7, 5, 3, 4];
@@ -164,7 +164,7 @@
                 {% set i = i + 1 %}
             {% endfor %}
 
-            plot3 = $.jqplot('graph2', [{{ series }}], {
+            plot3 = $.jqplot('histoSuccess', [{{ series }}], {
                 // Tell the plot to stack the bars.
                 stackSeries: true,
                 captureRightClick: true,
