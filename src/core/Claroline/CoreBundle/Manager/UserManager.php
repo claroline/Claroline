@@ -338,4 +338,14 @@ class UserManager
     {
         return $this->userRepo->find($userId);
     }
+
+    public function getUserByEmail($email)
+    {
+        return $this->userRepo->findOneByMail($email);
+    }
+
+    public function getResetPassword($resetPassword)
+    {
+        return $this->userRepo->findOneByResetPassword($resetPassword);
+    }
 }
