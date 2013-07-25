@@ -255,4 +255,36 @@ class GroupManager
 
         return ($getPager) ? $this->pagerFactory->createPager($res, $page): $res;
     }
+
+    public function getGroupsByRoles(array $roles, $page = 0)
+    {
+        $getPager = ($page === 0) ? false: true;
+        $res = $this->groupRepo->findByRoles($roles, $getPager);
+
+        return ($page !== 0) ? $this->pagerFactory->createPager($res, $page): $res;
+    }
+
+    public function getOutsidersByWorkspaceRoles(array $roles, AbstractWorkspace $workspace, $page = 0)
+    {
+        $getPager = ($page === 0) ? false: true;
+        $res = $this->groupRepo->findOutsidersByWorkspaceRoles($roles, $workspace, $getPager);
+
+        return ($page !== 0) ? $this->pagerFactory->createPager($res, $page): $res;
+    }
+
+    public function getGroupsByRolesAndName(array $roles, $name, $page = 0)
+    {
+        $getPager = ($page === 0) ? false: true;
+        $res = $this->groupRepo->findByRolesAndName($roles,$name,  $getPager);
+
+        return ($page !== 0) ? $this->pagerFactory->createPager($res, $page): $res;
+    }
+
+    public function getOutsidersByWorkspaceRolesAndName(array $roles, $name, AbstractWorkspace $workspace, $page = 0)
+    {
+        $getPager = ($page === 0) ? false: true;
+        $res = $this->userRepo->findOutsidersByWorkspaceRolesAndName($roles, $name, $workspace, $getPager);
+
+        return ($page !== 0) ? $this->pagerFactory->createPager($res, $page): $res;
+    }
 }

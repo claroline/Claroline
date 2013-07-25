@@ -40,6 +40,7 @@ analytics_home: Home
 analytics_connections: Connections
 analytics_resources: Resources
 analytics_top: Top
+apply: Apply
 available_workspaces: 'Available workspaces'
 by: by
 cancel: Cancel
@@ -526,3 +527,4 @@ Draw an area on the graph to zoom, double-click to cancel: 'Draw an area on the 
 Overview of recent activities of your workspaces: 'Overview of recent activities of your workspaces'
 Overview of recent activities in %workspaceName%: 'Overview of recent activities in %workspaceName%'
 Overview of all recent activities in %workspaceName% : 'Overview of all recent activities in %workspaceName%'
+select_all: Select all

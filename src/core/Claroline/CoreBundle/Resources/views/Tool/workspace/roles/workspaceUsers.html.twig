@@ -36,6 +36,14 @@
 {% from _self import renderPager %}
 {% from _self import displayControls %}
 
+{% set queryString = '' %}
+{% for role in roles %}
+    {% set queryString = queryString~'roleIds[]='~role.getId() %}
+    {% if not loop.last %}
+        {% set queryString = queryString~'&' %}
+    {% endif %}
+{% endfor %}
+
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
 {% block javascripts %}
@@ -130,10 +138,10 @@
 
         $('#chk-all').on('click', function(event) {
                 if ($('#chk-all').is(':checked')) {
-                $(' INPUT[@class=' + 'chk-item' + '][type="checkbox"]').attr('checked', true);
+                $('.chk-item').attr('checked', true);
             }
             else {
-                $(' INPUT[@class=' + 'chk-item' + '][type="checkbox"]').attr('checked', false);
+                 $('.chk-item').attr('checked', false);
             }
         });
     </script>
@@ -152,7 +160,7 @@
     <ul class="nav nav-tabs">
         <li> <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'roles'}) }}">{{ 'roles'|trans({}, 'platform') }}</a> </li>
         <li class="active"> <a  href="#"> {{'users'|trans({}, 'platform') }} </a> </li>
-        <li> <a href="{{ path('claro_workspace_registered_group_list', {'workspace': workspace.getId() }) }}"> {{'groups'|trans({}, 'platform') }} </a> </li>
+        <li> <a href="{{ path('claro_workspace_registered_group_list', {'workspace': workspace.getId() })~'?'~queryString }}"> {{'groups'|trans({}, 'platform') }} </a> </li>
     </ul>
 
     {{ macros.flashBox() }}
@@ -259,15 +267,3 @@
         {{ displayControls(workspace.getId()) }}
     </div>
 {% endblock %}
-
-    {#
-{% if role.getWorkspace() == workspace %}
-    <span class="label">
-        {{ role.getTranslationKey()|trans({}, 'platform') }}
-        <i class="icon-remove-sign pointer-hand remove-role-button"
-           href="{{ path('claro_workspace_remove_role_from_user', {'workspace': workspace.getId(), 'user': user.getId(), 'role': role.getId() } ) }}"
-        >
-        </i>
-    </span>
-{% endif %}
-#}
