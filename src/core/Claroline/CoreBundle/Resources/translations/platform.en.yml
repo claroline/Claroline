@@ -86,6 +86,7 @@ files: Files
 filter: Filter
 find_workspaces: 'Find workspaces'
 first_name: 'First name'
+forgot_password: 'Forgot your password ?'
 form_role: Role
 from: From
 from_message: From
@@ -254,12 +255,14 @@ copiable: 'Copiable'
 editable: 'Editable'
 yes: 'yes'
 no: 'no'
+link_outdated : 'link is no more valid'
 login: Login
 login_failure: 'Login has failed. Check your username and password are correct.'
 logout: Logout
 mail: Mail
 mail_form_content: Content
 mail_form_object: Object
+mail_sent : 'A email has been sent to your adress , check your inbox mail and your spam box'
 manage_rights: 'Manage rights'
 manager: Manager
 media_most_viewed: Most viewed media
@@ -287,6 +290,7 @@ my_workspace: 'My workspace'
 my_workspaces: 'My workspaces'
 name: Name
 new_message_alert: 'You have %count% new message(s)'
+no_email: 'No email found, check the spelling'
 no_search_results: 'Your search hasn''t returned any result.'
 none: None
 note: Note
@@ -305,6 +309,9 @@ path: Path
 permissions: Permissions
 personal_workspace: 'Personal workspace'
 phone: Phone
+password_email_message: 'You asked to reset your password click on this link to reset it'
+password_missmatch : 'passwords missmatched'
+password_ok : 'Your password has been changed, you can login now'
 platform_parameters: 'Platform parameters'
 platform_parameters_form_localLanguage: Langue
 platform_parameters_form_selfRegistration: Auto-inscription
@@ -421,6 +428,7 @@ type_s: Type(s)
 unregister: Unregister
 unregistered_groups: 'Unregistered groups'
 unregistered_users: 'Unregistered users'
+url_invalid: 'the code is not correct, do no try to change the url'
 user: User
 user_accounts: User accounts
 user_form_administrativeCode: 'Administrative code'
