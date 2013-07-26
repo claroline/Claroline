@@ -9,7 +9,7 @@ add_new_post: "Ajout d'un article"
 edit_post: "Edition de l'article '%postTitle%'"
 back_to_workspace: "Retour à l'espace de travail"
 back_to_blog: 'Retour au blog'
-icap_blog_options_form_authorize_comment: 'Commentaires autorisés'
+icap_blog_options_form_authorize_comment: 'Commentaires autorisés ?'
 icap_blog_options_form_authorize_anonymous_comment: 'Commentaires anonymes autorisés ?'
 icap_blog_options_form_post_per_page: "Articles par page"
 icap_blog_options_form_auto_publish_post: 'Publication automatique des articles ?'
@@ -24,6 +24,14 @@ icap_blog_post_publish_success: 'Article publié avec succès'
 icap_blog_post_publish_error: "Erreur lors de la publication de l'article"
 icap_blog_post_unpublish_success: 'Article dépublié avec succès'
 icap_blog_post_unpublish_error: "Erreur lors de la dépublication de l'article"
+icap_blog_comment_add_success: 'Commentaire ajouté avec succès'
+icap_blog_comment_add_error: "Erreur lors de l'ajout du commentaire"
+icap_blog_comment_delete_success: 'Commentaire supprimé avec succès'
+icap_blog_comment_delete_error: 'Erreur lors de a suppression du commentaire'
+icap_blog_comment_publish_success: 'Commentaire publié avec succès'
+icap_blog_comment_publish_error: 'Erreur lors de la publication du commentaire'
+icap_blog_comment_unpublish_success: 'Commentaire dépublié avec succès'
+icap_blog_comment_unpublish_error: 'Erreur lors de la dépublication dU COMMENTAIRE'
 no_tags: 'Aucun tags'
 comments: 'commentaires'
 see_comments: 'Voir les commentaires'
@@ -34,6 +42,8 @@ published_on: 'Publié le'
 Post: 'Article'
 post_deletion_confirm_title: "Suppression d'un article"
 post_deletion_confirm_message: "Etes-vous sûr de vouloir supprimer l'article <strong>%postName%</strong> ?"
+comment_deletion_confirm_title: "Suppression d'un commentaire"
+comment_deletion_confirm_message: "Etes-vous sûr de vouloir supprimer ce commentaire ?"
 configure_blog: 'Configuration du blog'
 icap_blog_post_configure_success: 'Blog configuré avec succès'
 icap_blog_post_configure_error: 'Erreur lors de la configuration du blog'
@@ -45,3 +55,7 @@ edit_blog_infos: 'Modifer les informations du blog'
 icap_blog_edit_infos_success: 'Informations du blog modifiées avec succès'
 icap_blog_edit_infos_error: 'Erreur lors de la modification des informations du blog'
 icap_blog_post_search_too_much_result: "Vos critères de recherche sont considérés comme non pertinent, veuillez rentrer d'autres mots clés."
+add_comment: 'Ajouter un commentaire'
+be_the_first_to_comment: 'Soyez le premier à commenter cet article'
+icap_blog_post_comment_form_message: 'Commentaire'
+to_comment: 'Commenter'

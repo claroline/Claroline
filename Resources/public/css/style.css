@@ -2,7 +2,7 @@ article {
   margin-bottom: 30px;
   border: 1px solid #E3E3E3;
 }
-article.draft {
+article.unpublished {
   border: 1px dotted orange;
 }
 article header {
@@ -23,4 +23,10 @@ article footer ul {
 }
 article .highlight {
   background-color: #DFFF00;
+}
+.comment_list li {
+  margin-bottom: 20px;
+}
+.comment_list li.unpublished {
+  border: 1px dotted orange;
 }

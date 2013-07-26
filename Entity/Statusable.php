@@ -47,4 +47,28 @@ class Statusable
     {
         return $this->status;
     }
+
+    /**
+     * @return Post
+     */
+    public function publish()
+    {
+        return $this->setStatus(self::STATUS_PUBLISHED);
+    }
+
+    /**
+     * @return Post
+     */
+    public function unpublish()
+    {
+        return $this->setStatus(self::STATUS_UNPUBLISHED);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPublished()
+    {
+        return $this->getStatus() === self::STATUS_PUBLISHED;
+    }
 }

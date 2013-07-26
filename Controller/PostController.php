@@ -2,8 +2,11 @@
 
 namespace ICAP\BlogBundle\Controller;
 
+use Claroline\CoreBundle\Entity\User;
+use ICAP\BlogBundle\Entity\Comment;
 use ICAP\BlogBundle\Entity\Post;
 use ICAP\BlogBundle\Entity\Blog;
+use ICAP\BlogBundle\Form\CommentType;
 use ICAP\BlogBundle\Form\PostType;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -13,6 +16,59 @@ use Symfony\Component\HttpFoundation\Request;
 
 class PostController extends Controller
 {
+    /**
+     * @Route("/{blogId}/post/view/{postSlug}", name="icap_blog_post_view", requirements={"id" = "\d+"})
+     *
+     * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
+     * @ParamConverter("post", class="ICAPBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
+     * @ParamConverter("user", options={"authenticatedUser" = true})
+     * @Template()
+     */
+    public function viewAction(Request $request, Blog $blog, Post $post, User $user)
+    {
+        $this->checkAccess("OPEN", $blog);
+
+        $commentStatus = Comment::STATUS_UNPUBLISHED;
+        if($blog->isAutoPublishComment()) {
+            $commentStatus = Comment::STATUS_PUBLISHED;
+        }
+
+        $comment = new Comment();
+        $comment
+            ->setPost($post)
+            ->setAuthor($user)
+            ->setStatus($commentStatus)
+        ;
+
+        $form = $this->createForm(new CommentType(), $comment);
+
+        if("POST" === $request->getMethod()) {
+            $form->handleRequest($request);
+            if ($form->isValid()) {
+                $translator = $this->get('translator');
+                $flashBag = $this->get('session')->getFlashBag();
+                $entityManager = $this->getDoctrine()->getManager();
+
+                try {
+                    $entityManager->persist($comment);
+                    $entityManager->flush();
+
+                    $flashBag->add('success', $translator->trans('icap_blog_comment_add_success', array(), 'icap_blog'));
+                }
+                catch(\Exception $exception)
+                {
+                    $flashBag->add('error', $translator->trans('icap_blog_comment_add_error', array(), 'icap_blog'));
+                }
+                return $this->redirect($this->generateUrl('icap_blog_post_view', array('blogId' => $blog->getId(), 'postSlug' => $post->getSlug())) . '#comments');
+            }
+        }
+
+        return array(
+            '_resource' => $blog,
+            'post'      => $post,
+            'form'      => $form->createView()
+        );
+    }
     /**
      * @Route("/{blogId}/post/new", name="icap_blog_post_new", requirements={"blogId" = "\d+"})
      *
@@ -33,7 +89,7 @@ class PostController extends Controller
 
         $messages = array(
             'success' => $translator->trans('icap_blog_post_add_success', array(), 'icap_blog'),
-            'error'   =>$translator->trans('icap_blog_post_add_error', array(), 'icap_blog')
+            'error'   => $translator->trans('icap_blog_post_add_error', array(), 'icap_blog')
         );
 
         return $this->persistPost($request, $blog, $post, $messages);
@@ -54,7 +110,7 @@ class PostController extends Controller
 
         $messages = array(
             'success' => $translator->trans('icap_blog_post_edit_success', array(), 'icap_blog'),
-            'error'   =>$translator->trans('icap_blog_post_edit_error', array(), 'icap_blog')
+            'error'   => $translator->trans('icap_blog_post_edit_error', array(), 'icap_blog')
         );
 
         return $this->persistPost($request, $blog, $post, $messages);

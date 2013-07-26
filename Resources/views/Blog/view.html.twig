@@ -26,7 +26,7 @@
     {% endif %}
     {% for post in pager %}
         {% set isPublished = post.isPublished %}
-        <article{% if not isPublished %} class="draft"{% endif %}>
+        <article{% if not isPublished %} class="unpublished"{% endif %}>
             <header>
                 {% if is_granted('EDIT', blog) %}
                     <div class="btn-group pull-right">
@@ -47,9 +47,9 @@
                         {% endif %}
                     </div>
                 {% endif %}
-                <h1>{{ post.title }}</h1>
+                <h1><a href="{{ path('icap_blog_post_view', {'blogId': _resource.id, 'postSlug': post.slug}) }}" title="">{{ post.title }}</a></h1>
                 {% set author = post.author %}
-                {{ 'written_by'|trans }} <a href="#" rel="author" title="{{ author.firstname ~ ' ' ~ author.lastname }}">{{ author.firstname ~ ' ' ~ author.lastname }}</a>
+                {{ 'written_by'|trans }} <a href="{{ path('icap_blog_view_filter', {'blogId': _resource.id, 'filter': author.username}) }}" rel="author" title="{{ author.firstname ~ ' ' ~ author.lastname }}">{{ author.firstname ~ ' ' ~ author.lastname }}</a>
                 {% if isPublished %}
 , {{ 'published_on'|trans }} <time>{{ post.publicationDate|date("d/m/Y") }}</time>
                 {% endif %}
@@ -59,12 +59,12 @@
                 <ul class="unstyled inline pull-left">
                     <li><i class="icon-tags"></i></li>
                 {% for tag in post.tags %}
-                    <li><a href="#" title="{{ tag.name }}">{{ tag.name }}</a></li>
+                    <li><a href="{{ path('icap_blog_view_filter', {'blogId': _resource.id, 'filter': tag}) }}" title="{{ tag }}">{{ tag }}</a></li>
                 {% else %}
                     <li>{{ 'no_tags'|trans }}</li>
                 {% endfor %}
                 </ul>
-                {% if _resource.isCommentsAuthorized %}<a href="#" class="pull-right" title="{{ 'see_comments'|trans }}"><i class="icon-comments"></i> {{ post.comments|length }} {{ 'comments'|trans }}</a>{% endif %}
+                {% if _resource.isCommentsAuthorized %}<a href="{{ path('icap_blog_post_view', {'blogId': _resource.id, 'postSlug': post.slug}) }}#comments" class="pull-right" title="{{ 'see_comments'|trans }}"><i class="icon-comments"></i> {{ post.comments|length }} {{ 'comments'|trans }}</a>{% endif %}
             </footer>
         </article>
     {% else %}

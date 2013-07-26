@@ -98,6 +98,30 @@ class Blog extends AbstractResource
     }
 
     /**
+     * @return bool
+     */
+    public function isAuthorizeAnonymousComment()
+    {
+        return $this->getOptions()->getAuthorizeAnonymousComment();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAutoPublishComment()
+    {
+        return $this->getOptions()->getAutoPublishComment();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAutoPublishPost()
+    {
+        return $this->getOptions()->getAutoPublishPost();
+    }
+
+    /**
      * @return array|\Claroline\CoreBundle\Entity\User[]
      */
     public function getAuthors()

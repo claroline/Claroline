@@ -39,6 +39,15 @@ class Comment extends Statusable
     protected $creationDate;
 
     /**
+     * @var \Datetime $publicationDate
+     *
+     * @ORM\Column(type="datetime", name="publication_date", nullable=true)
+     * @Gedmo\Timestampable(on="create")
+     * @Gedmo\Timestampable(on="change", field="status", value="1")
+     */
+    protected $publicationDate;
+
+    /**
      * @var User $author
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")

@@ -356,14 +356,6 @@ class Post extends Statusable
     }
 
     /**
-     * @return bool
-     */
-    public function isPublished()
-    {
-        return $this->getStatus() === self::STATUS_PUBLISHED;
-    }
-
-    /**
      * @param \ICAP\BlogBundle\Entity\PostTag[]|\Doctrine\Common\Collections\ArrayCollection $postTags
      *
      * @return Post
@@ -405,21 +397,5 @@ class Post extends Statusable
         $this->tags->remove($tag);
 
         return $this;
-    }
-
-    /**
-     * @return Post
-     */
-    public function publish()
-    {
-        return $this->setStatus(self::STATUS_PUBLISHED);
-    }
-
-    /**
-     * @return Post
-     */
-    public function unpublish()
-    {
-        return $this->setStatus(self::STATUS_UNPUBLISHED);
     }
 }
