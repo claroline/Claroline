@@ -86,6 +86,7 @@ files: Fichiers
 filter: Filtrer
 find_workspaces: 'Tous les espaces'
 first_name: Prénom
+forgot_password: 'Mot de passe oublié ?'
 form_role: Rôle
 from: Depuis
 from_message: De
@@ -254,12 +255,15 @@ copiable: 'Copiable'
 editable: 'Modifiable'
 yes: 'oui'
 no: 'non'
+no_email: 'Ce mail ne correspond pas a unitilisateur inscrit'
+link_outdated : 'le luen n''est plus valide'
 login: Connexion
 login_failure: 'La connexion a échoué. Vérifiez que votre nom d''utilisateur et votre mot de passe sont corrects.'
 logout: Déconnexion
 mail: Mail
 mail_form_content: Contenu
 mail_form_object: Objet
+mail_sent : 'Un email vient de vous être envoyé, vérifier votre dossier spam au cas où vous ne verrais pas l''email'
 manage_rights: 'Gérer les droits'
 manager: Gestionnaire
 media_most_viewed: Media les plus consultés
@@ -300,6 +304,9 @@ owner: Propriétaire
 owner_s: Propriétaire(s)
 parameters: Paramètres
 password: 'Mot de passe'
+password_email_message: 'Vous avez demander de Réinitialiser votre mot de passe. CLiquez sur ce lien , si vous n''etes pas l''orgine de cette action , ignorez ce message'
+password_missmatch: 'les mots de passes ne correspondent pas'
+password_ok : 'Votre mot de passe à été modifié , vous pouvez vous connecter'
 paste: Coller
 path: Emplacement
 permissions: Permissions

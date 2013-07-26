@@ -68,6 +68,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface
             $user->setLastName($lastName);
             $user->setUserName($username);
             $user->setPlainPassword($username);
+            $user->setMail($username.'@claroline.net');
             $roleManager->associateRole($user, $this->getReference("role/{$role}"));
 
             if ($this->withWorkspace) {
