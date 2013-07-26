@@ -30,7 +30,6 @@ class AppKernel extends Kernel
             new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
             new IDCI\Bundle\ExporterBundle\IDCIExporterBundle(),
             new Zenstruck\Bundle\FormBundle\ZenstruckFormBundle(),
-            new ICAPLyon1\Bundle\SimpleTagBundle\ICAPLyon1SimpleTagBundle(),
             new BeSimple\SsoAuthBundle\BeSimpleSsoAuthBundle()
         );
 
