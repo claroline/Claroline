@@ -79,10 +79,15 @@ class PostController extends Controller
     {
         $this->checkAccess("EDIT", $blog);
 
+        $postStatus = Comment::STATUS_UNPUBLISHED;
+        if($blog->isAutoPublishPost()) {
+            $postStatus = Comment::STATUS_PUBLISHED;
+        }
         $post = new Post();
         $post
             ->setBlog($blog)
             ->setAuthor($this->getUser())
+            ->setStatus($postStatus)
         ;
 
         $translator = $this->get('translator');
