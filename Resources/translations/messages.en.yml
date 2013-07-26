@@ -252,6 +252,7 @@ PlaceZone: To move an answer zone, select it by clicking on it and click again t
 Resize: To resize the answer zone, select it by clicking, then press Alt and move your mouse.
 SelectZone: To define an answer zone, click on it and place it by re-clicking to the selected place on the image. You can also press CTRL key and click on the picture where it should be placed.
 Erase: To erase an answer zone, press s key and click on the erasable answer zone.
+Point: Points must be assigned before positioning each answer zone.
 Answer zone: Answer zone
 Shape: Shape
 Color: Color
@@ -325,10 +326,12 @@ frequency: Frequency
 
 #Forms
 ujm_exobundle_interactiongraphictype_document: Documents
-ujm_exobundle_interactiongraphictype_interaction_hints: Hints 
+ujm_exobundle_interactiongraphictype_interaction_hints: Hints
 ujm_exobundle_interactionqcmtype_choices: Choices
 ujm_exobundle_interactionqcmtype_interaction: QCM
-ujm_exobundle_interactionqcmtype_interaction_hints: Hints 
+ujm_exobundle_interactionqcmtype_interaction_hints: Hints
+
+ujm_exobundle_categorytype_value: Name of the new category
 
 correct: Correct
 partially: Partiallyt correct

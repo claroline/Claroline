@@ -253,6 +253,7 @@ PlaceZone: Pour déplacer une zone de réponse, selecionnez-la en cliquant dessu
 Resize: Pour redimmensionner la zone de réponse, selection la en cliquant dessus puis appuyez sur Alt en bougeant la souris.
 SelectZone: Pour définir une zone de réponse, selectionnez la en cliquant dessus puis déposez la en re-cliquant à l'endroit voulu sur l'image. Vous pouvez aussi maintenir la touche CTRL enfoncée et cliquez sur l'image à l'endroit où vous voulez la placer.
 Erase: Pour effacer une zone de réponse, maintenez la touche s enfoncée et cliquez sur la zone de réponse à effacer.
+Point: Les points doivent être attribués avant le placement de chaque zone de réponse.
 Answer zone: Zone de réponse
 Shape: Forme
 Color: Couleur
@@ -326,11 +327,12 @@ frequency: Fréquence
 
 #Forms
 ujm_exobundle_interactiongraphictype_document: Documents
-ujm_exobundle_interactiongraphictype_interaction_hints: Indices 
+ujm_exobundle_interactiongraphictype_interaction_hints: Indices
 ujm_exobundle_interactionqcmtype_choices: Choix
 ujm_exobundle_interactionqcmtype_interaction: QCM
-ujm_exobundle_interactionqcmtype_interaction_hints: Indices 
+ujm_exobundle_interactionqcmtype_interaction_hints: Indices
 
+ujm_exobundle_categorytype_value: Nom de la nouvelle catégorie
 
 correct: Correcte
 partially: Partiellement correcte

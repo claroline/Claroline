@@ -91,10 +91,18 @@
     <a onclick="DisplayInstruction();" id="Order"
        onmouseover="document.body.style.cursor = 'pointer';"
        onmouseout="document.body.style.cursor = 'default';"
-    >Instructions</a>
+    >Show Instructions</a>
 
-    <p id="Instructions">{{ "ResizeZone" | trans }}<br/>{{ "SelectZone" | trans }}<br/>{{ "PlaceZone" | trans }}<br/>
-        {{ "Resize" | trans }}<br/>{{ "Erase" | trans }}</p>
+    <a onclick="HideInstruction();" id="hide"
+       onmouseover="document.body.style.cursor = 'pointer';"
+       onmouseout="document.body.style.cursor = 'default';"
+    >hide Instructions</a>
+
+    <div id="Instructions" style="border: #00CCFF dotted thin; margin: 20px; padding: 10px;">
+        ~ {{ "ResizeZone" | trans }}<hr/>~ {{ "SelectZone" | trans }}<hr/>
+        ~ {{ "PlaceZone" | trans }}<hr/>~ {{ "Resize" | trans }}<hr/>
+        ~ {{ "Erase" | trans }}<hr/>~ {{ "Point" | trans }}
+    </div>
 
     <div style="position: relative;" id="Answer">
         <img src="" width="" height="" id="AnswerImage"/>

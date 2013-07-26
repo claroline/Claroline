@@ -33,6 +33,7 @@ var y = 0; // Mouse y after move
 // Instructions aren't displayed (by default) for more visibility
 document.getElementById('Instructions').style.display = 'none';
 document.getElementById('Order').style.display = 'block';
+document.getElementById('hide').style.display = 'none';
 
 // Initialize reference answer zone position
 el.style.left = '45px';
@@ -43,6 +44,13 @@ el.style.top = '28px';
 function DisplayInstruction() { // If click, instructions are displayed
     document.getElementById('Instructions').style.display = 'block';
     document.getElementById('Order').style.display = 'none';
+    document.getElementById('hide').style.display = 'block';
+}
+
+function HideInstruction() {
+    document.getElementById('Instructions').style.display = 'none';
+    document.getElementById('hide').style.display = 'none';
+    document.getElementById('Order').style.display = 'block';
 }
 
 // Get the url's picture matching to the label in the list

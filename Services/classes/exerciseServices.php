@@ -253,7 +253,7 @@ class exerciseServices
                     }
                 }
             }
-            $total += $this->graphicMaxScore($interG->getInteraction()); // Score max
+            $total = $this->graphicMaxScore($interG->getInteraction()); // Score max
         }
 
         $penalty = 0;
@@ -284,6 +284,10 @@ class exerciseServices
         // Not negatif score
         if ($score < 0) {
             $score = 0;
+        }
+
+        if (!preg_match('/[0-9]+/', $answers)) {
+            $answers = '';
         }
 
         $res = array(
@@ -348,7 +352,7 @@ class exerciseServices
 
         return $exoTotalScore;
     }
-    
+
     public function getExercisePaperTotalScore($paperID)
     {
         $exercisePaperTotalScore = 0;
@@ -356,11 +360,11 @@ class exerciseServices
                                      ->getManager()
                                      ->getRepository('UJMExoBundle:Paper')
                                      ->find($paperID);
-        
+
         $interQuestions = $paper->getOrdreQuestion();
         $interQuestions = substr($interQuestions, 0, strlen($interQuestions) - 1);
         $interQuestionsTab = explode(";", $interQuestions);
-        
+
         foreach ($interQuestionsTab as $interQuestion) {
             $interaction = $this->doctrine->getManager()->getRepository('UJMExoBundle:Interaction')->find($interQuestion);
             switch ( $interaction->getType()) {
@@ -381,7 +385,7 @@ class exerciseServices
                     break;
             }
         }
-        
+
         return $exercisePaperTotalScore;
     }
 
