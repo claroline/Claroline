@@ -29,13 +29,13 @@ class Version20130530152255 extends BundleMigration
     public function down(Schema $schema)
     {
         //Marche pas et aucune idée de pourquoi, merci le migrationBundle
-        $this->addSql("DELETE FROM `icap__associated_tag` WHERE `taggableClass` = 'ICAP\\BlogBundle\\Entity\\Post'");
-
         $schema
             ->dropTable('icap__blog_comment')
             ->dropTable('icap__blog_post')
             ->dropTable('icap__blog_options')
             ->dropTable('icap__blog')
+            ->dropTable('icap__blog_tag')
+            ->dropTable('icap__blog_post_tag')
         ;
     }
 
