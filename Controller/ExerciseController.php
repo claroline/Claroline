@@ -1014,7 +1014,7 @@ class ExerciseController extends Controller
             foreach ($interQuestionsTab as $interQuestion) {
                 $flag = $em->getRepository('UJMExoBundle:Response')->findOneBy(array('interaction' => $interQuestion,
                                                                                      'paper' => $paper->getId()));
-                if (!$flag) {
+                if (!$flag || $flag->getResponse() == '') {
                     $interaction = $em->getRepository('UJMExoBundle:Interaction')->find($interQuestion);
                     $questionsResponsesTab[$interaction->getQuestion()->getId()]['noResponse'] += 1;
                 }

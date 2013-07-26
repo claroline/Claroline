@@ -85,7 +85,7 @@ class ResponseRepository extends EntityRepository
     {
         $dql = 'SELECT r.mark, count(r.mark) as nb
             FROM UJM\ExoBundle\Entity\Response r, UJM\ExoBundle\Entity\Interaction i, UJM\ExoBundle\Entity\Question q, UJM\ExoBundle\Entity\Paper p
-            WHERE r.interaction=i.id AND i.question=q.id AND r.paper=p.id AND p.exercise='.$exoId.' AND r.interaction ='.$interId.' group by r.mark';
+            WHERE r.interaction=i.id AND i.question=q.id AND r.paper=p.id AND p.exercise='.$exoId.' AND r.interaction ='.$interId.' AND r.response != \'\' GROUP BY r.mark';
 
         $query = $this->_em->createQuery($dql);
 
