@@ -68,11 +68,16 @@ Entry: Entry
 Exercise: Exercise
 Exit: Exit
 Expected answer: Expected answer
+ExplainCoeffDis0: The copies must have the same questions to calculate the coefficient of discrimination.
+ExplainCoeffDis1: Analysis of the relevance of the questions, this correlation coefficient ranges from -1 to +1
+ExplainCoeffDis2: The questuions with a discrimination coefficient between 0.35 and 0.65 maximize the discrimination of students.
+ExplainCoeffDis3: The questions that have a negative index signal a discrepancy, the best students fail these questions, the lowest pass these questions
 Feedback: Feedback
 Finish: Finish
 From: From
 Group: Group
 Hint: Hint
+HistoDiscrimination: Discrimination coefficient
 HistoMarks: Marks' histogram
 HistoSucces: Success' histogram
 Interupt: Interupt

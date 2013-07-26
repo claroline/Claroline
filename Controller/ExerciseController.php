@@ -686,7 +686,13 @@ class ExerciseController extends Controller
 
             $histoMark = $this->histoMark($exerciseId);
             $histoSuccess= $this->histoSuccess($exerciseId, $eqs, $papers);
-            $histoDiscrimination = $this->histoDiscrimination($exerciseId, $eqs, $papers);
+
+            if ($exercise->getNbQuestion() == 0)
+            {
+                $histoDiscrimination = $this->histoDiscrimination($exerciseId, $eqs, $papers);
+            } else {
+                $histoDiscrimination['coeffQ'] = 'none';
+            }
 
             return $this->render(
                 'UJMExoBundle:Exercise:docimology.html.twig',
@@ -699,7 +705,8 @@ class ExerciseController extends Controller
                     'maxY'                  => $histoMark['maxY'],
                     'questionsList'         => $histoSuccess['questionsList'],
                     'seriesResponsesTab'    => $histoSuccess['seriesResponsesTab'],
-                    'maxY2'                 => $histoSuccess['maxY']
+                    'maxY2'                 => $histoSuccess['maxY'],
+                    'coeffQ'                => $histoDiscrimination['coeffQ']
                 )
             );
         } else {
@@ -1053,20 +1060,16 @@ class ExerciseController extends Controller
         $tabScoreAverageQ = array();
         $productMarginMark = array();
         $tabCoeffQ = array();
+        $histoDiscrimination = array();
         $scoreAverageExo = 0;
         $marks = $em->getRepository('UJMExoBundle:Exercise')->getExerciseMarks($exerciseId, 'paper');
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exerciseId);
 
         //Array of exercise's scores
         foreach ($marks as $mark) {
-            if ($exercise->getNbQuestion() > 0) {
-                $exoScoreMax = $this->container->get('ujm.exercise_services')->getExercisePaperTotalScore($mark['paper']);
-            } else {
-                $exoScoreMax = $this->container->get('ujm.exercise_services')->getExerciseTotalScore($exerciseId);
-            }
-            $tabScoreExo[] = ($mark["noteExo"] / $exoScoreMax) * 20;
+            $tabScoreExo[] = $mark["noteExo"];
         }
-        //var_dump($tabScoreExo);
+        //var_dump($tabScoreExo);die();
 
         //Average exercise's score
         foreach ($tabScoreExo as $se) {
@@ -1083,7 +1086,7 @@ class ExerciseController extends Controller
             foreach ($responses as $response) {
                 $tabScoreQ[$eq->getQuestion()->getId()][] = $response['mark'];
             }
-            while (count($tabScoreQ[$eq->getQuestion()->getId()]) < 12) {
+            while (count($tabScoreQ[$eq->getQuestion()->getId()]) < count($papers)) {
                 $tabScoreQ[$eq->getQuestion()->getId()][] = 0;
             }
         }
@@ -1132,6 +1135,11 @@ class ExerciseController extends Controller
             }
         }
         //var_dump($tabCoeffQ);die();
+
+        $coeffQ = implode(",", $tabCoeffQ);
+        $histoDiscrimination['coeffQ'] = $coeffQ;
+
+        return $histoDiscrimination;
     }
 
     private function sd_square($x, $mean)

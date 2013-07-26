@@ -88,6 +88,18 @@
     <hr/>
     <div id="histoSuccess" style="height:100%; width:80%;"></div>
     <hr/>
+    <div id="histoDiscrimination" style="height:100%; width:80%;">
+        {% if coeffQ == 'none' %}
+            {{ "ExplainCoeffDis0" | trans }}
+            <br/><br/><br/>
+        {% endif %}
+    </div>
+    <p>
+        {{ "ExplainCoeffDis1" | trans }}<br/>
+        {{ "ExplainCoeffDis2" | trans }}<br/>
+        {{ "ExplainCoeffDis3" | trans }}
+    </p>
+    <hr/>
     <div id="questionList">
         <h4>{{ "List of question" | trans }}</h4>
         <ol>
@@ -152,10 +164,6 @@
             
             /*********************************histoSuccess******************************************************/
             
-            /*var s1 = [2, 6, 7, 10];
-            var s2 = [7, 5, 3, 4];
-            var s3 = [14, 9, 3, 8];*/
-
             {% set series = '' %}
             {% set i = 1 %}
             {% for serie in seriesResponsesTab %}
@@ -233,6 +241,53 @@
                     {label:'{{ 'no answer'|trans }}', color: 'yellow'}
                 ],
             });
+            
+            /*********************************histoDiscrimination******************************************************/
+            var s1 = [{{ coeffQ }}];
+
+            if (s1 != 'none') {
+                $.jqplot('histoDiscrimination', [s1], {
+                    title:'{{ "HistoDiscrimination" | trans }}',
+                    stackSeries: true,
+                    series:[{renderer:$.jqplot.BarRenderer}],
+
+                    seriesDefaults:{
+                        color: '#06A1E3',
+                        rendererOptions: {fillToZero: true},
+                        pointLabels: {
+                            show: true,
+                            hideZeros: false,
+                            formatString: '%.3f'
+                        }
+                    },
+
+                    axes: {
+                        xaxis: {
+                            label: '{{ 'Question'|trans }}',
+                            labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                            labelOptions:{
+                                fontFamily:'Helvetica',
+                                fontSize: '14pt'
+                            },
+                            renderer: $.jqplot.CategoryAxisRenderer,
+                            tickOptions: {showGridline: false}
+                        },
+
+                        yaxis: {
+                            label: '{{ 'Coefficient'|trans }}',
+                            labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                            labelOptions:{
+                                fontFamily:'Helvetica',
+                                fontSize: '14pt'
+                            },
+                            pad: 0.5,
+                            min: -1,
+                            max: 1,
+                            tickOptions: {formatString: '%.1f'}
+                        }
+                    }
+                });
+            }
         });
     </script>
 {% endblock %}

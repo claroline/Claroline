@@ -68,11 +68,16 @@ Entry: Entrer
 Exercise: Exercice
 Exit: Quitter
 Expected answer: Réponse attendue
+ExplainCoeffDis0: Les copies doivent avoir les mêmes questions pour pouvoir calculer le coefficient de discrimination.
+ExplainCoeffDis1: Analyse de la pertinence des questions, ce coefficient de corrélation varie de -1 à + 1
+ExplainCoeffDis2: Les questions dont le coefficient de discrimination se situe entre 0,35 et 0,65 maximisent la discrimination des étudiants.
+ExplainCoeffDis3: Les questions ayant un indice négatif signalent une incohérence, les meilleurs candidats échouent ces questions, les plus faibles réussissent ces questions
 Feedback: Commentaire
 Finish: Terminer
 From: A partir du
 Group: Groupe
 Hint: Indice
+HistoDiscrimination: Coefficient de discrimination
 HistoMarks: Histogramme des notes
 HistoSucces: Histogramme de réussite
 Interupt: Interrompre
