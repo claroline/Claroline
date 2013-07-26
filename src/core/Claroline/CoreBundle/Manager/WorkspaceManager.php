@@ -133,7 +133,7 @@ class WorkspaceManager
 
             $confTool = isset($toolsConfig[$toolName]) ?  $toolsConfig[$toolName] : array();
 
-            $tool = $this->toolManager->findOneByName($toolName);
+            $tool = $this->toolManager->getOneToolByName($toolName);
 
             if ($tool === null) {
                 throw new UnknownToolException("The tool {$toolName} does'nt exists.");

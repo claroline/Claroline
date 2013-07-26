@@ -608,8 +608,8 @@ class ResourceManager
     {
         $last = $this->resourceRepo->findOneBy(array('parent' => $parent, 'next' => null));
 
-        if (get_class($resource) == 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
-            $copy = new ResourceShortcut();
+        if ($resource instanceof \Claroline\CoreBundle\Entity\Resource\ResourceShortcut) {
+            $copy = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceShortcut');
             $copy->setResource($resource->getResource());
             $copy->setCreator($user);
             $copy->setWorkspace($parent->getWorkspace());
