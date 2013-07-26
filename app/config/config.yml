@@ -1,7 +1,7 @@
 imports:
     - { resource: security.yml }
     - { resource: local/parameters.yml }
-    - { resource: @ICAPLyon1SimpleTagBundle/Resources/config/config.yml }
+    - { resource: @ICAPBlogBundle/Resources/config/config_bundle.yml }
 
 framework:
     secret:          %secret%
@@ -135,6 +135,7 @@ stfalcon_tinymce:
             theme_advanced_statusbar_location: 'bottom'
             theme_advanced_buttons1_add: 'fullscreen'
             relative_urls: false
+            entity_encoding: 'raw'
         advanced:
             theme: 'advanced'
             plugins: 'pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,-example'
@@ -147,6 +148,7 @@ stfalcon_tinymce:
             theme_advanced_statusbar_location: 'bottom'
             theme_advanced_resizing: true
             relative_urls: false
+            entity_encoding: 'raw'
         medium:
             mode: 'textareas'
             theme: 'advanced'
@@ -160,6 +162,7 @@ stfalcon_tinymce:
             paste_auto_cleanup_on_paste: true
             spellchecker_languages: '+Français=fr,English=en,Dutch=nl'
             relative_urls: false
+            entity_encoding: 'raw'
         bbcode:
             mode: 'none'
             theme: 'advanced'
