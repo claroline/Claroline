@@ -398,4 +398,28 @@ class Post extends Statusable
 
         return $this;
     }
+
+    /**
+     * @param bool $countUnpublished
+     *
+     * @return int
+     */
+    public function countComments($countUnpublished = false)
+    {
+        $countComments = 0;
+
+        if($countUnpublished) {
+            $countComments = $this->getComments()->count();
+        }
+        else {
+            foreach($this->getComments() as $comment)
+            {
+                if($comment->isPublished()) {
+                    $countComments++;
+                }
+            }
+        }
+
+        return $countComments;
+    }
 }
