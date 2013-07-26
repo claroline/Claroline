@@ -184,36 +184,128 @@ class RoleManagerTest extends MockeryTestCase
      */
     public function testCheckWorkspaceRoleEditionThrowsExceptionForUser( )
     {
-        $this->markTestSkipped();
         $roleManager = $this->getManager(array('getManagerRole'));
         $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
         $managerRole = m::mock('Claroline\CoreBundle\Entity\Role');
-        $collaboratorRole = m::mock('Claroline\CoreBundle\Entity\Role');
-        $roles = array($collaboratorRole);
+        $roles = array($managerRole);
         $user = m::mock('Claroline\CoreBundle\Entity\User');
 
         $roleManager->shouldReceive('getManagerRole')->once()->with($workspace)->andReturn($managerRole);
         $managerRole->shouldReceive('getName')->andReturn('ROLE_WS_MANAGER');
         $user->shouldReceive('hasRole')->with('ROLE_WS_MANAGER')->andReturn(true);
-        $this->groupRepo->shouldReceive('findByRole')->andReturn(array());
-        $this->userRepo->shouldReceive('findByRole')->andReturn(array($user));
+        $this->groupRepo->shouldReceive('findByRoles')->andReturn(array());
+        $this->userRepo->shouldReceive('findByRoles')->andReturn(array($user));
 
         $roleManager->checkWorkspaceRoleEditionIsValid(array($user), $workspace, $roles);
     }
 
+    public function testGetRole()
+    {
+        $this->roleRepo->shouldReceive('find')->with(1)->andReturn('return');
+
+        $this->assertEquals('return', $this->getManager()->getRole(1));
+    }
+
+    public function testResetPlatformRoles()
+    {
+        $roleUser = new \Claroline\CoreBundle\Entity\Role();
+        $pfRole = new \Claroline\CoreBundle\Entity\Role();
+        $roles = array($pfRole);
+        $user = $this->mock('\Claroline\CoreBundle\Entity\User');
+
+        m::getConfiguration()->allowMockingNonExistentMethods(true);
+        $this->roleRepo->shouldReceive('findOneByName')->with('ROLE_USER')
+            ->andReturn($roleUser);
+        $this->roleRepo->shouldReceive('findPlatformRoles')->with($user)
+            ->once()->andReturn($roles);
+
+        $user->shouldReceive('removeRole')->once()->with($pfRole);
+        $this->om->shouldReceive('persist')->once()->with($user);
+        $this->om->shouldReceive('flush');
+        $this->getManager()->resetPlatformRoles($user);
+    }
+
     public function testDissociateWorkspaceRole()
     {
+        $manager = $this->getManager(array('checkWorkspaceRoleEditionIsValid', 'dissociateRole'));
 
+        $subject = new \Claroline\CoreBundle\Entity\User();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $role = new \Claroline\CoreBundle\Entity\Role();
+
+        $manager->shouldReceive('checkWorkspaceRoleEditionIsValid')->once()
+            ->with(array($subject), $workspace, array($role));
+        $manager->shouldReceive('dissociateRole')->once()->with($subject, $role);
+        $manager->dissociateWorkspaceRole($subject, $workspace, $role);
     }
 
-    public function testResetWorkspaceRoles()
+    public function testResetWorkspaceRolesForUser()
     {
+        $manager = $this->getManager(array('dissociateRole', 'checkWorkspaceRoleEditionIsValid'));
+        $managerRole = m::mock('Claroline\CoreBundle\Entity\Role');
+        $roles = array($managerRole);
+        $subject = new \Claroline\CoreBundle\Entity\User();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
 
+        $this->roleRepo->shouldReceive('findByUserAndWorkspace')->once()
+            ->with($subject, $workspace)->andReturn($roles);
+        $manager->shouldReceive('checkWorkspaceRoleEditionIsValid')->once()
+            ->with(array($subject), $workspace, $roles);
+        $this->om->shouldReceive('startFlushSuite')->once();
+        $this->om->shouldReceive('endFlushSuite')->once();
+        $manager->shouldReceive('dissociateRole')->once()
+            ->with($subject, $managerRole);
+
+        $manager->resetWorkspaceRolesForSubject($subject, $workspace);
     }
 
-    public function testEditSubjectWorkspaceRoles()
+    public function testResetWorkspaceRolesForGroup()
     {
+        $manager = $this->getManager(array('dissociateRole', 'checkWorkspaceRoleEditionIsValid'));
+        $managerRole = m::mock('Claroline\CoreBundle\Entity\Role');
+        $roles = array($managerRole);
+        $subject = new \Claroline\CoreBundle\Entity\Group();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
 
+        $this->roleRepo->shouldReceive('findByGroupAndWorkspace')->once()
+            ->with($subject, $workspace)->andReturn($roles);
+        $manager->shouldReceive('checkWorkspaceRoleEditionIsValid')->once()
+            ->with(array($subject), $workspace, $roles);
+        $this->om->shouldReceive('startFlushSuite')->once();
+        $this->om->shouldReceive('endFlushSuite')->once();
+        $manager->shouldReceive('dissociateRole')->once()
+            ->with($subject, $managerRole);
+
+        $manager->resetWorkspaceRolesForSubject($subject, $workspace);
+    }
+
+    public function testResetWorkspaceRoleForSubjects()
+    {
+        $manager = $this->getManager(array('resetWorkspaceRolesForSubject'));
+        $subject = new \Claroline\CoreBundle\Entity\Group();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $subjects = array($subject);
+        $manager->shouldReceive('resetWorkspaceRolesForSubject')->once()
+            ->with($subject, $workspace);
+
+        $this->om->shouldReceive('startFlushSuite')->once();
+        $this->om->shouldReceive('endFlushSuite')->once();
+
+        $manager->resetWorkspaceRoleForSubjects($subjects, $workspace);
+    }
+
+    public function testAssociateRolesToSubjects()
+    {
+        $manager = $this->getManager(array('associateRole'));
+        $subject = new \Claroline\CoreBundle\Entity\Group();
+        $subjects = array($subject);
+        $managerRole = new \Claroline\CoreBundle\Entity\Role;
+        $roles = array($managerRole);
+
+        $this->om->shouldReceive('startFlushSuite')->once();
+        $manager->shouldReceive('associateRole')->once()->with($subject, $managerRole);
+        $this->om->shouldReceive('endFlushSuite')->once();
+        $manager->associateRolesToSubjects($subjects, $roles);
     }
 
     /**
@@ -221,9 +313,154 @@ class RoleManagerTest extends MockeryTestCase
      */
     public function testRemoveThrowsExceptionIfReadOnly()
     {
-        $role = m::mock('Claroline\CoreBundle\Entity\Role');
+        $role = $this->mock('Claroline\CoreBundle\Entity\Role');
         $role->shouldReceive('isReadOnly')->once()->andReturn(true);
         $this->getManager()->remove($role);
+    }
+
+    public function testFindWorkspaceRoles()
+    {
+        $wsRole = new \Claroline\CoreBundle\Entity\Role();
+        $anonRole = new \Claroline\CoreBundle\Entity\Role();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $wsRoles = array($wsRole);
+        $res = array($wsRole, $anonRole);
+        $this->roleRepo->shouldReceive('findByWorkspace')->once()->with($workspace)->andReturn($wsRoles);
+        $this->roleRepo->shouldReceive('findBy')->once()->with(array('name' => 'ROLE_ANONYMOUS'))
+            ->andReturn(array($anonRole));
+
+        $this->assertEquals($res, $this->getManager()->getWorkspaceRoles($workspace));
+    }
+
+    public function testGetStringRoleFromToken()
+    {
+        $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $tokenRole = $this->mock('Symfony\Component\Security\Core\Role\RoleInterface');
+        $tokenRole->shouldReceive('getRole')->once()->andReturn('ROLE');
+        $token->shouldReceive('getRoles')->once()->andReturn(array($tokenRole));
+        $res = array('ROLE');
+        $this->assertEquals($res, $this->getManager()->getStringRolesFromToken($token));
+    }
+
+    public function testGetRoleBaseName()
+    {
+       $roleName = 'ROLE_WS_MANAGER_GUID';
+
+       $this->assertEquals('ROLE_WS_MANAGER', $this->getManager()->getRoleBaseName($roleName));
+    }
+
+    public function testGetRolesByWorkspace()
+    {
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $this->roleRepo->shouldReceive('findByWorkspace')->once()->with($workspace)->andReturn('return');
+
+        $this->assertEquals('return', $this->getManager()->getRolesByWorkspace($workspace));
+    }
+
+    public function testGetCollaboratorRole()
+    {
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $this->roleRepo->shouldReceive('findCollaboratorRole')->once()->with($workspace)->andReturn('return');
+
+        $this->assertEquals('return', $this->getManager()->getCollaboratorRole($workspace));
+    }
+
+    public function testGetVisitorRole()
+    {
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $this->roleRepo->shouldReceive('findVisitorRole')->once()->with($workspace)->andReturn('return');
+
+        $this->assertEquals('return', $this->getManager()->getVisitorRole($workspace));
+    }
+
+    public function testGetManagerRole()
+    {
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $this->roleRepo->shouldReceive('findManagerRole')->once()->with($workspace)->andReturn('return');
+
+        $this->assertEquals('return', $this->getManager()->getManagerRole($workspace));
+    }
+
+    public function testGetPlatformRoles()
+    {
+        $user = new \Claroline\CoreBundle\Entity\User();
+        $this->roleRepo->shouldReceive('findPlatformRoles')->once()->with($user)->andReturn('return');
+
+        $this->assertEquals('return', $this->getManager()->getPlatformRoles($user));
+    }
+
+    public function testGetWorkspaceRoleForUser()
+    {
+        $user = new \Claroline\CoreBundle\Entity\User();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $this->roleRepo->shouldReceive('findWorkspaceRolesForUser')->once()
+            ->with($user, $workspace)->andReturn('return');
+
+        $this->assertEquals('return', $this->getManager()->getWorkspaceRolesForUser($user, $workspace));
+    }
+
+
+    public function testGetRolesByWorkspaceAndTool()
+    {
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $tool = new \Claroline\CoreBundle\Entity\Tool\Tool();
+        $this->roleRepo->shouldReceive('findByWorkspaceAndTool')->once()
+            ->with($workspace, $tool)->andReturn('return');
+
+        $this->assertEquals('return', $this->getManager()->getRolesByWorkspaceAndTool($workspace, $tool));
+    }
+
+    public function testGetRolesBySearchOnWorkspaceAndTag()
+    {
+        $this->markTestIncomplete('Why is there no search on workspace ?');
+        $search = 'search';
+        $this->roleRepo->shouldReceive('findByWorkspaceCodeTag')->once()
+            ->with($search)->andReturn('return');
+
+        $this->assertEquals('return', $this->getManager()->getRolesBySearchOnWorkspaceAndTag($search));
+    }
+
+    public function testGetRoleById()
+    {
+        $id = 1;
+        $this->roleRepo->shouldReceive('find')->once()->with($id)->andReturn('return');
+
+        $this->assertEquals('return', $this->getManager()->getRoleById($id));
+    }
+
+    public function testGetRolesByIds()
+    {
+        $ids = array(1);
+        $this->om->shouldReceive('findByIds')->once()
+            ->with('Claroline\CoreBundle\Entity\Role', $ids)->andReturn('return');
+
+        $this->assertEquals('return', $this->getManager()->getRolesByIds($ids));
+    }
+
+    public function testGetRoleByName()
+    {
+        $name = 'name';
+        m::getConfiguration()->allowMockingNonExistentMethods(true);
+        $this->roleRepo->shouldReceive('findOneByName')->once()->with($name)->andReturn('return');
+
+        $this->assertEquals('return', $this->getManager()->getRoleByName($name));
+    }
+
+    public function testGetAllRoles()
+    {
+        $this->roleRepo->shouldReceive('findAll')->once()->andReturn('return');
+
+        $this->assertEquals('return', $this->getManager()->getAllRoles());
+    }
+
+    public function testGetStringRolesFromCurrentUser()
+    {
+        $manager = $this->getManager(array('getStringRolesFromToken'));
+        $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken');
+        $this->securityContext->shouldReceive('getToken')->once()->andReturn($token);
+        $manager->shouldReceive('getStringRolesFromToken')->once()->with($token)->andReturn('return');
+
+        $this->assertEquals('return', $manager->getStringRolesFromCurrentUser());
     }
 
     private function getManager(array $mockedMethods = array())

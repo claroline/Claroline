@@ -106,7 +106,7 @@ class ProfileController extends Controller
             $changeSet = $unitOfWork->getEntityChangeSet($user);
             $newRoles = $form->get('platformRoles')->getData();
 
-            $this->roleManager->resetRoles($user);
+            $this->roleManager->resetPlatformRoles($user);
             $this->roleManager->associateRoles($user, $newRoles);
             $this->security->getToken()->setUser($user);
 

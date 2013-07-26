@@ -23,31 +23,31 @@ class ResourceManagerTest extends MockeryTestCase
     {
         parent::setUp();
 
-        $this->rightsManager = m::mock('Claroline\CoreBundle\Manager\RightsManager');
-        $this->resourceRepo = m::mock('Claroline\CoreBundle\Repository\AbstractResourceRepository');
-        $this->resourceTypeRepo = m::mock('Claroline\CoreBundle\Repository\ResourceTypeRepository');
-        $this->shortcutRepo = m::mock('Claroline\CoreBundle\Repository\ResourceShortcutRepository');
-        $this->roleRepo = m::mock('Claroline\CoreBundle\Repository\RoleRepository');
-        $this->roleManager = m::mock('Claroline\CoreBundle\Manager\RoleManager');
-        $this->rightsRepo = m::mock('Claroline\CoreBundle\Repository\ResourceRightsRepository');
-        $this->iconManager = m::mock('Claroline\CoreBundle\Manager\IconManager');
-        $this->eventDispatcher = m::mock('Claroline\CoreBundle\Event\StrictDispatcher');
-        $this->om = m::mock('Claroline\CoreBundle\Persistence\ObjectManager');
-        $this->ut = m::mock('Claroline\CoreBundle\Library\Utilities\ClaroUtilities');
+        $this->rightsManager = $this->mock('Claroline\CoreBundle\Manager\RightsManager');
+        $this->resourceRepo = $this->mock('Claroline\CoreBundle\Repository\AbstractResourceRepository');
+        $this->resourceTypeRepo = $this->mock('Claroline\CoreBundle\Repository\ResourceTypeRepository');
+        $this->shortcutRepo = $this->mock('Claroline\CoreBundle\Repository\ResourceShortcutRepository');
+        $this->roleRepo = $this->mock('Claroline\CoreBundle\Repository\RoleRepository');
+        $this->roleManager = $this->mock('Claroline\CoreBundle\Manager\RoleManager');
+        $this->rightsRepo = $this->mock('Claroline\CoreBundle\Repository\ResourceRightsRepository');
+        $this->iconManager = $this->mock('Claroline\CoreBundle\Manager\IconManager');
+        $this->eventDispatcher = $this->mock('Claroline\CoreBundle\Event\StrictDispatcher');
+        $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->ut = $this->mock('Claroline\CoreBundle\Library\Utilities\ClaroUtilities');
     }
 
     public function testCreate()
     {
         $manager = $this->getManager(array('checkResourcePrepared', 'getUniqueName', 'setRights'));
 
-        $parent = m::mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
-        $resourceType = m::mock('Claroline\CoreBundle\Entity\Resource\ResourceType');
+        $parent = $this->mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $resourceType = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceType');
         $resourceType->shouldReceive('getName')->once()->andReturn('directory');
         $user = new \Claroline\CoreBundle\Entity\User();
         $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
         $icon = new \Claroline\CoreBundle\Entity\Resource\ResourceIcon();
-        $resource = m::mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
-        $prev = m::mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $resource = $this->mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $prev = $this->mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
 
         $this->om->shouldReceive('startFlushSuite')->once();
         $manager->shouldReceive('checkResourcePrepared')->once()->with($resource);
@@ -76,7 +76,7 @@ class ResourceManagerTest extends MockeryTestCase
 
     public function testCreateResource()
     {
-         $resource = m::mock('Claroline\CoreBundle\Entity\Resource\Directory');
+         $resource = $this->mock('Claroline\CoreBundle\Entity\Resource\Directory');
          $this->om->shouldReceive('factory')->once()
              ->with('\Claroline\CoreBundle\Entity\Resource\Directory')->andReturn($resource);
          $resource->shouldReceive('setName')->once()->with('name');
@@ -91,7 +91,7 @@ class ResourceManagerTest extends MockeryTestCase
      */
     public function testCreateResourceThrowsAnException()
     {
-         $role = m::mock('Claroline\CoreBundle\Entity\Role');
+         $role = $this->mock('Claroline\CoreBundle\Entity\Role');
          $this->om->shouldReceive('factory')->once()
              ->with('\Claroline\CoreBundle\Entity\Role')->andReturn($role);
 
@@ -328,12 +328,30 @@ class ResourceManagerTest extends MockeryTestCase
 
     public function testRemovePosition()
     {
-        $this->markTestSkipped('find a way to test this properly');
+        $next = $this->mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $previous = $this->mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $resource = $this->mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $resource->shouldReceive('getNext')->once()->andReturn($next);
+        $resource->shouldReceive('getPrevious')->once()->andReturn($previous);
+        $next->shouldReceive('setPrevious')->once()->with($previous);
+        $previous->shouldReceive('setNext')->once()->with($next);
+        $this->om->shouldReceive('persist')->times(2);
+        $this->om->shouldReceive('flush');
+        $this->getManager()->removePosition($resource);
     }
 
     public function testSetLastPosition()
     {
-        $this->markTestSkipped('find a way to test this properly');
+        $lastChild = $this->mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $resource = $this->mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $parent = new \Claroline\CoreBundle\Entity\Resource\Directory();
+        $this->resourceRepo->shouldReceive('findOneBy')->once()->with(array('parent' => $parent, 'next' => null))->andReturn($lastChild);
+        $resource->shouldReceive('setPrevious')->once()->with($lastChild);
+        $resource->shouldReceive('setNext')->once()->with(null);
+        $lastChild->shouldReceive('setNext')->once()->with($resource);
+        $this->om->shouldReceive('persist')->times(2);
+        $this->om->shouldReceive('flush')->once();
+        $this->getManager()->setLastPosition($parent, $resource);
     }
 
     public function testMove()
@@ -372,6 +390,7 @@ class ResourceManagerTest extends MockeryTestCase
         $manager->delete($resource);
     }
 
+    //@todo doing some assertions on the $copy
     public function testSimpleCopy()
     {
         $manager = $this->getManager(array('getUniqueName'));
@@ -390,6 +409,43 @@ class ResourceManagerTest extends MockeryTestCase
         $resource->shouldReceive('getIcon')->andReturn($icon);
         $resourceType->shouldReceive('getName')->andReturn('type_name');
         $copy = new \Claroline\CoreBundle\Entity\Resource\Directory();
+        $this->resourceRepo->shouldReceive('findOneBy')->once()->andReturn($last);
+        $this->eventDispatcher->shouldReceive('dispatch')->andReturn($event);
+        $event->shouldReceive('getCopy')->andReturn($copy);
+        $parent->shouldReceive('getWorkspace')->andReturn($workspace);
+        $last->shouldReceive('setNext')
+            ->once()
+            ->with(anInstanceOf('Claroline\CoreBundle\Entity\Resource\AbstractResource'));
+        $this->om->shouldReceive('persist')->times(2);
+        $this->rightsManager->shouldReceive('copy')->once()->with($resource, $copy);
+        $this->om->shouldReceive('flush')->once();
+
+        $manager->copy($resource, $parent, $user);
+    }
+
+    //@todo doing some assertions on the $copy
+    public function testShortcutCopy()
+    {
+        $manager = $this->getManager(array('getUniqueName'));
+        $manager->shouldReceive('getUniqueName')->andReturn('uniquename');
+
+        $resource = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceShortcut');
+        $parent = $this->mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $target = $this->mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $user = $this->mock('Claroline\CoreBundle\Entity\User');
+        $last = $this->mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $event = $this->mock('Claroline\CoreBundle\Event\Event\CopyResourceEvent');
+        $resourceType = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceType');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $icon = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
+
+        $resource->shouldReceive('getResourceType')->andReturn($resourceType);
+        $resource->shouldReceive('getIcon')->andReturn($icon);
+        $resource->shouldReceive('getResource')->andReturn($target);
+        $resourceType->shouldReceive('getName')->andReturn('type_name');
+        $copy = new \Claroline\CoreBundle\Entity\Resource\ResourceShortcut();
+        $this->om->shouldReceive('factory')->once()
+            ->with('Claroline\CoreBundle\Entity\Resource\ResourceShortcut')->andReturn($copy);
         $this->resourceRepo->shouldReceive('findOneBy')->once()->andReturn($last);
         $this->eventDispatcher->shouldReceive('dispatch')->andReturn($event);
         $event->shouldReceive('getCopy')->andReturn($copy);
@@ -458,6 +514,39 @@ class ResourceManagerTest extends MockeryTestCase
         $manager->shouldReceive('logChangeSet')->once()->with($resource);
 
         $this->assertEquals($icon, $manager->changeIcon($resource, $file));
+    }
+
+    public function testLogChangeSet()
+    {
+        $uow = $this->mock('Doctrine\ORM\UnitOfWork');
+        $resource = new \Claroline\CoreBundle\Entity\Resource\Directory();
+        $this->om->shouldReceive('getUnitOfWork')->andReturn($uow);
+        $uow->shouldReceive('computeChangeSets')->once();
+        $uow->shouldReceive('getEntityChangeSet')->once()->with($resource)->andReturn(array());
+        $this->eventDispatcher->shouldReceive('dispatch')->once()
+            ->with('log', 'Log\LogResourceUpdate', array($resource, array()));
+        $this->getManager()->logChangeSet($resource);
+    }
+
+    public function testGetResourceTypeByName()
+    {
+        m::getConfiguration()->allowMockingNonExistentMethods(true);
+        $this->resourceTypeRepo->shouldReceive('findOneByName')->with('name')->once()->andReturn('result');
+        $this->assertEquals('result', $this->getManager()->getResourceTypeByName('name'));
+    }
+
+    public function testGetAllResourceTypes()
+    {
+        $this->resourceTypeRepo->shouldReceive('findAll')->once()->andReturn('result');
+        $this->assertEquals('result', $this->getManager()->getAllResourceTypes());
+    }
+
+    public function testGetByIds()
+    {
+        $this->om->shouldReceive('findByIds')->once()
+            ->with('Claroline\CoreBundle\Entity\Resource\AbstractResource', array(1, 2))->andReturn('result');
+
+        $this->assertEquals('result', $this->getManager()->getByIds(array(1, 2)));
     }
 
     public function isPathValidProvider()

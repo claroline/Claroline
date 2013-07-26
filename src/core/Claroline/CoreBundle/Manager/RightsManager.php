@@ -259,7 +259,7 @@ class RightsManager
         return $creatableTypes;
     }
 
-    private function recursiveCreation(
+    public function recursiveCreation(
         array $permissions,
         Role $role,
         AbstractResource $resource,
@@ -279,7 +279,7 @@ class RightsManager
         $this->om->endFlushSuite();
     }
 
-    private function nonRecursiveCreation(
+    public function nonRecursiveCreation(
         array $permissions,
         Role $role,
         AbstractResource $resource,

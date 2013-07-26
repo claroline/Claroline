@@ -150,7 +150,7 @@ class RoleManager
         $this->om->flush();
     }
 
-    public function resetRoles(User $user)
+    public function resetPlatformRoles(User $user)
     {
         $userRole = $this->roleRepo->findOneByName('ROLE_USER');
         $roles = $this->roleRepo->findPlatformRoles($user);
@@ -166,7 +166,7 @@ class RoleManager
 
     public function dissociateWorkspaceRole(AbstractRoleSubject $subject, AbstractWorkspace $workspace, Role $role)
     {
-        $this->checkWorkspaceRoleEditionIsValid(array($subject), $workspace, array());
+        $this->checkWorkspaceRoleEditionIsValid(array($subject), $workspace, array($role));
         $this->dissociateRole($subject, $role);
     }
 
@@ -230,25 +230,6 @@ class RoleManager
         $this->om->flush();
     }
 
-    public function edit(Role $role)
-    {
-        $this->om->persist($role);
-        $this->om->flush();
-    }
-
-    public function editSubjectWorkspaceRoles(array $subjects, AbstractWorkspace $workspace, array $roles)
-    {
-        $this->om->startFlushSuite();
-        $this->checkWorkspaceRoleEditionIsValid($subjects, $workspace, $roles);
-
-        foreach ($subjects as $subject) {
-            $this->resetWorkspaceRoles($subject, $workspace);
-            $this->associateRoles($subject, $roles);
-        }
-
-        $this->om->endFlushSuite();
-    }
-
     public function associateRolesToSubjects(array $subjects, array $roles)
     {
         $this->om->startFlushSuite();
@@ -270,8 +251,6 @@ class RoleManager
      */
     public function checkWorkspaceRoleEditionIsValid(array $subjects, AbstractWorkspace $workspace, array $roles)
     {
-        return true;
-
         $managerRole = $this->getManagerRole($workspace);
         $groupsManagers = $this->groupRepo->findByRoles(array($managerRole));
         $usersManagers = $this->userRepo->findByRoles(array($managerRole));
@@ -279,8 +258,9 @@ class RoleManager
         $removedGroupsManager = 0;
         $removedUsersManager = 0;
 
+
         foreach ($subjects as $subject) {
-           if ($subject->hasRole($managerRole->getName()) && !in_array($managerRole, $roles)) {
+           if ($subject->hasRole($managerRole->getName()) && in_array($managerRole, $roles)) {
             $subject instanceof \Claroline\CoreBundle\Entity\Group ?
                 $removedGroupsManager ++:
                 $removedUsersManager ++;
@@ -292,7 +272,7 @@ class RoleManager
         }
     }
 
-    public function findWorkspaceRoles(AbstractWorkspace $workspace)
+    public function getWorkspaceRoles(AbstractWorkspace $workspace)
     {
         return array_merge(
             $this->roleRepo->findByWorkspace($workspace),
@@ -323,11 +303,6 @@ class RoleManager
     public function getPlatformRoles(User $user)
     {
         return $this->roleRepo->findPlatformRoles($user);
-    }
-
-    public function getWorkspaceRole(AbstractRoleSubject $subject, AbstractWorkspace $workspace)
-    {
-        return $this->roleRepo->findWorkspaceRole($subject, $workspace);
     }
 
     public function getWorkspaceRolesForUser(User $user, AbstractWorkspace $workspace)

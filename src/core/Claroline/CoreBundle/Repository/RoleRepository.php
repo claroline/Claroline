@@ -85,29 +85,6 @@ class RoleRepository extends EntityRepository
         return $query->getResult();
     }
 
-    /**
-     * Returns the first role found of a user or a group in a workspace.
-     *
-     * @param AbstractRoleSubject $subject   The subject of the role
-     * @param AbstractWorkspace   $workspace The workspace the role should be bound to
-     *
-     * @return null|Role
-     */
-    public function findWorkspaceRole(AbstractRoleSubject $subject, AbstractWorkspace $workspace)
-    {
-        $roles = $this->findByWorkspace($workspace);
-
-        foreach ($roles as $role) {
-            foreach ($subject->getRoles() as $subjectRole) {
-                if ($subjectRole == $role->getName()) {
-                    return $role;
-                }
-            }
-        }
-
-        return null;
-    }
-
     public function findByUserAndWorkspace(User $user, AbstractWorkspace $workspace)
     {
         $dql = "
