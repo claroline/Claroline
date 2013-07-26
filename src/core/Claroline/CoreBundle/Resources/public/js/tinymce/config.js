@@ -2,8 +2,8 @@
 tinymce.create('tinymce.plugins.ExamplePlugin', {
     init : function (ed, url) {
         // Register an example button
-        ed.addButton('example', {
-            title : 'example',
+        ed.addButton('ressourceLinker', {
+            title : 'ressourceLinker',
             image : 'http://stfalcon.com/favicon.ico',
             onclick : function () {
                 Claroline.ResourceManager.picker('open');
@@ -14,4 +14,4 @@ tinymce.create('tinymce.plugins.ExamplePlugin', {
 });
 
 // Register plugin with a short name
-tinymce.PluginManager.add('example', tinymce.plugins.ExamplePlugin);
+tinymce.PluginManager.add('ressourceLinker', tinymce.plugins.ExamplePlugin);
