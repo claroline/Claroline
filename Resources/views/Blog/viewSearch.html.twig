@@ -5,11 +5,13 @@
 {% block title %}{{ _resource.name }}{% endblock %}
 
 {% block content %}
+    {% if is_granted('EDIT', blog) %}
     <p>
         <a href="{{ _path('icap_blog_post_new', {'blogId': _resource.id}) }}" class="btn">
             {{ 'new_post'|trans }}
         </a>
     </p>
+    {% endif %}
     <div class="alert alert-info">
         <a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" class="close" data-toggle="tooltip" title="{{ 'delete_filter'|trans({}, 'icap_blog') }}" data-placement="top" data-original-title="{{ 'delete_filter'|trans({}, 'icap_blog') }}">&times;</a>
         {{ "post_filtered_by_search"|trans({'%searchTerms%': search}, 'icap_blog')|raw }}.

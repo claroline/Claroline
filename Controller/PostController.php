@@ -43,7 +43,7 @@ class PostController extends Controller
      * @Route("/{blogId}/post/edit/{postSlug}", name="icap_blog_post_edit", requirements={"blogId" = "\d+"})
      *
      * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
-     * @ParamConverter("post", class="ICAPBlogBundle:Post", options={"slug" = "postSlug"})
+     * @ParamConverter("post", class="ICAPBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
      * @Template()
      */
     public function editAction(Request $request, Blog $blog, Post $post)
@@ -95,7 +95,7 @@ class PostController extends Controller
      * @Route("/{blogId}/post/delete/{postSlug}", name="icap_blog_post_delete", requirements={"blogId" = "\d+"})
      *
      * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
-     * @ParamConverter("post", class="ICAPBlogBundle:Post", options={"slug" = "postSlug"})
+     * @ParamConverter("post", class="ICAPBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
      * @Template()
      */
     public function deleteAction(Blog $blog, Post $post)
@@ -124,7 +124,7 @@ class PostController extends Controller
      * @Route("/{blogId}/post/publish/{postSlug}", name="icap_blog_post_publish", requirements={"blogId" = "\d+"})
      *
      * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
-     * @ParamConverter("post", class="ICAPBlogBundle:Post", options={"slug" = "postSlug"})
+     * @ParamConverter("post", class="ICAPBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
      * @Template()
      */
     public function publishAction(Blog $blog, Post $post)
@@ -145,7 +145,7 @@ class PostController extends Controller
      * @Route("/{blogId}/post/unpublish/{postSlug}", name="icap_blog_post_unpublish", requirements={"blogId" = "\d+"})
      *
      * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
-     * @ParamConverter("post", class="ICAPBlogBundle:Post", options={"slug" = "postSlug"})
+     * @ParamConverter("post", class="ICAPBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
      * @Template()
      */
     public function unpublishAction(Blog $blog, Post $post)

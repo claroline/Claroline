@@ -63,6 +63,7 @@ class Post extends Statusable
      * @var \Datetime $publicationDate
      *
      * @ORM\Column(type="datetime", name="publication_date", nullable=true)
+     * @Gedmo\Timestampable(on="create")
      * @Gedmo\Timestampable(on="change", field="status", value="1")
      */
     protected $publicationDate;
@@ -359,7 +360,7 @@ class Post extends Statusable
      */
     public function isPublished()
     {
-        return (null !== $this->getPublicationDate());
+        return $this->getStatus() === self::STATUS_PUBLISHED;
     }
 
     /**
@@ -419,8 +420,6 @@ class Post extends Statusable
      */
     public function unpublish()
     {
-        $this->publicationDate = null;
-
         return $this->setStatus(self::STATUS_UNPUBLISHED);
     }
 }
