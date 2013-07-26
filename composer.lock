@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "e4b60d3ef938aec1258ab2ead5e0c67c",
+    "hash": "9657ba08046b88406939c492f4e8d7d3",
     "packages": [
         {
             "name": "besimple/sso-auth-bundle",
@@ -110,12 +110,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/MigrationBundle.git",
-                "reference": "634779ca0af42da4aeb26e316648ae2de83bfccf"
+                "reference": "5bc19b79d054347f5b2d14c3dced1f545dcc9d75"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/MigrationBundle/zipball/634779ca0af42da4aeb26e316648ae2de83bfccf",
-                "reference": "634779ca0af42da4aeb26e316648ae2de83bfccf",
+                "url": "https://api.github.com/repos/claroline/MigrationBundle/zipball/5bc19b79d054347f5b2d14c3dced1f545dcc9d75",
+                "reference": "5bc19b79d054347f5b2d14c3dced1f545dcc9d75",
                 "shasum": ""
             },
             "require": {
@@ -125,7 +125,8 @@
                 "symfony/framework-bundle": "~2.0"
             },
             "require-dev": {
-                "jdorn/sql-formatter": "~1.0"
+                "jdorn/sql-formatter": "~1.0",
+                "mockery/mockery": "dev-master@dev"
             },
             "type": "bundle",
             "autoload": {
@@ -147,7 +148,7 @@
                 "Claroline",
                 "migration"
             ],
-            "time": "2013-06-25 06:34:35"
+            "time": "2013-07-23 13:19:17"
         },
         {
             "name": "claroline/taxonomy-bundle",
@@ -340,12 +341,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/collections.git",
-                "reference": "3db3ab843ff76774bee4679d4cb3a10cffb0a935"
+                "reference": "623caf42551b416460df786154d89bc50e3d1798"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/collections/zipball/3db3ab843ff76774bee4679d4cb3a10cffb0a935",
-                "reference": "3db3ab843ff76774bee4679d4cb3a10cffb0a935",
+                "url": "https://api.github.com/repos/doctrine/collections/zipball/623caf42551b416460df786154d89bc50e3d1798",
+                "reference": "623caf42551b416460df786154d89bc50e3d1798",
                 "shasum": ""
             },
             "require": {
@@ -388,7 +389,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -399,7 +400,7 @@
                 "collections",
                 "iterator"
             ],
-            "time": "2013-05-26 05:21:22"
+            "time": "2013-07-23 08:27:26"
         },
         {
             "name": "doctrine/common",
