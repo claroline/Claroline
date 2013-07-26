@@ -67,17 +67,13 @@ class ICAPBlogExtension extends \Twig_Extension
 
     public function highlight($sentence, $search)
     {
-        $searchParameters = explode(' ', $search);
-
-        array_walk($searchParameters, '');
+        $searchParameters = explode(' ', trim($search));
 
         $returnHighlightedString = $sentence;
 
         foreach($searchParameters as $searchParameter)
         {
-            if(strlen($searchParameter) > 3) {
-                $returnHighlightedString = preg_replace('/(' . $searchParameter . ')/','<strong>\1</strong>', $returnHighlightedString);
-            }
+            $returnHighlightedString = preg_replace('/(' . $searchParameter . ')/','<span class="highlight">\1</span>', $returnHighlightedString);
         }
 
         return $returnHighlightedString;

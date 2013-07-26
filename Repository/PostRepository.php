@@ -4,6 +4,7 @@ namespace ICAP\BlogBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use ICAP\BlogBundle\Entity\Blog;
+use ICAP\BlogBundle\Exception\TooMuchResultException;
 
 class PostRepository extends EntityRepository
 {
@@ -33,56 +34,51 @@ class PostRepository extends EntityRepository
      * @param string $search
      * @param bool   $executeQuery
      *
+     * @throws TooMuchResultException
      * @return \Doctrine\ORM\QueryBuilder
      */
     public function searchByBlog(Blog $blog, $search, $executeQuery = true)
     {
-        $dql = 'SELECT p
-                FROM ICAPBlogBundle:Post p
-                WHERE p.blog = :blogId
-        ';
-        $query = $this->getEntityManager()
-            ->createQuery($dql)
-            ->setParameter('blogId', $blog->getId())
-        ;
-
         $query = $this->createQueryBuilder('post')
             ->andWhere('post.blog = :blogId')
             ->setParameter('blogId', $blog->getId())
             ->orderBy('post.publicationDate', 'ASC')
         ;
 
-        $searchCombinations = $this->getSearchCombinations($search);
-        foreach($searchCombinations as $key => $searchParameter)
+        $forbiddenWords = array('le', 'la', 'là', 'les', 'des', 'de', 'du', 'en', 'et', 'à', 'dans', 'me', 'mes', 'mon', 'ma',
+            'te', 'tes', 'ton', 'ta', 'se', 'ses', 'son', 'sa', 'ça', 'un', 'une', 'ou', 'donc', 'il', 'elle',
+            'on', 'nous', 'vous', 'ils', 'elles', 'eux', 'mien', 'sien', 'pour', 'que', 'qui', 'quand', 'quoi', 'quel',
+            'quels', 'quelle', 'quelles', 'par', 'tout', 'tous', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+            'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+        );
+
+        $searchParameters = explode(' ', trim($search));
+        $titleCondition   = '';
+        $contentCondition = '';
+        $hasWords         = false;
+        foreach($searchParameters as $key => $searchParameter)
         {
-            if(strlen($searchParameter) > 3) {
-                $query
-                    ->orWhere('post.title LIKE :search' . $key)
-                    ->orWhere('post.content LIKE :search' . $key)
-                    ->setParameter('search' . $key, '%' . $searchParameter . '%')
-                ;
+            if(false === in_array($searchParameter, $forbiddenWords)) {
+                $hasWords = true;
+                $titleCondition .= "post.title LIKE :titleSearch$key";
+                $contentCondition .= "post.content LIKE :contentSearch$key";
+                if($key < count($searchParameters) - 1) {
+                    $titleCondition .= " AND ";
+                    $contentCondition .= " AND ";
+                }
+
+                $query->setParameter('titleSearch' . $key, '%' . $searchParameter . '%');
+                $query->setParameter('contentSearch' . $key, '%' . $searchParameter . '%');
             }
         }
 
-//        echo "<pre>";
-//        var_dump(preg_replace(array('/(FROM)/', '/(WHERE)/', '/(AND)/', '/(OR )/', '/(ORDER BY)/'), PHP_EOL . '\1', $query->getQuery()->getSQL()));
-//        echo "</pre>" . PHP_EOL;
-//        die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
-
-        return $executeQuery ? $query->getResult(): $query;
-    }
-
-    protected function getSearchCombinations($sentence)
-    {
-        $combinations = array($sentence);
-
-        $words      = explode(' ', $sentence);
-        $countWords = count($words);
-
-        for($i = 1; $i < $countWords; $i++) {
-            $combinations[] = implode(' ', array_slice($words, 0, $countWords - $i));
+        if($hasWords) {
+            $query->andWhere('(' . $titleCondition . ') OR (' . $contentCondition . ')');
+        }
+        else {
+            throw new TooMuchResultException();
         }
 
-        return $combinations;
+        return $executeQuery ? $query->getResult(): $query;
     }
 }

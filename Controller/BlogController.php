@@ -7,9 +7,11 @@ use ICAP\BlogBundle\Entity\Blog;
 use ICAP\BlogBundle\Entity\BlogOptions;
 use ICAP\BlogBundle\Entity\Post;
 use ICAP\BlogBundle\Entity\Statusable;
+use ICAP\BlogBundle\Exception\TooMuchResultException;
 use ICAP\BlogBundle\Form\BlogInfosType;
 use ICAP\BlogBundle\Form\BlogOptionsType;
 use ICAP\BlogBundle\Entity\Tag;
+use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
@@ -117,26 +119,36 @@ class BlogController extends Controller
         /** @var \ICAp\BlogBundle\Repository\PostRepository $postRepository */
         $postRepository = $this->get('icap.blog.post_repository');
 
-        /** @var \Doctrine\ORM\QueryBuilder $query */
-        $query = $postRepository->searchByBlog($blog, $search, false);
+        try
+        {
+            /** @var \Doctrine\ORM\QueryBuilder $query */
+            $query = $postRepository->searchByBlog($blog, $search, false);
 
-        if(!$this->isUserGranted("EDIT", $blog)) {
-            $query
-                ->andWhere('post.publicationDate IS NOT NULL')
-                ->andWhere('post.status = :publishedStatus')
-                ->setParameter('publishedStatus', Statusable::STATUS_PUBLISHED)
+            if(!$this->isUserGranted("EDIT", $blog)) {
+                $query
+                    ->andWhere('post.publicationDate IS NOT NULL')
+                    ->andWhere('post.status = :publishedStatus')
+                    ->setParameter('publishedStatus', Statusable::STATUS_PUBLISHED)
+                ;
+            }
+
+            $adapter = new DoctrineORMAdapter($query);
+            $pager   = new PagerFanta($adapter);
+
+            $pager
+                ->setMaxPerPage($blog->getOptions()->getPostPerPage())
+                ->setCurrentPage($page)
             ;
         }
-
-        $adapter = new DoctrineORMAdapter($query);
-        $pager   = new PagerFanta($adapter);
-
-        $pager->setMaxPerPage($blog->getOptions()->getPostPerPage());
-
-        try {
-            $pager->setCurrentPage($page);
-        } catch (NotValidCurrentPageException $exception) {
+        catch (NotValidCurrentPageException $exception) {
             throw new NotFoundHttpException();
+        }
+        catch(TooMuchResultException $exception) {
+            $this->get('session')->getFlashBag()->add('alert', $this->get('translator')->trans('icap_blog_post_search_too_much_result', array(), 'icap_blog'));
+            $adapter = new ArrayAdapter(array());
+            $pager   = new PagerFanta($adapter);
+
+            $pager->setCurrentPage($page);
         }
 
         return array(

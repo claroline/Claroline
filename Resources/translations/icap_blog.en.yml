@@ -40,6 +40,8 @@ icap_blog_post_configure_error: 'An error occured while configuring the blog'
 delete_filter: 'Delete filter'
 post_filtered_by_tag: "Post list filtred by tag <strong>%tagName%</strong>"
 post_filtered_by_author: "Post list filtred by author <strong>%authorName%</strong>"
+post_filtered_by_search: 'Post list filtered by search <strong>%searchTerms%</strong>'
 edit_blog_infos: "Edit blog's information"
 icap_blog_edit_infos_success: 'Blog information edited with success'
 icap_blog_edit_infos_error: 'An error occured while editing blog information'
+icap_blog_post_search_too_much_result: "Your search criteria are considered irrelevant, please use other key words."
