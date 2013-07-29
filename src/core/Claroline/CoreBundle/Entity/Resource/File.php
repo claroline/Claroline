@@ -6,7 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="claro_file")
+ * @ORM\Table(
+ *     name="claro_file",
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(name="unique_hashname", columns={"hash_name"})
+ *     }
+ * )
  */
 class File extends AbstractResource
 {

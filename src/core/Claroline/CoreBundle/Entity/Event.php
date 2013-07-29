@@ -44,7 +44,7 @@ class Event
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
      *     inversedBy="events", cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      */
     private $workspace;
 

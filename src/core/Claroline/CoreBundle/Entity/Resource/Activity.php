@@ -28,12 +28,12 @@ class Activity extends AbstractResource
     protected $resourcesActivities;
 
     /**
-     * @ORM\Column(type="datetime", name="start_date")
+     * @ORM\Column(type="datetime", name="start_date", nullable=true)
      */
     protected $startDate;
 
     /**
-     * @ORM\Column(type="datetime", name="end_date")
+     * @ORM\Column(type="datetime", name="end_date", nullable=true)
      */
     protected $endDate;
 

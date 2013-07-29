@@ -35,7 +35,7 @@ class Theme
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
-     * @ORM\JoinColumn(name="plugin_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(name="plugin_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     protected $plugin;
 

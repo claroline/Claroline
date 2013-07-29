@@ -7,12 +7,11 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ToolRepository")
  * @ORM\Table(
- *       name="claro_tools",
- *       uniqueConstraints={
- *           @ORM\UniqueConstraint(name="tool_name_index", columns={"name"}),
- *           @ORM\UniqueConstraint( name="tool_plugin_id_index", columns={"plugin_id"})
- *      }
- *)
+ *     name="claro_tools",
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(name="unique_tool_name", columns={"name"})
+ *     }
+ * )
  */
 class Tool
 {
@@ -27,10 +26,12 @@ class Tool
      * @ORM\Column(name="name", type="string")
      */
     protected $name;
+
     /**
      * @ORM\Column(name="display_name", type="string", nullable=true)
      */
     protected $displayName;
+
     /**
      * @ORM\Column(name="class", type="string")
      */
@@ -74,7 +75,7 @@ class Tool
     private $isVisible = true;
 
     /**
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
      * @ORM\JoinColumn(name="plugin_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      */
     protected $plugin;

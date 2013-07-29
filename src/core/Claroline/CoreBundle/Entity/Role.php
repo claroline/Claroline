@@ -14,7 +14,12 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\RoleRepository")
- * @ORM\Table(name="claro_role")
+ * @ORM\Table(
+ *      name="claro_role",
+ *      uniqueConstraints={
+ *          @ORM\UniqueConstraint(name="unique_role_name", columns={"name"})
+ *      }
+ * )
  * @ORM\HasLifecycleCallbacks
  * @DoctrineAssert\UniqueEntity("name")
  */
@@ -32,7 +37,7 @@ class Role implements RoleInterface
     protected $id;
 
     /**
-     * @ORM\Column(name="name", type="string", length=50)
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
      * @Assert\NotBlank()
      */
     protected $name;
@@ -105,7 +110,7 @@ class Role implements RoleInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace", inversedBy="roles")
-     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     protected $workspace;
 
