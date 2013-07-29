@@ -23,7 +23,6 @@
         "doctrine/doctrine-migrations-bundle": "dev-master",
         "doctrine/doctrine-fixtures-bundle": "dev-master",
         "friendsofsymfony/jsrouting-bundle": "dev-master",
-        "mikey179/vfsStream": "dev-master",
         "stfalcon/tinymce-bundle": "dev-master",
         "claroline/front-end-bundle": "dev-master",
         "claroline/taxonomy-bundle": "dev-master",
@@ -41,7 +40,8 @@
     },
     "require-dev": {
         "mockery/mockery": "dev-master@dev",
-        "hamcrest/hamcrest": "1.1.0"
+        "hamcrest/hamcrest": "1.1.0",
+        "mikey179/vfsStream": "dev-master"
     },
     "repositories": [
         {
