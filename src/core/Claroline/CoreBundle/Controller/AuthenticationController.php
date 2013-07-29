@@ -15,6 +15,7 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\Translator;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
 /**
  * Authentication/login controller.
  */
@@ -27,6 +28,7 @@ class AuthenticationController
     private $om;
     private $mailer;
     private $translator;
+    private $formFactory;
 
     /**
      * @DI\InjectParams({
@@ -36,7 +38,8 @@ class AuthenticationController
      *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
      *     "mailer"         = @DI\Inject("mailer"),
      *     "router"         = @DI\Inject("router"),
-     *     "translator"         = @DI\Inject("translator"),
+     *     "translator"     = @DI\Inject("translator"),
+     *     "formFactory"    = @DI\Inject("claroline.form.factory")
      * })
     */
     public function __construct(
@@ -46,7 +49,8 @@ class AuthenticationController
         ObjectManager $om,
         \Swift_Mailer $mailer,
         UrlGeneratorInterface $router,
-        Translator $translator
+        Translator $translator,
+        FormFactory $formFactory
     )
     {
         $this->request = $request;
@@ -56,6 +60,7 @@ class AuthenticationController
         $this->mailer = $mailer;
         $this->router = $router;
         $this->translator = $translator;
+        $this->formFactory = $formFactory;
     }
     /**
      * @Route(
@@ -89,6 +94,22 @@ class AuthenticationController
 
     /**
      * @Route(
+     *     "/reset",
+     *     name="claro_security_forgot_password",
+     *     options={"expose"=true}
+     * )
+     * @Template("ClarolineCoreBundle:Authentication:forgotPassword.html.twig")
+    */
+
+    public function forgotPasswordAction()
+    {
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_EMAIL, array(), null);
+
+        return array('form' => $form->createView());
+
+    }
+    /**
+     * @Route(
      *     "/sendmail",
      *     name="claro_security_send_token",
      *     options={"expose"=true}
@@ -98,8 +119,12 @@ class AuthenticationController
      */
     public function sendEmailAction()
     {
-        $email = $this->request->get('email');
-        $user = $this->userManager->getUserbyEmail($email);
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_EMAIL, array(), null);
+        $form->handleRequest($this->request);
+        if ($form->isValid()) {
+            $data = $form->getData();
+            $user = $this->userManager->getUserbyEmail($data['mail']);
+        }
 
         if (!empty($user)) {
             $user->setHashTime(time());
@@ -111,36 +136,25 @@ class AuthenticationController
                 'claro_security_reset_password',
                 array('hash' => $user->getResetPasswordHash())
             );
-            $data = '<p><a href="' . $link . '"/>Click me</a></p>';
+            $body = '<p><a href="' . $link . '"/>Click me</a></p>';
 
             $message = \Swift_Message::newInstance()
                 ->setSubject('Reset Your Password')
                 ->setFrom('noreply@claroline.net')
-                ->setTo($email)
-                ->setBody($data, 'text/html');
+                ->setTo($data['mail'])
+                ->setBody($body, 'text/html');
             $this->mailer->send($message);
 
-            return array('user' => $user);
+            return array(
+                'user' => $user,
+                'form' => $form->createView()
+                );
         }
 
         return array(
-            'error' => $this->translator->trans('no_email', array(), 'platform'),
-            'user' => ''
-        );
-    }
-    /**
-     * @Route(
-     *     "/reset",
-     *     name="claro_security_forgot_password",
-     *     options={"expose"=true}
-     * )
-     * @Template("ClarolineCoreBundle:Authentication:forgotPassword.html.twig")
-    */
-
-    public function forgotPasswordAction()
-    {
-        return array();
-
+              'error' => $this->translator->trans('no_email', array(), 'platform'),
+              'form' => $form->createView()
+         );
     }
     /**
      * @Route(
@@ -157,14 +171,21 @@ class AuthenticationController
         $user = $this->userManager->getResetPasswordHash($hash);
 
         if (empty($user)) {
-            return array('error' => $this->translator->trans('no_email', array(), 'platform'));
+            return array(
+                'error' => $this->translator->trans('url_invalid', array(), 'platform'),
+                );
         }
 
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array($user->getId()), null);
         $currentTime = time();
 
         // the link is valid for 24h
         if ($currentTime - (3600 * 24) < $user->getHashTime()) {
-            return array( 'user' => $user);
+
+            return array(
+                'id' => $user->getId(),
+                'form' => $form->createView()
+                );
         }
 
         return array('error' => $this->translator->trans('link_outdated', array(), 'platform'));
@@ -182,12 +203,14 @@ class AuthenticationController
     */
     public function newPasswordAction()
     {
-        $plainPassword = $this->request->get('pwd');
-        $id = $this->request->get('id');
-        $user = $this->userManager->getUserById($id);
-        $repeat = $this->request->get('repeat');
 
-        if ($plainPassword === $repeat) {
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array(), null);
+        $form->handleRequest($this->request);
+        if ($form->isValid()) {
+            $user = $form->getData();
+            $plainPassword = $user['plainPassword'];
+            $id = $user['id'];
+            $user = $this->userManager->getUserById($id);
             $user->setPlainPassword($plainPassword);
             $this->om->persist($user);
             $this->om->flush();

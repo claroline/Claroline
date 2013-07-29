@@ -72,6 +72,7 @@ done_on: 'effectuée sur'
 download: Télécharger
 downloads: Nb tchgr.
 edit: Modifier
+email_form_mail : 'Entrer votre adresse email'
 enter_tag_name_message: 'Veuillez entrer un nom de Tag'
 export: Exporter
 fast_answer: 'Réponse rapide'
@@ -343,6 +344,8 @@ remove_group_s_confirm_message: 'groupe(s) supprimé(s)'
 remove_user_s_confirm_message: 'utilisateur(s) supprimé(s)'
 rename: Renommer
 reset: Réinitialiser
+reset_pwd_form_plainPassword_first: "Nouveau mot de passe"
+reset_pwd_form_plainPassword_second : "Répéter le mot de passe"
 resource: Ressource
 resource_action_denied_message: 'L''action %action% n''a pas pu être exécutée sur la resource ''%path%'': accès refusé.'
 resource_creation_denied: 'Vous n''avez pas la permission de créer une ressource dans le répertoire ''%path'': accès refusé.'
