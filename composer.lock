@@ -110,22 +110,25 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/MigrationBundle.git",
-                "reference": "5bc19b79d054347f5b2d14c3dced1f545dcc9d75"
+                "reference": "e6e228deca9c374e580a02ad5b716433776c4936"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/MigrationBundle/zipball/5bc19b79d054347f5b2d14c3dced1f545dcc9d75",
-                "reference": "5bc19b79d054347f5b2d14c3dced1f545dcc9d75",
+                "url": "https://api.github.com/repos/claroline/MigrationBundle/zipball/e6e228deca9c374e580a02ad5b716433776c4936",
+                "reference": "e6e228deca9c374e580a02ad5b716433776c4936",
                 "shasum": ""
             },
             "require": {
-                "doctrine/doctrine-bundle": "~1.0",
-                "doctrine/migrations": "*",
+                "doctrine/migrations": "dev-master",
+                "doctrine/orm": "~2.2",
+                "jdorn/sql-formatter": "~1.0",
                 "php": ">=5.3.3",
-                "symfony/framework-bundle": "~2.0"
+                "symfony/console": "~2.0",
+                "symfony/framework-bundle": "~2.0",
+                "symfony/twig-bridge": "~2.0",
+                "symfony/twig-bundle": "~2.0"
             },
             "require-dev": {
-                "jdorn/sql-formatter": "~1.0",
                 "mockery/mockery": "dev-master@dev"
             },
             "type": "bundle",
@@ -148,7 +151,7 @@
                 "Claroline",
                 "migration"
             ],
-            "time": "2013-07-23 13:19:17"
+            "time": "2013-07-25 15:35:19"
         },
         {
             "name": "claroline/taxonomy-bundle",
@@ -537,12 +540,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "2.4.0-RC2"
+                "reference": "fbce4b50a89352cfe600116ea7267bd1066dc972"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/2.4.0-RC2",
-                "reference": "2.4.0-RC2",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/fbce4b50a89352cfe600116ea7267bd1066dc972",
+                "reference": "fbce4b50a89352cfe600116ea7267bd1066dc972",
                 "shasum": ""
             },
             "require": {
@@ -599,7 +602,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2013-06-25 17:49:29"
+            "time": "2013-07-29 00:10:38"
         },
         {
             "name": "doctrine/doctrine-bundle",
