@@ -23,7 +23,8 @@
         "jdorn/sql-formatter": "~1.0"
     },
     "require-dev": {
-        "mockery/mockery": "dev-master@dev"
+        "mockery/mockery": "dev-master@dev",
+        "mikey179/vfsStream": "dev-master"
     },
     "autoload": {
         "psr-0": { "Claroline\\MigrationBundle": "" }
