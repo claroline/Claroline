@@ -44,12 +44,13 @@ class Manager
     {
         $bundle = $this->kernel->getBundle($bundleName);
         $platforms = $this->getAvailablePlatforms();
+        $version = date('YmdHis');
         $this->log("Generating migrations classes for '{$bundleName}'...");
 
         foreach ($platforms as $driverName => $platform) {
             $this->log(" - Generating migration class for {$driverName} driver...");
             $queries = $this->generator->generateMigrationQueries($bundle, $platform);
-            $this->writer->writeMigrationClass($bundle, $driverName, '123', $queries);
+            $this->writer->writeMigrationClass($bundle, $driverName, $version, $queries);
         }
     }
 

@@ -45,7 +45,7 @@ class ManagerTest extends MockeryTestCase
             ->andReturn(array('queries'));
         $this->writer->shouldReceive('writeMigrationClass')
             ->once()
-            ->with($bundle, 'driver', '123', array('queries'));
+            ->with($bundle, 'driver', m::any(), array('queries'));
 
         $manager->generateBundleMigration('FooBundle');
     }
