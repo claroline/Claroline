@@ -58,7 +58,7 @@ class DisplayConfig
     protected $widget;
 
     /**
-     * @ORM\Column(type="boolean", name="is_locked", nullable=false)
+     * @ORM\Column(type="boolean", name="is_locked")
      */
     protected $isLocked;
 

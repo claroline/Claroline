@@ -133,7 +133,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      *     inversedBy="personalUser",
      *     cascade={"remove"}
      * )
-     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", onDelete="SET NULL", nullable=false)
+     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", onDelete="SET NULL", nullable=true)
      */
     protected $personalWorkspace;
 
@@ -235,7 +235,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         if (null === $password) {
             return;
         }
-        
+
         $this->password = $password;
     }
 
@@ -419,7 +419,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     {
         $this->resetPasswordHash = $resetPasswordHash;
     }
-    
+
     public function getHashTime() {
         return $this->hashTime;
     }

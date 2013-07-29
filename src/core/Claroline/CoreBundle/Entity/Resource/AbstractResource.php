@@ -95,7 +95,7 @@ abstract class AbstractResource
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceIcon",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="icon_id", referencedColumnName="id",onDelete="CASCADE", nullable=true)
+     * @ORM\JoinColumn(name="icon_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     protected $icon;
 
@@ -121,7 +121,7 @@ abstract class AbstractResource
      *     fetch="EAGER"
      * )
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     *     @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      * })
      */
     protected $parent;
@@ -155,13 +155,13 @@ abstract class AbstractResource
      *      targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
      *      inversedBy="resources"
      * )
-     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id",onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     protected $workspace;
 
     /**
      * @Gedmo\TreePath(separator="`")
-     * @ORM\Column(name="path", type="string", length=3000, nullable=false)
+     * @ORM\Column(name="path", type="string", length=3000)
      */
     protected $path;
 

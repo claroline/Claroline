@@ -7,13 +7,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceActivityRepository")
  * @ORM\Table(
- *      name="claro_resource_activity",
- *      uniqueConstraints={
- *          @ORM\UniqueConstraint(
- *          name="user",columns={"activity_id","resource_id"}
- *          )
- *      }
- *
+ *     name="claro_resource_activity",
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(name="user", columns={"activity_id", "resource_id"})
+ *     }
  * )
  */
 class ResourceActivity
@@ -22,7 +19,6 @@ class ResourceActivity
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     *
      */
     protected $id;
 
@@ -42,7 +38,7 @@ class ResourceActivity
     private $resource;
 
     /**
-     * @ORM\Column(type="string", nullable=true, name="sequence_order", length=255)
+     * @ORM\Column(name="sequence_order", type="integer", nullable=true)
      */
     protected $sequenceOrder;
 

@@ -8,7 +8,12 @@ use Claroline\CoreBundle\Entity\Plugin;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceTypeRepository")
- * @ORM\Table(name="claro_resource_type")
+ * @ORM\Table(
+ *     name="claro_resource_type",
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(name="unique_res_type_name", columns={"name"})
+ *     }
+ * )
  */
 class ResourceType
 {
@@ -43,7 +48,10 @@ class ResourceType
     protected $customActions;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=false)
+     * @ORM\Column(type="string", length=255, nullable=true)
+     *
+     * @todo this attribute should not be nullable (a modification of "inherited"
+     * resource types -- see SiteBundle for an example -- is needed)
      */
     protected $class;
 

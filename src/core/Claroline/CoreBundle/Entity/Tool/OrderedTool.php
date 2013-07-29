@@ -14,9 +14,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  * @ORM\Table(
  *     name="claro_ordered_tool",
  *     uniqueConstraints={
- *         @ORM\UniqueConstraint(name="tool", columns={"tool_id", "workspace_id"}),
- *         @ORM\UniqueConstraint(name="display", columns={"workspace_id", "display_order"}),
- *         @ORM\UniqueConstraint(name="workspace", columns={"workspace_id", "name"})
+ *         @ORM\UniqueConstraint(name="unique_tool_ws_usr", columns={"tool_id", "workspace_id", "user_id"}),
+ *         @ORM\UniqueConstraint(name="unique_workspace_name", columns={"workspace_id", "name"})
  *     }
  * )
  * @DoctrineAssert\UniqueEntity({"name", "workspace"})
@@ -44,7 +43,7 @@ class OrderedTool
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\Tool",
      *     cascade={"persist"}, inversedBy="orderedTools"
      * )
-     * @ORM\JoinColumn(name="tool_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="tool_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     protected $tool;
 
