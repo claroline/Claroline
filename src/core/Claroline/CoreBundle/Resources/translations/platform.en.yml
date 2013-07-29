@@ -72,6 +72,7 @@ done_on: 'done on'
 download: Download
 downloads: Downloads
 edit: Edit
+email_form_mail : 'Enter your platform email adress'
 enter_tag_name_message: 'Please enter a tag name'
 export: Export
 fast_answer: 'Fast answer'
@@ -343,6 +344,8 @@ remove_group_s_confirm_message: 'group(s) removed'
 remove_user_s_confirm_message: 'user(s) removed'
 rename: Rename
 reset: Reset
+reset_pwd_form_plainPassword_first: "New password"
+reset_pwd_form_plainPassword_second : "Repeat the password"
 resource: Resource
 resource_action_denied_message: 'The action %action% couldn''t be done on ''%path%'': acces denied.'
 resource_creation_denied: 'You don''t have the permission to create in the directory ''%path'': access denied'
