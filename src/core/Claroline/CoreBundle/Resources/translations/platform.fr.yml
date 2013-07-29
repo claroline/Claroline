@@ -40,6 +40,7 @@ analytics_home: Vue de l'ensemble
 analytics_connections: Visites utilisateurs
 analytics_resources: Contenu plateforme
 analytics_top: Top des activités
+available_workspaces: 'Espaces d''activités disponibles'
 by: par
 cancel: Annuler
 choose_resource_form_type: 'Type de ressource'
@@ -85,6 +86,7 @@ files: Fichiers
 filter: Filtrer
 find_workspaces: 'Tous les espaces'
 first_name: Prénom
+forgot_password: 'Mot de passe oublié ?'
 form_role: Rôle
 from: Depuis
 from_message: De
@@ -95,14 +97,18 @@ group_form_ownedRoles: Rôles
 group_form_platformRole: Role
 group_parameter: 'Paramètres du groupe'
 groups: Groupes
-groups_list: "Liste des groupes"
+groups_list: 'Liste des groupes'
+has_not_been_imported: 'n''a pas été importé(e)'
+has_not_been_imported_into_the_group: 'n''a pas été importé(e) dans le groupe'
 history: Historique
 home: Accueil
 id: Id
 informations: Informations
 instructions: Consignes
 import: Importer
+import_users: 'Importer des utilisateurs'
 import_user_file_file: Importer depuis fichier
+invalid_csv_file: 'Le fichier CSV n''est pas valide'
 last_30_days_activity: Activités des 30 derniers jours
 last_name: Nom
 link: Lien
@@ -249,12 +255,15 @@ copiable: 'Copiable'
 editable: 'Modifiable'
 yes: 'oui'
 no: 'non'
+no_email: 'Ce mail ne correspond pas a unitilisateur inscrit'
+link_outdated : 'le luen n''est plus valide'
 login: Connexion
 login_failure: 'La connexion a échoué. Vérifiez que votre nom d''utilisateur et votre mot de passe sont corrects.'
 logout: Déconnexion
 mail: Mail
 mail_form_content: Contenu
 mail_form_object: Objet
+mail_sent : 'Un email vient de vous être envoyé, vérifier votre dossier spam au cas où vous ne verrais pas l''email'
 manage_rights: 'Gérer les droits'
 manager: Gestionnaire
 media_most_viewed: Media les plus consultés
@@ -295,6 +304,9 @@ owner: Propriétaire
 owner_s: Propriétaire(s)
 parameters: Paramètres
 password: 'Mot de passe'
+password_email_message: 'Vous avez demander de Réinitialiser votre mot de passe. CLiquez sur ce lien , si vous n''etes pas l''orgine de cette action , ignorez ce message'
+password_missmatch: 'les mots de passes ne correspondent pas'
+password_ok : 'Votre mot de passe à été modifié , vous pouvez vous connecter'
 paste: Coller
 path: Emplacement
 permissions: Permissions
@@ -321,8 +333,10 @@ profile_form_platformRoles: Rôles
 profile_form_username: 'Nom d''utilisateur'
 properties: Propriétés
 public: Publique
+public_workspaces: 'Espaces d''activités publiques'
 recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'
 register: Inscription
+register_to_a_workspace: 'S''inscrire à un espace d''activités'
 registered_groups: 'Groupes enregistrés'
 registered_users: 'Utilisateurs enregistrés'
 remove_group_s_confirm_message: 'groupe(s) supprimé(s)'
@@ -453,16 +467,22 @@ workspace_delete: 'Supprimer l''espace d''activités'
 workspace_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer cet espace d''activités ?'
 workspace_delete_confirm_title: 'Confirmation de suppression'
 workspace_edit_form_code: Code
+workspace_edit_form_displayable: Publique
 workspace_edit_form_name: Nom
+workspace_edit_form_selfRegistration: 'Inscription publique'
+workspace_edit_form_selfUnregistration: 'Désinscription publique'
 workspace_form_code: Code
+workspace_form_displayable: Publique
 workspace_form_name: Nom
 workspace_form_template: Modèle
 workspace_form_type: Type
 workspace_order_tool_edit_form_name: Nom
+workspace_registration_confirm_title: 'Voulez-vous vous inscrire à cet espace d''activités ?'
 workspace_resource: Ressources
 workspace_tag_form_name: Nom
 workspace_template_form_name: Nom
 workspace_tools: Outils
+workspace_unregistration_confirm_title: 'Voulez-vous vous désinscrire de cet espace d''activités ?'
 workspace_welcome: Accueil
 workspaces: 'Espaces d''activités'
 ws_creator: 'Créateur d''espaces'

@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Mockery as m;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
@@ -348,6 +349,46 @@ class ToolManagerTest extends MockeryTestCase
         $manager->shouldReceive('getWorkspaceExistingTools')->with($workspace)->once()->andReturn(array('2'));
         $expected = array('2', '1');
         $this->assertEquals($expected, $manager->getWorkspaceToolsConfigurationArray($workspace));
+    }
+
+    public function testGetOrderedToolsByWorkspaceAndRoles()
+    {
+        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $roleA = new Role();
+        $roleB = new Role();
+        $roles = array($roleA, $roleB);
+        $orderedTools = array('ordered_tool_1', 'ordered_tool_2');
+
+        $this->orderedToolRepo
+            ->shouldReceive('findByWorkspaceAndRoles')
+            ->with($workspace, $roles)
+            ->once()
+            ->andReturn($orderedTools);
+
+        $this->assertEquals(
+            $orderedTools,
+            $this->getManager()->getOrderedToolsByWorkspaceAndRoles($workspace, $roles)
+        );
+    }
+
+    public function testGetDisplayedByRolesAndWorkspace()
+    {
+        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $roleA = new Role();
+        $roleB = new Role();
+        $roles = array($roleA, $roleB);
+        $tools = array('tool_1', 'tool_2');
+
+        $this->toolRepo
+            ->shouldReceive('findDisplayedByRolesAndWorkspace')
+            ->with($roles, $workspace)
+            ->once()
+            ->andReturn($tools);
+
+        $this->assertEquals(
+            $tools,
+            $this->getManager()->getDisplayedByRolesAndWorkspace($roles, $workspace)
+        );
     }
 
     public function removeDesktopToolProvider()
