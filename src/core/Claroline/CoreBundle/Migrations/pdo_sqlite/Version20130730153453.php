@@ -8,12 +8,23 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/07/30 09:22:50
+ * Generation date: 2013/07/30 03:34:54
  */
-class Version20130730092250 extends AbstractMigration
+class Version20130730153453 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->addSql("
+            CREATE TABLE claro_content (
+                id INTEGER NOT NULL, 
+                title VARCHAR(255) DEFAULT NULL, 
+                content CLOB DEFAULT NULL, 
+                generated_content CLOB DEFAULT NULL, 
+                created DATETIME NOT NULL, 
+                modified DATETIME NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
         $this->addSql("
             CREATE TABLE claro_user (
                 id INTEGER NOT NULL, 
@@ -42,6 +53,32 @@ class Version20130730092250 extends AbstractMigration
             CREATE UNIQUE INDEX UNIQ_EB8D285282D40A1F ON claro_user (workspace_id)
         ");
         $this->addSql("
+            CREATE TABLE claro_user_group (
+                user_id INTEGER NOT NULL, 
+                group_id INTEGER NOT NULL, 
+                PRIMARY KEY(user_id, group_id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_ED8B34C7A76ED395 ON claro_user_group (user_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_ED8B34C7FE54D947 ON claro_user_group (group_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_user_role (
+                user_id INTEGER NOT NULL, 
+                role_id INTEGER NOT NULL, 
+                PRIMARY KEY(user_id, role_id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_797E43FFA76ED395 ON claro_user_role (user_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_797E43FFD60322AC ON claro_user_role (role_id)
+        ");
+        $this->addSql("
             CREATE TABLE claro_group (
                 id INTEGER NOT NULL, 
                 name VARCHAR(255) NOT NULL, 
@@ -49,7 +86,20 @@ class Version20130730092250 extends AbstractMigration
             )
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX name ON claro_group (name)
+            CREATE UNIQUE INDEX group_unique_name ON claro_group (name)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_group_role (
+                group_id INTEGER NOT NULL, 
+                role_id INTEGER NOT NULL, 
+                PRIMARY KEY(group_id, role_id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_1CBA5A40FE54D947 ON claro_group_role (group_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_1CBA5A40D60322AC ON claro_group_role (role_id)
         ");
         $this->addSql("
             CREATE TABLE claro_role (
@@ -66,7 +116,7 @@ class Version20130730092250 extends AbstractMigration
             CREATE INDEX IDX_3177747182D40A1F ON claro_role (workspace_id)
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX unique_role_name ON claro_role (name)
+            CREATE UNIQUE INDEX role_unique_name ON claro_role (name)
         ");
         $this->addSql("
             CREATE TABLE claro_resource (
@@ -82,8 +132,8 @@ class Version20130730092250 extends AbstractMigration
                 creation_date DATETIME NOT NULL, 
                 modification_date DATETIME NOT NULL, 
                 name VARCHAR(255) NOT NULL, 
-                lvl INTEGER NOT NULL, 
-                path VARCHAR(3000) NOT NULL, 
+                lvl INTEGER DEFAULT NULL, 
+                path VARCHAR(3000) DEFAULT NULL, 
                 mime_type VARCHAR(255) DEFAULT NULL, 
                 discr VARCHAR(255) NOT NULL, 
                 PRIMARY KEY(id)
@@ -146,6 +196,21 @@ class Version20130730092250 extends AbstractMigration
             CREATE INDEX IDX_D9028545727ACA70 ON claro_workspace (parent_id)
         ");
         $this->addSql("
+            CREATE TABLE claro_workspace_aggregation (
+                aggregator_workspace_id INTEGER NOT NULL, 
+                workspace_id INTEGER NOT NULL, 
+                PRIMARY KEY(
+                    aggregator_workspace_id, workspace_id
+                )
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_D012AF0FA08DFE7A ON claro_workspace_aggregation (aggregator_workspace_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_D012AF0F82D40A1F ON claro_workspace_aggregation (workspace_id)
+        ");
+        $this->addSql("
             CREATE TABLE claro_user_message (
                 id INTEGER NOT NULL, 
                 user_id INTEGER NOT NULL, 
@@ -183,10 +248,23 @@ class Version20130730092250 extends AbstractMigration
             CREATE INDEX IDX_6CF1320EA76ED395 ON claro_ordered_tool (user_id)
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX unique_tool_ws_usr ON claro_ordered_tool (tool_id, workspace_id, user_id)
+            CREATE UNIQUE INDEX ordered_tool_unique_tool_ws_usr ON claro_ordered_tool (tool_id, workspace_id, user_id)
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX unique_workspace_name ON claro_ordered_tool (workspace_id, name)
+            CREATE UNIQUE INDEX ordered_tool_unique_name_by_workspace ON claro_ordered_tool (workspace_id, name)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_ordered_tool_role (
+                orderedtool_id INTEGER NOT NULL, 
+                role_id INTEGER NOT NULL, 
+                PRIMARY KEY(orderedtool_id, role_id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_9210497679732467 ON claro_ordered_tool_role (orderedtool_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_92104976D60322AC ON claro_ordered_tool_role (role_id)
         ");
         $this->addSql("
             CREATE TABLE claro_resource_rights (
@@ -211,6 +289,19 @@ class Version20130730092250 extends AbstractMigration
             CREATE UNIQUE INDEX user ON claro_resource_rights (resource_id, role_id)
         ");
         $this->addSql("
+            CREATE TABLE claro_list_type_creation (
+                right_id INTEGER NOT NULL, 
+                resource_type_id INTEGER NOT NULL, 
+                PRIMARY KEY(right_id, resource_type_id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_84B4BEBA54976835 ON claro_list_type_creation (right_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_84B4BEBA98EC6B7B ON claro_list_type_creation (resource_type_id)
+        ");
+        $this->addSql("
             CREATE TABLE claro_resource_type (
                 id INTEGER NOT NULL, 
                 plugin_id INTEGER DEFAULT NULL, 
@@ -228,7 +319,7 @@ class Version20130730092250 extends AbstractMigration
             CREATE INDEX IDX_AEC62693727ACA70 ON claro_resource_type (parent_id)
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX unique_res_type_name ON claro_resource_type (name)
+            CREATE UNIQUE INDEX res_type_unique_name ON claro_resource_type (name)
         ");
         $this->addSql("
             CREATE TABLE claro_theme (
@@ -288,6 +379,32 @@ class Version20130730092250 extends AbstractMigration
         ");
         $this->addSql("
             CREATE INDEX IDX_97FAB91FD60322AC ON claro_log (role_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_log_doer_platform_roles (
+                log_id INTEGER NOT NULL, 
+                role_id INTEGER NOT NULL, 
+                PRIMARY KEY(log_id, role_id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_706568A5EA675D86 ON claro_log_doer_platform_roles (log_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_706568A5D60322AC ON claro_log_doer_platform_roles (role_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_log_doer_workspace_roles (
+                log_id INTEGER NOT NULL, 
+                role_id INTEGER NOT NULL, 
+                PRIMARY KEY(log_id, role_id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_8A8D2F47EA675D86 ON claro_log_doer_workspace_roles (log_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_8A8D2F47D60322AC ON claro_log_doer_workspace_roles (role_id)
         ");
         $this->addSql("
             CREATE TABLE claro_log_desktop_widget_config (
@@ -351,7 +468,7 @@ class Version20130730092250 extends AbstractMigration
             )
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX tool ON claro_workspace_template (hash)
+            CREATE UNIQUE INDEX template_unique_hash ON claro_workspace_template (hash)
         ");
         $this->addSql("
             CREATE TABLE claro_workspace_tag_hierarchy (
@@ -387,7 +504,7 @@ class Version20130730092250 extends AbstractMigration
             CREATE INDEX IDX_78839310BAD26311 ON claro_rel_workspace_tag (tag_id)
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX workspace_id ON claro_rel_workspace_tag (workspace_id, tag_id)
+            CREATE UNIQUE INDEX rel_workspace_tag_unique_combination ON claro_rel_workspace_tag (workspace_id, tag_id)
         ");
         $this->addSql("
             CREATE TABLE claro_workspace_tag (
@@ -401,7 +518,7 @@ class Version20130730092250 extends AbstractMigration
             CREATE INDEX IDX_C8EFD7EFA76ED395 ON claro_workspace_tag (user_id)
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX tool ON claro_workspace_tag (user_id, name)
+            CREATE UNIQUE INDEX tag_unique_name_and_user ON claro_workspace_tag (user_id, name)
         ");
         $this->addSql("
             CREATE TABLE claro_plugin (
@@ -414,7 +531,7 @@ class Version20130730092250 extends AbstractMigration
             )
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX plugin ON claro_plugin (vendor_name, short_name)
+            CREATE UNIQUE INDEX plugin_unique_name ON claro_plugin (vendor_name, short_name)
         ");
         $this->addSql("
             CREATE TABLE claro_message (
@@ -483,7 +600,7 @@ class Version20130730092250 extends AbstractMigration
             CREATE INDEX IDX_DCF37C7E89329D25 ON claro_resource_activity (resource_id)
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX user ON claro_resource_activity (activity_id, resource_id)
+            CREATE UNIQUE INDEX resource_activity_unique_combination ON claro_resource_activity (activity_id, resource_id)
         ");
         $this->addSql("
             CREATE TABLE claro_link (
@@ -510,7 +627,7 @@ class Version20130730092250 extends AbstractMigration
             )
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_478C586179F0D498 ON claro_resource_icon (shortcut_id)
+            CREATE INDEX IDX_478C586179F0D498 ON claro_resource_icon (shortcut_id)
         ");
         $this->addSql("
             CREATE TABLE claro_file (
@@ -521,7 +638,7 @@ class Version20130730092250 extends AbstractMigration
             )
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX unique_hashname ON claro_file (hash_name)
+            CREATE UNIQUE INDEX file_unique_hashname ON claro_file (hash_name)
         ");
         $this->addSql("
             CREATE TABLE claro_text_revision (
@@ -597,7 +714,7 @@ class Version20130730092250 extends AbstractMigration
             CREATE INDEX IDX_60F90965EC942BCF ON claro_tools (plugin_id)
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX unique_tool_name ON claro_tools (name)
+            CREATE UNIQUE INDEX tool_unique_name ON claro_tools (name)
         ");
         $this->addSql("
             CREATE TABLE claro_widget_display (
@@ -639,18 +756,7 @@ class Version20130730092250 extends AbstractMigration
             CREATE INDEX IDX_76CA6C4FEC942BCF ON claro_widget (plugin_id)
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX tool ON claro_widget (name)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_content (
-                id INTEGER NOT NULL, 
-                title VARCHAR(255) DEFAULT NULL, 
-                content CLOB DEFAULT NULL, 
-                generated_content CLOB DEFAULT NULL, 
-                created DATETIME NOT NULL, 
-                modified DATETIME NOT NULL, 
-                PRIMARY KEY(id)
-            )
+            CREATE UNIQUE INDEX widget_unique_name ON claro_widget (name)
         ");
         $this->addSql("
             CREATE TABLE claro_content2region (
@@ -741,10 +847,22 @@ class Version20130730092250 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
+            DROP TABLE claro_content
+        ");
+        $this->addSql("
             DROP TABLE claro_user
         ");
         $this->addSql("
+            DROP TABLE claro_user_group
+        ");
+        $this->addSql("
+            DROP TABLE claro_user_role
+        ");
+        $this->addSql("
             DROP TABLE claro_group
+        ");
+        $this->addSql("
+            DROP TABLE claro_group_role
         ");
         $this->addSql("
             DROP TABLE claro_role
@@ -756,13 +874,22 @@ class Version20130730092250 extends AbstractMigration
             DROP TABLE claro_workspace
         ");
         $this->addSql("
+            DROP TABLE claro_workspace_aggregation
+        ");
+        $this->addSql("
             DROP TABLE claro_user_message
         ");
         $this->addSql("
             DROP TABLE claro_ordered_tool
         ");
         $this->addSql("
+            DROP TABLE claro_ordered_tool_role
+        ");
+        $this->addSql("
             DROP TABLE claro_resource_rights
+        ");
+        $this->addSql("
+            DROP TABLE claro_list_type_creation
         ");
         $this->addSql("
             DROP TABLE claro_resource_type
@@ -772,6 +899,12 @@ class Version20130730092250 extends AbstractMigration
         ");
         $this->addSql("
             DROP TABLE claro_log
+        ");
+        $this->addSql("
+            DROP TABLE claro_log_doer_platform_roles
+        ");
+        $this->addSql("
+            DROP TABLE claro_log_doer_workspace_roles
         ");
         $this->addSql("
             DROP TABLE claro_log_desktop_widget_config
@@ -844,9 +977,6 @@ class Version20130730092250 extends AbstractMigration
         ");
         $this->addSql("
             DROP TABLE claro_widget
-        ");
-        $this->addSql("
-            DROP TABLE claro_content
         ");
         $this->addSql("
             DROP TABLE claro_content2region
