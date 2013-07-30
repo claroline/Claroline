@@ -15,3 +15,4 @@ tinymce.create('tinymce.plugins.ExamplePlugin', {
 
 // Register plugin with a short name
 tinymce.PluginManager.add('ressourceLinker', tinymce.plugins.ExamplePlugin);
+tinymce.activeEditor.setContent('');
