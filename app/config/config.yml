@@ -114,7 +114,7 @@ idci_exporter:
 stfalcon_tinymce:
     include_jquery: false
     tinymce_jquery: true
-    textarea_class: 'tinymce'
+    selector: '.tinymce'
     external_plugins:
             imagemanager:
                 url: 'asset[bundles/clarolinecore/js/tinymce/config.js]'
