@@ -1692,7 +1692,7 @@
                 {
                     "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -2304,12 +2304,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/stfalcon/TinymceBundle.git",
-                "reference": "v0.3.0"
+                "reference": "05341ae853f6470d6943e822e47410cb69b8554e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stfalcon/TinymceBundle/zipball/v0.3.0",
-                "reference": "v0.3.0",
+                "url": "https://api.github.com/repos/stfalcon/TinymceBundle/zipball/05341ae853f6470d6943e822e47410cb69b8554e",
+                "reference": "05341ae853f6470d6943e822e47410cb69b8554e",
                 "shasum": ""
             },
             "require": {
@@ -2353,7 +2353,7 @@
                 "tinymce",
                 "wysiwyg"
             ],
-            "time": "2013-07-30 07:59:56"
+            "time": "2013-07-29 09:26:49"
         },
         {
             "name": "stof/doctrine-extensions-bundle",
@@ -3007,8 +3007,8 @@
             "require-dev": {
                 "doctrine/doctrine-bundle": "*",
                 "doctrine/orm": "*",
-                "zendframework/zend-crypt": "~2.0,!=2.1.1",
-                "zenstruck/slugify-bundle": "~1.0"
+                "zendframework/zend-crypt": ">=2.0,<3.0,!=2.1.1",
+                "zenstruck/slugify-bundle": ">=1.0,<2.0"
             },
             "suggest": {
                 "zendframework/zend-crypt": "Required when using the ajax entity type 'use_controller' option. Version: ~2.0,!=2.1.1",
