@@ -60,17 +60,17 @@ class DisplayConfig
     /**
      * @ORM\Column(type="boolean", name="is_locked")
      */
-    protected $isLocked;
+    protected $isLocked = false;
 
     /**
      * @ORM\Column(type="boolean", name="is_visible")
      */
-    protected $isVisible;
+    protected $isVisible = false;
 
     /**
      * @ORM\Column(type="boolean", name="is_desktop")
      */
-    protected $isDesktop;
+    protected $isDesktop = false;
 
     public function getId()
     {
