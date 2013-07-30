@@ -33,7 +33,7 @@ class ResourceTypeCustomAction
      *     inversedBy="customActions",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id", nullable=false, onDelete="SET NULL")
+     * @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     protected $resourceType;
 
