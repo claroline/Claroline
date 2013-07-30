@@ -31,7 +31,7 @@
         "white-october/pagerfanta-bundle": "dev-master",
         "idci/exporter-bundle": "dev-master",
         "leafo/lessphp": "0.3.9",
-        "twitter/bootstrap": "2.3.1",
+        "twbs/bootstrap": "2.3.1",
         "fortawesome/fontawesome": "dev-master",
         "xaguilars/bootstrap-colorpicker": "dev-master",
         "zenstruck/form-bundle": "dev-master",
