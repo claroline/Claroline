@@ -18,6 +18,7 @@ class MigrationBuilder
     private $prodMigrationsRelativePath;
     private $testMigrationsRelativePath;
     private $includeTestMigrations;
+    private $driverName;
 
     /**
      * @DI\InjectParams({
@@ -38,9 +39,9 @@ class MigrationBuilder
     {
         $this->connection = $connection;
         $this->migrationHelper = $helper;
-        $driverName = $connection->getDriver()->getName();
-        $this->prodMigrationsRelativePath = $prodMigrationsRelativePath . '/' . $driverName;
-        $this->testMigrationsRelativePath = $testMigrationsRelativePath . '/' . $driverName;
+        $this->driverName = $connection->getDriver()->getName();
+        $this->prodMigrationsRelativePath = $prodMigrationsRelativePath;
+        $this->testMigrationsRelativePath = $testMigrationsRelativePath;
         $this->includeTestMigrations = (bool) $includeTestMigrations;
     }
 
@@ -73,13 +74,20 @@ class MigrationBuilder
         $migrationsNamespace = "{$bundle->getNamespace()}\\"
             . str_replace('/', '\\', $migrationsRelativePath);
         $migrationsTableName = "{$bundlePrefix}{$tableDiscr}_doctrine_migration_versions";
+        $isDriverSpecific = is_dir("{$migrationsPath}/{$this->driverName}");
 
         $config = new Configuration($this->connection);
         $config->setName($migrationsName);
-        $config->setMigrationsDirectory($migrationsPath);
-        $config->setMigrationsNamespace($migrationsNamespace);
+        $config->setMigrationsDirectory(
+            $isDriverSpecific ? "{$migrationsPath}/{$this->driverName}" : $migrationsPath
+        );
+        $config->setMigrationsNamespace(
+            $isDriverSpecific ? "{$migrationsNamespace}\\{$this->driverName}" : $migrationsNamespace
+        );
         $config->setMigrationsTableName($migrationsTableName);
-        $config->registerMigrationsFromDirectory($migrationsPath);
+        $config->registerMigrationsFromDirectory(
+            $isDriverSpecific ? "{$migrationsPath}/{$this->driverName}" : $migrationsPath
+        );
 
         if (count($config->getMigrations()) == 0) {
             return false;
