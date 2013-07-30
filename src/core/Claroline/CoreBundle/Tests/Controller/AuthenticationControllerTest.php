@@ -77,11 +77,13 @@ class AuthenticationControllerTest extends MockeryTestCase
             ->once()
             ->with('claro_security_reset_password', array('hash' => '123'))
             ->andReturn('/reset/123');
+        $this->translator->shouldReceive('trans')->once()->with('mail_click', array(), 'platform')->andReturn('blabla');
+        $this->translator->shouldReceive('trans')->once()->with('reset_pwd', array(), 'platform')->andReturn('reset');
         $this->mailer->shouldReceive('send')->once()->with(m::on(function ($message) {
-            return $message->getSubject() === 'Reset Your Password'
+            return $message->getSubject() === 'reset'
                 && $message->getFrom() === array('noreply@claroline.net' => null)
                 && $message->getTo() === array('toto@claroline.com' => null)
-                && $message->getBody() === '<p><a href="http://jorgeaimejquery/reset/123"/>Click me</a></p>';
+                && $message->getBody() === '<p><a href="http://jorgeaimejquery/reset/123"/>blabla</a></p>';
             }
         )
         );
