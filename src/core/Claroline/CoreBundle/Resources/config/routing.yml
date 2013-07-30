@@ -62,9 +62,9 @@ claro_desktop:
     prefix: desktop
     type: annotation
 
-claro_desktop_tool_calendar:
-    resource: "@ClarolineCoreBundle/Controller/Tool/DesktopCalendarController.php"
-    prefix: desktop/tool/calendar
+claro_desktop_tool_agenda:
+    resource: "@ClarolineCoreBundle/Controller/Tool/DesktopAgendaController.php"
+    prefix: desktop/tool/agenda
     type: annotation
 
 claro_desktop_tool_home:
@@ -112,9 +112,9 @@ claro_workspace_tool_group:
     prefix: workspaces/tool/group_management
     type: annotation
 
-claro_workspace_tool_calendar:
-    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceCalendarController.php"
-    prefix: workspaces/tool/calendar
+claro_workspace_tool_agenda:
+    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceAgendaController.php"
+    prefix: workspaces/tool/agenda
     type: annotation
 
 claro_workspace_tool_logs:
