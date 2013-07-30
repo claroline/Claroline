@@ -253,7 +253,7 @@ class HomeController
                 //@TODO Need content rights for admin users
                 if (!(!$this->security->isGranted('ROLE_ADMIN') and
                     $variables['type'] == 'menu' and
-                    $variables['content']->getTitle() == 'Administration')
+                    $variables['content']->getTitle() == 'Administration du contenu')
                 ) {
                     $tmp[$name] .= $this->render(
                         'ClarolineCoreBundle:Home/types:'.$variables['type'].'.html.twig', $variables, true

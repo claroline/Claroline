@@ -229,7 +229,7 @@ class TemplateBuilder
                     'perms' => array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'),
                     'name' => 'Ressources'
                 ),
-                'calendar' => array(
+                'agenda' => array(
                     'perms' => array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'),
                     'name' => 'Calendrier'
                 ),

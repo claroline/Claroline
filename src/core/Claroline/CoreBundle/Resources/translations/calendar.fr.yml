@@ -1,13 +1,13 @@
 add_an_event : "Ajouter un évènement"
 all day: "Toute la journée"
 end : "Fin"
-calendar_form_title : Titre
-calendar_form_end : " (jj/mm/aaaa)"
-calendar_form_start : "Date de début"
-calendar_form_description : "Description"
-calendar_form_allDay : " Sur toute la journée"
-calendar_form_priority_High : "Haute"
-calendar_form_priority : "Priorité"
+agenda_form_title : Titre
+agenda_form_end : " (jj/mm/aaaa)"
+agenda_form_start : "Date de début"
+agenda_form_description : "Description"
+agenda_form_allDay : " Sur toute la journée"
+agenda_form_priority_High : "Haute"
+agenda_form_priority : "Priorité"
 close : Fermer
 update : "mettre à jour"
 high: "Haute"
