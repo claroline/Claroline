@@ -9,15 +9,19 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class ResetPasswordType extends AbstractType
 {
     private $userId;
+
     public function __construct($userId = null)
     {
         $this->userId = $userId;
     }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-         $builder->add('plainPassword', 'repeated', array('type' => 'password'))
-                 ->add('id', 'hidden', array('data' => $this->getUserId()));
+        $builder
+            ->add('plainPassword', 'repeated', array('type' => 'password'))
+            ->add('id', 'hidden', array('data' => $this->getUserId()));
     }
+
     public function getName()
     {
         return 'reset_pwd_form';
@@ -25,11 +29,10 @@ class ResetPasswordType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver
-        ->setDefaults(
+        $resolver->setDefaults(
             array(
                 'translation_domain' => 'platform'
-                )
+            )
         );
     }
 

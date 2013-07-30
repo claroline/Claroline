@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
+
 /**
  * Authentication/login controller.
  */
@@ -41,7 +42,7 @@ class AuthenticationController
      *     "translator"     = @DI\Inject("translator"),
      *     "formFactory"    = @DI\Inject("claroline.form.factory")
      * })
-    */
+     */
     public function __construct(
         Request $request,
         UserManager $userManager,
@@ -99,8 +100,7 @@ class AuthenticationController
      *     options={"expose"=true}
      * )
      * @Template("ClarolineCoreBundle:Authentication:forgotPassword.html.twig")
-    */
-
+     */
     public function forgotPasswordAction()
     {
         $form = $this->formFactory->create(FormFactory::TYPE_USER_EMAIL, array(), null);
@@ -136,10 +136,16 @@ class AuthenticationController
                 'claro_security_reset_password',
                 array('hash' => $user->getResetPasswordHash())
             );
-            $body = '<p><a href="' . $link . '"/>Click me</a></p>';
+            $body = '<p><a href="' . $link . '"/>'.
+            $this->translator->trans(
+                'mail_click',
+                array(),
+                'platform'
+            )
+            .'</a></p>';
 
             $message = \Swift_Message::newInstance()
-                ->setSubject('Reset Your Password')
+                ->setSubject($this->translator->trans('reset_pwd', array(), 'platform'))
                 ->setFrom('noreply@claroline.net')
                 ->setTo($data['mail'])
                 ->setBody($body, 'text/html');
@@ -148,13 +154,13 @@ class AuthenticationController
             return array(
                 'user' => $user,
                 'form' => $form->createView()
-                );
+            );
         }
 
         return array(
-              'error' => $this->translator->trans('no_email', array(), 'platform'),
-              'form' => $form->createView()
-         );
+            'error' => $this->translator->trans('no_email', array(), 'platform'),
+            'form' => $form->createView()
+        );
     }
     /**
      * @Route(
@@ -165,7 +171,7 @@ class AuthenticationController
      * @Method("GET")
      *
      * @Template("ClarolineCoreBundle:Authentication:resetPassword.html.twig")
-    */
+     */
     public function resetPasswordAction($hash)
     {
         $user = $this->userManager->getResetPasswordHash($hash);
@@ -173,7 +179,7 @@ class AuthenticationController
         if (empty($user)) {
             return array(
                 'error' => $this->translator->trans('url_invalid', array(), 'platform'),
-                );
+            );
         }
 
         $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array($user->getId()), null);
@@ -185,7 +191,7 @@ class AuthenticationController
             return array(
                 'id' => $user->getId(),
                 'form' => $form->createView()
-                );
+            );
         }
 
         return array('error' => $this->translator->trans('link_outdated', array(), 'platform'));
@@ -200,15 +206,14 @@ class AuthenticationController
      * @Method("POST")
      *
      * @Template("ClarolineCoreBundle:Authentication:resetPassword.html.twig")
-    */
+     */
     public function newPasswordAction()
     {
-
         $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array(), null);
         $form->handleRequest($this->request);
         if ($form->isValid()) {
             $user = $form->getData();
-            $plainPassword = $user['plainPassword'];
+            $plainPassword = $user²['plainPassword'];
             $id = $user['id'];
             $user = $this->userManager->getUserById($id);
             $user->setPlainPassword($plainPassword);
@@ -225,4 +230,4 @@ class AuthenticationController
             'error' => $this->translator->trans('password_missmatch', array(), 'platform')
         );
     }
- }
+}
