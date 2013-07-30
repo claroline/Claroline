@@ -128,7 +128,9 @@ abstract class AbstractResource
 
     /**
      * @Gedmo\TreeLevel
-     * @ORM\Column(name="lvl", type="integer")
+     * @ORM\Column(name="lvl", type="integer", nullable=true)
+     *
+     * @todo this property shouldn't be nullable (is it due to materialized path strategy ?)
      */
     protected $lvl;
 
@@ -161,7 +163,9 @@ abstract class AbstractResource
 
     /**
      * @Gedmo\TreePath(separator="`")
-     * @ORM\Column(name="path", type="string", length=3000)
+     * @ORM\Column(name="path", type="string", length=3000, nullable=true)
+     *
+     * @todo this property shouldn't be nullable (is it due to materialized path strategy ?)
      */
     protected $path;
 
@@ -191,7 +195,6 @@ abstract class AbstractResource
      * @ORM\Column(type="string", name="mime_type", nullable=true)
      */
     private $mimeType;
-
 
     public function __construct()
     {
