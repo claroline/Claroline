@@ -37,3 +37,6 @@
 [submodule "src/plugin/ICAP/BlogBundle"]
 	path = src/plugin/ICAP/BlogBundle
 	url = https://github.com/iCAPLyon1/BlogBundle.git
+[submodule "src/plugin/Innova/DirectoryBundle"]
+	path = src/plugin/Innova/DirectoryBundle
+	url = https://github.com/InnovaLangues/DirectoryBundle.git
