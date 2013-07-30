@@ -58,7 +58,6 @@ class Role implements RoleInterface
      *     mappedBy="roles"
      * )
      * @ORM\JoinTable(
-     *     name="claro_user_role",
      *     joinColumns={
      *         @ORM\JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      *     },
@@ -74,7 +73,6 @@ class Role implements RoleInterface
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\OrderedTool",
      *     mappedBy="roles"
      * )
-     *
      */
     protected $orderedTools;
 
@@ -84,7 +82,6 @@ class Role implements RoleInterface
      *     mappedBy="roles"
      * )
      * @ORM\JoinTable(
-     *     name="claro_group_role",
      *     joinColumns={
      *         @ORM\JoinColumn(name="role_id", referencedColumnName="id")
      *     },

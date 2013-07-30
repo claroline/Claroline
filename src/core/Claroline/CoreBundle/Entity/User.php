@@ -12,7 +12,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Role;
-// TODO: Implements AdvancedUserInterface
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\UserRepository")
@@ -23,6 +22,8 @@ use Claroline\CoreBundle\Entity\Role;
  *      }
  * )
  * @DoctrineAssert\UniqueEntity("username")
+ *
+ * @todo implement AdvancedUserInterface
  */
 class User extends AbstractRoleSubject implements Serializable, UserInterface, EquatableInterface
 {
@@ -74,9 +75,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     /**
      * @ORM\Column(type="string", nullable=false, unique=true)
      * @Assert\NotBlank()
-     * @Assert\Email(
-     *     checkMX = false
-     * )
+     * @Assert\Email(checkMX = false)
      */
     protected $mail;
 

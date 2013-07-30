@@ -90,7 +90,6 @@ class ResourceType
      *     mappedBy="resourceTypes"
      * )
      * @ORM\JoinTable(
-     *     name="claro_list_type_creation",
      *     joinColumns={
      *         @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")
      *     },
