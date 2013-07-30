@@ -108,6 +108,7 @@ class AuthenticationController
         return array('form' => $form->createView());
 
     }
+
     /**
      * @Route(
      *     "/sendmail",
@@ -136,14 +137,8 @@ class AuthenticationController
                 'claro_security_reset_password',
                 array('hash' => $user->getResetPasswordHash())
             );
-            $body = '<p><a href="' . $link . '"/>'.
-            $this->translator->trans(
-                'mail_click',
-                array(),
-                'platform'
-            )
-            .'</a></p>';
-
+            $msg = $this->translator->trans('mail_click', array(), 'platform');
+            $body = '<p><a href="' . $link . '"/>' . $msg . '</a></p>';
             $message = \Swift_Message::newInstance()
                 ->setSubject($this->translator->trans('reset_pwd', array(), 'platform'))
                 ->setFrom('noreply@claroline.net')
@@ -162,6 +157,7 @@ class AuthenticationController
             'form' => $form->createView()
         );
     }
+    
     /**
      * @Route(
      *     "/newpassword/{hash}/",
