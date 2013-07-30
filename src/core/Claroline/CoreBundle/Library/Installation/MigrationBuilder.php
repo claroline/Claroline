@@ -38,8 +38,9 @@ class MigrationBuilder
     {
         $this->connection = $connection;
         $this->migrationHelper = $helper;
-        $this->prodMigrationsRelativePath = $prodMigrationsRelativePath;
-        $this->testMigrationsRelativePath = $testMigrationsRelativePath;
+        $driverName = $connection->getDriver()->getName();
+        $this->prodMigrationsRelativePath = $prodMigrationsRelativePath . '/' . $driverName;
+        $this->testMigrationsRelativePath = $testMigrationsRelativePath . '/' . $driverName;
         $this->includeTestMigrations = (bool) $includeTestMigrations;
     }
 
