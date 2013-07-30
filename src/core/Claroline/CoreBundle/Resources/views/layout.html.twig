@@ -89,20 +89,19 @@
 {% endblock %}
 
 {% block javascripts %}
-    {% javascripts debug=false  output='vendor/twitter/bootstrap/js/bootstrap.js'
-        '../vendor/twitter/bootstrap/js/bootstrap-affix.js'
-        '../vendor/twitter/bootstrap/js/bootstrap-alert.js'
-        '../vendor/twitter/bootstrap/js/bootstrap-button.js'
-        '../vendor/twitter/bootstrap/js/bootstrap-carousel.js'
-        '../vendor/twitter/bootstrap/js/bootstrap-collapse.js'
-        '../vendor/twitter/bootstrap/js/bootstrap-dropdown.js'
-        '../vendor/twitter/bootstrap/js/bootstrap-modal.js'
-        '../vendor/twitter/bootstrap/js/bootstrap-scrollspy.js'
-        '../vendor/twitter/bootstrap/js/bootstrap-tab.js'
-        '../vendor/twitter/bootstrap/js/bootstrap-tooltip.js'
-        '../vendor/twitter/bootstrap/js/bootstrap-popover.js'
-        '../vendor/twitter/bootstrap/js/bootstrap-transition.js'
-        '../vendor/twitter/bootstrap/js/bootstrap-typeahead.js'
+    {% javascripts debug=false  output='vendor/twbs/bootstrap/js/bootstrap.js'
+        '../vendor/twbs/bootstrap/js/affix.js'
+        '../vendor/twbs/bootstrap/js/alert.js'
+        '../vendor/twbs/bootstrap/js/button.js'
+        '../vendor/twbs/bootstrap/js/carousel.js'
+        '../vendor/twbs/bootstrap/js/collapse.js'
+        '../vendor/twbs/bootstrap/js/dropdown.js'
+        '../vendor/twbs/bootstrap/js/modal.js'
+        '../vendor/twbs/bootstrap/js/popover.js'
+        '../vendor/twbs/bootstrap/js/scrollspy.js'
+        '../vendor/twbs/bootstrap/js/tab.js'
+        '../vendor/twbs/bootstrap/js/tooltip.js'
+        '../vendor/twbs/bootstrap/js/transition.js'
         %}<script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     {% javascripts debug=false  output='vendor/jms/twig-js/twig.js'
