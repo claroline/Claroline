@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(
  *      name="claro_widget",
- *      uniqueConstraints={@ORM\UniqueConstraint(name="tool", columns={"name"})}
+ *      uniqueConstraints={@ORM\UniqueConstraint(name="widget_unique_name", columns={"name"})}
  *  )
  */
 class Widget

@@ -11,7 +11,7 @@ use Claroline\CoreBundle\Entity\Plugin;
  * @ORM\Table(
  *     name="claro_resource_type",
  *     uniqueConstraints={
- *         @ORM\UniqueConstraint(name="unique_res_type_name", columns={"name"})
+ *         @ORM\UniqueConstraint(name="res_type_unique_name", columns={"name"})
  *     }
  * )
  */

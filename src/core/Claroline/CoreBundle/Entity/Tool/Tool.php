@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *     name="claro_tools",
  *     uniqueConstraints={
- *         @ORM\UniqueConstraint(name="unique_tool_name", columns={"name"})
+ *         @ORM\UniqueConstraint(name="tool_unique_name", columns={"name"})
  *     }
  * )
  */

@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(
  *      name="claro_plugin",
  *      uniqueConstraints={
- *          @ORM\UniqueConstraint(name="plugin",columns={"vendor_name","short_name"})
+ *          @ORM\UniqueConstraint(name="plugin_unique_name", columns={"vendor_name", "short_name"})
  *      }
  * )
  */
