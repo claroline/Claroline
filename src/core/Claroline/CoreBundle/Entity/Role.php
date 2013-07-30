@@ -17,7 +17,7 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
  * @ORM\Table(
  *      name="claro_role",
  *      uniqueConstraints={
- *          @ORM\UniqueConstraint(name="unique_role_name", columns={"name"})
+ *          @ORM\UniqueConstraint(name="role_unique_name", columns={"name"})
  *      }
  * )
  * @ORM\HasLifecycleCallbacks

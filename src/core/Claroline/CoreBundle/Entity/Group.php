@@ -14,7 +14,7 @@ use Claroline\CoreBundle\Entity\User;
  * @ORM\Table(
  *      name="claro_group",
 *       uniqueConstraints={
- *          @ORM\UniqueConstraint(name="name",columns={"name"})
+ *          @ORM\UniqueConstraint(name="group_unique_name", columns={"name"})
  *      }
  *  )
  * @DoctrineAssert\UniqueEntity("name")

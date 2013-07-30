@@ -9,7 +9,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *     name="claro_resource_activity",
  *     uniqueConstraints={
- *         @ORM\UniqueConstraint(name="user", columns={"activity_id", "resource_id"})
+ *         @ORM\UniqueConstraint(
+ *             name="resource_activity_unique_combination",
+ *             columns={"activity_id", "resource_id"}
+ *         )
  *     }
  * )
  */

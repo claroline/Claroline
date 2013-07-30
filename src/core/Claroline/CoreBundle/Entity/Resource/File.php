@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *     name="claro_file",
  *     uniqueConstraints={
- *         @ORM\UniqueConstraint(name="unique_hashname", columns={"hash_name"})
+ *         @ORM\UniqueConstraint(name="file_unique_hashname", columns={"hash_name"})
  *     }
  * )
  */
