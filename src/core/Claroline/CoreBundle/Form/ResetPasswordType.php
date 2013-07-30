@@ -18,7 +18,7 @@ class ResetPasswordType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('plainPassword', 'repeated', array('type' => 'password'))
+            ->add('plainPassword', 'repeated', array('type' => 'password', 'required' => true))
             ->add('id', 'hidden', array('data' => $this->getUserId()));
     }
 
