@@ -344,8 +344,8 @@ class UserManager
         return $this->userRepo->findOneByMail($email);
     }
 
-    public function getResetPassword($resetPassword)
+    public function getResetPasswordHash($resetPassword)
     {
-        return $this->userRepo->findOneByResetPassword($resetPassword);
+        return $this->userRepo->findOneByResetPasswordHash($resetPassword);
     }
 }
