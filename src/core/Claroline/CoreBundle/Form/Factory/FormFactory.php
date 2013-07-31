@@ -32,6 +32,8 @@ class FormFactory
     const TYPE_RESOURCE_PERMS = 'resource_permissions';
     const TYPE_RESOURCE_RENAME = 'resource_rename';
     const TYPE_RESOURCE_PROPERTIES = 'resource_properties';
+    const TYPE_USER_EMAIL = 'email';
+    const TYPE_USER_RESET_PWD = 'user_reset_pwd';
 
     private static $types = array(
         self::TYPE_MESSAGE => array(
@@ -113,6 +115,12 @@ class FormFactory
         self::TYPE_RESOURCE_PROPERTIES => array(
             'formType' => 'Claroline\CoreBundle\Form\ResourcePropertiesType',
             'entity' => 'Claroline\CoreBundle\Entity\Resource\AbstractResource'
+        ),
+        self::TYPE_USER_EMAIL => array(
+            'formType' => 'Claroline\CoreBundle\Form\EmailType'
+        ),
+        self::TYPE_USER_RESET_PWD => array(
+            'formType' => 'Claroline\CoreBundle\Form\ResetPasswordType'
         )
     );
 
