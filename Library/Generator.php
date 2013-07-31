@@ -46,7 +46,7 @@ class Generator
         $toSchema = $schemas['toSchema'];
 
         $bundleTables = $this->getBundleTables($bundle, $schemas['metadata']);
-        $this->filterSchemas(array($fromSchema, $toSchema), $bundleTables);
+        $this->filterSchemas(array('fromSchema' => $fromSchema, 'toSchema' => $toSchema), $bundleTables);
 
         $upQueries = $fromSchema->getMigrateToSql($toSchema, $platform);
         $downQueries = $fromSchema->getMigrateFromSql($toSchema, $platform);
@@ -101,12 +101,12 @@ class Generator
 
     private function filterSchemas(array $schemas, array $bundleTables)
     {
-        foreach ($schemas as $schema) {
+        foreach ($schemas as $type => $schema) {
             foreach ($schema->getTables() as $table) {
                 if (!in_array($table->getName(), $bundleTables['tables'])) {
                     if (!in_array($table->getName(), $bundleTables['joinTables'])) {
                         $schema->dropTable($table->getName());
-                    } elseif ($schema->hasTable($table->getName())) {
+                    } elseif ($type === 'fromSchema' && $schema->hasTable($table->getName())) {
                         $schema->dropTable($table->getName());
                     }
                 }
