@@ -51,9 +51,15 @@ class Manager
         $this->log("Generating migrations classes for '{$bundleName}'...");
 
         foreach ($platforms as $driverName => $platform) {
-            $this->log(" - Generating migration class for {$driverName} driver...");
             $queries = $this->generator->generateMigrationQueries($bundle, $platform);
-            $this->writer->writeMigrationClass($bundle, $driverName, $version, $queries);
+
+            if (count($queries[Generator::QUERIES_UP]) > 0 || count($queries[Generator::QUERIES_DOWN]) > 0) {
+                $this->log(" - Generating migration class for {$driverName} driver...");
+                $this->writer->writeMigrationClass($bundle, $driverName, $version, $queries);
+            } else {
+                $this->log('Nothing to generate: database and mapping are synced');
+                break;
+            }
         }
     }
 

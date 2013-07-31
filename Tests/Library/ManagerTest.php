@@ -5,8 +5,6 @@ namespace Claroline\MigrationBundle\Library;
 use Mockery as m;
 use Claroline\MigrationBundle\Tests\MockeryTestCase;
 
-require_once __DIR__ . '/../../vendor/twig/twig/lib/Twig/Environment.php';
-
 class ManagerTest extends MockeryTestCase
 {
     private $kernel;
@@ -23,7 +21,10 @@ class ManagerTest extends MockeryTestCase
         $this->manager = new Manager($this->kernel, $this->generator, $this->writer);
     }
 
-    public function testGenerateBundleMigration()
+    /**
+     * @dataProvider queriesProvider
+     */
+    public function testGenerateBundleMigration(array $queries, $areQueriesEmpty)
     {
         $manager = m::mock(
             'Claroline\MigrationBundle\Library\Manager[getAvailablePlatforms]',
@@ -42,10 +43,13 @@ class ManagerTest extends MockeryTestCase
         $this->generator->shouldReceive('generateMigrationQueries')
             ->once()
             ->with($bundle, $platform)
-            ->andReturn(array('queries'));
-        $this->writer->shouldReceive('writeMigrationClass')
-            ->once()
-            ->with($bundle, 'driver', m::any(), array('queries'));
+            ->andReturn($queries);
+
+        if (!$areQueriesEmpty) {
+            $this->writer->shouldReceive('writeMigrationClass')
+                ->once()
+                ->with($bundle, 'driver', m::any(), $queries);
+        }
 
         $manager->generateBundleMigration('FooBundle');
     }
@@ -56,5 +60,25 @@ class ManagerTest extends MockeryTestCase
         $this->assertGreaterThan(1, count($platforms));
         $this->assertContains('pdo_mysql', array_keys($platforms));
         $this->assertInstanceOf('Doctrine\DBAL\Platforms\AbstractPlatform', $platforms['pdo_mysql']);
+    }
+
+    public function queriesProvider()
+    {
+        return array(
+            array(
+                array(
+                    Generator::QUERIES_UP => array('up queries'),
+                    Generator::QUERIES_DOWN => array('down queries')
+                ),
+                false
+            ),
+            array(
+                array(
+                    Generator::QUERIES_UP => array(),
+                    Generator::QUERIES_DOWN => array()
+                ),
+                true
+            ),
+        );
     }
 }
