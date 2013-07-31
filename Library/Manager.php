@@ -4,6 +4,9 @@ namespace Claroline\MigrationBundle\Library;
 
 use Symfony\Component\HttpKernel\Kernel;
 
+/**
+ * API entry point.
+ */
 class Manager
 {
     private $kernel;

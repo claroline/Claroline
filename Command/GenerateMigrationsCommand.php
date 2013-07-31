@@ -39,7 +39,7 @@ class GenerateMigrationsCommand extends ContainerAwareCommand
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
-    {
+    {try{
         $manager = $this->getContainer()->get('claroline.migration.manager');
         $manager->setLogger(
             function ($message) use ($output) {
@@ -47,5 +47,8 @@ class GenerateMigrationsCommand extends ContainerAwareCommand
             }
         );
         $manager->generateBundleMigration($input->getArgument('bundle'));
+    }catch(\Exception $ex){
+        var_dump($ex->getTraceAsString());
+    }
     }
 }

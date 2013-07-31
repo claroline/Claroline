@@ -14,6 +14,13 @@ class Writer
     private $twigEnvironment;
     private $twigEngine;
 
+    /**
+     * Constructor.
+     *
+     * @param \Symfony\Component\Filesystem\Filesystem  $fileSystem
+     * @param Twig_Environment                          $environment
+     * @param \Symfony\Bundle\TwigBundle\TwigEngine     $engine
+     */
     public function __construct(
         Filesystem $fileSystem,
         Twig_Environment $environment,
@@ -26,6 +33,14 @@ class Writer
         $this->twigEnvironment->addExtension(new SqlFormatterExtension());
     }
 
+    /**
+     * Writes a bundle migration class for a given driver.
+     *
+     * @param \Symfony\Component\HttpKernel\Bundle\Bundle   $bundle
+     * @param string                                        $driverName
+     * @param string                                        $version
+     * @param array                                         $queries
+     */
     public function writeMigrationClass(Bundle $bundle, $driverName, $version, array $queries)
     {
         $targetDir = "{$bundle->getPath()}/Migrations/{$driverName}";

@@ -7,6 +7,9 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 
+/**
+ * Class responsible for generating bundle migration queries.
+ */
 class Generator
 {
     const QUERIES_UP = 'up';
@@ -16,6 +19,12 @@ class Generator
     private $schemaTool;
     private $schemas = array();
 
+    /**
+     * Constructor.
+     *
+     * @param \Doctrine\ORM\EntityManager       $em
+     * @param \Doctrine\ORM\Tools\SchemaTool    $tool
+     */
     public function __construct(EntityManager $em, SchemaTool $tool)
     {
         $this->em = $em;
@@ -25,8 +34,8 @@ class Generator
     /**
      * Generates bundle migration queries (up and down) for a given SQL platform.
      *
-     * @param Symfony\Component\HttpKernel\Bundle\Bundle    $bundle
-     * @param Doctrine\DBAL\Platforms\AbstractPlatform      $platform
+     * @param \Symfony\Component\HttpKernel\Bundle\Bundle    $bundle
+     * @param \Doctrine\DBAL\Platforms\AbstractPlatform      $platform
      *
      * @return array
      */
@@ -37,7 +46,11 @@ class Generator
         $toSchema = $schemas['toSchema'];
 
         $bundleTables = $this->getBundleTables($bundle, $schemas['metadata']);
-        $this->filterSchemas(array($fromSchema, $toSchema), $bundleTables);
+
+        $this->filterSchemas(
+            array('fromSchema' => $fromSchema, 'toSchema' => $toSchema),
+            $bundleTables
+        );
 
         $upQueries = $fromSchema->getMigrateToSql($toSchema, $platform);
         $downQueries = $fromSchema->getMigrateFromSql($toSchema, $platform);
@@ -73,11 +86,17 @@ class Generator
 
     private function getBundleTables(Bundle $bundle, array $metadata)
     {
-        $bundleTables = array();
+        $bundleTables = array('tables' => array(), 'joinTables' => array());
 
         foreach ($metadata as $entityMetadata) {
             if (0 === strpos($entityMetadata->name, $bundle->getNamespace())) {
-                $bundleTables[] = $entityMetadata->getTableName();
+                $bundleTables['tables'][] = $entityMetadata->getTableName();
+
+                foreach ($entityMetadata->associationMappings as $association) {
+                    if (isset($association['joinTable']['name'])) {
+                        $bundleTables['joinTables'][] = $association['joinTable']['name'];
+                    }
+                }
             }
         }
 
@@ -86,10 +105,14 @@ class Generator
 
     private function filterSchemas(array $schemas, array $bundleTables)
     {
-        foreach ($schemas as $schema) {
+        foreach ($schemas as $type => $schema) {
             foreach ($schema->getTables() as $table) {
-                if (!in_array($table->getName(), $bundleTables)) {
-                    $schema->dropTable($table->getName());
+                if (!in_array($table->getName(), $bundleTables['tables'])) {
+                    if (!in_array($table->getName(), $bundleTables['joinTables'])) {
+                        $schema->dropTable($table->getName());
+                    } elseif ($type === 'fromSchema' && $schema->hasTable($table->getName())) {
+                        $schema->dropTable($table->getName());
+                    }
                 }
             }
         }
