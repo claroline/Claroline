@@ -42,7 +42,7 @@ class SqlFormatterExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'formatSql' => new \Twig_Function_Method($this, 'formatSql')
+            'formatSql' => new \Twig_SimpleFunction('formatSql', array($this, 'formatSql'))
         );
     }
 
