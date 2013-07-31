@@ -5,6 +5,7 @@ namespace Claroline\MigrationBundle\Library;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
+use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 
 /**
@@ -46,7 +47,7 @@ class Generator
         $toSchema = $schemas['toSchema'];
 
         $bundleTables = $this->getBundleTables($bundle, $schemas['metadata']);
-        $this->filterSchemas(array('fromSchema' => $fromSchema, 'toSchema' => $toSchema), $bundleTables);
+        $this->filterSchemas(array($fromSchema, $toSchema), $bundleTables);
 
         $upQueries = $fromSchema->getMigrateToSql($toSchema, $platform);
         $downQueries = $fromSchema->getMigrateFromSql($toSchema, $platform);
@@ -86,11 +87,11 @@ class Generator
 
         foreach ($metadata as $entityMetadata) {
             if (0 === strpos($entityMetadata->name, $bundle->getNamespace())) {
-                $bundleTables['tables'][] = $entityMetadata->getTableName();
+                $bundleTables[] = $entityMetadata->getTableName();
 
                 foreach ($entityMetadata->associationMappings as $association) {
                     if (isset($association['joinTable']['name'])) {
-                        $bundleTables['joinTables'][] = $association['joinTable']['name'];
+                        $bundleTables[] = $association['joinTable']['name'];
                     }
                 }
             }
@@ -101,14 +102,10 @@ class Generator
 
     private function filterSchemas(array $schemas, array $bundleTables)
     {
-        foreach ($schemas as $type => $schema) {
+        foreach ($schemas as $schema) {
             foreach ($schema->getTables() as $table) {
-                if (!in_array($table->getName(), $bundleTables['tables'])) {
-                    if (!in_array($table->getName(), $bundleTables['joinTables'])) {
-                        $schema->dropTable($table->getName());
-                    } elseif ($type === 'fromSchema' && $schema->hasTable($table->getName())) {
-                        $schema->dropTable($table->getName());
-                    }
+                if (!in_array($table->getName(), $bundleTables)) {
+                    $schema->dropTable($table->getName());
                 }
             }
         }
