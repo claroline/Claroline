@@ -30,13 +30,13 @@ class ResourceActivity
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\Activity",
      *     inversedBy="resourcesActivities"
      * )
-     * @ORM\JoinColumn(name="activity_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $activity;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource")
-     * @ORM\JoinColumn(name="resource_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $resource;
 

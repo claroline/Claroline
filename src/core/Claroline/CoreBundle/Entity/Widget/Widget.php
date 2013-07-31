@@ -6,10 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(
- *      name="claro_widget",
- *      uniqueConstraints={@ORM\UniqueConstraint(name="widget_unique_name", columns={"name"})}
- *  )
+ * @ORM\Table(name="claro_widget")
  */
 class Widget
 {
@@ -25,27 +22,27 @@ class Widget
      *     targetEntity="Claroline\CoreBundle\Entity\Plugin",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="plugin_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $plugin;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(unique=true)
      */
     protected $name;
 
     /**
-     * @ORM\Column(type="boolean", name="is_configurable")
+     * @ORM\Column(name="is_configurable", type="boolean")
      */
     protected $isConfigurable;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column()
      */
     protected $icon;
 
     /**
-     * @ORM\Column(type="boolean", name="is_exportable")
+     * @ORM\Column(name="is_exportable", type="boolean")
      */
     protected $isExportable;
 

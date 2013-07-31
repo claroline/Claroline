@@ -36,17 +36,17 @@ class UserMessage
     private $message;
 
     /**
-     * @ORM\Column(type="boolean", name="is_removed")
+     * @ORM\Column(name="is_removed", type="boolean")
      */
     protected $isRemoved;
 
     /**
-     * @ORM\Column(type="boolean", name="is_read")
+     * @ORM\Column(name="is_read", type="boolean")
      */
     protected $isRead;
 
     /**
-     * @ORM\Column(type="boolean", name="is_sent")
+     * @ORM\Column(name="is_sent", type="boolean")
      */
     protected $isSent;
 

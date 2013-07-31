@@ -11,12 +11,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceRightsRepository")
  * @ORM\Table(
- *      name="claro_resource_rights",
- *      uniqueConstraints={
- *          @ORM\UniqueConstraint(
- *          name="user",columns={"resource_id","role_id"}
- *          )
- *      }
+ *     name="claro_resource_rights",
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(
+ *             name="resource_rights_unique_resource_role",
+ *             columns={"resource_id", "role_id"}
+ *         )
+ *     }
  * )
  */
 class ResourceRights
@@ -33,7 +34,7 @@ class ResourceRights
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
      *     inversedBy="resourceRights"
      * )
-     * @ORM\JoinColumn(name="role_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     protected $role;
 
@@ -43,32 +44,32 @@ class ResourceRights
      *     inversedBy="rights",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="resource_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     protected $resource;
 
     /**
-     * @ORM\Column(type="boolean", name="can_delete")
+     * @ORM\Column(name="can_delete", type="boolean")
      */
     protected $canDelete = false;
 
     /**
-     * @ORM\Column(type="boolean", name="can_open")
+     * @ORM\Column(name="can_open", type="boolean")
      */
     protected $canOpen = false;
 
     /**
-     * @ORM\Column(type="boolean", name="can_edit")
+     * @ORM\Column(name="can_edit", type="boolean")
      */
     protected $canEdit = false;
 
     /**
-     * @ORM\Column(type="boolean", name="can_copy")
+     * @ORM\Column(name="can_copy", type="boolean")
      */
     protected $canCopy = false;
 
     /**
-     * @ORM\Column(type="boolean", name="can_export")
+     * @ORM\Column(name="can_export", type="boolean")
      */
     protected $canExport = false;
 
@@ -79,12 +80,7 @@ class ResourceRights
      * )
      * @ORM\JoinTable(
      *     name="claro_list_type_creation",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="right_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     *     }
+     *     inverseJoinColumns={@ORM\JoinColumn(name="resource_type_id")}
      * )
      */
     protected $resourceTypes;

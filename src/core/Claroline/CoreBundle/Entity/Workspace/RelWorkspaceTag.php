@@ -29,7 +29,7 @@ class RelWorkspaceTag
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace"
      * )
-     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     protected $workspace;
 
@@ -37,7 +37,7 @@ class RelWorkspaceTag
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\WorkspaceTag"
      * )
-     * @ORM\JoinColumn(name="tag_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     protected $tag;
 

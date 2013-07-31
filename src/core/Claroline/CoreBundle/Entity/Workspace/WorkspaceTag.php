@@ -25,7 +25,7 @@ class WorkspaceTag
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=false)
+     * @ORM\Column()
      */
     protected $name;
 
@@ -33,7 +33,7 @@ class WorkspaceTag
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User"
      * )
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $user;
 

@@ -13,54 +13,55 @@ use Doctrine\ORM\Mapping as ORM;
 class Event
 {
     /**
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column(name="title", type="string" , length=50)
+     * @ORM\Column(length=50)
      */
     private $title;
 
     /**
-     * @ORM\Column(name="start_date", type="integer",nullable=true)
+     * @ORM\Column(name="start_date", type="integer", nullable=true)
      */
     private $start;
 
     /**
-     * @ORM\Column(name="end_date", type="integer" , nullable=true)
+     * @ORM\Column(name="end_date", type="integer", nullable=true)
      */
     private $end;
 
     /**
-     * @ORM\Column(name="description", type="string" , nullable=true)
+     * @ORM\Column(nullable=true)
      */
     private $description;
 
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
-     *     inversedBy="events", cascade={"persist"}
+     *     inversedBy="events",
+     *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $workspace;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $user;
 
     /**
-     * @ORM\Column(name="allday", type="boolean" , nullable=true)
+     * @ORM\Column(name="allday", type="boolean", nullable=true)
      */
     private $allDay;
 
      /**
-     * @ORM\Column(name="priority", type="string" , nullable=true)
+     * @ORM\Column(nullable=true)
      */
     private $priority;
 
