@@ -14,12 +14,7 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\RoleRepository")
- * @ORM\Table(
- *      name="claro_role",
- *      uniqueConstraints={
- *          @ORM\UniqueConstraint(name="role_unique_name", columns={"name"})
- *      }
- * )
+ * @ORM\Table(name="claro_role")
  * @ORM\HasLifecycleCallbacks
  * @DoctrineAssert\UniqueEntity("name")
  */
@@ -37,13 +32,13 @@ class Role implements RoleInterface
     protected $id;
 
     /**
-     * @ORM\Column(name="name", type="string", length=255, nullable=false)
+     * @ORM\Column(unique=true)
      * @Assert\NotBlank()
      */
     protected $name;
 
     /**
-     * @ORM\Column(name="translation_key", type="string", length=255, nullable=false)
+     * @ORM\Column(name="translation_key")
      */
     protected $translationKey;
 
@@ -56,14 +51,6 @@ class Role implements RoleInterface
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     mappedBy="roles"
-     * )
-     * @ORM\JoinTable(
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     *     }
      * )
      */
     protected $users;
@@ -81,19 +68,11 @@ class Role implements RoleInterface
      *     targetEntity="Claroline\CoreBundle\Entity\Group",
      *     mappedBy="roles"
      * )
-     * @ORM\JoinTable(
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="role_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="group_id", referencedColumnName="id")
-     *     }
-     * )
      */
     protected $groups;
 
     /**
-     * @ORM\Column(name="type", type="integer", nullable=false)
+     * @ORM\Column(type="integer")
      */
     protected $type = self::PLATFORM_ROLE;
 
@@ -107,7 +86,7 @@ class Role implements RoleInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace", inversedBy="roles")
-     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $workspace;
 

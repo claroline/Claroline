@@ -14,17 +14,7 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
  * Base entity for all resources.
  *
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\AbstractResourceRepository")
- * @ORM\Table(
- *      name="claro_resource",
- *      uniqueConstraints={
- *          @ORM\UniqueConstraint(
- *          name="next_id",columns={"next_id"}
- *          ),
- *          @ORM\UniqueConstraint(
- *          name="previous_id",columns={"previous_id"}
- *          )
- *      }
- * )
+ * @ORM\Table(name="claro_resource")
  * @ORM\InheritanceType("JOINED")
  * @Gedmo\Tree(type="materializedPath")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
@@ -54,18 +44,18 @@ abstract class AbstractResource
      *     inversedBy="abstractResources",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="license_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $license;
 
     /**
-     * @ORM\Column(type="datetime", name="creation_date")
+     * @ORM\Column(name="creation_date", type="datetime")
      * @Gedmo\Timestampable(on="create")
      */
     protected $creationDate;
 
     /**
-     * @ORM\Column(type="datetime", name="modification_date")
+     * @ORM\Column(name="modification_date", type="datetime")
      * @Gedmo\Timestampable(on="update")
      */
     protected $modificationDate;
@@ -76,7 +66,7 @@ abstract class AbstractResource
      *     inversedBy="abstractResources",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(name="resource_type_id", onDelete="CASCADE", nullable=false)
      */
     protected $resourceType;
 
@@ -86,7 +76,7 @@ abstract class AbstractResource
      *     inversedBy="abstractResources",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(name="user_id", onDelete="CASCADE", nullable=false)
      */
     protected $creator;
 
@@ -95,13 +85,13 @@ abstract class AbstractResource
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceIcon",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="icon_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $icon;
 
     /**
      * @Gedmo\TreePathSource
-     * @ORM\Column(type="string", length=255, name="name")
+     * @ORM\Column()
      * @Assert\NotBlank()
      */
     protected $name;
@@ -120,15 +110,13 @@ abstract class AbstractResource
      *     inversedBy="children",
      *     fetch="EAGER"
      * )
-     * @ORM\JoinColumns({
-     *     @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     * })
+     * @ORM\JoinColumns({@ORM\JoinColumn(onDelete="CASCADE")})
      */
     protected $parent;
 
     /**
      * @Gedmo\TreeLevel
-     * @ORM\Column(name="lvl", type="integer", nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      *
      * @todo this property shouldn't be nullable (is it due to materialized path strategy ?)
      */
@@ -157,13 +145,13 @@ abstract class AbstractResource
      *      targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
      *      inversedBy="resources"
      * )
-     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
      */
     protected $workspace;
 
     /**
      * @Gedmo\TreePath(separator="`")
-     * @ORM\Column(name="path", type="string", length=3000, nullable=true)
+     * @ORM\Column(length=3000, nullable=true)
      *
      * @todo this property shouldn't be nullable (is it due to materialized path strategy ?)
      */
@@ -178,21 +166,25 @@ abstract class AbstractResource
     protected $rights;
 
     /**
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
-     *     cascade={"persist"})
-     * @ORM\JoinColumn(name="next_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     * @ORM\OneToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
+     *     cascade={"persist"}
+     * )
+     * @ORM\JoinColumn(unique=true, onDelete="SET NULL")
      */
     protected $next;
 
     /**
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
-     *     cascade={"persist"})
-     * @ORM\JoinColumn(name="previous_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     * @ORM\OneToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
+     *     cascade={"persist"}
+     * )
+     * @ORM\JoinColumn(unique=true, onDelete="SET NULL")
      */
     protected $previous;
 
     /**
-     * @ORM\Column(type="string", name="mime_type", nullable=true)
+     * @ORM\Column(name="mime_type", nullable=true)
      */
     private $mimeType;
 

@@ -18,19 +18,20 @@ class License
     protected $id;
 
     /**
-     * @ORM\Column(name="name", type="string")
+     * @ORM\Column()
      */
     protected $name;
 
     /**
-     * @ORM\Column(name="acronym", type="string", length=255, nullable=true)
+     * @ORM\Column(nullable=true)
      */
     protected $acronym;
 
     /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
-     *     mappedBy="license", cascade={"persist"}
+     *     mappedBy="license",
+     *     cascade={"persist"}
      * )
      */
     protected $abstractResources;

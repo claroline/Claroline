@@ -24,14 +24,14 @@ class Plugin
     protected $id;
 
     /**
-     * @ORM\Column(name="vendor_name", type="string", length=50)
+     * @ORM\Column(name="vendor_name", length=50)
      * @Assert\NotBlank()
      * @Assert\Length(max=50)
      */
     protected $vendorName;
 
     /**
-     * @ORM\Column(name="short_name", type="string", length=50)
+     * @ORM\Column(name="short_name", length=50)
      * @Assert\NotBlank()
      * @Assert\Length(max=50)
      */
@@ -43,7 +43,7 @@ class Plugin
     protected $hasOptions;
 
     /**
-     * @ORM\Column(name="icon", type="string", length=255)
+     * @ORM\Column()
      * @Assert\NotBlank()
      * @Assert\Length(max=255)
      */

@@ -8,12 +8,7 @@ use Claroline\CoreBundle\Entity\Plugin;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceTypeRepository")
- * @ORM\Table(
- *     name="claro_resource_type",
- *     uniqueConstraints={
- *         @ORM\UniqueConstraint(name="res_type_unique_name", columns={"name"})
- *     }
- * )
+ * @ORM\Table(name="claro_resource_type")
  */
 class ResourceType
 {
@@ -25,7 +20,7 @@ class ResourceType
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=255, name="name")
+     * @ORM\Column(unique=true)
      */
     protected $name;
 
@@ -48,7 +43,7 @@ class ResourceType
     protected $customActions;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(nullable=true)
      *
      * @todo this attribute should not be nullable (a modification of "inherited"
      * resource types -- see SiteBundle for an example -- is needed)
@@ -56,13 +51,13 @@ class ResourceType
     protected $class;
 
     /**
-     * @ORM\Column(type="boolean", name="is_exportable")
+     * @ORM\Column(name="is_exportable", type="boolean")
      */
     protected $isExportable = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
-     * @ORM\JoinColumn(name="plugin_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $plugin;
 
@@ -71,7 +66,7 @@ class ResourceType
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
      *     inversedBy="children"
      * )
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="SET NULL", nullable=true)
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $parent;
 
@@ -89,14 +84,7 @@ class ResourceType
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceRights",
      *     mappedBy="resourceTypes"
      * )
-     * @ORM\JoinTable(
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="right_id", referencedColumnName="id")
-     *     }
-     * )
+     * @ORM\JoinTable(joinColumns={@ORM\JoinColumn(name="resource_type_id")})
      */
     protected $rights;
 

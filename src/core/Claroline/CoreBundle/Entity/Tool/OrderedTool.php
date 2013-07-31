@@ -32,18 +32,20 @@ class OrderedTool
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
-     *     cascade={"persist"}, inversedBy="orderedTools"
+     *     cascade={"persist"},
+     *     inversedBy="orderedTools"
      * )
-     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $workspace;
 
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\Tool",
-     *     cascade={"persist"}, inversedBy="orderedTools"
+     *     cascade={"persist"},
+     *     inversedBy="orderedTools"
      * )
-     * @ORM\JoinColumn(name="tool_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     protected $tool;
 
@@ -53,7 +55,7 @@ class OrderedTool
     protected $order;
 
     /**
-     * @Orm\Column(type="string")
+     * @Orm\Column()
      */
     protected $name;
 
@@ -62,18 +64,17 @@ class OrderedTool
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
      *     inversedBy="orderedTools"
      * )
-     * @ORM\JoinTable(
-     *     name="claro_ordered_tool_role"
-     * )
+     * @ORM\JoinTable(name="claro_ordered_tool_role")
      */
     protected $roles;
 
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     cascade={"persist"}, inversedBy="orderedTools"
+     *     cascade={"persist"},
+     *     inversedBy="orderedTools"
      * )
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $user;
 

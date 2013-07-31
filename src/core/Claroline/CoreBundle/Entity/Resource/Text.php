@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Text extends AbstractResource
 {
     /**
-     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Column(type="integer")
      */
     protected $version;
 

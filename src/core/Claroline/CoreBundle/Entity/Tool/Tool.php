@@ -6,12 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ToolRepository")
- * @ORM\Table(
- *     name="claro_tools",
- *     uniqueConstraints={
- *         @ORM\UniqueConstraint(name="tool_unique_name", columns={"name"})
- *     }
- * )
+ * @ORM\Table(name="claro_tools")
  */
 class Tool
 {
@@ -23,17 +18,17 @@ class Tool
     protected $id;
 
     /**
-     * @ORM\Column(name="name", type="string")
+     * @ORM\Column(unique=true)
      */
     protected $name;
 
     /**
-     * @ORM\Column(name="display_name", type="string", nullable=true)
+     * @ORM\Column(name="display_name", nullable=true)
      */
     protected $displayName;
 
     /**
-     * @ORM\Column(name="class", type="string")
+     * @ORM\Column()
      */
     protected $class;
 
@@ -76,12 +71,15 @@ class Tool
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
-     * @ORM\JoinColumn(name="plugin_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $plugin;
 
     /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Tool\OrderedTool", mappedBy="tool")
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\OrderedTool",
+     *     mappedBy="tool"
+     * )
      */
     protected $orderedTools;
 

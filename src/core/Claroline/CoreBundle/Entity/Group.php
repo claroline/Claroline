@@ -29,7 +29,7 @@ class Group extends AbstractRoleSubject
     protected $id;
 
     /**
-     * @ORM\Column(name="name", type="string", length=255, nullable=false)
+     * @ORM\Column()
      * @Assert\NotBlank()
      */
     protected $name;
@@ -40,14 +40,6 @@ class Group extends AbstractRoleSubject
      *     cascade={"persist"},
      *     mappedBy="groups"
      * )
-     * @ORM\JoinTable(
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     *     }
-     * )
      */
     protected $users;
 
@@ -57,15 +49,7 @@ class Group extends AbstractRoleSubject
      *     cascade={"persist"},
      *     inversedBy="groups"
      * )
-     * @ORM\JoinTable(
-     *     name="claro_group_role",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     *     }
-     * )
+     * @ORM\JoinTable(name="claro_group_role")
      */
     protected $roles;
 

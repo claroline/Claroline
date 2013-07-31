@@ -6,12 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(
- *     name="claro_file",
- *     uniqueConstraints={
- *         @ORM\UniqueConstraint(name="file_unique_hashname", columns={"hash_name"})
- *     }
- * )
+ * @ORM\Table(name="claro_file")
  */
 class File extends AbstractResource
 {
@@ -21,7 +16,7 @@ class File extends AbstractResource
     protected $size;
 
     /**
-     * @ORM\Column(type="string", length=36, name="hash_name")
+     * @ORM\Column(name="hash_name", length=36, unique=true)
      */
     protected $hashName;
 
