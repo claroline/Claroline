@@ -9,7 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Claroline\MigrationBundle\Generator\Generator;
 use Claroline\MigrationBundle\Twig\SqlFormatterExtension;
 
-class GenerateMigrationsCommand extends ContainerAwareCommand
+class GenerateCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
@@ -39,7 +39,7 @@ class GenerateMigrationsCommand extends ContainerAwareCommand
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
-    {try{
+    {
         $manager = $this->getContainer()->get('claroline.migration.manager');
         $manager->setLogger(
             function ($message) use ($output) {
@@ -47,8 +47,5 @@ class GenerateMigrationsCommand extends ContainerAwareCommand
             }
         );
         $manager->generateBundleMigration($input->getArgument('bundle'));
-    }catch(\Exception $ex){
-        var_dump($ex->getTraceAsString());
-    }
     }
 }
