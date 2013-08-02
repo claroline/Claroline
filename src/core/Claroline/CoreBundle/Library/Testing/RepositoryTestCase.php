@@ -122,6 +122,7 @@ abstract class RepositoryTestCase extends WebTestCase
         $user->setLastName($name . 'LastName');
         $user->setUsername($name . 'Username');
         $user->setPlainPassword($name . 'Password');
+        $user->setMail($name . '@claroline.net');
         $user->setCreationDate(self::$time);
 
         foreach ($roles as $role) {
