@@ -371,4 +371,15 @@ class WorkspaceManager
     {
         return $this->workspaceRepo->findOneByGuid($guid);
     }
+
+    public function getDisplayableWorkspaces()
+    {
+        return $this->workspaceRepo->findDisplayableWorkspaces();
+    }
+
+
+    public function getWorkspacesWithSelfRegistration()
+    {
+        return $this->workspaceRepo->findWorkspacesWithSelfRegistration();
+    }
 }
