@@ -50,7 +50,11 @@ class WorkspaceControllerTest extends MockeryTestCase
             'workspaceRoles' => 'workspaceRoles'
         );
 
-        $this->tagManager->shouldReceive('getDatasForWorkspaceList')->with(false)->once()->andReturn($datas);
+        $this->tagManager
+            ->shouldReceive('getDatasForWorkspaceList')
+            ->with(false)
+            ->once()
+            ->andReturn($datas);
 
         $this->assertEquals(
             array(
@@ -494,6 +498,76 @@ class WorkspaceControllerTest extends MockeryTestCase
         $this->assertEquals(
             new JsonResponse($arWorkspace),
             $this->getController()->findRoleByWorkspaceCodeAction('search')
+        );
+    }
+
+    public function testWorkspaceListByTagPagerAction()
+    {
+        $tag = $this->mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTag');
+
+        $this->tagManager
+            ->shouldReceive('getPagerRelationByTag')
+            ->with($tag, 1)
+            ->once()
+            ->andReturn('relations');
+        $tag->shouldReceive('getId')
+            ->once()
+            ->andReturn(1);
+
+        $this->assertEquals(
+            array(
+                'workspaceTagId' => 1,
+                'relations' => 'relations'
+            ),
+            $this->getController()->workspaceListByTagPagerAction($tag, 1)
+        );
+    }
+
+    public function testWorkspaceCompleteListPagerAction()
+    {
+        $this->tagManager->shouldReceive('getPagerAllWorkspaces')
+            ->with(1)
+            ->once()
+            ->andReturn('workspaces');
+
+        $this->assertEquals(
+            array('workspaces' => 'workspaces'),
+            $this->getController()->workspaceCompleteListPagerAction(1)
+        );
+    }
+
+    public function testWorkspaceListByTagRegistrationPagerAction()
+    {
+        $tag = $this->mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTag');
+
+        $this->tagManager
+            ->shouldReceive('getPagerRelationByTag')
+            ->with($tag, 1)
+            ->once()
+            ->andReturn('relations');
+        $tag->shouldReceive('getId')
+            ->once()
+            ->andReturn(1);
+
+        $this->assertEquals(
+            array(
+                'workspaceTagId' => 1,
+                'relations' => 'relations'
+            ),
+            $this->getController()->workspaceListByTagRegistrationPagerAction($tag, 1)
+        );
+    }
+
+    public function testWorkspaceCompleteListRegistrationPagerAction()
+    {
+        $this->tagManager->shouldReceive('getPagerAllWorkspaces')
+            ->with(1)
+            ->once()
+            ->andReturn('workspaces');
+
+        $this->assertEquals(
+            array('workspaces' => 'workspaces'),
+            $this->getController()->workspaceCompleteListRegistrationPagerAction(1)
         );
     }
 

@@ -12,6 +12,7 @@ use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\CoreBundle\Repository\WorkspaceTagRepository;
 use Claroline\CoreBundle\Repository\RelWorkspaceTagRepository;
 use Claroline\CoreBundle\Repository\WorkspaceTagHierarchyRepository;
+use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -30,18 +31,21 @@ class WorkspaceTagManager
     private $workspaceRepo;
     private $roleManager;
     private $om;
+    private $pagerFactory;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "roleManager" = @DI\Inject("claroline.manager.role_manager"),
-     *     "om"          = @DI\Inject("claroline.persistence.object_manager")
+     *     "roleManager"  = @DI\Inject("claroline.manager.role_manager"),
+     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
+     *     "pagerFactory" = @DI\Inject("claroline.pager.pager_factory")
      * })
      */
     public function __construct(
         RoleManager $roleManager,
-        ObjectManager $om
+        ObjectManager $om,
+        PagerFactory $pagerFactory
     )
     {
         $this->tagRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag');
@@ -50,6 +54,7 @@ class WorkspaceTagManager
         $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
         $this->roleManager = $roleManager;
         $this->om = $om;
+        $this->pagerFactory = $pagerFactory;
     }
 
     public function insert(WorkspaceTag $tag)
@@ -97,6 +102,16 @@ class WorkspaceTagManager
     public function deleteAllRelationsFromWorkspaceAndUser(AbstractWorkspace $workspace, User $user)
     {
         $relations = $this->relTagRepo->findByWorkspaceAndUser($workspace, $user);
+
+        foreach ($relations as $relation) {
+            $this->om->remove($relation);
+        }
+        $this->om->flush();
+    }
+
+    public function deleteAllAdminRelationsFromWorkspace(AbstractWorkspace $workspace)
+    {
+        $relations = $this->relTagRepo->findAdminByWorkspace($workspace);
 
         foreach ($relations as $relation) {
             $this->om->remove($relation);
@@ -356,10 +371,16 @@ class WorkspaceTagManager
             }
         }
 
+        $tagWorkspacePager = array();
+
+        foreach ($tagWorkspaces as $key => $content) {
+            $tagWorkspacePager[$key] = $this->pagerFactory->createPagerFromArray($content, 1);
+        }
+
         $datas = array();
-        $datas['workspaces'] = $workspaces;
+        $datas['workspaces'] = $this->pagerFactory->createPagerFromArray($workspaces, 1);
         $datas['tags'] = $tags;
-        $datas['tagWorkspaces'] = $tagWorkspaces;
+        $datas['tagWorkspaces'] = $tagWorkspacePager;
         $datas['hierarchy'] = $hierarchy;
         $datas['rootTags'] = $rootTags;
         $datas['displayable'] = $displayable;
@@ -376,7 +397,13 @@ class WorkspaceTagManager
     {
         $workspaces = $this->workspaceRepo->findWorkspacesWithSelfRegistration();
         $tags = $this->getNonEmptyAdminTags();
-        $relTagWorkspace = $this->getTagRelationsByAdminAndWorkspaces($workspaces);
+
+        try {
+            $relTagWorkspace = $this->getTagRelationsByAdminAndWorkspaces($workspaces);
+        }
+        catch (\InvalidArgumentException $e) {
+            $relTagWorkspace = array();
+        }
         $tagWorkspaces = array();
 
         // create an array: tagId => [associated_workspace_relation]
@@ -458,5 +485,19 @@ class WorkspaceTagManager
         }
 
         return $displayable;
+    }
+
+    public function getPagerRelationByTag(WorkspaceTag $workspaceTag, $page = 1)
+    {
+        $relations = $this->relTagRepo->findAdminRelationsByTags($workspaceTag);
+
+        return $this->pagerFactory->createPagerFromArray($relations, $page);
+    }
+
+    public function getPagerAllWorkspaces($page = 1)
+    {
+        $workspaces = $this->workspaceRepo->findDisplayableWorkspaces();
+
+        return $this->pagerFactory->createPagerFromArray($workspaces, $page);
     }
 }

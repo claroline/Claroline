@@ -98,6 +98,10 @@ class WorkspaceRepository extends EntityRepository
             $dql .= " OR r.name = '{$roles[$i]}'";
         }
 
+        $dql .= "
+            ORDER BY w.name
+        ";
+
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();

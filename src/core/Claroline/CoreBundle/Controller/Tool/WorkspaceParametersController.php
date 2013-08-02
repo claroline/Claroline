@@ -13,11 +13,13 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 class WorkspaceParametersController extends AbstractParametersController
 {
     private $workspaceManager;
+    private $workspaceTagManager;
     private $security;
     private $eventDispatcher;
     private $formFactory;
@@ -26,6 +28,7 @@ class WorkspaceParametersController extends AbstractParametersController
     /**
      * @DI\InjectParams({
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "workspaceTagManager"   = @DI\Inject("claroline.manager.workspace_tag_manager"),
      *     "security"           = @DI\Inject("security.context"),
      *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
@@ -34,6 +37,7 @@ class WorkspaceParametersController extends AbstractParametersController
      */
     public function __construct(
         WorkspaceManager $workspaceManager,
+        WorkspaceTagManager $workspaceTagManager,
         SecurityContextInterface $security,
         StrictDispatcher $eventDispatcher,
         FormFactory $formFactory,
@@ -41,6 +45,7 @@ class WorkspaceParametersController extends AbstractParametersController
     )
     {
         $this->workspaceManager = $workspaceManager;
+        $this->workspaceTagManager = $workspaceTagManager;
         $this->security = $security;
         $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
@@ -153,12 +158,18 @@ class WorkspaceParametersController extends AbstractParametersController
 
         $wsRegisteredName = $workspace->getName();
         $wsRegisteredCode = $workspace->getCode();
+        $wsRegisteredDisplayable = $workspace->isDisplayable();
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array(), $workspace);
         $request = $this->getRequest();
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $this->workspaceManager->createWorkspace($workspace);
+            $displayable = $workspace->isDisplayable();
+
+            if (!$displayable && $displayable !== $wsRegisteredDisplayable) {
+                $this->workspaceTagManager->deleteAllAdminRelationsFromWorkspace($workspace);
+            }
 
             return $this->redirect(
                 $this->generateUrl(

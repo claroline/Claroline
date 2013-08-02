@@ -97,6 +97,8 @@ group_form_platformRole: Role
 group_parameter: 'Paramètres du groupe'
 groups: Groupes
 groups_list: 'Liste des groupes'
+has_been_suscribed_with_role: 'a été inscrit(e) avec le rôle'
+has_been_suscribed_with_role_group: 'a été inscrit avec le rôle'
 has_not_been_imported: 'n''a pas été importé(e)'
 has_not_been_imported_into_the_group: 'n''a pas été importé(e) dans le groupe'
 history: Historique
@@ -332,6 +334,7 @@ register: Inscription
 register_to_a_workspace: 'S''inscrire à un espace d''activités'
 registered_groups: 'Groupes enregistrés'
 registered_users: 'Utilisateurs enregistrés'
+registration_to_workspaces: 'Inscription à des espaces d''activités'
 remove_group_s_confirm_message: 'groupe(s) supprimé(s)'
 remove_user_s_confirm_message: 'utilisateur(s) supprimé(s)'
 rename: Renommer
@@ -366,6 +369,7 @@ resource_right_form_canExport: Exporter
 resource_right_form_isRecursive: Appliquer au contenu du répertoire et aux sous-répertoires
 restore : Restaurer
 results: Résultats
+results_for_search_on: 'Resultat(s) de la recherche sur'
 rights: Droits
 rights_management: 'Gestion des droits'
 role: Rôle
@@ -373,9 +377,16 @@ roles: Rôles
 save: Sauvegarder
 save_as_template: Sauvegarder comme modèle
 search: Rechercher
+search_group: 'Rechercher un groupe'
+search_user: 'Rechercher un utilisateur'
 see: Voir
 see_more: Voir plus
 select all: 'Tout sélectionner'
+select_groups_for_registration_to_workspace: 'Choississez les groupes à inscrire'
+select_roles_to_assign: 'Selectionnez les Rôles à attribuer'
+select_users_for_registration_to_workspace: 'Choississez les utilisateurs à inscrire'
+select_workspaces_for_registration: 'Choisissez les espaces d''activités pour l''inscription'
+selected_workspaces_for_registration: 'Espaces d''activités sélectionnés pour l''inscription'
 send_mail: 'Envoyer un mail'
 send_message: 'Envoyer un message'
 session_id: 'Identifiant de session'
@@ -387,6 +398,10 @@ show_as: 'Voir en tant que'
 show_profile: 'Voir le profile'
 Show: Afficher
 steal_session: 'Voler la session'
+subscribe_groups: 'Inscrire des groupes'
+subscribe_selected_groups: 'Inscrire les groupes sélectionnés'
+subscribe_selected_users: 'Inscrire les utilisateurs sélectionnés'
+subscribe_users: 'Inscrire des utilisateurs'
 switch: Echanger
 tag: Tag
 tag_children_list: 'Liste des enfants'
