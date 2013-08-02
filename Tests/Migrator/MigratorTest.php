@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\MigrationBundle\Library;
+namespace Claroline\MigrationBundle\Migrator;
 
 use Mockery as m;
 use Claroline\MigrationBundle\Tests\MockeryTestCase;

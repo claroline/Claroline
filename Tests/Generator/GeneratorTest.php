@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\MigrationBundle\Library;
+namespace Claroline\MigrationBundle\Generator;
 
 use Mockery as m;
 use Claroline\MigrationBundle\Tests\MockeryTestCase;
@@ -35,7 +35,7 @@ class GeneratorTest extends MockeryTestCase
             'fromSchema' => $this->fromSchema
         );
         $generator = m::mock(
-            'Claroline\MigrationBundle\Library\Generator[getSchemas]',
+            'Claroline\MigrationBundle\Generator\Generator[getSchemas]',
             array($this->em, $this->schemaTool)
         );
         $generator->shouldReceive('getSchemas')->once()->andReturn($schemas);

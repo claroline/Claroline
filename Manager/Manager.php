@@ -1,8 +1,11 @@
 <?php
 
-namespace Claroline\MigrationBundle\Library;
+namespace Claroline\MigrationBundle\Manager;
 
 use Symfony\Component\HttpKernel\Kernel;
+use Claroline\MigrationBundle\Generator\Generator;
+use Claroline\MigrationBundle\Generator\Writer;
+use Claroline\MigrationBundle\Migrator\Migrator;
 
 /**
  * API entry point.
@@ -18,10 +21,10 @@ class Manager
     /**
      * Constructor.
      *
-     * @param \Symfony\Component\HttpKernel\Kernel          $kernel
-     * @param \Claroline\MigrationBundle\Library\Generator  $generator
-     * @param \Claroline\MigrationBundle\Library\Writer     $writer
-     * @param \Claroline\MigrationBundle\Library\Migrator   $migrator
+     * @param \Symfony\Component\HttpKernel\Kernel              $kernel
+     * @param \Claroline\MigrationBundle\Generator\Generator    $generator
+     * @param \Claroline\MigrationBundle\Generator\Writer       $writer
+     * @param \Claroline\MigrationBundle\Migrator\Migrator      $migrator
      */
     public function __construct(
         Kernel $kernel,

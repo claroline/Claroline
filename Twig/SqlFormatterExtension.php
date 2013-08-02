@@ -2,7 +2,7 @@
 
 namespace Claroline\MigrationBundle\Twig;
 
-use Claroline\MigrationBundle\Library\SqlFormatter as Formatter;
+use Claroline\MigrationBundle\Generator\SqlFormatter as Formatter;
 
 /**
  * Adds a 'formatSql' function to the Twig environment.

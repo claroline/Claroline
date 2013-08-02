@@ -4,7 +4,7 @@ namespace Claroline\MigrationBundle\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Claroline\MigrationBundle\Library\Migrator;
+use Claroline\MigrationBundle\Migrator\Migrator;
 
 class VersionCommand extends AbstractCommand
 {

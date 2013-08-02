@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\MigrationBundle\Library;
+namespace Claroline\MigrationBundle\Migrator;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Doctrine\DBAL\Connection;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\MigrationBundle\Library;
+namespace Claroline\MigrationBundle\Generator;
 
 use Twig_Environment;
 use Symfony\Component\Filesystem\Filesystem;

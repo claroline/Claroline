@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\MigrationBundle\Library;
+namespace Claroline\MigrationBundle\Migrator;
 
 class InvalidVersionException extends \Exception
 {

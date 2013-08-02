@@ -1,9 +1,11 @@
 <?php
 
-namespace Claroline\MigrationBundle\Library;
+namespace Claroline\MigrationBundle\Manager;
 
 use Mockery as m;
 use Claroline\MigrationBundle\Tests\MockeryTestCase;
+use Claroline\MigrationBundle\Generator\Generator;
+use Claroline\MigrationBundle\Migrator\Migrator;
 
 class ManagerTest extends MockeryTestCase
 {
@@ -17,9 +19,9 @@ class ManagerTest extends MockeryTestCase
     {
         parent::setUp();
         $this->kernel = m::mock('Symfony\Component\HttpKernel\Kernel');
-        $this->writer = m::mock('Claroline\MigrationBundle\Library\Writer');
-        $this->generator = m::mock('Claroline\MigrationBundle\Library\Generator');
-        $this->migrator = m::mock('Claroline\MigrationBundle\Library\Migrator');
+        $this->writer = m::mock('Claroline\MigrationBundle\Generator\Writer');
+        $this->generator = m::mock('Claroline\MigrationBundle\Generator\Generator');
+        $this->migrator = m::mock('Claroline\MigrationBundle\Migrator\Migrator');
         $this->manager = new Manager($this->kernel, $this->generator, $this->writer, $this->migrator);
     }
 
@@ -29,7 +31,7 @@ class ManagerTest extends MockeryTestCase
     public function testGenerateBundleMigration(array $queries, $areQueriesEmpty)
     {
         $manager = m::mock(
-            'Claroline\MigrationBundle\Library\Manager[getAvailablePlatforms]',
+            'Claroline\MigrationBundle\Manager\Manager[getAvailablePlatforms]',
             array($this->kernel, $this->generator, $this->writer, $this->migrator)
         );
         $bundle = m::mock('Symfony\Component\HttpKernel\Bundle\Bundle');

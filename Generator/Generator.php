@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\MigrationBundle\Library;
+namespace Claroline\MigrationBundle\Generator;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Doctrine\ORM\EntityManager;
