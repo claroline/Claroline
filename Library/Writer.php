@@ -8,6 +8,9 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Claroline\MigrationBundle\Twig\SqlFormatterExtension;
 
+/**
+ * Class responsible for writing bundle migration queries in a migration class file.
+ */
 class Writer
 {
     private $fileSystem;

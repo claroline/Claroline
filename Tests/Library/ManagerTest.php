@@ -10,6 +10,7 @@ class ManagerTest extends MockeryTestCase
     private $kernel;
     private $generator;
     private $writer;
+    private $migrator;
     private $manager;
 
     protected function setUp()
@@ -18,7 +19,8 @@ class ManagerTest extends MockeryTestCase
         $this->kernel = m::mock('Symfony\Component\HttpKernel\Kernel');
         $this->writer = m::mock('Claroline\MigrationBundle\Library\Writer');
         $this->generator = m::mock('Claroline\MigrationBundle\Library\Generator');
-        $this->manager = new Manager($this->kernel, $this->generator, $this->writer);
+        $this->migrator = m::mock('Claroline\MigrationBundle\Library\Migrator');
+        $this->manager = new Manager($this->kernel, $this->generator, $this->writer, $this->migrator);
     }
 
     /**
@@ -28,7 +30,7 @@ class ManagerTest extends MockeryTestCase
     {
         $manager = m::mock(
             'Claroline\MigrationBundle\Library\Manager[getAvailablePlatforms]',
-            array($this->kernel, $this->generator, $this->writer)
+            array($this->kernel, $this->generator, $this->writer, $this->migrator)
         );
         $bundle = m::mock('Symfony\Component\HttpKernel\Bundle\Bundle');
         $platform = m::mock('Doctrine\DBAL\Platforms\AbstractPlatform');
@@ -62,6 +64,39 @@ class ManagerTest extends MockeryTestCase
         $this->assertInstanceOf('Doctrine\DBAL\Platforms\AbstractPlatform', $platforms['pdo_mysql']);
     }
 
+    public function testGetBundleStatus()
+    {
+        $bundle = m::mock('Symfony\Component\HttpKernel\Bundle\Bundle');
+        $this->kernel->shouldReceive('getBundle')
+            ->once()
+            ->with('FooBundle')
+            ->andReturn($bundle);
+        $this->migrator->shouldReceive('getMigrationStatus')
+            ->once()
+            ->with($bundle)
+            ->andReturn('status');
+        $this->assertEquals('status', $this->manager->getBundleStatus('FooBundle'));
+    }
+
+    /**
+     * @dataProvider migrationProvider
+     */
+    public function testMigrate($direction, $method)
+    {
+        $bundle = m::mock('Symfony\Component\HttpKernel\Bundle\Bundle');
+        $this->kernel->shouldReceive('getBundle')
+            ->once()
+            ->with('FooBundle')
+            ->andReturn($bundle);
+        $this->migrator->shouldReceive('migrate')
+            ->once()
+            ->with($bundle, '123', $direction);
+        $this->migrator->shouldReceive('getCurrentVersion')
+            ->once()
+            ->with($bundle);
+        $this->manager->{$method}('FooBundle', '123');
+    }
+
     public function queriesProvider()
     {
         return array(
@@ -79,6 +114,14 @@ class ManagerTest extends MockeryTestCase
                 ),
                 true
             ),
+        );
+    }
+
+    public function migrationProvider()
+    {
+        return array(
+            array(Migrator::DIRECTION_UP, 'upgradeBundle'),
+            array(Migrator::DIRECTION_DOWN, 'downgradeBundle')
         );
     }
 }
