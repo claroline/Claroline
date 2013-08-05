@@ -80,7 +80,8 @@ class ResourceRights
      * )
      * @ORM\JoinTable(
      *     name="claro_list_type_creation",
-     *     inverseJoinColumns={@ORM\JoinColumn(name="resource_type_id")}
+     *     joinColumns={@ORM\JoinColumn(name="resource_type_id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="right_id")})
      * )
      */
     protected $resourceTypes;
