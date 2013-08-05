@@ -28,13 +28,16 @@ Launch:
 composer update claroline/migration-bundle
 ```
 
-Then add the bundle to your app's kernel:
+Then add the bundle to your application kernel:
 
 ```php
 // app/AppKernel.php
 <?php
 
-// ...
+use Symfony\Component\HttpKernel\Kernel;
+
+class AppKernel extends Kernel
+{
     public function registerBundles()
     {
         $bundles = array(
@@ -42,7 +45,10 @@ Then add the bundle to your app's kernel:
             new Claroline\MigrationBundle\ClarolineMigrationBundle(),
         );
     }
-// ...
+
+    // ...
+}
+
 ```
 
 COMMANDS
@@ -61,7 +67,6 @@ You can execute a migration using one of the following commands:
 
 ```sh
 php app/console claroline:migration:upgrade AcmeFooBundle
-
 php app/console claroline:migration:downgrade AcmeFooBundle
 ```
 
@@ -71,10 +76,8 @@ using the `--target` option:
 
 ```sh
 php app/console claroline:migration:downgrade AcmeFooBundle --target=20130101124512
-
-php app/console claroline:migration:upgrade AcmeFooBundle --target=farthest
-
 php app/console claroline:migration:upgrade AcmeFooBundle --target=nearest
+php app/console claroline:migration:upgrade AcmeFooBundle --target=farthest
 ```
 
 where *farthest* means a full upgrade/downgrade.
@@ -94,11 +97,8 @@ The whole API is accessible through the migration [manager class][manager_path]:
 ```php
 <?php
 
-// ...
+$container->get('claroline.migration.manager')->upgradeBundle($bundle, '20131201134501');
 
-    $container->get('claroline.migration.manager')->upgradeBundle($bundle, '20131201134501');
-
-// ...
 ```
 
 [manager_path]: Manager/Manager.php
