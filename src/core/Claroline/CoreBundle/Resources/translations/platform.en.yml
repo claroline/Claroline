@@ -40,6 +40,7 @@ analytics_home: Home
 analytics_connections: Connections
 analytics_resources: Resources
 analytics_top: Top
+apply: Apply
 available_workspaces: 'Available workspaces'
 by: by
 cancel: Cancel
@@ -99,6 +100,8 @@ group_form_platformRole: Role
 group_parameter: 'Group parameter'
 groups: Groups
 groups_list: 'Groups list'
+has_been_suscribed_with_role: 'has been suscribed with role'
+has_been_suscribed_with_role_group: 'has been suscribed with role'
 has_not_been_imported: 'has not been imported'
 has_not_been_imported_into_the_group: 'has not been imported into the group'
 history: History
@@ -342,8 +345,10 @@ register: Register
 register_to_a_workspace: 'Register to a workspace'
 registered_groups: 'Registered groups'
 registered_users: 'Registered users'
+registration_to_workspaces: 'Registration to workspaces'
 remove_group_s_confirm_message: 'group(s) removed'
 remove_user_s_confirm_message: 'user(s) removed'
+remove_messages_confirm_message: 'message(s) removed'
 rename: Rename
 reset: Reset
 reset_pwd: 'Reset Your Password'
@@ -378,17 +383,27 @@ resource_right_form_canView: See
 resource_right_form_canExport: Export
 resource_right_form_isRecursive: Apply changes to current and sub directories
 restore : Restore
+restore_messages_confirm_message: restored message(s)
 results: Results
+results_for_search_on: 'Result(s) for search on'
 rights: Rights
 rights_management: 'Rights Management'
 role: Role
 roles: Roles
+role_creation: Role creation
 save: Save
 save_as_template: Save as template
 search: Search
+search_group: 'Search for a group'
+search_user: 'Search for an user'
 see: See
 see_more: See more
 select all: Select all
+select_groups_for_registration_to_workspace: 'Select groups to register'
+select_roles_to_assign: 'Select roles to assign'
+select_users_for_registration_to_workspace: 'Select users to register'
+select_workspaces_for_registration: 'Select workspaces for registration'
+selected_workspaces_for_registration: 'Selected workspaces for registration'
 send_mail: 'Send a mail'
 send_message: 'Send a message'
 session_id: 'Session id'
@@ -398,6 +413,10 @@ show_as_admin: 'Show as admin'
 show_as_user: 'Show as user'
 show_as: 'Show as'
 show_profile: 'Show profile'
+subscribe_groups: 'Subscribe groups'
+subscribe_selected_groups: 'Subscribe selected groups'
+subscribe_selected_users: 'Subscribe selected users'
+subscribe_users: 'Subscribe users'
 switch: Switch
 tag: Tag
 tag_children_list: 'Tag children list'
@@ -455,6 +474,7 @@ users: Users
 users_connected_once: users connected at least once
 users_visits: Users' connections
 unwritable_file_exception: "The file %path% is not writable."
+unregistered: Unregistered
 validate: Validate
 view: View
 views: Views
@@ -483,6 +503,8 @@ workspace_form_type: Type
 workspace_order_tool_edit_form_name: Name
 workspace_registration_confirm_title: 'Do you really want to register to this workspace ?'
 workspace_resource: Resources
+workspace_role_type_form_translationKey: Name
+workspace_role_type_form_requireDir: Create a directory
 workspace_tag_form_name: Name
 workspace_template_form_name: Name
 workspace_tools: Tools
@@ -534,3 +556,4 @@ Draw an area on the graph to zoom, double-click to cancel: 'Draw an area on the 
 Overview of recent activities of your workspaces: 'Overview of recent activities of your workspaces'
 Overview of recent activities in %workspaceName%: 'Overview of recent activities in %workspaceName%'
 Overview of all recent activities in %workspaceName% : 'Overview of all recent activities in %workspaceName%'
+select_all: Select all

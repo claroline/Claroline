@@ -5,27 +5,35 @@ namespace Claroline\CoreBundle\Controller\Tool;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Claroline\CoreBundle\Controller\Tool\AbstractParametersController;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
-class WorkspaceParametersController extends AbstractParametersController
+class WorkspaceParametersController extends Controller
 {
     private $workspaceManager;
+    private $workspaceTagManager;
     private $security;
     private $eventDispatcher;
     private $formFactory;
     private $router;
+    private $request;
 
     /**
      * @DI\InjectParams({
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "workspaceTagManager"   = @DI\Inject("claroline.manager.workspace_tag_manager"),
      *     "security"           = @DI\Inject("security.context"),
      *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
@@ -34,17 +42,21 @@ class WorkspaceParametersController extends AbstractParametersController
      */
     public function __construct(
         WorkspaceManager $workspaceManager,
+        WorkspaceTagManager $workspaceTagManager,
         SecurityContextInterface $security,
         StrictDispatcher $eventDispatcher,
         FormFactory $formFactory,
-        UrlGeneratorInterface $router
+        UrlGeneratorInterface $router,
+        Request $request
     )
     {
         $this->workspaceManager = $workspaceManager;
+        $this->workspaceTagManager = $workspaceTagManager;
         $this->security = $security;
         $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
         $this->router = $router;
+        $this->request = $request;
     }
 
     /**
@@ -87,9 +99,8 @@ class WorkspaceParametersController extends AbstractParametersController
     public function workspaceExportAction(AbstractWorkspace $workspace)
     {
         $this->checkAccess($workspace);
-        $request = $this->getRequest();
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_TEMPLATE);
-        $form->handleRequest($request);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $name = $form->get('name')->getData();
@@ -153,12 +164,17 @@ class WorkspaceParametersController extends AbstractParametersController
 
         $wsRegisteredName = $workspace->getName();
         $wsRegisteredCode = $workspace->getCode();
+        $wsRegisteredDisplayable = $workspace->isDisplayable();
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array(), $workspace);
-        $request = $this->getRequest();
-        $form->handleRequest($request);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $this->workspaceManager->createWorkspace($workspace);
+            $displayable = $workspace->isDisplayable();
+
+            if (!$displayable && $displayable !== $wsRegisteredDisplayable) {
+                $this->workspaceTagManager->deleteAllAdminRelationsFromWorkspace($workspace);
+            }
 
             return $this->redirect(
                 $this->generateUrl(
@@ -202,5 +218,12 @@ class WorkspaceParametersController extends AbstractParametersController
         );
 
         return new Response($event->getContent());
+    }
+
+    private function checkAccess(AbstractWorkspace $workspace)
+    {
+        if (!$this->security->isGranted('parameters', $workspace)) {
+            throw new AccessDeniedException();
+        }
     }
 }

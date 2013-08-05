@@ -18,110 +18,120 @@ class LogWorkspaceWidgetConfig
     protected $id;
 
     /**
-     * @ORM\Column(type="boolean", name="is_default", nullable=false)
+     * @ORM\Column(name="is_default", type="boolean")
      */
     protected $isDefault = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
-     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
      */
     protected $workspace;
 
     /**
-     * @ORM\Column(type="integer", name="amount", nullable=false)
+     * @ORM\Column(type="integer")
      */
     protected $amount = 5;
 
     // CREATION
     /**
-     * @ORM\Column(type="boolean", name="resource_copy", nullable=false)
+     * @ORM\Column(name="resource_copy", type="boolean")
      */
     protected $resourceCopy = true;
+
     /**
-     * @ORM\Column(type="boolean", name="resource_create", nullable=false)
+     * @ORM\Column(name="resource_create", type="boolean")
      */
     protected $resourceCreate = true;
+
     /**
-     * @ORM\Column(type="boolean", name="resource_shortcut", nullable=false)
+     * @ORM\Column(name="resource_shortcut", type="boolean")
      */
     protected $resourceShortcut = true;
 
     // READ
     /**
-     * @ORM\Column(type="boolean", name="resource_read", nullable=false)
+     * @ORM\Column(name="resource_read", type="boolean")
      */
     protected $resourceRead = true;
+
     /**
-     * @ORM\Column(type="boolean", name="ws_tool_read", nullable=false)
+     * @ORM\Column(name="ws_tool_read", type="boolean")
      */
     protected $wsToolRead = true;
 
     // DOWNLOAD
     /**
-     * @ORM\Column(type="boolean", name="resource_export", nullable=false)
+     * @ORM\Column(name="resource_export", type="boolean")
      */
     protected $resourceExport = true;
 
     // UPDATE
     /**
-     * @ORM\Column(type="boolean", name="resource_update", nullable=false)
+     * @ORM\Column(name="resource_update", type="boolean")
      */
     protected $resourceUpdate = true;
+
     /**
-     * @ORM\Column(type="boolean", name="resource_update_rename", nullable=false)
+     * @ORM\Column(name="resource_update_rename", type="boolean")
      */
     protected $resourceUpdateRename = true;
 
     // NEW IN THE OBJECT
     /**
-     * @ORM\Column(type="boolean", name="resource_child_update", nullable=false)
+     * @ORM\Column(name="resource_child_update", type="boolean")
      */
     protected $resourceChildUpdate = true;
 
     // DELETE
     /**
-     * @ORM\Column(type="boolean", name="resource_delete", nullable=false)
+     * @ORM\Column(name="resource_delete", type="boolean")
      */
     protected $resourceDelete = true;
 
     // MOVE
     /**
-     * @ORM\Column(type="boolean", name="resource_move", nullable=false)
+     * @ORM\Column(name="resource_move", type="boolean")
      */
     protected $resourceMove = true;
 
     // INSCRIPTION
     /**
-     * @ORM\Column(type="boolean", name="ws_role_subscribe_user", nullable=false)
+     * @ORM\Column(name="ws_role_subscribe_user", type="boolean")
      */
     protected $wsRoleSubscribeUser = true;
+
     /**
-     * @ORM\Column(type="boolean", name="ws_role_subscribe_group", nullable=false)
+     * @ORM\Column(name="ws_role_subscribe_group", type="boolean")
      */
     protected $wsRoleSubscribeGroup = true;
+
     /**
-     * @ORM\Column(type="boolean", name="ws_role_unsubscribe_user", nullable=false)
+     * @ORM\Column(name="ws_role_unsubscribe_user", type="boolean")
      */
     protected $wsRoleUnsubscribeUser = true;
+
     /**
-     * @ORM\Column(type="boolean", name="ws_role_unsubscribe_group", nullable=false)
+     * @ORM\Column(name="ws_role_unsubscribe_group", type="boolean")
      */
     protected $wsRoleUnsubscribeGroup = true;
+
     /**
-     * @ORM\Column(type="boolean", name="ws_role_change_right", nullable=false)
+     * @ORM\Column(name="ws_role_change_right", type="boolean")
      */
     protected $wsRoleChangeRight = true;
+
     /**
-     * @ORM\Column(type="boolean", name="ws_role_create", nullable=false)
+     * @ORM\Column(name="ws_role_create", type="boolean")
      */
     protected $wsRoleCreate = true;
+
     /**
-     * @ORM\Column(type="boolean", name="ws_role_delete", nullable=false)
+     * @ORM\Column(name="ws_role_delete", type="boolean")
      */
     protected $wsRoleDelete = true;
+
     /**
-     * @ORM\Column(type="boolean", name="ws_role_update", nullable=false)
+     * @ORM\Column(name="ws_role_update", type="boolean")
      */
     protected $wsRoleUpdate = true;
 

@@ -1,0 +1,9 @@
+{% twig_js name="roleUserLabel" %}
+
+<span class="label label-success" id="label-{{ roleId }}-{{ userId}}">
+{{ roleName }}
+<i class="icon-remove-sign pointer-hand remove-role-button"
+   href="{{ path('claro_workspace_remove_role_from_user', {'workspace': workspaceId, 'user': userId, 'role': roleId } ) }}"
+>
+</i>
+</span>

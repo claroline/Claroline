@@ -75,7 +75,7 @@ class MessageType extends AbstractType
                 ->add(
                     'content',
                     'textarea',
-                    array('required' => true, 'attr' => array ('class' => 'tinymce', 'data-theme' => 'simple'))
+                    array('required' => true, 'attr' => array ('class' => 'tinymce', 'data-theme' => 'medium'))
                 );
     }
 
