@@ -21,34 +21,30 @@ class Config
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
-     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
      */
     protected $workspace;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;
 
     /**
      * @Assert\NotBlank()
      * @CustomAssert\IsRss()
-     * @ORM\Column(type="string", name="url")
+     * @ORM\Column()
      */
     protected $url;
 
     /**
-     * @ORM\Column(type="boolean", name="is_default")
+     * @ORM\Column(name="is_default", type="boolean")
      */
     protected $isDefault = false;
 
     /**
-     * @ORM\Column(type="boolean", name="is_desktop")
+     * @ORM\Column(name="is_desktop", type="boolean")
      */
     protected $isDesktop = false;
-
-
 
     public function getId()
     {
@@ -104,5 +100,4 @@ class Config
     {
         return $this->user;
     }
-
 }
