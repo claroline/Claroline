@@ -84,7 +84,6 @@ class ResourceType
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceRights",
      *     mappedBy="resourceTypes"
      * )
-     * @ORM\JoinTable(joinColumns={@ORM\JoinColumn(name="resource_type_id")})
      */
     protected $rights;
 
