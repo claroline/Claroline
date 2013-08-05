@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/07/30 05:15:44
+ * Generation date: 2013/08/05 09:37:37
  */
-class Version20130730171543 extends AbstractMigration
+class Version20130805093737 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -78,8 +78,8 @@ class Version20130730171543 extends AbstractMigration
                 translation_key VARCHAR(255) NOT NULL, 
                 is_read_only TINYINT(1) NOT NULL, 
                 type INT NOT NULL, 
+                UNIQUE INDEX UNIQ_317774715E237E06 (name), 
                 INDEX IDX_3177747182D40A1F (workspace_id), 
-                UNIQUE INDEX role_unique_name (name), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
@@ -139,11 +139,11 @@ class Version20130730171543 extends AbstractMigration
         $this->addSql("
             CREATE TABLE claro_workspace_aggregation (
                 aggregator_workspace_id INT NOT NULL, 
-                workspace_id INT NOT NULL, 
+                simple_workspace_id INT NOT NULL, 
                 INDEX IDX_D012AF0FA08DFE7A (aggregator_workspace_id), 
-                INDEX IDX_D012AF0F82D40A1F (workspace_id), 
+                INDEX IDX_D012AF0F782B5A3F (simple_workspace_id), 
                 PRIMARY KEY(
-                    aggregator_workspace_id, workspace_id
+                    aggregator_workspace_id, simple_workspace_id
                 )
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
@@ -197,17 +197,17 @@ class Version20130730171543 extends AbstractMigration
                 can_export TINYINT(1) NOT NULL, 
                 INDEX IDX_3848F483D60322AC (role_id), 
                 INDEX IDX_3848F48389329D25 (resource_id), 
-                UNIQUE INDEX user (resource_id, role_id), 
+                UNIQUE INDEX resource_rights_unique_resource_role (resource_id, role_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_list_type_creation (
-                right_id INT NOT NULL, 
                 resource_type_id INT NOT NULL, 
-                INDEX IDX_84B4BEBA54976835 (right_id), 
+                right_id INT NOT NULL, 
                 INDEX IDX_84B4BEBA98EC6B7B (resource_type_id), 
-                PRIMARY KEY(right_id, resource_type_id)
+                INDEX IDX_84B4BEBA54976835 (right_id), 
+                PRIMARY KEY(resource_type_id, right_id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
@@ -218,9 +218,9 @@ class Version20130730171543 extends AbstractMigration
                 name VARCHAR(255) NOT NULL, 
                 class VARCHAR(255) DEFAULT NULL, 
                 is_exportable TINYINT(1) NOT NULL, 
+                UNIQUE INDEX UNIQ_AEC626935E237E06 (name), 
                 INDEX IDX_AEC62693EC942BCF (plugin_id), 
                 INDEX IDX_AEC62693727ACA70 (parent_id), 
-                UNIQUE INDEX res_type_unique_name (name), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
@@ -335,7 +335,7 @@ class Version20130730171543 extends AbstractMigration
                 id INT AUTO_INCREMENT NOT NULL, 
                 hash VARCHAR(255) NOT NULL, 
                 name VARCHAR(255) NOT NULL, 
-                UNIQUE INDEX template_unique_hash (hash), 
+                UNIQUE INDEX UNIQ_94D0CBDBD1B862B8 (hash), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
@@ -469,7 +469,7 @@ class Version20130730171543 extends AbstractMigration
                 id INT NOT NULL, 
                 size INT NOT NULL, 
                 hash_name VARCHAR(36) NOT NULL, 
-                UNIQUE INDEX file_unique_hashname (hash_name), 
+                UNIQUE INDEX UNIQ_EA81C80BE1F029B6 (hash_name), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
@@ -532,8 +532,8 @@ class Version20130730171543 extends AbstractMigration
                 is_displayable_in_desktop TINYINT(1) NOT NULL, 
                 is_exportable TINYINT(1) NOT NULL, 
                 has_options TINYINT(1) NOT NULL, 
+                UNIQUE INDEX UNIQ_60F909655E237E06 (name), 
                 INDEX IDX_60F90965EC942BCF (plugin_id), 
-                UNIQUE INDEX tool_unique_name (name), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
@@ -562,8 +562,8 @@ class Version20130730171543 extends AbstractMigration
                 is_configurable TINYINT(1) NOT NULL, 
                 icon VARCHAR(255) NOT NULL, 
                 is_exportable TINYINT(1) NOT NULL, 
+                UNIQUE INDEX UNIQ_76CA6C4F5E237E06 (name), 
                 INDEX IDX_76CA6C4FEC942BCF (plugin_id), 
-                UNIQUE INDEX widget_unique_name (name), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
@@ -749,14 +749,12 @@ class Version20130730171543 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_workspace_aggregation 
             ADD CONSTRAINT FK_D012AF0FA08DFE7A FOREIGN KEY (aggregator_workspace_id) 
-            REFERENCES claro_workspace (id) 
-            ON DELETE CASCADE
+            REFERENCES claro_workspace (id)
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_aggregation 
-            ADD CONSTRAINT FK_D012AF0F82D40A1F FOREIGN KEY (workspace_id) 
-            REFERENCES claro_workspace (id) 
-            ON DELETE CASCADE
+            ADD CONSTRAINT FK_D012AF0F782B5A3F FOREIGN KEY (simple_workspace_id) 
+            REFERENCES claro_workspace (id)
         ");
         $this->addSql("
             ALTER TABLE claro_user_message 
@@ -814,15 +812,13 @@ class Version20130730171543 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_list_type_creation 
-            ADD CONSTRAINT FK_84B4BEBA54976835 FOREIGN KEY (right_id) 
-            REFERENCES claro_resource_rights (id) 
-            ON DELETE CASCADE
+            ADD CONSTRAINT FK_84B4BEBA98EC6B7B FOREIGN KEY (resource_type_id) 
+            REFERENCES claro_resource_rights (id)
         ");
         $this->addSql("
             ALTER TABLE claro_list_type_creation 
-            ADD CONSTRAINT FK_84B4BEBA98EC6B7B FOREIGN KEY (resource_type_id) 
-            REFERENCES claro_resource_type (id) 
-            ON DELETE CASCADE
+            ADD CONSTRAINT FK_84B4BEBA54976835 FOREIGN KEY (right_id) 
+            REFERENCES claro_resource_type (id)
         ");
         $this->addSql("
             ALTER TABLE claro_resource_type 
@@ -1360,7 +1356,7 @@ class Version20130730171543 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_aggregation 
-            DROP FOREIGN KEY FK_D012AF0F82D40A1F
+            DROP FOREIGN KEY FK_D012AF0F782B5A3F
         ");
         $this->addSql("
             ALTER TABLE claro_ordered_tool 
@@ -1392,7 +1388,7 @@ class Version20130730171543 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_list_type_creation 
-            DROP FOREIGN KEY FK_84B4BEBA54976835
+            DROP FOREIGN KEY FK_84B4BEBA98EC6B7B
         ");
         $this->addSql("
             ALTER TABLE claro_resource 
@@ -1400,7 +1396,7 @@ class Version20130730171543 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_list_type_creation 
-            DROP FOREIGN KEY FK_84B4BEBA98EC6B7B
+            DROP FOREIGN KEY FK_84B4BEBA54976835
         ");
         $this->addSql("
             ALTER TABLE claro_resource_type 
