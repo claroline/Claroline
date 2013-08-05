@@ -110,12 +110,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/MigrationBundle.git",
-                "reference": "d761c5b29d6a4d01533d25afee29e0fb0985fa35"
+                "reference": "a89af72dd326d255d40de49ed14828fda0523942"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/MigrationBundle/zipball/d761c5b29d6a4d01533d25afee29e0fb0985fa35",
-                "reference": "d761c5b29d6a4d01533d25afee29e0fb0985fa35",
+                "url": "https://api.github.com/repos/claroline/MigrationBundle/zipball/a89af72dd326d255d40de49ed14828fda0523942",
+                "reference": "a89af72dd326d255d40de49ed14828fda0523942",
                 "shasum": ""
             },
             "require": {
@@ -152,7 +152,7 @@
                 "Claroline",
                 "migration"
             ],
-            "time": "2013-07-31 07:36:42"
+            "time": "2013-08-02 13:33:22"
         },
         {
             "name": "claroline/taxonomy-bundle",
@@ -541,12 +541,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "170442dcef20c86df4c3bcba4714900ae87dbf33"
+                "reference": "2a7f59c1ecc62d828edf012f344ca44acdbe3c75"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/170442dcef20c86df4c3bcba4714900ae87dbf33",
-                "reference": "170442dcef20c86df4c3bcba4714900ae87dbf33",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/2a7f59c1ecc62d828edf012f344ca44acdbe3c75",
+                "reference": "2a7f59c1ecc62d828edf012f344ca44acdbe3c75",
                 "shasum": ""
             },
             "require": {
@@ -603,7 +603,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2013-07-31 05:13:32"
+            "time": "2013-08-03 15:29:12"
         },
         {
             "name": "doctrine/doctrine-bundle",
