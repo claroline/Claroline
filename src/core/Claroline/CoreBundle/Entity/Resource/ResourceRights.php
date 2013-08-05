@@ -30,25 +30,6 @@ class ResourceRights
     protected $id;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Role",
-     *     inversedBy="resourceRights"
-     * )
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     */
-    protected $role;
-
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
-     *     inversedBy="rights",
-     *     cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     */
-    protected $resource;
-
-    /**
      * @ORM\Column(name="can_delete", type="boolean")
      */
     protected $canDelete = false;
@@ -74,14 +55,33 @@ class ResourceRights
     protected $canExport = false;
 
     /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Role",
+     *     inversedBy="resourceRights"
+     * )
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     */
+    protected $role;
+
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
+     *     inversedBy="rights",
+     *     cascade={"persist"}
+     * )
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     */
+    protected $resource;
+
+    /**
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
      *     inversedBy="rights"
      * )
      * @ORM\JoinTable(
      *     name="claro_list_type_creation",
-     *     joinColumns={@ORM\JoinColumn(name="resource_type_id")},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="right_id")})
+     *     joinColumns={@ORM\JoinColumn(name="resource_rights_id", onDelete="CASCADE")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="resource_type_id", onDelete="CASCADE")})
      * )
      */
     protected $resourceTypes;

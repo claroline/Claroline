@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\sqlsrv;
+namespace Claroline\CoreBundle\Migrations\pdo_mysql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,868 +8,637 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/08/05 09:37:39
+ * Generation date: 2013/08/05 10:47:54
  */
-class Version20130805093737 extends AbstractMigration
+class Version20130805104754 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             CREATE TABLE claro_user (
-                id INT IDENTITY NOT NULL, 
-                workspace_id INT, 
-                first_name NVARCHAR(50) NOT NULL, 
-                last_name NVARCHAR(50) NOT NULL, 
-                username NVARCHAR(255) NOT NULL, 
-                password NVARCHAR(255) NOT NULL, 
-                salt NVARCHAR(255) NOT NULL, 
-                phone NVARCHAR(255), 
-                mail NVARCHAR(255) NOT NULL, 
-                administrative_code NVARCHAR(255), 
-                creation_date DATETIME2(6) NOT NULL, 
-                reset_password NVARCHAR(255), 
-                hash_time INT, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_EB8D2852F85E0677 ON claro_user (username) 
-            WHERE username IS NOT NULL
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_EB8D28525126AC48 ON claro_user (mail) 
-            WHERE mail IS NOT NULL
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_EB8D285282D40A1F ON claro_user (workspace_id) 
-            WHERE workspace_id IS NOT NULL
+                id INT AUTO_INCREMENT NOT NULL, 
+                workspace_id INT DEFAULT NULL, 
+                first_name VARCHAR(50) NOT NULL, 
+                last_name VARCHAR(50) NOT NULL, 
+                username VARCHAR(255) NOT NULL, 
+                password VARCHAR(255) NOT NULL, 
+                salt VARCHAR(255) NOT NULL, 
+                phone VARCHAR(255) DEFAULT NULL, 
+                mail VARCHAR(255) NOT NULL, 
+                administrative_code VARCHAR(255) DEFAULT NULL, 
+                creation_date DATETIME NOT NULL, 
+                reset_password VARCHAR(255) DEFAULT NULL, 
+                hash_time INT DEFAULT NULL, 
+                UNIQUE INDEX UNIQ_EB8D2852F85E0677 (username), 
+                UNIQUE INDEX UNIQ_EB8D28525126AC48 (mail), 
+                UNIQUE INDEX UNIQ_EB8D285282D40A1F (workspace_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_user_group (
                 user_id INT NOT NULL, 
                 group_id INT NOT NULL, 
-                PRIMARY KEY (user_id, group_id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_ED8B34C7A76ED395 ON claro_user_group (user_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_ED8B34C7FE54D947 ON claro_user_group (group_id)
+                INDEX IDX_ED8B34C7A76ED395 (user_id), 
+                INDEX IDX_ED8B34C7FE54D947 (group_id), 
+                PRIMARY KEY(user_id, group_id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_user_role (
                 user_id INT NOT NULL, 
                 role_id INT NOT NULL, 
-                PRIMARY KEY (user_id, role_id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_797E43FFA76ED395 ON claro_user_role (user_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_797E43FFD60322AC ON claro_user_role (role_id)
+                INDEX IDX_797E43FFA76ED395 (user_id), 
+                INDEX IDX_797E43FFD60322AC (role_id), 
+                PRIMARY KEY(user_id, role_id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_group (
-                id INT IDENTITY NOT NULL, 
-                name NVARCHAR(255) NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX group_unique_name ON claro_group (name) 
-            WHERE name IS NOT NULL
+                id INT AUTO_INCREMENT NOT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                UNIQUE INDEX group_unique_name (name), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_group_role (
                 group_id INT NOT NULL, 
                 role_id INT NOT NULL, 
-                PRIMARY KEY (group_id, role_id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_1CBA5A40FE54D947 ON claro_group_role (group_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_1CBA5A40D60322AC ON claro_group_role (role_id)
+                INDEX IDX_1CBA5A40FE54D947 (group_id), 
+                INDEX IDX_1CBA5A40D60322AC (role_id), 
+                PRIMARY KEY(group_id, role_id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_role (
-                id INT IDENTITY NOT NULL, 
-                workspace_id INT, 
-                name NVARCHAR(255) NOT NULL, 
-                translation_key NVARCHAR(255) NOT NULL, 
-                is_read_only BIT NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
+                workspace_id INT DEFAULT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                translation_key VARCHAR(255) NOT NULL, 
+                is_read_only TINYINT(1) NOT NULL, 
                 type INT NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_317774715E237E06 ON claro_role (name) 
-            WHERE name IS NOT NULL
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_3177747182D40A1F ON claro_role (workspace_id)
+                UNIQUE INDEX UNIQ_317774715E237E06 (name), 
+                INDEX IDX_3177747182D40A1F (workspace_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_resource (
-                id INT IDENTITY NOT NULL, 
-                license_id INT, 
+                id INT AUTO_INCREMENT NOT NULL, 
+                license_id INT DEFAULT NULL, 
                 resource_type_id INT NOT NULL, 
                 user_id INT NOT NULL, 
-                icon_id INT, 
-                parent_id INT, 
+                icon_id INT DEFAULT NULL, 
+                parent_id INT DEFAULT NULL, 
                 workspace_id INT NOT NULL, 
-                next_id INT, 
-                previous_id INT, 
-                creation_date DATETIME2(6) NOT NULL, 
-                modification_date DATETIME2(6) NOT NULL, 
-                name NVARCHAR(255) NOT NULL, 
-                lvl INT, 
-                path NVARCHAR(3000), 
-                mime_type NVARCHAR(255), 
-                discr NVARCHAR(255) NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_F44381E0460F904B ON claro_resource (license_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_F44381E098EC6B7B ON claro_resource (resource_type_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_F44381E0A76ED395 ON claro_resource (user_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_F44381E054B9D732 ON claro_resource (icon_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_F44381E0727ACA70 ON claro_resource (parent_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_F44381E082D40A1F ON claro_resource (workspace_id)
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_F44381E0AA23F6C8 ON claro_resource (next_id) 
-            WHERE next_id IS NOT NULL
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_F44381E02DE62210 ON claro_resource (previous_id) 
-            WHERE previous_id IS NOT NULL
+                next_id INT DEFAULT NULL, 
+                previous_id INT DEFAULT NULL, 
+                creation_date DATETIME NOT NULL, 
+                modification_date DATETIME NOT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                lvl INT DEFAULT NULL, 
+                path VARCHAR(3000) DEFAULT NULL, 
+                mime_type VARCHAR(255) DEFAULT NULL, 
+                discr VARCHAR(255) NOT NULL, 
+                INDEX IDX_F44381E0460F904B (license_id), 
+                INDEX IDX_F44381E098EC6B7B (resource_type_id), 
+                INDEX IDX_F44381E0A76ED395 (user_id), 
+                INDEX IDX_F44381E054B9D732 (icon_id), 
+                INDEX IDX_F44381E0727ACA70 (parent_id), 
+                INDEX IDX_F44381E082D40A1F (workspace_id), 
+                UNIQUE INDEX UNIQ_F44381E0AA23F6C8 (next_id), 
+                UNIQUE INDEX UNIQ_F44381E02DE62210 (previous_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_workspace (
-                id INT IDENTITY NOT NULL, 
-                user_id INT, 
-                parent_id INT, 
-                name NVARCHAR(255) NOT NULL, 
-                code NVARCHAR(255) NOT NULL, 
-                is_public BIT, 
-                displayable BIT, 
-                guid NVARCHAR(255) NOT NULL, 
-                self_registration BIT, 
-                self_unregistration BIT, 
-                discr NVARCHAR(255) NOT NULL, 
-                lft INT, 
-                lvl INT, 
-                rgt INT, 
-                root INT, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_D902854577153098 ON claro_workspace (code) 
-            WHERE code IS NOT NULL
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_D90285452B6FCFB2 ON claro_workspace (guid) 
-            WHERE guid IS NOT NULL
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D9028545A76ED395 ON claro_workspace (user_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D9028545727ACA70 ON claro_workspace (parent_id)
+                id INT AUTO_INCREMENT NOT NULL, 
+                user_id INT DEFAULT NULL, 
+                parent_id INT DEFAULT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                code VARCHAR(255) NOT NULL, 
+                is_public TINYINT(1) DEFAULT NULL, 
+                displayable TINYINT(1) DEFAULT NULL, 
+                guid VARCHAR(255) NOT NULL, 
+                self_registration TINYINT(1) DEFAULT NULL, 
+                self_unregistration TINYINT(1) DEFAULT NULL, 
+                discr VARCHAR(255) NOT NULL, 
+                lft INT DEFAULT NULL, 
+                lvl INT DEFAULT NULL, 
+                rgt INT DEFAULT NULL, 
+                root INT DEFAULT NULL, 
+                UNIQUE INDEX UNIQ_D902854577153098 (code), 
+                UNIQUE INDEX UNIQ_D90285452B6FCFB2 (guid), 
+                INDEX IDX_D9028545A76ED395 (user_id), 
+                INDEX IDX_D9028545727ACA70 (parent_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_workspace_aggregation (
                 aggregator_workspace_id INT NOT NULL, 
                 simple_workspace_id INT NOT NULL, 
-                PRIMARY KEY (
+                INDEX IDX_D012AF0FA08DFE7A (aggregator_workspace_id), 
+                INDEX IDX_D012AF0F782B5A3F (simple_workspace_id), 
+                PRIMARY KEY(
                     aggregator_workspace_id, simple_workspace_id
                 )
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D012AF0FA08DFE7A ON claro_workspace_aggregation (aggregator_workspace_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D012AF0F782B5A3F ON claro_workspace_aggregation (simple_workspace_id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_user_message (
-                id INT IDENTITY NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
                 user_id INT NOT NULL, 
                 message_id INT NOT NULL, 
-                is_removed BIT NOT NULL, 
-                is_read BIT NOT NULL, 
-                is_sent BIT NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D48EA38AA76ED395 ON claro_user_message (user_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D48EA38A537A1329 ON claro_user_message (message_id)
+                is_removed TINYINT(1) NOT NULL, 
+                is_read TINYINT(1) NOT NULL, 
+                is_sent TINYINT(1) NOT NULL, 
+                INDEX IDX_D48EA38AA76ED395 (user_id), 
+                INDEX IDX_D48EA38A537A1329 (message_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_ordered_tool (
-                id INT IDENTITY NOT NULL, 
-                workspace_id INT, 
+                id INT AUTO_INCREMENT NOT NULL, 
+                workspace_id INT DEFAULT NULL, 
                 tool_id INT NOT NULL, 
-                user_id INT, 
+                user_id INT DEFAULT NULL, 
                 display_order INT NOT NULL, 
-                name NVARCHAR(255) NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_6CF1320E82D40A1F ON claro_ordered_tool (workspace_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_6CF1320E8F7B22CC ON claro_ordered_tool (tool_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_6CF1320EA76ED395 ON claro_ordered_tool (user_id)
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX ordered_tool_unique_tool_ws_usr ON claro_ordered_tool (tool_id, workspace_id, user_id) 
-            WHERE tool_id IS NOT NULL 
-            AND workspace_id IS NOT NULL 
-            AND user_id IS NOT NULL
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX ordered_tool_unique_name_by_workspace ON claro_ordered_tool (workspace_id, name) 
-            WHERE workspace_id IS NOT NULL 
-            AND name IS NOT NULL
+                name VARCHAR(255) NOT NULL, 
+                INDEX IDX_6CF1320E82D40A1F (workspace_id), 
+                INDEX IDX_6CF1320E8F7B22CC (tool_id), 
+                INDEX IDX_6CF1320EA76ED395 (user_id), 
+                UNIQUE INDEX ordered_tool_unique_tool_ws_usr (tool_id, workspace_id, user_id), 
+                UNIQUE INDEX ordered_tool_unique_name_by_workspace (workspace_id, name), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_ordered_tool_role (
                 orderedtool_id INT NOT NULL, 
                 role_id INT NOT NULL, 
-                PRIMARY KEY (orderedtool_id, role_id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_9210497679732467 ON claro_ordered_tool_role (orderedtool_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_92104976D60322AC ON claro_ordered_tool_role (role_id)
+                INDEX IDX_9210497679732467 (orderedtool_id), 
+                INDEX IDX_92104976D60322AC (role_id), 
+                PRIMARY KEY(orderedtool_id, role_id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_resource_rights (
-                id INT IDENTITY NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
                 role_id INT NOT NULL, 
                 resource_id INT NOT NULL, 
-                can_delete BIT NOT NULL, 
-                can_open BIT NOT NULL, 
-                can_edit BIT NOT NULL, 
-                can_copy BIT NOT NULL, 
-                can_export BIT NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_3848F483D60322AC ON claro_resource_rights (role_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_3848F48389329D25 ON claro_resource_rights (resource_id)
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX resource_rights_unique_resource_role ON claro_resource_rights (resource_id, role_id) 
-            WHERE resource_id IS NOT NULL 
-            AND role_id IS NOT NULL
+                can_delete TINYINT(1) NOT NULL, 
+                can_open TINYINT(1) NOT NULL, 
+                can_edit TINYINT(1) NOT NULL, 
+                can_copy TINYINT(1) NOT NULL, 
+                can_export TINYINT(1) NOT NULL, 
+                INDEX IDX_3848F483D60322AC (role_id), 
+                INDEX IDX_3848F48389329D25 (resource_id), 
+                UNIQUE INDEX resource_rights_unique_resource_role (resource_id, role_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_list_type_creation (
+                resource_rights_id INT NOT NULL, 
                 resource_type_id INT NOT NULL, 
-                right_id INT NOT NULL, 
-                PRIMARY KEY (resource_type_id, right_id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_84B4BEBA98EC6B7B ON claro_list_type_creation (resource_type_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_84B4BEBA54976835 ON claro_list_type_creation (right_id)
+                INDEX IDX_84B4BEBA195FBDF1 (resource_rights_id), 
+                INDEX IDX_84B4BEBA98EC6B7B (resource_type_id), 
+                PRIMARY KEY(
+                    resource_rights_id, resource_type_id
+                )
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_resource_type (
-                id INT IDENTITY NOT NULL, 
-                plugin_id INT, 
-                parent_id INT, 
-                name NVARCHAR(255) NOT NULL, 
-                class NVARCHAR(255), 
-                is_exportable BIT NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_AEC626935E237E06 ON claro_resource_type (name) 
-            WHERE name IS NOT NULL
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_AEC62693EC942BCF ON claro_resource_type (plugin_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_AEC62693727ACA70 ON claro_resource_type (parent_id)
+                id INT AUTO_INCREMENT NOT NULL, 
+                plugin_id INT DEFAULT NULL, 
+                parent_id INT DEFAULT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                class VARCHAR(255) DEFAULT NULL, 
+                is_exportable TINYINT(1) NOT NULL, 
+                UNIQUE INDEX UNIQ_AEC626935E237E06 (name), 
+                INDEX IDX_AEC62693EC942BCF (plugin_id), 
+                INDEX IDX_AEC62693727ACA70 (parent_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_theme (
-                id INT IDENTITY NOT NULL, 
-                plugin_id INT, 
-                name NVARCHAR(255) NOT NULL, 
-                path NVARCHAR(255) NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_1D76301AEC942BCF ON claro_theme (plugin_id)
+                id INT AUTO_INCREMENT NOT NULL, 
+                plugin_id INT DEFAULT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                path VARCHAR(255) NOT NULL, 
+                INDEX IDX_1D76301AEC942BCF (plugin_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_log (
-                id INT IDENTITY NOT NULL, 
-                doer_id INT, 
-                receiver_id INT, 
-                receiver_group_id INT, 
-                owner_id INT, 
-                workspace_id INT, 
-                resource_id INT, 
-                resource_type_id INT, 
-                role_id INT, 
-                action NVARCHAR(255) NOT NULL, 
-                date_log DATETIME2(6) NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
+                doer_id INT DEFAULT NULL, 
+                receiver_id INT DEFAULT NULL, 
+                receiver_group_id INT DEFAULT NULL, 
+                owner_id INT DEFAULT NULL, 
+                workspace_id INT DEFAULT NULL, 
+                resource_id INT DEFAULT NULL, 
+                resource_type_id INT DEFAULT NULL, 
+                role_id INT DEFAULT NULL, 
+                action VARCHAR(255) NOT NULL, 
+                date_log DATETIME NOT NULL, 
                 short_date_log DATE NOT NULL, 
-                details VARCHAR(MAX), 
-                doer_type NVARCHAR(255) NOT NULL, 
-                doer_ip NVARCHAR(255), 
-                tool_name NVARCHAR(255), 
-                child_type NVARCHAR(255), 
-                child_action NVARCHAR(255), 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_97FAB91F12D3860F ON claro_log (doer_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_97FAB91FCD53EDB6 ON claro_log (receiver_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_97FAB91FC6F122B2 ON claro_log (receiver_group_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_97FAB91F7E3C61F9 ON claro_log (owner_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_97FAB91F82D40A1F ON claro_log (workspace_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_97FAB91F89329D25 ON claro_log (resource_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_97FAB91F98EC6B7B ON claro_log (resource_type_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_97FAB91FD60322AC ON claro_log (role_id)
+                details LONGTEXT DEFAULT NULL COMMENT '(DC2Type:json_array)', 
+                doer_type VARCHAR(255) NOT NULL, 
+                doer_ip VARCHAR(255) DEFAULT NULL, 
+                tool_name VARCHAR(255) DEFAULT NULL, 
+                child_type VARCHAR(255) DEFAULT NULL, 
+                child_action VARCHAR(255) DEFAULT NULL, 
+                INDEX IDX_97FAB91F12D3860F (doer_id), 
+                INDEX IDX_97FAB91FCD53EDB6 (receiver_id), 
+                INDEX IDX_97FAB91FC6F122B2 (receiver_group_id), 
+                INDEX IDX_97FAB91F7E3C61F9 (owner_id), 
+                INDEX IDX_97FAB91F82D40A1F (workspace_id), 
+                INDEX IDX_97FAB91F89329D25 (resource_id), 
+                INDEX IDX_97FAB91F98EC6B7B (resource_type_id), 
+                INDEX IDX_97FAB91FD60322AC (role_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_log_doer_platform_roles (
                 log_id INT NOT NULL, 
                 role_id INT NOT NULL, 
-                PRIMARY KEY (log_id, role_id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_706568A5EA675D86 ON claro_log_doer_platform_roles (log_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_706568A5D60322AC ON claro_log_doer_platform_roles (role_id)
+                INDEX IDX_706568A5EA675D86 (log_id), 
+                INDEX IDX_706568A5D60322AC (role_id), 
+                PRIMARY KEY(log_id, role_id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_log_doer_workspace_roles (
                 log_id INT NOT NULL, 
                 role_id INT NOT NULL, 
-                PRIMARY KEY (log_id, role_id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_8A8D2F47EA675D86 ON claro_log_doer_workspace_roles (log_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_8A8D2F47D60322AC ON claro_log_doer_workspace_roles (role_id)
+                INDEX IDX_8A8D2F47EA675D86 (log_id), 
+                INDEX IDX_8A8D2F47D60322AC (role_id), 
+                PRIMARY KEY(log_id, role_id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_log_desktop_widget_config (
-                id INT IDENTITY NOT NULL, 
-                user_id INT, 
-                is_default BIT NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
+                user_id INT DEFAULT NULL, 
+                is_default TINYINT(1) NOT NULL, 
                 amount INT NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_4AE48D62A76ED395 ON claro_log_desktop_widget_config (user_id)
+                INDEX IDX_4AE48D62A76ED395 (user_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_log_workspace_widget_config (
-                id INT IDENTITY NOT NULL, 
-                workspace_id INT, 
-                is_default BIT NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
+                workspace_id INT DEFAULT NULL, 
+                is_default TINYINT(1) NOT NULL, 
                 amount INT NOT NULL, 
-                resource_copy BIT NOT NULL, 
-                resource_create BIT NOT NULL, 
-                resource_shortcut BIT NOT NULL, 
-                resource_read BIT NOT NULL, 
-                ws_tool_read BIT NOT NULL, 
-                resource_export BIT NOT NULL, 
-                resource_update BIT NOT NULL, 
-                resource_update_rename BIT NOT NULL, 
-                resource_child_update BIT NOT NULL, 
-                resource_delete BIT NOT NULL, 
-                resource_move BIT NOT NULL, 
-                ws_role_subscribe_user BIT NOT NULL, 
-                ws_role_subscribe_group BIT NOT NULL, 
-                ws_role_unsubscribe_user BIT NOT NULL, 
-                ws_role_unsubscribe_group BIT NOT NULL, 
-                ws_role_change_right BIT NOT NULL, 
-                ws_role_create BIT NOT NULL, 
-                ws_role_delete BIT NOT NULL, 
-                ws_role_update BIT NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D301C70782D40A1F ON claro_log_workspace_widget_config (workspace_id)
+                resource_copy TINYINT(1) NOT NULL, 
+                resource_create TINYINT(1) NOT NULL, 
+                resource_shortcut TINYINT(1) NOT NULL, 
+                resource_read TINYINT(1) NOT NULL, 
+                ws_tool_read TINYINT(1) NOT NULL, 
+                resource_export TINYINT(1) NOT NULL, 
+                resource_update TINYINT(1) NOT NULL, 
+                resource_update_rename TINYINT(1) NOT NULL, 
+                resource_child_update TINYINT(1) NOT NULL, 
+                resource_delete TINYINT(1) NOT NULL, 
+                resource_move TINYINT(1) NOT NULL, 
+                ws_role_subscribe_user TINYINT(1) NOT NULL, 
+                ws_role_subscribe_group TINYINT(1) NOT NULL, 
+                ws_role_unsubscribe_user TINYINT(1) NOT NULL, 
+                ws_role_unsubscribe_group TINYINT(1) NOT NULL, 
+                ws_role_change_right TINYINT(1) NOT NULL, 
+                ws_role_create TINYINT(1) NOT NULL, 
+                ws_role_delete TINYINT(1) NOT NULL, 
+                ws_role_update TINYINT(1) NOT NULL, 
+                INDEX IDX_D301C70782D40A1F (workspace_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_log_hidden_workspace_widget_config (
                 workspace_id INT NOT NULL, 
                 user_id INT NOT NULL, 
-                PRIMARY KEY (workspace_id, user_id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_BC83196EA76ED395 ON claro_log_hidden_workspace_widget_config (user_id)
+                INDEX IDX_BC83196EA76ED395 (user_id), 
+                PRIMARY KEY(workspace_id, user_id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_workspace_template (
-                id INT IDENTITY NOT NULL, 
-                hash NVARCHAR(255) NOT NULL, 
-                name NVARCHAR(255) NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_94D0CBDBD1B862B8 ON claro_workspace_template (hash) 
-            WHERE hash IS NOT NULL
+                id INT AUTO_INCREMENT NOT NULL, 
+                hash VARCHAR(255) NOT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                UNIQUE INDEX UNIQ_94D0CBDBD1B862B8 (hash), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_workspace_tag_hierarchy (
-                id INT IDENTITY NOT NULL, 
-                user_id INT, 
+                id INT AUTO_INCREMENT NOT NULL, 
+                user_id INT DEFAULT NULL, 
                 tag_id INT NOT NULL, 
                 parent_id INT NOT NULL, 
                 level INT NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_A46B159EA76ED395 ON claro_workspace_tag_hierarchy (user_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_A46B159EBAD26311 ON claro_workspace_tag_hierarchy (tag_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_A46B159E727ACA70 ON claro_workspace_tag_hierarchy (parent_id)
+                INDEX IDX_A46B159EA76ED395 (user_id), 
+                INDEX IDX_A46B159EBAD26311 (tag_id), 
+                INDEX IDX_A46B159E727ACA70 (parent_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_rel_workspace_tag (
-                id INT IDENTITY NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
                 workspace_id INT NOT NULL, 
                 tag_id INT NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_7883931082D40A1F ON claro_rel_workspace_tag (workspace_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_78839310BAD26311 ON claro_rel_workspace_tag (tag_id)
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX rel_workspace_tag_unique_combination ON claro_rel_workspace_tag (workspace_id, tag_id) 
-            WHERE workspace_id IS NOT NULL 
-            AND tag_id IS NOT NULL
+                INDEX IDX_7883931082D40A1F (workspace_id), 
+                INDEX IDX_78839310BAD26311 (tag_id), 
+                UNIQUE INDEX rel_workspace_tag_unique_combination (workspace_id, tag_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_workspace_tag (
-                id INT IDENTITY NOT NULL, 
-                user_id INT, 
-                name NVARCHAR(255) NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_C8EFD7EFA76ED395 ON claro_workspace_tag (user_id)
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX tag_unique_name_and_user ON claro_workspace_tag (user_id, name) 
-            WHERE user_id IS NOT NULL 
-            AND name IS NOT NULL
+                id INT AUTO_INCREMENT NOT NULL, 
+                user_id INT DEFAULT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                INDEX IDX_C8EFD7EFA76ED395 (user_id), 
+                UNIQUE INDEX tag_unique_name_and_user (user_id, name), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_plugin (
-                id INT IDENTITY NOT NULL, 
-                vendor_name NVARCHAR(50) NOT NULL, 
-                short_name NVARCHAR(50) NOT NULL, 
-                has_options BIT NOT NULL, 
-                icon NVARCHAR(255) NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX plugin_unique_name ON claro_plugin (vendor_name, short_name) 
-            WHERE vendor_name IS NOT NULL 
-            AND short_name IS NOT NULL
+                id INT AUTO_INCREMENT NOT NULL, 
+                vendor_name VARCHAR(50) NOT NULL, 
+                short_name VARCHAR(50) NOT NULL, 
+                has_options TINYINT(1) NOT NULL, 
+                icon VARCHAR(255) NOT NULL, 
+                UNIQUE INDEX plugin_unique_name (vendor_name, short_name), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_message (
-                id INT IDENTITY NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
                 sender_id INT NOT NULL, 
-                parent_id INT, 
-                object NVARCHAR(255) NOT NULL, 
-                content NVARCHAR(1023) NOT NULL, 
-                date DATETIME2(6) NOT NULL, 
-                is_removed BIT NOT NULL, 
+                parent_id INT DEFAULT NULL, 
+                object VARCHAR(255) NOT NULL, 
+                content VARCHAR(1023) NOT NULL, 
+                date DATETIME NOT NULL, 
+                is_removed TINYINT(1) NOT NULL, 
                 lft INT NOT NULL, 
                 lvl INT NOT NULL, 
                 rgt INT NOT NULL, 
-                root INT, 
-                sender_username NVARCHAR(255) NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D6FE8DD8F624B39D ON claro_message (sender_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D6FE8DD8727ACA70 ON claro_message (parent_id)
+                root INT DEFAULT NULL, 
+                sender_username VARCHAR(255) NOT NULL, 
+                INDEX IDX_D6FE8DD8F624B39D (sender_id), 
+                INDEX IDX_D6FE8DD8727ACA70 (parent_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_event (
-                id INT IDENTITY NOT NULL, 
-                workspace_id INT, 
+                id INT AUTO_INCREMENT NOT NULL, 
+                workspace_id INT DEFAULT NULL, 
                 user_id INT NOT NULL, 
-                title NVARCHAR(50) NOT NULL, 
-                start_date INT, 
-                end_date INT, 
-                description NVARCHAR(255), 
-                allday BIT, 
-                priority NVARCHAR(255), 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_B1ADDDB582D40A1F ON claro_event (workspace_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_B1ADDDB5A76ED395 ON claro_event (user_id)
+                title VARCHAR(50) NOT NULL, 
+                start_date INT DEFAULT NULL, 
+                end_date INT DEFAULT NULL, 
+                description VARCHAR(255) DEFAULT NULL, 
+                allday TINYINT(1) DEFAULT NULL, 
+                priority VARCHAR(255) DEFAULT NULL, 
+                INDEX IDX_B1ADDDB582D40A1F (workspace_id), 
+                INDEX IDX_B1ADDDB5A76ED395 (user_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_license (
-                id INT IDENTITY NOT NULL, 
-                name NVARCHAR(255) NOT NULL, 
-                acronym NVARCHAR(255), 
-                PRIMARY KEY (id)
-            )
+                id INT AUTO_INCREMENT NOT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                acronym VARCHAR(255) DEFAULT NULL, 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_resource_activity (
-                id INT IDENTITY NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
                 activity_id INT NOT NULL, 
                 resource_id INT NOT NULL, 
-                sequence_order INT, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_DCF37C7E81C06096 ON claro_resource_activity (activity_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_DCF37C7E89329D25 ON claro_resource_activity (resource_id)
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX resource_activity_unique_combination ON claro_resource_activity (activity_id, resource_id) 
-            WHERE activity_id IS NOT NULL 
-            AND resource_id IS NOT NULL
+                sequence_order INT DEFAULT NULL, 
+                INDEX IDX_DCF37C7E81C06096 (activity_id), 
+                INDEX IDX_DCF37C7E89329D25 (resource_id), 
+                UNIQUE INDEX resource_activity_unique_combination (activity_id, resource_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_link (
                 id INT NOT NULL, 
-                url NVARCHAR(255) NOT NULL, 
-                PRIMARY KEY (id)
-            )
+                url VARCHAR(255) NOT NULL, 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_directory (
                 id INT NOT NULL, 
-                PRIMARY KEY (id)
-            )
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_resource_icon (
-                id INT IDENTITY NOT NULL, 
-                shortcut_id INT, 
-                icon_location NVARCHAR(255), 
-                mimeType NVARCHAR(255) NOT NULL, 
-                is_shortcut BIT NOT NULL, 
-                relative_url NVARCHAR(255), 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_478C586179F0D498 ON claro_resource_icon (shortcut_id)
+                id INT AUTO_INCREMENT NOT NULL, 
+                shortcut_id INT DEFAULT NULL, 
+                icon_location VARCHAR(255) DEFAULT NULL, 
+                mimeType VARCHAR(255) NOT NULL, 
+                is_shortcut TINYINT(1) NOT NULL, 
+                relative_url VARCHAR(255) DEFAULT NULL, 
+                INDEX IDX_478C586179F0D498 (shortcut_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_file (
                 id INT NOT NULL, 
                 size INT NOT NULL, 
-                hash_name NVARCHAR(36) NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_EA81C80BE1F029B6 ON claro_file (hash_name) 
-            WHERE hash_name IS NOT NULL
+                hash_name VARCHAR(36) NOT NULL, 
+                UNIQUE INDEX UNIQ_EA81C80BE1F029B6 (hash_name), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_text_revision (
-                id INT IDENTITY NOT NULL, 
-                text_id INT, 
-                user_id INT, 
+                id INT AUTO_INCREMENT NOT NULL, 
+                text_id INT DEFAULT NULL, 
+                user_id INT DEFAULT NULL, 
                 version INT NOT NULL, 
-                content NVARCHAR(255) NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_F61948DE698D3548 ON claro_text_revision (text_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_F61948DEA76ED395 ON claro_text_revision (user_id)
+                content VARCHAR(255) NOT NULL, 
+                INDEX IDX_F61948DE698D3548 (text_id), 
+                INDEX IDX_F61948DEA76ED395 (user_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_resource_type_custom_action (
-                id INT IDENTITY NOT NULL, 
-                resource_type_id INT, 
-                action NVARCHAR(255), 
-                async BIT, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_4A98967B98EC6B7B ON claro_resource_type_custom_action (resource_type_id)
+                id INT AUTO_INCREMENT NOT NULL, 
+                resource_type_id INT DEFAULT NULL, 
+                action VARCHAR(255) DEFAULT NULL, 
+                async TINYINT(1) DEFAULT NULL, 
+                INDEX IDX_4A98967B98EC6B7B (resource_type_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_resource_shortcut (
                 id INT NOT NULL, 
                 resource_id INT NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_5E7F4AB889329D25 ON claro_resource_shortcut (resource_id)
+                INDEX IDX_5E7F4AB889329D25 (resource_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_activity (
                 id INT NOT NULL, 
-                instruction NVARCHAR(255) NOT NULL, 
-                start_date DATETIME2(6), 
-                end_date DATETIME2(6), 
-                PRIMARY KEY (id)
-            )
+                instruction VARCHAR(255) NOT NULL, 
+                start_date DATETIME DEFAULT NULL, 
+                end_date DATETIME DEFAULT NULL, 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_text (
                 id INT NOT NULL, 
                 version INT NOT NULL, 
-                PRIMARY KEY (id)
-            )
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_tools (
-                id INT IDENTITY NOT NULL, 
-                plugin_id INT, 
-                name NVARCHAR(255) NOT NULL, 
-                display_name NVARCHAR(255), 
-                class NVARCHAR(255) NOT NULL, 
-                is_workspace_required BIT NOT NULL, 
-                is_desktop_required BIT NOT NULL, 
-                is_displayable_in_workspace BIT NOT NULL, 
-                is_displayable_in_desktop BIT NOT NULL, 
-                is_exportable BIT NOT NULL, 
-                has_options BIT NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_60F909655E237E06 ON claro_tools (name) 
-            WHERE name IS NOT NULL
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_60F90965EC942BCF ON claro_tools (plugin_id)
+                id INT AUTO_INCREMENT NOT NULL, 
+                plugin_id INT DEFAULT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                display_name VARCHAR(255) DEFAULT NULL, 
+                class VARCHAR(255) NOT NULL, 
+                is_workspace_required TINYINT(1) NOT NULL, 
+                is_desktop_required TINYINT(1) NOT NULL, 
+                is_displayable_in_workspace TINYINT(1) NOT NULL, 
+                is_displayable_in_desktop TINYINT(1) NOT NULL, 
+                is_exportable TINYINT(1) NOT NULL, 
+                has_options TINYINT(1) NOT NULL, 
+                UNIQUE INDEX UNIQ_60F909655E237E06 (name), 
+                INDEX IDX_60F90965EC942BCF (plugin_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_widget_display (
-                id INT IDENTITY NOT NULL, 
-                parent_id INT, 
-                workspace_id INT, 
-                user_id INT, 
+                id INT AUTO_INCREMENT NOT NULL, 
+                parent_id INT DEFAULT NULL, 
+                workspace_id INT DEFAULT NULL, 
+                user_id INT DEFAULT NULL, 
                 widget_id INT NOT NULL, 
-                is_locked BIT NOT NULL, 
-                is_visible BIT NOT NULL, 
-                is_desktop BIT NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_2D34DB3727ACA70 ON claro_widget_display (parent_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_2D34DB382D40A1F ON claro_widget_display (workspace_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_2D34DB3A76ED395 ON claro_widget_display (user_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_2D34DB3FBE885E2 ON claro_widget_display (widget_id)
+                is_locked TINYINT(1) NOT NULL, 
+                is_visible TINYINT(1) NOT NULL, 
+                is_desktop TINYINT(1) NOT NULL, 
+                INDEX IDX_2D34DB3727ACA70 (parent_id), 
+                INDEX IDX_2D34DB382D40A1F (workspace_id), 
+                INDEX IDX_2D34DB3A76ED395 (user_id), 
+                INDEX IDX_2D34DB3FBE885E2 (widget_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_widget (
-                id INT IDENTITY NOT NULL, 
-                plugin_id INT, 
-                name NVARCHAR(255) NOT NULL, 
-                is_configurable BIT NOT NULL, 
-                icon NVARCHAR(255) NOT NULL, 
-                is_exportable BIT NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_76CA6C4F5E237E06 ON claro_widget (name) 
-            WHERE name IS NOT NULL
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_76CA6C4FEC942BCF ON claro_widget (plugin_id)
+                id INT AUTO_INCREMENT NOT NULL, 
+                plugin_id INT DEFAULT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                is_configurable TINYINT(1) NOT NULL, 
+                icon VARCHAR(255) NOT NULL, 
+                is_exportable TINYINT(1) NOT NULL, 
+                UNIQUE INDEX UNIQ_76CA6C4F5E237E06 (name), 
+                INDEX IDX_76CA6C4FEC942BCF (plugin_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_content (
-                id INT IDENTITY NOT NULL, 
-                title NVARCHAR(255), 
-                content VARCHAR(MAX), 
-                generated_content VARCHAR(MAX), 
-                created DATETIME2(6) NOT NULL, 
-                modified DATETIME2(6) NOT NULL, 
-                PRIMARY KEY (id)
-            )
+                id INT AUTO_INCREMENT NOT NULL, 
+                title VARCHAR(255) DEFAULT NULL, 
+                content LONGTEXT DEFAULT NULL, 
+                generated_content LONGTEXT DEFAULT NULL, 
+                created DATETIME NOT NULL, 
+                modified DATETIME NOT NULL, 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_content2region (
-                id INT IDENTITY NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
                 content_id INT NOT NULL, 
                 region_id INT NOT NULL, 
-                next_id INT, 
-                back_id INT, 
-                size NVARCHAR(30) NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_8D18942E84A0A3ED ON claro_content2region (content_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_8D18942E98260155 ON claro_content2region (region_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_8D18942EAA23F6C8 ON claro_content2region (next_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_8D18942EE9583FF0 ON claro_content2region (back_id)
+                next_id INT DEFAULT NULL, 
+                back_id INT DEFAULT NULL, 
+                size VARCHAR(30) NOT NULL, 
+                INDEX IDX_8D18942E84A0A3ED (content_id), 
+                INDEX IDX_8D18942E98260155 (region_id), 
+                INDEX IDX_8D18942EAA23F6C8 (next_id), 
+                INDEX IDX_8D18942EE9583FF0 (back_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_content2type (
-                id INT IDENTITY NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
                 content_id INT NOT NULL, 
                 type_id INT NOT NULL, 
-                next_id INT, 
-                back_id INT, 
-                size NVARCHAR(30) NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_1A2084EF84A0A3ED ON claro_content2type (content_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_1A2084EFC54C8C93 ON claro_content2type (type_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_1A2084EFAA23F6C8 ON claro_content2type (next_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_1A2084EFE9583FF0 ON claro_content2type (back_id)
+                next_id INT DEFAULT NULL, 
+                back_id INT DEFAULT NULL, 
+                size VARCHAR(30) NOT NULL, 
+                INDEX IDX_1A2084EF84A0A3ED (content_id), 
+                INDEX IDX_1A2084EFC54C8C93 (type_id), 
+                INDEX IDX_1A2084EFAA23F6C8 (next_id), 
+                INDEX IDX_1A2084EFE9583FF0 (back_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_subcontent (
-                id INT IDENTITY NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
                 father_id INT NOT NULL, 
                 child_id INT NOT NULL, 
-                next_id INT, 
-                back_id INT, 
-                size NVARCHAR(255), 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D72E133C2055B9A2 ON claro_subcontent (father_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D72E133CDD62C21B ON claro_subcontent (child_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D72E133CAA23F6C8 ON claro_subcontent (next_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D72E133CE9583FF0 ON claro_subcontent (back_id)
+                next_id INT DEFAULT NULL, 
+                back_id INT DEFAULT NULL, 
+                size VARCHAR(255) DEFAULT NULL, 
+                INDEX IDX_D72E133C2055B9A2 (father_id), 
+                INDEX IDX_D72E133CDD62C21B (child_id), 
+                INDEX IDX_D72E133CAA23F6C8 (next_id), 
+                INDEX IDX_D72E133CE9583FF0 (back_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_region (
-                id INT IDENTITY NOT NULL, 
-                name NVARCHAR(255) NOT NULL, 
-                PRIMARY KEY (id)
-            )
+                id INT AUTO_INCREMENT NOT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_type (
-                id INT IDENTITY NOT NULL, 
-                name NVARCHAR(255) NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
+                name VARCHAR(255) NOT NULL, 
                 max_content_page INT NOT NULL, 
-                PRIMARY KEY (id)
-            )
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             ALTER TABLE claro_user 
@@ -1045,13 +814,15 @@ class Version20130805093737 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_list_type_creation 
-            ADD CONSTRAINT FK_84B4BEBA98EC6B7B FOREIGN KEY (resource_type_id) 
-            REFERENCES claro_resource_rights (id)
+            ADD CONSTRAINT FK_84B4BEBA195FBDF1 FOREIGN KEY (resource_rights_id) 
+            REFERENCES claro_resource_rights (id) 
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_list_type_creation 
-            ADD CONSTRAINT FK_84B4BEBA54976835 FOREIGN KEY (right_id) 
-            REFERENCES claro_resource_type (id)
+            ADD CONSTRAINT FK_84B4BEBA98EC6B7B FOREIGN KEY (resource_type_id) 
+            REFERENCES claro_resource_type (id) 
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_resource_type 
@@ -1409,363 +1180,363 @@ class Version20130805093737 extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE claro_user_group 
-            DROP CONSTRAINT FK_ED8B34C7A76ED395
+            DROP FOREIGN KEY FK_ED8B34C7A76ED395
         ");
         $this->addSql("
             ALTER TABLE claro_user_role 
-            DROP CONSTRAINT FK_797E43FFA76ED395
+            DROP FOREIGN KEY FK_797E43FFA76ED395
         ");
         $this->addSql("
             ALTER TABLE claro_resource 
-            DROP CONSTRAINT FK_F44381E0A76ED395
+            DROP FOREIGN KEY FK_F44381E0A76ED395
         ");
         $this->addSql("
             ALTER TABLE claro_workspace 
-            DROP CONSTRAINT FK_D9028545A76ED395
+            DROP FOREIGN KEY FK_D9028545A76ED395
         ");
         $this->addSql("
             ALTER TABLE claro_user_message 
-            DROP CONSTRAINT FK_D48EA38AA76ED395
+            DROP FOREIGN KEY FK_D48EA38AA76ED395
         ");
         $this->addSql("
             ALTER TABLE claro_ordered_tool 
-            DROP CONSTRAINT FK_6CF1320EA76ED395
+            DROP FOREIGN KEY FK_6CF1320EA76ED395
         ");
         $this->addSql("
             ALTER TABLE claro_log 
-            DROP CONSTRAINT FK_97FAB91F12D3860F
+            DROP FOREIGN KEY FK_97FAB91F12D3860F
         ");
         $this->addSql("
             ALTER TABLE claro_log 
-            DROP CONSTRAINT FK_97FAB91FCD53EDB6
+            DROP FOREIGN KEY FK_97FAB91FCD53EDB6
         ");
         $this->addSql("
             ALTER TABLE claro_log 
-            DROP CONSTRAINT FK_97FAB91F7E3C61F9
+            DROP FOREIGN KEY FK_97FAB91F7E3C61F9
         ");
         $this->addSql("
             ALTER TABLE claro_log_desktop_widget_config 
-            DROP CONSTRAINT FK_4AE48D62A76ED395
+            DROP FOREIGN KEY FK_4AE48D62A76ED395
         ");
         $this->addSql("
             ALTER TABLE claro_log_hidden_workspace_widget_config 
-            DROP CONSTRAINT FK_BC83196EA76ED395
+            DROP FOREIGN KEY FK_BC83196EA76ED395
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_tag_hierarchy 
-            DROP CONSTRAINT FK_A46B159EA76ED395
+            DROP FOREIGN KEY FK_A46B159EA76ED395
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_tag 
-            DROP CONSTRAINT FK_C8EFD7EFA76ED395
+            DROP FOREIGN KEY FK_C8EFD7EFA76ED395
         ");
         $this->addSql("
             ALTER TABLE claro_message 
-            DROP CONSTRAINT FK_D6FE8DD8F624B39D
+            DROP FOREIGN KEY FK_D6FE8DD8F624B39D
         ");
         $this->addSql("
             ALTER TABLE claro_event 
-            DROP CONSTRAINT FK_B1ADDDB5A76ED395
+            DROP FOREIGN KEY FK_B1ADDDB5A76ED395
         ");
         $this->addSql("
             ALTER TABLE claro_text_revision 
-            DROP CONSTRAINT FK_F61948DEA76ED395
+            DROP FOREIGN KEY FK_F61948DEA76ED395
         ");
         $this->addSql("
             ALTER TABLE claro_widget_display 
-            DROP CONSTRAINT FK_2D34DB3A76ED395
+            DROP FOREIGN KEY FK_2D34DB3A76ED395
         ");
         $this->addSql("
             ALTER TABLE claro_user_group 
-            DROP CONSTRAINT FK_ED8B34C7FE54D947
+            DROP FOREIGN KEY FK_ED8B34C7FE54D947
         ");
         $this->addSql("
             ALTER TABLE claro_group_role 
-            DROP CONSTRAINT FK_1CBA5A40FE54D947
+            DROP FOREIGN KEY FK_1CBA5A40FE54D947
         ");
         $this->addSql("
             ALTER TABLE claro_log 
-            DROP CONSTRAINT FK_97FAB91FC6F122B2
+            DROP FOREIGN KEY FK_97FAB91FC6F122B2
         ");
         $this->addSql("
             ALTER TABLE claro_user_role 
-            DROP CONSTRAINT FK_797E43FFD60322AC
+            DROP FOREIGN KEY FK_797E43FFD60322AC
         ");
         $this->addSql("
             ALTER TABLE claro_group_role 
-            DROP CONSTRAINT FK_1CBA5A40D60322AC
+            DROP FOREIGN KEY FK_1CBA5A40D60322AC
         ");
         $this->addSql("
             ALTER TABLE claro_ordered_tool_role 
-            DROP CONSTRAINT FK_92104976D60322AC
+            DROP FOREIGN KEY FK_92104976D60322AC
         ");
         $this->addSql("
             ALTER TABLE claro_resource_rights 
-            DROP CONSTRAINT FK_3848F483D60322AC
+            DROP FOREIGN KEY FK_3848F483D60322AC
         ");
         $this->addSql("
             ALTER TABLE claro_log 
-            DROP CONSTRAINT FK_97FAB91FD60322AC
+            DROP FOREIGN KEY FK_97FAB91FD60322AC
         ");
         $this->addSql("
             ALTER TABLE claro_log_doer_platform_roles 
-            DROP CONSTRAINT FK_706568A5D60322AC
+            DROP FOREIGN KEY FK_706568A5D60322AC
         ");
         $this->addSql("
             ALTER TABLE claro_log_doer_workspace_roles 
-            DROP CONSTRAINT FK_8A8D2F47D60322AC
+            DROP FOREIGN KEY FK_8A8D2F47D60322AC
         ");
         $this->addSql("
             ALTER TABLE claro_resource 
-            DROP CONSTRAINT FK_F44381E0727ACA70
+            DROP FOREIGN KEY FK_F44381E0727ACA70
         ");
         $this->addSql("
             ALTER TABLE claro_resource 
-            DROP CONSTRAINT FK_F44381E0AA23F6C8
+            DROP FOREIGN KEY FK_F44381E0AA23F6C8
         ");
         $this->addSql("
             ALTER TABLE claro_resource 
-            DROP CONSTRAINT FK_F44381E02DE62210
+            DROP FOREIGN KEY FK_F44381E02DE62210
         ");
         $this->addSql("
             ALTER TABLE claro_resource_rights 
-            DROP CONSTRAINT FK_3848F48389329D25
+            DROP FOREIGN KEY FK_3848F48389329D25
         ");
         $this->addSql("
             ALTER TABLE claro_log 
-            DROP CONSTRAINT FK_97FAB91F89329D25
+            DROP FOREIGN KEY FK_97FAB91F89329D25
         ");
         $this->addSql("
             ALTER TABLE claro_resource_activity 
-            DROP CONSTRAINT FK_DCF37C7E89329D25
+            DROP FOREIGN KEY FK_DCF37C7E89329D25
         ");
         $this->addSql("
             ALTER TABLE claro_link 
-            DROP CONSTRAINT FK_50B267EABF396750
+            DROP FOREIGN KEY FK_50B267EABF396750
         ");
         $this->addSql("
             ALTER TABLE claro_directory 
-            DROP CONSTRAINT FK_12EEC186BF396750
+            DROP FOREIGN KEY FK_12EEC186BF396750
         ");
         $this->addSql("
             ALTER TABLE claro_file 
-            DROP CONSTRAINT FK_EA81C80BBF396750
+            DROP FOREIGN KEY FK_EA81C80BBF396750
         ");
         $this->addSql("
             ALTER TABLE claro_resource_shortcut 
-            DROP CONSTRAINT FK_5E7F4AB889329D25
+            DROP FOREIGN KEY FK_5E7F4AB889329D25
         ");
         $this->addSql("
             ALTER TABLE claro_resource_shortcut 
-            DROP CONSTRAINT FK_5E7F4AB8BF396750
+            DROP FOREIGN KEY FK_5E7F4AB8BF396750
         ");
         $this->addSql("
             ALTER TABLE claro_activity 
-            DROP CONSTRAINT FK_E4A67CACBF396750
+            DROP FOREIGN KEY FK_E4A67CACBF396750
         ");
         $this->addSql("
             ALTER TABLE claro_text 
-            DROP CONSTRAINT FK_5D9559DCBF396750
+            DROP FOREIGN KEY FK_5D9559DCBF396750
         ");
         $this->addSql("
             ALTER TABLE claro_user 
-            DROP CONSTRAINT FK_EB8D285282D40A1F
+            DROP FOREIGN KEY FK_EB8D285282D40A1F
         ");
         $this->addSql("
             ALTER TABLE claro_role 
-            DROP CONSTRAINT FK_3177747182D40A1F
+            DROP FOREIGN KEY FK_3177747182D40A1F
         ");
         $this->addSql("
             ALTER TABLE claro_resource 
-            DROP CONSTRAINT FK_F44381E082D40A1F
+            DROP FOREIGN KEY FK_F44381E082D40A1F
         ");
         $this->addSql("
             ALTER TABLE claro_workspace 
-            DROP CONSTRAINT FK_D9028545727ACA70
+            DROP FOREIGN KEY FK_D9028545727ACA70
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_aggregation 
-            DROP CONSTRAINT FK_D012AF0FA08DFE7A
+            DROP FOREIGN KEY FK_D012AF0FA08DFE7A
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_aggregation 
-            DROP CONSTRAINT FK_D012AF0F782B5A3F
+            DROP FOREIGN KEY FK_D012AF0F782B5A3F
         ");
         $this->addSql("
             ALTER TABLE claro_ordered_tool 
-            DROP CONSTRAINT FK_6CF1320E82D40A1F
+            DROP FOREIGN KEY FK_6CF1320E82D40A1F
         ");
         $this->addSql("
             ALTER TABLE claro_log 
-            DROP CONSTRAINT FK_97FAB91F82D40A1F
+            DROP FOREIGN KEY FK_97FAB91F82D40A1F
         ");
         $this->addSql("
             ALTER TABLE claro_log_workspace_widget_config 
-            DROP CONSTRAINT FK_D301C70782D40A1F
+            DROP FOREIGN KEY FK_D301C70782D40A1F
         ");
         $this->addSql("
             ALTER TABLE claro_rel_workspace_tag 
-            DROP CONSTRAINT FK_7883931082D40A1F
+            DROP FOREIGN KEY FK_7883931082D40A1F
         ");
         $this->addSql("
             ALTER TABLE claro_event 
-            DROP CONSTRAINT FK_B1ADDDB582D40A1F
+            DROP FOREIGN KEY FK_B1ADDDB582D40A1F
         ");
         $this->addSql("
             ALTER TABLE claro_widget_display 
-            DROP CONSTRAINT FK_2D34DB382D40A1F
+            DROP FOREIGN KEY FK_2D34DB382D40A1F
         ");
         $this->addSql("
             ALTER TABLE claro_ordered_tool_role 
-            DROP CONSTRAINT FK_9210497679732467
+            DROP FOREIGN KEY FK_9210497679732467
         ");
         $this->addSql("
             ALTER TABLE claro_list_type_creation 
-            DROP CONSTRAINT FK_84B4BEBA98EC6B7B
+            DROP FOREIGN KEY FK_84B4BEBA195FBDF1
         ");
         $this->addSql("
             ALTER TABLE claro_resource 
-            DROP CONSTRAINT FK_F44381E098EC6B7B
+            DROP FOREIGN KEY FK_F44381E098EC6B7B
         ");
         $this->addSql("
             ALTER TABLE claro_list_type_creation 
-            DROP CONSTRAINT FK_84B4BEBA54976835
+            DROP FOREIGN KEY FK_84B4BEBA98EC6B7B
         ");
         $this->addSql("
             ALTER TABLE claro_resource_type 
-            DROP CONSTRAINT FK_AEC62693727ACA70
+            DROP FOREIGN KEY FK_AEC62693727ACA70
         ");
         $this->addSql("
             ALTER TABLE claro_log 
-            DROP CONSTRAINT FK_97FAB91F98EC6B7B
+            DROP FOREIGN KEY FK_97FAB91F98EC6B7B
         ");
         $this->addSql("
             ALTER TABLE claro_resource_type_custom_action 
-            DROP CONSTRAINT FK_4A98967B98EC6B7B
+            DROP FOREIGN KEY FK_4A98967B98EC6B7B
         ");
         $this->addSql("
             ALTER TABLE claro_log_doer_platform_roles 
-            DROP CONSTRAINT FK_706568A5EA675D86
+            DROP FOREIGN KEY FK_706568A5EA675D86
         ");
         $this->addSql("
             ALTER TABLE claro_log_doer_workspace_roles 
-            DROP CONSTRAINT FK_8A8D2F47EA675D86
+            DROP FOREIGN KEY FK_8A8D2F47EA675D86
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_tag_hierarchy 
-            DROP CONSTRAINT FK_A46B159EBAD26311
+            DROP FOREIGN KEY FK_A46B159EBAD26311
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_tag_hierarchy 
-            DROP CONSTRAINT FK_A46B159E727ACA70
+            DROP FOREIGN KEY FK_A46B159E727ACA70
         ");
         $this->addSql("
             ALTER TABLE claro_rel_workspace_tag 
-            DROP CONSTRAINT FK_78839310BAD26311
+            DROP FOREIGN KEY FK_78839310BAD26311
         ");
         $this->addSql("
             ALTER TABLE claro_resource_type 
-            DROP CONSTRAINT FK_AEC62693EC942BCF
+            DROP FOREIGN KEY FK_AEC62693EC942BCF
         ");
         $this->addSql("
             ALTER TABLE claro_theme 
-            DROP CONSTRAINT FK_1D76301AEC942BCF
+            DROP FOREIGN KEY FK_1D76301AEC942BCF
         ");
         $this->addSql("
             ALTER TABLE claro_tools 
-            DROP CONSTRAINT FK_60F90965EC942BCF
+            DROP FOREIGN KEY FK_60F90965EC942BCF
         ");
         $this->addSql("
             ALTER TABLE claro_widget 
-            DROP CONSTRAINT FK_76CA6C4FEC942BCF
+            DROP FOREIGN KEY FK_76CA6C4FEC942BCF
         ");
         $this->addSql("
             ALTER TABLE claro_user_message 
-            DROP CONSTRAINT FK_D48EA38A537A1329
+            DROP FOREIGN KEY FK_D48EA38A537A1329
         ");
         $this->addSql("
             ALTER TABLE claro_message 
-            DROP CONSTRAINT FK_D6FE8DD8727ACA70
+            DROP FOREIGN KEY FK_D6FE8DD8727ACA70
         ");
         $this->addSql("
             ALTER TABLE claro_resource 
-            DROP CONSTRAINT FK_F44381E0460F904B
+            DROP FOREIGN KEY FK_F44381E0460F904B
         ");
         $this->addSql("
             ALTER TABLE claro_resource 
-            DROP CONSTRAINT FK_F44381E054B9D732
+            DROP FOREIGN KEY FK_F44381E054B9D732
         ");
         $this->addSql("
             ALTER TABLE claro_resource_icon 
-            DROP CONSTRAINT FK_478C586179F0D498
+            DROP FOREIGN KEY FK_478C586179F0D498
         ");
         $this->addSql("
             ALTER TABLE claro_resource_activity 
-            DROP CONSTRAINT FK_DCF37C7E81C06096
+            DROP FOREIGN KEY FK_DCF37C7E81C06096
         ");
         $this->addSql("
             ALTER TABLE claro_text_revision 
-            DROP CONSTRAINT FK_F61948DE698D3548
+            DROP FOREIGN KEY FK_F61948DE698D3548
         ");
         $this->addSql("
             ALTER TABLE claro_ordered_tool 
-            DROP CONSTRAINT FK_6CF1320E8F7B22CC
+            DROP FOREIGN KEY FK_6CF1320E8F7B22CC
         ");
         $this->addSql("
             ALTER TABLE claro_widget_display 
-            DROP CONSTRAINT FK_2D34DB3727ACA70
+            DROP FOREIGN KEY FK_2D34DB3727ACA70
         ");
         $this->addSql("
             ALTER TABLE claro_widget_display 
-            DROP CONSTRAINT FK_2D34DB3FBE885E2
+            DROP FOREIGN KEY FK_2D34DB3FBE885E2
         ");
         $this->addSql("
             ALTER TABLE claro_content2region 
-            DROP CONSTRAINT FK_8D18942E84A0A3ED
+            DROP FOREIGN KEY FK_8D18942E84A0A3ED
         ");
         $this->addSql("
             ALTER TABLE claro_content2type 
-            DROP CONSTRAINT FK_1A2084EF84A0A3ED
+            DROP FOREIGN KEY FK_1A2084EF84A0A3ED
         ");
         $this->addSql("
             ALTER TABLE claro_subcontent 
-            DROP CONSTRAINT FK_D72E133C2055B9A2
+            DROP FOREIGN KEY FK_D72E133C2055B9A2
         ");
         $this->addSql("
             ALTER TABLE claro_subcontent 
-            DROP CONSTRAINT FK_D72E133CDD62C21B
+            DROP FOREIGN KEY FK_D72E133CDD62C21B
         ");
         $this->addSql("
             ALTER TABLE claro_content2region 
-            DROP CONSTRAINT FK_8D18942EAA23F6C8
+            DROP FOREIGN KEY FK_8D18942EAA23F6C8
         ");
         $this->addSql("
             ALTER TABLE claro_content2region 
-            DROP CONSTRAINT FK_8D18942EE9583FF0
+            DROP FOREIGN KEY FK_8D18942EE9583FF0
         ");
         $this->addSql("
             ALTER TABLE claro_content2type 
-            DROP CONSTRAINT FK_1A2084EFAA23F6C8
+            DROP FOREIGN KEY FK_1A2084EFAA23F6C8
         ");
         $this->addSql("
             ALTER TABLE claro_content2type 
-            DROP CONSTRAINT FK_1A2084EFE9583FF0
+            DROP FOREIGN KEY FK_1A2084EFE9583FF0
         ");
         $this->addSql("
             ALTER TABLE claro_subcontent 
-            DROP CONSTRAINT FK_D72E133CAA23F6C8
+            DROP FOREIGN KEY FK_D72E133CAA23F6C8
         ");
         $this->addSql("
             ALTER TABLE claro_subcontent 
-            DROP CONSTRAINT FK_D72E133CE9583FF0
+            DROP FOREIGN KEY FK_D72E133CE9583FF0
         ");
         $this->addSql("
             ALTER TABLE claro_content2region 
-            DROP CONSTRAINT FK_8D18942E98260155
+            DROP FOREIGN KEY FK_8D18942E98260155
         ");
         $this->addSql("
             ALTER TABLE claro_content2type 
-            DROP CONSTRAINT FK_1A2084EFC54C8C93
+            DROP FOREIGN KEY FK_1A2084EFC54C8C93
         ");
         $this->addSql("
             DROP TABLE claro_user
