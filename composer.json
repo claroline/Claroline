@@ -1,6 +1,6 @@
 {
-    "name": "claroline/claronext",
-    "description": "Claroline 2.0",
+    "name": "claroline/claroline",
+    "description": "Claroline Connect",
     "autoload": {
         "psr-0": { "": "src/" }
     },
