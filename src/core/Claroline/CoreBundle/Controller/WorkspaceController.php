@@ -11,6 +11,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Security\Utilities;
@@ -562,6 +563,132 @@ class WorkspaceController extends Controller
         }
 
         return new JsonResponse($arWorkspace);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/list/tag/{workspaceTagId}/page/{page}",
+     *     name="claro_workspace_list_pager",
+     *     defaults={"page"=1},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "workspaceTag",
+     *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
+     *      options={"id" = "workspaceTagId", "strictId" = true}
+     * )
+     *
+     * @EXT\Template()
+     *
+     * Renders the workspace list associate to a tag in a pager.
+     *
+     * @return Response
+     */
+    public function workspaceListByTagPagerAction(WorkspaceTag $workspaceTag, $page = 1)
+    {
+        $relations = $this->tagManager->getPagerRelationByTag($workspaceTag, $page);
+
+        return array(
+            'workspaceTagId' => $workspaceTag->getId(),
+            'relations' => $relations
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/list/workspaces/page/{page}",
+     *     name="claro_all_workspaces_list_pager",
+     *     defaults={"page"=1},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     *
+     * @EXT\Template()
+     *
+     * Renders the workspace list in a pager.
+     *
+     * @return Response
+     */
+    public function workspaceCompleteListPagerAction($page = 1)
+    {
+        $workspaces = $this->tagManager->getPagerAllWorkspaces($page);
+
+        return array('workspaces' => $workspaces);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/registration/list/tag/{workspaceTagId}/page/{page}",
+     *     name="claro_workspace_list_registration_pager",
+     *     defaults={"page"=1},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "workspaceTag",
+     *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
+     *      options={"id" = "workspaceTagId", "strictId" = true}
+     * )
+     *
+     * @EXT\Template()
+     *
+     * Renders the workspace list associate to a tag in a pager for registation.
+     *
+     * @return Response
+     */
+    public function workspaceListByTagRegistrationPagerAction(WorkspaceTag $workspaceTag, $page = 1)
+    {
+        $relations = $this->tagManager->getPagerRelationByTag($workspaceTag, $page);
+
+        return array(
+            'workspaceTagId' => $workspaceTag->getId(),
+            'relations' => $relations
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/registration/list/workspaces/page/{page}",
+     *     name="claro_all_workspaces_list_registration_pager",
+     *     defaults={"page"=1},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     *
+     * @EXT\Template()
+     *
+     * Renders the workspace list in a pager for registration.
+     *
+     * @return Response
+     */
+    public function workspaceCompleteListRegistrationPagerAction($page = 1)
+    {
+        $workspaces = $this->tagManager->getPagerAllWorkspaces($page);
+
+        return array('workspaces' => $workspaces);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/registration/list/workspaces/search/{search}/page/{page}",
+     *     name="claro_workspaces_list_registration_pager_search",
+     *     defaults={"page"=1},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     *
+     * @EXT\Template()
+     *
+     * Renders the workspace list in a pager for registration.
+     *
+     * @return Response
+     */
+    public function workspaceSearchedListRegistrationPagerAction($search, $page = 1)
+    {
+        $pager = $this->workspaceManager->getDisplayableWorkspacesBySearchPager($search, $page);
+
+        return array('workspaces' => $pager, 'search' => $search);
     }
 
     private function assertIsGranted($attributes, $object = null)

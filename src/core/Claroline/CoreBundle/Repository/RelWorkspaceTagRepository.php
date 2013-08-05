@@ -119,9 +119,28 @@ class RelWorkspaceTagRepository extends EntityRepository
             SELECT t.id AS tag_id, rwt AS rel_ws_tag
             FROM Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag rwt
             JOIN rwt.tag t
+            JOIN rwt.workspace w
             WHERE t.user IS NULL
+            ORDER BY w.name
         ';
         $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
+
+    public function findAdminRelationsByTags(WorkspaceTag $workspaceTag)
+    {
+        $dql = '
+            SELECT rwt
+            FROM Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag rwt
+            JOIN rwt.tag t
+            JOIN rwt.workspace w
+            WHERE t.user IS NULL
+            AND t = :tag
+            ORDER BY w.name
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('tag', $workspaceTag);
 
         return $query->getResult();
     }
