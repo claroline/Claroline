@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "f7119ca772f16c576cab0eff07cb6443",
+    "hash": "afff43cad069b276aff0073affc26273",
     "packages": [
         {
             "name": "besimple/sso-auth-bundle",
@@ -110,12 +110,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/MigrationBundle.git",
-                "reference": "a89af72dd326d255d40de49ed14828fda0523942"
+                "reference": "10bccdbc7e5a1ec14b6a5c953cc7c21faac30e52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/MigrationBundle/zipball/a89af72dd326d255d40de49ed14828fda0523942",
-                "reference": "a89af72dd326d255d40de49ed14828fda0523942",
+                "url": "https://api.github.com/repos/claroline/MigrationBundle/zipball/10bccdbc7e5a1ec14b6a5c953cc7c21faac30e52",
+                "reference": "10bccdbc7e5a1ec14b6a5c953cc7c21faac30e52",
                 "shasum": ""
             },
             "require": {
@@ -152,7 +152,7 @@
                 "Claroline",
                 "migration"
             ],
-            "time": "2013-08-02 13:33:22"
+            "time": "2013-08-05 11:51:47"
         },
         {
             "name": "claroline/taxonomy-bundle",
@@ -373,7 +373,7 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan H. Wage",
+                    "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/"
                 },
@@ -391,9 +391,9 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -1056,7 +1056,7 @@
                 "shasum": null
             },
             "type": "library",
-            "time": "2013-06-17 15:31:59"
+            "time": "2013-06-26 15:41:16"
         },
         {
             "name": "friendsofsymfony/jsrouting-bundle",
@@ -1471,7 +1471,7 @@
                 {
                     "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -1957,44 +1957,6 @@
             "description": "lessphp is a compiler for LESS written in PHP.",
             "homepage": "http://leafo.net/lessphp/",
             "time": "2013-03-02 16:13:31"
-        },
-        {
-            "name": "mikey179/vfsStream",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mikey179/vfsStream.git",
-                "reference": "bfe5bcf59eb50b5029546d080c23146f7528024f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mikey179/vfsStream/zipball/bfe5bcf59eb50b5029546d080c23146f7528024f",
-                "reference": "bfe5bcf59eb50b5029546d080c23146f7528024f",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.3.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "org\\bovigo\\vfs\\": "src/main/php"
-                }
-            },
-            "license": [
-                "BSD"
-            ],
-            "homepage": "http://vfs.bovigo.org/",
-            "support": {
-                "source": "https://github.com/mikey179/vfsStream/tree/master",
-                "issues": "https://github.com/mikey179/vfsStream/issues"
-            },
-            "time": "2013-05-28 21:32:26"
         },
         {
             "name": "monolog/monolog",
