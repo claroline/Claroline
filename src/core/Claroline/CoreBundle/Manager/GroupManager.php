@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Repository\GroupRepository;
@@ -203,6 +204,34 @@ class GroupManager
     public function getGroupsByName($search, $page)
     {
         $query = $this->groupRepo->findByName($search, false);
+
+        return $this->pagerFactory->createPager($query, $page);
+    }
+
+    public function getGroupsByRoles(array $roles, $page = 1)
+    {
+        $query = $this->groupRepo->findByRoles($roles, true);
+
+        return $this->pagerFactory->createPager($query, $page);
+    }
+
+    public function getOutsidersByWorkspaceRoles(array $roles, AbstractWorkspace $workspace, $page = 1)
+    {
+        $query = $this->groupRepo->findOutsidersByWorkspaceRoles($roles, $workspace, true);
+
+        return  $this->pagerFactory->createPager($query, $page);
+    }
+
+    public function getGroupsByRolesAndName(array $roles, $name, $page = 1)
+    {
+        $query = $this->groupRepo->findByRolesAndName($roles, $name,  true);
+
+        return $this->pagerFactory->createPager($query, $page);
+    }
+
+    public function getOutsidersByWorkspaceRolesAndName(array $roles, $name, AbstractWorkspace $workspace, $page = 1)
+    {
+        $query = $this->groupRepo->findOutsidersByWorkspaceRolesAndName($roles, $name, $workspace, true);
 
         return $this->pagerFactory->createPager($query, $page);
     }

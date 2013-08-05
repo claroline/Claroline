@@ -1195,12 +1195,12 @@ class AdministrationController extends Controller
      * @EXT\ParamConverter(
      *     "workspaces",
      *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
-     *      options={"multipleIds" = true, "id" = "workspaceIds"}
+     *      options={"multipleIds" = true, "name" = "workspaceIds"}
      * )
      * @EXT\ParamConverter(
      *     "users",
      *      class="ClarolineCoreBundle:User",
-     *      options={"multipleIds" = true, "id" = "subjectIds"}
+     *      options={"multipleIds" = true, "name" = "subjectIds"}
      * )
      */
     public function subscribeMultipleUsersToMultipleWorkspacesAction(
@@ -1248,12 +1248,12 @@ class AdministrationController extends Controller
      * @EXT\ParamConverter(
      *     "workspaces",
      *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
-     *      options={"multipleIds" = true, "id" = "workspaceIds"}
+     *      options={"multipleIds" = true, "name" = "workspaceIds"}
      * )
      * @EXT\ParamConverter(
      *     "groups",
      *      class="ClarolineCoreBundle:Group",
-     *      options={"multipleIds" = true, "id" = "subjectIds"}
+     *      options={"multipleIds" = true, "name" = "subjectIds"}
      * )
      */
     public function subscribeMultipleGroupsToMultipleWorkspacesAction(
@@ -1301,12 +1301,12 @@ class AdministrationController extends Controller
      * @EXT\ParamConverter(
      *     "roles",
      *      class="ClarolineCoreBundle:Role",
-     *      options={"multipleIds" = true, "id" = "roleIds"}
+     *      options={"multipleIds" = true, "name" = "roleIds"}
      * )
      * @EXT\ParamConverter(
      *     "users",
      *      class="ClarolineCoreBundle:User",
-     *      options={"multipleIds" = true, "id" = "subjectIds"}
+     *      options={"multipleIds" = true, "name" = "subjectIds"}
      * )
      */
     public function subscribeMultipleUsersToOneWorkspaceAction(
@@ -1348,12 +1348,12 @@ class AdministrationController extends Controller
      * @EXT\ParamConverter(
      *     "roles",
      *      class="ClarolineCoreBundle:Role",
-     *      options={"multipleIds" = true, "id" = "roleIds"}
+     *      options={"multipleIds" = true, "name" = "roleIds"}
      * )
      * @EXT\ParamConverter(
      *     "groups",
      *      class="ClarolineCoreBundle:Group",
-     *      options={"multipleIds" = true, "id" = "subjectIds"}
+     *      options={"multipleIds" = true, "name" = "subjectIds"}
      * )
      */
     public function subscribeMultipleGroupsToOneWorkspaceAction(

@@ -32,6 +32,8 @@ class FormFactory
     const TYPE_RESOURCE_PERMS = 'resource_permissions';
     const TYPE_RESOURCE_RENAME = 'resource_rename';
     const TYPE_RESOURCE_PROPERTIES = 'resource_properties';
+    const TYPE_WORKSPACE_ROLE = 'workspace_role';
+    const TYPE_ROLE_TRANSLATION = 'workspace_role_translation';
     const TYPE_USER_EMAIL = 'email';
     const TYPE_USER_RESET_PWD = 'user_reset_pwd';
 
@@ -116,6 +118,13 @@ class FormFactory
             'formType' => 'Claroline\CoreBundle\Form\ResourcePropertiesType',
             'entity' => 'Claroline\CoreBundle\Entity\Resource\AbstractResource'
         ),
+        self::TYPE_WORKSPACE_ROLE => array(
+            'formType' => 'Claroline\CoreBundle\Form\WorkspaceRoleType'
+        ),
+        self::TYPE_ROLE_TRANSLATION => array(
+            'formType' => 'Claroline\CoreBundle\Form\RoleTranslationType',
+            'entity' => 'Claroline\CoreBundle\Entity\Role'
+        ),
         self::TYPE_USER_EMAIL => array(
             'formType' => 'Claroline\CoreBundle\Form\EmailType'
         ),
@@ -156,5 +165,10 @@ class FormFactory
         }
 
         return $this->factory->create($formType, $entityVar);
+    }
+
+    public function createFormBuilder($data = null, array $options = array())
+    {
+        return $this->factory->createBuilder('form', $data, $options);
     }
 }

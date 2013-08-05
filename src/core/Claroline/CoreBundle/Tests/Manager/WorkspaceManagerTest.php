@@ -80,8 +80,8 @@ class WorkspaceManagerTest extends MockeryTestCase
         $config->shouldReceive('getToolsConfiguration')->once()->andReturn($tools);
         $config->shouldReceive('getToolsPermissions')->once()->andReturn($toolsInfos);
         $config->shouldReceive('getArchive')->times(2)->andReturn(new \ZipArchive());
+        $config->shouldReceive('check')->once();
         $config->shouldReceive('isDisplayable')->once()->andReturn('displayable');
-
         $this->ut->shouldReceive('generateGuid')->once()->andReturn('guid');
 
         $manager = $this->mock('Claroline\CoreBundle\Entity\User');
@@ -123,8 +123,8 @@ class WorkspaceManagerTest extends MockeryTestCase
 
         $this->resourceManager->shouldReceive('create')->once()
             ->with($dir, $dirType, $manager, $workspace, null, null, array('preprights'))->andReturn($dir);
-        $this->toolManager->shouldReceive('findOneByName')->once()->with('toolName1')->andReturn($tool);
-        $this->toolManager->shouldReceive('findOneByName')->once()->with('toolName2')->andReturn($tool);
+        $this->toolManager->shouldReceive('getOneToolByName')->once()->with('toolName1')->andReturn($tool);
+        $this->toolManager->shouldReceive('getOneToolByName')->once()->with('toolName2')->andReturn($tool);
         $this->toolManager->shouldReceive('import');
 
         $this->dispatcher->shouldReceive('dispatch')->once()
