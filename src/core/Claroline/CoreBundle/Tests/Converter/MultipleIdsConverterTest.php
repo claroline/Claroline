@@ -61,15 +61,14 @@ class MultipleIdsConverterTest extends MockeryTestCase
         $this->converter->apply($this->request, $this->configuration);
     }
 
-    /**
-     * @expectedException Symfony\Component\HttpKernel\Exception\BadRequestHttpException
-     */
     public function testApplyThrowsAnExceptionIfNoIdsParameterWerePassed()
     {
         $this->configuration->shouldReceive('getName')->once()->andReturn('parameter');
         $this->configuration->shouldReceive('getClass')->once()->andReturn('Foo\Entity');
-        $this->configuration->shouldReceive('getOptions')->once()->andReturn(array());
+        $this->configuration->shouldReceive('getOptions')->once()->andReturn(array('multipleIds' => true));
         $this->request->query = new ParameterBag();
+        $this->request->attributes = m::mock('Symfony\Component\HttpFoundation\ParameterBag');
+        $this->request->attributes->shouldReceive('set')->once()->with('parameter', array());
         $this->converter->apply($this->request, $this->configuration);
     }
 
@@ -80,7 +79,7 @@ class MultipleIdsConverterTest extends MockeryTestCase
     {
         $this->configuration->shouldReceive('getName')->once()->andReturn('parameter');
         $this->configuration->shouldReceive('getClass')->once()->andReturn('Foo\Entity');
-        $this->configuration->shouldReceive('getOptions')->once()->andReturn(array());
+        $this->configuration->shouldReceive('getOptions')->once()->andReturn(array('multipleIds' => true));
         $this->request->query = new ParameterBag();
         $this->request->query->set('ids', 'not_an_array');
         $this->converter->apply($this->request, $this->configuration);
@@ -93,7 +92,7 @@ class MultipleIdsConverterTest extends MockeryTestCase
     {
         $this->configuration->shouldReceive('getName')->once()->andReturn('parameter');
         $this->configuration->shouldReceive('getClass')->once()->andReturn('Foo\Entity');
-        $this->configuration->shouldReceive('getOptions')->once()->andReturn(array());
+        $this->configuration->shouldReceive('getOptions')->once()->andReturn(array('multipleIds' => true));
         $this->request->query = new ParameterBag();
         $this->request->query->set('ids', array(1, 2));
         $this->om->shouldReceive('findByIds')
@@ -107,7 +106,7 @@ class MultipleIdsConverterTest extends MockeryTestCase
         $entities = array('entity_1', 'entity_2');
         $this->configuration->shouldReceive('getName')->once()->andReturn('parameter');
         $this->configuration->shouldReceive('getClass')->once()->andReturn('Foo\Entity');
-        $this->configuration->shouldReceive('getOptions')->once()->andReturn(array());
+        $this->configuration->shouldReceive('getOptions')->once()->andReturn(array('multipleIds' => true));
         $this->request->query = new ParameterBag();
         $this->request->attributes = new ParameterBag();
         $this->request->query->set('ids', array(1, 2));

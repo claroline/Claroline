@@ -172,7 +172,7 @@ abstract class AbstractResource
      * )
      * @ORM\JoinColumn(unique=true, onDelete="SET NULL")
      */
-    protected $next;
+    protected $next = null;
 
     /**
      * @ORM\OneToOne(
