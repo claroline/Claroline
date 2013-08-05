@@ -18,7 +18,7 @@ class Revision
     protected $id;
 
     /**
-     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Column(type="integer")
      */
     protected $version;
 
@@ -28,12 +28,12 @@ class Revision
      *     inversedBy="revisions",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="text_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $text;
 
     /**
-     * @ORM\Column(type="string", nullable=false, length=255)
+     * @ORM\Column()
      */
     protected $content;
 
@@ -42,7 +42,7 @@ class Revision
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false, onDelete="SET NULL")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $user;
 

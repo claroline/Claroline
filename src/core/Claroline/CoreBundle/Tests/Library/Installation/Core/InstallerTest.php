@@ -26,7 +26,7 @@ class InstallerTest extends TestCase
     public function testInstallWillCallMigratorOnlyForCorePlugins()
     {
         $this->migratorMock->expects($this->exactly(2))
-            ->method('createSchemaForBundle');
+            ->method('migrate');
 
         $this->installer->install();
     }
@@ -52,7 +52,7 @@ class InstallerTest extends TestCase
 
     private function initMigratorMock()
     {
-        $this->migratorMock = $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\BundleMigrator')
+        $this->migratorMock = $this->getMockBuilder('Claroline\MigrationBundle\Migrator\Migrator')
             ->disableOriginalConstructor()
             ->getMock();
     }

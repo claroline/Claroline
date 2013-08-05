@@ -42,7 +42,7 @@ class AgendaType extends AbstractType
                 array(
                     'attr' => array(
                         'class' => 'tinymce',
-                        'data-theme' => 'medium'
+                        'data-theme' => 'simple'
                         )
                     )
             )

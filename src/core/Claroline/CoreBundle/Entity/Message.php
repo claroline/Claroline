@@ -21,36 +21,36 @@ class Message
     protected $id;
 
     /**
-     * @ORM\Column(type="string", name="object")
+     * @ORM\Column()
      * @Assert\NotBlank()
      */
     protected $object;
 
     /**
-     * @ORM\Column(type="string", name="content", length=1023)
+     * @ORM\Column(length=1023)
      * @Assert\NotBlank()
      */
     protected $content;
 
     /**
-     * @todo rename the property to "sender" and the join column to "sender_id"
+     * @todo rename the property to "sender"
      *
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="sender_id", referencedColumnName="id", onDelete="CASCADE" , nullable=false)
+     * @ORM\JoinColumn(name="sender_id", onDelete="CASCADE", nullable=false)
      */
     protected $user;
 
     /**
-     * @ORM\Column(type="datetime", name="date")
+     * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="create")
      */
     protected $date;
 
     /**
-     * @ORM\Column(type="boolean", name="is_removed")
+     * @ORM\Column(name="is_removed", type="boolean")
      */
     protected $isRemoved;
 
@@ -64,25 +64,25 @@ class Message
 
     /**
      * @Gedmo\TreeLeft
-     * @ORM\Column(name="lft", type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $lft;
 
     /**
      * @Gedmo\TreeLevel
-     * @ORM\Column(name="lvl", type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $lvl;
 
     /**
      * @Gedmo\TreeRight
-     * @ORM\Column(name="rgt", type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $rgt;
 
     /**
      * @Gedmo\TreeRoot
-     * @ORM\Column(name="root", type="integer", nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $root;
 
@@ -92,12 +92,7 @@ class Message
      *     targetEntity="Claroline\CoreBundle\Entity\Message",
      *     inversedBy="children"
      * )
-     * @ORM\JoinColumn(
-     *     name="parent_id",
-     *     referencedColumnName="id",
-     *     onDelete="SET NULL",
-     *     nullable=true
-     * )
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $parent;
 
@@ -111,7 +106,7 @@ class Message
     protected $children;
 
     /**
-     * @ORM\Column(type="string", name="sender_username")
+     * @ORM\Column(name="sender_username")
      */
     protected $senderUsername;
 

@@ -37,13 +37,13 @@ abstract class AbstractWorkspace
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column()
      * @Assert\NotBlank()
      */
     protected $name;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(unique=true)
      * @Assert\NotBlank()
      */
     protected $code;
@@ -54,7 +54,7 @@ abstract class AbstractWorkspace
     protected $isPublic = true;
 
     /**
-     * @ORM\Column(name="displayable", type="boolean", nullable=true)
+     * @ORM\Column(type="boolean", nullable=true)
      */
     protected $displayable;
 
@@ -86,9 +86,9 @@ abstract class AbstractWorkspace
 
     /**
      * @ORM\OneToMany(
-     * targetEntity="Claroline\CoreBundle\Entity\Role",
-     * mappedBy="workspace",
-     * cascade={"persist"}
+     *     targetEntity="Claroline\CoreBundle\Entity\Role",
+     *     mappedBy="workspace",
+     *     cascade={"persist"}
      * )
      */
     protected $roles;
@@ -105,12 +105,12 @@ abstract class AbstractWorkspace
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User"
      * )
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id",onDelete="SET NULL", nullable=true)
+     * @ORM\JoinColumn(name="user_id", onDelete="SET NULL")
      */
     protected $creator;
 
     /**
-     * @ORM\Column(name="guid", type="string", length=255, unique=true)
+     * @ORM\Column(unique=true)
      */
     protected $guid;
 
