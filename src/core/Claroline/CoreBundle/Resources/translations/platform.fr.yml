@@ -73,6 +73,7 @@ done_on: 'effectuée sur'
 download: Télécharger
 downloads: Nb tchgr.
 edit: Modifier
+email_form_mail : 'Entrez votre adresse email'
 enter_tag_name_message: 'Veuillez entrer un nom de Tag'
 export: Exporter
 fast_answer: 'Réponse rapide'
@@ -87,6 +88,7 @@ files: Fichiers
 filter: Filtrer
 find_workspaces: 'Tous les espaces'
 first_name: Prénom
+forgot_password: 'Mot de passe oublié ?'
 form_role: Rôle
 from: Depuis
 from_message: De
@@ -255,12 +257,17 @@ copiable: 'Copiable'
 editable: 'Modifiable'
 yes: 'oui'
 no: 'non'
+no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
+link_outdated : 'le luen n''est plus valide'
 login: Connexion
 login_failure: 'La connexion a échoué. Vérifiez que votre nom d''utilisateur et votre mot de passe sont corrects.'
 logout: Déconnexion
 mail: Mail
 mail_form_content: Contenu
 mail_form_object: Objet
+mail_message : 'Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur me lien ci-dessous pour le réinitialiser. Si vous n''êtes pas à l''orgine de cette action, veuillez ignorer ce message.' 
+mail_click: 'Cliquez sur ce lien pour réinitialiser votre mot de passe'
+mail_sent : 'Un email vient de vous être envoyé. Vérifiez votre dossier spam au cas où vous ne verriez pas l''email'
 manage_rights: 'Gérer les droits'
 manager: Gestionnaire
 media_most_viewed: Media les plus consultés
@@ -301,6 +308,9 @@ owner: Propriétaire
 owner_s: Propriétaire(s)
 parameters: Paramètres
 password: 'Mot de passe'
+password_email_message: 'Vous avez demander de Réinitialiser votre mot de passe. CLiquez sur ce lien , si vous n''etes pas l''orgine de cette action , ignorez ce message'
+password_missmatch: 'les mots de passes ne correspondent pas'
+password_ok : 'Votre mot de passe à été modifié , vous pouvez vous connecter'
 paste: Coller
 path: Emplacement
 permissions: Permissions
@@ -338,6 +348,9 @@ remove_user_s_confirm_message: 'utilisateur(s) supprimé(s)'
 remove_messages_confirm_message: 'message(s) supprimé(s)'
 rename: Renommer
 reset: Réinitialiser
+reset_pwd: 'Réinitialisation de votre mot de passe'
+reset_pwd_form_plainPassword_first: "Nouveau mot de passe"
+reset_pwd_form_plainPassword_second : "Répétez le mot de passe"
 resource: Ressource
 resource_action_denied_message: 'L''action %action% n''a pas pu être exécutée sur la resource ''%path%'': accès refusé.'
 resource_creation_denied: 'Vous n''avez pas la permission de créer une ressource dans le répertoire ''%path'': accès refusé.'
