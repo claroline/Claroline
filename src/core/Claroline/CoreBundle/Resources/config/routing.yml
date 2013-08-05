@@ -32,6 +32,12 @@ claro_content_error:
         _controller: FrameworkBundle:Template:template
         template: 'ClarolineCoreBundle:Home:ajaxerror.html.twig'
 
+claro_content_typeerror:
+    pattern: /content/typeerror
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'ClarolineCoreBundle:Home:typeerror.html.twig'
+
 claro_content_confirm:
     pattern: /content/confirm
     defaults:

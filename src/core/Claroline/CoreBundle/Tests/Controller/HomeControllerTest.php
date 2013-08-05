@@ -144,6 +144,24 @@ class HomeControllerTest extends MockeryTestCase
         $this->assertEquals(new Response('true'), $this->controller->deleteAction($this->content));
     }
 
+    public function testdeletetypeAction()
+    {
+        $this->manager->shouldReceive('deleteType')->once()->andReturn('true');
+        $this->assertEquals(new Response('true'), $this->controller->deletetypeAction($this->content));
+    }
+
+    public function testtypeexistAction()
+    {
+        $this->manager->shouldReceive('typeExist')->once()->andReturn('true');
+        $this->assertEquals(new Response('true'), $this->controller->typeexistAction('home'));
+    }
+
+    public function testcreatetypeAction()
+    {
+        $this->manager->shouldReceive('createType')->once()->andReturn($this->type);
+        $this->assertEquals(array('type' => $this->type), $this->controller->createtypeAction('home'));
+    }
+
     public function testcontentToRegionAction()
     {
         $this->manager->shouldReceive('contentToRegion')->once()->andReturn('true');

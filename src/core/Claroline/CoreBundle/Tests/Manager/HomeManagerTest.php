@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Manager;
 use \Mockery as m;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Manager\HomeManager;
+use Claroline\CoreBundle\Entity\Home\Type;
 
 class HomeManagerTest extends MockeryTestCase
 {
@@ -150,6 +151,30 @@ class HomeManagerTest extends MockeryTestCase
         $this->manager->shouldReceive('remove')->once();
         $this->manager->shouldReceive('flush')->once();
         $this->assertEquals(null, $this->homeManager->deleteContent($this->content));
+    }
+
+    public function testdeleteType()
+    {
+        $this->repository->shouldReceive('findBy')->times(4)->andReturn(
+            $this->contentType, $this->subContent, $this->subContent, $this->contentType
+        );
+        $this->manager->shouldReceive('remove')->once();
+        $this->manager->shouldReceive('flush')->once();
+        $this->assertEquals(null, $this->homeManager->deleteType($this->type));
+    }
+
+    public function testcreateType()
+    {
+        $this->repository->shouldReceive('findOneBy')->once();
+        $this->manager->shouldReceive('persist')->once();
+        $this->manager->shouldReceive('flush')->once();
+        $this->assertEquals(new Type('home'), $this->homeManager->createType('home'));
+    }
+
+    public function testtypeExist()
+    {
+        $this->repository->shouldReceive('findOneBy')->once();
+        $this->assertEquals('false', $this->homeManager->typeExist('home'));
     }
 
     public function testdeleNodeEntity()
