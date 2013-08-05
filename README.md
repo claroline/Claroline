@@ -9,16 +9,15 @@ Doctrine Migrations integration bundle providing :
 
 [![Build Status](https://secure.travis-ci.org/claroline/MigrationBundle.png?branch=master)](http://travis-ci.org/claroline/MigrationBundle)
 
-INSTALLATION
+Installation
 ------------
 
 Add the bundle to your composer.json:
 
 ```json
 "require": {
-    ...
+    // ...
     "claroline/migration-bundle": "dev-master"
-    ...
 },
 ```
 
@@ -48,10 +47,9 @@ class AppKernel extends Kernel
 
     // ...
 }
-
 ```
 
-COMMANDS
+Commands
 --------
 
 You can generate migrations for a specific bundle using:
