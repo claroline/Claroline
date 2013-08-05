@@ -111,6 +111,8 @@
             <arg value="${appdir}/build/tools/phpmd.xml" />
             <arg value="--reportfile" />
             <arg value="${builddir}/logs/pmd.xml" />
+            <arg value="--exclude" />
+            <arg value="${srcdir}/*/*/*/Migrations" />
         </exec>
     </target>
 
