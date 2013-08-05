@@ -527,7 +527,7 @@ class AdministrationControllerTest extends MockeryTestCase
         $this->markTestSkipped('Refactoring may be needed');
     }
 
-    public function testRegistrationManagementAction()
+    public function testRegistrationManagementActionWithoutSearch()
     {
         $datas = array(
             'workspaces' => 'workspaces',
@@ -551,9 +551,27 @@ class AdministrationControllerTest extends MockeryTestCase
                 'tagWorkspaces' => 'tagWorkspaces',
                 'hierarchy' => 'hierarchy',
                 'rootTags' => 'rootTags',
-                'displayable' => 'displayable'
+                'displayable' => 'displayable',
+                'search' => ''
             ),
             $this->getController()->registrationManagementAction('')
+        );
+    }
+
+    public function testRegistrationManagementActionWithSearch()
+    {
+        $this->workspaceManager
+            ->shouldReceive('getDisplayableWorkspacesBySearchPager')
+            ->with('search', 1)
+            ->once()
+            ->andReturn('pager');
+
+        $this->assertEquals(
+            array(
+                'workspaces' => 'pager',
+                'search' => 'search'
+            ),
+            $this->getController()->registrationManagementAction('search')
         );
     }
 

@@ -314,4 +314,29 @@ class WorkspaceRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    /**
+     * Returns the workspaces which are visible for each user
+     * and where name or code contains $search param.
+     *
+     * @return array[AbstractWorkspace]
+     */
+    public function findDisplayableWorkspacesBySearch($search)
+    {
+        $dql = '
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            WHERE w.displayable = true
+            AND (
+                UPPER(w.name) LIKE :search
+                OR UPPER(w.code) LIKE :search
+            )
+            ORDER BY w.name
+        ';
+        $search = strtoupper($search);
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('search', "%{$search}%");
+
+        return $query->getResult();
+    }
 }

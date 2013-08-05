@@ -669,6 +669,28 @@ class WorkspaceController extends Controller
         return array('workspaces' => $workspaces);
     }
 
+    /**
+     * @EXT\Route(
+     *     "/registration/list/workspaces/search/{search}/page/{page}",
+     *     name="claro_workspaces_list_registration_pager_search",
+     *     defaults={"page"=1},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     *
+     * @EXT\Template()
+     *
+     * Renders the workspace list in a pager for registration.
+     *
+     * @return Response
+     */
+    public function workspaceSearchedListRegistrationPagerAction($search, $page = 1)
+    {
+        $pager = $this->workspaceManager->getDisplayableWorkspacesBySearchPager($search, $page);
+
+        return array('workspaces' => $pager, 'search' => $search);
+    }
+
     private function assertIsGranted($attributes, $object = null)
     {
         if (false === $this->security->isGranted($attributes, $object)) {

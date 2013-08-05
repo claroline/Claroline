@@ -44,7 +44,20 @@
                 var page = getPage(urlTab);
 
                 if (tagId === -1) {
-                    route = Routing.generate('claro_all_workspaces_list_registration_pager', {'page': page});
+                    var search = $('#search-mode').attr('search');
+
+                    if (search === '') {
+                        route = Routing.generate(
+                            'claro_all_workspaces_list_registration_pager',
+                            {'page': page}
+                        );
+                    }
+                    else {
+                        route = Routing.generate(
+                            'claro_workspaces_list_registration_pager_search',
+                            {'search': search, 'page': page}
+                        );
+                    }
                 }
                 else {
                     route = Routing.generate(
