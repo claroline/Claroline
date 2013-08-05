@@ -10,8 +10,8 @@
 {% endblock %}
 
 {% block section_content %}
-    <div id="registration-list-div" subject-type="user">
-        <div class="margin">
+    <div id="registration-list-div" subject-type="user" class="margin">
+        <div>
             <div id="custom-flashbag-div" class="alert alert-success hide">
                 <a id="flashbag-close-button" class="close" href="#">×</a>
                 <ul id="custom-flashbag-ul">
@@ -39,6 +39,7 @@
 
         {% include 'ClarolineCoreBundle:Administration:registrationManagementSelectedWorkspacesAndRoles.html.twig' %}
 
+        <br>
         <br>
 
         <div id="pager-block">
