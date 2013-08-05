@@ -60,7 +60,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
     public function workspaceToolsRolesAction(AbstractWorkspace $workspace)
     {
         return array(
-            'roles' => $this->roleManager->findWorkspaceRoles($workspace),
+            'roles' => $this->roleManager->getWorkspaceRoles($workspace),
             'workspace' => $workspace,
             'toolPermissions' => $this->toolManager->getWorkspaceToolsConfigurationArray($workspace)
         );
@@ -206,7 +206,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      */
     public function workspaceOrderToolEditFormAction(AbstractWorkspace $workspace, Tool $tool)
     {
-        $ot = $this->toolManager->findOneByWorkspaceAndTool($workspace, $tool);
+        $ot = $this->toolManager->getOneByWorkspaceAndTool($workspace, $tool);
 
         return array(
             'form' => $this->formFactory->create(FormFactory::TYPE_ORDERED_TOOL, array(), $ot)->createView(),

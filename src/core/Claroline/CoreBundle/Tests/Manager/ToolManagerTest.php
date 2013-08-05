@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Manager;
 use Mockery as m;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
 class ToolManagerTest extends MockeryTestCase
@@ -26,6 +27,7 @@ class ToolManagerTest extends MockeryTestCase
         $this->roleRepo = $this->mock('Claroline\CoreBundle\Repository\RoleRepository');
         $this->translator = $this->mock('Symfony\Component\Translation\Translator');
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->roleManager = $this->mock('Claroline\CoreBundle\Manager\RoleManager');
     }
 
     public function testCreate()
@@ -275,7 +277,7 @@ class ToolManagerTest extends MockeryTestCase
 
     public function testAddMissingWorkspaceTools()
     {
-        $manager = $this->getManager(array('getWorkspaceRoles', 'addWorkspaceTool'));
+        $manager = $this->getManager(array('addWorkspaceTool'));
 
         $tool = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
         $tool->shouldReceive('isDisplayableInWorkspace')->andReturn(true);
@@ -296,7 +298,7 @@ class ToolManagerTest extends MockeryTestCase
             )
         );
 
-        $manager->shouldReceive('getWorkspaceRoles')->with($workspace)->once()->andReturn(array($roleA, $roleB));
+        $this->roleManager->shouldReceive('getWorkspaceRoles')->with($workspace)->once()->andReturn(array($roleA, $roleB));
 
         $this->toolRepo->shouldReceive('countDisplayedToolsByWorkspace')->once()->andReturn(2);
         $this->toolRepo->shouldReceive('findUndisplayedToolsByWorkspace')->once()->andReturn(array($tool));
@@ -310,7 +312,7 @@ class ToolManagerTest extends MockeryTestCase
 
     public function testGetWorkspaceExistingTools()
     {
-        $manager = $this->getManager(array('getWorkspaceRoles'));
+        $manager = $this->getManager();
 
         $tool = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
         $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
@@ -337,7 +339,7 @@ class ToolManagerTest extends MockeryTestCase
         );
 
         $this->orderedToolRepo->shouldReceive('findBy')->andReturn(array($ot))->once();
-        $manager->shouldReceive('getWorkspaceRoles')->with($workspace)->once()->andReturn(array($roleA, $roleB));
+        $this->roleManager->shouldReceive('getWorkspaceRoles')->with($workspace)->once()->andReturn(array($roleA, $roleB));
         $this->assertEquals($expected, $manager->getWorkspaceExistingTools($workspace));
     }
 
@@ -353,7 +355,7 @@ class ToolManagerTest extends MockeryTestCase
 
     public function testGetOrderedToolsByWorkspaceAndRoles()
     {
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
         $roleA = new Role();
         $roleB = new Role();
         $roles = array($roleA, $roleB);
@@ -373,7 +375,7 @@ class ToolManagerTest extends MockeryTestCase
 
     public function testGetDisplayedByRolesAndWorkspace()
     {
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
         $roleA = new Role();
         $roleB = new Role();
         $roles = array($roleA, $roleB);
@@ -389,6 +391,97 @@ class ToolManagerTest extends MockeryTestCase
             $tools,
             $this->getManager()->getDisplayedByRolesAndWorkspace($roles, $workspace)
         );
+    }
+
+    public function testEditOrderedTool()
+    {
+        $entity = new OrderedTool();
+        $this->om->shouldReceive('persist')->once()->with($entity);
+        $this->om->shouldReceive('flush')->once();
+
+        $this->getManager()->editOrderedTool($entity);
+    }
+
+    public function testEditTool()
+    {
+        $entity = new Tool();
+        $this->om->shouldReceive('persist')->once()->with($entity);
+        $this->om->shouldReceive('flush')->once();
+
+        $this->getManager()->editTool($entity);
+    }
+
+    public function testGetAllTools()
+    {
+        $this->toolRepo->shouldReceive('findAll')->once()->andReturn('return');
+
+        $this->assertEquals('return', $this->getManager()->getAllTools());
+    }
+
+    public function testgetOneByWorkspaceAndTool()
+    {
+        $tool = new Tool();
+        $ws = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+
+        $this->orderedToolRepo->shouldReceive('findOneBy')->once()
+            ->with(array('workspace' => $ws, 'tool' => $tool))->andReturn('return');
+
+        $this->assertEquals('return', $this->getManager()->getOneByWorkspaceAndTool($ws, $tool));
+    }
+
+    public function testAddRequiredToolsUser()
+    {
+        $manager = $this->getManager(array('addDesktopTool'));
+        $user = new \Claroline\CoreBundle\Entity\User;
+        $home = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
+        $resmanager = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
+        $parameters = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
+        $home->shouldReceive('getName')->once()->andReturn('home');
+        $resmanager->shouldReceive('getName')->once()->andReturn('resource_manager');
+        $parameters->shouldReceive('getName')->once()->andReturn('parameters');
+
+        $this->toolRepo->shouldReceive('findOneBy')->once()->with(array('name' => 'home'))->andReturn($home);
+        $this->toolRepo->shouldReceive('findOneBy')->once()->with(array('name' => 'resource_manager'))->andReturn($resmanager);
+        $this->toolRepo->shouldReceive('findOneBy')->once()->with(array('name' => 'parameters'))->andReturn($parameters);
+        $manager->shouldReceive('addDesktopTool')->once()->with($home, $user, 1, 'home');
+        $manager->shouldReceive('addDesktopTool')->once()->with($resmanager, $user, 2, 'resource_manager');
+        $manager->shouldReceive('addDesktopTool')->once()->with($parameters, $user, 3, 'parameters');
+        $this->om->shouldReceive('startFlushSuite')->once();
+        $this->om->shouldReceive('persist')->once()->with($user);
+        $this->om->shouldReceive('endFlushSuite')->once()->with($user);
+
+        $manager->addRequiredToolsToUser($user);
+
+    }
+
+    public function testGetOneToolByName()
+    {
+        $name = 'name';
+        m::getConfiguration()->allowMockingNonExistentMethods(true);
+        $this->toolRepo->shouldReceive('findOneByName')->once()->with($name)->andReturn('return');
+
+        $this->assertEquals('return', $this->getManager()->getOneToolByName($name));
+    }
+
+    public function testGetToolByCriteria()
+    {
+        $criteria = array();
+        $this->toolRepo->shouldReceive('findBy')->with($criteria)->once()->andReturn('return');
+
+        $this->assertEquals('return', $this->getManager()->getToolByCriterias($criteria));
+    }
+
+    public function testExtractFiles()
+    {
+        $archpath = 'path';
+        $archive = $this->mock('ZipArchive');
+        $confTools = array('files' => array('path'));
+        $this->om->shouldReceive('factory')->once()->with('ZipArchive')->andReturn($archive);
+        $archive->shouldReceive('open')->once()->with($archpath);
+        $archive->shouldReceive('extractTo')->once()->with(m::any());
+
+        $realPath = $this->getManager()->extractFiles($archpath, $confTools);
+        $this->assertContains('path', $realPath[0]);
     }
 
     public function removeDesktopToolProvider()
@@ -433,7 +526,8 @@ class ToolManagerTest extends MockeryTestCase
                 $this->ed,
                 $this->utilities,
                 $this->translator,
-                $this->om
+                $this->om,
+                $this->roleManager
             );
         } else {
             $stringMocked = '[';
@@ -451,7 +545,8 @@ class ToolManagerTest extends MockeryTestCase
                     $this->ed,
                     $this->utilities,
                     $this->translator,
-                    $this->om
+                    $this->om,
+                    $this->roleManager
                 )
             );
         }

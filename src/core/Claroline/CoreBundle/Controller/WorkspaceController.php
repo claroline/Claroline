@@ -11,6 +11,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Security\Utilities;
@@ -562,6 +563,227 @@ class WorkspaceController extends Controller
         }
 
         return new JsonResponse($arWorkspace);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspaceId}/add/user/{userId}",
+     *     name="claro_workspace_add_user",
+     *     options={"expose"=true},
+     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
+     * )
+     * @EXT\Method({"POST", "GET"})
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "user",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"id" = "userId", "strictId" = true}
+     * )
+     *
+     * Adds a user to a workspace.
+     *
+     * @param AbstractWorkspace $workspace
+     * @param User $user
+     *
+     * @return Response
+     */
+    public function addUserAction(AbstractWorkspace $workspace, User $user)
+    {
+        $role = $this->roleManager->getCollaboratorRole($workspace);
+
+        $userRole = $this->roleManager->getWorkspaceRoleForUser($user, $workspace);
+
+        if (is_null($userRole)) {
+            $this->roleManager->associateRole($user, $role);
+            $this->eventDispatcher->dispatch(
+                'log',
+                'Log\LogWorkspaceRoleSubscribe',
+                array($role, $user)
+            );
+        }
+
+        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+        $this->securityContext->setToken($token);
+
+        return new JsonResponse($this->userManager->convertUsersToArray(array($user)));
+    }
+
+    /** @EXT\Route(
+     *     "/list/tag/{workspaceTagId}/page/{page}",
+     *     name="claro_workspace_list_pager",
+     *     defaults={"page"=1},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "workspaceTag",
+     *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
+     *      options={"id" = "workspaceTagId", "strictId" = true}
+     * )
+     *
+     * @EXT\Template()
+     *
+     * Renders the workspace list associate to a tag in a pager.
+     *
+     * @return Response
+     */
+    public function workspaceListByTagPagerAction(WorkspaceTag $workspaceTag, $page = 1)
+    {
+        $relations = $this->tagManager->getPagerRelationByTag($workspaceTag, $page);
+
+        return array(
+            'workspaceTagId' => $workspaceTag->getId(),
+            'relations' => $relations
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/list/workspaces/page/{page}",
+     *     name="claro_all_workspaces_list_pager",
+     *     defaults={"page"=1},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     *
+     * @EXT\Template()
+     *
+     * Renders the workspace list in a pager.
+     *
+     * @return Response
+     */
+    public function workspaceCompleteListPagerAction($page = 1)
+    {
+        $workspaces = $this->tagManager->getPagerAllWorkspaces($page);
+
+        return array('workspaces' => $workspaces);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspaceId}/users/{userId}",
+     *     name="claro_workspace_delete_user",
+     *     options={"expose"=true},
+     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
+     * )
+     * @EXT\Method({"DELETE", "GET"})
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "user",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"id" = "userId", "strictId" = true}
+     * )
+     *
+     * Removes an user from a workspace.
+     *
+     * @param AbstractWorkspace $workspace
+     * @param User $userId
+     *
+     * @return Response
+     */
+    public function removeUserAction(AbstractWorkspace $workspace, User $user)
+    {
+        $roles = $this->roleManager->getRolesByWorkspace($workspace);
+        $this->checkRemoveManagerRoleIsValid(array($user), $workspace);
+
+        foreach ($roles as $role) {
+            if ($user->hasRole($role->getName())) {
+                $this->roleManager->dissociateRole($user, $role);
+                $this->eventDispatcher->dispatch(
+                    'log',
+                    'Log\LogWorkspaceRoleUnsubscribe',
+                    array($role, $user)
+                );
+            }
+        }
+        $this->workspaceTagManager->deleteAllRelationsFromWorkspaceAndUser($workspace, $user);
+
+        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+        $this->securityContext->setToken($token);
+
+        return new Response("success", 204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/registration/list/tag/{workspaceTagId}/page/{page}",
+     *     name="claro_workspace_list_registration_pager",
+     *     defaults={"page"=1},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "workspaceTag",
+     *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
+     *      options={"id" = "workspaceTagId", "strictId" = true}
+     * )
+     *
+     * @EXT\Template()
+     *
+     * Renders the workspace list associate to a tag in a pager for registation.
+     *
+     * @return Response
+     */
+    public function workspaceListByTagRegistrationPagerAction(WorkspaceTag $workspaceTag, $page = 1)
+    {
+        $relations = $this->tagManager->getPagerRelationByTag($workspaceTag, $page);
+
+        return array(
+            'workspaceTagId' => $workspaceTag->getId(),
+            'relations' => $relations
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/registration/list/workspaces/page/{page}",
+     *     name="claro_all_workspaces_list_registration_pager",
+     *     defaults={"page"=1},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     *
+     * @EXT\Template()
+     *
+     * Renders the workspace list in a pager for registration.
+     *
+     * @return Response
+     */
+    public function workspaceCompleteListRegistrationPagerAction($page = 1)
+    {
+        $workspaces = $this->tagManager->getPagerAllWorkspaces($page);
+
+        return array('workspaces' => $workspaces);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/registration/list/workspaces/search/{search}/page/{page}",
+     *     name="claro_workspaces_list_registration_pager_search",
+     *     defaults={"page"=1},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     *
+     * @EXT\Template()
+     *
+     * Renders the workspace list in a pager for registration.
+     *
+     * @return Response
+     */
+    public function workspaceSearchedListRegistrationPagerAction($search, $page = 1)
+    {
+        $pager = $this->workspaceManager->getDisplayableWorkspacesBySearchPager($search, $page);
+
+        return array('workspaces' => $pager, 'search' => $search);
     }
 
     private function assertIsGranted($attributes, $object = null)

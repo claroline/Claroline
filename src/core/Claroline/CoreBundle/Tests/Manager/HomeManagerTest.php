@@ -134,7 +134,7 @@ class HomeManagerTest extends MockeryTestCase
     {
         $this->repository->shouldReceive('findOneBy')->times(2)->andReturn($this->contentType);
         $this->contentType->shouldReceive('detach')->once();
-        $this->contentType->shouldReceive('getBack')->times(2);
+        $this->contentType->shouldReceive('getBack')->times(2)->andReturn($this->contentType);
         $this->contentType->shouldReceive('setBack')->times(2);
         $this->contentType->shouldReceive('setNext')->once();
         $this->manager->shouldReceive('persist')->times(2);

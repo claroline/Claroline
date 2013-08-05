@@ -470,7 +470,7 @@ class UserManagerTest extends MockeryTestCase
             ->once()
             ->andReturn('pager');
 
-        $this->assertEquals('pager', $this->getManager()->getGroupOutsidersByName($group, 'search', 1));
+        $this->assertEquals('pager', $this->getManager()->getGroupOutsidersByName($group, 1, 'search'));
     }
 
     public function testGetAllUsersExcept()
@@ -558,6 +558,94 @@ class UserManagerTest extends MockeryTestCase
             ->andReturn($user);
 
         $this->assertEquals($user, $this->getManager()->getUserById($userId));
+    }
+
+    public function testSetPersonalWorkspaceUser()
+    {
+        $this->markTestSkipped('How to test the Configuration::fromTemplate ?');
+    }
+
+    public function testGetUsersByRoles()
+    {
+        $em = $this->mock('Doctrine\ORM\EntityManager');
+        $query = new \Doctrine\ORM\Query($em);
+        $role = new \Claroline\CoreBundle\Entity\Role();
+        $roles = array($role);
+
+        $this->userRepo->shouldReceive('findByRoles')
+            ->with($roles, true)
+            ->once()
+            ->andReturn($query);
+
+        $this->pagerFactory->shouldReceive('createPager')
+            ->with($query, 1)
+            ->once()
+            ->andReturn('pager');
+
+        $this->assertEquals('pager', $this->getManager()->getUsersByRoles($roles, 1));
+    }
+
+    public function testGetOutsidersByWorkspaceRole()
+    {
+        $em = $this->mock('Doctrine\ORM\EntityManager');
+        $query = new \Doctrine\ORM\Query($em);
+        $role = new \Claroline\CoreBundle\Entity\Role();
+        $roles = array($role);
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+
+        $this->userRepo->shouldReceive('findOutsidersByWorkspaceRoles')
+            ->with($roles, $workspace, true)
+            ->once()
+            ->andReturn($query);
+
+        $this->pagerFactory->shouldReceive('createPager')
+            ->with($query, 1)
+            ->once()
+            ->andReturn('pager');
+
+        $this->assertEquals('pager', $this->getManager()->getOutsidersByWorkspaceRoles($roles, $workspace, 1));
+    }
+
+    public function testGetUsersByRoleAndName()
+    {
+        $em = $this->mock('Doctrine\ORM\EntityManager');
+        $query = new \Doctrine\ORM\Query($em);
+        $role = new \Claroline\CoreBundle\Entity\Role();
+        $roles = array($role);
+
+        $this->userRepo->shouldReceive('findByRolesAndName')
+            ->with($roles, 'name', true)
+            ->once()
+            ->andReturn($query);
+
+        $this->pagerFactory->shouldReceive('createPager')
+            ->with($query, 1)
+            ->once()
+            ->andReturn('pager');
+
+        $this->assertEquals('pager', $this->getManager()->getUsersByRolesAndName($roles, 'name', 1));
+    }
+
+    public function testGetOutsidersByWorkspaceAndRole()
+    {
+        $em = $this->mock('Doctrine\ORM\EntityManager');
+        $query = new \Doctrine\ORM\Query($em);
+        $role = new \Claroline\CoreBundle\Entity\Role();
+        $roles = array($role);
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+
+        $this->userRepo->shouldReceive('findOutsidersByWorkspaceRolesAndName')
+            ->with($roles, 'name', $workspace, true)
+            ->once()
+            ->andReturn($query);
+
+        $this->pagerFactory->shouldReceive('createPager')
+            ->with($query, 1)
+            ->once()
+            ->andReturn('pager');
+
+        $this->assertEquals('pager', $this->getManager()
+            ->getOutsidersByWorkspaceRolesAndName($roles, 'name', $workspace, 1));
     }
 
     private function getManager(array $mockedMethods = array())
