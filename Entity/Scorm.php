@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Scorm extends AbstractResource
 {
     /**
-     * @ORM\Column(type="string", length=36, name="hash_name")
+     * @ORM\Column(name="hash_name", length=36)
      */
     protected $hashName;
 
@@ -22,12 +22,12 @@ class Scorm extends AbstractResource
     protected $masteryScore;
 
     /**
-     * @ORM\Column(name="launch_data", type="string", length=255, nullable=true)
+     * @ORM\Column(name="launch_data", nullable=true)
      */
     protected $launchData;
 
     /**
-     * @ORM\Column(name="entry_url", type="string", length=255, nullable=false)
+     * @ORM\Column(name="entry_url")
      */
     protected $entryUrl;
 

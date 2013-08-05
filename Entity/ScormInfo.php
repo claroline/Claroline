@@ -18,79 +18,72 @@ class ScormInfo
     protected $id;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\User"
-     * )
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      */
     protected $user;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\ScormBundle\Entity\Scorm"
-     * )
-     * @ORM\JoinColumn(name="scorm_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Claroline\ScormBundle\Entity\Scorm")
      */
     protected $scorm;
 
     /**
-     * @ORM\Column(name="score_raw", type="integer",nullable=true)
+     * @ORM\Column(name="score_raw", type="integer", nullable=true)
      */
     protected $scoreRaw;
 
-
     /**
-     * @ORM\Column(name="score_min", type="integer",nullable=true)
+     * @ORM\Column(name="score_min", type="integer", nullable=true)
      */
     protected $scoreMin;
 
     /**
-     * @ORM\Column(name="score_max", type="integer",nullable=true)
+     * @ORM\Column(name="score_max", type="integer", nullable=true)
      */
     protected $scoreMax;
 
     /**
-     * @ORM\Column(name="lesson_status", type="string", length=255, nullable=true)
+     * @ORM\Column(name="lesson_status", nullable=true)
      */
     protected $lessonStatus;
 
     /**
-     * @ORM\Column(name="session_time", type="integer" , nullable=true)
+     * @ORM\Column(name="session_time", type="integer", nullable=true)
      */
     protected $sessionTime;
 
     /**
-     * @ORM\Column(name="total_time", type="integer" , nullable=true)
+     * @ORM\Column(name="total_time", type="integer", nullable=true)
      */
     protected $totalTime;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(nullable=true)
      */
     protected $entry;
 
     /**
-     * @ORM\Column(name="suspend_data", type="string", length=255, nullable=true)
+     * @ORM\Column(name="suspend_data", nullable=true)
      */
     protected $suspendData;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(nullable=true)
      */
     protected $credit;
 
     /**
-     * @ORM\Column(name="exit_mode", type="string", length=255, nullable=true)
+     * @ORM\Column(name="exit_mode", nullable=true)
      */
     protected $exitMode;
 
     /**
-     * @ORM\Column(name="lesson_location", type="string", length=255, nullable=true)
+     * @ORM\Column(name="lesson_location", nullable=true)
      */
     protected $lessonLocation;
 
     /**
-     * @ORM\Column(name="lesson_mode", type="string", length=255, nullable=true)
+     * @ORM\Column(name="lesson_mode", nullable=true)
      */
     protected $lessonMode;
 
