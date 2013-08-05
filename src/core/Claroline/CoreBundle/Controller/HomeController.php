@@ -92,6 +92,7 @@ class HomeController
         $array = $this->manager->contentLayout($type, $father, $region);
 
         if ($array) {
+
             return $this->render('ClarolineCoreBundle:Home:layout.html.twig', $this->renderContent($array));
         }
 
@@ -223,7 +224,7 @@ class HomeController
      */
     public function renderContent($array)
     {
-        $tmp = '';
+        $tmp = ' '; // void in case of not yet content
 
         if (isset($array['content']) and isset($array['type']) and is_array($array['content'])) {
             foreach ($array['content'] as $content) {
@@ -250,17 +251,9 @@ class HomeController
             $tmp[$name] = '';
 
             foreach ($region as $variables) {
-                //@TODO Need content rights for admin users
-                if (!(!$this->security->isGranted('ROLE_ADMIN') and
-                    $variables['type'] == 'menu' and
-                    $variables['content']->getTitle() == 'Administration du contenu')
-                ) {
-                    $tmp[$name] .= $this->render(
-                        'ClarolineCoreBundle:Home/types:'.$variables['type'].'.html.twig', $variables, true
-                    )->getContent();
-                } else {
-                    unset($tmp[$name]);
-                }
+                $tmp[$name] .= $this->render(
+                    'ClarolineCoreBundle:Home/types:'.$variables['type'].'.html.twig', $variables, true
+                )->getContent();
             }
         }
 
@@ -365,6 +358,61 @@ class HomeController
     {
         try {
             $this->manager->deleteContent($content);
+
+            return new Response('true');
+        } catch (\Exeption $e) {
+            return new Response('false'); //useful in ajax
+        }
+    }
+
+    /**
+     * Verify if a type exist.
+     *
+     * @Route("/content/typeexist/{name}", name="claroline_content_typeexist")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function typeexistAction($name)
+    {
+        return new Response($this->manager->typeExist($name));
+    }
+
+    /**
+     * Create a type by POST method. This is used by ajax.
+     * The response is a template of the type in success, otherwise false.
+     *
+     * @Route("/content/createtype/{name}", name="claroline_content_createtype")
+     * @Secure(roles="ROLE_ADMIN")
+     *
+     * @Template("ClarolineCoreBundle:Home:type.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function createtypeAction($name)
+    {
+        try {
+            return array("type" => $this->manager->createType($name));
+
+        } catch (\Exeption $e) {
+            return new Response('false'); //useful in ajax
+        }
+    }
+
+    /**
+     * Delete a type by POST method. This is used by ajax.
+     * The response is the word true in a string in success, otherwise false.
+     *
+     * @Route("/content/deletetype/{type}", name="claroline_content_deletetype")
+     * @Secure(roles="ROLE_ADMIN")
+     *
+     * @ParamConverter("type", class = "ClarolineCoreBundle:Home\Type", options = {"id" = "type"})
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deletetypeAction($type)
+    {
+        try {
+            $this->manager->deleteType($type);
 
             return new Response('true');
         } catch (\Exeption $e) {

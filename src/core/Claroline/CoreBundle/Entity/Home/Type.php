@@ -12,8 +12,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Type
 {
-    public function __construct()
+    public function __construct($name = null)
     {
+        if ($name) {
+            $this->setName($name);
+        }
+
         $this->maxContentPage = 100;
     }
 

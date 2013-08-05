@@ -15,11 +15,6 @@ class LoadRegionData extends AbstractFixture
 {
     public function load(ObjectManager $manager)
     {
-        $admin = array(
-            "Contenu" => array("url" => "/types", "icon" => "icon-th-large"),
-            "Menus" => array("url" => "/type/menu", "icon" => "icon-th-list")
-        );
-
         $header = array(
             "Contenu d'exemple" => array("url" => "/type/opengraph", "icon" => ""),
             "Accueil" => array("url" => "/", "icon" => "")
@@ -34,7 +29,6 @@ class LoadRegionData extends AbstractFixture
         );
 
         $this->setRegions($manager);
-        $this->menuToRegion($manager, $this->menu($manager, "Administration du contenu", $admin), 'left');
         $this->menuToRegion($manager, $this->menu($manager, "Entête", $header), 'header');
         $this->menuToRegion($manager, $this->menu($manager, "Pied de page", $footer), 'footer');
     }
