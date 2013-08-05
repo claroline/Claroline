@@ -2,7 +2,7 @@
     <label for="workspaces-list">
         <b>{{ 'selected_workspaces_for_registration'|trans({}, 'platform') }}</b>
     </label>
-    <select id="workspaces-list" name="workspaces-list" size="5" class="span12">
+    <select id="workspaces-list" name="workspaces-list" size="5" class="span12" disabled="disabled">
         {% for workspace in workspaces %}
             <option class="dropdown-submenu workspace-option" workspace-id="{{ workspace.getId() }}">
                 {{ workspace.getName() }}
