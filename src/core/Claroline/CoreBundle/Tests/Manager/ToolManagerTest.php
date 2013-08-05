@@ -353,7 +353,7 @@ class ToolManagerTest extends MockeryTestCase
 
     public function testGetOrderedToolsByWorkspaceAndRoles()
     {
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
         $roleA = new Role();
         $roleB = new Role();
         $roles = array($roleA, $roleB);
@@ -373,7 +373,7 @@ class ToolManagerTest extends MockeryTestCase
 
     public function testGetDisplayedByRolesAndWorkspace()
     {
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
         $roleA = new Role();
         $roleB = new Role();
         $roles = array($roleA, $roleB);

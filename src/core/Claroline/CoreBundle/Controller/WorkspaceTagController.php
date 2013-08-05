@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Doctrine\ORM\EntityManager;
@@ -23,6 +24,7 @@ class WorkspaceTagController extends Controller
     private $workspaceManager;
     private $securityContext;
     private $formFactory;
+    private $utils;
 
     /**
      * @DI\InjectParams({
@@ -30,7 +32,8 @@ class WorkspaceTagController extends Controller
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "tagManager"         = @DI\Inject("claroline.manager.workspace_tag_manager"),
      *     "securityContext"    = @DI\Inject("security.context"),
-     *     "formFactory"        = @DI\Inject("claroline.form.factory")
+     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
+     *     "utils"              = @DI\Inject("claroline.security.utilities")
      * })
      */
     public function __construct(
@@ -38,7 +41,8 @@ class WorkspaceTagController extends Controller
         WorkspaceManager $workspaceManager,
         WorkspaceTagManager $tagManager,
         SecurityContextInterface $securityContext,
-        FormFactory $formFactory
+        FormFactory $formFactory,
+        Utilities $utils
     )
     {
         $this->em = $em;
@@ -46,6 +50,7 @@ class WorkspaceTagController extends Controller
         $this->tagManager = $tagManager;
         $this->securityContext = $securityContext;
         $this->formFactory = $formFactory;
+        $this->utils = $utils;
     }
 
     /**
@@ -68,7 +73,9 @@ class WorkspaceTagController extends Controller
         }
         $user = $this->securityContext->getToken()->getUser();
         $tags = $this->tagManager->getTagsByUser($user);
-        $workspaces = $this->workspaceManager->getWorkspacesByUser($user);
+        $token = $this->securityContext->getToken();
+        $roles = $this->utils->getRoles($token);
+        $workspaces = $this->workspaceManager->getWorkspacesByRoles($roles);
         $workspacesTags = array();
 
         foreach ($workspaces as $workspace) {
@@ -111,7 +118,7 @@ class WorkspaceTagController extends Controller
         }
         $user = $this->securityContext->getToken()->getUser();
         $tags = $this->tagManager->getTagsByUser(null);
-        $workspaces = $this->workspaceManager->getNonPersonalWorkspaces();
+        $workspaces = $this->workspaceManager->getDisplayableWorkspaces();
         $workspacesTags = array();
 
         foreach ($workspaces as $workspace) {
