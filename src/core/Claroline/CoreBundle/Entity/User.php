@@ -72,7 +72,11 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     protected $phone;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=false, unique=true)
+     * @Assert\NotBlank()
+     * @Assert\Email(
+     *     checkMX = false
+     * )
      */
     protected $mail;
 
@@ -155,6 +159,16 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      */
     protected $orderedTools;
 
+    /**
+     * @ORM\Column(name="reset_password", type="string", nullable=true)
+     */
+    protected $resetPasswordHash;
+
+    /**
+     * @ORM\Column(name="hash_time",type="integer", nullable=true)
+     */
+    protected  $hashTime;
+
     public function __construct()
     {
         parent::__construct();
@@ -218,6 +232,10 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
 
     public function setPassword($password)
     {
+        if (null === $password) {
+            return;
+        }
+        
         $this->password = $password;
     }
 
@@ -391,4 +409,24 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     {
         return $this->orderedTools;
     }
+
+    public function getResetPasswordHash()
+    {
+        return $this->resetPasswordHash;
+    }
+
+    public function setResetPasswordHash($resetPasswordHash)
+    {
+        $this->resetPasswordHash = $resetPasswordHash;
+    }
+    
+    public function getHashTime() {
+        return $this->hashTime;
+    }
+
+    public function setHashTime($hashTime) {
+        $this->hashTime = $hashTime;
+    }
+
+
 }

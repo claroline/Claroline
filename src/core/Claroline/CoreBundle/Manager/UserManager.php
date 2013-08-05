@@ -366,4 +366,14 @@ class UserManager
 
         return ($page !== 0) ? $this->pagerFactory->createPager($res, $page): $res;
     }
+
+    public function getUserByEmail($email)
+    {
+        return $this->userRepo->findOneByMail($email);
+    }
+
+    public function getResetPasswordHash($resetPassword)
+    {
+        return $this->userRepo->findOneByResetPasswordHash($resetPassword);
+    }
 }

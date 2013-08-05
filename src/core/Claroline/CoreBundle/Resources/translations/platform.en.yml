@@ -73,6 +73,7 @@ done_on: 'done on'
 download: Download
 downloads: Downloads
 edit: Edit
+email_form_mail : 'Enter your email'
 enter_tag_name_message: 'Please enter a tag name'
 export: Export
 fast_answer: 'Fast answer'
@@ -87,6 +88,7 @@ files: Files
 filter: Filter
 find_workspaces: 'Find workspaces'
 first_name: 'First name'
+forgot_password: 'Forgot your password ?'
 form_role: Role
 from: From
 from_message: From
@@ -255,12 +257,16 @@ copiable: 'Copiable'
 editable: 'Editable'
 yes: 'yes'
 no: 'no'
+link_outdated : 'link is no more valid'
 login: Login
 login_failure: 'Login has failed. Check your username and password are correct.'
 logout: Logout
 mail: Mail
 mail_form_content: Content
 mail_form_object: Object
+mail_message : 'You received this message because you asked for a new password. Please click on the link below to reset it. If you did not ask to reset your password please ignore this message.'
+mail_click: 'Click on this link to reset your password'
+mail_sent : 'A email has been sent to your address , check your inbox mail and your spam box'
 manage_rights: 'Manage rights'
 manager: Manager
 media_most_viewed: Most viewed media
@@ -288,6 +294,7 @@ my_workspace: 'My workspace'
 my_workspaces: 'My workspaces'
 name: Name
 new_message_alert: 'You have %count% new message(s)'
+no_email: 'No email found, check the spelling'
 no_search_results: 'Your search hasn''t returned any result.'
 none: None
 note: Note
@@ -306,6 +313,9 @@ path: Path
 permissions: Permissions
 personal_workspace: 'Personal workspace'
 phone: Phone
+password_email_message: 'You asked to reset your password click on this link to reset it'
+password_missmatch : 'passwords missmatched'
+password_ok : 'Your password has been changed, you can login now'
 platform_parameters: 'Platform parameters'
 platform_parameters_form_localLanguage: Langue
 platform_parameters_form_selfRegistration: Auto-inscription
@@ -338,6 +348,9 @@ remove_user_s_confirm_message: 'user(s) removed'
 remove_messages_confirm_message: 'message(s) removed'
 rename: Rename
 reset: Reset
+reset_pwd: 'Reset Your Password'
+reset_pwd_form_plainPassword_first: "New password"
+reset_pwd_form_plainPassword_second : "Repeat the password"
 resource: Resource
 resource_action_denied_message: 'The action %action% couldn''t be done on ''%path%'': acces denied.'
 resource_creation_denied: 'You don''t have the permission to create in the directory ''%path'': access denied'
@@ -425,6 +438,7 @@ type_s: Type(s)
 unregister: Unregister
 unregistered_groups: 'Unregistered groups'
 unregistered_users: 'Unregistered users'
+url_invalid: 'the code is not correct, do no try to change the url'
 user: User
 user_accounts: User accounts
 user_form_administrativeCode: 'Administrative code'
