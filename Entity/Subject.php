@@ -22,13 +22,13 @@ class Subject
     protected $id;
 
     /**
-     * @ORM\Column(type="string", name="title")
+     * @ORM\Column()
      * @Assert\NotBlank()
      */
     protected $title;
 
     /**
-     * @ORM\Column(type="datetime", name="created")
+     * @ORM\Column(name="created", type="datetime")
      * @Gedmo\Timestampable(on="create")
      */
     protected $creationDate;
@@ -44,11 +44,7 @@ class Subject
      *     targetEntity="Claroline\ForumBundle\Entity\Forum",
      *     inversedBy="subjects"
      * )
-     * @ORM\JoinColumn(
-     *     name="forum_id",
-     *     referencedColumnName="id",
-     *     onDelete="CASCADE"
-     * )
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $forum;
 
@@ -66,7 +62,7 @@ class Subject
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id")
      */
     protected $creator;
 

@@ -23,13 +23,13 @@ class Message
     protected $id;
 
     /**
-     * @ORM\Column(type="string", name="content")
+     * @ORM\Column(name="content")
      * @Assert\NotBlank()
      */
     protected $content;
 
     /**
-     * @ORM\Column(type="datetime", name="created")
+     * @ORM\Column(name="created", type="datetime")
      * @Gedmo\Timestampable(on="create")
      */
     protected $creationDate;
@@ -45,11 +45,7 @@ class Message
      *     targetEntity="Claroline\ForumBundle\Entity\Subject",
      *     inversedBy="messages"
      * )
-     * @ORM\JoinColumn(
-     *     name="subject_id",
-     *     referencedColumnName="id",
-     *     onDelete="CASCADE"
-     * )
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $subject;
 
@@ -58,7 +54,7 @@ class Message
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id")
      */
     protected $creator;
 
