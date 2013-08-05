@@ -1,0 +1,41 @@
+{% twig_js name="ResourceManagerResults" %}
+
+<div class="results">
+    {% if resources.length > 0 %}
+        <h4>{{ 'results'|trans({}, 'platform') }} : </h4>
+        <table class="table table-striped table-bordered table-condensed table-hover">
+            <thead>
+                <tr>
+                    <th class="checkbox-column"></th>
+                    <th>{{ 'name'|trans({}, 'platform') }}</th>
+                    <th>{{ 'type'|trans({}, 'platform') }}</th>
+                    <th>{{ 'path'|trans({}, 'platform') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for resource in resources %}
+                {% if resource.parent_id is not null %}
+                    <tr id="{{ resource.id }}" class="resource">
+                        <td class="checkbox-column">
+                            <input type="checkbox"
+                                value="{{ resource.id }}"
+                                data-resource-name="{{ resource.name }}"/>
+                        </td>
+                        <td><a href="#" class="resource-link" data-id="{{ resource.id }}" data-type="{{ resource.type }}">{{ resource.name }}</a></td>
+                        <td>
+                            {% for resourceType, attributes in resourceTypes %}
+                                {% if resourceType == resource.type %}
+                                    {{ attributes.name }}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>{{ resource.path_for_display }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <em>{{ 'no_search_results'|trans({}, 'platform') }}</em>
+    {% endif %}
+</div>

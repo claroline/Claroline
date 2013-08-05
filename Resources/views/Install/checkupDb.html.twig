@@ -1,0 +1,60 @@
+{% extends 'ClarolineCoreBundle:Install:layout.html.twig' %}
+{% block content %}
+<div class="span3">
+    <h3> Progression</h3>
+    <ol class="nav nav-list">
+           {%block naviguation %}
+           {{ parent()}}
+            {%endblock %}
+        </ol>
+        <p>  Progression</p>
+        <div class="progress">
+            <div class="bar" style="width: 60%;"></div>
+        </div>
+    </div>
+    <div class="span6">
+        {%block data %}
+            <h3> {{ 'step_2'|trans({}, 'install') }}</h3>
+
+            <form action="{{ path('claro_checkDbForm') }}" method="post" >
+                {{ form_label(form.dbHost) }}
+                {{ form_widget(form.dbHost) }} <em><span class="muted"> ex : localhost</span> <em>
+                {{ form_label(form.dbName) }}
+                {{ form_widget(form.dbName) }} <em><span class="muted"> ex : Claroline</span> <em>
+                {{ form_label(form.dbUser, "Nom d'utilisateur") }}
+                {{ form_widget(form.dbUser) }} <em><span class="muted"> ex : root</span> <em>
+                {{ form_label(form.dbPassword, "Mot de passe") }}
+                {{ form_widget(form.dbPassword) }} <em><span class="muted"> ex : secret</span> <em>
+                <br />
+                {{ form_rest(form) }}
+                 {% if exist is defined %}
+                      <span class="label label-important">{{ 'exist'|trans({}, 'install') }} <input type="checkbox" name="exist" value="0"/> </span><br />
+                    {% endif %}
+                <input type="submit" name="submit" value="{{ 'next'|trans({}, 'install') }}" class="btn btn-primary"/>
+                </form>
+                <a href="{{ path('claro_permission', {'lg':version} ) }}" class="btn"> {{ 'back'|trans({},'install') }} </a>
+
+        {%endblock data %}
+    </div>
+    <div class="span3">
+         <h3> {{ 'hint'|trans({}, 'install') }}</h3>
+        <div class="action">
+        <div class="well">{{ 'hint_2'|trans({}, 'install') }}</div>
+        <div class="well">{{ 'hint_3'|trans({}, 'install') }}</div>
+        </div>
+    </div>
+    {% if app.session.getFlashes() is defined %}
+        <div class="span12">
+             <div class="alert alert-error">
+        {% for key, flash in app.session.getFlashes() %}
+            {{ flash }}
+        {% endfor %}
+            {{ form_errors(form) }}
+    </div>
+                {% endif %}
+        </div>
+
+    </div>
+
+
+{% endblock %}

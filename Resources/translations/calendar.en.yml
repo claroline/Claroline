@@ -1,0 +1,17 @@
+calendar_form_title : title
+calendar_form_end : " (jj/mm/aaaa)"
+calendar_form_start : "Start date"
+calendar_form_description : "Description"
+calendar_form_allDay : " All day"
+calendar_form_priority : "Priority"
+new entry : "new entry"
+start date : "start datet"
+non plan task : "non plan tasks"
+title : "title"
+end : "end"
+all day : "all day"
+high : "high"
+medium : "medium"
+low : "low"
+no event found : 'no event found'
+tasks: Tasks

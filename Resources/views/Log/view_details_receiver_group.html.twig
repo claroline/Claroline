@@ -1,0 +1,7 @@
+{% if log.getDetails().receiverGroup is defined %}
+    <h4>{{ ('log_receiver_group')|trans({}, 'platform') }}</h4>
+    <dl class="dl-horizontal">
+        <dt>{{ ('name')|trans({}, 'platform') }}</dt>
+        <dd>{{ log.getDetails().receiverGroup.name }}</dd>
+    </dl>
+{% endif %}

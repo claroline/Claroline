@@ -1,0 +1,30 @@
+{% extends 'ZenstruckFormBundle:Twitter:form_bootstrap_layout.html.twig' %}
+
+{% block form_label %}
+    {% spaceless %}
+        {% set is_multichoice_widget = (checked is defined) and ('choice' in form.parent.vars.block_prefixes) %}
+
+        {% if is_multichoice_widget %}
+            {% set label_attr = label_attr|merge({'class': 'radio' in block_prefixes ? 'radio' : 'checkbox'}) %}
+        {% else %}
+            {% set label_attr = label_attr|merge({'class': 'control-label'}) %}
+        {% endif %}
+        {% if not compound %}
+            {% set label_attr = label_attr|merge({'for': id}) %}
+        {% endif %}
+        {% if required %}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+        {% endif %}
+
+        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+        {% if label %}
+        {{ label|trans({}, translation_domain) }}
+        {% else %}
+        {{ id|trans({}, translation_domain) }}
+        {% endif %}
+            {% if is_multichoice_widget %}
+                {{ form_widget(form) }}
+            {% endif %}
+        </label>
+    {% endspaceless %}
+{% endblock form_label %}

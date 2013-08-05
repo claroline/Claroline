@@ -1,0 +1,116 @@
+{% extends '::base.html.twig' %}
+
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+
+{% block stylesheets %}
+
+    {% if config.getParameter('theme') != '' %}
+        {% include config.getParameter('theme') %}
+    {% endif %}
+
+    {% stylesheets debug=false filter='lessphp'  output='vendor/fortawesome/fontawesome/css/font-awesome.css'
+    '../vendor/fortawesome/fontawesome/less/font-awesome.less'
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
+
+    {% image debug=false output='vendor/fortawesome/fontawesome/font/FontAwesome.otf'
+        '../vendor/fortawesome/fontawesome/font/FontAwesome.otf' %}
+    {% endimage %}
+
+    {% image debug=false output='vendor/fortawesome/fontawesome/font/fontawesome-webfont.eot'
+        '../vendor/fortawesome/fontawesome/font/fontawesome-webfont.eot' %}
+    {% endimage %}
+
+    {% image debug=false output='vendor/fortawesome/fontawesome/font/fontawesome-webfont.svg'
+        '../vendor/fortawesome/fontawesome/font/fontawesome-webfont.svg' %}
+    {% endimage %}
+
+    {% image debug=false output='vendor/fortawesome/fontawesome/font/fontawesome-webfont.ttf'
+        '../vendor/fortawesome/fontawesome/font/fontawesome-webfont.ttf' %}
+    {% endimage %}
+
+    {% image debug=false output='vendor/fortawesome/fontawesome/font/fontawesome-webfont.woff'
+        '../vendor/fortawesome/fontawesome/font/fontawesome-webfont.woff' %}
+    {% endimage %}
+
+{% endblock %}
+
+{% block javascripts_header %}
+    {{ parent() }}
+    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-1.7.1.min.js') }}'></script>
+{% endblock %}
+
+{% block favicon %}
+    <link rel="shortcut icon" href="{{ asset('bundles/clarolinecore/images/ico/favicon.ico') }}"/>
+    <link rel="apple-touch-icon" href="{{ asset('bundles/clarolinecore/images/ico/apple-touch-icon.png')}}"/>
+{% endblock %}
+
+{% block layout %}
+    <div id="sf-environement" data-env="{{ app.environment }}"></div>
+    <div id="wrapper">
+        <div class="please-wait">
+            <span class="label label-warning"> {{ 'please_wait'|trans({}, 'platform') }} </span>
+        </div>
+        {% if not is_path_mode %}
+            {% if workspace is defined %}
+            {% render controller('ClarolineCoreBundle:Layout:topBar', {'workspaceId': workspace.getId()}) %}
+            {% else %}
+            {% render controller('ClarolineCoreBundle:Layout:topBar') %}
+            {% endif %}
+        {% endif %}
+
+        <div id="grid" class="container container-fluid">
+            {% if has_role('ROLE_USURPATE_WORKSPACE_ROLE') %}
+                {% render controller('ClarolineCoreBundle:Layout:renderWarningImpersonation') %}
+            {% endif %}
+            {% block sectionHeader %}
+            &nbsp;
+            {% endblock %}
+
+            <div class="row-fluid content">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+   {% block footer %}
+        {% if not is_path_mode %}
+            {% render controller('ClarolineCoreBundle:Layout:footer') %}
+        {% endif %}
+    {% endblock%}
+    <div id="ajax-login-modal" class="modal hide fade">
+        <div class="modal-header">
+        </div>
+        <div class="modal-body" id="ajax-login-modal-body">
+            <div id="ajax-login-validation-box-body">
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {% javascripts debug=false  output='vendor/twbs/bootstrap/js/bootstrap.js'
+        '../vendor/twbs/bootstrap/js/bootstrap-affix.js'
+        '../vendor/twbs/bootstrap/js/bootstrap-alert.js'
+        '../vendor/twbs/bootstrap/js/bootstrap-button.js'
+        '../vendor/twbs/bootstrap/js/bootstrap-carousel.js'
+        '../vendor/twbs/bootstrap/js/bootstrap-collapse.js'
+        '../vendor/twbs/bootstrap/js/bootstrap-dropdown.js'
+        '../vendor/twbs/bootstrap/js/bootstrap-modal.js'
+        '../vendor/twbs/bootstrap/js/bootstrap-scrollspy.js'
+        '../vendor/twbs/bootstrap/js/bootstrap-tab.js'
+        '../vendor/twbs/bootstrap/js/bootstrap-tooltip.js'
+        '../vendor/twbs/bootstrap/js/bootstrap-popover.js'
+        '../vendor/twbs/bootstrap/js/bootstrap-transition.js'
+        '../vendor/twbs/bootstrap/js/bootstrap-typeahead.js'
+        %}<script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    {% javascripts debug=false  output='vendor/jms/twig-js/twig.js'
+        '../vendor/jms/twig-js/twig.js'
+        %}<script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/utilities.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/startup.js') }}"></script>
+{% endblock %}

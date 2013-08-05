@@ -1,0 +1,50 @@
+{% macro flashBox() %}
+    {% set flashBag = app.session.getFlashBag() %}
+    {% if flashBag|length > 0 %}
+        {% set flashes =
+            {
+                'info': flashBag.get('info'),
+                'success': flashBag.get('success'),
+                'error': flashBag.get('error'),
+                'alert': flashBag.get('alert')
+            }
+        %}
+        {% for category, msgs in flashes %}
+            {% if msgs|length > 0 %}
+                <div class="alert alert-{{ category }}">
+                    <a class="close" data-dismiss="alert" href="#">×</a>
+                    <ul>
+                        {% for msg in msgs %}
+                            <li>{{ msg }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endmacro %}
+
+{% macro sectionHeader(text) %}
+    <div class="row-fluid">
+        <div class="span12">
+            <h2 class="section-header">{{ text }}</h2>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro breadcrumbs(elements) %}
+    <ul class="breadcrumb">
+        {% for element in elements %}
+            <li{% if element['href'] == "" %} class="active"{% endif %}>
+                {% if element['href'] != "" %}
+                    <a href="{{ element['href'] }}"><i class="{{ element['icon'] }}"></i> {{ element['name'] }}</a>
+                {% else %}
+                    {{ element['name'] }}
+                {% endif %}
+            </li>
+            {% if not loop.last %}
+            <li><span class="divider"> / </span></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endmacro %}

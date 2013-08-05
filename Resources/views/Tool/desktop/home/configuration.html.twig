@@ -1,0 +1,26 @@
+{% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+
+{% block section_content %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_desktop_open_tool', {'toolName': 'parameters'})
+            },
+            {
+                'name': 'home'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+
+    <ul>
+        <li>
+            <a href="{{ path('claro_desktop_widget_properties') }}">
+                {{ 'widgets'|trans({}, 'platform') }}
+            </a>
+        </li>
+    </ul>
+
+{% endblock %}

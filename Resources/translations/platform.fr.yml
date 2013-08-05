@@ -1,0 +1,561 @@
+account_created: 'Compte créé'
+account_general_statistics: Statistiques générales sur les comptes
+action: Action
+activity_form_instructions: Instructions
+activity_form_name: Nom
+add: Ajouter
+add_group: 'Ajouter un groupe'
+add_group_s_confirm_message: 'groupe(s) ajouté(s)'
+add_resource: 'Ajouter une ressource'
+add_tag_to_workspace: 'Ajouter un Tag à l''espace d''activités'
+add_user: 'Ajouter un utilisateur'
+add_users: 'Ajouter des utilisateurs'
+add_user_s_confirm_message: 'utilisateur(s) ajouté(s)'
+admin: Administrateur
+admin_analytics: 'Statistiques plateforme'
+administration: Administration
+administrative_code: 'Code administratif'
+admin_form_firstName : 'Prenom'
+admin_form_lastName : 'Nom de famille'
+admin_form_plainPassword_first : 'Mot de passe'
+admin_form_plainPassword_second : 'Répétez votre mot de passe'
+admin_form_mail : 'Adresse email'
+admin_form_username : 'Nom d''utilisateur'
+admin_logs: 'Suivi plateforme'
+admin_tag_children_list: 'Liste des enfants'
+admin_tag_potential_children_list: 'Liste des enfants potentiels'
+admin_tags_add_remove_children_to: 'Ajouter/Retirer des enfants au Tag'
+admin_tags_hierarchy: 'Hiérarchie des Tags administrateur'
+admin_tags_list: 'Liste des Tags administrateur'
+admin_tags_management: 'Gestion des Tags administrateur'
+admin_tags_organization: 'Organisation des Tags administrateur'
+admin_workspace_tag_form_name: Nom
+advanced: Avancé
+agenda: Agenda
+all: Tous
+all_my_workspaces: 'Tous mes espaces d''activités'
+all_workspaces: 'Tous les espaces'
+anonymous: Anonyme
+analytics_home: Vue de l'ensemble
+analytics_connections: Visites utilisateurs
+analytics_resources: Contenu plateforme
+analytics_top: Top des activités
+apply: Appliquer
+available_workspaces: 'Espaces d''activités disponibles'
+by: par
+cancel: Annuler
+choose_resource_form_type: 'Type de ressource'
+close: Fermer
+collaborator: Collaborateur
+communication: Communication
+configuration: Configuration
+connections: Nb Cnx.
+configure: Configurer
+copy: Copier
+create: Créer
+creation: Création
+create_group: 'Créer un groupe'
+create_new_admin_tag: 'Créer un nouveau Tag administrateur'
+create_new_tag: 'Créer un nouveau Tag'
+create_workspace: 'Créer un espace d''activités'
+creation_date: 'Date de création'
+cut: Couper
+dashboard: 'Tableau de bord'
+date: Date
+delete: Supprimer
+desktop: Bureau
+desktop_tools: Outils du bureau
+directory: Répertoire
+directory_form_name: Nom
+directory_form_shareType: Redistribution
+display_options: 'Options d''affichage'
+done_on: 'effectuée sur'
+download: Télécharger
+downloads: Nb tchgr.
+edit: Modifier
+email_form_mail : 'Entrez votre adresse email'
+enter_tag_name_message: 'Veuillez entrer un nom de Tag'
+export: Exporter
+fast_answer: 'Réponse rapide'
+file: Fichier
+file_form_file: Fichier
+file_form_license: License
+file_form_name: Nom
+file_form_shareType: Redistribution
+file_form_shareType_0: Oui
+file_form_shareType_1: Non
+files: Fichiers
+filter: Filtrer
+find_workspaces: 'Tous les espaces'
+first_name: Prénom
+forgot_password: 'Mot de passe oublié ?'
+form_role: Rôle
+from: Depuis
+from_message: De
+general: Général
+group: Groupe
+group_form_name: Nom
+group_form_ownedRoles: Rôles
+group_form_platformRole: Role
+group_parameter: 'Paramètres du groupe'
+groups: Groupes
+groups_list: 'Liste des groupes'
+has_been_suscribed_with_role: 'a été inscrit(e) avec le rôle'
+has_been_suscribed_with_role_group: 'a été inscrit avec le rôle'
+has_not_been_imported: 'n''a pas été importé(e)'
+has_not_been_imported_into_the_group: 'n''a pas été importé(e) dans le groupe'
+history: Historique
+home: Accueil
+id: Id
+informations: Informations
+instructions: Consignes
+import: Importer
+import_users: 'Importer des utilisateurs'
+import_user_file_file: Importer depuis fichier
+invalid_csv_file: 'Le fichier CSV n''est pas valide'
+last_30_days_activity: Activités des 30 derniers jours
+last_name: Nom
+link: Lien
+list_groups: 'Lister les groupes'
+list_users: 'Lister les utilisateurs'
+list_workspaces: 'Tous les espaces d''activités'
+lock: Verrouiller
+log_default_user: 'Claroline Connect'
+log_create: 'Création'
+log_update: 'Mise à jour'
+log_delete: 'Suppression'
+log_add_user: 'Ajout d''un utilisateur'
+log_remove_user: 'Retrait d''un utilisateur'
+log_delete: 'Suppression'
+log_login: 'Connexion'
+log_read: 'Lecture'
+log_export: 'Téléchargement'
+log_move: 'Déplacement'
+log_shortcut: 'Raccourci'
+log_copy: 'Copie'
+log_child_update: 'Mise à jour à l''interieur'
+log_change_right: 'Changement de droit'
+log_subscribe_user: 'Inscription utilisateur'
+log_unsubscribe_user: 'Désinscription utilisateur'
+log_subscribe_group: 'Inscription groupe'
+log_unsubscribe_group: 'Désinscription groupe'
+log_workspace_read: 'Entrée dans l''espace d''activités'
+log_resource_copy_shortname: 'Copie'
+log_resource_create_shortname: 'Création'
+log_resource_delete_shortname: 'Suppression'
+log_resource_move_shortname: 'Déplacement'
+log_resource_read_shortname: 'Ouverture'
+log_resource_export_shortname: 'Download'
+log_resource_update_shortname: 'Modification'
+log_resource_update_rename_shortname: 'Renommage'
+log_resource_child_update_shortname: 'Modification'
+log_user_create_shortname: 'Création'
+log_user_login_shortname: 'Connexion'
+log_user_delete_shortname: 'Suppression'
+log_user_update_shortname: 'Modification'
+log_group_create_shortname: 'Création'
+log_group_add_user_shortname: 'Ajout'
+log_group_remove_user_shortname: 'Retrait'
+log_group_delete_shortname: 'Suppression'
+log_group_update_shortname: 'Modification'
+log_ws_role_subscribe_user_shortname: 'Inscription'
+log_ws_role_unsubscribe_user_shortname: 'Désinscription'
+log_ws_role_subscribe_group_shortname: 'Inscription'
+log_ws_role_unsubscribe_group_shortname: 'Désinscription'
+log_ws_role_change_right_shortname: 'Changement de droits'
+log_workspace_create_shortname: 'Création'
+log_ws_tool_read_shortname: 'Ouverture'
+log_resource_copy_title: 'Copie d''une ressource'
+log_resource_create_title: 'Création d''une ressource'
+log_resource_delete_title: 'Suppression d''une ressource'
+log_resource_move_title: 'Déplacement d''une ressource'
+log_resource_read_title: 'Ouverture d''une ressource'
+log_resource_export_title: 'Téléchargement d''une ressource'
+log_resource_update_title: 'Mise à jour d''une ressource'
+log_resource_update_rename_title: 'Renommage d''une ressource'
+log_resource_child_update_title: 'Mise à jour à l''interieur d''une ressource'
+log_user_create_title: 'Création d''un utilisateur'
+log_user_login_title: 'Connexion d''un utilisateur'
+log_user_delete_title: 'Suppression d''un utilisateur'
+log_user_update_title: 'Mise à jour d''un utilisateur'
+log_group_create_title: 'Création d''un groupe'
+log_group_add_user_title: 'Ajout d''un utilisateur à un groupe'
+log_group_remove_user_title: 'Retrait d''un utilisateur d''un groupe'
+log_group_delete_title: 'Suppression d''un groupe'
+log_group_update_title: 'Mise à jour d''un groupe'
+log_ws_role_subscribe_user_title: 'Inscription d''un utilisateur à un rôle (espace de travail)'
+log_ws_role_unsubscribe_user_title: 'Retrait d''un utilisateur d''un rôle (espace de travail)'
+log_ws_role_subscribe_group_title: 'Inscription d''un groupe à un rôle (espace de travail)'
+log_ws_role_unsubscribe_group_title: 'Retrait d''un groupe d''un rôle (espace de travail)'
+log_ws_role_change_right_title: 'Changement des droits pour un rôle (espace de travail)'
+log_workspace_create_title: 'Création d''un espace de travail'
+log_ws_tool_read_title: 'Ouverture d''un outil dans un espace de travail'
+log_resource_copy_sentence: 'a copié %resource%'
+log_resource_create_sentence: 'a créé %resource%'
+log_resource_delete_sentence: 'a supprimé %resource%'
+log_resource_move_sentence: 'a déplacé %resource%'
+log_resource_read_sentence: 'a ouvert %resource%'
+log_resource_export_sentence: 'a téléchargé %resource%'
+log_resource_update_sentence: 'a modifié %resource%'
+log_resource_update_rename_sentence: 'a renommé %resource%'
+log_user_create_sentence: 'a créé le compte %receiver_user%'
+log_user_login_sentence: 's''est connecté'
+log_user_delete_sentence: 'a supprimé le compte %receiver_user%'
+log_user_update_sentence: 'a modifié le compte %receiver_user%'
+log_group_create_sentence: 'a créé le groupe %receiver_group%'
+log_group_add_user_sentence: 'a ajouté %receiver_user% au groupe %receiver_group%'
+log_group_remove_user_sentence: 'a retiré %receiver_user% du groupe %receiver_group%'
+log_group_delete_sentence: 'a supprimé le groupe %receiver_group%'
+log_group_update_sentence: 'a modifié le groupe %receiver_group%'
+log_ws_role_subscribe_user_sentence: 'a inscrit %receiver_user% au rôle %role% dans %workspace%'
+log_ws_role_unsubscribe_user_sentence: 'a désinscrit %receiver_user% du rôle %role% dans %workspace%'
+log_ws_role_subscribe_group_sentence: 'a inscrit %receiver_group% au rôle %role% dans %workspace%'
+log_ws_role_unsubscribe_group_sentence: 'a désinscrit %receiver_group% du rôle %role% dans %workspace%'
+log_ws_role_change_right_sentence: 'a modifié les droits du rôle %role% pour %resource%'
+log_workspace_create_sentence: 'a créé l''espace de travail %workspace%'
+log_ws_tool_read_sentence: 'a ouvert l''outil %tool% dans %workspace%'
+log_see_details: 'voir le détail'
+log_doer: 'Auteur de l''action'
+log_receiver_user: 'Utilisateur cible de l''action'
+log_himself: 'L''auteur lui-même'
+log_change_set: 'Liste des propriétés modifiées'
+log_old_values: 'Anciennes valeurs'
+log_new_values: 'Nouvelles valeurs'
+log_platform_roles: 'Rôles plateforme'
+platform_role: 'Rôle plateforme'
+log_workspace_roles: 'Rôles espace d''activités'
+log_resource: 'Resource cible de l''action'
+log_owner: 'Propriétaire de la cible'
+log_resource_owner: 'Propriétaire de la ressource'
+log_context: 'Contexte :'
+log_receiver_group: 'Groupe cible de l''action'
+log_role: 'Rôle cible de l''action'
+log_old_folder: 'Ancien dossier parent'
+log_old_workspace: 'Ancien espace de travail'
+log_has_not_changed: 'N''a pas changé'
+log_copy_source: 'Source de la copie'
+log_workspace_source: 'Espace de travail source'
+log_widget_config_creation: Création
+log_widget_config_read: Lecture / Ouverture
+log_widget_config_export: Téléchargement
+log_widget_config_update: Mise à jour d'une ressource
+log_widget_config_updateChild: Nouveauté dans une ressource
+log_widget_config_delete: Suppression
+log_widget_config_move: Déplacement
+log_widget_config_subscribe: Inscription
+log_widget_config_amount: Nombre de ligne
+firstName: Prénom
+lastName: Nom
+canOpen: 'Droit d''ouvrir'
+canCopy: 'Droit de copier'
+canDelete: 'Droit de supprimer'
+canEdit: 'Droit de modifier'
+canExport: 'Droit d''exporter'
+canCreate: 'Creation de %type%'
+sharable: 'Partageable'
+deletable: 'Supprimable'
+exportable: 'Exportable'
+copiable: 'Copiable'
+editable: 'Modifiable'
+yes: 'oui'
+no: 'non'
+no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
+link_outdated : 'le luen n''est plus valide'
+login: Connexion
+login_failure: 'La connexion a échoué. Vérifiez que votre nom d''utilisateur et votre mot de passe sont corrects.'
+logout: Déconnexion
+mail: Mail
+mail_form_content: Contenu
+mail_form_object: Objet
+mail_message : 'Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur me lien ci-dessous pour le réinitialiser. Si vous n''êtes pas à l''orgine de cette action, veuillez ignorer ce message.'
+mail_click: 'Cliquez sur ce lien pour réinitialiser votre mot de passe'
+mail_sent : 'Un email vient de vous être envoyé. Vérifiez votre dossier spam au cas où vous ne verriez pas l''email'
+manage_rights: 'Gérer les droits'
+manager: Gestionnaire
+media_most_viewed: Media les plus consultés
+messages_confirm_delete: 'Etes-vous sûr de vouloir supprimer ce(s) message(s) ?'
+messages_confirm_permanent_delete: 'Etes-vous sûr de vouloir supprimer définitivement ce(s) message(s) ?'
+messages_confirm_restore: 'Etes-vous sûr de vouloir restaurer ce(s) message(s) ?'
+message_form_content: Contenu
+message_form_object: Objet
+message_form_to: A
+messages: Messages
+messages_received: 'Messages reçus'
+messages_received_removed: 'Messages reçus supprimés'
+messages_removed: 'Messages supprimés'
+messages_sent: 'Messages envoyés'
+messages_sent_removed: 'Messages envoyés supprimés'
+misc: Divers
+move: Déplacer
+my_account: 'Mon compte'
+my_agenda: 'Mon agenda'
+my_contacts: 'Mes contacts'
+my_notes: 'Mes notes'
+my_portfolio: 'Mon portfolio'
+my_resources: 'Mes resources'
+my_workspace: 'Mon espace de travail'
+my_workspaces: 'Mes espaces d''activités'
+name: Nom
+new_message_alert: 'Vous avez %count% nouveaux message(s)'
+no_search_results: 'Votre recherche n''a retourné aucun résultat.'
+note: Note
+none: Aucun
+object: Objet
+ok: Ok
+open: Ouvrir
+options: Options
+organize_admin_tags: 'Organiser les Tags administrateur'
+organize_private_tags: 'Organiser les Tags personnels'
+owner: Propriétaire
+owner_s: Propriétaire(s)
+parameters: Paramètres
+password: 'Mot de passe'
+password_email_message: 'Vous avez demander de Réinitialiser votre mot de passe. CLiquez sur ce lien , si vous n''etes pas l''orgine de cette action , ignorez ce message'
+password_missmatch: 'les mots de passes ne correspondent pas'
+password_ok : 'Votre mot de passe à été modifié , vous pouvez vous connecter'
+paste: Coller
+path: Emplacement
+permissions: Permissions
+personal_workspace: 'Espace personnel'
+phone: Téléphone
+platform_parameters: 'Paramètres de la plateforme'
+platform_parameters_form_localLanguage: Langue
+platform_parameters_form_selfRegistration: Auto-inscription
+platform_parameters_form_theme: Thème
+platform_plugins: 'Plugins de la plateforme'
+platform_widgets: 'Widgets de la plateforme'
+please_wait: 'Veuillez patienter...'
+private: Privée
+profile_form_administrativeCode: 'Code administratif'
+profile_form_firstName: Prénom
+profile_form_lastName: Nom
+profile_form_mail: Mail
+profile_form_note: 'Note personnelle'
+profile_form_ownedRoles: Role(s)
+profile_form_phone: Téléphone
+profile_form_plainPassword_first: 'Mot de passe'
+profile_form_plainPassword_second: Vérification
+profile_form_platformRoles: Rôles
+profile_form_username: 'Nom d''utilisateur'
+properties: Propriétés
+public: Publique
+public_workspaces: 'Espaces d''activités publiques'
+recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'
+register: Inscription
+register_to_a_workspace: 'S''inscrire à un espace d''activités'
+registered_groups: 'Groupes enregistrés'
+registered_users: 'Utilisateurs enregistrés'
+registration_to_workspaces: 'Inscription à des espaces d''activités'
+remove_group_s_confirm_message: 'groupe(s) supprimé(s)'
+remove_user_s_confirm_message: 'utilisateur(s) supprimé(s)'
+remove_messages_confirm_message: 'message(s) supprimé(s)'
+rename: Renommer
+reset: Réinitialiser
+reset_pwd: 'Réinitialisation de votre mot de passe'
+reset_pwd_form_plainPassword_first: "Nouveau mot de passe"
+reset_pwd_form_plainPassword_second : "Répétez le mot de passe"
+resource: Ressource
+resource_action_denied_message: 'L''action %action% n''a pas pu être exécutée sur la resource ''%path%'': accès refusé.'
+resource_creation_denied: 'Vous n''avez pas la permission de créer une ressource dans le répertoire ''%path'': accès refusé.'
+resource_creation_wrong_type: 'Vous n''avez pas la permission de créer un(e) %type% dans le répertoire ''%path%'': accès refusé.'
+resource_properties_form_copiable: Copier
+resource_properties_form_creationDate: 'Date de création'
+resource_properties_form_creator: Créateur
+resource_properties_form_deletable: Supprimer
+resource_properties_form_editable: Editer
+resource_properties_form_exportable: Exporter
+resource_properties_form_name: Nom
+resource_properties_form_resourceType: 'Type de ressource'
+resource_properties_form_sharable: 'Partager cette ressource'
+resource_properties_form_shareType: Redistribution
+resource_properties_form_userIcon: Icône
+resources: Ressources
+resources_most_downloaded: Ressources les plus téléchargés
+resources_rights: 'Droits des ressources'
+resources_usage_ratio: Taux d'utilisation des resources
+resources_usage_list: Liste d'utilisation des resources
+resource_right_form_canCopy: Copier
+resource_right_form_canDelete: Supprimer
+resource_right_form_canEdit: Editer
+resource_right_form_canOpen: Ouvrir
+resource_right_form_canShare: Partager
+resource_right_form_canView: Voir
+resource_right_form_canExport: Exporter
+resource_right_form_isRecursive: Appliquer au contenu du répertoire et aux sous-répertoires
+restore : Restaurer
+restore_messages_confirm_message: message(s) restaurés
+results: Résultats
+results_for_search_on: 'Resultat(s) de la recherche sur'
+rights: Droits
+rights_management: 'Gestion des droits'
+role: Rôle
+roles: Rôles
+role_creation: Créer un rôle
+save: Sauvegarder
+save_as_template: Sauvegarder comme modèle
+search: Rechercher
+search_group: 'Rechercher un groupe'
+search_user: 'Rechercher un utilisateur'
+see: Voir
+see_more: Voir plus
+select all: 'Tout sélectionner'
+select_groups_for_registration_to_workspace: 'Choississez les groupes à inscrire'
+select_roles_to_assign: 'Selectionnez les Rôles à attribuer'
+select_users_for_registration_to_workspace: 'Choississez les utilisateurs à inscrire'
+select_workspaces_for_registration: 'Choisissez les espaces d''activités pour l''inscription'
+selected_workspaces_for_registration: 'Espaces d''activités sélectionnés pour l''inscription'
+send_mail: 'Envoyer un mail'
+send_message: 'Envoyer un message'
+session_id: 'Identifiant de session'
+settings: Paramètres
+show: Voir
+show_as_admin: 'Voir comme admin'
+show_as_user: 'Voir comme utilisateur'
+show_as: 'Voir en tant que'
+show_profile: 'Voir le profile'
+Show: Afficher
+steal_session: 'Voler la session'
+subscribe_groups: 'Inscrire des groupes'
+subscribe_selected_groups: 'Inscrire les groupes sélectionnés'
+subscribe_selected_users: 'Inscrire les utilisateurs sélectionnés'
+subscribe_users: 'Inscrire des utilisateurs'
+switch: Echanger
+tag: Tag
+tag_children_list: 'Liste des enfants'
+tag_potential_children_list: 'Liste des enfants potentiels'
+tags_add_remove_children_to: 'Ajouter/Retirer des enfants au Tag'
+tags_hierarchy: 'Hiérarchie des Tags'
+tags_list: 'Liste des Tags'
+tags_management: 'Gestion des Tags'
+tags_organization: 'Organisation des Tags'
+teacher: Professeur
+text_form_name: Nom
+text_form_shareType: Redistribution
+text_form_text: Texte
+to: Jusque
+tool_form_name : "Nom"
+tool_form_displayName : "Nom affiché"
+to_message: A
+today: 'Aujourd''hui'
+tool: Outil
+tools: Outils
+top: Top
+top_extension: "Top des extensions (Media), par nombre de fichiers"
+top_workspaces_resources: "Top des espaces d'activités avec le plus des resources"
+top_workspaces_connections: "Top des espaces d'activités les plus consultés"
+top_resources_views: "Top des resources les plus consultés"
+top_resources_downloads: "Top des resources les plus téléchargés"
+top_users_workspaces_owners: "Top des utilisateurs ayant crée le plus de modules"
+top_users_workspaces_enrolled: "Top des utilisateurs étant inscrits dans le plus de modules"
+top_users_connections: "Top des utilisateurs s'étant les plus connectés"
+top_media_views: "Top des Medias le plus consultés"
+trash : Corbeille
+type: Type
+type_s: Type(s)
+unique connections: 'Nb Cnx. uniques'
+unregister: Désinscription
+unregistered: Non inscrit
+unregistered_groups: 'Groupes non enregistrés'
+unregistered_users: 'Utilisateurs non enregistrés'
+unwritable_file_exception: "Vous n'avez pas la permission d'écrire dans le fichier %path%."
+user: Utilisateur
+user_accounts: Comptes utilisateur
+user_form_administrativeCode: 'Code administratif'
+user_form_firstName: Nom
+user_form_lastName: Prénom
+user_form_mail: Mail
+user_form_note: 'Note personnelle'
+user_form_ownedRoles: Role(s)
+user_form_phone: Téléphone
+user_form_plainPassword_first: 'Mot de passe'
+user_form_plainPassword_second: Vérification
+user_form_username: 'Nom d''utilisateur'
+user_parameters: 'Paramètres de l''utilisateur'
+users_management: 'Gestion des utilisateurs'
+users_list: 'Liste des utilisateurs'
+username: 'Nom d''utilisateur'
+users: Utilisateurs
+users_connected_once: utilisateurs connectés au moins 1 fois sur la plateforme
+users_visits: Visites des utilisateurs
+validate: Valider
+view: Voir
+views: Nb vues
+visible: Visible
+visitor: Visiteur
+warning_workspace_impersonation: Vous êtes connectés en tant que %role% du workspace %workspace%.
+widget_settings: 'Paramètres des widgets'
+widgets: Widgets
+workspace: 'Espace d''activités'
+workspace.create: 'Créer un nouvel espace d''activités'
+workspace.name_not_blank: 'Veuillez spécifier un nom pour ce workspace.'
+workspace_administration: Administration
+workspace_delete: 'Supprimer l''espace d''activités'
+workspace_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer cet espace d''activités ?'
+workspace_delete_confirm_title: 'Confirmation de suppression'
+workspace_edit_form_code: Code
+workspace_edit_form_displayable: Publique
+workspace_edit_form_name: Nom
+workspace_edit_form_selfRegistration: 'Inscription publique'
+workspace_edit_form_selfUnregistration: 'Désinscription publique'
+workspace_form_code: Code
+workspace_form_displayable: Publique
+workspace_form_name: Nom
+workspace_form_template: Modèle
+workspace_form_type: Type
+workspace_order_tool_edit_form_name: Nom
+workspace_registration_confirm_title: 'Voulez-vous vous inscrire à cet espace d''activités ?'
+workspace_resource: Ressources
+workspace_role_type_form_translationKey: Nom
+workspace_role_type_form_requireDir: Créer un répertoire
+workspace_tag_form_name: Nom
+workspace_template_form_name: Nom
+workspace_tools: Outils
+workspace_unregistration_confirm_title: 'Voulez-vous vous désinscrire de cet espace d''activités ?'
+workspace_welcome: Accueil
+workspaces: 'Espaces d''activités'
+ws_creator: 'Créateur d''espaces'
+ws_most_viewed: Espaces d'activités les plus consultés
+date_range.format: 'd-m-Y'
+date_range.js_format: 'dd-MM-yyyy'
+date_range.apply: 'Appliquer'
+date_range.clear: 'Effacer'
+date_range.week: 's'
+date_range.from: 'De'
+date_range.to: 'A'
+date_range.custom_range: 'Plage personnalisée'
+date_range.day_names: '["Di","Lu","Ma","Me","Je","Ve","Sa"]'
+date_range.month_names: '["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"]'
+date_range.first_day: '1'
+date_range.today: 'Aujourd''hui'
+date_range.yesterday: 'Hier'
+date_range.last_week: 'Semaine précédente'
+date_range.this_week: 'Semaine en cours'
+date_range.last_month: 'Mois précédent'
+date_range.this_month: 'Mois en cours'
+date_range.last_year: 'Année précédente'
+date_range.this_year: 'Année en cours'
+date_range.last_school_year: 'Année sco. précédente'
+date_range.this_school_year: 'Année sco. en cours'
+date_range.last_seven_days: '7 derniers jours'
+date_range.last_thirty_days: '30 derniers jours'
+jqplot_date_output_format: '%d-%m-%Y'
+Show actions for: 'Afficher les actions sur'
+for period: 'sur la période du'
+for user: 'de l''utilisateur'
+Show actions: 'Afficher les actions'
+See all: 'Voir tous'
+yesterday_activity: Activité de la veille
+Your changes have been saved: 'Vos changements ont été sauvegardés'
+The form is not valid: 'Le formulaire n''est pas valide'
+Choose workspaces displayed in the widget: 'Choisissez les espaces de travail affichés par le widget'
+Choose visible actions in the widget: 'Choisissez les actions visibles dans le widget'
+Actions per day: 'Nombre d''actions par jour'
+Last action: '{1} Dernière action|[1,Inf] %logAmount% dernières actions'
+log_hidden_workspace_widget_config_amount : 'Nombre d''actions'
+Action List: 'Liste des actions'
+Filter actions: 'Filtrer les actions'
+Draw an area on the graph to zoom, double-click to cancel: 'Tracez une zone sur le graphique pour zoomer; double cliquez pour annuler'
+Overview of recent activities of your workspaces: 'Aperçu des activités récentes de vos espaces de travail'
+Overview of recent activities in %workspaceName%: 'Aperçu des activités récentes de %workspaceName%'
+Overview of all recent activities in %workspaceName%: 'Aperçu de toutes les activités récentes de %workspaceName%'
+select_all: Tout sélectionner

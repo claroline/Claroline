@@ -1,0 +1,39 @@
+administrator_profil : 'Profile administrateur'
+back: retour
+current_value: 'valeur actuelle'
+database : 'base de données'
+db_name: 'Nom de la base de donnée'
+db_host : 'Adresse du serveur de base de donnée'
+done : "Voila c'est fait "
+exist : "La base de donnée existe déjà , voulez vous l'écraser ?"
+folders: Dossiers
+hint: 'Trucs et Astuces'
+hint_1: 'Si vous avez des versions supérieures à celle du tableau ,cela ne peut aller que mieux pour vous.'
+hint_2 : 'Utilisez les informations fournies par votre hébergement internet'
+hint_3 : "Si vous voulez utiliser Claronext en local, vous aurez surement la configuration suivante : localhost,root,pas de mot de passe, et le nom de votre base de donnée"
+hint_4 : "Essayer autre chose que azerty ou 1234 comme password"
+hint_5 : ' Notez précieusement ces informations et gardez les dans un endroit sécurisé'
+general : 'Information générale'
+home : "Allez à l'accueil"
+install_form_dbDriver: 'Driver PDO'
+install_form_dbHost : 'Adresse du serveur de base de donnée'
+install_form_dbName : 'Nom de la base de donnée'
+install_form_dbUser : "Nom d'utilisateur"
+install_form_dbPassword : 'mot de passe'
+language : "langue"
+minimum_value: 'Valeur minimume'
+next : 'suivant'
+next: suivant
+of: sur
+parameters: paramètres
+password: 'Mot de passe'
+permission: 'Permission lectures et écritures'
+server: serveur
+system_requirement : 'Etape1: configuration requise'
+step_2 : 'Etape 2 configuration de la base de données'
+step_3 : 'Step 3 Profile administrateur'
+step_4 : 'Vérification de vos paramètres'
+sucess : 'Installation réussie avec succès'
+this_process : "Cet assistant vous guidera à travers les différentes étapes de l'installation"
+username: 'Nom de l''utilisateur'
+welcome : "Bienvenue dans l'installationt de la platforme Claronext"

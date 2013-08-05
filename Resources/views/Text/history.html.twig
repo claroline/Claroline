@@ -1,0 +1,10 @@
+{# to keep the workspace layout, extends this template #}
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+{# use the section_content block to display yor html #}
+{% block section_content %}
+    {% for difference in differences %}
+        {{ difference|raw }}
+            </br>-------------------------------</br>
+        {% endfor %}
+    {{ original|raw }}
+{% endblock %}

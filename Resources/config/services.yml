@@ -1,0 +1,18 @@
+# This file contains only services that cannot be defined using annotations.
+
+services:
+    # service definition is conditional (parameter depend on the environment)
+    claroline.config.platform_config_handler:
+        class: %claroline.param.platform_config_handler_class%
+        arguments:
+            - %claroline.param.platform_options_files%
+    # array injection with annotations is not supported
+    claroline.plugin.validator:
+        class: Claroline\CoreBundle\Library\Installation\Plugin\Validator
+        arguments:
+            - routing: "@claroline.plugin.routing_checker"
+              config: "@claroline.plugin.config_checker"
+    # symfony class used as service argument
+    symfony.yaml:
+        class: Symfony\Component\Yaml\Yaml
+        public: false

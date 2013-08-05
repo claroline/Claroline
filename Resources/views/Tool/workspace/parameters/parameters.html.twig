@@ -1,0 +1,26 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block section_content %}
+
+    {{ macros.breadcrumbs([
+        {
+            'icon': 'icon-cog',
+            'name': 'parameters'|trans({}, 'platform'),
+            'href': '#'
+        }
+    ])}}
+
+    <ul>
+        <li>
+            <a href="{{ path('claro_workspace_edit_form', {'workspace': workspace.getId()}) }}"> {{ 'general'|trans({}, 'platform') }} </a>
+        </li>
+        <li>
+            <a href="{{ path('claro_workspace_tools_roles', {'workspaceId': workspace.getId()}) }}"> {{ 'tools'|trans({}, 'platform') }} </a>
+        </li>
+        {% for tool in tools %}
+            <li> <a href="{{ path('claro_workspace_tool_config', {'tool': tool.getId(), 'workspace': workspace.getId()}) }}">
+                {{ tool.getName()|trans({}, 'tools') }}
+            </a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

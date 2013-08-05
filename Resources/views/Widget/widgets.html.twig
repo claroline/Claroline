@@ -1,0 +1,107 @@
+<style type="text/css">
+    .accordion-toggle {
+        cursor: default;
+    }
+
+    .edition {
+        display: none;
+    }
+</style>
+
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+{{ macros.flashBox() }}
+
+<div class="accordion widget">
+    {% for widget in widgets %}
+        <div class="accordion-group widget">
+            <div class="accordion-heading">
+                <div class="accordion-toggle">
+                    <a data-toggle="collapse"  href="#collapse{{ widget.id }}">
+                        <i class="icon-chevron-up" id="arrow{{ widget.id }}"></i>
+                        {{ widget.title|trans({}, 'widget') }}
+                    </a>
+                    {% if widget.configurable %}
+                        {% if isDesktop %}
+                            <a
+                                href="{{ path('claro_desktop_widget_configuration', {'widget': widget.id}) }}"
+                                class="pull-right"
+                                id="edit-widget{{ widget.id }}">
+                                <i class="icon-edit"></i> {{ 'edit'|trans({}, 'platform') }}
+                            </a>
+                        {% else %}
+                            <a
+                                href="{{ path('claro_workspace_widget_configuration', {'workspace': workspaceId, 'widget': widget.id}) }}"
+                                class="pull-right"
+                                id="edit-widget{{ widget.id }}">
+                                <i class="icon-edit"></i> {{ 'edit'|trans({}, 'platform') }}
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+            <div id="collapse{{ widget.id }}" class="accordion-body collapse in">
+                <div class="accordion-inner view">
+                    {{ widget.content|raw }}
+                </div>
+                <div class="accordion-inner edition">empty</div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+    'use strict';
+        {% for widget in widgets %}
+            $('#collapse{{ widget.id }}').on('hidden', function () {
+                var icon = $('#arrow{{ widget.id }}');
+                icon.removeClass('icon-chevron-up');
+                icon.addClass('icon-chevron-down');
+            });
+            $('#collapse{{ widget.id }}').on('shown', function () {
+                var icon = $('#arrow{{ widget.id }}');
+                icon.removeClass('icon-chevron-down');
+                icon.addClass('icon-chevron-up');
+            });
+
+            var editButton = $('#edit-widget{{ widget.id }}');
+            var url = editButton.attr('href');
+            editButton
+                .attr('href', '#form_edit_widget{{ widget.id }}')
+                .attr('data-edit', url);
+
+            $('#edit-widget{{ widget.id }}').on('click', function (event) {
+                event.preventDefault();
+                var button = $('#edit-widget{{ widget.id }}');
+                if (button.hasClass('editing')) {
+                    button.removeClass('editing');
+                    button.html('<i class="icon-edit"></i> {{ 'edit'|trans({}, 'platform') }}');
+                    $('#collapse{{ widget.id }} > .view').show();
+                    $('#collapse{{ widget.id }} > .edition').hide();
+                } else {
+                    if ($('#collapse{{ widget.id }} > .edition').html() == 'empty') {
+                        $.get($(this).attr('data-edit'))
+                            .done(function (data) {
+                                $('#collapse{{ widget.id }} > .edition').html(data);
+                                // Catch cancel's click
+                                $('#collapse{{ widget.id }} .claro-widget-form-cancel').on('click', function (event) {
+                                    event.preventDefault();
+                                    $('#edit-widget{{ widget.id }}').click();
+                                });
+
+                                button.addClass('editing');
+                                button.html('<i class="icon-ban-circle"></i> {{ 'cancel'|trans({}, 'platform') }}');
+                                $('#collapse{{ widget.id }} > .view').hide();
+                                $('#collapse{{ widget.id }} > .edition').show();
+                            });
+                    } else {
+                        button.addClass('editing');
+                        button.html('<i class="icon-ban-circle"></i> {{ 'cancel'|trans({}, 'platform') }}');
+                        $('#collapse{{ widget.id }} > .view').hide();
+                        $('#collapse{{ widget.id }} > .edition').show();
+                    }
+                }
+            });
+        {% endfor %}
+    });
+</script>

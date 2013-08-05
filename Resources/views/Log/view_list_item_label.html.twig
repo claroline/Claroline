@@ -1,0 +1,3 @@
+{% include 'ClarolineCoreBundle:Log:view_list_item_icon.html.twig' %}
+
+<a class='log-action-name' href="{{ path( 'claro_log_view_details', { 'logId': log.getId() } ) }}">{{ ('log_' ~ log.getAction() ~ '_shortname')|trans({}, 'platform') }}</a>

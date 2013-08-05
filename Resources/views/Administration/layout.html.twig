@@ -1,0 +1,69 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block title %}{{ 'administration'|trans({}, 'platform') }}{% endblock %}
+
+{% block content %}
+    <div class="span3 administration">
+        <ul class="nav nav-tabs nav-stacked">
+            <li class="disabled">
+                <a><b>{{ 'administration'|trans({}, 'platform') }}</b></a>
+            </li>
+            <li{% if path('claro_admin_platform_settings_form') == app.request.requesturi or app.request.requesturi == '/Claroline/web/app_dev.php/admin/' %} class="active"{% endif %}>
+                <a href="{{ path('claro_admin_platform_settings_form') }}" id="link_platform_parameters">
+                            <i class="icon-cog"></i>
+                            <i class="icon-chevron-right pull-right"></i>
+                            {{ 'platform_parameters'|trans({}, 'platform') }}</a>
+            </li>
+            <li>
+                <a href="{{ path('claro_admin_users_management') }}"
+
+                   id="link_add_user">
+                    <i class="icon-user"></i>
+                    <i class="icon-chevron-right pull-right"></i>
+                    {{ 'users_management'|trans({}, 'platform') }}
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('claro_admin_registration_management') }}">
+                    <i class="icon-book"></i>
+                    <i class="icon-chevron-right pull-right"></i>
+                    {{ 'registration_to_workspaces'|trans({}, 'platform') }}
+                </a>
+            </li>
+            <li{% if path('claro_admin_plugins') == app.request.requesturi %} class="active"{% endif %}>
+                <a href="{{ path('claro_admin_plugins') }}" id="link_platform_plugins">
+                            <i class="icon-wrench"></i>
+                            <i class="icon-chevron-right pull-right"></i>
+                            {{ 'platform_plugins'|trans({}, 'platform') }}</a>
+            </li>
+            <li{% if path('claro_admin_widgets') == app.request.requesturi %} class="active"{% endif %}>
+                <a href="{{ path('claro_admin_widgets') }}" id="link_platform_widgets">
+                            <i class="icon-dashboard"></i>
+                            <i class="icon-chevron-right pull-right"></i>
+                            {{ 'platform_widgets'|trans({}, 'platform') }}</a>
+            </li>
+            <li{% if path('claro_admin_tool_show') == app.request.requesturi %} class="active"{% endif %}>
+                <a href="{{ path('claro_admin_tool_show') }}" id="link_platform_widgets">
+                            <i class="icon-pencil"></i>
+                            <i class="icon-chevron-right pull-right"></i>
+                            {{ 'desktop_tools'|trans({}, 'platform') }}</a>
+            </li>
+            <li{% if path('claro_admin_logs_show') == app.request.requesturi %} class="active"{% endif %}>
+                <a href="{{ path('claro_admin_logs_show') }}" id="link_logs">
+                            <i class="icon-reorder"></i>
+                            <i class="icon-chevron-right pull-right"></i>
+                            {{ 'admin_logs'|trans({}, 'platform') }}</a>
+            </li>
+            <li{% if path('claro_admin_analytics_show') in app.request.requesturi %} class="active"{% endif %}>
+                <a href="{{ path('claro_admin_analytics_show') }}" id="link_analytics">
+                            <i class="icon-bar-chart"></i>
+                            <i class="icon-chevron-right pull-right"></i>
+                            {{ 'admin_analytics'|trans({}, 'platform') }}</a>
+            </li>
+        </ul>
+    </div>
+    <div class="span9 section-content border">
+        {% block section_content %}{% endblock %}
+    </div>
+
+{% endblock %}

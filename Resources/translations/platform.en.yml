@@ -1,0 +1,559 @@
+account_created: 'Account created.'
+account_general_statistics: Account general statistics
+action: Action
+activity_form_instructions: Instructions
+activity_form_name: Name
+add: Add
+add_group: 'Add group'
+add_group_s_confirm_message: 'group(s) added'
+add_resource: 'Add resource'
+add_tag_to_workspace: 'Add tag to workspace'
+add_user: 'Add user'
+add_users: 'Add users'
+add_user_s_confirm_message: 'users(s) added'
+admin: Administrator
+admin_analytics: 'Platform analytics'
+admin_form_firstName : 'first name'
+admin_form_lastName : 'Lastname'
+admin_form_plainPassword_first : 'Paswword'
+admin_form_plainPassword_second : 'Repeat your password'
+admin_form_mail : 'Email adress'
+admin_form_username : 'Username'
+admin_logs: 'Platform logs'
+admin_tag_children_list: 'Admin tag children list'
+admin_tag_potential_children_list: 'Admin tag potential children list'
+admin_tags_add_remove_children_to: 'Add/Remove children to'
+admin_tags_hierarchy: 'Admin tags hierarchy'
+admin_tags_list: 'Admin tags list'
+admin_tags_management: 'Admin tags management'
+admin_tags_organization: 'Admin tags organization'
+admin_workspace_tag_form_name: Name
+administration: Administration
+administrative_code: 'Administrative code'
+advanced: Advanced
+agenda: Agenda
+all: All
+all_my_workspaces: 'All my workspaces'
+all_workspaces: 'All workspaces'
+anonymous: Anonymous
+analytics_home: Home
+analytics_connections: Connections
+analytics_resources: Resources
+analytics_top: Top
+apply: Apply
+available_workspaces: 'Available workspaces'
+by: by
+cancel: Cancel
+choose_resource_form_type: 'Resource type'
+close: Close
+collaborator: Collaborator
+communication: Communication
+configuration: Configuration
+configure: Configure
+connections: Connections
+copy: Copy
+create: Create
+creation: Creation
+create_group: 'Create group'
+create_new_admin_tag: 'Create new admin tag'
+create_new_tag: 'Create new tag'
+create_workspace: 'Create workspace'
+creation_date: 'Creation date'
+cut: Cut
+dashboard: Dashboard
+date: Date
+delete: Delete
+desktop: Desktop
+desktop_tools: Desktop tools
+directory: Directory
+directory_form_name: Name
+directory_form_shareType: Sharable
+display_options: 'Display options'
+done_on: 'done on'
+download: Download
+downloads: Downloads
+edit: Edit
+email_form_mail : 'Enter your email'
+enter_tag_name_message: 'Please enter a tag name'
+export: Export
+fast_answer: 'Fast answer'
+file: File
+file_form_file: File
+file_form_license: License
+file_form_name: Name
+file_form_shareType: Sharable
+file_form_shareType_0: Yes
+file_form_shareType_1: false
+files: Files
+filter: Filter
+find_workspaces: 'Find workspaces'
+first_name: 'First name'
+forgot_password: 'Forgot your password ?'
+form_role: Role
+from: From
+from_message: From
+general: General
+group: Group
+group_form_name: Name
+group_form_ownedRoles: Roles
+group_form_platformRole: Role
+group_parameter: 'Group parameter'
+groups: Groups
+groups_list: 'Groups list'
+has_been_suscribed_with_role: 'has been suscribed with role'
+has_been_suscribed_with_role_group: 'has been suscribed with role'
+has_not_been_imported: 'has not been imported'
+has_not_been_imported_into_the_group: 'has not been imported into the group'
+history: History
+home: Home
+id: Id
+informations: Informations
+instructions: Instructions
+import: Import
+import_user_file_file: Import from a file
+import_users: 'Import users'
+invalid_csv_file: 'Invalid CSV file'
+last_30_days_activity: Activity over the last 30 days
+last_name: 'Last name'
+link: Link
+list_groups: 'List groups'
+list_users: 'List users'
+list_workspaces: 'List workspaces'
+lock: Lock
+log_default_user: 'Claroline Connect'
+log_create: 'Create'
+log_update: 'Update'
+log_delete: 'Delete'
+log_add_user: 'Add user'
+log_remove_user: 'Remove user'
+log_delete: 'Delete'
+log_login: 'Login'
+log_read: 'Read'
+log_export: 'Download'
+log_move: 'Move'
+log_shortcut: 'Shortcut'
+log_copy: 'Copy'
+log_child_update: 'Update inside'
+log_change_right: 'Change rights'
+log_subscribe_user: 'Subscribe user'
+log_unsubscribe_user: 'Unsubscribe user'
+log_subscribe_group: 'Subscribe group'
+log_unsubscribe_group: 'Unsubscribe group'
+log_workspace_read: 'Workspace entries'
+log_resource_copy_shortname: 'Copy'
+log_resource_create_shortname: 'Creation'
+log_resource_delete_shortname: 'Delete'
+log_resource_move_shortname: 'Move'
+log_resource_read_shortname: 'Open'
+log_resource_export_shortname: 'Download'
+log_resource_update_shortname: 'Update'
+log_resource_update_rename_shortname: 'Rename'
+log_resource_child_update_shortname: 'Update'
+log_user_create_shortname: 'Creation'
+log_user_login_shortname: 'Login'
+log_user_delete_shortname: 'Delete'
+log_user_update_shortname: 'Update'
+log_group_create_shortname: 'Creation'
+log_group_add_user_shortname: 'Adding'
+log_group_remove_user_shortname: 'Removing'
+log_group_delete_shortname: 'Delete'
+log_group_update_shortname: 'Update'
+log_ws_role_subscribe_user_shortname: 'Subscribe'
+log_ws_role_unsubscribe_user_shortname: 'Unsubscribe'
+log_ws_role_subscribe_group_shortname: 'Subscribe'
+log_ws_role_unsubscribe_group_shortname: 'Unsubscribe'
+log_ws_role_change_right_shortname: 'Change rights'
+log_workspace_create_shortname: 'Creation'
+log_ws_tool_read_shortname: 'Open'
+log_resource_copy_title: 'Resource copy'
+log_resource_create_title: 'Resource creation'
+log_resource_delete_title: 'Resource delete'
+log_resource_move_title: 'Resource move'
+log_resource_read_title: 'Resource open'
+log_resource_export_title: 'Resource download'
+log_resource_update_title: 'Resource update'
+log_resource_update_rename_title: 'Resource rename'
+log_resource_child_update_title: 'Inside resource update'
+log_user_create_title: 'User creation'
+log_user_login_title: 'User login'
+log_user_delete_title: 'User delete'
+log_user_update_title: 'User update'
+log_group_create_title: 'Group creation'
+log_group_add_user_title: 'Adding user to group'
+log_group_remove_user_title: 'Removing user from group'
+log_group_delete_title: 'Group delete'
+log_group_update_title: 'Group update'
+log_ws_role_subscribe_user_title: 'Subscribe user to a workspace role'
+log_ws_role_unsubscribe_user_title: 'Unsubscribe user from a workspace role'
+log_ws_role_subscribe_group_title: 'Subscribe group to a workspace role'
+log_ws_role_unsubscribe_group_title: 'Unsubscribe group from a workspace role'
+log_ws_role_change_right_title: 'Change rights for a workspace role'
+log_workspace_create_title: 'Workspace creation'
+log_ws_tool_read_title: 'Workspace tool open'
+log_resource_copy_sentence: 'has copied %resource%'
+log_resource_create_sentence: 'has created %resource%'
+log_resource_delete_sentence: 'has deleted %resource%'
+log_resource_move_sentence: 'has moved %resource%'
+log_resource_read_sentence: 'has opened %resource%'
+log_resource_export_sentence: 'has downloaded %resource%'
+log_resource_update_sentence: 'has updated %resource%'
+log_resource_update_rename_sentence: 'has renamed %resource%'
+log_user_create_sentence: 'has created the account %receiver_user%'
+log_user_login_sentence: 'has logged'
+log_user_delete_sentence: 'has deleted the account %receiver_user%'
+log_user_update_sentence: 'has updated the account %receiver_user%'
+log_group_create_sentence: 'has created the group %receiver_group%'
+log_group_add_user_sentence: 'has added %receiver_user% to the group %receiver_group%'
+log_group_remove_user_sentence: 'has removed %receiver_user% from the group %receiver_group%'
+log_group_delete_sentence: 'has deleted the group %receiver_group%'
+log_group_update_sentence: 'has updated the group %receiver_group%'
+log_ws_role_subscribe_user_sentence: 'has subscribed %receiver_user% to the role %role% in %workspace%'
+log_ws_role_unsubscribe_user_sentence: 'has unsubscribed %receiver_user% from the role %role% in %workspace%'
+log_ws_role_subscribe_group_sentence: 'has subscribed %receiver_group% to the role %role% in %workspace%'
+log_ws_role_unsubscribe_group_sentence: 'has unsubscribed %receiver_group% to the role %role% in %workspace%'
+log_ws_role_change_right_sentence: 'has updated the rights of the %role% for %resource%'
+log_workspace_create_sentence: 'has created the workspace %workspace%'
+log_ws_tool_read_sentence: 'has opened the tool %tool% in the workspace %workspace%'
+log_see_details: 'see details'
+log_doer: 'Doer'
+log_receiver_user: 'Action target user'
+log_himself: 'The doer himself'
+log_change_set: 'List of modified properties'
+log_old_values: 'Old values'
+log_new_values: 'New values'
+log_platform_roles: 'Platform roles'
+platform_role: 'Platform role'
+log_workspace_roles: 'Workspace roles'
+log_resource: 'Action target resource'
+log_owner: 'Target''s Owner'
+log_resource_owner: 'Resource''s owner'
+log_context: 'Context:'
+log_receiver_group: 'Action target group'
+log_role: 'Action target role'
+log_old_folder: 'Old parent folder'
+log_old_workspace: 'Old workspace'
+log_has_not_changed: 'Has not changed'
+log_copy_source: 'Copy source'
+log_workspace_source: 'Workspace source'
+log_widget_config_creation: Creation
+log_widget_config_read: Read / Open
+log_widget_config_export: Export
+log_widget_config_update: Update
+log_widget_config_updateChild: News in the object
+log_widget_config_delete: Delete
+log_widget_config_move: Move
+log_widget_config_subscribe: Subscribe
+log_widget_config_amount: Line number
+firstName: First name
+lastName: Last name
+canOpen: 'Right to open'
+canCopy: 'Right to copy'
+canDelete: 'Right to delete'
+canEdit: 'Right to edit'
+canExport: 'Right to export'
+canCreate: 'Create %type%'
+sharable: 'Sharable'
+deletable: 'Deletable'
+exportable: 'Exportable'
+copiable: 'Copiable'
+editable: 'Editable'
+yes: 'yes'
+no: 'no'
+link_outdated : 'link is no more valid'
+login: Login
+login_failure: 'Login has failed. Check your username and password are correct.'
+logout: Logout
+mail: Mail
+mail_form_content: Content
+mail_form_object: Object
+mail_message : 'You received this message because you asked for a new password. Please click on the link below to reset it. If you did not ask to reset your password please ignore this message.'
+mail_click: 'Click on this link to reset your password'
+mail_sent : 'A email has been sent to your address , check your inbox mail and your spam box'
+manage_rights: 'Manage rights'
+manager: Manager
+media_most_viewed: Most viewed media
+messages_confirm_delete : 'Are your sure , you want to delete this file ?'
+messages_confirm_permanent_delete: 'Are you sure you want to permanently delete this(these) message(s) ?'
+messages_confirm_restore: 'Are you sure you want to restore this(these) message(s) ?'
+message_form_content: Content
+message_form_object: Object
+message_form_to: To
+messages: Message
+messages_received: 'Messages received'
+messages_received_removed: 'Messages received removed'
+messages_removed: 'Messages removed'
+messages_sent: 'Messages sent'
+messages_sent_removed: 'Messages sent removed'
+misc: Miscellaneous
+move: Move
+my_account: 'My account'
+my_agenda: 'My agenda'
+my_contacts: 'My contacts'
+my_notes: 'My notes'
+my_portfolio: 'My portfolio'
+my_resources: 'My resources'
+my_workspace: 'My workspace'
+my_workspaces: 'My workspaces'
+name: Name
+new_message_alert: 'You have %count% new message(s)'
+no_email: 'No email found, check the spelling'
+no_search_results: 'Your search hasn''t returned any result.'
+none: None
+note: Note
+object: Object
+ok: Ok
+open: Open
+options: Options
+organize_admin_tags: 'Organize admin tags'
+organize_private_tags: 'Organize private tags'
+owner: Owner
+owner_s: Owner(s)
+parameters: Parameters
+password: Password
+paste: Paste
+path: Path
+permissions: Permissions
+personal_workspace: 'Personal workspace'
+phone: Phone
+password_email_message: 'You asked to reset your password click on this link to reset it'
+password_missmatch : 'passwords missmatched'
+password_ok : 'Your password has been changed, you can login now'
+platform_parameters: 'Platform parameters'
+platform_parameters_form_localLanguage: Langue
+platform_parameters_form_selfRegistration: Auto-inscription
+platform_parameters_form_theme: Theme
+platform_plugins: 'Platform plugins'
+platform_widgets: 'Platform widgets'
+please_wait: 'Please wait...'
+private: Privée
+profile_form_administrativeCode: 'Administrative code'
+profile_form_firstName: 'First name'
+profile_form_lastName: 'Last name'
+profile_form_mail: Mail
+profile_form_note: 'Personnal note'
+profile_form_ownedRoles: Role(s)
+profile_form_phone: Phone
+profile_form_plainPassword_first: Password
+profile_form_plainPassword_second: Verification
+profile_form_platformRoles: Roles
+profile_form_username: Username
+properties: Properties
+public: Public
+public_workspaces: 'Public workspaces'
+recursive_dir_action: 'Apply to the contents of the directory and its subdirectories'
+register: Register
+register_to_a_workspace: 'Register to a workspace'
+registered_groups: 'Registered groups'
+registered_users: 'Registered users'
+registration_to_workspaces: 'Registration to workspaces'
+remove_group_s_confirm_message: 'group(s) removed'
+remove_user_s_confirm_message: 'user(s) removed'
+remove_messages_confirm_message: 'message(s) removed'
+rename: Rename
+reset: Reset
+reset_pwd: 'Reset Your Password'
+reset_pwd_form_plainPassword_first: "New password"
+reset_pwd_form_plainPassword_second : "Repeat the password"
+resource: Resource
+resource_action_denied_message: 'The action %action% couldn''t be done on ''%path%'': acces denied.'
+resource_creation_denied: 'You don''t have the permission to create in the directory ''%path'': access denied'
+resource_creation_wrong_type: 'You don''t have the permission to create a(n) %type% in the directory ''%path%'': access denied'
+resource_properties_form_copiable: Copy
+resource_properties_form_creationDate: 'Creation Date'
+resource_properties_form_creator: Creator
+resource_properties_form_deletable: Delete
+resource_properties_form_editable: Edit
+resource_properties_form_exportable: Export
+resource_properties_form_name: Name
+resource_properties_form_resourceType: 'Resource type'
+resource_properties_form_sharable: 'Share this resource'
+resource_properties_form_shareType: 'Share type'
+resource_properties_form_userIcon: Icon
+resources: Resources
+resources_most_downloaded: Most downloaded resources
+resources_usage_ratio: Resources usage ratio
+resources_usage_list: Resources usage list
+resources_rights: 'Resources rights'
+resource_right_form_canCopy: Copy
+resource_right_form_canDelete: Selete
+resource_right_form_canEdit: Edit
+resource_right_form_canOpen: Open
+resource_right_form_canShare: Share
+resource_right_form_canView: See
+resource_right_form_canExport: Export
+resource_right_form_isRecursive: Apply changes to current and sub directories
+restore : Restore
+restore_messages_confirm_message: restored message(s)
+results: Results
+results_for_search_on: 'Result(s) for search on'
+rights: Rights
+rights_management: 'Rights Management'
+role: Role
+roles: Roles
+role_creation: Role creation
+save: Save
+save_as_template: Save as template
+search: Search
+search_group: 'Search for a group'
+search_user: 'Search for an user'
+see: See
+see_more: See more
+select all: Select all
+select_groups_for_registration_to_workspace: 'Select groups to register'
+select_roles_to_assign: 'Select roles to assign'
+select_users_for_registration_to_workspace: 'Select users to register'
+select_workspaces_for_registration: 'Select workspaces for registration'
+selected_workspaces_for_registration: 'Selected workspaces for registration'
+send_mail: 'Send a mail'
+send_message: 'Send a message'
+session_id: 'Session id'
+settings: Settings
+show: Show
+show_as_admin: 'Show as admin'
+show_as_user: 'Show as user'
+show_as: 'Show as'
+show_profile: 'Show profile'
+subscribe_groups: 'Subscribe groups'
+subscribe_selected_groups: 'Subscribe selected groups'
+subscribe_selected_users: 'Subscribe selected users'
+subscribe_users: 'Subscribe users'
+switch: Switch
+tag: Tag
+tag_children_list: 'Tag children list'
+tag_potential_children_list: 'Tag potential children list'
+tags_add_remove_children_to: 'Add/Remove children to'
+tags_hierarchy: 'Tags hierarchy'
+tags_list: 'Tags list'
+tags_management: 'Tags management'
+tags_organization: 'Tags organization'
+teacher: Teacher
+text_form_name: Name
+text_form_shareType: Sharable
+text_form_text: Text
+to: To
+to_message: To
+today: Today
+tool: Tool
+tools: Tools
+tool_form_name : "tool name"
+tool_form_displayName : "Displayed tool name"
+top: Top
+top_extension: "Top filetypes having the most files"
+top_workspaces_resources: "Top workspaces having the most resources"
+top_workspaces_connections: "Top most visited workspaces"
+top_resources_views: "Top most viewed resources"
+top_resources_downloads: "Top most downloaded resources"
+top_users_workspaces_owners: "Top users having the most workspaces"
+top_users_workspaces_enrolled: "Top users having access in most workspaces"
+top_users_connections: "Top users being the most connected to platform"
+top_media_views: "Top most viewed media"
+trash : Trash
+type: Type
+type_s: Type(s)
+unregister: Unregister
+unregistered_groups: 'Unregistered groups'
+unregistered_users: 'Unregistered users'
+url_invalid: 'the code is not correct, do no try to change the url'
+user: User
+user_accounts: User accounts
+user_form_administrativeCode: 'Administrative code'
+user_form_firstName: 'First name'
+user_form_lastName: 'Last name'
+user_form_mail: Mail
+user_form_note: 'Personnal note'
+user_form_ownedRoles: Role(s)
+user_form_phone: Phone
+user_form_plainPassword_first: Password
+user_form_plainPassword_second: Verification
+user_form_username: Username
+user_parameters: 'User parameters'
+users_management: 'Users management'
+users_list: 'Users list'
+username: Username
+users: Users
+users_connected_once: users connected at least once
+users_visits: Users' connections
+unwritable_file_exception: "The file %path% is not writable."
+unregistered: Unregistered
+validate: Validate
+view: View
+views: Views
+visible: Visible
+visitor: Visitor
+warning_workspace_impersonation: You are connectecd as %role% from the workspace %workspace.
+widget_settings: 'Widget settings'
+widgets: Widgets
+workspace: Workspace
+workspace.create: 'Create a new workspace'
+workspace.name_not_blank: 'The workspace''s name is required.'
+workspace_administration: Administration
+workspace_delete: 'Delete the workspace'
+workspace_delete_confirm_message: 'Are you sure you want to delete this workspace ?'
+workspace_delete_confirm_title: 'Delete Confirm'
+workspace_edit_form_code: Code
+workspace_edit_form_displayable: Public
+workspace_edit_form_name: Name
+workspace_edit_form_selfRegistration: 'Public registration'
+workspace_edit_form_selfUnregistration: 'Public unregistration'
+workspace_form_code: Code
+workspace_form_displayable: Public
+workspace_form_name: Name
+workspace_form_template: Template
+workspace_form_type: Type
+workspace_order_tool_edit_form_name: Name
+workspace_registration_confirm_title: 'Do you really want to register to this workspace ?'
+workspace_resource: Resources
+workspace_role_type_form_translationKey: Name
+workspace_role_type_form_requireDir: Create a directory
+workspace_tag_form_name: Name
+workspace_template_form_name: Name
+workspace_tools: Tools
+workspace_unregistration_confirm_title: 'Do you really want to unregister from this workspace ?'
+workspace_welcome: Welcome
+workspaces: Workspaces
+ws_creator: 'Workspace creator'
+ws_most_viewed: Most viewed workspaces
+date_range.format: 'm/d/Y'
+date_range.js_format: 'MM/dd/yyyy'
+date_range.apply: 'Apply'
+date_range.clear: 'Clear'
+date_range.week: 'w'
+date_range.from: 'From'
+date_range.to: 'To'
+date_range.custom_range: 'Custom range'
+date_range.day_names: '["Su","Mo","Tu","We","Th","Fr","Sa"]'
+date_range.month_names: '["January","February","March","April","May","June","July","August","September","October","November","December"]'
+date_range.first_day: '0'
+date_range.today: 'Today'
+date_range.yesterday: 'Yesterday'
+date_range.last_week: 'Last week'
+date_range.this_week: 'This week'
+date_range.last_month: 'Last month'
+date_range.this_month: 'This month'
+date_range.last_year: 'Last year'
+date_range.this_year: 'This year'
+date_range.last_school_year: 'Last school year'
+date_range.this_school_year: 'This school year'
+date_range.last_seven_days: 'Last 7 days'
+date_range.last_thirty_days: 'Last 30 days'
+jqplot_date_output_format: '%m/%d/%Y'
+Show actions for: 'Show actions for'
+for period: 'for period'
+for user: 'for user'
+Show actions: 'Show actions'
+See all: 'See all'
+yesterday_activity: Yesterday's activity
+Your changes have been saved: 'Your changes have been saved'
+The form is not valid: 'The form is not valid'
+Choose workspaces displayed in the widget: 'Choose workspaces displayed in the widget'
+Choose visible actions in the widget: 'Choose visible actions in the widget'
+Actions per day: 'Actions per day'
+Last action: '{1} Last action|[1,Inf] Last %logAmount% actions'
+log_hidden_workspace_widget_config_amount : Amount
+Action List: 'Action List'
+Filter actions: 'Filter actions'
+Draw an area on the graph to zoom, double-click to cancel: 'Draw an area on the graph to zoom, double-click to cancel'
+Overview of recent activities of your workspaces: 'Overview of recent activities of your workspaces'
+Overview of recent activities in %workspaceName%: 'Overview of recent activities in %workspaceName%'
+Overview of all recent activities in %workspaceName% : 'Overview of all recent activities in %workspaceName%'
+select_all: Select all

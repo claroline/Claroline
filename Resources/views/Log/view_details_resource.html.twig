@@ -1,0 +1,15 @@
+{% if log.getDetails().resource is defined %}
+    <h4>{{ ('log_resource')|trans({}, 'platform') }}</h4>
+
+    <dl class="dl-horizontal">
+        <dt>{{ ('name')|trans({}, 'platform') }}</dt>
+        <dd>{{ log.getDetails().resource.name }}</dd>
+        <dt>{{ ('path')|trans({}, 'platform') }}</dt>
+        <dd>{{ log.getDetails().resource.path }}</dd>
+
+        {% if log.getResourceType() %}
+            <dt>{{ ('type')|trans({}, 'platform') }}</dt>
+            <dd>{{ log.getResourceType().getName()|trans({}, 'resource') }}</dd>
+        {% endif %}
+    </dl>
+{% endif %}

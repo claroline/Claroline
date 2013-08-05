@@ -1,0 +1,30 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block section_content %}
+    <div class="margin">
+        <h3 id='user-list-block' class="sub-section-header">{{ 'Plugins'|trans({}, 'platform') }}</h3>
+    </div>
+    {% for plugin in plugins %}
+        <span class="plugin-item">
+            <figure>
+                {% if plugin.hasOptions() %}
+                    <a href="{{ path('claro_admin_plugin_options', {'domain': plugin.getShortName()}) }}">
+                {% endif %}
+
+                <img src="{{ asset(plugin.getIcon()) }}"/>
+
+                {% if plugin.hasOptions() %}
+                    </a>
+                {% endif %}
+
+                <figcaption class="plugin-figcaption">
+                {% if plugin.hasOptions() %}
+                    <a href="{{ path('claro_admin_plugin_options', {'domain': plugin.getShortName()}) }}">{{  plugin.getShortName()|lower|trans({}, 'plugin_description') }}</a>
+                {% else %}
+                    {{  plugin.getShortName()|trans({}, 'plugin_description') }}
+                {% endif %}
+            </figcaption>
+            </figure>
+        </span>
+    {% endfor %}
+{% endblock %}

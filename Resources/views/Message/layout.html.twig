@@ -1,0 +1,24 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block content %}
+<div class="border">
+<div id="tabs" class="row-fluid">
+    <div class="span12">
+        <ul class="tabs nav nav-tabs">
+            <li class="{% if 'claro_message_list_received' == app.request.get('_route') %}active{% endif %}">
+                <a href="{{ path('claro_message_list_received') }}" id="link_message_list_received_layout"><i class="icon-envelope-alt"></i> {{ 'messages_received'|trans({}, 'platform') }}</a>
+            </li>
+            <li class="{% if 'claro_message_list_sent' == app.request.get('_route') %}active{% endif %}">
+                <a href="{{ path('claro_message_list_sent') }}" id="link_message_sent_layout"><i class="icon-share-alt"></i> {{ 'messages_sent'|trans({}, 'platform') }}</a>
+            </li>
+            <li class="{% if 'claro_message_list_removed' == app.request.get('_route') %}active{% endif %}">
+            <a href="{{ path('claro_message_list_removed')}}" id="link_message_removed_layout"><i class="icon-trash"></i> {{ 'trash'|trans({}, 'platform') }}</a>
+            </li>
+        </ul>
+    </div>
+</div>
+    <div class="margin">
+        {% block section_content %}{% endblock %}
+    </div>
+</div>
+{% endblock %}

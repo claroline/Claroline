@@ -1,0 +1,37 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block title %}{{ 'desktop'|trans({}, 'platform') }}{% endblock %}
+
+{% block sectionHeader %}
+    &nbsp;
+{% endblock %}
+
+{% block content %}
+
+    <div class="span3">
+        <ul class="nav nav-tabs nav-stacked">
+            <li class="disabled">
+               <a><b>{{ 'desktop'|trans({}, 'platform') }}</b></a>
+            </li>
+
+            {% render controller("ClarolineCoreBundle:Desktop:renderToolList") %}
+        </ul>
+    </div>
+
+    <div class="span9 section-content border">
+
+        {% block section_content %}{% endblock %}
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+
+        $('body').tooltip({
+            selector: '[data-toggle=tooltip]'
+        })
+
+    </script>
+{% endblock %}

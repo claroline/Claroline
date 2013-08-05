@@ -1,0 +1,114 @@
+{% twig_js name="ResourceManagerActions" %}
+
+<div class="navbar-inner">
+    {% if isPickerMode == false %}
+        <ul class="nav">
+            {% if resourceTypes|length > 0 %}
+                <li class="dropdown">
+                    <a class="dropdown-toggle{% if isCreateAllowed == false %} disabled{% endif %}" data-toggle="dropdown">
+                        <i class="icon-edit"></i>
+                        {{ 'create'|trans({}, 'platform') }}
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu create">
+                        {% for resourceType, name in creatableTypes %}
+                            <li><a id='{{ resourceType }}'>{{ name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endif %}
+            <li>
+                <a class="{% if isAddAllowed == false %}disabled{% else %}open-picker{% endif %}">
+                   <i class="icon-plus"></i>
+                   {{ 'add'|trans({}, 'platform') }}
+               </a>
+            </li>
+            <li class="divider-vertical"></li>
+            <li>
+                <a class="cut disabled"  data-toggle="tooltip" data-placement="bottom" title="{{ 'cut'|trans({}, 'platform') }}">
+                    <i class="icon-cut"></i>
+                </a>
+            </li>
+            <li>
+                <a class="copy disabled" data-toggle="tooltip" data-placement="bottom" title="{{ 'copy'|trans({}, 'platform') }}">
+                    <i class="icon-copy"></i>
+                </a>
+            </li>
+            <li>
+               <a class="paste{% if isPasteAllowed == false %} disabled{% endif %}" data-toggle="tooltip" data-placement="bottom" title="{{ 'paste'|trans({}, 'platform') }}">
+                    <i class="icon-paste"></i>
+                </a>
+            </li>
+            <li>
+                <a class="delete disabled" data-toggle="tooltip" data-placement="bottom" title="{{ 'delete'|trans({}, 'platform') }}">
+                    <i class="icon-remove-sign"></i>
+                </a>
+            </li>
+            <li>
+                <a class="download disabled" data-toggle="tooltip" data-placement="bottom" title="{{ 'download'|trans({}, 'platform') }}">
+                    <i class="icon-download-alt"></i>
+                </a>
+            </li>
+            <li class="dropdown">
+                <a class="dropdown-toggle zoom" data-toggle="dropdown">
+                    <i class="icon-zoom-in"></i>
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu zoom">
+                    <li><a id='zoom50'>50%</a></li>
+                    <li><a id='zoom75'>75%</a></li>
+                    <li class="active"><a id='zoom100'>100%</a></li>
+                    <li><a id='zoom125'>125%</a></li>
+                    <li><a id='zoom150'>150%</a></li>
+                    <li><a id='zoom200'>200%</a></li>
+                </ul>
+            </li>
+        </ul>
+        <ul class="nav pull-right">
+            <li class="divider-vertical"></li>
+             <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown">
+                    {{ 'filter'|trans({}, 'platform') }}
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    {% for key, resourceType in resourceTypes %}
+                    <li><a data-type="{{ key }}" class="filter-result"> {{ resourceType.name }}</a></li>
+                    {% endfor %}
+                    <li><a data-type="none" class="filter-result"> {{ 'none'|trans({}, 'platform' )}} </a></li>
+                </ul>
+            </li>
+            <li class="divider-vertical"></li>
+            <li>
+                <div class="input-append">
+                    <input class="name input-medium" type="text" placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ searchedName }}">
+                    <button class="filter btn" type="button">
+                        <i class="icon-search"></i>
+                    </button>
+                    <button class="config-search-panel btn" type="button"><i class="icon-cog"></i></button>
+                </div>
+            </li>
+        </ul>
+    {% else %}
+        <ul class='nav'>
+            <li>
+                <a class="add {% if isAddAllowed == false or isPasteAllowed == false %}disabled{% endif %}">
+                    <i class="icon-plus"></i>
+                    {{ 'add'|trans({}, 'platform') }}
+                </a>
+            </li>
+        </ul>
+        <ul class="nav pull-right">
+            <li class="divider-vertical"></li>
+            <li>
+                <div class="input-append" width="500">
+                    <input class="name input-medium" type="text" placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ searchedName }}">
+                    <button class="filter btn" type="button">
+                        <i class="icon-search"></i>
+                    </button>
+                    <button class="config-search-panel btn" type="button"><i class="icon-cog"></i></button>
+                </div>
+           </li>
+        </ul>
+    {% endif %}
+</div>

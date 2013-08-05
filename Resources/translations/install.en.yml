@@ -1,0 +1,39 @@
+administrator_profil : 'Administrator profil'
+back: back
+current_value: 'current value'
+database : 'Database'
+db_name: 'database name'
+db_host : 'Database adress server'
+done : 'Enjoy Claroline'
+exist : 'The database already exist do you want to overwrite ?'
+folders: folders
+hint: 'hints and tips'
+hint_1: 'If your value are higher than the minimum requier that''s mean your are on the right track.'
+hint_2 : 'Use the informations provide by your Internet Hosting'
+hint_3 : 'If your using claroline off line , your settings will propably be : localhost,root, no password and your database name'
+hint_4 : "Do not put 1234 or azerty as a password please"
+hint_5 : "Keep safe somewhere those information, you can find it back in the administration panel"
+gerenal : 'General information'
+home : 'go home'
+install_form_dbDriver: 'PDO Driver'
+install_form_dbHost : 'Database server adress'
+install_form_dbName : 'Database name'
+install_form_dbUser : 'Username'
+install_form_dbPassword : 'password'
+language : 'language'
+minimum_value: 'minimum value'
+next : 'next'
+next: next
+of: of
+parameters: Parameters
+password: password
+permission: 'Can I read or write folders ?'
+server: server
+system_requirement : 'Step 1: System minimum requirement'
+step_2 : 'Step 2: Database configuration'
+step_3 : 'Step 3: Admin profile'
+step_4 : 'Check up of your parameters'
+sucess : 'Successful installation'
+this_process : 'This setup will guide you through the various stages of the installation of the platform'
+username: username
+welcome : 'Welcome to the wizard of Claroline'

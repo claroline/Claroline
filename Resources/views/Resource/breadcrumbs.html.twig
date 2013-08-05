@@ -1,0 +1,35 @@
+<ul class="breadcrumb">
+    {% for keyRes, resource in ancestors %}
+    <li {% if loop.last %} class="active" {% endif %}>
+
+    {% set url = path('claro_workspace_open_tool',
+        {'toolName': 'resource_manager', 'workspaceId': workspaceId })
+    %}
+
+    {% for keyPath, pathItem in ancestors %}
+        {% if keyPath == 0 %}
+            {% set url = url~"?" %}
+        {% else %}
+            {% set url = url~"&" %}
+        {% endif %}
+        {% if keyPath < keyRes %}
+            {% set url = url~"_breadcrumbs[]="~pathItem.id %}
+        {% endif %}
+    {% endfor %}
+
+    {% set url = url~"#resources/"~resource.id %}
+
+    {% if not loop.last %}<a href="{{ url}}">
+        {{ resource.name }}
+    </a>
+    {% else %}
+        {{ resource.name }}
+    {% endif %}
+
+    {% if not loop.last %}
+        <span class="divider"> / </span>
+    {% endif %}
+
+    </li>
+    {% endfor %}
+</ul>

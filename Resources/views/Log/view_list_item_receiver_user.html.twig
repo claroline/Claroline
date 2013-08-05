@@ -1,0 +1,11 @@
+{% if log.getDetails().receiverUser is defined %}
+    <strong>
+        {% if log.getReceiver() != null %}
+            <a href="{{ path('claro_profile_view', {'userId': log.getReceiver().getId()}) }}">
+                {{ log.getDetails().receiverUser.firstName }} {{ log.getDetails().receiverUser.lastName }}
+            </a>
+        {% else %}
+            <em>{{ log.getDetails().receiverUser.firstName }} {{ log.getDetails().receiverUser.lastName }}</em>
+        {% endif %}
+    </strong>
+{% endif %}

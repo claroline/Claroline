@@ -1,0 +1,73 @@
+/* Additional style rules */
+body
+{
+    background:#fff url(../../bundles/clarolinecore/images/themes/claroline/bg2.jpg) repeat-x;
+}
+
+h2.section-header {
+    margin: 20px auto;
+}
+
+h3.sub-section-header {
+    min-height: 30px;
+    margin-bottom: 16px;
+    border-bottom: solid @grayLighter 1px;
+}
+
+.brand
+{
+	background:transparent url(../../bundles/clarolinecore/images/logo/claroline-logo-bulles-22x25.png) 20px 5px no-repeat;
+	padding-left:50px !important;
+
+}
+
+/** NAVBAR **/
+
+.navbar.navbar-inverse.navbar-fixed-top
+{
+    background:#222 url(../../bundles/clarolinecore/images/themes/claroline/bg.jpg) repeat;
+    border-bottom:3px solid @orange;
+    .box-shadow(0 1px 3px rgba(0,0,0,.25))
+}
+
+.navbar.navbar-inverse.navbar-fixed-top .navbar-inner
+{
+    background:transparent;
+}
+
+/** tools **/
+
+.nav.nav-tabs.nav-stacked li.active a
+{
+    background:@linkColor;
+    color:@white;
+}
+
+.nav.nav-tabs.nav-stacked li.disabled a
+{
+    color:@grayDark;
+    background:@grayLighter;
+}
+
+/** content **/
+
+.section-content .navbar .navbar-inner a
+{
+    color:@navbarLinkColorActive;
+}
+
+.section-content .navbar .navbar-inner .dropdown-menu a:hover, .section-content .navbar .navbar-inner li.active a
+{
+    color:@white;
+}
+
+.nav.nav-tabs.nav-stacked
+{
+    .border-radius(@baseBorderRadius);
+}
+
+.nav.nav-tabs.nav-stacked, .border
+{
+    background-color:@white;
+    .box-shadow(0 1px 10px rgba(0,0,0,.2));
+}

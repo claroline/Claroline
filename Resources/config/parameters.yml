@@ -1,0 +1,17 @@
+# This file contains the core container parameters. Most of them may be overwritten
+# in test environment (see app/config/config_test.yml)
+
+parameters:
+    claroline.param.files_directory: "%kernel.root_dir%/../files"
+    claroline.param.thumbnails_directory: "%kernel.root_dir%/../web/thumbnails"
+    claroline.param.templates_directory: "%kernel.root_dir%/../templates/"
+    claroline.param.plugin_directory: "%kernel.root_dir%/../src/plugin"
+    claroline.param.prod_migrations_directory: Migrations
+    claroline.param.test_migrations_directory: Tests/Stub/Migrations
+    claroline.param.plugin_namespaces_file: "%kernel.root_dir%/config/local/plugin/namespaces"
+    claroline.param.plugin_bundles_file: "%kernel.root_dir%/config/local/plugin/bundles"
+    claroline.param.plugin_routing_file: "%kernel.root_dir%/config/local/plugin/routing.yml"
+    claroline.param.include_test_migrations: false
+    claroline.param.platform_config_handler_class: Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler
+    claroline.param.platform_options_files:
+        prod: %kernel.root_dir%/config/local/platform_options.yml

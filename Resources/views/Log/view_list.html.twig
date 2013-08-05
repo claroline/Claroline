@@ -1,0 +1,26 @@
+<style type="text/css">
+    .logs-list {
+        margin-top: 10px;
+    }
+    .logs-list .row-odd {
+        background-color: #F9F9F9;
+    }
+    .logs-list > div.row-fluid {
+        border-top: 1px solid #DDDDDD;
+    }
+    .logs-list > div.row-fluid:first-child {
+        border-top: none;
+    }
+</style>
+
+<div class='logs-list'>
+    {% for log in logs %}
+    <div class='row-fluid {% if loop.index is divisibleby(2) %}row-odd{% else %}row-even{% endif %}'>
+        {% if listItemViews[log.getId()] is defined %}
+            {% include 'ClarolineCoreBundle:Log:view_list_item.html.twig' with {'listItemView': listItemViews[log.getId()]} %}
+        {% else %}
+            {% include 'ClarolineCoreBundle:Log:view_list_item.html.twig' %}
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>

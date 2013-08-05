@@ -1,0 +1,48 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block title %}{{ workspace.getName() }}{% endblock %}
+
+{% block sectionHeader %}
+    &nbsp;
+{% endblock %}
+
+{% block content %}
+    {% if _resource is defined %}
+        {% set workspace = _resource.getWorkspace() %}
+    {% endif %}
+
+    {% if not is_path_mode %}
+        {% render controller("ClarolineCoreBundle:Workspace:renderToolList", {'workspaceId': workspace.getId(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})}) %}
+    {% endif %}
+
+    <div class="span9 section-content border">
+        {% block breadcrumb %}
+            <div id="resource-breadcrumb">
+            {% if _resource is defined %}
+                <div id="twig-resource-attributes"
+                     data-resource-id="{{ _resource.getId() }}"
+                     data-resource-name="{{ _resource.getName() }}"
+                     data-workspace-id="{{ workspaceId }}">
+                </div>
+                {% if not is_path_mode  %}
+                {% render controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
+                    {'workspace': workspace, 'resource': _resource, '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})
+                %}
+                {% endif %}
+            {% endif %}
+            </div>
+        {% endblock %}
+        {% block section_content %}{% endblock %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+
+        $('body').tooltip({
+            selector: '[data-toggle=tooltip]'
+        })
+
+    </script>
+{% endblock %}

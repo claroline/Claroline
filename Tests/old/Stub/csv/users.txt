@@ -1,0 +1,9 @@
+firstname1,lastname1,username1,password1,email1@claroline.net,code1
+firstname2,lastname2,username2,password2,email2@claroline.net,code2
+firstname3,lastname3,username3,password3,email3@claroline.net,code3
+firstname4,lastname4,username4,password4,email4@claroline.net,code4
+firstname5,lastname5,username5,password5,email5@claroline.net,code5
+firstname6,lastname6,username6,password6,email6@claroline.net,code6
+firstname7,lastname7,username7,password7,email7@claroline.net,code7
+firstname8,lastname8,username8,password8,email8@claroline.net,code8
+firstname9,lastname9,username9,password9,email9@claroline.net,code9

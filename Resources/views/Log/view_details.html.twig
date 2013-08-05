@@ -1,0 +1,39 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block content %}
+    <h1>
+        {% block logDetailsTitle %}
+            {{ ('log_'~log.getAction()~'_title')|trans({}, 'platform')}}
+        {% endblock %}
+    </h1>
+
+    <p>
+        {% block logDetailsSubtitle %}
+            {% include 'ClarolineCoreBundle:Log:view_list_item.html.twig' %}
+        {% endblock %}
+    </p>
+
+    {% block logDetailsContext %}
+        <h3>{{'log_context'|trans({}, 'platform')}}</h3>
+
+        {% include 'ClarolineCoreBundle:Log:view_details_doer.html.twig' %}
+
+        {% include 'ClarolineCoreBundle:Log:view_details_role.html.twig' %}
+
+        {% include 'ClarolineCoreBundle:Log:view_details_receiver_user.html.twig' %}
+
+        {% include 'ClarolineCoreBundle:Log:view_details_receiver_group.html.twig' %}
+
+        {% include 'ClarolineCoreBundle:Log:view_details_resource.html.twig' %}
+
+        {% include 'ClarolineCoreBundle:Log:view_details_owner.html.twig' %}
+
+        {% include 'ClarolineCoreBundle:Log:view_details_workspace.html.twig' %}
+
+        {% include 'ClarolineCoreBundle:Log:view_details_action_' ~ log.getAction() ~ '.html.twig' ignore missing %}
+    {% endblock %}
+
+    {#
+    <small>{{ log.getDetails()|json_encode}}</small>
+    #}
+{% endblock %}

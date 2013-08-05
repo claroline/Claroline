@@ -1,0 +1,31 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{#
+This form doesn't include the usual form theme as we want it to always display the
+same message when authentication has failed (no precise validation errors).
+#}
+
+{% block content %}
+    <div class="offset4 span4">{% if error %}
+            <div class="span12 alert margin alert-error">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                {{ 'login_failure'|trans({}, 'platform') }}
+            </div>
+        {% endif %}
+        <div class='border span12'>
+            <form class="margin" action="{{ path('claro_security_login_check') }}" method="post"><h3 class="sub-section-header">{{ 'login' | trans({}, "platform")}}</h3>
+                <label class="control-label" for="username">  <b>{{ 'username'|trans({}, 'platform') }} </b> </label> 
+                <div class="controls">
+                    <input class="span12" type="text" id="username" name="_username" value="{{ last_username }}" required="required"/>
+                </div>
+                <label class="control-label" for="password"><b>{{ 'password'|trans({}, 'platform') }}</b>  <small><a href ="{{ path('claro_security_forgot_password')}}">({{ 'forgot_password'|trans({}, 'platform') }})</a> </small></label> 
+                <div class="controls">
+                    <input  class="span12" type="password" id="password" name="_password" required="required" />
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">{{ 'login'|trans({}, 'platform') }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

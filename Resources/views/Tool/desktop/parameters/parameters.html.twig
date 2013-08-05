@@ -1,0 +1,30 @@
+{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/clarolinecore/js/administration/widgets.js') }}" type="text/javascript"></script>
+{% endblock %}
+
+{% block section_content %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_desktop_open_tool', {'toolName': 'parameters'})
+            }
+        ])
+    }}
+    <div class="margin">
+        <ul>
+            <li class='li-user-parameters'>
+            <a href="{{ path('claro_tool_properties') }}">{{ 'tools'|trans({}, 'platform') }}</a>
+            </li>
+            {% for tool in tools %}
+                <li class='li-user-parameters'><a href="{{ path('claro_desktop_tool_config', {'tool': tool.getId()}) }}">
+                    {{ tool.getName()|trans({}, 'tools') }}
+                </a></li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
