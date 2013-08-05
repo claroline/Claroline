@@ -17,19 +17,13 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
-use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Manager\GroupManager;
-use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 class WorkspaceParametersController extends Controller
 {
     private $workspaceManager;
-    private $roleManager;
-    private $userManager;
-    private $groupManager;
-    private $resourceManager;
+    private $workspaceTagManager;
     private $security;
     private $eventDispatcher;
     private $formFactory;
@@ -38,24 +32,17 @@ class WorkspaceParametersController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
-     *     "userManager"      = @DI\Inject("claroline.manager.user_manager"),
-     *     "groupManager"     = @DI\Inject("claroline.manager.group_manager"),
-     *     "resourceManager"  = @DI\Inject("claroline.manager.resource_manager"),
-     *     "security"         = @DI\Inject("security.context"),
-     *     "eventDispatcher"  = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "formFactory"      = @DI\Inject("claroline.form.factory"),
-     *     "router"           = @DI\Inject("router"),
-     *     "request"          = @DI\Inject("request")
+     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "workspaceTagManager"   = @DI\Inject("claroline.manager.workspace_tag_manager"),
+     *     "security"           = @DI\Inject("security.context"),
+     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
+     *     "router"             = @DI\Inject("router")
      * })
      */
     public function __construct(
         WorkspaceManager $workspaceManager,
-        RoleManager $roleManager,
-        UserManager $userManager,
-        GroupManager $groupManager,
-        ResourceManager $resourceManager,
+        WorkspaceTagManager $workspaceTagManager,
         SecurityContextInterface $security,
         StrictDispatcher $eventDispatcher,
         FormFactory $formFactory,
@@ -64,10 +51,7 @@ class WorkspaceParametersController extends Controller
     )
     {
         $this->workspaceManager = $workspaceManager;
-        $this->roleManager = $roleManager;
-        $this->userManager = $userManager;
-        $this->groupManager = $groupManager;
-        $this->resourceManager = $resourceManager;
+        $this->workspaceTagManager = $workspaceTagManager;
         $this->security = $security;
         $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
@@ -180,11 +164,17 @@ class WorkspaceParametersController extends Controller
 
         $wsRegisteredName = $workspace->getName();
         $wsRegisteredCode = $workspace->getCode();
+        $wsRegisteredDisplayable = $workspace->isDisplayable();
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array(), $workspace);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $this->workspaceManager->createWorkspace($workspace);
+            $displayable = $workspace->isDisplayable();
+
+            if (!$displayable && $displayable !== $wsRegisteredDisplayable) {
+                $this->workspaceTagManager->deleteAllAdminRelationsFromWorkspace($workspace);
+            }
 
             return $this->redirect(
                 $this->generateUrl(

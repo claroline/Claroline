@@ -138,6 +138,22 @@ class RoleManagerTest extends MockeryTestCase
         $manager->associateRoles($ars, $roles);
     }
 
+    public function testAssociateRoleToMultipleSubjects()
+    {
+        $arsA = $this->mock('Claroline\CoreBundle\Entity\AbstractRoleSubject');
+        $arsB = $this->mock('Claroline\CoreBundle\Entity\AbstractRoleSubject');
+        $subjects = array($arsA, $arsB);
+        $role = new Role();
+
+        $arsA->shouldReceive('addRole')->with($role)->once();
+        $arsB->shouldReceive('addRole')->with($role)->once();
+        $this->om->shouldReceive('persist')->with($arsA)->once();
+        $this->om->shouldReceive('persist')->with($arsB)->once();
+        $this->om->shouldReceive('flush')->once();
+
+        $this->getManager()->associateRoleToMultipleSubjects($subjects, $role);
+    }
+
     public function testInitBaseWorkspaceRole()
     {
         $manager = $this->getManager(array('createWorkspaceRole'));
@@ -206,7 +222,7 @@ class RoleManagerTest extends MockeryTestCase
         $this->assertEquals('return', $this->getManager()->getRole(1));
     }
 
-    public function testResetPlatformRoles()
+    public function testResetRoles()
     {
         $roleUser = new \Claroline\CoreBundle\Entity\Role();
         $pfRole = new \Claroline\CoreBundle\Entity\Role();
@@ -222,7 +238,7 @@ class RoleManagerTest extends MockeryTestCase
         $user->shouldReceive('removeRole')->once()->with($pfRole);
         $this->om->shouldReceive('persist')->once()->with($user);
         $this->om->shouldReceive('flush');
-        $this->getManager()->resetPlatformRoles($user);
+        $this->getManager()->resetRoles($user);
     }
 
     public function testDissociateWorkspaceRole()
