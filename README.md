@@ -95,7 +95,7 @@ The whole API is accessible through the migration [manager class][manager_path]:
 ```php
 <?php
 
-$container->get('claroline.migration.manager')->upgradeBundle($bundle, '20131201134501');
+$container->get('claroline.migration.manager')->upgradeBundle('AcmeFooBundle', '20131201134501');
 
 ```
 
