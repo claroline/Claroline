@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/07/30 05:15:44
+ * Generation date: 2013/08/05 09:37:38
  */
-class Version20130730171543 extends AbstractMigration
+class Version20130805093737 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -186,10 +186,10 @@ class Version20130730171543 extends AbstractMigration
             FROM DUAL; END LOOP; END IF; END;
         ");
         $this->addSql("
-            CREATE INDEX IDX_3177747182D40A1F ON claro_role (workspace_id)
+            CREATE UNIQUE INDEX UNIQ_317774715E237E06 ON claro_role (name)
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX role_unique_name ON claro_role (name)
+            CREATE INDEX IDX_3177747182D40A1F ON claro_role (workspace_id)
         ");
         $this->addSql("
             CREATE TABLE claro_resource (
@@ -327,9 +327,9 @@ class Version20130730171543 extends AbstractMigration
         $this->addSql("
             CREATE TABLE claro_workspace_aggregation (
                 aggregator_workspace_id NUMBER(10) NOT NULL, 
-                workspace_id NUMBER(10) NOT NULL, 
+                simple_workspace_id NUMBER(10) NOT NULL, 
                 PRIMARY KEY(
-                    aggregator_workspace_id, workspace_id
+                    aggregator_workspace_id, simple_workspace_id
                 )
             )
         ");
@@ -337,7 +337,7 @@ class Version20130730171543 extends AbstractMigration
             CREATE INDEX IDX_D012AF0FA08DFE7A ON claro_workspace_aggregation (aggregator_workspace_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_D012AF0F82D40A1F ON claro_workspace_aggregation (workspace_id)
+            CREATE INDEX IDX_D012AF0F782B5A3F ON claro_workspace_aggregation (simple_workspace_id)
         ");
         $this->addSql("
             CREATE TABLE claro_user_message (
@@ -499,20 +499,20 @@ class Version20130730171543 extends AbstractMigration
             CREATE INDEX IDX_3848F48389329D25 ON claro_resource_rights (resource_id)
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX \"user\" ON claro_resource_rights (resource_id, role_id)
+            CREATE UNIQUE INDEX resource_rights_unique_resource_role ON claro_resource_rights (resource_id, role_id)
         ");
         $this->addSql("
             CREATE TABLE claro_list_type_creation (
-                right_id NUMBER(10) NOT NULL, 
                 resource_type_id NUMBER(10) NOT NULL, 
-                PRIMARY KEY(right_id, resource_type_id)
+                right_id NUMBER(10) NOT NULL, 
+                PRIMARY KEY(resource_type_id, right_id)
             )
         ");
         $this->addSql("
-            CREATE INDEX IDX_84B4BEBA54976835 ON claro_list_type_creation (right_id)
+            CREATE INDEX IDX_84B4BEBA98EC6B7B ON claro_list_type_creation (resource_type_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_84B4BEBA98EC6B7B ON claro_list_type_creation (resource_type_id)
+            CREATE INDEX IDX_84B4BEBA54976835 ON claro_list_type_creation (right_id)
         ");
         $this->addSql("
             CREATE TABLE claro_resource_type (
@@ -554,13 +554,13 @@ class Version20130730171543 extends AbstractMigration
             FROM DUAL; END LOOP; END IF; END;
         ");
         $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_AEC626935E237E06 ON claro_resource_type (name)
+        ");
+        $this->addSql("
             CREATE INDEX IDX_AEC62693EC942BCF ON claro_resource_type (plugin_id)
         ");
         $this->addSql("
             CREATE INDEX IDX_AEC62693727ACA70 ON claro_resource_type (parent_id)
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX res_type_unique_name ON claro_resource_type (name)
         ");
         $this->addSql("
             CREATE TABLE claro_theme (
@@ -852,7 +852,7 @@ class Version20130730171543 extends AbstractMigration
             FROM DUAL; END LOOP; END IF; END;
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX template_unique_hash ON claro_workspace_template (hash)
+            CREATE UNIQUE INDEX UNIQ_94D0CBDBD1B862B8 ON claro_workspace_template (hash)
         ");
         $this->addSql("
             CREATE TABLE claro_workspace_tag_hierarchy (
@@ -1274,7 +1274,7 @@ class Version20130730171543 extends AbstractMigration
             )
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX file_unique_hashname ON claro_file (hash_name)
+            CREATE UNIQUE INDEX UNIQ_EA81C80BE1F029B6 ON claro_file (hash_name)
         ");
         $this->addSql("
             CREATE TABLE claro_text_revision (
@@ -1431,10 +1431,10 @@ class Version20130730171543 extends AbstractMigration
             FROM DUAL; END LOOP; END IF; END;
         ");
         $this->addSql("
-            CREATE INDEX IDX_60F90965EC942BCF ON claro_tools (plugin_id)
+            CREATE UNIQUE INDEX UNIQ_60F909655E237E06 ON claro_tools (name)
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX tool_unique_name ON claro_tools (name)
+            CREATE INDEX IDX_60F90965EC942BCF ON claro_tools (plugin_id)
         ");
         $this->addSql("
             CREATE TABLE claro_widget_display (
@@ -1529,10 +1529,10 @@ class Version20130730171543 extends AbstractMigration
             FROM DUAL; END LOOP; END IF; END;
         ");
         $this->addSql("
-            CREATE INDEX IDX_76CA6C4FEC942BCF ON claro_widget (plugin_id)
+            CREATE UNIQUE INDEX UNIQ_76CA6C4F5E237E06 ON claro_widget (name)
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX widget_unique_name ON claro_widget (name)
+            CREATE INDEX IDX_76CA6C4FEC942BCF ON claro_widget (plugin_id)
         ");
         $this->addSql("
             CREATE TABLE claro_content (
@@ -1908,14 +1908,12 @@ class Version20130730171543 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_workspace_aggregation 
             ADD CONSTRAINT FK_D012AF0FA08DFE7A FOREIGN KEY (aggregator_workspace_id) 
-            REFERENCES claro_workspace (id) 
-            ON DELETE CASCADE
+            REFERENCES claro_workspace (id)
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_aggregation 
-            ADD CONSTRAINT FK_D012AF0F82D40A1F FOREIGN KEY (workspace_id) 
-            REFERENCES claro_workspace (id) 
-            ON DELETE CASCADE
+            ADD CONSTRAINT FK_D012AF0F782B5A3F FOREIGN KEY (simple_workspace_id) 
+            REFERENCES claro_workspace (id)
         ");
         $this->addSql("
             ALTER TABLE claro_user_message 
@@ -1973,15 +1971,13 @@ class Version20130730171543 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_list_type_creation 
-            ADD CONSTRAINT FK_84B4BEBA54976835 FOREIGN KEY (right_id) 
-            REFERENCES claro_resource_rights (id) 
-            ON DELETE CASCADE
+            ADD CONSTRAINT FK_84B4BEBA98EC6B7B FOREIGN KEY (resource_type_id) 
+            REFERENCES claro_resource_rights (id)
         ");
         $this->addSql("
             ALTER TABLE claro_list_type_creation 
-            ADD CONSTRAINT FK_84B4BEBA98EC6B7B FOREIGN KEY (resource_type_id) 
-            REFERENCES claro_resource_type (id) 
-            ON DELETE CASCADE
+            ADD CONSTRAINT FK_84B4BEBA54976835 FOREIGN KEY (right_id) 
+            REFERENCES claro_resource_type (id)
         ");
         $this->addSql("
             ALTER TABLE claro_resource_type 
@@ -2519,7 +2515,7 @@ class Version20130730171543 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_aggregation 
-            DROP CONSTRAINT FK_D012AF0F82D40A1F
+            DROP CONSTRAINT FK_D012AF0F782B5A3F
         ");
         $this->addSql("
             ALTER TABLE claro_ordered_tool 
@@ -2551,7 +2547,7 @@ class Version20130730171543 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_list_type_creation 
-            DROP CONSTRAINT FK_84B4BEBA54976835
+            DROP CONSTRAINT FK_84B4BEBA98EC6B7B
         ");
         $this->addSql("
             ALTER TABLE claro_resource 
@@ -2559,7 +2555,7 @@ class Version20130730171543 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_list_type_creation 
-            DROP CONSTRAINT FK_84B4BEBA98EC6B7B
+            DROP CONSTRAINT FK_84B4BEBA54976835
         ");
         $this->addSql("
             ALTER TABLE claro_resource_type 
