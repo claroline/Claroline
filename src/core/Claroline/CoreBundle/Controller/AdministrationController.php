@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -32,6 +33,7 @@ class AdministrationController extends Controller
     private $roleManager;
     private $groupManager;
     private $workspaceManager;
+    private $workspaceTagManager;
     private $security;
     private $eventDispatcher;
     private $configHandler;
@@ -42,17 +44,18 @@ class AdministrationController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
-     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
-     *     "groupManager"       = @DI\Inject("claroline.manager.group_manager"),
-     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "security"           = @DI\Inject("security.context"),
-     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "configHandler"      = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
-     *     "analyticsManager"   = @DI\Inject("claroline.manager.analytics_manager"),
-     *     "translator"         = @DI\Inject("translator"),
-     *     "request"            = @DI\Inject("request")
+     *     "userManager"         = @DI\Inject("claroline.manager.user_manager"),
+     *     "roleManager"         = @DI\Inject("claroline.manager.role_manager"),
+     *     "groupManager"        = @DI\Inject("claroline.manager.group_manager"),
+     *     "workspaceManager"    = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "workspaceTagManager" = @DI\Inject("claroline.manager.workspace_tag_manager"),
+     *     "security"            = @DI\Inject("security.context"),
+     *     "eventDispatcher"     = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "configHandler"       = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "formFactory"         = @DI\Inject("claroline.form.factory"),
+     *     "analyticsManager"    = @DI\Inject("claroline.manager.analytics_manager"),
+     *     "translator"          = @DI\Inject("translator"),
+     *     "request"             = @DI\Inject("request")
      * })
      */
     public function __construct(
@@ -60,6 +63,7 @@ class AdministrationController extends Controller
         RoleManager $roleManager,
         GroupManager $groupManager,
         WorkspaceManager $workspaceManager,
+        WorkspaceTagManager $workspaceTagManager,
         SecurityContextInterface $security,
         StrictDispatcher $eventDispatcher,
         PlatformConfigurationHandler $configHandler,
@@ -73,6 +77,7 @@ class AdministrationController extends Controller
         $this->roleManager = $roleManager;
         $this->groupManager = $groupManager;
         $this->workspaceManager = $workspaceManager;
+        $this->workspaceTagManager = $workspaceTagManager;
         $this->security = $security;
         $this->eventDispatcher = $eventDispatcher;
         $this->configHandler = $configHandler;
@@ -583,8 +588,11 @@ class AdministrationController extends Controller
             } catch (UnwritableException $e) {
                 $form->addError(
                     new FormError(
-                        $this->get('translator')
-                        ->trans('unwritable_file_exception', array('%path%' => $e->getPath()), 'platform')
+                        $this->translator->trans(
+                            'unwritable_file_exception',
+                            array('%path%' => $e->getPath()),
+                            'platform'
+                        )
                     )
                 );
 
@@ -1026,5 +1034,354 @@ class AdministrationController extends Controller
             'form_criteria' => $criteriaForm->createView(),
             'list_data' => $listData
         );
+    }
+
+    /**
+     * @EXT\Route(
+     *    "registration/management",
+     *    name="claro_admin_registration_management",
+     *    defaults={"search"=""},
+     *    options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Route(
+     *     "registration/management/search/{search}",
+     *     name="claro_admin_registration_management_search",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     *
+     * @EXT\Template()
+     *
+     * @return Response
+     */
+    public function registrationManagementAction($search)
+    {
+        if ($search === '') {
+            $datas = $this->workspaceTagManager->getDatasForWorkspaceList(false);
+
+            return array(
+                'workspaces' => $datas['workspaces'],
+                'tags' => $datas['tags'],
+                'tagWorkspaces' => $datas['tagWorkspaces'],
+                'hierarchy' => $datas['hierarchy'],
+                'rootTags' => $datas['rootTags'],
+                'displayable' => $datas['displayable'],
+                'search' => ''
+            );
+        }
+        $pager = $this->workspaceManager->getDisplayableWorkspacesBySearchPager($search, 1);
+
+        return array('workspaces' => $pager, 'search' => $search);
+    }
+
+    /**
+     * @EXT\Route(
+     *    "registration/management/users",
+     *    name="claro_admin_registration_management_users",
+     *    options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *     "workspaces",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"multipleIds" = true}
+     * )
+     *
+     * @EXT\Template()
+     *
+     * @return Response
+     */
+    public function registrationManagementUserListAction(array $workspaces)
+    {
+        $pager = $this->userManager->getAllUsers(1);
+
+        return array('workspaces' => $workspaces, 'users' => $pager, 'search' => '');
+    }
+
+    /**
+     * @EXT\Route(
+     *    "registration/management/groups",
+     *    name="claro_admin_registration_management_groups",
+     *    options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *     "workspaces",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"multipleIds" = true}
+     * )
+     *
+     * @EXT\Template()
+     *
+     * @return Response
+     */
+    public function registrationManagementGroupListAction(array $workspaces)
+    {
+        $pager = $this->groupManager->getGroups(1);
+
+        return array('workspaces' => $workspaces, 'groups' => $pager, 'search' => '');
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/registration/list/users/page/{page}",
+     *     name="claro_users_list_registration_pager",
+     *     defaults={"page"=1, "search"=""},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Route(
+     *     "/registration/list/users/page/{page}/search/{search}",
+     *     name="claro_users_list_registration_pager_search",
+     *     defaults={"page"=1},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     *
+     * @EXT\Template()
+     *
+     * Renders the user list in a pager for registration.
+     *
+     * @return Response
+     */
+    public function userListPagerAction($page, $search)
+    {
+        $pager = $search === '' ?
+            $this->userManager->getAllUsers($page) :
+            $this->userManager->getUsersByName($search, $page);
+
+        return array('users' => $pager, 'search' => $search);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/registration/list/groups/page/{page}",
+     *     name="claro_groups_list_registration_pager",
+     *     defaults={"page"=1, "search"=""},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Route(
+     *     "/registration/list/groups/page/{page}/search/{search}",
+     *     name="claro_groups_list_registration_pager_search",
+     *     defaults={"page"=1},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     *
+     * @EXT\Template()
+     *
+     * Renders the group list in a pager for registration.
+     *
+     * @return Response
+     */
+    public function groupListPagerAction($page, $search)
+    {
+        $pager = $search === '' ?
+            $this->groupManager->getGroups($page) :
+            $this->groupManager->getGroupsByName($search, $page);
+
+        return array('groups' => $pager, 'search' => $search);
+    }
+
+    /**
+     * @EXT\Route(
+     *    "registration/management/workspaces/users/{roleKey}",
+     *    name="claro_admin_subscribe_users_to_workspaces",
+     *    options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "workspaces",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"multipleIds" = true, "id" = "workspaceIds"}
+     * )
+     * @EXT\ParamConverter(
+     *     "users",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"multipleIds" = true, "id" = "subjectIds"}
+     * )
+     */
+    public function subscribeMultipleUsersToMultipleWorkspacesAction(
+        $roleKey,
+        array $workspaces,
+        array $users
+    )
+    {
+        foreach ($workspaces as $workspace) {
+            $role = $this->roleManager->getRoleByTranslationKeyAndWorkspace($roleKey, $workspace);
+
+            if (!is_null($role)) {
+                $this->roleManager->associateRoleToMultipleSubjects($users, $role);
+            }
+        }
+
+        $msg = '';
+
+        foreach ($users as $user) {
+            $msg .= $user->getFirstName() . ' ' . $user->getLastName() . ' ';
+            $msg .= $this->translator->trans(
+                'has_been_suscribed_with_role',
+                array(),
+                'platform'
+            );
+            $msg .= ' "' .
+                $this->translator->trans(
+                    $roleKey,
+                    array(),
+                    'platform'
+                ) .
+                '"-;-';
+        }
+
+        return new Response($msg, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *    "registration/management/workspaces/groups/{roleKey}",
+     *    name="claro_admin_subscribe_groups_to_workspaces",
+     *    options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "workspaces",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"multipleIds" = true, "id" = "workspaceIds"}
+     * )
+     * @EXT\ParamConverter(
+     *     "groups",
+     *      class="ClarolineCoreBundle:Group",
+     *      options={"multipleIds" = true, "id" = "subjectIds"}
+     * )
+     */
+    public function subscribeMultipleGroupsToMultipleWorkspacesAction(
+        $roleKey,
+        array $workspaces,
+        array $groups
+    )
+    {
+        foreach ($workspaces as $workspace) {
+            $role = $this->roleManager->getRoleByTranslationKeyAndWorkspace($roleKey, $workspace);
+
+            if (!is_null($role)) {
+                $this->roleManager->associateRoleToMultipleSubjects($groups, $role);
+            }
+        }
+
+        $msg = '';
+
+        foreach ($groups as $group) {
+            $msg .= '"' . $group->getName() . '" ';
+            $msg .= $this->translator->trans(
+                'has_been_suscribed_with_role_group',
+                array(),
+                'platform'
+            );
+            $msg .= ' "' .
+                $this->translator->trans(
+                    $roleKey,
+                    array(),
+                    'platform'
+                ) .
+                '"-;-';
+        }
+
+        return new Response($msg, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *    "registration/management/workspaces/roles/users",
+     *    name="claro_admin_subscribe_users_to_one_workspace",
+     *    options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "roles",
+     *      class="ClarolineCoreBundle:Role",
+     *      options={"multipleIds" = true, "id" = "roleIds"}
+     * )
+     * @EXT\ParamConverter(
+     *     "users",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"multipleIds" = true, "id" = "subjectIds"}
+     * )
+     */
+    public function subscribeMultipleUsersToOneWorkspaceAction(
+        array $roles,
+        array $users
+    )
+    {
+        $msg = '';
+
+        foreach ($users as $user) {
+            foreach($roles as $role) {
+                $this->roleManager->associateRole($user, $role);
+                $msg .= $user->getFirstName() . ' ' . $user->getLastName() . ' ';
+                $msg .= $this->translator->trans(
+                    'has_been_suscribed_with_role',
+                    array(),
+                    'platform'
+                );
+                $msg .= ' "' .
+                    $this->translator->trans(
+                        $role->getTranslationKey(),
+                        array(),
+                        'platform'
+                    ) .
+                    '"-;-';
+            }
+        }
+
+        return new Response($msg, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *    "registration/management/workspaces/roles/groups",
+     *    name="claro_admin_subscribe_groups_to_one_workspace",
+     *    options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "roles",
+     *      class="ClarolineCoreBundle:Role",
+     *      options={"multipleIds" = true, "id" = "roleIds"}
+     * )
+     * @EXT\ParamConverter(
+     *     "groups",
+     *      class="ClarolineCoreBundle:Group",
+     *      options={"multipleIds" = true, "id" = "subjectIds"}
+     * )
+     */
+    public function subscribeMultipleGroupsToOneWorkspaceAction(
+        array $roles,
+        array $groups
+    )
+    {
+        $msg = '';
+
+        foreach ($groups as $group) {
+            foreach($roles as $role) {
+                $this->roleManager->associateRole($group, $role);
+                $msg .= '"' . $group->getName() . '" ';
+                $msg .= $this->translator->trans(
+                    'has_been_suscribed_with_role_group',
+                    array(),
+                    'platform'
+                );
+                $msg .= ' "' .
+                    $this->translator->trans(
+                        $role->getTranslationKey(),
+                        array(),
+                        'platform'
+                    ) .
+                    '"-;-';
+            }
+        }
+
+        return new Response($msg, 200);
     }
 }
