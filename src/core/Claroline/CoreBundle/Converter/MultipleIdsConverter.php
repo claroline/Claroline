@@ -51,10 +51,10 @@ class MultipleIdsConverter implements ParamConverterInterface
         }
 
         $options = $configuration->getOptions();
-        $idParameter = isset($options['id']) ? $options['id'] : 'ids';
+        $paramName = (isset($options['name'])) ? $options['name']: 'ids';
 
-        if ($request->query->has($idParameter)) {
-            if (is_array($ids = $request->query->get($idParameter))) {
+        if ($request->query->has($paramName)) {
+            if (is_array($ids = $request->query->get($paramName))) {
                 try {
                     $entities = $this->om->findByIds($entityClass, $ids);
                     $request->attributes->set($parameter, $entities);
@@ -64,10 +64,12 @@ class MultipleIdsConverter implements ParamConverterInterface
                     throw new NotFoundHttpException($ex->getMessage());
                 }
             }
-
+            throw new BadRequestHttpException();
         }
 
-        throw new BadRequestHttpException('An array of identifiers was expected');
+        $request->attributes->set($parameter, array());
+
+        return true;
     }
 
     /**

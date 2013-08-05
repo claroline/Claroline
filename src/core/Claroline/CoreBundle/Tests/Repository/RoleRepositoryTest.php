@@ -58,22 +58,6 @@ class RoleRepositoryTest extends RepositoryTestCase
         $this->assertEquals('ROLE_PLATFORM_CUSTOM', $roles[0]->getName());
     }
 
-    public function testFindWorkspaceRole()
-    {
-        $role = self::$repo->findWorkspaceRole(self::get('john'), self::get('ws_2'));
-        $this->assertNull($role);
-        $role = self::$repo->findWorkspaceRole(self::get('john'), self::get('ws_1'));
-        $this->assertEquals('ROLE_WS_CUSTOM_1', $role->getName());
-        $role = self::$repo->findWorkspaceRole(self::get('group_1'), self::get('ws_1'));
-        $this->assertEquals('ROLE_WS_CUSTOM_2', $role->getName());
-    }
-
-    public function testFindWorkspaceRoleForUser()
-    {
-        $role = self::$repo->findWorkspaceRole(self::get('john'), self::get('ws_1'));
-        $this->assertEquals('ROLE_WS_CUSTOM_1', $role->getName());
-    }
-
     public function testFindByWorkspaceAndTool()
     {
         $roles = self::$repo->findByWorkspaceAndTool(

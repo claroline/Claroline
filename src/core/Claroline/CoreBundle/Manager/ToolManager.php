@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Exception\ToolPositionAlreadyOccupiedException;
 use Claroline\CoreBundle\Manager\Exception\UnremovableToolException;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -38,6 +39,8 @@ class ToolManager
     private $translator;
     /** @var ObjectManager */
     private $om;
+    /** @var RoleManager */
+    private $roleManager;
 
     /**
      * Constructor.
@@ -46,14 +49,16 @@ class ToolManager
      *     "ed"          = @DI\Inject("claroline.event.event_dispatcher"),
      *     "utilities"   = @DI\Inject("claroline.utilities.misc"),
      *     "translator"  = @DI\Inject("translator"),
-     *     "om"          = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"          = @DI\Inject("claroline.persistence.object_manager"),
+     *     "roleManager" = @DI\Inject("claroline.manager.role_manager")
      * })
      */
     public function __construct(
         StrictDispatcher $ed,
         ClaroUtilities $utilities,
         Translator $translator,
-        ObjectManager $om
+        ObjectManager $om,
+        RoleManager $roleManager
     )
     {
         $this->orderedToolRepo = $om->getRepository('ClarolineCoreBundle:Tool\OrderedTool');
@@ -63,6 +68,7 @@ class ToolManager
         $this->utilities = $utilities;
         $this->translator = $translator;
         $this->om = $om;
+        $this->roleManager = $roleManager;
     }
 
     public function create(Tool $tool)
@@ -213,7 +219,7 @@ class ToolManager
     public function getWorkspaceExistingTools(AbstractWorkspace $workspace)
     {
         $ot = $this->orderedToolRepo->findBy(array('workspace' => $workspace), array('order' => 'ASC'));
-        $wsRoles = $this->getWorkspaceRoles($workspace);
+        $wsRoles = $this->roleManager->getWorkspaceRoles($workspace);
         $existingTools = array();
 
         foreach ($ot as $orderedTool) {
@@ -266,7 +272,7 @@ class ToolManager
         $initPos = $this->toolRepo->countDisplayedToolsByWorkspace($workspace);
         $initPos++;
         $missingTools = array();
-        $wsRoles = $this->getWorkspaceRoles($workspace);
+        $wsRoles = $this->roleManager->getWorkspaceRoles($workspace);
 
         foreach ($undisplayedTools as $undisplayedTool) {
             if ($undisplayedTool->isDisplayableInWorkspace()) {
@@ -359,27 +365,14 @@ class ToolManager
         $this->om->flush();
     }
 
-    public function findOneByName($name)
-    {
-        return $this->toolRepo->findOneByName($name);
-    }
-
-    public function findAll()
+    public function getAllTools()
     {
         return $this->toolRepo->findAll();
     }
 
-    public function findOneByWorkspaceAndTool(AbstractWorkspace $ws, Tool $tool)
+    public function getOneByWorkspaceAndTool(AbstractWorkspace $ws, Tool $tool)
     {
         return $this->orderedToolRepo->findOneBy(array('workspace' => $ws, 'tool' => $tool));
-    }
-
-    public function getWorkspaceRoles(AbstractWorkspace $workspace)
-    {
-        return array_merge(
-            $this->roleRepo->findByWorkspace($workspace),
-            $this->roleRepo->findBy(array('name' => 'ROLE_ANONYMOUS'))
-        );
     }
 
     private function configChecker($conf)
@@ -419,7 +412,7 @@ class ToolManager
     public function extractFiles($archpath, $confTools)
     {
         $extractPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('claro_ws_tmp_', true);
-        $archive = new \ZipArchive();
+        $archive = $this->om->factory('ZipArchive');
         $archive->open($archpath);
         $archive->extractTo($extractPath);
         $realPaths = array();
