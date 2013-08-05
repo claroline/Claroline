@@ -1,7 +1,7 @@
 imports:
     - { resource: security.yml }
     - { resource: local/parameters.yml }
-    #- { resource: @ICAPLyon1SimpleTagBundle/Resources/config/config.yml }
+    - { resource: @ICAPLyon1SimpleTagBundle/Resources/config/config.yml }
 
 framework:
     secret:          %secret%
