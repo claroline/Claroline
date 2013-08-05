@@ -571,6 +571,19 @@ class WorkspaceControllerTest extends MockeryTestCase
         );
     }
 
+    public function testWorkspaceSearchedListRegistrationPagerAction()
+    {
+        $this->workspaceManager->shouldReceive('getDisplayableWorkspacesBySearchPager')
+            ->with('search', 1)
+            ->once()
+            ->andReturn('pager');
+
+        $this->assertEquals(
+            array('workspaces' => 'pager', 'search' => 'search'),
+            $this->getController()->workspaceSearchedListRegistrationPagerAction('search', 1)
+        );
+    }
+
     private function getController(array $mockedMethods = array())
     {
         if (count($mockedMethods) === 0) {

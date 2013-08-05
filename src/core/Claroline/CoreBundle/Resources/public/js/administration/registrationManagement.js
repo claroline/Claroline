@@ -60,7 +60,7 @@
         window.location.href = route;
     });
 
-    $('.workspace-check').click(function () {
+    $('#workspace-list-div').on('click', '.workspace-check', function () {
         if ($('.workspace-check:checked').length > 0) {
             $('.subscribe-user-button, .subscribe-group-button').attr('disabled', false);
         }

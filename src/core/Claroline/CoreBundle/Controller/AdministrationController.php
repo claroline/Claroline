@@ -1057,16 +1057,24 @@ class AdministrationController extends Controller
      */
     public function registrationManagementAction($search)
     {
-        $datas = $this->workspaceTagManager->getDatasForWorkspaceList(false);
+        if ($search === '') {
+            $datas = $this->workspaceTagManager->getDatasForWorkspaceList(false);
 
-        return array(
-            'workspaces' => $datas['workspaces'],
-            'tags' => $datas['tags'],
-            'tagWorkspaces' => $datas['tagWorkspaces'],
-            'hierarchy' => $datas['hierarchy'],
-            'rootTags' => $datas['rootTags'],
-            'displayable' => $datas['displayable']
-        );
+            return array(
+                'workspaces' => $datas['workspaces'],
+                'tags' => $datas['tags'],
+                'tagWorkspaces' => $datas['tagWorkspaces'],
+                'hierarchy' => $datas['hierarchy'],
+                'rootTags' => $datas['rootTags'],
+                'displayable' => $datas['displayable'],
+                'search' => ''
+            );
+        }
+        else {
+            $pager = $this->workspaceManager->getDisplayableWorkspacesBySearchPager($search, 1);
+
+            return array('workspaces' => $pager, 'search' => $search);
+        }
     }
 
     /**
