@@ -345,6 +345,12 @@ class RoleManager
         return $this->getStringRolesFromToken($this->sc->getToken());
     }
 
+    public function edit(Role $role)
+    {
+        $this->om->persist($role);
+        $this->om->flush();
+    }
+
     /**
      * Returns the roles (an array of string) of the $token.
      *

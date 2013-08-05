@@ -554,9 +554,9 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $dql = "
             SELECT u FROM Claroline\CoreBundle\Entity\User u
             JOIN u.roles r WHERE r IN (:roles)
-            AND UPPER(u.username) LIKE :search
+            AND (UPPER(u.username) LIKE :search
             OR UPPER(u.lastName) LIKE :search
-            OR UPPER(u.firstName) LIKE :search
+            OR UPPER(u.firstName) LIKE :search)
             ORDER BY u.lastName
             ";
 
@@ -567,6 +567,10 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return ($getQuery) ? $query: $query->getResult();
     }
 
+    /**
+     * This method should be renamed.
+     * Find users who are outside the workspace and users whose role are in $roles.
+     */
     public function findOutsidersByWorkspaceRoles(array $roles, AbstractWorkspace $workspace, $getQuery = false)
     {
         //feel free to make this request easier if you can
@@ -594,6 +598,10 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return ($getQuery) ? $query: $query->getResult();
     }
 
+    /**
+     * This method should be renamed.
+     * Find users who are outside the workspace and users whose role are in $roles.
+     */
     public function findOutsidersByWorkspaceRolesAndName(array $roles, $name, AbstractWorkspace $workspace, $getQuery = false)
     {
         //feel free to make this request easier if you can
@@ -621,62 +629,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query = $this->_em->createQuery($dql);
         $query->setParameter('roles', $roles);
         $query->setParameter('wsId', $workspace);
-        $query->setParameter('search', "%{$search}%");
-
-        return ($getQuery) ? $query: $query->getResult();
-    }
-
-    public function findOutsidersByRole(Role $role, $getQuery = false)
-    {
-        $dql = "
-            SELECT u FROM Claroline\CoreBundle\Entity\User u
-                WHERE u.id NOT IN (SELECT u2.id FROM Claroline\CoreBundle\Entity\User u2
-                JOIN u2.roles r
-                WHERE r.id = :roleId)
-            ";
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('roleId', $role->getId());
-
-        return ($getQuery) ? $query: $query->getResult();
-    }
-
-    public function findByRoleAndName(Role $role, $search, $getQuery = false)
-    {
-        $dql = "
-            SELECT u FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.roles r
-            WHERE r.id = :roleId
-            AND (UPPER(u.username) LIKE :search
-            OR UPPER(u.lastName) LIKE :search
-            OR UPPER(u.firstName) LIKE :search)
-            ORDER BY u.id
-            ";
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('roleId', $role->getId());
-        $search = strtoupper($search);
-        $query->setParameter('search', "%{$search}%");
-
-        return ($getQuery) ? $query: $query->getResult();
-    }
-
-    public function findOutsidersByRoleAndName(Role $role, $search, $getQuery = false)
-    {
-        $dql = "
-            SELECT u FROM Claroline\CoreBundle\Entity\User u
-                WHERE u.id NOT IN (SELECT u2.id FROM Claroline\CoreBundle\Entity\User u2
-                JOIN u2.roles r
-                WHERE r.id = :roleId)
-                AND (UPPER(u.username) LIKE :search
-                OR UPPER(u.lastName) LIKE :search
-                OR UPPER(u.firstName) LIKE :search)
-                ORDER BY u.id
-            ";
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('roleId', $role->getId());
-        $search = strtoupper($search);
         $query->setParameter('search', "%{$search}%");
 
         return ($getQuery) ? $query: $query->getResult();
