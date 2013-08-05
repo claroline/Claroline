@@ -495,19 +495,19 @@ class WorkspaceController extends Controller
     {
         if ('anon.' != $this->security->getToken()->getUser()) {
             $roles = $this->roleManager->getRolesByWorkspace($workspace);
-            $foundRole = array();
+            $foundRoles = array();
 
             foreach ($roles as $wsRole) {
                 foreach ($this->security->getToken()->getUser()->getRoles() as $userRole) {
                     if ($userRole == $wsRole->getName()) {
-                        $foundRole[] = $userRole;
+                        $foundRoles[] = $userRole;
                     }
                 }
             }
 
             $isAdmin = $this->security->getToken()->getUser()->hasRole('ROLE_ADMIN');
 
-            if (count($foundRole) === 0 && !$isAdmin) {
+            if (count($foundRoles) === 0 && !$isAdmin) {
                 throw new AccessDeniedException('No role found in that workspace');
             }
 
@@ -516,7 +516,7 @@ class WorkspaceController extends Controller
                 $openedTool = array($this->toolManager->getOneToolByName('home'));
             } else {
                 $openedTool = $this->toolManager->getDisplayedByRolesAndWorkspace(
-                    $foundRole,
+                    $foundRoles,
                     $workspace
                 );
             }
