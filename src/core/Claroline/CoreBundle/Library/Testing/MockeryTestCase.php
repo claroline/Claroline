@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Library\Testing;
 
 use Mockery as m;
+use Mockery\Mock;
 
 abstract class MockeryTestCase extends \PHPUnit_Framework_TestCase
 {
@@ -34,7 +35,7 @@ abstract class MockeryTestCase extends \PHPUnit_Framework_TestCase
      * @param mixed $class
      * @param mixed $parameters
      *
-     * @return object
+     * @return Mock
      */
     protected function mock($class, $parameters = null)
     {

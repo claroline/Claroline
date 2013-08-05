@@ -237,11 +237,7 @@ class TemplateBuilder
                     'perms' => array('ROLE_WS_MANAGER'),
                     'name' => 'Paramètres'
                 ),
-                'group_management' => array(
-                    'perms' => array('ROLE_WS_MANAGER'),
-                    'name' => 'Groupes'
-                ),
-                'user_management' => array(
+                'roles' => array(
                     'perms' => array('ROLE_WS_MANAGER'),
                     'name' => 'Utilisateurs'
                 ),

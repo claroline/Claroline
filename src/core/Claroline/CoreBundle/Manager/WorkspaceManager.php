@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
+use Claroline\CoreBundle\Manager\Exception\UnknownToolException;
 use Symfony\Component\Yaml\Yaml;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -99,6 +100,7 @@ class WorkspaceManager
 
     public function create(Configuration $config, User $manager)
     {
+        $config->check();
         $this->om->startFlushSuite();
         $workspace = $this->om->factory('Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace');
         $workspace->setName($config->getWorkspaceName());
@@ -137,6 +139,12 @@ class WorkspaceManager
 
             $confTool = isset($toolsConfig[$toolName]) ?  $toolsConfig[$toolName] : array();
 
+            $tool = $this->toolManager->getOneToolByName($toolName);
+
+            if ($tool === null) {
+                throw new UnknownToolException("The tool {$toolName} does'nt exists.");
+            }
+
             $this->toolManager->import(
                 $confTool,
                 $rolesToAdd,
@@ -144,7 +152,7 @@ class WorkspaceManager
                 $perms['name'],
                 $workspace,
                 $root,
-                $this->toolManager->findOneByName($toolName),
+                $tool,
                 $manager,
                 $position,
                 $config->getArchive()
