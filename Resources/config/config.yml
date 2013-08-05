@@ -1,0 +1,6 @@
+plugin:
+  has_options: false
+
+  resources:
+    - class: Claroline\AnnouncementBundle\Entity\AnnouncementAggregate
+      name: claroline_announcement_aggregate
