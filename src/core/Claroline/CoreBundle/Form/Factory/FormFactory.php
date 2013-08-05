@@ -118,20 +118,18 @@ class FormFactory
             'formType' => 'Claroline\CoreBundle\Form\ResourcePropertiesType',
             'entity' => 'Claroline\CoreBundle\Entity\Resource\AbstractResource'
         ),
-<<<<<<< HEAD
         self::TYPE_WORKSPACE_ROLE => array(
             'formType' => 'Claroline\CoreBundle\Form\WorkspaceRoleType'
         ),
         self::TYPE_ROLE_TRANSLATION => array(
             'formType' => 'Claroline\CoreBundle\Form\RoleTranslationType',
             'entity' => 'Claroline\CoreBundle\Entity\Role'
-=======
+        ),
         self::TYPE_USER_EMAIL => array(
             'formType' => 'Claroline\CoreBundle\Form\EmailType'
         ),
         self::TYPE_USER_RESET_PWD => array(
             'formType' => 'Claroline\CoreBundle\Form\ResetPasswordType'
->>>>>>> upstream/master
         )
     );
 

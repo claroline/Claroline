@@ -280,7 +280,7 @@ class RolesController extends Controller
      * )
      * @EXT\Method({"DELETE", "GET"})
      */
-   public function removeGroupFromRole(Group $group, Role $role, AbstractWorkspace $workspace)
+   public function removeGroupFromRoleAction(Group $group, Role $role, AbstractWorkspace $workspace)
    {
        $this->checkAccess($workspace);
        $this->roleManager->dissociateWorkspaceRole($group, $workspace, $role);
@@ -306,7 +306,7 @@ class RolesController extends Controller
      *     options={"multipleIds"=true, "name"="roleIds"}
      * )
      */
-   public function addGroupsToRoles(array $groups, array $roles, AbstractWorkspace $workspace)
+   public function addGroupsToRolesAction(array $groups, array $roles, AbstractWorkspace $workspace)
    {
        $this->checkAccess($workspace);
        $this->roleManager->associateRolesToSubjects($groups, $roles);
@@ -336,7 +336,7 @@ class RolesController extends Controller
      * @EXT\Method("GET")
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:workspaceUsers.html.twig")
      */
-    public function registeredUsersListAction(
+    public function usersListAction(
         AbstractWorkspace $workspace,
         $page,
         $search,
@@ -401,7 +401,7 @@ class RolesController extends Controller
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:workspaceGroups.html.twig")
      */
-    public function registeredGroupsListAction(
+    public function groupsListAction(
         AbstractWorkspace $workspace,
         $page,
         $search,

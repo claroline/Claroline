@@ -70,29 +70,33 @@ class GroupRepositoryTest extends RepositoryTestCase
         $this->assertEquals('group_1', $groups[0]->getName());
     }
 
-    public function testFindByRole()
+    public function testFindByRoles()
     {
-        $groups = self::$repo->findByRole(self::get('ROLE_1'));
+        $groups = self::$repo->findByRoles(array(self::get('ROLE_1')));
         $this->assertEquals('group_1', $groups[0]->getName());
         $this->assertEquals('group_2', $groups[1]->getName());
     }
 
-    public function testFindOutsidersByRole()
+    public function testFindOutsidersByWorkspaceRoles()
     {
-        $groups = self::$repo->findOutsidersByRole(self::get('ROLE_1'));
+        $groups = self::$repo->findOutsidersByWorkspaceRoles(array(self::get('ROLE_1')), self::get('ws_1'));
         $this->assertEquals('group_3', $groups[0]->getName());
         $this->assertEquals('group_4', $groups[1]->getName());
     }
 
-    public function testFindByRoleAndName()
+    public function testFindByRolesAndName()
     {
-        $groups = self::$repo->findByRoleAndName(self::get('ROLE_1'), 'group_1');
+        $groups = self::$repo->findByRolesAndName(array(self::get('ROLE_1')), 'group_1');
         $this->assertEquals(1, count($groups));
     }
 
     public function testFindOutsidersByRoleAndName()
     {
-        $groups = self::$repo->findOutsidersByRoleAndName(self::get('ROLE_1'), 'group_3');
+        $groups = self::$repo->findOutsidersByWorkspaceRolesAndName(
+            array(self::get('ROLE_1')),
+            'group_3',
+            self::get('ws_1')
+        );
         $this->assertEquals(1, count($groups));
     }
 }
