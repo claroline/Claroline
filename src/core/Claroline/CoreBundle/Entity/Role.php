@@ -236,4 +236,9 @@ class Role implements RoleInterface
     {
         return $this->workspace;
     }
+
+    public static function getMandatoryWsRoles()
+    {
+        return array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER', 'ROLE_WS_VISITOR');
+    }
 }

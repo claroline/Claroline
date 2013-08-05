@@ -567,6 +567,52 @@ class WorkspaceController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/{workspaceId}/add/user/{userId}",
+     *     name="claro_workspace_add_user",
+     *     options={"expose"=true},
+     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
+     * )
+     * @EXT\Method({"POST", "GET"})
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "user",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"id" = "userId", "strictId" = true}
+     * )
+     *
+     * Adds a user to a workspace.
+     *
+     * @param AbstractWorkspace $workspace
+     * @param User $user
+     *
+     * @return Response
+     */
+    public function addUserAction(AbstractWorkspace $workspace, User $user)
+    {
+        $role = $this->roleManager->getCollaboratorRole($workspace);
+
+        $userRole = $this->roleManager->getWorkspaceRoleForUser($user, $workspace);
+
+        if (is_null($userRole)) {
+            $this->roleManager->associateRole($user, $role);
+            $this->eventDispatcher->dispatch(
+                'log',
+                'Log\LogWorkspaceRoleSubscribe',
+                array($role, $user)
+            );
+        }
+
+        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+        $this->securityContext->setToken($token);
+
+        return new JsonResponse($this->userManager->convertUsersToArray(array($user)));
+    }
+
+    /** @EXT\Route(
      *     "/list/tag/{workspaceTagId}/page/{page}",
      *     name="claro_workspace_list_pager",
      *     defaults={"page"=1},
@@ -615,6 +661,55 @@ class WorkspaceController extends Controller
         $workspaces = $this->tagManager->getPagerAllWorkspaces($page);
 
         return array('workspaces' => $workspaces);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspaceId}/users/{userId}",
+     *     name="claro_workspace_delete_user",
+     *     options={"expose"=true},
+     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
+     * )
+     * @EXT\Method({"DELETE", "GET"})
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "user",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"id" = "userId", "strictId" = true}
+     * )
+     *
+     * Removes an user from a workspace.
+     *
+     * @param AbstractWorkspace $workspace
+     * @param User $userId
+     *
+     * @return Response
+     */
+    public function removeUserAction(AbstractWorkspace $workspace, User $user)
+    {
+        $roles = $this->roleManager->getRolesByWorkspace($workspace);
+        $this->checkRemoveManagerRoleIsValid(array($user), $workspace);
+
+        foreach ($roles as $role) {
+            if ($user->hasRole($role->getName())) {
+                $this->roleManager->dissociateRole($user, $role);
+                $this->eventDispatcher->dispatch(
+                    'log',
+                    'Log\LogWorkspaceRoleUnsubscribe',
+                    array($role, $user)
+                );
+            }
+        }
+        $this->workspaceTagManager->deleteAllRelationsFromWorkspaceAndUser($workspace, $user);
+
+        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+        $this->securityContext->setToken($token);
+
+        return new Response("success", 204);
     }
 
     /**

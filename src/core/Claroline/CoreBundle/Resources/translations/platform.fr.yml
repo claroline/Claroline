@@ -40,6 +40,7 @@ analytics_home: Vue de l'ensemble
 analytics_connections: Visites utilisateurs
 analytics_resources: Contenu plateforme
 analytics_top: Top des activités
+apply: Appliquer
 available_workspaces: 'Espaces d''activités disponibles'
 by: par
 cancel: Annuler
@@ -347,6 +348,7 @@ registered_users: 'Utilisateurs enregistrés'
 registration_to_workspaces: 'Inscription à des espaces d''activités'
 remove_group_s_confirm_message: 'groupe(s) supprimé(s)'
 remove_user_s_confirm_message: 'utilisateur(s) supprimé(s)'
+remove_messages_confirm_message: 'message(s) supprimé(s)'
 rename: Renommer
 reset: Réinitialiser
 reset_pwd: 'Réinitialisation de votre mot de passe'
@@ -381,12 +383,14 @@ resource_right_form_canView: Voir
 resource_right_form_canExport: Exporter
 resource_right_form_isRecursive: Appliquer au contenu du répertoire et aux sous-répertoires
 restore : Restaurer
+restore_messages_confirm_message: message(s) restaurés
 results: Résultats
 results_for_search_on: 'Resultat(s) de la recherche sur'
 rights: Droits
 rights_management: 'Gestion des droits'
 role: Rôle
 roles: Rôles
+role_creation: Créer un rôle
 save: Sauvegarder
 save_as_template: Sauvegarder comme modèle
 search: Rechercher
@@ -450,6 +454,7 @@ type: Type
 type_s: Type(s)
 unique connections: 'Nb Cnx. uniques'
 unregister: Désinscription
+unregistered: Non inscrit
 unregistered_groups: 'Groupes non enregistrés'
 unregistered_users: 'Utilisateurs non enregistrés'
 unwritable_file_exception: "Vous n'avez pas la permission d'écrire dans le fichier %path%."
@@ -500,6 +505,8 @@ workspace_form_type: Type
 workspace_order_tool_edit_form_name: Nom
 workspace_registration_confirm_title: 'Voulez-vous vous inscrire à cet espace d''activités ?'
 workspace_resource: Ressources
+workspace_role_type_form_translationKey: Nom
+workspace_role_type_form_requireDir: Créer un répertoire
 workspace_tag_form_name: Nom
 workspace_template_form_name: Nom
 workspace_tools: Outils
@@ -551,3 +558,4 @@ Draw an area on the graph to zoom, double-click to cancel: 'Tracez une zone sur 
 Overview of recent activities of your workspaces: 'Aperçu des activités récentes de vos espaces de travail'
 Overview of recent activities in %workspaceName%: 'Aperçu des activités récentes de %workspaceName%'
 Overview of all recent activities in %workspaceName%: 'Aperçu de toutes les activités récentes de %workspaceName%'
+select_all: Tout sélectionner

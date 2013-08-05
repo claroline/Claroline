@@ -197,6 +197,10 @@ class ObjectManager extends ObjectManagerDecorator
      */
     public function findByIds($class, array $ids)
     {
+        if (count($ids) === 0) {
+            return array();
+        }
+
         $dql = "SELECT object FROM {$class} object WHERE object.id IN (:ids)";
         $query = $this->wrapped->createQuery($dql);
         $query->setParameter('ids', $ids);
