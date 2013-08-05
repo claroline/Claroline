@@ -1070,11 +1070,9 @@ class AdministrationController extends Controller
                 'search' => ''
             );
         }
-        else {
-            $pager = $this->workspaceManager->getDisplayableWorkspacesBySearchPager($search, 1);
+        $pager = $this->workspaceManager->getDisplayableWorkspacesBySearchPager($search, 1);
 
-            return array('workspaces' => $pager, 'search' => $search);
-        }
+        return array('workspaces' => $pager, 'search' => $search);
     }
 
     /**
