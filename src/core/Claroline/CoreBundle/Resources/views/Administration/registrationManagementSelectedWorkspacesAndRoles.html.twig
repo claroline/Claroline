@@ -2,7 +2,7 @@
     <label for="workspaces-list">
         <b>{{ 'selected_workspaces_for_registration'|trans({}, 'platform') }}</b>
     </label>
-    <select id="workspaces-list" name="workspaces-list" size="5">
+    <select id="workspaces-list" name="workspaces-list" size="5" class="span12">
         {% for workspace in workspaces %}
             <option class="dropdown-submenu workspace-option" workspace-id="{{ workspace.getId() }}">
                 {{ workspace.getName() }}
@@ -19,7 +19,7 @@
 </label>
 
 {% if workspaces|length > 1 %}
-    <select id="roles-list" name="roles-list" size="5" multiple="multiple">
+    <select id="roles-list" name="roles-list" size="5" multiple="multiple" class="span12">
         <option class="dropdown-submenu role-option" value="collaborator">
             {{ 'collaborator'|trans({}, 'platform') }}
         </option>
