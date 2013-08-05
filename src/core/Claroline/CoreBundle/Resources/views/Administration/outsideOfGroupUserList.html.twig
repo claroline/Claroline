@@ -26,21 +26,38 @@
     {% endif %}
 {% endmacro %}
 
+{% macro displayControls(group) %}
+    {% if app.user %}
+        <button class="btn btn-secondary action-button" data-action="add"><i class="icon-plus"></i> {{ 'add'|trans({}, 'platform') }}</button>
+    {% endif %}
+{% endmacro %}
+
 {% from _self import renderPager %}
+{% from _self import displayControls %}
 
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
 {% block javascripts %}
     {{ parent() }}
     {% javascripts
-       vars=["locale"]
-      "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/addUserConfirm.html.twigjs"
-       filter="twig_js"
+        vars=["locale"]
+        "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/removeUserConfirm.html.twigjs"
+        "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
+        "@ClarolineCoreBundle/Resources/views/Modal/validationFooter.html.twigjs"
+        filter="twig_js"
     %}
-
     <script language="javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
-    <script src="{{ asset('bundles/clarolinecore/js/administration/outsideOfGroupUserList.js') }}" type="text/javascript"></script>
+    <script src='{{ asset('bundles/clarolinecore/js/table.js') }}' type="text/javascript"></script>
+    <script>
+        parameters = {};
+        parameters.route = {};
+        parameters.route.action = {};
+        parameters.route.normal = {"route": "claro_admin_outside_of_group_user_list", "parameters": {'groupId': {{ group.getId() }} }};
+        parameters.route.search = {"route": "claro_admin_outside_of_group_user_list_search", "parameters": {'groupId': {{ group.getId() }}}};
+        parameters.route.action.add = {"route": "claro_admin_multiadd_user_to_group", "parameters": {'groupId': {{ group.getId() }}}, 'type': 'PUT', "confirmTemplate": removeUserConfirm};
+        Claroline.Table.initialize(parameters);
+    </script>
 {% endblock %}
 
 {% block section_content %}
@@ -67,15 +84,13 @@
             ])
         }}
 <div class="search-bar">
-    <button class="btn btn-secondary add-users-button"><i class="icon-plus"></i> {{ 'add'|trans({}, 'platform') }}</button>
-
+     {{ displayControls(group) }}
             <div class="input-append pull-right">
-                <input class="input-medium" type="text" id="search-user-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
-                <button class="filter btn" type="button" id="search-user-button">
+                <input class="input-medium" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
+                <button class="filter btn" type="button" id="search-button">
                     <i class="icon-search"></i>
                 </button>
             </div>
-
         </div>
     </div>
         {{ renderPager(search, group.getId(), pager) }}
@@ -98,7 +113,7 @@
                     <td>{{ user.getLastName() }}</td>
                     <td>{{ user.getFirstName() }}</td>
                     <td>
-                        <input type="checkbox" value="{{ user.id }}" class="chk-user" align="center"></input>
+                        <input type="checkbox" value="{{ user.id }}" class="chk-item" align="center"></input>
                     </td>
                 </tr>
             {% endfor %}
@@ -106,22 +121,7 @@
     </table>
     </div>
         {{ renderPager(search, group.getId(), pager) }}
+        {{ displayControls(group) }}
     <div>
-    <p>
-        <button class="btn btn-secondary add-users-button">{{ 'add'|trans({}, 'platform') }}</button>
-    </p>
-    <div id="twig-attributes" data-group-id="{{ group.getId() }}"></div>
 </div>
-     <!-------------- modal box ------------------------------------------------>
-    <div id="validation-box" class="modal hide fade">
-        <div class="modal-header">
-        </div>
-        <div class="modal-body" id="modal-body">
-            <div id="validation-box-body"></div>
-        </div>
-        <div class="modal-footer">
-            <input type="button" id="modal-valid-button" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-            <input type="button" id="modal-cancel-button" class="btn btn-secondary" value="{{ 'cancel'|trans({}, 'platform') }}"/>
-        </div>
-    </div>
 {% endblock %}

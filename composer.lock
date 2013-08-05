@@ -104,6 +104,57 @@
             "time": "2013-07-01 11:37:17"
         },
         {
+            "name": "claroline/migration-bundle",
+            "version": "dev-master",
+            "target-dir": "Claroline/MigrationBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/claroline/MigrationBundle.git",
+                "reference": "a89af72dd326d255d40de49ed14828fda0523942"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/claroline/MigrationBundle/zipball/a89af72dd326d255d40de49ed14828fda0523942",
+                "reference": "a89af72dd326d255d40de49ed14828fda0523942",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/migrations": "dev-master",
+                "doctrine/orm": "~2.2",
+                "jdorn/sql-formatter": "~1.0",
+                "php": ">=5.3.3",
+                "symfony/console": "~2.0",
+                "symfony/framework-bundle": "~2.0",
+                "symfony/twig-bridge": "~2.0",
+                "symfony/twig-bundle": "~2.0"
+            },
+            "require-dev": {
+                "mikey179/vfsstream": "dev-master",
+                "mockery/mockery": "dev-master@dev"
+            },
+            "type": "bundle",
+            "autoload": {
+                "psr-0": {
+                    "Claroline\\MigrationBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Claroline development team",
+                    "email": "dev@claroline.net",
+                    "homepage": "http://github.com/claroline"
+                }
+            ],
+            "description": "Claroline migration bundle",
+            "homepage": "http://www.claroline.net",
+            "keywords": [
+                "Claroline",
+                "migration"
+            ],
+            "time": "2013-08-02 13:33:22"
+        },
+        {
             "name": "claroline/taxonomy-bundle",
             "version": "dev-master",
             "target-dir": "Claroline/TaxonomyBundle",
@@ -225,12 +276,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
-                "reference": "dc3438804c6303f1b5892f184a79aa8e3ce5d81d"
+                "reference": "beb242e0e22eebdca1db571edb1bac788b054124"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/dc3438804c6303f1b5892f184a79aa8e3ce5d81d",
-                "reference": "dc3438804c6303f1b5892f184a79aa8e3ce5d81d",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/beb242e0e22eebdca1db571edb1bac788b054124",
+                "reference": "beb242e0e22eebdca1db571edb1bac788b054124",
                 "shasum": ""
             },
             "require": {
@@ -286,7 +337,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2013-07-04 15:48:06"
+            "time": "2013-07-31 00:07:06"
         },
         {
             "name": "doctrine/collections",
@@ -490,12 +541,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "2.4.0-RC2"
+                "reference": "2a7f59c1ecc62d828edf012f344ca44acdbe3c75"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/2.4.0-RC2",
-                "reference": "2.4.0-RC2",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/2a7f59c1ecc62d828edf012f344ca44acdbe3c75",
+                "reference": "2a7f59c1ecc62d828edf012f344ca44acdbe3c75",
                 "shasum": ""
             },
             "require": {
@@ -552,7 +603,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2013-06-25 17:49:29"
+            "time": "2013-08-03 15:29:12"
         },
         {
             "name": "doctrine/doctrine-bundle",
@@ -3068,6 +3119,44 @@
             ]
         },
         {
+            "name": "mikey179/vfsStream",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mikey179/vfsStream.git",
+                "reference": "bfe5bcf59eb50b5029546d080c23146f7528024f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mikey179/vfsStream/zipball/bfe5bcf59eb50b5029546d080c23146f7528024f",
+                "reference": "bfe5bcf59eb50b5029546d080c23146f7528024f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "org\\bovigo\\vfs\\": "src/main/php"
+                }
+            },
+            "license": [
+                "BSD"
+            ],
+            "homepage": "http://vfs.bovigo.org/",
+            "support": {
+                "source": "https://github.com/mikey179/vfsStream/tree/master",
+                "issues": "https://github.com/mikey179/vfsStream/issues"
+            },
+            "time": "2013-05-28 21:32:26"
+        },
+        {
             "name": "mockery/mockery",
             "version": "dev-master",
             "source": {
@@ -3133,10 +3222,10 @@
         "doctrine/doctrine-migrations-bundle": 20,
         "doctrine/doctrine-fixtures-bundle": 20,
         "friendsofsymfony/jsrouting-bundle": 20,
-        "mikey179/vfsstream": 20,
         "stfalcon/tinymce-bundle": 20,
         "claroline/front-end-bundle": 20,
         "claroline/taxonomy-bundle": 20,
+        "claroline/migration-bundle": 20,
         "jms/twig-js-bundle": 20,
         "white-october/pagerfanta-bundle": 20,
         "idci/exporter-bundle": 20,
@@ -3144,7 +3233,8 @@
         "xaguilars/bootstrap-colorpicker": 20,
         "zenstruck/form-bundle": 20,
         "icap-lyon1/simple-tag-bundle": 20,
-        "mockery/mockery": 20
+        "mockery/mockery": 20,
+        "mikey179/vfsstream": 20
     },
     "platform": {
         "php": ">=5.3.3"

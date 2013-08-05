@@ -297,7 +297,7 @@ class UserManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
-    public function getGroupOutsidersByName(Group $group, $search, $page)
+    public function getGroupOutsidersByName(Group $group, $page, $search)
     {
         $query = $this->userRepo->findGroupOutsidersByName($group, $search, false);
 
@@ -337,6 +337,34 @@ class UserManager
     public function getUserById($userId)
     {
         return $this->userRepo->find($userId);
+    }
+
+    public function getUsersByRoles(array $roles, $page = 1)
+    {
+        $res = $this->userRepo->findByRoles($roles, true);
+
+        return $this->pagerFactory->createPager($res, $page);
+    }
+
+    public function getOutsidersByWorkspaceRoles(array $roles, AbstractWorkspace $workspace, $page = 1)
+    {
+        $res = $this->userRepo->findOutsidersByWorkspaceRoles($roles, $workspace, true);
+
+        return $this->pagerFactory->createPager($res, $page);
+    }
+
+    public function getUsersByRolesAndName(array $roles, $name, $page = 1)
+    {
+        $res = $this->userRepo->findByRolesAndName($roles, $name, true);
+
+        return $this->pagerFactory->createPager($res, $page);
+    }
+
+    public function getOutsidersByWorkspaceRolesAndName(array $roles, $name, AbstractWorkspace $workspace, $page = 1)
+    {
+        $res = $this->userRepo->findOutsidersByWorkspaceRolesAndName($roles, $name, $workspace, true);
+
+        return ($page !== 0) ? $this->pagerFactory->createPager($res, $page): $res;
     }
 
     public function getUserByEmail($email)

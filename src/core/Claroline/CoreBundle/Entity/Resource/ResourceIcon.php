@@ -19,29 +19,30 @@ class ResourceIcon
     protected $id;
 
     /**
-     * @ORM\Column(type="string", name="icon_location", nullable=true, length=255)
+     * @ORM\Column(name="icon_location", nullable=true)
      */
     protected $iconLocation;
 
     /**
-     * @ORM\Column(type="string", name="mimeType", length=255)
+     * @ORM\Column()
      */
     protected $mimeType;
 
     /**
-     * @ORM\Column(type="boolean", name="is_shortcut")
+     * @ORM\Column(name="is_shortcut", type="boolean")
      */
     protected $isShortcut = false;
 
     /**
-     * @ORM\Column(type="string", name="relative_url", nullable=true, length=255)
+     * @ORM\Column(name="relative_url", nullable=true)
+     *
      * The url from the /web folder.
      */
     protected $relativeUrl;
 
     /**
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceIcon")
-     * @ORM\JoinColumn(name="shortcut_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceIcon")
+     * @ORM\JoinColumn(name="shortcut_id", onDelete="SET NULL")
      */
     protected $shortcutIcon;
 
