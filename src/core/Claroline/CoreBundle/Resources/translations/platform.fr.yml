@@ -72,6 +72,7 @@ done_on: 'effectuée sur'
 download: Télécharger
 downloads: Nb tchgr.
 edit: Modifier
+email_form_mail : 'Entrez votre adresse email'
 enter_tag_name_message: 'Veuillez entrer un nom de Tag'
 export: Exporter
 fast_answer: 'Réponse rapide'
@@ -98,6 +99,8 @@ group_form_platformRole: Role
 group_parameter: 'Paramètres du groupe'
 groups: Groupes
 groups_list: 'Liste des groupes'
+has_been_suscribed_with_role: 'a été inscrit(e) avec le rôle'
+has_been_suscribed_with_role_group: 'a été inscrit avec le rôle'
 has_not_been_imported: 'n''a pas été importé(e)'
 has_not_been_imported_into_the_group: 'n''a pas été importé(e) dans le groupe'
 history: Historique
@@ -255,7 +258,7 @@ copiable: 'Copiable'
 editable: 'Modifiable'
 yes: 'oui'
 no: 'non'
-no_email: 'Ce mail ne correspond pas a unitilisateur inscrit'
+no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
 link_outdated : 'le luen n''est plus valide'
 login: Connexion
 login_failure: 'La connexion a échoué. Vérifiez que votre nom d''utilisateur et votre mot de passe sont corrects.'
@@ -263,7 +266,9 @@ logout: Déconnexion
 mail: Mail
 mail_form_content: Contenu
 mail_form_object: Objet
-mail_sent : 'Un email vient de vous être envoyé, vérifier votre dossier spam au cas où vous ne verrais pas l''email'
+mail_message : 'Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur me lien ci-dessous pour le réinitialiser. Si vous n''êtes pas à l''orgine de cette action, veuillez ignorer ce message.'
+mail_click: 'Cliquez sur ce lien pour réinitialiser votre mot de passe'
+mail_sent : 'Un email vient de vous être envoyé. Vérifiez votre dossier spam au cas où vous ne verriez pas l''email'
 manage_rights: 'Gérer les droits'
 manager: Gestionnaire
 media_most_viewed: Media les plus consultés
@@ -339,10 +344,14 @@ register: Inscription
 register_to_a_workspace: 'S''inscrire à un espace d''activités'
 registered_groups: 'Groupes enregistrés'
 registered_users: 'Utilisateurs enregistrés'
+registration_to_workspaces: 'Inscription à des espaces d''activités'
 remove_group_s_confirm_message: 'groupe(s) supprimé(s)'
 remove_user_s_confirm_message: 'utilisateur(s) supprimé(s)'
 rename: Renommer
 reset: Réinitialiser
+reset_pwd: 'Réinitialisation de votre mot de passe'
+reset_pwd_form_plainPassword_first: "Nouveau mot de passe"
+reset_pwd_form_plainPassword_second : "Répétez le mot de passe"
 resource: Ressource
 resource_action_denied_message: 'L''action %action% n''a pas pu être exécutée sur la resource ''%path%'': accès refusé.'
 resource_creation_denied: 'Vous n''avez pas la permission de créer une ressource dans le répertoire ''%path'': accès refusé.'
@@ -373,6 +382,7 @@ resource_right_form_canExport: Exporter
 resource_right_form_isRecursive: Appliquer au contenu du répertoire et aux sous-répertoires
 restore : Restaurer
 results: Résultats
+results_for_search_on: 'Resultat(s) de la recherche sur'
 rights: Droits
 rights_management: 'Gestion des droits'
 role: Rôle
@@ -380,9 +390,16 @@ roles: Rôles
 save: Sauvegarder
 save_as_template: Sauvegarder comme modèle
 search: Rechercher
+search_group: 'Rechercher un groupe'
+search_user: 'Rechercher un utilisateur'
 see: Voir
 see_more: Voir plus
 select all: 'Tout sélectionner'
+select_groups_for_registration_to_workspace: 'Choississez les groupes à inscrire'
+select_roles_to_assign: 'Selectionnez les Rôles à attribuer'
+select_users_for_registration_to_workspace: 'Choississez les utilisateurs à inscrire'
+select_workspaces_for_registration: 'Choisissez les espaces d''activités pour l''inscription'
+selected_workspaces_for_registration: 'Espaces d''activités sélectionnés pour l''inscription'
 send_mail: 'Envoyer un mail'
 send_message: 'Envoyer un message'
 session_id: 'Identifiant de session'
@@ -394,6 +411,10 @@ show_as: 'Voir en tant que'
 show_profile: 'Voir le profile'
 Show: Afficher
 steal_session: 'Voler la session'
+subscribe_groups: 'Inscrire des groupes'
+subscribe_selected_groups: 'Inscrire les groupes sélectionnés'
+subscribe_selected_users: 'Inscrire les utilisateurs sélectionnés'
+subscribe_users: 'Inscrire des utilisateurs'
 switch: Echanger
 tag: Tag
 tag_children_list: 'Liste des enfants'

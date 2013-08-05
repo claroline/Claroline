@@ -50,8 +50,11 @@ class MultipleIdsConverter implements ParamConverterInterface
             throw new InvalidConfigurationException(InvalidConfigurationException::MISSING_CLASS);
         }
 
-        if ($request->query->has('ids')) {
-            if (is_array($ids = $request->query->get('ids'))) {
+        $options = $configuration->getOptions();
+        $idParameter = isset($options['id']) ? $options['id'] : 'ids';
+
+        if ($request->query->has($idParameter)) {
+            if (is_array($ids = $request->query->get($idParameter))) {
                 try {
                     $entities = $this->om->findByIds($entityClass, $ids);
                     $request->attributes->set($parameter, $entities);

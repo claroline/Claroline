@@ -124,6 +124,15 @@ class RoleManager
         $this->om->flush();
     }
 
+    public function associateRoleToMultipleSubjects(array $subjects, Role $role)
+    {
+        foreach ($subjects as $subject) {
+            $subject->addRole($role);
+            $this->om->persist($subject);
+        }
+        $this->om->flush();
+    }
+
     public function resetRoles(User $user)
     {
         $userRole = $this->roleRepo->findOneByName('ROLE_USER');
@@ -225,6 +234,11 @@ class RoleManager
     public function getAllRoles()
     {
         return $this->roleRepo->findAll();
+    }
+
+    public function getRoleByTranslationKeyAndWorkspace($key, AbstractWorkspace $workspace)
+    {
+        return $this->roleRepo->findOneBy(array('translationKey' => $key, 'workspace' => $workspace));
     }
 
     public function getStringRolesFromCurrentUser()

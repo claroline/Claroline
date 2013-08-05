@@ -72,6 +72,7 @@ done_on: 'done on'
 download: Download
 downloads: Downloads
 edit: Edit
+email_form_mail : 'Enter your email'
 enter_tag_name_message: 'Please enter a tag name'
 export: Export
 fast_answer: 'Fast answer'
@@ -98,6 +99,8 @@ group_form_platformRole: Role
 group_parameter: 'Group parameter'
 groups: Groups
 groups_list: 'Groups list'
+has_been_suscribed_with_role: 'has been suscribed with role'
+has_been_suscribed_with_role_group: 'has been suscribed with role'
 has_not_been_imported: 'has not been imported'
 has_not_been_imported_into_the_group: 'has not been imported into the group'
 history: History
@@ -262,7 +265,9 @@ logout: Logout
 mail: Mail
 mail_form_content: Content
 mail_form_object: Object
-mail_sent : 'A email has been sent to your adress , check your inbox mail and your spam box'
+mail_message : 'You received this message because you asked for a new password. Please click on the link below to reset it. If you did not ask to reset your password please ignore this message.'
+mail_click: 'Click on this link to reset your password'
+mail_sent : 'A email has been sent to your address , check your inbox mail and your spam box'
 manage_rights: 'Manage rights'
 manager: Manager
 media_most_viewed: Most viewed media
@@ -339,10 +344,14 @@ register: Register
 register_to_a_workspace: 'Register to a workspace'
 registered_groups: 'Registered groups'
 registered_users: 'Registered users'
+registration_to_workspaces: 'Registration to workspaces'
 remove_group_s_confirm_message: 'group(s) removed'
 remove_user_s_confirm_message: 'user(s) removed'
 rename: Rename
 reset: Reset
+reset_pwd: 'Reset Your Password'
+reset_pwd_form_plainPassword_first: "New password"
+reset_pwd_form_plainPassword_second : "Repeat the password"
 resource: Resource
 resource_action_denied_message: 'The action %action% couldn''t be done on ''%path%'': acces denied.'
 resource_creation_denied: 'You don''t have the permission to create in the directory ''%path'': access denied'
@@ -373,6 +382,7 @@ resource_right_form_canExport: Export
 resource_right_form_isRecursive: Apply changes to current and sub directories
 restore : Restore
 results: Results
+results_for_search_on: 'Result(s) for search on'
 rights: Rights
 rights_management: 'Rights Management'
 role: Role
@@ -380,9 +390,16 @@ roles: Roles
 save: Save
 save_as_template: Save as template
 search: Search
+search_group: 'Search for a group'
+search_user: 'Search for an user'
 see: See
 see_more: See more
 select all: Select all
+select_groups_for_registration_to_workspace: 'Select groups to register'
+select_roles_to_assign: 'Select roles to assign'
+select_users_for_registration_to_workspace: 'Select users to register'
+select_workspaces_for_registration: 'Select workspaces for registration'
+selected_workspaces_for_registration: 'Selected workspaces for registration'
 send_mail: 'Send a mail'
 send_message: 'Send a message'
 session_id: 'Session id'
@@ -392,6 +409,10 @@ show_as_admin: 'Show as admin'
 show_as_user: 'Show as user'
 show_as: 'Show as'
 show_profile: 'Show profile'
+subscribe_groups: 'Subscribe groups'
+subscribe_selected_groups: 'Subscribe selected groups'
+subscribe_selected_users: 'Subscribe selected users'
+subscribe_users: 'Subscribe users'
 switch: Switch
 tag: Tag
 tag_children_list: 'Tag children list'
