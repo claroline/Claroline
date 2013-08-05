@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/08/05 09:37:37
+ * Generation date: 2013/08/05 10:47:54
  */
-class Version20130805093737 extends AbstractMigration
+class Version20130805104754 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -279,16 +279,18 @@ class Version20130805093737 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_list_type_creation (
+                resource_rights_id INTEGER NOT NULL, 
                 resource_type_id INTEGER NOT NULL, 
-                right_id INTEGER NOT NULL, 
-                PRIMARY KEY(resource_type_id, right_id)
+                PRIMARY KEY(
+                    resource_rights_id, resource_type_id
+                )
             )
         ");
         $this->addSql("
-            CREATE INDEX IDX_84B4BEBA98EC6B7B ON claro_list_type_creation (resource_type_id)
+            CREATE INDEX IDX_84B4BEBA195FBDF1 ON claro_list_type_creation (resource_rights_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_84B4BEBA54976835 ON claro_list_type_creation (right_id)
+            CREATE INDEX IDX_84B4BEBA98EC6B7B ON claro_list_type_creation (resource_type_id)
         ");
         $this->addSql("
             CREATE TABLE claro_resource_type (

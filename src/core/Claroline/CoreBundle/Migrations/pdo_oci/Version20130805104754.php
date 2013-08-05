@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/08/05 09:37:38
+ * Generation date: 2013/08/05 10:47:54
  */
-class Version20130805093737 extends AbstractMigration
+class Version20130805104754 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -503,16 +503,18 @@ class Version20130805093737 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_list_type_creation (
+                resource_rights_id NUMBER(10) NOT NULL, 
                 resource_type_id NUMBER(10) NOT NULL, 
-                right_id NUMBER(10) NOT NULL, 
-                PRIMARY KEY(resource_type_id, right_id)
+                PRIMARY KEY(
+                    resource_rights_id, resource_type_id
+                )
             )
         ");
         $this->addSql("
-            CREATE INDEX IDX_84B4BEBA98EC6B7B ON claro_list_type_creation (resource_type_id)
+            CREATE INDEX IDX_84B4BEBA195FBDF1 ON claro_list_type_creation (resource_rights_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_84B4BEBA54976835 ON claro_list_type_creation (right_id)
+            CREATE INDEX IDX_84B4BEBA98EC6B7B ON claro_list_type_creation (resource_type_id)
         ");
         $this->addSql("
             CREATE TABLE claro_resource_type (
@@ -1971,13 +1973,15 @@ class Version20130805093737 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_list_type_creation 
-            ADD CONSTRAINT FK_84B4BEBA98EC6B7B FOREIGN KEY (resource_type_id) 
-            REFERENCES claro_resource_rights (id)
+            ADD CONSTRAINT FK_84B4BEBA195FBDF1 FOREIGN KEY (resource_rights_id) 
+            REFERENCES claro_resource_rights (id) 
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_list_type_creation 
-            ADD CONSTRAINT FK_84B4BEBA54976835 FOREIGN KEY (right_id) 
-            REFERENCES claro_resource_type (id)
+            ADD CONSTRAINT FK_84B4BEBA98EC6B7B FOREIGN KEY (resource_type_id) 
+            REFERENCES claro_resource_type (id) 
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_resource_type 
@@ -2547,7 +2551,7 @@ class Version20130805093737 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_list_type_creation 
-            DROP CONSTRAINT FK_84B4BEBA98EC6B7B
+            DROP CONSTRAINT FK_84B4BEBA195FBDF1
         ");
         $this->addSql("
             ALTER TABLE claro_resource 
@@ -2555,7 +2559,7 @@ class Version20130805093737 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_list_type_creation 
-            DROP CONSTRAINT FK_84B4BEBA54976835
+            DROP CONSTRAINT FK_84B4BEBA98EC6B7B
         ");
         $this->addSql("
             ALTER TABLE claro_resource_type 
