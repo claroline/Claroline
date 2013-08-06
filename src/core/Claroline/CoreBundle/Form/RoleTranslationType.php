@@ -10,7 +10,7 @@ class RoleTranslationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('translationKey', 'text',  array('required' => true));
+        $builder->add('translationKey', 'text', array('required' => true));
     }
 
     public function getName()
@@ -20,11 +20,6 @@ class RoleTranslationType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver
-        ->setDefaults(
-            array(
-                'translation_domain' => 'platform'
-                )
-        );
+        $resolver->setDefaults(array('translation_domain' => 'platform'));
     }
 }
