@@ -372,7 +372,7 @@ class HomeController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function typeexistAction($name)
+    public function typeExistAction($name)
     {
         if ($this->manager->typeExist($name)) {
             return new Response('true');
@@ -392,7 +392,7 @@ class HomeController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function createtypeAction($name)
+    public function createTypeAction($name)
     {
         try {
             return array('type' => $this->manager->createType($name));
