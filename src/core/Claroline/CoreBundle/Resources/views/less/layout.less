@@ -26,8 +26,39 @@ html, body {
     #grid {
         padding-top: @navbarHeight;
     }
+
+    .impersonalitation-spacer
+    {
+        height:@navbarHeight;
+    }
 }
 
+.impersonalitation-bar
+{
+    top:@navbarHeight;
+    z-index: @zindexDropdown - 1;
+}
+
+.impersonalitation-bar .navbar-inner
+{
+    height: @navbarHeight + 6;
+    padding-top:5px;
+    background:none;
+    #translucent > .background(@linkColor, .5);
+    border:0;
+}
+
+.impersonalitation-bar .navbar-inner .nav li a
+{
+    color:@white;
+    padding-left:2px;
+}
+
+.impersonalitation-close
+{
+    font-weight:bold;
+    font-size:20px;
+}
 @media (max-width: 980px) {
      #top_bar {
         margin-bottom:0 !important;
@@ -37,7 +68,6 @@ html, body {
     {
         padding-left:20px;
     }
-
 }
 
 @media (min-width: 768px) {
@@ -559,7 +589,7 @@ footer {
 .please-wait {
     width:100%;
     position: fixed;
-    z-index: 1050;
+    z-index: @zindexModal;
     top: 10px;
     display: none;
     text-align:center;
@@ -589,6 +619,18 @@ footer {
     top:4px;
 }
 
+.nav.nav-tabs.nav-stacked .nav.nav-tabs.nav-stacked
+{
+    margin:0;
+    padding:0;
+    .border-radius(0);
+}
+
+.nav.nav-tabs.nav-stacked .nav.nav-tabs.nav-stacked li a
+{
+    .border-radius(0);
+    padding-left:30px;
+}
 .sub-section-header
 {
     margin:0;
