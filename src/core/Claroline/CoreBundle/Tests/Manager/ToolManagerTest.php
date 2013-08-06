@@ -298,8 +298,10 @@ class ToolManagerTest extends MockeryTestCase
             )
         );
 
-        $this->roleManager->shouldReceive('getWorkspaceRoles')->with($workspace)->once()->andReturn(array($roleA, $roleB));
-
+        $this->roleManager->shouldReceive('getWorkspaceRoles')
+            ->with($workspace)
+            ->once()
+            ->andReturn(array($roleA, $roleB));
         $this->toolRepo->shouldReceive('countDisplayedToolsByWorkspace')->once()->andReturn(2);
         $this->toolRepo->shouldReceive('findUndisplayedToolsByWorkspace')->once()->andReturn(array($tool));
         $this->orderedToolRepo->shouldReceive('findOneBy')
@@ -339,7 +341,10 @@ class ToolManagerTest extends MockeryTestCase
         );
 
         $this->orderedToolRepo->shouldReceive('findBy')->andReturn(array($ot))->once();
-        $this->roleManager->shouldReceive('getWorkspaceRoles')->with($workspace)->once()->andReturn(array($roleA, $roleB));
+        $this->roleManager->shouldReceive('getWorkspaceRoles')
+            ->with($workspace)
+            ->once()
+            ->andReturn(array($roleA, $roleB));
         $this->assertEquals($expected, $manager->getWorkspaceExistingTools($workspace));
     }
 
@@ -441,8 +446,14 @@ class ToolManagerTest extends MockeryTestCase
         $parameters->shouldReceive('getName')->once()->andReturn('parameters');
 
         $this->toolRepo->shouldReceive('findOneBy')->once()->with(array('name' => 'home'))->andReturn($home);
-        $this->toolRepo->shouldReceive('findOneBy')->once()->with(array('name' => 'resource_manager'))->andReturn($resmanager);
-        $this->toolRepo->shouldReceive('findOneBy')->once()->with(array('name' => 'parameters'))->andReturn($parameters);
+        $this->toolRepo->shouldReceive('findOneBy')
+            ->once()
+            ->with(array('name' => 'resource_manager'))
+            ->andReturn($resmanager);
+        $this->toolRepo->shouldReceive('findOneBy')
+            ->once()
+            ->with(array('name' => 'parameters'))
+            ->andReturn($parameters);
         $manager->shouldReceive('addDesktopTool')->once()->with($home, $user, 1, 'home');
         $manager->shouldReceive('addDesktopTool')->once()->with($resmanager, $user, 2, 'resource_manager');
         $manager->shouldReceive('addDesktopTool')->once()->with($parameters, $user, 3, 'parameters');

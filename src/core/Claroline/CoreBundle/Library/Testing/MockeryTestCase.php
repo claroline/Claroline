@@ -83,6 +83,7 @@ abstract class MockeryTestCase extends \PHPUnit_Framework_TestCase
         // custom __clone implementation (ex: Symfony's Request object)
         if ($rClass->isInternal() || $rClass->hasMethod('__clone')) {
             self::$nonCloneableClasses[] = $class;
+
             return false;
         }
 
