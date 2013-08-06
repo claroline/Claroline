@@ -13,9 +13,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * Controller of the calendar
+ * Controller of the agenda
  */
-class WorkspaceCalendarController extends Controller
+class WorkspaceAgendaController extends Controller
 {
     private $security;
     private $formFactory;
@@ -53,9 +53,9 @@ class WorkspaceCalendarController extends Controller
     public function addEventAction(AbstractWorkspace $workspace)
     {
         $em = $this->getDoctrine()->getManager();
-        $this->checkUserIsAllowed('calendar', $workspace);
+        $this->checkUserIsAllowed('agenda', $workspace);
         $event = new Event();
-        $form = $this->formFactory->create(FormFactory::TYPE_CALENDAR, array(), $event);
+        $form = $this->formFactory->create(FormFactory::TYPE_AGENDA, array(), $event);
         $request = $this->get('request');
 
         if ($request->getMethod() === 'POST') {
@@ -123,11 +123,11 @@ class WorkspaceCalendarController extends Controller
     public function updateAction(AbstractWorkspace $workspace)
     {
         $em = $this->getDoctrine()->getManager();
-        $this->checkUserIsAllowed('calendar', $workspace);
+        $this->checkUserIsAllowed('agenda', $workspace);
         $request = $this->get('request');
         $postData = $request->request->all();
         $event = $em->getRepository('ClarolineCoreBundle:Event')->find($postData['id']);
-        $form = $this->formFactory->create(FormFactory::TYPE_CALENDAR, array(), $event);
+        $form = $this->formFactory->create(FormFactory::TYPE_AGENDA, array(), $event);
 
         if ($request->getMethod() === 'POST') {
 
@@ -174,7 +174,7 @@ class WorkspaceCalendarController extends Controller
     public function deleteAction(AbstractWorkspace $workspace)
     {
         $em = $this->getDoctrine()->getManager();
-        $this->checkUserIsAllowed('calendar', $workspace);
+        $this->checkUserIsAllowed('agenda', $workspace);
         $repository = $em->getRepository('ClarolineCoreBundle:Event');
         $request = $this->get('request');
         $postData = $request->request->all();
@@ -208,7 +208,7 @@ class WorkspaceCalendarController extends Controller
     public function showAction(AbstractWorkspace $workspace)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $this->checkUserIsAllowed('calendar', $workspace);
+        $this->checkUserIsAllowed('agenda', $workspace);
         $listEvents = $em->getRepository('ClarolineCoreBundle:Event')
             ->findbyWorkspaceId($workspace->getId(), false);
         $data = array();
@@ -242,7 +242,7 @@ class WorkspaceCalendarController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $repository = $em->getRepository('ClarolineCoreBundle:Event');
         $event = $repository->find($postData['id']);
-        $this->checkUserIsAllowed('calendar', $event->getWorkspace());
+        $this->checkUserIsAllowed('agenda', $event->getWorkspace());
         // timestamp 1h = 3600
         $newStartDate = $event->getStart()->getTimestamp() + ((3600 * 24) * $postData['dayDelta']);
         $dateStart = new \DateTime(date('d-m-Y', $newStartDate));

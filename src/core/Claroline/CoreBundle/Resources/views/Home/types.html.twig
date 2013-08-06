@@ -3,20 +3,19 @@
         <div class="border span10">
             <input
             type="text"
+            maxlength="200"
             placeholder="{{ "New content page" | trans({}, 'home') }}..."
             class="content-title"
             {% if content is defined %}value="{{ content.title }}"{% endif %}
             >
         </div>
 
-        <a class="btn btn-primary span2">{{ "Create" | trans({}, 'home') }}</a>
+        <a class="btn btn-primary span2 create-type">{{ "Create" | trans({}, 'home') }}</a>
     </div>
     <hr>
 </div>
-
+<div class="content row-fluid">
 {% for type in types %}
-    <div class="alert alert-info">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong><a href="{{ ("type/" ~ type.name) | homeLink }}">{{ type.name }}</a></strong>
-    </div>
+    {% include 'ClarolineCoreBundle:Home:type.html.twig' with {'type' : type } %}
 {% endfor %}
+</div>

@@ -55,7 +55,9 @@ class RegistrationController extends Controller
     {
         $this->checkAccess();
         $user = new User();
+
         $form = $this->get('form.factory')->create(new BaseProfileType(), $user);
+
         $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {

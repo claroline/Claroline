@@ -38,8 +38,12 @@ class Type
     /**
      * Constructor.
      */
-    public function __construct()
+    public function __construct($name = null)
     {
+        if ($name) {
+            $this->setName($name);
+        }
+
         $this->maxContentPage = 100;
     }
 
