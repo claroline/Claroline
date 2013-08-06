@@ -89,11 +89,11 @@ class HomeController
      */
     public function typeAction($type, $father = null, $region = null)
     {
-        $array = $this->manager->contentLayout($type, $father, $region);
+        $layout = $this->manager->contentLayout($type, $father, $region);
 
-        if ($array) {
+        if ($layout) {
 
-            return $this->render('ClarolineCoreBundle:Home:layout.html.twig', $this->renderContent($array));
+            return $this->render('ClarolineCoreBundle:Home:layout.html.twig', $this->renderContent($layout));
         }
 
         return $this->render('ClarolineCoreBundle:Home:error.html.twig', array('path' => $type));
@@ -222,20 +222,20 @@ class HomeController
      *
      * @return array
      */
-    public function renderContent($array)
+    public function renderContent($content)
     {
         $tmp = ' '; // void in case of not yet content
 
-        if (isset($array['content']) and isset($array['type']) and is_array($array['content'])) {
-            foreach ($array['content'] as $content) {
+        if (isset($content['content']) and isset($content['type']) and is_array($content['content'])) {
+            foreach ($content['content'] as $content) {
                 $tmp .= $this->render(
                     'ClarolineCoreBundle:Home/types:'.$content['type'].'.html.twig', $content, true
                 )->getContent();
             }
-            $array['content'] = $tmp;
+            $content['content'] = $tmp;
         }
 
-        return $array;
+        return $content;
     }
 
     /**
@@ -374,7 +374,11 @@ class HomeController
      */
     public function typeexistAction($name)
     {
-        return new Response($this->manager->typeExist($name));
+        if ($this->manager->typeExist($name)) {
+            return new Response('true');
+        }
+
+        return new Response('false');
     }
 
     /**
@@ -391,8 +395,7 @@ class HomeController
     public function createtypeAction($name)
     {
         try {
-            return array("type" => $this->manager->createType($name));
-
+            return array('type' => $this->manager->createType($name));
         } catch (\Exeption $e) {
             return new Response('false'); //useful in ajax
         }
@@ -448,13 +451,12 @@ class HomeController
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function render($template, $array, $default = false)
+    public function render($template, $variables, $default = false)
     {
-
         if ($default) {
             $template = $this->homeService->defaultTemplate($template);
         }
 
-        return new Response($this->templating->render($template, $array));
+        return new Response($this->templating->render($template, $variables));
     }
 }

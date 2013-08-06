@@ -327,10 +327,10 @@ class HomeManager
         $type = $this->type->findOneBy(array('name' => $name));
 
         if (is_object($type)) {
-            return 'true';
+            return true;
         }
 
-        return 'false';
+        return false;
     }
 
     /**
@@ -340,7 +340,7 @@ class HomeManager
      */
     public function deleteType($type)
     {
-        $contents = $this->contentType->findBy(array("type" => $type));
+        $contents = $this->contentType->findBy(array('type' => $type));
 
         foreach ($contents as $content) {
             $this->deleteContent($content->getContent());
