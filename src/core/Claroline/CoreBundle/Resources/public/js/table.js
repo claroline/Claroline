@@ -1,5 +1,9 @@
+/* global createValidationBox */
+/* global ModalWindow */
+/* global ValidationFooter */
+
 (function () {
-    'use_strict';
+    'use strict';
 
     window.Claroline = window.Claroline || {};
     var table = window.Claroline.Table = {};
@@ -22,8 +26,20 @@
      *
      * parameters.route.normal = {'route': 'route_normal', 'parameters': {'workspaceId': workspaceId }}
      * parameters.route.search = {'route': 'route_search', 'parameters': {'workspaceId': workspaceId }}
-     * parameters.route.action.default = {'route': 'route_action', 'parameters': {'workspaceId': workspaceId }, 'type': 'PUT', 'btn'='btn-default', 'confirmTemplate'=temp }
-     * parameters.route.action.other = {'route': 'route_action', 'parameters': {'workspaceId': workspaceId }, 'type': 'PUT', 'btn'='btn-other', 'confirmTemplate'=temp2 }
+     * parameters.route.action.default = {
+     *     'route': 'route_action',
+     *     'parameters': {'workspaceId': workspaceId },
+     *     'type': 'PUT',
+     *     'btn': 'btn-default',
+     *     'confirmTemplate': templateA
+     * }
+     * parameters.route.action.other = {
+     *     'route': 'route_action',
+     *     'parameters': {'workspaceId': workspaceId },
+     *     'type': 'PUT',
+     *     'btn': 'btn-other',
+     *     'confirmTemplate': templateB
+     * }
      */
     table.initialize = function (parameters) {
         var currentAction = '';
@@ -31,19 +47,21 @@
 
         $('#search-button').click(function () {
             var search = document.getElementById('search-items-txt').value;
+            var route;
 
             if (search !== '') {
                 parameters.route.search.parameters.search = search;
-                var route = Routing.generate(parameters.route.search.route, parameters.route.search.parameters);
+                route = Routing.generate(parameters.route.search.route, parameters.route.search.parameters);
             } else {
-                var route = Routing.generate(parameters.route.normal.route, parameters.route.normal.parameters);
+                route = Routing.generate(parameters.route.normal.route, parameters.route.normal.parameters);
             }
 
             window.location.href = route;
         });
 
         for (var key in parameters.route.action) {
-            var btnClass = '.' + (parameters.route.action[key].btn === undefined ? 'action-button': parameters.route.action[key].btn);
+            var btnClass = '.'
+                + (parameters.route.action[key].btn === undefined ? 'action-button': parameters.route.action[key].btn);
             $(btnClass).click(function (e) {
                 currentAction = $(e.currentTarget).attr('data-action');
                 $('.modal.claroline').modal('show');
@@ -53,7 +71,7 @@
             });
         }
 
-        $('#modal-valid-button').on('click', function() {
+        $('#modal-valid-button').on('click', function () {
             var queryString = {};
             var i = 0;
             var array = [];
@@ -62,13 +80,18 @@
                 i++;
             });
             queryString.ids = array;
-            var route = Routing.generate(parameters.route.action[currentAction].route, parameters.route.action[currentAction].parameters);
-            var type =  parameters.route.action[currentAction].type === undefined ? 'GET': parameters.route.action[currentAction].type;
+            var route = Routing.generate(
+                parameters.route.action[currentAction].route,
+                parameters.route.action[currentAction].parameters
+            );
+            var type =  parameters.route.action[currentAction].type === undefined ?
+                'GET':
+                parameters.route.action[currentAction].type;
             route += '?' + $.param(queryString);
             $.ajax({
                 url: route,
                 type: type,
-                success: function() {
+                success: function () {
                     $('.chk-item:checked').each(function (index, element) {
                         $(element).parent().parent().remove();
                     });
@@ -89,7 +112,7 @@
     };
 
     createValidationBox = function() {
-        html = Twig.render(ModalWindow, {'footer': Twig.render(ValidationFooter), 'isHidden': true});
+        var html = Twig.render(ModalWindow, {'footer': Twig.render(ValidationFooter), 'isHidden': true});
         $('body').append(html);
     };
 })();

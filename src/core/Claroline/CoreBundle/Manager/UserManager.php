@@ -156,8 +156,7 @@ class UserManager
 
                 $this->om->persist($newUser);
                 $this->ed->dispatch('log', 'Log\LogUserCreate', array($newUser));
-            }
-            else {
+            } else {
                 $nonImportedUsers[] = array(
                     'username' => $username,
                     'firstName' => $firstName,
