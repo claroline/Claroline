@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Controller\Tool;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 
-class CalendarControllerTest extends FunctionalTestCase
+class AgendaControllerTest extends FunctionalTestCase
 {
     private $logRepository;
 
@@ -23,7 +23,7 @@ class CalendarControllerTest extends FunctionalTestCase
 
         $workspaceId = $this->getWorkspace('ws_a')->getId();
         $this->logUser($this->getUser('ws_creator'));
-        $this->client->request('GET', "/workspaces/{$workspaceId}/open/tool/calendar");
+        $this->client->request('GET', "/workspaces/{$workspaceId}/open/tool/agenda");
         $status = $this->client->getResponse()->getStatusCode();
         $this->assertEquals(200, $status);
 
@@ -36,20 +36,20 @@ class CalendarControllerTest extends FunctionalTestCase
             null,
             null,
             null,
-            'calendar'
+            'agenda'
         );
         $this->assertEquals(1, count($logs));
     }
 
-    public function testShowWorkspaceCalendar()
+    public function testShowWorkspaceAgenda()
     {
         $workspaceId = $this->getWorkspace('ws_a')->getId();
         $this->logUser($this->getUser('ws_creator'));
         $this->client->request(
             'POST',
-            "/workspaces/tool/calendar/{$workspaceId}/add",
+            "/workspaces/tool/agenda/{$workspaceId}/add",
             array(
-                'calendar_form' => array(
+                'agenda_form' => array(
                     'title' => 'foo',
                     'end' => '22-02-2013',
                     'description' => 'ghhkkgf',
@@ -59,20 +59,20 @@ class CalendarControllerTest extends FunctionalTestCase
                 'date' => 'Thu Jan 24 2013 00:00:00 GMT+0100'
             )
         );
-        $status = $this->client->request('GET', "/workspaces/tool/calendar/{$workspaceId}/show");
+        $status = $this->client->request('GET', "/workspaces/tool/agenda/{$workspaceId}/show");
         $status = $this->client->getResponse()->getStatusCode();
         $this->assertEquals(200, $status);
     }
 
-    public function testAddEventCalendar()
+    public function testAddEventAgenda()
     {
         $workspaceId = $this->getWorkspace('ws_a')->getId();
         $this->logUser($this->getUser('ws_creator'));
         $this->client->request(
             'POST',
-            "/workspaces/tool/calendar/{$workspaceId}/add",
+            "/workspaces/tool/agenda/{$workspaceId}/add",
             array(
-                'calendar_form' => array(
+                'agenda_form' => array(
                     'title' => 'foo',
                     'end' => '22-02-2013',
                     'description' => 'ghhkkgf',
@@ -87,15 +87,15 @@ class CalendarControllerTest extends FunctionalTestCase
         $this->assertEquals(200, $status);
     }
 
-    public function testDeleteEventCalendar()
+    public function testDeleteEventAgenda()
     {
         $workspaceId = $this->getWorkspace('ws_a')->getId();
         $this->logUser($this->getUser('ws_creator'));
         $this->client->request(
             'POST',
-            "/workspaces/tool/calendar/{$workspaceId}/add",
+            "/workspaces/tool/agenda/{$workspaceId}/add",
             array(
-                'calendar_form' => array(
+                'agenda_form' => array(
                     'title' => 'foo',
                     'description' => 'ghhkkgf',
                     'end' => '22-02-2013',
@@ -109,7 +109,7 @@ class CalendarControllerTest extends FunctionalTestCase
         $data = json_decode($data, true);
         $this->client->request(
             'POST',
-            "/workspaces/tool/calendar/{$workspaceId}/delete",
+            "/workspaces/tool/agenda/{$workspaceId}/delete",
             array(
                 'id' => $data['id']
             )
@@ -120,15 +120,15 @@ class CalendarControllerTest extends FunctionalTestCase
 
     }
 
-    public function testMoveEventCalendar()
+    public function testMoveEventAgenda()
     {
         $workspaceId = $this->getWorkspace('ws_a')->getId();
         $this->logUser($this->getUser('ws_creator'));
         $this->client->request(
             'POST',
-            "/workspaces/tool/calendar/{$workspaceId}/add",
+            "/workspaces/tool/agenda/{$workspaceId}/add",
             array(
-                'calendar_form' => array(
+                'agenda_form' => array(
                     'title' => 'foo',
                     'description' => 'ghhkkgf',
                     'end' => '22-02-2013',
@@ -145,7 +145,7 @@ class CalendarControllerTest extends FunctionalTestCase
         );
         $this->client->request(
             'POST',
-            "/workspaces/tool/calendar/move",
+            "/workspaces/tool/agenda/move",
             $dataForm
         );
 
@@ -160,9 +160,9 @@ class CalendarControllerTest extends FunctionalTestCase
         $this->logUser($this->getUser('ws_creator'));
         $this->client->request(
             'POST',
-            "/workspaces/tool/calendar/{$workspaceId}/add",
+            "/workspaces/tool/agenda/{$workspaceId}/add",
             array(
-                'calendar_form' => array(
+                'agenda_form' => array(
                     'title' => 'foo',
                     'description' => 'ghhkkgf',
                     'end' => '22-02-2013',
@@ -177,9 +177,9 @@ class CalendarControllerTest extends FunctionalTestCase
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->client->request(
             'POST',
-            "/workspaces/tool/calendar/{$workspaceId}/update",
+            "/workspaces/tool/agenda/{$workspaceId}/update",
             array(
-                'calendar_form' => array(
+                'agenda_form' => array(
                     'title' => 'foo',
                     'description' => 'ghhkkgf',
                     'end' => '22-02-2013',

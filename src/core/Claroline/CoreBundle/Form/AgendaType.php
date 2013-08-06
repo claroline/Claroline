@@ -7,7 +7,7 @@ use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class CalendarType extends AbstractType
+class AgendaType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -61,7 +61,7 @@ class CalendarType extends AbstractType
 
     public function getName()
     {
-        return 'calendar_form';
+        return 'agenda_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -75,7 +75,7 @@ class CalendarType extends AbstractType
                 'workspace' => new SimpleWorkspace() ,
                 'user' => new \Claroline\CoreBundle\Entity\User(),
                 'class' => 'Claroline\CoreBundle\Entity\Event',
-                'translation_domain' => 'calendar'
+                'translation_domain' => 'agenda'
                 )
         )
         ->setRequired(

@@ -21,7 +21,7 @@ use Claroline\CoreBundle\DataFixtures\Demo\LoadActivityData;
 use Claroline\CoreBundle\DataFixtures\Demo\LoadShortcutData;
 use Claroline\CoreBundle\DataFixtures\Demo\LoadContentData;
 use Claroline\CoreBundle\DataFixtures\Demo\LoadTypeData;
-use Claroline\CoreBundle\DataFixtures\Demo\LoadRegionData;;
+use Claroline\CoreBundle\DataFixtures\Demo\LoadRegionData;
 use Claroline\ForumBundle\Tests\DataFixtures\LoadForumData;
 
 class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
