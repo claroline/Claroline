@@ -122,9 +122,9 @@ class LogListener
             }
 
             if ($event->getWorkspace() !== null) {
-                $workspaceRole = $this->roleManager->getWorkspaceRoleForUser($doer, $event->getWorkspace());
+                $workspaceRoles = $this->roleManager->getWorkspaceRolesForUser($doer, $event->getWorkspace());
 
-                if ($workspaceRole != null) {
+                foreach ($workspaceRoles as $workspaceRole) {
                     $log->addDoerWorkspaceRole($workspaceRole);
                 }
             }

@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Link extends AbstractResource
 {
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column()
      */
     protected $url;
 

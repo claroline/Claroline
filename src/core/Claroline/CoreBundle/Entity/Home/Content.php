@@ -12,17 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Content
 {
-    public function __construct()
-    {
-        $this->created = new \Datetime();
-        $this->modified = new \Datetime();
-    }
-
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
+     * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
@@ -30,14 +24,14 @@ class Content
     /**
      * @var string
      *
-     * @ORM\Column(name="title", type="string", length=255, nullable=true)
+     * @ORM\Column(length=255, nullable=true)
      */
     private $title;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="content", type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $content;
 
@@ -51,14 +45,14 @@ class Content
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="created", type="datetime")
+     * @ORM\Column(type="datetime")
      */
     private $created;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="modified", type="datetime")
+     * @ORM\Column(type="datetime")
      */
     private $modified;
 
@@ -70,6 +64,15 @@ class Content
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->created = new \Datetime();
+        $this->modified = new \Datetime();
     }
 
     /**

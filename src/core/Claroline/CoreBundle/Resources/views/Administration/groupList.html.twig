@@ -25,20 +25,41 @@
     {% endif %}
 {% endmacro %}
 
+{% macro displayControls(workspaceId) %}
+    {% if app.user %}
+        <button class="btn btn-secondary action-button" data-action="remove">
+            <i class="icon-trash"></i>
+            {{ 'delete'|trans({}, 'platform') }}
+        </button>
+    {% endif %}
+{% endmacro %}
+
 {% from _self import renderPager %}
+{% from _self import displayControls %}
 
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
 {% block javascripts %}
     {{ parent() }}
     {% javascripts
-       vars=["locale"]
-      "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/removeGroupConfirm.html.twigjs"
-       filter="twig_js"
+        vars=["locale"]
+        "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/removeGroupConfirm.html.twigjs"
+        "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
+        "@ClarolineCoreBundle/Resources/views/Modal/validationFooter.html.twigjs"
+        filter="twig_js"
     %}
     <script language="javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
-    <script src='{{ asset('bundles/clarolinecore/js/administration/groupList.js') }}' type="text/javascript"></script>
+    <script src='{{ asset('bundles/clarolinecore/js/table.js') }}' type="text/javascript"></script>
+    <script>
+        parameters = {};
+        parameters.route = {};
+        parameters.route.action = {};
+        parameters.route.normal = {"route": "claro_admin_group_list", "parameters": {}};
+        parameters.route.search = {"route": "claro_admin_group_list_search", "parameters": {}};
+        parameters.route.action.remove = {"route": "claro_admin_multidelete_group", "parameters": {}, "type": "DELETE", "confirmTemplate": removeGroupConfirm};
+        Claroline.Table.initialize(parameters);
+    </script>
 {% endblock %}
 
 {% block section_content %}
@@ -54,11 +75,10 @@
             ])
         }}
         <div class="search-bar">
-            <button class="btn btn-secondary delete-groups-button pull-left"><i class="icon-trash"></i> {{ 'delete'|trans({}, 'platform') }}</button>
-
+            {{ displayControls(workspace.getId()) }}
             <div class="input-append pull-right">
-                <input class="input-medium" type="text" id="search-group-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
-                <button class="filter btn" type="button" id="search-group-button">
+                <input class="input-medium" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
+                <button class="filter btn" type="button" id="search-button">
                     <i class="icon-search"></i>
                 </button>
             </div>
@@ -74,7 +94,7 @@
                     <th>{{ 'name'|trans({}, 'platform') }}</th>
                     <th>{{ 'users'|trans({}, 'platform') }}</th>
                     <th>{{ 'settings'|trans({}, 'platform') }}</th>
-                    <th></th>
+                    <th> <input type="checkbox" name="all" id="check-all-items"></input> </th>
                 </tr>
             </thead>
             <tbody id="group-table-body">
@@ -88,7 +108,7 @@
                             <a href="{{ path('claro_admin_group_settings_form', {'groupId': group.getId()}) }}" id="link-settings-{{ group.getId() }}">{{ 'settings'|trans({}, 'platform') }}</a>
                         </td>
                         <td>
-                            <input type="checkbox" class="chk-group" value="{{ group.getId() }}"></input>
+                            <input type="checkbox" class="chk-item" value="{{ group.getId() }}"></input>
                         </td>
                     </tr>
                 {% endfor %}
@@ -97,18 +117,6 @@
         </div>
             {{ renderPager(search, pager) }}
         <div>
-        <button class="btn btn-secondary delete-groups-button"><i class="icon-trash"></i> {{ 'delete'|trans({}, 'platform') }}</button>
-    </div>
-     <!-------------- modal box ------------------------------------------------>
-    <div id="validation-box" class="modal hide fade">
-        <div class="modal-header">
-        </div>
-        <div class="modal-body" id="modal-body">
-            <div id="validation-box-body"></div>
-        </div>
-        <div class="modal-footer">
-            <input type="button" id="modal-valid-button" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-            <input type="button" id="modal-cancel-button" class="btn btn-secondary" value="{{ 'cancel'|trans({}, 'platform') }}"/>
-        </div>
+        {{ displayControls(workspace.getId()) }}
     </div>
 {% endblock %}

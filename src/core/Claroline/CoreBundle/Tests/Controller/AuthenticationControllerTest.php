@@ -3,6 +3,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use \Mockery as m;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
 
 class AuthenticationControllerTest extends MockeryTestCase
 {
@@ -13,6 +14,7 @@ class AuthenticationControllerTest extends MockeryTestCase
     private $om;
     private $mailer;
     private $translator;
+    private $formFactory;
 
     protected function setUp()
     {
@@ -24,6 +26,7 @@ class AuthenticationControllerTest extends MockeryTestCase
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
         $this->mailer = $this->mock('Swift_Mailer');
         $this->translator = $this->mock('Symfony\Component\Translation\Translator');
+        $this->formFactory = $this->mock('Claroline\CoreBundle\Form\Factory\FormFactory');
         $this->controller = new AuthenticationController(
             $this->request,
             $this->userManager,
@@ -31,14 +34,28 @@ class AuthenticationControllerTest extends MockeryTestCase
             $this->om,
             $this->mailer,
             $this->router,
-            $this->translator
+            $this->translator,
+            $this->formFactory
         );
     }
 
     public function testSendEmailAction()
     {
         $user = $this->mock('Claroline\CoreBundle\Entity\User');
-        $this->request->shouldReceive('get')->once()->with('email')->andReturn('toto@claroline.com');
+        $form = $this->mock('Symfony\Component\Form\Form');
+        $this->formFactory->shouldReceive('create')
+            ->once()
+            ->with(FormFactory::TYPE_USER_EMAIL, array(), null)
+            ->andReturn($form);
+        $form->shouldReceive('handleRequest')
+            ->with($this->request)
+            ->once();
+        $form->shouldReceive('isValid')
+            ->once()
+            ->andReturn(true);
+        $form->shouldReceive('getData')
+            ->once()
+            ->andReturn(array('mail' => 'toto@claroline.com'));
         $this->userManager->shouldReceive('getUserByEmail')
             ->once()
             ->with('toto@claroline.com')
@@ -60,12 +77,19 @@ class AuthenticationControllerTest extends MockeryTestCase
             ->once()
             ->with('claro_security_reset_password', array('hash' => '123'))
             ->andReturn('/reset/123');
+        $this->translator->shouldReceive('trans')->once()->with('mail_click', array(), 'platform')->andReturn('blabla');
+        $this->translator->shouldReceive('trans')->once()->with('reset_pwd', array(), 'platform')->andReturn('reset');
         $this->mailer->shouldReceive('send')->once()->with(m::on(function ($message) {
-            return $message->getSubject() === 'Reset Your Password'
+            return $message->getSubject() === 'reset'
                 && $message->getFrom() === array('noreply@claroline.net' => null)
                 && $message->getTo() === array('toto@claroline.com' => null)
-                && $message->getBody() === '<p><a href="http://jorgeaimejquery/reset/123"/>Click me</a></p>';
-        }));
-        $this->assertEquals(array('user' => $user), $this->controller->sendEmailAction());
+                && $message->getBody() === '<p><a href="http://jorgeaimejquery/reset/123"/>blabla</a></p>';
+            }
+        )
+        );
+        $form->shouldReceive('createView')
+            ->once()
+            ->andReturn('view');
+        $this->assertEquals(array('user' => $user, 'form' => 'view'), $this->controller->sendEmailAction());
     }
 }
