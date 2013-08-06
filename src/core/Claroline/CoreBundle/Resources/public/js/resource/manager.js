@@ -163,14 +163,12 @@
                     }
                 },
                 'click a.copy': function () {
-                    if (!(this.$('a.copy').hasClass('disabled'))
-                        && _.size(this.checkedResources.resources) > 0) {
+                    if (!(this.$('a.copy').hasClass('disabled')) && _.size(this.checkedResources.resources) > 0) {
                         this.setPasteBinState(true, false);
                     }
                 },
                 'click a.cut': function () {
-                    if (!(this.$('a.cut').hasClass('disabled'))
-                        && _.size(this.checkedResources.resources) > 0) {
+                    if (!(this.$('a.cut').hasClass('disabled')) && _.size(this.checkedResources.resources) > 0) {
                         this.setPasteBinState(true, true);
                     }
                 },
@@ -296,7 +294,11 @@
                         if (this.checkedResources.resources.hasOwnProperty(event.resource.id)) {
                             delete this.checkedResources.resources[event.resource.id];
                         } else {
-                            this.checkedResources.resources[event.resource.id] = [event.resource.name, event.resource.type,event.resource.mimeType];
+                            this.checkedResources.resources[event.resource.id] = [
+                                event.resource.name,
+                                event.resource.type,
+                                event.resource.mimeType
+                            ];
                         }
 
                         this.checkedResources.directoryId = this.currentDirectory.id;
@@ -811,10 +813,10 @@
                 }
             }
         },
-        setFilterState: function(type) {
+        setFilterState: function (type) {
             $('.resource-thumbnail').show();
             if (type !== 'none') {
-                $.each($('.resource-element'), function(key, element) {
+                $.each($('.resource-element'), function (key, element) {
                     if ($(element).attr('data-type') !== type && $(element).attr('data-type') !== 'directory') {
                         $(element.parentElement).hide();
                     }
@@ -1066,12 +1068,8 @@
         open: function (resourceType, resourceId, directoryHistory) {
             var _path = '';
             for (var i = 0; i < directoryHistory.length; i++) {
-                    if (directoryHistory[i].id !== 0) {
-                    if (i === 0) {
-                        _path += '?';
-                    } else {
-                        _path += '&';
-                    }
+                if (directoryHistory[i].id !== 0) {
+                    _path += i === 0 ? '?' : '&';
                     _path += '_breadcrumbs[]=' + directoryHistory[i].id;
                 }
             }

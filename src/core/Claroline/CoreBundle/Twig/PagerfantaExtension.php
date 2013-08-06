@@ -45,12 +45,15 @@ class PagerfantaExtension extends P
      */
     public function renderPagerfanta(PagerfantaInterface $pagerfanta, $viewName = null, array $options = array())
     {
-        $options = array_replace(array(
-            'routeName'     => null,
-            'routeParams'   => array(),
-            'pageParameter' => '[page]',
-            'queryString' => null
-        ), $options);
+        $options = array_replace(
+            array(
+                'routeName' => null,
+                'routeParams' => array(),
+                'pageParameter' => '[page]',
+                'queryString' => null
+            ),
+            $options
+        );
 
         if (null === $viewName) {
             $viewName = $this->container->getParameter('white_october_pagerfanta.default_view');
@@ -72,19 +75,20 @@ class PagerfantaExtension extends P
         $routeName = $options['routeName'];
         $routeParams = $options['routeParams'];
         $pagePropertyPath = new PropertyPath($options['pageParameter']);
-        $routeGenerator = function($page) use($router, $routeName, $routeParams, $pagePropertyPath, $options) {
+        $routeGenerator = function ($page) use ($router, $routeName, $routeParams, $pagePropertyPath, $options) {
             $propertyAccessor = PropertyAccess::getPropertyAccessor();
             $propertyAccessor->setValue($routeParams, $pagePropertyPath, $page);
 
             $url = $router->generate($routeName, $routeParams);
 
             if ($options['queryString']) {
-               $url .= '?' . $options['queryString'];
+                $url .= '?' . $options['queryString'];
             }
 
             return $url;
         };
 
-        return $this->container->get('white_october_pagerfanta.view_factory')->get($viewName)->render($pagerfanta, $routeGenerator, $options);
+        return $this->container->get('white_october_pagerfanta.view_factory')
+            ->get($viewName)->render($pagerfanta, $routeGenerator, $options);
     }
 }
