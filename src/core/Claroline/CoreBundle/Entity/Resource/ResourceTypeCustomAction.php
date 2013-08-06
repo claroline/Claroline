@@ -18,12 +18,12 @@ class ResourceTypeCustomAction
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(nullable=true)
      */
     protected $action;
 
     /**
-     * @ORM\Column(type="boolean", name="async", nullable=true)
+     * @ORM\Column(name="async", type="boolean", nullable=true)
      */
     protected $isAsync;
 
@@ -33,7 +33,7 @@ class ResourceTypeCustomAction
      *     inversedBy="customActions",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id", nullable=false, onDelete="SET NULL")
+     * @ORM\JoinColumn(name="resource_type_id", onDelete="SET NULL")
      */
     protected $resourceType;
 

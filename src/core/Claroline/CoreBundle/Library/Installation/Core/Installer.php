@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Library\Installation\Core;
 
 use Symfony\Component\HttpKernel\Kernel;
-use Claroline\CoreBundle\Library\Installation\BundleMigrator;
+use Claroline\MigrationBundle\Migrator\Migrator;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -17,10 +17,10 @@ class Installer
     /**
      * @DI\InjectParams({
      *     "kernel" = @DI\Inject("kernel"),
-     *     "migrator" = @DI\Inject("claroline.install.bundle_migrator")
+     *     "migrator" = @DI\Inject("claroline.migration.migrator")
      * })
      */
-    public function __construct(Kernel $kernel, BundleMigrator $migrator)
+    public function __construct(Kernel $kernel, Migrator $migrator)
     {
         $this->kernel = $kernel;
         $this->migrator = $migrator;
@@ -41,7 +41,7 @@ class Installer
         $bundles = $this->getRegisteredCoreBundles();
 
         foreach ($bundles as $bundle) {
-            $this->migrator->createSchemaForBundle($bundle);
+            $this->migrator->migrate($bundle, Migrator::VERSION_FARTHEST, Migrator::DIRECTION_UP);
         }
     }
 
@@ -50,7 +50,7 @@ class Installer
         $bundles = $this->getRegisteredCoreBundles();
 
         foreach ($bundles as $bundle) {
-            $this->migrator->dropSchemaForBundle($bundle);
+            $this->migrator->migrate($bundle, Migrator::VERSION_FARTHEST, Migrator::DIRECTION_DOWN);
         }
     }
 
