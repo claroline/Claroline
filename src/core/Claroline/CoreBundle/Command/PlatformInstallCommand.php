@@ -37,25 +37,29 @@ class PlatformInstallCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $translator = $this->getContainer()->get('translator');
+        $translator->setLocale(
+            $this->getContainer()->get('claroline.config.platform_config_handler')->getParameter('locale_language')
+        );
         $kernel = $this->getApplication()->getKernel();
         $environment = $kernel->getEnvironment();
         $fileSystem = new Filesystem();
         $output->writeln("Generating default {$environment} template...");
         $templateDirectory = $this->getContainer()->getParameter('claroline.param.templates_directory');
         $defaultPath = "{$templateDirectory}default.zip";
-        TemplateBuilder::buildDefault($defaultPath);
+        TemplateBuilder::buildDefault($defaultPath, $translator);
 
         if ($environment === 'test') {
             // save a copy of the original default config
             $configPath = "{$templateDirectory}config.yml";
-            file_put_contents($configPath, Yaml::dump(TemplateBuilder::getDefaultConfig(), 10));
+            file_put_contents($configPath, Yaml::dump(TemplateBuilder::getDefaultConfig($translator), 10));
             // create a test template with additional resources
             $complexArchive = "{$templateDirectory}complex.zip";
             $fileSystem->copy("{$templateDirectory}default.zip", $complexArchive);
             $archive = new \ZipArchive();
             $archive->open($complexArchive);
             $tmpFile = tempnam(sys_get_temp_dir(), 'tmp');
-            $templateBuilder = new TemplateBuilder($archive, TemplateBuilder::getDefaultConfig());
+            $templateBuilder = new TemplateBuilder($archive, TemplateBuilder::getDefaultConfig($translator));
             $templateBuilder->addFile($tmpFile, 'empty', 'empty.txt', 1, 2)
                 ->addDirectory('main dir', 3)
                 ->addFile($tmpFile, 'empty2', 'empty2.txt', 3, 4)
