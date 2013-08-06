@@ -131,7 +131,7 @@ class Log
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $role;
-    
+
     /**
      * Constructor
      */
