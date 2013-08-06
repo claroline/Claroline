@@ -34,7 +34,10 @@ class RoleListener
         $subRequest = $this->request->duplicate(
             array(),
             null,
-            array("_controller" => 'ClarolineCoreBundle:Tool\Roles:configureRolePage', 'workspace' => $event->getWorkspace())
+            array(
+                '_controller' => 'ClarolineCoreBundle:Tool\Roles:configureRolePage',
+                'workspace' => $event->getWorkspace()
+            )
         );
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setContent($response->getContent());
