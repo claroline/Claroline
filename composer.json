@@ -24,6 +24,14 @@
         "doctrine/doctrine-fixtures-bundle": "dev-master",
         "friendsofsymfony/jsrouting-bundle": "dev-master",
         "stfalcon/tinymce-bundle": "dev-master",
+
+
+
+        "claroline/core-bundle": "dev-master",
+        "stefk/test-plugin-bundle": "dev-master",
+
+
+
         "claroline/front-end-bundle": "dev-master",
         "claroline/taxonomy-bundle": "dev-master",
         "claroline/migration-bundle": "dev-master",
