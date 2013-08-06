@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Manager;
 use \Mockery as m;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Manager\HomeManager;
+use Claroline\CoreBundle\Entity\Home\Type;
 
 class HomeManagerTest extends MockeryTestCase
 {
@@ -47,7 +48,7 @@ class HomeManagerTest extends MockeryTestCase
         );
     }
 
-    public function testgetContent()
+    public function testGetContent()
     {
         $this->repository->shouldReceive('findOneBy')->once()->andReturn($this->contentType);
         $this->type->shouldReceive('getName')->once();
@@ -58,7 +59,7 @@ class HomeManagerTest extends MockeryTestCase
         );
     }
 
-    public function testcontentLayout()
+    public function testContentLayout()
     {
         $this->repository->shouldReceive('findOneBy')->once()->andReturn($this->type);
         $this->repository->shouldReceive('find')->once()->andReturn($this->content);
@@ -72,7 +73,7 @@ class HomeManagerTest extends MockeryTestCase
         $this->assertEquals(array(), $this->homeManager->contentLayout('home', 1, 'left'));
     }
 
-    public function testgetContentByType()
+    public function testGetContentByType()
     {
         $this->repository->shouldReceive('findOneBy')->once()->andReturn($this->type);
         $this->repository->shouldReceive('find')->once()->andReturn($this->content);
@@ -86,26 +87,26 @@ class HomeManagerTest extends MockeryTestCase
         $this->assertEquals(array(array()), $this->homeManager->getContentByType('home', 1, 'left'));
     }
 
-    public function testgetRegionContents()
+    public function testGetRegionContents()
     {
         $this->repository->shouldReceive('findAll')->once()->andReturn($this->region);
         $this->assertEquals(array(), $this->homeManager->getRegionContents());
     }
 
-    public function testgetTypes()
+    public function testGetTypes()
     {
         $this->repository->shouldReceive('findAll')->once()->andReturn($this->type);
         $this->assertEquals($this->type, $this->homeManager->getTypes());
     }
 
-    public function testgetGraph()
+    public function testGetGraph()
     {
         $array = array('type' => 'video');
         $this->graph->shouldReceive('get')->once()->andReturn($array);
         $this->assertEquals($array, $this->homeManager->getGraph('http://youtu.be/tmauTTi7awA'));
     }
 
-    public function testcreateContent()
+    public function testCreateContent()
     {
         $this->manager->shouldReceive('persist')->times(2);
         $this->manager->shouldReceive('flush')->once();
@@ -115,7 +116,7 @@ class HomeManagerTest extends MockeryTestCase
         $this->assertEquals(null, $this->homeManager->createContent('title', 'some content', 'foo', 'home', 1));
     }
 
-    public function testupdateContent()
+    public function testUpdateContent()
     {
         $this->manager->shouldReceive('persist')->times(2);
         $this->manager->shouldReceive('flush')->once();
@@ -130,7 +131,7 @@ class HomeManagerTest extends MockeryTestCase
         );
     }
 
-    public function testreorderContent()
+    public function testReorderContent()
     {
         $this->repository->shouldReceive('findOneBy')->times(2)->andReturn($this->contentType);
         $this->contentType->shouldReceive('detach')->once();
@@ -142,7 +143,7 @@ class HomeManagerTest extends MockeryTestCase
         $this->assertEquals(null, $this->homeManager->reorderContent($this->type, $this->content, $this->content));
     }
 
-    public function testdeleteContent()
+    public function testDeleteContent()
     {
         $this->repository->shouldReceive('findBy')->times(4)->andReturn(
             $this->contentType, $this->subContent, $this->subContent, $this->contentType
@@ -152,13 +153,37 @@ class HomeManagerTest extends MockeryTestCase
         $this->assertEquals(null, $this->homeManager->deleteContent($this->content));
     }
 
-    public function testdeleNodeEntity()
+    public function testDeleteType()
+    {
+        $this->repository->shouldReceive('findBy')->times(4)->andReturn(
+            $this->contentType, $this->subContent, $this->subContent, $this->contentType
+        );
+        $this->manager->shouldReceive('remove')->once();
+        $this->manager->shouldReceive('flush')->once();
+        $this->assertEquals(null, $this->homeManager->deleteType($this->type));
+    }
+
+    public function testCreateType()
+    {
+        $this->repository->shouldReceive('findOneBy')->once();
+        $this->manager->shouldReceive('persist')->once();
+        $this->manager->shouldReceive('flush')->once();
+        $this->assertEquals(new Type('home'), $this->homeManager->createType('home'));
+    }
+
+    public function testTypeExist()
+    {
+        $this->repository->shouldReceive('findOneBy')->once();
+        $this->assertEquals(false, $this->homeManager->typeExist('home'));
+    }
+
+    public function testDeleNodeEntity()
     {
         $this->repository->shouldReceive('findBy')->once()->andReturn($this->contentType);
         $this->assertEquals(null, $this->homeManager->deleNodeEntity($this->repository, array('id' => 1), null));
     }
 
-    public function testcontentToRegion()
+    public function testContentToRegion()
     {
         $this->repository->shouldReceive('findOneBy')->once()->andReturn($this->contentRegion);
         $this->manager->shouldReceive('persist')->once();
@@ -167,13 +192,13 @@ class HomeManagerTest extends MockeryTestCase
         $this->assertEquals(null, $this->homeManager->contentToRegion($this->region, $this->content));
     }
 
-    public function testgetCreator()
+    public function testGetCreator()
     {
         $this->homeService->shouldReceive('isDefinedPush')->once()->andReturn(array());
         $this->assertEquals(array(), $this->homeManager->getCreator('home', null, null, null));
     }
 
-    public function testgetMenu()
+    public function testGetMenu()
     {
         $this->homeService->shouldReceive('isDefinedPush')->once()->andReturn(array());
         $this->assertEquals(array(), $this->homeManager->getMenu(1, 'span12', 'home', null));

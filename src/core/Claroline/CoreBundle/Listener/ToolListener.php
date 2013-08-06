@@ -95,13 +95,13 @@ class ToolListener
     }
 
     /**
-     * @DI\Observe("open_tool_workspace_calendar")
+     * @DI\Observe("open_tool_workspace_agenda")
      *
      * @param DisplayToolEvent $event
      */
-    public function onDisplayWorkspaceCalendar(DisplayToolEvent $event)
+    public function onDisplayWorkspaceAgenda(DisplayToolEvent $event)
     {
-        $event->setContent($this->workspaceCalendar($event->getWorkspace()->getId()));
+        $event->setContent($this->workspaceAgenda($event->getWorkspace()->getId()));
     }
 
     /**
@@ -125,13 +125,13 @@ class ToolListener
     }
 
     /**
-     * @DI\Observe("open_tool_desktop_calendar")
+     * @DI\Observe("open_tool_desktop_agenda")
      *
      * @param DisplayToolEvent $event
      */
-    public function onDisplayDesktopCalendar(DisplayToolEvent $event)
+    public function onDisplayDesktopAgenda(DisplayToolEvent $event)
     {
-        $event->setContent($this->desktopCalendar());
+        $event->setContent($this->desktopAgenda());
     }
 
     /**
@@ -181,15 +181,15 @@ class ToolListener
         );
     }
 
-    public function workspaceCalendar($workspaceId)
+    public function workspaceAgenda($workspaceId)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
-        $form = $this->formFactory->create(FormFactory::TYPE_CALENDAR);
+        $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
         $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspaceId, true);
 
         return $this->templating->render(
-            'ClarolineCoreBundle:Tool/workspace/calendar:calendar.html.twig',
+            'ClarolineCoreBundle:Tool/workspace/agenda:agenda.html.twig',
             array('workspace' => $workspace,
                 'form' => $form->createView(),
                 'listEvents' => $listEvents )
@@ -207,10 +207,10 @@ class ToolListener
         );
     }
 
-    public function desktopCalendar()
+    public function desktopAgenda()
     {
         $event = new Event();
-        $form = $this->formFactory->create(FormFactory::TYPE_CALENDAR, array(), $event);
+        $form = $this->formFactory->create(FormFactory::TYPE_AGENDA, array(), $event);
         $em = $this->container-> get('doctrine.orm.entity_manager');
         $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findAll();
         $cours = array();
@@ -220,7 +220,7 @@ class ToolListener
         }
 
         return $this->templating->render(
-            'ClarolineCoreBundle:Tool/desktop/calendar:calendar.html.twig',
+            'ClarolineCoreBundle:Tool/desktop/agenda:agenda.html.twig',
             array(
                 'form' => $form->createView(),
                 'listEvents' => $listEvents,
