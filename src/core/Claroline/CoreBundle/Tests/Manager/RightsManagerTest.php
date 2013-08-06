@@ -207,7 +207,9 @@ class RightsManagerTest extends MockeryTestCase
             'ROLE_WS_MANAGER' => array('perms' => 'perms')
         );
 
-        $this->roleManager->shouldReceive('getRoleBaseName')->with('ROLE_WS_MANAGER_GUID')->andReturn('ROLE_WS_MANAGER');
+        $this->roleManager->shouldReceive('getRoleBaseName')
+            ->with('ROLE_WS_MANAGER_GUID')
+            ->andReturn('ROLE_WS_MANAGER');
         $role->shouldReceive('getName')->andReturn('ROLE_WS_MANAGER_GUID');
 
         $result = array('ROLE_WS_MANAGER' => array('perms' => 'perms', 'role' => $role));

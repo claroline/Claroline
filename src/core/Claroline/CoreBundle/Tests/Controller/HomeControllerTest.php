@@ -37,7 +37,7 @@ class HomeControllerTest extends MockeryTestCase
     }
 
     //@TODO test with father not null
-    public function testcontentAction()
+    public function testContentAction()
     {
         $this->type->shouldReceive('getName')->once();
         $this->manager->shouldReceive('getContent')->once()->andReturn(array());
@@ -46,7 +46,7 @@ class HomeControllerTest extends MockeryTestCase
         $this->assertEquals(new Response, $this->controller->contentAction($this->content, $this->type, null));
     }
 
-    public function testhomeAction()
+    public function testHomeAction()
     {
         $this->manager->shouldReceive('getRegionContents')->once()->andReturn(
             array('header' => array(array('type' => 'home')))
@@ -61,14 +61,14 @@ class HomeControllerTest extends MockeryTestCase
         );
     }
 
-    public function testtypeAction()
+    public function testTypeAction()
     {
         $this->manager->shouldReceive('contentLayout')->once()->andReturn(array('content' => array('type' => 'home')));
         $this->templating->shouldReceive('render')->once();
         $this->assertEquals(new Response, $this->controller->typeAction($this->type, $this->content, $this->region));
     }
 
-    public function testtypesAction()
+    public function testTypesAction()
     {
         $this->manager->shouldReceive('getTypes')->once();
         $this->manager->shouldReceive('getRegionContents')->once()->andReturn(
@@ -84,7 +84,7 @@ class HomeControllerTest extends MockeryTestCase
     }
 
     //@TODO test with values not null
-    public function testcreatorAction()
+    public function testCreatorAction()
     {
         $this->manager->shouldReceive('getCreator')->once()->andReturn(array());
         $this->security->shouldReceive('isGranted')->with('ROLE_ADMIN')->once()->andReturn(true);
@@ -93,7 +93,7 @@ class HomeControllerTest extends MockeryTestCase
         $this->assertEquals(new Response, $this->controller->creatorAction('home', 1, null, null));
     }
 
-    public function testsizeAction()
+    public function testSizeAction()
     {
         $this->assertEquals(
             array('id' => 1, 'size' => 'span12', 'type' => 'home'),
@@ -101,7 +101,7 @@ class HomeControllerTest extends MockeryTestCase
         );
     }
 
-    public function testgraphAction()
+    public function testGraphAction()
     {
         $this->request->shouldReceive('get')->once();
         $this->manager->shouldReceive('getGraph')->once()->andReturn(array('type' => 'video'));
@@ -110,26 +110,26 @@ class HomeControllerTest extends MockeryTestCase
         $this->assertEquals(new Response, $this->controller->graphAction());
     }
 
-    public function testregionAction()
+    public function testRegionAction()
     {
         $this->assertEquals(array('id' => 1), $this->controller->regionAction(1));
     }
 
-    public function testcreateAction()
+    public function testCreateAction()
     {
         $this->request->shouldReceive('get')->times(5);
         $this->manager->shouldReceive('createContent')->once()->andReturn('true');
         $this->assertEquals(new Response('true'), $this->controller->createAction());
     }
 
-    public function testupdateAction()
+    public function testUpdateAction()
     {
         $this->request->shouldReceive('get')->times(5);
         $this->manager->shouldReceive('updateContent')->once()->andReturn('true');
         $this->assertEquals(new Response('true'), $this->controller->updateAction($this->content));
     }
 
-    public function testreorderAction()
+    public function testReorderAction()
     {
         $this->manager->shouldReceive('reorderContent')->once()->andReturn('true');
         $this->assertEquals(
@@ -138,13 +138,31 @@ class HomeControllerTest extends MockeryTestCase
         );
     }
 
-    public function testdeleteAction()
+    public function testDeleteAction()
     {
         $this->manager->shouldReceive('deleteContent')->once()->andReturn('true');
         $this->assertEquals(new Response('true'), $this->controller->deleteAction($this->content));
     }
 
-    public function testcontentToRegionAction()
+    public function testDeletetypeAction()
+    {
+        $this->manager->shouldReceive('deleteType')->once()->andReturn('true');
+        $this->assertEquals(new Response('true'), $this->controller->deletetypeAction($this->content));
+    }
+
+    public function testTypeExistAction()
+    {
+        $this->manager->shouldReceive('typeExist')->once()->andReturn('true');
+        $this->assertEquals(new Response('true'), $this->controller->typeExistAction('home'));
+    }
+
+    public function testCreateTypeAction()
+    {
+        $this->manager->shouldReceive('createType')->once()->andReturn($this->type);
+        $this->assertEquals(array('type' => $this->type), $this->controller->createTypeAction('home'));
+    }
+
+    public function testContentToRegionAction()
     {
         $this->manager->shouldReceive('contentToRegion')->once()->andReturn('true');
         $this->assertEquals(

@@ -157,7 +157,7 @@ class AuthenticationController
             'form' => $form->createView()
         );
     }
-    
+
     /**
      * @Route(
      *     "/newpassword/{hash}/",
@@ -207,9 +207,10 @@ class AuthenticationController
     {
         $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array(), null);
         $form->handleRequest($this->request);
+
         if ($form->isValid()) {
             $user = $form->getData();
-            $plainPassword = $user²['plainPassword'];
+            $plainPassword = $user['plainPassword'];
             $id = $user['id'];
             $user = $this->userManager->getUserById($id);
             $user->setPlainPassword($plainPassword);

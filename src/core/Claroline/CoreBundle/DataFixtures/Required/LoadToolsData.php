@@ -25,7 +25,7 @@ class LoadToolsData extends AbstractFixture implements ContainerAwareInterface, 
             array('home', 'icon-home', false, false, true, true, true, true),
             array('parameters', 'icon-cog', false, false, true, true, false, false),
             array('resource_manager', 'icon-folder-open', false, false, true, true, true, true),
-            array('calendar', 'icon-calendar', false, false, true, true, false, false),
+            array('agenda', 'icon-calendar', false, false, true, true, false, false),
             array('logs', 'icon-list', false, false, true, false, false, false),
             array('roles', 'icon-user', true, false, true, false, false, false)
         );
@@ -54,5 +54,4 @@ class LoadToolsData extends AbstractFixture implements ContainerAwareInterface, 
     {
         return 6;
     }
-
 }

@@ -40,20 +40,20 @@
                 <form method="post" action="{#{{ path('claro_workspace_agenda_add_event') }}#}" id="myForm" name="myForm" {{ form_enctype(form) }}>
                     {{ form_widget(form) }}
                 </form>
-                <a href="{{ path('claro_desktop_calendar_show') }}" id="link"></a>
+                <a href="{{ path('claro_desktop_agenda_show') }}" id="link"></a>
                 <a href="{{ path('claro_workspace_agenda_move') }}" id="move"></a>
                {#}  <a href="{{ path('claro_workspace_agenda_delete') }}" id="delete"></a>
                 <a href="{{ path('claro_workspace_agenda_delete') }}" id="update"></a>#}
             </div>
         <div class="modal-footer">
-            <button class="btn" data-dismiss="modal" aria-hidden="true">{{'close'|trans({}, 'calendar') }}</button>
-            <button class="btn btn-primary" id="save">{{ 'add_an_event'|trans({}, 'calendar') }}</button>
-             <button class="btn btn-info" id="updateBtn" > {{ 'update'|trans({}, 'calendar') }}</button>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">{{'close'|trans({}, 'agenda') }}</button>
+            <button class="btn btn-primary" id="save">{{ 'add_an_event'|trans({}, 'agenda') }}</button>
+             <button class="btn btn-info" id="updateBtn" > {{ 'update'|trans({}, 'agenda') }}</button>
         </div>
         </div>
     <div class="span3">
 
-        <h4> <u>{{'task'|trans({}, 'calendar') }} </u></h4>
+        <h4> <u>{{'task'|trans({}, 'agenda') }} </u></h4>
         {% for e in listEvents if e.allDay == 1 %}
         <div class="border">
             <button type="button" class="delete-task close" data-event-id="{{e.id}}" data-dismiss="alert">&times;</button>
@@ -67,13 +67,13 @@
             </ul>
         </div>
         {% else %}
-        <li>{{ 'no event found'|trans({}, 'calendar') }}</li>
+        <li>{{ 'no event found'|trans({}, 'agenda') }}</li>
         {% endfor %}
          <div> Couleur</div>
         <ul>
-            <li style="color:#FF0000">  {{ 'high'|trans({}, 'calendar') }} </span></li>
-            <li style="color:#01A9DB"> {{ 'medium'|trans({}, 'calendar') }} </li>
-            <li style="color:#848484"> {{ 'low'|trans({}, 'calendar') }} </li>
+            <li style="color:#FF0000">  {{ 'high'|trans({}, 'agenda') }} </span></li>
+            <li style="color:#01A9DB"> {{ 'medium'|trans({}, 'agenda') }} </li>
+            <li style="color:#848484"> {{ 'low'|trans({}, 'agenda') }} </li>
         </ul>
     </div>
 </div>

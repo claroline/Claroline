@@ -869,17 +869,19 @@ class ResourceManager
         }
     }
 
-    public function createResource($class, $name) {
-
+    public function createResource($class, $name)
+    {
         $entity = $this->om->factory($class);
 
         if ($entity instanceof \Claroline\CoreBundle\Entity\Resource\AbstractResource) {
             $entity->setName($name);
 
             return $entity;
-        } else {
-            throw new WrongClassException("{$class} doesn't extends Claroline\CoreBundle\Entity\Resource\AbstractResource.");
         }
+
+        throw new WrongClassException(
+            "{$class} doesn't extend Claroline\CoreBundle\Entity\Resource\AbstractResource."
+        );
     }
 
     public function getResource($id)

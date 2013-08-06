@@ -1,8 +1,7 @@
 (function () {
     'use strict';
 
-    function getTagId(tab)
-    {
+    function getTagId(tab) {
         for (var i = 0; i < tab.length; i++) {
             if (tab[i] === 'tag') {
                 return tab[i + 1];
@@ -12,13 +11,12 @@
         return -1;
     }
 
-    function getPage(tab)
-    {
+    function getPage(tab) {
         var page = 1;
 
         for (var i = 0; i < tab.length; i++) {
             if (tab[i] === 'page') {
-                if (typeof(tab[i + 1]) != 'undefined') {
+                if (typeof(tab[i + 1]) !== 'undefined') {
                     page = tab[i + 1];
                 }
                 break;
@@ -28,8 +26,7 @@
         return page;
     }
 
-    function initEvents()
-    {
+    function initEvents() {
         $('#workspace-list-div').on('click', '.pagination > ul > li > a', function (event) {
             event.preventDefault();
             event.stopPropagation();
