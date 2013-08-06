@@ -11,4 +11,16 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class AnnouncementAggregate extends AbstractResource
 {
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\AnnouncementBundle\Entity\Announcement",
+     *     mappedBy="aggregate"
+     * )
+     */
+    protected $announcements;
+
+    public function getAnnouncements()
+    {
+        return $this->announcements;
+    }
 }

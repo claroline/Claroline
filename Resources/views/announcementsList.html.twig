@@ -1,0 +1,26 @@
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% block section_content %}
+
+<div class="margin">
+
+    <h1>{{ 'announcement_aggregate_management'|trans({}, 'announcement') }}</h1>
+    <h3>{{ 'resource'|trans({}, 'platform') }} : {{ _resource.getName() }}</h3>
+
+    <div>
+        <a href="{{ path('claro_announcement_create_form', {'aggregateId': _resource.getId()}) }}">
+            <button class="btn btn-secondary create-announcement-button">
+                {{ 'create_new_announcement'|trans({}, 'announcement') }}
+            </button>
+        </a>
+    </div>
+
+    <ul>
+    {% for announcement in announcements %}
+        <li>{{ announcement.getTitle() }}<li>
+    {% endfor %}
+    </ul>
+
+</div>
+
+{% endblock %}
