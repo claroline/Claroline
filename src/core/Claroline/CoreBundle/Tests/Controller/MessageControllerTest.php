@@ -105,7 +105,7 @@ class MessageControllerTest extends MockeryTestCase
             ->andReturn('ancestors');
         $this->formFactory->shouldReceive('create')
             ->once()
-            ->with(FormFactory::TYPE_MESSAGE, array('john', 'Re: Some object...'), $message)
+            ->with(FormFactory::TYPE_MESSAGE, array('john', 'Re: Some object...'))
             ->andReturn($this->form);
         $this->form->shouldReceive('createView')->once()->andReturn('form');
         $this->assertEquals(

@@ -238,8 +238,7 @@ class MessageController
         $ancestors = $this->messageManager->getConversation($message);
         $form = $this->formFactory->create(
             FormFactory::TYPE_MESSAGE,
-            array($message->getSenderUsername(), 'Re: ' . $message->getObject()),
-            $message
+            array($message->getSenderUsername(), 'Re: ' . $message->getObject())
         );
 
         return array(
@@ -307,7 +306,7 @@ class MessageController
      *
      * Restores messages previously moved to the trash bin.
      *
-     * @param User           $user
+     * @param User $user
      * @param array[Message] $messages
      *
      * @return Response

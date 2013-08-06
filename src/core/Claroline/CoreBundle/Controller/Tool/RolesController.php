@@ -125,7 +125,6 @@ class RolesController extends Controller
                     $creations[] = array('name' => $resourceType->getName());
                 }
 
-
                 $this->resourceManager->create(
                     $this->resourceManager->createResource(
                         'Claroline\CoreBundle\Entity\Resource\Directory',
@@ -243,7 +242,7 @@ class RolesController extends Controller
         return new Response('success');
     }
 
-   /**
+    /**
      * @EXT\Route(
      *     "/{workspace}/add/role/user",
      *     name="claro_workspace_add_roles_to_users",
@@ -264,15 +263,15 @@ class RolesController extends Controller
      *
      * @return Response
      */
-   public function addUsersToRolesAction(array $users, array $roles, AbstractWorkspace $workspace)
-   {
-       $this->checkAccess($workspace);
-       $this->roleManager->associateRolesToSubjects($users, $roles);
+    public function addUsersToRolesAction(array $users, array $roles, AbstractWorkspace $workspace)
+    {
+        $this->checkAccess($workspace);
+        $this->roleManager->associateRolesToSubjects($users, $roles);
 
-       return new Response('success');
-   }
+        return new Response('success');
+    }
 
-   /**
+    /**
      * @EXT\Route(
      *     "/{workspace}/remove/role/{role}/group/{group}",
      *     name="claro_workspace_remove_role_from_group",
@@ -280,15 +279,15 @@ class RolesController extends Controller
      * )
      * @EXT\Method({"DELETE", "GET"})
      */
-   public function removeGroupFromRoleAction(Group $group, Role $role, AbstractWorkspace $workspace)
-   {
-       $this->checkAccess($workspace);
-       $this->roleManager->dissociateWorkspaceRole($group, $workspace, $role);
+    public function removeGroupFromRoleAction(Group $group, Role $role, AbstractWorkspace $workspace)
+    {
+        $this->checkAccess($workspace);
+        $this->roleManager->dissociateWorkspaceRole($group, $workspace, $role);
 
-       return new Response('success');
-   }
+        return new Response('success');
+    }
 
-  /**
+    /**
      * @EXT\Route(
      *     "/{workspace}/add/role/group",
      *     name="claro_workspace_add_roles_to_groups",
@@ -306,15 +305,15 @@ class RolesController extends Controller
      *     options={"multipleIds"=true, "name"="roleIds"}
      * )
      */
-   public function addGroupsToRolesAction(array $groups, array $roles, AbstractWorkspace $workspace)
-   {
-       $this->checkAccess($workspace);
-       $this->roleManager->associateRolesToSubjects($groups, $roles);
+    public function addGroupsToRolesAction(array $groups, array $roles, AbstractWorkspace $workspace)
+    {
+        $this->checkAccess($workspace);
+        $this->roleManager->associateRolesToSubjects($groups, $roles);
 
-       return new Response('success');
-   }
+        return new Response('success');
+    }
 
-       /**
+    /**
      * @EXT\Route(
      *     "/{workspace}/users/registered/page/{page}/{withUnregistered}",
      *     name="claro_workspace_registered_user_list",
@@ -349,13 +348,19 @@ class RolesController extends Controller
         if ($withUnregistered === '1') {
             if ($search === '') {
                 $pager = $this->userManager->getOutsidersByWorkspaceRoles(
-                    array_map('unserialize', array_diff(array_map('serialize', $wsRoles), array_map('serialize', $roles))),
+                    array_map(
+                        'unserialize',
+                        array_diff(array_map('serialize', $wsRoles), array_map('serialize', $roles))
+                    ),
                     $workspace,
                     $page
                 );
             } else {
                 $pager = $this->userManager->getOutsidersByWorkspaceRolesAndName(
-                    array_map('unserialize', array_diff(array_map('serialize', $wsRoles), array_map('serialize', $roles))),
+                    array_map(
+                        'unserialize',
+                        array_diff(array_map('serialize', $wsRoles), array_map('serialize', $roles))
+                    ),
                     $search,
                     $workspace,
                     $page
@@ -414,13 +419,19 @@ class RolesController extends Controller
         if ($withUnregistered === '1') {
             if ($search === '') {
                 $pager = $this->groupManager->getOutsidersByWorkspaceRoles(
-                    array_map('unserialize', array_diff(array_map('serialize', $wsRoles), array_map('serialize', $roles))),
+                    array_map(
+                        'unserialize',
+                        array_diff(array_map('serialize', $wsRoles), array_map('serialize', $roles))
+                    ),
                     $workspace,
                     $page
                 );
             } else {
                 $pager = $this->groupManager->getOutsidersByWorkspaceRolesAndName(
-                    array_map('unserialize', array_diff(array_map('serialize', $wsRoles), array_map('serialize', $roles))),
+                    array_map(
+                        'unserialize',
+                        array_diff(array_map('serialize', $wsRoles), array_map('serialize', $roles))
+                    ),
                     $search,
                     $workspace,
                     $page

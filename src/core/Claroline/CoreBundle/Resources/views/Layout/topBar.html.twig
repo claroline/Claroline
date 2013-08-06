@@ -34,8 +34,15 @@
                         <li{{ path('claro_message_list_received') | compareRoute | raw }}>
                         <a href="{{ path('claro_message_list_received') }}" id="link-messages"
                             title="{{ 'new_message_alert'|trans({'%count%': countUnreadMessages}, 'platform')}}">
-                            <i class="icon-envelope"></i> <span class="text">{{ 'messages'|trans({}, 'platform') }}</span>
-                            {% if countUnreadMessages > 0 %}&nbsp;<span class="badge badge-important">{{ countUnreadMessages }}</span>{% endif %}
+                            <i class="icon-envelope"></i>&nbsp;
+                            <span class="text">
+                                {{ 'messages'|trans({}, 'platform') }}
+                            </span>
+                            {% if countUnreadMessages > 0 %}&nbsp;
+                                <span class="badge badge-important">
+                                    {{ countUnreadMessages }}
+                                </span>
+                            {% endif %}
                         </a>
                         </li>
 
@@ -97,7 +104,7 @@
                             </ul>
                             </li>
                         {% else %}
-                            <li class="dropdown">
+                            <li class="dropdown{{ "/workspaces/" | compareRoute(" active") | raw }}">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                 <i class="icon-book"></i>
                                 {% if isInAWorkspace %}
@@ -118,14 +125,14 @@
                             </li>
                         {% endif %}
                         {% if (register_target is empty)  and  isLogged == false %}
-                            <li>
+                            <li class="{{ "/login" | compareRoute(" active") | raw }}">
                             <a href="{{ login_target }}" id="link-login">
                                 <i class="icon-user"></i>
                                 {{ 'login'|trans({}, 'platform') }}
                             </a>
                             </li>
                         {% else %}
-                            <li class="dropdown">
+                            <li class="dropdown{{ "/login" | compareRoute(" active") | raw }}{{ "/register/form" | compareRoute(" active") | raw }}">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                 <i class="icon-user"></i> {{ username }}<b class="caret"></b>
                             </a>
@@ -190,18 +197,18 @@
                                             {{ 'register'|trans({}, 'platform') }}
                                         </a>
                                         </li>
-                                        <li class="divider"></li>
-                                        <li>
+                                    <li class="divider"></li>
+                                    <li>
                                         <a href="{{ login_target }}" id="link-login">
                                             {{ 'login'|trans({}, 'platform') }}
                                         </a>
-                                        </li>
-                                    {% endif %}
+                                    </li>
                                 {% endif %}
-                            </ul>
-                            </li>
+                            {% endif %}
                         </ul>
-                    </div>
-                </div>
+                    </li>
+                </ul>
             </div>
         </div>
+    </div>
+</div>
