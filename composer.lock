@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "72b1aa0bf03f2bf7b1557018552bd82a",
+    "hash": "250e3443c055c8c28d5a5f3152c925f4",
     "packages": [
         {
             "name": "besimple/sso-auth-bundle",
@@ -70,48 +70,6 @@
                 "cas"
             ],
             "time": "2013-06-29 19:54:06"
-        },
-        {
-            "name": "claroline/core-bundle",
-            "version": "dev-master",
-            "target-dir": "Claroline/CoreBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/claroline/CoreBundle.git",
-                "reference": "8501a851e523fa5f6d41a8d1dc614c2701d0727e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/claroline/CoreBundle/zipball/8501a851e523fa5f6d41a8d1dc614c2701d0727e",
-                "reference": "8501a851e523fa5f6d41a8d1dc614c2701d0727e",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0",
-                "symfony/framework-bundle": "2.*",
-                "symfony/symfony": "2.*"
-            },
-            "type": "bundle",
-            "autoload": {
-                "psr-0": {
-                    "Claroline\\CoreBundle": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "authors": [
-                {
-                    "name": "Claroline development team",
-                    "email": "dev@claroline.net",
-                    "homepage": "http://github.com/claroline"
-                }
-            ],
-            "description": "Claroline core bundle",
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "core"
-            ],
-            "time": "2013-08-05 14:44:24"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -197,6 +155,36 @@
             "time": "2013-08-05 11:51:47"
         },
         {
+            "name": "claroline/plugin-installer",
+            "version": "dev-master",
+            "target-dir": "Claroline/PluginInstaller",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/claroline/PluginInstaller.git",
+                "reference": "b501cb4d4d2b6aa4a882f3f4e78fa54dc6da2e5d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/claroline/PluginInstaller/zipball/b501cb4d4d2b6aa4a882f3f4e78fa54dc6da2e5d",
+                "reference": "b501cb4d4d2b6aa4a882f3f4e78fa54dc6da2e5d",
+                "shasum": ""
+            },
+            "require": {
+                "symfony/symfony": "~2.3"
+            },
+            "type": "composer-installer",
+            "extra": {
+                "class": "Claroline\\PluginInstaller\\Installer"
+            },
+            "autoload": {
+                "psr-0": {
+                    "Claroline\\PluginInstaller": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "time": "2013-08-07 11:27:04"
+        },
+        {
             "name": "claroline/taxonomy-bundle",
             "version": "dev-master",
             "target-dir": "Claroline/TaxonomyBundle",
@@ -240,6 +228,75 @@
                 "issues": "https://github.com/claroline/TaxonomyBundle/issues"
             },
             "time": "2013-07-17 13:12:15"
+        },
+        {
+            "name": "composer/composer",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/composer/composer.git",
+                "reference": "af1f5a3423afb1429ee1a50cbe4fb8930bddabfd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/composer/composer/zipball/af1f5a3423afb1429ee1a50cbe4fb8930bddabfd",
+                "reference": "af1f5a3423afb1429ee1a50cbe4fb8930bddabfd",
+                "shasum": ""
+            },
+            "require": {
+                "justinrainbow/json-schema": "1.1.*",
+                "php": ">=5.3.2",
+                "seld/jsonlint": "1.*",
+                "symfony/console": "~2.3@dev",
+                "symfony/finder": "~2.1",
+                "symfony/process": "~2.1@dev"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~3.7.10"
+            },
+            "suggest": {
+                "ext-openssl": "Enabling the openssl extension allows you to access https URLs for repositories and packages",
+                "ext-zip": "Enabling the zip extension allows you to unzip archives, and allows gzip compression of all internet traffic"
+            },
+            "bin": [
+                "bin/composer"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Composer": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be",
+                    "homepage": "http://seld.be",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Nils Adermann",
+                    "email": "naderman@naderman.de",
+                    "homepage": "http://www.naderman.de"
+                }
+            ],
+            "description": "Dependency Manager",
+            "homepage": "http://getcomposer.org/",
+            "keywords": [
+                "autoload",
+                "dependency",
+                "package"
+            ],
+            "time": "2013-08-05 13:26:02"
         },
         {
             "name": "doctrine/annotations",
@@ -1841,6 +1898,61 @@
             "time": "2013-06-12 08:45:22"
         },
         {
+            "name": "justinrainbow/json-schema",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "git://github.com/justinrainbow/json-schema.git",
+                "reference": "v1.1.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/justinrainbow/json-schema/archive/v1.1.0.zip",
+                "reference": "v1.1.0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "JsonSchema": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "NewBSD"
+            ],
+            "authors": [
+                {
+                    "name": "Igor Wiedler",
+                    "email": "igor@wiedler.ch",
+                    "homepage": "http://wiedler.ch/igor/"
+                },
+                {
+                    "name": "Bruno Prieto Reis",
+                    "email": "bruno.p.reis@gmail.com"
+                },
+                {
+                    "name": "Justin Rainbow",
+                    "email": "justin.rainbow@gmail.com"
+                },
+                {
+                    "name": "Robert Schönthal",
+                    "email": "seroscho@googlemail.com",
+                    "homepage": "http://digitalkaoz.net"
+                }
+            ],
+            "description": "A library to validate a json schema.",
+            "homepage": "https://github.com/justinrainbow/json-schema",
+            "keywords": [
+                "json",
+                "schema"
+            ],
+            "time": "2012-01-03 00:33:17"
+        },
+        {
             "name": "kriswallsmith/assetic",
             "version": "1.1.x-dev",
             "source": {
@@ -2212,6 +2324,53 @@
             "time": "2012-12-21 11:40:51"
         },
         {
+            "name": "seld/jsonlint",
+            "version": "1.1.1",
+            "source": {
+                "type": "git",
+                "url": "http://github.com/Seldaek/jsonlint",
+                "reference": "1.1.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Seldaek/jsonlint/zipball/1.1.1",
+                "reference": "1.1.1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "bin": [
+                "bin/jsonlint"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Seld\\JsonLint": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be",
+                    "homepage": "http://seld.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "JSON Linter",
+            "keywords": [
+                "json",
+                "linter",
+                "parser",
+                "validator"
+            ],
+            "time": "2013-02-11 23:03:12"
+        },
+        {
             "name": "sensio/distribution-bundle",
             "version": "dev-master",
             "target-dir": "Sensio/Bundle/DistributionBundle",
@@ -2351,6 +2510,33 @@
             ],
             "description": "This bundle generates code for you",
             "time": "2013-07-24 09:19:19"
+        },
+        {
+            "name": "stefk/test-plugin-bundle",
+            "version": "dev-master",
+            "target-dir": "Stefk/TestPluginBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stefk/TestPluginBundle.git",
+                "reference": "e17f1512286097747f2e6c3cd3f622b004e7b1ba"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stefk/TestPluginBundle/zipball/e17f1512286097747f2e6c3cd3f622b004e7b1ba",
+                "reference": "e17f1512286097747f2e6c3cd3f622b004e7b1ba",
+                "shasum": ""
+            },
+            "require": {
+                "claroline/plugin-installer": "*"
+            },
+            "type": "claroline-plugin",
+            "autoload": {
+                "psr-0": {
+                    "Stefk\\TestPluginBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "time": "2013-08-07 15:19:23"
         },
         {
             "name": "stfalcon/tinymce-bundle",
@@ -3227,7 +3413,8 @@
         "doctrine/doctrine-fixtures-bundle": 20,
         "friendsofsymfony/jsrouting-bundle": 20,
         "stfalcon/tinymce-bundle": 20,
-        "claroline/core-bundle": 20,
+        "composer/composer": 20,
+        "stefk/test-plugin-bundle": 20,
         "claroline/front-end-bundle": 20,
         "claroline/taxonomy-bundle": 20,
         "claroline/migration-bundle": 20,

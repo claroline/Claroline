@@ -26,8 +26,9 @@
         "stfalcon/tinymce-bundle": "dev-master",
 
 
+        "composer/composer": "dev-master",
 
-        "claroline/core-bundle": "dev-master",
+
         "stefk/test-plugin-bundle": "dev-master",
 
 
