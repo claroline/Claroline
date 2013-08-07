@@ -2,9 +2,9 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Claroline\CoreBundle\Tests\Library\Installation\Plugin\StubPluginTestCase;
 
-class ValidatorTest extends WebTestCase
+class ValidatorTest extends StubPluginTestCase
 {
     public function testValidatorAcceptsOnlyInstancesOfCheckerInterface()
     {
@@ -62,9 +62,8 @@ class ValidatorTest extends WebTestCase
 
         $container = static::createClient()->getContainer();
         $validator = $container->get('claroline.plugin.validator');
-        $pluginDirectory = $container->getParameter('claroline.param.stub_plugin_directory');
-        $loader = new Loader($pluginDirectory);
-        $plugin = $loader->load($pluginFqcn);
+        $path = $this->buildPluginPath($pluginFqcn);
+        $plugin = $this->getLoader()->load($pluginFqcn, $path);
         $errors = $validator->validate($plugin);
         $this->assertEquals(0, count($errors));
     }
