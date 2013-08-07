@@ -33,7 +33,7 @@ class InstallerTest extends WebTestCase
             ->will($this->returnValue(false));
         $this->mockedLoader->expects($this->once())
             ->method('load')
-            ->with(get_class($this->mockedPlugin))
+            ->with(get_class($this->mockedPlugin), 'plugin/path')
             ->will($this->returnValue($this->mockedPlugin));
         $this->mockedValidator->expects($this->any())
             ->method('getPluginConfiguration')
@@ -45,7 +45,7 @@ class InstallerTest extends WebTestCase
             ->method('register')
             ->with($this->mockedPlugin, array());
 
-        $this->installer->install(get_class($this->mockedPlugin));
+        $this->installer->install(get_class($this->mockedPlugin), 'plugin/path');
     }
 
     public function testInstallThrowsAnExceptionIfPluginIsAlreadyRegistered()
@@ -59,7 +59,7 @@ class InstallerTest extends WebTestCase
             ->with($pluginFQCN)
             ->will($this->returnValue(true));
 
-        $this->installer->install($pluginFQCN);
+        $this->installer->install($pluginFQCN, 'plugin/path');
     }
 
     public function testUninstallProperlyDelegatesToHelpers()

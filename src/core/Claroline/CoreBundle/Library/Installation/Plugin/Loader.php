@@ -19,36 +19,21 @@ class Loader
     const NON_INSTANTIABLE_BUNDLE_CLASS = 2;
     const UNEXPECTED_BUNDLE_TYPE = 3;
 
-    private $pluginDirectory;
-
-    /**
-     * Constructor.
-     *
-     * @param string $pluginDirectory
-     *
-     * @DI\InjectParams({
-     *     "pluginDirectory" = @DI\Inject("%claroline.param.plugin_directory%")
-     * })
-     */
-    public function __construct($pluginDirectory)
-    {
-        $this->pluginDirectory = $pluginDirectory;
-    }
-
     /**
      * Searches a plugin bundle by its FQCN and returns an instance of it.
      *
      * @param  string           $pluginFqcn
+     * @param  string           $pluginPath
      * @throws RuntimeException if the plugin class cannot be found or instantiated
      *
      * @return PluginBundle
      */
-    public function load($pluginFqcn)
+    public function load($pluginFqcn, $pluginPath = null)
     {
-        $pluginPath = $this->pluginDirectory
-            . DIRECTORY_SEPARATOR
-            . str_replace('\\', DIRECTORY_SEPARATOR, $pluginFqcn)
-            . '.php';
+        if (!$pluginPath) {
+            $rPlugin = new \ReflectionClass($pluginFqcn);
+            $pluginPath = $rPlugin->getFileName();
+        }
 
         if (!file_exists($pluginPath)) {
             throw new RuntimeException(

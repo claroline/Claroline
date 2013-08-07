@@ -96,14 +96,15 @@ class Installer
     /**
      * Installs a plugin.
      *
-     * @param string $pluginFqcn
+     * @param string $pluginFqcn    FQCN of the plugin bundle class
+     * @param string $pluginPath    Path of the plugin bundle class
      *
      * @throws Exception if the plugin doesn't pass the validation
      */
-    public function install($pluginFqcn)
+    public function install($pluginFqcn, $pluginPath)
     {
         $this->checkRegistrationStatus($pluginFqcn, false);
-        $plugin = $this->loader->load($pluginFqcn);
+        $plugin = $this->loader->load($pluginFqcn, $pluginPath);
         $errors = $this->validator->validate($plugin);
 
         if (0 === count($errors)) {

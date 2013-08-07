@@ -2,22 +2,18 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Claroline\CoreBundle\Tests\Library\Installation\Plugin\StubPluginTestCase;
 
-class RoutingCheckerTest extends WebTestCase
+class RoutingCheckerTest extends StubPluginTestCase
 {
     /** @var CommonChecker */
     private $checker;
 
-    /** @var Loader */
-    private $loader;
-
     protected function setUp()
     {
+        parent::setUp();
         $container = static::createClient()->getContainer();
         $this->checker = $container->get('claroline.plugin.routing_checker');
-        $pluginDirectory = $container->getParameter('claroline.param.stub_plugin_directory');
-        $this->loader = new Loader($pluginDirectory);
     }
 
     /**
@@ -25,7 +21,8 @@ class RoutingCheckerTest extends WebTestCase
      */
     public function testCheckerReturnsAnErrorOnInvalidRoutingPrefix($pluginFqcn)
     {
-        $errors = $this->checker->check($this->loader->load($pluginFqcn));
+        $path = $this->buildPluginPath($pluginFqcn);
+        $errors = $this->checker->check($this->getLoader()->load($pluginFqcn, $path));
         $this->assertEquals(RoutingChecker::INVALID_ROUTING_PREFIX, $errors[0]->getCode());
     }
 
@@ -35,7 +32,8 @@ class RoutingCheckerTest extends WebTestCase
     public function testCheckerReturnsAnErrorIfRoutingPrefixIsAlreadyRegistered($pluginFqcn)
     {
         $this->markTestSkipped('Symfony 2.2 doesn\'t provide a way to retrieve the registered prefixes');
-        $errors = $this->checker->check($this->loader->load($pluginFqcn));
+        $path = $this->buildPluginPath($pluginFqcn);
+        $errors = $this->checker->check($this->getLoader()->load($pluginFqcn, $path));
         $this->assertEquals(RoutingChecker::ALREADY_REGISTERED_PREFIX, $errors[0]->getCode());
     }
 
@@ -44,7 +42,8 @@ class RoutingCheckerTest extends WebTestCase
      */
     public function testCheckerReturnsAnErrorOnNonExistentRoutingResource($pluginFqcn)
     {
-        $errors = $this->checker->check($this->loader->load($pluginFqcn));
+        $path = $this->buildPluginPath($pluginFqcn);
+        $errors = $this->checker->check($this->getLoader()->load($pluginFqcn, $path));
         $this->assertEquals(RoutingChecker::NON_EXISTENT_ROUTING_FILE, $errors[0]->getCode());
     }
 
@@ -53,7 +52,8 @@ class RoutingCheckerTest extends WebTestCase
      */
     public function testCheckerReturnsAnErrorOnUnexpectedRoutingResourceLocation($pluginFqcn)
     {
-        $errors = $this->checker->check($this->loader->load($pluginFqcn));
+        $path = $this->buildPluginPath($pluginFqcn);
+        $errors = $this->checker->check($this->getLoader()->load($pluginFqcn, $path));
         $this->assertEquals(RoutingChecker::INVALID_ROUTING_LOCATION, $errors[0]->getCode());
     }
 
@@ -62,7 +62,8 @@ class RoutingCheckerTest extends WebTestCase
      */
     public function testCheckerReturnsAnErrorOnNonYamlRoutingFile($pluginFqcn)
     {
-        $errors = $this->checker->check($this->loader->load($pluginFqcn));
+        $path = $this->buildPluginPath($pluginFqcn);
+        $errors = $this->checker->check($this->getLoader()->load($pluginFqcn, $path));
         $this->assertEquals(RoutingChecker::INVALID_ROUTING_EXTENSION, $errors[0]->getCode());
     }
 
@@ -71,7 +72,8 @@ class RoutingCheckerTest extends WebTestCase
      */
     public function testCheckerReturnsAnErrorOnUnloadableYamlRoutingFile($pluginFqcn)
     {
-        $errors = $this->checker->check($this->loader->load($pluginFqcn));
+        $path = $this->buildPluginPath($pluginFqcn);
+        $errors = $this->checker->check($this->getLoader()->load($pluginFqcn, $path));
         $this->assertEquals(RoutingChecker::INVALID_YAML_ROUTING_FILE, $errors[0]->getCode());
     }
 
