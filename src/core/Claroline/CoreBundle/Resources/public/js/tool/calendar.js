@@ -62,16 +62,15 @@
             var  currentDate = new Date();
             var pickedDate = new Date(date);
 
-            $('#calendar_form_start').val(date.getDate() + '/' +
-                (date.getMonth() + 1) + '/' + date.getFullYear() + ' ' 
-                + date.getHours() + ':' + pickedDate.getMinutes());
+            // $('#calendar_form_start').val(date.getDate() + '/' +
+            //     (date.getMonth() + 1) + '/' + date.getFullYear() + ' ' 
+            //     + date.getHours() + ':' + pickedDate.getMinutes());
+            $('#calendar_form_start').val(date.toLocaleString())
             if (pickedDate > currentDate) {
-                $('#calendar_form_end').val(pickedDate.getDate() + '/' +
-                    (pickedDate.getMonth() + 1) + '/' + pickedDate.getFullYear() + ' ' 
-                    + pickedDate.getHours() + ':' + pickedDate.getMinutes());
+                $('#calendar_form_end').val(pickedDate.toLocaleString());
+                    
             } else {
-                $('#calendar_form_end').val(currentDate.getDate() + '/' +
-                    (currentDate.getMonth() + 1) + '/' + currentDate.getFullYear() + ' ' + pickedDate.getHours() + ':' + pickedDate.getMinutes());
+                $('#calendar_form_end').val(currentDate.toLocaleString());
             }
             $('#myModal').modal();
         };
@@ -112,9 +111,9 @@
                             }
                         }
                     },
-                    'error': function (xhr, textStatus) {
+                    'error': function ( xhr, textStatus) {
                         if (xhr.status === 400) {//bad request
-                            alert(' Start date is bigger thand end date');
+                            alert(textStatus);
                             $('#save').removeAttr('disabled');
                             $('#output').html(textStatus);
                         } else {
@@ -149,6 +148,13 @@
                         $('#myModal').modal('hide');
                         $('#updateBtn').removeAttr('disabled');
                         $('#calendar').fullCalendar('refetchEvents');
+                    }
+                },
+                'error': function ( xhr, textStatus) {
+                    if (xhr.status === 400) {//bad request
+                        alert(textStatus);
+                        $('#save').removeAttr('disabled');
+                        $('#output').html(textStatus);
                     }
                 }
             });

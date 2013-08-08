@@ -17,7 +17,7 @@ class CalendarType extends AbstractType
                 'start',
                 'date',
                 array(
-                    'format' => 'd-M-yyyy ',
+                    'format' => 'd-M-yyyy H:mm:ss',
                     'widget' => 'single_text',
                     )
             )
@@ -25,7 +25,7 @@ class CalendarType extends AbstractType
                 'end',
                 'date',
                 array(
-                    'format' => 'd-M-yyyy',
+                    'format' => 'd-M-yyyy H:mm:ss',
                     'widget' => 'single_text',
                 )
             )
