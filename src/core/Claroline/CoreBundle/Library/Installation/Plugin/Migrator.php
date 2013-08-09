@@ -50,7 +50,27 @@ class Migrator
         $this->doMigrate($plugin, BaseMigrator::DIRECTION_DOWN);
     }
 
-    public function doMigrate(PluginBundle $plugin, $direction)
+    /**
+     * Updates the schema of a plugin.
+     *
+     * @param PluginBundle  $plugin
+     * @param string        $version
+     */
+    public function migrate(PluginBundle $plugin, $version)
+    {
+        $currentVersion = $this->migrator->getCurrentVersion($plugin);
+
+        if ($version === $currentVersion) {
+            return;
+        }
+
+        $direction = $currentVersion > $version ?
+            BaseMigrator::DIRECTION_DOWN :
+            BaseMigrator::DIRECTION_UP;
+        $this->migrator->migrate($plugin, $version, $direction);
+    }
+
+    private function doMigrate(PluginBundle $plugin, $direction)
     {
         try {
             $this->migrator->migrate($plugin, BaseMigrator::VERSION_FARTHEST, $direction);

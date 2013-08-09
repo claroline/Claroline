@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "250e3443c055c8c28d5a5f3152c925f4",
+    "hash": "7fa8443e03b1267353cc616294410b7e",
     "packages": [
         {
             "name": "besimple/sso-auth-bundle",
@@ -161,12 +161,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/PluginInstaller.git",
-                "reference": "b501cb4d4d2b6aa4a882f3f4e78fa54dc6da2e5d"
+                "reference": "7a36f906f6d26b33ca2e19a5dd70307bc601a82f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/PluginInstaller/zipball/b501cb4d4d2b6aa4a882f3f4e78fa54dc6da2e5d",
-                "reference": "b501cb4d4d2b6aa4a882f3f4e78fa54dc6da2e5d",
+                "url": "https://api.github.com/repos/claroline/PluginInstaller/zipball/7a36f906f6d26b33ca2e19a5dd70307bc601a82f",
+                "reference": "7a36f906f6d26b33ca2e19a5dd70307bc601a82f",
                 "shasum": ""
             },
             "require": {
@@ -182,7 +182,7 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2013-08-07 11:27:04"
+            "time": "2013-08-09 07:29:07"
         },
         {
             "name": "claroline/taxonomy-bundle",
@@ -2513,30 +2513,33 @@
         },
         {
             "name": "stefk/test-plugin-bundle",
-            "version": "dev-master",
+            "version": "1.1.0",
             "target-dir": "Stefk/TestPluginBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stefk/TestPluginBundle.git",
-                "reference": "e17f1512286097747f2e6c3cd3f622b004e7b1ba"
+                "reference": "1.1.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stefk/TestPluginBundle/zipball/e17f1512286097747f2e6c3cd3f622b004e7b1ba",
-                "reference": "e17f1512286097747f2e6c3cd3f622b004e7b1ba",
+                "url": "https://api.github.com/repos/stefk/TestPluginBundle/zipball/1.1.0",
+                "reference": "1.1.0",
                 "shasum": ""
             },
             "require": {
                 "claroline/plugin-installer": "*"
             },
             "type": "claroline-plugin",
+            "extra": {
+                "dbVersion": "20130809130203"
+            },
             "autoload": {
                 "psr-0": {
                     "Stefk\\TestPluginBundle": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2013-08-07 15:19:23"
+            "time": "2013-08-09 11:04:23"
         },
         {
             "name": "stfalcon/tinymce-bundle",
@@ -3414,10 +3417,10 @@
         "friendsofsymfony/jsrouting-bundle": 20,
         "stfalcon/tinymce-bundle": 20,
         "composer/composer": 20,
-        "stefk/test-plugin-bundle": 20,
         "claroline/front-end-bundle": 20,
         "claroline/taxonomy-bundle": 20,
         "claroline/migration-bundle": 20,
+        "claroline/plugin-installer": 20,
         "jms/twig-js-bundle": 20,
         "white-october/pagerfanta-bundle": 20,
         "idci/exporter-bundle": 20,
