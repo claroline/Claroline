@@ -141,6 +141,19 @@ class Installer
     }
 
     /**
+     * Upgrades/downgrades a plugin to a specific version.
+     *
+     * @param string $pluginFqcn
+     * @param string $version
+     */
+    public function migrate($pluginFqcn, $version)
+    {
+        $this->checkRegistrationStatus($pluginFqcn, true);
+        $plugin = $this->loader->load($pluginFqcn);
+        $this->migrator->migrate($plugin, $version);
+    }
+
+    /**
      * Checks if a plugin is installed.
      *
      * @param type $pluginFqcn
