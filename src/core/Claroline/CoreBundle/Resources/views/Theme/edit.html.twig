@@ -35,8 +35,8 @@
             {% endif %}
         </h3>
         {% if parameters is defined %}
-            <div class="row-fluid">
-                <div class="span6">
+            <div class="row">
+                <div class="col-lg-6">
                     <h4>{{ "Theme parameters" | trans({}, "theme") }}</h4>
                     <table class="table table-bordered table-striped">
                         <tr>
@@ -59,7 +59,7 @@
                         </tr>
                     </table>
                 </div>
-                <div class="span6">
+                <div class="col-lg-6">
                     <h4>{{ "Colors" | trans({}, "theme")}}</h4>
                     <table class="table table-bordered table-striped">
                         {% for code,value in parameters.getColors() %}
@@ -82,8 +82,8 @@
                     <div id="moreoptions" class="accordion-body collapse">
                         <div class="accordion-inner">
                             {% for name,array in parameters.getParameters() %}
-                                {% if loop.index is divisibleby(2) %}<div class="row-fluid">{% endif %}
-                                    <div class="span6">
+                                {% if loop.index is divisibleby(2) %}<div class="row">{% endif %}
+                                    <div class="col-lg-6">
                                         <h4>{{ name }}</h4>
                                         <table class="table table-bordered table-striped">
                                             {% for code,value in array %}

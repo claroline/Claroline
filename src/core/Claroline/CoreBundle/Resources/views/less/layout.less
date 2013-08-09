@@ -8,26 +8,33 @@ html, body {
     height: 100%;
 }
 
-#wrapper {
+body {
+    padding:@navbar-height 0 0 0;
+}
+
+#wrap {
     min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    /* Negative indent footer by it's height */
+    margin: 0 auto -@navbar-height;
 }
 
-#grid {
-    /*overflow: auto;*/
-    padding-bottom: @navbarHeight; /* Reserves a space for the footer */
+#push {
+    height: 100%;
 }
 
+/* Debug
+.rax, [class*="col-lg-"]
+{
+    border:1px solid red;
+}
+*/
 /************/
 /*  @media  */
 /************/
 
-@media (min-width: 980px) {
-    /* Ensures the navbar doesn't hide the top content (only necessary on large screens)*/
-    #grid {
-        padding-top: @navbarHeight;
-    }
-}
-
+/*
 @media (max-width: 980px) {
      #top_bar {
         margin-bottom:0 !important;
@@ -53,19 +60,14 @@ html, body {
         text-align: center;
     }
 }
-
-@media (max-width: 767px) {
+*/
+//@media (max-width: 767px) {
     /* // Compensates for the 20px body padding set in bootstrap "responsive-767px-max.less" */
 
-    footer
-    {
-        margin: -@navbarHeight -20px 0 -20px;
-        padding: 0 20px 0 20px;
-    }
 
-    .creator .navbar.navbar-static-top
+    /*.creator .navbar.navbar-static-top
     {
-        margin:0 !important;
+       margin:0 !important;
 
     }
 
@@ -84,48 +86,40 @@ html, body {
 
     .workspace-toolbox-item {
         display: inline-block;
-    }
-}
+    }*/
+//}
 
 /************/
 /*  Footer  */
 /************/
 
-footer {
+#footer {
     width: 100%;
     position: relative;
-    min-height: @navbarHeight;
-    background-color: @grayLighter;
+    min-height: @navbar-height;
+    background-color: @gray-lighter;
     color: lighten(@gray, 20%);
-    text-shadow: 1px 1px @white;
 }
 
-#footer-content {
-    padding: 10px;
+#footer .container p {
+    margin: 15px;
     text-align: center;
     max-height: 100%;
 }
 
 /************/
-/*  Login   */
+/*  menu   */
 /************/
 
-#login-form, #login-error {
-    width: 420px;
-    margin: auto;
-    padding: 10px;
-    .border-radius(@baseBorderRadius);
-}
-
-#login-form {
-    margin-top: 12px;
-    background-color: @formActionsBackground;
+.list-group .list-group-item.disabled
+{
+    background:@panel-heading-bg;
 }
 
 /***********/
 /* WIDGETS */
 /***********/
-
+/*
 .widget {
     margin: 10px;
 }
@@ -149,11 +143,11 @@ footer {
     text-decoration: underline;
     font-style: italic;
 }
-
+*/
 /*****************/
 /* RESOURCES MGR */
 /*****************/
-
+/*
 .breadcrumb
 {
     margin-bottom:10px;
@@ -276,13 +270,13 @@ footer {
     cursor:pointer;
     cursor:hand;
 }
-
+*/
 /************/
 /**  ZOOM  **/
 /************/
 
 /** In this case is not posible to use css3 scale property **/
-
+/*
 @resourceElementWidth: 71;
 @resourceElementHeight: 80;
 @resourceThumbnailWidth: 100;
@@ -438,11 +432,11 @@ footer {
 {
     margin-bottom:10px;
 }
-
+*/
 /**************/
 /* WORKSPACES */
 /**************/
-
+/*
 .workspace-toolbox-item {
     margin: 6px;
 }
@@ -458,11 +452,11 @@ footer {
     font-size: @baseFontSize - 3px;
     font-style: italic;
 }
-
+*/
 /***********/
 /* PLUGINS */
 /***********/
-
+/*
 .plugin-item {
     display: inline-block;
 }
@@ -470,88 +464,29 @@ footer {
 .plugin-figcaption {
     text-align:center;
 }
-
+*/
 /************/
 /* MESSAGES */
 /************/
-
+/*
 .user-information {
     border: 1px solid @grayLighter;
     padding: 5px;
     .border-radius(@baseBorderRadius);
 }
-
-/********/
-/* MENU */
-/********/
-
-.dropdown-menu a
-{
-    cursor:pointer;
-}
-
-/** fix dropdowns colors inside an active link **/
-
-.content-element .margin
-{
-    height:100%;
-    padding-bottom:10px;
-}
-
-.content-element .text
-{
-    margin-top:10px;
-    margin-bottom:10px;
-}
-
-.content-element .muted
-{
-    position:absolute;
-    bottom: 10px;
-}
-
-.content-element .btn.dropdown-toggle
-{
-    color:@gray !important;
-    background:@grayLighter !important;
-}
-
-.content-element .dropdown-menu
-{
-    .border-radius(@baseBorderRadius);
-}
-
-.content-element .dropdown-menu a
-{
-    color:@dropdownLinkColor !important;
-    background:@dropdownBackground !important;
-}
-
-.content-element .dropdown-menu a:hover
-{
-    /*#gradient > .vertical(@dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%));*/
-    color:@dropdownLinkColorHover !important;
-    background-color: mix(@dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%), 60%) !important;
-    background-image: -moz-linear-gradient(top, @dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%)) !important; // FF 3.6+
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@dropdownLinkBackgroundHover), to(darken(@dropdownLinkBackgroundHover, 5%))) !important; // Safari 4+, Chrome 2+
-    background-image: -webkit-linear-gradient(top, @dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%)) !important; // Safari 5.1+, Chrome 10+
-    background-image: -o-linear-gradient(top, @dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%)) !important; // Opera 11.10
-    background-image: linear-gradient(to bottom, @dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%)) !important; // Standard, IE10
-    background-repeat: repeat-x;
-    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColparametersorstr='%d', GradientType=0)",argb(@dropdownLinkBackgroundHover),argb(darken(@dropdownLinkBackgroundHover, 5%)))); // IE9 and down
-}
+*/
 
 /**********/
 /*  Tabs  */
 /**********/
-
+/*
 .tabs.nav.nav-tabs
 {
     margin-top:5px;
     padding: 0 5px 0 5px;
 }
 
-
+*/
 /********/
 /* MISC */
 /********/
@@ -559,8 +494,8 @@ footer {
 .please-wait {
     width:100%;
     position: fixed;
-    z-index: 1050;
-    top: 10px;
+    z-index: @zindex-modal;
+    top: 5px;
     display: none;
     text-align:center;
 }
@@ -572,16 +507,7 @@ footer {
     margin: 0 0 10px 0;
 }
 
-.border {
-    border:1px solid #ddd;
-    .border-radius(@baseBorderRadius);
-    margin-bottom:10px;
-}
-
-.margin
-{
-    margin:0 10px 10px 10px;
-}
+/*
 
 .nav.nav-tabs.nav-stacked .icon-chevron-right.pull-right
 {
@@ -602,11 +528,11 @@ footer {
 {
     overflow:auto;margin-bottom:5px;
 }
-
+*/
 /*********/
 /* Forms */
 /*********/
-
+/*
 .section-content form
 {
     margin: 0 10px;
@@ -622,43 +548,66 @@ form legend
     margin:0 0 10px 0;
     font-weight:bold;
 }
-
+*/
 
 /**********************/
 /***      HOME      ***/
 /**********************/
 
-@media (min-width: 767px)
+.content-element .dropdown-menu a
 {
-	@contentSpanIterations: 12;
-    @contentSpanMargin: 1;
-
-    .content.row-fluid [class*="span"]
-    {
-		margin-left: 0;
-		margin-right: unit(@contentSpanMargin, "%");
-	}
-
-    .contentSpan (@index) when (@index >= 1) {
-
-        (~".content.row-fluid .span@{index}") {
-            width:unit(((@index * 100 / @contentSpanIterations) - @contentSpanMargin), "%");
-        }
-
-        (~".content.row-fluid .offset@{index}") {
-            margin-left:unit(((@index * 100 / @contentSpanIterations)), "%");
-        }
-
-        .contentSpan(@index - 1);
-    }
-
-    .contentSpan (@contentSpanIterations);
+    cursor:pointer;
 }
 
-.content-element .sub-section-header
+.content-element .text-muted
 {
-    margin-bottom:0;
+    position:absolute;
+    bottom: 10px;
 }
+
+.content-element p
+{
+    padding-bottom:10px;
+}
+
+.content-element .content-menu button
+{
+    position:relative; top: -1px; right: -1px
+}
+
+/*
+
+.content-element .btn.dropdown-toggle
+{
+    color:@gray !important;
+    background:@grayLighter !important;
+}
+
+.content-element .dropdown-menu
+{
+    .border-radius(@baseBorderRadius);
+}
+
+.content-element .dropdown-menu a
+{
+    color:@dropdownLinkColor !important;
+    background:@dropdownBackground !important;
+}
+*/
+//.content-element .dropdown-menu a:hover
+//{
+    /*#gradient > .vertical(@dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%));*/
+    /*color:@dropdownLinkColorHover !important;
+    background-color: mix(@dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%), 60%) !important;
+    background-image: -moz-linear-gradient(top, @dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%)) !important; // FF 3.6+
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@dropdownLinkBackgroundHover), to(darken(@dropdownLinkBackgroundHover, 5%))) !important; // Safari 4+, Chrome 2+
+    background-image: -webkit-linear-gradient(top, @dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%)) !important; // Safari 5.1+, Chrome 10+
+    background-image: -o-linear-gradient(top, @dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%)) !important; // Opera 11.10
+    background-image: linear-gradient(to bottom, @dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%)) !important; // Standard, IE10
+    background-repeat: repeat-x;
+    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColparametersorstr='%d', GradientType=0)",argb(@dropdownLinkBackgroundHover),argb(darken(@dropdownLinkBackgroundHover, 5%)))); // IE9 and down*/
+//}
+
 
 .float-right-top
 {
@@ -672,28 +621,22 @@ form legend
     position:relative;
 }
 
-.content-title, .content-text
+.creator .panel
 {
-    border:0 !important;
-    margin:0 !important;
-    width:100%;
-    max-width:100%;
-    .box-sizing(border-box);
+    padding:0;
 }
 
-.content-title
+.creator .panel .form-control
 {
-    height:30px !important;
+    .border-bottom-radius(0);
+    border:none;
 }
 
 .creator .navbar.navbar-static-top
 {
-    border-top:1px solid darken(@grayLighter, 5%);
-}
-
-.creator .navbar.navbar-static-top, .creator .navbar.navbar-static-top .navbar-inner
-{
-    .border-bottom-radius(@baseBorderRadius);
+    border-top:1px solid @input-border;
+    .border-bottom-radius(@border-radius-base);
+    margin:0;
 }
 
 .creator textarea
@@ -705,54 +648,39 @@ form legend
 
 .creator-collapse
 {
-    border:1px solid #ddd;
+    border:1px solid @list-group-border;
     padding:10px 10px 0 10px;
 }
 
-.creator .navbar.navbar-static-top .navbar-inner
+.creator .generated
 {
-    padding-left:5px;
-    padding-right:5px;
+    background: lighten(@state-success-bg, 5%);
+    padding:0;
+    margin:0;
 }
 
-#regions a.border
-{
-    text-align:center;
-}
-
-#sizes a.border, #regions a.border
+#sizes .panel, #regions .panel
 {
     cursor:pointer;
-}
-
-#sizes a.border
-{
     padding:5px;
 }
 
-#regions a.border
+#regions .panel
 {
+    text-align:center;
     padding:20px 5px 20px 5px;
 }
 
-#sizes a.border:hover, #sizes a.border.active,
-#regions a.border:hover, #regions a.border.active
+#sizes .panel:hover, #sizes .panel.active,
+#regions .panel:hover, #regions .panel.active
 {
-    background:@linkColor;
-    color:@white;
-    text-decoration:none;
+    background:@link-color;
+    color:#fff;
 }
 
 .align-right
 {
     text-align:right;
-}
-
-.creator .generated
-{
-    background:@grayLighter;
-    padding:0;
-    margin:0;
 }
 
 .generated, .generated .generated-content
@@ -768,7 +696,8 @@ form legend
 .generated .generated-content
 {
     margin:0;
-    padding:10px;
+    padding:0 10px 0 10px;
+    overflow:auto;
 }
 
 .content-element .generated .generated-content
@@ -777,27 +706,15 @@ form legend
     padding:0 0 10px 0;
 }
 
-.generated .generated-content h4
+.generated .generated-content p
 {
-    margin-top:0;
-}
-
-.generated .generated-content .clear
-{
-    clear:both;
-}
-
-.generated .generated-content iframe,
-.generated .generated-content img
-{
-    float:left;
-    margin:0 10px 5px 0;
+    margin:5px 0 5px 0;
 }
 
 /**********************/
 /** Theme Generator  **/
 /**********************/
-
+/*
 .theme-generator .theme-value input
 {
     margin:0px;
@@ -811,4 +728,4 @@ form legend
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
-}
+}*/

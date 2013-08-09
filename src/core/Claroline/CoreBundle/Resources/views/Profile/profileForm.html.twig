@@ -1,8 +1,8 @@
 {% extends "ClarolineCoreBundle::layout.html.twig" %}
 
 {% block content %}
-    <div class="border">
-        <form class="margin form-horizontal" action="{{ path('claro_profile_update') }}" method="post" {{ form_enctype(profile_form) }} id="profile_form">
+    <div class="panel">
+        <form class="form-horizontal" action="{{ path('claro_profile_update') }}" method="post" {{ form_enctype(profile_form) }} id="profile_form">
             <fieldset>
                 <legend>{{ 'my_account'|trans({}, 'platform') }} :</legend>
                 {{ form_widget(profile_form) }}

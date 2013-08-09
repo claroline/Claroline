@@ -21,7 +21,7 @@
         ])
     }}
 
-    <div id='calendar' class="span9"></div>
+    <div id='calendar' class="col-lg-9"></div>
     <div  id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -47,10 +47,10 @@
         </div>
     </div>
 
-    <div class="span3">
+    <div class="col-lg-3">
         <h4> <u>{{'tasks'|trans({}, 'agenda') }} </u></h4>
         {% for e in listEvents  %}
-        <div class="border">
+        <div class="panel">
             <button type="button" class="delete-task close" data-event-id="{{e.id}}" data-dismiss="alert">&times;</button>
            <h5 data-event-title="{{e.title}}"> {{ e.title }}</h5>
            <ul>

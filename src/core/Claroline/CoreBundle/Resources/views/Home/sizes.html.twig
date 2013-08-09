@@ -1,27 +1,31 @@
-<div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h3>{{ "Size of content" | trans({}, "home")}}</h3>
-</div>
-<div class="modal-body" data-id="{{ id }}" data-type="{{ type }}">
-    <div class="content row-fluid">
-        <a class="span6 border{% if size == 6 %} active{% endif %}">6</a>
-        <a class="span6 border{% if size == 6 %} active{% endif %} align-right">6</a>
+<div class="modal-dialog" >
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>{{ "Size of content" | trans({}, "home")}}</h3>
+        </div>
+        <div class="modal-body" data-id="{{ id }}" data-type="{{ type }}">
+            <div class="row">
+                <div class="col-lg-6"><div class="panel{% if size == 6 %} active{% endif %}">6</div></div>
+                <div class="col-lg-6"><div class="panel{% if size == 6 %} active{% endif %} align-right">6</div></div>
 
-        <a class="span7 border{% if size == 7 %} active{% endif %}">7</a>
-        <a class="span5 border{% if size == 5 %} active{% endif %} align-right">5</a>
+                <div class="col-lg-7"><div class="panel{% if size == 7 %} active{% endif %}">7</div></div>
+                <div class="col-lg-5"><div class="panel{% if size == 5 %} active{% endif %} align-right">5</div></div>
 
-        <a class="span8 border{% if size == 8 %} active{% endif %}">8</a>
-        <a class="span4 border{% if size == 4 %} active{% endif %} align-right">4</a>
+                <div class="col-lg-8"><div class="panel{% if size == 8 %} active{% endif %}">8</div></div>
+                <div class="col-lg-4"><div class="panel{% if size == 4 %} active{% endif %} align-right">4</div></div>
 
-        <a class="span9 border{% if size == 9 %} active{% endif %}">9</a>
-        <a class="span3 border{% if size == 3 %} active{% endif %} align-right">3</a>
+                <div class="col-lg-9"><div class="panel{% if size == 9 %} active{% endif %}">9</div></div>
+                <div class="col-lg-3"><div class="panel{% if size == 3 %} active{% endif %} align-right">3</div></div>
 
-        <a class="span10 border{% if size == 10 %} active{% endif %}">10</a>
-        <a class="span2 border{% if size == 2 %} active{% endif %} align-right">2</a>
+                <div class="col-lg-10"><div class="panel{% if size == 10 %} active{% endif %}">10</div></div>
+                <div class="col-lg-2"><div class="panel{% if size == 2 %} active{% endif %} align-right">2</div></div>
 
-        <a class="span11 border{% if size == 11 %} active{% endif %}">11</a>
-        <a class="span1 border{% if size == 1 %} active{% endif %} align-right">1</a>
+                <div class="col-lg-11"><div class="panel{% if size == 11 %} active{% endif %}">11</div></div>
+                <div class="col-lg-1"><div class="panel{% if size == 1 %} active{% endif %} align-right">1</div></div>
 
-        <a class="span12 border{% if size == 12 %} active{% endif %}">12</a>
+                <div class="col-lg-12"><div class="panel{% if size == 12 %} active{% endif %}">12</div></div>
+            </div>
+        </div>
     </div>
 </div>
