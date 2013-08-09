@@ -15,7 +15,8 @@
         {% render controller("ClarolineCoreBundle:Workspace:renderToolList", {'workspaceId': workspace.getId(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})}) %}
     {% endif %}
 
-    <div class="span9 section-content border">
+    <div class="col-lg-9 section-content">
+        <div class="panel">
         {% block breadcrumb %}
             <div id="resource-breadcrumb">
             {% if _resource is defined %}
@@ -33,6 +34,7 @@
             </div>
         {% endblock %}
         {% block section_content %}{% endblock %}
+        </div>
     </div>
 {% endblock %}
 

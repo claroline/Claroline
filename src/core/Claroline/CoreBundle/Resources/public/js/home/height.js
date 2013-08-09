@@ -4,21 +4,24 @@ function getResizeDivs(selector)
     var line = -1;
     var column = -1;
 
-    var first = $(selector).first().position();
+    var first = $(selector).first().offset();
 
     $(selector).each(function (index, element) {
+        //console.log($(element).offset());
 
         //lines
-        if ($(element).position().left === first.left) {
-            first = $(element).position();
+        if ($(element).offset().left === first.left) {
+            first = $(element).offset();
             line++;
+            //console.log("Line" + line);
             column = -1;
             divs[line] = [];
         }
 
         //columns
-        if ($(element).position().top === first.top) {
+        if ($(element).offset().top === first.top) {
             column++;
+            //console.log("Column" + column);
             divs[line][column] = [];
             divs[line][column].elements = [];
         }
@@ -44,14 +47,13 @@ function iterateDivs(divs, each) {
 
 function resizeDivs()
 {
-    var divs = getResizeDivs(".content.row-fluid .content-element.border");
-    var minHeight = 200;
+    var divs = getResizeDivs(".row.contents .content-element .panel");
+    var minHeight = 0;
     var currentline = -1;
 
     iterateDivs(divs, function (elements) {
         for (var element in elements) {
             if (elements.hasOwnProperty(element)) {
-               // alert(divs[line].height );
                 $(elements[element]).height("auto");
             }
         }
@@ -61,7 +63,7 @@ function resizeDivs()
         var height = 0; //min height
 
         if (currentline < line) {
-            minHeight = 200;
+            minHeight = 0;
             currentline++;
         }
 
@@ -73,10 +75,10 @@ function resizeDivs()
             }
         }
 
+        //alert(height + ">" + minHeight);
         if (height > minHeight) {
             minHeight = height;
-            divs[line].height = minHeight + 20;
-
+            divs[line].height = minHeight + 50;
         }
     });
 

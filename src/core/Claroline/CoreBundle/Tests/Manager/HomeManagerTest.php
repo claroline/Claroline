@@ -127,7 +127,7 @@ class HomeManagerTest extends MockeryTestCase
         $this->content->shouldReceive('setModified')->once();
         $this->contentType->shouldReceive('setSize')->once();
         $this->assertEquals(
-            null, $this->homeManager->updateContent($this->content, 'title', 'text', 'foo', 'span12', 'home')
+            null, $this->homeManager->updateContent($this->content, 'title', 'text', 'foo', 'col-lg-12', 'home')
         );
     }
 
@@ -201,6 +201,6 @@ class HomeManagerTest extends MockeryTestCase
     public function testGetMenu()
     {
         $this->homeService->shouldReceive('isDefinedPush')->once()->andReturn(array());
-        $this->assertEquals(array(), $this->homeManager->getMenu(1, 'span12', 'home', null));
+        $this->assertEquals(array(), $this->homeManager->getMenu(1, 'col-lg-12', 'home', null));
     }
 }

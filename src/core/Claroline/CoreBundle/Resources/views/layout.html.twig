@@ -48,9 +48,9 @@
 
 {% block layout %}
     <div id="sf-environement" data-env="{{ app.environment }}"></div>
-    <div id="wrapper">
+    <div id="wrap">
         <div class="please-wait">
-            <span class="label label-warning"> {{ 'please_wait'|trans({}, 'platform') }} </span>
+            <h4><span class="label label-warning"> {{ 'please_wait'|trans({}, 'platform') }} </span></h4>
         </div>
         {% if not is_path_mode %}
             {% if workspace is defined %}
@@ -60,7 +60,7 @@
             {% endif %}
         {% endif %}
 
-        <div id="grid" class="container container-fluid">
+        <div class="container">
             {% if has_role('ROLE_USURPATE_WORKSPACE_ROLE') %}
                 {% render controller('ClarolineCoreBundle:Layout:renderWarningImpersonation') %}
             {% endif %}
@@ -68,10 +68,11 @@
             &nbsp;
             {% endblock %}
 
-            <div class="row-fluid content">
+            <div class="row content">
                 {% block content %}{% endblock %}
             </div>
         </div>
+        <div id="push"></div>
     </div>
    {% block footer %}
         {% if not is_path_mode %}
@@ -90,18 +91,18 @@
 
 {% block javascripts %}
     {% javascripts debug=false  output='vendor/twbs/bootstrap/js/bootstrap.js'
-        '../vendor/twbs/bootstrap/js/affix.js'
+        '../vendor/twbs/bootstrap/js/transition.js'
         '../vendor/twbs/bootstrap/js/alert.js'
         '../vendor/twbs/bootstrap/js/button.js'
         '../vendor/twbs/bootstrap/js/carousel.js'
         '../vendor/twbs/bootstrap/js/collapse.js'
         '../vendor/twbs/bootstrap/js/dropdown.js'
         '../vendor/twbs/bootstrap/js/modal.js'
-        '../vendor/twbs/bootstrap/js/popover.js'
         '../vendor/twbs/bootstrap/js/scrollspy.js'
         '../vendor/twbs/bootstrap/js/tab.js'
         '../vendor/twbs/bootstrap/js/tooltip.js'
-        '../vendor/twbs/bootstrap/js/transition.js'
+        '../vendor/twbs/bootstrap/js/popover.js'
+        '../vendor/twbs/bootstrap/js/affix.js'
         %}<script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     {% javascripts debug=false  output='vendor/jms/twig-js/twig.js'

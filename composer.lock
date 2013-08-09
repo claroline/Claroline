@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "d2026b99840c358dfbd2662fbc722f7a",
+    "hash": "052686a831d3b6c5090b5a48a36019bf",
     "packages": [
         {
             "name": "besimple/sso-auth-bundle",
@@ -391,7 +391,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -463,7 +463,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -541,12 +541,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "2a7f59c1ecc62d828edf012f344ca44acdbe3c75"
+                "reference": "aa6be84b2804ce0d7f56a5d52693f983656d5eb8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/2a7f59c1ecc62d828edf012f344ca44acdbe3c75",
-                "reference": "2a7f59c1ecc62d828edf012f344ca44acdbe3c75",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/aa6be84b2804ce0d7f56a5d52693f983656d5eb8",
+                "reference": "aa6be84b2804ce0d7f56a5d52693f983656d5eb8",
                 "shasum": ""
             },
             "require": {
@@ -603,7 +603,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2013-08-03 15:29:12"
+            "time": "2013-08-06 21:51:07"
         },
         {
             "name": "doctrine/doctrine-bundle",
@@ -972,12 +972,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "97762d21a47135823a6470b6e2fed0041f88d77f"
+                "reference": "34b855e253893dfb54068596e4849220d1ce9ec5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/97762d21a47135823a6470b6e2fed0041f88d77f",
-                "reference": "97762d21a47135823a6470b6e2fed0041f88d77f",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/34b855e253893dfb54068596e4849220d1ce9ec5",
+                "reference": "34b855e253893dfb54068596e4849220d1ce9ec5",
                 "shasum": ""
             },
             "require": {
@@ -1039,7 +1039,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2013-08-06 06:41:30"
+            "time": "2013-08-06 21:50:14"
         },
         {
             "name": "fortawesome/fontawesome",
@@ -1923,12 +1923,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/leafo/lessphp.git",
-                "reference": "bc334d218be693bf571161df3b092530e1444a9a"
+                "reference": "d9da1ee64491dc61c3ca70bc58888a2b709576be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leafo/lessphp/zipball/bc334d218be693bf571161df3b092530e1444a9a",
-                "reference": "bc334d218be693bf571161df3b092530e1444a9a",
+                "url": "https://api.github.com/repos/leafo/lessphp/zipball/d9da1ee64491dc61c3ca70bc58888a2b709576be",
+                "reference": "d9da1ee64491dc61c3ca70bc58888a2b709576be",
                 "shasum": ""
             },
             "type": "library",
@@ -1956,7 +1956,7 @@
             ],
             "description": "lessphp is a compiler for LESS written in PHP.",
             "homepage": "http://leafo.net/lessphp/",
-            "time": "2013-08-06 07:25:47"
+            "time": "2013-08-06 17:01:49"
         },
         {
             "name": "monolog/monolog",
@@ -2549,12 +2549,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Icu.git",
-                "reference": "v1.0.0"
+                "reference": "0b790dfb98904df2bcd44b2e14a69b1ccd679ef7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Icu/zipball/v1.0.0",
-                "reference": "v1.0.0",
+                "url": "https://api.github.com/repos/symfony/Icu/zipball/0b790dfb98904df2bcd44b2e14a69b1ccd679ef7",
+                "reference": "0b790dfb98904df2bcd44b2e14a69b1ccd679ef7",
                 "shasum": ""
             },
             "require": {
@@ -2587,7 +2587,7 @@
                 "icu",
                 "intl"
             ],
-            "time": "2013-06-03 18:32:07"
+            "time": "2013-08-06 12:58:06"
         },
         {
             "name": "symfony/monolog-bundle",
@@ -2812,16 +2812,16 @@
         },
         {
             "name": "twbs/bootstrap",
-            "version": "v3.0.0-rc1",
+            "version": "dev-3.0.0-wip",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "v3.0.0-rc1"
+                "reference": "96136dbb56e136278cc7084caf84291949925d0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/v3.0.0-rc1",
-                "reference": "v3.0.0-rc1",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/96136dbb56e136278cc7084caf84291949925d0c",
+                "reference": "96136dbb56e136278cc7084caf84291949925d0c",
                 "shasum": ""
             },
             "type": "library",
@@ -2845,7 +2845,7 @@
                 "bootstrap",
                 "css"
             ],
-            "time": "2013-07-27 08:06:59"
+            "time": "2013-08-05 19:20:52"
         },
         {
             "name": "twig/extensions",
@@ -3201,6 +3201,7 @@
         "jms/twig-js-bundle": 20,
         "white-october/pagerfanta-bundle": 20,
         "idci/exporter-bundle": 20,
+        "twbs/bootstrap": 20,
         "fortawesome/fontawesome": 20,
         "xaguilars/bootstrap-colorpicker": 20,
         "zenstruck/form-bundle": 20,
