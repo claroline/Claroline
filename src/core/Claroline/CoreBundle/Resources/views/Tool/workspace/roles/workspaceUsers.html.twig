@@ -221,7 +221,7 @@
                     <li> <input class="chk-role" type="checkbox" value="{{ role.getId() }}" data-name="{{ role.getTranslationKey()|trans({}, 'platform') }}"> {{ role.getTranslationKey()|trans({}, 'platform') }}  </input> </li>
                 {% endfor %}
             </ul>
-            <button id="add-role-button" class="btn btn-secondary"> {{ 'apply'|trans({}, 'platform' ) }} </button>
+            <button id="add-role-button" class="btn btn-default"> {{ 'apply'|trans({}, 'platform' ) }} </button>
         </div>
 
         {{ renderPager(search, workspace.getId(), withUnregistered, queryString, pager) }}

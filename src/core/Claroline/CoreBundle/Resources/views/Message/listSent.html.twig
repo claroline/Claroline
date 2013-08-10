@@ -27,7 +27,7 @@
 
 {% macro displayControls() %}
     {% if app.user %}
-        <button class="btn btn-secondary action-button" data-action="remove">
+        <button class="btn btn-default action-button" data-action="remove">
             <i class="icon-trash"></i>
             {{ 'delete'|trans({}, 'platform') }}
         </button>
