@@ -23,27 +23,31 @@
 
     <div id='calendar' class="col-lg-9"></div>
     <div  id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3 id="myModalLabel"> {{ 'Nouvelle entrée'|trans({}, 'calendar') }}</h3>
-        </div>
-        <div class="modal-body">
-            <button class="btn btn-danger" id="deleteBtn" >
-                {{ 'delete'|trans({}, 'platform') }}
-            </button>
-            {{ tinymce_init() }}
-            <form method="post" action="{{ path('claro_workspace_agenda_add_event', {workspaceId: workspace.getId()}) }}" id="myForm" {{ form_enctype(form) }}>
-                {{ form_widget(form) }}
-            </form>
-            <a href="{{ path('claro_workspace_agenda_show', {workspaceId: workspace.getId()}) }}" id="link"></a>
-            <a href="{{ path('claro_workspace_agenda_move') }}" id="move"></a>
-            <a href="{{ path('claro_workspace_agenda_delete', {workspaceId: workspace.getId()}) }}" id="delete"></a>
-            <a href="{{ path('claro_workspace_agenda_update', {workspaceId: workspace.getId()}) }}" id="update"></a>
-        </div>
-        <div class="modal-footer">
-            <button class="btn" data-dismiss="modal" aria-hidden="true">{{'close'|trans({}, 'agenda') }}</button>
-            <button class="btn btn-primary" id="save">{{ 'add_an_event'|trans({}, 'agenda') }}</button>
-             <button class="btn btn-info" id="updateBtn" > {{ 'update'|trans({}, 'agenda') }}</button>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 id="myModalLabel"> {{ 'Nouvelle entrée'|trans({}, 'calendar') }}</h4>
+                </div>
+                <div class="modal-body">
+                    <button class="btn btn-danger" id="deleteBtn" >
+                        {{ 'delete'|trans({}, 'platform') }}
+                    </button>
+                    {{ tinymce_init() }}
+                    <form method="post" action="{{ path('claro_workspace_agenda_add_event', {workspaceId: workspace.getId()}) }}" id="myForm" {{ form_enctype(form) }}>
+                        {{ form_widget(form) }}
+                    </form>
+                    <a href="{{ path('claro_workspace_agenda_show', {workspaceId: workspace.getId()}) }}" id="link"></a>
+                    <a href="{{ path('claro_workspace_agenda_move') }}" id="move"></a>
+                    <a href="{{ path('claro_workspace_agenda_delete', {workspaceId: workspace.getId()}) }}" id="delete"></a>
+                    <a href="{{ path('claro_workspace_agenda_update', {workspaceId: workspace.getId()}) }}" id="update"></a>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{'close'|trans({}, 'agenda') }}</button>
+                    <button class="btn btn-primary" id="save">{{ 'add_an_event'|trans({}, 'agenda') }}</button>
+                     <button class="btn btn-info" id="updateBtn" > {{ 'update'|trans({}, 'agenda') }}</button>
+                </div>
+            </div>
         </div>
     </div>
 

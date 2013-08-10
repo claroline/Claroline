@@ -160,30 +160,38 @@
     </div>
 
     <div id="confirm-registration-validation-box" class="modal hide fade">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">×</button>
-            <h3>{{ 'workspace_registration_confirm_title'|trans({}, 'platform') }}</h3>
-        </div>
-        <div class="modal-body">
-            <p id="registration-confirm-message">{{ 'workspace_registration_confirm_message'|trans({}, 'platform') }}</p>
-        </div>
-        <div class="modal-footer">
-            <input type="button" id="registration-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-            <input type="button" class="btn btn-secondary" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>{{ 'workspace_registration_confirm_title'|trans({}, 'platform') }}</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="registration-confirm-message">{{ 'workspace_registration_confirm_message'|trans({}, 'platform') }}</p>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" id="registration-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+                </div>
+            </div>
         </div>
     </div>
 
     <div id="confirm-unregistration-validation-box" class="modal hide fade">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">×</button>
-            <h3>{{ 'workspace_unregistration_confirm_title'|trans({}, 'platform') }}</h3>
-        </div>
-        <div class="modal-body">
-            <p id="unregistration-confirm-message">{{ 'workspace_unregistration_confirm_message'|trans({}, 'platform') }}</p>
-        </div>
-        <div class="modal-footer">
-            <input type="button" id="unregistration-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-            <input type="button" class="btn btn-secondary" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>{{ 'workspace_unregistration_confirm_title'|trans({}, 'platform') }}</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="unregistration-confirm-message">{{ 'workspace_unregistration_confirm_message'|trans({}, 'platform') }}</p>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" id="unregistration-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

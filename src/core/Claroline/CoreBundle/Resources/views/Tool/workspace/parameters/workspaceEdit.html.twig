@@ -49,16 +49,20 @@
     </div>
 
     <div id="delete-ws-validation-box" class="modal hide fade">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">×</button>
-            <h3>{{ 'workspace_delete_confirm_title'|trans({}, 'platform') }}</h3>
-        </div>
-        <div class="modal-body">
-            <p>{{ 'workspace_delete_confirm_message'|trans({}, 'platform') }}</p>
-        </div>
-        <div class="modal-footer">
-            <input type="button" id="delete-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-            <input type="button" class="btn btn-secondary" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>{{ 'workspace_delete_confirm_title'|trans({}, 'platform') }}</h4>
+                </div>
+                <div class="modal-body">
+                    <p>{{ 'workspace_delete_confirm_message'|trans({}, 'platform') }}</p>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" id="delete-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
