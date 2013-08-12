@@ -55,7 +55,6 @@ if ($returnCode === 0) {
     system("php {$rootDirectory}/app/console claroline:install --env=test");
 
     system("php {$rootDirectory}/app/console cache:clear");
-    system("php {$rootDirectory}/app/console claroline:plugins:fixtures");
     system("php {$rootDirectory}/app/console claroline:fixture:demo");
 }
 
