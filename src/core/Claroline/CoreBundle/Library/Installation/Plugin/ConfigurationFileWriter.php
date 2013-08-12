@@ -30,10 +30,10 @@ class ConfigurationFileWriter
      * @param Yaml   $yamlHandler
      *
      * @DI\InjectParams({
-     *     "pluginNamespacesFile" = @DI\Inject("%claroline.param.plugin_namespaces_file%"),
-     *     "pluginBundlesFile" = @DI\Inject("%claroline.param.plugin_bundles_file%"),
-     *     "pluginRoutingFile" = @DI\Inject("%claroline.param.plugin_routing_file%"),
-     *     "yamlHandler" = @DI\Inject("symfony.yaml")
+     *     "pluginNamespacesFile"   = @DI\Inject("%claroline.param.plugin_namespaces_file%"),
+     *     "pluginBundlesFile"      = @DI\Inject("%claroline.param.plugin_bundles_file%"),
+     *     "pluginRoutingFile"      = @DI\Inject("%claroline.param.plugin_routing_file%"),
+     *     "yamlHandler"            = @DI\Inject("claroline.symfony_yaml")
      * })
      */
     public function __construct(
