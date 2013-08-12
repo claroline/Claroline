@@ -12,7 +12,17 @@ services:
         arguments:
             - routing: "@claroline.plugin.routing_checker"
               config: "@claroline.plugin.config_checker"
-    # symfony class used as service argument
+    # vendor classes used as service arguments
     claroline.symfony_yaml:
         class: Symfony\Component\Yaml\Yaml
         public: false
+    claroline.symfony_fixture_loader:
+        class: Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader
+        public: false
+        arguments:
+            - "@service_container"
+    claroline.doctrine_fixture_executor:
+        class: Doctrine\Common\DataFixtures\Executor\ORMExecutor
+        public: false
+        arguments:
+            - "@doctrine.orm.entity_manager"

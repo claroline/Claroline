@@ -6,6 +6,7 @@ use \RuntimeException;
 use \LogicException;
 use Symfony\Component\HttpKernel\KernelInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Library\Installation\FixtureLoader;
 
 /**
  * This class is used to perform the (un-)installation of a plugin. It uses
@@ -19,6 +20,7 @@ class Installer
     private $validator;
     private $recorder;
     private $migrator;
+    private $fixtureLoader;
     private $kernel;
 
     /**
@@ -31,11 +33,12 @@ class Installer
      * @param KernelInterface $kernel
      *
      * @DI\InjectParams({
-     *     "loader" = @DI\Inject("claroline.plugin.loader"),
-     *     "validator" = @DI\Inject("claroline.plugin.validator"),
-     *     "migrator" = @DI\Inject("claroline.plugin.migrator"),
-     *     "recorder" = @DI\Inject("claroline.plugin.recorder"),
-     *     "kernel" = @DI\Inject("kernel")
+     *     "loader"         = @DI\Inject("claroline.plugin.loader"),
+     *     "validator"      = @DI\Inject("claroline.plugin.validator"),
+     *     "migrator"       = @DI\Inject("claroline.plugin.migrator"),
+     *     "recorder"       = @DI\Inject("claroline.plugin.recorder"),
+     *     "fixtureLoader"  = @DI\Inject("claroline.installation.fixture_loader"),
+     *     "kernel"         = @DI\Inject("kernel")
      * })
      */
     public function __construct(
@@ -43,6 +46,7 @@ class Installer
         Validator $validator,
         Migrator $migrator,
         Recorder $recorder,
+        FixtureLoader $fixtureLoader,
         KernelInterface $kernel
     )
     {
@@ -50,6 +54,7 @@ class Installer
         $this->validator = $validator;
         $this->migrator = $migrator;
         $this->recorder = $recorder;
+        $this->fixtureLoader = $fixtureLoader;
         $this->kernel = $kernel;
     }
 
@@ -101,7 +106,7 @@ class Installer
      *
      * @throws Exception if the plugin doesn't pass the validation
      */
-    public function install($pluginFqcn, $pluginPath)
+    public function install($pluginFqcn, $pluginPath = null)
     {
         $this->checkRegistrationStatus($pluginFqcn, false);
         $plugin = $this->loader->load($pluginFqcn, $pluginPath);
@@ -113,6 +118,7 @@ class Installer
             $this->recorder->register($plugin, $config);
             $this->kernel->shutdown();
             $this->kernel->boot();
+            $this->fixtureLoader->load($plugin);
         } else {
             $report = "Plugin '{$pluginFqcn}' cannot be installed, due to the "
                 . "following validation errors :" . PHP_EOL;
