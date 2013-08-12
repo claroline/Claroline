@@ -63,38 +63,6 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
     }
 
     /**
-     * Helper method parsing the plugin directory and applying the "installPlugin"
-     * or "uninstallPlugin" methods of this class on each plugin found.
-     *
-     * @param string          $methodName "installPlugin" or "uninstallPlugin"
-     * @param OutputInterface $output
-     *
-     * @return boolean True if the callback method has succeeded at least once, false otherwise
-     */
-    protected function walkPluginDirectory($methodName, OutputInterface $output)
-    {
-        if ($methodName != 'installPlugin' && $methodName != 'uninstallPlugin') {
-            throw new InvalidArgumentException(
-                "First parameter must be either 'installPlugin' "
-                . " or 'uninstallPlugin', {$methodName} given."
-            );
-        }
-
-        $pluginDirectory = $this->getContainer()->getParameter('claroline.param.plugin_directory');
-        $hasEffect = false;
-        $output->writeln("Scanning plugin directory ('{$pluginDirectory}')...");
-        $pluginFQCNs = $this->getAvailablePluginFQCNs($pluginDirectory);
-
-        foreach ($pluginFQCNs as $pluginFQCN) {
-            if ($this->{$methodName}($pluginFQCN, $output)) {
-                $hasEffect = true;
-            }
-        }
-
-        return $hasEffect;
-    }
-
-    /**
      * Clears the cache in production environment (mandatory after plugin
      * installation/uninstallation).
      *
