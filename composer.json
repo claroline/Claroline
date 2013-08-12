@@ -1,9 +1,9 @@
 {
     "name": "claroline/video-player-bundle",
-    "description": "Claroline video player bundle",
-    "keywords": ["Claroline","Video player"],
+    "description": "Claroline video player plugin",
+    "keywords": ["Claroline", "Plugin", "Video player"],
     "homepage": "http://www.claroline.net",
-    "type": "bundle",
+    "type": "claroline-plugin",
     "license": "",
     "authors": [
         {
