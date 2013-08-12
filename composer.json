@@ -1,9 +1,9 @@
 {
     "name": "claroline/image-player-bundle",
-    "description": "Claroline image player bundle",
-    "keywords": ["Claroline","Image player"],
+    "description": "Claroline image player plugin",
+    "keywords": ["Claroline", "Plugin", "Image player"],
     "homepage": "http://www.claroline.net",
-    "type": "bundle",
+    "type": "claroline-plugin",
     "license": "",
     "authors": [
         {
