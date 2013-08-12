@@ -32,9 +32,9 @@
     </div>
 
     <!--<div class="col-lg-2">
-        <button type="button" class="filter btn">{{ 'search'|trans({}, 'platform') }}</button>
-        <button type="button" class="close-panel btn">{{ 'close'|trans({}, 'platform') }}</button>
-        <button type="button" class="close-panel btn pull-right">{{ 'close'|trans({}, 'platform') }}</button>
+        <button type="button" class="filter btn btn-default">{{ 'search'|trans({}, 'platform') }}</button>
+        <button type="button" class="close-panel btn btn-default">{{ 'close'|trans({}, 'platform') }}</button>
+        <button type="button" class="close-panel btn btn-default pull-right">{{ 'close'|trans({}, 'platform') }}</button>
     </div>-->
 
     <div class="filters-arrow-border"></div>

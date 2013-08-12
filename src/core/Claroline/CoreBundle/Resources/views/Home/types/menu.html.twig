@@ -5,7 +5,7 @@
             {% if region is defined and (region == "header" or region == "footer") %}
                 <ul class="nav nav-pills">
             {% else %}
-                <div class="list-group">
+                <div class="list-group menu">
             {% endif %}
     {% endif %}
 
@@ -31,19 +31,20 @@
             </li>
         {% else %}
              {% if father is defined %}
-                <div class="content-element relative"><a class="{% if region != "header" and region != "footer" %}list-group-item {% endif %}{{ content.content | activeLink }}"
-                    data-id="{{ content.id }}"
-                    data-type="{{ type }}"
-                    data-father="{{ father }}"
-                    {% if content.content is defined and content.content != "" %}
-                        href="{{ content.content | homeLink }}"
-                    {% endif %}
-                    >
-                    {{ content.title }}
-
-                </a>{% if (region is defined and region != 'header' and region != 'footer') or region is not defined %}
+                 <div class="content-element relative{% if region != "header" and region != "footer" %} list-group-item {% endif %}{{ content.content | activeLink }}">
+                    <a data-id="{{ content.id }}"
+                        data-type="{{ type }}"
+                        data-father="{{ father }}"
+                        {% if content.content is defined and content.content != "" %}
+                            href="{{ content.content | homeLink }}"
+                        {% endif %}
+                        >
+                            {{ content.title }}
+                    </a>
+                    {% if (region is defined and region != 'header' and region != 'footer') or region is not defined %}
                         {% render controller("ClarolineCoreBundle:Home:menu", { 'id': content.id, 'size': size, 'type': type, 'father': father  }) %}
-                    {% endif %}</div>
+                    {% endif %}
+                </div>
             {% else %}
                 <div class="{% if region != "header" and region != "footer" %}list-group-item {% endif %}disabled relative">
                     <b>{{ content.title }}</b>

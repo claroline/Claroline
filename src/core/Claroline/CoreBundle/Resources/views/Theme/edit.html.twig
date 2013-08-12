@@ -26,7 +26,7 @@
 {% block section_content %}
     <div id="homePath" class="hide">{{ path("claro_index") }}</div>
 
-    <div class="margin theme-generator">
+    <div class="theme-generator">
         <h3 class="sub-section-header">
             {% if theme is defined %}
             {{ "Edit theme" | trans({}, "theme") }}<em> ({{ theme.name }})</em>
@@ -50,10 +50,10 @@
                         <tr>
                             <td class="form-actions" colspan="2">
                                 <button class="btn save btn-primary"{% if theme is defined %} data-id="{{ theme.getId() }}"{% endif %}><i class="icon-ok"></i> {{ "Save" | trans({}, "") }}</button>
-                                <a href="{{ path("claroline_admin_theme_list") }}" class="btn"><i class="icon-reply"></i> {{ "Cancel" | trans({}, "") }}</a>
-                                <button class="btn preview"{% if theme is defined %} data-id="{{ theme.getId() }}"{% endif %}><i class="icon-eye-open"></i> {{ "Preview" | trans({}, "") }}</button>
+                                <a href="{{ path("claroline_admin_theme_list") }}" class="btn btn-default"><i class="icon-reply"></i> {{ "Cancel" | trans({}, "") }}</a>
+                                <button class="btn btn-default preview"{% if theme is defined %} data-id="{{ theme.getId() }}"{% endif %}><i class="icon-eye-open"></i> {{ "Preview" | trans({}, "") }}</button>
                                 {% if theme is defined %}
-                                    <button class="btn dele" data-id="{{ theme.getId() }}"><i class="icon-trash"></i> {{ "Delete" | trans({}, "") }}</button>
+                                    <button class="btn btn-default dele" data-id="{{ theme.getId() }}"><i class="icon-trash"></i> {{ "Delete" | trans({}, "") }}</button>
                                 {% endif %}
                             </td>
                         </tr>

@@ -42,9 +42,6 @@
                     {{ element['name'] }}
                 {% endif %}
             </li>
-            {% if not loop.last %}
-            <li><span class="divider"> / </span></li>
-            {% endif %}
         {% endfor %}
     </ul>
 {% endmacro %}

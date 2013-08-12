@@ -3,34 +3,25 @@
 {% block content %}
     {% if is_granted('ROLE_USER') %}
         <div class="col-lg-3">
-            <ul class="nav nav-tabs nav-stacked">
-                <li class="disabled">
-                <a><b>{{ 'workspaces' | trans({}, "platform")}}</b></a>
-                </li>
-                <li class="{{ "/workspaces/" | activeLink  }}">
-                <a href="{{ path('claro_workspace_list') }}">
+            <div class="list-group menu">
+                <a class="list-group-item disabled">
+                    <b>{{ 'workspaces' | trans({}, "platform")}}</b>
+                </a>
+                <a class="list-group-item{{ "/workspaces/" | activeLink  }}" href="{{ path('claro_workspace_list') }}">
                     <i class="icon-book"></i>
-                    <i class="icon-chevron-right pull-right"></i>
                     {{ 'all_workspaces'|trans({}, 'platform') }}
                 </a>
-                </li>
-                <li class="{{ "/workspaces/user" | activeLink  }}">
-                <a href="{{ path('claro_workspace_by_user') }}">
+                <a class="list-group-item {{ "/workspaces/user" | activeLink  }}" href="{{ path('claro_workspace_by_user') }}">
                     <i class="icon-book"></i>
-                    <i class="icon-chevron-right pull-right"></i>
                     {{ 'my_workspaces'|trans({}, 'platform') }}
                 </a>
-                </li>
                 {% if is_granted('ADMIN') %}
-                    <li>
-                    <a href="{{ path('claro_workspace_creation_form') }}">
+                    <a class="list-group-item {{ "/workspaces/new/form" | activeLink  }}" href="{{ path('claro_workspace_creation_form') }}">
                         <i class="icon-pencil"></i>
-                        <i class="icon-chevron-right pull-right"></i>
                         {{ 'create_workspace'|trans({}, 'platform') }}
                     </a>
-                    </li>
                 {% endif %}
-            </ul>
+            </div>
         </div>
     {% endif %}
     <div class="panel {% if is_granted('ROLE_USER') %}col-lg-9{% else %}col-lg-12{% endif %}">
