@@ -37,9 +37,9 @@ class RoutingChecker implements CheckerInterface
      * @param Yaml   $yamlParser
      *
      * @DI\InjectParams({
-     *     "router" = @DI\Inject("router"),
-     *     "yamlParser" = @DI\Inject("symfony.yaml"),
-     *     "mainPluginRoutingFile" = @DI\Inject("%kernel.root_dir%/config/local/plugin/routing.yml")
+     *     "router"                 = @DI\Inject("router"),
+     *     "yamlParser"             = @DI\Inject("claroline.symfony_yaml"),
+     *     "mainPluginRoutingFile"  = @DI\Inject("%kernel.root_dir%/config/local/plugin/routing.yml")
      * })
      */
     public function __construct(Router $router, Yaml $yamlParser, $mainPluginRoutingFile)

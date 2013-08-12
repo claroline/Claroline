@@ -21,8 +21,8 @@ class ConfigurationChecker implements CheckerInterface
 
     /**
      * @DI\InjectParams({
-     *     "yamlParser" = @DI\Inject("symfony.yaml"),
-     *     "em" = @DI\Inject("doctrine.orm.entity_manager")
+     *     "yamlParser" = @DI\Inject("claroline.symfony_yaml"),
+     *     "em"         = @DI\Inject("doctrine.orm.entity_manager")
      * })
      */
     public function __construct(Yaml $yamlParser, EntityManager $em)
