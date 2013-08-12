@@ -96,6 +96,23 @@ class InstallerTest extends WebTestCase
         $this->installer->uninstall($pluginFQCN);
     }
 
+    public function testMigrate()
+    {
+        $this->mockedRecorder->expects($this->once())
+            ->method('isRegistered')
+            ->with(get_class($this->mockedPlugin))
+            ->will($this->returnValue(true));
+        $this->mockedLoader->expects($this->once())
+            ->method('load')
+            ->with(get_class($this->mockedPlugin))
+            ->will($this->returnValue($this->mockedPlugin));
+        $this->mockedMigrator->expects($this->once())
+            ->method('migrate')
+            ->with($this->mockedPlugin);
+
+        $this->installer->migrate(get_class($this->mockedPlugin), '123');
+    }
+
     private function initMockedHelpers()
     {
         $this->mockedLoader = $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\Plugin\Loader')
