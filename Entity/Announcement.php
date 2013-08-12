@@ -3,9 +3,10 @@
 namespace Claroline\AnnouncementBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\AnnouncementBundle\Repository\AnnouncementRepository")
  * @ORM\Table(name="claro_announcement")
  */
 class Announcement
@@ -23,7 +24,8 @@ class Announcement
     protected $title;
 
     /**
-     * @ORM\Column(length=1023, nullable=true)
+     * @ORM\Column(length=1023, nullable=false)
+     * @Assert\NotBlank()
      */
     protected $content;
 
@@ -31,6 +33,11 @@ class Announcement
      * @ORM\Column(nullable=true)
      */
     protected $announcer;
+
+    /**
+     * @ORM\Column(name="creation_date", type="datetime", nullable=false)
+     */
+    protected $creationDate;
 
     /**
      * @ORM\Column(name="publication_date", type="datetime", nullable=true)
@@ -53,14 +60,13 @@ class Announcement
     protected $visibleUntil;
 
     /**
-     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Column(name="announcement_order", type="integer", nullable=false)
      */
-    protected $order;
+    protected $announcementOrder;
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     cascade={"persist"}
+     *     targetEntity="Claroline\CoreBundle\Entity\User"
      * )
      * @ORM\JoinColumn(name="creator_id", onDelete="CASCADE", nullable=false)
      */
@@ -70,7 +76,6 @@ class Announcement
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\AnnouncementBundle\Entity\AnnouncementAggregate",
-     *     cascade={"persist"},
      *     inversedBy="announcements"
      * )
      * @ORM\JoinColumn(name="aggregate_id", onDelete="CASCADE", nullable=false)
@@ -117,6 +122,16 @@ class Announcement
         $this->announcer = $announcer;
     }
 
+    public function getCreationDate()
+    {
+        return $this->creationDate;
+    }
+
+    public function setCreationDate($creationDate)
+    {
+        $this->creationDate = $creationDate;
+    }
+
     public function getPublicationDate()
     {
         return $this->publicationDate;
@@ -157,14 +172,14 @@ class Announcement
         $this->visibleUntil = $visibleUntil;
     }
 
-    public function getOrder()
+    public function getAnnouncementOrder()
     {
-        return $this->order;
+        return $this->announcementOrder;
     }
 
-    public function setOrder($order)
+    public function setAnnouncementOrder($announcementOrder)
     {
-        $this->order = $order;
+        $this->announcementOrder = $announcementOrder;
     }
 
     public function getCreator()
@@ -177,13 +192,13 @@ class Announcement
         $this->creator = $creator;
     }
 
-    public function getAggregator()
+    public function getAggregate()
     {
-        return $this->aggregator;
+        return $this->aggregate;
     }
 
-    public function setAggregator($aggregator)
+    public function setAggregate($aggregate)
     {
-        $this->aggregator = $aggregator;
+        $this->aggregate = $aggregate;
     }
 }

@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/08/06 10:25:07
+ * Generation date: 2013/08/07 11:04:08
  */
-class Version20130806102506 extends AbstractMigration
+class Version20130807110408 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -22,11 +22,12 @@ class Version20130806102506 extends AbstractMigration
                 title VARCHAR(255) DEFAULT NULL, 
                 content VARCHAR(1023) DEFAULT NULL, 
                 announcer VARCHAR(255) DEFAULT NULL, 
+                creation_date DATETIME NOT NULL, 
                 publication_date DATETIME DEFAULT NULL, 
                 visible BOOLEAN NOT NULL, 
                 visible_from DATETIME DEFAULT NULL, 
                 visible_until DATETIME DEFAULT NULL, 
-                \"order\" INTEGER NOT NULL, 
+                announcement_order INTEGER NOT NULL, 
                 PRIMARY KEY(id)
             )
         ");
@@ -36,12 +37,21 @@ class Version20130806102506 extends AbstractMigration
         $this->addSql("
             CREATE INDEX IDX_778754E3D0BBCCBE ON claro_announcement (aggregate_id)
         ");
+        $this->addSql("
+            CREATE TABLE claro_announcement_aggregate (
+                id INTEGER NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
     }
 
     public function down(Schema $schema)
     {
         $this->addSql("
             DROP TABLE claro_announcement
+        ");
+        $this->addSql("
+            DROP TABLE claro_announcement_aggregate
         ");
     }
 }

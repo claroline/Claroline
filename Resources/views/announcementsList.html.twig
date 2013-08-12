@@ -1,12 +1,46 @@
+{% macro renderPager(pager, aggregate) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_announcements_list',
+                'routeParams': {'aggregateId': aggregate.getId()}
+            }
+        )
+    }}
+{% endmacro %}
+
+{% from _self import renderPager %}
+
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script
+        src='{{ asset('bundles/clarolineannouncement/js/announcements_list.js') }}'
+        type="text/javascript"
+    >
+    </script>
+{% endblock %}
 
 {% block section_content %}
 
 <div class="margin">
+    {{
+        macros.breadcrumbs([
+            {
+                'name': 'announcements_list'|trans({}, 'announcement'),
+                'href': '#'
+            }
+        ])
+    }}
 
-    <h1>{{ 'announcement_aggregate_management'|trans({}, 'announcement') }}</h1>
-    <h3>{{ 'resource'|trans({}, 'platform') }} : {{ _resource.getName() }}</h3>
+    <h1>{{ 'announcements_list'|trans({}, 'announcement') }}</h1>
+    <h4>{{ 'resource'|trans({}, 'platform') }} : {{ _resource.getName() }}</h4>
 
+    {% if is_granted('EDIT', resourceCollection) %}
     <div>
         <a href="{{ path('claro_announcement_create_form', {'aggregateId': _resource.getId()}) }}">
             <button class="btn btn-secondary create-announcement-button">
@@ -14,13 +48,100 @@
             </button>
         </a>
     </div>
+    {% endif %}
 
-    <ul>
-    {% for announcement in announcements %}
-        <li>{{ announcement.getTitle() }}<li>
-    {% endfor %}
-    </ul>
+    <br>
 
+    <div class="margin">
+        {% set nbPages = announcements.getNbPages() %}
+        {% if nbPages > 1 %}
+        {{ renderPager(announcements, _resource) }}
+        {% endif %}
+        {% for announcement in announcements %}
+            <div class="announcement
+                {% if announcement.isVisible() %}
+                    announcement-visible
+                {% else %}
+                    announcement-hide
+                {% endif %}
+            ">
+                <div class="pull-right">
+                {% if is_granted('EDIT', resourceCollection) %}
+                    <a href="{{ path('claro_announcement_edit_form', {'announcementId': announcement.getId()}) }}">
+                        <button type="button">
+                            <i class="icon-edit"></i>
+                        </button>
+                    </a>
+                    <button
+                        type="button"
+                        class="announcement-delete-button"
+                        btn-announcement-id="{{ announcement.getId() }}"
+                    >
+                        &times;
+                    </button>
+                {% endif %}
+                </div>
+                {% set title = announcement.getTitle() %}
+                {% if title is not null %}
+                <div>
+                    <h3>{{ title }}</h3>
+                    <hr class="announcement-separator">
+                </div>
+                {% endif %}
+                <div>
+                    {% if announcement.getAnnouncer() is not null %}
+                    <h4>{{ announcement.getAnnouncer() }} :</h4>
+                    <br>
+                    {% endif %}
+                    <div class="margin">
+                        {{ announcement.getContent()|raw }}
+                    </div>
+                </div>
+                <div class="footer">
+                    <hr class="announcement-separator">
+                    {% if (is_granted('EDIT', resourceCollection) or is_granted('DELETE', resourceCollection)) %}
+                    <div>
+                        {% set creator = announcement.getCreator() %}
+                        {{ 'created_on'|trans({}, 'announcement') }}
+                        {{ announcement.getCreationDate().format('d-m-Y') }}
+                        {{ 'at'|trans({}, 'announcement') }}
+                        {{ announcement.getCreationDate().format('H:i:s') }},
+                        {{ 'by'|trans({}, 'announcement') }}
+                        {{ creator.getFirstName() }}
+                        {{ creator.getLastName() }}
+                    </div>
+                    {% endif %}
+                    {% set publicationDate = announcement.getPublicationDate() %}
+                    {% if publicationDate is not null %}
+                        <div>
+                            {{ 'published_on'|trans({}, 'announcement') }}
+                            {{ publicationDate.format('d-m-Y') }}
+                            {{ 'at'|trans({}, 'announcement') }}
+                            {{ publicationDate.format('H:i:s') }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+        {% if nbPages > 1 %}
+        {{ renderPager(announcements, _resource) }}
+        {% endif %}
+    </div>
+</div>
+
+
+<div id="delete-announcement-validation-box" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h3>{{ 'announcement_delete_confirm_title'|trans({}, 'announcement') }}</h3>
+    </div>
+    <div class="modal-body">
+        <p>{{ 'announcement_delete_confirm_message'|trans({}, 'announcement') }}</p>
+    </div>
+    <div class="modal-footer">
+        <input type="button" id="delete-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
+        <input type="button" class="btn btn-secondary" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+    </div>
 </div>
 
 {% endblock %}

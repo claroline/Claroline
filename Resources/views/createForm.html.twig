@@ -6,21 +6,51 @@
 {% endblock %}
 
 {% block section_content %}
+{% if type == 'create' %}
+    {% set typeText = 'announcement_creation' %}
+    {% set validationPath = path('claro_announcement_create', {'aggregateId': _resource.getId()}) %}
+{% else %}
+    {% set typeText = 'announcement_edition' %}
+    {% set validationPath = path('claro_announcement_edit', {'announcementId': announcement.getId()}) %}
+{% endif %}
 
-<form
-    class="form-horizontal"
-    action="{{ path('claro_announcement_create', {'aggregateId': _resource.getId()}) }}"
-    method="post" {{ form_enctype(form) }}
-    id="announcement-form"
-    autocomplete="off"
->
-    {{ form_widget(form) }}
-    <div class="form-actions">
-        <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-        <a href="{{ path('claro_announcement_aggregate_open', {'aggregateId': _resource.getId()}) }}">
-            <button  type="button" class="btn">{{ 'cancel'|trans({}, 'platform') }}</button>
-        </a>
-    </div>
-</form>
+<div class="margin">
+    {{
+        macros.breadcrumbs([
+            {
+                'name': 'announcements_list'|trans({}, 'announcement'),
+                'href': path('claro_announcements_list', {'aggregateId': _resource.getId()})
+            },
+            {
+                'name': typeText|trans({}, 'announcement'),
+                'href': '#'
+            }
+        ])
+    }}
+
+    <h1>
+    {% if type == 'create' %}
+        {{ typeText|trans({}, 'announcement') }}
+    {% else %}
+        {{ typeText|trans({}, 'announcement') }}
+    {% endif %}
+    </h1>
+    <br>
+    <form
+        class="form-horizontal"
+        action="{{ validationPath }}"
+        method="post" {{ form_enctype(form) }}
+        id="announcement-form"
+    >
+        {{ form_widget(form) }}
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            <a href="{{ path('claro_announcements_list', {'aggregateId': _resource.getId()}) }}">
+                <button  type="button" class="btn">{{ 'cancel'|trans({}, 'platform') }}</button>
+            </a>
+        </div>
+    </form>
+</div>
 
 {% endblock %}

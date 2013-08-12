@@ -16,12 +16,14 @@ class AnnouncementType extends AbstractType
             'content',
             'textarea',
             array(
+                'required' => true,
                 'attr' => array(
                     'class' => 'tinymce',
                     'data-theme' => 'medium'
                 )
             )
         );
+        $builder->add('visible', 'checkbox', array('required' => false));
     }
 
     public function getName()

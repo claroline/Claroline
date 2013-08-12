@@ -127,7 +127,7 @@ class AnnouncementListener
     public function onOpen(OpenResourceEvent $event)
     {
         $route = $this->router->generate(
-            'claro_announcement_aggregate_open',
+            'claro_announcements_list',
             array('aggregateId' => $event->getResource()->getId())
         );
         $event->setResponse(new RedirectResponse($route));

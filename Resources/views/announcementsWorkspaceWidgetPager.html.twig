@@ -1,0 +1,67 @@
+{% macro renderPager(pager, workspaceId) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_workspace_announcements_pager',
+                'routeParams': {'workspaceId': workspaceId}
+            }
+        )
+    }}
+{% endmacro %}
+
+{% from _self import renderPager %}
+
+{% block javascripts %}
+    <script
+        src='{{ asset('bundles/clarolineannouncement/js/workspace_widget.js') }}'
+        type="text/javascript"
+    >
+    </script>
+{% endblock %}
+
+{% set nbAnnouncements = datas|length %}
+
+{% if nbAnnouncements > 0 %}
+    {% set nbPages = datas.getNbPages() %}
+
+    <div id="workspace-widget-pager" workspace-id="{{ workspaceId }}">
+    {% if nbPages > 1 %}
+        {{ renderPager(datas, workspaceId) }}
+    {% endif %}
+
+    {% for data in datas %}
+        <div class="announcement">
+            {% set title = data['announcement'].getTitle() %}
+            {% if title is not null %}
+                <h3> {{ title }}</h3>
+                <hr>
+            {% endif %}
+            <div class="wrapper">
+                {% set announcer = data['announcement'].getAnnouncer() %}
+                {% if announcer is not null %}
+                    <h4>{{ announcer }} :</h4>
+                {% endif %}
+                <div class="margin">
+                    {{ data['announcement'].getContent()|raw }}
+                </div>
+            </div>
+            <hr>
+            <div class="footer">
+                {{ 'published_on'|trans({}, 'announcement') }}
+                {{ data['announcement'].getPublicationDate().format('d-m-Y') }}
+                {{ 'at'|trans({}, 'announcement') }}
+                {{ data['announcement'].getPublicationDate().format('H:i:s') }}
+            </div>
+        </div>
+    {% endfor %}
+
+    {% if nbPages > 1 %}
+        {{ renderPager(datas, workspaceId) }}
+    {% endif %}
+    </div>
+{% else %}
+    {{ 'no_announcement_widget_message'|trans({}, 'widget') }}
+{% endif %}

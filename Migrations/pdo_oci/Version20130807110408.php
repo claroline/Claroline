@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/08/06 10:25:07
+ * Generation date: 2013/08/07 11:04:08
  */
-class Version20130806102506 extends AbstractMigration
+class Version20130807110408 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -22,11 +22,12 @@ class Version20130806102506 extends AbstractMigration
                 title VARCHAR2(255) DEFAULT NULL, 
                 content VARCHAR2(1023) DEFAULT NULL, 
                 announcer VARCHAR2(255) DEFAULT NULL, 
+                creation_date TIMESTAMP(0) NOT NULL, 
                 publication_date TIMESTAMP(0) DEFAULT NULL, 
                 visible NUMBER(1) NOT NULL, 
                 visible_from TIMESTAMP(0) DEFAULT NULL, 
                 visible_until TIMESTAMP(0) DEFAULT NULL, 
-                \"order\" NUMBER(10) NOT NULL, 
+                announcement_order NUMBER(10) NOT NULL, 
                 PRIMARY KEY(id)
             )
         ");
@@ -65,6 +66,12 @@ class Version20130806102506 extends AbstractMigration
             CREATE INDEX IDX_778754E3D0BBCCBE ON claro_announcement (aggregate_id)
         ");
         $this->addSql("
+            CREATE TABLE claro_announcement_aggregate (
+                id NUMBER(10) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
             ALTER TABLE claro_announcement 
             ADD CONSTRAINT FK_778754E361220EA6 FOREIGN KEY (creator_id) 
             REFERENCES claro_user (id) 
@@ -76,12 +83,25 @@ class Version20130806102506 extends AbstractMigration
             REFERENCES claro_announcement_aggregate (id) 
             ON DELETE CASCADE
         ");
+        $this->addSql("
+            ALTER TABLE claro_announcement_aggregate 
+            ADD CONSTRAINT FK_79BF2C8CBF396750 FOREIGN KEY (id) 
+            REFERENCES claro_resource (id) 
+            ON DELETE CASCADE
+        ");
     }
 
     public function down(Schema $schema)
     {
         $this->addSql("
+            ALTER TABLE claro_announcement 
+            DROP CONSTRAINT FK_778754E3D0BBCCBE
+        ");
+        $this->addSql("
             DROP TABLE claro_announcement
+        ");
+        $this->addSql("
+            DROP TABLE claro_announcement_aggregate
         ");
     }
 }
