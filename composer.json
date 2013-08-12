@@ -21,5 +21,8 @@
     "autoload": {
         "psr-0": { "Claroline\\RssReaderBundle": "" }
     },
-    "target-dir": "Claroline/RssReaderBundle"
+    "target-dir": "Claroline/RssReaderBundle",
+    "extra": {
+        "dbVersion": "20130805110005"
+    }
 }
