@@ -1,51 +1,76 @@
 <?php
 
-namespace Claroline\CoreBundle\Installation\Plugin;
+namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
-class InstallerTest extends WebTestCase
+class InstallerTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var Installer */
+    private $plugin;
+    private $loader;
+    private $validator;
+    private $migrator;
+    private $recorder;
+    private $fixtureLoader;
+    private $kernel;
     private $installer;
-    private $mockedPlugin;
-    private $mockedLoader;
-    private $mockedValidator;
-    private $mockedMigrator;
-    private $mockedRecorder;
 
     protected function setUp()
     {
-        $this->installer = self::createClient()->getContainer()->get('claroline.plugin.installer');
-        $this->mockedPlugin = $this->getMock('Claroline\CoreBundle\Library\PluginBundle');
-        $this->initMockedHelpers();
-        $this->installer->setLoader($this->mockedLoader);
-        $this->installer->setValidator($this->mockedValidator);
-        $this->installer->setMigrator($this->mockedMigrator);
-        $this->installer->setRecorder($this->mockedRecorder);
+        $this->plugin = $this->getMock('Claroline\CoreBundle\Library\PluginBundle');
+        $this->loader = $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\Plugin\Loader')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->validator = $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\Plugin\Validator')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->migrator = $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\Plugin\Migrator')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->recorder = $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\Plugin\Recorder')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->fixtureLoader = $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\FixtureLoader')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\KernelInterface');
+
+        $this->installer = new Installer(
+            $this->loader,
+            $this->validator,
+            $this->migrator,
+            $this->recorder,
+            $this->fixtureLoader,
+            $this->kernel
+        );
     }
 
     public function testInstallProperlyDelegatesToHelpers()
     {
-        $this->mockedRecorder->expects($this->once())
+        $this->recorder->expects($this->once())
             ->method('isRegistered')
-            ->with(get_class($this->mockedPlugin))
+            ->with(get_class($this->plugin))
             ->will($this->returnValue(false));
-        $this->mockedLoader->expects($this->once())
+        $this->loader->expects($this->once())
             ->method('load')
-            ->with(get_class($this->mockedPlugin), 'plugin/path')
-            ->will($this->returnValue($this->mockedPlugin));
-        $this->mockedValidator->expects($this->any())
+            ->with(get_class($this->plugin), 'plugin/path')
+            ->will($this->returnValue($this->plugin));
+        $this->validator->expects($this->any())
             ->method('getPluginConfiguration')
             ->will($this->returnValue(array()));
-        $this->mockedMigrator->expects($this->once())
+        $this->migrator->expects($this->once())
             ->method('install')
-            ->with($this->mockedPlugin);
-        $this->mockedRecorder->expects($this->once())
+            ->with($this->plugin);
+        $this->recorder->expects($this->once())
             ->method('register')
-            ->with($this->mockedPlugin, array());
+            ->with($this->plugin, array());
+        $this->kernel->expects($this->once())
+            ->method('shutdown');
+        $this->kernel->expects($this->once())
+            ->method('boot');
+        $this->fixtureLoader->expects($this->once())
+            ->method('load')
+            ->with($this->plugin);
 
-        $this->installer->install(get_class($this->mockedPlugin), 'plugin/path');
+        $this->installer->install(get_class($this->plugin), 'plugin/path');
     }
 
     public function testInstallThrowsAnExceptionIfPluginIsAlreadyRegistered()
@@ -54,7 +79,7 @@ class InstallerTest extends WebTestCase
 
         $pluginFQCN = 'Imaginary\Fake\Plugin';
 
-        $this->mockedRecorder->expects($this->once())
+        $this->recorder->expects($this->once())
             ->method('isRegistered')
             ->with($pluginFQCN)
             ->will($this->returnValue(true));
@@ -64,22 +89,22 @@ class InstallerTest extends WebTestCase
 
     public function testUninstallProperlyDelegatesToHelpers()
     {
-        $this->mockedRecorder->expects($this->once())
+        $this->recorder->expects($this->once())
             ->method('isRegistered')
-            ->with(get_class($this->mockedPlugin))
+            ->with(get_class($this->plugin))
             ->will($this->returnValue(true));
-        $this->mockedLoader->expects($this->once())
+        $this->loader->expects($this->once())
             ->method('load')
-            ->with(get_class($this->mockedPlugin))
-            ->will($this->returnValue($this->mockedPlugin));
-        $this->mockedRecorder->expects($this->once())
+            ->with(get_class($this->plugin))
+            ->will($this->returnValue($this->plugin));
+        $this->recorder->expects($this->once())
             ->method('unregister')
-            ->with($this->mockedPlugin);
-        $this->mockedMigrator->expects($this->once())
+            ->with($this->plugin);
+        $this->migrator->expects($this->once())
             ->method('remove')
-            ->with($this->mockedPlugin);
+            ->with($this->plugin);
 
-        $this->installer->uninstall(get_class($this->mockedPlugin));
+        $this->installer->uninstall(get_class($this->plugin));
     }
 
     public function testUninstallThrowsAnExceptionIfPluginIsNotRegistered()
@@ -88,7 +113,7 @@ class InstallerTest extends WebTestCase
 
         $pluginFQCN = 'Imaginary\Fake\Plugin';
 
-        $this->mockedRecorder->expects($this->once())
+        $this->recorder->expects($this->once())
             ->method('isRegistered')
             ->with($pluginFQCN)
             ->will($this->returnValue(false));
@@ -98,34 +123,18 @@ class InstallerTest extends WebTestCase
 
     public function testMigrate()
     {
-        $this->mockedRecorder->expects($this->once())
+        $this->recorder->expects($this->once())
             ->method('isRegistered')
-            ->with(get_class($this->mockedPlugin))
+            ->with(get_class($this->plugin))
             ->will($this->returnValue(true));
-        $this->mockedLoader->expects($this->once())
+        $this->loader->expects($this->once())
             ->method('load')
-            ->with(get_class($this->mockedPlugin))
-            ->will($this->returnValue($this->mockedPlugin));
-        $this->mockedMigrator->expects($this->once())
+            ->with(get_class($this->plugin))
+            ->will($this->returnValue($this->plugin));
+        $this->migrator->expects($this->once())
             ->method('migrate')
-            ->with($this->mockedPlugin);
+            ->with($this->plugin);
 
-        $this->installer->migrate(get_class($this->mockedPlugin), '123');
-    }
-
-    private function initMockedHelpers()
-    {
-        $this->mockedLoader = $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\Plugin\Loader')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->mockedValidator = $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\Plugin\Validator')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->mockedMigrator = $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\Plugin\Migrator')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->mockedRecorder = $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\Plugin\Recorder')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->installer->migrate(get_class($this->plugin), '123');
     }
 }
