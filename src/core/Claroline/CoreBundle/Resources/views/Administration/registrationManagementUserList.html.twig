@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block section_content %}
-    <div id="registration-list-div" subject-type="user" class="margin">
+    <div id="registration-list-div" subject-type="user">
         <div>
             <div id="custom-flashbag-div" class="alert alert-success hide">
                 <a id="flashbag-close-button" class="close" href="#">×</a>
@@ -41,25 +41,26 @@
 
         <br>
         <br>
-
-        <div id="pager-block">
-            <div class="search-bar">
+        <div class="search-bar row">
+            <div class="col-lg-6">
                 <button class="btn btn-default subscribe-subjects-button" disabled="disabled">
                     <i class="icon-pencil"></i>
                     {{ 'subscribe_selected_users'|trans({}, 'platform') }}
                 </button>
-                <div class="input-append pull-right">
-                    <input
-                        class="input"
-                        type="text"
-                        id="search-txt"
-                        placeholder="{{ 'search_user'|trans({}, 'platform') }}"
-                    >
-                    <button class="filter btn" type="button" id="search-button">
-                        <i class="icon-search"></i>
-                    </button>
+            </div>
+            <div class="col-lg-6">
+                 <div class="input-group">
+                    <input class="form-control" type="text" id="search-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
+                    <span class="input-group-btn">
+                        <button class="filter btn btn-default" type="button" id="search-button">
+                            <i class="icon-search"></i>
+                        </button>
+                    </span>
                 </div>
             </div>
+        </div>
+
+        <div id="pager-block">
             <div id="list-pager" class="list-pager">
                 {% include 'ClarolineCoreBundle:Administration:userListPager.html.twig' %}
             </div>

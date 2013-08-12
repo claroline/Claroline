@@ -87,7 +87,7 @@ You'll need to return the configuration form html to the kernel.
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
             <a href="{{ path('claro_workspace_list') }}">
-                <button type="button" class="btn  claro-widget-form-cancel">{{ 'cancel'|trans({}, 'platform') }}</button>
+                <button type="button" class="btn btn-default claro-widget-form-cancel">{{ 'cancel'|trans({}, 'platform') }}</button>
             </a>
         </div>
     </form>
@@ -96,7 +96,7 @@ The cancel button must have **claro-widget-form-cancel** for ajax form's injecti
 
 The action of the form should redirect to one of your controller which will persist the modification to the configuration.
 To know if the form is call from widget's list with ajax add **redirectToHome** parameter to your route.
-    
+
     'redirectToHome': app.request.isXMLHttpRequest ? 1 : 0
 
 **controller class:**

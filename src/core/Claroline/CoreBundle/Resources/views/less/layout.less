@@ -9,7 +9,7 @@ html, body {
 }
 
 body {
-    padding:@navbar-height 0 0 0;
+    padding:@navbar-height 0 (@navbar-height + 10px) 0;
 }
 
 #wrap {
@@ -96,6 +96,7 @@ body {
 #footer {
     width: 100%;
     position: relative;
+    margin-top: @navbar-height + 10px;
     min-height: @navbar-height;
     background-color: @gray-lighter;
     color: lighten(@gray, 20%);
@@ -114,6 +115,12 @@ body {
 .list-group .list-group-item.disabled
 {
     background:@panel-heading-bg;
+}
+
+.list-group
+{
+    .border-top-radius(@list-group-border-radius);
+    .border-bottom-radius(@list-group-border-radius);
 }
 
 /***********/
@@ -522,11 +529,6 @@ body {
     font-size:21px;
     overflow:auto;
     height:auto;
-}
-
-.search-bar
-{
-    overflow:auto;margin-bottom:5px;
 }
 */
 /*********/

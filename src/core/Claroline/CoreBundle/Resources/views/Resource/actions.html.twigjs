@@ -82,10 +82,10 @@
             <li>
                 <div class="input-append">
                     <input class="name input-medium" type="text" placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ searchedName }}">
-                    <button class="filter btn" type="button">
+                    <button class="filter btn btn-default" type="button">
                         <i class="icon-search"></i>
                     </button>
-                    <button class="config-search-panel btn" type="button"><i class="icon-cog"></i></button>
+                    <button class="config-search-panel btn btn-default" type="button"><i class="icon-cog"></i></button>
                 </div>
             </li>
         </ul>
@@ -103,10 +103,10 @@
             <li>
                 <div class="input-append" width="500">
                     <input class="name input-medium" type="text" placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ searchedName }}">
-                    <button class="filter btn" type="button">
+                    <button class="filter btn btn-default" type="button">
                         <i class="icon-search"></i>
                     </button>
-                    <button class="config-search-panel btn" type="button"><i class="icon-cog"></i></button>
+                    <button class="config-search-panel btn btn-default" type="button"><i class="icon-cog"></i></button>
                 </div>
            </li>
         </ul>
