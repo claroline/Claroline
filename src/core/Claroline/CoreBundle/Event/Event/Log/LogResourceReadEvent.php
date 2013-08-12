@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Event\Event\Log;
 
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
 class LogResourceReadEvent extends LogGenericEvent implements LogNotRepeatableInterface
 {
@@ -11,7 +11,7 @@ class LogResourceReadEvent extends LogGenericEvent implements LogNotRepeatableIn
     /**
      * Constructor.
      */
-    public function __construct(AbstractResource $resource)
+    public function __construct(ResourceNode $resource)
     {
         parent::__construct(
             self::ACTION,

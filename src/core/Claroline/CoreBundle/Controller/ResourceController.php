@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContext;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
@@ -94,7 +94,7 @@ class ResourceController
      * )
      * @EXT\ParamConverter(
      *      "parent",
-     *      class="ClarolineCoreBundle:Resource\AbstractResource",
+     *      class="ClarolineCoreBundle:Resource\ResourceNode",
      *      options={"id" = "parentId", "strictId" = true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
@@ -102,13 +102,13 @@ class ResourceController
      * Creates a resource.
      *
      * @param string           $resourceType the resource type
-     * @param AbstractResource $parent       the parent
+     * @param ResourceNode $parent       the parent
      * @param User             $user         the user
      *
      * @throws \Exception
      * @return Response
      */
-    public function createAction($resourceType, AbstractResource $parent, User $user)
+    public function createAction($resourceType, ResourceNode $parent, User $user)
     {
         $collection = new ResourceCollection(array($parent));
         $collection->setAttributes(array('type' => $resourceType));
@@ -127,7 +127,7 @@ class ResourceController
                     $parent
                 );
 
-                $resourcesArray[] = $this->resourceManager->toArray($createdResource);
+                $resourcesArray[] = $this->resourceManager->toArray($createdResource->getResourceNode());
             }
 
             return new JsonResponse($resourcesArray);
@@ -143,29 +143,33 @@ class ResourceController
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter(
-     *      "resource",
-     *      class="ClarolineCoreBundle:Resource\AbstractResource",
+     *      "node",
+     *      class="ClarolineCoreBundle:Resource\ResourceNode",
      *      options={"id" = "resourceId", "strictId" = true}
      * )
      *
      * Opens a resource.
      *
-     * @param AbstractResource $resource     the resource
-     * @param string           $resourceType the resource type
+     * @param ResourceNode $resource     the resource
+     * @param string       $resourceType the resource type
      *
      * @return Response
      *
      * @throws AccessDeniedException
      * @throws \Exception
      */
-    public function openAction(AbstractResource $resource, $resourceType)
+    public function openAction(ResourceNode $node, $resourceType)
     {
-        $collection = new ResourceCollection(array($resource));
+        $collection = new ResourceCollection(array($node));
         //If it's a link, the resource will be its target.
-        $resource = $this->getResource($resource);
+        $node = $this->getResource($node);
         $this->checkAccess('OPEN', $collection);
-        $event = $this->dispatcher->dispatch('open_'.$resourceType, 'OpenResource', array($resource));
-        $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($resource));
+        $event = $this->dispatcher->dispatch(
+            'open_'.$resourceType,
+            'OpenResource',
+            array($this->resourceManager->getResourceFromNode($node))
+        );
+        $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($node));
 
         return $event->getResponse();
     }
@@ -178,7 +182,7 @@ class ResourceController
      * )
      * @EXT\ParamConverter(
      *     "resources",
-     *     class="ClarolineCoreBundle:Resource\AbstractResource",
+     *     class="ClarolineCoreBundle:Resource\ResourceNode",
      *     options={"multipleIds" = true}
      * )
      *
@@ -209,12 +213,12 @@ class ResourceController
      * )
      * @EXT\ParamConverter(
      *     "resources",
-     *     class="ClarolineCoreBundle:Resource\AbstractResource",
+     *     class="ClarolineCoreBundle:Resource\ResourceNode",
      *     options={"multipleIds" = true}
      * )
      * @EXT\ParamConverter(
      *      "newParent",
-     *      class="ClarolineCoreBundle:Resource\AbstractResource",
+     *      class="ClarolineCoreBundle:Resource\ResourceNode",
      *      options={"id" = "newParentId", "strictId" = true}
      * )
      *
@@ -222,13 +226,13 @@ class ResourceController
      * of parameters which are the ids of the moved resources
      * (query string: "ids[]=1&ids[]=2" ...).
      *
-     * @param AbstractResource $newParent
+     * @param ResourceNode $newParent
      * @param array            $resources
      *
      * @throws \RuntimeException
      * @return Response
      */
-    public function moveAction(AbstractResource $newParent, array $resources)
+    public function moveAction(ResourceNode $newParent, array $resources)
     {
         $collection = new ResourceCollection($resources);
         $collection->addAttribute('parent', $newParent);
@@ -254,7 +258,7 @@ class ResourceController
      * )
      * @EXT\ParamConverter(
      *      "resource",
-     *      class="ClarolineCoreBundle:Resource\AbstractResource",
+     *      class="ClarolineCoreBundle:Resource\ResourceNode",
      *      options={"id" = "resourceId", "strictId" = true}
      * )
      *
@@ -263,12 +267,12 @@ class ResourceController
      *
      * @param string           $resourceType the resource type
      * @param string           $action       the action
-     * @param AbstractResource $resource     the resource
+     * @param ResourceNode $resource     the resource
      *
      * @throws \Exception
      * @return Response
      */
-    public function customAction($resourceType, $action, AbstractResource $resource)
+    public function customAction($resourceType, $action, ResourceNode $resource)
     {
         $eventName = $action . '_' . $resourceType;
         //$collection = new ResourceCollection(array($resource));
@@ -296,7 +300,7 @@ class ResourceController
      * )
      * @EXT\ParamConverter(
      *     "resources",
-     *     class="ClarolineCoreBundle:Resource\AbstractResource",
+     *     class="ClarolineCoreBundle:Resource\ResourceNode",
      *     options={"multipleIds" = true}
      * )
      *
@@ -339,7 +343,7 @@ class ResourceController
      * )
      * @EXT\ParamConverter(
      *      "directory",
-     *      class="ClarolineCoreBundle:Resource\AbstractResource",
+     *      class="ClarolineCoreBundle:Resource\ResourceNode",
      *      options={"id" = "directoryId", "strictId" = true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
@@ -361,7 +365,7 @@ class ResourceController
      *
      * @throws Exception if the id doesnt't match any existing directory
      */
-    public function openDirectoryAction(User $user, AbstractResource $directory = null)
+    public function openDirectoryAction(User $user, ResourceNode $directory = null)
     {
         $path = array();
         $creatableTypes = array();
@@ -381,8 +385,14 @@ class ResourceController
                 $canChangePosition = true;
             }
 
+            //wtf !
+            $this->resourceManager->refresh($directory);
             $path = $this->resourceManager->getAncestors($directory);
+            //wtf !
+            $this->resourceManager->refresh($directory);
             $resources = $this->resourceManager->getChildren($directory, $currentRoles);
+            //wtf !
+            $this->resourceManager->refresh($directory);
             $creatableTypes = $this->rightsManager->getCreatableTypes($currentRoles, $directory);
             $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($directory));
         }
@@ -407,12 +417,12 @@ class ResourceController
      * )
      * @EXT\ParamConverter(
      *      "parent",
-     *      class="ClarolineCoreBundle:Resource\AbstractResource",
+     *      class="ClarolineCoreBundle:Resource\ResourceNode",
      *      options={"id" = "resourceDestinationId", "strictId" = true}
      * )
      * @EXT\ParamConverter(
-     *     "resources",
-     *     class="ClarolineCoreBundle:Resource\AbstractResource",
+     *     "nodes",
+     *     class="ClarolineCoreBundle:Resource\ResourceNode",
      *     options={"multipleIds" = true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
@@ -420,21 +430,23 @@ class ResourceController
      * Adds multiple resource resource to a workspace.
      * Needs an array of ids to be functionnal (query string: "ids[]=1&ids[]=2" ...).
      *
-     * @param AbstractResource $parent
+     * @param ResourceNode $parent
      * @param array            $resources
      * @param User             $user
      *
      * @return Response
      */
-    public function copyAction(AbstractResource $parent, array $resources, User $user)
+    public function copyAction(ResourceNode $parent, array $nodes, User $user)
     {
         $newNodes = array();
-        $collection = new ResourceCollection($resources);
+        $collection = new ResourceCollection($nodes);
         $collection->addAttribute('parent', $parent);
         $this->checkAccess('COPY', $collection);
 
-        foreach ($resources as $resource) {
-            $newNodes[] = $this->resourceManager->toArray($this->resourceManager->copy($resource, $parent, $user));
+        foreach ($nodes as $node) {
+            //$resource = $this->resourceManager->getResourceFromNode($node);
+            $newNodes[] = $this->resourceManager
+                ->toArray($this->resourceManager->copy($node, $parent, $user)->getResourceNode());
         }
 
         return new JsonResponse($newNodes);
@@ -463,7 +475,7 @@ class ResourceController
     {
         $criteria = $this->resourceManager->buildSearchArray($this->request->query->all());
         $criteria['roots'] = isset($criteria['roots']) ? $criteria['roots'] : array();
-        $path = $directory ? $this->resourceManager->getAncestors($directory): array();
+        $path = $directory ? $this->resourceManager->getAncestors($directory->getResourceNode()): array();
         $userRoles = $this->roleManager->getStringRolesFromCurrentUser();
         $resources = $this->resourceManager->getByCriteria($criteria, $userRoles, true);
 
@@ -479,12 +491,12 @@ class ResourceController
      * @EXT\ParamConverter("creator", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
      *      "parent",
-     *      class="ClarolineCoreBundle:Resource\Directory",
+     *      class="ClarolineCoreBundle:Resource\ResourceNode",
      *      options={"id" = "newParentId", "strictId" = true}
      * )
      * @EXT\ParamConverter(
      *     "resources",
-     *     class="ClarolineCoreBundle:Resource\AbstractResource",
+     *     class="ClarolineCoreBundle:Resource\ResourceNode",
      *     options={"multipleIds" = true}
      * )
      *
@@ -497,11 +509,12 @@ class ResourceController
      *
      * @return Response
      */
-    public function createShortcutAction(Directory $parent, User $creator, array $resources)
+    public function createShortcutAction(ResourceNode $parent, User $creator, array $resources)
     {
         foreach ($resources as $resource) {
-            $shortcut = $this->resourceManager->makeShortcut($resource, $parent, $creator, new ResourceShortcut());
-            $links[] = $this->resourceManager->toArray($shortcut);
+            $shortcut = $this->resourceManager
+                ->makeShortcut($resource, $parent, $creator, new ResourceShortcut());
+            $links[] = $this->resourceManager->toArray($shortcut->getResourceNode());
         }
 
         return new JsonResponse($links);
@@ -510,7 +523,7 @@ class ResourceController
     /**
      * @EXT\Template("ClarolineCoreBundle:Resource:breadcrumbs.html.twig")
      */
-    public function renderBreadcrumbsAction(AbstractResource $resource, AbstractWorkspace $workspace, $_breadcrumbs)
+    public function renderBreadcrumbsAction(ResourceNode $resource, AbstractWorkspace $workspace, $_breadcrumbs)
     {
         $breadcrumbsAncestors = array();
 
@@ -552,23 +565,23 @@ class ResourceController
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
      *      "resource",
-     *      class="ClarolineCoreBundle:Resource\AbstractResource",
+     *      class="ClarolineCoreBundle:Resource\ResourceNode",
      *      options={"id" = "resourceId", "strictId" = true}
      * )
      * @EXT\ParamConverter(
      *      "next",
-     *      class="ClarolineCoreBundle:Resource\AbstractResource",
+     *      class="ClarolineCoreBundle:Resource\ResourceNode",
      *      options={"id" = "nextId", "strictId" = true}
      * )
      *
-     * @param AbstractResource $resource
-     * @param AbstractResource $next
-     * @param User             $user
+     * @param ResourceNode $resource
+     * @param ResourceNode $next
+     * @param User         $user
      *
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function insertBefore(AbstractResource $resource, User $user, AbstractResource $next = null)
+    public function insertBefore(ResourceNode $resource, User $user, ResourceNode $next = null)
     {
         if ($user !== $resource->getParent()->getCreator() && !$this->sc->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
@@ -579,13 +592,14 @@ class ResourceController
         return new Response('success', 204);
     }
 
-    private function getResource(AbstractResource $resource)
+    private function getResource(ResourceNode $node)
     {
-        if (get_class($resource) === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
-            $resource = $resource->getResource();
+        if ($node->getClass() === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
+            $resource = $this->resourceManager->getResourceFromNode($node);
+            $node = $resource->getTarget();
         }
 
-        return $resource;
+        return $node;
     }
 
     /**

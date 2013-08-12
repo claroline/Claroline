@@ -1,0 +1,32 @@
+<?php
+
+namespace Claroline\CoreBundle\Migrations\oci8;
+
+use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\DBAL\Schema\Schema;
+
+/**
+ * Auto-generated migration based on mapping information: modify it with caution
+ *
+ * Generation date: 2013/08/08 03:43:42
+ */
+class Version20130808154341 extends AbstractMigration
+{
+    public function up(Schema $schema)
+    {
+        $this->addSql("
+            ALTER TABLE claro_resource_shortcut MODIFY (
+                id NUMBER(10) NOT NULL
+            )
+        ");
+    }
+
+    public function down(Schema $schema)
+    {
+        $this->addSql("
+            ALTER TABLE claro_resource_shortcut MODIFY (
+                id NUMBER(10) NOT NULL
+            )
+        ");
+    }
+}

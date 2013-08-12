@@ -16,7 +16,6 @@ class LogGenericEvent extends Event
     protected $workspace;
     protected $owner;
     protected $toolName;
-
     protected $childType;
     protected $childAction;
 
