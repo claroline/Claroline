@@ -186,7 +186,7 @@ class ActivityListener implements ContainerAwareInterface
         $resourceTypes = $this->container->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findAll();
-        $activity = $event->getResource();
+        $activity = $event->getResourceNode();
         $resourceActivities = $this->container
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')

@@ -124,7 +124,7 @@ class DirectoryListener
      */
     public function onOpen(OpenResourceEvent $event)
     {
-        $dir = $event->getResource();
+        $dir = $event->getResourceNode();
         $file = $this->resourceManager->download(array($dir));
         $response = new StreamedResponse();
 
@@ -267,8 +267,6 @@ class DirectoryListener
     public function copy(CopyResourceEvent $event)
     {
         $resourceCopy = new Directory();
-        $dirType = $this->resourceManager->getResourceTypeByName('directory');
-        $resourceCopy->setResourceType($dirType);
         $event->setCopy($resourceCopy);
     }
 }

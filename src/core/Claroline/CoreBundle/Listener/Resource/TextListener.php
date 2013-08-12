@@ -127,7 +127,7 @@ class TextListener implements ContainerAwareInterface
      */
     public function onOpen(OpenResourceEvent $event)
     {
-        $text = $event->getResource();
+        $text = $event->getResourceNode();
         $revisionRepo = $this->container->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Resource\Revision');
         $content = $this->container->get('templating')->render(

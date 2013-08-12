@@ -91,7 +91,7 @@ class ResourceManagerImportExportListener
     {
         $config = array();
         $workspace = $event->getWorkspace();
-        $resourceRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
+        $resourceRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
         $root = $resourceRepo->findWorkspaceRoot($workspace);
 
         $roles = $this->roleManager->getRolesByWorkspace($workspace);
