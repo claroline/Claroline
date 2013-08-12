@@ -21,5 +21,8 @@
     "autoload": {
         "psr-0": { "Claroline\\ForumBundle": "" }
     },
-    "target-dir": "Claroline/ForumBundle"
+    "target-dir": "Claroline/ForumBundle",
+    "extra": {
+        "dbVersion": "20130805105700"
+    }
 }
