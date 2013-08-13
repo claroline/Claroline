@@ -49,16 +49,9 @@
 {% endblock %}
 
 {% block section_content %}
-
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'icon-book',
-                'name': 'all_workspaces'|trans({}, 'platform'),
-                'href': '#'
-            }
-        ])
-    }}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'all_workspaces'|trans({}, 'platform') }}</h3>
+    </div>
 
     <div id="workspace-list-div" class="widget">
 

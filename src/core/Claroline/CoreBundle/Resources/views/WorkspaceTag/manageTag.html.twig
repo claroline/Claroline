@@ -7,6 +7,10 @@
 
 {% block section_content %}
 
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'tags_management'|trans({}, 'platform') }}</h3>
+    </div>
+
     {{
         macros.breadcrumbs([
             {
@@ -49,7 +53,7 @@
                                     {% if workspaceTag.getTag().getUser() is not null %}
                                         label-success
                                     {% else %}
-                                        label-important
+                                        label-danger
                                     {% endif %}
                                 ">
                                     {{ workspaceTag.getTag().getName() }}
@@ -61,6 +65,7 @@
                                         </i>
                                     {% endif %}
                                 </span>
+                                &nbsp;
                             {% endfor %}
                             <i  class="icon-plus-sign add-tag-button"
                                 data-trigger="hover"
@@ -79,7 +84,7 @@
     <div id="twig-add-tag-user-id" data-user-id="{{ user.getId() }}">
     </div>
 
-    <div id="add-tag-validation-box" class="modal hide fade">
+    <div id="add-tag-validation-box" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -87,14 +92,22 @@
                     <h4>{{ 'enter_tag_name_message'|trans({}, 'platform') }}</h4>
                 </div>
                 <div class="modal-body" style="overflow-y: visible">
-                    <label for="modal-tag-input">{{ 'name'|trans({}, 'platform') }} : </label>
-                    <input
-                        id='modal-tag-input'
-                        type='text'
-                        name='tag-to-add'
-                        data-provide='typeahead'
-                        data-source='{{ tagsNameTxt }}'
-                        autocomplete='off'>
+                    <form class="form-horizontal">
+                        <label for="modal-tag-input" class="col-lg-2 control-label">
+                            {{ 'name'|trans({}, 'platform') }}
+                        </label>
+                        <div class="col-lg-6">
+                            <input
+                                id='modal-tag-input'
+                                class="form-control"
+                                type='text'
+                                name='tag-to-add'
+                                data-provide='typeahead'
+                                data-source='{{ tagsNameTxt }}'
+                                autocomplete='off'>
+                        </div>
+                    </form>
+                    <br>
                 </div>
                 <div class="modal-footer">
                     <input type="button" id="add-tag-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
