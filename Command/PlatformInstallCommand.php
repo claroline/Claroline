@@ -82,11 +82,6 @@ class PlatformInstallCommand extends ContainerAwareCommand
             $fixtureCommand->run($fixtureInput, $output);
         }
 
-        if ($input->getOption('with-plugins')) {
-            $pluginCommand = $this->getApplication()->find('claroline:plugin:install_all');
-            $pluginCommand->run(new ArrayInput(array('command' => 'claroline:plugin:install_all')), $output);
-        }
-
         $assetCommand = $this->getApplication()->find('assets:install');
         $assetInput = new ArrayInput(
             array(

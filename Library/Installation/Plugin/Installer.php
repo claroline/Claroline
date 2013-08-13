@@ -6,6 +6,7 @@ use \RuntimeException;
 use \LogicException;
 use Symfony\Component\HttpKernel\KernelInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Library\PluginBundle;
 
 /**
  * This class is used to perform the (un-)installation of a plugin. It uses
@@ -31,11 +32,11 @@ class Installer
      * @param KernelInterface $kernel
      *
      * @DI\InjectParams({
-     *     "loader" = @DI\Inject("claroline.plugin.loader"),
-     *     "validator" = @DI\Inject("claroline.plugin.validator"),
-     *     "migrator" = @DI\Inject("claroline.plugin.migrator"),
-     *     "recorder" = @DI\Inject("claroline.plugin.recorder"),
-     *     "kernel" = @DI\Inject("kernel")
+     *     "loader"         = @DI\Inject("claroline.plugin.loader"),
+     *     "validator"      = @DI\Inject("claroline.plugin.validator"),
+     *     "migrator"       = @DI\Inject("claroline.plugin.migrator"),
+     *     "recorder"       = @DI\Inject("claroline.plugin.recorder"),
+     *     "kernel"         = @DI\Inject("kernel")
      * })
      */
     public function __construct(
@@ -54,65 +55,20 @@ class Installer
     }
 
     /**
-     * Sets the plugin loader.
-     *
-     * @param Loader $loader
-     */
-    public function setLoader(Loader $loader)
-    {
-        $this->loader = $loader;
-    }
-
-    /**
-     * Sets the plugin validator.
-     *
-     * @param Validator $validator
-     */
-    public function setValidator(Validator $validator)
-    {
-        $this->validator = $validator;
-    }
-
-    /**
-     * Sets the plugin recorder.
-     *
-     * @param Recorder $recorder
-     */
-    public function setRecorder(Recorder $recorder)
-    {
-        $this->recorder = $recorder;
-    }
-
-    /**
-     * Sets the plugin migrator.
-     *
-     * @param Migrator $migrator
-     */
-    public function setMigrator(Migrator $migrator)
-    {
-        $this->migrator = $migrator;
-    }
-
-    /**
      * Installs a plugin.
      *
-     * @param string $pluginFqcn
+     * @param string $pluginFqcn    FQCN of the plugin bundle class
+     * @param string $pluginPath    Path of the plugin bundle class
      *
      * @throws Exception if the plugin doesn't pass the validation
      */
-    public function install($pluginFqcn)
+    public function install($pluginFqcn, $pluginPath = null)
     {
         $this->checkRegistrationStatus($pluginFqcn, false);
-        $plugin = $this->loader->load($pluginFqcn);
+        $plugin = $this->loader->load($pluginFqcn, $pluginPath);
         $errors = $this->validator->validate($plugin);
 
-        if (0 === count($errors)) {
-            $config = $this->validator->getPluginConfiguration();
-            $this->migrator->install($plugin);
-            $this->recorder->register($plugin, $config);
-            $this->kernel->shutdown();
-            $this->kernel->boot();
-        } else {
+        if (0 !== count($errors)) {
             $report = "Plugin '{$pluginFqcn}' cannot be installed, due to the "
                 . "following validation errors :" . PHP_EOL;
 
@@ -122,6 +78,13 @@ class Installer
 
             throw new RuntimeException($report);
         }
+
+        $config = $this->validator->getPluginConfiguration();
+        $this->recorder->register($plugin, $config);
+        $this->kernel->shutdown();
+        $this->kernel->boot();
+        $this->migrator->install($plugin);
+        $this->loadFixtures($plugin);
     }
 
     /**
@@ -137,6 +100,19 @@ class Installer
         $this->migrator->remove($plugin);
         $this->kernel->shutdown();
         $this->kernel->boot();
+    }
+
+    /**
+     * Upgrades/downgrades a plugin to a specific version.
+     *
+     * @param string $pluginFqcn
+     * @param string $version
+     */
+    public function migrate($pluginFqcn, $version)
+    {
+        $this->checkRegistrationStatus($pluginFqcn, true);
+        $plugin = $this->loader->load($pluginFqcn);
+        $this->migrator->migrate($plugin, $version);
     }
 
     /**
@@ -160,5 +136,14 @@ class Installer
                 "Plugin '{$pluginFqcn}' is {$stateDiscr} registered."
             );
         }
+    }
+
+    private function loadFixtures(PluginBundle $plugin)
+    {
+        $container = $this->kernel->getContainer();
+        $mappingLoader = $container->get('claroline.installation.mapping_loader');
+        $fixtureLoader = $container->get('claroline.installation.fixture_loader');
+        $mappingLoader->registerMapping($plugin);
+        $fixtureLoader->load($plugin);
     }
 }
