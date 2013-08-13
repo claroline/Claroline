@@ -24,22 +24,6 @@
         "doctrine/doctrine-fixtures-bundle": "dev-master",
         "friendsofsymfony/jsrouting-bundle": "dev-master",
         "stfalcon/tinymce-bundle": "dev-master",
-
-
-        "composer/composer": "dev-master",
-
-
-        "stefk/test-plugin-bundle": "1.1.0",
-
-
-
-        "claroline/front-end-bundle": "dev-master",
-        "claroline/taxonomy-bundle": "dev-master",
-        "claroline/migration-bundle": "dev-master",
-
-
-        "claroline/plugin-installer": "dev-master",
-
         "jms/twig-js-bundle": "dev-master",
         "white-october/pagerfanta-bundle": "dev-master",
         "idci/exporter-bundle": "dev-master",
@@ -49,7 +33,23 @@
         "xaguilars/bootstrap-colorpicker": "dev-master",
         "zenstruck/form-bundle": "dev-master",
         "icap-lyon1/simple-tag-bundle": "dev-master",
-        "besimple/sso-auth-bundle": "*"
+        "besimple/sso-auth-bundle": "*",
+        "composer/composer": "dev-master",
+
+        "claroline/front-end-bundle": "dev-master",
+        "claroline/taxonomy-bundle": "dev-master",
+        "claroline/migration-bundle": "dev-master",
+        "claroline/plugin-installer": "dev-master",
+
+        "claroline/activity-tool-bundle": "dev-master",
+        "claroline/example-bundle": "dev-master",
+        "claroline/forum-bundle": "dev-master",
+        "claroline/image-player-bundle": "dev-master",
+        "claroline/pdf-player-bundle": "dev-master",
+        "claroline/rss-reader-bundle": "dev-master",
+        "claroline/scorm-bundle": "dev-master",
+        "claroline/site-bundle": "dev-master",
+        "claroline/video-player-bundle": "dev-master"
     },
     "require-dev": {
         "mockery/mockery": "dev-master@dev",
