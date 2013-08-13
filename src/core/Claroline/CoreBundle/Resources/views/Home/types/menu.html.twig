@@ -47,7 +47,7 @@
                 </div>
             {% else %}
                 <div class="{% if region != "header" and region != "footer" %}list-group-item {% endif %}disabled relative">
-                    <b>{{ content.title }}</b>
+                    {{ content.title }}
                     {% if (region is defined and region != 'header' and region != 'footer') or region is not defined %}
                         {% render controller("ClarolineCoreBundle:Home:menu", { 'id': content.id, 'size': size, 'type': type, 'father': father  }) %}
                     {% endif %}

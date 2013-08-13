@@ -5,7 +5,7 @@
 {% block content %}
     <div class="col-lg-3 administration">
         <div class="list-group menu">
-            <div class="list-group-item disabled"><b>{{ 'administration'|trans({}, 'platform') }}</b></div>
+            <div class="list-group-item disabled">{{ 'administration'|trans({}, 'platform') }}</div>
             <a class="list-group-item{% if path('claro_admin_platform_settings_form') == app.request.requesturi or app.request.requesturi == '/Claroline/web/app_dev.php/admin/' %} active{% endif %}"
                 href="{{ path('claro_admin_platform_settings_form') }}" id="link_platform_parameters">
                 <i class="icon-cog"></i>
