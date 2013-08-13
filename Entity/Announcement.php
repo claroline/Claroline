@@ -60,11 +60,6 @@ class Announcement
     protected $visibleUntil;
 
     /**
-     * @ORM\Column(name="announcement_order", type="integer", nullable=false)
-     */
-    protected $announcementOrder;
-
-    /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User"
      * )
@@ -170,16 +165,6 @@ class Announcement
     public function setVisibleUntil($visibleUntil)
     {
         $this->visibleUntil = $visibleUntil;
-    }
-
-    public function getAnnouncementOrder()
-    {
-        return $this->announcementOrder;
-    }
-
-    public function setAnnouncementOrder($announcementOrder)
-    {
-        $this->announcementOrder = $announcementOrder;
     }
 
     public function getCreator()

@@ -155,7 +155,6 @@ class AnnouncementController extends Controller
         if ($form->isValid()) {
             $now = new \DateTime();
             $announcement->setAggregate($aggregate);
-            $announcement->setAnnouncementOrder(1);
             $announcement->setCreationDate($now);
 
             if ($announcement->isVisible()) {
