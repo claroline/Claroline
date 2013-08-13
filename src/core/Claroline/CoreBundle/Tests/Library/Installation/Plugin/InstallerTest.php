@@ -9,9 +9,11 @@ class InstallerTest extends \PHPUnit_Framework_TestCase
     private $validator;
     private $migrator;
     private $recorder;
-    private $fixtureLoader;
     private $kernel;
     private $installer;
+    private $container;
+    private $mappingLoader;
+    private $fixtureLoader;
 
     protected function setUp()
     {
@@ -28,9 +30,13 @@ class InstallerTest extends \PHPUnit_Framework_TestCase
         $this->recorder = $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\Plugin\Recorder')
             ->disableOriginalConstructor()
             ->getMock();
+        $this->mappingLoader = $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\MappingLoader')
+            ->disableOriginalConstructor()
+            ->getMock();
         $this->fixtureLoader = $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\FixtureLoader')
             ->disableOriginalConstructor()
             ->getMock();
+        $this->container = $this->getMockForAbstractClass('Symfony\Component\DependencyInjection\ContainerInterface');
         $this->kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\KernelInterface');
 
         $this->installer = new Installer(
@@ -38,7 +44,6 @@ class InstallerTest extends \PHPUnit_Framework_TestCase
             $this->validator,
             $this->migrator,
             $this->recorder,
-            $this->fixtureLoader,
             $this->kernel
         );
     }
@@ -66,6 +71,20 @@ class InstallerTest extends \PHPUnit_Framework_TestCase
             ->method('shutdown');
         $this->kernel->expects($this->once())
             ->method('boot');
+        $this->kernel->expects($this->once())
+            ->method('getContainer')
+            ->will($this->returnValue($this->container));
+        $this->container->expects($this->at(0))
+            ->method('get')
+            ->with('claroline.installation.mapping_loader')
+            ->will($this->returnValue($this->mappingLoader));
+        $this->container->expects($this->at(1))
+            ->method('get')
+            ->with('claroline.installation.fixture_loader')
+            ->will($this->returnValue($this->fixtureLoader));
+        $this->mappingLoader->expects($this->once())
+            ->method('registerMapping')
+            ->with($this->plugin);
         $this->fixtureLoader->expects($this->once())
             ->method('load')
             ->with($this->plugin);

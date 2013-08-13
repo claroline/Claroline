@@ -6,7 +6,7 @@ use \RuntimeException;
 use \LogicException;
 use Symfony\Component\HttpKernel\KernelInterface;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Library\Installation\FixtureLoader;
+use Claroline\CoreBundle\Library\PluginBundle;
 
 /**
  * This class is used to perform the (un-)installation of a plugin. It uses
@@ -20,7 +20,6 @@ class Installer
     private $validator;
     private $recorder;
     private $migrator;
-    private $fixtureLoader;
     private $kernel;
 
     /**
@@ -37,7 +36,6 @@ class Installer
      *     "validator"      = @DI\Inject("claroline.plugin.validator"),
      *     "migrator"       = @DI\Inject("claroline.plugin.migrator"),
      *     "recorder"       = @DI\Inject("claroline.plugin.recorder"),
-     *     "fixtureLoader"  = @DI\Inject("claroline.installation.fixture_loader"),
      *     "kernel"         = @DI\Inject("kernel")
      * })
      */
@@ -46,7 +44,6 @@ class Installer
         Validator $validator,
         Migrator $migrator,
         Recorder $recorder,
-        FixtureLoader $fixtureLoader,
         KernelInterface $kernel
     )
     {
@@ -54,48 +51,7 @@ class Installer
         $this->validator = $validator;
         $this->migrator = $migrator;
         $this->recorder = $recorder;
-        $this->fixtureLoader = $fixtureLoader;
         $this->kernel = $kernel;
-    }
-
-    /**
-     * Sets the plugin loader.
-     *
-     * @param Loader $loader
-     */
-    public function setLoader(Loader $loader)
-    {
-        $this->loader = $loader;
-    }
-
-    /**
-     * Sets the plugin validator.
-     *
-     * @param Validator $validator
-     */
-    public function setValidator(Validator $validator)
-    {
-        $this->validator = $validator;
-    }
-
-    /**
-     * Sets the plugin recorder.
-     *
-     * @param Recorder $recorder
-     */
-    public function setRecorder(Recorder $recorder)
-    {
-        $this->recorder = $recorder;
-    }
-
-    /**
-     * Sets the plugin migrator.
-     *
-     * @param Migrator $migrator
-     */
-    public function setMigrator(Migrator $migrator)
-    {
-        $this->migrator = $migrator;
     }
 
     /**
@@ -112,14 +68,7 @@ class Installer
         $plugin = $this->loader->load($pluginFqcn, $pluginPath);
         $errors = $this->validator->validate($plugin);
 
-        if (0 === count($errors)) {
-            $config = $this->validator->getPluginConfiguration();
-            $this->migrator->install($plugin);
-            $this->recorder->register($plugin, $config);
-            $this->kernel->shutdown();
-            $this->kernel->boot();
-            $this->fixtureLoader->load($plugin);
-        } else {
+        if (0 !== count($errors)) {
             $report = "Plugin '{$pluginFqcn}' cannot be installed, due to the "
                 . "following validation errors :" . PHP_EOL;
 
@@ -129,6 +78,13 @@ class Installer
 
             throw new RuntimeException($report);
         }
+
+        $config = $this->validator->getPluginConfiguration();
+        $this->recorder->register($plugin, $config);
+        $this->kernel->shutdown();
+        $this->kernel->boot();
+        $this->migrator->install($plugin);
+        $this->loadFixtures($plugin);
     }
 
     /**
@@ -180,5 +136,14 @@ class Installer
                 "Plugin '{$pluginFqcn}' is {$stateDiscr} registered."
             );
         }
+    }
+
+    private function loadFixtures(PluginBundle $plugin)
+    {
+        $container = $this->kernel->getContainer();
+        $mappingLoader = $container->get('claroline.installation.mapping_loader');
+        $fixtureLoader = $container->get('claroline.installation.fixture_loader');
+        $mappingLoader->registerMapping($plugin);
+        $fixtureLoader->load($plugin);
     }
 }
