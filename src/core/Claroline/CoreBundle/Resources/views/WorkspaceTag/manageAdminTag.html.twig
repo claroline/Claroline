@@ -7,6 +7,10 @@
 
 {% block section_content %}
 
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'admin_tags_management'|trans({}, 'platform') }}</h3>
+    </div>
+
     {{
         macros.breadcrumbs([
             {
@@ -44,7 +48,7 @@
                     </td>
                     <td>
                         {% for workspaceTag in workspacesTags[workspace.getId()] %}
-                            <span class="label label-important">
+                            <span class="label label-danger">
                                 {{ workspaceTag.getTag().getName() }}
                                 <i  class="icon-remove-sign remove-admin-tag-button"
                                     data-workspace-id="{{ workspace.getId() }}"
@@ -52,6 +56,7 @@
                                 >
                                 </i>
                             </span>
+                            &nbsp;
                         {% endfor %}
                         <i  class="icon-plus-sign add-tag-button"
                             data-trigger="hover"
@@ -74,17 +79,25 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4>{{ 'enter_tag_name_message'|trans({}, 'platform') }}</h4>
+                    <h4 class="modal-title">{{ 'enter_tag_name_message'|trans({}, 'platform') }}</h4>
                 </div>
                 <div class="modal-body" style="overflow-y: visible">
-                    <label for="modal-tag-input">{{ 'name'|trans({}, 'platform') }} : </label>
-                    <input
-                        id='modal-tag-input'
-                        type='text'
-                        name='tag-to-add'
-                        data-provide='typeahead'
-                        data-source='{{ tagsNameTxt }}'
-                        autocomplete='off'>
+                    <form class="form-horizontal">
+                        <label for="modal-tag-input" class="col-lg-2 control-label">
+                            {{ 'name'|trans({}, 'platform') }}
+                        </label>
+                        <div class="col-lg-6">
+                            <input
+                                id="modal-tag-input"
+                                class="form-control"
+                                type="text"
+                                name="tag-to-add"
+                                data-provide="typeahead"
+                                data-source="{{ tagsNameTxt }}"
+                                autocomplete="off">
+                        </div>
+                    </form>
+                    <br>
                 </div>
                 <div class="modal-footer">
                     <input type="button" id="add-admin-tag-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>

@@ -7,6 +7,12 @@
 
 {% block section_content %}
 
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'tags_add_remove_children_to'|trans({}, 'platform') }} [{{ tag.getName() }}]
+        </h3>
+    </div>
+
     {{
         macros.breadcrumbs([
             {
@@ -29,7 +35,6 @@
         ])
     }}
 
-    <h3 class="sub-section-header">{{ 'tags_add_remove_children_to'|trans({}, 'platform') }} [{{ tag.getName() }}]</h3>
 
     <div id="twig-tag-id" data-tag-id="{{ tag.getId() }}">
     </div>
@@ -65,7 +70,7 @@
             </td>
         </tr>
     </table>
-    <div>
+    <div class="panel-footer">
         <button id="tag-hierarchy-children-button" type="submit" class="btn btn-primary">
             {{ 'ok'|trans({}, 'platform') }}
         </button>
@@ -73,4 +78,5 @@
             <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
         </a>
     </div>
+
 {% endblock %}

@@ -35,7 +35,7 @@
                         {% if granted %}
                             </a>
                             {% if workspace.getSelfUnregistration() %}
-                            <span class="label label-important unregister-user-to-workspace"
+                            <span class="label label-danger unregister-user-to-workspace"
                                 data-workspace-id="{{ workspace.getId() }}"
                                 data-workspace-name="{{ workspace.getName() }}"
                                 data-workspace-code="{{ workspace.getCode() }}">
@@ -73,6 +73,10 @@
 
 {% block section_content %}
 
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'public_workspaces'|trans({}, 'platform') }}</h3>
+    </div>
+
     {{
         macros.breadcrumbs([
             {
@@ -89,13 +93,6 @@
     }}
 
     <div class="widget">
-
-    {% if is_granted('ROLE_ADMIN') %}
-        <a href="{{ path('claro_workspace_manage_admin_tag') }}">
-            <button type="button" class="btn btn-default">{{ 'admin_tags_management'|trans({}, 'platform') }}</button>
-        </a>
-        <hr>
-    {% endif %}
 
         <div class="accordion" id="accordion-all">
             <div class="accordion-group">
@@ -128,7 +125,7 @@
                                 {% if granted %}
                                     </a>
                                     {% if workspace.getSelfUnregistration() %}
-                                    <span class="label label-important unregister-user-to-workspace"
+                                    <span class="label label-danger unregister-user-to-workspace"
                                         data-workspace-id="{{ workspace.getId() }}"
                                         data-workspace-name="{{ workspace.getName() }}"
                                         data-workspace-code="{{ workspace.getCode() }}">

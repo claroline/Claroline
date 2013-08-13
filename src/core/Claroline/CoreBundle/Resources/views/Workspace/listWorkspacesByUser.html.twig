@@ -35,7 +35,7 @@
                         {% if granted %}</a>{% endif %}
 
                         {% if workspace.getSelfUnregistration() %}
-                        <span class="label label-important unregister-user-to-workspace"
+                        <span class="label label-danger unregister-user-to-workspace"
                             data-workspace-id="{{ workspace.getId() }}"
                             data-workspace-name="{{ workspace.getName() }}"
                             data-workspace-code="{{ workspace.getCode() }}">
@@ -63,15 +63,9 @@
 {% endblock %}
 
 {% block section_content %}
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'icon-book',
-                'name': 'my_workspaces'|trans({}, 'platform'),
-                'href': '#'
-            }
-        ])
-    }}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'my_workspaces'|trans({}, 'platform') }}</h3>
+    </div>
 
     <div class="widget">
         <a href="{{ path('claro_workspace_manage_tag') }}">
@@ -113,7 +107,7 @@
                                 {% if granted%}</a>{% endif %}
 
                                 {% if workspace.getSelfUnregistration() %}
-                                <span class="label label-important unregister-user-to-workspace"
+                                <span class="label label-danger unregister-user-to-workspace"
                                     data-workspace-id="{{ workspace.getId() }}"
                                     data-workspace-name="{{ workspace.getName() }}"
                                     data-workspace-code="{{ workspace.getCode() }}">
