@@ -93,7 +93,7 @@
                                 <td>
                                     <a data-resource-id="{{ resource.getId() }}"
                                        class="res-creation-options"
-                                       href="{{ path('claro_resource_right_creation_form', {'resource': resourceRight.getResource().getId(), 'role': resourceRight.getRole().getId() }) }}">
+                                       href="{{ path('claro_resource_right_creation_form', {'resource': resourceRight.getResourceNode().getId(), 'role': resourceRight.getRole().getId() }) }}">
                                        {{ 'options'|trans({}, 'platform') }}
                                     </a>
                                 </td>

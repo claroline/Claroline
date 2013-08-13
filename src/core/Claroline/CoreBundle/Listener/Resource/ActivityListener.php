@@ -186,13 +186,13 @@ class ActivityListener implements ContainerAwareInterface
         $resourceTypes = $this->container->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findAll();
-        $activity = $event->getResourceNode();
+        $activity = $event->getResource();
         $resourceActivities = $this->container
             ->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
             ->findResourceActivities($activity);
 
-        if ($this->container->get('security.context')->getToken()->getUser() == $activity->getCreator()) {
+        if ($this->container->get('security.context')->getToken()->getUser() == $activity->getResourceNode()->getCreator()) {
             $content = $this->container->get('templating')->render(
                 'ClarolineCoreBundle:Activity:index.html.twig',
                 array(
@@ -206,7 +206,7 @@ class ActivityListener implements ContainerAwareInterface
                 'ClarolineCoreBundle:Activity/player:activity.html.twig',
                 array(
                     'activity' => $activity,
-                    'resource' => $resourceActivities[0]->getResource()
+                    'resource' => $resourceActivities[0]
                 )
             );
         }

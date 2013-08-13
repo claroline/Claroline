@@ -104,7 +104,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      *     mappedBy="creator"
      * )
      */
-    protected $abstractResources;
+    protected $resourceNodes;
 
     /**
      * @ORM\OneToOne(

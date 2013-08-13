@@ -154,8 +154,7 @@ class FileListener implements ContainerAwareInterface
     {
         $ds = DIRECTORY_SEPARATOR;
         $resource = $event->getResource();
-        $node = $resource->getResourceNode();
-        $mimeType = $node->getMimeType();
+        $mimeType = $resource->getResourceNode()->getMimeType();
         $playEvent = $this->container->get('claroline.event.event_dispatcher')
                 ->dispatch(
                     strtolower(str_replace('/', '_', 'play_file_' . $mimeType)),
@@ -178,7 +177,7 @@ class FileListener implements ContainerAwareInterface
                 $response = $fallBackPlayEvent->getResponse();
             } else {
                 $item = $this->container
-                    ->getParameter('claroline.param.files_directory') . $ds . $node->getHashName();
+                    ->getParameter('claroline.param.files_directory') . $ds . $resource->getHashName();
                 $file = file_get_contents($item);
                 $response = new Response();
                 $response->setContent($file);
