@@ -39,27 +39,25 @@
         ])
     }}
 
-    <div class="margin">
-        <table class="table table-striped table-bordered table-condensed">
-            <tr>
-                <th>{{ 'tags_hierarchy'|trans({}, 'platform') }}</th>
-                <th>{{ 'tags_list'|trans({}, 'platform') }}</th>
-            </tr>
-            <tr>
-                <td>
-                    {{ showTagHierarchy(rootTags, hierarchy) }}
-                </td>
-                <td>
-                    <ul>
-                    {% for tag in tags %}
-                        <li>
-                            <a href="{{ path('claro_workspace_tag_check_children', {'tagId':tag.getId()}) }}">
-                            {{ tag.getName() }}
-                        </li>
-                    {% endfor %}
-                    </ul>
-                </td>
-            </tr>
-        </table>
-    </div>
+    <table class="table table-striped table-bordered table-condensed">
+        <tr>
+            <th>{{ 'tags_hierarchy'|trans({}, 'platform') }}</th>
+            <th>{{ 'tags_list'|trans({}, 'platform') }}</th>
+        </tr>
+        <tr>
+            <td>
+                {{ showTagHierarchy(rootTags, hierarchy) }}
+            </td>
+            <td>
+                <ul>
+                {% for tag in tags %}
+                    <li>
+                        <a href="{{ path('claro_workspace_tag_check_children', {'tagId':tag.getId()}) }}">
+                        {{ tag.getName() }}
+                    </li>
+                {% endfor %}
+                </ul>
+            </td>
+        </tr>
+    </table>
 {% endblock %}

@@ -17,7 +17,7 @@
                 <div class="row"> {% if is_granted('ROLE_ADMIN') %}
                     <div class="content-element relative col-lg-12">
                         <div class="list-group menu">
-                            <div class="list-group-item disabled"><b>{{ "Content Administration" | trans({}, "home") }}</b></div>
+                            <div class="list-group-item disabled">{{ "Content Administration" | trans({}, "home") }}</div>
                             <a class="list-group-item{{ "/type/menu" | compareRoute(" active") }}"
                                 href="{{ path("claro_get_content_by_type", { "type": "menu"}) }}">
                                 <i class="icon-th-list"></i> {{ "Menus" | trans({}, "home") }}

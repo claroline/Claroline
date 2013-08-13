@@ -88,7 +88,7 @@
         ])
     }}
 
-    <div class="margin widget">
+    <div class="widget">
 
     {% if is_granted('ROLE_ADMIN') %}
         <a href="{{ path('claro_workspace_manage_admin_tag') }}">
@@ -159,7 +159,7 @@
     <div id="twig-self-registration-user-id" data-user-id="{{ user.getId() }}">
     </div>
 
-    <div id="confirm-registration-validation-box" class="modal hide fade">
+    <div id="confirm-registration-validation-box" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -177,7 +177,7 @@
         </div>
     </div>
 
-    <div id="confirm-unregistration-validation-box" class="modal hide fade">
+    <div id="confirm-unregistration-validation-box" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

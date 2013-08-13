@@ -109,11 +109,13 @@ body {
 }
 
 /************/
-/*  menu   */
+/*  menu    */
 /************/
 
 .list-group .list-group-item.disabled
 {
+    padding: 8px 15px !important;
+    font-size: (@font-size-base * 1.25);
     background:@panel-heading-bg;
 }
 
@@ -126,22 +128,20 @@ body {
 /***********/
 /* WIDGETS */
 /***********/
-/*
-.widget {
-    margin: 10px;
-}
 
-.widget .accordion-group
+.accordion .accordion-heading .accordion-toggle
 {
-    margin: 0 0 10px 0;
+    background:@panel-heading-bg;
 }
 
-.widget .accordion-toggle
+.accordion .accordion-heading .btn
 {
-    background:@grayLighter;
+    position:absolute;
+    right:3px;
+    top:3px
 }
 
-.widget .accordion-toggle:hover
+.accordion .accordion-heading .accordion-toggle:hover
 {
     text-decoration:none;
 }
@@ -150,31 +150,14 @@ body {
     text-decoration: underline;
     font-style: italic;
 }
-*/
+
 /*****************/
 /* RESOURCES MGR */
 /*****************/
-/*
-.breadcrumb
-{
-    margin-bottom:10px;
-}
-
-.resource-manager .breadcrumb
-{
-    margin: 0;
-
-    .border-bottom-radius(0);
-}
-
-.navbar-fixed-top .container
-{
-	padding: 0 20px 0 20px;
-}
 
 .section-content .navbar .navbar-inner a.disabled
 {
-    color:@grayLight;
+    color:@gray-light;
 }
 
 .resource-manager .actions .btn,
@@ -183,42 +166,24 @@ body {
     margin: 0;
 }
 
-.section-content .navbar
-{
-    padding:0;
-    margin:0;
-}
-
-.section-content .navbar .navbar-inner
-{
-    padding-left:5px;
-    padding-right:5px;
-    margin:0;
-}
-
-.section-content .navbar .navbar-inner a
+.section-content .navbar .nav.navbar-nav > li > a
 {
     cursor:pointer;
 }
 
-.section-content .navbar .input-append
-{
-    margin:5px 0 0 0;
-}
-
-.section-content .navbar .navbar-inner a.disabled .caret
+/*.section-content .navbar .navbar-inner a.disabled .caret
 {
     visibility:hidden;
-}
+}*/
 
-.resource-manager .filters .row-fluid
+.resource-manager .filters .row
 {
     position:relative;
 }
 
 .filters-arrow-border
 {
-    border-color: transparent transparent @grayLight transparent;
+    border-color: transparent transparent @gray-light transparent;
     border-style: solid;
     border-width: 10px;
     height:0;
@@ -230,7 +195,7 @@ body {
 
 .filters-arrow
 {
-    border-color: transparent transparent @white transparent;
+    border-color: transparent transparent #fff transparent;
     border-style: solid;
     border-width: 10px;
     height:0;
@@ -242,12 +207,12 @@ body {
 
 .resource-manager .filters
 {
-    background:@white;
-    border:1px solid @grayLight;
+    background:#fff;
+    border:1px solid @gray-light;
     .box-shadow(0 1px 3px rgba(0,0,0,.25));
     margin:5px;
     padding:5px;
-    .border-radius(@baseBorderRadius);
+    .border-radius(@border-radius-base);
 }
 
 .resource-manager .filters label
@@ -277,13 +242,13 @@ body {
     cursor:pointer;
     cursor:hand;
 }
-*/
+
 /************/
 /**  ZOOM  **/
 /************/
 
 /** In this case is not posible to use css3 scale property **/
-/*
+
 @resourceElementWidth: 71;
 @resourceElementHeight: 80;
 @resourceThumbnailWidth: 100;
@@ -439,7 +404,7 @@ body {
 {
     margin-bottom:10px;
 }
-*/
+
 /**************/
 /* WORKSPACES */
 /**************/
@@ -486,14 +451,26 @@ body {
 /**********/
 /*  Tabs  */
 /**********/
-/*
+
 .tabs.nav.nav-tabs
 {
-    margin-top:5px;
-    padding: 0 5px 0 5px;
+    margin-bottom:20px;
 }
 
-*/
+/****************/
+/*  Pagination  */
+/****************/
+
+div.pagination
+{
+    margin:0;
+}
+
+div.pagination ul
+{
+    .pagination
+}
+
 /********/
 /* MISC */
 /********/
