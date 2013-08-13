@@ -385,14 +385,8 @@ class ResourceController
                 $canChangePosition = true;
             }
 
-            //wtf !
-            $this->resourceManager->refresh($directory);
             $path = $this->resourceManager->getAncestors($directory);
-            //wtf !
-            $this->resourceManager->refresh($directory);
             $resources = $this->resourceManager->getChildren($directory, $currentRoles);
-            //wtf !
-            $this->resourceManager->refresh($directory);
             $creatableTypes = $this->rightsManager->getCreatableTypes($currentRoles, $directory);
             $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($directory));
         }

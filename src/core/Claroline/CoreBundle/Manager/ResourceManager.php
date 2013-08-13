@@ -421,9 +421,7 @@ class ResourceManager
     {
         $previous = $this->findPreviousOrLastRes($resource->getParent(), $next);
         $oldPrev = $resource->getPrevious();
-//        $this->om->refresh($oldPrev);
         $oldNext = $resource->getNext();
-//        $this->om->refresh($oldNext);
 
         $resource->setPrevious($previous);
         $resource->setNext($next);

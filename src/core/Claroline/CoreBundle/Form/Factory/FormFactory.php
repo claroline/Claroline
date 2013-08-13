@@ -112,11 +112,11 @@ class FormFactory
         ),
         self::TYPE_RESOURCE_RENAME => array(
             'formType' => 'Claroline\CoreBundle\Form\ResourceNameType',
-            'entity' => 'Claroline\CoreBundle\Entity\Resource\AbstractResource'
+            'entity' => 'Claroline\CoreBundle\Entity\Resource\ResourceNode'
         ),
         self::TYPE_RESOURCE_PROPERTIES => array(
             'formType' => 'Claroline\CoreBundle\Form\ResourcePropertiesType',
-            'entity' => 'Claroline\CoreBundle\Entity\Resource\AbstractResource'
+            'entity' => 'Claroline\CoreBundle\Entity\Resource\ResourceNode'
         ),
         self::TYPE_WORKSPACE_ROLE => array(
             'formType' => 'Claroline\CoreBundle\Form\WorkspaceRoleType'

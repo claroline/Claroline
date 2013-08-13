@@ -25,18 +25,13 @@ class ResourceNodeRepository extends MaterializedPathRepository
      */
     public function findWorkspaceRoot(AbstractWorkspace $workspace)
     {
-//        var_dump('pre get dql');
-//        var_dump($workspace->getId());
         $builder = new ResourceQueryBuilder();
         $builder->selectAsEntity()
             ->whereInWorkspace($workspace)
             ->whereParentIsNull();
-
-//        var_dump($builder->getDql());
         $query = $this->_em->createQuery($builder->getDql());
         $query->setParameters($builder->getParameters());
-//        var_dump($query->getSQL());
-//        throw new \Exception();
+
         return $query->getOneOrNullResult();
     }
 

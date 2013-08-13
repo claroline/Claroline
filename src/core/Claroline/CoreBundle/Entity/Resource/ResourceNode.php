@@ -63,7 +63,7 @@ class ResourceNode
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     inversedBy="abstractResources",
+     *     inversedBy="resourceNodes",
      *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
@@ -87,18 +87,10 @@ class ResourceNode
     protected $name;
 
     /**
-     * Note : Fetch "eager" option is required because on name update, in order to build
-     * the new path, the materialized path extension uses the reflection api to retrieve
-     * the resource's parents paths, but the parents are proxies and their "path" property
-     * is empty until it is lazy-loaded via the dedicated getter...
-     * (see Gedmo\Tree\Strategy\AbstractMaterializedPath, line 283 :
-     *  '$pathProp->getValue($parent)' returns null).
-     *
      * @Gedmo\TreeParent
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
-     *     inversedBy="children",
-     *     fetch="EAGER"
+     *     inversedBy="children"
      * )
      * @ORM\JoinColumns({@ORM\JoinColumn(onDelete="CASCADE")})
      */
