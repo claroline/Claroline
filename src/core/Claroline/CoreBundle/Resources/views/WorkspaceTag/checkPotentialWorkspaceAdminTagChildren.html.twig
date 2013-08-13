@@ -2,10 +2,18 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src='{{ asset('bundles/clarolinecore/js/workspace/workspace_tag_hierarchy.js') }}' type="text/javascript"></script>
+    <script
+        src="{{ asset('bundles/clarolinecore/js/workspace/workspace_tag_hierarchy.js') }}"
+        type="text/javascript">
+    </script>
 {% endblock %}
 
 {% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'admin_tags_add_remove_children_to'|trans({}, 'platform') }} [{{ tag.getName() }}]
+        </h3>
+    </div>
 
     {{
         macros.breadcrumbs([
@@ -24,8 +32,6 @@
             }
         ])
     }}
-
-    <h3 class="sub-section-header">{{ 'admin_tags_add_remove_children_to'|trans({}, 'platform') }} [{{ tag.getName() }}]</h3>
 
     <div id="twig-tag-id" data-tag-id="{{ tag.getId() }}">
     </div>

@@ -6,6 +6,7 @@ use \Mockery as m;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
@@ -14,6 +15,7 @@ class WorkspaceControllerTest extends MockeryTestCase
 {
     private $resourceManager;
     private $roleManager;
+    private $userManager;
     private $tagManager;
     private $toolManager;
     private $workspaceManager;
@@ -28,6 +30,7 @@ class WorkspaceControllerTest extends MockeryTestCase
         parent::setUp();
         $this->resourceManager = $this->mock('Claroline\CoreBundle\Manager\ResourceManager');
         $this->roleManager = $this->mock('Claroline\CoreBundle\Manager\RoleManager');
+        $this->userManager = $this->mock('Claroline\CoreBundle\Manager\UserManager');
         $this->tagManager = $this->mock('Claroline\CoreBundle\Manager\WorkspaceTagManager');
         $this->toolManager = $this->mock('Claroline\CoreBundle\Manager\ToolManager');
         $this->workspaceManager = $this->mock('Claroline\CoreBundle\Manager\WorkspaceManager');
@@ -584,6 +587,118 @@ class WorkspaceControllerTest extends MockeryTestCase
         );
     }
 
+    public function testAddUserAction()
+    {
+        $user = new User();
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $role = new Role();
+
+        $this->roleManager
+            ->shouldReceive('getCollaboratorRole')
+            ->with($workspace)
+            ->once()
+            ->andReturn($role);
+        $this->roleManager
+            ->shouldReceive('getWorkspaceRolesForUser')
+            ->with($user, $workspace)
+            ->once()
+            ->andReturn(array());
+        $this->roleManager
+            ->shouldReceive('associateRole')
+            ->with($user, $role)
+            ->once();
+        $this->eventDispatcher
+            ->shouldReceive('dispatch')
+            ->with(
+                'log',
+                'Log\LogRoleSubscribe',
+                array($role, $user, $workspace)
+            )
+            ->once();
+        $this->security->shouldReceive('setToken')
+            ->with(anInstanceOf('Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken'))
+            ->once();
+        $this->userManager
+            ->shouldReceive('convertUsersToArray')
+            ->with(array($user))
+            ->once()
+            ->andReturn(array('user' => 'user'));
+
+        $this->assertEquals(
+            new JsonResponse(array('user' => 'user')),
+            $this->getController()->addUserAction($workspace, $user)
+        );
+    }
+
+    public function testRemoveUserAction()
+    {
+        $user = $this->mock('Claroline\CoreBundle\Entity\User');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $roleA = $this->mock('Claroline\CoreBundle\Entity\Role');
+        $roleB = $this->mock('Claroline\CoreBundle\Entity\Role');
+        $roleC = $this->mock('Claroline\CoreBundle\Entity\Role');
+        $roleD = new Role();
+        $roles = array($roleA, $roleB, $roleC);
+
+        $this->roleManager
+            ->shouldReceive('getRolesByWorkspace')
+            ->with($workspace)
+            ->once()
+            ->andReturn($roles);
+        $this->roleManager
+            ->shouldReceive('checkWorkspaceRoleEditionIsValid')
+            ->with(array($user), $workspace, $roles)
+            ->once();
+        $roleA->shouldReceive('getName')
+            ->once()
+            ->andReturn('ROLE_A');
+        $roleB->shouldReceive('getName')
+            ->once()
+            ->andReturn('ROLE_B');
+        $roleC->shouldReceive('getName')
+            ->once()
+            ->andReturn('ROLE_C');
+        $user->shouldReceive('hasRole')
+            ->with('ROLE_A')
+            ->once()
+            ->andReturn(true);
+        $user->shouldReceive('hasRole')
+            ->with('ROLE_B')
+            ->once()
+            ->andReturn(false);
+        $user->shouldReceive('hasRole')
+            ->with('ROLE_C')
+            ->once()
+            ->andReturn(false);
+        $this->roleManager
+            ->shouldReceive('dissociateRole')
+            ->with($user, $roleA)
+            ->once();
+        $this->eventDispatcher
+            ->shouldReceive('dispatch')
+            ->with(
+                'log',
+                'Log\LogRoleUnsubscribe',
+                array($roleA, $user, $workspace)
+            )
+            ->once();
+        $this->tagManager
+            ->shouldReceive('deleteAllRelationsFromWorkspaceAndUser')
+            ->with($workspace, $user)
+            ->once();
+        $user->shouldReceive('getRoles')
+            ->once()
+            ->andReturn(array($roleD));
+        $this->security->shouldReceive('setToken')
+            ->with(anInstanceOf('Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken'))
+            ->once();
+
+        $this->assertEquals(
+            new Response('success', 204),
+            $this->getController()->removeUserAction($workspace, $user)
+        );
+    }
+
     private function getController(array $mockedMethods = array())
     {
         if (count($mockedMethods) === 0) {
@@ -592,6 +707,7 @@ class WorkspaceControllerTest extends MockeryTestCase
                 $this->workspaceManager,
                 $this->resourceManager,
                 $this->roleManager,
+                $this->userManager,
                 $this->tagManager,
                 $this->toolManager,
                 $this->eventDispatcher,
@@ -617,6 +733,7 @@ class WorkspaceControllerTest extends MockeryTestCase
                 $this->workspaceManager,
                 $this->resourceManager,
                 $this->roleManager,
+                $this->userManager,
                 $this->tagManager,
                 $this->toolManager,
                 $this->eventDispatcher,
