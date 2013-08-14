@@ -73,18 +73,22 @@
         {{ macros.flashBox() }}
     </div>
     {{
-    macros.breadcrumbs([
-        {
-            'icon': 'icon-user',
-            'name': 'users_management'|trans({}, 'platform'),
-            'href': path('claro_admin_users_management')
-        },
-        {
-            'name':'users_list'|trans({}, 'platform'),
-            'href':''
-        }
-    ])
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-user',
+                'name': 'users_management'|trans({}, 'platform'),
+                'href': path('claro_admin_users_management')
+            },
+            {
+                'name':'users_list'|trans({}, 'platform'),
+                'href':''
+            }
+        ])
     }}
+
+    <h3>{{ 'users_list'|trans({}, 'platform') }}</h3>
+    <br>
+
     <div class="search-bar row">
         <div class="col-lg-6">
             {{ displayControls(workspace.getId()) }}

@@ -21,6 +21,9 @@
         ])
     }}
 
+    <h3>{{ 'general_parameters'|trans({}, 'platform') }}</h3>
+    <br>
+
     {% if is_granted('DELETE', workspace ) %}
         <a href="#" class="workspace-delete-confirmation btn btn-default">
             {{ 'workspace_delete'|trans({}, 'platform') }}
@@ -30,11 +33,12 @@
         {{ 'save_as_template'|trans({}, 'platform') }}
     </a>
     <br>
+    <br>
 
     <form class="form-horizontal" action="{{ path('claro_workspace_edit', {'workspace': workspace.getId()}) }}" method="post" {{ form_enctype(form) }}>
         <fieldset>
             {{ form_widget(form) }}
-            <div class="form-actions">
+            <div class="form-actions panel-footer">
                 <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
                 <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}">
                     <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>

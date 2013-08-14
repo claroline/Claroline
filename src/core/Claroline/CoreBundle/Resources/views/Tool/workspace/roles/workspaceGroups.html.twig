@@ -164,6 +164,10 @@
     </ul>
 
     {{ macros.flashBox() }}
+
+    <h3>{{ 'groups_registration_in_workspace'|trans({}, 'platform') }}</h3>
+    <br>
+
     {{ displayControls(workspace.getId()) }}
     <div class="input-append pull-right">
         <input class="input-medium" type="text" id="search-items-txt"  placeholder="{{ 'search'|trans({}, 'platform') }}">
@@ -222,38 +226,39 @@
         </ul>
         <button id="add-role-button" class="btn btn-default"> {{ 'apply'|trans({}, 'platform' ) }} </button>
     </div>
+    <br>
 
-        {{ renderPager(search, workspace.getId(), withUnregistered, queryString, pager) }}
-        <table class="table table-striped table-bordered table-condensed">
-            <thead>
-                <tr>
-                    <td></td>
-                    <td>{{ 'name'|trans({}, 'platform') }}</td>
-                    <td>{{ 'role'|trans({}, 'platform') }}</td>
+    {{ renderPager(search, workspace.getId(), withUnregistered, queryString, pager) }}
+    <table class="table table-striped table-bordered table-condensed">
+        <thead>
+            <tr>
+                <td></td>
+                <td>{{ 'name'|trans({}, 'platform') }}</td>
+                <td>{{ 'role'|trans({}, 'platform') }}</td>
+            </tr>
+        </thead>
+        <tbody id="user-table-body">
+            {% for group in pager.currentPageResults %}
+                <tr id="row-{{ group.id }}" class="row-group" data-group-id="{{ group.getId() }}">
+                    <td> <input class="chk-grp" type="checkbox" value="{{ group.getId() }}"> </input></td>
+                    <td>  {{ group.name }} </td>
+                    <td>
+                        {% for role in group.getEntityRoles() %}
+                            {% if role.getWorkspace() == workspace %}
+                                <span class="label label-success" id="label-{{ role.getId () }}-{{ group.getId()}}">
+                                    {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                    <i class="icon-remove-sign pointer-hand remove-role-button"
+                                        href="{{ path('claro_workspace_remove_role_from_group', {'workspace': workspace.getId(), 'group': group.getId(), 'role': role.getId() } ) }}"
+                                        >
+                                    </i>
+                                </span>
+                            {% endif %}
+                        {% endfor %}
+                    </td>
                 </tr>
-            </thead>
-            <tbody id="user-table-body">
-                {% for group in pager.currentPageResults %}
-                    <tr id="row-{{ group.id }}" class="row-group" data-group-id="{{ group.getId() }}">
-                        <td> <input class="chk-grp" type="checkbox" value="{{ group.getId() }}"> </input></td>
-                        <td>  {{ group.name }} </td>
-                        <td>
-                            {% for role in group.getEntityRoles() %}
-                                {% if role.getWorkspace() == workspace %}
-                                    <span class="label label-success" id="label-{{ role.getId () }}-{{ group.getId()}}">
-                                        {{ role.getTranslationKey()|trans({}, 'platform') }}
-                                        <i class="icon-remove-sign pointer-hand remove-role-button"
-                                            href="{{ path('claro_workspace_remove_role_from_group', {'workspace': workspace.getId(), 'group': group.getId(), 'role': role.getId() } ) }}"
-                                            >
-                                        </i>
-                                    </span>
-                                {% endif %}
-                            {% endfor %}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {{ renderPager(search, workspace.getId(), withUnregistered, queryString, pager) }}
-        {{ displayControls(workspace.getId()) }}
+            {% endfor %}
+        </tbody>
+    </table>
+    {{ renderPager(search, workspace.getId(), withUnregistered, queryString, pager) }}
+    {{ displayControls(workspace.getId()) }}
 {% endblock %}

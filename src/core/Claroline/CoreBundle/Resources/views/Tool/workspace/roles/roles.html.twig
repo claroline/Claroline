@@ -21,8 +21,13 @@
         <li> <a href="{{ path('claro_workspace_registered_group_list', {'workspace': workspace.getId() })~'?'~queryString }}"> {{'groups'|trans({}, 'platform') }} </a> </li>
     </ul>
 
+    <h3>{{ 'roles_management'|trans({}, 'platform') }}</h3>
+    <br>
+
     <div>
-        <a  class="btn btn-default" href="{{ path('claro_workspace_role_create_form', {'workspace': workspace.getId() }) }}">{{ 'add'|trans({}, 'platform') }}</a>
+        <a  class="btn btn-default" href="{{ path('claro_workspace_role_create_form', {'workspace': workspace.getId() }) }}">{{ 'add_role'|trans({}, 'platform') }}</a>
+        <br>
+        <br>
         <table class="table-striped table-bordered table-condensed">
             <thead>
                 <th> {{ 'name'|trans({}, 'platform') }} </th>

@@ -164,6 +164,10 @@
     </ul>
 
     {{ macros.flashBox() }}
+
+    <h3>{{ 'users_registration_in_workspace'|trans({}, 'platform') }}</h3>
+    <br>
+
     {{ displayControls(workspace.getId()) }}
     <div class="input-append pull-right">
         <input class="input-medium" type="text" id="search-items-txt"  placeholder="{{ 'search'|trans({}, 'platform') }}">
@@ -222,6 +226,7 @@
         </ul>
         <button id="add-role-button" class="btn btn-default"> {{ 'apply'|trans({}, 'platform' ) }} </button>
     </div>
+    <br>
 
     {{ renderPager(search, workspace.getId(), withUnregistered, queryString, pager) }}
     <table class="table table-striped table-bordered table-condensed">

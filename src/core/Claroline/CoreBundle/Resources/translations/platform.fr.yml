@@ -1,12 +1,15 @@
 account_created: 'Compte créé'
-account_general_statistics: Statistiques générales sur les comptes
+account_general_statistics: 'Statistiques générales sur les comptes'
 action: Action
+Action List: 'Liste des actions'
+Actions per day: 'Nombre d''actions par jour'
 activity_form_instructions: Instructions
 activity_form_name: Nom
 add: Ajouter
 add_group: 'Ajouter un groupe'
 add_group_s_confirm_message: 'groupe(s) ajouté(s)'
 add_resource: 'Ajouter une ressource'
+add_role: 'Ajouter un role'
 add_tag_to_workspace: 'Ajouter un Tag à l''espace d''activités'
 add_user: 'Ajouter un utilisateur'
 add_users: 'Ajouter des utilisateurs'
@@ -36,21 +39,30 @@ all: Tous
 all_my_workspaces: 'Tous mes espaces d''activités'
 all_workspaces: 'Tous les espaces'
 anonymous: Anonyme
-analytics_home: Vue de l'ensemble
-analytics_connections: Visites utilisateurs
-analytics_resources: Contenu plateforme
-analytics_top: Top des activités
+analytics_home: 'Vue de l''ensemble'
+analytics_connections: 'Visites utilisateurs'
+analytics_resources: 'Contenu plateforme'
+analytics_top: 'Top des activités'
 apply: Appliquer
 available_workspaces: 'Espaces d''activités disponibles'
 by: par
 cancel: Annuler
+canCopy: 'Droit de copier'
+canCreate: 'Creation de %type%'
+canEdit: 'Droit de modifier'
+canExport: 'Droit d''exporter'
+canDelete: 'Droit de supprimer'
+canOpen: 'Droit d''ouvrir'
 choose_resource_form_type: 'Type de ressource'
+Choose visible actions in the widget: 'Choisissez les actions visibles dans le widget'
+Choose workspaces displayed in the widget: 'Choisissez les espaces de travail affichés par le widget'
 close: Fermer
 collaborator: Collaborateur
 communication: Communication
 configuration: Configuration
 connections: Nb Cnx.
 configure: Configurer
+copiable: 'Copiable'
 copy: Copier
 create: Créer
 creation: Création
@@ -62,20 +74,47 @@ creation_date: 'Date de création'
 cut: Couper
 dashboard: 'Tableau de bord'
 date: Date
+date_range.apply: 'Appliquer'
+date_range.clear: 'Effacer'
+date_range.custom_range: 'Plage personnalisée'
+date_range.day_names: '["Di","Lu","Ma","Me","Je","Ve","Sa"]'
+date_range.first_day: '1'
+date_range.format: 'd-m-Y'
+date_range.from: 'De'
+date_range.js_format: 'dd-MM-yyyy'
+date_range.last_month: 'Mois précédent'
+date_range.last_school_year: 'Année sco. précédente'
+date_range.last_seven_days: '7 derniers jours'
+date_range.last_thirty_days: '30 derniers jours'
+date_range.last_week: 'Semaine précédente'
+date_range.last_year: 'Année précédente'
+date_range.month_names: '["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"]'
+date_range.this_month: 'Mois en cours'
+date_range.this_school_year: 'Année sco. en cours'
+date_range.this_week: 'Semaine en cours'
+date_range.this_year: 'Année en cours'
+date_range.to: 'A'
+date_range.today: 'Aujourd''hui'
+date_range.week: 's'
+date_range.yesterday: 'Hier'
+deletable: 'Supprimable'
 delete: Supprimer
 desktop: Bureau
-desktop_tools: Outils du bureau
+desktop_tools: 'Outils du bureau'
 directory: Répertoire
 directory_form_name: Nom
 directory_form_shareType: Redistribution
 display_options: 'Options d''affichage'
 done_on: 'effectuée sur'
 download: Télécharger
-downloads: Nb tchgr.
+downloads: 'Nb tchgr.'
+Draw an area on the graph to zoom, double-click to cancel: 'Tracez une zone sur le graphique pour zoomer; double cliquez pour annuler'
 edit: Modifier
+editable: 'Modifiable'
 email_form_mail : 'Entrez votre adresse email'
 enter_tag_name_message: 'Veuillez entrer un nom de Tag'
 export: Exporter
+exportable: 'Exportable'
 fast_answer: 'Réponse rapide'
 file: Fichier
 file_form_file: Fichier
@@ -86,36 +125,49 @@ file_form_shareType_0: Oui
 file_form_shareType_1: Non
 files: Fichiers
 filter: Filtrer
+Filter actions: 'Filtrer les actions'
 find_workspaces: 'Tous les espaces'
 first_name: Prénom
+firstName: Prénom
 forgot_password: 'Mot de passe oublié ?'
+for period: 'sur la période du'
+for user: 'de l''utilisateur'
 form_role: Rôle
 from: Depuis
 from_message: De
 general: Général
+general_parameters: 'Paramètres généraux'
 group: Groupe
+group_configuration: 'Configuration du groupe'
+group_creation: 'Création d''un groupe'
 group_form_name: Nom
 group_form_ownedRoles: Rôles
 group_form_platformRole: Role
 group_parameter: 'Paramètres du groupe'
 groups: Groupes
 groups_list: 'Liste des groupes'
+groups_registration_in_workspace: 'Inscription des groupes à l''espace d''activités'
 has_been_suscribed_with_role: 'a été inscrit(e) avec le rôle'
 has_been_suscribed_with_role_group: 'a été inscrit avec le rôle'
 has_not_been_imported: 'n''a pas été importé(e)'
 has_not_been_imported_into_the_group: 'n''a pas été importé(e) dans le groupe'
 history: Historique
 home: Accueil
+home_parameters: 'Paramètres de l''accueil'
 id: Id
 informations: Informations
 instructions: Consignes
 import: Importer
 import_users: 'Importer des utilisateurs'
-import_user_file_file: Importer depuis fichier
+import_user_file_file: 'Importer depuis fichier'
 invalid_csv_file: 'Le fichier CSV n''est pas valide'
-last_30_days_activity: Activités des 30 derniers jours
+jqplot_date_output_format: '%d-%m-%Y'
+last_30_days_activity: 'Activités des 30 derniers jours'
+Last action: '{1} Dernière action|[1,Inf] %logAmount% dernières actions'
 last_name: Nom
+lastName: Nom
 link: Lien
+link_outdated : 'le lien n''est plus valide'
 list_groups: 'Lister les groupes'
 list_users: 'Lister les utilisateurs'
 list_workspaces: 'Tous les espaces d''activités'
@@ -127,6 +179,7 @@ log_delete: 'Suppression'
 log_add_user: 'Ajout d''un utilisateur'
 log_remove_user: 'Retrait d''un utilisateur'
 log_delete: 'Suppression'
+log_hidden_workspace_widget_config_amount : 'Nombre d''actions'
 log_login: 'Connexion'
 log_read: 'Lecture'
 log_export: 'Téléchargement'
@@ -222,7 +275,6 @@ log_change_set: 'Liste des propriétés modifiées'
 log_old_values: 'Anciennes valeurs'
 log_new_values: 'Nouvelles valeurs'
 log_platform_roles: 'Rôles plateforme'
-platform_role: 'Rôle plateforme'
 log_workspace_roles: 'Rôles espace d''activités'
 log_resource: 'Resource cible de l''action'
 log_owner: 'Propriétaire de la cible'
@@ -236,31 +288,14 @@ log_has_not_changed: 'N''a pas changé'
 log_copy_source: 'Source de la copie'
 log_workspace_source: 'Espace de travail source'
 log_widget_config_creation: Création
-log_widget_config_read: Lecture / Ouverture
+log_widget_config_read: 'Lecture / Ouverture'
 log_widget_config_export: Téléchargement
-log_widget_config_update: Mise à jour d'une ressource
-log_widget_config_updateChild: Nouveauté dans une ressource
+log_widget_config_update: 'Mise à jour d''une ressource'
+log_widget_config_updateChild: 'Nouveauté dans une ressource'
 log_widget_config_delete: Suppression
 log_widget_config_move: Déplacement
 log_widget_config_subscribe: Inscription
-log_widget_config_amount: Nombre de ligne
-firstName: Prénom
-lastName: Nom
-canOpen: 'Droit d''ouvrir'
-canCopy: 'Droit de copier'
-canDelete: 'Droit de supprimer'
-canEdit: 'Droit de modifier'
-canExport: 'Droit d''exporter'
-canCreate: 'Creation de %type%'
-sharable: 'Partageable'
-deletable: 'Supprimable'
-exportable: 'Exportable'
-copiable: 'Copiable'
-editable: 'Modifiable'
-yes: 'oui'
-no: 'non'
-no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
-link_outdated : 'le luen n''est plus valide'
+log_widget_config_amount: 'Nombre de ligne'
 login: Connexion
 login_failure: 'La connexion a échoué. Vérifiez que votre nom d''utilisateur et votre mot de passe sont corrects.'
 logout: Déconnexion
@@ -272,7 +307,7 @@ mail_click: 'Cliquez sur ce lien pour réinitialiser votre mot de passe'
 mail_sent : 'Un email vient de vous être envoyé. Vérifiez votre dossier spam au cas où vous ne verriez pas l''email'
 manage_rights: 'Gérer les droits'
 manager: Gestionnaire
-media_most_viewed: Media les plus consultés
+media_most_viewed: 'Media les plus consultés'
 messages_confirm_delete: 'Etes-vous sûr de vouloir supprimer ce(s) message(s) ?'
 messages_confirm_permanent_delete: 'Etes-vous sûr de vouloir supprimer définitivement ce(s) message(s) ?'
 messages_confirm_restore: 'Etes-vous sûr de vouloir restaurer ce(s) message(s) ?'
@@ -297,15 +332,20 @@ my_workspace: 'Mon espace de travail'
 my_workspaces: 'Mes espaces d''activités'
 name: Nom
 new_message_alert: 'Vous avez %count% nouveaux message(s)'
+no: 'non'
+no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
 no_search_results: 'Votre recherche n''a retourné aucun résultat.'
-note: Note
 none: Aucun
+note: Note
 object: Objet
 ok: Ok
 open: Ouvrir
 options: Options
 organize_admin_tags: 'Organiser les Tags administrateur'
 organize_private_tags: 'Organiser les Tags personnels'
+Overview of all recent activities in %workspaceName%: 'Aperçu de toutes les activités récentes de %workspaceName%'
+Overview of recent activities in %workspaceName%: 'Aperçu des activités récentes de %workspaceName%'
+Overview of recent activities of your workspaces: 'Aperçu des activités récentes de vos espaces de travail'
 owner: Propriétaire
 owner_s: Propriétaire(s)
 parameters: Paramètres
@@ -323,6 +363,7 @@ platform_parameters_form_localLanguage: Langue
 platform_parameters_form_selfRegistration: Auto-inscription
 platform_parameters_form_theme: Thème
 platform_plugins: 'Plugins de la plateforme'
+platform_role: 'Rôle plateforme'
 platform_widgets: 'Widgets de la plateforme'
 please_wait: 'Veuillez patienter...'
 private: Privée
@@ -350,10 +391,11 @@ remove_group_s_confirm_message: 'groupe(s) supprimé(s)'
 remove_user_s_confirm_message: 'utilisateur(s) supprimé(s)'
 remove_messages_confirm_message: 'message(s) supprimé(s)'
 rename: Renommer
+rename_tool: 'Renommage d''un outil'
 reset: Réinitialiser
 reset_pwd: 'Réinitialisation de votre mot de passe'
-reset_pwd_form_plainPassword_first: "Nouveau mot de passe"
-reset_pwd_form_plainPassword_second : "Répétez le mot de passe"
+reset_pwd_form_plainPassword_first: 'Nouveau mot de passe'
+reset_pwd_form_plainPassword_second : 'Répétez le mot de passe'
 resource: Ressource
 resource_action_denied_message: 'L''action %action% n''a pas pu être exécutée sur la resource ''%path%'': accès refusé.'
 resource_creation_denied: 'Vous n''avez pas la permission de créer une ressource dans le répertoire ''%path'': accès refusé.'
@@ -370,10 +412,11 @@ resource_properties_form_sharable: 'Partager cette ressource'
 resource_properties_form_shareType: Redistribution
 resource_properties_form_userIcon: Icône
 resources: Ressources
-resources_most_downloaded: Ressources les plus téléchargés
+resources_most_downloaded: 'Ressources les plus téléchargés'
 resources_rights: 'Droits des ressources'
-resources_usage_ratio: Taux d'utilisation des resources
-resources_usage_list: Liste d'utilisation des resources
+resources_rights_management: 'Gestion des droits des ressources'
+resources_usage_ratio: 'Taux d''utilisation des resources'
+resources_usage_list: 'Liste d''utilisation des resources'
 resource_right_form_canCopy: Copier
 resource_right_form_canDelete: Supprimer
 resource_right_form_canEdit: Editer
@@ -381,24 +424,30 @@ resource_right_form_canOpen: Ouvrir
 resource_right_form_canShare: Partager
 resource_right_form_canView: Voir
 resource_right_form_canExport: Exporter
-resource_right_form_isRecursive: Appliquer au contenu du répertoire et aux sous-répertoires
+resource_right_form_isRecursive: 'Appliquer au contenu du répertoire et aux sous-répertoires'
 restore : Restaurer
-restore_messages_confirm_message: message(s) restaurés
+restore_messages_confirm_message: 'message(s) restaurés'
 results: Résultats
 results_for_search_on: 'Resultat(s) de la recherche sur'
 rights: Droits
 rights_management: 'Gestion des droits'
 role: Rôle
 roles: Rôles
-role_creation: Créer un rôle
+role_creation: 'Création d''un rôle'
+role_edition: 'Modification d''un rôle'
+role_name_type_form_translationKey: 'Nom'
+roles_management: 'Gestion des rôles'
 save: Sauvegarder
-save_as_template: Sauvegarder comme modèle
+save_as_template: 'Sauvegarder comme modèle'
+save_workspace_as_template: 'Sauvegarde de l''espace d''activités comme modèle'
 search: Rechercher
 search_group: 'Rechercher un groupe'
 search_user: 'Rechercher un utilisateur'
 see: Voir
+See all: 'Voir tous'
 see_more: Voir plus
 select all: 'Tout sélectionner'
+select_all: 'Tout sélectionner'
 select_groups_for_registration_to_workspace: 'Choississez les groupes à inscrire'
 select_roles_to_assign: 'Selectionnez les Rôles à attribuer'
 select_users_for_registration_to_workspace: 'Choississez les utilisateurs à inscrire'
@@ -408,7 +457,10 @@ send_mail: 'Envoyer un mail'
 send_message: 'Envoyer un message'
 session_id: 'Identifiant de session'
 settings: Paramètres
+sharable: 'Partageable'
 show: Voir
+Show actions: 'Afficher les actions'
+Show actions for: 'Afficher les actions sur'
 show_as_admin: 'Voir comme admin'
 show_as_user: 'Voir comme utilisateur'
 show_as: 'Voir en tant que'
@@ -432,34 +484,37 @@ teacher: Professeur
 text_form_name: Nom
 text_form_shareType: Redistribution
 text_form_text: Texte
+The form is not valid: 'Le formulaire n''est pas valide'
 to: Jusque
-tool_form_name : "Nom"
-tool_form_displayName : "Nom affiché"
+tool_form_name : 'Nom'
+tool_form_displayName : 'Nom affiché'
+tools_rights_configuration: 'Configuration des droits sur les outils'
 to_message: A
 today: 'Aujourd''hui'
 tool: Outil
 tools: Outils
 top: Top
-top_extension: "Top des extensions (Media), par nombre de fichiers"
-top_workspaces_resources: "Top des espaces d'activités avec le plus des resources"
-top_workspaces_connections: "Top des espaces d'activités les plus consultés"
-top_resources_views: "Top des resources les plus consultés"
-top_resources_downloads: "Top des resources les plus téléchargés"
-top_users_workspaces_owners: "Top des utilisateurs ayant crée le plus de modules"
-top_users_workspaces_enrolled: "Top des utilisateurs étant inscrits dans le plus de modules"
-top_users_connections: "Top des utilisateurs s'étant les plus connectés"
-top_media_views: "Top des Medias le plus consultés"
+top_extension: 'Top des extensions (Media), par nombre de fichiers'
+top_workspaces_resources: 'Top des espaces d''activités avec le plus des resources'
+top_workspaces_connections: 'Top des espaces d''activités les plus consultés'
+top_resources_views: 'Top des resources les plus consultés'
+top_resources_downloads: 'Top des resources les plus téléchargés'
+top_users_workspaces_owners: 'Top des utilisateurs ayant crée le plus de modules'
+top_users_workspaces_enrolled: 'Top des utilisateurs étant inscrits dans le plus de modules'
+top_users_connections: 'Top des utilisateurs s''étant les plus connectés'
+top_media_views: 'Top des Medias le plus consultés'
 trash : Corbeille
 type: Type
 type_s: Type(s)
 unique connections: 'Nb Cnx. uniques'
 unregister: Désinscription
-unregistered: Non inscrit
+unregistered: 'Non inscrit'
 unregistered_groups: 'Groupes non enregistrés'
 unregistered_users: 'Utilisateurs non enregistrés'
-unwritable_file_exception: "Vous n'avez pas la permission d'écrire dans le fichier %path%."
+unwritable_file_exception: 'Vous n''avez pas la permission d''écrire dans le fichier %path%.'
 user: Utilisateur
-user_accounts: Comptes utilisateur
+user_accounts: 'Comptes utilisateur'
+user_creation: 'Création d''un utilisateur'
 user_form_administrativeCode: 'Code administratif'
 user_form_firstName: Nom
 user_form_lastName: Prénom
@@ -471,20 +526,23 @@ user_form_plainPassword_first: 'Mot de passe'
 user_form_plainPassword_second: Vérification
 user_form_username: 'Nom d''utilisateur'
 user_parameters: 'Paramètres de l''utilisateur'
-users_management: 'Gestion des utilisateurs'
-users_list: 'Liste des utilisateurs'
 username: 'Nom d''utilisateur'
 users: Utilisateurs
-users_connected_once: utilisateurs connectés au moins 1 fois sur la plateforme
-users_visits: Visites des utilisateurs
+users_connected_once: 'utilisateurs connectés au moins 1 fois sur la plateforme'
+users_import: 'Importer des utilisateurs'
+users_list: 'Liste des utilisateurs'
+users_management: 'Gestion des utilisateurs'
+users_registration_in_workspace: 'Inscription des utilisateurs dans l''espace d''activités'
+users_visits: 'Visites des utilisateurs'
 validate: Valider
 view: Voir
-views: Nb vues
+views: 'Nb vues'
 visible: Visible
 visitor: Visiteur
-warning_workspace_impersonation: Vous êtes connectés en tant que %role% du workspace %workspace%.
+warning_workspace_impersonation: 'Vous êtes connectés en tant que %role% du workspace %workspace%.'
 widget_settings: 'Paramètres des widgets'
 widgets: Widgets
+widgets_configuration: 'Configuration des widgets'
 workspace: 'Espace d''activités'
 workspace.create: 'Créer un nouvel espace d''activités'
 workspace.name_not_blank: 'Veuillez spécifier un nom pour ce workspace.'
@@ -506,7 +564,7 @@ workspace_order_tool_edit_form_name: Nom
 workspace_registration_confirm_title: 'Voulez-vous vous inscrire à cet espace d''activités ?'
 workspace_resource: Ressources
 workspace_role_type_form_translationKey: Nom
-workspace_role_type_form_requireDir: Créer un répertoire
+workspace_role_type_form_requireDir: 'Créer un répertoire'
 workspace_tag_form_name: Nom
 workspace_template_form_name: Nom
 workspace_tools: Outils
@@ -514,48 +572,7 @@ workspace_unregistration_confirm_title: 'Voulez-vous vous désinscrire de cet es
 workspace_welcome: Accueil
 workspaces: 'Espaces d''activités'
 ws_creator: 'Créateur d''espaces'
-ws_most_viewed: Espaces d'activités les plus consultés
-date_range.format: 'd-m-Y'
-date_range.js_format: 'dd-MM-yyyy'
-date_range.apply: 'Appliquer'
-date_range.clear: 'Effacer'
-date_range.week: 's'
-date_range.from: 'De'
-date_range.to: 'A'
-date_range.custom_range: 'Plage personnalisée'
-date_range.day_names: '["Di","Lu","Ma","Me","Je","Ve","Sa"]'
-date_range.month_names: '["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"]'
-date_range.first_day: '1'
-date_range.today: 'Aujourd''hui'
-date_range.yesterday: 'Hier'
-date_range.last_week: 'Semaine précédente'
-date_range.this_week: 'Semaine en cours'
-date_range.last_month: 'Mois précédent'
-date_range.this_month: 'Mois en cours'
-date_range.last_year: 'Année précédente'
-date_range.this_year: 'Année en cours'
-date_range.last_school_year: 'Année sco. précédente'
-date_range.this_school_year: 'Année sco. en cours'
-date_range.last_seven_days: '7 derniers jours'
-date_range.last_thirty_days: '30 derniers jours'
-jqplot_date_output_format: '%d-%m-%Y'
-Show actions for: 'Afficher les actions sur'
-for period: 'sur la période du'
-for user: 'de l''utilisateur'
-Show actions: 'Afficher les actions'
-See all: 'Voir tous'
-yesterday_activity: Activité de la veille
+ws_most_viewed: 'Espaces d''activités les plus consultés'
+yes: 'oui'
+yesterday_activity: 'Activité de la veille'
 Your changes have been saved: 'Vos changements ont été sauvegardés'
-The form is not valid: 'Le formulaire n''est pas valide'
-Choose workspaces displayed in the widget: 'Choisissez les espaces de travail affichés par le widget'
-Choose visible actions in the widget: 'Choisissez les actions visibles dans le widget'
-Actions per day: 'Nombre d''actions par jour'
-Last action: '{1} Dernière action|[1,Inf] %logAmount% dernières actions'
-log_hidden_workspace_widget_config_amount : 'Nombre d''actions'
-Action List: 'Liste des actions'
-Filter actions: 'Filtrer les actions'
-Draw an area on the graph to zoom, double-click to cancel: 'Tracez une zone sur le graphique pour zoomer; double cliquez pour annuler'
-Overview of recent activities of your workspaces: 'Aperçu des activités récentes de vos espaces de travail'
-Overview of recent activities in %workspaceName%: 'Aperçu des activités récentes de %workspaceName%'
-Overview of all recent activities in %workspaceName%: 'Aperçu de toutes les activités récentes de %workspaceName%'
-select_all: Tout sélectionner
