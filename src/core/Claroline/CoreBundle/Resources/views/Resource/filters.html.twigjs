@@ -1,10 +1,10 @@
 {% twig_js name="ResourceManagerFilters" %}
-<div class="row-fluid">
-    <!--<div class="span3">
+<div class="row">
+    <!--<div class="col-lg-3">
         <label>{{ 'name'|trans({}, 'platform') }} : </label>
         <input type="text" class="name input-medium"/>
     </div>-->
-    <div class="span5">
+    <div class="col-lg-5">
         <label>{{ 'type_s'|trans({}, 'platform') }} :</label>
         {% if resourceTypes|length > 0 %}
         <select class="resource-types" multiple="multiple">
@@ -15,7 +15,7 @@
         {% endif %}
     </div>
 
-    <div class="span3">
+    <div class="col-lg-3">
         <label>{{ 'from'|trans({}, 'platform') }} :</label>
         <input type="text"
         class="datepicker date-from input-small"
@@ -23,7 +23,7 @@
         data-date-format="yyyy-mm-dd"/>
     </div>
 
-    <div class="span4">
+    <div class="col-lg-4">
         <label>{{ 'to'|trans({}, 'platform') }} :</label>
         <input type="text"
         class="datepicker date-to input-small"
@@ -31,10 +31,10 @@
         data-date-format="yyyy-mm-dd"/>
     </div>
 
-    <!--<div class="span2">
-        <button type="button" class="filter btn">{{ 'search'|trans({}, 'platform') }}</button>
-        <button type="button" class="close-panel btn">{{ 'close'|trans({}, 'platform') }}</button>
-        <button type="button" class="close-panel btn pull-right">{{ 'close'|trans({}, 'platform') }}</button>
+    <!--<div class="col-lg-2">
+        <button type="button" class="filter btn btn-default">{{ 'search'|trans({}, 'platform') }}</button>
+        <button type="button" class="close-panel btn btn-default">{{ 'close'|trans({}, 'platform') }}</button>
+        <button type="button" class="close-panel btn btn-default pull-right">{{ 'close'|trans({}, 'platform') }}</button>
     </div>-->
 
     <div class="filters-arrow-border"></div>

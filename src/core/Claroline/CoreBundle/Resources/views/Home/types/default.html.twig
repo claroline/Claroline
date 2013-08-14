@@ -1,11 +1,13 @@
 {% if content != null %}
 
-<div class="content-element border {{ size }} relative" data-id="{{ content.id }}" data-type="{{ type }}">
-    {% render controller("ClarolineCoreBundle:Home:menu", { 'id': content.id, 'size': size, 'type': type, 'father': father  }) %}
+<div class="content-element {{ size }}" data-id="{{ content.id }}" data-type="{{ type }}">
+    <div class="panel relative">
+        {% render controller("ClarolineCoreBundle:Home:menu", { 'id': content.id, 'size': size, 'type': type, 'father': father  }) %}
 
-    <div class="margin">
         {% if content.title != "" %}
-            <h3 class="sub-section-header">{{ content.title }}</h3>
+            <div class="panel-heading">
+                <h3 class="panel-title">{{ content.title }}</h3>
+            </div>
         {% endif %}
         <p class="text">{{ content.content | nl2br}}</p>
         {% if content.generatedcontent != "" and content.generatedcontent != null %}
@@ -15,9 +17,8 @@
             </div>
         </div>
         {% endif %}
-        <i class="muted">{{ content.created | timeAgo }}</i>
+        <i class="text-muted">{{ content.created | timeAgo }}</i>
     </div>
-
 </div>
 
 {% endif %}

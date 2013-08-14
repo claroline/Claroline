@@ -1,33 +1,32 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
 {% block section_content %}
-    <div class="margin">
-        <div>
-            {{ macros.flashBox() }}
-        </div>
-        {{
-        macros.breadcrumbs([
-                {
-                    'icon': 'icon-user',
-                    'name': 'users_management'|trans({}, 'platform'),
-                    'href': path('claro_admin_users_management')
-                },
-                {
-                    'name': 'groups_list'|trans({}, 'platform'),
-                    'href': path('claro_admin_group_list')
-                },
-                {
-                    'name':  group.getName(),
-                    'href': path('claro_admin_user_of_group_list', {'groupId': group.getId()})
-                },
-                {
-                    'name': 'import_users'|trans({}, 'platform'),
-                    'href': ''
-                }
-        ])
-        }}
+    <div>
+        {{ macros.flashBox() }}
     </div>
+    {{
+    macros.breadcrumbs([
+            {
+                'icon': 'icon-user',
+                'name': 'users_management'|trans({}, 'platform'),
+                'href': path('claro_admin_users_management')
+            },
+            {
+                'name': 'groups_list'|trans({}, 'platform'),
+                'href': path('claro_admin_group_list')
+            },
+            {
+                'name':  group.getName(),
+                'href': path('claro_admin_user_of_group_list', {'groupId': group.getId()})
+            },
+            {
+                'name': 'import_users'|trans({}, 'platform'),
+                'href': ''
+            }
+    ])
+    }}
     {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
+
     <form class="form-horizontal" action="{{ path('claro_admin_import_users_into_group', {'groupId': group.getId()}) }}" method="post" {{ form_enctype(form) }} >
         <fieldset>
             {{ form_widget(form) }}

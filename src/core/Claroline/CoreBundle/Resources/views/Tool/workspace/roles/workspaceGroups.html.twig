@@ -1,36 +1,36 @@
 {% macro renderPager(search, workspaceId, withUnregistered, queryString, pager) %}
-    {% if search == '' %}
+{% if search == '' %}
     {{
-        pagerfanta(
-            pager,
-            'twitter_bootstrap_translated',
-            {
-                'proximity' : 1,
-                'routeName': 'claro_workspace_registered_group_list',
-                'routeParams': {'workspace': workspaceId, 'withUnregistered': withUnregistered},
-                'queryString': queryString
-            }
-        )
+    pagerfanta(
+    pager,
+    'twitter_bootstrap_translated',
+    {
+    'proximity' : 1,
+    'routeName': 'claro_workspace_registered_group_list',
+    'routeParams': {'workspace': workspaceId, 'withUnregistered': withUnregistered},
+    'queryString': queryString
+    }
+    )
     }}
-    {% else %}
-        {{
-            pagerfanta(
-                pager,
-                'twitter_bootstrap_translated',
-                {
-                    'proximity' : 1,
-                    'routeName': 'claro_workspace_registered_group_list_search',
-                    'routeParams': {'search': search, 'workspace': workspaceId, 'withUnregistered': withUnregistered},
-                    'queryString': queryString
-                }
-            )
-        }}
-    {% endif %}
+{% else %}
+    {{
+    pagerfanta(
+    pager,
+    'twitter_bootstrap_translated',
+    {
+    'proximity' : 1,
+    'routeName': 'claro_workspace_registered_group_list_search',
+    'routeParams': {'search': search, 'workspace': workspaceId, 'withUnregistered': withUnregistered},
+    'queryString': queryString
+    }
+    )
+    }}
+{% endif %}
 {% endmacro %}
 
 {% macro displayControls(workspaceId) %}
-    {% if app.user %}
-    {% endif %}
+{% if app.user %}
+{% endif %}
 {% endmacro %}
 
 {% from _self import renderPager %}
@@ -49,10 +49,10 @@
 {% block javascripts %}
     {{ parent() }}
     {% javascripts
-        vars=["locale"]
-        "@ClarolineCoreBundle/Resources/views/Tool/workspace/roles/roleGroupLabel.html.twigjs"
-        "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
-        filter="twig_js"
+    vars=["locale"]
+    "@ClarolineCoreBundle/Resources/views/Tool/workspace/roles/roleGroupLabel.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
+    filter="twig_js"
     %}
     <script language="javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -65,7 +65,7 @@
                 url: route,
                 type: 'DELETE',
                 success: function() {
-                   target.parent().remove();
+                    target.parent().remove();
                 }
             });
         });
@@ -128,7 +128,7 @@
 
             if (search !== '') {
                 var route = Routing.generate('claro_workspace_registered_group_list_search', {'workspace': {{ workspace.getId }}, 'withUnregistered': withUnregistered, 'search': search });
-            } else {
+                } else {
                 var route = Routing.generate('claro_workspace_registered_group_list', {'workspace': {{ workspace.getId }}, 'withUnregistered': withUnregistered });
             }
 
@@ -137,7 +137,7 @@
         });
 
         $('#chk-all').on('click', function(event) {
-                if ($('#chk-all').is(':checked')) {
+            if ($('#chk-all').is(':checked')) {
                 $('.chk-item').attr('checked', true);
             }
             else {
@@ -164,65 +164,64 @@
     </ul>
 
     {{ macros.flashBox() }}
-    <div class="margin">
-            {{ displayControls(workspace.getId()) }}
-            <div class="input-append pull-right">
-                <input class="input-medium" type="text" id="search-items-txt"  placeholder="{{ 'search'|trans({}, 'platform') }}">
-                <button class="filter btn" type="button" id="search-button">
-                    <i class="icon-search"></i>
-                </button>
-                <div class="btn-group">
-                    <button class="btn dropdown-toggle" data-toggle="dropdown">
-                        {{ 'roles'|trans({}, 'platform') }}
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu" >
-                        <li> <input id="chk-all" type="checkbox"> {{ 'select_all'|trans({}, 'platform') }}  </input> </li>
-                        <li class="divider"></li>
-                        {% for role in wsRoles %}
-                            <li>
-                                <input
-                                    class="chk-search chk-item"
-                                    type="checkbox"
-                                    value="{{ role.getId() }}"
-                                    data-name="{{ role.getTranslationKey()|trans({}, 'platform') }}"
-                                    {% for toCheck in roles %}
-                                        {% if toCheck.getId() == role.getId() %}
-                                            checked
-                                        {% endif %}
-                                    {% endfor %}
-                                "> {{ role.getTranslationKey()|trans({}, 'platform') }}
-                                </input>
-                            </li>
-                        {% endfor %}
-                        <li class="divider"></li>
-                        <li>
-                            <input id="chk-unregistered"
-                               class="chk-item"
-                               type="checkbox"
-                               value="1"
-                               {% if withUnregistered == 1 %}
-                                   checked
-                               {% endif %}
-                               data-name="{{ 'unregistered'|trans({}, 'platform') }}">
-                                   {{ 'unregistered'|trans({}, 'platform') }}
-                            </input>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+    {{ displayControls(workspace.getId()) }}
+    <div class="input-append pull-right">
+        <input class="input-medium" type="text" id="search-items-txt"  placeholder="{{ 'search'|trans({}, 'platform') }}">
+        <button class="filter btn btn-default" type="button" id="search-button">
+            <i class="icon-search"></i>
+        </button>
         <div class="btn-group">
-            <button class="btn dropdown-toggle" data-toggle="dropdown">
+            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                 {{ 'roles'|trans({}, 'platform') }}
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu" >
+                <li> <input id="chk-all" type="checkbox"> {{ 'select_all'|trans({}, 'platform') }}  </input> </li>
+                <li class="divider"></li>
                 {% for role in wsRoles %}
-                    <li> <input class="chk-role" type="checkbox" value="{{ role.getId() }}" data-name="{{ role.getTranslationKey()|trans({}, 'platform') }}"> {{ role.getTranslationKey()|trans({}, 'platform') }}  </input> </li>
+                    <li>
+                    <input
+                    class="chk-search chk-item"
+                    type="checkbox"
+                    value="{{ role.getId() }}"
+                    data-name="{{ role.getTranslationKey()|trans({}, 'platform') }}"
+                    {% for toCheck in roles %}
+                        {% if toCheck.getId() == role.getId() %}
+                            checked
+                        {% endif %}
+                    {% endfor %}
+                    > {{ role.getTranslationKey()|trans({}, 'platform') }}
+                    </input>
+                    </li>
                 {% endfor %}
+                <li class="divider"></li>
+                <li>
+                <input id="chk-unregistered"
+                class="chk-item"
+                type="checkbox"
+                value="1"
+                {% if withUnregistered == 1 %}
+                    checked
+                {% endif %}
+                data-name="{{ 'unregistered'|trans({}, 'platform') }}">
+                {{ 'unregistered'|trans({}, 'platform') }}
+                </input>
+                </li>
             </ul>
-            <button id="add-role-button" class="btn btn-secondary"> {{ 'apply'|trans({}, 'platform' ) }} </button>
         </div>
+    </div>
+    <div class="btn-group">
+        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            {{ 'roles'|trans({}, 'platform') }}
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu" >
+            {% for role in wsRoles %}
+                <li> <input class="chk-role" type="checkbox" value="{{ role.getId() }}" data-name="{{ role.getTranslationKey()|trans({}, 'platform') }}"> {{ role.getTranslationKey()|trans({}, 'platform') }}  </input> </li>
+            {% endfor %}
+        </ul>
+        <button id="add-role-button" class="btn btn-default"> {{ 'apply'|trans({}, 'platform' ) }} </button>
+    </div>
 
         {{ renderPager(search, workspace.getId(), withUnregistered, queryString, pager) }}
         <table class="table table-striped table-bordered table-condensed">
@@ -241,13 +240,13 @@
                         <td>
                             {% for role in group.getEntityRoles() %}
                                 {% if role.getWorkspace() == workspace %}
-                                <span class="label label-success" id="label-{{ role.getId () }}-{{ group.getId()}}">
-                                    {{ role.getTranslationKey()|trans({}, 'platform') }}
-                                    <i class="icon-remove-sign pointer-hand remove-role-button"
-                                       href="{{ path('claro_workspace_remove_role_from_group', {'workspace': workspace.getId(), 'group': group.getId(), 'role': role.getId() } ) }}"
-                                    >
-                                    </i>
-                                </span>
+                                    <span class="label label-success" id="label-{{ role.getId () }}-{{ group.getId()}}">
+                                        {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                        <i class="icon-remove-sign pointer-hand remove-role-button"
+                                            href="{{ path('claro_workspace_remove_role_from_group', {'workspace': workspace.getId(), 'group': group.getId(), 'role': role.getId() } ) }}"
+                                            >
+                                        </i>
+                                    </span>
                                 {% endif %}
                             {% endfor %}
                         </td>
@@ -257,5 +256,4 @@
         </table>
         {{ renderPager(search, workspace.getId(), withUnregistered, queryString, pager) }}
         {{ displayControls(workspace.getId()) }}
-    </div>
 {% endblock %}

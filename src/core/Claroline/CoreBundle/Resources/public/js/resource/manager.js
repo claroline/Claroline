@@ -20,9 +20,15 @@
                 this.currentDirectory = {id: parameters.directoryId};
 
                 if (parameters.isPickerMode) {
-                    this.el.className = 'picker resource-manager modal hide';
-                    this.wrapper = $('<div class="modal-body"/>');
-                    $(this.el).append(this.wrapper);
+                    this.el.className = 'picker resource-manager';
+                    //this.wrapper = $('<div class="modal-body"/>');
+                    //$(this.el).append(this.wrapper);
+
+                    $(this.el).html(Twig.render(ModalWindow, {
+                        'header' : 'Resource Picker',
+                        'body': ''
+                    }));
+                    this.wrapper = $('.modal-body', this.el);
                 } else {
                     this.el.className = 'main resource-manager';
                     this.wrapper = $(this.el);
@@ -114,7 +120,7 @@
             }
         }),
         Actions: Backbone.View.extend({
-            className: 'navbar navbar-static-top',
+            className: 'row',
             events: {
                 'keypress input.name': function (event) {
                     if (event.keyCode !== 13) {
@@ -542,7 +548,7 @@
             }
         }),
         Form: Backbone.View.extend({
-            className: 'resource-form modal hide',
+            className: 'resource-form',
             events: {
                 'click #submit-default-rights-form-button': function (event) {
                     event.preventDefault();
@@ -617,14 +623,14 @@
                             $('#modal-check-role').append(form);
                             $('#rights-form-resource-tab-content').css('display', 'none');
                             $('#rights-form-resource-nav-tabs').css('display', 'none');
-                            $('#modal-check-resource-right-box').modal('show');
+                            $('#modal-check-resource-right-box .modal').modal('show');
                         }
                     });
                 },
                 'click .modal-close': function (event) {
                     event.preventDefault();
                     $('#modal-check-role').empty();
-                    $('#modal-check-resource-right-box').modal('hide');
+                    $('#modal-check-resource-right-box .modal').modal('hide');
                     $('#rights-form-resource-tab-content').css('display', 'block');
                     $('#rights-form-resource-nav-tabs').css('display', 'block');
                 },
@@ -643,7 +649,7 @@
                             $('#form-right-wrapper').empty();
                             $('#perms-table').append(newrow);
                             $('#modal-check-role').empty();
-                            $('#modal-check-resource-right-box').modal('hide');
+                            $('#modal-check-resource-right-box .modal').modal('hide');
                             $('#rights-form-resource-tab-content').css('display', 'block');
                             $('#rights-form-resource-nav-tabs').css('display', 'block');
                         }
@@ -666,7 +672,7 @@
                 this.on('close', this.close, this);
             },
             close: function () {
-                $(this.el).modal('hide');
+                $('.modal', this.el).modal('hide');
             },
             render: function (form, targetResourceId, eventOnSubmit) {
                 this.targetResourceId = targetResourceId;
@@ -674,7 +680,8 @@
                 form = form.replace('_resourceId', targetResourceId);
                 $(this.el).html(Twig.render(ModalWindow, {
                     'body': form
-                })).modal();
+                }));
+                $('.modal', this.el).modal('show');
             }
         })
     };
@@ -1116,7 +1123,7 @@
                 this.views.picker.subViews.actions.callback = callback;
             }
 
-            this.views.picker.$el.modal(action === 'open' ? 'show' : 'hide');
+            $('.modal', this.views.picker.$el).modal(action === 'open' ? 'show' : 'hide');
         }
     };
 

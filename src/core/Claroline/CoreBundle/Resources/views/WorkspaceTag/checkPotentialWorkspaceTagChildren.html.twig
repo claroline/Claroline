@@ -7,6 +7,12 @@
 
 {% block section_content %}
 
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'tags_add_remove_children_to'|trans({}, 'platform') }} [{{ tag.getName() }}]
+        </h3>
+    </div>
+
     {{
         macros.breadcrumbs([
             {
@@ -29,51 +35,48 @@
         ])
     }}
 
-    <div class="margin">
-        <h3 class="sub-section-header">{{ 'tags_add_remove_children_to'|trans({}, 'platform') }} [{{ tag.getName() }}]</h3>
 
-        <div id="twig-tag-id" data-tag-id="{{ tag.getId() }}">
-        </div>
-        <table class="table table-striped table-bordered table-condensed">
-            <tr>
-                <th>{{ 'tag_potential_children_list'|trans({}, 'platform') }}</th>
-                <th>{{ 'tag_children_list'|trans({}, 'platform') }}</th>
-            </tr>
-            <tr>
-                <td>
-                    <div>
-                        <ul id="possible-children-list">
-                        {% for possibleChild in possibleChildren %}
-                            <li>
-                                <input type="checkbox" name="tag-possible-child" value="{{possibleChild.getId()}}">
-                                {{ possibleChild.getName() }}
-                            </li>
-                        {% endfor %}
-                        </ul>
-                    </div>
-                </td>
-                <td>
-                    <div>
-                        <ul id="children-list">
-                        {% for child in children %}
-                            <li>
-                                <input type="checkbox" name="tag-child" value="{{child.getId()}}" checked>
-                                {{ child.getName() }}
-                            </li>
-                        {% endfor %}
-                        </ul>
-                    </div>
-                </td>
-            </tr>
-        </table>
-        <div>
-            <button id="tag-hierarchy-children-button" type="submit" class="btn btn-primary">
-                {{ 'ok'|trans({}, 'platform') }}
-            </button>
-            <a href="{{ path('claro_workspace_organize_tag') }}">
-                <button type="button" class="btn">{{ 'cancel'|trans({}, 'platform') }}</button>
-            </a>
-        </div>
+    <div id="twig-tag-id" data-tag-id="{{ tag.getId() }}">
+    </div>
+    <table class="table table-striped table-bordered table-condensed">
+        <tr>
+            <th>{{ 'tag_potential_children_list'|trans({}, 'platform') }}</th>
+            <th>{{ 'tag_children_list'|trans({}, 'platform') }}</th>
+        </tr>
+        <tr>
+            <td>
+                <div>
+                    <ul id="possible-children-list">
+                    {% for possibleChild in possibleChildren %}
+                        <li>
+                            <input type="checkbox" name="tag-possible-child" value="{{possibleChild.getId()}}">
+                            {{ possibleChild.getName() }}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            </td>
+            <td>
+                <div>
+                    <ul id="children-list">
+                    {% for child in children %}
+                        <li>
+                            <input type="checkbox" name="tag-child" value="{{child.getId()}}" checked>
+                            {{ child.getName() }}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <div class="panel-footer">
+        <button id="tag-hierarchy-children-button" type="submit" class="btn btn-primary">
+            {{ 'ok'|trans({}, 'platform') }}
+        </button>
+        <a href="{{ path('claro_workspace_organize_tag') }}">
+            <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+        </a>
     </div>
 
 {% endblock %}

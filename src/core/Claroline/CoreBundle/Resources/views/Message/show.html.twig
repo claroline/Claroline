@@ -7,7 +7,7 @@
 {{ tinymce_init() }}
 {% endblock %}
 {% block content %}
-    <div class="user-information span2">
+    <div class="user-information col-lg-2">
         <div>
             <img src="{{ asset('bundles/clarolinecore/images/workspaces/tools/user_small.png') }}"/>
         </div>
@@ -18,7 +18,7 @@
             {{ message.getDate()|date('m/d/Y H:i:s') }}
         </div>
     </div>
-    <div class="message-content span9">
+    <div class="message-content col-lg-9">
         <div class="accordion" id="accordion">
             {% for ancestor in ancestors %}
                 <div class="accordion-group message-show">

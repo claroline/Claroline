@@ -35,7 +35,7 @@
                         {% if granted %}</a>{% endif %}
 
                         {% if workspace.getSelfUnregistration() %}
-                        <span class="label label-important unregister-user-to-workspace"
+                        <span class="label label-danger unregister-user-to-workspace"
                             data-workspace-id="{{ workspace.getId() }}"
                             data-workspace-name="{{ workspace.getName() }}"
                             data-workspace-code="{{ workspace.getCode() }}">
@@ -63,22 +63,16 @@
 {% endblock %}
 
 {% block section_content %}
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'icon-book',
-                'name': 'my_workspaces'|trans({}, 'platform'),
-                'href': '#'
-            }
-        ])
-    }}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'my_workspaces'|trans({}, 'platform') }}</h3>
+    </div>
 
-    <div class="margin widget">
+    <div class="widget">
         <a href="{{ path('claro_workspace_manage_tag') }}">
-            <button type="button" class="btn">{{ 'tags_management'|trans({}, 'platform') }}</button>
+            <button type="button" class="btn btn-default">{{ 'tags_management'|trans({}, 'platform') }}</button>
         </a>
         <a href="{{ path('claro_list_workspaces_with_self_registration') }}">
-            <button type="button" class="btn">{{ 'register_to_a_workspace'|trans({}, 'platform') }}</button>
+            <button type="button" class="btn btn-default">{{ 'register_to_a_workspace'|trans({}, 'platform') }}</button>
         </a>
 
         <hr>
@@ -113,7 +107,7 @@
                                 {% if granted%}</a>{% endif %}
 
                                 {% if workspace.getSelfUnregistration() %}
-                                <span class="label label-important unregister-user-to-workspace"
+                                <span class="label label-danger unregister-user-to-workspace"
                                     data-workspace-id="{{ workspace.getId() }}"
                                     data-workspace-name="{{ workspace.getName() }}"
                                     data-workspace-code="{{ workspace.getCode() }}">
@@ -135,17 +129,21 @@
     <div id="twig-self-registration-user-id" data-user-id="{{ user.getId() }}">
     </div>
 
-    <div id="confirm-unregistration-validation-box" class="modal hide fade">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">×</button>
-            <h3>{{ 'workspace_unregistration_confirm_title'|trans({}, 'platform') }}</h3>
-        </div>
-        <div class="modal-body">
-            <p id="unregistration-confirm-message">{{ 'workspace_unregistration_confirm_message'|trans({}, 'platform') }}</p>
-        </div>
-        <div class="modal-footer">
-            <input type="button" id="unregistration-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-            <input type="button" class="btn btn-secondary" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+    <div id="confirm-unregistration-validation-box" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>{{ 'workspace_unregistration_confirm_title'|trans({}, 'platform') }}</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="unregistration-confirm-message">{{ 'workspace_unregistration_confirm_message'|trans({}, 'platform') }}</p>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" id="unregistration-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
