@@ -28,34 +28,45 @@
     {% set nbPages = datas.getNbPages() %}
 
     <div id="workspace-widget-pager" workspace-id="{{ workspaceId }}">
+
     {% if nbPages > 1 %}
         {{ renderPager(datas, workspaceId) }}
     {% endif %}
 
     {% for data in datas %}
-        <div class="announcement">
-            {% set title = data['announcement'].getTitle() %}
-            {% if title is not null %}
-                <h3> {{ title }}</h3>
-                <hr>
+    <div class="panel panel-primary">
+        {% set title = data['announcement'].getTitle() %}
+
+        {% if title is not null %}
+        <div class="panel-heading">
+            <h4>{{ title }}</h4>
+        </div>
+        {% endif %}
+
+        <div class="panel-body">
+            {% set announcer = data['announcement'].getAnnouncer() %}
+
+            {% if announcer is not null %}
+                <h4>{{ announcer }} :</h4>
+                <div class="well">
             {% endif %}
-            <div class="wrapper">
-                {% set announcer = data['announcement'].getAnnouncer() %}
-                {% if announcer is not null %}
-                    <h4>{{ announcer }} :</h4>
-                {% endif %}
-                <div class="margin">
-                    {{ data['announcement'].getContent()|raw }}
+
+            {{ data['announcement'].getContent()|raw }}
+
+            {% if announcer is not null %}
                 </div>
-            </div>
-            <hr>
-            <div class="footer">
+            {% endif %}
+        </div>
+
+        <div class="panel-footer">
+            <small>
                 {{ 'published_on'|trans({}, 'announcement') }}
                 {{ data['announcement'].getPublicationDate().format('d-m-Y') }}
                 {{ 'at'|trans({}, 'announcement') }}
                 {{ data['announcement'].getPublicationDate().format('H:i:s') }}
-            </div>
+            </small>
         </div>
+    </div>
     {% endfor %}
 
     {% if nbPages > 1 %}

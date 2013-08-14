@@ -28,13 +28,15 @@
         ])
     }}
 
-    <h1>
-    {% if type == 'create' %}
-        {{ typeText|trans({}, 'announcement') }}
-    {% else %}
-        {{ typeText|trans({}, 'announcement') }}
-    {% endif %}
-    </h1>
+    <div class="panel-heading">
+        <h3>
+        {% if type == 'create' %}
+            {{ typeText|trans({}, 'announcement') }}
+        {% else %}
+            {{ typeText|trans({}, 'announcement') }}
+        {% endif %}
+        </h3>
+    </div>
     <br>
     <form
         class="form-horizontal"
@@ -44,10 +46,10 @@
     >
         {{ form_widget(form) }}
 
-        <div class="form-actions">
+        <div class="form-actions panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
             <a href="{{ path('claro_announcements_list', {'aggregateId': _resource.getId()}) }}">
-                <button  type="button" class="btn">{{ 'cancel'|trans({}, 'platform') }}</button>
+                <button  type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
             </a>
         </div>
     </form>
