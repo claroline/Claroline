@@ -12,7 +12,7 @@
         <script type="text/javascript">
             $(document).ready(function() {
                 var path = '{{ path('exporter_api', {'entity_reference': 'user', '_format': 'json'}) }}';
-                $( "#{{ form.vars['id'] }}" ).after('<a id="{{ form.vars['id'] }}_clear" class="btn"><i class="icon-remove"></i></a>');
+                $( "#{{ form.vars['id'] }}" ).after('<a id="{{ form.vars['id'] }}_clear" class="btn btn-default"><i class="icon-remove"></i></a>');
                 $( "#{{ form.vars['id'] }}_clear" ).on('click', function(){
                     $( "#{{ form.vars['id'] }}" ).val('');
                 });

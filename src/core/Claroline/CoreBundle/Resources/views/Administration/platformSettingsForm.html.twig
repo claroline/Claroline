@@ -2,19 +2,22 @@
 
 {% block section_content %}
     <form class="form-horizontal" action="{{path('claro_admin_update_platform_settings')}}" method="post" {{ form_enctype(form_settings) }} id="form_settings">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ 'platform_parameters'|trans({}, 'platform') }}</h3>
+        </div>
         <fieldset>
-            <legend>{{ 'platform_parameters'|trans({}, 'platform') }} :</legend>
             {{ form_widget(form_settings) }}
             <label class="control-label"></label>
             <div class="controls">
                 <a href="{{ path("claroline_admin_theme_list") }}"><i class="icon-edit"></i> {{ "Theme Generator" | trans({}, "theme") }}</a>
             </div>
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-                <a href="{{ path('claro_admin_index') }}">
-                    <button type="button" class="btn">{{ 'cancel'|trans({}, 'platform') }}</button>
-                </a>
-            </div>
+
         </fieldset>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            <a href="{{ path('claro_admin_index') }}">
+                <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+            </a>
+        </div>
     </form>
 {% endblock %}

@@ -1,8 +1,7 @@
 {% twig_js name="ResourceManagerActions" %}
-
-<div class="navbar-inner">
+<div class="navbar navbar-static-top">
     {% if isPickerMode == false %}
-        <ul class="nav">
+        <ul class="nav navbar-nav">
             {% if resourceTypes|length > 0 %}
                 <li class="dropdown">
                     <a class="dropdown-toggle{% if isCreateAllowed == false %} disabled{% endif %}" data-toggle="dropdown">
@@ -23,7 +22,6 @@
                    {{ 'add'|trans({}, 'platform') }}
                </a>
             </li>
-            <li class="divider-vertical"></li>
             <li>
                 <a class="cut disabled"  data-toggle="tooltip" data-placement="bottom" title="{{ 'cut'|trans({}, 'platform') }}">
                     <i class="icon-cut"></i>
@@ -64,8 +62,7 @@
                 </ul>
             </li>
         </ul>
-        <ul class="nav pull-right">
-            <li class="divider-vertical"></li>
+        <ul class="nav navbar-nav">
              <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown">
                     {{ 'filter'|trans({}, 'platform') }}
@@ -78,19 +75,9 @@
                     <li><a data-type="none" class="filter-result"> {{ 'none'|trans({}, 'platform' )}} </a></li>
                 </ul>
             </li>
-            <li class="divider-vertical"></li>
-            <li>
-                <div class="input-append">
-                    <input class="name input-medium" type="text" placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ searchedName }}">
-                    <button class="filter btn" type="button">
-                        <i class="icon-search"></i>
-                    </button>
-                    <button class="config-search-panel btn" type="button"><i class="icon-cog"></i></button>
-                </div>
-            </li>
         </ul>
     {% else %}
-        <ul class='nav'>
+        <ul class='nav navbar-nav'>
             <li>
                 <a class="add {% if isAddAllowed == false or isPasteAllowed == false %}disabled{% endif %}">
                     <i class="icon-plus"></i>
@@ -98,17 +85,13 @@
                 </a>
             </li>
         </ul>
-        <ul class="nav pull-right">
-            <li class="divider-vertical"></li>
-            <li>
-                <div class="input-append" width="500">
-                    <input class="name input-medium" type="text" placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ searchedName }}">
-                    <button class="filter btn" type="button">
-                        <i class="icon-search"></i>
-                    </button>
-                    <button class="config-search-panel btn" type="button"><i class="icon-cog"></i></button>
-                </div>
-           </li>
-        </ul>
     {% endif %}
+
+    <form class="navbar-form pull-right">
+        <input class="name form-control" type="text" placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ searchedName }}" style="width: 150px;">
+        <button class="filter btn btn-default" type="button">
+            <i class="icon-search"></i>
+        </button>
+        <button class="config-search-panel btn btn-default" type="button"><i class="icon-cog"></i></button>
+    </form>
 </div>

@@ -1,7 +1,6 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
 {% block section_content %}
-    <div class="margin">
         <div>
             {{ macros.flashBox() }}
         </div>
@@ -22,7 +21,6 @@
             }
         ])
         }}
-    </div>
     {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
     <form class="form-horizontal" action="{{ path('claro_admin_import_users') }}" method="post" {{ form_enctype(form) }} >
         <fieldset>

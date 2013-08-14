@@ -22,7 +22,7 @@
     </ul>
 
     <div>
-        <a  class="btn btn-secondary" href="{{ path('claro_workspace_role_create_form', {'workspace': workspace.getId() }) }}">{{ 'add'|trans({}, 'platform') }}</a>
+        <a  class="btn btn-default" href="{{ path('claro_workspace_role_create_form', {'workspace': workspace.getId() }) }}">{{ 'add'|trans({}, 'platform') }}</a>
         <table class="table-striped table-bordered table-condensed">
             <thead>
                 <th> {{ 'name'|trans({}, 'platform') }} </th>
@@ -33,8 +33,8 @@
                 {% for role in roles %}
                     <tr>
                         <td> {{ role.getTranslationKey|trans({}, 'platform') }} </td>
-                        <td> <a class="btn btn-secondary" href="{{ path('claro_workspace_role_edit_form', {'workspace': workspace.getId(), 'role': role.getId()}) }}"> {{ 'edit'|trans({}, 'platform') }} </a> </td>
-                        <td> <a class="role-delete-btn btn btn-secondary {% if role.isReadOnly %} disabled {% endif %}" href="{{ path('claro_workspace_role_remove', {'workspace': workspace.getId(), 'role': role.getId()} ) }}"> {{ 'delete'|trans({}, 'platform') }} </a> </td>
+                        <td> <a class="btn btn-default" href="{{ path('claro_workspace_role_edit_form', {'workspace': workspace.getId(), 'role': role.getId()}) }}"> {{ 'edit'|trans({}, 'platform') }} </a> </td>
+                        <td> <a class="role-delete-btn btn btn-default {% if role.isReadOnly %} disabled {% endif %}" href="{{ path('claro_workspace_role_remove', {'workspace': workspace.getId(), 'role': role.getId()} ) }}"> {{ 'delete'|trans({}, 'platform') }} </a> </td>
                     </tr>
                 {% endfor %}
             </tbody>

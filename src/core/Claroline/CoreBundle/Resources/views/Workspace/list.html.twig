@@ -49,49 +49,42 @@
 {% endblock %}
 
 {% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'all_workspaces'|trans({}, 'platform') }}</h3>
+    </div>
 
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'icon-book',
-                'name': 'all_workspaces'|trans({}, 'platform'),
-                'href': '#'
-            }
-        ])
-    }}
+    <div id="workspace-list-div" class="widget">
 
-    <div id="workspace-list-div" class="margin widget">
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('claro_workspace_manage_admin_tag') }}">
+                <button type="button" class="btn btn-default">{{ 'admin_tags_management'|trans({}, 'platform') }}</button>
+            </a>
+            <hr>
+        {% endif %}
 
-    {% if is_granted('ROLE_ADMIN') %}
-        <a href="{{ path('claro_workspace_manage_admin_tag') }}">
-            <button type="button" class="btn">{{ 'admin_tags_management'|trans({}, 'platform') }}</button>
-        </a>
-        <hr>
-    {% endif %}
-
-    <div class="accordion" id="accordion-all">
-        <div class="accordion-group">
-            <div class="accordion-heading">
-                <a  class="accordion-toggle"
-                    data-toggle="collapse"
-                    data-parent="#accordion-all"
-                    href="#collapse-all"
-                >
-                    <i class="icon-align-justify"></i>
-                    {{ 'all_workspaces'|trans({}, 'platform') }}
-                    <i class="icon-chevron-down pull-right"></i>
-                </a>
-            </div>
-            <div id="collapse-all" class="accordion-body collapse {% if tags|length == 0 %}in{% endif %}">
-                <div class="accordion-inner">
-                    <div id="workspace-list-pager-all" class="workspace-list-pager">
-                        {% include 'ClarolineCoreBundle:Workspace:workspaceCompleteListPager.html.twig' %}
+        <div class="accordion" id="accordion-all">
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a  class="accordion-toggle"
+                        data-toggle="collapse"
+                        data-parent="#accordion-all"
+                        href="#collapse-all"
+                    >
+                        <i class="icon-align-justify"></i>
+                        {{ 'all_workspaces'|trans({}, 'platform') }}
+                        <i class="icon-chevron-down pull-right"></i>
+                    </a>
+                </div>
+                <div id="collapse-all" class="accordion-body collapse {% if tags|length == 0 %}in{% endif %}">
+                    <div class="accordion-inner">
+                        <div id="workspace-list-pager-all" class="workspace-list-pager">
+                            {% include 'ClarolineCoreBundle:Workspace:workspaceCompleteListPager.html.twig' %}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable) }}
+        {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable) }}
     </div>
 {% endblock %}

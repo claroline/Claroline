@@ -37,31 +37,30 @@
 
         $.ajax(homePath + url)
             .done(
-                    function (data)
-                    {
+                function (data)
+                {
+                    var modal = document.createElement("div");
+                    modal.className = "modal fade";
 
-                        var modal = document.createElement("div");
-                        modal.className = "modal hide fade";
-
-                        if (id) {
-                            modal.setAttribute("id", id);
-                        }
-
-                        if (element) {
-                            $(modal).data("element", element);
-                        }
-
-                        modal.innerHTML = data;
-
-                        $(modal).appendTo("body");
-
-                        $(modal).modal("show");
-
-                        $(modal).on("hidden", function () {
-                            $(this).remove();
-                        });
-
+                    if (id) {
+                        modal.setAttribute("id", id);
                     }
+
+                    if (element) {
+                        $(modal).data("element", element);
+                    }
+
+                    modal.innerHTML = data;
+
+                    $(modal).appendTo("body");
+
+                    $(modal).modal("show");
+
+                    $(modal).on("hidden", function () {
+                        $(this).remove();
+                    });
+
+                }
         )
             .error(
                     function ()
@@ -183,7 +182,7 @@
                                         function (data)
                                         {
                                             insertElement(data);
-                                            resizeDivs();
+                                            //resizeDivs();
                                         }
                                 )
                             ;
@@ -207,7 +206,7 @@
                                     function (data)
                                     {
                                         $(creatorElement).replaceWith(data);
-                                        resizeDivs();
+                                        //resizeDivs();
                                     }
                                 )
                             ;
@@ -273,15 +272,15 @@
 
     $("body").on("click", ".content-size", function (event) {
         var element = parentByClassName(event.target, "content-element");
-        var size = (element.className.match(/\bspan\S+/g) || []).join(" ").substr(4);
+        var size = (element.className.match(/\bcol-lg-\S+/g) || []).join(" ").substr(7);
         var id = $(element).data("id");
         var type = $(element).data("type");
 
         modal("content/size/" + id + "/" + size + "/" + type, "sizes", element);
     });
 
-    $("body").on("click", "#sizes a.border", function (event) {
-        var size = "span" + event.target.innerHTML;
+    $("body").on("click", "#sizes .panel", function (event) {
+        var size = "col-lg-" + event.target.innerHTML;
         var id = $("#sizes .modal-body").data("id");
         var type = $("#sizes .modal-body").data("type");
         var element = $("#sizes").data("element");
@@ -293,11 +292,11 @@
             {
                 if (data === "true") {
                     $(element).removeClass(function (index, css) {
-                        return (css.match(/\bspan\S+/g) || []).join(" ");
+                        return (css.match(/\bcol-lg-\S+/g) || []).join(" ");
                     });
 
                     $(element).addClass(size);
-                    resizeDivs();
+                    //resizeDivs();
 
                     $("#sizes").modal("hide");
                 }
@@ -325,7 +324,7 @@
     });
 
 
-    $("body").on("click", "#regions a.border", function (event) {
+    $("body").on("click", "#regions .panel", function (event) {
         var name = $(event.target).data("region");
         var id = $("#regions .modal-body").data("id");
 
@@ -405,7 +404,7 @@
                             {
                                 if (data !== "false" && data !== "") {
                                     $(typeCreator).next().prepend(data);
-                                    name.val('');
+                                    name.val("");
                                 } else {
                                     modal("content/error");
                                 }
@@ -437,7 +436,7 @@
                     if (data === "true") {
                         $(element).hide("slow", function () {
                             $(this).remove();
-                            resizeDivs();
+                            //resizeDivs();
                         });
                     }
                     else
@@ -474,7 +473,7 @@
                     function (data)
                     {
                         $(element).replaceWith(data);
-                        resizeDivs();
+                        //resizeDivs();
 
                         $(".creator textarea").each(function () {
                             resize(this);
@@ -525,7 +524,7 @@
                     function (data)
                     {
                         $(element).replaceWith(data);
-                        resizeDivs();
+                        //resizeDivs();
                     }
                 )
                 .error(
@@ -559,13 +558,13 @@
         $(event.target).parent().html("");
     });
 
-    $(".content.row-fluid").sortable({
+    $(".row.contents").sortable({
         items: "> .content-element",
         cancel: "input,textarea,button,select,option,a.btn.dropdown-toggle,.dropdown-menu",
         cursor: "move"
     });
 
-    $(".content.row-fluid").on("sortupdate", function (event, ui) {
+    $(".row.contents").on("sortupdate", function (event, ui) {
         if (this === ui.item.parent()[0]) {
             var a = $(ui.item).data("id");
             var b = $(ui.item).next().data("id");
@@ -575,7 +574,7 @@
             {
                 $.ajax(homePath + "content/reorder/" + type + "/" + a + "/" + b)
                 .success(
-                    resizeDivs()
+                    //resizeDivs()
                 )
                 .error(
                         function ()

@@ -35,7 +35,7 @@
                         {% if granted %}
                             </a>
                             {% if workspace.getSelfUnregistration() %}
-                            <span class="label label-important unregister-user-to-workspace"
+                            <span class="label label-danger unregister-user-to-workspace"
                                 data-workspace-id="{{ workspace.getId() }}"
                                 data-workspace-name="{{ workspace.getName() }}"
                                 data-workspace-code="{{ workspace.getCode() }}">
@@ -73,6 +73,10 @@
 
 {% block section_content %}
 
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'public_workspaces'|trans({}, 'platform') }}</h3>
+    </div>
+
     {{
         macros.breadcrumbs([
             {
@@ -88,14 +92,7 @@
         ])
     }}
 
-    <div class="margin widget">
-
-    {% if is_granted('ROLE_ADMIN') %}
-        <a href="{{ path('claro_workspace_manage_admin_tag') }}">
-            <button type="button" class="btn">{{ 'admin_tags_management'|trans({}, 'platform') }}</button>
-        </a>
-        <hr>
-    {% endif %}
+    <div class="widget">
 
         <div class="accordion" id="accordion-all">
             <div class="accordion-group">
@@ -128,7 +125,7 @@
                                 {% if granted %}
                                     </a>
                                     {% if workspace.getSelfUnregistration() %}
-                                    <span class="label label-important unregister-user-to-workspace"
+                                    <span class="label label-danger unregister-user-to-workspace"
                                         data-workspace-id="{{ workspace.getId() }}"
                                         data-workspace-name="{{ workspace.getName() }}"
                                         data-workspace-code="{{ workspace.getCode() }}">
@@ -159,31 +156,39 @@
     <div id="twig-self-registration-user-id" data-user-id="{{ user.getId() }}">
     </div>
 
-    <div id="confirm-registration-validation-box" class="modal hide fade">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">×</button>
-            <h3>{{ 'workspace_registration_confirm_title'|trans({}, 'platform') }}</h3>
-        </div>
-        <div class="modal-body">
-            <p id="registration-confirm-message">{{ 'workspace_registration_confirm_message'|trans({}, 'platform') }}</p>
-        </div>
-        <div class="modal-footer">
-            <input type="button" id="registration-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-            <input type="button" class="btn btn-secondary" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+    <div id="confirm-registration-validation-box" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>{{ 'workspace_registration_confirm_title'|trans({}, 'platform') }}</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="registration-confirm-message">{{ 'workspace_registration_confirm_message'|trans({}, 'platform') }}</p>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" id="registration-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div id="confirm-unregistration-validation-box" class="modal hide fade">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">×</button>
-            <h3>{{ 'workspace_unregistration_confirm_title'|trans({}, 'platform') }}</h3>
-        </div>
-        <div class="modal-body">
-            <p id="unregistration-confirm-message">{{ 'workspace_unregistration_confirm_message'|trans({}, 'platform') }}</p>
-        </div>
-        <div class="modal-footer">
-            <input type="button" id="unregistration-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-            <input type="button" class="btn btn-secondary" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+    <div id="confirm-unregistration-validation-box" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>{{ 'workspace_unregistration_confirm_title'|trans({}, 'platform') }}</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="unregistration-confirm-message">{{ 'workspace_unregistration_confirm_message'|trans({}, 'platform') }}</p>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" id="unregistration-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

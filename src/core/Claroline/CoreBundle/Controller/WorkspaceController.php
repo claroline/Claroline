@@ -8,8 +8,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
@@ -18,6 +20,7 @@ use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -34,6 +37,7 @@ class WorkspaceController extends Controller
     private $workspaceManager;
     private $resourceManager;
     private $roleManager;
+    private $userManager;
     private $tagManager;
     private $toolManager;
     private $eventDispatcher;
@@ -47,6 +51,7 @@ class WorkspaceController extends Controller
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "resourceManager"    = @DI\Inject("claroline.manager.resource_manager"),
      *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
+     *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
      *     "tagManager"         = @DI\Inject("claroline.manager.workspace_tag_manager"),
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
      *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
@@ -60,6 +65,7 @@ class WorkspaceController extends Controller
         WorkspaceManager $workspaceManager,
         ResourceManager $resourceManager,
         RoleManager $roleManager,
+        UserManager $userManager,
         WorkspaceTagManager $tagManager,
         ToolManager $toolManager,
         StrictDispatcher $eventDispatcher,
@@ -72,6 +78,7 @@ class WorkspaceController extends Controller
         $this->workspaceManager = $workspaceManager;
         $this->resourceManager = $resourceManager;
         $this->roleManager = $roleManager;
+        $this->userManager = $userManager;
         $this->tagManager = $tagManager;
         $this->toolManager = $toolManager;
         $this->eventDispatcher = $eventDispatcher;
@@ -595,19 +602,19 @@ class WorkspaceController extends Controller
     {
         $role = $this->roleManager->getCollaboratorRole($workspace);
 
-        $userRole = $this->roleManager->getWorkspaceRoleForUser($user, $workspace);
+        $userRoles = $this->roleManager->getWorkspaceRolesForUser($user, $workspace);
 
-        if (is_null($userRole)) {
+        if (count($userRoles) === 0) {
             $this->roleManager->associateRole($user, $role);
             $this->eventDispatcher->dispatch(
                 'log',
-                'Log\LogWorkspaceRoleSubscribe',
-                array($role, $user)
+                'Log\LogRoleSubscribe',
+                array($role, $user, $workspace)
             );
         }
 
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-        $this->securityContext->setToken($token);
+        $this->security->setToken($token);
 
         return new JsonResponse($this->userManager->convertUsersToArray(array($user)));
     }
@@ -665,7 +672,7 @@ class WorkspaceController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/{workspaceId}/users/{userId}",
+     *     "/{workspaceId}/remove/user/{userId}",
      *     name="claro_workspace_delete_user",
      *     options={"expose"=true},
      *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
@@ -692,24 +699,24 @@ class WorkspaceController extends Controller
     public function removeUserAction(AbstractWorkspace $workspace, User $user)
     {
         $roles = $this->roleManager->getRolesByWorkspace($workspace);
-        $this->checkRemoveManagerRoleIsValid(array($user), $workspace);
+        $this->roleManager->checkWorkspaceRoleEditionIsValid(array($user), $workspace, $roles);
 
         foreach ($roles as $role) {
             if ($user->hasRole($role->getName())) {
                 $this->roleManager->dissociateRole($user, $role);
                 $this->eventDispatcher->dispatch(
                     'log',
-                    'Log\LogWorkspaceRoleUnsubscribe',
-                    array($role, $user)
+                    'Log\LogRoleUnsubscribe',
+                    array($role, $user, $workspace)
                 );
             }
         }
-        $this->workspaceTagManager->deleteAllRelationsFromWorkspaceAndUser($workspace, $user);
+        $this->tagManager->deleteAllRelationsFromWorkspaceAndUser($workspace, $user);
 
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-        $this->securityContext->setToken($token);
+        $this->security->setToken($token);
 
-        return new Response("success", 204);
+        return new Response('success', 204);
     }
 
     /**
