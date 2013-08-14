@@ -1,27 +1,32 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
 {% block section_content %}
-        {{
-            macros.breadcrumbs([
+    {{
+        macros.breadcrumbs([
+        {
+               'icon': 'icon-user',
+                'name': 'users_management'|trans({}, 'platform'),
+                'href': path('claro_admin_users_management')
+            },
             {
-                   'icon': 'icon-user',
-                    'name': 'users_management'|trans({}, 'platform'),
-                    'href': path('claro_admin_users_management')
-                },
-                {
-                    'name': 'groups_list'|trans({}, 'platform'),
-                    'href': path('claro_admin_group_list')
-                },
-                {
-                    'name': 'group_parameter'|trans({}, 'platform'),
-                    'href': ''
-                }
-            ])
-        }}
+                'name': 'groups_list'|trans({}, 'platform'),
+                'href': path('claro_admin_group_list')
+            },
+            {
+                'name': 'group_parameter'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+
+    <h3>{{ 'group_configuration'|trans({}, 'platform') }}</h3>
+    <h4>{{ 'group'|trans({}, 'platform') }} : {{ group.getName() }}</h4>
+    <br>
+
     <form class="form-horizontal" action="{{ path('claro_admin_update_group_settings', {'groupId': group.getId()}) }}" method="post" {{ form_enctype(form_settings) }} id="form_settings">
         <fieldset>
             {{ form_widget(form_settings) }}
-            <div class="form-actions">
+            <div class="form-actions panel-footer">
                 <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
                 <a href="{{ path('claro_admin_group_list') }}">
                     <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>

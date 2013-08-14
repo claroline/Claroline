@@ -2,15 +2,9 @@
 
 {% block section_content %}
 
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'icon-user',
-                'name':'users_management'|trans({}, 'platform'),
-                'href':'#'
-            }
-        ])
-    }}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'users_management'|trans({}, 'platform') }}</h3>
+    </div>
 
     <div>
         <ul>

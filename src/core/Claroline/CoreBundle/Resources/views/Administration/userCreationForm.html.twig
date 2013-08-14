@@ -13,9 +13,12 @@
     ])
 }}
 
+<h3>{{ 'user_creation'|trans({}, 'platform') }}</h3>
+<br>
+
 <form class="form-horizontal" action="{{ path('claro_admin_create_user') }}" method="post" {{ form_enctype(form_complete_user) }} id="form_complete_user" autocomplete="off">
     {{ form_widget(form_complete_user) }}
-    <div class="form-actions">
+    <div class="form-actions panel-footer">
         <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
         <a href="{{ path('claro_admin_users_management') }}">
             <button  type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>

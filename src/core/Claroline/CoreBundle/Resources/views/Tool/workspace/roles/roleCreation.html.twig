@@ -15,6 +15,9 @@
         ])
     }}
 
+    <h3>{{ 'role_creation'|trans({}, 'platform') }}</h3>
+    <br>
+
     <div class="wrapper">
     <form class="form-horizontal"
           action="{{ path('claro_workspace_role_create', {'workspace': workspace.getId()} ) }}"
@@ -22,9 +25,8 @@
           id="workspace-role-creation"
       >
         <fieldset>
-            <legend>{{ 'role_creation'|trans({}, 'platform') }} :</legend>
             {{ form_widget(form) }}
-            <div class="form-actions">
+            <div class="form-actions panel-footer">
                 <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
                 <a href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()}) }}">
                     <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>

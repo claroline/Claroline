@@ -20,10 +20,14 @@
         ])
     }}
 
+    <h3>{{ 'rename_tool'|trans({}, 'platform') }}</h3>
+    <h4>{{ 'tool'|trans({}, 'platform') }} : {{ wot.getTool().getName()|trans({}, 'platform') }}</h4>
+    <br>
+
     <form class="form-horizontal" action="{{ path('claro_workspace_order_tool_edit', {'workspaceId': workspace.getId(), 'workspaceOrderToolId': wot.getId()}) }}" method="post" {{ form_enctype(form) }}>
         <fieldset>
             {{ form_widget(form) }}
-            <div class="form-actions">
+            <div class="form-actions panel-footer">
                 <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
                 <a href="{{ path('claro_workspace_tools_roles', {'workspaceId': workspace.getId()}) }}">
                     <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>

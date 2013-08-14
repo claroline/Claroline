@@ -19,12 +19,14 @@
         ])
     }}
 
+    <h3>{{ 'save_workspace_as_template'|trans({}, 'platform') }}</h3>
+
     <form class="form-horizontal"
           action="{{ path('claro_workspace_export', {'workspace': workspace.getId() }) }}"
           method="post" {{ form_enctype(form) }}>
         <fieldset>
             {{ form_widget(form) }}
-            <div class="form-actions">
+            <div class="form-actions panel-footer">
                 <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
                 <a href="{{ path('claro_workspace_edit_form', {'workspace': workspace.getId()}) }}">
                     <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>

@@ -12,6 +12,8 @@
         {{ form_row(form.resourceType) }}
         {{ form_row(form.creator) }}
         {{ form_rest(form) }}
-        <input type="submit" value="{{ 'ok'|trans({}, 'platform') }}"/>
+        <div class="panel-footer">
+            <input type="submit" value="{{ 'ok'|trans({}, 'platform') }}"/>
+        </div>
     </div>
 </form>

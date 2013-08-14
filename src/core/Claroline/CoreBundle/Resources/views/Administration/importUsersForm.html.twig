@@ -1,10 +1,10 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
 {% block section_content %}
-        <div>
-            {{ macros.flashBox() }}
-        </div>
-        {{
+    <div>
+        {{ macros.flashBox() }}
+    </div>
+    {{
         macros.breadcrumbs([
             {
                 'icon': 'icon-user',
@@ -20,12 +20,16 @@
                 'href':''
             }
         ])
-        }}
+    }}
+
+    <h3>{{ 'users_import'|trans({}, 'platform') }}</h3>
+    <br>
+
     {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
     <form class="form-horizontal" action="{{ path('claro_admin_import_users') }}" method="post" {{ form_enctype(form) }} >
         <fieldset>
             {{ form_widget(form) }}
-            <div class="form-actions">
+            <div class="form-actions panel-footer">
                 <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
             </div>
         </fieldset>
