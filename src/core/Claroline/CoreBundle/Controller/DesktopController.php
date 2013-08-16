@@ -7,8 +7,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\DiExtraBundle\Annotation as DI;
+use JMS\SecurityExtraBundle\Annotation as SEC;
 
 /**
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("hasRole('ROLE_USER')")
+ *
  * Controller of the user's desktop.
  */
 class DesktopController extends Controller

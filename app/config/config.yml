@@ -64,8 +64,7 @@ swiftmailer:
     password:   %mailer_password%
 
 jms_security_extra:
-    secure_all_services: false
-
+    expressions: ~
 jms_di_extra:
     locations:
         # set the following option to false and explicitely name

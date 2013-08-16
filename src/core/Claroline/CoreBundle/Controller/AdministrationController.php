@@ -21,9 +21,13 @@ use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\SecurityExtraBundle\Annotation as SEC;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("hasRole('ADMIN')")
+ *
  * Controller of the platform administration section (users, groups,
  * workspaces, platform settings, etc.).
  */
