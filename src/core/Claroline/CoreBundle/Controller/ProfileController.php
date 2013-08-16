@@ -12,8 +12,12 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
+use JMS\SecurityExtraBundle\Annotation as SEC;
 
 /**
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("hasRole('ROLE_USER')")
+ *
  * Controller of the user profile.
  */
 class ProfileController extends Controller

@@ -8,12 +8,17 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
+use JMS\SecurityExtraBundle\Annotation as SEC;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Message;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Manager\MessageManager;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 
+/**
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("hasRole('ROLE_USER')")
+ */
 class MessageController
 {
     private $request;
