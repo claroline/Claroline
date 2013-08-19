@@ -101,9 +101,9 @@ class ResourceController
      *
      * Creates a resource.
      *
-     * @param string           $resourceType the resource type
+     * @param string       $resourceType the resource type
      * @param ResourceNode $parent       the parent
-     * @param User             $user         the user
+     * @param User         $user         the user
      *
      * @throws \Exception
      * @return Response
@@ -138,19 +138,14 @@ class ResourceController
 
     /**
      * @EXT\Route(
-     *     "/open/{resourceType}/{resourceId}",
+     *     "/open/{resourceType}/{node}",
      *     name="claro_resource_open",
      *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter(
-     *      "node",
-     *      class="ClarolineCoreBundle:Resource\ResourceNode",
-     *      options={"id" = "resourceId", "strictId" = true}
      * )
      *
      * Opens a resource.
      *
-     * @param ResourceNode $resource     the resource
+     * @param ResourceNode $resource     the node
      * @param string       $resourceType the resource type
      *
      * @return Response
@@ -162,7 +157,7 @@ class ResourceController
     {
         $collection = new ResourceCollection(array($node));
         //If it's a link, the resource will be its target.
-        $node = $this->getResource($node);
+        $node = $this->getRealTarget($node);
         $this->checkAccess('OPEN', $collection);
         $event = $this->dispatcher->dispatch(
             'open_'.$resourceType,
@@ -181,25 +176,25 @@ class ResourceController
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter(
-     *     "resources",
+     *     "nodes",
      *     class="ClarolineCoreBundle:Resource\ResourceNode",
      *     options={"multipleIds" = true}
      * )
      *
-     * Removes a many resources from a workspace.
+     * Removes a many nodes from a workspace.
      * Takes an array of ids as parameters (query string: "ids[]=1&ids[]=2" ...).
      *
-     * @param array $resources
+     * @param array $nodes
      *
      * @return Response
      */
-    public function deleteAction(array $resources)
+    public function deleteAction(array $nodes)
     {
-        $collection = new ResourceCollection($resources);
+        $collection = new ResourceCollection($nodes);
         $this->checkAccess('DELETE', $collection);
 
-        foreach ($collection->getResources() as $resource) {
-            $this->resourceManager->delete($resource);
+        foreach ($collection->getResources() as $node) {
+            $this->resourceManager->delete($node);
         }
 
         return new Response('Resource deleted', 204);
@@ -207,19 +202,14 @@ class ResourceController
 
     /**
      * @EXT\Route(
-     *     "/move/{newParentId}",
+     *     "/move/{newParent}",
      *     name="claro_resource_move",
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter(
-     *     "resources",
+     *     "nodes",
      *     class="ClarolineCoreBundle:Resource\ResourceNode",
      *     options={"multipleIds" = true}
-     * )
-     * @EXT\ParamConverter(
-     *      "newParent",
-     *      class="ClarolineCoreBundle:Resource\ResourceNode",
-     *      options={"id" = "newParentId", "strictId" = true}
      * )
      *
      * Moves many resource (changes their parents). This function takes an array
@@ -227,20 +217,20 @@ class ResourceController
      * (query string: "ids[]=1&ids[]=2" ...).
      *
      * @param ResourceNode $newParent
-     * @param array            $resources
+     * @param array        $nodes
      *
      * @throws \RuntimeException
      * @return Response
      */
-    public function moveAction(ResourceNode $newParent, array $resources)
+    public function moveAction(ResourceNode $newParent, array $nodes)
     {
-        $collection = new ResourceCollection($resources);
+        $collection = new ResourceCollection($nodes);
         $collection->addAttribute('parent', $newParent);
         $this->checkAccess('MOVE', $collection);
 
-        foreach ($resources as $resource) {
+        foreach ($nodes as $node) {
             try {
-                $movedResource = $this->resourceManager->move($resource, $newParent);
+                $movedResource = $this->resourceManager->move($node, $newParent);
                 $movedResources[] = $this->resourceManager->toArray($movedResource);
             } catch (\Gedmo\Exception\UnexpectedValueException $e) {
                 throw new \RuntimeException('Cannot move a resource into itself');
@@ -265,8 +255,8 @@ class ResourceController
      * Handles any custom action (i.e. not defined in this controller) on a
      * resource of a given type.
      *
-     * @param string           $resourceType the resource type
-     * @param string           $action       the action
+     * @param string       $resourceType the resource type
+     * @param string       $action       the action
      * @param ResourceNode $resource     the resource
      *
      * @throws \Exception
@@ -299,7 +289,7 @@ class ResourceController
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter(
-     *     "resources",
+     *     "nodes",
      *     class="ClarolineCoreBundle:Resource\ResourceNode",
      *     options={"multipleIds" = true}
      * )
@@ -308,15 +298,15 @@ class ResourceController
      * of the resources which are going to be downloaded
      * (query string: "ids[]=1&ids[]=2" ...).
      *
-     * @param array $resources
+     * @param array $nodes
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function downloadAction(array $resources)
+    public function downloadAction(array $nodes)
     {
-        $collection = new ResourceCollection($resources);
+        $collection = new ResourceCollection($nodes);
         $this->checkAccess('EXPORT', $collection);
-        $file = $this->resourceManager->download($resources);
+        $file = $this->resourceManager->download($nodes);
         $response = new StreamedResponse();
 
         $response->setCallBack(
@@ -336,15 +326,15 @@ class ResourceController
 
     /**
      * @EXT\Route(
-     *     "directory/{directoryId}",
+     *     "directory/{nodeId}",
      *     name="claro_resource_directory",
      *     options={"expose"=true},
-     *     defaults={"directoryId"=0}
+     *     defaults={"nodeId"=0}
      * )
      * @EXT\ParamConverter(
-     *      "directory",
+     *      "node",
      *      class="ClarolineCoreBundle:Resource\ResourceNode",
-     *      options={"id" = "directoryId", "strictId" = true}
+     *      options={"id" = "nodeId", "strictId" = true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
@@ -358,37 +348,37 @@ class ResourceController
      * If the directory id is a shortcut id, the directory targeted by the shortcut
      * is returned.
      *
-     * @param Directory $directory the directory
-     * @param User      $user      the user
+     * @param ResourceNode $node the directory node
+     * @param User         $user the user
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws Exception if the id doesnt't match any existing directory
      */
-    public function openDirectoryAction(User $user, ResourceNode $directory = null)
+    public function openDirectoryAction(User $user, ResourceNode $node = null)
     {
         $path = array();
         $creatableTypes = array();
         $currentRoles = $this->roleManager->getStringRolesFromCurrentUser();
         $canChangePosition = false;
 
-        if ($directory === null) {
+        if ($node === null) {
             $resources = $this->resourceManager->getRoots($user);
             $isRoot = true;
             $workspaceId = 0;
         } else {
             $isRoot = false;
-            $workspaceId = $directory->getWorkspace()->getId();
-            $directory = $this->getResource($directory);
+            $workspaceId = $node->getWorkspace()->getId();
+            $node = $this->getRealTarget($node);
 
-            if ($user === $directory->getCreator() || $this->sc->isGranted('ROLE_ADMIN')) {
+            if ($user === $node->getCreator() || $this->sc->isGranted('ROLE_ADMIN')) {
                 $canChangePosition = true;
             }
 
-            $path = $this->resourceManager->getAncestors($directory);
-            $resources = $this->resourceManager->getChildren($directory, $currentRoles);
-            $creatableTypes = $this->rightsManager->getCreatableTypes($currentRoles, $directory);
-            $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($directory));
+            $path = $this->resourceManager->getAncestors($node);
+            $resources = $this->resourceManager->getChildren($node, $currentRoles);
+            $creatableTypes = $this->rightsManager->getCreatableTypes($currentRoles, $node);
+            $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($node));
         }
 
         return new JsonResponse(
@@ -405,14 +395,9 @@ class ResourceController
 
     /**
      * @EXT\Route(
-     *     "/copy/{resourceDestinationId}",
+     *     "/copy/{parent}",
      *     name="claro_resource_copy",
      *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter(
-     *      "parent",
-     *      class="ClarolineCoreBundle:Resource\ResourceNode",
-     *      options={"id" = "resourceDestinationId", "strictId" = true}
      * )
      * @EXT\ParamConverter(
      *     "nodes",
@@ -448,29 +433,31 @@ class ResourceController
 
     /**
      * @EXT\Route(
-     *     "/filter/{directoryId}",
+     *     "/filter/{nodeId}",
      *     name="claro_resource_filter",
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter(
-     *      "directory",
-     *      class="ClarolineCoreBundle:Resource\Directory",
-     *      options={"id" = "directoryId", "strictId" = true}
+     *      "node",
+     *      class="ClarolineCoreBundle:Resource\ResourceNode",
+     *      options={"id" = "nodeId", "strictId" = true}
      * )
      *
      * Returns a json representation of a resource search result.
      *
-     * @param Directory $directory The id of the directory from which the search was started
+     * @param ResourceNode $node The id of the node from which the search was started
      *
      * @throws \Exception
      * @return Response
      */
-    public function filterAction(Directory $directory = null)
+    public function filterAction(ResourceNode $node = null)
     {
         $criteria = $this->resourceManager->buildSearchArray($this->request->query->all());
         $criteria['roots'] = isset($criteria['roots']) ? $criteria['roots'] : array();
-        $path = $directory ? $this->resourceManager->getAncestors($directory->getResourceNode()): array();
+        $path = $node ? $this->resourceManager->getAncestors($node): array();
         $userRoles = $this->roleManager->getStringRolesFromCurrentUser();
+
+        //by criteria recursive => infinte loop
         $resources = $this->resourceManager->getByCriteria($criteria, $userRoles, true);
 
         return new JsonResponse(array('resources' => $resources, 'path' => $path));
@@ -478,18 +465,13 @@ class ResourceController
 
     /**
      * @EXT\Route(
-     *     "/shortcut/{newParentId}/create",
+     *     "/shortcut/{parent}/create",
      *     name="claro_resource_create_shortcut",
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("creator", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
-     *      "parent",
-     *      class="ClarolineCoreBundle:Resource\ResourceNode",
-     *      options={"id" = "newParentId", "strictId" = true}
-     * )
-     * @EXT\ParamConverter(
-     *     "resources",
+     *     "nodes",
      *     class="ClarolineCoreBundle:Resource\ResourceNode",
      *     options={"multipleIds" = true}
      * )
@@ -497,17 +479,17 @@ class ResourceController
      * Creates (one or several) shortcuts.
      * Takes an array of ids to be functionnal (query string: "ids[]=1&ids[]=2" ...).
      *
-     * @param Directory $parent    the new parent
-     * @param User      $user      the shortcut creator
-     * @param array     $resources the resources going to be linked
+     * @param ResourceNode $parent    the new parent
+     * @param User         $user      the shortcut creator
+     * @param array        $resources the resources going to be linked
      *
      * @return Response
      */
-    public function createShortcutAction(ResourceNode $parent, User $creator, array $resources)
+    public function createShortcutAction(ResourceNode $parent, User $creator, array $nodes)
     {
-        foreach ($resources as $resource) {
+        foreach ($nodes as $node) {
             $shortcut = $this->resourceManager
-                ->makeShortcut($resource, $parent, $creator, new ResourceShortcut());
+                ->makeShortcut($node, $parent, $creator, new ResourceShortcut());
             $links[] = $this->resourceManager->toArray($shortcut->getResourceNode());
         }
 
@@ -515,15 +497,31 @@ class ResourceController
     }
 
     /**
+     * @EXT\Route(
+     *     "restore/{parent}",
+     *     name="claro_resource_restore",
+     *     options={"expose"=true}
+     * )
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
+     */
+    public function restoreNodeOrderAction(ResourceNode $parent)
+    {
+        $this->resourceManager->restoreNodeOrder($parent);
+
+        return new Response('success');
+    }
+
+    /**
      * @EXT\Template("ClarolineCoreBundle:Resource:breadcrumbs.html.twig")
      */
-    public function renderBreadcrumbsAction(ResourceNode $resource, AbstractWorkspace $workspace, $_breadcrumbs)
+    public function renderBreadcrumbsAction(ResourceNode $node, AbstractWorkspace $workspace, $_breadcrumbs)
     {
         $breadcrumbsAncestors = array();
 
         if (count($_breadcrumbs) > 0) {
             $breadcrumbsAncestors = $this->resourceManager->getByIds($_breadcrumbs);
-            $breadcrumbsAncestors[] = $resource;
+            $breadcrumbsAncestors[] = $node;
             $root = $breadcrumbsAncestors[0];
             $workspace = $root->getWorkspace();
         }
@@ -531,7 +529,7 @@ class ResourceController
         //this condition is wrong
         if (count($breadcrumbsAncestors) === 0) {
             $_breadcrumbs = array();
-            $ancestors = $this->resourceManager->getAncestors($resource);
+            $ancestors = $this->resourceManager->getAncestors($node);
 
             foreach ($ancestors as $ancestor) {
                 $_breadcrumbs[] = $ancestor['id'];
@@ -552,16 +550,11 @@ class ResourceController
 
     /**
      * @EXT\Route(
-     *     "/sort/{resourceId}/next/{nextId}",
+     *     "/sort/{node}/next/{nextId}",
      *     name="claro_resource_insert_before",
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\ParamConverter(
-     *      "resource",
-     *      class="ClarolineCoreBundle:Resource\ResourceNode",
-     *      options={"id" = "resourceId", "strictId" = true}
-     * )
      * @EXT\ParamConverter(
      *      "next",
      *      class="ClarolineCoreBundle:Resource\ResourceNode",
@@ -575,18 +568,18 @@ class ResourceController
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function insertBefore(ResourceNode $resource, User $user, ResourceNode $next = null)
+    public function insertBefore(ResourceNode $node, User $user, ResourceNode $next = null)
     {
-        if ($user !== $resource->getParent()->getCreator() && !$this->sc->isGranted('ROLE_ADMIN')) {
+        if ($user !== $node->getParent()->getCreator() && !$this->sc->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
 
-        $this->resourceManager->insertBefore($resource, $next);
+        $this->resourceManager->insertBefore($node, $next);
 
         return new Response('success', 204);
     }
 
-    private function getResource(ResourceNode $node)
+    private function getRealTarget(ResourceNode $node)
     {
         if ($node->getClass() === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
             $resource = $this->resourceManager->getResourceFromNode($node);

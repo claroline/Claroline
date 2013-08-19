@@ -59,7 +59,7 @@ class ResourceRightsController
 
     /**
      * @EXT\Route(
-     *     "/{resource}/rights/form/role/{role}",
+     *     "/{node}/rights/form/role/{role}",
      *     name="claro_resource_right_form",
      *     options={"expose"=true},
      *     defaults={"role"=null}
@@ -67,15 +67,14 @@ class ResourceRightsController
      *
      * Displays the resource rights form.
      *
-     * @param AbstractResource $resource the resource
+     * @param ResourceNode $node
      *
      * @return Response
      *
      * @throws AccessDeniedException if the current user is not allowed to edit the resource
      */
-    public function rightFormAction(ResourceNode $resource, Role $role = null)
+    public function rightFormAction(ResourceNode $node, Role $role = null)
     {
-        $node = $resource;
         $collection = new ResourceCollection(array($node));
         $this->checkAccess('EDIT', $collection);
         $isDir = ($node->getResourceType()->getName() === 'directory') ? true: false;
@@ -114,7 +113,7 @@ class ResourceRightsController
 
     /**
      * @EXT\Route(
-     *     "/{resource}/rights/edit",
+     *     "/{node}/rights/edit",
      *     name="claro_resource_rights_edit",
      *     options={"expose"=true}
      * )
@@ -123,16 +122,15 @@ class ResourceRightsController
      * by role to be passed by POST method. Permissions are set to false when not passed
      * in the request.
      *
-     * @param AbstractResource $resource the resource
+     * @param ResourceNode $node the resource
      *
      * @return Response
      *
      * @throws AccessDeniedException if the current user is not allowed to edit the resource
      */
 
-    public function editPermsAction(ResourceNode $resource)
+    public function editPermsAction(ResourceNode $node)
     {
-        $node = $resource;
         $collection = new ResourceCollection(array($node));
         $this->checkAccess('EDIT', $collection);
         $datas = $this->getPermissionsFromRequest();
@@ -147,7 +145,7 @@ class ResourceRightsController
 
     /**
      * @EXT\Route(
-     *     "/{resource}/role/{role}/right/creation/form",
+     *     "/{node}/role/{role}/right/creation/form",
      *     name="claro_resource_right_creation_form",
      *     options={"expose"=true}
      * )
@@ -157,16 +155,15 @@ class ResourceRightsController
      * type of resource in a directory). Show the different resource types already
      * allowed for creation.
      *
-     * @param AbstractResource $resource the resource
-     * @param Role             $role     the role for which the form is displayed
+     * @param ResourceNode $node the resource
+     * @param Role         $role the role for which the form is displayed
      *
      * @return Response
      *
      * @throws AccessDeniedException if the current user is not allowed to edit the resource
      */
-    public function rightCreationFormAction(ResourceNode $resource, Role $role)
+    public function rightCreationFormAction(ResourceNode $node, Role $role)
     {
-        $node = $resource;
         $collection = new ResourceCollection(array($node));
         $this->checkAccess('EDIT', $collection);
 
@@ -180,7 +177,7 @@ class ResourceRightsController
 
     /**
      * @EXT\Route(
-     *     "/{resource}/role/{role}/right/creation/edit",
+     *     "/{node}/role/{role}/right/creation/edit",
      *     name="claro_resource_rights_creation_edit",
      *     options={"expose"=true}
      * )
@@ -189,16 +186,15 @@ class ResourceRightsController
      * array of resource type ids to be passed by POST method. Only the types
      * passed in the request will be allowed.
      *
-     * @param AbstractResource $resource the resource
-     * @param Role             $role     the role for which the form is displayed
+     * @param ResourceNode $node the resource
+     * @param Role         $role the role for which the form is displayed
      *
      * @return Response
      *
      * @throws AccessDeniedException if the current user is not allowed to edit the resource
      */
-    public function editPermsCreationAction(ResourceNode $resource, Role $role)
+    public function editPermsCreationAction(ResourceNode $node, Role $role)
     {
-        $node = $resource;
         $collection = new ResourceCollection(array($node));
         $this->checkAccess('EDIT', $collection);
         $isRecursive = $this->request->request->get('isRecursive');

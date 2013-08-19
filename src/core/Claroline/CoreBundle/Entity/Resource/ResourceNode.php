@@ -152,16 +152,16 @@ class ResourceNode
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(onDelete="SET NULL")
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
-    protected $next = null;
+    protected $next;
 
     /**
      * @ORM\OneToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(onDelete="SET NULL")
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
     protected $previous;
 
@@ -446,9 +446,12 @@ class ResourceNode
         return $this->rights;
     }
 
-    public function setNext(ResourceNode $next = null)
+    public function setNext(ResourceNode $next = null, $setPrev = false)
     {
         $this->next = $next;
+        if ($next !== null && $setPrev === true) {
+            $next->setPrevious($this);
+        }
     }
 
     public function getNext()
@@ -456,9 +459,12 @@ class ResourceNode
         return $this->next;
     }
 
-    public function setPrevious(ResourceNode $previous = null)
+    public function setPrevious(ResourceNode $previous = null, $setNext = false)
     {
         $this->previous = $previous;
+        if ($previous !== null && $setNext == true) {
+            $previous->setNext($this);
+        }
     }
 
     public function getPrevious()

@@ -285,7 +285,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
      *
      * @todo find a proper way to prevent infinite recursion
      */
-    public function findRecursiveDirectoryShortcuts(array $criteria, array $roles = null)
+    public function findRecursiveDirectoryShortcuts(array $criteria, array $roles = null, $alreadyFound = array())
     {
         $builder = new ResourceQueryBuilder();
         $builder->selectAsArray();
@@ -297,8 +297,11 @@ class ResourceNodeRepository extends MaterializedPathRepository
 
         foreach ($results as $result) {
             $criteria['roots'] = array($result['target_path']);
-            $results = array_merge($this->findRecursiveDirectoryShortcuts($criteria, $roles, $results), $results);
-            $results = array_map('unserialize', array_unique(array_map('serialize', $results)));
+            //if the result was already found, stop the recursion.
+            if (!in_array($result, $alreadyFound)) {
+                $results = array_merge($this->findRecursiveDirectoryShortcuts($criteria, $roles, $results), $results);
+                $results = array_map('unserialize', array_unique(array_map('serialize', $results)));
+            }
         }
 
         return $results;

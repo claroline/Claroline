@@ -669,7 +669,7 @@
             render: function (form, targetResourceId, eventOnSubmit) {
                 this.targetResourceId = targetResourceId;
                 this.eventOnSubmit = eventOnSubmit;
-                form = form.replace('_resourceId', targetResourceId);
+                form = form.replace('_nodeId', targetResourceId);
                 $(this.el).html(Twig.render(ModalWindow, {
                     'body': form
                 })).modal();
@@ -881,7 +881,7 @@
                                 $.ajax({
                                     url: Routing.generate(
                                         'claro_resource_insert_before',
-                                        {'resourceId': moved, 'nextId': nextId}
+                                        {'node': moved, 'nextId': nextId}
                                     )
                                 });
                             }

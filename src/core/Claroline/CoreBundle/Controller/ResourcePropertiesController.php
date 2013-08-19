@@ -54,20 +54,15 @@ class ResourcePropertiesController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/rename/form/{resourceId}",
+     *     "/rename/form/{node}",
      *     name="claro_resource_rename_form",
      *     options={"expose"=true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Resource:renameForm.html.twig")
-     * @EXT\ParamConverter(
-     *      "node",
-     *      class="ClarolineCoreBundle:Resource\ResourceNode",
-     *      options={"id" = "resourceId", "strictId" = true}
-     * )
      *
      * Displays the form allowing to rename a resource.
      *
-     * @param integer $resourceId the resource id
+     * @param ResourceNode $node
      *
      * @return Response
      */
@@ -82,20 +77,15 @@ class ResourcePropertiesController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/rename/{resourceId}",
+     *     "/rename/{node}",
      *     name="claro_resource_rename",
      *     options={"expose"=true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Resource:renameForm.html.twig")
-     * @EXT\ParamConverter(
-     *      "node",
-     *      class="ClarolineCoreBundle:Resource\ResourceNode",
-     *      options={"id" = "resourceId", "strictId" = true}
-     * )
      *
      * Renames a resource.
      *
-     * @param integer $resourceId the resource id
+     * @param ResourceNode $node
      *
      * @return Response
      */
@@ -120,20 +110,15 @@ class ResourcePropertiesController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/properties/form/{resourceId}",
+     *     "/properties/form/{node}",
      *     name="claro_resource_form_properties",
      *     options={"expose"=true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Resource:propertiesForm.html.twig")
-     * @EXT\ParamConverter(
-     *      "node",
-     *      class="ClarolineCoreBundle:Resource\ResourceNode",
-     *      options={"id" = "resourceId", "strictId" = true}
-     * )
      *
      * Displays the resource properties form.
      *
-     * @param integer $resourceId the resource id
+     * @param ResourceNode $node
      *
      * @return Response
      */
@@ -146,21 +131,16 @@ class ResourcePropertiesController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/properties/edit/{resourceId}",
+     *     "/properties/edit/{node}",
      *     name="claro_resource_edit_properties",
      *     options={"expose"=true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Resource:propertiesForm.html.twig")
-     * @EXT\ParamConverter(
-     *      "node",
-     *      class="ClarolineCoreBundle:Resource\ResourceNode",
-     *      options={"id" = "resourceId", "strictId" = true}
-     * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * Changes the resource properties.
      *
-     * @param integer $resourceId the resource id
+     * @param ResourceNode $node
      *
      * @return StreamedResponse
      */
