@@ -25,6 +25,7 @@ class WorkspaceCalendarControllerTest extends MockeryTestCase
         $this->formFactory = $this->mock('Claroline\CoreBundle\Form\Factory\FormFactory');
         $this->security = $this->mock('Symfony\Component\Security\Core\SecurityContextInterface');
         $this->request = $this->mock('Symfony\Component\HttpFoundation\Request');
+
     }
 
     public function testAddEventAction()
@@ -40,14 +41,7 @@ class WorkspaceCalendarControllerTest extends MockeryTestCase
                 && $event->getAllDay() === true;
             }
         );
-        $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
-        $user = new User();
-        $controller = $this->getController(array('checkUserIsAllowed'));
-        $this->security
-            ->shouldReceive('isGranted')
-            ->with('calendar', $workspace)
-            ->once()
-            ->andReturn(true);
+
         $form = $this->mock('Symfony\Component\Form\Form');
         $this->formFactory->shouldReceive('create')
             ->once()
@@ -60,17 +54,16 @@ class WorkspaceCalendarControllerTest extends MockeryTestCase
                 ->once()
                 ->andReturn(true);
         $event->shouldReceive('setWorkspace')->once()->with($workspace);
-        $this->security->shouldReceive('getToken')->once()->andReturn($token);
-        $token->shouldReceive('getUser')->once()->andReturn($user);
         $event->shouldReceive('setUser')->once()->with($user);
         $this->om->shouldReceive('persist')->once()->with($event);
         $this->om->shouldReceive('flush')->once();
         $event->shouldReceive();
         $this->assertEquals(new Response(json_encode(""),200,array('Content-Type' => 'application/json')), $controller->addEventAction($workspace));
     }
-    
+
     public function testUpdateAction()
     {
+        $workspace = new SimpleWorkspace();
         $user = new User();
         $controller = $this->getController(array('checkUserIsAllowed'));
         $this->security
@@ -78,12 +71,36 @@ class WorkspaceCalendarControllerTest extends MockeryTestCase
             ->with('calendar', $workspace)
             ->once()
             ->andReturn(true);
+        $this->security->shouldReceive('getToken')->once()->andReturn($token);
+        $token->shouldReceive('getUser')->once()->andReturn($user);
+        $form = $this->mock('Symfony\Component\Form\Form');
+        $this->formFactory->shouldReceive('create')
+            ->once()
+            ->with(FormFactory::TYPE_CALENDAR, array(), anInstanceOf('Claroline\CoreBundle\Entity\Event'))
+            ->andReturn($form);
+            $form->shouldReceive('handleRequest')
+                ->once()
+                ->with($this->request);
+            $form->shouldReceive('isValid')
+                ->once()
+                ->andReturn(true);
+        $this->assertEquals(new Response(json_encode(""),200,array('Content-Type' => 'application/json')), $controller->addEventAction($workspace));
     }
 
     private function getController (array $mockedMethods = array())
     {
+        $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $user = new User();
+        $controller = $this->getController(array('checkUserIsAllowed'));
+        $this->security
+            ->shouldReceive('isGranted')
+            ->with('calendar', $workspace)
+            ->once()
+            ->andReturn(true);
+        $this->security->shouldReceive('getToken')->once()->andReturn($token);
+        $token->shouldReceive('getUser')->once()->andReturn($user);
         if (count($mockedMethods) === 0) {
-                
+
            return new Tool\WorkspaceCalendarController(
                 $this->security,
                 $this->formFactory,

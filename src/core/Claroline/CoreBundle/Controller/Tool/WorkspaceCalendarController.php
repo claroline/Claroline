@@ -129,7 +129,6 @@ class WorkspaceCalendarController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            
             $this->om->flush();
         }
 

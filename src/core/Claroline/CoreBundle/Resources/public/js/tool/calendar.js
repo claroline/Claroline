@@ -61,10 +61,6 @@
                 .removeAttr('selected');
             var  currentDate = new Date();
             var pickedDate = new Date(date);
-
-            // $('#calendar_form_start').val(date.getDate() + '/' +
-            //     (date.getMonth() + 1) + '/' + date.getFullYear() + ' ' 
-            //     + date.getHours() + ':' + pickedDate.getMinutes());
             $('#calendar_form_start').val(date.toLocaleString())
             if (pickedDate > currentDate) {
                 $('#calendar_form_end').val(pickedDate.toLocaleString());
@@ -244,24 +240,21 @@
             $('#deleteBtn').show();
             $('#updateBtn').show();
             $('#save').hide();
-            $('#myModalLabel').val('Modifier une entrée');
+            $('#myModalLabel').text('Modifier une entrée');
             $('#calendar_form_title').attr('value', calEvent.title);
             $('#calendar_form_description').val(calEvent.description);
             $('#calendar_form_priority option[value=' + calEvent.color + ']').attr('selected', 'selected');
             var pickedDate = new Date(calEvent.start);
-            $('#calendar_form_start').val(pickedDate.getDate() + '/' +
-                (pickedDate.getMonth() + 1) + '/' + pickedDate.getFullYear());
+            $('#calendar_form_start').val(pickedDate.toLocaleString());
             if (calEvent.end === null)
             {
 
-                $('#calendar_form_end').val(pickedDate.getDate() + '/' +
-                (pickedDate.getMonth() + 1) + '/' + pickedDate.getFullYear());
+                $('#calendar_form_end').val(pickedDate.toLocaleString());
             }
             else
             {
                 var Enddate = new Date(calEvent.end);
-                $('#calendar_form_end').val(Enddate.getDate() + '/' +
-                (Enddate.getMonth() + 1) + '/' + Enddate.getFullYear());
+                $('#calendar_form_end').val(Enddate.toLocaleString());
             }
 
             $.ajaxSetup({
