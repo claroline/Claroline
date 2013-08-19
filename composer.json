@@ -1,9 +1,9 @@
 {
     "name": "claroline/pdf-player-bundle",
-    "description": "Claroline PDF player bundle",
-    "keywords": ["Claroline","PDF player"],
+    "description": "Claroline PDF player plugin",
+    "keywords": ["Claroline", "Plugin", "PDF player"],
     "homepage": "http://www.claroline.net",
-    "type": "bundle",
+    "type": "claroline-plugin",
     "license": "",
     "authors": [
         {
