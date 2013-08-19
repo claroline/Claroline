@@ -403,7 +403,7 @@ class WorkspaceManager
 
     public function getDisplayableWorkspacesBySearchPager($search, $page)
     {
-        $workspaces =  $this->workspaceRepo->findDisplayableWorkspacesBySearch($search);
+        $workspaces = $this->workspaceRepo->findDisplayableWorkspacesBySearch($search);
 
         return $this->pagerFactory->createPagerFromArray($workspaces, $page);
     }

@@ -644,8 +644,10 @@ class UserManagerTest extends MockeryTestCase
             ->once()
             ->andReturn('pager');
 
-        $this->assertEquals('pager', $this->getManager()
-            ->getOutsidersByWorkspaceRolesAndName($roles, 'name', $workspace, 1));
+        $this->assertEquals(
+            'pager',
+            $this->getManager()->getOutsidersByWorkspaceRolesAndName($roles, 'name', $workspace, 1)
+        );
     }
 
     private function getManager(array $mockedMethods = array())

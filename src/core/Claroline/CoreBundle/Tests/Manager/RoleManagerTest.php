@@ -120,7 +120,6 @@ class RoleManagerTest extends MockeryTestCase
         $this->om->shouldReceive('endFlushSuite')->once();
         $this->dispatcher->shouldReceive('dispatch')->once();
 
-
         $this->getManager()->dissociateRole($ars, $role);
     }
 
@@ -360,9 +359,9 @@ class RoleManagerTest extends MockeryTestCase
 
     public function testGetRoleBaseName()
     {
-       $roleName = 'ROLE_WS_MANAGER_GUID';
+        $roleName = 'ROLE_WS_MANAGER_GUID';
 
-       $this->assertEquals('ROLE_WS_MANAGER', $this->getManager()->getRoleBaseName($roleName));
+        $this->assertEquals('ROLE_WS_MANAGER', $this->getManager()->getRoleBaseName($roleName));
     }
 
     public function testGetRolesByWorkspace()

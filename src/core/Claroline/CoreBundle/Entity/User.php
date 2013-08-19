@@ -399,13 +399,13 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $this->resetPasswordHash = $resetPasswordHash;
     }
 
-    public function getHashTime() {
+    public function getHashTime()
+    {
         return $this->hashTime;
     }
 
-    public function setHashTime($hashTime) {
+    public function setHashTime($hashTime)
+    {
         $this->hashTime = $hashTime;
     }
-
-
 }

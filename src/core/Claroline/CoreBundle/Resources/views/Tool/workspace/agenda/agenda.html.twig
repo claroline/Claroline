@@ -41,14 +41,14 @@
             <a href="{{ path('claro_workspace_agenda_update', {workspaceId: workspace.getId()}) }}" id="update"></a>
         </div>
         <div class="modal-footer">
-            <button class="btn" data-dismiss="modal" aria-hidden="true">{{'close'|trans({}, 'calendar') }}</button>
-            <button class="btn btn-primary" id="save">{{ 'add_an_event'|trans({}, 'calendar') }}</button>
-             <button class="btn btn-info" id="updateBtn" > {{ 'update'|trans({}, 'calendar') }}</button>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">{{'close'|trans({}, 'agenda') }}</button>
+            <button class="btn btn-primary" id="save">{{ 'add_an_event'|trans({}, 'agenda') }}</button>
+             <button class="btn btn-info" id="updateBtn" > {{ 'update'|trans({}, 'agenda') }}</button>
         </div>
     </div>
 
     <div class="span3">
-        <h4> <u>{{'tasks'|trans({}, 'calendar') }} </u></h4>
+        <h4> <u>{{'tasks'|trans({}, 'agenda') }} </u></h4>
         {% for e in listEvents  %}
         <div class="border">
             <button type="button" class="delete-task close" data-event-id="{{e.id}}" data-dismiss="alert">&times;</button>
@@ -62,13 +62,13 @@
             </ul>
         </div>
         {% else %}
-        <li>{{ 'no event found'|trans({}, 'calendar') }}</li>
+        <li>{{ 'no event found'|trans({}, 'agenda') }}</li>
         {% endfor %}
         <h4><u>Priorité</u></h4>
         <div>
-            <span style="color:#FF0000">  {{ 'high'|trans({}, 'calendar') }} </span>
-            <span style="color:#01A9DB"> {{ 'medium'|trans({}, 'calendar') }} </span>
-            <span style="color:#848484"> {{ 'low'|trans({}, 'calendar') }} </span>
+            <span style="color:#FF0000">  {{ 'high'|trans({}, 'agenda') }} </span>
+            <span style="color:#01A9DB"> {{ 'medium'|trans({}, 'agenda') }} </span>
+            <span style="color:#848484"> {{ 'low'|trans({}, 'agenda') }} </span>
         </div>
     </div>
 {% endblock %}
