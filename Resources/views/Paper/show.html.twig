@@ -40,7 +40,7 @@
     <link href="{{ asset('bundles/ujmexo/css/paper.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
-{% block title %} Correction {% endblock %}
+{% block title %} {{ 'correction' | trans }} {% endblock %}
 
 {% block section_content %}
 
@@ -75,10 +75,10 @@
 
                 <table border="1">
                     <tr>
-                        <th>{{ "Your answer" | trans }}</th>
-                        <th>{{ "Expected answer" | trans }}</th>
-                        <th>{{ "Choice" | trans }}</th>
-                        <th>{{ "Feedback" | trans }}</th>
+                        <th>{{ 'Your answer' | trans }}</th>
+                        <th>{{ 'Expected answer' | trans }}</th>
+                        <th>{{ 'Choice' | trans }}</th>
+                        <th>{{ 'Feedback' | trans }}</th>
                     </tr>
 
                     {% for choice in interQCM.choices %}
@@ -114,17 +114,17 @@
                 </table>
 
                 <div name="feddback">
-                    {{ "Comment" | trans }}:
+                    {{ 'Comment' | trans }}:
                     {{ interQCM.interaction.feedback|raw }}
                 </div>
 
                 {% for hv in hintViewed %}
                     {% if( hv.hint.interaction.id == interaction.id ) %}
-                        {{ "Penalty" | trans }}: {{ hv.hint.penalty }}<br/>
+                        {{ 'Penalty' | trans }}: {{ hv.hint.penalty }}<br/>
                     {% endif %}
                 {% endfor %}
 
-                {{ "Mark" | trans }}: {{ responses[i].mark }}/{{ interInfo['maxScore'] }}<br/>
+                {{ 'Mark' | trans }}: {{ responses[i].mark }} / {{ interInfo['maxScore'] }}<br/>
                 {% set exoMark = exoMark + responses[i].mark %}
                 {% set exoScoreMax = exoScoreMax + interInfo['maxScore'] %}
                  {% else %}
@@ -188,26 +188,26 @@
                     {% endfor %}
                 </div>
 
-                {{ "Mark" | trans }}: {{ responses[i].mark }}/{{ maxScore }} <br/>
+                {{ 'Mark' | trans }}: {{ responses[i].mark }} / {{ maxScore }} <br/>
                 {% set exoMark = exoMark + responses[i].mark %}
                 {% set exoScoreMax = exoScoreMax + maxScore %}
 
                 {% set point = responses[i].mark + hv.hint.penalty %}
 
                 {% if responses[i].mark == 0 and hv.hint.penalty == 0 %}
-                        Aucune bonne réponse.
+                        {{ 'noRightAnswer' | trans }}.
                     {% elseif hv.hint.penalty == 0 %}
-                        Indices non vus, pas de pénalité.
+                        {{ 'noHintShow' | trans }}.
                     {% else %}
-                        Points bonne réponse : {{ point }} avec : -
+                        {{ 'pointRightResponse' | trans }} : {{ point }} {{ 'with' | trans }} : -
 
                         {% for hv in hintViewed %}
                             {% if( hv.hint.interaction.id == interaction.id ) %}
-                                {{ "Penalty" | trans }}: {{ hv.hint.penalty }}<br/>
+                                {{ 'Penalty' | trans }}: {{ hv.hint.penalty }}<br/>
                             {% endif %}
                         {% endfor %}
 
-                        de pénalité pour indices vus.
+                        {{ 'sawHint' | trans }}.
                     {% endif %}
                 <br/>
                 {% if interG.interaction.feedback is defined %}
@@ -246,5 +246,5 @@
     {% set scoreFinal = scoreFinal * 20 %}
     <div>{{ scoreFinal }} / 20</div>
     <br/>
-    <a href="{{ path('ujm_exercise_open', { 'exerciseId': exoId }) }}"><i class="icon-arrow-left"></i> {{ "Back" | trans }}</a>
+    <a href="{{ path('ujm_exercise_open', { 'exerciseId': exoId }) }}"><i class="icon-arrow-left"></i> {{ 'Back' | trans }}</a>
 {% endblock %}

@@ -42,7 +42,7 @@
 <script src="{{ asset('bundles/ujmexo/js/dateTimePicker.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
 
-<h1>Exercise edit</h1>
+<h1>{{'Exercise edit'|trans}}</h1>
 
 <form action="{{ path('ujm_exercise_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
     {#{ form_widget(edit_form) }#}

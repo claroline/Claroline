@@ -46,7 +46,7 @@ Back: Retour
 Back to the list: Retour à la liste
 Bank of questions: Banque de questions
 Category: Catégorie
-close: fermer
+close: Fermer
 Create: Créer
 Choice: Choix
 Comment: Commentaire
@@ -246,7 +246,7 @@ Document: Image réponse
 Add a new picture ...: Ajouter une nouvelle image ...
 Picture name: Nom de l'image
 Upload !: Télécharger !
-Uploading ...: Chargement en cours...
+Uploading: Chargement en cours
 Select: Sélectionner
 ResizeZone: Pour redimmensionner l'image, Placez votre souris sur l'image et utilisez la molette. Vous pouvez aussi appuyer sur la touche MAJ et déplacez la souris.
 PlaceZone: Pour déplacer une zone de réponse, selecionnez-la en cliquant dessus et disposez-la en recliquant à l'endroit voulu.
@@ -275,7 +275,7 @@ inside: Vous devez mettre la zone de reponse complète DANS l'image ...
 manageImg: Gérer mes documents ...
 Preview: Aperçu
 Label: Label
-waring: Êtes-vous sûr de vouloir supprimer ce document ?
+warning: Êtes-vous sûr de vouloir supprimer ce document ?
 linkedDoc: Attention, le document que vous essayez de supprimer est lié à des questions !
 whichAction: Quelle action souhaitez-vous réaliser ?
 doNothing: Ne rien faire et revenir à la liste de mes documents ...
@@ -338,3 +338,22 @@ correct: Correcte
 partially: Partiellement correcte
 wrong: Fausse
 no answer: Pas de réponse
+
+Exercise edit: Modification de l'exercice
+Exercise creation: Création d'un exercice
+
+InteractionGraphic Edition: Edition d'une question Graphique
+InteractionGraphic creation: Création d'une question Graphique
+
+show Instructions: Montrer les consignes
+hide Instructions: Masquer les consignes
+
+correction: Correction
+
+noRightAnswer: Aucune bonne réponse
+noHintShow: Indices non vus, pas de pénalité
+pointRightResponse: Points bonne réponse
+with: avec
+sawHint: de pénalité pour indices vus
+
+validate: Valider

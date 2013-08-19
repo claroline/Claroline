@@ -44,7 +44,7 @@
                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                     <i class="icon-chevron-up" id="upT"  style="display: none;"></i>
                     <i class="icon-chevron-down" id="downT"  style="display: none;"></i>
-                    {{ "Type" | trans }}
+                    {{ 'Type' | trans }}
                 </th>
                 <th style="text-align: center">{{ "Preview" | trans }}</th>
                 <th style="text-align: center" onclick="SortQuestions('Label', 'table');"
@@ -52,9 +52,9 @@
                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                     <i class="icon-chevron-up" id="upL"  style="display: none;"></i>
                     <i class="icon-chevron-down" id="downL"  style="display: none;"></i>
-                    {{ "Label" | trans }}
+                    {{ 'Label' | trans }}
                 </th>
-                <th style="text-align: center">{{ "Actions" | trans }}</th>
+                <th style="text-align: center">{{ 'Actions' | trans }}</th>
             </tr>
         </thead>
         <tbody>
@@ -99,7 +99,7 @@
                         <a href="#" onclick="ChangeName('{{ myDoc.label }}');"><i class="icon-pencil"></i></a>
 
                         <a href="{{ path('ujm_document_del', { 'label': myDoc.label }) }}"
-                           onclick="return confirm('{{ "waring" | trans }}');"><i class="icon-trash"></i>
+                           onclick="return confirm('{{ "warning" | trans }}');"><i class="icon-trash"></i>
                         </a>
                     </td>
                 </tr>

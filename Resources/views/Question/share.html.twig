@@ -37,12 +37,12 @@
 
 {% block section_content %}
 
-    <h1>{{ "sharedUser" | trans }}</h1>
+    <h1>{{ 'sharedUser' | trans }}</h1>
 
-    <a href="{{ path('ujm_question_index') }}" ><i class="icon-arrow-left"></i> {{ "Back" | trans }}</a>
+    <a href="{{ path('ujm_question_index') }}" ><i class="icon-arrow-left"></i> {{ 'Back' | trans }}</a>
     <br/>
     <hr>
-    {{ "nameUser2Shared" | trans }} :<br/><br/>
+    {{ 'nameUser2Shared' | trans }} :<br/><br/>
     <div class="input-append pull-left">
         <input class="input-medium" type="text" id="search-user-txt" placeholder="{{ 'search'|trans({}, 'platform') }}"
             onkeydown="if (event.keyCode == 13) { search_user_ajax('{{ path('ujm_question_share_search_user') }}', 1);return false; }">

@@ -40,11 +40,11 @@
     <link href="{{ asset('bundles/ujmexo/css/paper.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
-{% block title %} Correction {% endblock %}
+{% block title %} {{ 'correction' | trans }} {% endblock %}
 
 {% block section_content %}
 
-        <h1>Question : {{ interG.interaction.question.title }}</h1>
+        <h1>{{ interG.interaction.question.title }}</h1>
 
             <div>
                 <p>{{ interG.interaction.question.description|raw }}</p>
@@ -58,7 +58,7 @@
             <img src="{{asset (doc.url)}}" width="{{ interG.width }}" height="{{ interG.height }}"
                 alt="AnswerImage" id="AnswerImage1"/>
 
-            {%set i = 0 %}{% set allInfo = '' %}
+            {% set i = 0 %}{% set allInfo = '' %}
 
             {% for c in coords %}
 
@@ -73,19 +73,19 @@
                 {% set allInfo = coords[i].shape~';'~coords[i].color~';'~asset('bundles/ujmexo/images/graphic/')~';'
                     ~numb[0]~';'~numb[1]~';'~respcoo[0]~';'~respcoo[1]~';'~coords[i].size~'^'~allInfo %}
 
-                {%set i = i + 1%}
+                {% set i = i + 1 %}
 
             {% endfor %}
         </div>
 
-        <p>Score : {{ score }}/{{ total }}.<br/>
+        <p>{{ 'Mark' | trans }} : {{ score }} / {{ total }}<br/>
 
             {% if score == 0 and penalty == 0 %}
-                Aucune bonne réponse.
+                {{ 'noRightAnswer' | trans }}.
             {% elseif penalty == 0 %}
-                Indices non vus, pas de pénalité.
+                {{ 'noHintShow' | trans }}.
             {% else %}
-                Points bonne réponse : {{ point }} avec : -{{ penalty }} de pénalité pour indices vus.
+                {{ 'pointRightResponse' | trans }} : {{ point }} {{ 'with' | trans }} : -{{ penalty }} {{ 'sawHint' | trans }}.
             {% endif %}
         </p>
 
@@ -97,7 +97,7 @@
 
         <input type="hidden" id="info" name="info" value="{{i}}~{{allInfo}}"/>
 
-        <a href="{{ path('ujm_question_index') }}">{{ "Question list" | trans }}</a>
+        <a href="{{ path('ujm_question_index') }}">{{ 'Question list' | trans }}</a>
 
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/GraphicOverview.js') }}"></script>
   {% endblock %}

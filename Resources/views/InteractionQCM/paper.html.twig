@@ -40,13 +40,13 @@
     <link href="{{ asset('bundles/ujmexo/css/paper.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
 
-{% block title %} {{ "Paper" | trans }} {{ "Question" | trans }} {% endblock %}
+{% block title %} {{ 'Paper' | trans }} {{ 'Question' | trans }} {% endblock %}
 
 
 
 {% block section_content %}
 
-<h1> Q : {{ interactionQCM.interaction.question.title }} ?</h1>
+<h1>{{ interactionQCM.interaction.question.title }}</h1>
 
 {% if interactionQCM.interaction.question.description != null %}
     <div name="description">
@@ -78,7 +78,7 @@
             {% set nbr_hint = 1 %}
             {% for hint in interactionQCM.interaction.hints %}              
                <tr>
-                   <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}', '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }}', '{{nbr_hint}}')">{{ "Hint" | trans }} {{nbr_hint}} </a></td>
+                   <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}', '{{path('ujm_hint_show')}}', '{{ 'consult_hint' | trans }}', '{{nbr_hint}}')">{{ 'Hint' | trans }} {{nbr_hint}} </a></td>
                    <td id="div_hint{{nbr_hint}}"></td>
                </tr>
                {% set nbr_hint = nbr_hint + 1 %}
@@ -87,7 +87,7 @@
 
         <input type="hidden" name="testQCM" value="testQCM" />
         <input type="hidden" name="interactionQCMToValidated" value="{{ interactionQCM.id }}" />
-        <button type="submit" id="submit_response">Ok</button>
+        <button type="submit" id="submit_response">{{ 'validate' | trans }}</button>
     </p>
 </form>
 

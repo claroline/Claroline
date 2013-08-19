@@ -40,15 +40,15 @@
     <link href="{{ asset('bundles/ujmexo/css/paper.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
 
-{% block title %} {{ "Paper" | trans }} {{ "Question" | trans }} {% endblock %}
+{% block title %} {{ 'Paper' | trans }} {{ 'Question' | trans }} {% endblock %}
 
 
 
 {% block section_content %}
 
-<a href="{{ path('ujm_question_index') }}" ><i class="icon-arrow-left"></i> {{ "Back" | trans }}</a>
+<a href="{{ path('ujm_question_index') }}" ><i class="icon-arrow-left"></i> {{ 'Back' | trans }}</a>
 
-<h1> Question : {{ interactionGraphic.interaction.question.title }} </h1>
+<h1>{{ interactionGraphic.interaction.question.title }}</h1>
 
 <div name="description">
     <p>{{ interactionGraphic.interaction.question.description|raw }}</p>
@@ -58,8 +58,8 @@
     <p>{{ interactionGraphic.interaction.invite|raw }}</p>
 </h3>
 
-<h5>{{ "Order" | trans }} :</h5>
-<h6><em>{{ "position" | trans }}<br/>{{ "selection" | trans }}<br/>{{ "raz" | trans }}<br/>{{ "onlyOnce" | trans }}</em></h6>
+<h5>{{ 'Order' | trans }} :</h5>
+<h6><em>{{ 'position' | trans }}<br/>{{ 'selection' | trans }}<br/>{{ 'raz' | trans }}<br/>{{ 'onlyOnce' | trans }}</em></h6>
 
 <div style="position: relative;" id="Answer">
     <p id="ContainerCursor">
@@ -85,14 +85,14 @@
         {% set nbr_hint = 1 %}
         {% for hint in interactionGraphic.interaction.hints %}
             <tr>
-                <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}', '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }}', '{{nbr_hint}}')">{{ "Hint" | trans }} {{nbr_hint}} </a></td>
+                <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}', '{{path('ujm_hint_show')}}', '{{ 'consult_hint' | trans }}', '{{nbr_hint}}')">{{ 'Hint' | trans }} {{nbr_hint}} </a></td>
                 <td id="div_hint{{nbr_hint}}"></td>
             </tr>
             {% set nbr_hint = nbr_hint + 1 %}
         {% endfor %}
     </table><br/>
 
-    <button type="submit" onclick="NoEmptyAnswer();return false;">Ok</button>
+    <button type="submit" onclick="NoEmptyAnswer();return false;">{{ 'validate' | trans }}</button>
 </form><br/>
 
 {% endblock %}

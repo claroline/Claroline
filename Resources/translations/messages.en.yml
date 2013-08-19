@@ -46,7 +46,7 @@ Back: Back
 Back to the list: Back to the list
 Bank of questions: Bank of questions
 Category: Category
-close: close
+close: Close
 Comment: Comment
 Compose: Compose
 Create: Create
@@ -245,7 +245,7 @@ Document: Answer picture
 Add a new picture ...: Add a new picture ...
 Picture name: Picture name
 Upload !: Upload !
-Uploading ...: Uploading ...
+Uploading: Uploading
 Select: Select
 ResizeZone: To  re-size the picture, place your mouse ove rthe image and use the wheel. You can also press MAJ key and move your mouse.
 PlaceZone: To move an answer zone, select it by clicking on it and click again to place it.
@@ -274,7 +274,7 @@ inside: You must put all the answer zone INSIDE the picture ...
 manageImg: Manage my documents ...
 Preview: Preview
 Label: Label
-waring: Are you sure you want to delete this document ?
+warning: Are you sure you want to delete this document ?
 linkedDoc: Warning, the document you tried to delete is linked to questions !
 whichAction: Which action would you like to do ?
 doNothing: Do nothing and go back to my documents management ...
@@ -337,3 +337,22 @@ correct: Correct
 partially: Partiallyt correct
 wrong: Wrong
 no answer: No answer
+
+Exercise edit: Exercise edit
+Exercise creation: Exercise creation
+
+InteractionGraphic Edition: InteractionGraphic Edition
+InteractionGraphic creation: InteractionGraphic creation
+
+show Instructions: Show Instructions
+hide Instructions: Hide Instructions
+
+correction: Correction
+
+noRightAnswer: No right answer
+noHintShow: Hints not seen, no penalty
+pointRightResponse: Right answer point
+with: with
+sawHint: of penalty for seen hints
+
+validate: Validate

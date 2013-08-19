@@ -39,7 +39,7 @@
     {{ parent() }}
 {% endblock %}
 
-{% block title %} {{ "Paper" | trans }} {% endblock %}
+{% block title %} {{ 'Paper' | trans }} {% endblock %}
 
 {% block section_content %}
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
@@ -69,7 +69,7 @@
 <!--------------------------------------------------- QCM ------------------------------------------------------------->
 
         {% if interactionType == 'InteractionQCM' %}
-            <h1> Q : {{ interactionToDisplayed.interaction.question.title }} ?</h1>
+            <h1>{{ interactionToDisplayed.interaction.question.title }}</h1>
 
             <input type="hidden" name="interactionQCMToValidated" value="{{ interactionToDisplayed.id }}"/>
             <input type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
@@ -81,9 +81,9 @@
                 </div>
             {% endif %}
 
-            <div name="question">
+            <h3 name="question">
                 <p>{{ interactionToDisplayed.interaction.invite|raw }}<p/>
-            </div>
+            </h3>
 
             <p>
                 <table>
@@ -125,7 +125,7 @@
 
         {% elseif interactionType == 'InteractionGraphic' %}
 
-            <h1> Question : {{ interactionToDisplayed.interaction.question.title }} </h1>
+            <h1>{{ interactionToDisplayed.interaction.question.title }}</h1>
 
             <input type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
             <input type="hidden" name="typeInteraction" value="InteractionGraphic"/>
@@ -193,18 +193,34 @@
     <table>
         <tr>
             {% if numQ != 1 %}
-                <td> <a href="#" onClick="submitForm(1, '{{ interactionType }}');"> << </a></td>
-                <td> <a href="#" onClick="submitForm({{ numQ-1 }}, '{{ interactionType }}');"> < </a></td>
+                <td>
+                    <a href="#" onClick="submitForm(1, '{{ interactionType }}');">
+                        <i class="icon-chevron-left"></i><i class="icon-chevron-left"></i>
+                    </a>
+                </td>
+                <td>
+                    <a href="#" onClick="submitForm({{ numQ-1 }}, '{{ interactionType }}');">&nbsp;&nbsp;
+                        <i class="icon-chevron-left">&nbsp;</i>
+                    </a>
+                </td>
             {% else %}
-                <td> << </td>
-                <td> < </td>
+                <td><i class="icon-chevron-left"></i><i class="icon-chevron-left"></i></td>
+                <td>&nbsp;&nbsp;<i class="icon-chevron-left">&nbsp;</i></td>
             {% endif %}
             {% if numQ != indexMax %}
-                <td> <a href="#" onClick="submitForm({{ numQ+1 }}, '{{ interactionType }}');"> > </a></td>
-                <td> <a href="#" onClick="submitForm({{ indexMax }}, '{{ interactionType }}');"> >> </a></td>
+                <td>
+                    <a href="#" onClick="submitForm({{ numQ+1 }}, '{{ interactionType }}');">&nbsp;
+                        <i class="icon-chevron-right"></i>
+                    </a>
+                </td>
+                <td>
+                    <a href="#" onClick="submitForm({{ indexMax }}, '{{ interactionType }}');">&nbsp;&nbsp;
+                        <i class="icon-chevron-right"></i><i class="icon-chevron-right"></i>&nbsp;&nbsp;
+                    </a>
+                </td>
             {% else %}
-                <td> > </td>
-                <td> >> </td>
+                <td>&nbsp;<i class="icon-chevron-right"></i></td>
+                <td>&nbsp;&nbsp;<i class="icon-chevron-right"></i><i class="icon-chevron-right"></i>&nbsp;&nbsp;</td>
             {% endif %}
             {% if dispButtonInterrupt %}
                 <td><input type="button" value="{{ "Interupt" | trans }}" onClick="interupt('{{ interactionType }}')"/>

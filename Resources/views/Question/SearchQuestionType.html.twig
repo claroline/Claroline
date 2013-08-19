@@ -44,35 +44,35 @@
                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                     <i class="icon-chevron-up" id="upC"  style="display: none;"></i>
                     <i class="icon-chevron-down" id="downC"  style="display: none;"></i>
-                    {{ "Category" | trans }}
+                    {{ 'Category' | trans }}
                 </th>
                 <th style="text-align: center"onclick="SortQuestions('Title', 'QuestionArray');"
                     onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                     <i class="icon-chevron-up" id="upTi"  style="display: none;"></i>
                     <i class="icon-chevron-down" id="downTi"  style="display: none;"></i>
-                    {{ "Title" | trans }}
+                    {{ 'Title' | trans }}
                 </th>
                 <th style="text-align: center"onclick="SortQuestions('Type', 'QuestionArray');"
                     onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                     <i class="icon-chevron-up" id="upTy"  style="display: none;"></i>
                     <i class="icon-chevron-down" id="downTy"  style="display: none;"></i>
-                    {{ "Type" | trans }}
+                    {{ 'Type' | trans }}
                 </th>
                 <th style="text-align: center"onclick="SortQuestions('Invite', 'QuestionArray')"
                     onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                     <i class="icon-chevron-up" id="upI"  style="display: none;"></i>
                     <i class="icon-chevron-down" id="downI"  style="display: none;"></i>
-                    {{ "Question" | trans }}
+                    {{ 'Question' | trans }}
                 </th>
 
                 {% if canDisplay == 'shared' %}
-                    <th style="text-align: center">{{ "shared by" | trans }}</th>
+                    <th style="text-align: center">{{ 'shared by' | trans }}</th>
                 {% endif %}
                 {% if canDisplay == 'my' %}
-                    <th style="text-align: center">{{ "Actions" | trans }}</th>
+                    <th style="text-align: center">{{ 'Actions' | trans }}</th>
                     <th><i class="icon-share-alt"></th>
                 {% endif %}
             </tr>
@@ -90,20 +90,20 @@
                     <td style="text-align: center; vertical-align: middle;">
                         <ul style="text-align: center; vertical-align: middle; list-style-type: none; margin-left: 0;">
                             <li>
-                                <a href="{{ path('ujm_question_share', { 'questionID': FindQuestion.question.id }) }}">{{ "Share" | trans }}</a>
+                                <a href="{{ path('ujm_question_share', { 'questionID': FindQuestion.question.id }) }}">{{ 'Share' | trans }}</a>
                             </li>
                             {% if(questionWithResponse[x] == 0) %}
                                 <li>
-                                    <a href="{{ path('ujm_question_edit', { 'id': FindQuestion.question.id }) }}">{{ "Edit" | trans }}</a>
+                                    <a href="{{ path('ujm_question_edit', { 'id': FindQuestion.question.id }) }}">{{ 'Edit' | trans }}</a>
                                 </li>
                                 <li>
                                     <form action="{{ path('ujm_question_delete', { 'id': FindQuestion.question.id}) }}" method="post">
-                                        <button type="submit">{{ "Delete of my bank" | trans }}</button>
+                                        <button type="submit">{{ 'Delete of my bank' | trans }}</button>
                                     </form>
                                 </li>
                             {% else %}
                                 <li>
-                                    <a href="{{ path('ujm_question_edit', { 'id': FindQuestion.question.id }) }}" style="color:red">{{ "Edit" | trans }}</a>
+                                    <a href="{{ path('ujm_question_edit', { 'id': FindQuestion.question.id }) }}" style="color:red">{{ 'Edit' | trans }}</a>
                                 </li>
                             {% endif %}
                         </ul>

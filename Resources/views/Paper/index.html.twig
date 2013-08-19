@@ -37,12 +37,12 @@
 
 {% block section_content %}
 
-    <h1>{{ "Paper list" | trans }}</h1>
+    <h1>{{ 'Paper list' | trans }}</h1>
 
-    <a href="{{ path('ujm_exercise_open', { 'exerciseId': exoID }) }}" ><i class="icon-arrow-left"></i> {{ "Back" | trans }}</a>
+    <a href="{{ path('ujm_exercise_open', { 'exerciseId': exoID }) }}" ><i class="icon-arrow-left"></i> {{ 'Back' | trans }}</a>
     {% if isAdmin %}
         &nbsp;|&nbsp;
-        <a href="{{ path('ujm_exercise_docimology', { 'exerciseId': exoID, 'nbPapers': pager.getNbResults }) }}" >{{ "Docimology" | trans }}</a>
+        <a href="{{ path('ujm_exercise_docimology', { 'exerciseId': exoID, 'nbPapers': pager.getNbResults }) }}" >{{ 'Docimology' | trans }}</a>
     {% endif %}
     <br/><br/>
 
@@ -56,33 +56,33 @@
                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                         <i class="icon-chevron-up" id="upU"  style="display: none;"></i>
                         <i class="icon-chevron-down" id="downU"  style="display: none;"></i>
-                        {{ "User" | trans }}
+                        {{ 'User' | trans }}
                     </th>
                     <th style="text-align: center" onclick="SortQuestions('numPaper', 'UserArray');"
                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                         <i class="icon-chevron-up" id="upN"  style="display: none;"></i>
                         <i class="icon-chevron-down" id="downN"  style="display: none;"></i>
-                        {{ "Num_paper" | trans }}
+                        {{ 'Num_paper' | trans }}
                     </th>
                     <th style="text-align: center" onclick="SortQuestions('startDate', 'UserArray');"
                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                         <i class="icon-chevron-up" id="upS"  style="display: none;"></i>
                         <i class="icon-chevron-down" id="downS"  style="display: none;"></i>
-                        {{ "Start date" | trans }}
+                        {{ 'Start date' | trans }}
                     </th>
                     <th style="text-align: center" onclick="SortQuestions('endDate', 'UserArray');"
                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                         <i class="icon-chevron-up" id="upE"  style="display: none;"></i>
                         <i class="icon-chevron-down" id="downE"  style="display: none;"></i>
-                        {{ "End date" | trans }}
+                        {{ 'End date' | trans }}
                     </th>
-                    <th style="text-align: center">{{ "isInterupt" | trans }}
+                    <th style="text-align: center">{{ 'isInterupt' | trans }}
                     </th>
                     {% if display != 'none' %}
-                        <th style="text-align: center">{{ "Actions" | trans }}
+                        <th style="text-align: center">{{ 'Actions' | trans }}
                         </th>
                     {% endif %}
                 </tr>
