@@ -85,5 +85,5 @@
     <canvas id="the-canvas" style="border:1px solid black"></canvas>
   </div>
 
- <a href="{{ path('claro_resource_download') }}?ids[]={{pdf.getId()}}">{{ 'download'|trans({}, 'platform') }} </a>
+ <a href="{{ path('claro_resource_download') }}?ids[]={{pdf.getResourceNode().getId()}}">{{ 'download'|trans({}, 'platform') }} </a>
 {% endblock %}

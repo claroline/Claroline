@@ -16,7 +16,7 @@ class PdfPlayerListener extends ContainerAware
         $content = $this->container->get('templating')->render(
             'ClarolinePdfPlayerBundle::pdf.html.twig',
             array(
-                'workspace' => $event->getResource()->getWorkspace(),
+                'workspace' => $event->getResource()->getResourceNode()->getWorkspace(),
                 'path' => $path,
                 'pdf' => $event->getResource(),
                 '_resource' => $event->getResource()
