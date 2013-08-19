@@ -3,7 +3,7 @@
     "description": "Claroline activity tool bundle",
     "keywords": ["Claroline","ActivityTool"],
     "homepage": "http://www.claroline.net",
-    "type": "bundle",
+    "type": "claroline-plugin",
     "license": "",
     "authors": [
         {
