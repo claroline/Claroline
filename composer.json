@@ -1,9 +1,9 @@
 {
     "name": "claroline/rss-reader-bundle",
-    "description": "Claroline RSS reader bundle",
-    "keywords": ["Claroline","RSS"],
+    "description": "Claroline RSS reader plugin",
+    "keywords": ["Claroline", "Plugin", "RSS"],
     "homepage": "http://www.claroline.net",
-    "type": "bundle",
+    "type": "claroline-plugin",
     "license": "",
     "authors": [
         {
@@ -21,5 +21,8 @@
     "autoload": {
         "psr-0": { "Claroline\\RssReaderBundle": "" }
     },
-    "target-dir": "Claroline/RssReaderBundle"
+    "target-dir": "Claroline/RssReaderBundle",
+    "extra": {
+        "dbVersion": "20130805110005"
+    }
 }
