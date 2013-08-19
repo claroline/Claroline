@@ -175,6 +175,8 @@ class ResourceNode
      */
     protected $class;
 
+    private $pathForCreationLog;
+
     public function __construct()
     {
         $this->rights = new ArrayCollection();
@@ -490,5 +492,15 @@ class ResourceNode
     public function setClass($class)
     {
         $this->class = $class;
+    }
+
+    public function setPathForCreationLog($path)
+    {
+        $this->pathForCreationLog = $path;
+    }
+
+    public function getPathForCreationLog()
+    {
+        return $this->pathForCreationLog;
     }
 }
