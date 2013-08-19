@@ -49,6 +49,7 @@ class ResourceManagerTest extends MockeryTestCase
         $resource = $this->mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
         $node = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $name = 'name';
+        $parent->shouldReceive('getPathForDisplay')->once()->andReturn('path');
         $resource->shouldReceive('getName')->once()->andReturn($name);
         $this->om->shouldReceive('factory')->once()
             ->with('Claroline\CoreBundle\Entity\Resource\ResourceNode')->andReturn($node);
@@ -71,6 +72,7 @@ class ResourceManagerTest extends MockeryTestCase
         $node->shouldReceive('setPrevious')->once()->with($prev);
         $node->shouldReceive('setIcon')->once()->with($icon);
         $node->shouldReceive('setClass')->once()->with(get_class($resource));
+        $node->shouldReceive('setPathForCreationLog')->once()->with('path / name');
         $resource->shouldReceive('setResourceNode')->once()->with($node);
         $manager->shouldReceive('setRights')->once()->with($node, $parent, null);
         $this->om->shouldReceive('persist')->once()->with($resource);
