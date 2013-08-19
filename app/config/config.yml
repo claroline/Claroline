@@ -1,7 +1,6 @@
 imports:
     - { resource: security.yml }
     - { resource: local/parameters.yml }
-    - { resource: @ICAPBlogBundle/Resources/config/config_bundle.yml }
 
 framework:
     secret:          %secret%
