@@ -16,7 +16,7 @@ class ImagePlayerListener extends ContainerAware
         $content = $this->container->get('templating')->render(
             'ClarolineImagePlayerBundle::image.html.twig',
             array(
-                'workspace' => $event->getResource()->getWorkspace(),
+                'workspace' => $event->getResource()->getResourceNode()->getWorkspace(),
                 'path' => $path,
                 'image' => $event->getResource(),
                 '_resource' => $event->getResource()
