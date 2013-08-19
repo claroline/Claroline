@@ -34,6 +34,7 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
          *             l_dir_3
          *         dir_3
          *             dir_4
+         *                 l_dir_4
          *                 file_1
          *
          * ws_2
@@ -51,6 +52,7 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
         self::createFile('file_1', self::get('t_file'), self::get('john'), self::get('dir_4'));
         self::createShortcut('l_dir_2', self::get('t_link'), self::get('dir_2'), self::get('john'), self::get('dir_5'));
         self::createShortcut('l_dir_3', self::get('t_link'), self::get('dir_3'), self::get('john'), self::get('dir_2'));
+        self::createShortcut('l_dir_4', self::get('t_link'), self::get('dir_4'), self::get('john'), self::get('dir_4'));
         self::createResourceRights(self::get('ROLE_1'), self::get('dir_1'), array('open'));
         self::createResourceRights(self::get('ROLE_1'), self::get('dir_2'), array('open'));
         self::createResourceRights(self::get('ROLE_2'), self::get('dir_5'), array('open'));
@@ -65,8 +67,8 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
     public function testFindDescendants()
     {
         $this->assertEquals(1, count(self::$repo->findDescendants(self::get('dir_2')->getResourceNode())));
-        $this->assertEquals(5, count(self::$repo->findDescendants(self::get('dir_1')->getResourceNode())));
-        $this->assertEquals(6, count(self::$repo->findDescendants(self::get('dir_1')->getResourceNode(), true)));
+        $this->assertEquals(6, count(self::$repo->findDescendants(self::get('dir_1')->getResourceNode())));
+        $this->assertEquals(7, count(self::$repo->findDescendants(self::get('dir_1')->getResourceNode(), true)));
         $this->assertEquals(2, count(self::$repo->findDescendants(self::get('dir_3')->getResourceNode(), true, 't_dir')));
     }
 
@@ -138,16 +140,16 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
     public function testFindByCriteria()
     {
         $resources = self::$repo->findByCriteria(array());
-        $this->assertEquals(8, count($resources));
+        $this->assertEquals(9, count($resources));
 
         $resources = self::$repo->findByCriteria(array('types' => array('t_file')));
         $this->assertEquals(1, count($resources));
 
         $resources = self::$repo->findByCriteria(array('roots' => array(self::get('dir_1')->getResourceNode()->getPath())));
-        $this->assertEquals(6, count($resources));
+        $this->assertEquals(7, count($resources));
 
         $resources = self::$repo->findByCriteria(array('dateFrom' => self::$time));
-        $this->assertEquals(6, count($resources));
+        $this->assertEquals(7, count($resources));
 
         $resources = self::$repo->findByCriteria(array('dateTo' => self::$time));
         $this->assertEquals(2, count($resources));
@@ -175,11 +177,13 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
         $shortcuts = self::$repo->findRecursiveDirectoryShortcuts(
             array('roots' => array(self::get('dir_5')->getResourceNode()->getPath()))
         );
-        $this->assertEquals(2, count($shortcuts));
-        $this->assertEquals('l_dir_3', $shortcuts[0]['name']);
-        $this->assertEquals('l_dir_2', $shortcuts[1]['name']);
-        $this->assertEquals(self::get('dir_3')->getResourceNode()->getPath(), $shortcuts[0]['target_path']);
-        $this->assertEquals(self::get('dir_2')->getResourceNode()->getPath(), $shortcuts[1]['target_path']);
+        $this->assertEquals(3, count($shortcuts));
+        $this->assertEquals('l_dir_4', $shortcuts[0]['name']);
+        $this->assertEquals('l_dir_3', $shortcuts[1]['name']);
+        $this->assertEquals('l_dir_2', $shortcuts[2]['name']);
+        $this->assertEquals(self::get('dir_4')->getResourceNode()->getPath(), $shortcuts[0]['target_path']);
+        $this->assertEquals(self::get('dir_3')->getResourceNode()->getPath(), $shortcuts[1]['target_path']);
+        $this->assertEquals(self::get('dir_2')->getResourceNode()->getPath(), $shortcuts[2]['target_path']);
     }
 
     public function testFindMimeTypesWithMostResources()

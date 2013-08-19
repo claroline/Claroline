@@ -1,5 +1,5 @@
 <form novalidate="novalidate"
-      action="{{ path('claro_resource_rights_edit', {'resource':resourceRights.getResource().getId()}) }}"
+      action="{{ path('claro_resource_rights_edit', {'node':resourceRights.getResourceNode().getId()}) }}"
       method="post"
       class="form-vertical form-right-resource"
       id="resource-right-form">
@@ -13,7 +13,7 @@
         <br><input name="isRecursive" type="checkbox"/> {{ 'recursive_dir_action'|trans({}, 'platform')}}
         <br><a data-resource-id="{{ resource.getId() }}"
            class="res-creation-options"
-           href="{{ path('claro_resource_right_creation_form', {'resource': resourceRights.getResource().getId(), 'role': resourceRights.getRole().getId() }) }}">
+           href="{{ path('claro_resource_right_creation_form', {'node': resourceRights.getResourceNode().getId(), 'role': resourceRights.getRole().getId() }) }}">
            {{ 'options'|trans({}, 'platform') }}
         </a>
     {% endif %}

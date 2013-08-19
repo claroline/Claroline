@@ -213,9 +213,9 @@ You can use the 'ClarolineCoreBundle:Resource:createForm.html.twig' as default f
 
 If you want to write your own twig file, your form action must be:
 
-    action="{{ path('claro_resource_create', {'resourceType': resourceType, 'parentId' '_resourceId'}) }}"
+    action="{{ path('claro_resource_create', {'resourceType': resourceType, 'parentId' '_nodeId'}) }}"
 
-where resourceType is the 'name' field you defined in your config.yml file and _resourceId is a placeholder used
+where resourceType is the 'name' field you defined in your config.yml file and _nodeId is a placeholder used
 by the javascript manager.
 
 ###### Using existing forms & validations

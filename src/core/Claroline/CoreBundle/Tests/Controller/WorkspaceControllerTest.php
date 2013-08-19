@@ -237,7 +237,7 @@ class WorkspaceControllerTest extends MockeryTestCase
         $orderedTools = array('ordered_tool_1', 'ordered_tool_2');
 
         $this->resourceManager
-            ->shouldReceive('getResource')
+            ->shouldReceive('getNode')
             ->with(0)
             ->once()
             ->andReturn($resource);

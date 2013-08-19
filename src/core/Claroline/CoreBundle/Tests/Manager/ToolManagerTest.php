@@ -54,6 +54,8 @@ class ToolManagerTest extends MockeryTestCase
         $name = 'toolName';
         $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
         $resource = $this->mock('Claroline\CoreBundle\Entity\Resource\Directory');
+        $node = new \Claroline\CoreBundle\Entity\Resource\ResourceNode();
+        $resource->shouldReceive('getResourceNode')->once()->andReturn($node);
         $userManager = $this->mock('Claroline\CoreBundle\Entity\User');
         $position = 1;
         $tool = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');

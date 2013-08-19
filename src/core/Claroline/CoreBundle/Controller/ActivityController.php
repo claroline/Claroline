@@ -139,14 +139,9 @@ class ActivityController extends Controller
 
     /**
      * @EXT\Route(
-     *    "/leftmenu/{activityId}",
+     *    "/leftmenu/{activity}",
      *    name="claro_activity_left_menu",
      *    options={"expose"=true}
-     * )
-     * @EXT\ParamConverter(
-     *      "activity",
-     *      class="ClarolineCoreBundle:Resource\Activity",
-     *      options={"id" = "activityId", "strictId" = true}
      * )
      *
      * @EXT\Template("ClarolineCoreBundle:Activity/player:leftMenu.html.twig")
@@ -178,16 +173,7 @@ class ActivityController extends Controller
     }
 
     /**
-     * @EXT\Route (
-     *     "/player/{activityId}",
-     *     name="claro_activity_show_player"
-     * )
-     * @EXT\ParamConverter(
-     *      "activity",
-     *      class="ClarolineCoreBundle:Resource\Activity",
-     *      options={"id" = "activityId", "strictId" = true}
-     * )
-     *
+     * @EXT\Route ("/player/{activity}", name="claro_activity_show_player")
      * @EXT\Template("ClarolineCoreBundle:Activity/player:activity.html.twig")
      *
      * Shows the player layout.
@@ -210,16 +196,7 @@ class ActivityController extends Controller
     }
 
     /**
-     * @EXT\Route(
-     *     "/instructions/{activityId}",
-     *     name="claro_activity_show_instructions"
-     * )
-     * @EXT\ParamConverter(
-     *      "activity",
-     *      class="ClarolineCoreBundle:Resource\Activity",
-     *      options={"id" = "activityId", "strictId" = true}
-     * )
-     *
+     * @EXT\Route("/instructions/{activity}", name="claro_activity_show_instructions")
      * @EXT\Template("ClarolineCoreBundle:Activity/player:instructions.html.twig")
      *
      * Show the instructions of an activity.
@@ -248,7 +225,10 @@ class ActivityController extends Controller
             if ($resourceActivity->getResourceNode()->getResourceType()->getName() !== 'activity') {
                 $countSteps++;
             } else {
-                $countSteps = $this->countSteps($resourceActivity->getResourceNode(), $countSteps);
+                $countSteps = $this->countSteps(
+                    $this->resourceManager->getResourceFromNode($resourceActivity->getResourceNode()),
+                    $countSteps
+                );
             }
         }
 
@@ -270,7 +250,10 @@ class ActivityController extends Controller
             $countItems++;
 
             if ($resourceActivity->getResourceNode()->getResourceType()->getName() == 'activity') {
-                $countItems = $this->countItems($resourceActivity->getResourceNode(), $countItems);
+                $countItems = $this->countItems(
+                    $this->resourceManager->getResourceFromNode($resourceActivity->getResourceNode()),
+                    $countItems
+                );
             }
         }
 
@@ -296,12 +279,18 @@ class ActivityController extends Controller
 
             if ($resourceActivity->getResourceNode()->getResourceType()->getName() == 'activity') {
                 $items[] = array(
-                    'resource' => $resourceActivity->getResourceNode(),
+                    'resource' => $this->resourceManager->getResourceFromNode($resourceActivity->getResourceNode()),
                     'step' => $step,
-                    'resources' => $this->getItems($resourceActivity->getResourceNode(), $step)
+                    'resources' => $this->getItems(
+                        $this->resourceManager->getResourceFromNode($resourceActivity->getResourceNode()),
+                        $step
+                    )
                 );
             } else {
-                $items[] = array('resource' => $resourceActivity->getResourceNode(), 'step' => $step);
+                $items[] = array(
+                    'resource' => $this->resourceManager->getResourceFromNode($resourceActivity->getResourceNode()),
+                    'step' => $step
+                );
             }
         }
 
