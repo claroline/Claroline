@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/08/14 05:27:46
+ * Generation date: 2013/08/19 02:56:25
  */
-class Version20130814172746 extends AbstractMigration
+class Version20130819145625 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -175,7 +175,8 @@ class Version20130814172746 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_activity 
             ADD CONSTRAINT FK_E4A67CACB87FAB32 FOREIGN KEY (resourceNode_id) 
-            REFERENCES claro_resource_node (id) NOT DEFERRABLE INITIALLY IMMEDIATE
+            REFERENCES claro_resource_node (id) 
+            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
             CREATE UNIQUE INDEX UNIQ_E4A67CACB87FAB32 ON claro_activity (resourceNode_id)
@@ -236,7 +237,8 @@ class Version20130814172746 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_file 
             ADD CONSTRAINT FK_EA81C80BB87FAB32 FOREIGN KEY (resourceNode_id) 
-            REFERENCES claro_resource_node (id) NOT DEFERRABLE INITIALLY IMMEDIATE
+            REFERENCES claro_resource_node (id) 
+            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
             CREATE UNIQUE INDEX UNIQ_EA81C80BB87FAB32 ON claro_file (resourceNode_id)
@@ -269,7 +271,8 @@ class Version20130814172746 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_link 
             ADD CONSTRAINT FK_50B267EAB87FAB32 FOREIGN KEY (resourceNode_id) 
-            REFERENCES claro_resource_node (id) NOT DEFERRABLE INITIALLY IMMEDIATE
+            REFERENCES claro_resource_node (id) 
+            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
             CREATE UNIQUE INDEX UNIQ_50B267EAB87FAB32 ON claro_link (resourceNode_id)
@@ -302,7 +305,8 @@ class Version20130814172746 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_directory 
             ADD CONSTRAINT FK_12EEC186B87FAB32 FOREIGN KEY (resourceNode_id) 
-            REFERENCES claro_resource_node (id) NOT DEFERRABLE INITIALLY IMMEDIATE
+            REFERENCES claro_resource_node (id) 
+            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
             CREATE UNIQUE INDEX UNIQ_12EEC186B87FAB32 ON claro_directory (resourceNode_id)
@@ -353,7 +357,8 @@ class Version20130814172746 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_resource_shortcut 
             ADD CONSTRAINT FK_5E7F4AB8B87FAB32 FOREIGN KEY (resourceNode_id) 
-            REFERENCES claro_resource_node (id) NOT DEFERRABLE INITIALLY IMMEDIATE
+            REFERENCES claro_resource_node (id) 
+            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
             CREATE INDEX IDX_5E7F4AB8158E0B66 ON claro_resource_shortcut (target_id)
@@ -389,7 +394,8 @@ class Version20130814172746 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_text 
             ADD CONSTRAINT FK_5D9559DCB87FAB32 FOREIGN KEY (resourceNode_id) 
-            REFERENCES claro_resource_node (id) NOT DEFERRABLE INITIALLY IMMEDIATE
+            REFERENCES claro_resource_node (id) 
+            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
             CREATE UNIQUE INDEX UNIQ_5D9559DCB87FAB32 ON claro_text (resourceNode_id)
