@@ -296,15 +296,11 @@
                         if (this.checkedResources.nodes.hasOwnProperty(event.node.id)) {
                             delete this.checkedResources.nodes[event.node.id];
                         } else {
-<<<<<<< HEAD
-                            this.checkedResources.nodes[event.node.id] = [event.node.name, event.node.type,event.node.mimeType];
-=======
-                            this.checkedResources.resources[event.resource.id] = [
-                                event.resource.name,
-                                event.resource.type,
-                                event.resource.mimeType
+                            this.checkedResources.resources[event.node.id] = [
+                                event.node.name,
+                                event.node.type,
+                                event.node.mimeType
                             ];
->>>>>>> upstream/master
                         }
 
                         this.checkedResources.directoryId = this.currentDirectory.id;
@@ -819,17 +815,10 @@
                 }
             }
         },
-<<<<<<< HEAD
-        setFilterState: function(type) {
+        setFilterState: function (type) {
             $('.node-thumbnail').show();
             if (type !== 'none') {
-                $.each($('.node-element'), function(key, element) {
-=======
-        setFilterState: function (type) {
-            $('.resource-thumbnail').show();
-            if (type !== 'none') {
-                $.each($('.resource-element'), function (key, element) {
->>>>>>> upstream/master
+                $.each($('.node-element'), function (key, element) {
                     if ($(element).attr('data-type') !== type && $(element).attr('data-type') !== 'directory') {
                         $(element.parentElement).hide();
                     }
