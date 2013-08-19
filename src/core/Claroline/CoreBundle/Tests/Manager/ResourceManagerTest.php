@@ -302,11 +302,19 @@ class ResourceManagerTest extends MockeryTestCase
     /**
      * @dataProvider insertBeforeProvider
      */
-    public function testInsertBefore($previous, $next, $oldPrev, $oldNext)
+    public function testInsertBefore($previous, $next, $oldPrev, $oldNext, $rmNext, $rmPrev)
     {
         $resource = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $parent = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
-        $manager = $this->getManager(array('findPreviousOrLastRes'));
+        $manager = $this->getManager(
+            array(
+                'findPreviousOrLastRes',
+                'removePreviousWherePreviousIs',
+                'removeNextWhereNextIs'
+            )
+        );
+        $manager->shouldReceive('removePreviousWherePreviousIs')->times($rmPrev);
+        $manager->shouldReceive('removeNextWhereNextIs')->times($rmNext);
         $manager->shouldReceive('findPreviousOrLastRes')->once()->andReturn($previous);
         $resource->shouldReceive('setNext')->with($next)->once();
         $resource->shouldReceive('setPrevious')->with($previous)->once();
@@ -341,9 +349,11 @@ class ResourceManagerTest extends MockeryTestCase
         $resource = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $resource->shouldReceive('getNext')->once()->andReturn($next);
         $resource->shouldReceive('getPrevious')->once()->andReturn($previous);
+        $resource->shouldReceive('setNext')->once()->with(null);
+        $resource->shouldReceive('setPrevious')->once()->with(null);
         $next->shouldReceive('setPrevious')->once()->with($previous);
         $previous->shouldReceive('setNext')->once()->with($next);
-        $this->om->shouldReceive('persist')->times(2);
+        $this->om->shouldReceive('persist')->times(3);
         $this->om->shouldReceive('flush');
         $this->getManager()->removePosition($resource);
     }
@@ -423,6 +433,7 @@ class ResourceManagerTest extends MockeryTestCase
 
         $node->shouldReceive('getResourceType')->andReturn($resourceType);
         $node->shouldReceive('getIcon')->andReturn($icon);
+        $node->shouldReceive('getClass')->once()->andReturn('class');
         $resourceType->shouldReceive('getName')->andReturn('type_name');
         $copy = new \Claroline\CoreBundle\Entity\Resource\Directory();
         $newNode->shouldReceive('setResourceType')->once()->with($resourceType);
@@ -433,6 +444,7 @@ class ResourceManagerTest extends MockeryTestCase
         $newNode->shouldReceive('setPrevious')->once()->with($last);
         $newNode->shouldReceive('setNext')->once()->with(null);
         $newNode->shouldReceive('setIcon')->once()->with($icon);
+        $newNode->shouldReceive('setClass')->once()->with('class');
         $this->resourceNodeRepo->shouldReceive('findOneBy')->once()->andReturn($last);
         $this->eventDispatcher->shouldReceive('dispatch')->andReturn($event);
         $event->shouldReceive('getCopy')->andReturn($copy);
@@ -467,6 +479,7 @@ class ResourceManagerTest extends MockeryTestCase
             ->andReturn($newNode);
         $node->shouldReceive('getResourceType')->andReturn($resourceType);
         $node->shouldReceive('getIcon')->andReturn($icon);
+        $node->shouldReceive('getClass')->once()->andReturn('class');
         $manager->shouldReceive('getResourceFromNode')->once()
             ->with($node)->andReturn(new \Claroline\CoreBundle\Entity\Resource\Directory);
 
@@ -478,6 +491,7 @@ class ResourceManagerTest extends MockeryTestCase
         $newNode->shouldReceive('setPrevious')->once()->with($last);
         $newNode->shouldReceive('setNext')->once()->with(null);
         $newNode->shouldReceive('setIcon')->once()->with($icon);
+        $newNode->shouldReceive('setClass')->once()->with('class');
 
         $resourceType->shouldReceive('getName')->andReturn('type_name');
         $copy = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceShortcut');
@@ -663,9 +677,9 @@ class ResourceManagerTest extends MockeryTestCase
         $oldNext = new \Claroline\CoreBundle\Entity\Resource\ResourceNode();
 
         return array(
-            array('previous' => $previous, 'next' => $next, 'oldPrev' => $oldPrev ,'oldNext' => $oldNext),
-            array('previous' => $previous, 'next' => null, 'oldPrev' => null, 'oldNext' => $oldNext),
-            array('previous' => null, 'next' => $next, 'oldPrev' => $oldPrev, 'oldNext' => $oldNext),
+            array('previous' => $previous, 'next' => $next, 'oldPrev' => $oldPrev ,'oldNext' => $oldNext, 'rmNext' => 1, 'rmPrev' => 3),
+            array('previous' => $previous, 'next' => null, 'oldPrev' => null, 'oldNext' => $oldNext, 'rmNext' => 1, 'rmPrev' => 1),
+            array('previous' => null, 'next' => $next, 'oldPrev' => $oldPrev, 'oldNext' => $oldNext, 'rmNext' => 0, 'rmPrev' => 3),
         );
     }
 

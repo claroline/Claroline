@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContext;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\User;
@@ -116,7 +115,7 @@ class ResourceController
         $event = $this->dispatcher->dispatch('create_'.$resourceType, 'CreateResource', array($resourceType));
 
         if (count($event->getResources()) > 0) {
-            $resourcesArray = array();
+            $nodesArray = array();
 
             foreach ($event->getResources() as $resource) {
                 $createdResource = $this->resourceManager->create(
@@ -127,10 +126,10 @@ class ResourceController
                     $parent
                 );
 
-                $resourcesArray[] = $this->resourceManager->toArray($createdResource->getResourceNode());
+                $nodesArray[] = $this->resourceManager->toArray($createdResource->getResourceNode());
             }
 
-            return new JsonResponse($resourcesArray);
+            return new JsonResponse($nodesArray);
         }
 
         return new Response($event->getErrorFormContent());
@@ -230,14 +229,14 @@ class ResourceController
 
         foreach ($nodes as $node) {
             try {
-                $movedResource = $this->resourceManager->move($node, $newParent);
-                $movedResources[] = $this->resourceManager->toArray($movedResource);
+                $movedNode = $this->resourceManager->move($node, $newParent);
+                $movedNodes[] = $this->resourceManager->toArray($movedNode);
             } catch (\Gedmo\Exception\UnexpectedValueException $e) {
                 throw new \RuntimeException('Cannot move a resource into itself');
             }
         }
 
-        return new JsonResponse($movedResources);
+        return new JsonResponse($movedNodes);
     }
 
     /**
@@ -257,17 +256,17 @@ class ResourceController
      *
      * @param string       $resourceType the resource type
      * @param string       $action       the action
-     * @param ResourceNode $resource     the resource
+     * @param ResourceNode $node         the resource
      *
      * @throws \Exception
      * @return Response
      */
-    public function customAction($resourceType, $action, ResourceNode $resource)
+    public function customAction($resourceType, $action, ResourceNode $node)
     {
         $eventName = $action . '_' . $resourceType;
         //$collection = new ResourceCollection(array($resource));
 
-        $event = new CustomActionResourceEvent($resource);
+        $event = new CustomActionResourceEvent($this->resourceManager->getResourceFromNode($node));
         //$this->ed->dispatch($eventName, $event);
 
         if (!$event->getResponse() instanceof Response) {
@@ -363,7 +362,7 @@ class ResourceController
         $canChangePosition = false;
 
         if ($node === null) {
-            $resources = $this->resourceManager->getRoots($user);
+            $nodes = $this->resourceManager->getRoots($user);
             $isRoot = true;
             $workspaceId = 0;
         } else {
@@ -376,7 +375,7 @@ class ResourceController
             }
 
             $path = $this->resourceManager->getAncestors($node);
-            $resources = $this->resourceManager->getChildren($node, $currentRoles);
+            $nodes = $this->resourceManager->getChildren($node, $currentRoles);
             $creatableTypes = $this->rightsManager->getCreatableTypes($currentRoles, $node);
             $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($node));
         }
@@ -385,7 +384,7 @@ class ResourceController
             array(
                 'path' => $path,
                 'creatableTypes' => $creatableTypes,
-                'resources' => $resources,
+                'nodes' => $nodes,
                 'canChangePosition' => $canChangePosition,
                 'workspace_id' => $workspaceId,
                 'is_root' => $isRoot

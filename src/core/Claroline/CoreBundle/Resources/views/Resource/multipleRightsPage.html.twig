@@ -60,8 +60,8 @@
 <div class="tab-content" id="rights-form-resource-tab-content">
     <div class="tab-pane active" id="general">
         <form
-            id="resource-rights-form"
-            class="resource-rights-form"
+            id="node-rights-form"
+            class="node-rights-form"
             action="{{ path('claro_resource_rights_edit', {'node': resource.getId()}) }}"
             method="post"
         >
@@ -166,7 +166,7 @@
     </div>
 </div>
 
-<div id="modal-check-resource-right-box" class="modal hide fade">
+<div id="modal-check-node-right-box" class="modal hide fade">
     <div class="modal-header">
         <button type="button" class="close modal-close">×</button>
         <h3>{{ 'rights_management'|trans({}, 'platform') }}</h3>

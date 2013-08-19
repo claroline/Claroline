@@ -118,7 +118,9 @@ class RightsManager
         $isRecursive
     )
     {
-        $this->om->startFlushSuite();
+        //Bugfix: If the flushSuite is uncommented, doctrine returns an error
+        //(ResourceRights duplicata)
+        //$this->om->startFlushSuite();
 
         $arRights = ($isRecursive) ?
             $this->updateRightsTree($role, $node):
@@ -130,7 +132,7 @@ class RightsManager
             $this->logChangeSet($toUpdate);
         }
 
-        $this->om->endFlushSuite();
+        //$this->om->endFlushSuite();
 
         return $arRights;
     }

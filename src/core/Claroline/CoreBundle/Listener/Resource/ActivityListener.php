@@ -115,12 +115,13 @@ class ActivityListener implements ContainerAwareInterface
 
         foreach ($resourceActivities as $resourceActivity) {
             $ra = new ResourceActivity();
-            $ra->setResource($resourceActivity->getResource());
+            $ra->setResourceNode($resourceActivity->getResourceNode());
             $ra->setSequenceOrder($resourceActivity->getSequenceOrder());
             $ra->setActivity($copy);
             $em->persist($ra);
         }
-
+        
+        $em->persist($copy);
         $event->setCopy($copy);
         $event->stopPropagation();
     }

@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
-use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -521,6 +520,9 @@ class ResourceManager
     {
         $next = $node->getNext();
         $previous = $node->getPrevious();
+        $node->setPrevious(null);
+        $node->setNext(null);
+        $this->om->persist($node);
 
         if ($next) {
             $next->setPrevious($previous);
@@ -636,7 +638,7 @@ class ResourceManager
         if ($node instanceof \Claroline\CoreBundle\Entity\Resource\ResourceShortcut) {
             $copy = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceShortcut');
             $copy->setTarget($node->getResource()->getTarget());
-            $newNode = $this->copyNode($node, $parent, $last, $user);
+            $newNode = $this->copyNode($node, $parent, $user, $last);
             $copy->setResourceNode($newNode);
 
         } else {
@@ -647,7 +649,7 @@ class ResourceManager
             );
 
             $copy = $event->getCopy();
-            $newNode = $this->copyNode($node, $parent, $last, $user);
+            $newNode = $this->copyNode($node, $parent, $user, $last);
             $copy->setResourceNode($newNode);
 
             if ($node->getResourceType()->getName() == 'directory') {
@@ -728,8 +730,9 @@ class ResourceManager
      */
     public function delete(ResourceNode $node)
     {
-        $this->om->startFlushSuite();
+        //why is it broken when this function is fired after startFlushSuite ?
         $this->removePosition($node);
+        $this->om->startFlushSuite();
         $this->dispatcher->dispatch(
             "delete_{$node->getResourceType()->getName()}",
             'DeleteResource',
@@ -966,7 +969,7 @@ class ResourceManager
         $this->om->refresh($entity);
     }
 
-    private function copyNode(ResourceNode $node, ResourceNode $newParent, ResourceNode $last, User $user)
+    private function copyNode(ResourceNode $node, ResourceNode $newParent, User $user,  ResourceNode $last = null)
     {
         $newNode = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $newNode->setResourceType($node->getResourceType());
@@ -977,6 +980,7 @@ class ResourceManager
         $newNode->setPrevious($last);
         $newNode->setNext(null);
         $newNode->setIcon($node->getIcon());
+        $newNode->setClass($node->getClass());
         $this->rightsManager->copy($node, $newNode);
         $this->om->persist($newNode);
 
@@ -996,7 +1000,8 @@ class ResourceManager
         $this->om->flush();
     }
 
-    private function removeNextWhereNextIs(ResourceNode $next = null) {
+    /** required by insertBefore */
+    public function removeNextWhereNextIs(ResourceNode $next = null) {
         $node = $this->resourceNodeRepo->findOneBy(array('next' => $next));
         if ($node) {
             $node->setNext(null);
@@ -1005,7 +1010,8 @@ class ResourceManager
         }
     }
 
-    private function removePreviousWherePreviousIs(ResourceNode $previous = null) {
+    /** required by insertBefore */
+    public function removePreviousWherePreviousIs(ResourceNode $previous = null) {
         $node = $this->resourceNodeRepo->findOneBy(array('previous' => $previous));
         if ($node) {
             $node->setPrevious(null);

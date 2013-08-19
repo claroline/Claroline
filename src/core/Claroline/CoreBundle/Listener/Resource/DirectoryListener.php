@@ -242,18 +242,19 @@ class DirectoryListener
     public function delete(DeleteResourceEvent $event)
     {
         $resource = $event->getResource();
+        $node = $resource->getResourceNode();
 
-        if ($resource->getParent() === null) {
+        if ($node->getParent() === null) {
             throw new \LogicException('Root directory cannot be removed');
         }
 
-        $children = $this->resourceManager->getAllChildren($resource, false);
+        $children = $this->resourceManager->getAllChildren($node, false);
 
         foreach ($children as $child) {
             $this->eventDispatcher->dispatch(
-                'delete_{$child->getResourceType()->getName()}',
+                "delete_{$child->getResourceType()->getName()}",
                 'DeleteResource',
-                array($child)
+                array($this->resourceManager->getResourceFromNode($child))
             );
         }
     }

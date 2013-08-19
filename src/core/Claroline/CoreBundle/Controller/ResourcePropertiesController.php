@@ -102,10 +102,7 @@ class ResourcePropertiesController extends Controller
             return new JsonResponse(array($node->getName()));
         }
 
-        return array(
-            'resourceId' => $node->getId(),
-            'form' => $form->createView()
-        );
+        return array('form' => $form->createView());
     }
 
     /**
@@ -174,10 +171,7 @@ class ResourcePropertiesController extends Controller
             return new JsonResponse(array($node));
         }
 
-        return array(
-            'resourceId' => $node->getId(),
-            'form' => $form->createView()
-        );
+        return array('form' => $form->createView());
     }
 
     /**
