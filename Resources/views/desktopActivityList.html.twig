@@ -27,16 +27,16 @@
                     <th nowrap>{{ 'start_date'|trans({}, 'tools') }}</th>
                     <th nowrap>{{ 'end_date'|trans({}, 'tools') }}</th>
                 </tr>
-                {% for resourceId in workspaceInfo.resources %}
+                {% for nodeId in workspaceInfo.nodes %}
                 <tr>
                     <td>
-                        <a href="{{ path('claro_resource_open', {'resourceId': resourceId, 'resourceType': 'activity'}) }}">
-                        {{ resourceInfos[resourceId].name }}
+                        <a href="{{ path('claro_resource_open', {'node': nodeId , 'resourceType': 'activity'}) }}">
+                        {{ resourceInfos[nodeId].name }}
                         </a>
                     </td>
-                    <td>{{ activityInfos[resourceId].instructions }}</td>
-                    <td>{{ activityInfos[resourceId].startDate }}</td>
-                    <td>{{ activityInfos[resourceId].endDate }}</td>
+                    <td>{{ activityInfos[nodeId].instructions }}</td>
+                    <td>{{ activityInfos[nodeId].startDate }}</td>
+                    <td>{{ activityInfos[nodeId].endDate }}</td>
                 </tr>
                 {% endfor %}
             </table>

@@ -16,7 +16,7 @@
         {% for resInfo in resourceInfos %}
         <tr>
             <td>
-                <a href="{{ path('claro_resource_open', {'resourceId': resInfo.id, 'resourceType': 'activity'}) }}">
+                <a href="{{ path('claro_resource_open', {'node': resInfo.id, 'resourceType': 'activity'}) }}">
                 {{ resInfo.name }}
                 </a>
             </td>

@@ -4,10 +4,9 @@ namespace Claroline\ActivityToolBundle\Listener;
 
 use Claroline\CoreBundle\Event\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Response;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service
@@ -81,62 +80,62 @@ class ToolListener extends ContainerAware
         $criteria['roots'] = array();
 
         if (!$isDesktopTool) {
-            $root = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+            $root = $em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
                 ->findWorkspaceRoot($workspace);
             $criteria['roots'][] = $root->getPath();
         }
         $criteria['types'] = array('activity');
-        $resources = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+        $nodes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
             ->findByCriteria($criteria, $userRoles, true);
 
         $activitiesDatas = array();
-        $resourceInfos = array();
-        $activitiesId = array();
+        $nodeInfos = array();
+        $activityNodesId = array();
         $activityInfos = array();
 
         if ($isDesktopTool) {
             $workspaceInfos = array();
         }
 
-        foreach ($resources as $resource) {
-            $resourceId = $resource['id'];
-            $activitiesId[] = $resourceId;
-            $resourceInfos[$resourceId] = $resource;
+        foreach ($nodes as $node) {
+            $nodeId = $node['id'];
+            $activityNodesId[] = $nodeId;
+            $nodeInfos[$nodeId] = $node;
         }
 
-        if (count($activitiesId) > 0) {
+        if (count($activityNodesId) > 0) {
             if ($isDesktopTool) {
-                $resourcesWorkspaces = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-                    ->findWorkspaceInfoByIds($activitiesId);
+                $nodeWorkspaces = $em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
+                    ->findWorkspaceInfoByIds($activityNodesId);
 
-                foreach ($resourcesWorkspaces as $resWs) {
-                    $code = $resWs['code'];
+                foreach ($nodeWorkspaces as $nodeWs) {
+                    $code = $nodeWs['code'];
 
                     if (!isset($workspaceInfos[$code])) {
                         $workspaceInfos[$code] = array();
                         $workspaceInfos[$code]['code'] = $code;
-                        $workspaceInfos[$code]['name'] = $resWs['name'];
-                        $workspaceInfos[$code]['resources'] = array();
+                        $workspaceInfos[$code]['name'] = $nodeWs['name'];
+                        $workspaceInfos[$code]['nodes'] = array();
                     }
-                    $workspaceInfos[$code]['resources'][] = $resWs['id'];
+                    $workspaceInfos[$code]['nodes'][] = $nodeWs['id'];
                 }
             }
 
             $activities = $em->getRepository('ClarolineCoreBundle:Resource\Activity')
-                ->findActivitiesByIds($activitiesId);
+                ->findActivitiesByNodeIds($activityNodesId);
 
             foreach ($activities as $activity) {
-                $actId = $activity['id'];
-                $activityInfos[$actId] = array();
-                $activityInfos[$actId]['instructions'] = $activity['instructions'];
-                $activityInfos[$actId]['startDate'] = ($activity['startDate'] instanceof \DateTime) ?
+                $actNodeId = $activity['nodeId'];
+                $activityInfos[$actNodeId] = array();
+                $activityInfos[$actNodeId]['instructions'] = $activity['instructions'];
+                $activityInfos[$actNodeId]['startDate'] = ($activity['startDate'] instanceof \DateTime) ?
                     $activity['startDate']->format('Y-m-d H:i:s') : '-';
-                $activityInfos[$actId]['endDate'] = ($activity['endDate'] instanceof \DateTime) ?
+                $activityInfos[$actNodeId]['endDate'] = ($activity['endDate'] instanceof \DateTime) ?
                     $activity['endDate']->format('Y-m-d H:i:s') : '-';
             }
         }
 
-        $activitiesDatas['resourceInfos'] = $resourceInfos;
+        $activitiesDatas['resourceInfos'] = $nodeInfos;
         $activitiesDatas['activityInfos'] = $activityInfos;
 
         if ($isDesktopTool) {
