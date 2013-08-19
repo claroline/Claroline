@@ -23,15 +23,15 @@
         "doctrine/doctrine-migrations-bundle": "dev-master",
         "doctrine/doctrine-fixtures-bundle": "dev-master",
         "friendsofsymfony/jsrouting-bundle": "dev-master",
-        "mikey179/vfsStream": "dev-master",
         "stfalcon/tinymce-bundle": "dev-master",
         "claroline/front-end-bundle": "dev-master",
         "claroline/taxonomy-bundle": "dev-master",
+        "claroline/migration-bundle": "dev-master",
         "jms/twig-js-bundle": "dev-master",
         "white-october/pagerfanta-bundle": "dev-master",
         "idci/exporter-bundle": "dev-master",
         "leafo/lessphp": "0.3.9",
-        "twitter/bootstrap": "2.3.1",
+        "twbs/bootstrap": "2.3.2",
         "fortawesome/fontawesome": "dev-master",
         "xaguilars/bootstrap-colorpicker": "dev-master",
         "zenstruck/form-bundle": "dev-master",
@@ -39,7 +39,8 @@
     },
     "require-dev": {
         "mockery/mockery": "dev-master@dev",
-        "hamcrest/hamcrest": "1.1.0"
+        "hamcrest/hamcrest": "1.1.0",
+        "mikey179/vfsStream": "dev-master"
     },
     "repositories": [
         {
@@ -116,7 +117,8 @@
         ]
     },
     "config": {
-        "bin-dir": "bin"
+        "bin-dir": "bin",
+        "github-protocols": ["https", "http", "git"]
     },
     "minimum-stability": "dev",
     "extra": {

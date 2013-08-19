@@ -15,7 +15,7 @@ class Activity extends AbstractResource
 {
     /**
      * @Assert\NotBlank()
-     * @ORM\Column(type="string", name="instruction")
+     * @ORM\Column(name="instruction")
      */
     protected $instructions;
 
@@ -28,12 +28,12 @@ class Activity extends AbstractResource
     protected $resourcesActivities;
 
     /**
-     * @ORM\Column(type="datetime", name="start_date")
+     * @ORM\Column(name="start_date", type="datetime", nullable=true)
      */
     protected $startDate;
 
     /**
-     * @ORM\Column(type="datetime", name="end_date")
+     * @ORM\Column(name="end_date", type="datetime", nullable=true)
      */
     protected $endDate;
 

@@ -174,4 +174,104 @@ class GroupRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
+    public function findByRoles(array $roles, $getQuery = false)
+    {
+        $dql = "
+            SELECT u FROM Claroline\CoreBundle\Entity\Group u
+            JOIN u.roles r WHERE r IN (:roles)
+            ORDER BY u.name
+            ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roles', $roles);
+
+        return ($getQuery) ? $query: $query->getResult();
+    }
+
+    public function findByRolesAndName(array $roles, $name, $getQuery = false)
+    {
+        $search = strtoupper($name);
+        $dql = "
+            SELECT u FROM Claroline\CoreBundle\Entity\Group u
+            JOIN u.roles r WHERE r IN (:roles)
+            AND UPPER(u.name) LIKE :search
+            ORDER BY u.name
+            ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roles', $roles);
+        $query->setParameter('search', "%{$search}%");
+
+        return ($getQuery) ? $query: $query->getResult();
+    }
+
+    /**
+     * This method should be renamed.
+     * Find groups who are outside the workspace and users whose role are in $roles.
+     */
+    public function findOutsidersByWorkspaceRoles(array $roles, AbstractWorkspace $workspace, $getQuery = false)
+    {
+        //feel free to make this request easier if you can
+
+        $dql = "
+            SELECT u FROM Claroline\CoreBundle\Entity\Group u
+            WHERE u NOT IN (
+                SELECT u2 FROM Claroline\CoreBundle\Entity\Group u2
+                JOIN u2.roles r WHERE r IN (:roles) AND
+                u2 NOT IN (
+                    SELECT u3 FROM Claroline\CoreBundle\Entity\Group u3
+                    JOIN u3.roles r2
+                    JOIN r2.workspace ws
+                    WHERE r2 NOT IN (:roles)
+                    AND ws = :wsId
+                )
+            )
+            ORDER BY u.name
+            ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roles', $roles);
+        $query->setParameter('wsId', $workspace);
+
+        return $getQuery ? $query : $query->getResult();
+    }
+
+    /**
+     * This method should be renamed.
+     * Find groups who are outside the workspace and users whose role are in $roles.
+     */
+    public function findOutsidersByWorkspaceRolesAndName(
+        array $roles,
+        $name,
+        AbstractWorkspace $workspace,
+        $getQuery = false
+    )
+    {
+        //feel free to make this request easier if you can
+        $search = strtoupper($name);
+
+        $dql = "
+            SELECT u FROM Claroline\CoreBundle\Entity\Group u
+            WHERE u NOT IN (
+                SELECT u2 FROM Claroline\CoreBundle\Entity\Group u2
+                JOIN u2.roles r WHERE r IN (:roles) AND
+                u2 NOT IN (
+                    SELECT u3 FROM Claroline\CoreBundle\Entity\Group u3
+                    JOIN u3.roles r2
+                    JOIN r2.workspace ws
+                    WHERE r2 NOT IN (:roles)
+                    AND ws = :wsId
+                )
+            )
+            AND UPPER(u.name) LIKE :search
+            ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roles', $roles);
+        $query->setParameter('wsId', $workspace);
+        $query->setParameter('search', "%{$search}%");
+
+        return $getQuery ? $query : $query->getResult();
+    }
 }

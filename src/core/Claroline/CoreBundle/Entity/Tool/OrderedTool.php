@@ -14,9 +14,14 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  * @ORM\Table(
  *     name="claro_ordered_tool",
  *     uniqueConstraints={
- *         @ORM\UniqueConstraint(name="tool", columns={"tool_id", "workspace_id"}),
- *         @ORM\UniqueConstraint(name="display", columns={"workspace_id", "display_order"}),
- *         @ORM\UniqueConstraint(name="workspace", columns={"workspace_id", "name"})
+ *         @ORM\UniqueConstraint(
+ *             name="ordered_tool_unique_tool_ws_usr",
+ *             columns={"tool_id", "workspace_id", "user_id"}
+ *         ),
+ *         @ORM\UniqueConstraint(
+ *             name="ordered_tool_unique_name_by_workspace",
+ *             columns={"workspace_id", "name"}
+ *         )
  *     }
  * )
  * @DoctrineAssert\UniqueEntity({"name", "workspace"})
@@ -33,18 +38,20 @@ class OrderedTool
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
-     *     cascade={"persist"}, inversedBy="orderedTools"
+     *     cascade={"persist"},
+     *     inversedBy="orderedTools"
      * )
-     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $workspace;
 
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\Tool",
-     *     cascade={"persist"}, inversedBy="orderedTools"
+     *     cascade={"persist"},
+     *     inversedBy="orderedTools"
      * )
-     * @ORM\JoinColumn(name="tool_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     protected $tool;
 
@@ -54,7 +61,7 @@ class OrderedTool
     protected $order;
 
     /**
-     * @Orm\Column(type="string")
+     * @Orm\Column()
      */
     protected $name;
 
@@ -63,18 +70,17 @@ class OrderedTool
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
      *     inversedBy="orderedTools"
      * )
-     * @ORM\JoinTable(
-     *     name="claro_ordered_tool_role"
-     * )
+     * @ORM\JoinTable(name="claro_ordered_tool_role")
      */
     protected $roles;
 
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     cascade={"persist"}, inversedBy="orderedTools"
+     *     cascade={"persist"},
+     *     inversedBy="orderedTools"
      * )
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $user;
 

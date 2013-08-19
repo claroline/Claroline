@@ -1,0 +1,71 @@
+{% macro showTag(tagsList, tagWorkspaces, hierarchy, index, displayable) %}
+{% for tag in tagsList %}
+    {% set workspaceTagId = tag.getId() %}
+    {% if displayable[workspaceTagId] %}
+    {% set currentIndex = index ~ "-" ~ workspaceTagId %}
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a  class="accordion-toggle"
+                data-toggle="collapse"
+                href="#collapse-{{ currentIndex }}"
+            >
+                <i class="icon-align-justify"></i>
+                {{ tag.getName() }}
+                <input
+                    class="chk-workspaces-{{currentIndex}} accordion-checkbox chk-workspace pull-right"
+                    type="checkbox"
+                    value="{{currentIndex}}"
+                >
+            </a>
+        </div>
+        <div id="collapse-{{ currentIndex }}" class="accordion-body collapse">
+            <div class="accordion-inner">
+                {% if hierarchy[workspaceTagId]|length > 0 %}
+                {{ _self.showTag(hierarchy[workspaceTagId], tagWorkspaces, hierarchy, currentIndex, displayable) }}
+                {% endif %}
+
+                {% if tagWorkspaces[workspaceTagId]|length > 0 %}
+                {% set relations = tagWorkspaces[workspaceTagId] %}
+                <div id="workspace-list-pager-{{ currentIndex }}" class="workspace-list-pager">
+                    {% include 'ClarolineCoreBundle:Workspace:workspaceListByTagRegistrationPager.html.twig' %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endfor %}
+{% endmacro %}
+
+{% from _self import showTag %}
+
+<div class="accordion" id="accordion-all">
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a  class="accordion-toggle"
+                data-toggle="collapse"
+                data-parent="#accordion-all"
+                href="#collapse-all"
+            >
+                <i class="icon-align-justify"></i>
+                {{ 'all_workspaces'|trans({}, 'platform') }}
+                <input
+                    class="accordion-checkbox pull-right"
+                    type="checkbox"
+                    value="all"
+                >
+            </a>
+        </div>
+        <div id="collapse-all" class="accordion-body collapse {% if tags|length == 0 %}in{% endif %}">
+            <div class="accordion-inner">
+            {% if workspaces|length > 0 %}
+                <div id="workspace-list-pager-all" class="workspace-list-pager">
+                {% include 'ClarolineCoreBundle:Workspace:workspaceCompleteListRegistrationPager.html.twig' %}
+                </div>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable) }}

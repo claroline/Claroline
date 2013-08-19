@@ -98,6 +98,10 @@ class WorkspaceRepository extends EntityRepository
             $dql .= " OR r.name = '{$roles[$i]}'";
         }
 
+        $dql .= "
+            ORDER BY w.name
+        ";
+
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
@@ -269,6 +273,69 @@ class WorkspaceRepository extends EntityRepository
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userId', $user->getId());
+
+        return $query->getResult();
+    }
+
+    /**
+     * Returns the workspaces which are visible for each user.
+     *
+     * @return array[AbstractWorkspace]
+     */
+    public function findDisplayableWorkspaces()
+    {
+        $dql = '
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            WHERE w.displayable = true
+            ORDER BY w.name
+        ';
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
+
+    /**
+     * Returns the workspaces which are visible for each user
+     * and allowing self-registration.
+     *
+     * @return array[AbstractWorkspace]
+     */
+    public function findWorkspacesWithSelfRegistration()
+    {
+        $dql = '
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            WHERE w.displayable = true
+            AND w.selfRegistration = true
+            ORDER BY w.name
+        ';
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
+
+    /**
+     * Returns the workspaces which are visible for each user
+     * and where name or code contains $search param.
+     *
+     * @return array[AbstractWorkspace]
+     */
+    public function findDisplayableWorkspacesBySearch($search)
+    {
+        $dql = '
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            WHERE w.displayable = true
+            AND (
+                UPPER(w.name) LIKE :search
+                OR UPPER(w.code) LIKE :search
+            )
+            ORDER BY w.name
+        ';
+        $search = strtoupper($search);
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('search', "%{$search}%");
 
         return $query->getResult();
     }

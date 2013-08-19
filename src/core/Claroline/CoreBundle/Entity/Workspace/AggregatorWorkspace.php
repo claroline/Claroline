@@ -15,21 +15,8 @@ class AggregatorWorkspace extends AbstractWorkspace
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace")
      * @ORM\JoinTable(
      *     name="claro_workspace_aggregation",
-     *     joinColumns={
-     *         @ORM\JoinColumn(
-     *             name="aggregator_workspace_id",
-     *             referencedColumnName="id",
-     *             nullable=true, onDelete="CASCADE"
-     *         )
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(
-     *             name="workspace_id",
-     *             referencedColumnName="id",
-     *             nullable=true,
-     *             onDelete="CASCADE"
-     *         )
-     *     }
+     *     joinColumns={@ORM\JoinColumn(name="aggregator_workspace_id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="simple_workspace_id")})
      * )
      */
     protected $workspaces;

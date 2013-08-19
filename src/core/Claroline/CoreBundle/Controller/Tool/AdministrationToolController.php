@@ -55,7 +55,7 @@ class AdministrationToolController extends Controller
     public function showToolAction()
     {
         $forms = array();
-        $tools = $this->toolManager->findAll();
+        $tools = $this->toolManager->getAllTools();
 
         foreach ($tools as $i => $tool) {
             $forms[] = $this->formFactory->create(FormFactory::TYPE_TOOL, array(), $tool)->createView();

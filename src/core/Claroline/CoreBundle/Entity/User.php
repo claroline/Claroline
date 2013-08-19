@@ -1,4 +1,4 @@
-<?php //
+<?php
 
 namespace Claroline\CoreBundle\Entity;
 
@@ -12,17 +12,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Role;
-// TODO: Implements AdvancedUserInterface
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\UserRepository")
- * @ORM\Table(
- *      name="claro_user",
- *      uniqueConstraints={
- *          @ORM\UniqueConstraint(name="user", columns={"username"})
- *      }
- * )
+ * @ORM\Table(name="claro_user")
  * @DoctrineAssert\UniqueEntity("username")
+ *
+ * @todo implement AdvancedUserInterface
  */
 class User extends AbstractRoleSubject implements Serializable, UserInterface, EquatableInterface
 {
@@ -34,30 +30,30 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     protected $id;
 
     /**
-     * @ORM\Column(name="first_name", type="string", length=50)
+     * @ORM\Column(name="first_name", length=50)
      * @Assert\NotBlank()
      */
     protected $firstName;
 
     /**
-     * @ORM\Column(name="last_name", type="string", length=50)
+     * @ORM\Column(name="last_name", length=50)
      * @Assert\NotBlank()
      */
     protected $lastName;
 
     /**
-     * @ORM\Column(name="username", type="string", length=255, unique=true)
+     * @ORM\Column(unique=true)
      * @Assert\NotBlank()
      */
     protected $username;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column()
      */
     protected $password;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column()
      */
     protected $salt;
 
@@ -67,17 +63,19 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     protected $plainPassword;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(nullable=true)
      */
     protected $phone;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(unique=true)
+     * @Assert\NotBlank()
+     * @Assert\Email(checkMX = false)
      */
     protected $mail;
 
     /**
-     * @ORM\Column(name="administrative_code", type="string", nullable=true)
+     * @ORM\Column(name="administrative_code", nullable=true)
      */
     protected $administrativeCode;
 
@@ -86,32 +84,17 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      *      targetEntity="Claroline\CoreBundle\Entity\Group",
      *      inversedBy="users"
      * )
-     * @ORM\JoinTable(
-     *     name="claro_user_group",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     *     }
-     * )
+     * @ORM\JoinTable(name="claro_user_group")
      */
     protected $groups;
 
     /**
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
-     *     inversedBy="users", fetch="EXTRA_LAZY"
+     *     inversedBy="users",
+     *     fetch="EXTRA_LAZY"
      * )
-     * @ORM\JoinTable(
-     *     name="claro_user_role",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     *     }
-     * )
+     * @ORM\JoinTable(name="claro_user_role")
      */
     protected $roles;
 
@@ -129,13 +112,13 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      *     inversedBy="personalUser",
      *     cascade={"remove"}
      * )
-     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", onDelete="SET NULL", nullable=false)
+     * @ORM\JoinColumn(name="workspace_id", onDelete="SET NULL")
      */
     protected $personalWorkspace;
 
     /**
+     * @ORM\Column(name="creation_date", type="datetime")
      * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime", name="creation_date")
      */
     protected $created;
 
@@ -154,6 +137,16 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      * )
      */
     protected $orderedTools;
+
+    /**
+     * @ORM\Column(name="reset_password", nullable=true)
+     */
+    protected $resetPasswordHash;
+
+    /**
+     * @ORM\Column(name="hash_time", type="integer", nullable=true)
+     */
+    protected  $hashTime;
 
     public function __construct()
     {
@@ -218,6 +211,10 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
 
     public function setPassword($password)
     {
+        if (null === $password) {
+            return;
+        }
+
         $this->password = $password;
     }
 
@@ -390,5 +387,25 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     public function getOrderedTools()
     {
         return $this->orderedTools;
+    }
+
+    public function getResetPasswordHash()
+    {
+        return $this->resetPasswordHash;
+    }
+
+    public function setResetPasswordHash($resetPasswordHash)
+    {
+        $this->resetPasswordHash = $resetPasswordHash;
+    }
+
+    public function getHashTime()
+    {
+        return $this->hashTime;
+    }
+
+    public function setHashTime($hashTime)
+    {
+        $this->hashTime = $hashTime;
     }
 }

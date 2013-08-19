@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Manager\Exception\MissingResourceNameException;
 use Claroline\CoreBundle\Manager\Exception\ResourceTypeNotFoundException;
 use Claroline\CoreBundle\Manager\Exception\RightsException;
 use Claroline\CoreBundle\Manager\Exception\ExportResourceException;
+use Claroline\CoreBundle\Manager\Exception\WrongClassException;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -128,7 +129,6 @@ class ResourceManager
         $resource->setParent($parent);
         $resource->setName($name);
         $resource->setPrevious($previous);
-        $resource->setNext(null);
         $resource->setIcon($icon);
         $this->setRights($resource, $parent, $rights);
         $this->om->persist($resource);
@@ -329,6 +329,7 @@ class ResourceManager
 
         $resourceTypes = $this->resourceTypeRepo->findAll();
 
+        //@todo remove this line and grant edit requests in the resourceManager.
         $this->rightsManager->create(
             array(
                 'canDelete' => true,
@@ -543,16 +544,11 @@ class ResourceManager
         $continue = true;
 
         for ($i = 0, $size = count($ancestors); $i < $size; $i++) {
-
             if (isset($ancestors[$i + 1])) {
-                if ($ancestors[$i + 1]->getParent() == $ancestors[$i]) {
+                if ($ancestors[$i + 1]->getParent() === $ancestors[$i]) {
                     $continue = true;
                 } else {
-                    if ($this->hasLinkTo($ancestors[$i], $ancestors[$i + 1])) {
-                        $continue = true;
-                    } else {
-                        $continue = false;
-                    }
+                    $continue = $this->hasLinkTo($ancestors[$i], $ancestors[$i + 1]);
                 }
             }
 
@@ -612,8 +608,8 @@ class ResourceManager
     {
         $last = $this->resourceRepo->findOneBy(array('parent' => $parent, 'next' => null));
 
-        if (get_class($resource) == 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
-            $copy = new ResourceShortcut();
+        if ($resource instanceof \Claroline\CoreBundle\Entity\Resource\ResourceShortcut) {
+            $copy = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceShortcut');
             $copy->setResource($resource->getResource());
             $copy->setCreator($user);
             $copy->setWorkspace($parent->getWorkspace());
@@ -873,6 +869,21 @@ class ResourceManager
         }
     }
 
+    public function createResource($class, $name)
+    {
+        $entity = $this->om->factory($class);
+
+        if ($entity instanceof \Claroline\CoreBundle\Entity\Resource\AbstractResource) {
+            $entity->setName($name);
+
+            return $entity;
+        }
+
+        throw new WrongClassException(
+            "{$class} doesn't extend Claroline\CoreBundle\Entity\Resource\AbstractResource."
+        );
+    }
+
     public function getResource($id)
     {
         return $this->resourceRepo->find($id);
@@ -918,6 +929,11 @@ class ResourceManager
     public function getResourceTypeByName($name)
     {
         return $this->resourceTypeRepo->findOneByName($name);
+    }
+
+    public function getAllResourceTypes()
+    {
+        return $this->resourceTypeRepo->findAll();
     }
 
     public function getByIds(array $ids)

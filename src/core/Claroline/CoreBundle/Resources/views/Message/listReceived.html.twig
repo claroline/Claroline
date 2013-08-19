@@ -25,23 +25,61 @@
     {% endif %}
 {% endmacro %}
 
+{% macro displayControls() %}
+    {% if app.user %}
+        <button class="btn btn-secondary action-button" data-action="remove">
+            <i class="icon-trash"></i>
+            {{ 'delete'|trans({}, 'platform') }}
+        </button>
+    {% endif %}
+{% endmacro %}
+
 {% from _self import renderPager %}
+{% from _self import displayControls %}
 
 {% extends 'ClarolineCoreBundle:Message:layout.html.twig' %}
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('bundles/clarolinecore/js/message/listReceived.js') }}" type="text/javascript"></script>
+    {% javascripts
+        vars=["locale"]
+        "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/removeMessageConfirm.html.twigjs"
+        "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
+        "@ClarolineCoreBundle/Resources/views/Modal/validationFooter.html.twigjs"
+        filter="twig_js"
+    %}
+    <script language="javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script src='{{ asset('bundles/clarolinecore/js/table.js') }}' type="text/javascript"></script>
+    <script>
+        parameters = {};
+        parameters.route = {};
+        parameters.route.action = {};
+        parameters.route.normal = {"route": "claro_message_list_received", "parameters": {}};
+        parameters.route.search = {"route": "claro_message_list_received_search", "parameters": {}};
+        parameters.route.action.remove = {"route": "claro_message_soft_delete", "parameters": {}, "confirmTemplate": removeMessageConfirm};
+        Claroline.Table.initialize(parameters);
+        $('.mark-as-read').live('click', function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'GET',
+                url: $(e.currentTarget).attr('href'),
+                success: function () {
+                    $(e.target).css('color', 'green');
+                    $(e.target).attr('class', 'icon-ok-sign');
+                }
+            });
+        });
+    </script>
 {% endblock %}
 
 {% block section_content %}
 
     <div class="search-bar">
-        <button class="btn btn-secondary delete-msg" id="delete-msg">{{ 'delete'|trans({}, 'platform') }}</button>
-
+        {{ displayControls(workspace.getId()) }}
         <div class="input-append pull-right">
-            <input class="input-medium" type="text" id="search-msg-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
-            <button class="filter btn" type="button" id="search-msg">
+            <input class="input-medium" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
+            <button class="filter btn" type="button" id="search-button">
                 <i class="icon-search"></i>
             </button>
         </div>
@@ -57,7 +95,7 @@
                 <th>{{ 'date'|trans({}, 'platform') }}</th>
                 <th>{{ 'from_message'|trans({}, 'platform') }}</th>
                 <th>{{ 'object'|trans({}, 'platform') }}</th>
-                <td><input type="checkbox" name="all" id="allChecked"></input><span>{{ 'select all'|trans({}, 'platform') }}</span></td>
+                <td><input type="checkbox" name="all" id="check-all-items"></input></td>
             </tr>
         </thead>
         <tbody id="message-table-body">
@@ -73,25 +111,11 @@
                     <td>{{ userMessage.getMessage().getDate()|date('d-m-Y') }}</td>
                     <td>{{ userMessage.getMessage().getSenderUsername() }}</td>
                     <td><a href="{{ path('claro_message_show', {'message': userMessage.getMessage().getId()}) }}">{{ userMessage.getMessage().getObject() }}</a></td>
-                    <td><input class="chk-delete" value="{{ userMessage.getMessage().getId() }}" type="checkbox"></input></td>
+                    <td><input class="chk-item" value="{{ userMessage.getMessage().getId() }}" type="checkbox"></input></td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
-    <div>
         {{ renderPager(search, pager) }}
-    </div>
-    <button class="btn btn-secondary delete-msg delete-users-button" id="delete-msg">{{ 'delete'|trans({}, 'platform') }}</button>
-    <!-------------- modal box ------------------------------------------------>
-    <div id="validation-box" class="modal hide fade">
-        <div class="modal-header">
-        </div>
-        <div class="modal-body" id="modal-body">
-            <div id="validation-box-body">{{'messages_confirm_delete'|trans({}, 'platform') }}</div>
-        </div>
-        <div class="modal-footer">
-            <input type="button" id="modal-valid-button" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-            <input type="button" id="modal-cancel-button" class="btn btn-secondary" value="{{ 'cancel'|trans({}, 'platform') }}"/>
-        </div>
-    </div>
+        {{ displayControls(workspace.getId()) }}
 {% endblock %}
