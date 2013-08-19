@@ -16,7 +16,7 @@ class VideoPlayerListener extends ContainerAware
         $content = $this->container->get('templating')->render(
             'ClarolineVideoPlayerBundle::video.html.twig',
             array(
-                'workspace' => $event->getResource()->getWorkspace(),
+                'workspace' => $event->getResource()->getResourceNode()->getWorkspace(),
                 'path' => $path,
                 'video' => $event->getResource(),
                 '_resource' => $event->getResource()

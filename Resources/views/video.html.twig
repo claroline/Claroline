@@ -8,5 +8,6 @@
     <embed src="{{ path ('claro_stream_video', {'videoId': video.getId()})}}" width="550" height="400">
     </embed>
 </object>
-
+<br>
+<a href="{{ path('claro_resource_download') }}?ids[]={{video.getResourceNode().getId()}}">{{ 'download'|trans({}, 'platform') }} </a>
 {% endblock %}
