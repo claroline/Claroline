@@ -4,56 +4,6 @@
 
 #Resource plugin
 
-## Database tables
-
-You must create a migration class building your tables in the existing database.
-
-The class must extend [*BundleMigration*](http://symfony.com/doc/2.0/bundles/DoctrineMigrationsBundle/index.html) and be placed in the *Migrations* folder. Its name must start with *Version* and end with a timestamp (YYYMMDDHHMMSS); e.g. *Version20121002000000.php*.
-
-This class will be executed by the plateform when installing your plugin. It must contains two methods: up() and down(). They will be called to create or remove your tables to/from the database.
-
-    /**
-    *  BundleMigration is written on top of Doctrine\DBAL\Migrations\AbstractMigration
-    *  and contains some helper methods.
-    *  You can use the doctrine migration class as well (see the doctrine doc).
-    */
-    class Version20121002000000 extends BundleMigration
-    {
-
-        /**
-        * Will be fired at the plugin installation.
-        * @param \Doctrine\DBAL\Schema\Schema $schema
-        */
-        public function up(Schema $schema)
-        {
-            $this->createExampleTable($schema);
-        }
-
-        /**
-        * Will be fired at the plugin uninstallation.
-         * @param \Doctrine\DBAL\Schema\Schema $schema
-         */
-        public function down(Schema $schema)
-        {
-            $schema->dropTable('claro_example_text');
-        }
-
-        /**
-        * Create the 'claro_example_text' table.
-        * @param \Doctrine\DBAL\Schema\Schema $schema
-        */
-        public function createExampleTable(Schema $schema)
-        {
-            // Table creation
-            $table = $schema->createTable('claro_example_text');
-            // Add an auto increment id
-            $this->addId($table);
-            // Add a column
-            $table->addColumn('text', 'text');
-        }
-    }
-
-
 ## Plugin configuration file
 Your plugin must define its properties and the list of its resources in the *Resources/config/config.yml file*.
 This file will be parsed by the plugin installator to install your plugin and create all your declared resources types in the database.
@@ -114,6 +64,11 @@ If your entity is a resource that must be recognized by the platform and managea
             return $this->text;
         }
     }
+
+The AbstractResource entity has a mandatory relation to ResourceNode.
+A ResourceNode job is to keep some informations related to a resource wich are
+necessary for the claroline core to work (ie: parent, children, resourceType, workspace...)
+In other words, nodes symbolise the resource tree with their context.
 
 ## Listener
 
@@ -291,7 +246,8 @@ Your response must extends the workspace layout.
 
     {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
-AbstractResource has a mandatory relation to the AbstractWorkspace table.
+AbstractResource has a mandatory relation to the ResourceNode table. The ResourceNode
+table has a mandatory relation to the AbstractWorkspace table.
 The Workspace indicate the context in wich your resource was placed.
 A resource is usually opened through the resource manager. The resource manager will append
 the resource breadcrumbs to the url (_breadcrumbs[]=123&...) to keep track of wich path the user
@@ -330,7 +286,7 @@ If you want to implement it, you must create some custom actions (see plugin con
 ### Database
 
 ResourceRights are stored in the entity Resource\ResourceRights.
-This table has a reliation to a role, a resource and a workspace.
+This table has a relation to a role, a resource and a workspace.
 It has several booleans defining the current permissions:
 canCopy, canDeleten canEdit, canOpen, canExport.
 
