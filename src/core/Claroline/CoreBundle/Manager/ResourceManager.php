@@ -142,6 +142,13 @@ class ResourceManager
             $icon = $this->iconManager->getIcon($resource);
         }
 
+        $parentPath = '';
+
+        if ($parent) {
+            $parentPath .= $parent->getPathForDisplay() . ' / ';
+        }
+        
+        $node->setPathForCreationLog($parentPath . $name);
         $node->setIcon($icon);
         $this->dispatcher->dispatch('log', 'Log\LogResourceCreate', array($node));
         $this->om->endFlushSuite();
