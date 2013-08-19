@@ -56,7 +56,7 @@
                     <li>{{ 'no_tags'|trans }}</li>
                 {% endfor %}
                 </ul>
-                {% if _resource.isCommentsAuthorized %}<a href="{{ path('icap_blog_post_view', {'blogId': _resource.id, 'postSlug': post.slug}) }}#comments" class="pull-right" title="{{ 'see_comments'|trans }}"><i class="icon-comments"></i> {{ post.comments|length }} {{ 'comments'|trans }}</a>{% endif %}
+                {% if _resource.isCommentsAuthorized %}<a href="{{ path('icap_blog_post_view', {'blogId': _resource.id, 'postSlug': post.slug}) }}#comments" class="pull-right" title="{{ 'see_comments'|trans }}"><i class="icon-comments"></i> {% set countComments = is_granted('EDIT', blog) ? post.countComments(true) : post.countComments %}{{ countComments }} {{ 'comments'|trans }}</a>{% endif %}
             </footer>
         </article>
     {% else %}

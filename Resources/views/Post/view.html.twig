@@ -50,12 +50,11 @@
 
     {% set blogOptions = _resource.options %}
     {% if _resource.isCommentsAuthorized %}
-        {% if (_resource.isAuthorizeAnonymousComment and is_granted('IS_AUTHENTICATED_ANONYMOUSLY')) or is_granted('EDIT', blog) %}
         <ul class="unstyled comment_list">
         {% set postComments = post.comments %}
         {% for comment in postComments %}
             {% set isPublished = comment.isPublished %}
-            {% if is_granted('EDIT', blog) or isPublished  %}
+            {% if is_granted('EDIT', blog) or isPublished %}
             <li{% if isPublished == false %} class="unpublished"{% endif %}>
                 {% if is_granted('EDIT', blog) %}
                 <div class="btn-group pull-right">
@@ -73,13 +72,12 @@
                     {% endif %}
                 </div>
                 {% endif %}
-                {{ comment.author.firstname ~ ' ' ~ comment.author.lastname }}{% if isPublished %}, {{ comment.publicationDate|date('date_format'|trans({}, 'platform')) }}{% endif %}
-                {{ comment.message|raw }}
+                <p>{{ comment.author.firstname ~ ' ' ~ comment.author.lastname }}{% if isPublished %}, {{ comment.publicationDate|date('date_format'|trans({}, 'platform')) }}{% endif %}</p>
+                <p>{{ comment.message|raw }}</p>
             </li>
             {% endif %}
         {% endfor %}
         </ul>
-        {% endif %}
         {% if is_granted('EDIT', blog) %}
             {% if countComments > 0 %}{{ 'add_comment'|trans }}{% else %}{{ 'be_the_first_to_comment'|trans }}{% endif %} :
             <form action="{{ path('icap_blog_post_view', {'blogId': _resource.id, 'postSlug': post.slug}) }}" method="post" {{ form_enctype(form) }}>
