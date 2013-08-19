@@ -972,6 +972,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
+
                 "reference": "cc83ac6ce8d11f0c6c421cd4afd3503c8a69c35f"
             },
             "dist": {
@@ -3135,6 +3136,7 @@
     ],
     "minimum-stability": "dev",
     "stability-flags": {
+        "doctrine/orm": 20,
         "jms/security-extra-bundle": 20,
         "jms/di-extra-bundle": 20,
         "stof/doctrine-extensions-bundle": 20,

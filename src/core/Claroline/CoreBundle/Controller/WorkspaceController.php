@@ -355,7 +355,7 @@ class WorkspaceController extends Controller
             } else {
                 $rootId = $_breadcrumbs[1];
             }
-            $workspace = $this->resourceManager->getResource($rootId)->getWorkspace();
+            $workspace = $this->resourceManager->getNode($rootId)->getWorkspace();
         }
 
         if (!$this->security->isGranted('OPEN', $workspace)) {

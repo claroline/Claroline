@@ -33,7 +33,7 @@ class Revision
     protected $text;
 
     /**
-     * @ORM\Column()
+     * @ORM\Column(type="text")
      */
     protected $content;
 

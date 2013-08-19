@@ -6,7 +6,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\CoreBundle\Repository\AbstractResourceRepository;
+use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
@@ -32,7 +32,7 @@ class WorkspaceManager
     private $roleManager;
     /** @var ResourceManager */
     private $resourceManager;
-    /** @var AbstractResourceRepository */
+    /** @var ResourceNodeRepository */
     private $resourceRepo;
     /** @var ResourceRightsRepository */
     private $resourceRightsRepo;
@@ -91,7 +91,7 @@ class WorkspaceManager
         $this->resourceTypeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
         $this->orderedToolRepo = $om->getRepository('ClarolineCoreBundle:Tool\OrderedTool');
-        $this->resourceRepo = $om->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
+        $this->resourceRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
         $this->resourceRightsRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
         $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');

@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Repository;
 use Symfony\Component\Security\Core\Role\RoleInterface;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Repository\Exception\MissingSelectClauseException;
 
@@ -27,7 +28,7 @@ class ResourceQueryBuilder
     public function __construct()
     {
         $eol = PHP_EOL;
-        $this->fromClause = "FROM Claroline\CoreBundle\Entity\Resource\AbstractResource resource{$eol}";
+        $this->fromClause = "FROM Claroline\CoreBundle\Entity\Resource\ResourceNode resource{$eol}";
         $this->joinRelativesClause = "JOIN resource.creator creator{$eol}" .
             "JOIN resource.resourceType resourceType{$eol}" .
             "LEFT JOIN resource.next next{$eol}" .
@@ -112,7 +113,7 @@ class ResourceQueryBuilder
      *
      * @return ResourceQueryBuilder
      */
-    public function whereParentIs(AbstractResource $parent)
+    public function whereParentIs(ResourceNode $parent)
     {
         $this->addWhereClause('resource.parent = :ar_parentId');
         $this->parameters[':ar_parentId'] = $parent->getId();
@@ -326,8 +327,9 @@ class ResourceQueryBuilder
     public function whereIsShortcut()
     {
         $eol = PHP_EOL;
-        $this->joinRelativesClause .= 'JOIN resource.resource target' . PHP_EOL;
-        $this->fromClause = "FROM 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut' resource{$eol}";
+        $this->joinRelativesClause = "JOIN rs.resourceNode resource{$eol}" . $this->joinRelativesClause;
+        $this->joinRelativesClause = "JOIN rs.target target{$eol}" . $this->joinRelativesClause;
+        $this->fromClause = "FROM Claroline\CoreBundle\Entity\Resource\ResourceShortcut rs{$eol}";
         $this->selectClause .= ", target.id as target_id{$eol}";
         $this->selectClause .= ", target.path as target_path{$eol}";
 

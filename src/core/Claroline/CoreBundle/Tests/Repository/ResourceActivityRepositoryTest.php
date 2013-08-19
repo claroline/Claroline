@@ -33,6 +33,6 @@ class ResourceActivityRepositoryTest extends RepositoryTestCase
     {
         $activityResources = self::$repo->findResourceActivities(self::get('activity_1'));
         $this->assertEquals(1, count($activityResources));
-        $this->assertEquals('file_1', $activityResources[0]->getResource()->getName());
+        $this->assertEquals('file_1', $activityResources[0]->getResourceNode()->getName());
     }
 }
