@@ -17,7 +17,7 @@ class AgendaType extends AbstractType
                 'start',
                 'date',
                 array(
-                    'format' => 'd-M-yyyy ',
+                    'format' => 'd-M-yyyy H:mm:ss',
                     'widget' => 'single_text',
                     )
             )
@@ -25,7 +25,7 @@ class AgendaType extends AbstractType
                 'end',
                 'date',
                 array(
-                    'format' => 'd-M-yyyy',
+                    'format' => 'd-M-yyyy H:mm:ss',
                     'widget' => 'single_text',
                 )
             )
