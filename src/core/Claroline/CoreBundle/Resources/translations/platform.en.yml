@@ -40,6 +40,8 @@ analytics_home: Home
 analytics_connections: Connections
 analytics_resources: Resources
 analytics_top: Top
+apply: Apply
+available_workspaces: 'Available workspaces'
 by: by
 cancel: Cancel
 choose_resource_form_type: 'Resource type'
@@ -71,6 +73,7 @@ done_on: 'done on'
 download: Download
 downloads: Downloads
 edit: Edit
+email_form_mail : 'Enter your email'
 enter_tag_name_message: 'Please enter a tag name'
 export: Export
 fast_answer: 'Fast answer'
@@ -85,6 +88,7 @@ files: Files
 filter: Filter
 find_workspaces: 'Find workspaces'
 first_name: 'First name'
+forgot_password: 'Forgot your password ?'
 form_role: Role
 from: From
 from_message: From
@@ -95,7 +99,11 @@ group_form_ownedRoles: Roles
 group_form_platformRole: Role
 group_parameter: 'Group parameter'
 groups: Groups
-groups_list: "Groups list"
+groups_list: 'Groups list'
+has_been_suscribed_with_role: 'has been suscribed with role'
+has_been_suscribed_with_role_group: 'has been suscribed with role'
+has_not_been_imported: 'has not been imported'
+has_not_been_imported_into_the_group: 'has not been imported into the group'
 history: History
 home: Home
 id: Id
@@ -103,6 +111,8 @@ informations: Informations
 instructions: Instructions
 import: Import
 import_user_file_file: Import from a file
+import_users: 'Import users'
+invalid_csv_file: 'Invalid CSV file'
 last_30_days_activity: Activity over the last 30 days
 last_name: 'Last name'
 link: Link
@@ -249,12 +259,16 @@ copiable: 'Copiable'
 editable: 'Editable'
 yes: 'yes'
 no: 'no'
+link_outdated : 'link is no more valid'
 login: Login
 login_failure: 'Login has failed. Check your username and password are correct.'
 logout: Logout
 mail: Mail
 mail_form_content: Content
 mail_form_object: Object
+mail_message : 'You received this message because you asked for a new password. Please click on the link below to reset it. If you did not ask to reset your password please ignore this message.'
+mail_click: 'Click on this link to reset your password'
+mail_sent : 'A email has been sent to your address , check your inbox mail and your spam box'
 manage_rights: 'Manage rights'
 manager: Manager
 media_most_viewed: Most viewed media
@@ -282,6 +296,7 @@ my_workspace: 'My workspace'
 my_workspaces: 'My workspaces'
 name: Name
 new_message_alert: 'You have %count% new message(s)'
+no_email: 'No email found, check the spelling'
 no_search_results: 'Your search hasn''t returned any result.'
 none: None
 note: Note
@@ -300,6 +315,9 @@ path: Path
 permissions: Permissions
 personal_workspace: 'Personal workspace'
 phone: Phone
+password_email_message: 'You asked to reset your password click on this link to reset it'
+password_missmatch : 'passwords missmatched'
+password_ok : 'Your password has been changed, you can login now'
 platform_parameters: 'Platform parameters'
 platform_parameters_form_localLanguage: Langue
 platform_parameters_form_selfRegistration: Auto-inscription
@@ -321,14 +339,21 @@ profile_form_platformRoles: Roles
 profile_form_username: Username
 properties: Properties
 public: Public
+public_workspaces: 'Public workspaces'
 recursive_dir_action: 'Apply to the contents of the directory and its subdirectories'
 register: Register
+register_to_a_workspace: 'Register to a workspace'
 registered_groups: 'Registered groups'
 registered_users: 'Registered users'
+registration_to_workspaces: 'Registration to workspaces'
 remove_group_s_confirm_message: 'group(s) removed'
 remove_user_s_confirm_message: 'user(s) removed'
+remove_messages_confirm_message: 'message(s) removed'
 rename: Rename
 reset: Reset
+reset_pwd: 'Reset Your Password'
+reset_pwd_form_plainPassword_first: "New password"
+reset_pwd_form_plainPassword_second : "Repeat the password"
 resource: Resource
 resource_action_denied_message: 'The action %action% couldn''t be done on ''%path%'': acces denied.'
 resource_creation_denied: 'You don''t have the permission to create in the directory ''%path'': access denied'
@@ -358,17 +383,27 @@ resource_right_form_canView: See
 resource_right_form_canExport: Export
 resource_right_form_isRecursive: Apply changes to current and sub directories
 restore : Restore
+restore_messages_confirm_message: restored message(s)
 results: Results
+results_for_search_on: 'Result(s) for search on'
 rights: Rights
 rights_management: 'Rights Management'
 role: Role
 roles: Roles
+role_creation: Role creation
 save: Save
 save_as_template: Save as template
 search: Search
+search_group: 'Search for a group'
+search_user: 'Search for an user'
 see: See
 see_more: See more
 select all: Select all
+select_groups_for_registration_to_workspace: 'Select groups to register'
+select_roles_to_assign: 'Select roles to assign'
+select_users_for_registration_to_workspace: 'Select users to register'
+select_workspaces_for_registration: 'Select workspaces for registration'
+selected_workspaces_for_registration: 'Selected workspaces for registration'
 send_mail: 'Send a mail'
 send_message: 'Send a message'
 session_id: 'Session id'
@@ -378,6 +413,10 @@ show_as_admin: 'Show as admin'
 show_as_user: 'Show as user'
 show_as: 'Show as'
 show_profile: 'Show profile'
+subscribe_groups: 'Subscribe groups'
+subscribe_selected_groups: 'Subscribe selected groups'
+subscribe_selected_users: 'Subscribe selected users'
+subscribe_users: 'Subscribe users'
 switch: Switch
 tag: Tag
 tag_children_list: 'Tag children list'
@@ -414,6 +453,7 @@ type_s: Type(s)
 unregister: Unregister
 unregistered_groups: 'Unregistered groups'
 unregistered_users: 'Unregistered users'
+url_invalid: 'the code is not correct, do no try to change the url'
 user: User
 user_accounts: User accounts
 user_form_administrativeCode: 'Administrative code'
@@ -434,6 +474,7 @@ users: Users
 users_connected_once: users connected at least once
 users_visits: Users' connections
 unwritable_file_exception: "The file %path% is not writable."
+unregistered: Unregistered
 validate: Validate
 view: View
 views: Views
@@ -450,16 +491,24 @@ workspace_delete: 'Delete the workspace'
 workspace_delete_confirm_message: 'Are you sure you want to delete this workspace ?'
 workspace_delete_confirm_title: 'Delete Confirm'
 workspace_edit_form_code: Code
+workspace_edit_form_displayable: Public
 workspace_edit_form_name: Name
+workspace_edit_form_selfRegistration: 'Public registration'
+workspace_edit_form_selfUnregistration: 'Public unregistration'
 workspace_form_code: Code
+workspace_form_displayable: Public
 workspace_form_name: Name
 workspace_form_template: Template
 workspace_form_type: Type
 workspace_order_tool_edit_form_name: Name
+workspace_registration_confirm_title: 'Do you really want to register to this workspace ?'
 workspace_resource: Resources
+workspace_role_type_form_translationKey: Name
+workspace_role_type_form_requireDir: Create a directory
 workspace_tag_form_name: Name
 workspace_template_form_name: Name
 workspace_tools: Tools
+workspace_unregistration_confirm_title: 'Do you really want to unregister from this workspace ?'
 workspace_welcome: Welcome
 workspaces: Workspaces
 ws_creator: 'Workspace creator'
@@ -508,3 +557,4 @@ Draw an area on the graph to zoom, double-click to cancel: 'Draw an area on the 
 Overview of recent activities of your workspaces: 'Overview of recent activities of your workspaces'
 Overview of recent activities in %workspaceName%: 'Overview of recent activities in %workspaceName%'
 Overview of all recent activities in %workspaceName% : 'Overview of all recent activities in %workspaceName%'
+select_all: Select all

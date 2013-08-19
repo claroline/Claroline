@@ -25,6 +25,7 @@ class AppKernel extends Kernel
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new JMS\TwigJsBundle\JMSTwigJsBundle(),
             new Claroline\CoreBundle\ClarolineCoreBundle(),
+            new Claroline\MigrationBundle\ClarolineMigrationBundle(),
             new Claroline\Bundle\FrontEndBundle\FrontEndBundle(),
             new Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle(),
             new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),

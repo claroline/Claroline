@@ -152,28 +152,35 @@
 
                 },
                 'click a.delete': function () {
-                    this.dispatcher.trigger('delete', {ids: _.keys(this.checkedResources.resources)});
-                    this.checkedResources.resources = {};
+                    if (!(this.$('a.delete').hasClass('disabled'))) {
+                        this.dispatcher.trigger('delete', {ids: _.keys(this.checkedResources.resources)});
+                        this.checkedResources.resources = {};
+                    }
                 },
                 'click a.download': function () {
-                    this.dispatcher.trigger('download', {ids: _.keys(this.checkedResources.resources)});
+                    if (!(this.$('a.download').hasClass('disabled'))) {
+                        this.dispatcher.trigger('download', {ids: _.keys(this.checkedResources.resources)});
+                    }
                 },
                 'click a.copy': function () {
-                    if (_.size(this.checkedResources.resources) > 0) {
+                    if (!(this.$('a.copy').hasClass('disabled')) && _.size(this.checkedResources.resources) > 0) {
                         this.setPasteBinState(true, false);
                     }
                 },
                 'click a.cut': function () {
-                    if (_.size(this.checkedResources.resources) > 0) {
+                    if (!(this.$('a.cut').hasClass('disabled')) && _.size(this.checkedResources.resources) > 0) {
                         this.setPasteBinState(true, true);
                     }
                 },
                 'click a.paste': function () {
-                    this.dispatcher.trigger('paste', {
-                        ids:  _.keys(this.checkedResources.resources),
-                        isCutMode: this.isCutMode,
-                        directoryId: this.currentDirectory.id
-                    });
+                    if (!(this.$('a.paste').hasClass('disabled'))) {
+                        this.dispatcher.trigger('paste', {
+                            ids:  _.keys(this.checkedResources.resources),
+                            isCutMode: this.isCutMode,
+                            directoryId: this.currentDirectory.id,
+                            sourceDirectoryId: this.checkedResources.directoryId
+                        });
+                    }
                 },
                 'click a.open-picker': function () {
                     this.dispatcher.trigger('picker', {action: 'open'});
@@ -287,7 +294,11 @@
                         if (this.checkedResources.resources.hasOwnProperty(event.resource.id)) {
                             delete this.checkedResources.resources[event.resource.id];
                         } else {
-                            this.checkedResources.resources[event.resource.id] = [event.resource.name, event.resource.type,event.resource.mimeType];
+                            this.checkedResources.resources[event.resource.id] = [
+                                event.resource.name,
+                                event.resource.type,
+                                event.resource.mimeType
+                            ];
                         }
 
                         this.checkedResources.directoryId = this.currentDirectory.id;
@@ -321,6 +332,15 @@
                 this.isReadyToPaste = isReadyToPaste;
                 this.isCutMode = isCutMode;
                 this.setButtonEnabledState(this.$('a.paste'), isReadyToPaste && !this.isSearchMode);
+            },
+            setInitialState: function () {
+                this.isReadyToPaste = false;
+                this.isCutMode = false;
+                this.setButtonEnabledState(this.$('a.cut'), false);
+                this.setButtonEnabledState(this.$('a.copy'), false);
+                this.setButtonEnabledState(this.$('a.paste'), false);
+                this.setButtonEnabledState(this.$('a.delete'), false);
+                this.setButtonEnabledState(this.$('a.download'), false);
             },
             render: function (directory, creatableTypes, isSearchMode, searchParameters) {
                 this.currentDirectory = directory;
@@ -514,6 +534,11 @@
                         $(this.el).append(thumbnail.$el);
                     }, this);
                 }
+            },
+            uncheckAll: function () {
+                _.each(this.$('input[type=checkbox]'), function (checkbox) {
+                    checkbox.checked = false;
+                });
             }
         }),
         Form: Backbone.View.extend({
@@ -706,7 +731,7 @@
                 this.custom(event.action, event.id);
             },
             'paste': function (event) {
-                this[event.isCutMode ? 'move' : 'copy'](event.ids, event.directoryId);
+                this[event.isCutMode ? 'move' : 'copy'](event.ids, event.directoryId, event.sourceDirectoryId);
             },
             'breadcrumb-click': function (event) {
                 if (event.isPickerMode) {
@@ -788,10 +813,10 @@
                 }
             }
         },
-        setFilterState: function(type) {
+        setFilterState: function (type) {
             $('.resource-thumbnail').show();
             if (type !== 'none') {
-                $.each($('.resource-element'), function(key, element) {
+                $.each($('.resource-element'), function (key, element) {
                     if ($(element).attr('data-type') !== type && $(element).attr('data-type') !== 'directory') {
                         $(element.parentElement).hide();
                     }
@@ -951,6 +976,7 @@
                 data: {ids: resourceIds},
                 success: function () {
                     this.views.main.subViews.resources.removeResources(resourceIds);
+                    this.views.main.subViews.actions.setInitialState();
                 }
             });
         },
@@ -966,15 +992,23 @@
                 }
             });
         },
-        move: function (resourceIds, newParentDirectoryId) {
-            $.ajax({
-                context: this,
-                url: this.parameters.appPath + '/resource/move/' + newParentDirectoryId,
-                data: {ids: resourceIds},
-                success: function (data) {
-                    this.views.main.subViews.resources.addThumbnails(data);
-                }
-            });
+        move: function (resourceIds, newParentDirectoryId, oldParentDirectoryId) {
+            if (newParentDirectoryId === oldParentDirectoryId) {
+                this.views.main.subViews.resources.uncheckAll();
+                this.views.main.subViews.actions.checkedResources.resources = {};
+                this.views.main.subViews.actions.setInitialState();
+            }
+            else {
+                $.ajax({
+                    context: this,
+                    url: this.parameters.appPath + '/resource/move/' + newParentDirectoryId,
+                    data: {ids: resourceIds},
+                    success: function (data) {
+                        this.views.main.subViews.resources.addThumbnails(data);
+                        this.views.main.subViews.actions.setInitialState();
+                    }
+                });
+            }
         },
         rename: function (formAction, formData, resourceId) {
             $.ajax({
@@ -1034,12 +1068,8 @@
         open: function (resourceType, resourceId, directoryHistory) {
             var _path = '';
             for (var i = 0; i < directoryHistory.length; i++) {
-                    if (directoryHistory[i].id !== 0) {
-                    if (i === 0) {
-                        _path += '?';
-                    } else {
-                        _path += '&';
-                    }
+                if (directoryHistory[i].id !== 0) {
+                    _path += i === 0 ? '?' : '&';
                     _path += '_breadcrumbs[]=' + directoryHistory[i].id;
                 }
             }

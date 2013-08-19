@@ -14,8 +14,10 @@ use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
+use Claroline\CoreBundle\Manager\Exception\UnknownToolException;
 use Symfony\Component\Yaml\Yaml;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -50,6 +52,8 @@ class WorkspaceManager
     private $ut;
     /** @var string */
     private $templateDir;
+    /** @var PagerFactory */
+    private $pagerFactory;
 
     /**
      * Constructor.
@@ -61,7 +65,8 @@ class WorkspaceManager
      *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "ut"              = @DI\Inject("claroline.utilities.misc"),
-     *     "templateDir"     = @DI\Inject("%claroline.param.templates_directory%")
+     *     "templateDir"     = @DI\Inject("%claroline.param.templates_directory%"),
+     *     "pagerFactory"    = @DI\Inject("claroline.pager.pager_factory")
      * })
      */
 
@@ -72,7 +77,8 @@ class WorkspaceManager
         StrictDispatcher $dispatcher,
         ObjectManager $om,
         ClaroUtilities $ut,
-        $templateDir
+        $templateDir,
+        PagerFactory $pagerFactory
     )
     {
         $this->roleManager = $roleManager;
@@ -89,16 +95,19 @@ class WorkspaceManager
         $this->resourceRightsRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
         $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
+        $this->pagerFactory = $pagerFactory;
     }
 
     public function create(Configuration $config, User $manager)
     {
+        $config->check();
         $this->om->startFlushSuite();
         $workspace = $this->om->factory('Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace');
         $workspace->setName($config->getWorkspaceName());
         $workspace->setPublic($config->isPublic());
         $workspace->setCode($config->getWorkspaceCode());
         $workspace->setGuid($this->ut->generateGuid());
+        $workspace->setDisplayable($config->isDisplayable());
         $baseRoles = $this->roleManager->initWorkspaceBaseRole($config->getRoles(), $workspace);
         $baseRoles['ROLE_ANONYMOUS'] = $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS'));
         $this->roleManager->associateRole($manager, $baseRoles["ROLE_WS_MANAGER"]);
@@ -130,6 +139,12 @@ class WorkspaceManager
 
             $confTool = isset($toolsConfig[$toolName]) ?  $toolsConfig[$toolName] : array();
 
+            $tool = $this->toolManager->getOneToolByName($toolName);
+
+            if ($tool === null) {
+                throw new UnknownToolException("The tool {$toolName} does'nt exists.");
+            }
+
             $this->toolManager->import(
                 $confTool,
                 $rolesToAdd,
@@ -137,7 +152,7 @@ class WorkspaceManager
                 $perms['name'],
                 $workspace,
                 $root,
-                $this->toolManager->findOneByName($toolName),
+                $tool,
                 $manager,
                 $position,
                 $config->getArchive()
@@ -155,7 +170,13 @@ class WorkspaceManager
     public function createWorkspace(AbstractWorkspace $workspace)
     {
         $this->om->persist($workspace);
-        $this->om->flush($workspace);
+        $this->om->flush();
+    }
+
+    public function deleteWorkspace(AbstractWorkspace $workspace)
+    {
+        $this->om->remove($workspace);
+        $this->om->flush();
     }
 
     /**
@@ -363,5 +384,27 @@ class WorkspaceManager
     public function getOneByGuid($guid)
     {
         return $this->workspaceRepo->findOneByGuid($guid);
+    }
+
+    public function getDisplayableWorkspaces()
+    {
+        return $this->workspaceRepo->findDisplayableWorkspaces();
+    }
+
+    public function getWorkspacesWithSelfRegistration()
+    {
+        return $this->workspaceRepo->findWorkspacesWithSelfRegistration();
+    }
+
+    public function getDisplayableWorkspacesBySearch($search)
+    {
+        return $this->workspaceRepo->findDisplayableWorkspacesBySearch($search);
+    }
+
+    public function getDisplayableWorkspacesBySearchPager($search, $page)
+    {
+        $workspaces = $this->workspaceRepo->findDisplayableWorkspacesBySearch($search);
+
+        return $this->pagerFactory->createPagerFromArray($workspaces, $page);
     }
 }

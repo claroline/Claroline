@@ -1,3 +1,3 @@
 {% twig_js name="removeUserConfirm" %}
 
-{{ nbUsers }} : {{ 'remove_user_s_confirm_message'|trans({}, 'platform') }}
+{{ nbItems }} : {{ 'remove_user_s_confirm_message'|trans({}, 'platform') }}

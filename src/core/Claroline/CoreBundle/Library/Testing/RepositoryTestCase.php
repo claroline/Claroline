@@ -122,6 +122,7 @@ abstract class RepositoryTestCase extends WebTestCase
         $user->setLastName($name . 'LastName');
         $user->setUsername($name . 'Username');
         $user->setPlainPassword($name . 'Password');
+        $user->setMail($name . '@claroline.net');
         $user->setCreationDate(self::$time);
 
         foreach ($roles as $role) {
@@ -171,6 +172,17 @@ abstract class RepositoryTestCase extends WebTestCase
         $workspace = new SimpleWorkspace();
         $workspace->setName($name);
         $workspace->setCode($name . 'Code');
+        $workspace->setGuid(self::$client->getContainer()->get('claroline.utilities.misc')->generateGuid());
+        self::create($name, $workspace);
+    }
+
+    protected static function createDisplayableWorkspace($name, $selfRegistration)
+    {
+        $workspace = new SimpleWorkspace();
+        $workspace->setName($name);
+        $workspace->setCode($name . 'Code');
+        $workspace->setDisplayable(true);
+        $workspace->setSelfRegistration($selfRegistration);
         $workspace->setGuid(self::$client->getContainer()->get('claroline.utilities.misc')->generateGuid());
         self::create($name, $workspace);
     }

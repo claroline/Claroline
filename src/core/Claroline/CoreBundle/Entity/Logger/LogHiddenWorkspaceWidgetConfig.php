@@ -12,21 +12,20 @@ class LogHiddenWorkspaceWidgetConfig
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer", name="workspace_id", nullable=false)
+     * @ORM\Column(name="workspace_id", type="integer")
      */
     protected $workspaceId;
 
     /**
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;
 
     /**
      * Set workspaceId
      *
-     * @param  integer                        $workspaceId
+     * @param integer  $workspaceId
      * @return LogHiddenWorkspaceWidgetConfig
      */
     public function setWorkspaceId($workspaceId)

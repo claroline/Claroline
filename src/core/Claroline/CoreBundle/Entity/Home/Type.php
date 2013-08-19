@@ -12,16 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Type
 {
-    public function __construct()
-    {
-        $this->maxContentPage = 100;
-    }
-
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
+     * @ORM\Column(name="id", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
@@ -29,7 +24,7 @@ class Type
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column()
      */
     private $name;
 
@@ -39,6 +34,18 @@ class Type
      * @ORM\Column(name="max_content_page", type="integer")
      */
     private $maxContentPage;
+
+    /**
+     * Constructor.
+     */
+    public function __construct($name = null)
+    {
+        if ($name) {
+            $this->setName($name);
+        }
+
+        $this->maxContentPage = 100;
+    }
 
     /**
      * Get id

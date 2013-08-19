@@ -16,25 +16,25 @@ class SimpleWorkspace extends AbstractWorkspace
 {
     /**
      * @Gedmo\TreeLeft
-     * @ORM\Column(name="lft", type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $lft;
 
     /**
      * @Gedmo\TreeLevel
-     * @ORM\Column(name="lvl", type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $lvl;
 
     /**
      * @Gedmo\TreeRight
-     * @ORM\Column(name="rgt", type="integer")
+     * @ORM\Column(type="integer")
      */
     protected $rgt;
 
     /**
      * @Gedmo\TreeRoot
-     * @ORM\Column(name="root", type="integer", nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $root;
 
@@ -44,11 +44,7 @@ class SimpleWorkspace extends AbstractWorkspace
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace",
      *     inversedBy="children"
      * )
-     * @ORM\JoinColumn(
-     *     name="parent_id",
-     *     referencedColumnName="id",
-     *     onDelete="SET NULL"
-     * )
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $parent;
 

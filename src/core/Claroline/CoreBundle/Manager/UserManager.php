@@ -2,21 +2,21 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Symfony\Component\Translation\Translator;
-use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Claroline\CoreBundle\Entity\User;
+use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
-use Doctrine\Common\Collections\ArrayCollection;
-use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service("claroline.manager.user_manager")
@@ -44,7 +44,7 @@ class UserManager
      *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
      *     "ed"                     = @DI\Inject("claroline.event.event_dispatcher"),
      *     "personalWsTemplateFile" = @DI\Inject("%claroline.param.templates_directory%"),
-     *     "translator"                  = @DI\Inject("translator"),
+     *     "translator"             = @DI\Inject("translator"),
      *     "ch"                     = @DI\Inject("claroline.config.platform_config_handler"),
      *     "pagerFactory"           = @DI\Inject("claroline.pager.pager_factory"),
      *     "om"                     = @DI\Inject("claroline.persistence.object_manager")
@@ -123,8 +123,9 @@ class UserManager
         $this->om->endFlushSuite();
     }
 
-    public function importUsers($users)
+    public function importUsers(array $users)
     {
+        $nonImportedUsers = array();
         $roleName = PlatformRoles::USER;
         $this->om->startFlushSuite();
 
@@ -134,26 +135,39 @@ class UserManager
             $lastName = $user[1];
             $username = $user[2];
             $pwd = $user[3];
-            $code = $user[4];
-            $email = isset($user[5])? $user[5] : null;
+            $email = $user[4];
+            $code = isset($user[5])? $user[5] : null;
+            $phone = isset($user[6])? $user[6] : null;
+            $existingUser = $this->userRepo->findOneByUsername($username);
 
-            $newUser = new User();
-            $newUser->setFirstName($firstName);
-            $newUser->setLastName($lastName);
-            $newUser->setUsername($username);
-            $newUser->setPlainPassword($pwd);
-            $newUser->setAdministrativeCode($code);
-            $newUser->setMail($email);
+            if (is_null($existingUser)) {
+                $newUser = $this->om->factory('Claroline\CoreBundle\Entity\User');
+                $newUser->setFirstName($firstName);
+                $newUser->setLastName($lastName);
+                $newUser->setUsername($username);
+                $newUser->setPlainPassword($pwd);
+                $newUser->setMail($email);
+                $newUser->setAdministrativeCode($code);
+                $newUser->setPhone($phone);
 
-            $this->setPersonalWorkspace($newUser);
-            $this->toolManager->addRequiredToolsToUser($newUser);
-            $this->roleManager->setRoleToRoleSubject($newUser, $roleName);
+                $this->setPersonalWorkspace($newUser);
+                $this->toolManager->addRequiredToolsToUser($newUser);
+                $this->roleManager->setRoleToRoleSubject($newUser, $roleName);
 
-            $this->om->persist($user);
-            $this->ed->dispatch('log', 'Log\LogUserCreateEvent', $newUser);
+                $this->om->persist($newUser);
+                $this->ed->dispatch('log', 'Log\LogUserCreate', array($newUser));
+            } else {
+                $nonImportedUsers[] = array(
+                    'username' => $username,
+                    'firstName' => $firstName,
+                    'lastName' => $lastName
+                );
+            }
         }
 
         $this->om->endFlushSuite();
+
+        return $nonImportedUsers;
     }
 
     public function setPersonalWorkspace(User $user)
@@ -282,7 +296,7 @@ class UserManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
-    public function getGroupOutsidersByName(Group $group, $search, $getQuery = false)
+    public function getGroupOutsidersByName(Group $group, $page, $search)
     {
         $query = $this->userRepo->findGroupOutsidersByName($group, $search, false);
 
@@ -309,12 +323,12 @@ class UserManager
         return $this->om->findByIds('Claroline\CoreBundle\Entity\User', $ids);
     }
 
-    public function getUsersEnrolledInMostWorkspaces ($max)
+    public function getUsersEnrolledInMostWorkspaces($max)
     {
         return $this->userRepo->findUsersEnrolledInMostWorkspaces($max);
     }
 
-    public function getUsersOwnersOfMostWorkspaces ($max)
+    public function getUsersOwnersOfMostWorkspaces($max)
     {
         return $this->userRepo->findUsersOwnersOfMostWorkspaces($max);
     }
@@ -322,5 +336,43 @@ class UserManager
     public function getUserById($userId)
     {
         return $this->userRepo->find($userId);
+    }
+
+    public function getUsersByRoles(array $roles, $page = 1)
+    {
+        $res = $this->userRepo->findByRoles($roles, true);
+
+        return $this->pagerFactory->createPager($res, $page);
+    }
+
+    public function getOutsidersByWorkspaceRoles(array $roles, AbstractWorkspace $workspace, $page = 1)
+    {
+        $res = $this->userRepo->findOutsidersByWorkspaceRoles($roles, $workspace, true);
+
+        return $this->pagerFactory->createPager($res, $page);
+    }
+
+    public function getUsersByRolesAndName(array $roles, $name, $page = 1)
+    {
+        $res = $this->userRepo->findByRolesAndName($roles, $name, true);
+
+        return $this->pagerFactory->createPager($res, $page);
+    }
+
+    public function getOutsidersByWorkspaceRolesAndName(array $roles, $name, AbstractWorkspace $workspace, $page = 1)
+    {
+        $res = $this->userRepo->findOutsidersByWorkspaceRolesAndName($roles, $name, $workspace, true);
+
+        return ($page !== 0) ? $this->pagerFactory->createPager($res, $page): $res;
+    }
+
+    public function getUserByEmail($email)
+    {
+        return $this->userRepo->findOneByMail($email);
+    }
+
+    public function getResetPasswordHash($resetPassword)
+    {
+        return $this->userRepo->findOneByResetPasswordHash($resetPassword);
     }
 }
