@@ -20,7 +20,7 @@ abstract class AbstractResource
      */
     protected $resourceNode;
 
-    protected $name;
+    protected $name = '';
     protected $mimeType;
 
     public function setResourceNode(ResourceNode $resourceNode)
@@ -39,6 +39,7 @@ abstract class AbstractResource
     }
 
     //for forms (otherwis name won't exist)
+    //@todo this should be removed
     public function getName()
     {
         return $this->name;

@@ -99,7 +99,7 @@ class ActivityController extends Controller
         $em->remove($resourceActivity);
         $em->flush();
 
-        return new Response('success', 200);
+        return new Response('success', 204);
     }
 
     /**

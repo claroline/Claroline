@@ -153,34 +153,34 @@
                 },
                 'click a.delete': function () {
                     if (!(this.$('a.delete').hasClass('disabled'))) {
-                        this.dispatcher.trigger('delete', {ids: _.keys(this.checkedResources.nodes)});
-                        this.checkedResources.nodes = {};
+                        this.dispatcher.trigger('delete', {ids: _.keys(this.checkedNodes.nodes)});
+                        this.checkedNodes.nodes = {};
                     }
                 },
                 'click a.download': function () {
                     if (!(this.$('a.download').hasClass('disabled'))) {
-                        this.dispatcher.trigger('download', {ids: _.keys(this.checkedResources.nodes)});
+                        this.dispatcher.trigger('download', {ids: _.keys(this.checkedNodes.nodes)});
                     }
                 },
                 'click a.copy': function () {
 
-                    if (!(this.$('a.copy').hasClass('disabled')) && _.size(this.checkedResources.nodes) > 0) {
+                    if (!(this.$('a.copy').hasClass('disabled')) && _.size(this.checkedNodes.nodes) > 0) {
                         this.setPasteBinState(true, false);
                     }
                 },
                 'click a.cut': function () {
 
-                    if (!(this.$('a.cut').hasClass('disabled')) && _.size(this.checkedResources.nodes) > 0) {
+                    if (!(this.$('a.cut').hasClass('disabled')) && _.size(this.checkedNodes.nodes) > 0) {
                         this.setPasteBinState(true, true);
                     }
                 },
                 'click a.paste': function () {
                     if (!(this.$('a.paste').hasClass('disabled'))) {
                         this.dispatcher.trigger('paste', {
-                            ids:  _.keys(this.checkedResources.nodes),
+                            ids:  _.keys(this.checkedNodes.nodes),
                             isCutMode: this.isCutMode,
                             directoryId: this.currentDirectory.id,
-                            sourceDirectoryId: this.checkedResources.directoryId
+                            sourceDirectoryId: this.checkedNodes.directoryId
                         });
                     }
                 },
@@ -206,13 +206,13 @@
                     }
 
                     if (this.parameters.isPickerOnly) {
-                        this.parameters.pickerCallback(this.checkedResources.nodes, this.currentDirectory.id);
+                        this.parameters.pickerCallback(this.checkedNodes.nodes, this.currentDirectory.id);
                     } else {
                         if (this.callback) {
-                            this.callback(_.keys(this.checkedResources.nodes), this.targetDirectoryId);
+                            this.callback(_.keys(this.checkedNodes.nodes), this.targetDirectoryId);
                         } else {
                             this.dispatcher.trigger('paste', {
-                                ids: _.keys(this.checkedResources.nodes),
+                                ids: _.keys(this.checkedNodes.nodes),
                                 directoryId: this.targetDirectoryId,
                                 isCutMode: false
                             });
@@ -266,7 +266,7 @@
                 // destination directory for picker "add" action
                 this.targetDirectoryId = this.currentDirectory.id;
                 // selection of nodes checked by the user
-                this.checkedResources = {
+                this.checkedNodes = {
                     nodes: {},
                     directoryId: parameters.directoryId,
                     isSearchMode: false
@@ -283,28 +283,28 @@
                         // cancel any previous selection made in another directory
                         // or in a previous search results list
                         // or in this directory if we're in picker 'mono-select' mode
-                        if (this.checkedResources.directoryId !== this.currentDirectory.id ||
-                            (this.checkedResources.isSearchMode && !this.isSearchMode) ||
+                        if (this.checkedNodes.directoryId !== this.currentDirectory.id ||
+                            (this.checkedNodes.isSearchMode && !this.isSearchMode) ||
                             (this.parameters.isPickerMode &&
                                 !this.parameters.isPickerMultiSelectAllowed &&
                                 event.isChecked)) {
-                            this.checkedResources.directoryId = this.currentDirectory.id;
-                            this.checkedResources.nodes = {};
+                            this.checkedNodes.directoryId = this.currentDirectory.id;
+                            this.checkedNodes.nodes = {};
                             this.setPasteBinState(false, false);
                         }
                         // add the node to the selection or remove it if already present
-                        if (this.checkedResources.nodes.hasOwnProperty(event.node.id)) {
-                            delete this.checkedResources.nodes[event.node.id];
+                        if (this.checkedNodes.nodes.hasOwnProperty(event.node.id)) {
+                            delete this.checkedNodes.nodes[event.node.id];
                         } else {
-                            this.checkedResources.resources[event.node.id] = [
+                            this.checkedNodes.nodes[event.node.id] = [
                                 event.node.name,
                                 event.node.type,
                                 event.node.mimeType
                             ];
                         }
 
-                        this.checkedResources.directoryId = this.currentDirectory.id;
-                        this.checkedResources.isSearchMode = this.isSearchMode;
+                        this.checkedNodes.directoryId = this.currentDirectory.id;
+                        this.checkedNodes.isSearchMode = this.isSearchMode;
                         this.setActionsEnabledState(event.isPickerMode);
                     }
                 }, this);
@@ -313,7 +313,7 @@
                 return isEnabled ? jqButton.removeClass('disabled') : jqButton.addClass('disabled');
             },
             setActionsEnabledState: function (isPickerMode) {
-                var isSelectionNotEmpty = _.size(this.checkedResources.nodes) > 0;
+                var isSelectionNotEmpty = _.size(this.checkedNodes.nodes) > 0;
                 // enable picker "add" button on non-root directories if selection is not empty
                 if (isPickerMode && (this.currentDirectory.id !== '0' || this.isSearchMode)) {
                     this.setButtonEnabledState(this.$('a.add'), isSelectionNotEmpty);
@@ -348,8 +348,8 @@
                 this.currentDirectory = directory;
 
                 if (isSearchMode && !this.isSearchMode) {
-                    this.checkedResources.nodes = {};
-                    this.checkedResources.isSearchMode = true;
+                    this.checkedNodes.nodes = {};
+                    this.checkedNodes.isSearchMode = true;
                 }
 
                 this.isSearchMode = isSearchMode;
@@ -997,7 +997,7 @@
         move: function (resourceIds, newParentDirectoryId, oldParentDirectoryId) {
             if (newParentDirectoryId === oldParentDirectoryId) {
                 this.views.main.subViews.nodes.uncheckAll();
-                this.views.main.subViews.actions.checkedResources.nodes = {};
+                this.views.main.subViews.actions.checkedNodes.nodes = {};
                 this.views.main.subViews.actions.setInitialState();
             }
             else {
