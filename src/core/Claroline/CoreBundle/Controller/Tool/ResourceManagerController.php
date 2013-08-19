@@ -34,16 +34,16 @@ class ResourceManagerController extends Controller
             throw new AccessDeniedException();
         }
 
-        $resource = $em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
+        $node = $em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
         $config = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
-            ->findOneBy(array('resource' => $resource, 'role' => $role));
+            ->findOneBy(array('resourceNode' => $node, 'role' => $role));
         $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
 
         return array(
             'workspace' => $workspace,
             'configs' => array($config),
             'resourceTypes' => $resourceTypes,
-            'resourceId' => $resource->getId(),
+            'nodeId' => $node->getId(),
             'roleId' => $role->getId(),
             'tool' => $this->getResourceManagerTool()
         );

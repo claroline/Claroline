@@ -170,7 +170,7 @@ class ResourceRightsController
         return array(
             'configs' => array($this->rightsManager->getOneByRoleAndResource($role, $node)),
             'resourceTypes' => $this->rightsManager->getResourceTypes(),
-            'resourceId' => $node->getId(),
+            'nodeId' => $node->getId(),
             'roleId' => $role->getId()
         );
     }

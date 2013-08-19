@@ -16,6 +16,7 @@ abstract class AbstractResource
 
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $resourceNode;
 
