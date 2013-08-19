@@ -33,11 +33,11 @@ class LogRoleSubscribeEvent extends LogGenericEvent
             $action = self::ACTION_USER;
             $receiver = $subject;
         } else {
-          $details['receiverGroup'] = array(
+            $details['receiverGroup'] = array(
                 'name' => $subject->getName()
             );
-           $action = self::ACTION_GROUP;
-           $receiverGroup = $subject;
+            $action = self::ACTION_GROUP;
+            $receiverGroup = $subject;
         }
 
         parent::__construct(

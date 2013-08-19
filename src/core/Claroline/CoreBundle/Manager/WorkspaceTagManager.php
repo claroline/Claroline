@@ -400,10 +400,10 @@ class WorkspaceTagManager
 
         try {
             $relTagWorkspace = $this->getTagRelationsByAdminAndWorkspaces($workspaces);
-        }
-        catch (\InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException $e) {
             $relTagWorkspace = array();
         }
+        
         $tagWorkspaces = array();
 
         // create an array: tagId => [associated_workspace_relation]

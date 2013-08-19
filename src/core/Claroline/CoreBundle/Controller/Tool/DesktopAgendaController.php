@@ -7,14 +7,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
- * Controller of the calendar
+ * Controller of the Agenda
  */
-class DesktopCalendarController extends Controller
+class DesktopAgendaController extends Controller
 {
     /**
      * @Route(
      *     "/show/",
-     *     name="claro_desktop_calendar_show"
+     *     name="claro_desktop_agenda_show"
      * )
      */
     public function desktopShowAction()

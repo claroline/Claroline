@@ -20,7 +20,6 @@
     $('.chk-tool-visible').on('change', function (e) {
         var toolId = $(e.target.parentElement).attr('data-tool-id');
         var roleId = $(e.target.parentElement).attr('data-role-id');
-        var rowIndex = e.target.parentElement.parentElement.rowIndex;
         var isCurrentElementChecked = e.currentTarget.checked;
         var route = '';
         if (isCurrentElementChecked) {

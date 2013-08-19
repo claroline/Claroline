@@ -1,5 +1,7 @@
 (function () {
-    $('.role-delete-btn').on('click', function(event){
+    'use strict';
+
+    $('.role-delete-btn').on('click', function (event) {
         console.debug(event);
         event.preventDefault();
 
@@ -7,7 +9,7 @@
             $.ajax({
                 url: $(event.target).attr('href'),
                 type: 'GET',
-                success: function (response) {
+                success: function () {
                     $(event.target).parent().parent().remove();
                 }
             });

@@ -78,7 +78,6 @@ class ResourceManagerTest extends MockeryTestCase
         $this->om->shouldReceive('persist')->once()->with($resource);
         $this->om->shouldReceive('persist')->once()->with($node);
         $this->eventDispatcher->shouldReceive('dispatch')->once()->with('log', 'Log\LogResourceCreate', array($node));
-
         $this->om->shouldReceive('endFlushSuite')->once();
 
         $this->assertEquals($resource, $manager->create($resource, $resourceType, $user, $workspace, $parent));
@@ -91,9 +90,10 @@ class ResourceManagerTest extends MockeryTestCase
              ->with('\Claroline\CoreBundle\Entity\Resource\Directory')->andReturn($resource);
          $resource->shouldReceive('setName')->once()->with('name');
 
-         $this->assertEquals($resource, $this->getManager()
-             ->createResource('\Claroline\CoreBundle\Entity\Resource\Directory', 'name'));
-
+         $this->assertEquals(
+             $resource,
+             $this->getManager()->createResource('\Claroline\CoreBundle\Entity\Resource\Directory', 'name')
+         );
     }
 
     /**
@@ -365,7 +365,8 @@ class ResourceManagerTest extends MockeryTestCase
         $lastChild = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $resource = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $parent = new \Claroline\CoreBundle\Entity\Resource\ResourceNode();
-        $this->resourceNodeRepo->shouldReceive('findOneBy')->once()->with(array('parent' => $parent, 'next' => null))->andReturn($lastChild);
+        $this->resourceNodeRepo->shouldReceive('findOneBy')->once()
+            ->with(array('parent' => $parent, 'next' => null))->andReturn($lastChild);
         $resource->shouldReceive('setPrevious')->once()->with($lastChild);
         $resource->shouldReceive('setNext')->once()->with(null);
         $lastChild->shouldReceive('setNext')->once()->with($resource);

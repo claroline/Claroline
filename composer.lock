@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "0dc9e2e0acac48cab4bbec739af46433",
+    "hash": "fdad08c795ace3398a1be1e3ace59165",
     "packages": [
         {
             "name": "besimple/sso-auth-bundle",
@@ -325,7 +325,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -373,7 +373,7 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan H. Wage",
+                    "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/"
                 },
@@ -393,7 +393,7 @@
                 {
                     "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -412,12 +412,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/common.git",
-                "reference": "9c6b8615a988117dec83bdbb0fad80afef23eab8"
+                "reference": "f28a39065d455b6df1c989ea6590e971a1f0256d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/common/zipball/9c6b8615a988117dec83bdbb0fad80afef23eab8",
-                "reference": "9c6b8615a988117dec83bdbb0fad80afef23eab8",
+                "url": "https://api.github.com/repos/doctrine/common/zipball/f28a39065d455b6df1c989ea6590e971a1f0256d",
+                "reference": "f28a39065d455b6df1c989ea6590e971a1f0256d",
                 "shasum": ""
             },
             "require": {
@@ -478,7 +478,7 @@
                 "persistence",
                 "spl"
             ],
-            "time": "2013-07-30 05:35:10"
+            "time": "2013-08-17 18:48:00"
         },
         {
             "name": "doctrine/data-fixtures",
@@ -972,12 +972,13 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "7f1c1d2b4acca7596d82ece885fd491537cdf230"
+
+                "reference": "cc83ac6ce8d11f0c6c421cd4afd3503c8a69c35f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/7f1c1d2b4acca7596d82ece885fd491537cdf230",
-                "reference": "7f1c1d2b4acca7596d82ece885fd491537cdf230",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/cc83ac6ce8d11f0c6c421cd4afd3503c8a69c35f",
+                "reference": "cc83ac6ce8d11f0c6c421cd4afd3503c8a69c35f",
                 "shasum": ""
             },
             "require": {
@@ -1015,7 +1016,7 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan Wage",
+                    "name": "Jonathan H. Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/"
                 },
@@ -1039,7 +1040,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2013-08-13 05:07:34"
+            "time": "2013-08-19 04:33:45"
         },
         {
             "name": "fortawesome/fontawesome",
@@ -1118,12 +1119,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/l3pp4rd/DoctrineExtensions.git",
-                "reference": "fb0aeab1341c7e29cc76e9f3865b8c7fa7df82cf"
+                "reference": "v2.3.7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/l3pp4rd/DoctrineExtensions/zipball/fb0aeab1341c7e29cc76e9f3865b8c7fa7df82cf",
-                "reference": "fb0aeab1341c7e29cc76e9f3865b8c7fa7df82cf",
+                "url": "https://api.github.com/repos/l3pp4rd/DoctrineExtensions/zipball/v2.3.7",
+                "reference": "v2.3.7",
                 "shasum": ""
             },
             "require": {
@@ -1190,50 +1191,7 @@
                 "tree",
                 "uploadable"
             ],
-            "time": "2013-08-07 11:28:20"
-        },
-        {
-            "name": "icap-lyon1/simple-tag-bundle",
-            "version": "dev-master",
-            "target-dir": "ICAPLyon1/Bundle/SimpleTagBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/iCAPLyon1/SimpleTagBundle.git",
-                "reference": "4ce5e2ca761c573c5246fd1528dd3e8cc86ca91f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/SimpleTagBundle/zipball/4ce5e2ca761c573c5246fd1528dd3e8cc86ca91f",
-                "reference": "4ce5e2ca761c573c5246fd1528dd3e8cc86ca91f",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/doctrine-bundle": "*",
-                "php": ">=5.3.2",
-                "symfony/framework-bundle": "~2.1",
-                "twig/twig": "*"
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-0": {
-                    "ICAPLyon1\\Bundle\\SimpleTagBundle": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Panagiotis Tsavdaris",
-                    "email": "ptsavdar@gmail.com"
-                }
-            ],
-            "description": "Symfony TagBundle that easily adds tags to any entity",
-            "keywords": [
-                "tag"
-            ],
-            "time": "2013-06-19 12:12:01"
+            "time": "2013-08-18 07:18:44"
         },
         {
             "name": "idci/exporter-bundle",
@@ -1242,12 +1200,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/IDCI-Consulting/ExporterBundle.git",
-                "reference": "162c8c7c0af0eb9bf254499bd9c8b68bd8da2e69"
+                "reference": "f905f202c24d04c89f8d532dc17ab53266a013d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/IDCI-Consulting/ExporterBundle/zipball/162c8c7c0af0eb9bf254499bd9c8b68bd8da2e69",
-                "reference": "162c8c7c0af0eb9bf254499bd9c8b68bd8da2e69",
+                "url": "https://api.github.com/repos/IDCI-Consulting/ExporterBundle/zipball/f905f202c24d04c89f8d532dc17ab53266a013d2",
+                "reference": "f905f202c24d04c89f8d532dc17ab53266a013d2",
                 "shasum": ""
             },
             "require": {
@@ -1282,7 +1240,7 @@
                 "twig",
                 "xml"
             ],
-            "time": "2013-07-24 13:42:58"
+            "time": "2013-08-18 17:09:32"
         },
         {
             "name": "incenteev/composer-parameter-handler",
@@ -2026,12 +1984,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/whiteoctober/Pagerfanta.git",
-                "reference": "1a3cb8addb92df6396e59a2c44c3b7f216b4218a"
+                "reference": "deb6401540518b11f5547b4f962e9e5b6e762341"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/1a3cb8addb92df6396e59a2c44c3b7f216b4218a",
-                "reference": "1a3cb8addb92df6396e59a2c44c3b7f216b4218a",
+                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/deb6401540518b11f5547b4f962e9e5b6e762341",
+                "reference": "deb6401540518b11f5547b4f962e9e5b6e762341",
                 "shasum": ""
             },
             "require": {
@@ -2041,7 +1999,7 @@
                 "doctrine/mongodb-odm": "*",
                 "doctrine/orm": "2.*",
                 "mandango/mandango": "*",
-                "propel/propel1": ">=1.6,<2.0",
+                "propel/propel1": "~1.6",
                 "solarium/solarium": "dev-develop"
             },
             "suggest": {
@@ -2080,7 +2038,7 @@
                 "paginator",
                 "paging"
             ],
-            "time": "2013-06-13 22:25:28"
+            "time": "2013-08-14 07:27:55"
         },
         {
             "name": "phpoption/phpoption",
@@ -2269,12 +2227,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/SensioGeneratorBundle.git",
-                "reference": "a8c497fb2d59d347fb6c22173827ae70d91d37fa"
+                "reference": "8daadf79d5f305fbcf4261c052968415f4e69a00"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/SensioGeneratorBundle/zipball/a8c497fb2d59d347fb6c22173827ae70d91d37fa",
-                "reference": "a8c497fb2d59d347fb6c22173827ae70d91d37fa",
+                "url": "https://api.github.com/repos/sensiolabs/SensioGeneratorBundle/zipball/8daadf79d5f305fbcf4261c052968415f4e69a00",
+                "reference": "8daadf79d5f305fbcf4261c052968415f4e69a00",
                 "shasum": ""
             },
             "require": {
@@ -2308,7 +2266,7 @@
                 }
             ],
             "description": "This bundle generates code for you",
-            "time": "2013-08-10 06:57:32"
+            "time": "2013-08-13 20:01:59"
         },
         {
             "name": "stfalcon/tinymce-bundle",
@@ -2708,12 +2666,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "615bd0ba7d4ec48b5b73fb06db3a6cced5a2f2f6"
+                "reference": "49eb608b724f4534bc6ea3e84df8f9c3450df490"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/615bd0ba7d4ec48b5b73fb06db3a6cced5a2f2f6",
-                "reference": "615bd0ba7d4ec48b5b73fb06db3a6cced5a2f2f6",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/49eb608b724f4534bc6ea3e84df8f9c3450df490",
+                "reference": "49eb608b724f4534bc6ea3e84df8f9c3450df490",
                 "shasum": ""
             },
             "require": {
@@ -2808,7 +2766,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2013-08-11 17:29:22"
+            "time": "2013-08-17 16:34:49"
         },
         {
             "name": "twbs/bootstrap",
@@ -3124,12 +3082,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/padraic/mockery.git",
-                "reference": "f0e835aebf28d7323efefffb31b9a6df27427f29"
+                "reference": "9d2460275665f4506d359f4e2037705d07833173"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/f0e835aebf28d7323efefffb31b9a6df27427f29",
-                "reference": "f0e835aebf28d7323efefffb31b9a6df27427f29",
+                "url": "https://api.github.com/repos/padraic/mockery/zipball/9d2460275665f4506d359f4e2037705d07833173",
+                "reference": "9d2460275665f4506d359f4e2037705d07833173",
                 "shasum": ""
             },
             "require": {
@@ -3170,7 +3128,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2013-08-07 21:50:22"
+            "time": "2013-08-16 09:45:12"
         }
     ],
     "aliases": [
@@ -3195,7 +3153,6 @@
         "fortawesome/fontawesome": 20,
         "xaguilars/bootstrap-colorpicker": 20,
         "zenstruck/form-bundle": 20,
-        "icap-lyon1/simple-tag-bundle": 20,
         "mockery/mockery": 20,
         "mikey179/vfsstream": 20
     },
