@@ -14,7 +14,7 @@
     {% set validationPath = path('claro_announcement_edit', {'announcementId': announcement.getId()}) %}
 {% endif %}
 
-<div class="margin">
+<div>
     {{
         macros.breadcrumbs([
             {
@@ -28,15 +28,13 @@
         ])
     }}
 
-    <div class="panel-heading">
-        <h3>
+    <h3>
         {% if type == 'create' %}
             {{ typeText|trans({}, 'announcement') }}
         {% else %}
             {{ typeText|trans({}, 'announcement') }}
         {% endif %}
-        </h3>
-    </div>
+    </h3>
     <br>
     <form
         class="form-horizontal"
