@@ -99,6 +99,33 @@ class ManagerTest extends MockeryTestCase
         $this->manager->{$method}('FooBundle', '123');
     }
 
+    public function testDiscardUpperMigrations()
+    {
+        $manager = m::mock(
+            'Claroline\MigrationBundle\Manager\Manager[getAvailablePlatforms]',
+            array($this->kernel, $this->generator, $this->writer, $this->migrator)
+        );
+        $manager->shouldReceive('getAvailablePlatforms')
+            ->once()
+            ->andReturn(array('driver1' => 'd1', 'driver2' => 'd2'));
+        $bundle = m::mock('Symfony\Component\HttpKernel\Bundle\Bundle');
+        $this->kernel->shouldReceive('getBundle')
+            ->once()
+            ->with('FooBundle')
+            ->andReturn($bundle);
+        $this->migrator->shouldReceive('getCurrentVersion')
+            ->once()
+            ->with($bundle)
+            ->andReturn('1');
+        $this->writer->shouldReceive('deleteUpperMigrationClasses')
+            ->once()
+            ->with($bundle, 'driver1', '1');
+        $this->writer->shouldReceive('deleteUpperMigrationClasses')
+            ->once()
+            ->with($bundle, 'driver2', '1');
+        $manager->discardUpperMigrations('FooBundle');
+    }
+
     public function queriesProvider()
     {
         return array(

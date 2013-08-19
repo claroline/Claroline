@@ -114,6 +114,36 @@ class Manager
     }
 
     /**
+     * Deletes migration classes which are above the current version of a bundle.
+     *
+     * @param string $bundleName
+     */
+    public function discardUpperMigrations($bundleName)
+    {
+        $bundle = $this->kernel->getBundle($bundleName);
+        $drivers = array_keys($this->getAvailablePlatforms());
+        $currentVersion = $this->migrator->getCurrentVersion($bundle);
+        $this->log("Deleting migration classes above version {$currentVersion} for '{$bundleName}'...");
+        $hasDeleted = false;
+
+        foreach ($drivers as $driver) {
+            $deletedVersions = $this->writer->deleteUpperMigrationClasses($bundle, $driver, $currentVersion);
+
+            if (count($deletedVersions) > 0) {
+                $hasDeleted = true;
+
+                foreach ($deletedVersions as $version) {
+                    $this->log(" - Deleted {$version} for driver {$driver}");
+                }
+            }
+        }
+
+        if (!$hasDeleted) {
+            $this->log('Nothing to discard: there are no migrations classes above the current version');
+        }
+    }
+
+    /**
      * Returns the list of available driver platforms.
      *
      * Note: this method is public for testing purposes only

@@ -87,6 +87,25 @@ highlights the current/installed one:
 php app/console claroline:migration:version AcmeFooBundle
 ```
 
+Finally, you can delete generated migration classes which are above the current version
+of a bundle using:
+
+```sh
+php app/console claroline:migration:discard AcmeFooBundle
+```
+This last command is useful if you intend to "merge" several migration classes generated
+during development into a single migration class. In such a case, the steps to follow
+would be:
+
+```sh
+# downgrading to the newest version you want to keep
+php app/console claroline:migration:downgrade AcmeFooBundle --target=20130101124512
+# deleting everything above that version
+php app/console claroline:migration:discard AcmeFooBundle
+# generating a new migration class
+php app/console claroline:migration:generate AcmeFooBundle
+```
+
 API
 ---
 

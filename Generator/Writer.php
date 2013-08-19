@@ -68,4 +68,30 @@ class Writer
         $this->fileSystem->touch($classFile);
         file_put_contents($classFile, $content);
     }
+
+    /**
+     * Deletes bundle migration classes for a given driver which are above a
+     * reference version.
+     *
+     * @param \Symfony\Component\HttpKernel\Bundle\Bundle   $bundle
+     * @param string                                        $driverName
+     * @param string                                        $referenceVersion
+     * @return array The migration files that were deleted
+     */
+    public function deleteUpperMigrationClasses(Bundle $bundle, $driverName, $referenceVersion)
+    {
+        $migrations = new \DirectoryIterator("{$bundle->getPath()}/Migrations/{$driverName}");
+        $deletedVersions = array();
+
+        foreach ($migrations as $migration) {
+            if (preg_match('#Version(\d+)\.php#', $migration->getFilename(), $matches)) {
+                if ($matches[1] > $referenceVersion) {
+                    $this->fileSystem->remove(array($migration->getPathname()));
+                    $deletedVersions[] = $migration->getFilename();
+                }
+            }
+        }
+
+        return $deletedVersions;
+    }
 }
