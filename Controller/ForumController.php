@@ -4,6 +4,7 @@ namespace Claroline\ForumBundle\Controller;
 
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
+use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Form\MessageType;
 use Claroline\ForumBundle\Form\SubjectType;
 use Claroline\ForumBundle\Form\ForumOptionsType;
@@ -38,7 +39,7 @@ class ForumController extends Controller
     public function openAction($forumId, $page)
     {
         $em = $this->getDoctrine()->getManager();
-        $forum = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($forumId);
+        $forum = $em->getRepository('ClarolineForumBundle:Forum')->find($forumId);
         $this->checkAccess($forum);
         $limits = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
         $limit = $limits[0]->getSubjects();
@@ -69,7 +70,7 @@ class ForumController extends Controller
     public function forumSubjectCreationFormAction($forumId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $forum = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($forumId);
+        $forum = $em->getRepository('ClarolineForumBundle:Forum')->find($forumId);
         $this->checkAccess($forum);
         $formSubject = $this->get('form.factory')->create(new SubjectType());
 
@@ -99,7 +100,7 @@ class ForumController extends Controller
         $form = $this->get('form.factory')->create(new SubjectType(), new Subject);
         $form->handleRequest($this->get('request'));
         $em = $this->getDoctrine()->getManager();
-        $forum = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($forumId);
+        $forum = $em->getRepository('ClarolineForumBundle:Forum')->find($forumId);
         $this->checkAccess($forum);
 
         if ($form->isValid()) {
@@ -263,9 +264,9 @@ class ForumController extends Controller
         return array('form' => $form->createView());
     }
 
-    private function checkAccess($forum)
+    private function checkAccess(Forum $forum)
     {
-        $collection = new ResourceCollection(array($forum));
+        $collection = new ResourceCollection(array($forum->getResourceNode()));
 
         if (!$this->get('security.context')->isGranted('OPEN', $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());

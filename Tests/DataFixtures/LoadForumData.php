@@ -7,6 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Fixtures\LoggableFixture;
 use Claroline\ForumBundle\Entity\Forum;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
 
@@ -31,7 +32,7 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
         return $this->container;
     }
 
-    public function __construct($forumName, $username, $nbMessages, $nbSubjects, $parent = null)
+    public function __construct($forumName, $username, $nbMessages, $nbSubjects, ResourceNode $parent = null)
     {
         $this->forumName = $forumName;
         $this->username = $username;
@@ -46,7 +47,7 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $user = $em->getRepository('ClarolineCoreBundle:User')->findOneBy(array('username' => $this->username));
         if ($this->parent == null) {
-            $root = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+            $root = $em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
                 ->findOneBy(array('parent' => null, 'workspace' => $user->getPersonalWorkspace()->getId()));
         } else {
             $root = $this->parent;
