@@ -109,17 +109,17 @@ class RssReaderListener extends ContainerAware
                     'workspaceId' => $workspaceId,
                     'isDefault' => $event->isDefault(),
                     'isDesktop' => false,
-                    'userId' => 0,
-                    'noCancelButton' => true
+                    'userId' => 0
                 )
             );
         } else {
             $form = $this->container->get('form.factory')->create(new ConfigType, $config);
             $content = $this->container->get('templating')->render(
-                'ClarolineRssReaderBundle::formUpdate.html.twig', array(
-                'form' => $form->createView(),
-                'rssConfig' => $config,
-                'layout' => 'none'
+                'ClarolineRssReaderBundle::formUpdate.html.twig',
+                array(
+                    'form' => $form->createView(),
+                    'rssConfig' => $config,
+                    'layout' => 'none'
                 )
             );
         }
@@ -150,16 +150,16 @@ class RssReaderListener extends ContainerAware
                     'workspaceId' => 0,
                     'isDefault' => $event->isDefault(),
                     'isDesktop' => true,
-                    'userId' => $userId,
-                    'noCancelButton' => true
+                    'userId' => $userId
                 )
             );
         } else {
             $form = $this->container->get('form.factory')->create(new ConfigType, $config);
             $content = $this->container->get('templating')->render(
-                'ClarolineRssReaderBundle::formUpdate.html.twig', array(
-                'form' => $form->createView(),
-                'rssConfig' => $config,
+                'ClarolineRssReaderBundle::formUpdate.html.twig',
+                array(
+                    'form' => $form->createView(),
+                    'rssConfig' => $config,
                 )
             );
         }
