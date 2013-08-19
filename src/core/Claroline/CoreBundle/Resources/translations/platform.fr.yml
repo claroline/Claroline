@@ -515,6 +515,7 @@ workspace_welcome: Accueil
 workspaces: 'Espaces d''activités'
 ws_creator: 'Créateur d''espaces'
 ws_most_viewed: Espaces d'activités les plus consultés
+date_format: 'd/m/Y'
 date_range.format: 'd-m-Y'
 date_range.js_format: 'dd-MM-yyyy'
 date_range.apply: 'Appliquer'

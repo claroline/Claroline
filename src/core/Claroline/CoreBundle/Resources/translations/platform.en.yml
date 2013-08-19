@@ -513,6 +513,7 @@ workspace_welcome: Welcome
 workspaces: Workspaces
 ws_creator: 'Workspace creator'
 ws_most_viewed: Most viewed workspaces
+date_format: 'm/d/Y'
 date_range.format: 'm/d/Y'
 date_range.js_format: 'MM/dd/yyyy'
 date_range.apply: 'Apply'
