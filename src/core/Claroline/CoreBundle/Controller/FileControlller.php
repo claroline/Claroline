@@ -25,7 +25,7 @@ class FileControlller extends Controller
      */
     public function getImg(ResourceNode $node)
     {
-        $file = $this->get('claroline.manager.resource.manager')->getResourceFromNode($node);
+        $file = $this->get('claroline.manager.resource_manager')->getResourceFromNode($node);
         $imgpath = $this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR
             . $file->getHashName();
 
