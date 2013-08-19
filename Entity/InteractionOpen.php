@@ -124,7 +124,7 @@ class InteractionOpen
         return $this->interaction;
     }
 
-    public function setInteraction(UJM\ExoBundle\Entity\Interaction $interaction)
+    public function setInteraction(\UJM\ExoBundle\Entity\Interaction $interaction)
     {
         $this->interaction = $interaction;
     }
@@ -144,7 +144,7 @@ class InteractionOpen
      *
      * @param UJM\ExoBundle\Entity\Unit $Unit
      */
-    public function addUnit(UJM\ExoBundle\Entity\Unit $unit)
+    public function addUnit(\UJM\ExoBundle\Entity\Unit $unit)
     {
         $this->unit[] = $unit;
     }
@@ -154,7 +154,7 @@ class InteractionOpen
         return $this->typeopenquestion;
     }
 
-    public function setTypeOpenQuestion(UJM\ExoBundle\Entity\TypeOpenQuestion $typeOpenQuestion)
+    public function setTypeOpenQuestion(\UJM\ExoBundle\Entity\TypeOpenQuestion $typeOpenQuestion)
     {
         $this->typeopenquestion = $typeOpenQuestion;
     }

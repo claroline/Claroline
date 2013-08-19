@@ -135,7 +135,7 @@ class WordResponse
         return $this->interactionopen;
     }
 
-    public function setInteractionOpen(UJM\ExoBundle\Entity\InteractionOpen $interactionOpen)
+    public function setInteractionOpen(\UJM\ExoBundle\Entity\InteractionOpen $interactionOpen)
     {
         $this->interactionopen = $interactionOpen;
     }
@@ -145,7 +145,7 @@ class WordResponse
         return $this->hole;
     }
 
-    public function setHole(UJM\ExoBundle\Entity\Hole $hole)
+    public function setHole(\UJM\ExoBundle\Entity\Hole $hole)
     {
         $this->hole = $hole;
     }
