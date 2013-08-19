@@ -147,7 +147,7 @@ class ResourceManager
         if ($parent) {
             $parentPath .= $parent->getPathForDisplay() . ' / ';
         }
-        
+
         $node->setPathForCreationLog($parentPath . $name);
         $node->setIcon($icon);
         $this->dispatcher->dispatch('log', 'Log\LogResourceCreate', array($node));
@@ -264,7 +264,6 @@ class ResourceManager
      */
     public function sort(array $nodes)
     {
-//        return $nodes;
         $sortedResources = array();
 
         if (count($nodes) > 0) {
@@ -463,11 +462,6 @@ class ResourceManager
 
         $this->om->flush();
 
-//        echo "node: {$node->getId()}, {$node->getPrevious()->getId()}, {$node->getNext()->getId()}\n";
-//        echo "previous: {$previous->getId()}, {$previous->getPrevious()->getId()}, {$previous->getNext()->getId()}\n";
-//        echo "next: {$next->getId()}, {$next->getPrevious()->getId()}\n";
-//        echo "oldPrev: {$oldPrev->getId()}, {$oldPrev->getPrevious()->getId()}\n";
-
         return $node;
     }
 
@@ -641,10 +635,11 @@ class ResourceManager
     public function copy(ResourceNode $node, ResourceNode $parent, User $user)
     {
         $last = $this->resourceNodeRepo->findOneBy(array('parent' => $parent, 'next' => null));
+        $resource = $this->getResourceFromNode($node);
 
-        if ($node instanceof \Claroline\CoreBundle\Entity\Resource\ResourceShortcut) {
+        if ($resource instanceof \Claroline\CoreBundle\Entity\Resource\ResourceShortcut) {
             $copy = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceShortcut');
-            $copy->setTarget($node->getResource()->getTarget());
+            $copy->setTarget($resource->getTarget());
             $newNode = $this->copyNode($node, $parent, $user, $last);
             $copy->setResourceNode($newNode);
 
@@ -652,7 +647,7 @@ class ResourceManager
             $event = $this->dispatcher->dispatch(
                 'copy_' . $node->getResourceType()->getName(),
                 'CopyResource',
-                array($this->getResourceFromNode($node))
+                array($resource)
             );
 
             $copy = $event->getCopy();
@@ -971,11 +966,6 @@ class ResourceManager
     public function getResourceFromNode(ResourceNode $node)
     {
         return $this->om->getRepository($node->getClass())->findOneByResourceNode($node->getId());
-    }
-
-    public function refresh($entity)
-    {
-        $this->om->refresh($entity);
     }
 
     private function copyNode(ResourceNode $node, ResourceNode $newParent, User $user,  ResourceNode $last = null)
