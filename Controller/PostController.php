@@ -65,6 +65,7 @@ class PostController extends Controller
 
         return array(
             '_resource' => $blog,
+            'user'      => $user,
             'post'      => $post,
             'form'      => $form->createView()
         );
@@ -73,9 +74,10 @@ class PostController extends Controller
      * @Route("/{blogId}/post/new", name="icap_blog_post_new", requirements={"blogId" = "\d+"})
      *
      * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
+     * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function newAction(Request $request, Blog $blog)
+    public function newAction(Request $request, Blog $blog, User $user)
     {
         $this->checkAccess("EDIT", $blog);
 
@@ -97,7 +99,7 @@ class PostController extends Controller
             'error'   => $translator->trans('icap_blog_post_add_error', array(), 'icap_blog')
         );
 
-        return $this->persistPost($request, $blog, $post, $messages);
+        return $this->persistPost($request, $blog, $post, $user, $messages);
     }
 
     /**
@@ -105,9 +107,10 @@ class PostController extends Controller
      *
      * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
      * @ParamConverter("post", class="ICAPBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
+     * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function editAction(Request $request, Blog $blog, Post $post)
+    public function editAction(Request $request, Blog $blog, Post $post, User $user)
     {
         $this->checkAccess("EDIT", $blog);
 
@@ -118,10 +121,10 @@ class PostController extends Controller
             'error'   => $translator->trans('icap_blog_post_edit_error', array(), 'icap_blog')
         );
 
-        return $this->persistPost($request, $blog, $post, $messages);
+        return $this->persistPost($request, $blog, $post, $user, $messages);
     }
 
-    protected function persistPost(Request $request, Blog $blog, Post $post, array $messages)
+    protected function persistPost(Request $request, Blog $blog, Post $post, User $user, array $messages)
     {
         $form = $this->createForm(new PostType(), $post);
 
@@ -147,6 +150,7 @@ class PostController extends Controller
 
         return array(
             '_resource' => $blog,
+            'user'      => $user,
             'post'      => $post,
             'form'      => $form->createView()
         );
