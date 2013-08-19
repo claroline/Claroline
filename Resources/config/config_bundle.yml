@@ -1,4 +1,0 @@
-twig:
-    form:
-        resources:
-            - 'ICAPBlogBundle:Form:fields.html.twig'

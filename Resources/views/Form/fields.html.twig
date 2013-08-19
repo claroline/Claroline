@@ -1,7 +1,0 @@
-{% extends 'ClarolineCoreBundle::form_theme.html.twig' %}
-
-{% block tags_widget %}
-    {% spaceless %}
-        <input type="hidden" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
-    {% endspaceless %}
-{% endblock %}
