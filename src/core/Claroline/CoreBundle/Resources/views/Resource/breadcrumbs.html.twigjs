@@ -1,22 +1,22 @@
 {% twig_js name="ResourceManagerBreadcrumbs" %}
 
-{% for resource in resources %}
+{% for node in nodes %}
 
     {% if loop.first %}
         <li>
-            <a href="#" data-resource-id="{{ resource.id }}">
+            <a href="#" data-node-id="{{ node.id }}">
                 <i class="icon-folder-open-alt"></i> {{ 'resources'|trans({}, 'platform') }}
             </a>
         </li>
     {% elseif not loop.last %}
         <li>
-            <a href="#" data-resource-id="{{ resource.id }}">
-                {{ resource.name }}
+            <a href="#" data-node-id="{{ node.id }}">
+                {{ node.name }}
             </a>
         </li>
     {% else %}
         <li class="active">
-            {{ resource.name }}
+            {{ node.name }}
         </li>
     {% endif %}
 

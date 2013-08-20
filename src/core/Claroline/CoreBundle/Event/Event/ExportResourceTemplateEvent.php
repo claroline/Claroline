@@ -10,14 +10,12 @@ class ExportResourceTemplateEvent extends Event implements DataConveyorEventInte
 {
     private $resource;
     private $config;
-    private $resourceDependencies;
     private $files;
     private $isPopulated = false;
 
     public function __construct(AbstractResource $resource)
     {
         $this->resource = $resource;
-        $this->resourceDependencies = array();
         $this->files = array();
     }
 
@@ -53,26 +51,6 @@ class ExportResourceTemplateEvent extends Event implements DataConveyorEventInte
     public function getFiles()
     {
         return $this->files;
-    }
-
-    /**
-     * Sets the resource dependencies
-     *
-     * @param array
-     */
-    public function setResourceDependencies(array $resourceDependencies)
-    {
-        $this->resourceDependencies = $resourceDependencies;
-    }
-
-    /**
-     * Gets the resource dependencies
-     *
-     * @return array
-     */
-    public function getResourceDependencies()
-    {
-        return $this->resourceDependencies;
     }
 
     public function isPopulated()

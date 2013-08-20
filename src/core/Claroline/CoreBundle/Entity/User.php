@@ -100,11 +100,11 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     mappedBy="creator"
      * )
      */
-    protected $abstractResources;
+    protected $resourceNodes;
 
     /**
      * @ORM\OneToOne(

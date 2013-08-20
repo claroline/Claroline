@@ -176,7 +176,6 @@ class RoleRepository extends EntityRepository
         $dql = "
             SELECT DISTINCT r FROM Claroline\CoreBundle\Entity\Role r
             JOIN r.workspace ws
-            LEFT JOIN ws.personalUser pu
             LEFT JOIN Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag rwt
             WITH rwt.workspace = ws
             LEFT JOIN Claroline\CoreBundle\Entity\Workspace\WorkspaceTag wt
@@ -184,7 +183,7 @@ class RoleRepository extends EntityRepository
             LEFT JOIN Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy wth
             WITH wth.tag = wt AND wth.user IS NULL
             LEFT JOIN wth.parent p
-            WHERE pu IS NULL AND (UPPER(ws.code) LIKE :code
+            WHERE ws.displayable = true AND (UPPER(ws.code) LIKE :code
             OR UPPER(wt.name) LIKE :code
             OR UPPER(p.name) LIKE :code)
         ";

@@ -15,7 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  *     uniqueConstraints={
  *         @ORM\UniqueConstraint(
  *             name="resource_rights_unique_resource_role",
- *             columns={"resource_id", "role_id"}
+ *             columns={"resourceNode_id", "role_id"}
  *         )
  *     }
  * )
@@ -65,13 +65,13 @@ class ResourceRights
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     inversedBy="rights",
      *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
-    protected $resource;
+    protected $resourceNode;
 
     /**
      * @ORM\ManyToMany(
@@ -106,14 +106,14 @@ class ResourceRights
         $this->role = $role;
     }
 
-    public function getResource()
+    public function getResourceNode()
     {
-        return $this->resource;
+        return $this->resourceNode;
     }
 
-    public function setResource(AbstractResource $resource)
+    public function setResourceNode(ResourceNode $resourceNode)
     {
-        $this->resource = $resource;
+        $this->resourceNode = $resourceNode;
     }
 
     public function canDelete()
