@@ -21,7 +21,7 @@
         <h5>{{ ('log_new_values')|trans({}, 'platform') }}</h4>
         <dl class="dl-horizontal">
             {% for key, values in log.getDetails().receiverGroup.changeSet %}
-                <dt>{{ key|trans({}, 'platform') }}</dt> 
+                <dt>{{ key|trans({}, 'platform') }}</dt>
                 {% if values[1] %}
                     {% if key != 'platformRole' %}
                         <dd>{{ values[1] }}</dd>

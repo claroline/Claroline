@@ -7,9 +7,9 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Security\Token\ViewAsToken;
+use Claroline\CoreBundle\Manager\RoleManager;
 
 /**
  * @DI\Service
@@ -17,19 +17,26 @@ use Claroline\CoreBundle\Library\Security\Token\ViewAsToken;
 class ViewAsListener
 {
     private $securityContext;
+    private $roleManager;
 
     /**
      * @DI\InjectParams({
-     *     "context" = @DI\Inject("security.context"),
-     *     "em" = @DI\Inject("doctrine.orm.entity_manager")
+     *     "context"        = @DI\Inject("security.context"),
+     *     "em"             = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "roleManager"    = @DI\Inject("claroline.manager.role_manager")
      * })
      *
      * @param SecurityContextInterface $context
      */
-    public function __construct(SecurityContextInterface $context, EntityManager $em)
+    public function __construct(
+        SecurityContextInterface $context,
+        EntityManager $em,
+        RoleManager $roleManager
+    )
     {
         $this->securityContext = $context;
         $this->em = $em;
+        $this->roleManager = $roleManager;
     }
 
     /**
@@ -49,15 +56,15 @@ class ViewAsListener
                     $this->securityContext->setToken($token);
                 }
             } else {
-                $workspaceId = substr($viewAs, strripos($viewAs, '_') + 1);
+                $guid = substr($viewAs, strripos($viewAs, '_') + 1);
                 $baseRole = substr($viewAs, 0, strripos($viewAs, '_'));
 
-                if ($this->securityContext->isGranted('ROLE_WS_MANAGER_'.$workspaceId)) {
+                if ($this->securityContext->isGranted('ROLE_WS_MANAGER_'.$guid)) {
 
                     if ($baseRole === 'ROLE_ANONYMOUS') {
                         throw new \Exception('No implementation yet');
                     } else {
-                        $role = $this->em->getRepository('ClarolineCoreBundle:Role')->findOneByName($viewAs);
+                        $role = $this->roleManager->getRoleByName($viewAs);
 
                         if ($role === null) {
                             throw new \Exception("The role {$viewAs} does not exists");

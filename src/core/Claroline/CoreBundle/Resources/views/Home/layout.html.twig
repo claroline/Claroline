@@ -1,7 +1,8 @@
 {% if content != null %}
 
     {% if region is not defined or (region is defined and region != 'header' and region != 'footer') %}
-        {{ creator | raw }}
+        {# creator | raw #}
+        {% render controller("ClarolineCoreBundle:Home:creator", { 'type': type, 'id': null, 'content': null, 'father': father }) %}
     {% endif %}
 
     {% if father is not defined %}

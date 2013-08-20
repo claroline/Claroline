@@ -2,9 +2,7 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
-use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
-use Claroline\CoreBundle\Entity\Resource\MimeType;
 
 /**
  * @ORM\Entity
@@ -18,7 +16,7 @@ class File extends AbstractResource
     protected $size;
 
     /**
-     * @ORM\Column(type="string", length=36, name="hash_name")
+     * @ORM\Column(name="hash_name", length=50, unique=true)
      */
     protected $hashName;
 

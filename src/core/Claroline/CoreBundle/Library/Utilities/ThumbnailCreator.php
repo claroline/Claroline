@@ -2,29 +2,35 @@
 
 namespace Claroline\CoreBundle\Library\Utilities;
 
-use Claroline\CoreBundle\Library\Resource\Utilities;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 
 /**
  * @DI\Service("claroline.utilities.thumbnail_creator")
  */
 class ThumbnailCreator
 {
+    private $webDir;
+    private $thumbnailDir;
+    private $isGdLoaded;
+    private $isFfmpegLoaded;
+    private $ut;
+
     /**
      * @DI\InjectParams({
      *     "kernelRootDir" = @DI\Inject("%kernel.root_dir%"),
      *     "thumbnailDirectory" = @DI\Inject("%claroline.param.thumbnails_directory%"),
-     *     "utilities" = @DI\Inject("claroline.resource.utilities")
+     *     "ut"       = @DI\Inject("claroline.utilities.misc")
      * })
      */
-    public function __construct($kernelRootDir, $thumbnailDirectory, Utilities $utilities)
+    public function __construct($kernelRootDir, $thumbnailDirectory, ClaroUtilities $ut)
     {
         $ds = DIRECTORY_SEPARATOR;
         $this->webDir = "{$kernelRootDir}{$ds}..{$ds}web";
-        $this->utilities = $utilities;
         $this->thumbnailDir = $thumbnailDirectory;
         $this->isGdLoaded = extension_loaded('gd');
         $this->isFfmpegLoaded = extension_loaded('ffmpeg');
+        $this->ut = $ut;
     }
 
     /**
@@ -44,7 +50,7 @@ class ThumbnailCreator
             if (!$this->isGdLoaded) {
                 $message .= 'The GD extension is missing \n';
             }
-            if (!$this->isFfmegLoaded) {
+            if (!$this->isFfmpegLoaded) {
                 $message .= 'The Ffmpeg extension is missing \n';
             }
 
@@ -83,9 +89,18 @@ class ThumbnailCreator
              throw new UnloadedExtensionException('The GD extension is missing \n');
         }
 
-        $extension = (pathinfo($originalPath, PATHINFO_EXTENSION) == 'jpg') ?
-            'jpeg':
-            pathinfo($originalPath, PATHINFO_EXTENSION);
+        if (file_exists($originalPath)) {
+            /*
+            This function is deprecated.
+            I had to do this for the DnD upload (.jpg files have png mime for some reasons).
+            It would be nice to know why it works this way.
+            */
+            $mime = mime_content_type($originalPath);
+            $eMime = explode('/', $mime);
+            $extension = $eMime[1];
+        } else {
+            throw new \Exception("The file {$originalPath} doesn't exists.");
+        }
 
         if (function_exists($funcname = "imagecreatefrom{$extension}")) {
             $srcImg = $funcname($originalPath);
@@ -157,11 +172,10 @@ class ThumbnailCreator
         $stamp = imagecreatefrompng($stampPath);
         imagesavealpha($im, true);
         imagecopy($im, $stamp, 0, imagesy($im) - imagesy($stamp), 0, 0, imagesx($stamp), imagesy($stamp));
-        $name = "{$this->utilities->generateGuid()}.{$extension}";
+        $name = "{$this->ut->generateGuid()}.{$extension}";
         imagepng($im, $this->thumbnailDir.$ds.$name);
         imagedestroy($im);
 
         return "{$this->thumbnailDir}{$ds}{$name}";
     }
 }
-

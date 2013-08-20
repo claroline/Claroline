@@ -5,7 +5,7 @@
 
     <div id="text_content">
         {{ text|raw }}
-        <a href="{{ _path('claro_text_history', {'textId': _resource.getId()}) }}">history</a>
-        <a href="{{ _path('claro_text_edit_form', {'textId': _resource.getId()}) }}">edit</a>
+        <a href="{{ _path('claro_text_history', {'text': _resource.getId()}) }}">history</a>
+        <a href="{{ _path('claro_text_edit_form', {'text': _resource.getId()}) }}">edit</a>
     </div>
 {% endblock %}

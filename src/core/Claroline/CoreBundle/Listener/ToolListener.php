@@ -3,30 +3,55 @@
 namespace Claroline\CoreBundle\Listener;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Library\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Event\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Entity\Event;
-use Claroline\CoreBundle\Form\CalendarType;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 
 /**
- * @DI\Service
+ * @DI\Service(scope="request")
  */
 class ToolListener
 {
     private $container;
+    private $toolManager;
+    private $workspaceManager;
+    private $formFactory;
+    private $templating;
+    private $request;
+    private $httpKernel;
 
     /**
      * @DI\InjectParams({
-     *     "container" = @DI\Inject("service_container")
+     *     "container" = @DI\Inject("service_container"),
+     *     "toolManager" = @DI\Inject("claroline.manager.tool_manager"),
+     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "formFactory" = @DI\Inject("claroline.form.factory"),
+     *     "templating" = @DI\Inject("templating"),
+     *     "request" = @DI\Inject("request"),
+     *     "httpKernel" = @DI\Inject("http_kernel")
      * })
-     *
-     * @param ContainerInterface $container
      */
-    public function setContainer(ContainerInterface $container = null)
+    public function __construct(
+        ContainerInterface $container,
+        ToolManager $toolManager,
+        WorkspaceManager $workspaceManager,
+        FormFactory $formFactory,
+        $templating,
+        $request,
+        $httpKernel
+    )
     {
         $this->container = $container;
+        $this->toolManager = $toolManager;
+        $this->workspaceManager = $workspaceManager;
+        $this->formFactory = $formFactory;
+        $this->templating = $templating;
+        $this->request = $request;
+        $this->httpKernel = $httpKernel;
     }
 
     /**
@@ -70,13 +95,13 @@ class ToolListener
     }
 
     /**
-     * @DI\Observe("open_tool_workspace_calendar")
+     * @DI\Observe("open_tool_workspace_agenda")
      *
      * @param DisplayToolEvent $event
      */
-    public function onDisplayWorkspaceCalendar(DisplayToolEvent $event)
+    public function onDisplayWorkspaceAgenda(DisplayToolEvent $event)
     {
-        $event->setContent($this->workspaceCalendar($event->getWorkspace()->getId()));
+        $event->setContent($this->workspaceAgenda($event->getWorkspace()->getId()));
     }
 
     /**
@@ -100,19 +125,19 @@ class ToolListener
     }
 
     /**
-     * @DI\Observe("open_tool_desktop_calendar")
+     * @DI\Observe("open_tool_desktop_agenda")
      *
      * @param DisplayToolEvent $event
      */
-    public function onDisplayDesktopCalendar(DisplayToolEvent $event)
+    public function onDisplayDesktopAgenda(DisplayToolEvent $event)
     {
-        $event->setContent($this->desktopCalendar());
+        $event->setContent($this->desktopAgenda());
     }
 
     /**
      * @DI\Observe("open_tool_workspace_workgroup")
      *
-     * @param \Claroline\CoreBundle\Library\Event\DisplayToolEvent $event
+     * @param \Claroline\CoreBundle\Event\Event\DisplayToolEvent $event
      */
     public function onDisplayWorkgroup(DisplayToolEvent $event)
     {
@@ -128,11 +153,12 @@ class ToolListener
      */
     public function workspaceParameters($workspaceId)
     {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-        $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findBy(array('hasOptions' => true, 'isDisplayableInWorkspace' => true));
+        $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
+        $tools = $this->toolManager->getToolByCriterias(
+            array('hasOptions' => true, 'isDisplayableInWorkspace' => true)
+        );
 
-        return $this->container->get('templating')->render(
+        return $this->templating->render(
             'ClarolineCoreBundle:Tool\workspace\parameters:parameters.html.twig',
             array('workspace' => $workspace, 'tools' => $tools)
         );
@@ -145,26 +171,25 @@ class ToolListener
      */
     public function desktopParameters()
     {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $tools = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findBy(array('hasOptions' => true, 'isDisplayableInDesktop' => true));
+        $tools = $this->toolManager->getToolByCriterias(
+            array('hasOptions' => true, 'isDisplayableInDesktop' => true)
+        );
 
-        return $this->container
-            ->get('templating')
-            ->render(
-                'ClarolineCoreBundle:Tool\desktop\parameters:parameters.html.twig',
-                array('tools' => $tools)
-            );
+        return $this->templating->render(
+            'ClarolineCoreBundle:Tool\desktop\parameters:parameters.html.twig',
+            array('tools' => $tools)
+        );
     }
 
-    public function workspaceCalendar($workspaceId)
+    public function workspaceAgenda($workspaceId)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-        $form = $this->container->get('form.factory')->create(new CalendarType());
+        $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
+        $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
         $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspaceId, true);
 
-        return $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Tool/workspace/calendar:calendar.html.twig',
+        return $this->templating->render(
+            'ClarolineCoreBundle:Tool/workspace/agenda:agenda.html.twig',
             array('workspace' => $workspace,
                 'form' => $form->createView(),
                 'listEvents' => $listEvents )
@@ -174,19 +199,18 @@ class ToolListener
 
     public function workspaceLogs($workspaceId)
     {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+        $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
 
-        return $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Tool/workspace/logs:log_list.html.twig',
+        return $this->templating->render(
+            'ClarolineCoreBundle:Tool/workspace/logs:logList.html.twig',
             $this->container->get('claroline.log.manager')->getWorkspaceList($workspace, 1)
         );
     }
 
-    public function desktopCalendar()
+    public function desktopAgenda()
     {
         $event = new Event();
-        $formBuilder = $this->container->get('form.factory')->createBuilder(new CalendarType(), $event, array());
+        $form = $this->formFactory->create(FormFactory::TYPE_AGENDA, array(), $event);
         $em = $this->container-> get('doctrine.orm.entity_manager');
         $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findAll();
         $cours = array();
@@ -195,22 +219,21 @@ class ToolListener
             $cours[] = $event->getWorkspace()->getName();
         }
 
-        return $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Tool/desktop/calendar:calendar.html.twig',
+        return $this->templating->render(
+            'ClarolineCoreBundle:Tool/desktop/agenda:agenda.html.twig',
             array(
-                'form' => $formBuilder-> getForm()-> createView(),
+                'form' => $form->createView(),
                 'listEvents' => $listEvents,
                 'cours' => array_unique($cours)
-                )
+            )
         );
     }
 
     public function workgroup($workspaceId)
     {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+        $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
 
-        return $this->container->get('templating')->render(
+        return $this->templating->render(
             'ClarolineCoreBundle:Tool/workspace/workgroup:workgroup.html.twig',
             array('workspace' => $workspace)
         );
@@ -219,10 +242,8 @@ class ToolListener
     private function forward($controller, array $parameters = array())
     {
         $parameters['_controller'] = $controller;
-        $subRequest = $this->container->get('request')->duplicate(array(), null, $parameters);
+        $subRequest = $this->request->duplicate(array(), null, $parameters);
 
-        return $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        return $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
     }
 }
-
-

@@ -4,56 +4,6 @@
 
 #Resource plugin
 
-## Database tables
-
-You must create a migration class building your tables in the existing database.
-
-The class must extend [*BundleMigration*](http://symfony.com/doc/2.0/bundles/DoctrineMigrationsBundle/index.html) and be placed in the *Migrations* folder. Its name must start with *Version* and end with a timestamp (YYYMMDDHHMMSS); e.g. *Version20121002000000.php*.
-
-This class will be executed by the plateform when installing your plugin. It must contains two methods: up() and down(). They will be called to create or remove your tables to/from the database.
-
-    /**
-    *  BundleMigration is written on top of Doctrine\DBAL\Migrations\AbstractMigration
-    *  and contains some helper methods.
-    *  You can use the doctrine migration class as well (see the doctrine doc).
-    */
-    class Version20121002000000 extends BundleMigration
-    {
-
-        /**
-        * Will be fired at the plugin installation.
-        * @param \Doctrine\DBAL\Schema\Schema $schema
-        */
-        public function up(Schema $schema)
-        {
-            $this->createExampleTable($schema);
-        }
-
-        /**
-        * Will be fired at the plugin uninstallation.
-         * @param \Doctrine\DBAL\Schema\Schema $schema
-         */
-        public function down(Schema $schema)
-        {
-            $schema->dropTable('claro_example_text');
-        }
-
-        /**
-        * Create the 'claro_example_text' table.
-        * @param \Doctrine\DBAL\Schema\Schema $schema
-        */
-        public function createExampleTable(Schema $schema)
-        {
-            // Table creation
-            $table = $schema->createTable('claro_example_text');
-            // Add an auto increment id
-            $this->addId($table);
-            // Add a column
-            $table->addColumn('text', 'text');
-        }
-    }
-
-
 ## Plugin configuration file
 Your plugin must define its properties and the list of its resources in the *Resources/config/config.yml file*.
 This file will be parsed by the plugin installator to install your plugin and create all your declared resources types in the database.
@@ -69,8 +19,6 @@ This file will be parsed by the plugin installator to install your plugin and cr
           - class: Claroline\ExampleBundle\Entity\Example
             # Your resource type name
             name: claroline_example
-            # Is it possible to navigate within your resource (does it have sub-resources ?)
-            is_browsable: true
             # Do you want your resource to be exported as a part of a workspace model ?
             # Note: the default value of this parameter is "false"
             is_exportable: false
@@ -116,6 +64,11 @@ If your entity is a resource that must be recognized by the platform and managea
             return $this->text;
         }
     }
+
+The AbstractResource entity has a mandatory relation to ResourceNode.
+A ResourceNode job is to keep some informations related to a resource wich are
+necessary for the claroline core to work (ie: parent, children, resourceType, workspace...)
+In other words, nodes symbolise the resource tree with their context.
 
 ## Listener
 
@@ -193,7 +146,7 @@ Please find the Symfony documentation here: http://symfony.com/doc/2.0/book/form
 
 Resources forms are a little be more complicated.
 
-You can use the 'ClarolineCoreBundle:Resource:create_form.html.twig' as default form for your resource.
+You can use the 'ClarolineCoreBundle:Resource:createForm.html.twig' as default form for your resource.
 
         ...
         //the form you defined with the symfony2 form component
@@ -215,9 +168,9 @@ You can use the 'ClarolineCoreBundle:Resource:create_form.html.twig' as default 
 
 If you want to write your own twig file, your form action must be:
 
-    action="{{ path('claro_resource_create', {'resourceType': resourceType, 'parentId' '_resourceId'}) }}"
+    action="{{ path('claro_resource_create', {'resourceType': resourceType, 'parentId' '_nodeId'}) }}"
 
-where resourceType is the 'name' field you defined in your config.yml file and _resourceId is a placeholder used
+where resourceType is the 'name' field you defined in your config.yml file and _nodeId is a placeholder used
 by the javascript manager.
 
 ###### Using existing forms & validations
@@ -240,7 +193,7 @@ in the config files.
 
     use Claroline\CoreBundle\Form\FileType;
     use Claroline\CoreBundle\Entity\Resource\File;
-    use Claroline\CoreBundle\Library\Event\CreateFormResourceEvent;
+    use Claroline\CoreBundle\Event\Event\CreateFormResourceEvent;
     use Claroline\CoreBundle\Listener\Resource\FileListener;
     ...
 
@@ -284,29 +237,8 @@ This AbstractResource class some very important relations.
 
 This entity job is to stock important attributes wich will differ depending on
 the ResourceType.
-Theses attributes are:
 
-* isBrowsable;
-* isVisible;
-
-These attributes are defined in the resource section in your config file.
-
-It also has relations to the customaction and the plugin tables.
-
-Once you created your basic entity and filled the field you defined yourself,
-you can ask the resource manager to set every needed relations and persist it.
-
-Hopefully, this is very easy to do:
-
-At first, get the claroline.resource.manager service.
-
-     $creator = $this->get('claroline.resource.manager');
-
-Then you must use the create() method.
-
-Here is the method signature:
-
-     public function create(AbstractResource $resource, $parentId, $resourceType, User $user = null)
+[Update needed]
 
 ### Keeping the context
 
@@ -314,7 +246,8 @@ Your response must extends the workspace layout.
 
     {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
-AbstractResource has a mandatory relation to the AbstractWorkspace table.
+AbstractResource has a mandatory relation to the ResourceNode table. The ResourceNode
+table has a mandatory relation to the AbstractWorkspace table.
 The Workspace indicate the context in wich your resource was placed.
 A resource is usually opened through the resource manager. The resource manager will append
 the resource breadcrumbs to the url (_breadcrumbs[]=123&...) to keep track of wich path the user
@@ -353,7 +286,7 @@ If you want to implement it, you must create some custom actions (see plugin con
 ### Database
 
 ResourceRights are stored in the entity Resource\ResourceRights.
-This table has a reliation to a role, a resource and a workspace.
+This table has a relation to a role, a resource and a workspace.
 It has several booleans defining the current permissions:
 canCopy, canDeleten canEdit, canOpen, canExport.
 
