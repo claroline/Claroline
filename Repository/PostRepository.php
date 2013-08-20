@@ -4,6 +4,7 @@ namespace ICAP\BlogBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use ICAP\BlogBundle\Entity\Blog;
+use ICAP\BlogBundle\Entity\Statusable;
 use ICAP\BlogBundle\Exception\TooMuchResultException;
 
 class PostRepository extends EntityRepository
@@ -35,7 +36,7 @@ class PostRepository extends EntityRepository
      * @param bool   $executeQuery
      *
      * @throws TooMuchResultException
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return array|\Doctrine\ORM\QueryBuilder
      */
     public function searchByBlog(Blog $blog, $search, $executeQuery = true)
     {
@@ -78,6 +79,37 @@ class PostRepository extends EntityRepository
         else {
             throw new TooMuchResultException();
         }
+
+        return $executeQuery ? $query->getResult(): $query;
+    }
+
+    /**
+     * @param Blog $blog
+     * @param int  $startDate
+     * @param int  $endDate
+     * @param bool $executeQuery
+     *
+     * @return array|\Doctrine\ORM\AbstractQuery
+     */
+    public function findPublishedByBlogAndDates(Blog $blog, $startDate, $endDate, $executeQuery = true)
+    {
+        $startDateTime = new \DateTime();
+        $startDateTime->setTimestamp($startDate);
+
+        $endDateTime = new \DateTime();
+        $endDateTime->setTimestamp($endDate);
+
+        $query = $this->createQueryBuilder('post')
+            ->andWhere('post.blog = :blogId')
+            ->andWhere('post.status = :postStatus')
+            ->andWhere('post.publicationDate IS NOT NULL')
+            ->andWhere('post.publicationDate BETWEEN :startDate AND :endDate')
+            ->setParameter('blogId', $blog->getId())
+            ->setParameter('postStatus', Statusable::STATUS_PUBLISHED)
+            ->setParameter('startDate', $startDateTime)
+            ->setParameter('endDate', $endDateTime)
+            ->getQuery()
+        ;
 
         return $executeQuery ? $query->getResult(): $query;
     }

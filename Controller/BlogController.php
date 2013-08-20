@@ -19,6 +19,7 @@ use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -235,5 +236,35 @@ class BlogController extends Controller
             '_resource' => $blog,
             'form'      => $form->createView()
         );
+    }
+
+    /**
+     * @Route("/calendar/{blogId}", name="icap_blog_calendar_datas", requirements={"blogId" = "\d+"})
+     * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
+     */
+    public function calendarDatas(Request $request, Blog $blog)
+    {
+        $requestParameters = $request->query->all();
+        $startDate         = $requestParameters['start'];
+        $endDate           = $requestParameters['end'];
+        $calendarDatas     = array();
+
+        $postRepository = $this->getDoctrine()->getManager()->getRepository('ICAPBlogBundle:Post');
+
+        $posts = $postRepository->findPublishedByBlogAndDates($blog, $startDate, $endDate);
+
+        foreach($posts as $post)
+        {
+            $calendarDatas[] = array(
+                'id'    => $post->getId(),
+                'start' => $post->getPublicationDate()->format('Y-m-d'),
+                'title' => $post->getTitle(),
+                'url'   => $this->generateUrl('icap_blog_post_view', array('blogId' => $blog->getId(), 'postSlug' => $post->getSlug()))
+            );
+        }
+
+        $response = new JsonResponse($calendarDatas);
+
+        return $response;
     }
 }
