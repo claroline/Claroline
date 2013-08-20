@@ -7,12 +7,12 @@ ujm_exercise_edit:
     defaults: { _controller: "UJMExoBundle:Exercise:edit" }
 
 ujm_exercise_import_question:
-    pattern: /{exoID}/import/{page2Go}/{maxPage}/{nbItem}
-    defaults: { _controller: UJMExoBundle:Exercise:importQuestion, page2Go: 1, maxPage: 10, nbItem: 1 }
+    pattern: /{exoID}/import/{pageGoNow}/{maxPage}/{nbItem}
+    defaults: { _controller: UJMExoBundle:Exercise:importQuestion, pageGoNow: 1, maxPage: 10, nbItem: 1 }
 
 ujm_exercise_questions:
-    pattern:  /{id}/questions/{pageNow}/{category2Find}/{title2Find}
-    defaults: { _controller: UJMExoBundle:Exercise:showQuestions, pageNow: 0, category2Find: z, title2Find: z }
+    pattern:  /{id}/questions/{pageNow}/{categoryToFind}/{titleToFind}
+    defaults: { _controller: UJMExoBundle:Exercise:showQuestions, pageNow: 0, categoryToFind: z, titleToFind: z }
 
 ujm_exercise_question_delete:
     pattern:  /{exoID}/{qid}/delete/{pageNow}/{maxPage}/{nbItem}/{lastPage}
@@ -25,9 +25,9 @@ ujm_exercise_update:
     requirements: { _method: post }
 
 ujm_exercise_validate_import:
-    pattern: /{exoID}/{qid}/import/{page2go}
-    defaults: { _controller: UJMExoBundle:Exercise:importValidate, page2go: 1 }
+    pattern: /{exoID}/{qid}/import/{pageGoNow}
+    defaults: { _controller: UJMExoBundle:Exercise:importValidate, pageGoNow: 1 }
 
 ujm_exercise_validate_import_shared:
-    pattern: /import/shared/{exoID}/{qid}/{page2go}
-    defaults: { _controller: UJMExoBundle:Exercise:importValidateShared, page2go: 1 }
+    pattern: /import/shared/{exoID}/{qid}/{pageGoNow}
+    defaults: { _controller: UJMExoBundle:Exercise:importValidateShared, pageGoNow: 1 }

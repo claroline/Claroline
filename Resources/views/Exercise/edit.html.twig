@@ -109,7 +109,7 @@
 
 <ul class="record_actions">
     <li>
-        <a href="{{ path('claro_resource_open', { 'resourceType': entity.resourceType.name, 'resourceId': entity.id }) }}">
+        <a href="{{ path('claro_resource_open', { 'resourceType': entity.resourceNode.resourceType.name(), 'node': entity.id }) }}">
             {{ "back" | trans }}
         </a>
     </li>

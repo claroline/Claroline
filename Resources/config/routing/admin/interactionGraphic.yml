@@ -1,6 +1,6 @@
 ujm_interactiongraphic_AddImg:
-    pattern:  /AjoutImg/{redirection}/{page2Go}/{maxPage}/{nbItem}
-    defaults: { _controller: UJMExoBundle:WSRest:postDocumentAdd, page2Go: 1, maxPage: 10, nbItem: 1 }
+    pattern:  /AjoutImg/{redirection}/{pageToGo}/{maxPage}/{nbItem}
+    defaults: { _controller: UJMExoBundle:WSRest:postDocumentAdd, pageToGo: 1, maxPage: 10, nbItem: 1 }
     requirements: { _method: post }
 
 ujm_interactiongraphic_create:

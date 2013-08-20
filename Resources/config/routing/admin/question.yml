@@ -1,10 +1,10 @@
 ujm_question_index:
-    pattern: /index/{pageNow}/{category2Find}/{title2Find}
-    defaults: { _controller: UJMExoBundle:Question:index, pageNow: 0, category2Find: z, title2Find: z }
+    pattern: /index/{pageNow}/{categoryToFind}/{titleToFind}
+    defaults: { _controller: UJMExoBundle:Question:index, pageNow: 0, categoryToFind: z, titleToFind: z }
 
 ujm_question_new:
-    pattern:  /new/{exoID}/{page2Go}/{maxPage}/{nbItem}
-    defaults: { _controller: UJMExoBundle:Question:new, exoID: -1, page2Go: 1, maxPage: 10, nbItem: 1 }
+    pattern:  /new/{exoID}/{pageToGo}/{maxPage}/{nbItem}
+    defaults: { _controller: UJMExoBundle:Question:new, exoID: -1, pageToGo: 1, maxPage: 10, nbItem: 1 }
 
 ujm_question_edit:
     pattern:  /{id}/edit
