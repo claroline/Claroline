@@ -550,7 +550,7 @@
             }
         }),
         Form: Backbone.View.extend({
-            className: 'node-form modal',
+            className: 'node-form',
             events: {
                 'click #submit-default-rights-form-button': function (event) {
                     event.preventDefault();
