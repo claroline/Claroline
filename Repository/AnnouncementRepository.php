@@ -10,15 +10,20 @@ class AnnouncementRepository extends EntityRepository
 {
     public function findVisibleAnnouncementsByWorkspace(AbstractWorkspace $workspace, array $roles)
     {
+        $now = new \DateTime();
+
         $dql = '
             SELECT a AS announcement
             FROM Claroline\AnnouncementBundle\Entity\Announcement a
             JOIN a.aggregate aa
-            JOIN aa.workspace w
-            JOIN aa.rights r
+            JOIN aa.resourceNode n
+            JOIN n.workspace w
+            JOIN n.rights r
             JOIN r.role rr
             WHERE w = :workspace
             AND a.visible = true
+            AND ( ( a.visibleFrom IS NULL ) OR ( a.visibleFrom <= :now ) )
+            AND ( ( a.visibleUntil IS NULL ) OR ( a.visibleUntil >= :now ) )
             AND r.canOpen = true
             AND rr.name in (:roles)
             ORDER BY a.publicationDate DESC
@@ -26,6 +31,7 @@ class AnnouncementRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspace', $workspace);
         $query->setParameter('roles', $roles);
+        $query->setParameter('now', $now);
 
         return $query->getResult();
     }
@@ -40,11 +46,14 @@ class AnnouncementRepository extends EntityRepository
                 w.code AS workspaceCode
             FROM Claroline\AnnouncementBundle\Entity\Announcement a
             JOIN a.aggregate aa
-            JOIN aa.workspace w
-            JOIN aa.rights r
+            JOIN aa.resourceNode n
+            JOIN n.workspace w
+            JOIN n.rights r
             JOIN r.role rr
             WHERE w IN (:workspaces)
             AND a.visible = true
+            AND ( ( a.visibleFrom IS NULL ) OR ( a.visibleFrom <= :now ) )
+            AND ( ( a.visibleUntil IS NULL ) OR ( a.visibleUntil >= :now ) )
             AND r.canOpen = true
             AND rr.name in (:roles)
             ORDER BY a.publicationDate DESC
@@ -79,6 +88,8 @@ class AnnouncementRepository extends EntityRepository
             JOIN a.aggregate aa
             WHERE aa = :aggregate
             AND a.visible = true
+            AND ( ( a.visibleFrom IS NULL ) OR ( a.visibleFrom <= :now ) )
+            AND ( ( a.visibleUntil IS NULL ) OR ( a.visibleUntil >= :now ) )
             ORDER BY a.creationDate DESC
         ';
         $query = $this->_em->createQuery($dql);

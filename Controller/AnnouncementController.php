@@ -76,7 +76,7 @@ class AnnouncementController extends Controller
      */
     public function announcementsListAction(AnnouncementAggregate $aggregate, $page)
     {
-        $collection = new ResourceCollection(array($aggregate));
+        $collection = new ResourceCollection(array($aggregate->getResourceNode()));
 
         try {
             $this->checkAccess('EDIT', $aggregate);
@@ -363,7 +363,7 @@ class AnnouncementController extends Controller
      */
     private function checkAccess($permission, AbstractResource $resource)
     {
-        $collection = new ResourceCollection(array($resource));
+        $collection = new ResourceCollection(array($resource->getResourceNode()));
 
         if (!$this->securityContext->isGranted($permission, $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
