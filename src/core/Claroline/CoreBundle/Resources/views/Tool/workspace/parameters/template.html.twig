@@ -1,13 +1,23 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 {% block section_content %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{{ path('claro_workspace_open_tool',
-               {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}">
-               {{ 'parameters'|trans({}, 'platform') }}
-            </a>
-        </li>
-    </ul>
+
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
+            },
+            {
+                'name': 'general'|trans({}, 'platform'),
+                'href': path('claro_workspace_edit_form', {'workspace': workspace.getId()})
+            },
+            {
+                'name': 'save_as_template'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
 
     <form class="form-horizontal"
           action="{{ path('claro_workspace_export', {'workspace': workspace.getId() }) }}"
@@ -16,7 +26,9 @@
             {{ form_widget(form) }}
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-                <button type="button" class="btn">{{ 'cancel'|trans({}, 'platform') }}</button>
+                <a href="{{ path('claro_workspace_edit_form', {'workspace': workspace.getId()}) }}">
+                    <button type="button" class="btn">{{ 'cancel'|trans({}, 'platform') }}</button>
+                </a>
             </div>
         </fieldset>
     </form>

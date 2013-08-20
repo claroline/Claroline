@@ -2,531 +2,629 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
+use \Mockery as m;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
-class WorkspaceControllerTest extends FunctionalTestCase
+class WorkspaceControllerTest extends MockeryTestCase
 {
-    private $logRepository;
+    private $resourceManager;
+    private $roleManager;
+    private $tagManager;
+    private $toolManager;
+    private $workspaceManager;
+    private $eventDispatcher;
+    private $security;
+    private $router;
+    private $utils;
+    private $formFactory;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->client->followRedirects();
-        $this->loadPlatformRolesFixture();
-        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Logger\Log');
-        $this->defaultTemplate = $this->em->getRepository('ClarolineCoreBundle:Workspace\Template')
-            ->findOneByName('default');
+        $this->resourceManager = $this->mock('Claroline\CoreBundle\Manager\ResourceManager');
+        $this->roleManager = $this->mock('Claroline\CoreBundle\Manager\RoleManager');
+        $this->tagManager = $this->mock('Claroline\CoreBundle\Manager\WorkspaceTagManager');
+        $this->toolManager = $this->mock('Claroline\CoreBundle\Manager\ToolManager');
+        $this->workspaceManager = $this->mock('Claroline\CoreBundle\Manager\WorkspaceManager');
+        $this->eventDispatcher = $this->mock('Claroline\CoreBundle\Event\StrictDispatcher');
+        $this->security = $this->mock('Symfony\Component\Security\Core\SecurityContextInterface');
+        $this->router = $this->mock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
+        $this->utils = $this->mock('Claroline\CoreBundle\Library\Security\Utilities');
+        $this->formFactory = $this->mock('Claroline\CoreBundle\Form\Factory\FormFactory');
     }
 
-    public function testWSCreatorcanViewHisWorkspaces()
+    public function testListAction()
     {
-        $this->loadUserData(array('ws_creator' => 'ws_creator'));
-        $this->loadWorkspaceData(array('ws_a' => 'ws_creator'));
-        $crawler = $this->logUser($this->getUser('ws_creator'));
-        $link = $crawler->filter('#link-my-workspaces')->link();
-        $crawler = $this->client->click($link);
-        $this->assertEquals(2, $crawler->filter('.row-workspace')->count());
-    }
-
-    public function testAdmincanViewHisWorkspaces()
-    {
-        $this->loadUserData(array('admin' => 'admin'));
-        $this->loadWorkspaceData(array('ws_e' => 'admin'));
-        $crawler = $this->logUser($this->getUser('admin'));
-        $link = $crawler->filter('#link-my-workspaces')->link();
-        $crawler = $this->client->click($link);
-        $this->assertEquals(2, $crawler->filter('.row-workspace')->count());
-    }
-
-    public function testWSCreatorCanCreateWS()
-    {
-        $now = new \DateTime();
-
-        $this->loadUserData(array('ws_creator' => 'ws_creator'));
-        $crawler = $this->logUser($this->getUser('ws_creator'));
-        $link = $crawler->filter('#link-create-ws-form')->link();
-        $crawler = $this->client->click($link);
-        $form = $crawler->filter('button[type=submit]')->form();
-        $form['workspace_form[name]'] = 'new_workspace';
-        $form['workspace_form[type]'] = 'simple';
-        $form['workspace_form[code]'] = 'code';
-        $form['workspace_form[template]'] = $this->defaultTemplate->getId();
-        $this->client->submit($form);
-        $crawler = $this->client->request('GET', "/workspaces");
-        $this->assertEquals(1, $crawler->filter('.row-workspace')->count());
-
-        $logs = $this->logRepository->findActionAfterDate(
-            'workspace_create',
-            $now,
-            $this->getUser('ws_creator')->getId()
+        $datas = array(
+            'workspaces' => 'workspaces',
+            'tags' => 'tags',
+            'tagWorkspaces' => 'tagWorkspaces',
+            'hierarchy' => 'hierarchy',
+            'rootTags' => 'rootTags',
+            'displayable' => 'displayable',
+            'workspaceRoles' => 'workspaceRoles'
         );
-        $this->assertEquals(1, count($logs));
+
+        $this->tagManager
+            ->shouldReceive('getDatasForWorkspaceList')
+            ->with(false)
+            ->once()
+            ->andReturn($datas);
+
+        $this->assertEquals(
+            array(
+                'workspaces' => $datas['workspaces'],
+                'tags' => $datas['tags'],
+                'tagWorkspaces' => $datas['tagWorkspaces'],
+                'hierarchy' => $datas['hierarchy'],
+                'rootTags' => $datas['rootTags'],
+                'displayable' => $datas['displayable']
+            ),
+            $this->getController()->listAction()
+        );
     }
 
-    /**
-     * @group debug
-     */
-    public function testWSCreatorCanDeleteHisWS()
+    public function testListWorkspacesByUserAction()
     {
-        // $now = new \DateTime();
+        $controller = $this->getController(array('assertIsGranted', 'isTagDisplayable'));
+        $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $user = new User();
+        $roles = array('ROLE_A', 'ROLE_B');
+        $workspaces = array('worksapce_1', 'workspace_2');
+        $tagA = $this->mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTag');
+        $tagB = $this->mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTag');
+        $tagC = $this->mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTag');
+        $tagD = $this->mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTag');
+        $tags = array($tagA, $tagB, $tagC);
+        $allTags = array($tagA, $tagB, $tagC, $tagD);
+        $relTagWorkspace = array(
+            array('tag_id' => 1, 'rel_ws_tag' => 'relation_1'),
+            array('tag_id' => 1, 'rel_ws_tag' => 'relation_2'),
+            array('tag_id' => 2, 'rel_ws_tag' => 'relation_3'),
+            array('tag_id' => 3, 'rel_ws_tag' => 'relation_4')
+        );
+        $tagHierarchyA = $this->mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy');
+        $tagHierarchyB = $this->mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy');
+        $tagHierarchyC = $this->mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy');
+        $tagHierarchyD = $this->mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy');
+        $tagsHierarchy = array($tagHierarchyA, $tagHierarchyB, $tagHierarchyC, $tagHierarchyD);
+        $rootTags = array($tagA);
 
-        $this->loadUserData(array('ws_creator' => 'ws_creator'));
-        $this->loadWorkspaceData(
+        $this->security->shouldReceive('isGranted')->with('ROLE_USER', null)->once()->andReturn(true);
+        $this->security->shouldReceive('getToken')->once()->andReturn($token);
+        $token->shouldReceive('getUser')->once()->andReturn($user);
+        $this->utils->shouldReceive('getRoles')->with($token)->once()->andReturn($roles);
+        $this->workspaceManager
+            ->shouldReceive('getWorkspacesByRoles')
+            ->with($roles)
+            ->once()
+            ->andReturn($workspaces);
+        $this->tagManager
+            ->shouldReceive('getNonEmptyTagsByUser')
+            ->with($user)
+            ->once()
+            ->andReturn($tags);
+        $this->tagManager
+            ->shouldReceive('getTagRelationsByUser')
+            ->with($user)
+            ->once()
+            ->andReturn($relTagWorkspace);
+        $this->tagManager
+            ->shouldReceive('getAllHierarchiesByUser')
+            ->with($user)
+            ->once()
+            ->andReturn($tagsHierarchy);
+        $this->tagManager
+            ->shouldReceive('getRootTags')
+            ->with($user)
+            ->once()
+            ->andReturn($rootTags);
+        $tagHierarchyA->shouldReceive('getLevel')->once()->andReturn(0);
+        $tagHierarchyB->shouldReceive('getLevel')->once()->andReturn(0);
+        $tagHierarchyC->shouldReceive('getLevel')->once()->andReturn(0);
+        $tagHierarchyD->shouldReceive('getLevel')->once()->andReturn(1);
+        $tagHierarchyD->shouldReceive('getParent')->times(3)->andReturn($tagA);
+        $tagA->shouldReceive('getId')->times(4)->andReturn(1);
+        $tagHierarchyD->shouldReceive('getTag')->once()->andReturn($tagB);
+        $this->tagManager
+            ->shouldReceive('getTagsByUser')
+            ->with($user)
+            ->once()
+            ->andReturn($allTags);
+        $tagB->shouldReceive('getId')->once()->andReturn(2);
+        $tagC->shouldReceive('getId')->once()->andReturn(3);
+        $tagD->shouldReceive('getId')->once()->andReturn(4);
+
+        $controller->listWorkspacesByUserAction();
+    }
+
+    public function testListWorkspacesWithSelfRegistrationAction()
+    {
+        $controller = $this->getController(array('assertIsGranted'));
+        $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $user = new User();
+        $datas = array(
+            'workspaces' => 'workspaces',
+            'tags' => 'tags',
+            'tagWorkspaces' => 'tagWorkspaces',
+            'hierarchy' => 'hierarchy',
+            'rootTags' => 'rootTags',
+            'displayable' => 'displayable'
+        );
+
+        $this->security->shouldReceive('isGranted')->with('ROLE_USER', null)->once()->andReturn(true);
+        $this->security->shouldReceive('getToken')->once()->andReturn($token);
+        $token->shouldReceive('getUser')->once()->andReturn($user);
+        $this->tagManager
+            ->shouldReceive('getDatasForSelfRegistrationWorkspaceList')
+            ->once()
+            ->andReturn($datas);
+
+        $this->assertEquals(
             array(
-                'ws_a' => 'ws_creator',
-                'ws_b' => 'ws_creator',
-                'ws_c' => 'ws_creator',
-                'ws_d' => 'ws_creator',
+                'user' => $user,
+                'workspaces' => $datas['workspaces'],
+                'tags' => $datas['tags'],
+                'tagWorkspaces' => $datas['tagWorkspaces'],
+                'hierarchy' => $datas['hierarchy'],
+                'rootTags' => $datas['rootTags'],
+                'displayable' => $datas['displayable']
+            ),
+            $controller->listWorkspacesWithSelfRegistrationAction()
+        );
+    }
+
+    public function testCreationFormAction()
+    {
+        $controller = $this->getController(array('assertIsGranted'));
+        $form = $this->mock('Symfony\Component\Form\Form');
+
+        $this->security
+            ->shouldReceive('isGranted')
+            ->with('ROLE_WS_CREATOR', null)
+            ->once()
+            ->andReturn(true);
+        $this->formFactory
+            ->shouldReceive('create')
+            ->with(FormFactory::TYPE_WORKSPACE)
+            ->once()
+            ->andReturn($form);
+        $form->shouldReceive('createView')->once()->andReturn('view');
+
+        $this->assertEquals(array('form' => 'view'), $controller->creationFormAction());
+    }
+
+    public function testCreateAction()
+    {
+        $this->markTestSkipped('Cannot test because of some method calls');
+    }
+
+    public function testDeleteAction()
+    {
+        $controller = $this->getController(array('assertIsGranted'));
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+
+        $this->security
+            ->shouldReceive('isGranted')
+            ->with('DELETE', $workspace)
+            ->once()
+            ->andReturn(true);
+        $this->eventDispatcher
+            ->shouldReceive('dispatch')
+            ->with('log', 'Log\LogWorkspaceDelete', array($workspace))
+            ->once();
+        $this->workspaceManager
+            ->shouldReceive('deleteWorkspace')
+            ->with($workspace)
+            ->once();
+
+        $this->assertEquals(new Response('success', 204), $controller->deleteAction($workspace));
+    }
+
+    public function testRenderToolListActionWithBreadcrumbs()
+    {
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspaceA = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $resource = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
+        $breadcrumbs = array(0, 0);
+        $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $roles = array('ROLE_1', 'ROLE_2');
+        $orderedTools = array('ordered_tool_1', 'ordered_tool_2');
+
+        $this->resourceManager
+            ->shouldReceive('getNode')
+            ->with(0)
+            ->once()
+            ->andReturn($resource);
+        $resource->shouldReceive('getWorkspace')
+            ->once()
+            ->andReturn($workspaceA);
+        $this->security
+            ->shouldReceive('isGranted')
+            ->with('OPEN', $workspaceA)
+            ->once()
+            ->andReturn(true);
+        $this->security->shouldReceive('getToken')->once()->andReturn($token);
+        $this->utils->shouldReceive('getRoles')->with($token)->once()->andReturn($roles);
+        $this->toolManager
+            ->shouldReceive('getOrderedToolsByWorkspaceAndRoles')
+            ->with($workspaceA, $roles)
+            ->once()
+            ->andReturn($orderedTools);
+
+        $this->assertEquals(
+            array('orderedTools' => $orderedTools, 'workspace' => $workspaceA),
+            $this->getController()->renderToolListAction($workspace, $breadcrumbs)
+        );
+    }
+
+    public function testRenderToolListActionWithoutBreadcrumbs()
+    {
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $roles = array('ROLE_1', 'ROLE_2');
+        $orderedTools = array('ordered_tool_1', 'ordered_tool_2');
+
+        $this->security
+            ->shouldReceive('isGranted')
+            ->with('OPEN', $workspace)
+            ->once()
+            ->andReturn(true);
+        $this->security->shouldReceive('getToken')->once()->andReturn($token);
+        $this->utils->shouldReceive('getRoles')->with($token)->once()->andReturn($roles);
+        $this->toolManager
+            ->shouldReceive('getOrderedToolsByWorkspaceAndRoles')
+            ->with($workspace, $roles)
+            ->once()
+            ->andReturn($orderedTools);
+
+        $this->assertEquals(
+            array('orderedTools' => $orderedTools, 'workspace' => $workspace),
+            $this->getController()->renderToolListAction($workspace, null)
+        );
+    }
+
+    public function testOpenToolAction()
+    {
+        $controller = $this->getController(array('assertIsGranted'));
+        $toolName = 'tool_name';
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $event = $this->mock('Claroline\CoreBundle\Event\Event\DisplayToolEvent');
+
+        $this->security
+            ->shouldReceive('isGranted')
+            ->with($toolName, $workspace)
+            ->once()
+            ->andReturn(true);
+        $this->eventDispatcher
+            ->shouldReceive('dispatch')
+            ->with(
+                'open_tool_workspace_' . $toolName,
+                'DisplayTool',
+                array($workspace)
+            )
+            ->once()
+            ->andReturn($event);
+        $this->eventDispatcher
+            ->shouldReceive('dispatch')
+            ->with(
+                'log',
+                'Log\LogWorkspaceToolRead',
+                array($workspace, $toolName)
+            )
+            ->once();
+        $event->shouldReceive('getContent')->once()->andReturn('content');
+
+        $this->assertEquals(
+            new Response('content'),
+            $controller->openToolAction($toolName, $workspace)
+        );
+    }
+
+    public function testWidgetsAction()
+    {
+        $this->markTestSkipped('Maybe after refactoring of widget manager');
+    }
+
+    public function testOpenActionAdmin()
+    {
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $admin = $this->mock('Claroline\CoreBundle\Entity\User');
+        $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $roleA = $this->mock('Claroline\CoreBundle\Entity\Role');
+        $roleB = $this->mock('Claroline\CoreBundle\Entity\Role');
+        $roles = array($roleA, $roleB);
+        $userRoles = array('ROLE_A', 'ROLE_C');
+        $openedTool = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
+
+        $this->security->shouldReceive('getToken')->times(4)->andReturn($token);
+        $token->shouldReceive('getUser')->once()->andReturn('admin');
+        $this->roleManager
+            ->shouldReceive('getRolesByWorkspace')
+            ->with($workspace)
+            ->once()
+            ->andReturn($roles);
+        $token->shouldReceive('getUser')->times(3)->andReturn($admin);
+        $admin->shouldReceive('getRoles')->times(2)->andReturn($userRoles);
+        $roleA->shouldReceive('getName')->times(2)->andReturn('ROLE_A');
+        $roleB->shouldReceive('getName')->times(2)->andReturn('ROLE_B');
+        $admin->shouldReceive('hasRole')->with('ROLE_ADMIN')->once()->andReturn(true);
+        $this->toolManager
+            ->shouldReceive('getOneToolByName')
+            ->with('home')
+            ->once()
+            ->andReturn($openedTool);
+        $workspace->shouldReceive('getId')->once()->andReturn(1);
+        $openedTool->shouldReceive('getName')->once()->andReturn('tool_name');
+        $this->router
+            ->shouldReceive('generate')
+            ->with(
+                'claro_workspace_open_tool',
+                array('workspaceId' => 1, 'toolName' => 'tool_name')
+            )
+            ->once()
+            ->andReturn('route');
+
+        $this->assertEquals(
+            new RedirectResponse('route'),
+            $this->getController()->openAction($workspace)
+        );
+    }
+
+    public function testOpenActionUser()
+    {
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $user = $this->mock('Claroline\CoreBundle\Entity\User');
+        $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $roleA = $this->mock('Claroline\CoreBundle\Entity\Role');
+        $roleB = $this->mock('Claroline\CoreBundle\Entity\Role');
+        $roles = array($roleA, $roleB);
+        $userRoles = array('ROLE_A', 'ROLE_C');
+        $openedTool = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
+
+        $this->security->shouldReceive('getToken')->times(4)->andReturn($token);
+        $token->shouldReceive('getUser')->once()->andReturn('user');
+        $this->roleManager
+            ->shouldReceive('getRolesByWorkspace')
+            ->with($workspace)
+            ->once()
+            ->andReturn($roles);
+        $token->shouldReceive('getUser')->times(3)->andReturn($user);
+        $user->shouldReceive('getRoles')->times(2)->andReturn($userRoles);
+        $roleA->shouldReceive('getName')->times(2)->andReturn('ROLE_A');
+        $roleB->shouldReceive('getName')->times(2)->andReturn('ROLE_B');
+        $user->shouldReceive('hasRole')->with('ROLE_ADMIN')->once()->andReturn(false);
+        $this->toolManager
+            ->shouldReceive('getDisplayedByRolesAndWorkspace')
+            ->with(array('ROLE_A'), $workspace)
+            ->once()
+            ->andReturn(array($openedTool));
+        $workspace->shouldReceive('getId')->once()->andReturn(1);
+        $openedTool->shouldReceive('getName')->once()->andReturn('tool_name');
+        $this->router
+            ->shouldReceive('generate')
+            ->with(
+                'claro_workspace_open_tool',
+                array('workspaceId' => 1, 'toolName' => 'tool_name')
+            )
+            ->once()
+            ->andReturn('route');
+
+        $this->assertEquals(
+            new RedirectResponse('route'),
+            $this->getController()->openAction($workspace)
+        );
+    }
+
+    public function testOpenActionAnonymous()
+    {
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $openedTool = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
+
+        $this->security->shouldReceive('getToken')->times(1)->andReturn($token);
+        $token->shouldReceive('getUser')->once()->andReturn('anon.');
+        $this->toolManager
+            ->shouldReceive('getDisplayedByRolesAndWorkspace')
+            ->with(array('ROLE_ANONYMOUS'), $workspace)
+            ->once()
+            ->andReturn(array($openedTool));
+        $workspace->shouldReceive('getId')->once()->andReturn(1);
+        $openedTool->shouldReceive('getName')->once()->andReturn('tool_name');
+        $this->router
+            ->shouldReceive('generate')
+            ->with(
+                'claro_workspace_open_tool',
+                array('workspaceId' => 1, 'toolName' => 'tool_name')
+            )
+            ->once()
+            ->andReturn('route');
+
+        $this->assertEquals(
+            new RedirectResponse('route'),
+            $this->getController()->openAction($workspace)
+        );
+    }
+
+    public function testFindRoleByWorkspaceCodeAction()
+    {
+        $roleA = $this->mock('Claroline\CoreBundle\Entity\Role');
+        $roleB = $this->mock('Claroline\CoreBundle\Entity\Role');
+        $roles = array($roleA, $roleB);
+        $workspaceA = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspaceB = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $arWorkspace = array(
+            'code_A' => array(
+                'ROLE_A' => array(
+                    'name' => 'ROLE_A',
+                    'translation_key' => 'key_A',
+                    'id' => 1,
+                    'workspace' => 'ws_A'
+                )
+            ),
+            'code_B' => array(
+                'ROLE_B' => array(
+                    'name' => 'ROLE_B',
+                    'translation_key' => 'key_B',
+                    'id' => 2,
+                    'workspace' => 'ws_B'
+                )
             )
         );
 
-        $this->logUser($this->getUser('ws_creator'));
+        $this->roleManager
+            ->shouldReceive('getRolesBySearchOnWorkspaceAndTag')
+            ->with('search')
+            ->once()
+            ->andReturn($roles);
+        $roleA->shouldReceive('getWorkspace')->times(2)->andReturn($workspaceA);
+        $workspaceA->shouldReceive('getCode')->once()->andReturn('code_A');
+        $roleA->shouldReceive('getName')->times(2)->andReturn('ROLE_A');
+        $roleA->shouldReceive('getTranslationKey')->once()->andReturn('key_A');
+        $roleA->shouldReceive('getId')->once()->andReturn(1);
+        $workspaceA->shouldReceive('getName')->once()->andReturn('ws_A');
+        $roleB->shouldReceive('getWorkspace')->times(2)->andReturn($workspaceB);
+        $workspaceB->shouldReceive('getCode')->once()->andReturn('code_B');
+        $roleB->shouldReceive('getName')->times(2)->andReturn('ROLE_B');
+        $roleB->shouldReceive('getTranslationKey')->once()->andReturn('key_B');
+        $roleB->shouldReceive('getId')->once()->andReturn(2);
+        $workspaceB->shouldReceive('getName')->once()->andReturn('ws_B');
 
-        $crawler = $this->client->request(
-            'DELETE',
-            "/workspaces/{$this->getWorkspace('ws_d')->getId()}"
+        $this->assertEquals(
+            new JsonResponse($arWorkspace),
+            $this->getController()->findRoleByWorkspaceCodeAction('search')
         );
-        $crawler = $this->client->request(
-            'GET',
-            "/workspaces/user"
-        );
-
-        $this->assertEquals(4, $crawler->filter('.row-workspace')->count());
-
-        // $logs = $this->logRepository->findActionAfterDate(
-        //     'workspace_delete',
-        //     $now,
-        //     $this->getUser('ws_creator')->getId()
-        // );
-        // $this->assertEquals(1, count($logs));
     }
 
-    public function testWSManagercanViewHisWS()
+    public function testWorkspaceListByTagPagerAction()
     {
-        $this->loadUserData(array('ws_creator' => 'ws_creator'));
-        $this->loadWorkspaceData(
+        $tag = $this->mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTag');
+
+        $this->tagManager
+            ->shouldReceive('getPagerRelationByTag')
+            ->with($tag, 1)
+            ->once()
+            ->andReturn('relations');
+        $tag->shouldReceive('getId')
+            ->once()
+            ->andReturn(1);
+
+        $this->assertEquals(
             array(
-                'ws_a' => 'ws_creator',
-                'ws_b' => 'ws_creator',
-                'ws_c' => 'ws_creator',
-                'ws_d' => 'ws_creator',
+                'workspaceTagId' => 1,
+                'relations' => 'relations'
+            ),
+            $this->getController()->workspaceListByTagPagerAction($tag, 1)
+        );
+    }
+
+    public function testWorkspaceCompleteListPagerAction()
+    {
+        $this->tagManager->shouldReceive('getPagerAllWorkspaces')
+            ->with(1)
+            ->once()
+            ->andReturn('workspaces');
+
+        $this->assertEquals(
+            array('workspaces' => 'workspaces'),
+            $this->getController()->workspaceCompleteListPagerAction(1)
+        );
+    }
+
+    public function testWorkspaceListByTagRegistrationPagerAction()
+    {
+        $tag = $this->mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTag');
+
+        $this->tagManager
+            ->shouldReceive('getPagerRelationByTag')
+            ->with($tag, 1)
+            ->once()
+            ->andReturn('relations');
+        $tag->shouldReceive('getId')
+            ->once()
+            ->andReturn(1);
+
+        $this->assertEquals(
+            array(
+                'workspaceTagId' => 1,
+                'relations' => 'relations'
+            ),
+            $this->getController()->workspaceListByTagRegistrationPagerAction($tag, 1)
+        );
+    }
+
+    public function testWorkspaceCompleteListRegistrationPagerAction()
+    {
+        $this->tagManager->shouldReceive('getPagerAllWorkspaces')
+            ->with(1)
+            ->once()
+            ->andReturn('workspaces');
+
+        $this->assertEquals(
+            array('workspaces' => 'workspaces'),
+            $this->getController()->workspaceCompleteListRegistrationPagerAction(1)
+        );
+    }
+
+    public function testWorkspaceSearchedListRegistrationPagerAction()
+    {
+        $this->workspaceManager->shouldReceive('getDisplayableWorkspacesBySearchPager')
+            ->with('search', 1)
+            ->once()
+            ->andReturn('pager');
+
+        $this->assertEquals(
+            array('workspaces' => 'pager', 'search' => 'search'),
+            $this->getController()->workspaceSearchedListRegistrationPagerAction('search', 1)
+        );
+    }
+
+    private function getController(array $mockedMethods = array())
+    {
+        if (count($mockedMethods) === 0) {
+
+            return new WorkspaceController(
+                $this->workspaceManager,
+                $this->resourceManager,
+                $this->roleManager,
+                $this->tagManager,
+                $this->toolManager,
+                $this->eventDispatcher,
+                $this->security,
+                $this->router,
+                $this->utils,
+                $this->formFactory
+            );
+        }
+
+        $stringMocked = '[';
+        $stringMocked .= array_pop($mockedMethods);
+
+        foreach ($mockedMethods as $mockedMethod) {
+            $stringMocked .= ",{$mockedMethod}";
+        }
+
+        $stringMocked .= ']';
+
+        return $this->mock(
+            'Claroline\CoreBundle\Controller\WorkspaceController' . $stringMocked,
+            array(
+                $this->workspaceManager,
+                $this->resourceManager,
+                $this->roleManager,
+                $this->tagManager,
+                $this->toolManager,
+                $this->eventDispatcher,
+                $this->security,
+                $this->router,
+                $this->utils,
+                $this->formFactory
             )
         );
-        $this->logUser($this->getUser('ws_creator'));
-        $crawler = $this->client->request(
-            'GET',
-            "/workspaces"
-        );
-        $link = $crawler->filter("#link-home-{$this->getWorkspace('ws_d')->getId()}")
-            ->link();
-        $crawler = $this->client->click($link);
-        $this->assertEquals(1, $crawler->filter(".welcome-home")->count());
-    }
-
-    public function testUsercanViewWSList()
-    {
-        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $this->loadWorkspaceData(
-            array(
-            'ws_e' => 'admin',
-            'ws_f' => 'admin'
-            )
-        );
-        $this->logUser($this->getUser('user'));
-        $crawler = $this->client->request('GET', "/workspaces");
-        $this->assertEquals(2, $crawler->filter('.row-workspace')->count());
-    }
-
-    //111111111111111111111111111111111
-    //++++++++++++++++++++++++++++++/
-    // ACCESS WORKSPACE MAIN PAGES +/
-    //++++++++++++++++++++++++++++++/
-
-    public function testUserCantAccessUnregisteredResource()
-    {
-        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $this->logUser($this->getUser('user'));
-        $pwuId = $this->getUser('admin')->getPersonalWorkspace()->getId();
-        $this->client->request(
-            'GET',
-            "/workspaces/{$pwuId}/open/tool/resource_manager"
-        );
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testDisplayHome()
-    {
-        $this->loadUserData(array('user' => 'user'));
-        $this->logUser($this->getUser('user'));
-        $pwsId = $this->getUser('user')->getPersonalWorkspace()->getId();
-        $this->client->request(
-            'GET',
-            "/workspaces/{$pwsId}/open/tool/home"
-        );
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testUserCantAccessUnregisteredHome()
-    {
-        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $this->logUser($this->getUser('user'));
-        $pwaId = $this->getUser('admin')->getPersonalWorkspace()->getId();
-        $this->client->request(
-            'GET',
-            "/workspaces/{$pwaId}/open/tool/home"
-        );
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testDisplayUserManagement()
-    {
-        $this->loadUserData(array('user' => 'user'));
-        $pwuId = $this->getUser('user')->getPersonalWorkspace()->getId();
-        $this->logUser($this->getUser('user'));
-        $this->client->request('GET', "/workspaces/{$pwuId}/open/tool/user_management");
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testUserCantAccessUnregisteredUserManagement()
-    {
-        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $pwaId = $this->getUser('admin')->getPersonalWorkspace()->getId();
-        $this->logUser($this->getUser('user'));
-        $this->client->request('GET', "/workspaces/{$pwaId}/open/tool/user_management");
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testDisplayUserParameters()
-    {
-        $this->loadUserData(array('user' => 'user'));
-        $pwuId = $this->getUser('user')->getPersonalWorkspace()->getId();
-        $this->logUser($this->getUser('user'));
-        $this->client->request(
-            'GET',
-            "/workspaces/tool/user_management/{$pwuId}/user/{$this->getUser('user')->getId()}"
-        );
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testUserCantAccessUnregisteredUserParameters()
-    {
-        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $pwaId = $this->getUser('admin')->getPersonalWorkspace()->getId();
-        $userId = $this->getUser('user')->getId();
-        $this->logUser($this->getUser('user'));
-        $this->client->request('GET', "/workspaces/tool/user_management/{$pwaId}/user/{$userId}");
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testWSCreatorCantCreateTwoWSWithSameCode()
-    {
-        $this->loadUserData(array('ws_creator' => 'ws_creator'));
-        $crawler = $this->logUser($this->getFixtureReference('user/ws_creator'));
-        $link = $crawler->filter('#link-create-ws-form')->link();
-        $crawler = $this->client->click($link);
-        $form = $crawler->filter('button[type=submit]')->form();
-        $form['workspace_form[name]'] = 'first_new_workspace';
-        $form['workspace_form[type]'] = 'simple';
-        $form['workspace_form[code]'] = 'same_code';
-        $form['workspace_form[template]'] = $this->defaultTemplate->getId();
-        $this->client->submit($form);
-        $crawler = $this->client->request('GET', "/workspaces");
-        $this->assertEquals(1, $crawler->filter('.row-workspace')->count());
-        $crawler = $this->client->click($link);
-        $form = $crawler->filter('button[type=submit]')->form();
-        $form['workspace_form[name]'] = 'second_new_workspace';
-        $form['workspace_form[type]'] = 'simple';
-        $form['workspace_form[code]'] = 'same_code';
-        $form['workspace_form[template]'] = $this->defaultTemplate->getId();
-        $this->client->submit($form);
-        $crawler = $this->client->request('GET', "/workspaces");
-        $this->assertEquals(1, $crawler->filter('.row-workspace')->count());
-    }
-
-    public function testCreateWorkspaceGrantAccessToWorkspace()
-    {
-        $this->loadUserData(array('ws_creator' => 'ws_creator'));
-        $crawler = $this->logUser($this->getFixtureReference('user/ws_creator'));
-        $link = $crawler->filter('#link-create-ws-form')->link();
-        $crawler = $this->client->click($link);
-        $form = $crawler->filter('button[type=submit]')->form();
-        $form['workspace_form[name]'] = 'first_new_workspace';
-        $form['workspace_form[type]'] = 'simple';
-        $form['workspace_form[code]'] = 'a_code';
-        $form['workspace_form[template]'] = $this->defaultTemplate->getId();
-        $this->client->submit($form);
-        $ws = $this->client->getContainer()->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
-            ->findOneByName('first_new_workspace');
-        $this->client->request('GET', "/workspaces/{$ws->getId()}/open/tool/home");
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testUserCanCreateWorkspaceTag()
-    {
-        $this->loadUserData(array('user' => 'user'));
-        $this->logUser($this->getUser('user'));
-        $crawler = $this->client->request('GET', '/workspaces/tag/createform');
-        $form = $crawler->filter('button[type=submit]')->form();
-        $form['workspace_tag_form[name]'] = 'tag';
-        $this->client->submit($form);
-        $form = $crawler->filter('button[type=submit]')->form();
-        $form['workspace_tag_form[name]'] = 'tag 2';
-        $this->client->submit($form);
-        $tags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findByUser($this->getUser('user'));
-        $this->assertEquals(2, count($tags));
-    }
-
-    public function testUserCantCreateTwoWorkspaceTagsWithSameName()
-    {
-        $this->loadUserData(array('user' => 'user'));
-        $this->logUser($this->getUser('user'));
-        $crawler = $this->client->request('GET', '/workspaces/tag/createform');
-        $form = $crawler->filter('button[type=submit]')->form();
-        $form['workspace_tag_form[name]'] = 'tag';
-        $this->client->submit($form);
-        $tags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findByUser($this->getUser('user'));
-        $this->assertEquals(1, count($tags));
-        $crawler = $this->client->request('GET', '/workspaces/tag/createform');
-        $form = $crawler->filter('button[type=submit]')->form();
-        $form['workspace_tag_form[name]'] = 'tag';
-        $this->client->submit($form);
-        $tags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findByUser($this->getUser('user'));
-        $this->assertEquals(1, count($tags));
-    }
-
-    public function testUserCanAssociateAndRemoveTagToWorkspace()
-    {
-        $this->loadUserData(array('user' => 'user'));
-        $this->logUser($this->getUser('user'));
-        $pws = $this->getUser('user')->getPersonalWorkspace();
-        $userId = $this->getUser('user')->getId();
-        $workspaceId = $pws->getId();
-        $crawler = $this->client->request("GET", "/workspaces/tag/createform");
-        $form = $crawler->filter('button[type=submit]')->form();
-        $form['workspace_tag_form[name]'] = 'tag';
-        $this->client->submit($form);
-
-        $tag = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findOneBy(array('user' => $userId, 'name' => 'tag'));
-
-        $this->client->request(
-            "POST",
-            "/workspaces/{$userId}/workspace/{$workspaceId}/tag/add/{$tag->getName()}"
-        );
-        $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findByWorkspaceAndUser($pws, $this->getUser('user'));
-        $this->assertEquals(1, count($relWsTag));
-
-        $this->client->request(
-            "DELETE",
-            "/workspaces/{$userId}/workspace/{$workspaceId}/tag/remove/{$tag->getId()}"
-        );
-        $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findByWorkspaceAndUser($pws, $this->getUser('user'));
-        $this->assertEquals(0, count($relWsTag));
-    }
-
-    public function testUserCanAssociateInexistingTagToWorkspace()
-    {
-        $this->loadUserData(array('user' => 'user'));
-        $this->logUser($this->getUser('user'));
-        $pws = $this->getUser('user')->getPersonalWorkspace();
-        $userId = $this->getUser('user')->getId();
-        $workspaceId = $pws->getId();
-
-        $this->client->request(
-            "POST",
-            "/workspaces/{$userId}/workspace/{$workspaceId}/tag/add/tag"
-        );
-        $tags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findByUser($this->getUser('user'));
-        $this->assertEquals(1, count($tags));
-        $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findOneByWorkspaceAndTagAndUser($pws, $tags[0], $this->getUser('user'));
-        $this->assertNotNull($relWsTag);
-    }
-
-    public function testAdminCanCreateWorkspaceTag()
-    {
-        $this->loadUserData(array('admin' => 'admin'));
-        $this->logUser($this->getUser('admin'));
-        $crawler = $this->client->request('GET', '/workspaces/tag/admin/createform');
-        $form = $crawler->filter('button[type=submit]')->form();
-        $form['admin_workspace_tag_form[name]'] = 'tag';
-        $this->client->submit($form);
-        $form = $crawler->filter('button[type=submit]')->form();
-        $form['admin_workspace_tag_form[name]'] = 'tag 2';
-        $this->client->submit($form);
-        $tags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findByUser(null);
-        $this->assertEquals(2, count($tags));
-    }
-
-    public function testAdminCantCreateTwoWorkspaceTagsWithSameName()
-    {
-        $this->loadUserData(array('admin' => 'admin'));
-        $this->logUser($this->getUser('admin'));
-        $crawler = $this->client->request('GET', '/workspaces/tag/admin/createform');
-        $form = $crawler->filter('button[type=submit]')->form();
-        $form['admin_workspace_tag_form[name]'] = 'tag';
-        $this->client->submit($form);
-        $tags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findByUser(null);
-        $this->assertEquals(1, count($tags));
-        $crawler = $this->client->request('GET', '/workspaces/tag/admin/createform');
-        $form = $crawler->filter('button[type=submit]')->form();
-        $form['admin_workspace_tag_form[name]'] = 'tag';
-        $this->client->submit($form);
-        $tags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findByUser(null);
-        $this->assertEquals(1, count($tags));
-    }
-
-    public function testAdminCanAssociateAndRemoveTagToWorkspace()
-    {
-        $this->loadUserData(array('admin' => 'admin'));
-        $this->logUser($this->getUser('admin'));
-        $pws = $this->getUser('admin')->getPersonalWorkspace();
-        $workspaceId = $pws->getId();
-        $crawler = $this->client->request("GET", "/workspaces/tag/admin/createform");
-        $form = $crawler->filter('button[type=submit]')->form();
-        $form['admin_workspace_tag_form[name]'] = 'tag';
-        $this->client->submit($form);
-
-        $tag = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findOneBy(array('user' => null, 'name' => 'tag'));
-
-        $this->client->request(
-            "POST",
-            "/workspaces/workspace/{$workspaceId}/tag/add/{$tag->getName()}"
-        );
-        $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findAdminByWorkspace($pws);
-        $this->assertEquals(1, count($relWsTag));
-
-        $this->client->request(
-            "DELETE",
-            "/workspaces/workspace/{$workspaceId}/tag/remove/{$tag->getId()}"
-        );
-        $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findAdminByWorkspace($pws);
-        $this->assertEquals(0, count($relWsTag));
-    }
-
-    public function testAdminCanAssociateInexistingTagToWorkspace()
-    {
-        $this->loadUserData(array('admin' => 'admin'));
-        $this->logUser($this->getUser('admin'));
-        $pws = $this->getUser('admin')->getPersonalWorkspace();
-        $workspaceId = $pws->getId();
-
-        $this->client->request(
-            "POST",
-            "/workspaces/workspace/{$workspaceId}/tag/add/tag"
-        );
-        $tags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findByUser(null);
-        $this->assertEquals(1, count($tags));
-        $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findOneAdminByWorkspaceAndTag($pws, $tags[0]);
-        $this->assertNotNull($relWsTag);
-    }
-
-    public function testUserAndAdminCanCreateTagWithTheSameName()
-    {
-        $this->loadUserData(array('admin' => 'admin'));
-        $this->logUser($this->getUser('admin'));
-        $userId = $this->getUser('admin')->getId();
-        $pws = $this->getUser('admin')->getPersonalWorkspace();
-        $workspaceId = $pws->getId();
-
-        $this->client->request(
-            "POST",
-            "/workspaces/{$userId}/workspace/{$workspaceId}/tag/add/tag"
-        );
-        $userTags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findByUser($this->getUser('admin'));
-        $this->assertEquals(1, count($userTags));
-        $userRelWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findOneByWorkspaceAndTagAndUser($pws, $userTags[0], $this->getUser('admin'));
-        $this->assertNotNull($userRelWsTag);
-
-        $this->client->request(
-            "POST",
-            "/workspaces/workspace/{$workspaceId}/tag/add/tag"
-        );
-        $adminTags = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findByUser(null);
-        $this->assertEquals(1, count($adminTags));
-        $adminRelWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findOneAdminByWorkspaceAndTag($pws, $adminTags[0]);
-        $this->assertNotNull($adminRelWsTag);
-
-        $allRelWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findAllByWorkspaceAndUser($pws, $this->getUser('admin'));
-        $this->assertEquals(2, count($allRelWsTag));
-    }
-
-    public function testNonAdminCantAccessCreateAdminTagForm()
-    {
-        $this->setExpectedException('Exception');
-        $this->loadUserData(array('user' => 'user'));
-        $this->logUser($this->getUser('user'));
-        $crawler = $this->client->request('GET', '/workspaces/tag/admin/createform');
-        $crawler->filter('button[type=submit]')->form();
-    }
-
-    public function testNonAdminCantAssociateAdminTagToWorkspace()
-    {
-        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $this->logUser($this->getUser('admin'));
-        $crawler = $this->client->request('GET', '/workspaces/tag/admin/createform');
-        $form = $crawler->filter('button[type=submit]')->form();
-        $form['admin_workspace_tag_form[name]'] = 'tag';
-        $this->client->submit($form);
-        $tag = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findOneBy(array('user' => null, 'name' => 'tag'));
-        $this->assertNotNull($tag);
-
-        $this->logUser($this->getUser('user'));
-        $pws = $this->getUser('user')->getPersonalWorkspace();
-        $this->client->request(
-            "POST",
-            "/workspaces/workspace/{$pws->getId()}/tag/add/{$tag->getName()}"
-        );
-        $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findOneAdminByWorkspaceAndTag($pws, $tag);
-        $this->assertNull($relWsTag);
-    }
-
-    public function testNonAdminCantRemoveAdminTagFromWorkspace()
-    {
-        $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
-        $this->logUser($this->getUser('admin'));
-        $pws = $this->getUser('user')->getPersonalWorkspace();
-        $this->client->request(
-            "POST",
-            "/workspaces/workspace/{$pws->getId()}/tag/add/tag"
-        );
-        $tag = $this->em->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag')
-            ->findOneBy(array('user' => null, 'name' => 'tag'));
-        $this->assertNotNull($tag);
-
-        $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findOneAdminByWorkspaceAndTag($pws, $tag);
-        $this->assertNotNull($relWsTag);
-
-        $this->logUser($this->getUser('user'));
-        $this->client->request(
-            "DELETE",
-            "/workspaces/workspace/{$pws->getId()}/tag/remove/{$tag->getId()}"
-        );
-        $relWsTag = $this->em->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag')
-            ->findOneAdminByWorkspaceAndTag($pws, $tag);
-        $this->assertNotNull($relWsTag);
     }
 }

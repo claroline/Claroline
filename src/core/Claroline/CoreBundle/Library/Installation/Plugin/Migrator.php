@@ -2,7 +2,8 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use Claroline\CoreBundle\Library\Installation\BundleMigrator;
+use Doctrine\DBAL\Migrations\MigrationException;
+use Claroline\MigrationBundle\Migrator\Migrator as BaseMigrator;
 use Claroline\CoreBundle\Library\PluginBundle;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -21,10 +22,10 @@ class Migrator
      * @param BundleMigrator $migrator
      *
      * @DI\InjectParams({
-     *     "migrator" = @DI\Inject("claroline.install.bundle_migrator")
+     *     "migrator" = @DI\Inject("claroline.migration.migrator")
      * })
      */
-    public function __construct(BundleMigrator $migrator)
+    public function __construct(BaseMigrator $migrator)
     {
         $this->migrator = $migrator;
     }
@@ -36,7 +37,7 @@ class Migrator
      */
     public function install(PluginBundle $plugin)
     {
-        $this->migrator->createSchemaForBundle($plugin);
+        $this->doMigrate($plugin, BaseMigrator::DIRECTION_UP);
     }
 
     /**
@@ -46,18 +47,18 @@ class Migrator
      */
     public function remove(PluginBundle $plugin)
     {
-        $this->migrator->dropSchemaForBundle($plugin);
+        $this->doMigrate($plugin, BaseMigrator::DIRECTION_DOWN);
     }
 
-    /**
-     * Updates the tables of a plugin.
-     *
-     * @param PluginBundle $plugin
-     *
-     * @param string $version
-     */
-    public function migrate(PluginBundle $plugin, $version)
+    public function doMigrate(PluginBundle $plugin, $direction)
     {
-        $this->migrator->migrateBundle($plugin, $version);
+        try {
+            $this->migrator->migrate($plugin, BaseMigrator::VERSION_FARTHEST, $direction);
+        } catch (MigrationException $ex) {
+            // code 4 == no migration to execute (harmless)
+            if ($ex->getCode() !== 4) {
+                throw $ex;
+            }
+        }
     }
 }

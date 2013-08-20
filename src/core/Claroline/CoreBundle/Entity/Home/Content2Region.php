@@ -7,14 +7,61 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Content2Region
  *
+ * @ORM\Entity()
  * @ORM\Table(name="claro_content2region")
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Content2RegionRepository")
  */
 class Content2Region
 {
-    public function __construct($first)
+    /**
+     * @var integer
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     */
+    private $content;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Region")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     */
+    private $region;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(length=30)
+     */
+    private $size;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content2Region")
+     * @ORM\JoinColumn(onDelete="CASCADE")
+     */
+    private $next;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content2Region")
+     * @ORM\JoinColumn(onDelete="CASCADE")
+     */
+    private $back;
+
+    /**
+     * Constructor.
+     *
+     * @param \Claroline\CoreBundle\Entity\Home\Content2Region $first
+     */
+    public function __construct(Content2Region $first = null)
     {
-        $this->size = "span12"; //The size may be between 1 and 12 that correspont to span1 ant span12 of bootstrap
+        // the size may vary between 1 and 12 and corresponds to
+        // bootstrap container span classes
+        $this->size = 'span12';
 
         if ($first) {
             $first->setBack($this);
@@ -25,47 +72,6 @@ class Content2Region
             $this->back = null;
         }
     }
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content")
-     * @ORM\JoinColumn(name="content_id", nullable=false, onDelete="CASCADE")
-    */
-    private $content;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Region")
-     * @ORM\JoinColumn(name="region_id", nullable=false, onDelete="CASCADE")
-    */
-    private $region;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="size", type="string", length=30)
-     */
-    private $size;
-
-    /**
-    * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content2Region")
-    * @ORM\JoinColumn(name="next_id", nullable=true, onDelete="CASCADE")
-    */
-    private $next;
-
-    /**
-    * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content2Region")
-    * @ORM\JoinColumn(name="back_id", nullable=true, onDelete="CASCADE")
-    */
-    private $back;
-
 
     /**
      * Get id
@@ -80,7 +86,7 @@ class Content2Region
     /**
      * Set size
      *
-     * @param string $size
+     * @param  string         $size
      * @return Content2Region
      */
     public function setSize($size)
@@ -106,7 +112,7 @@ class Content2Region
      * @param \Claroline\CoreBundle\Entity\Home\Content $content
      * @return Content2Region
      */
-    public function setContent(\Claroline\CoreBundle\Entity\Home\Content $content)
+    public function setContent(Content $content)
     {
         $this->content = $content;
 
@@ -126,10 +132,10 @@ class Content2Region
     /**
      * Set region
      *
-     * @param \Claroline\CoreBundle\Entity\Home\Region $region
+     * @param  \Claroline\CoreBundle\Entity\Home\Region $region
      * @return Content2Region
      */
-    public function setRegion(\Claroline\CoreBundle\Entity\Home\Region $region)
+    public function setRegion(Region $region)
     {
         $this->region = $region;
 
@@ -149,10 +155,10 @@ class Content2Region
     /**
      * Set next
      *
-     * @param \Claroline\CoreBundle\Entity\Home\Content2Region $next
+     * @param  \Claroline\CoreBundle\Entity\Home\Content2Region $next
      * @return Content2Region
      */
-    public function setNext(\Claroline\CoreBundle\Entity\Home\Content2Region $next = null)
+    public function setNext(Content2Region $next = null)
     {
         $this->next = $next;
 
@@ -172,10 +178,10 @@ class Content2Region
     /**
      * Set back
      *
-     * @param \Claroline\CoreBundle\Entity\Home\Content2Region $back
+     * @param  \Claroline\CoreBundle\Entity\Home\Content2Region $back
      * @return Content2Region
      */
-    public function setBack(\Claroline\CoreBundle\Entity\Home\Content2Region $back = null)
+    public function setBack(Content2Region $back = null)
     {
         $this->back = $back;
 

@@ -2,14 +2,12 @@
 
 namespace Claroline\CoreBundle\Entity\Workspace;
 
-use \RuntimeException;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\SerializerBundle\Annotation\Type;
-use Claroline\CoreBundle\Entity\Tool\Tool;
-use Claroline\CoreBundle\Entity\Tool\WorkspaceTool;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkspaceRepository")
@@ -39,13 +37,13 @@ abstract class AbstractWorkspace
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column()
      * @Assert\NotBlank()
      */
     protected $name;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(unique=true)
      * @Assert\NotBlank()
      */
     protected $code;
@@ -56,8 +54,13 @@ abstract class AbstractWorkspace
     protected $isPublic = true;
 
     /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    protected $displayable;
+
+    /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     mappedBy="workspace"
      * )
      */
@@ -74,19 +77,18 @@ abstract class AbstractWorkspace
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\WorkspaceOrderedTool",
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\OrderedTool",
      *     mappedBy="workspace",
      *     cascade={"persist"}
      * )
      */
-    protected $workspaceOrderedTools;
-
+    protected $orderedTools;
 
     /**
      * @ORM\OneToMany(
-     * targetEntity="Claroline\CoreBundle\Entity\Role",
-     * mappedBy="workspace",
-     * cascade={"persist"}
+     *     targetEntity="Claroline\CoreBundle\Entity\Role",
+     *     mappedBy="workspace",
+     *     cascade={"persist"}
      * )
      */
     protected $roles;
@@ -99,10 +101,33 @@ abstract class AbstractWorkspace
      */
     protected $personalUser;
 
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\User"
+     * )
+     * @ORM\JoinColumn(name="user_id", onDelete="SET NULL")
+     */
+    protected $creator;
+
+    /**
+     * @ORM\Column(unique=true)
+     */
+    protected $guid;
+
+    /**
+     * @ORM\Column(name="self_registration", type="boolean", nullable=true)
+     */
+    protected $selfRegistration;
+
+    /**
+     * @ORM\Column(name="self_unregistration", type="boolean", nullable=true)
+     */
+    protected $selfUnregistration;
+
     public function __construct()
     {
         $this->roles = new ArrayCollection();
-        $this->workspaceTools = new ArrayCollection();
+        $this->orderedTools = new ArrayCollection();
     }
 
     public function getId()
@@ -152,13 +177,73 @@ abstract class AbstractWorkspace
         return $this->code;
     }
 
-    public function getWorkspaceOrderedTools()
+    public function getOrderedTools()
     {
-        return $this->workspaceOrderedTools;
+        return $this->orderedTools;
+    }
+
+    public function addOrderedTool(OrderedTool $tool)
+    {
+        $this->orderedTools->add($tool);
+    }
+
+    public function removeOrderedTool(OrderedTool $tool)
+    {
+        $this->orderedTools->removeElement($tool);
     }
 
     public function getRoles()
     {
         return $this->roles;
+    }
+
+    public function getCreator()
+    {
+        return $this->creator;
+    }
+
+    public function setCreator($creator)
+    {
+        $this->creator = $creator;
+    }
+
+    public function setGuid($guid)
+    {
+        $this->guid = $guid;
+    }
+
+    public function getGuid()
+    {
+        return $this->guid;
+    }
+
+    public function setDisplayable($displayable)
+    {
+        $this->displayable = $displayable;
+    }
+
+    public function isDisplayable()
+    {
+        return $this->displayable;
+    }
+
+    public function setSelfRegistration($selfRegistration)
+    {
+        $this->selfRegistration = $selfRegistration;
+    }
+
+    public function getSelfRegistration()
+    {
+        return $this->selfRegistration;
+    }
+
+    public function setSelfUnregistration($selfUnregistration)
+    {
+        $this->selfUnregistration = $selfUnregistration;
+    }
+
+    public function getSelfUnregistration()
+    {
+        return $this->selfUnregistration;
     }
 }

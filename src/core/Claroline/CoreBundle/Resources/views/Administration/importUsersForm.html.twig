@@ -1,0 +1,35 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block section_content %}
+    <div class="margin">
+        <div>
+            {{ macros.flashBox() }}
+        </div>
+        {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-user',
+                'name': 'users_management'|trans({}, 'platform'),
+                'href': path('claro_admin_users_management')
+            },
+            {
+                'name':'users_list'|trans({}, 'platform'),
+                'href':path('claro_admin_user_list')
+            },
+            {
+                'name':'import'|trans({}, 'platform'),
+                'href':''
+            }
+        ])
+        }}
+    </div>
+    {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
+    <form class="form-horizontal" action="{{ path('claro_admin_import_users') }}" method="post" {{ form_enctype(form) }} >
+        <fieldset>
+            {{ form_widget(form) }}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            </div>
+        </fieldset>
+    </form>
+{% endblock %}

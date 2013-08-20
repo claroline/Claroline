@@ -4,9 +4,9 @@
     {{ parent() }}
     {% render controller('ClarolineCoreBundle:Tool\\WorkspaceResourceParameters:workspaceResourceTypes')
     %}
+{{ tinymce_init() }}
 {% endblock %}
 {% block content %}
-{{ tinymce_init() }}
     <div class="user-information span2">
         <div>
             <img src="{{ asset('bundles/clarolinecore/images/workspaces/tools/user_small.png') }}"/>
@@ -43,7 +43,6 @@
                 id="generic-form"
                 class="form-horizontal">
                 {{ form_widget(form) }}
-                {{ form_widget(form.content, { 'attr': {'class': 'tinymce' }} ) }}
                 {{ form_rest(form) }}
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>

@@ -4,7 +4,7 @@
         <i class="icon-caret-down"></i>
     </a>
     <ul class="dropdown-menu pull-right">
-        {% if type != "default" and father is not defined %}
+        {% if type is defined and father is not defined %}
         <li><a class="content-size"><i class="icon-resize-horizontal"></i> {{ "Size" | trans({}, 'home') }}</a></li>
         {% endif %}
         <li><a class="content-edit"><i class="icon-edit"></i> {{ "Edit" | trans({}, 'home') }}</a></li>

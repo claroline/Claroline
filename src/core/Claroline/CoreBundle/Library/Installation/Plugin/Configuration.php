@@ -6,7 +6,6 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Doctrine\ORM\EntityManager;
 
 class Configuration implements ConfigurationInterface
 {
@@ -114,9 +113,9 @@ class Configuration implements ConfigurationInterface
                                     )
                                 ->end()
                             ->end()
-                       ->booleanNode('is_visible')->end()
+                       ->booleanNode('is_visible')->end()    // must be removed
+                       ->booleanNode('is_browsable')->end()  // must be removed
                        ->scalarNode('is_exportable')->defaultValue(false)->end()
-                       ->booleanNode('is_browsable')->isRequired()->end()
                        ->scalarNode('icon')
                            ->validate()
                                 ->ifTrue(

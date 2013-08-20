@@ -5,8 +5,10 @@ namespace Claroline\CoreBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Resource\Revision;
+use Claroline\CoreBundle\Entity\Resource\Text;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * TextManager will redirect to this controller once a directory is "open" or "edit".
@@ -54,7 +56,6 @@ class TextController extends Controller
         }
 
         if ($maxlen == 0) {
-
             return array(array('d' => $old, 'i' => $new));
         }
 
@@ -144,9 +145,11 @@ class TextController extends Controller
 
     /**
      * @Route(
-     *     "/history/{textId}",
+     *     "/history/{text}",
      *     name="claro_text_history"
      * )
+     *
+     * @Template()
      *
      * Shows the diff between every text version. This function is a test.
      *
@@ -154,10 +157,8 @@ class TextController extends Controller
      *
      * @return type
      */
-    public function historyAction($textId)
+    public function historyAction(Text $text)
     {
-        $em = $this->getDoctrine()->getManager();
-        $text = $em->getRepository('ClarolineCoreBundle:Resource\Text')->find($textId);
         $revisions = $text->getRevisions();
         $size = count($revisions);
         $size--;
@@ -178,22 +179,20 @@ class TextController extends Controller
             $d++;
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Text:history.html.twig',
-            array(
-                'differences' => $differences,
-                'original' => $revisions[$size]->getContent(),
-                'workspace' => $text->getWorkspace(),
-                '_resource' => $text
-            )
+        return array(
+            'differences' => $differences,
+            'original' => $revisions[$size]->getContent(),
+            '_resource' => $text
         );
     }
 
     /**
      * @Route(
-     *     "/form/edit/{textId}",
+     *     "/form/edit/{text}",
      *     name="claro_text_edit_form"
      * )
+     *
+     * @Template()
      *
      * Displays the text edition form.
      *
@@ -201,24 +200,20 @@ class TextController extends Controller
      *
      * @return Response
      */
-    public function editFormAction($textId)
+    public function editFormAction(Text $text)
     {
-        $textRepo = $this->container->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\Text');
-        $text = $textRepo->find($textId);
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $revisionRepo = $em->getRepository('ClarolineCoreBundle:Resource\Revision');
 
-        return $this->render(
-            'ClarolineCoreBundle:Text:edit.html.twig',
-            array(
-                'text' => $textRepo->getLastRevision($text)->getContent(),
-                '_resource' => $text
-            )
+        return array(
+            'text' => $revisionRepo->getLastRevision($text)->getContent(),
+            '_resource' => $text
         );
     }
 
     /**
      * @Route(
-     *     "/edit/{textId}",
+     *     "/edit/{old}",
      *     name="claro_text_edit"
      * )
      *
@@ -228,14 +223,13 @@ class TextController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function editAction($textId)
+    public function editAction(Text $old)
     {
 
         $request = $this->get('request');
         $user = $this->get('security.context')->getToken()->getUser();
         $text = $request->request->get('content');
         $em = $this->getDoctrine()->getManager();
-        $old = $em->getRepository('ClarolineCoreBundle:Resource\Text')->find($textId);
         $version = $old->getVersion();
         $revision = new Revision();
         $revision->setContent($text);
@@ -248,7 +242,7 @@ class TextController extends Controller
 
         $route = $this->get('router')->generate(
             'claro_resource_open',
-            array('resourceType' => 'text', 'resourceId' => $textId)
+            array('resourceType' => 'text', 'node' => $old->getResourceNode()->getId())
         );
 
         return new RedirectResponse($route);

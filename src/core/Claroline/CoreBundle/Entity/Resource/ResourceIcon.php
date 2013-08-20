@@ -4,10 +4,9 @@ namespace Claroline\CoreBundle\Entity\Resource;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Claroline\CoreBundle\Entity\Resource\IconType;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceIconRepository")
  * @ORM\Table(name="claro_resource_icon")
  */
 class ResourceIcon
@@ -20,34 +19,30 @@ class ResourceIcon
     protected $id;
 
     /**
-     * @ORM\Column(type="string", name="icon_location", nullable=true, length=255)
+     * @ORM\Column(name="icon_location", nullable=true)
      */
     protected $iconLocation;
 
     /**
-     * @ORM\Column(type="string", name="type", length=255)
+     * @ORM\Column()
      */
-    protected $type;
+    protected $mimeType;
 
     /**
-     * @ORM\Column(type="boolean", name="is_shortcut")
+     * @ORM\Column(name="is_shortcut", type="boolean")
      */
-    protected $isShortcut;
+    protected $isShortcut = false;
 
     /**
-     * @ORM\Column(type="string", name="relative_url", nullable=true, length=255)
+     * @ORM\Column(name="relative_url", nullable=true)
+     *
+     * The url from the /web folder.
      */
     protected $relativeUrl;
 
     /**
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\IconType")
-     * @ORM\JoinColumn(name="icon_type_id", referencedColumnName="id", nullable=false, onDelete="SET NULL" )
-     */
-    protected $iconType;
-
-    /**
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceIcon")
-     * @ORM\JoinColumn(name="shortcut_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceIcon")
+     * @ORM\JoinColumn(name="shortcut_id", onDelete="SET NULL")
      */
     protected $shortcutIcon;
 
@@ -74,24 +69,14 @@ class ResourceIcon
         $this->iconLocation = $iconLocation;
     }
 
-    public function setIconType(IconType $iconType)
+    public function getMimeType()
     {
-        $this->iconType = $iconType;
+        return $this->mimeType;
     }
 
-    public function getIconType()
+    public function setMimeType($mimeType)
     {
-        return $this->iconType;
-    }
-
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-    public function getType()
-    {
-        return $this->type;
+        $this->mimeType = $mimeType;
     }
 
     public function isShortcut()

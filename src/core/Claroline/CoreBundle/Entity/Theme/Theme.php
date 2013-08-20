@@ -5,24 +5,16 @@ namespace Claroline\CoreBundle\Entity\Theme;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Type
- *
+ * @ORM\Entity()
  * @ORM\Table(name="claro_theme")
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ThemeRepository")
  */
 class Theme
 {
-    public function __construct($name = null, $path = null)
-    {
-        $this->setName($name);
-        $this->setPath($path);
-    }
-
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
+     * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
@@ -30,23 +22,28 @@ class Theme
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column()
      */
     private $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="path", type="string", length=255)
+     * @ORM\Column()
      */
     private $path;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
-     * @ORM\JoinColumn(name="plugin_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $plugin;
 
+    public function __construct($name = null, $path = null)
+    {
+        $this->setName($name);
+        $this->setPath($path);
+    }
 
     /**
      * Get id
@@ -61,7 +58,7 @@ class Theme
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string $name
      * @return Theme
      */
     public function setName($name)
@@ -84,7 +81,7 @@ class Theme
     /**
      * Set path
      *
-     * @param string $path
+     * @param  string $path
      * @return Theme
      */
     public function setPath($path)

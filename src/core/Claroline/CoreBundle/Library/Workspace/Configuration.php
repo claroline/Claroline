@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Library\Workspace;
 
 use \RuntimeException;
 use Symfony\Component\Yaml\Yaml;
+use Claroline\CoreBundle\Library\Workspace\Exception\BaseRoleException;
 
 class Configuration
 {
@@ -14,6 +15,7 @@ class Configuration
     private $workspaceName;
     private $workspaceCode;
     private $isPublic;
+    private $displayable;
     /**
      * If you want to use the role_anonymous from the platform, use
      * 'ROLE_ANONYMOUS'.
@@ -26,24 +28,26 @@ class Configuration
     private $permsRootConfig;
     private $templateFile;
 
-    public function __construct($template)
+    public function __construct($template, $full = true)
     {
-        $this->templateFile = $template;
-        $this->workspaceType = self::TYPE_SIMPLE;
-        $archive = new \ZipArchive();
+        if ($full) {
+            $this->templateFile = $template;
+            $this->workspaceType = self::TYPE_SIMPLE;
+            $archive = new \ZipArchive();
 
-        if (true === $code = $archive->open($template)) {
-            $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
-            $archive->close();
-            $this->setCreatorRole($parsedFile['creator_role']);
-            $this->setRoles($parsedFile['roles']);
-            $this->setToolsPermissions($parsedFile['tools_infos']);
-            $this->setToolsConfiguration($parsedFile['tools']);
-            $this->setPermsRootConfiguration($parsedFile['root_perms']);
-        } else {
-            throw new \Exception(
-                "Couldn't open template archive '{$template}' (error {$code})"
-            );
+            if (true === $code = $archive->open($template)) {
+                $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
+                $archive->close();
+                $this->setCreatorRole($parsedFile['creator_role']);
+                $this->setRoles($parsedFile['roles']);
+                $this->setToolsPermissions($parsedFile['tools_infos']);
+                $this->setToolsConfiguration($parsedFile['tools']);
+                $this->setPermsRootConfiguration($parsedFile['root_perms']);
+            } else {
+                throw new \Exception(
+                    "Couldn't open template archive '{$template}' (error {$code})"
+                );
+            }
         }
     }
 
@@ -93,6 +97,30 @@ class Configuration
 
         if (!is_string($this->workspaceName) || 0 === strlen($this->workspaceName)) {
             throw new RuntimeException('Workspace name must be a non empty string');
+        }
+
+        $this->checkRoles($this->getRoles());
+    }
+
+    /**
+     * Require an array of role:
+     * array('ROLE_WS_COLLABORATOR' => 'translation')
+     * @param type $roles
+     */
+    public function checkRoles(array $roles)
+    {
+        $mandatoryRoles = \Claroline\CoreBundle\Entity\Role::getMandatoryWsRoles();
+        $manadatoryCount = count($mandatoryRoles);
+        $found = 0;
+
+        foreach (array_keys($roles) as $roleName) {
+            if (in_array($roleName, $mandatoryRoles)) {
+                $found++;
+            }
+        }
+
+        if ($found !== $manadatoryCount) {
+            throw new BaseRoleException('One or more base roles are missing');
         }
     }
 
@@ -164,5 +192,15 @@ class Configuration
     public function getPermsRootConfiguration()
     {
         return $this->permsRootConfig;
+    }
+
+    public function setDisplayable($displayable)
+    {
+        $this->displayable = $displayable;
+    }
+
+    public function isDisplayable()
+    {
+        return $this->displayable;
     }
 }

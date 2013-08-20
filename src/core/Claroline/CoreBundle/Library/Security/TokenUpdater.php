@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Library\Security;
 
-use Claroline\CoreBundle\Library\Security\Token\ViewAsToken;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
