@@ -1,5 +1,5 @@
 <ul class="breadcrumb">
-    {% for keyRes, resource in ancestors %}
+    {% for keyRes, node in ancestors %}
     <li {% if loop.last %} class="active" {% endif %}>
 
     {% set url = path('claro_workspace_open_tool',
@@ -17,13 +17,13 @@
         {% endif %}
     {% endfor %}
 
-    {% set url = url~"#resources/"~resource.id %}
+    {% set url = url~"#resources/"~node.id %}
 
     {% if not loop.last %}<a href="{{ url}}">
-        {{ resource.name }}
+        {{ node.name }}
     </a>
     {% else %}
-        {{ resource.name }}
+        {{ node.name }}
     {% endif %}
 
     </li>

@@ -57,7 +57,7 @@ class ResourceManagerImportExportListener
         $config = $event->getConfig();
         $root = $event->getRoot();
         $createdResources = array();
-        $createdResources[$config['root_id']] = $root->getId();
+        $createdResources[$config['root_id']] = $root;
         $createdResources = $this->loadDirectories(
             $config,
             $createdResources,
@@ -91,8 +91,8 @@ class ResourceManagerImportExportListener
     {
         $config = array();
         $workspace = $event->getWorkspace();
-        $resourceRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
-        $root = $resourceRepo->findWorkspaceRoot($workspace);
+        $resourceRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
+        $root = $this->resourceManager->getWorkspaceRoot($workspace);
 
         $roles = $this->roleManager->getRolesByWorkspace($workspace);
         $config['root_id'] = $root->getId();
@@ -101,7 +101,7 @@ class ResourceManagerImportExportListener
         $children = $resourceRepo->findBy(array('parent' => $root, 'resourceType' => $dirType));
 
         foreach ($children as $child) {
-            $newEvent = $this->ed->dispatch("resource_directory_to_template", 'ExportResourceTemplate', array($child));
+            $newEvent = $this->ed->dispatch("resource_directory_to_template", 'ExportDirectoryTemplate', array($child));
             $dataChildren = $newEvent->getConfig();
             $config['directory'][] = $dataChildren;
         }
@@ -110,16 +110,15 @@ class ResourceManagerImportExportListener
         $criteria['roots'] = array($root->getName());
         $criteria['isExportable'] = true;
         $config['resources'] = array();
-        $resources = $resourceRepo->findByCriteria($criteria);
+        $resources = $this->resourceManager->getByCriteria($criteria);
         $addToArchive = array();
 
         foreach ($resources as $resource) {
             if ($resource['type'] !== 'directory') {
-                $newEvent = new ExportResourceTemplateEvent($resourceRepo->find($resource['id']));
                 $newEvent = $this->ed->dispatch(
                     "resource_{$resource['type']}_to_template",
                     'ExportResourceTemplate',
-                    array($resourceRepo->find($resource['id']))
+                    array($this->resourceManager->getResourceFromNode($this->resourceManager->getNode($resource['id'])))
                 );
                 $dataResources = $newEvent->getConfig();
 

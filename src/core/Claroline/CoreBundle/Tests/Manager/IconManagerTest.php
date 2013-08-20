@@ -36,7 +36,9 @@ class IconManagerTest extends MockeryTestCase
     {
         $manager = $this->getManager(array('searchIcon'));
         $dir = $this->mock('Claroline\CoreBundle\Entity\Resource\Directory');
-        $dir->shouldReceive('getMimeType')->andReturn('custom/directory');
+        $node = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
+        $dir->shouldReceive('getResourceNode')->once()->andReturn($node);
+        $node->shouldReceive('getMimeType')->andReturn('custom/directory');
         $icon = new ResourceIcon();
         $manager->shouldReceive('searchIcon')->once()->andReturn($icon);
         $this->assertEquals($icon, $manager->getIcon($dir));
@@ -49,7 +51,9 @@ class IconManagerTest extends MockeryTestCase
     {
         $manager = $this->getManager(array('createFromFile', 'createShortcutIcon', 'getEntity'));
         $file = $this->mock('Claroline\CoreBundle\Entity\Resource\File');
-        $file->shouldReceive('getMimeType')->once()->andReturn('video/mp4');
+        $node = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
+        $file->shouldReceive('getResourceNode')->once()->andReturn($node);
+        $node->shouldReceive('getMimeType')->once()->andReturn('video/mp4');
         $file->shouldReceive('getHashName')->once()->andReturn('ABCDEFG.mp4');
         $icon = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
         $icon->shouldReceive('setMimeType')->once()->with('custom');
@@ -193,10 +197,11 @@ class IconManagerTest extends MockeryTestCase
         $this->om->shouldReceive('startFlushSuite')->once();
         $icon = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
         $oldIcon = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
-        $resource = $this->mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $resource = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $resource->shouldReceive('getIcon')->once()->andReturn($oldIcon);
         $resource->shouldReceive('setIcon')->once()->with($icon);
         $manager->shouldReceive('delete')->once()->with($oldIcon);
+        $this->om->shouldReceive('persist')->once()->with($resource);
         $this->om->shouldReceive('endFlushSuite')->once();
 
         $this->assertEquals($resource, $manager->replace($resource, $icon));

@@ -75,7 +75,7 @@ class RolesControllerTest extends MockeryTestCase
         $workspace->shouldReceive('getId')->andReturn(1);
         $user = new \Claroline\CoreBundle\Entity\User();
         $this->checkAccess($workspace);
-        $root = new \Claroline\CoreBundle\Entity\Resource\Directory();
+        $root = new \Claroline\CoreBundle\Entity\Resource\ResourceNode();
         $newRes = new \Claroline\CoreBundle\Entity\Resource\Directory();
         $managerRole = new \Claroline\CoreBundle\Entity\Role();
         $newRole = new \Claroline\CoreBundle\Entity\Role();

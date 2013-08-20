@@ -4,7 +4,8 @@ namespace Claroline\CoreBundle\Repository;
 
 use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 
-class AltAbstractResourceRepositoryTest extends RepositoryTestCase
+//can be rewritter for ResourceNode only ?
+class ResourceNodeRepositoryTest extends RepositoryTestCase
 {
     private static $repo;
     private static $time;
@@ -12,7 +13,7 @@ class AltAbstractResourceRepositoryTest extends RepositoryTestCase
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
-        self::$repo = self::getRepository('ClarolineCoreBundle:Resource\AbstractResource');
+        self::$repo = self::getRepository('ClarolineCoreBundle:Resource\ResourceNode');
 
         self::createWorkspace('ws_1');
         self::createWorkspace('ws_2');
@@ -33,6 +34,7 @@ class AltAbstractResourceRepositoryTest extends RepositoryTestCase
          *             l_dir_3
          *         dir_3
          *             dir_4
+         *                 l_dir_4
          *                 file_1
          *
          * ws_2
@@ -50,6 +52,7 @@ class AltAbstractResourceRepositoryTest extends RepositoryTestCase
         self::createFile('file_1', self::get('t_file'), self::get('john'), self::get('dir_4'));
         self::createShortcut('l_dir_2', self::get('t_link'), self::get('dir_2'), self::get('john'), self::get('dir_5'));
         self::createShortcut('l_dir_3', self::get('t_link'), self::get('dir_3'), self::get('john'), self::get('dir_2'));
+        self::createShortcut('l_dir_4', self::get('t_link'), self::get('dir_4'), self::get('john'), self::get('dir_4'));
         self::createResourceRights(self::get('ROLE_1'), self::get('dir_1'), array('open'));
         self::createResourceRights(self::get('ROLE_1'), self::get('dir_2'), array('open'));
         self::createResourceRights(self::get('ROLE_2'), self::get('dir_5'), array('open'));
@@ -58,15 +61,15 @@ class AltAbstractResourceRepositoryTest extends RepositoryTestCase
     public function testFindWorkspaceRoot()
     {
         $root = self::$repo->findWorkspaceRoot(self::get('ws_1'));
-        $this->assertEquals(self::get('dir_1'), $root);
+        $this->assertEquals(self::get('dir_1')->getResourceNode(), $root);
     }
 
     public function testFindDescendants()
     {
-        $this->assertEquals(1, count(self::$repo->findDescendants(self::get('dir_2'))));
-        $this->assertEquals(5, count(self::$repo->findDescendants(self::get('dir_1'))));
-        $this->assertEquals(6, count(self::$repo->findDescendants(self::get('dir_1'), true)));
-        $this->assertEquals(2, count(self::$repo->findDescendants(self::get('dir_3'), true, 't_dir')));
+        $this->assertEquals(1, count(self::$repo->findDescendants(self::get('dir_2')->getResourceNode())));
+        $this->assertEquals(6, count(self::$repo->findDescendants(self::get('dir_1')->getResourceNode())));
+        $this->assertEquals(7, count(self::$repo->findDescendants(self::get('dir_1')->getResourceNode(), true)));
+        $this->assertEquals(2, count(self::$repo->findDescendants(self::get('dir_3')->getResourceNode(), true, 't_dir')));
     }
 
     /**
@@ -74,12 +77,12 @@ class AltAbstractResourceRepositoryTest extends RepositoryTestCase
      */
     public function testFindChildrenThrowsAnExceptionIfNoRolesAreGiven()
     {
-        $children = self::$repo->findChildren(self::get('dir_1'), array());
+        $children = self::$repo->findChildren(self::get('dir_1')->getResourceNode(), array());
     }
 
     public function testFindChildrenReturnsEverythingIfTheUserIsAdmin()
     {
-        $children = self::$repo->findChildren(self::get('dir_1'), array('ROLE_ADMIN'));
+        $children = self::$repo->findChildren(self::get('dir_1')->getResourceNode(), array('ROLE_ADMIN'));
         $this->assertEquals(2, count($children));
         $this->assertEquals('dir_2', $children[0]['name']);
         $this->assertEquals('dir_3', $children[1]['name']);
@@ -87,7 +90,7 @@ class AltAbstractResourceRepositoryTest extends RepositoryTestCase
 
     public function testFindChildrenReturnsOpenableResources()
     {
-        $children = self::$repo->findChildren(self::get('dir_1'), array('ROLE_1'));
+        $children = self::$repo->findChildren(self::get('dir_1')->getResourceNode(), array('ROLE_1'));
         $this->assertEquals(1, count($children));
         $this->assertEquals('dir_2', $children[0]['name']);
     }
@@ -119,7 +122,7 @@ class AltAbstractResourceRepositoryTest extends RepositoryTestCase
 
     public function testFindAncestors()
     {
-        $ancestors = self::$repo->findAncestors(self::get('dir_4'));
+        $ancestors = self::$repo->findAncestors(self::get('dir_4')->getResourceNode());
         $this->assertEquals(3, count($ancestors));
         $this->assertEquals('dir_1', $ancestors[0]['name']);
         $this->assertEquals('dir_3', $ancestors[1]['name']);
@@ -137,16 +140,16 @@ class AltAbstractResourceRepositoryTest extends RepositoryTestCase
     public function testFindByCriteria()
     {
         $resources = self::$repo->findByCriteria(array());
-        $this->assertEquals(8, count($resources));
+        $this->assertEquals(9, count($resources));
 
         $resources = self::$repo->findByCriteria(array('types' => array('t_file')));
         $this->assertEquals(1, count($resources));
 
-        $resources = self::$repo->findByCriteria(array('roots' => array(self::get('dir_1')->getPath())));
-        $this->assertEquals(6, count($resources));
+        $resources = self::$repo->findByCriteria(array('roots' => array(self::get('dir_1')->getResourceNode()->getPath())));
+        $this->assertEquals(7, count($resources));
 
         $resources = self::$repo->findByCriteria(array('dateFrom' => self::$time));
-        $this->assertEquals(6, count($resources));
+        $this->assertEquals(7, count($resources));
 
         $resources = self::$repo->findByCriteria(array('dateTo' => self::$time));
         $this->assertEquals(2, count($resources));
@@ -172,13 +175,15 @@ class AltAbstractResourceRepositoryTest extends RepositoryTestCase
     public function testFindDirectoryShortcutTargets()
     {
         $shortcuts = self::$repo->findRecursiveDirectoryShortcuts(
-            array('roots' => array(self::get('dir_5')->getPath()))
+            array('roots' => array(self::get('dir_5')->getResourceNode()->getPath()))
         );
-        $this->assertEquals(2, count($shortcuts));
-        $this->assertEquals('l_dir_3', $shortcuts[0]['name']);
-        $this->assertEquals('l_dir_2', $shortcuts[1]['name']);
-        $this->assertEquals(self::get('dir_3')->getPath(), $shortcuts[0]['target_path']);
-        $this->assertEquals(self::get('dir_2')->getPath(), $shortcuts[1]['target_path']);
+        $this->assertEquals(3, count($shortcuts));
+        $this->assertEquals('l_dir_4', $shortcuts[0]['name']);
+        $this->assertEquals('l_dir_3', $shortcuts[1]['name']);
+        $this->assertEquals('l_dir_2', $shortcuts[2]['name']);
+        $this->assertEquals(self::get('dir_4')->getResourceNode()->getPath(), $shortcuts[0]['target_path']);
+        $this->assertEquals(self::get('dir_3')->getResourceNode()->getPath(), $shortcuts[1]['target_path']);
+        $this->assertEquals(self::get('dir_2')->getResourceNode()->getPath(), $shortcuts[2]['target_path']);
     }
 
     public function testFindMimeTypesWithMostResources()
@@ -202,7 +207,10 @@ class AltAbstractResourceRepositoryTest extends RepositoryTestCase
     public function testFindWorkspaceInfoByIds()
     {
         $infos = self::$repo->findWorkspaceInfoByIds(
-            array(self::get('dir_4')->getId(), self::get('dir_5')->getId())
+            array(
+                self::get('dir_4')->getResourceNode()->getId(),
+                self::get('dir_5')->getResourceNode()->getId()
+            )
         );
         $this->assertEquals(2, count($infos));
         $this->assertEquals('ws_1', $infos[0]['name']);

@@ -19,13 +19,13 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
         $eol = PHP_EOL;
         $expectedDql =
             "SELECT resource{$eol}" .
-            "FROM Claroline\CoreBundle\Entity\Resource\AbstractResource resource{$eol}";
+            "FROM Claroline\CoreBundle\Entity\Resource\ResourceNode resource{$eol}";
         $this->assertEquals($expectedDql, $dql);
 
         $dql = $qb->selectAsEntity(true)->getDql();
         $expectedDql =
             "SELECT resource{$eol}" .
-            "FROM Claroline\CoreBundle\Entity\Resource\AbstractResource resource{$eol}" .
+            "FROM Claroline\CoreBundle\Entity\Resource\ResourceNode resource{$eol}" .
             "JOIN resource.creator creator{$eol}" .
             "JOIN resource.resourceType resourceType{$eol}" .
             "LEFT JOIN resource.next next{$eol}" .
@@ -53,7 +53,7 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
             "    next.id as next_id,{$eol}" .
             "    icon.relativeUrl as large_icon,{$eol}" .
             "    resource.mimeType as mime_type{$eol}" .
-            "FROM Claroline\CoreBundle\Entity\Resource\AbstractResource resource{$eol}" .
+            "FROM Claroline\CoreBundle\Entity\Resource\ResourceNode resource{$eol}" .
             "JOIN resource.creator creator{$eol}" .
             "JOIN resource.resourceType resourceType{$eol}" .
             "LEFT JOIN resource.next next{$eol}" .
@@ -79,7 +79,7 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
             "    MAX (CASE rights.canExport WHEN true THEN 1 ELSE 0 END) as can_export,{$eol}" .
             "    MAX (CASE rights.canDelete WHEN true THEN 1 ELSE 0 END) as can_delete,{$eol}" .
             "    MAX (CASE rights.canEdit WHEN true THEN 1 ELSE 0 END) as can_edit{$eol}" .
-            "FROM Claroline\CoreBundle\Entity\Resource\AbstractResource resource{$eol}" .
+            "FROM Claroline\CoreBundle\Entity\Resource\ResourceNode resource{$eol}" .
             "JOIN resource.creator creator{$eol}" .
             "JOIN resource.resourceType resourceType{$eol}" .
             "LEFT JOIN resource.next next{$eol}" .
@@ -99,7 +99,7 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
         $mockedWorkspace->expects($this->once())
             ->method('getId')
             ->will($this->returnValue(123));
-        $mockedParent = $this->getMock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $mockedParent = $this->getMock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $mockedParent->expects($this->once())
             ->method('getId')
             ->will($this->returnValue(456));
@@ -129,7 +129,7 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
         $eol = PHP_EOL;
         $expectedDql =
             "SELECT resource{$eol}" .
-            "FROM Claroline\CoreBundle\Entity\Resource\AbstractResource resource{$eol}" .
+            "FROM Claroline\CoreBundle\Entity\Resource\ResourceNode resource{$eol}" .
             "JOIN resource.creator creator{$eol}" .
             "JOIN resource.resourceType resourceType{$eol}" .
             "LEFT JOIN resource.next next{$eol}" .
