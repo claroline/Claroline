@@ -183,7 +183,7 @@ class ExerciseController extends Controller
      * Finds and displays a Question entity to this Exercise.
      *
      */
-    public function showQuestionsAction($id, $pageNow, $category2Find, $title2Find)
+    public function showQuestionsAction($id, $pageNow, $categoryToFind, $titleToFind)
     {
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($id);
@@ -198,13 +198,13 @@ class ExerciseController extends Controller
         $page = $request->query->get('page', 1);
 
         if ($exoAdmin == 1) {
-            $Interactions = $this->getDoctrine()
+            $interactions = $this->getDoctrine()
                 ->getManager()
                 ->getRepository('UJMExoBundle:Interaction')
                 ->getExerciseInteraction($em, $id, 0);
 
             $questionWithResponse = array();
-            foreach ($Interactions as $interaction) {
+            foreach ($interactions as $interaction) {
                 $response = $em->getRepository('UJMExoBundle:Response')
                     ->findBy(array('interaction' => $interaction->getId()));
                 if (count($response) > 0) {
@@ -214,16 +214,16 @@ class ExerciseController extends Controller
                 }
             }
 
-            if ($category2Find != '' && $title2Find != '' && $category2Find != 'z' && $title2Find != 'z') {
+            if ($categoryToFind != '' && $titleToFind != '' && $categoryToFind != 'z' && $titleToFind != 'z') {
                 $i = 1 ;
                 $pos = 0 ;
                 $temp = 0;
 
-                foreach ($Interactions as $interaction) {
-                    if ($interaction->getQuestion()->getCategory() == $category2Find) {
+                foreach ($interactions as $interaction) {
+                    if ($interaction->getQuestion()->getCategory() == $categoryToFind) {
                         $temp = $i;
                     }
-                    if ($interaction->getQuestion()->getTitle() == $title2Find && $temp == $i) {
+                    if ($interaction->getQuestion()->getTitle() == $titleToFind && $temp == $i) {
                         $pos = $i;
                         break;
                     }
@@ -238,17 +238,17 @@ class ExerciseController extends Controller
             }
 
             // Pagination finded documents
-            $adapterQuestion = new ArrayAdapter($Interactions);
+            $adapterQuestion = new ArrayAdapter($interactions);
             $pagerQuestion = new Pagerfanta($adapterQuestion);
 
             try {
                 if ($pageNow == 0) {
-                    $interactions = $pagerQuestion
+                    $interactionsPager = $pagerQuestion
                         ->setMaxPerPage($max)
                         ->setCurrentPage($page)
                         ->getCurrentPageResults();
                 } else {
-                    $interactions = $pagerQuestion
+                    $interactionsPager = $pagerQuestion
                         ->setMaxPerPage($max)
                         ->setCurrentPage($pageNow)
                         ->getCurrentPageResults();
@@ -261,7 +261,7 @@ class ExerciseController extends Controller
                 'UJMExoBundle:Question:exerciseQuestion.html.twig',
                 array(
                     'workspace'            => $workspace,
-                    'interactions'         => $interactions,
+                    'interactions'         => $interactionsPager,
                     'exerciseID'           => $id,
                     'questionWithResponse' => $questionWithResponse,
                     'pagerQuestion'        => $pagerQuestion
@@ -276,7 +276,7 @@ class ExerciseController extends Controller
     *To import in this Exercise a Question of the User's bank.
     *
     */
-    public function importQuestionAction($exoID, $page2Go, $maxPage, $nbItem)
+    public function importQuestionAction($exoID, $pageGoNow, $maxPage, $nbItem)
     {
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($exoID);
@@ -310,7 +310,7 @@ class ExerciseController extends Controller
 
         if ($exoAdmin == 1) {
 
-            $Interactions = $this->getDoctrine()
+            $interactions = $this->getDoctrine()
                 ->getManager()
                 ->getRepository('UJMExoBundle:Interaction')
                 ->getUserInteractionImport($this->getDoctrine()->getManager(), $uid, $exoID);
@@ -318,33 +318,33 @@ class ExerciseController extends Controller
             $shared = $em->getRepository('UJMExoBundle:Share')
                     ->getUserInteractionSharedImport($exoID, $uid, $em);
 
-            $SharedWithMe = array();
+            $sharedWithMe = array();
 
             $end = count($shared);
 
             for ($i = 0; $i < $end; $i++) {
-                $SharedWithMe[] = $em->getRepository('UJMExoBundle:Interaction')
+                $sharedWithMe[] = $em->getRepository('UJMExoBundle:Interaction')
                     ->findOneBy(array('question' => $shared[$i]->getQuestion()->getId()));
             }
 
             // Do the pagination of the result depending on which page of which array was changed
             // (My questions array)
-            $adapterMy = new ArrayAdapter($Interactions);
+            $adapterMy = new ArrayAdapter($interactions);
             $pagerfantaMy = new Pagerfanta($adapterMy);
 
             // (My shared questions array)
-            $adapterShared = new ArrayAdapter($SharedWithMe);
+            $adapterShared = new ArrayAdapter($sharedWithMe);
             $pagerfantaShared = new Pagerfanta($adapterShared);
 
             try {
                 // Test if my questions array exists (try) and affects the matching results (which page, how many per page ...)
-                $interactions = $pagerfantaMy
+                $interactionsPager = $pagerfantaMy
                     ->setMaxPerPage($max)
                     ->setCurrentPage($pagerMy)
                     ->getCurrentPageResults();
 
                 // Test if my shared questions array exists (try) and affects the matching results (which page, how many per page ...)
-                $sharedWithMe = $pagerfantaShared
+                $sharedWithMePager = $pagerfantaShared
                     ->setMaxPerPage($max)
                     ->setCurrentPage($pagerShared)
                     ->getCurrentPageResults();
@@ -354,17 +354,17 @@ class ExerciseController extends Controller
             }
 
             if ($pageToGo) {
-                $page2Go = $pageToGo;
+                $pageGoNow = $pageToGo;
             } else {
                 // If new item > max per page, display next page
                 $rest = $nbItem % $maxPage;
 
                 if ($nbItem == 0) {
-                    $page2Go = 0;
+                    $pageGoNow = 0;
                 }
 
                 if ($rest == 0) {
-                    $page2Go += 1;
+                    $pageGoNow += 1;
                 }
             }
 
@@ -372,12 +372,12 @@ class ExerciseController extends Controller
                 'UJMExoBundle:Question:import.html.twig',
                 array(
                     'workspace'    => $workspace,
-                    'interactions' => $interactions,
+                    'interactions' => $interactionsPager,
                     'exoID'        => $exoID,
-                    'sharedWithMe' => $sharedWithMe,
+                    'sharedWithMe' => $sharedWithMePager,
                     'pagerMy'      => $pagerfantaMy,
                     'pagerShared'  => $pagerfantaShared,
-                    'page2go'      => $page2Go
+                    'page2go'      => $pageGoNow
                 )
             );
         } else {
@@ -389,7 +389,7 @@ class ExerciseController extends Controller
      * To record the Question's import.
      *
      */
-    public function importValidateAction($exoID, $qid, $page2go)
+    public function importValidateAction($exoID, $qid, $pageGoNow)
     {
         $user = $this->container->get('security.context')->getToken()->getUser();
         $question = $this->getDoctrine()
@@ -415,11 +415,12 @@ class ExerciseController extends Controller
 
             $em->flush();
 
-            return $this->redirect($this->generateUrl(
-                'ujm_exercise_questions',
+            return $this->redirect(
+                $this->generateUrl(
+                    'ujm_exercise_questions',
                     array(
                         'id' => $exoID,
-                        'pageNow' => $page2go
+                        'pageNow' => $pageGoNow
                     )
                 )
             );
@@ -428,7 +429,7 @@ class ExerciseController extends Controller
         }
     }
 
-    public function importValidateSharedAction($exoID, $qid, $page2go)
+    public function importValidateSharedAction($exoID, $qid, $pageGoNow)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -452,11 +453,12 @@ class ExerciseController extends Controller
 
             $em->flush();
 
-            return $this->redirect($this->generateUrl(
+            return $this->redirect(
+                $this->generateUrl(
                     'ujm_exercise_questions',
                     array(
                         'id' => $exoID,
-                        'pageNow' => $page2go
+                        'pageNow' => $pageGoNow
                     )
                 )
             );
@@ -493,7 +495,8 @@ class ExerciseController extends Controller
             }
         }
 
-        return $this->redirect($this->generateUrl(
+        return $this->redirect(
+            $this->generateUrl(
                 'ujm_exercise_questions',
                 array(
                     'id' => $exoID,
@@ -675,9 +678,10 @@ class ExerciseController extends Controller
         $this->checkAccess($exercise);
 
         $eqs = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(
-                                                                        array('exercise' => $exerciseId),
-                                                                        array('ordre' => 'ASC')
-                                                                    );
+            array('exercise' => $exerciseId),
+            array('ordre' => 'ASC')
+        );
+
         $papers = $em->getRepository('UJMExoBundle:Paper')->getExerciseAllPapers($exerciseId);
 
         if ($this->get('security.context')->isGranted('ROLE_WS_CREATOR')) {
@@ -685,10 +689,9 @@ class ExerciseController extends Controller
             $workspace = $exercise->getWorkspace();
 
             $histoMark = $this->histoMark($exerciseId);
-            $histoSuccess= $this->histoSuccess($exerciseId, $eqs, $papers);
+            $histoSuccess = $this->histoSuccess($exerciseId, $eqs, $papers);
 
-            if ($exercise->getNbQuestion() == 0)
-            {
+            if ($exercise->getNbQuestion() == 0) {
                 $histoDiscrimination = $this->histoDiscrimination($exerciseId, $eqs, $papers);
             } else {
                 $histoDiscrimination['coeffQ'] = 'none';
@@ -1019,8 +1022,12 @@ class ExerciseController extends Controller
 
             $interQuestionsTab = explode(";", $interQuestions);
             foreach ($interQuestionsTab as $interQuestion) {
-                $flag = $em->getRepository('UJMExoBundle:Response')->findOneBy(array('interaction' => $interQuestion,
-                                                                                     'paper' => $paper->getId()));
+                $flag = $em->getRepository('UJMExoBundle:Response')->findOneBy(
+                    array(
+                        'interaction' => $interQuestion,
+                        'paper' => $paper->getId())
+                    );
+
                 if (!$flag || $flag->getResponse() == '') {
                     $interaction = $em->getRepository('UJMExoBundle:Interaction')->find($interQuestion);
                     $questionsResponsesTab[$interaction->getQuestion()->getId()]['noResponse'] += 1;
@@ -1086,7 +1093,11 @@ class ExerciseController extends Controller
             foreach ($responses as $response) {
                 $tabScoreQ[$eq->getQuestion()->getId()][] = $response['mark'];
             }
-            while (count($tabScoreQ[$eq->getQuestion()->getId()]) < count($papers)) {
+
+            $inf = count($tabScoreQ[$eq->getQuestion()->getId()]);
+            $sup = count($papers);
+
+            while ($inf < $sup) {
                 $tabScoreQ[$eq->getQuestion()->getId()][] = 0;
             }
         }
@@ -1144,7 +1155,7 @@ class ExerciseController extends Controller
 
     private function sd_square($x, $mean)
     {
-        return pow($x - $mean,2);
+        return pow($x - $mean, 2);
 
     }
 

@@ -77,7 +77,7 @@ class QuestionController extends Controller
      * Lists the User's Question entities.
      *
      */
-    public function indexAction($pageNow = 0, $category2Find = '', $title2Find = '')
+    public function indexAction($pageNow = 0, $categoryToFind = '', $titleToFind = '')
     {
         // To paginate the result :
         $request = $this->get('request'); // Get the request which contains the following parameters :
@@ -99,7 +99,7 @@ class QuestionController extends Controller
 
         $user = $this->container->get('security.context')->getToken()->getUser();
         $uid = $user->getId();
-        $Interactions = $this->getDoctrine()
+        $interactions = $this->getDoctrine()
             ->getManager()
             ->getRepository('UJMExoBundle:Interaction')
             ->getUserInteraction($uid);
@@ -108,7 +108,7 @@ class QuestionController extends Controller
         $alreadyShared = array();
         $em = $this->getDoctrine()->getManager();
 
-        foreach ($Interactions as $interaction) {
+        foreach ($interactions as $interaction) {
             $response = $em->getRepository('UJMExoBundle:Response')
                 ->findBy(array('interaction' => $interaction->getId()));
             if (count($response) > 0) {
@@ -129,24 +129,24 @@ class QuestionController extends Controller
         $shared = $em->getRepository('UJMExoBundle:Share')
             ->findBy(array('user' => $uid));
 
-        $SharedWithMe = array();
+        $sharedWithMe = array();
 
         $end = count($shared);
 
         for ($i = 0; $i < $end; $i++) {
-            $SharedWithMe[] = $em->getRepository('UJMExoBundle:Interaction')
+            $sharedWithMe[] = $em->getRepository('UJMExoBundle:Interaction')
                 ->findOneBy(array('question' => $shared[$i]->getQuestion()->getId()));
         }
 
-        if ($category2Find != '' && $title2Find != '' && $category2Find != 'z' && $title2Find != 'z') {
+        if ($categoryToFind != '' && $titleToFind != '' && $categoryToFind != 'z' && $titleToFind != 'z') {
             $i = 1 ;
             $pos = 0 ;
             $temp = 0;
-            foreach ($Interactions as $interaction) {
-                if ($interaction->getQuestion()->getCategory() == $category2Find) {
+            foreach ($interactions as $interaction) {
+                if ($interaction->getQuestion()->getCategory() == $categoryToFind) {
                     $temp = $i;
                 }
-                if ($interaction->getQuestion()->getTitle() == $title2Find && $temp == $i) {
+                if ($interaction->getQuestion()->getTitle() == $titleToFind && $temp == $i) {
                     $pos = $i;
                     break;
                 }
@@ -162,29 +162,29 @@ class QuestionController extends Controller
 
         // Do the pagination of the result depending on which page of which array was changed
         // (My questions array)
-        $adapterMy = new ArrayAdapter($Interactions);
+        $adapterMy = new ArrayAdapter($interactions);
         $pagerfantaMy = new Pagerfanta($adapterMy);
 
         // (My shared questions array)
-        $adapterShared = new ArrayAdapter($SharedWithMe);
+        $adapterShared = new ArrayAdapter($sharedWithMe);
         $pagerfantaShared = new Pagerfanta($adapterShared);
 
         try {
             if ($pageNow == 0) {
                 // Test if my questions array exists (try) and affects the matching results (which page, how many per page ...)
-                $interactions = $pagerfantaMy
+                $interactionsPager = $pagerfantaMy
                     ->setMaxPerPage($max)
                     ->setCurrentPage($pagerMy)
                     ->getCurrentPageResults();
             } else {
-                $interactions = $pagerfantaMy
+                $interactionsPager = $pagerfantaMy
                     ->setMaxPerPage($max)
                     ->setCurrentPage($pageNow)
                     ->getCurrentPageResults();
             }
 
             // Test if my shared questions array exists (try) and affects the matching results (which page, how many per page ...)
-            $sharedWithMe = $pagerfantaShared
+            $sharedWithMePager = $pagerfantaShared
                 ->setMaxPerPage($max)
                 ->setCurrentPage($pagerShared)
                 ->getCurrentPageResults();
@@ -195,10 +195,10 @@ class QuestionController extends Controller
 
         return $this->render(
             'UJMExoBundle:Question:index.html.twig', array(
-            'interactions'         => $interactions,
+            'interactions'         => $interactionsPager,
             'questionWithResponse' => $questionWithResponse,
             'alreadyShared'       => $alreadyShared,
-            'sharedWithMe'       => $sharedWithMe,
+            'sharedWithMe'       => $sharedWithMePager,
             'pagerMy' => $pagerfantaMy,
             'pagerShared' => $pagerfantaShared
             )
@@ -694,14 +694,14 @@ class QuestionController extends Controller
 
         if ($search != '') {
             $em = $this->getDoctrine()->getManager();
-            $UserList = $em->getRepository('ClarolineCoreBundle:User')->findByName($search);
+            $userList = $em->getRepository('ClarolineCoreBundle:User')->findByName($search);
 
             // Pagination users for share question
-            $adapterUserSearch = new ArrayAdapter($UserList);
+            $adapterUserSearch = new ArrayAdapter($userList);
             $pagerUserSearch = new Pagerfanta($adapterUserSearch);
 
             try {
-                $userList = $pagerUserSearch
+                $userListPager = $pagerUserSearch
                     ->setMaxPerPage($max)
                     ->setCurrentPage($page)
                     ->getCurrentPageResults();
@@ -712,7 +712,7 @@ class QuestionController extends Controller
             // Put the result in a twig
             $divResultSearch = $this->render(
                 'UJMExoBundle:Question:search.html.twig', array(
-                'userList' => $userList,
+                'userList' => $userListPager,
                 'pagerUserSearch' => $pagerUserSearch,
                 'search' => $search,
                 'questionID' => $questionID
@@ -786,7 +786,7 @@ class QuestionController extends Controller
             ->getManager()
             ->getRepository('UJMExoBundle:Document');
 
-        $ListDoc = $repository->findBy(array('user' => $user->getId()));
+        $listDoc = $repository->findBy(array('user' => $user->getId()));
 
         // Pagination of the documents
         $max = 5; // Max questions displayed per page
@@ -794,11 +794,11 @@ class QuestionController extends Controller
         $page = $request->query->get('page', 1); // Which page
 
          // Make the pagination of the result with pagerfanta bundle
-        $adapterDoc = new ArrayAdapter($ListDoc);
+        $adapterDoc = new ArrayAdapter($listDoc);
         $pagerDoc = new Pagerfanta($adapterDoc);
 
         try {
-            $listDoc = $pagerDoc
+            $listDocPager = $pagerDoc
                 ->setMaxPerPage($max)
                 ->setCurrentPage($page)
                 ->getCurrentPageResults();
@@ -809,7 +809,7 @@ class QuestionController extends Controller
         return $this->render(
             'UJMExoBundle:Question:manageImg.html.twig',
             array(
-                'listDoc' => $listDoc,
+                'listDoc' => $listDocPager,
                 'pagerDoc' => $pagerDoc
             )
         );
@@ -844,10 +844,10 @@ class QuestionController extends Controller
                 ->getManager()
                 ->getRepository('UJMExoBundle:Document');
 
-            $ListDoc = $repository->findBy(array('user' => $userId));
+            $listDoc = $repository->findBy(array('user' => $userId));
 
             // Pagination to see questions link to paper (and cannot be deleted)
-            $adapterDoc = new ArrayAdapter($ListDoc);
+            $adapterDoc = new ArrayAdapter($listDoc);
             $pagerDoc = new Pagerfanta($adapterDoc);
 
             // If delete last item of page, display the previous one
@@ -858,7 +858,7 @@ class QuestionController extends Controller
             }
 
             try {
-                $listDoc = $pagerDoc
+                $listDocPager = $pagerDoc
                     ->setMaxPerPage($maxPage)
                     ->setCurrentPage($pageNow)
                     ->getCurrentPageResults();
@@ -869,7 +869,7 @@ class QuestionController extends Controller
             return $this->render(
                 'UJMExoBundle:Question:manageImg.html.twig',
                 array(
-                    'listDoc' => $listDoc,
+                    'listDoc' => $listDocPager,
                     'pagerDoc' => $pagerDoc,
                 )
             );
@@ -1010,14 +1010,14 @@ class QuestionController extends Controller
                 ->getManager()
                 ->getRepository('UJMExoBundle:Document');
 
-            $ListDocSort = $repository->findByType($type, $user->getId(), $searchLabel);
+            $listDocSort = $repository->findByType($type, $user->getId(), $searchLabel);
 
             // Pagination of sorted documents
-            $adapterSortDoc = new ArrayAdapter($ListDocSort);
+            $adapterSortDoc = new ArrayAdapter($listDocSort);
             $pagerSortDoc = new Pagerfanta($adapterSortDoc);
 
             try {
-                $listDocSort = $pagerSortDoc
+                $listDocSortPager = $pagerSortDoc
                     ->setMaxPerPage($max)
                     ->setCurrentPage($page)
                     ->getCurrentPageResults();
@@ -1028,7 +1028,7 @@ class QuestionController extends Controller
             // Put the result in a twig
             $divResultSearch = $this->render(
                 'UJMExoBundle:Question:sortDoc.html.twig', array(
-                'listFindDoc' => $listDocSort,
+                'listFindDoc' => $listDocSortPager,
                 'pagerFindDoc' => $pagerSortDoc,
                 'labelToFind' => $searchLabel,
                 'whichAction' => 'sort',
@@ -1076,14 +1076,14 @@ class QuestionController extends Controller
 
         if ($labelToFind) {
             $em = $this->getDoctrine()->getManager();
-            $ListFindDoc = $em->getRepository('UJMExoBundle:Document')->findByLabel($labelToFind, $userId, 1);
+            $listFindDoc = $em->getRepository('UJMExoBundle:Document')->findByLabel($labelToFind, $userId, 1);
 
             // Pagination finded documents
-            $adapterFindDoc = new ArrayAdapter($ListFindDoc);
+            $adapterFindDoc = new ArrayAdapter($listFindDoc);
             $pagerFindDoc = new Pagerfanta($adapterFindDoc);
 
             try {
-                $listFindDoc = $pagerFindDoc
+                $listFindDocPager = $pagerFindDoc
                     ->setMaxPerPage($max)
                     ->setCurrentPage($page)
                     ->getCurrentPageResults();
@@ -1094,7 +1094,7 @@ class QuestionController extends Controller
             // Put the result in a twig
             $divResultSearch = $this->render(
                 'UJMExoBundle:Question:sortDoc.html.twig', array(
-                'listFindDoc' => $listFindDoc,
+                'listFindDoc' => $listFindDocPager,
                 'pagerFindDoc' => $pagerFindDoc,
                 'labelToFind' => $labelToFind,
                 'whichAction' => 'search'
@@ -1137,20 +1137,20 @@ class QuestionController extends Controller
         $creator = $this->container->get('security.context')->getToken()->getUser(); // User who share his question
 
         if ($request->isXmlHttpRequest()) {
-            $QuestionID = $request->request->get('questionID'); // Which question is shared
+            $questionID = $request->request->get('questionID'); // Which question is shared
             // With which user
-            $UserName = $request->request->get('Uname');
-            $UserFname = $request->request->get('Ufname');
+            $userName = $request->request->get('Uname');
+            $userFname = $request->request->get('Ufname');
 
             $em = $this->getDoctrine()->getManager();
-            $MatchingName = $em->getRepository('ClarolineCoreBundle:User')->findByName($UserName);
-            $question = $em->getRepository('UJMExoBundle:Question')->findOneBy(array('id' => $QuestionID));
+            $matchingName = $em->getRepository('ClarolineCoreBundle:User')->findByName($userName);
+            $question = $em->getRepository('UJMExoBundle:Question')->findOneBy(array('id' => $questionID));
 
-            $end = count($MatchingName);
+            $end = count($matchingName);
 
             for ($i = 0; $i < $end; $i++) {
-                if ($MatchingName[$i]->getFirstName() == $UserFname) {
-                    $user = $MatchingName[$i];
+                if ($matchingName[$i]->getFirstName() == $userFname) {
+                    $user = $matchingName[$i];
                     break;
                 }
             }
@@ -1183,7 +1183,7 @@ class QuestionController extends Controller
      * If question already shared with a given user
      *
      */
-    public function alreadySharedAction($ToShare, $em)
+    public function alreadySharedAction($toShare, $em)
     {
         $alreadyShared = $em->getRepository('UJMExoBundle:Share')->findAll();
         $already = false;
@@ -1191,11 +1191,11 @@ class QuestionController extends Controller
         $end = count($alreadyShared);
 
         for ($i = 0; $i < $end; $i++) {
-            if ($alreadyShared[$i]->getUser() == $ToShare->getUser() &&
-                $alreadyShared[$i]->getQuestion() == $ToShare->getQuestion()
+            if ($alreadyShared[$i]->getUser() == $toShare->getUser() &&
+                $alreadyShared[$i]->getQuestion() == $toShare->getQuestion()
             ) {
-               $already = true;
-               break;
+                $already = true;
+                break;
             }
         }
 
@@ -1224,7 +1224,7 @@ class QuestionController extends Controller
         $user = $this->container->get('security.context')->getToken()->getUser();
         $request = $this->get('request');
 
-        $ListQuestions = array();
+        $listQuestions = array();
         $questionWithResponse = array();
         $alreadyShared = array();
 
@@ -1238,8 +1238,8 @@ class QuestionController extends Controller
         // If what and where to search is defined
         if ($type && $whatToFind && $where) {
             $em = $this->getDoctrine()->getEntityManager();
-            $QuestionRepository = $em->getRepository('UJMExoBundle:Question');
-            $InteractionRepository = $em->getRepository('UJMExoBundle:Interaction');
+            $questionRepository = $em->getRepository('UJMExoBundle:Question');
+            $interactionRepository = $em->getRepository('UJMExoBundle:Interaction');
 
             // Get the matching questions depending on :
             //  * in which database search,
@@ -1250,36 +1250,36 @@ class QuestionController extends Controller
             if ($where == 'my') {
                 switch ($type) {
                     case 'Category':
-                        $Questions = $QuestionRepository->findByCategory($user->getId(), $whatToFind);
+                        $questions = $questionRepository->findByCategory($user->getId(), $whatToFind);
 
-                        $end = count($Questions);
+                        $end = count($questions);
 
                         for ($i = 0; $i < $end; $i++) {
-                            $ListQuestions[] = $InteractionRepository->findOneBy(array('question' => $Questions[$i]->getId()));
+                            $listQuestions[] = $interactionRepository->findOneBy(array('question' => $questions[$i]->getId()));
                         }
                         break;
 
                     case 'Type':
-                        $ListQuestions = $InteractionRepository->findByType($user->getId(), $whatToFind);
+                        $listQuestions = $interactionRepository->findByType($user->getId(), $whatToFind);
                         break;
 
                     case 'Title':
-                        $Questions = $QuestionRepository->findByTitle($user->getId(), $whatToFind);
+                        $questions = $questionRepository->findByTitle($user->getId(), $whatToFind);
 
-                        $end = count($Questions);
+                        $end = count($questions);
 
                         for ($i = 0; $i < $end; $i++) {
-                            $ListQuestions[] = $InteractionRepository->findOneBy(array('question' => $Questions[$i]->getId()));
+                            $listQuestions[] = $interactionRepository->findOneBy(array('question' => $questions[$i]->getId()));
                         }
                         break;
 
                     case 'Contain':
-                        $ListQuestions = $InteractionRepository->findByContain($user->getId(), $whatToFind);
+                        $listQuestions = $interactionRepository->findByContain($user->getId(), $whatToFind);
                         break;
                 }
 
                 // For all the matching questions search if ...
-                foreach ($ListQuestions as $list) {
+                foreach ($listQuestions as $list) {
                     // ... the question is link to a paper (question in the test has already been passed)
                     $response = $em->getRepository('UJMExoBundle:Response')
                         ->findBy(array('interaction' => $list->getId()));
@@ -1300,11 +1300,11 @@ class QuestionController extends Controller
                 }
 
                 // Make the pagination of the result with pagerfanta bundle
-                $adapterSearch = new ArrayAdapter($ListQuestions);
+                $adapterSearch = new ArrayAdapter($listQuestions);
                 $pagerSearch = new Pagerfanta($adapterSearch);
 
                 try {
-                    $listQuestions = $pagerSearch
+                    $listQuestionsPager = $pagerSearch
                         ->setMaxPerPage($max)
                         ->setCurrentPage($page)
                         ->getCurrentPageResults();
@@ -1315,7 +1315,7 @@ class QuestionController extends Controller
                 // Put the result in a twig
                 $divResultSearch = $this->render(
                     'UJMExoBundle:Question:SearchQuestionType.html.twig', array(
-                    'listQuestions' => $listQuestions,
+                    'listQuestions' => $listQuestionsPager,
                     'canDisplay' => $where,
                     'pagerSearch' => $pagerSearch,
                     'type'        => $type,
@@ -1349,7 +1349,7 @@ class QuestionController extends Controller
                         $end = count($sharedQuestion);
 
                         for ($i = 0; $i < $end; $i++) {
-                            $ListQuestions[] = $em->getRepository('UJMExoBundle:Interaction')
+                            $listQuestions[] = $em->getRepository('UJMExoBundle:Interaction')
                                 ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
                         }
                         break;
@@ -1361,7 +1361,7 @@ class QuestionController extends Controller
                         $end = count($sharedQuestion);
 
                         for ($i = 0; $i < $end; $i++) {
-                            $ListQuestions[] = $em->getRepository('UJMExoBundle:Interaction')
+                            $listQuestions[] = $em->getRepository('UJMExoBundle:Interaction')
                                 ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
                         }
                         break;
@@ -1373,7 +1373,7 @@ class QuestionController extends Controller
                         $end = count($sharedQuestion);
 
                         for ($i = 0; $i < $end; $i++) {
-                            $ListQuestions[] = $em->getRepository('UJMExoBundle:Interaction')
+                            $listQuestions[] = $em->getRepository('UJMExoBundle:Interaction')
                                 ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
                         }
                         break;
@@ -1385,18 +1385,18 @@ class QuestionController extends Controller
                         $end = count($sharedQuestion);
 
                         for ($i = 0; $i < $end; $i++) {
-                            $ListQuestions[] = $em->getRepository('UJMExoBundle:Interaction')
+                            $listQuestions[] = $em->getRepository('UJMExoBundle:Interaction')
                                 ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
                         }
                         break;
                 }
 
                 // Make the pagination of the result with pagerfanta bundle
-                $adapterSearch = new ArrayAdapter($ListQuestions);
+                $adapterSearch = new ArrayAdapter($listQuestions);
                 $pagerSearch = new Pagerfanta($adapterSearch);
 
                 try {
-                    $listQuestions = $pagerSearch
+                    $listQuestionsPager = $pagerSearch
                         ->setMaxPerPage($max)
                         ->setCurrentPage($page)
                         ->getCurrentPageResults();
@@ -1407,7 +1407,7 @@ class QuestionController extends Controller
                 // Put the result in a twig
                 $divResultSearch = $this->render(
                     'UJMExoBundle:Question:SearchQuestionType.html.twig', array(
-                    'listQuestions' => $listQuestions,
+                    'listQuestions' => $listQuestionsPager,
                     'canDisplay' => $where,
                     'pagerSearch' => $pagerSearch,
                     'type'        => $type,

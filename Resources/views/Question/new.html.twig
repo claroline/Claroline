@@ -42,14 +42,14 @@
 
 {% block section_content %}
 
-<h1>{{ 'Question creation' | trans }}</h1>
+<h1>{{ 'question creation' | trans }}</h1>
 
 <form name="form_type_question">
-<label for="menu_type_question">{{ 'kind of question' | trans }}</label>
-<select name="menu_type_question" id="menu_type_question" onchange="cherche_type('{{ 'Warning_change_type_q' | trans }}', '{{ exoID }}', '{{ path('ujm_question_display_form_type')}}' )">
-    <option selected="selected">{{ 'Choose_type' | trans }}</option>
+<label for="menu_type_question">{{ 'kind of question' | trans }} ?</label>
+<select name="menu_type_question" id="menu_type_question" onchange="cherche_type('{{ 'warning_change_type_q' | trans }} ?', '{{ exoID }}', '{{ path('ujm_question_display_form_type')}}' )">
+    <option selected="selected">{{ 'choose_type' | trans }}</option>
     <option>{{ 'hole' | trans }}</option>
-    <option>{{ 'QCM' | trans }}</option>
+    <option>{{ 'qcm' | trans }}</option>
     <option>{{ 'graphic' | trans }}</option>
     <option>{{ 'open' | trans }}</option>
 </select>
@@ -66,7 +66,7 @@
 <ul class="record_actions">
     <li>
         <a href="{{ path('ujm_question_index') }}">
-            {{ 'Back to the list' | trans }}
+            {{ 'back to the list' | trans }}
         </a>
     </li>
 </ul>

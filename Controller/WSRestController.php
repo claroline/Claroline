@@ -57,7 +57,7 @@ class WSRestController extends Controller
      * To add a document with the plugin advimage with tinyMCEBundle
      *
      */
-    public function postDocumentAddAction($redirection, $page2Go, $maxPage, $nbItem)
+    public function postDocumentAddAction($redirection, $pageToGo, $maxPage, $nbItem)
     {
         // We post the data label, url, type, login
         // Login allow to link a doc and a user
@@ -125,23 +125,23 @@ class WSRestController extends Controller
                     ->getManager()
                     ->getRepository('UJMExoBundle:Document');
 
-                $ListDoc = $repository->findBy(array('user' => $user->getId()));
+                $listDoc = $repository->findBy(array('user' => $user->getId()));
 
                 // Pagination of documents
-                $adapterDoc = new ArrayAdapter($ListDoc);
+                $adapterDoc = new ArrayAdapter($listDoc);
                 $pagerDoc = new Pagerfanta($adapterDoc);
 
                 // If new item > max per page, display next page
                 $rest = $nbItem % $maxPage;
 
                 if ($rest == 0) {
-                    $page2Go += 1;
+                    $pageToGo += 1;
                 }
 
                 try {
-                    $listDoc = $pagerDoc
+                    $listDocPager = $pagerDoc
                         ->setMaxPerPage($maxPage)
-                        ->setCurrentPage($page2Go)
+                        ->setCurrentPage($pageToGo)
                         ->getCurrentPageResults();
                 } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
                     throw $this->createNotFoundException("Cette page n'existe pas.");
@@ -150,7 +150,7 @@ class WSRestController extends Controller
                 return $this->render(
                     'UJMExoBundle:Question:manageImg.html.twig',
                     array(
-                        'listDoc' => $listDoc,
+                        'listDoc' => $listDocPager,
                         'pagerDoc' => $pagerDoc
                     )
                 );
@@ -160,7 +160,7 @@ class WSRestController extends Controller
         }
     }
 
-    public function NameAlreadyExistAction()
+    public function nameAlreadyExistAction()
     {
         $request = $this->container->get('request');
         $user = $this->container->get('security.context')->getToken()->getUser();

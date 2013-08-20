@@ -39,25 +39,25 @@
     <ul>
         <li style="float: left;  margin-left: 70px;">
             <a href="{{ path('ujm_question_new') }}">
-                {{ 'Create a new entry' | trans }}
+                {{ 'create a new entry' | trans }}
             </a>
         </li>
 
         <li style="float: left; margin-left: 100px;">
             <a href="{{ path('ujm_question_manage_doc') }}">
-                {{ 'manageImg' | trans }}
+                {{ 'manageImg' | trans }} ...
             </a>
         </li>
 
         <li style="float: left; margin-left: 100px;">
             <a href="{{ path('ujm_question_search_question') }}">
-                {{ 'SearchQuestion' | trans }}
+                {{ 'searchQuestion' | trans }} ...
             </a>
         </li>
     </ul>
 <hr/>
 
-    <h3>{{ 'My questions' | trans }}</h3>
+    <h3>{{ 'my questions' | trans }}</h3>
 
     <hr/>
 
@@ -71,30 +71,30 @@
                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                         <i class="icon-chevron-up" id="upC"  style="display: none;"></i>
                         <i class="icon-chevron-down" id="downC"  style="display: none;"></i>
-                        {{ 'Category' | trans }}
+                        {{ 'category' | trans }}
                     </th>
                     <th style="text-align: center"onclick="SortQuestions('Title', 'QuestionArrayMy');"
                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                         <i class="icon-chevron-up" id="upTi"  style="display: none;"></i>
                         <i class="icon-chevron-down" id="downTi"  style="display: none;"></i>
-                        {{ 'Title' | trans }}
+                        {{ 'title' | trans }}
                     </th>
                     <th style="text-align: center"onclick="SortQuestions('Type', 'QuestionArrayMy');"
                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                         <i class="icon-chevron-up" id="upTy"  style="display: none;"></i>
                         <i class="icon-chevron-down" id="downTy"  style="display: none;"></i>
-                        {{ 'Type' | trans }}
+                        {{ 'type' | trans }}
                     </th>
                     <th style="text-align: center"onclick="SortQuestions('Invite', 'QuestionArrayMy')"
                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                         <i class="icon-chevron-up" id="upI"  style="display: none;"></i>
                         <i class="icon-chevron-down" id="downI"  style="display: none;"></i>
-                        {{ 'Question' | trans }}
+                        {{ 'question' | trans }}
                     </th>
-                    <th style="text-align: center">{{ 'Actions' | trans }}</th>
+                    <th style="text-align: center">{{ 'actions' | trans }}</th>
                     <th><i class="icon-share-alt"></th>
                 </tr>
             </thead>
@@ -110,22 +110,22 @@
                     <td style="text-align: center; vertical-align: middle;">
                         <ul style="text-align: center; vertical-align: middle; list-style-type: none; margin-left: 0;">
                             <li>
-                                <a href="{{ path('ujm_question_share', { 'questionID': interaction.question.id }) }}">{{ 'Share' | trans }}</a>
+                                <a href="{{ path('ujm_question_share', { 'questionID': interaction.question.id }) }}">{{ 'share' | trans }}</a>
                             </li>
                             {% if(questionWithResponse[x] == 0) %}
                                 <li>
-                                    <a href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}">{{ 'Edit' | trans }}</a>
+                                    <a href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}">{{ 'edit' | trans }}</a>
                                 </li>
                                 <li>
                                     <form action="{{ path('ujm_question_delete', {
                                         'id': interaction.question.id, 'pageNow': pagerMy.getCurrentPage, 'maxPage': pagerMy.maxPerPage,
                                         'nbItem': pagerMy.getNbResults, 'lastPage': pagerMy.getNbPages }) }}" method="post">
-                                        <button type="submit">{{ 'Delete of my bank' | trans }}</button>
+                                        <button type="submit">{{ 'delete of my bank' | trans }}</button>
                                     </form>
                                 </li>
                             {% else %}
                                 <li>
-                                    <a href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}" style="color:red">{{ 'Edit' | trans }}</a>
+                                    <a href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}" style="color:red">{{ 'edit' | trans }}</a>
                                 </li>
                             {% endif %}
                         </ul>
@@ -147,12 +147,12 @@
             {'pagerShared': pagerShared.getCurrentPage, 'pagerMy': pagerMy.getCurrentPage, 'click': 'my'} }) }}
         {% endif %}
     {% else %}
-        <p>{{ 'noQuestionFound'|trans }}</p>
+        <p>{{ 'noQuestionFound'|trans }} ...</p>
     {% endif %}
 
     <hr/>
 
-    <h3>{{ 'My shared questions' | trans }}</h3>
+    <h3>{{ 'my shared questions' | trans }}</h3>
 
     {% if sharedWithMe is not empty %}
 
@@ -164,14 +164,14 @@
                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                         <i class="icon-chevron-up" id="upCs"  style="display: none;"></i>
                         <i class="icon-chevron-down" id="downCs"  style="display: none;"></i>
-                        {{ 'Category' | trans }}
+                        {{ 'category' | trans }}
                     </th>
                     <th style="text-align: center"onclick="SortQuestions('Title', 'QuestionArrayShared');"
                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                         <i class="icon-chevron-up" id="upTis"  style="display: none;"></i>
                         <i class="icon-chevron-down" id="downTis"  style="display: none;"></i>
-                        {{ 'Title' | trans }}
+                        {{ 'title' | trans }}
                     </th>
                     <th style="text-align: center"onclick="SortQuestions('Type', 'QuestionArrayShared');"
                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
@@ -185,10 +185,10 @@
                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                         <i class="icon-chevron-up" id="upIs"  style="display: none;"></i>
                         <i class="icon-chevron-down" id="downIs"  style="display: none;"></i>
-                        {{ 'Question' | trans }}
+                        {{ 'question' | trans }}
                     </th>
                     <th style="text-align: center">{{ 'shared by' | trans }}</th>
-                    <!--th style="text-align: center">{#{ "Actions" | trans }#}</th-->
+                    <!--th style="text-align: center">{#{ "actions" | trans }#}</th-->
                 </tr>
             </thead>
             <tbody>
@@ -202,20 +202,20 @@
                     <!--td style="text-align: center; vertical-align: middle;">
                         <ul style="list-style-type: none;">
                             <li>
-                                <a href="{#{ path('ujm_question_share', { 'questionID': myQShare.question.id }) }}">{{ "Share" | trans }}</a>
+                                <a href="{#{ path('ujm_question_share', { 'questionID': myQShare.question.id }) }}">{{ "share" | trans }}</a>
                             </li>
                             {% if(questionWithResponse[i] == 0) %}
                                 <li>
-                                    <a href="{{ path('ujm_question_edit', { 'id': myQShare.question.id }) }}">{{ "Edit" | trans }}</a>
+                                    <a href="{{ path('ujm_question_edit', { 'id': myQShare.question.id }) }}">{{ "edit" | trans }}</a>
                                 </li>
                                 <li>
                                     <form action="{{ path('ujm_question_delete', { 'id': myQShare.question.id}) }}" method="post">
-                                        <button type="submit">{{ "Delete of my bank" | trans }}</button>
+                                        <button type="submit">{{ "delete of my bank" | trans }}</button>
                                     </form>
                                 </li>
                             {% else %}
                                 <li>
-                                    <a href="{{ path('ujm_question_edit', { 'id': myQShare.question.id }) }}" style="color:red">{{ "Edit" | trans }}</a>
+                                    <a href="{{ path('ujm_question_edit', { 'id': myQShare.question.id }) }}" style="color:red">{{ "edit" | trans }}</a>
                                 </li>
                             {% endif %#}
                         </ul>
@@ -235,7 +235,7 @@
             {'pagerMy': pagerMy.getCurrentPage, 'pagerShared': pagerShared.getCurrentPage,  'click': 'shared'} }) }}
         {% endif %}
     {% else %}
-        <p>{{ 'noQuestionFound'|trans }}</p>
+        <p>{{ 'noQuestionFound'|trans }} ...</p>
     {% endif %}
     <hr/>
 {% endblock %}

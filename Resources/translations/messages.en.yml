@@ -1,4 +1,4 @@
-
+##
  # ExoOnLine
  # Copyright or © or Copr. Université Jean Monnet (France), 2012
  # dsi.dev@univ-st-etienne.fr
@@ -33,157 +33,306 @@
  # knowledge of the CeCILL license and that you accept its terms.
 ##
 
-Actions: Actions
-Add: Add
-Add user: Add user
-Administration: Administration
-After the last attempt: After the last attempt
-At the end of assessment: At the end of assessment
-At the same time that the correction: At the same time that the correction
-Availability of correction: Availability of correction
-Availability of score: Availability of score
-Back: Back
-Back to the list: Back to the list
-Bank of questions: Bank of questions
-Category: Category
+# A
+actions: Actions
+add: Add
+add a new picture: Add a new picture
+addDoc: Add a document
+add hint: Add hint
+add user: Add user
+administration: Administration
+after the last attempt: After the last attempt
+allQuestion: All
+already: This question is already shared with this user
+alreadyExist: This name exist already
+answer_coched: No response expected is checked
+answer zone: Answer zone
+at the end of assessment: At the end of assessment
+at the same time that the correction: At the same time that the correction
+availability of correction: Availability of correction
+availability of score: Availability of score
+
+# B
+back: Back
+back to the list: Back to the list
+bank of questions: Bank of questions
+
+# C
+category: Category
+cercle: Circle
+change: Change
+changeName: Change the name
+choice: Choice
+choose_type: Choose type
+chooseType: Choose type of document to display
 close: Close
-Comment: Comment
-Compose: Compose
-Create: Create
-Create a new entry: Create a new entry
-Create a new category: Create a new category
-Choice: Choice
-Correction date: Correction date
-Date: Date
-Delete: Delete
-Delete of my bank: Delete of my bank
-Delete of my exercise: Delete of my exercise
-Description: Description
-Docimology: Docimology
-Document: Document
-Duration: Duration
-Edit: Edit
-End date: End date
-Entry: Entry
-Exercise: Exercise
-Exit: Exit
-Expected answer: Expected answer
-ExplainCoeffDis0: The copies must have the same questions to calculate the coefficient of discrimination.
-ExplainCoeffDis1: Analysis of the relevance of the questions, this correlation coefficient ranges from -1 to +1
-ExplainCoeffDis2: The questuions with a discrimination coefficient between 0.35 and 0.65 maximize the discrimination of students.
-ExplainCoeffDis3: The questions that have a negative index signal a discrepancy, the best students fail these questions, the lowest pass these questions
-Feedback: Feedback
-Finish: Finish
-From: From
-Group: Group
-Hint: Hint
-HistoDiscrimination: Discrimination coefficient
-HistoMarks: Marks' histogram
-HistoSucces: Success' histogram
-Interupt: Interupt
+color: Color
+comment: Comment
+compose: Compose
+consult_hint: Consult the hint, results in a penalty, do you want to continue
+containSearch: Whose question contains
+correct: Correct
+correction: Correction
+correction date: Correction date
+course_name: Course name
+create: Create
+create a new category: Create a new category
+create a new entry: Create a new entry
+creationDate: Creation date
+
+# D
+date: Date
+delDocQuestion: Delete this document and all the linked questions
+delete: Delete
+delete of my bank: Delete of my bank
+delete of my exercise: Delete of my exercise
+description: Description
+docimology: Docimology
+docManage: Manage my documents
+docName: Document name
+document: Document
+doNothing: Do nothing and go back to my documents management
+duration: Duration
+
+# E
+edit: Edit
+edit a category: Edit a category
+edit a question: Edit a question
+end date: End date
+entry: Entry
+erase: To erase an answer zone, press s key and click on the erasable answer zone.
+exercise: Exercise
+exercise creation: Exercise creation
+exercise edit: Exercise edit
+exit: Exit
+expected answer: Expected answer
+explainCoeffDis0: The copies must have the same questions to calculate the coefficient of discrimination.
+explainCoeffDis1: Analysis of the relevance of the questions, this correlation coefficient ranges from -1 to +1.
+explainCoeffDis2: The questions with a discrimination coefficient between 0.35 and 0.65 maximize the discrimination of students.
+explainCoeffDis3: Questions which have a negative index signal a discrepancy, the best students fail these questions, the lowest pass these questions.
+
+# F
+feedback: Feedback
+findBy: Find by
+findIn: Find in
+findLabel: Find a document with a specific label
+findQuestion: Find questions
+findWhat: What you're looking for
+finish: Finish
+frequency: Frequency
+from: From
+
+# G
+graphic: Graphic
+group: Group
+
+# H
+hide Instructions: Hide instructions
+hint: Hint
+hints: Hints
+hint number: Hint number
+histoDiscrimination: Discrimination coefficient
+histoMarks: Marks' histogram
+histoSuccess: Success' histogram
+hole: Hole
+
+# I
+infiny: Indefinite
+interupt: Interupt
+invite_question: The prompt of question must be completed
 isInterupt: Interupted
-Import: Import
-Import questions: Import questions
-List: List
-List of exercises: List of exercises
-List of question: List of question
-Lock attempt: Lock attempt
-Mark: Mark
-Maximum number of tries: Maximum number of tries
-Multiple response: Multiple response
-My account: My account
-My questions: My questions
-Never: Never
-Number of papers: Number of papers
-Number of questions: Number of questions
-Number of questions to draw: Number of questions to draw
-Paper: Paper
-Paper list: Paper list
-Penalty: Penalty
-Planning_Of_Groups: Planning of groups
-Print paper: Print paper
-Question: Question
-Question list: Question list
-Random order of questions: Random order of questions
-Role: Role
-Share: Share
-Show: Show
-Start date: Start date
-Subscription: Subscription
-Test exit: Test output
-Title: Title
-Try: Try
-Type: Type
-Unique response: Unique response
-Use date of end: Use date of end
-User: User
-Your answer: Your answer
+import: Import
+import questions: Import questions
+inside: You must put all the answer zone INSIDE the picture
+interactionGraphic creation: InteractionGraphic creation
+interactionGraphic Edition: InteractionGraphic Edition
+
+# K
+kind of question: What kind of question
+
+# L
+label: Label
+label_empty: Fields of the responses should not be empty
+linkedDoc: Warning, the document you tried to delete is linked to questions
+linkpaper: Link to a test
+list: List
+list of exercises: List of exercises
+list of question: List of question
+lock attempt: Lock attempt
+
+# M
+manageImg: Manage my documents
+mark: Mark
+maximum number of tries: Maximum number of tries
+multiple response: Multiple response
+my account: My account
+my questions: My questions
+my shared questions: My shared questions
+
+# N
+nameUser2Shared: Name of user to share the question
+nbr_choices: The number of choices must be greater than two
+never: Never
+newName: New name
+no: No
+no answer: No answer
+noAnswerZone: There is no answer zone
+noDocFound: No document found
+noHintShow: Hints not seen, no penalty
+noImg: You must upload a picture
+noOne: None
+noPaperFound: No paper found
+noQuestion: You ask for nothing
+noQuestionFound: No question found
+noRightAnswer: No right answer
+notImageMesssage: The document should be an image
+noTitle: The question has no title
+noUserFound: No user found
+number of papers: Number of papers
+number of questions: Number of questions
+number of questions to draw: Number of questions to draw
+num_paper: Paper's number
+
+# O
+onlyOnce: => The rights answers count only once.
+open: Open
+order: Order
+orders: Instructions
+
+# P
+paper: Paper
+paper list: Paper list
+partially: Partially correct
+penalty: Penalty
+picture name: Picture name
+placeZone: To move an answer zone, select it by clicking on it and click again to place it.
+planning_Of_Groups: Planning of groups
+point: Point
+points: Points
+point_answer: You must assign a point to the correct answer
+point_answers: You must assign a point to each answer
+pointInstruction: Points must be assigned before positioning each answer zone.
+pointRightResponse: Right answer points
+position: => Place pointers below (red cross) on the picture. The pointer's center defines your answer.
+preview: Preview
+print paper: Print paper
+
+# Q
+qcm: QCM
+question: Question
+question creation: Question creation
+
+# R
+random order of questions: Random order of questions
+raz: => To reset pointers, press "c".
+rectangle: Rectangle
+reset: Reset
+resize: To resize the answer zone, select it by clicking, then press Alt and move your mouse.
+resizeZone: To re-size the picture, place your mouse ove rthe image and use the wheel. You can also press MAJ key and move your mouse.
+response: Response
+response number: Response number
+result: Results
+role: Role
+
+# S
+sawHint: of penalty for seen hints
+searchQuestion: Search questions
+seeDoc: See linked questions to this document
+select: Select
+selection: => Click on a pointer to select it and click again on the picture to define your answer.
+selectZone: To define an answer zone, click on it and place it by re-clicking to the selected place on the image. You can also press CTRL key and click on the picture where it should be placed.
+self: You can't shared this question with yourself
+shape: Shape
+share: Share
+shared by: Shared by
+sharedUser: Share of questions
+show: Show
+show Instructions: Show instructions
+sort: Sort
+start date: Start date
+subscription: Subscription
+
+# T
+test exit: Test output
+title: Title
+try: Try
+type: Type
+
+# U
+unique response: Unique response
+upload: Upload
+uploading: Uploading
+use date of end: Use end date
+user: User
+
+# V
+validate: Validate
+
+# W
+warning: Are you sure you want to delete this document
+warning_change_type_q: Warning you may lose your data entered continue
+whichAction: Which action would you like to do
+with: With
+withResponse: With answers
+wrong: Wrong
+wrongName: The input name is wrong
+wrongPoint: The input value is wrong
+
+# Y
+yes: Yes
+your answer: Your answer
+
 
 #properties of entities
-User.username: Username
-User.password: Password
-User.name: Name
-User.firstName: Firstname
-User.mail: Email
-
-Roles.name: Name of role
-
-Groupes.name: Name of group
-
-Planning.start_time: Start date
-Planning.end_time: End date
-
-Subscription.admin: Granted admin role (exercise)
-
-Exercise.title: Exercise title
-Exercise.description: Description (optional)
-Exercise.shuffle: Random order of questions
-Exercise.nbQuestion: Number of question
-Exercise.duration: Duration
-Exercise.nbQuestionPage: Number of question by page
-Exercise.doprint: Print the copy at the end of test
-Exercise.maxAttemps: Tries allowed
-Exercise.correctionMode: Correction mode
-Exercise.markMode: Availability of the notation
-Exercise.start_date: Start date
-Exercise.end_date: End date
-Exercise.dispButtonIterrupt: Allow the test be stopped
-Exercise.lockAttempt: Lock the test
-
-Question.title: Question title
-Question.description: Description (optional)
-Question.model: Set as model
-Question_creation: Question creation
-
-kind of question: what kind of question ?
-Choose_type: Choose type
-hole: Hole
-QCM: QCM
-graphic: Graphic
-open: Open
-Warning_change_type_q: Warning you may lose your data entered continue ?
-
-response number: Response number
-response: Response
-point: Point
-comment: Comment
-expected response: Expected response
-order: Order
-
-add hint: Add hint
-hint number: Hint number
-consult_hint: Consult the hint, results in a penalty, do you want to continue ?
-
-course_name: Course name
 
 Category.value: Category
 
-Interaction.invite: Question
-Interaction.feedback: Feedback to display whith the correction (optional)
+Choice.feedback: Feedback if this answer is checked (optional)
+Choice.label: Proposed answer
+Choice.positionForce: Forced position
+Choice.rightResponse: Correct answer
+Choice.weight: Points for this answer
 
-Inter_QCM.shuffle: Order of random selection
+Coords.color: Color
+Coords.score: Points for correct answer
+Coords.shape: Shape
+
+Document.label: Document
+
+Exercise.correctionMode: Correction mode
+Exercise.description: Description (optional)
+Exercise.dispButtonIterrupt: Allow the test to be stopped
+Exercise.doprint: Print the copy at the end of the test
+Exercise.duration: Duration
+Exercise.end_date: End date
+Exercise.lockAttempt: Lock the test
+Exercise.markMode: Availability of the notation
+Exercise.maxAttemps: Tries allowed
+Exercise.nbQuestion: Number of question
+Exercise.nbQuestionPage: Number of questions by page
+Exercise.shuffle: Random order of questions
+Exercise.start_date: Start date
+Exercise.title: Exercise title
+
+Exepertise.description: Description
+Exepertise.title_expertise: Expertise title
+
+Groupes.name: Name of group
+
+Hole.orthography: Allow misspellings
+Hole.score: Points for correct answer
+Hole.selector: Submit a list
+Hole.size: Size of hole
+
+Hint.penalty: Penalty
+Hint.value: Hint
+
+Interaction.feedback: Feedback to display with the correction (optional)
+Interaction.invite: Question
+
 Inter_QCM.ScoreRightResponse: Points for correct answer
 Inter_QCM.ScoreFalseResponse: Points for wrong answer
+Inter_QCM.shuffle: Order of random selection
 Inter_QCM.weightChoice: Assign points by response
 
 Inter_Hole.html: Cloze
@@ -191,140 +340,35 @@ Inter_Hole.orthography: Allow misspellings
 Inter_Hole.score: Score
 Inter_Hole.size: Size
 
-Coords.shape: Shape
-Coords.color: Color
-Coords.score: Points for correct response
+LockAttempte.date: Date
 
-TypeQCM.value: QCM type
+Planning.end_time: End Date
+Planning.start_time: Start date
 
-Choice.label: Proposed answer
-Choice.weight: Points to this response
-Choice.feedback: Feedback (optional)
-Choice.rightResponse: Correct response
-Choice.positionForce: Forced position
+Question_creation: Question creation
+Question.description: Description of the question (optional)
+Question.model: Set as model
+Question.title: Question title
 
-TypeOpenQuestion.value: Question type
-
-Hole.orthography: Allow misspellings
-Hole.score: Point for correct response
-Hole.selector: Submit a list
-Hole.size: Size of hole
-
-WordResponse.response_value: Word
-WordResponse.score: Point to this response
-
-Unit.value: Unity
-
-Document.label: Document
-
-Hint.value: Hint
-Hint.penalty: Penality
-
-Exepertise.title_expertise: Expertise title
-Exepertise.description: Description
+Roles.name: Name of role
 
 Response.mark: Mark
 Response.reponse: Response
 
-LockAttempte.date: Date
+Subscription.admin: Granted admin role (exercise)
 
-Edit a category: Edit a category
-Edit a question: Edit a question
+TypeOpenQuestion.value: Question type
 
-#create QCM Question alert
-nbr_choices: The number of choices must be greater than two
-answer_coched: No response expected is checked
-point_answers: You must assign a point to each answer
-point_answer: you must assign a point to the correct answer
-label_empty: Fields of the responses should not be empty
-invite_question: The prompt of question must be completed
+TypeQCM.value: QCM type
 
-#Create Graphic Question
-Hints: Hints
-Document: Answer picture
-Add a new picture ...: Add a new picture ...
-Picture name: Picture name
-Upload !: Upload !
-Uploading: Uploading
-Select: Select
-ResizeZone: To  re-size the picture, place your mouse ove rthe image and use the wheel. You can also press MAJ key and move your mouse.
-PlaceZone: To move an answer zone, select it by clicking on it and click again to place it.
-Resize: To resize the answer zone, select it by clicking, then press Alt and move your mouse.
-SelectZone: To define an answer zone, click on it and place it by re-clicking to the selected place on the image. You can also press CTRL key and click on the picture where it should be placed.
-Erase: To erase an answer zone, press s key and click on the erasable answer zone.
-Point: Points must be assigned before positioning each answer zone.
-Answer zone: Answer zone
-Shape: Shape
-Color: Color
-Points: Points
-cercle: circle
-rectangle: rectangle
-Order: Instructions
-position: => Place pointers below (red cross) on the picture. The pointer's center defines your answer.
-selection: => Click on a pointer to select it and click again on the picture to define your answer.
-raz: => To reset pointers, press "c".
-noTitle: The question has no title.
-noQuestion: You ask for nothing ...
-noImg: You must upload a picture !
-noAnswerZone: There is no answer zone ...
-notAll: All the answers zones haven\'t been placed !
-onlyOnce: => The rights answers count only once.
-wrong: The input name is wrong.
-inside: You must put all the answer zone INSIDE the picture ...
-manageImg: Manage my documents ...
-Preview: Preview
-Label: Label
-warning: Are you sure you want to delete this document ?
-linkedDoc: Warning, the document you tried to delete is linked to questions !
-whichAction: Which action would you like to do ?
-doNothing: Do nothing and go back to my documents management ...
-seeDoc: See linked questions to this document.
-delDocQuestion: Delete this document and all the linked questions !
-creationDate: Creation date
-Linkpaper: Link to a test ?
-withResponse:  With answers ?
-no: no
-yes: yes
-docName: Document name ?
-addDoc: Add a document ...
-changeName: Change the name
-newName: New name ?
-change: Change !
-sort: Sort
-My shared questions: My shared questions
-shared by: Shared by
-already: This question is already shared with this user ...
-Self: You can't shared this question with yourself ...
-NotImageMesssage: The document should be an image
-SearchQuestion: Search questions ...
-CategorySearch: Category
-TypeSearch: Type
-TitleSearch: Title
-ContainSearch: Whose question contains ...
-noQuestionFound: No question  found ...
-noDocFound: No document found ...
-noPaperFound: No paper
-noUserFound: No user found ...
-Num_paper: paper's number
-DocManage: Manage my documents
-sharedUser: Shared question
-nameUser2Shared: Name of user to shared question
-findLabel: Find a document  with a specific label
-chooseType: Choose type of document to display
-reset: reset
-findBy: Find by
-findIn: Find in
-findWhat: What you're looking for
-result: Results
-findQuestion: Find questions
-alreadyExist: This name exist already.
-noOne: None
-infiny: Indefinite
-allQuestion: All
-creationDate: Creation Date
-frequency: Frequency
+User.firstName: First name
+User.mail: E-mail
+User.name: Name
+User.password: Password
+User.username: User name
 
-#Forms
+Unit.value: Unity
+
 ujm_exobundle_interactiongraphictype_document: Documents
 ujm_exobundle_interactiongraphictype_interaction_hints: Hints
 ujm_exobundle_interactionqcmtype_choices: Choices
@@ -333,26 +377,5 @@ ujm_exobundle_interactionqcmtype_interaction_hints: Hints
 
 ujm_exobundle_categorytype_value: Name of the new category
 
-correct: Correct
-partially: Partiallyt correct
-wrong: Wrong
-no answer: No answer
-
-Exercise edit: Exercise edit
-Exercise creation: Exercise creation
-
-InteractionGraphic Edition: InteractionGraphic Edition
-InteractionGraphic creation: InteractionGraphic creation
-
-show Instructions: Show Instructions
-hide Instructions: Hide Instructions
-
-correction: Correction
-
-noRightAnswer: No right answer
-noHintShow: Hints not seen, no penalty
-pointRightResponse: Right answer point
-with: with
-sawHint: of penalty for seen hints
-
-validate: Validate
+WordResponse.score: Point to this response
+WordResponse.response_value: Word

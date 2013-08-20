@@ -34,7 +34,7 @@
 #}
 
 {% block content %}
-    <h1>{{'Exercise creation'|trans}}</h1>
+    <h1>{{'exercise creation'|trans}}</h1>
 
     <form action="{{ path('claro_resource_create', {resourceType: 'ujm_exercise', parentId: '_resourceId'}) }}"
           method="post" {{ form_enctype(form) }}
@@ -46,7 +46,7 @@
         </div>
 
         <p>
-            <button type="submit">{{'Create'|trans}}</button>
+            <button type="submit">{{'create'|trans}}</button>
         </p>
     </form>
 {% endblock %}

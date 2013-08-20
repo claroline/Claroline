@@ -40,18 +40,18 @@
 <form class="well label_bold" id="uploadForm" enctype="multipart/form-data" onsubmit="DisplayMessage();"
       method="post" action="{{ path('ujm_interactiongraphic_AddImg', { 'redirection': 0 }) }}">
 
-    <label for="label">{{ 'Picture name' | trans }} : </label><br/>
+    <label for="label">{{ 'picture name' | trans }} : </label><br/>
     <input type="text" id='label' name='label' required="true"/><br/><br/>
     <input id="picture" name="picture" type="file" required="true" accept="image/*"/>
     <br /><br />
-    <input id="uploadSubmit" type="submit" value="{{ 'Upload !' | trans }}"
-        onclick="ValidName('{{ 'wrong' | trans }}','label', '{{ path('ujm_Document_name_alreadyExist') }}', '{{ 'alreadyExist' | trans }}');
-        return false;"/><p id="Result">{{ 'Uploading' | trans }} ...</p>
+    <input id="uploadSubmit" type="submit" value="{{ 'upload' | trans }} !"
+        onclick="ValidName('{{ 'wrongName' | trans }}','label', '{{ path('ujm_Document_name_alreadyExist') }}', '{{ 'alreadyExist' | trans }}');
+        return false;"/><p id="Result">{{ 'uploading' | trans }} ...</p>
 </form>
 
 <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-1.7.1.min.js') }}'></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/addImage.js') }}"></script>
 
 {% if idDoc is defined %}
-    <script type="text/javascript">ChangeList('{{ idDoc }}', '{{ label }}', '{{ type }}', '{{ 'NotImageMesssage'|trans }}');</script>
+    <script type="text/javascript">ChangeList('{{ idDoc }}', '{{ label }}', '{{ type }}', '{{ 'notImageMesssage'|trans }}');</script>
 {% endif %}

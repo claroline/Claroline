@@ -33,157 +33,306 @@
  # knowledge of the CeCILL license and that you accept its terms.
 ##
 
-Actions: Actions
-Add: Ajouter
-Add user: Ajouter un utilisateur
-Administration: Administration
-After the last attempt: Après le dernier essai
-At the end of assessment: A la fin du test
-At the same time that the correction: En même temps que la correction
-Availability of correction: Disponibilité de la correction
-Availability of score: Disponibilité de la note
-Back: Retour
-Back to the list: Retour à la liste
-Bank of questions: Banque de questions
-Category: Catégorie
+# A
+actions: Actions
+add: Ajouter
+add a new picture: Ajouter une nouvelle image
+addDoc: Ajouter un document
+add hint: Ajouter un indice
+add user: Ajouter un utilisateur
+administration: Administration
+after the last attempt: Après le dernier essai
+allQuestion: Toutes
+already: Cette question est déjà partagée avec cet utilisateur
+alreadyExist: Ce nom existe déjà.
+answer_coched: Aucune réponse attendue nest cochée
+answer zone: Zone de réponse
+at the end of assessment: A la fin du test
+at the same time that the correction: En même temps que la correction
+availability of correction: Disponibilité de la correction
+availability of score: Disponibilité de la note
+
+# B
+back: Retour
+back to the list: Retour à la liste
+bank of questions: Banque de questions
+
+# C
+category: Catégorie
+cercle: Cercle
+change: Changer
+changeName: Changer le nom
+choice: Choix
+choose_type: Choisir un type
+chooseType: Choisissez le type de document à afficher
 close: Fermer
-Create: Créer
-Choice: Choix
-Comment: Commentaire
-Compose: Composer
-Correction date: Date de la correction
-Create a new entry: Créer une nouvelle entrée
-Create a new category: Créer une nouvelle catégorie
-Date: Date
-Delete: Supprimer
-Delete of my bank: Supprimer de ma banque
-Delete of my exercise: Supprimer de mon exercice
-Description: Description
-Docimology: Docimologie
-Document: Document
-Duration: Durée
-Edit: Editer
-End date: Date de fin
-Entry: Entrer
-Exercise: Exercice
-Exit: Quitter
-Expected answer: Réponse attendue
-ExplainCoeffDis0: Les copies doivent avoir les mêmes questions pour pouvoir calculer le coefficient de discrimination.
-ExplainCoeffDis1: Analyse de la pertinence des questions, ce coefficient de corrélation varie de -1 à + 1
-ExplainCoeffDis2: Les questions dont le coefficient de discrimination se situe entre 0,35 et 0,65 maximisent la discrimination des étudiants.
-ExplainCoeffDis3: Les questions ayant un indice négatif signalent une incohérence, les meilleurs candidats échouent ces questions, les plus faibles réussissent ces questions
-Feedback: Commentaire
-Finish: Terminer
-From: A partir du
-Group: Groupe
-Hint: Indice
-HistoDiscrimination: Coefficient de discrimination
-HistoMarks: Histogramme des notes
-HistoSucces: Histogramme de réussite
-Interupt: Interrompre
+color: Couleur
+comment: Commentaire
+compose: Composer
+consult_hint: Consulter l\'indice entraîne une pénalité, voulez vous continuer
+containSearch: Dont la question contient
+correct: Correcte
+correction: Correction
+correction date: Date de la correction
+course_name: Nom du Cours
+create: Créer
+create a new category: Créer une nouvelle catégorie
+create a new entry: Créer une nouvelle entrée
+creationDate: Date de création
+
+# D
+date: Date
+delDocQuestion: Supprimer ce document ainsi que toutes les questions qui y sont liées
+delete: Supprimer
+delete of my bank: Supprimer de ma banque
+delete of my exercise: Supprimer de mon exercice
+description: Description
+docimology: Docimologie
+docManage: Gestion de mes documents
+docName: Nom du document
+document: Document
+doNothing: Ne rien faire et revenir à la liste de mes documents
+duration: Durée
+
+# E
+edit: Editer
+edit a category: Editer une catégorie
+edit a question: Editer une question
+end date: Date de fin
+entry: Entrer
+erase: Pour effacer une zone de réponse, maintenez la touche s enfoncée et cliquez sur la zone de réponse à effacer.
+exercise: Exercice
+exercise creation: Création d'un exercice
+exercise edit: Modification de l'exercice
+exit: Quitter
+expected answer: Réponse attendue
+explainCoeffDis0: Les copies doivent avoir les mêmes questions pour pouvoir calculer le coefficient de discrimination.
+explainCoeffDis1: Analyse de la pertinence des questions, ce coefficient de corrélation varie de -1 à + 1.
+explainCoeffDis2: Les questions dont le coefficient de discrimination se situe entre 0,35 et 0,65 maximisent la discrimination des étudiants.
+explainCoeffDis3: Les questions ayant un indice négatif signalent une incohérence, les meilleurs candidats échouent ces questions, les plus faibles réussissent ces questions.
+
+# F
+feedback: Commentaire
+findBy: Trouver par
+findIn: Trouver dans
+findLabel: Trouver un document avec un label spécifique
+findQuestion: Rechercher des questions
+findWhat: Ce que vous cherchez
+finish: Terminer
+frequency: Fréquence
+from: A partir du
+
+# G
+graphic: Graphique
+group: Groupe
+
+# H
+hide Instructions: Masquer les consignes
+hint: Indice
+hints: Indices
+hint number: Num indice
+histoDiscrimination: Coefficient de discrimination
+histoMarks: Histogramme des notes
+histoSuccess: Histogramme de réussite
+hole: Blancs
+
+# I
+infiny: Infini
+interupt: Interrompre
+invite_question: L'invite de la question doit être rempli
 isInterupt: Interrompu
-Import: Importer
-Import questions: Importer des questions
-List: Liste
-List of exercises: Listes des exercices
-List of question: Listes des questions
-Lock attempt: Vérouiller le test
-Mark: Score
-Maximum number of tries: Nombre d'essaies maximum
-Multiple response: Réponse multiples
-My account: Mon compte
-My questions: Mes questions
-Never: Jamais
-Number of papers: Nombre de copies
-Number of questions: Nombre de questions
-Number of questions to draw: Nombre de questions à tirer
-Paper: Passage
-Paper list: Listes des copies
-Penalty: Pénalité
-Planning_Of_Groups: Planning des groupes
-Print paper: Imprimer la copie
-Question: Question
-Question list: Liste des questions
-Random order of questions: Ordre des question aléatoire
-Role: Rôle
-Share: Partager
-Show: Afficher
-Start date: Date de début
-Subscription: Inscription
-Test exit: Sortie du test
-Title: Titre
-Try: Tester
-Type: Type
-Unique response: Réponse Unique
-Use date of end: Utiliser une date de fin
-User: Utilisateur
-Your answer: Votre réponse
+import: Importer
+import questions: Importer des questions
+inside: Vous devez mettre la zone de reponse complète DANS l'image
+interactionGraphic creation: Création d'une question Graphique
+interactionGraphic Edition: Edition d'une question Graphique
+
+# K
+kind of question: Quel type de question
+
+# L
+label: Label
+label_empty: Les champs des réponses ne doivent pas être vides
+linkedDoc: Attention, le document que vous essayez de supprimer est lié à des questions
+linkpaper: Liées à un test
+list: Liste
+list of exercises: Liste des exercices
+list of question: Liste des questions
+lock attempt: Vérouiller le test
+
+# M
+manageImg: Gérer mes documents
+mark: Score
+maximum number of tries: Nombre d'essaies maximum
+multiple response: Réponse multiples
+my account: Mon compte
+my questions: Mes questions
+my shared questions: Mes questions partagées
+
+# N
+nameUser2Shared: Nom de l'utilisateur avec qui partager la question
+nbr_choices: Le nombre de choix doit être supérieur à deux
+never: Jamais
+newName: Nouveau nom
+no: non
+no answer: Pas de réponse
+noAnswerZone: Vous n\'avez mis aucune zone de réponse
+noDocFound: Pas de document trouvé
+noHintShow: Indices non vus, pas de pénalité
+noImg: Vous devez télécharger une image
+noOne: Aucune
+noPaperFound: Aucune copie
+noQuestion: Vous ne posez aucune question
+noQuestionFound: Pas de question trouvée
+noRightAnswer: Aucune bonne réponse
+notImageMesssage: Le document doit être une image
+noTitle: La question n\'a pas de titre
+noUserFound: Pas d'utilisateur trouvé
+number of papers: Nombre de copies
+number of questions: Nombre de questions
+number of questions to draw: Nombre de questions à tirer
+num_paper: Numéro de la copie
+
+# O
+onlyOnce: => Les bonnes réponses ne sont comptabilisées qu'une seule fois.
+open: Ouverte
+order: Ordre
+orders: Consignes
+
+# P
+paper: Passage
+paper list: Listes des copies
+partially: Partiellement correcte
+penalty: Pénalité
+picture name: Nom de l'image
+placeZone: Pour déplacer une zone de réponse, selecionnez-la en cliquant dessus et disposez-la en recliquant à l'endroit voulu.
+planning_Of_Groups: Planning des groupes
+point: Point
+points: Points
+point_answer: Vous devez assigner un point à la réponse attendue
+point_answers: Vous devez assigner un point à chaque réponse
+pointInstruction: Les points doivent être attribués avant le placement de chaque zone de réponse.
+pointRightResponse: Points bonne réponse
+position: => Positionner le(s) pointeur(s) ci-dessous (croix rouge) sur l'image. La position du centre du pointeur défini votre réponse.
+preview: Aperçu
+print paper: Imprimer la copie
+
+# Q
+qcm: QCM
+question: Question
+question creation: Création d'une question
+
+# R
+random order of questions: Ordre des question aléatoire
+raz: => Pour remettre à zéro tous les pointeurs, appuyez sur "c".
+rectangle: Rectangle
+reset: Réinitialiser
+resize: Pour redimmensionner la zone de réponse, selection la en cliquant dessus puis appuyez sur Alt en bougeant la souris.
+resizeZone: Pour redimmensionner l'image, Placez votre souris sur l'image et utilisez la molette. Vous pouvez aussi appuyer sur la touche MAJ et déplacez la souris.
+response: Réponse
+response number: Num rép
+result: Résultats
+role: Rôle
+
+# S
+sawHint: de pénalité pour indices vus
+searchQuestion: Chercher des questions
+seeDoc: Voir les questions liées à ce document
+select: Sélectionner
+selection: => Cliquez sur un pointeurs pour le sélectionner et cliquez ensuite sur l'image pour définir votre zone de réponse.
+selectZone: Pour définir une zone de réponse, selectionnez la en cliquant dessus puis déposez la en re-cliquant à l'endroit voulu sur l'image. Vous pouvez aussi maintenir la touche CTRL enfoncée et cliquez sur l'image à l'endroit où vous voulez la placer.
+self: Vous ne pouvez pas partager une question avec vous-même
+shape: Forme
+share: Partager
+shared by: Partagée par
+sharedUser: Partage de question
+show: Afficher
+show Instructions: Montrer les consignes
+sort: Trier
+start date: Date de début
+subscription: Inscription
+
+# T
+test exit: Sortie du test
+title: Titre
+try: Tester
+type: Type
+
+# U
+unique response: Réponse Unique
+upload: Télécharger
+uploading: Chargement en cours
+use date of end: Utiliser une date de fin
+user: Utilisateur
+
+# V
+validate: Valider
+
+# W
+warning: Êtes-vous sûr de vouloir supprimer ce document
+warning_change_type_q: Attention vous risquez de perdre vos données saisies, continuer
+whichAction: Quelle action souhaitez-vous réaliser
+with: Avec
+withResponse: Avec des réponses
+wrong: Fausse
+wrongName: Le nom saisi est incorrect
+wrongPoint: La valeur saisie est incorrecte
+
+# Y
+yes: Oui
+your answer: Votre réponse
+
 
 #properties of entities
-User.username: Login utilisateur
-User.password: Mot de passe
-User.name: Nom
-User.firstName: Prénom
-User.mail: Adresse mail
-
-Roles.name: Nom du rôle
-
-Groupes.name: Nom du groupe
-
-Planning.start_time: Date de début
-Planning.end_time: Date de fin
-
-Subscription.admin: Donner les droits de gestionnaire (exercice)
-
-Exercise.title: Titre de l'exercice
-Exercise.description: Description (facultatif)
-Exercise.shuffle: Orde des questions aléatoire
-Exercise.nbQuestion: Nombre de question à tirer aléatoirement
-Exercise.duration: Durée
-Exercise.nbQuestionPage: Nombre de questions par page
-Exercise.doprint: Imprimer la copie à la fin du test
-Exercise.maxAttemps: Nombre d'essais autorisés
-Exercise.correctionMode: Mode de la correction
-Exercise.markMode: Note disponible
-Exercise.start_date: Date de début
-Exercise.end_date: Date de fin
-Exercise.dispButtonIterrupt: Autoriser l'interruption du test
-Exercise.lockAttempt: Vérouiller le test
-
-Question.title: Titre de la question
-Question.description: Description de la question (facultatif)
-Question.model: Définir comme modèle
-Question_creation: Création d'une question
-
-kind of question: Quel type de question ?
-Choose_type: Choisir un type
-hole: Blancs
-QCM: QCM
-graphic: Graphique
-open: Ouverte
-Warning_change_type_q: Attention vous risquez de perdre vos données saisies, continuer ?
-
-response number: Num rép
-response: Réponse
-point: Point
-comment: Commentaire
-expected response: Réponse attendue
-order: Ordre
-
-add hint: Ajouter un indice
-hint number: Num indice
-
-
-course_name: Nom du Cours
 
 Category.value: Catégorie
 
-Interaction.invite: Question
-Interaction.feedback: Commentaire à afficher avec la correction (facultatif)
+Choice.feedback: Commentaire si la réponse est selectionnée(facultatif)
+Choice.label: Réponse proposée
+Choice.positionForce: Forcer cette position
+Choice.rightResponse: Réponse attendue
+Choice.weight: Points pour cette réponse
 
-Inter_QCM.shuffle: Ordre des choix aléatoire
+Coords.color: Couleur
+Coords.score: Points pour la bonne réponse
+Coords.shape: Forme
+
+Document.label: Document
+
+Exercise.correctionMode: Mode de la correction
+Exercise.description: Description (facultatif)
+Exercise.dispButtonIterrupt: Autoriser l'interruption du test
+Exercise.doprint: Imprimer la copie à la fin du test
+Exercise.duration: Durée
+Exercise.end_date: Date de fin
+Exercise.lockAttempt: Vérouiller le test
+Exercise.markMode: Note disponible
+Exercise.maxAttemps: Nombre d'essais autorisés
+Exercise.nbQuestion: Nombre de question à tirer aléatoirement
+Exercise.nbQuestionPage: Nombre de questions par page
+Exercise.shuffle: Orde des questions aléatoire
+Exercise.start_date: Date de début
+Exercise.title: Titre de l'exercice
+
+Exepertise.description: Description
+Exepertise.title_expertise: Titre de l'expertise
+
+Groupes.name: Nom du groupe
+
+Hole.orthography: Autoriser les fautes d'orthographe
+Hole.score: Point pour une bonne réponse
+Hole.selector: Proposer une liste
+Hole.size: Taille du blanc
+
+Hint.penalty: Pénalité
+Hint.value: Indice
+
+Interaction.feedback: Commentaire à afficher avec la correction (facultatif)
+Interaction.invite: Question
+
 Inter_QCM.ScoreRightResponse: Points pour la bonne réponse
 Inter_QCM.ScoreFalseResponse: Points pour une mauvaise réponse
+Inter_QCM.shuffle: Ordre des choix aléatoire
 Inter_QCM.weightChoice: Attribuer les points par réponse
 
 Inter_Hole.html: Texte à trous
@@ -191,141 +340,35 @@ Inter_Hole.orthography: Autoriser les fautes d'orthographe
 Inter_Hole.score: Point
 Inter_Hole.size: Taille
 
-Coords.shape: Forme
-Coords.color: Couleur
-Coords.score: Points pour la bonne réponse
+LockAttempte.date: Date
 
-TypeQCM.value: Type du QCM
+Planning.end_time: Date de fin
+Planning.start_time: Date de début
 
-Choice.label: Réponse proposée
-Choice.weight: Points pour cette réponse
-Choice.feedback: Commentaire si la réponse est selectionnée(facultatif)
-Choice.rightResponse: Réponse attendue
-Choice.positionForce: Forcer cette position
+Question_creation: Création d'une question
+Question.description: Description de la question (facultatif)
+Question.model: Définir comme modèle
+Question.title: Titre de la question
 
-TypeOpenQuestion.value: Type de la question
-
-Hole.orthography: Autoriser les fautes d'orthographe
-Hole.score: Point pour une bonne réponse
-Hole.selector: Proposer une liste
-Hole.size: Taille du blanc
-
-WordResponse.response_value: Mot
-WordResponse.score: Poitnt attribués à cette réponse
-
-Unit.value: Unité
-
-Document.label: Document
-
-Hint.value: Indice
-Hint.penalty: Pénalité
-consult_hint: Consulter l\'indice entraîne une pénalité, voulez vous continuer ?
-
-Exepertise.title_expertise: Titre de l'expertise
-Exepertise.description: Description
+Roles.name: Nom du rôle
 
 Response.mark: Note
 Response.reponse: Réponse
 
-LockAttempte.date: Date
+Subscription.admin: Donner les droits de gestionnaire (exercice)
 
-Edit a category: Editer une catégorie
-Edit a question: Editer une question
+TypeOpenQuestion.value: Type de la question
 
-#create QCM Question alert
-nbr_choices: Le nombre de choix doit être supérieur à deux
-answer_coched: Aucune réponse attendue nest cochée
-point_answers: Vous devez assigner un point à chaque réponse
-point_answer: Vous devez assigner un point à la réponse attendue
-label_empty: les champs des réponses ne doivent pas être vides
-invite_question: l'invite de la question doit être rempli
+TypeQCM.value: Type du QCM
 
-#Create Graphic Question
-Hints: Indices
-Document: Image réponse
-Add a new picture ...: Ajouter une nouvelle image ...
-Picture name: Nom de l'image
-Upload !: Télécharger !
-Uploading: Chargement en cours
-Select: Sélectionner
-ResizeZone: Pour redimmensionner l'image, Placez votre souris sur l'image et utilisez la molette. Vous pouvez aussi appuyer sur la touche MAJ et déplacez la souris.
-PlaceZone: Pour déplacer une zone de réponse, selecionnez-la en cliquant dessus et disposez-la en recliquant à l'endroit voulu.
-Resize: Pour redimmensionner la zone de réponse, selection la en cliquant dessus puis appuyez sur Alt en bougeant la souris.
-SelectZone: Pour définir une zone de réponse, selectionnez la en cliquant dessus puis déposez la en re-cliquant à l'endroit voulu sur l'image. Vous pouvez aussi maintenir la touche CTRL enfoncée et cliquez sur l'image à l'endroit où vous voulez la placer.
-Erase: Pour effacer une zone de réponse, maintenez la touche s enfoncée et cliquez sur la zone de réponse à effacer.
-Point: Les points doivent être attribués avant le placement de chaque zone de réponse.
-Answer zone: Zone de réponse
-Shape: Forme
-Color: Couleur
-Points: Points
-cercle: cercle
-rectangle: rectangle
-Order: Consignes
-position: => Positionner le(s) pointeur(s) ci-dessous (croix rouge) sur l'image. La position du centre du pointeur défini votre réponse.
-selection: => Cliquez sur un pointeurs pour le sélectionner et cliquez ensuite sur l'image pour définir votre zone de réponse.
-raz: => Pour remettre à zéro tous les pointeurs, appuyez sur "c".
-noTitle: La question n\'a pas de titre.
-noQuestion: Vous ne posez aucune question ...
-noImg: Vous devez télécharger une image !
-noAnswerZone: Vous n\'avez mis aucune zone de réponse ...
-notAll: Toutes les zones de réponses n\'ont pas été placées !
-onlyOnce: => Les bonnes réponses ne sont comptabilisées qu'une seule fois.
-wrong: Le nom saisi est incorrect.
-inside: Vous devez mettre la zone de reponse complète DANS l'image ...
-manageImg: Gérer mes documents ...
-Preview: Aperçu
-Label: Label
-warning: Êtes-vous sûr de vouloir supprimer ce document ?
-linkedDoc: Attention, le document que vous essayez de supprimer est lié à des questions !
-whichAction: Quelle action souhaitez-vous réaliser ?
-doNothing: Ne rien faire et revenir à la liste de mes documents ...
-seeDoc: Voir les questions liées à ce document.
-delDocQuestion: Supprimer ce document ainsi que toutes les questions qui y sont liées !
-creationDate: Date de création
-Linkpaper: Liées à un test ?
-withResponse: Avec des réponses ?
-no: non
-yes: oui
-docName: Nom du document ?
-addDoc: Ajouter un document ...
-changeName: Changer le nom
-newName: Nouveau nom ?
-change: Changer !
-sort: Trier
-My shared questions: Mes questions partagées
-shared by: Partagée par
-already: Cette question est déjà partagée avec cet utilisateur ...
-Self: Vous ne pouvez pas partager une question avec vous-même ...
-NotImageMesssage: Le document doit être une image
-SearchQuestion: Chercher des questions ...
-CategorySearch: Catégorie
-TypeSearch: Type
-TitleSearch: Titre
-ContainSearch: Dont la question contient ...
-noQuestionFound: Pas de question trouvée ...
-noDocFound: Pas de document trouvé ...
-noPaperFound: Aucune copie
-noUserFound: Pas d'utilisateur trouvé ...
-Num_paper: Numéro de la copie
-DocManage: Gestion de mes documents
-sharedUser: Partage de question
-nameUser2Shared: Nom de l'utilisateur avec qui partager la question
-findLabel: Trouver un document avec un label spécifique
-chooseType: Choisissez le type de document à afficher
-reset: réinitialiser
-findBy: Trouver par
-findIn: Trouver dans
-findWhat: Ce que vous cherchez
-result: Résultats
-findQuestion: Rechercher des questions
-alreadyExist: Ce nom existe déjà.
-noOne: Aucune
-infiny: Infini
-allQuestion: Toutes
-creationDate: Date de création
-frequency: Fréquence
+User.firstName: Prénom
+User.mail: Adresse mail
+User.name: Nom
+User.password: Mot de passe
+User.username: Login utilisateur
 
-#Forms
+Unit.value: Unité
+
 ujm_exobundle_interactiongraphictype_document: Documents
 ujm_exobundle_interactiongraphictype_interaction_hints: Indices
 ujm_exobundle_interactionqcmtype_choices: Choix
@@ -334,26 +377,5 @@ ujm_exobundle_interactionqcmtype_interaction_hints: Indices
 
 ujm_exobundle_categorytype_value: Nom de la nouvelle catégorie
 
-correct: Correcte
-partially: Partiellement correcte
-wrong: Fausse
-no answer: Pas de réponse
-
-Exercise edit: Modification de l'exercice
-Exercise creation: Création d'un exercice
-
-InteractionGraphic Edition: Edition d'une question Graphique
-InteractionGraphic creation: Création d'une question Graphique
-
-show Instructions: Montrer les consignes
-hide Instructions: Masquer les consignes
-
-correction: Correction
-
-noRightAnswer: Aucune bonne réponse
-noHintShow: Indices non vus, pas de pénalité
-pointRightResponse: Points bonne réponse
-with: avec
-sawHint: de pénalité pour indices vus
-
-validate: Valider
+WordResponse.score: Point attribués à cette réponse
+WordResponse.response_value: Mot

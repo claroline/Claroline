@@ -44,17 +44,17 @@
                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                     <i class="icon-chevron-up" id="upT"  style="display: none;"></i>
                     <i class="icon-chevron-down" id="downT"  style="display: none;"></i>
-                    {{ 'Type' | trans }}
+                    {{ 'type' | trans }}
                 </th>
-                <th style="text-align: center">{{ "Preview" | trans }}</th>
+                <th style="text-align: center">{{ "preview" | trans }}</th>
                 <th style="text-align: center" onclick="SortQuestions('Label', 'table');"
                     onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                     <i class="icon-chevron-up" id="upL"  style="display: none;"></i>
                     <i class="icon-chevron-down" id="downL"  style="display: none;"></i>
-                    {{ 'Label' | trans }}
+                    {{ 'label' | trans }}
                 </th>
-                <th style="text-align: center">{{ 'Actions' | trans }}</th>
+                <th style="text-align: center">{{ 'actions' | trans }}</th>
             </tr>
         </thead>
         <tbody>
@@ -99,7 +99,7 @@
                         <a href="#" onclick="ChangeName('{{ myDoc.label }}');"><i class="icon-pencil"></i></a>
 
                         <a href="{{ path('ujm_document_del', { 'label': myDoc.label }) }}"
-                           onclick="return confirm('{{ "warning" | trans }}');"><i class="icon-trash"></i>
+                           onclick="return confirm('{{ "warning" | trans }} ?');"><i class="icon-trash"></i>
                         </a>
                     </td>
                 </tr>
@@ -120,7 +120,7 @@
         {% endif %}
     {% endif %}
 {% else %}
-    <p>{{ 'noDocFound'|trans }}</p>
+    <p>{{ 'noDocFound'|trans }} ...</p>
 {% endif %}
 
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/SortAndSearch.js') }}"></script>

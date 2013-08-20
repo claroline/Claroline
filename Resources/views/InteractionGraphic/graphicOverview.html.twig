@@ -78,7 +78,7 @@
             {% endfor %}
         </div>
 
-        <p>{{ 'Mark' | trans }} : {{ score }} / {{ total }}<br/>
+        <p>{{ 'mark' | trans }} : {{ score }} / {{ total }}<br/>
 
             {% if score == 0 and penalty == 0 %}
                 {{ 'noRightAnswer' | trans }}.
@@ -97,7 +97,7 @@
 
         <input type="hidden" id="info" name="info" value="{{i}}~{{allInfo}}"/>
 
-        <a href="{{ path('ujm_question_index') }}">{{ 'Question list' | trans }}</a>
+        <a href="{{ path('ujm_question_index') }}">{{ 'list of question' | trans }}</a>
 
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/GraphicOverview.js') }}"></script>
   {% endblock %}

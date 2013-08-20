@@ -39,7 +39,7 @@
 
     <h1>{{ 'findQuestion' | trans }}</h1>
 
-    <a href="{{ path('ujm_question_index') }}" ><i class="icon-arrow-left"></i> {{ 'Back' | trans }}</a>
+    <a href="{{ path('ujm_question_index') }}" ><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
     <hr>
 
     <div id="searchQuestions">
@@ -48,19 +48,19 @@
             action="{{ path('ujm_question_searchQuestion') }}">
 
             {{ 'findBy'|trans }} :<br/>
-            <input type="radio" name="QuestionSearch" value="Category" style=" position: relative; top: -3px;" checked/> {{ 'CategorySearch'|trans }}
+            <input type="radio" name="QuestionSearch" value="Category" style=" position: relative; top: -3px;" checked/> {{ 'category'|trans }}
             &nbsp;&nbsp;|&nbsp;&nbsp;
-            <input type="radio" name="QuestionSearch" value="Type" style=" position: relative; top: -3px;"/> {{ 'TypeSearch'|trans }}
+            <input type="radio" name="QuestionSearch" value="Type" style=" position: relative; top: -3px;"/> {{ 'type'|trans }}
             &nbsp;&nbsp;|&nbsp;&nbsp;
-            <input type="radio" name="QuestionSearch" value="Title" style=" position: relative; top: -3px;"/> {{ 'TitleSearch'|trans }}
+            <input type="radio" name="QuestionSearch" value="Title" style=" position: relative; top: -3px;"/> {{ 'title'|trans }}
             &nbsp;&nbsp;|&nbsp;&nbsp;
-            <input type="radio" name="QuestionSearch" value="Contain" style=" position: relative; top: -3px;"/> {{ 'ContainSearch'|trans }}
+            <input type="radio" name="QuestionSearch" value="Contain" style=" position: relative; top: -3px;"/> {{ 'containSearch'|trans }} ...
             <br/><br/>
 
             {{ 'findIn'|trans }} :<br/>
-            <input type="radio" name="WhereSearch" value="my" style=" position: relative; top: -3px;" checked/> {{ 'My questions'|trans }}
+            <input type="radio" name="WhereSearch" value="my" style=" position: relative; top: -3px;" checked/> {{ 'my questions'|trans }}
             &nbsp;&nbsp;|&nbsp;&nbsp;
-            <input type="radio" name="WhereSearch" value="shared" style=" position: relative; top: -3px;"/> {{ 'My shared questions'|trans }}
+            <input type="radio" name="WhereSearch" value="shared" style=" position: relative; top: -3px;"/> {{ 'my shared questions'|trans }}
             <br/><br/>
 
             {{ 'findWhat'|trans }} :&nbsp;&nbsp;

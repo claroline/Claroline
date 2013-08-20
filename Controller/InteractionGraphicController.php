@@ -140,7 +140,7 @@ class InteractionGraphicController extends Controller
 
         $lengthCoord = count($coord) - 1; // Number of answer zones
 
-        $allCoords = $this->PersitNewCoords($coord, $interGraph, $lengthCoord);
+        $allCoords = $this->persitNewCoords($coord, $interGraph, $lengthCoord);
 
         if ($form->isValid()) {
 
@@ -170,24 +170,26 @@ class InteractionGraphicController extends Controller
                 $em->flush();
             }
 
-            $category2Find = $interGraph->getInteraction()->getQuestion()->getCategory();
-            $title2Find = $interGraph->getInteraction()->getQuestion()->getTitle();
+            $categoryToFind = $interGraph->getInteraction()->getQuestion()->getCategory();
+            $titleToFind = $interGraph->getInteraction()->getQuestion()->getTitle();
 
             if ($exoID == -1) {
-                return $this->redirect($this->generateUrl(
-                    'ujm_question_index', array(
-                        'category2Find' => $category2Find,
-                        'title2Find' => $title2Find
+                return $this->redirect(
+                    $this->generateUrl(
+                        'ujm_question_index', array(
+                            'category2Find' => $categoryToFind,
+                            'title2Find' => $titleToFind
                         )
                     )
                 );
             } else {
-                return $this->redirect($this->generateUrl(
-                    'ujm_exercise_questions',
-                    array(
-                        'id' => $exoID,
-                        'category2Find' => $category2Find,
-                        'title2Find' => $title2Find
+                return $this->redirect(
+                    $this->generateUrl(
+                        'ujm_exercise_questions',
+                        array(
+                            'id' => $exoID,
+                            'category2Find' => $categoryToFind,
+                            'title2Find' => $titleToFind
                         )
                     )
                 );
@@ -272,7 +274,7 @@ class InteractionGraphicController extends Controller
         $entity->setHeight($height);
         $entity->setWidth($width);
 
-        $CoordsToDel = $em->getRepository('UJMExoBundle:Coords')->findBy(array('interactionGraphic' => $entity->getId()));
+        $coordsToDel = $em->getRepository('UJMExoBundle:Coords')->findBy(array('interactionGraphic' => $entity->getId()));
 
         $coords = $this->get('request')->get('coordsZone'); // Get the answer zones
 
@@ -280,7 +282,7 @@ class InteractionGraphicController extends Controller
 
         $lengthCoord = count($coord) - 1; // Number of answer zones
 
-        $allCoords = $this->PersitNewCoords($coord, $entity, $lengthCoord);
+        $allCoords = $this->persitNewCoords($coord, $entity, $lengthCoord);
 
         if ($editForm->isValid()) {
 
@@ -307,7 +309,7 @@ class InteractionGraphicController extends Controller
                 $em->persist($hint);
             }
 
-            foreach ($CoordsToDel as $ctd) {
+            foreach ($coordsToDel as $ctd) {
                 // if you wanted to delete the Hint entirely, you can also do that
                 $em->remove($ctd);
             }
@@ -366,7 +368,7 @@ class InteractionGraphicController extends Controller
      * Persist coordonates of the answer zones into the database.
      *
      */
-    public function PersitNewCoords ($coord, $interGraph, $lengthCoord)
+    public function persitNewCoords ($coord, $interGraph, $lengthCoord)
     {
         $result = array();
         for ($i = 0; $i < $lengthCoord; $i++) {

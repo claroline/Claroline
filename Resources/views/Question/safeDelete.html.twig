@@ -37,16 +37,16 @@
 
 {% block section_content %}
     <h4>
-        <mark style=" background-color: yellow; color: red;"><i class="icon-warning-sign"></i> {{ 'linkedDoc' | trans }}</mark><br/>
+        <mark style=" background-color: yellow; color: red;"><i class="icon-warning-sign"></i> {{ 'linkedDoc' | trans }} !</mark><br/>
     </h4>
 
     <p>
-        {{ 'whichAction' | trans }}
+        {{ 'whichAction' | trans }} ?
         <ul>
-            <li><a href="{{ path('ujm_question_manage_doc') }}">{{ 'doNothing' | trans }}</a></li>
+            <li><a href="{{ path('ujm_question_manage_doc') }}">{{ 'doNothing' | trans }} ...</a></li>
             <li><a href="#" onclick="DisplayQuestions();">{{ 'seeDoc' | trans }}</a></li>
             {% if(dontdisplay == 0) %}
-                <li><a href="{{ path('ujm_document_del_linked', { 'label': label }) }}">{{ 'delDocQuestion' | trans }}</a></li>
+                <li><a href="{{ path('ujm_document_del_linked', { 'label': label }) }}">{{ 'delDocQuestion' | trans }} !</a></li>
             {% endif %}
         </ul>
     </p>
@@ -73,35 +73,35 @@
                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                         <i class="icon-chevron-up" id="upTl"  style="display: none;"></i>
                         <i class="icon-chevron-down" id="downTl"  style="display: none;"></i>
-                        {{ 'Title' | trans }}
+                        {{ 'title' | trans }}
                     </th>
                     <th style="text-align: center" onclick="SortQuestions('QuestionL', 'linkDocArray');"
                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                         <i class="icon-chevron-up" id="upQl"  style="display: none;"></i>
                         <i class="icon-chevron-down" id="downQl"  style="display: none;"></i>
-                        {{ 'Question' | trans }}
+                        {{ 'question' | trans }}
                     </th>
                     <th style="text-align: center" onclick="SortQuestions('CategoryL', 'linkDocArray');"
                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                         <i class="icon-chevron-up" id="upCl"  style="display: none;"></i>
                         <i class="icon-chevron-down" id="downCl"  style="display: none;"></i>
-                        {{ 'Category' | trans }}
+                        {{ 'category' | trans }}
                     </th>
                     <th style="text-align: center" onclick="SortQuestions('paperL', 'linkDocArray');"
                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                         <i class="icon-chevron-up" id="upPl"  style="display: none;"></i>
                         <i class="icon-chevron-down" id="downPl"  style="display: none;"></i>
-                        {{ 'Linkpaper' | trans }}
+                        {{ 'linkpaper' | trans }} ?
                     </th>
                     <th style="text-align: center" onclick="SortQuestions('responseL', 'linkDocArray');"
                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                         <i class="icon-chevron-up" id="upRl"  style="display: none;"></i>
                         <i class="icon-chevron-down" id="downRl"  style="display: none;"></i>
-                        {{ 'withResponse' | trans }}
+                        {{ 'withResponse' | trans }} ?
                     </th>
                 </tr>
             </thead>
@@ -151,7 +151,7 @@
             {'label': label, 'pageNow': pageNow, 'maxPage': maxPage,  'nbItem': nbItem, 'show': 1} }) }}
         {% endif %}
     {% else %}
-        <p>{{ 'noDocFound'|trans }}</p>
+        <p>{{ 'noDocFound'|trans }} ...</p>
     {% endif %}
     </div>
 {% endblock %}

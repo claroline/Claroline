@@ -35,17 +35,17 @@
 
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
-{% block title %} {{ 'Question list' | trans }} {% endblock %}
+{% block title %} {{ 'list of question' | trans }} {% endblock %}
 
 {% block section_content %}
-    <h1>{{ 'My questions' | trans }}</h1>
+    <h1>{{ 'my questions' | trans }}</h1>
 
-    <a href="{{ path('ujm_exercise_open', { 'exerciseId':  exerciseID }) }}"><i class="icon-arrow-left"></i> {{ 'Back' | trans }}</a>
+    <a href="{{ path('ujm_exercise_open', { 'exerciseId':  exerciseID }) }}"><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
     &nbsp;&nbsp;|&nbsp;&nbsp;
     <a href="{{ path('ujm_exercise_import_question', { 'exoID':  exerciseID, 'page2Go': pagerQuestion.getNbPages,
-        'maxPage': pagerQuestion.maxPerPage, 'nbItem': pagerQuestion.getNbResults }) }}">{{ 'Import questions' | trans }}</a>
+        'maxPage': pagerQuestion.maxPerPage, 'nbItem': pagerQuestion.getNbResults }) }}">{{ 'import questions' | trans }}</a>
     &nbsp;&nbsp;|&nbsp;&nbsp;
-    <a href="{{ path('ujm_question_new', { 'exoID': exerciseID }) }}">{{ 'Create a new entry' | trans }}</a>
+    <a href="{{ path('ujm_question_new', { 'exoID': exerciseID }) }}">{{ 'create a new entry' | trans }}</a>
     <br/><br/>
 
     {% if interactions is not empty %}
@@ -57,30 +57,30 @@
                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                     <i class="icon-chevron-up" id="upC"  style="display: none;"></i>
                     <i class="icon-chevron-down" id="downC"  style="display: none;"></i>
-                    {{ 'Category' | trans }}
+                    {{ 'category' | trans }}
                 </th>
                 <th style="text-align: center"onclick="SortQuestions('Title', 'QuestionArray');"
                     onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                     <i class="icon-chevron-up" id="upTi"  style="display: none;"></i>
                     <i class="icon-chevron-down" id="downTi"  style="display: none;"></i>
-                    {{ 'Title' | trans }}
+                    {{ 'title' | trans }}
                 </th>
                 <th style="text-align: center"onclick="SortQuestions('Type', 'QuestionArray');"
                     onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                     <i class="icon-chevron-up" id="upTy"  style="display: none;"></i>
                     <i class="icon-chevron-down" id="downTy"  style="display: none;"></i>
-                    {{ 'Type' | trans }}
+                    {{ 'type' | trans }}
                 </th>
                 <th style="text-align: center"onclick="SortQuestions('Invite', 'QuestionArray')"
                     onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                     <i class="icon-chevron-up" id="upI"  style="display: none;"></i>
                     <i class="icon-chevron-down" id="downI"  style="display: none;"></i>
-                    {{ 'Question' | trans }}
+                    {{ 'question' | trans }}
                 </th>
-                    <th style="text-align: center">{{ 'Actions' | trans }}</th>
+                    <th style="text-align: center">{{ 'actions' | trans }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -96,11 +96,11 @@
                         <ul  style="list-style-type: none; margin-left: 0;">
                             {% if(questionWithResponse[x] == 0) %}
                                 <li>
-                                    <a href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}">{{ 'Edit' | trans }}</a>
+                                    <a href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}">{{ 'edit' | trans }}</a>
                                 </li>
                             {% else %}
                                 <li>
-                                    <a href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}" style="color:red">{{ 'Edit' | trans }}</a>
+                                    <a href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}" style="color:red">{{ 'edit' | trans }}</a>
                                 </li>
                             {% endif %}
                             <li>
@@ -108,7 +108,7 @@
                                         'exoID': exerciseID, 'qid': interaction.question.id, 'pageNow': pagerQuestion.getCurrentPage,
                                         'maxPage': pagerQuestion.maxPerPage, 'nbItem': pagerQuestion.getNbResults, 'lastPage': pagerQuestion.getNbPages
                                     }) }}" method="post">
-                                    <button type="submit">{{ 'Delete of my exercise' | trans }}</button>
+                                    <button type="submit">{{ 'delete of my exercise' | trans }}</button>
                                 </form>
                             </li>
                         </ul>
@@ -123,7 +123,7 @@
             { 'id': exerciseID } }) }}
         {% endif %}
     {% else %}
-        <p>{{ 'noQuestionFound'|trans }}</p>
+        <p>{{ 'noQuestionFound'|trans }} ...</p>
     {% endif %}
 {% endblock %}
 

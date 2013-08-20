@@ -75,10 +75,10 @@
 
                 <table border="1">
                     <tr>
-                        <th>{{ 'Your answer' | trans }}</th>
-                        <th>{{ 'Expected answer' | trans }}</th>
-                        <th>{{ 'Choice' | trans }}</th>
-                        <th>{{ 'Feedback' | trans }}</th>
+                        <th>{{ 'your answer' | trans }}</th>
+                        <th>{{ 'expected answer' | trans }}</th>
+                        <th>{{ 'choice' | trans }}</th>
+                        <th>{{ 'feedback' | trans }}</th>
                     </tr>
 
                     {% for choice in interQCM.choices %}
@@ -114,17 +114,17 @@
                 </table>
 
                 <div name="feddback">
-                    {{ 'Comment' | trans }}:
+                    {{ 'comment' | trans }}:
                     {{ interQCM.interaction.feedback|raw }}
                 </div>
 
                 {% for hv in hintViewed %}
                     {% if( hv.hint.interaction.id == interaction.id ) %}
-                        {{ 'Penalty' | trans }}: {{ hv.hint.penalty }}<br/>
+                        {{ 'penalty' | trans }}: {{ hv.hint.penalty }}<br/>
                     {% endif %}
                 {% endfor %}
 
-                {{ 'Mark' | trans }}: {{ responses[i].mark }} / {{ interInfo['maxScore'] }}<br/>
+                {{ 'mark' | trans }}: {{ responses[i].mark }} / {{ interInfo['maxScore'] }}<br/>
                 {% set exoMark = exoMark + responses[i].mark %}
                 {% set exoScoreMax = exoScoreMax + interInfo['maxScore'] %}
                  {% else %}
@@ -188,7 +188,7 @@
                     {% endfor %}
                 </div>
 
-                {{ 'Mark' | trans }}: {{ responses[i].mark }} / {{ maxScore }} <br/>
+                {{ 'mark' | trans }}: {{ responses[i].mark }} / {{ maxScore }} <br/>
                 {% set exoMark = exoMark + responses[i].mark %}
                 {% set exoScoreMax = exoScoreMax + maxScore %}
 
@@ -203,7 +203,7 @@
 
                         {% for hv in hintViewed %}
                             {% if( hv.hint.interaction.id == interaction.id ) %}
-                                {{ 'Penalty' | trans }}: {{ hv.hint.penalty }}<br/>
+                                {{ 'penalty' | trans }}: {{ hv.hint.penalty }}<br/>
                             {% endif %}
                         {% endfor %}
 
@@ -246,5 +246,5 @@
     {% set scoreFinal = scoreFinal * 20 %}
     <div>{{ scoreFinal }} / 20</div>
     <br/>
-    <a href="{{ path('ujm_exercise_open', { 'exerciseId': exoId }) }}"><i class="icon-arrow-left"></i> {{ 'Back' | trans }}</a>
+    <a href="{{ path('ujm_exercise_open', { 'exerciseId': exoId }) }}"><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
 {% endblock %}

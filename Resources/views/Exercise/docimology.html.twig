@@ -79,10 +79,10 @@
         }
     </style>
 
-    <h1>{{ "Docimology" | trans }}</h1>
-    <a href="{{ path('ujm_exercise_open', { 'exerciseId': exoID }) }}" ><i class="icon-arrow-left"></i> {{ "Back" | trans }}</a>
+    <h1>{{ "docimology" | trans }}</h1>
+    <a href="{{ path('ujm_exercise_open', { 'exerciseId': exoID }) }}" ><i class="icon-arrow-left"></i> {{ "back" | trans }}</a>
     <br/><br/>
-    {{ "Number of papers" | trans }}: {{ nbPapers }}
+    {{ "number of papers" | trans }}: {{ nbPapers }}
     <hr/>
     <div id="histoMarks" style="height:100%; width:100%;"></div>
     <hr/>
@@ -90,18 +90,18 @@
     <hr/>
     <div id="histoDiscrimination" style="height:100%; width:80%;">
         {% if coeffQ == 'none' %}
-            {{ "ExplainCoeffDis0" | trans }}
+            {{ "explainCoeffDis0" | trans }}
             <br/><br/><br/>
         {% endif %}
     </div>
     <p>
-        {{ "ExplainCoeffDis1" | trans }}<br/>
-        {{ "ExplainCoeffDis2" | trans }}<br/>
-        {{ "ExplainCoeffDis3" | trans }}
+        {{ "explainCoeffDis1" | trans }}<br/>
+        {{ "explainCoeffDis2" | trans }}<br/>
+        {{ "explainCoeffDis3" | trans }}
     </p>
     <hr/>
     <div id="questionList">
-        <h4>{{ "List of question" | trans }}</h4>
+        <h4>{{ "list of question" | trans }}</h4>
         <ol>
             {% for questionTitle in questionsList %}
                 <li>{{ questionTitle }}</li>
@@ -125,7 +125,7 @@
             var marks = [{{ scoreList }}];
 
             $.jqplot('histoMarks', [s1], {
-                title:'{{ "HistoMarks" | trans }}',
+                title:'{{ "histoMarks" | trans }}',
 
                 series:[{renderer:$.jqplot.BarRenderer}],
 
@@ -136,7 +136,7 @@
 
                 axes: {
                     xaxis: {
-                        label: '{{ 'Mark'|trans }}',
+                        label: '{{ 'mark'|trans }}',
                         labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
                         labelOptions:{
                             fontFamily:'Helvetica',
@@ -178,7 +178,7 @@
             {% endfor %}
 
             plot3 = $.jqplot('histoSuccess', [{{ series }}], {
-                title:'{{ "HistoSucces" | trans }}',
+                title:'{{ "histoSuccess" | trans }}',
 
                 stackSeries: true,
                 captureRightClick: true,
@@ -201,7 +201,7 @@
                 axes: {
                     
                     xaxis: {
-                        label: '{{ 'Question'|trans }}',
+                        label: '{{ 'question'|trans }}',
                         renderer: $.jqplot.CategoryAxisRenderer,
                         
                         labelOptions:{
@@ -247,7 +247,7 @@
 
             if (s1 != 'none') {
                 $.jqplot('histoDiscrimination', [s1], {
-                    title:'{{ "HistoDiscrimination" | trans }}',
+                    title:'{{ "histoDiscrimination" | trans }}',
                     stackSeries: true,
                     series:[{renderer:$.jqplot.BarRenderer}],
 
@@ -263,7 +263,7 @@
 
                     axes: {
                         xaxis: {
-                            label: '{{ 'Question'|trans }}',
+                            label: '{{ 'question'|trans }}',
                             labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
                             labelOptions:{
                                 fontFamily:'Helvetica',

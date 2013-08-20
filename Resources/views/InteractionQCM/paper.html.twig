@@ -40,7 +40,7 @@
     <link href="{{ asset('bundles/ujmexo/css/paper.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
 
-{% block title %} {{ 'Paper' | trans }} {{ 'Question' | trans }} {% endblock %}
+{% block title %} {{ 'paper' | trans }} {{ 'question' | trans }} {% endblock %}
 
 
 
@@ -78,7 +78,7 @@
             {% set nbr_hint = 1 %}
             {% for hint in interactionQCM.interaction.hints %}              
                <tr>
-                   <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}', '{{path('ujm_hint_show')}}', '{{ 'consult_hint' | trans }}', '{{nbr_hint}}')">{{ 'Hint' | trans }} {{nbr_hint}} </a></td>
+                   <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}', '{{path('ujm_hint_show')}}', '{{ 'consult_hint' | trans }} ?', '{{nbr_hint}}')">{{ 'hint' | trans }} {{nbr_hint}} </a></td>
                    <td id="div_hint{{nbr_hint}}"></td>
                </tr>
                {% set nbr_hint = nbr_hint + 1 %}

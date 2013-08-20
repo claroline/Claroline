@@ -59,7 +59,7 @@ class ExerciseQuestionRepository extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
-    
+
     /**
      * Number of question for an exercise
      *

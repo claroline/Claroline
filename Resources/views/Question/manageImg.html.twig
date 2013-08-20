@@ -37,24 +37,24 @@
 
 {% block section_content %}
 
-    <h1>{{ 'DocManage' | trans }}</h1>
+    <h1>{{ 'docManage' | trans }}</h1>
 
-    <a href="{{ path('ujm_question_index') }}" ><i class="icon-arrow-left"></i> {{ 'Back' | trans }}</a>
+    <a href="{{ path('ujm_question_index') }}" ><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
     <hr>
-    <a href="#" onclick="AddDocument();"><i class="icon-plus" id="icon"></i> {{ 'addDoc' | trans }}</a>
+    <a href="#" onclick="AddDocument();"><i class="icon-plus" id="icon"></i> {{ 'addDoc' | trans }} ...</a>
 
     <div id="AddDocuments" style="display: none;"><br/>
         <form class="well label_bold" id="uploadForm" enctype="multipart/form-data" onsubmit="DisplayMessage();"
           method="post" action="{{ path('ujm_interactiongraphic_AddImg', { 'redirection': 1, 'page2Go': pagerDoc.getNbPages,
                                     'maxPage': pagerDoc.maxPerPage, 'nbItem': pagerDoc.getNbResults }) }}">
 
-            <label for="label">{{ 'docName' | trans }}</label>
+            <label for="label">{{ 'docName' | trans }} ?</label>
             <input type="text" id='label' name='label' required="true"/><br/>
             <input id="picture" name="picture" type="file" required="true"/>
             <br /><br />
-            <input id="uploadSubmit" type="submit" value="{{ 'Upload !' | trans }}"
-                onclick="ValidName('{{ 'wrong' | trans }}','label', '{{ path('ujm_Document_name_alreadyExist') }}', '{{ 'alreadyExist' | trans }}');
-                return false;"/><p id="Result">{{ 'Uploading ...' | trans }}</p>
+            <input id="uploadSubmit" type="submit" value="{{ 'upload' | trans }} !"
+                onclick="ValidName('{{ 'wrongName' | trans }}','label', '{{ path('ujm_Document_name_alreadyExist') }}', '{{ 'alreadyExist' | trans }}');
+                return false;"/><p id="Result">{{ 'uploading' | trans }} ...</p>
         </form>
     </div><hr>
 
@@ -107,10 +107,10 @@
 
         <form id="updateName" enctype="multipart/form-data" method="post" action="{{ path('ujm_question_name_update') }}">
 
-            <p>{{ 'newName' | trans }}</p>
+            <p>{{ 'newName' | trans }} ?</p>
             <input type="text" id='newlabel' name='newlabel' required="true"/><br/>
-            <input id="updateSubmit" type="submit" value="{{ 'change' | trans }}"
-                onclick="ValidName('{{ 'wrong' | trans }}','newlabel', '{{ path('ujm_Document_name_alreadyExist') }}', '{{ 'alreadyExist' | trans }}');
+            <input id="updateSubmit" type="submit" value="{{ 'change' | trans }} !"
+                onclick="ValidName('{{ 'wrongName' | trans }}','newlabel', '{{ path('ujm_Document_name_alreadyExist') }}', '{{ 'alreadyExist' | trans }}');
                     return false;"/>
 
             <input type="hidden" id="oldName" name="oldName" value=""/>
@@ -133,17 +133,17 @@
                                 onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                                 <i class="icon-chevron-up" id="upT"  style="display: none;"></i>
                                 <i class="icon-chevron-down" id="downT"  style="display: none;"></i>
-                                {{ 'Type' | trans }}
+                                {{ 'type' | trans }}
                             </th>
-                            <th style="text-align: center">{{ "Preview" | trans }}</th>
+                            <th style="text-align: center">{{ "preview" | trans }}</th>
                             <th style="text-align: center" onclick="SortQuestions('Label', 'table');"
                                 onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                                 onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                                 <i class="icon-chevron-up" id="upL"  style="display: none;"></i>
                                 <i class="icon-chevron-down" id="downL"  style="display: none;"></i>
-                                {{ 'Label' | trans }}
+                                {{ 'label' | trans }}
                             </th>
-                            <th style="text-align: center">{{ 'Actions' | trans }}</th>
+                            <th style="text-align: center">{{ 'actions' | trans }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -189,7 +189,7 @@
 
                                     <a href="{{ path('ujm_document_del', { 'label': myDoc.label, 'pageNow': pagerDoc.currentPage,
                                                 'maxPage': pagerDoc.maxPerPage,'nbItem': pagerDoc.getNbResults, 'lastPage': pagerDoc.getNbPages }) }}"
-                                       onclick="return confirm('{{ 'warning' | trans }}');"><i class="icon-trash"></i>
+                                       onclick="return confirm('{{ 'warning' | trans }} ?');"><i class="icon-trash"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -201,7 +201,7 @@
                     {{ pagerfanta(pagerDoc, 'twitter_bootstrap_translated', {'routeName': 'ujm_question_manage_doc'}) }}
                 {% endif %}
             {% else %}
-                <p>{{ 'noDocFound'|trans }}</p>
+                <p>{{ 'noDocFound'|trans }} ...</p>
             {% endif %}
         {% endif %}
     </div>

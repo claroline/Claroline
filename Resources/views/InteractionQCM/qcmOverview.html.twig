@@ -60,10 +60,10 @@
 
 <table border="1">
     <tr>
-        <th>{{ 'Your answer' | trans }}</th>
-        <th>{{ 'Expected answer' | trans }}</th>
-        <th>{{ 'Choice' | trans }}</th>
-        <th>{{ 'Feedback' | trans }}</th>
+        <th>{{ 'your answer' | trans }}</th>
+        <th>{{ 'expected answer' | trans }}</th>
+        <th>{{ 'choice' | trans }}</th>
+        <th>{{ 'feedback' | trans }}</th>
     </tr>
 
     {% for choice in interQCM.choices %}
@@ -102,10 +102,10 @@
     {{ interQCM.interaction.feedback|raw}}
 </div>
 {% if penalty > 0 %}
-    {{ 'Penalty' | trans }}: {{ penalty }}<br/>
+    {{ 'penalty' | trans }}: {{ penalty }}<br/>
 {% endif %}
-{{ 'Mark' | trans }}: <span id="score">{{ score }}</span>
+{{ 'mark' | trans }}: <span id="score">{{ score }}</span>
 <br/><br/>
 
-<a href="{{ path('ujm_question_index') }}">{{ 'Question list' | trans }}</a>
+<a href="{{ path('ujm_question_index') }}">{{ 'list of question' | trans }}</a>
 {% endblock %}

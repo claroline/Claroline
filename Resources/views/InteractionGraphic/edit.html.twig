@@ -40,11 +40,11 @@
     <link href="{{ asset('bundles/ujmexo/css/new_QI.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
 
-{% block title %} {{ 'Edit a question' | trans }} {% endblock %}
+{% block title %} {{ 'edit a question' | trans }} {% endblock %}
 
 {% block section_content %}
 
-    <h1>{{'InteractionGraphic Edition'|trans}}</h1>
+    <h1>{{'interactionGraphic Edition'|trans}}</h1>
 
     <form class="well label_bold" id="InterGraphForm" action="{{ path('ujm_interactiongraphic_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
         {#{ form_widget(edit_form) }#}
@@ -59,7 +59,7 @@
             {{ form_row(edit_form.interaction.question.category, { 'attr': {'style': 'float left;'} }) }}
         </li>
         <li style="float: left;  margin-left: 70px; margin-top: 4%;">
-            <a href="#" id="lien_category">{{ 'Create a new category' | trans }}</a>
+            <a href="#" id="lien_category">{{ 'create a new category' | trans }}</a>
         </li>
     </ul>
     </p><br/><br/><br/><br/><p>
@@ -82,7 +82,7 @@
 {# ------------------------------------------------- Lien nouvelle image ---------------------------------------------------------------------------- #}
                 <a href="{{ path('ujm_interactiongraphic_SavePic') }}" onclick="window.open(this.href, 'NewPic',
                 'height=167, width=287, top=300, left=570, toolbar=no, menubar=no, location=no, resizable=yes, scrollbars=no, status=no'
-                ); return false;">{{ "Add a new picture ..." | trans }}</a>
+                ); return false;">{{ "add a new picture" | trans }} ...</a>
             </li>
         </ul>
     </p>
@@ -90,7 +90,7 @@
 
 {# ------------------------------------------------- Boutton affichage image ---------------------------------------------------------------------------- #}
 
-    <p><input id="LoadImg" type="button" value="{{ 'Select' | trans }}" onclick="LoadPic('{{ path('ujm_interactiongraphic_DisplayPic') }}',
+    <p><input id="LoadImg" type="button" value="{{ 'select' | trans }}" onclick="LoadPic('{{ path('ujm_interactiongraphic_DisplayPic') }}',
             '{{ asset('bundles') }}', {{ edit_form.document.vars.id }});"/></p>
 
 {# ------------------------------------------------- Zone affichage image ---------------------------------------------------------------------------- #}
@@ -106,9 +106,9 @@
     >{{ 'hide Instructions' | trans }}</a>
 
     <div id="Instructions" style="border: #00CCFF dotted thin; margin: 20px; padding: 10px;">
-        ~ {{ 'ResizeZone' | trans }}<hr/>~ {{ 'SelectZone' | trans }}<hr/>
-        ~ {{ 'PlaceZone' | trans }}<hr/>~ {{ 'Resize' | trans }}<hr/>
-        ~ {{ 'Erase' | trans }}<hr/>~ {{ 'Point' | trans }}
+        ~ {{ 'resizeZone' | trans }}<hr/>~ {{ 'selectZone' | trans }}<hr/>
+        ~ {{ 'placeZone' | trans }}<hr/>~ {{ 'resize' | trans }}<hr/>
+        ~ {{ 'erase' | trans }}<hr/>~ {{ 'pointInstruction' | trans }}
     </div>
 
     <div style="position: relative;" id="Answer">
@@ -131,10 +131,10 @@
     <div style="position: relative;" id="AnswerArray">
         <table>
             <tr>
-               <th>{{ 'Answer zone' | trans }}</th>
-                <th>{{ 'Shape' | trans }}</th>
-                <th>{{ 'Color' | trans }}</th>
-                <th>{{ 'Points' | trans }}</th>
+                <th>{{ 'answer zone' | trans }}</th>
+                <th>{{ 'shape' | trans }}</th>
+                <th>{{ 'color' | trans }}</th>
+                <th>{{ 'points' | trans }}</th>
             </tr>
 
             <tr>
@@ -163,7 +163,7 @@
                 </td>
 
                 <td>
-                    <input type="TEXT" id="points" name="points" value="1" style="width:50px; text-align: end" onblur="CheckScore('{{ 'wrong' | trans }}');">
+                    <input type="TEXT" id="points" name="points" value="1" style="width:50px; text-align: end" onblur="CheckScore('{{ 'wrongPoint' | trans }}');">
                 </td>
             </tr>
         </table>
@@ -177,7 +177,7 @@
 
     <input type="hidden" name="exercise" value="{{ entity.id }}" />
 
-    <input type="hidden" id="message" name="message" value="{{ 'inside' | trans }}"/>
+    <input type="hidden" id="message" name="message" value="{{ 'inside' | trans }} ..."/>
 
 {# ------------------------------------------------- Boutton validation formulaire ---------------------------------------------------------------------------- #}
 
@@ -187,16 +187,16 @@
 
     <p>
         <button type="submit" id="button_submit"
-            onclick="Check('{{ 'noTitle' | trans }}', '{{ 'noQuestion' | trans }}','{{ 'noImg' | trans }}',
-            '{{ 'noAnswerZone' | trans }}', '{{ edit_form.interaction.question.title.vars.id }}',
-            '{{ edit_form.interaction.invite.vars.id }}');return false;">{{ 'Edit' | trans }}</button>
+            onclick="Check('{{ 'noTitle' | trans }}', '{{ 'noQuestion' | trans }} ...','{{ 'noImg' | trans }} !',
+            '{{ 'noAnswerZone' | trans }} ...', '{{ edit_form.interaction.question.title.vars.id }}',
+            '{{ edit_form.interaction.invite.vars.id }}');return false;">{{ 'edit' | trans }}</button>
     </p>
     </form>
 
 {# ------------------------------------------------- Div category ---------------------------------------------------------------------------- #}
 
 <div id="listeCategory">
-    <div id="popupCategory" class="hiddenCat"> <a id="closeCategory" class="hiddenCat" title="close popup">{{ 'close' | trans }}</a><h1>{{ 'Create a new category' | trans }}</h1><div id="div_input_category"></div></div><div id="overlayEffect_cat"> </div>
+    <div id="popupCategory" class="hiddenCat"> <a id="closeCategory" class="hiddenCat" title="close popup">{{ 'close' | trans }}</a><h1>{{ 'create a new category' | trans }}</h1><div id="div_input_category"></div></div><div id="overlayEffect_cat"> </div>
 </div>
 
     {{ tinymce_init() }}

@@ -39,7 +39,7 @@
     {{ parent() }}
 {% endblock %}
 
-{% block title %} {{ 'Paper' | trans }} {% endblock %}
+{% block title %} {{ 'paper' | trans }} {% endblock %}
 
 {% block section_content %}
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
@@ -108,8 +108,8 @@
                     {% for hint in interactionToDisplayed.interaction.hints %}
                         <tr>
                             <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}',
-                                    '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }}', '{{nbr_hint}}',
-                                    '{{paper}}')">{{ "Hint" | trans }} {{nbr_hint}}</a>
+                                    '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }} ?', '{{nbr_hint}}',
+                                    '{{paper}}')">{{ "hint" | trans }} {{nbr_hint}}</a>
                             </td>
                             <td id="div_hint{{nbr_hint}}"></td>
                         </tr>
@@ -173,8 +173,8 @@
                     {% for hint in interactionToDisplayed.interaction.hints %}
                         <tr>
                             <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}',
-                                    '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }}', '{{nbr_hint}}',
-                                    '{{paper}}')">{{ "Hint" | trans }} {{nbr_hint}}</a>
+                                    '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }} ?', '{{nbr_hint}}',
+                                    '{{paper}}')">{{ "hint" | trans }} {{nbr_hint}}</a>
                             </td>
                             <td id="div_hint{{nbr_hint}}"></td>
                         </tr>
@@ -223,10 +223,10 @@
                 <td>&nbsp;&nbsp;<i class="icon-chevron-right"></i><i class="icon-chevron-right"></i>&nbsp;&nbsp;</td>
             {% endif %}
             {% if dispButtonInterrupt %}
-                <td><input type="button" value="{{ "Interupt" | trans }}" onClick="interupt('{{ interactionType }}')"/>
+                <td><input type="button" value="{{ "interupt" | trans }}" onClick="interupt('{{ interactionType }}')"/>
                 </td>
             {% endif %}
-            <td><input type="button" value="{{ "Finish" | trans }}" onClick="finish('{{ interactionType }}')"/></td>
+            <td><input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }}')"/></td>
         </tr>
     </table>
 {% endblock %}

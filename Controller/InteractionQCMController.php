@@ -132,16 +132,20 @@ class InteractionQCMController extends Controller
         );
 
         if ($formHandler->processAdd()) {
-            $category2Find = $interQCM->getInteraction()->getQuestion()->getCategory();
-            $title2Find = $interQCM->getInteraction()->getQuestion()->getTitle();
+            $categoryToFind = $interQCM->getInteraction()->getQuestion()->getCategory();
+            $titleToFind = $interQCM->getInteraction()->getQuestion()->getTitle();
 
             if ($exoID == -1) {
-                return $this->redirect($this->generateUrl('ujm_question_index', array(
-                    'category2Find' => $category2Find, 'title2Find' => $title2Find))
+                return $this->redirect(
+                    $this->generateUrl('ujm_question_index', array(
+                        'category2Find' => $categoryToFind, 'title2Find' => $titleToFind)
+                    )
                 );
             } else {
-                return $this->redirect($this->generateUrl('ujm_exercise_questions', array(
-                    'id' => $exoID, 'category2Find' => $category2Find, 'title2Find' => $title2Find))
+                return $this->redirect(
+                    $this->generateUrl('ujm_exercise_questions', array(
+                        'id' => $exoID, 'category2Find' => $categoryToFind, 'title2Find' => $titleToFind)
+                    )
                 );
             }
         }

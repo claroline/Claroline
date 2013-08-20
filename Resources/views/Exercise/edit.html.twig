@@ -42,7 +42,7 @@
 <script src="{{ asset('bundles/ujmexo/js/dateTimePicker.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
 
-<h1>{{'Exercise edit'|trans}}</h1>
+<h1>{{'exercise edit'|trans}}</h1>
 
 <form action="{{ path('ujm_exercise_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
     {#{ form_widget(edit_form) }#}
@@ -103,14 +103,14 @@
     
     {{ form_rest(edit_form) }}
     <p>
-        <button type="submit">{{ "Edit" | trans }}</button>
+        <button type="submit">{{ "edit" | trans }}</button>
     </p>
 </form>
 
 <ul class="record_actions">
     <li>
         <a href="{{ path('claro_resource_open', { 'resourceType': entity.resourceType.name, 'resourceId': entity.id }) }}">
-            {{ "Back" | trans }}
+            {{ "back" | trans }}
         </a>
     </li>
 </ul>

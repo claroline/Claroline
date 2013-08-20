@@ -60,7 +60,7 @@
                     <i class="icon-chevron-down" id="downSp"  style="display: none;"></i>
                     {{ 'first_name'|trans({}, 'platform') }}
                 </th>
-                <th style="text-align: center">{{ 'Share'|trans}}</th>
+                <th style="text-align: center">{{ 'share'|trans}}</th>
             </tr>
         </thead>
         {% for user in userList %}
@@ -70,7 +70,7 @@
                 <td style="text-align: center; vertical-align: middle;">{{ user.firstName }}</td>
                 <td style="text-align: center; vertical-align: middle;">
                     <a href="#" onclick="shareQuestionUser('{{ path('ujm_question_shareQuestionUser') }}','{{ user.lastName }}','{{ user.firstName }}'
-                    ,'{{ 'already' | trans }}','{{ 'Self' | trans }}');"><i class="icon-share"></i>
+                    ,'{{ 'already' | trans }} ...','{{ 'self' | trans }} ...');"><i class="icon-share"></i>
                     </a>
                 </td>
             </tr>
@@ -84,7 +84,7 @@
             'routeParams': { 'search': search , 'qId': questionID } }) }}
     {% endif %}
 {% else %}
-    <p>{{ 'noUserFound'|trans }}</p>
+    <p>{{ 'noUserFound'|trans }} ...</p>
 {% endif %}
 
 

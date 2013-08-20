@@ -74,7 +74,7 @@ ujm_question_searchQuestion:
     defaults: { _controller: "UJMExoBundle:Question:searchQuestionType" }
 
 ujm_Document_name_alreadyExist:
-    pattern:  /Document/NameAlreadyExist
-    defaults: { _controller: "UJMExoBundle:WSRest:NameAlreadyExist" }
+    pattern:  /Document/nameAlreadyExist
+    defaults: { _controller: "UJMExoBundle:WSRest:nameAlreadyExist" }
     requirements:
       _method: POST
