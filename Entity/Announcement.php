@@ -67,7 +67,6 @@ class Announcement
      */
     protected $creator;
 
-
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\AnnouncementBundle\Entity\AnnouncementAggregate",

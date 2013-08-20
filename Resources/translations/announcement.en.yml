@@ -6,6 +6,8 @@ announcement_form_announcer: Announcer
 announcement_form_content: Message
 announcement_form_title: Title
 announcement_form_visible: Visible
+announcement_form_visible_from: From
+announcement_form_visible_until: Until
 announcements_list: 'Announcements list'
 at: at
 by: by

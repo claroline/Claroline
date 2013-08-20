@@ -23,7 +23,51 @@ class AnnouncementType extends AbstractType
                 )
             )
         );
-        $builder->add('visible', 'checkbox', array('required' => false));
+        $builder->add(
+            'visible',
+            'checkbox',
+            array(
+                'required' => false,
+                'attr' => array('class' => 'visible-chk')
+            )
+        );
+
+        $disabled = true;
+
+        if (isset($options['data']) && !is_null($options['data'])) {
+            $disabled = !$options['data']->isVisible();
+        }
+        $attr = array();
+        $attr['class'] = 'datepicker input-small';
+        $attr['data-date-format'] = 'dd-mm-yyyy';
+        $attr['autocomplete'] = 'off';
+
+        if ($disabled) {
+            $attr['disabled'] = 'disabled';
+        }
+
+        $builder->add(
+            'visible_from',
+            'date',
+            array(
+                'required' => false,
+                'format' => 'dd-MM-yyyy',
+                'widget' => 'single_text',
+                'attr' => $attr,
+                'input' => 'datetime'
+            )
+        );
+        $builder->add(
+            'visible_until',
+            'date',
+            array(
+                'required' => false,
+                'format' => 'dd-MM-yyyy',
+                'widget' => 'single_text',
+                'attr' => $attr,
+                'input' => 'datetime'
+            )
+        );
     }
 
     public function getName()

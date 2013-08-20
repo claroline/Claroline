@@ -1,8 +1,25 @@
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link
+        rel='stylesheet'
+        type='text/css'
+        href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css') }}'
+    >
+{% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     {{ tinymce_init() }}
+    <script
+        type="text/javascript"
+        src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}">
+    </script>
+    <script
+        src='{{ asset('bundles/clarolineannouncement/js/create_form.js') }}'
+        type="text/javascript">
+    </script>
 {% endblock %}
 
 {% block section_content %}

@@ -60,8 +60,6 @@
             <small>
                 {{ 'published_on'|trans({}, 'announcement') }}
                 {{ data['announcement'].getPublicationDate().format('d-m-Y') }}
-                {{ 'at'|trans({}, 'announcement') }}
-                {{ data['announcement'].getPublicationDate().format('H:i:s') }}
                 {{ 'in_workspace'|trans({}, 'widget') }}
                 <a href="{{
                     path('claro_workspace_open',
