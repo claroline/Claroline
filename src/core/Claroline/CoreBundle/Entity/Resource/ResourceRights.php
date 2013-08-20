@@ -2,23 +2,22 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
-use \Exception;
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceRightsRepository")
  * @ORM\Table(
- *      name="claro_resource_rights",
- *      uniqueConstraints={
- *          @ORM\UniqueConstraint(
- *          name="user",columns={"resource_id","role_id"}
- *          )
- *      }
+ *     name="claro_resource_rights",
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(
+ *             name="resource_rights_unique_resource_role",
+ *             columns={"resourceNode_id", "role_id"}
+ *         )
+ *     }
  * )
  */
 class ResourceRights
@@ -31,48 +30,48 @@ class ResourceRights
     protected $id;
 
     /**
+     * @ORM\Column(name="can_delete", type="boolean")
+     */
+    protected $canDelete = false;
+
+    /**
+     * @ORM\Column(name="can_open", type="boolean")
+     */
+    protected $canOpen = false;
+
+    /**
+     * @ORM\Column(name="can_edit", type="boolean")
+     */
+    protected $canEdit = false;
+
+    /**
+     * @ORM\Column(name="can_copy", type="boolean")
+     */
+    protected $canCopy = false;
+
+    /**
+     * @ORM\Column(name="can_export", type="boolean")
+     */
+    protected $canExport = false;
+
+    /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
      *     inversedBy="resourceRights"
      * )
-     * @ORM\JoinColumn(name="role_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     protected $role;
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     inversedBy="rights",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="resource_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
-    protected $resource;
-
-    /**
-     * @ORM\Column(type="boolean", name="can_delete")
-     */
-    protected $canDelete;
-
-    /**
-     * @ORM\Column(type="boolean", name="can_open")
-     */
-    protected $canOpen;
-
-    /**
-     * @ORM\Column(type="boolean", name="can_edit")
-     */
-    protected $canEdit;
-
-    /**
-     * @ORM\Column(type="boolean", name="can_copy")
-     */
-    protected $canCopy;
-
-    /**
-     * @ORM\Column(type="boolean", name="can_export")
-     */
-    protected $canExport;
+    protected $resourceNode;
 
     /**
      * @ORM\ManyToMany(
@@ -81,12 +80,8 @@ class ResourceRights
      * )
      * @ORM\JoinTable(
      *     name="claro_list_type_creation",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="right_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     *     }
+     *     joinColumns={@ORM\JoinColumn(name="resource_rights_id", onDelete="CASCADE")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="resource_type_id", onDelete="CASCADE")})
      * )
      */
     protected $resourceTypes;
@@ -111,14 +106,14 @@ class ResourceRights
         $this->role = $role;
     }
 
-    public function getResource()
+    public function getResourceNode()
     {
-        return $this->resource;
+        return $this->resourceNode;
     }
 
-    public function setResource(AbstractResource $resource)
+    public function setResourceNode(ResourceNode $resourceNode)
     {
-        $this->resource = $resource;
+        $this->resourceNode = $resourceNode;
     }
 
     public function canDelete()
@@ -180,34 +175,15 @@ class ResourceRights
         $this->setCanExport($originalRights->canExport());
     }
 
-    //required by the form builder
-    public function getCanOpen()
+    public function getPermissions()
     {
-        return $this->canOpen;
-    }
-
-    //required by the form builder
-    public function getCanDelete()
-    {
-        return $this->canDelete;
-    }
-
-    //required by the form builder
-    public function getCanExport()
-    {
-        return $this->canExport;
-    }
-
-    //required by the form builder
-    public function getCanEdit()
-    {
-        return $this->canEdit;
-    }
-
-    //required by the form builder
-    public function getCanCopy()
-    {
-        return $this->canCopy;
+        return array(
+            'canOpen' => $this->canOpen,
+            'canEdit' => $this->canEdit,
+            'canDelete' => $this->canDelete,
+            'canCopy' => $this->canCopy,
+            'canExport' => $this->canExport,
+        );
     }
 
     public function getCreatableResourceTypes()

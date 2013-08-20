@@ -7,37 +7,23 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Content2Type
  *
+ * @ORM\Entity()
  * @ORM\Table(name="claro_content2type")
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Content2TypeRepository")
  */
 class Content2Type
 {
-    public function __construct($first)
-    {
-        $this->size = "span12"; //The size may be between 1 and 12 that correspont to span1 ant span12 of bootstrap
-
-        if ($first) {
-            $first->setBack($this);
-            $this->next = $first;
-            $this->back = null;
-        } else {
-            $this->next = null;
-            $this->back = null;
-        }
-    }
-
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
+     * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content")
-     * @ORM\JoinColumn(name="content_id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
     */
     private $content;
 
@@ -50,21 +36,42 @@ class Content2Type
     /**
      * @var string
      *
-     * @ORM\Column(name="size", type="string", length=30)
+     * @ORM\Column(length=30)
      */
     private $size;
 
     /**
     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content2Type")
-    * @ORM\JoinColumn(name="next_id", nullable=true, onDelete="CASCADE")
+    * @ORM\JoinColumn(onDelete="CASCADE")
     */
     private $next;
 
     /**
     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content2Type")
-    * @ORM\JoinColumn(name="back_id", nullable=true, onDelete="CASCADE")
+    * @ORM\JoinColumn(onDelete="CASCADE")
     */
     private $back;
+
+    /**
+     * Constructor.
+     *
+     * @param \Claroline\CoreBundle\Entity\Home\Content2Type $first
+     */
+    public function __construct(Content2Type $first = null)
+    {
+        // the size may vary between 1 and 12 and corresponds to
+        // bootstrap container span classes
+        $this->size = 'span12';
+
+        if ($first) {
+            $first->setBack($this);
+            $this->next = $first;
+            $this->back = null;
+        } else {
+            $this->next = null;
+            $this->back = null;
+        }
+    }
 
     /**
      * Get id
@@ -79,7 +86,7 @@ class Content2Type
     /**
      * Set size
      *
-     * @param string $size
+     * @param  string       $size
      * @return Content2Type
      */
     public function setSize($size)
@@ -102,10 +109,10 @@ class Content2Type
     /**
      * Set content
      *
-     * @param \Claroline\CoreBundle\Entity\Home\Content $content
+     * @param  \Claroline\CoreBundle\Entity\Home\Content $content
      * @return Content2Type
      */
-    public function setContent(\Claroline\CoreBundle\Entity\Home\Content $content)
+    public function setContent(Content $content)
     {
         $this->content = $content;
 
@@ -125,10 +132,10 @@ class Content2Type
     /**
      * Set type
      *
-     * @param \Claroline\CoreBundle\Entity\Home\Type $type
+     * @param  \Claroline\CoreBundle\Entity\Home\Type $type
      * @return Content2Type
      */
-    public function setType(\Claroline\CoreBundle\Entity\Home\Type $type)
+    public function setType(Type $type)
     {
         $this->type = $type;
 
@@ -148,10 +155,10 @@ class Content2Type
     /**
      * Set next
      *
-     * @param \Claroline\CoreBundle\Entity\Home\Content2Type $next
+     * @param  \Claroline\CoreBundle\Entity\Home\Content2Type $next
      * @return Content2Type
      */
-    public function setNext($next)
+    public function setNext(Content2Type $next)
     {
         $this->next = $next;
 
@@ -171,10 +178,10 @@ class Content2Type
     /**
      * Set back
      *
-     * @param \Claroline\CoreBundle\Entity\Home\Content2Type $back
+     * @param  \Claroline\CoreBundle\Entity\Home\Content2Type $back
      * @return Content2Type
      */
-    public function setBack($back)
+    public function setBack(Content2Type $back)
     {
         $this->back = $back;
 

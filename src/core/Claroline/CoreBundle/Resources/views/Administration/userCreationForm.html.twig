@@ -1,0 +1,25 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block section_content %}
+
+{{
+    macros.breadcrumbs([
+        {
+            'icon': 'icon-user',
+            'name': 'users_management'|trans({}, 'platform'),
+            'href': path('claro_admin_users_management')
+        },
+        {'name':'add_user'|trans({}, 'platform'), 'href':''}
+    ])
+}}
+
+<form class="form-horizontal" action="{{ path('claro_admin_create_user') }}" method="post" {{ form_enctype(form_complete_user) }} id="form_complete_user" autocomplete="off">
+    {{ form_widget(form_complete_user) }}
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+        <a href="{{ path('claro_admin_users_management') }}">
+            <button  type="button" class="btn">{{ 'cancel'|trans({}, 'platform') }}</button>
+        </a>
+    </div>
+</form>
+{% endblock %}

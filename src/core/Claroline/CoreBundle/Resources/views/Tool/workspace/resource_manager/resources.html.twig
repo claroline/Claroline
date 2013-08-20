@@ -15,7 +15,7 @@
         "@ClarolineCoreBundle/Resources/views/Resource/thumbnail.html.twigjs"
         "@ClarolineCoreBundle/Resources/views/Resource/results.html.twigjs"
         "@ClarolineCoreBundle/Resources/views/Resource/roles.html.twigjs"
-        "@ClarolineCoreBundle/Resources/views/modal.html.twigjs"
+        "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
         filter="twig_js"
     %}
         <script language="javascript" src="{{ asset_url }}"></script>
@@ -26,6 +26,7 @@
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/js/jquery-ui-1.9.2.custom.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}" type="text/javascript"></script>
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager.js') }}"></script>
+    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'platform' }) }}"></script>
     <script type="text/javascript">
         $(function() {
             Claroline.ResourceManager.initialize({
@@ -43,7 +44,7 @@
                                 {% for customAction in resourceType.getCustomActions() %}
                                     "{{ customAction.getAction() }}": {
                                         "name": "{{ customAction.getAction() }}",
-                                        "route": "{{ path('claro_resource_custom', {'resourceType': resourceType.getName(), 'action': customAction.getAction(), 'resourceId': '_resourceId' }) }}",
+                                        "route": "{{ path('claro_resource_custom', {'resourceType': resourceType.getName(), 'action': customAction.getAction(), 'resourceId': '_nodeId' }) }}",
                                         "async": {{ customAction.isAsync() }}
                                     }
                                     {% if loop.last != true %},{% endif %}
@@ -57,218 +58,10 @@
         });
     </script>
 
-    {# Test for upload dnd #}
-    <style>
-        .dropzone {
-            border-style: dotted;
-            min-height: 100px;
-        }
-
-        .resource-manager {
-            position: relative;
-        }
-
-        .resource-manager .resources.dropzone {
-            padding-bottom: 50px;
-        }
-
-        .dropzone-text {
-            font-size: 15px;
-            font-weight: bold;
-            font-family: "Helvetica Neue";
-            text-align: center;
-            margin-top: -30px;
-            line-height: 30px;
-        }
-
-        .resources-progress-bar {
-            background-color: rgb(255, 255, 255);
-            background-color: rgba(255, 255, 255, 0.7);
-            height: 100%;
-            width: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            text-align: center;
-        }
-
-        .resources-progress-bar > div {
-            font-weight: bold;
-            margin: auto;
-            position: relative;
-            width: 80%;
-            top: 50%;
-        }
-    </style>
     <script type="text/javascript">
         var FileAPI = { debug: false, pingUrl: false }
     </script>
     <script type="text/javascript" src='{{ asset('bundles/frontend/FileAPI/FileAPI.min.js') }}'></script>
     <script type="text/javascript" src='{{ asset('bundles/frontend/FileAPI/FileAPI.exif.js') }}'></script>
-    <script type="text/javascript">
-        $(document).on('ready', function () {
-            if( !(FileAPI.support.cors || FileAPI.support.flash) ){
-                alert('Il faut chrome ou au moins flash');
-            } else {
-                var dropzone_enabled = false;
-                var drop_enabled = false;
-
-                if( FileAPI.support.dnd ){
-                    $(document).dnd(function (over, evt){
-                        if (true == true) { //$('ul.create > li > a#file').length > 0
-                            drop_enabled = ($(evt.target).hasClass('resources') || $(evt.target).parents('.resources').length > 0);
-     
-                            if (over) {
-                                if (!dropzone_enabled) {
-                                    $('.resources').addClass('dropzone');
-                                    $('.resources').after('<div class="dropzone-text"></div>');
-                                    dropzone_enabled = true;
-                                }
-                            } else {
-                                if (dropzone_enabled) {
-                                    $('.resources').removeClass('dropzone');
-                                    $('.dropzone-text').remove();
-                                    dropzone_enabled = false;
-                                }
-                            }
-
-                            if (drop_enabled) {
-                                $('.dropzone-text').html('Drop file');
-                            }else {
-                                $('.dropzone-text').html('Drag file here');
-                            }
-                        }
-                    }, function (files){
-                        if (drop_enabled) {
-                            //console.log(files);
-                            onFiles(files);
-                        }else {
-                            //console.log('rien il drop pas sur la cible');
-                        }
-                    });
-                }
-            }
-        });
-
-        var FU = {
-            files: [],
-            index: 0,
-            active: false,
-
-            add: function (file){
-                FU.files.push(file);
-            },
-
-            getFileById: function (id){
-                var i = FU.files.length;
-                while( i-- ){
-                    if( FileAPI.uid(FU.files[i]) == id ){
-                        return  FU.files[i];
-                    }
-                }
-            },
-
-            start: function (){
-                if( !FU.active && (FU.active = FU.files.length > FU.index) ){
-                    FU._upload(FU.files[FU.index]);
-                }
-            },
-
-            abort: function (id){
-                var file = this.getFileById(id);
-                if( file.xhr ){
-                    file.xhr.abort();
-                }
-            },
-
-            _upload: function (file){
-                if( file ){
-                    //console.log(file);
-                    var currentDirectoryId = Claroline.ResourceManager.Controller.views.main.currentDirectory.id;
-
-                    file.xhr = FileAPI.upload({
-                        url: '/web/app_dev.php/file/upload/'+currentDirectoryId,
-                        imageAutoOrientation: true,
-                        data: { fileName: file.name },
-                        files: { file: file},
-                        upload: function (){
-                            //console.log('upload');
-                            if (FU.index == 0) {
-                                $('.resources').after(
-                                    '<div class="resources-progress-bar"><div>{{ 'Upload...'|trans({}, 'platform') }}<div class="progress progress-striped active"><div class="bar" style="width: 0%;"></div></div><div id="progress-files">1/'+FU.files.length+'</div></div></div>'
-                                );
-                            }
-                        },
-                        progress: function (evt){
-                            var progress = ((evt.loaded/evt.total*(100/FU.files.length))+((100/FU.files.length)*FU.index))+'%';
-                            console.log('progress: '+progress);
-                            progress = progress;
-                            $('div.progress > div.bar').css('width', progress);
-                        },
-                        complete: function (err, xhr){
-                            var state = err ? 'error' : 'done';
-                            //console.log('complete: '+state);
-
-                            FU.index++;
-                            FU.active = false;
-
-                            $('#progress-files').html(FU.index+'/'+FU.files.length);
-                            var progress = (100/FU.files.length)*FU.index;
-                            console.log('progress: '+progress);
-                            $('div.progress > div.bar').css('width', progress+'%');
-                            FU.start();
-
-                            if (xhr.status == 200) {
-                                var jsonResponse = $.parseJSON(xhr.response);
-                                Claroline.ResourceManager.Controller.views.main.subViews.resources.addThumbnails(jsonResponse);
-                            } else {
-                                showErrorMessage('{{ 'Upload failed...'|trans({}, 'platform') }}');
-                            }
-
-                            if (FU.index == FU.files.length) {
-                                //Last file = remove progress bar
-                                setTimeout(function(){
-                                    $('div.resources-progress-bar').remove();
-                                },500)
-                                FU.index = 0;
-                                FU.active = false;
-                                FU.files = [];
-                            }
-                        }
-                    });
-                }
-            }
-        };
-
-        function showErrorMessage(message) {
-            var alertUl = $('.alert-error > ul');
-            if (alertUl.length > 0) {
-                alertUl.append(
-                    '<li>'+message+'</li>'
-                );
-            } else {
-                $('.resource-manager').prepend(
-                    '<div class="alert alert-error">'
-                +      '<a class="close" href="#" data-dismiss="alert">×</a>'
-                +      '<ul>'
-                +          '<li>'+message+'</li>'
-                +      '</ul>'
-                +   '</div>'
-                );
-            }
-        }
-
-        function onFiles(files) {
-            FileAPI.each(files, function (file) {
-                if ( file.size >= 25*FileAPI.MB ){
-                    showErrorMessage('{{ 'Sorry. Max size 25MB'|trans({}, 'platform') }}');
-                } else if ( file.size === void 0 ){
-                    showErrorMessage('{{ 'Nonexistent size'|trans({}, 'platform') }}');
-                } else {
-                    FU.add(file);
-                }
-            });
-            FU.start();
-        }
-    </script>
+    <script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/resource/dnd.js') }}'></script>
 {% endblock %}

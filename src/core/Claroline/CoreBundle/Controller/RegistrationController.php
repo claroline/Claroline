@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Form\BaseProfileType;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Library\Security\Acl\ClassIdentity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * Controller for user self-registration. Access to this functionality requires
@@ -23,6 +24,8 @@ class RegistrationController extends Controller
      *     name="claro_registration_user_registration_form"
      * )
      *
+     * @Template()
+     *
      * Displays the user self-registration form.
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -33,10 +36,7 @@ class RegistrationController extends Controller
         $user = new User();
         $form = $this->get('form.factory')->create(new BaseProfileType(), $user);
 
-        return $this->render(
-            'ClarolineCoreBundle:Registration:user_registration_form.html.twig',
-            array('form' => $form->createView())
-        );
+        return array('form' => $form->createView());
     }
 
     /**
@@ -44,6 +44,8 @@ class RegistrationController extends Controller
      *     "/create",
      *     name="claro_registration_register_user"
      * )
+     *
+     * @Template("ClarolineCoreBundle:Registration:userRegistrationForm.html.twig")
      *
      * Registers a new user and displays a flash message in case of success.
      *
@@ -53,24 +55,21 @@ class RegistrationController extends Controller
     {
         $this->checkAccess();
         $user = new User();
+
         $form = $this->get('form.factory')->create(new BaseProfileType(), $user);
+
         $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {
-            $em = $this->get('doctrine.orm.entity_manager');
-            $userRole = $em->getRepository('ClarolineCoreBundle:Role')
-                ->findOneByName(PlatformRoles::USER);
-            $user->addRole($userRole);
-            $user = $this->container->get('claroline.user.creator')->create($user);
-
+            $this->get('claroline.manager.user_manager')->createUserWithRole(
+                $user,
+                PlatformRoles::USER
+            );
             $msg = $this->get('translator')->trans('account_created', array(), 'platform');
             $this->getRequest()->getSession()->getFlashBag()->add('success', $msg);
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Registration:user_registration_form.html.twig',
-            array('form' => $form->createView())
-        );
+        return array('form' => $form->createView());
     }
 
     /**

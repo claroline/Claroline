@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Claroline\CoreBundle\Tests\DataFixtures\LoadMessagesData;
+use Claroline\CoreBundle\DataFixtures\Demo\LoadMessagesData;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 
 class SendMessagesCommand extends ContainerAwareCommand

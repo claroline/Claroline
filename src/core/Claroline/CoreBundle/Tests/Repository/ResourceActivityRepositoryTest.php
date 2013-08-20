@@ -6,31 +6,33 @@ use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 
 class ResourceActivityRepositoryTest extends RepositoryTestCase
 {
-    /** @var \Claroline\CoreBundle\Repository\ResourceActivityRepository */
     public static $repo;
 
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
-        self::$repo = self::$em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity');
-        self::loadPlatformRoleData();
-        self::loadUserData(array('jane' => 'user'));
-        self::loadFileData('jane', 'jane', array('lorem.pdf', 'sample.pdf', 'symfony.pdf'));
-        self::loadActivityData(
-            'activity',
-            'jane',
-            'jane',
-            array(
-                self::getFile('lorem.pdf')->getId(),
-                self::getFile('sample.pdf')->getId(),
-                self::getFile('symfony.pdf')->getId()
-            )
+        self::$repo = self::getRepository('ClarolineCoreBundle:Resource\ResourceActivity');
+
+        self::createUser('john');
+        self::createWorkspace('ws_1');
+        self::createResourceType('t_dir');
+        self::createResourceType('t_file');
+        self::createResourceType('t_act');
+        self::createDirectory('dir_1', self::get('t_dir'), self::get('john'), self::get('ws_1'));
+        self::createFile('file_1', self::get('t_file'), self::get('john'), self::get('dir_1'));
+        self::createActivity(
+            'activity_1',
+            self::get('t_act'),
+            self::get('john'),
+            array(self::get('file_1')),
+            self::get('dir_1')
         );
     }
 
     public function testFindResourceActivities()
     {
-        $ra = self::$repo->findResourceActivities(self::getActivity('activity'));
-        $this->assertEquals(3, count($ra));
+        $activityResources = self::$repo->findResourceActivities(self::get('activity_1'));
+        $this->assertEquals(1, count($activityResources));
+        $this->assertEquals('file_1', $activityResources[0]->getResourceNode()->getName());
     }
 }

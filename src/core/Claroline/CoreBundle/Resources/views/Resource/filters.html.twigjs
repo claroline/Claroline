@@ -7,7 +7,7 @@
     <div class="span5">
         <label>{{ 'type_s'|trans({}, 'platform') }} :</label>
         {% if resourceTypes|length > 0 %}
-        <select class="resource-types" multiple="multiple">
+        <select class="node-types" multiple="multiple">
             {% for resourceType, attributes in resourceTypes %}
             <option value="{{ resourceType }}">{{ attributes.name }}</option>
             {% endfor %}

@@ -7,21 +7,16 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Type
  *
+ * @ORM\Entity()
  * @ORM\Table(name="claro_type")
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\TypeRepository")
  */
 class Type
 {
-    public function __construct()
-    {
-        $this->maxContentPage = 100;
-    }
-
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
+     * @ORM\Column(name="id", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
@@ -29,7 +24,7 @@ class Type
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column()
      */
     private $name;
 
@@ -40,6 +35,17 @@ class Type
      */
     private $maxContentPage;
 
+    /**
+     * Constructor.
+     */
+    public function __construct($name = null)
+    {
+        if ($name) {
+            $this->setName($name);
+        }
+
+        $this->maxContentPage = 100;
+    }
 
     /**
      * Get id
@@ -54,7 +60,7 @@ class Type
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string $name
      * @return Type
      */
     public function setName($name)
@@ -77,7 +83,7 @@ class Type
     /**
      * Set max_content_page
      *
-     * @param integer $maxContentPage
+     * @param  integer $maxContentPage
      * @return Type
      */
     public function setMaxContentPage($maxContentPage)

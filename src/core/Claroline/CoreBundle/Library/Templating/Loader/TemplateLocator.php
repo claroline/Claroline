@@ -19,10 +19,10 @@ class TemplateLocator extends baseTemplateLocator
     /**
      * Constructor.
      *
-     * @param FileLocatorInterface          $locator  A FileLocatorInterface instance
-     * @param PlatformConfigurationHandler  $configHandler Claroline platform configuration handler service
-     * @param ThemeService                  $themeService Claroline theme service
-     * @param string                        $cacheDir The cache path
+     * @param FileLocatorInterface         $locator       A FileLocatorInterface instance
+     * @param PlatformConfigurationHandler $configHandler Claroline platform configuration handler service
+     * @param ThemeService                 $themeService  Claroline theme service
+     * @param string                       $cacheDir      The cache path
      */
     public function __construct(FileLocatorInterface $locator, $configHandler, $themeService, $cacheDir = null)
     {
@@ -51,19 +51,22 @@ class TemplateLocator extends baseTemplateLocator
         if (is_object($theme) and
             $bundle !== '' and
             $bundle !== $template->get('bundle') and
-            $template->get('bundle') === 'ClarolineCoreBundle') {
+            $template->get('bundle') === 'ClarolineCoreBundle'
+        ) {
             $tmp = clone $template;
 
-            $template->set('bundle', $bundle);
-            $template->set(
+            $tmp->set('bundle', $bundle);
+            $tmp->set(
                 'controller',
                 strtolower(str_replace(' ', '', $theme->getName())).'/'.$template->get('controller')
             );
 
             try {
-                $this->locator->locate($template->getPath(), $currentPath);
-            } catch (\InvalidArgumentException $e) {
-                $template = $tmp; //return to default
+                $this->locator->locate($tmp->getPath(), $currentPath);
+                $template = $tmp;
+            } catch (\Exception $e) {
+                //var_dump($template);
+                unset($tmp);
             }
         }
 
@@ -82,4 +85,3 @@ class TemplateLocator extends baseTemplateLocator
         }
     }
 }
-

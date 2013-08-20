@@ -18,7 +18,7 @@ class ClaroUtilities
      *
      * $array[] = value3
      *
-     * One the function is fired the results is
+     * Once the function is fired the results is
      * $fillable[1] = value1
      * $fillable[2] = value2
      * $fillable[3] = value3
@@ -57,7 +57,6 @@ class ClaroUtilities
         return $filledArray;
     }
 
-
     /**
      * From http://php.net/manual/en/function.time.php
      *
@@ -87,5 +86,31 @@ class ClaroUtilities
         }
 
         return join(' ', $ret);
+    }
+
+    /**
+     * Generates a globally unique identifier.
+     *
+     * @see http://php.net/manual/fr/function.com-create-guid.php
+     *
+     * @return string
+     */
+    public function generateGuid()
+    {
+        if (function_exists('com_create_guid') === true) {
+            return trim(com_create_guid(), '{}');
+        }
+
+        return sprintf(
+            '%04X%04X-%04X-%04X-%04X-%04X%04X%04X',
+            mt_rand(0, 65535),
+            mt_rand(0, 65535),
+            mt_rand(0, 65535),
+            mt_rand(16384, 20479),
+            mt_rand(32768, 49151),
+            mt_rand(0, 65535),
+            mt_rand(0, 65535),
+            mt_rand(0, 65535)
+        );
     }
 }

@@ -4,225 +4,174 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Claroline\CoreBundle\Entity\Resource\IconType;
-use Claroline\CoreBundle\Form\ResourcePropertiesType;
-use Claroline\CoreBundle\Form\ResourceNameType;
+use Symfony\Component\Security\Core\SecurityContext;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Claroline\CoreBundle\Library\Event\LogResourceUpdateEvent;
-
+use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\DiExtraBundle\Annotation as DI;
 
 class ResourcePropertiesController extends Controller
 {
+
+    private $formFactory;
+    private $sc;
+    private $resourceManager;
+    private $request;
+    private $dispatcher;
+
     /**
-     * @Route(
-     *     "/rename/form/{resourceId}",
+     * @DI\InjectParams({
+     *     "formFactory"     = @DI\Inject("claroline.form.factory"),
+     *     "sc"              = @DI\Inject("security.context"),
+     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
+     *     "request"         = @DI\Inject("request"),
+     *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher")
+     * })
+     */
+    public function __construct
+    (
+        FormFactory $formFactory,
+        SecurityContext $sc,
+        ResourceManager $resourceManager,
+        Request $request,
+        StrictDispatcher $dispatcher
+    )
+    {
+        $this->formFactory = $formFactory;
+        $this->sc = $sc;
+        $this->resourceManager = $resourceManager;
+        $this->request = $request;
+        $this->dispatcher = $dispatcher;
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/rename/form/{node}",
      *     name="claro_resource_rename_form",
      *     options={"expose"=true}
      * )
+     * @EXT\Template("ClarolineCoreBundle:Resource:renameForm.html.twig")
      *
      * Displays the form allowing to rename a resource.
      *
-     * @param integer $resourceId the resource id
+     * @param ResourceNode $node
      *
      * @return Response
      */
-    public function renameFormAction($resourceId)
+    public function renameFormAction(ResourceNode $node)
     {
-        $resource = $this->getDoctrine()
-            ->getManager()
-            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->find($resourceId);
-        $collection = new ResourceCollection(array($resource));
+        $collection = new ResourceCollection(array($node));
         $this->checkAccess('EDIT', $collection);
-        $form = $this->createForm(new ResourceNameType(), $resource);
+        $form = $this->formFactory->create(FormFactory::TYPE_RESOURCE_RENAME, array(), $node);
 
-        return $this->render(
-            'ClarolineCoreBundle:Resource:rename_form.html.twig',
-            array('form' => $form->createView())
-        );
+        return array('form' => $form->createView());
     }
 
     /**
-     * @Route(
-     *     "/rename/{resourceId}",
+     * @EXT\Route(
+     *     "/rename/{node}",
      *     name="claro_resource_rename",
      *     options={"expose"=true}
      * )
+     * @EXT\Template("ClarolineCoreBundle:Resource:renameForm.html.twig")
      *
      * Renames a resource.
      *
-     * @param integer $resourceId the resource id
+     * @param ResourceNode $node
      *
      * @return Response
      */
-    public function renameAction($resourceId)
+    public function renameAction(ResourceNode $node)
     {
-        $request = $this->get('request');
-        $em = $this->getDoctrine()->getManager();
-        $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->find($resourceId);
-        $collection = new ResourceCollection(array($resource));
+        $collection = new ResourceCollection(array($node));
         $this->checkAccess('EDIT', $collection);
-        $form = $this->createForm(new ResourceNameType(), $resource);
-        $form->handleRequest($request);
+        $form = $this->formFactory->create(FormFactory::TYPE_RESOURCE_RENAME, array(), $node);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $unitOfWork = $em->getUnitOfWork();
-            $unitOfWork->computeChangeSets();
-            $changeSet = $unitOfWork->getEntityChangeSet($resource);
+            $this->resourceManager->rename($node, $form->get('name')->getData());
 
-            $em->persist($resource);
-            $em->flush();
-            $content = json_encode(array($resource->getName()));
-            $response = new Response($content);
-            $response->headers->set('Content-Type', 'application/json');
-
-            $log = new LogResourceUpdateEvent($resource, $changeSet);
-            $this->get('event_dispatcher')->dispatch('log', $log);
-
-            return $response;
+            return new JsonResponse(array($node->getName()));
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Resource:rename_form.html.twig',
-            array('resourceId' => $resourceId, 'form' => $form->createView())
-        );
+        return array('form' => $form->createView());
     }
 
     /**
-     * @Route(
-     *     "/properties/form/{resourceId}",
+     * @EXT\Route(
+     *     "/properties/form/{node}",
      *     name="claro_resource_form_properties",
      *     options={"expose"=true}
      * )
+     * @EXT\Template("ClarolineCoreBundle:Resource:propertiesForm.html.twig")
      *
      * Displays the resource properties form.
      *
-     * @param integer $resourceId the resource id
+     * @param ResourceNode $node
      *
      * @return Response
      */
-    public function propertiesFormAction($resourceId)
+    public function propertiesFormAction(ResourceNode $node)
     {
-        $resource = $this->getDoctrine()
-            ->getManager()
-            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->find($resourceId);
+        $form = $this->formFactory->create(FormFactory::TYPE_RESOURCE_PROPERTIES, array(), $node);
 
-        $form = $this->createForm(new ResourcePropertiesType(), $resource);
-
-        return $this->render(
-            'ClarolineCoreBundle:Resource:form_properties.html.twig',
-            array('form' => $form->createView())
-        );
+        return array('form' => $form->createView());
     }
 
     /**
-     * @Route(
-     *     "/properties/edit/{resourceId}",
+     * @EXT\Route(
+     *     "/properties/edit/{node}",
      *     name="claro_resource_edit_properties",
      *     options={"expose"=true}
      * )
+     * @EXT\Template("ClarolineCoreBundle:Resource:propertiesForm.html.twig")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * Changes the resource properties.
      *
-     * @param integer $resourceId the resource id
+     * @param ResourceNode $node
      *
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     * @return StreamedResponse
      */
-    public function changePropertiesAction($resourceId)
+    public function changePropertiesAction(ResourceNode $node, User $user)
     {
-        $request = $this->get('request');
-        $em = $this->get('doctrine.orm.entity_manager');
-        $resource = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
-            ->find($resourceId);
-
-        if (!$this->get('security.context')->getToken()->getUser() === $resource->getCreator()) {
+        if (!$user === $node->getCreator()) {
              throw new AccessDeniedException("You're not the owner of this resource");
         }
 
-        $form = $this->createForm(new ResourcePropertiesType(), $resource);
-        $form->handleRequest($request);
+        $form = $this->formFactory->create(FormFactory::TYPE_RESOURCE_PROPERTIES, array(), $node);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $data = $form->getData();
-            $file = $data->getUserIcon();
+            $name = $form->get('name')->getData();
+            $file = $form->get('newIcon')->getData();
 
-            if ($file !== null) {
-                $this->removeOldIcon($resource);
-                $manager = $this->get('claroline.resource.icon_creator');
-                $icon = $manager->createCustomIcon($file);
-                $em->persist($icon);
-
-                if (get_class($resource) === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
-                    $icon = $icon->getShortcutIcon();
-                }
-
-                $resource->setIcon($icon);
+            if ($file) {
+                $icon = $this->resourceManager->changeIcon($node, $file);
             }
 
-            $resource->setName($data->getName());
+            $this->resourceManager->rename($node, $name);
 
-            $unitOfWork = $em->getUnitOfWork();
-            $unitOfWork->computeChangeSets();
-            $changeSet = $unitOfWork->getEntityChangeSet($resource);
-
-            if (array_key_exists('icon', $changeSet)) {
-                $icons = $changeSet['icon'];
-                if ($icons[0] != null) {
-                    $icons[0] = $icons[0]->getRelativeUrl();
-                }
-                if ($icons[1] != null) {
-                    $icons[1] = $icons[1]->getRelativeUrl();
-                }
-                $changeSet['icon'] = $icons;
-            }
-
-            $em->persist($resource);
-            $em->flush();
             $content = "{";
+            $content .= (isset($icon)) ?
+                $content .= '"icon": "' . $icon->getRelativeUrl() . '"':
+                $content .= '"icon": "' . $node->getIcon()->getRelativeUrl() . '"';
 
-            if (isset($icon)) {
-                $content .= '"icon": "' . $icon->getRelativeUrl() . '"';
-            } else {
-                $content .= '"icon": "' . $resource->getIcon()->getRelativeUrl() . '"';
-            }
-
-            $content .= ', "name": "' . $resource->getName() . '"';
+            $content .= ', "name": "' . $node->getName() . '"';
             $content .= '}';
-            $response = new Response($content);
-            $response->headers->set('Content-Type', 'application/json');
 
-            $log = new LogResourceUpdateEvent($resource, $changeSet);
-            $this->get('event_dispatcher')->dispatch('log', $log);
-
-            return $response;
+            return new JsonResponse(array($node));
         }
 
-        return $this->render(
-            'ClarolineCoreBundle:Resource:form_properties.html.twig',
-            array('resourceId' => $resourceId, 'form' => $form->createView())
-        );
-    }
-
-    /**
-     * Removes the icon of a resource from the web/thumbnails folder.
-     *
-     * @param AbstractResource $resource the resource
-     */
-    private function removeOldIcon($resource)
-    {
-        $icon = $resource->getIcon();
-
-        if ($icon->getIconType()->getType() == IconType::CUSTOM_ICON) {
-            $pathName = $this->container->getParameter('claroline.param.thumbnails_directory')
-                . DIRECTORY_SEPARATOR . $icon->getIconLocation();
-            if (file_exists($pathName)) {
-                unlink($pathName);
-            }
-        }
+        return array('form' => $form->createView());
     }
 
     /**
@@ -235,16 +184,15 @@ class ResourcePropertiesController extends Controller
      *  where $parent is the new parent entity.
      *
      *
-     * @param string $permission
+     * @param string             $permission
      * @param ResourceCollection $collection
      *
      * @throws AccessDeniedException
      */
     private function checkAccess($permission, $collection)
     {
-        if (!$this->get('security.context')->isGranted($permission, $collection)) {
+        if (!$this->sc->isGranted($permission, $collection)) {
             throw new AccessDeniedException(print_r($collection->getErrorsForDisplay(), true));
         }
     }
 }
-

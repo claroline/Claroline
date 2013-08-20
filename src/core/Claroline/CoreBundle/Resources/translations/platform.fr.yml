@@ -1,4 +1,5 @@
 account_created: 'Compte créé'
+account_general_statistics: Statistiques générales sur les comptes
 action: Action
 activity_form_instructions: Instructions
 activity_form_name: Nom
@@ -11,6 +12,7 @@ add_user: 'Ajouter un utilisateur'
 add_users: 'Ajouter des utilisateurs'
 add_user_s_confirm_message: 'utilisateur(s) ajouté(s)'
 admin: Administrateur
+admin_analytics: 'Statistiques plateforme'
 administration: Administration
 administrative_code: 'Code administratif'
 admin_form_firstName : 'Prenom'
@@ -34,6 +36,12 @@ all: Tous
 all_my_workspaces: 'Tous mes espaces d''activités'
 all_workspaces: 'Tous les espaces'
 anonymous: Anonyme
+analytics_home: Vue de l'ensemble
+analytics_connections: Visites utilisateurs
+analytics_resources: Contenu plateforme
+analytics_top: Top des activités
+apply: Appliquer
+available_workspaces: 'Espaces d''activités disponibles'
 by: par
 cancel: Annuler
 choose_resource_form_type: 'Type de ressource'
@@ -41,6 +49,7 @@ close: Fermer
 collaborator: Collaborateur
 communication: Communication
 configuration: Configuration
+connections: Nb Cnx.
 configure: Configurer
 copy: Copier
 create: Créer
@@ -62,7 +71,9 @@ directory_form_shareType: Redistribution
 display_options: 'Options d''affichage'
 done_on: 'effectuée sur'
 download: Télécharger
+downloads: Nb tchgr.
 edit: Modifier
+email_form_mail : 'Entrez votre adresse email'
 enter_tag_name_message: 'Veuillez entrer un nom de Tag'
 export: Exporter
 fast_answer: 'Réponse rapide'
@@ -77,6 +88,7 @@ files: Fichiers
 filter: Filtrer
 find_workspaces: 'Tous les espaces'
 first_name: Prénom
+forgot_password: 'Mot de passe oublié ?'
 form_role: Rôle
 from: Depuis
 from_message: De
@@ -87,14 +99,21 @@ group_form_ownedRoles: Rôles
 group_form_platformRole: Role
 group_parameter: 'Paramètres du groupe'
 groups: Groupes
-groups_list: "Liste des groupes"
+groups_list: 'Liste des groupes'
+has_been_suscribed_with_role: 'a été inscrit(e) avec le rôle'
+has_been_suscribed_with_role_group: 'a été inscrit avec le rôle'
+has_not_been_imported: 'n''a pas été importé(e)'
+has_not_been_imported_into_the_group: 'n''a pas été importé(e) dans le groupe'
 history: Historique
 home: Accueil
 id: Id
 informations: Informations
 instructions: Consignes
 import: Importer
+import_users: 'Importer des utilisateurs'
 import_user_file_file: Importer depuis fichier
+invalid_csv_file: 'Le fichier CSV n''est pas valide'
+last_30_days_activity: Activités des 30 derniers jours
 last_name: Nom
 link: Lien
 list_groups: 'Lister les groupes'
@@ -240,14 +259,20 @@ copiable: 'Copiable'
 editable: 'Modifiable'
 yes: 'oui'
 no: 'non'
+no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
+link_outdated : 'le luen n''est plus valide'
 login: Connexion
 login_failure: 'La connexion a échoué. Vérifiez que votre nom d''utilisateur et votre mot de passe sont corrects.'
 logout: Déconnexion
 mail: Mail
 mail_form_content: Contenu
 mail_form_object: Objet
+mail_message : 'Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur me lien ci-dessous pour le réinitialiser. Si vous n''êtes pas à l''orgine de cette action, veuillez ignorer ce message.'
+mail_click: 'Cliquez sur ce lien pour réinitialiser votre mot de passe'
+mail_sent : 'Un email vient de vous être envoyé. Vérifiez votre dossier spam au cas où vous ne verriez pas l''email'
 manage_rights: 'Gérer les droits'
 manager: Gestionnaire
+media_most_viewed: Media les plus consultés
 messages_confirm_delete: 'Etes-vous sûr de vouloir supprimer ce(s) message(s) ?'
 messages_confirm_permanent_delete: 'Etes-vous sûr de vouloir supprimer définitivement ce(s) message(s) ?'
 messages_confirm_restore: 'Etes-vous sûr de vouloir restaurer ce(s) message(s) ?'
@@ -285,6 +310,9 @@ owner: Propriétaire
 owner_s: Propriétaire(s)
 parameters: Paramètres
 password: 'Mot de passe'
+password_email_message: 'Vous avez demander de Réinitialiser votre mot de passe. CLiquez sur ce lien , si vous n''etes pas l''orgine de cette action , ignorez ce message'
+password_missmatch: 'les mots de passes ne correspondent pas'
+password_ok : 'Votre mot de passe à été modifié , vous pouvez vous connecter'
 paste: Coller
 path: Emplacement
 permissions: Permissions
@@ -311,14 +339,21 @@ profile_form_platformRoles: Rôles
 profile_form_username: 'Nom d''utilisateur'
 properties: Propriétés
 public: Publique
+public_workspaces: 'Espaces d''activités publiques'
 recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'
 register: Inscription
+register_to_a_workspace: 'S''inscrire à un espace d''activités'
 registered_groups: 'Groupes enregistrés'
 registered_users: 'Utilisateurs enregistrés'
+registration_to_workspaces: 'Inscription à des espaces d''activités'
 remove_group_s_confirm_message: 'groupe(s) supprimé(s)'
 remove_user_s_confirm_message: 'utilisateur(s) supprimé(s)'
+remove_messages_confirm_message: 'message(s) supprimé(s)'
 rename: Renommer
 reset: Réinitialiser
+reset_pwd: 'Réinitialisation de votre mot de passe'
+reset_pwd_form_plainPassword_first: "Nouveau mot de passe"
+reset_pwd_form_plainPassword_second : "Répétez le mot de passe"
 resource: Ressource
 resource_action_denied_message: 'L''action %action% n''a pas pu être exécutée sur la resource ''%path%'': accès refusé.'
 resource_creation_denied: 'Vous n''avez pas la permission de créer une ressource dans le répertoire ''%path'': accès refusé.'
@@ -335,7 +370,10 @@ resource_properties_form_sharable: 'Partager cette ressource'
 resource_properties_form_shareType: Redistribution
 resource_properties_form_userIcon: Icône
 resources: Ressources
+resources_most_downloaded: Ressources les plus téléchargés
 resources_rights: 'Droits des ressources'
+resources_usage_ratio: Taux d'utilisation des resources
+resources_usage_list: Liste d'utilisation des resources
 resource_right_form_canCopy: Copier
 resource_right_form_canDelete: Supprimer
 resource_right_form_canEdit: Editer
@@ -345,16 +383,27 @@ resource_right_form_canView: Voir
 resource_right_form_canExport: Exporter
 resource_right_form_isRecursive: Appliquer au contenu du répertoire et aux sous-répertoires
 restore : Restaurer
+restore_messages_confirm_message: message(s) restaurés
 results: Résultats
+results_for_search_on: 'Resultat(s) de la recherche sur'
 rights: Droits
 rights_management: 'Gestion des droits'
 role: Rôle
 roles: Rôles
+role_creation: Créer un rôle
 save: Sauvegarder
 save_as_template: Sauvegarder comme modèle
 search: Rechercher
+search_group: 'Rechercher un groupe'
+search_user: 'Rechercher un utilisateur'
 see: Voir
+see_more: Voir plus
 select all: 'Tout sélectionner'
+select_groups_for_registration_to_workspace: 'Choississez les groupes à inscrire'
+select_roles_to_assign: 'Selectionnez les Rôles à attribuer'
+select_users_for_registration_to_workspace: 'Choississez les utilisateurs à inscrire'
+select_workspaces_for_registration: 'Choisissez les espaces d''activités pour l''inscription'
+selected_workspaces_for_registration: 'Espaces d''activités sélectionnés pour l''inscription'
 send_mail: 'Envoyer un mail'
 send_message: 'Envoyer un message'
 session_id: 'Identifiant de session'
@@ -364,7 +413,12 @@ show_as_admin: 'Voir comme admin'
 show_as_user: 'Voir comme utilisateur'
 show_as: 'Voir en tant que'
 show_profile: 'Voir le profile'
+Show: Afficher
 steal_session: 'Voler la session'
+subscribe_groups: 'Inscrire des groupes'
+subscribe_selected_groups: 'Inscrire les groupes sélectionnés'
+subscribe_selected_users: 'Inscrire les utilisateurs sélectionnés'
+subscribe_users: 'Inscrire des utilisateurs'
 switch: Echanger
 tag: Tag
 tag_children_list: 'Liste des enfants'
@@ -385,14 +439,27 @@ to_message: A
 today: 'Aujourd''hui'
 tool: Outil
 tools: Outils
+top: Top
+top_extension: "Top des extensions (Media), par nombre de fichiers"
+top_workspaces_resources: "Top des espaces d'activités avec le plus des resources"
+top_workspaces_connections: "Top des espaces d'activités les plus consultés"
+top_resources_views: "Top des resources les plus consultés"
+top_resources_downloads: "Top des resources les plus téléchargés"
+top_users_workspaces_owners: "Top des utilisateurs ayant crée le plus de modules"
+top_users_workspaces_enrolled: "Top des utilisateurs étant inscrits dans le plus de modules"
+top_users_connections: "Top des utilisateurs s'étant les plus connectés"
+top_media_views: "Top des Medias le plus consultés"
 trash : Corbeille
 type: Type
 type_s: Type(s)
+unique connections: 'Nb Cnx. uniques'
 unregister: Désinscription
+unregistered: Non inscrit
 unregistered_groups: 'Groupes non enregistrés'
 unregistered_users: 'Utilisateurs non enregistrés'
 unwritable_file_exception: "Vous n'avez pas la permission d'écrire dans le fichier %path%."
 user: Utilisateur
+user_accounts: Comptes utilisateur
 user_form_administrativeCode: 'Code administratif'
 user_form_firstName: Nom
 user_form_lastName: Prénom
@@ -408,8 +475,11 @@ users_management: 'Gestion des utilisateurs'
 users_list: 'Liste des utilisateurs'
 username: 'Nom d''utilisateur'
 users: Utilisateurs
+users_connected_once: utilisateurs connectés au moins 1 fois sur la plateforme
+users_visits: Visites des utilisateurs
 validate: Valider
 view: Voir
+views: Nb vues
 visible: Visible
 visitor: Visiteur
 warning_workspace_impersonation: Vous êtes connectés en tant que %role% du workspace %workspace%.
@@ -423,19 +493,29 @@ workspace_delete: 'Supprimer l''espace d''activités'
 workspace_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer cet espace d''activités ?'
 workspace_delete_confirm_title: 'Confirmation de suppression'
 workspace_edit_form_code: Code
+workspace_edit_form_displayable: Publique
 workspace_edit_form_name: Nom
+workspace_edit_form_selfRegistration: 'Inscription publique'
+workspace_edit_form_selfUnregistration: 'Désinscription publique'
 workspace_form_code: Code
+workspace_form_displayable: Publique
 workspace_form_name: Nom
 workspace_form_template: Modèle
 workspace_form_type: Type
 workspace_order_tool_edit_form_name: Nom
+workspace_registration_confirm_title: 'Voulez-vous vous inscrire à cet espace d''activités ?'
 workspace_resource: Ressources
+workspace_role_type_form_translationKey: Nom
+workspace_role_type_form_requireDir: Créer un répertoire
 workspace_tag_form_name: Nom
 workspace_template_form_name: Nom
 workspace_tools: Outils
+workspace_unregistration_confirm_title: 'Voulez-vous vous désinscrire de cet espace d''activités ?'
 workspace_welcome: Accueil
 workspaces: 'Espaces d''activités'
 ws_creator: 'Créateur d''espaces'
+ws_most_viewed: Espaces d'activités les plus consultés
+date_format: 'd/m/Y'
 date_range.format: 'd-m-Y'
 date_range.js_format: 'dd-MM-yyyy'
 date_range.apply: 'Appliquer'
@@ -465,6 +545,7 @@ for period: 'sur la période du'
 for user: 'de l''utilisateur'
 Show actions: 'Afficher les actions'
 See all: 'Voir tous'
+yesterday_activity: Activité de la veille
 Your changes have been saved: 'Vos changements ont été sauvegardés'
 The form is not valid: 'Le formulaire n''est pas valide'
 Choose workspaces displayed in the widget: 'Choisissez les espaces de travail affichés par le widget'
@@ -478,7 +559,11 @@ Draw an area on the graph to zoom, double-click to cancel: 'Tracez une zone sur 
 Overview of recent activities of your workspaces: 'Aperçu des activités récentes de vos espaces de travail'
 Overview of recent activities in %workspaceName%: 'Aperçu des activités récentes de %workspaceName%'
 Overview of all recent activities in %workspaceName%: 'Aperçu de toutes les activités récentes de %workspaceName%'
-Upload failed...: 'Téléchargement échoué...'
-Sorry. Max size 25MB: 'Refusé. Taille max 25MB'
-Nonexistent size: 'Taille de fichier introuvable'
-Upload...: 'Téléchargement en cours...'
+upload_fail: 'Echec du téléchargement'
+max_size_25mb: 'Taille max 25MB'
+empty_file: 'Fichier vide'
+upload: 'Téléchargement'
+upload_denied: "Vous n'avez pas la permission de créer une ressource à cet endroit"
+select_all: Tout sélectionner
+drop_file: Déposez le fichier
+drag_file_here: Déplacez le fichier ici

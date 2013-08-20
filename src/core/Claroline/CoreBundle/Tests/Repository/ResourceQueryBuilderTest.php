@@ -19,19 +19,19 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
         $eol = PHP_EOL;
         $expectedDql =
             "SELECT resource{$eol}" .
-            "FROM Claroline\CoreBundle\Entity\Resource\AbstractResource resource{$eol}";
+            "FROM Claroline\CoreBundle\Entity\Resource\ResourceNode resource{$eol}";
         $this->assertEquals($expectedDql, $dql);
 
         $dql = $qb->selectAsEntity(true)->getDql();
         $expectedDql =
             "SELECT resource{$eol}" .
-            "FROM Claroline\CoreBundle\Entity\Resource\AbstractResource resource{$eol}" .
+            "FROM Claroline\CoreBundle\Entity\Resource\ResourceNode resource{$eol}" .
             "JOIN resource.creator creator{$eol}" .
             "JOIN resource.resourceType resourceType{$eol}" .
             "LEFT JOIN resource.next next{$eol}" .
             "LEFT JOIN resource.previous previous{$eol}" .
             "LEFT JOIN resource.parent parent{$eol}" .
-            "JOIN resource.icon icon{$eol}";
+            "LEFT JOIN resource.icon icon{$eol}";
         $this->assertEquals($expectedDql, $dql);
     }
 
@@ -49,18 +49,17 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
             "    parent.id as parent_id,{$eol}" .
             "    creator.username as creator_username,{$eol}" .
             "    resourceType.name as type,{$eol}" .
-            "    resourceType.isBrowsable as is_browsable,{$eol}" .
             "    previous.id as previous_id,{$eol}" .
             "    next.id as next_id,{$eol}" .
             "    icon.relativeUrl as large_icon,{$eol}" .
             "    resource.mimeType as mime_type{$eol}" .
-            "FROM Claroline\CoreBundle\Entity\Resource\AbstractResource resource{$eol}" .
+            "FROM Claroline\CoreBundle\Entity\Resource\ResourceNode resource{$eol}" .
             "JOIN resource.creator creator{$eol}" .
             "JOIN resource.resourceType resourceType{$eol}" .
             "LEFT JOIN resource.next next{$eol}" .
             "LEFT JOIN resource.previous previous{$eol}" .
             "LEFT JOIN resource.parent parent{$eol}" .
-            "JOIN resource.icon icon{$eol}";
+            "LEFT JOIN resource.icon icon{$eol}";
 
         $this->assertEquals($expectedDql, $dql);
 
@@ -73,7 +72,6 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
             "    parent.id as parent_id,{$eol}" .
             "    creator.username as creator_username,{$eol}" .
             "    resourceType.name as type,{$eol}" .
-            "    resourceType.isBrowsable as is_browsable,{$eol}" .
             "    previous.id as previous_id,{$eol}" .
             "    next.id as next_id,{$eol}" .
             "    icon.relativeUrl as large_icon,{$eol}" .
@@ -81,13 +79,13 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
             "    MAX (CASE rights.canExport WHEN true THEN 1 ELSE 0 END) as can_export,{$eol}" .
             "    MAX (CASE rights.canDelete WHEN true THEN 1 ELSE 0 END) as can_delete,{$eol}" .
             "    MAX (CASE rights.canEdit WHEN true THEN 1 ELSE 0 END) as can_edit{$eol}" .
-            "FROM Claroline\CoreBundle\Entity\Resource\AbstractResource resource{$eol}" .
+            "FROM Claroline\CoreBundle\Entity\Resource\ResourceNode resource{$eol}" .
             "JOIN resource.creator creator{$eol}" .
             "JOIN resource.resourceType resourceType{$eol}" .
             "LEFT JOIN resource.next next{$eol}" .
             "LEFT JOIN resource.previous previous{$eol}" .
             "LEFT JOIN resource.parent parent{$eol}" .
-            "JOIN resource.icon icon{$eol}" .
+            "LEFT JOIN resource.icon icon{$eol}" .
             "LEFT JOIN resource.rights rights{$eol}" .
             "JOIN rights.role rightRole{$eol}";
         $this->assertEquals($expectedDql, $dql);
@@ -101,7 +99,7 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
         $mockedWorkspace->expects($this->once())
             ->method('getId')
             ->will($this->returnValue(123));
-        $mockedParent = $this->getMock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $mockedParent = $this->getMock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $mockedParent->expects($this->once())
             ->method('getId')
             ->will($this->returnValue(456));
@@ -131,13 +129,13 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
         $eol = PHP_EOL;
         $expectedDql =
             "SELECT resource{$eol}" .
-            "FROM Claroline\CoreBundle\Entity\Resource\AbstractResource resource{$eol}" .
+            "FROM Claroline\CoreBundle\Entity\Resource\ResourceNode resource{$eol}" .
             "JOIN resource.creator creator{$eol}" .
             "JOIN resource.resourceType resourceType{$eol}" .
             "LEFT JOIN resource.next next{$eol}" .
             "LEFT JOIN resource.previous previous{$eol}" .
             "LEFT JOIN resource.parent parent{$eol}" .
-            "JOIN resource.icon icon{$eol}" .
+            "LEFT JOIN resource.icon icon{$eol}" .
             "LEFT JOIN resource.rights rights{$eol}" .
             "JOIN rights.role rightRole{$eol}" .
             "WHERE resource.workspace = :workspace_id{$eol}" .
