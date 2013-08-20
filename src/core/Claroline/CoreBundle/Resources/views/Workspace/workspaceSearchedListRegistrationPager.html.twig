@@ -1,0 +1,46 @@
+{% macro renderPager(pager, search) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_workspaces_list_registration_pager_search',
+                'routeParams': {'search': search}
+            }
+        )
+    }}
+{% endmacro %}
+
+{% from _self import renderPager %}
+
+<div id="search-workspaces-div">
+{{ renderPager(workspaces, search) }}
+
+<table id="workspace-table"  class="table table-striped table-bordered table-condensed">
+    <tbody id="user-table-body">
+        {% for workspace in workspaces %}
+            <tr id="{{ workspace.getId() }}" class="row-workspace">
+                <td>
+                    {{ workspace.getName() }}
+                    <span class="workspace-code">({{ workspace.getCode() }})</span>
+                </td>
+                <td>
+                    <input
+                        type="checkbox"
+                        value="{{ workspace.getId() }}"
+                        class="chk-workspace-all workspace-check"
+                        align="center">
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p>
+    <small>
+        * {{ 'results_for_search_on'|trans({}, 'platform') }} "{{ search }}"
+    </small>
+</p>
+
+{{ renderPager(workspaces, search) }}
+</div>

@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Repository;
 use Symfony\Component\Security\Core\Role\RoleInterface;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Repository\Exception\MissingSelectClauseException;
 
@@ -27,13 +28,13 @@ class ResourceQueryBuilder
     public function __construct()
     {
         $eol = PHP_EOL;
-        $this->fromClause = "FROM Claroline\CoreBundle\Entity\Resource\AbstractResource resource{$eol}";
+        $this->fromClause = "FROM Claroline\CoreBundle\Entity\Resource\ResourceNode resource{$eol}";
         $this->joinRelativesClause = "JOIN resource.creator creator{$eol}" .
             "JOIN resource.resourceType resourceType{$eol}" .
             "LEFT JOIN resource.next next{$eol}" .
             "LEFT JOIN resource.previous previous{$eol}" .
             "LEFT JOIN resource.parent parent{$eol}" .
-            "JOIN resource.icon icon{$eol}";
+            "LEFT JOIN resource.icon icon{$eol}";
     }
 
     /**
@@ -71,7 +72,6 @@ class ResourceQueryBuilder
             "    parent.id as parent_id,{$eol}" .
             "    creator.username as creator_username,{$eol}" .
             "    resourceType.name as type,{$eol}" .
-            "    resourceType.isBrowsable as is_browsable,{$eol}" .
             "    previous.id as previous_id,{$eol}" .
             "    next.id as next_id,{$eol}" .
             "    icon.relativeUrl as large_icon,{$eol}".
@@ -113,7 +113,7 @@ class ResourceQueryBuilder
      *
      * @return ResourceQueryBuilder
      */
-    public function whereParentIs(AbstractResource $parent)
+    public function whereParentIs(ResourceNode $parent)
     {
         $this->addWhereClause('resource.parent = :ar_parentId');
         $this->parameters[':ar_parentId'] = $parent->getId();
@@ -124,8 +124,8 @@ class ResourceQueryBuilder
     /**
      * Filters resources whose path begins with a given path.
      *
-     * @param string    $path
-     * @param boolean   $includeGivenPath
+     * @param string  $path
+     * @param boolean $includeGivenPath
      *
      * @return ResourceQueryBuilder
      */
@@ -320,15 +320,16 @@ class ResourceQueryBuilder
     }
 
     /**
-     * Filters resources that are shortcuts and select their target.
+     * Filters resources that are shortcuts and selects their target.
      *
-     * @return \Claroline\CoreBundle\Repository\ResourceQueryBuilder
+     * @return ResourceQueryBuilder
      */
     public function whereIsShortcut()
     {
         $eol = PHP_EOL;
-        $this->joinRelativesClause .= 'JOIN resource.resource target' . PHP_EOL;
-        $this->fromClause = "FROM 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut' resource{$eol}";
+        $this->joinRelativesClause = "JOIN rs.resourceNode resource{$eol}" . $this->joinRelativesClause;
+        $this->joinRelativesClause = "JOIN rs.target target{$eol}" . $this->joinRelativesClause;
+        $this->fromClause = "FROM Claroline\CoreBundle\Entity\Resource\ResourceShortcut rs{$eol}";
         $this->selectClause .= ", target.id as target_id{$eol}";
         $this->selectClause .= ", target.path as target_path{$eol}";
 
@@ -387,9 +388,11 @@ class ResourceQueryBuilder
     {
         $this->groupByClause = '
             GROUP BY resource.id,
+                     parent.id,
+                     previous.id,
+                     next.id,
                      creator.username,
                      resourceType.name,
-                     resourceType.isBrowsable,
                      icon.relativeUrl
         ' . PHP_EOL;
 

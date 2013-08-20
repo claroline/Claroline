@@ -20,13 +20,12 @@
     $('.chk-tool-visible').on('change', function (e) {
         var toolId = $(e.target.parentElement).attr('data-tool-id');
         var roleId = $(e.target.parentElement).attr('data-role-id');
-        var rowIndex = e.target.parentElement.parentElement.rowIndex;
         var isCurrentElementChecked = e.currentTarget.checked;
         var route = '';
         if (isCurrentElementChecked) {
             route = Routing.generate(
                 'claro_tool_workspace_add',
-                { 'toolId' : toolId, 'position': rowIndex, 'workspaceId': wsId, 'roleId': roleId }
+                { 'toolId' : toolId, 'workspaceId': wsId, 'roleId': roleId }
             );
         } else {
             route = Routing.generate(

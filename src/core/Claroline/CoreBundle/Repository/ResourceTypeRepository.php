@@ -6,37 +6,36 @@ use Doctrine\ORM\EntityRepository;
 
 class ResourceTypeRepository extends EntityRepository
 {
+    /**
+     * Returns all the resource types introduced by plugins.
+     *
+     * @return array[ResourceType]
+     */
     public function findPluginResourceTypes()
     {
-        $dql = "
+        $dql = '
             SELECT rt FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
             WHERE rt.plugin IS NOT NULL
-        ";
-
+        ';
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
     }
 
-    public function findPluginResourceNameFqcns()
+    /**
+     * Returns the number of existing resources for each resource type.
+     *
+     * @return array
+     */
+    public function countResourcesByType()
     {
-        $sql = 'SELECT class FROM claro_resource_type WHERE plugin_id IS NOT NULL';
+        $qb = $this
+            ->createQueryBuilder('type')
+            ->select('type.id, type.name, COUNT(rs.id) AS total')
+            ->leftJoin('Claroline\CoreBundle\Entity\Resource\ResourceNode', 'rs', 'WITH', 'type = rs.resourceType')
+            ->groupBy('type.id')
+            ->orderBy('total', 'DESC');
 
-        return $this->_em
-            ->getConnection()
-            ->query($sql)
-            ->fetchAll(\PDO::FETCH_ASSOC);
-    }
-
-    public function findByIds(array $resourceTypeIds)
-    {
-        $dql = '
-            SELECT rt
-            FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
-            WHERE rt.id IN (' . implode(',', $resourceTypeIds) . ')
-        ';
-
-        return $this->_em->createQuery($dql)
-            ->getResult();
+        return $qb->getQuery()->getResult();
     }
 }

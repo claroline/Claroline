@@ -25,7 +25,6 @@ class WorkspaceAccessExtension extends \Twig_Extension
         $this->ut = $ut;
     }
 
-
     /**
      * {@inheritdoc}
      */

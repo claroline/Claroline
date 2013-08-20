@@ -7,16 +7,16 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Region
  *
+ * @ORM\Entity()
  * @ORM\Table(name="claro_region")
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\RegionRepository")
  */
 class Region
 {
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
+     * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
@@ -24,10 +24,9 @@ class Region
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column()
      */
     private $name;
-
 
     /**
      * Get id
@@ -42,7 +41,7 @@ class Region
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string $name
      * @return Region
      */
     public function setName($name)

@@ -5,17 +5,14 @@ namespace  Claroline\CoreBundle\Listener;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
-use Claroline\CoreBundle\Library\Event\ConfigureWidgetWorkspaceEvent;
-use Claroline\CoreBundle\Library\Event\ConfigureWidgetDesktopEvent;
-use Claroline\CoreBundle\Library\Event\LogCreateDelegateViewEvent;
-use Claroline\CoreBundle\Library\Event\LogResourceChildUpdateEvent;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Event\Event\DisplayWidgetEvent;
+use Claroline\CoreBundle\Event\Event\ConfigureWidgetWorkspaceEvent;
+use Claroline\CoreBundle\Event\Event\ConfigureWidgetDesktopEvent;
 use Claroline\CoreBundle\Entity\Logger\LogWorkspaceWidgetConfig;
 use Claroline\CoreBundle\Entity\Logger\LogDesktopWidgetConfig;
-use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Form\LogWorkspaceWidgetConfigType;
 use Claroline\CoreBundle\Form\LogDesktopWidgetConfigType;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 
 /**
  * @DI\Service
@@ -23,11 +20,11 @@ use Claroline\CoreBundle\Form\LogDesktopWidgetConfigType;
 class LogWidgetListener
 {
     private $logManager;
+    private $workspaceManager;
     private $securityContext;
     private $twig;
     private $ed;
     private $formFactory;
-    private $manager;
 
     private function convertConfigToFormData($config, $isDefault)
     {
@@ -67,31 +64,35 @@ class LogWidgetListener
             $config->getWsRoleUpdate() === true;
 
         $data['amount'] = $config->getAmount();
+
         return $data;
     }
 
     /**
      * @DI\InjectParams({
-     *     "logManager"  = @DI\Inject("claroline.log.manager"),
-     *     "context"     = @DI\Inject("security.context"),
-     *     "twig"        = @DI\Inject("templating"),
-     *     "ed"          = @DI\Inject("event_dispatcher"),
-     *     "formFactory" = @DI\Inject("form.factory"),
-     *     "manager" = @DI\Inject("doctrine.orm.entity_manager")
+     *     "logManager"         = @DI\Inject("claroline.log.manager"),
+     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "context"            = @DI\Inject("security.context"),
+     *     "twig"               = @DI\Inject("templating"),
+     *     "ed"                 = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "formFactory"        = @DI\Inject("form.factory")
      * })
-     *
-     * @param EntityManager             $em
-     * @param SecurityContextInterface  $context
-     * @param TwigEngine                $twig
      */
-    public function __construct($logManager, SecurityContextInterface $context, TwigEngine $twig, $ed, $formFactory, $manager)
+    public function __construct(
+        $logManager,
+        WorkspaceManager $workspaceManager,
+        SecurityContextInterface $context,
+        TwigEngine $twig,
+        $ed,
+        $formFactory
+    )
     {
         $this->logManager = $logManager;
+        $this->workspaceManager = $workspaceManager;
         $this->securityContext = $context;
         $this->twig = $twig;
         $this->ed = $ed;
         $this->formFactory = $formFactory;
-        $this->manager = $manager;
     }
 
     /**
@@ -171,7 +172,8 @@ class LogWidgetListener
 
         $form = $this->formFactory->create(new LogWorkspaceWidgetConfigType(), $data);
         $content = $this->twig->render(
-                'ClarolineCoreBundle:Log:config_workspace_widget_form.html.twig', array(
+            'ClarolineCoreBundle:Log:config_workspace_widget_form.html.twig',
+            array(
                 'form' => $form->createView(),
                 'workspace' => $event->getWorkspace(),
                 'isDefault' => $event->isDefault() ? 1 : 0
@@ -188,11 +190,10 @@ class LogWidgetListener
     public function onDesktopConfigure(ConfigureWidgetDesktopEvent $event)
     {
         if ($event->isDefault() !== true) {
-            $workspaces = $this
-                ->manager
-                ->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
-                ->findByUserAndRoleNames($event->getUser(), array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'));
-
+            $workspaces = $this->workspaceManager->getWorkspacesByUserAndRoleNames(
+                $event->getUser(),
+                array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER')
+            );
             $workspacesVisibility = $this
                 ->logManager
                 ->getWorkspaceVisibilityForDesktopWidget($event->getUser(), $workspaces);
@@ -231,7 +232,8 @@ class LogWidgetListener
                 array('workspaces' => $workspaces)
             );
         $content = $this->twig->render(
-                'ClarolineCoreBundle:Log:config_desktop_widget_form.html.twig', array(
+            'ClarolineCoreBundle:Log:config_desktop_widget_form.html.twig',
+            array(
                 'form' => $form->createView(),
                 'isDefault' => $event->isDefault() ? 1 : 0
             )

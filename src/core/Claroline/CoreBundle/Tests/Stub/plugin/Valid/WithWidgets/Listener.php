@@ -2,7 +2,7 @@
 
 namespace Valid\WithWidgets;
 
-use Claroline\CoreBundle\Library\Event\DisplayWidgetEvent;
+use Claroline\CoreBundle\Event\Event\DisplayWidgetEvent;
 
 class Listener
 {

@@ -1,10 +1,9 @@
 {% extends '::base.html.twig' %}
 
-{% set themePath = 'bundles/clarolinecore/css/themes/' ~ config.getParameter('theme') %}
+{% set themePath = 'themes/' ~ config.getParameter('theme') %}
 {% block stylesheets %}
     <link rel='stylesheet' type='text/css' href='{{ asset(themePath ~ '/bootstrap.css') }}'/>
-    <link rel='stylesheet' type='text/css' href='{{ asset(themePath ~ '/bootstrap-responsive.css') }}'/>
-    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/css/font-awesome.css') }}'/>
+    <link rel='stylesheet' type='text/css' href='{{ asset('vendor/fortawesome/fontawesome/font-awesome.css') }}'/>
 {% endblock %}
 
 {% block favicon %}
@@ -13,7 +12,7 @@
 {% endblock %}
 
 {% block layout %}
-<div id="top_bar" class="navbar navbar-fixed-top"> 
+<div id="top_bar" class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
             <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -50,5 +49,5 @@
              <div class="span6">
                   {%block data %}
                   {%endblock data %}
-    {% endblock %} 
+    {% endblock %}
 {%endblock %}

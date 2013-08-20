@@ -1,0 +1,18 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ tinymce_init() }}
+{% endblock %}
+{% block content %}
+<form novalidate="novalidate"
+      action="{{path('claro_message_send')}}"
+      method="post" {{ form_enctype(form) }}
+      id="generic-form"
+      class="form-horizontal">
+   {{ form_widget(form) }}
+   {{ form_rest(form) }}
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+    </div>
+</form>
+{% endblock %}

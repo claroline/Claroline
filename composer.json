@@ -7,8 +7,8 @@
     "require": {
         "php": ">=5.3.3",
         "symfony/symfony": "2.3.*",
-        "doctrine/orm": ">=2.2.3,<2.4-dev",
-        "doctrine/doctrine-bundle": "1.2.*",
+        "doctrine/orm": ">=2.2,<2.5-dev",
+        "doctrine/doctrine-bundle": ">=2.1",
         "twig/extensions": "1.0.*",
         "symfony/assetic-bundle": "2.3.*",
         "symfony/swiftmailer-bundle": "2.3.*",
@@ -23,20 +23,24 @@
         "doctrine/doctrine-migrations-bundle": "dev-master",
         "doctrine/doctrine-fixtures-bundle": "dev-master",
         "friendsofsymfony/jsrouting-bundle": "dev-master",
-        "mikey179/vfsStream": "dev-master",
         "stfalcon/tinymce-bundle": "dev-master",
         "claroline/front-end-bundle": "dev-master",
+        "claroline/taxonomy-bundle": "dev-master",
+        "claroline/migration-bundle": "dev-master",
         "jms/twig-js-bundle": "dev-master",
         "white-october/pagerfanta-bundle": "dev-master",
         "idci/exporter-bundle": "dev-master",
         "leafo/lessphp": "0.3.9",
-        "twitter/bootstrap": "2.3.1",
+        "twbs/bootstrap": "2.3.2",
         "fortawesome/fontawesome": "dev-master",
         "xaguilars/bootstrap-colorpicker": "dev-master",
-        "zenstruck/form-bundle": "dev-master"
+        "zenstruck/form-bundle": "dev-master",
+        "besimple/sso-auth-bundle": "*"
     },
     "require-dev": {
-        "mockery/mockery": "dev-master@dev"
+        "mockery/mockery": "dev-master@dev",
+        "hamcrest/hamcrest": "1.1.0",
+        "mikey179/vfsStream": "dev-master"
     },
     "repositories": [
         {
@@ -72,12 +76,28 @@
             }
         },
         {
-            "type": "vcs",
-            "url": "http://github.com/mikey179/vfsStream"
+            "type": "package",
+            "package": {
+                "name": "hamcrest/hamcrest",
+                "version": "1.1.0",
+                "dist": {
+                    "type": "zip",
+                    "url": "https://hamcrest.googlecode.com/files/hamcrest-php-1.1.0.zip"
+                },
+                "include-path": ["Hamcrest-1.1.0/"],
+                "autoload": {
+                    "psr-0": { "Hamcrest_": "Hamcrest-1.1.0/" },
+                    "files": ["Hamcrest-1.1.0/Hamcrest/Hamcrest.php"]
+                }
+            }
         },
         {
             "type": "vcs",
             "url": "http://github.com/claroline/FrontEndBundle"
+        },
+        {
+            "type": "vcs",
+            "url": "http://github.com/claroline/TaxonomyBundle"
         }
     ],
     "scripts": {
@@ -97,7 +117,8 @@
         ]
     },
     "config": {
-        "bin-dir": "bin"
+        "bin-dir": "bin",
+        "github-protocols": ["https", "http", "git"]
     },
     "minimum-stability": "dev",
     "extra": {

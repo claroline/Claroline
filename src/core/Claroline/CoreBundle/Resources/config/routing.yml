@@ -32,6 +32,12 @@ claro_content_error:
         _controller: FrameworkBundle:Template:template
         template: 'ClarolineCoreBundle:Home:ajaxerror.html.twig'
 
+claro_content_typeerror:
+    pattern: /content/typeerror
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'ClarolineCoreBundle:Home:typeerror.html.twig'
+
 claro_content_confirm:
     pattern: /content/confirm
     defaults:
@@ -62,9 +68,9 @@ claro_desktop:
     prefix: desktop
     type: annotation
 
-claro_desktop_tool_calendar:
-    resource: "@ClarolineCoreBundle/Controller/Tool/DesktopCalendarController.php"
-    prefix: desktop/tool/calendar
+claro_desktop_tool_agenda:
+    resource: "@ClarolineCoreBundle/Controller/Tool/DesktopAgendaController.php"
+    prefix: desktop/tool/agenda
     type: annotation
 
 claro_desktop_tool_home:
@@ -102,24 +108,19 @@ claro_workspace_tool_resources_properties:
     prefix: workspaces/tool/properties
     type: annotation
 
-claro_workspace_tool_user:
-    resource: "@ClarolineCoreBundle/Controller/Tool/UserController.php"
-    prefix: workspaces/tool/user_management
-    type: annotation
-
-claro_workspace_tool_group:
-    resource: "@ClarolineCoreBundle/Controller/Tool/GroupController.php"
-    prefix: workspaces/tool/group_management
-    type: annotation
-
-claro_workspace_tool_calendar:
-    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceCalendarController.php"
-    prefix: workspaces/tool/calendar
+claro_workspace_tool_agenda:
+    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceAgendaController.php"
+    prefix: workspaces/tool/agenda
     type: annotation
 
 claro_workspace_tool_logs:
     resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceLogController.php"
     prefix: workspaces/tool/logs
+    type: annotation
+
+claro_workspace_roles:
+    resource: "@ClarolineCoreBundle/Controller/Tool/RolesController.php"
+    prefix: workspaces/tools/roles/
     type: annotation
 
 claro_admin:

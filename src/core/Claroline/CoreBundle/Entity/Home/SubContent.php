@@ -7,14 +7,61 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * SubContent
  *
+ * @ORM\Entity()
  * @ORM\Table(name="claro_subcontent")
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\SubContentRepository")
  */
 class SubContent
 {
-    public function __construct($first)
+    /**
+     * @var integer
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     */
+    private $father;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     */
+    private $child;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(length=255, nullable=true)
+     */
+    private $size;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\SubContent")
+     * @ORM\JoinColumn(onDelete="CASCADE")
+     */
+    private $next;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\SubContent")
+     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
+     */
+    private $back;
+
+    /**
+     * Constructor.
+     *
+     * @param \Claroline\CoreBundle\Entity\Home\SubContent $first
+     */
+    public function __construct(SubContent $first = null)
     {
-        $this->size = "span12"; //The size may be between 1 and 12 that correspont to span1 and span12 of bootstrap
+        // the size may vary between 1 and 12 and corresponds to
+        // bootstrap container span classes
+        $this->size = 'span12';
 
         if ($first) {
             $first->setBack($this);
@@ -25,46 +72,6 @@ class SubContent
             $this->back = null;
         }
     }
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-
-     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content")
-     * @ORM\JoinColumn(name="father_id", nullable=false, onDelete="CASCADE")
-    */
-    private $father;
-
-     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content")
-     * @ORM\JoinColumn(name="child_id", nullable=false, onDelete="CASCADE")
-    */
-    private $child;
-
-        /**
-     * @var string
-     *
-     * @ORM\Column(name="size", type="string", nullable=true, length=255)
-     */
-    private $size;
-
-    /**
-    * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\SubContent")
-    *  @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
-    */
-    private $next;
-
-    /**
-    * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\SubContent")
-    *  @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
-    */
-    private $back;
 
     /**
      * Get id
@@ -79,7 +86,7 @@ class SubContent
     /**
      * Set size
      *
-     * @param string $size
+     * @param  string     $size
      * @return SubContent
      */
     public function setSize($size)
@@ -102,10 +109,10 @@ class SubContent
     /**
      * Set father
      *
-     * @param \Claroline\CoreBundle\Entity\Home\Content $father
+     * @param  \Claroline\CoreBundle\Entity\Home\Content $father
      * @return SubContent
      */
-    public function setFather(\Claroline\CoreBundle\Entity\Home\Content $father)
+    public function setFather(Content $father)
     {
         $this->father = $father;
 
@@ -125,10 +132,10 @@ class SubContent
     /**
      * Set child
      *
-     * @param \Claroline\CoreBundle\Entity\Home\Content $child
+     * @param  \Claroline\CoreBundle\Entity\Home\Content $child
      * @return SubContent
      */
-    public function setChild(\Claroline\CoreBundle\Entity\Home\Content $child)
+    public function setChild(Content $child)
     {
         $this->child = $child;
 
@@ -161,7 +168,7 @@ class SubContent
      * @param \Claroline\CoreBundle\Entity\Home\SubContent $next
      * @return SubContent
      */
-    public function setNext(\Claroline\CoreBundle\Entity\Home\SubContent $next = null)
+    public function setNext(SubContent $next = null)
     {
         $this->next = $next;
 
@@ -181,10 +188,10 @@ class SubContent
     /**
      * Set back
      *
-     * @param \Claroline\CoreBundle\Entity\Home\SubContent $back
+     * @param  \Claroline\CoreBundle\Entity\Home\SubContent $back
      * @return SubContent
      */
-    public function setBack(\Claroline\CoreBundle\Entity\Home\SubContent $back = null)
+    public function setBack(SubContent $back = null)
     {
         $this->back = $back;
 

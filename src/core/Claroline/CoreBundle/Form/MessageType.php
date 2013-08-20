@@ -8,15 +8,14 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Claroline\CoreBundle\Validator\Constraints\SendToUsernames;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-
 class MessageType extends AbstractType
 {
     /**
      * Constructor.
      *
-     * @param string $username
-     * @param string $object
-     * @param boolean $isFast indicate if the message is an answer of a previous message
+     * @param string  $username
+     * @param string  $object
+     * @param boolean $isFast   indicate if the message is an answer of a previous message
      * (no need to show the object nor the username).
      *
      * @throws \Exception
@@ -48,7 +47,7 @@ class MessageType extends AbstractType
                         'data' =>
                         $this->username,
                         'required' => true,
-                        'mapped' => false,
+                        'mapped' => true,
                         'constraints' => array(
                             new NotBlank(),
                             new SendToUsernames()
@@ -63,7 +62,7 @@ class MessageType extends AbstractType
                     array(
                         'data' => $this->username,
                         'required' => true,
-                        'mapped' => false,
+                        'mapped' => true,
                         'constraints' => array(
                             new NotBlank(),
                             new SendToUsernames()
@@ -76,7 +75,7 @@ class MessageType extends AbstractType
                 ->add(
                     'content',
                     'textarea',
-                    array('required' => true, 'attr' => array ('class' => 'tinymce', 'data-theme' => 'simple'))
+                    array('required' => true, 'attr' => array ('class' => 'tinymce', 'data-theme' => 'medium'))
                 );
     }
 

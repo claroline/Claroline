@@ -6,183 +6,9 @@ use Doctrine\ORM\EntityRepository;
 
 class LogRepository extends EntityRepository
 {
-
-    private function actionsRestrictionToString($actionsRestriction)
-    {
-        $s = "";
-        $first = true;
-        foreach ($actionsRestriction as $action) {
-            if ($first) {
-                $first = false;
-                $s .= "'".$action."'";
-            } else {
-                $s .= ", '".$action."'";
-            }
-        }
-
-        return $s;
-    }
-
-    private function addActionFilterToQueryBuilder($qb, $action, $actionsRestriction)
-    {
-        if ($action == 'resource_all') {
-            $action = array('resource_create',
-                'resource_move',
-                'resource_read',
-                'resource_export',
-                'resource_delete',
-                'resource_update',
-                'resource_shortcut',
-                'resource_child_update');
-        } else if ($action == 'ws_role_all') {
-            $action = array('ws_role_create',
-                'ws_role_delete',
-                'ws_role_update',
-                'ws_role_change_right',
-                'ws_role_subscribe_user',
-                'ws_role_unsubscribe_user',
-                'ws_role_subscribe_group',
-                'ws_role_unsubscribe_group');
-        } else if ($action == 'group_all') {
-            $action = array('group_add_user', 'group_create', 'group_delete', 'group_remove_user', 'group_update');
-        } else if ($action == 'user_all') {
-            $action = array('user_create', 'user_delete', 'user_login', 'user_update');
-        } else if ($action == 'workspace_all') {
-            $action = array('workspace_create', 'workspace_delete', 'workspace_update');
-        } else if ($action == 'all' or $action === null) {
-            $action = $actionsRestriction;
-        } else {
-            $action = array($action);
-        }
-
-        $qb->andWhere("log.action IN (:action)");
-        $qb->setParameter('action', $action);
-
-        return $qb;
-    }
-
-    private function addDateRangeFilterToQueryBuilder($qb, $range)
-    {
-        if ($range !== null and count($range) == 2) {
-            $startDate = new \DateTime();
-            $startDate->setTimestamp($range[0]);
-            $startDate->setTime(0, 0, 0);
-
-            $endDate = new \DateTime();
-            $endDate->setTimestamp($range[1]);
-            $endDate->setTime(23, 59, 59);
-
-            $qb
-                ->andWhere("log.dateLog >= :startDate")
-                ->andWhere("log.dateLog <= :endDate")
-                ->setParameter('startDate', $startDate)
-                ->setParameter('endDate', $endDate);
-        }
-
-        return $qb;
-    }
-
-    private function addUserFilterToQueryBuilder($qb, $userSearch)
-    {
-        if ($userSearch !== null && $userSearch != '') {
-            $upperUserSearch = strtoupper($userSearch);
-            $upperUserSearch = trim($upperUserSearch);
-            $upperUserSearch = preg_replace('/\s+/', ' ', $upperUserSearch);
-
-            $qb->leftJoin('log.doer', 'doer');
-            $qb->andWhere(
-                $qb->expr()->orx(
-                    $qb->expr()->like('UPPER(doer.lastName)', ':userSearch'),
-                    $qb->expr()->like('UPPER(doer.firstName)', ':userSearch'),
-                    $qb->expr()->like('UPPER(doer.username)', ':userSearch'),
-                    $qb->expr()->like("CONCAT(CONCAT(UPPER(doer.firstName), ' '), UPPER(doer.lastName))", ':userSearch'),
-                    $qb->expr()->like("CONCAT(CONCAT(UPPER(doer.lastName), ' '), UPPER(doer.firstName))", ':userSearch')
-                )
-            );
-
-            $qb->setParameter('userSearch', '%'.$upperUserSearch.'%');
-        }
-
-        return $qb;
-    }
-
-    private function addWorkspaceFilterToQueryBuilder($qb, $workspaceIds)
-    {
-        if ($workspaceIds !== null and count($workspaceIds) > 0) {
-            $qb->leftJoin('log.workspace', 'workspace');
-            if (count($workspaceIds) == 1) {
-                $qb->andWhere("workspace.id = :workspaceId");
-                $qb->setParameter('workspaceId', $workspaceIds[0]);
-            } else {
-                $qb->andWhere("workspace.id IN (:workspaceIds)")->setParameter('workspaceIds', $workspaceIds);
-            }
-        }
-
-        return $qb;
-    }
-
-    private function addConfigurationFilterToQueryBuilder($qb, $configs)
-    {
-        $actionIndex = 0;
-        foreach ($configs as $config) {
-            $workspaceId = $config->getWorkspace()->getId();
-            $actionRestriction = $config->getActionRestriction();
-            if (count($actionRestriction) > 0) {
-                foreach($config->getActionRestriction() as $action) {
-                    $qb->orWhere('log.action = :action'.$actionIndex.' AND workspace.id = :workspace'.$workspaceId);
-                    $qb->setParameter('action'.$actionIndex, $action);
-                    $actionIndex++;
-                }
-                $qb->setParameter('workspace'.$workspaceId, $workspaceId);
-            }
-        }
-
-        return $qb;
-    }
-
-    private function extractChartData($result, $range)
-    {
-        $chartData = array();
-        if (count($result) > 0) {
-            //We send an array indexed by date dans contains count
-            $lastDay = null;
-            $endDay = null;
-            if ($range !== null and count($range) == 2) {
-                $lastDay = new \DateTime();
-                $lastDay->setTimestamp($range[0]);
-
-                $endDay = new \DateTime();
-                $endDay->setTimestamp($range[1]);
-            }
-
-            foreach ($result as $line) {
-                if ($lastDay !== null) {
-                    while ($lastDay->getTimestamp() < $line['shortDate']->getTimestamp()) {
-                        $chartData[] = array($lastDay->getTimestamp()*1000, 0);
-                        $lastDay->add(new \DateInterval('P1D')); // P1D means a period of 1 day
-                    }
-                } else {
-                    $lastDay = $line['shortDate'];
-                }
-                $lastDay->add(new \DateInterval('P1D')); // P1D means a period of 1 day
-
-                $chartData[] = array($line['shortDate']->getTimestamp()*1000, intval($line['total']));
-            }
-
-            while ($lastDay->getTimestamp() <= $endDay->getTimestamp()) {
-                $chartData[] = array($lastDay->getTimestamp()*1000, 0);
-
-                $lastDay->add(new \DateInterval('P1D')); // P1D means a period of 1 day
-            }
-        }
-
-        return $chartData;
-    }
-
     public function countByDayThroughConfigs($configs, $range)
     {
         if ($configs === null || count($configs) == 0) {
-
             return null;
         }
 
@@ -220,7 +46,6 @@ class LogRepository extends EntityRepository
     public function findLogsThroughConfigs($configs, $maxResult = -1)
     {
         if ($configs === null || count($configs) == 0) {
-
             return null;
         }
 
@@ -381,5 +206,271 @@ class LogRepository extends EntityRepository
         $logs = $q->getResult();
 
         return $logs;
+    }
+
+    public function topWSByAction ($range, $action, $max)
+    {
+        $qb = $this
+            ->createQueryBuilder('log')
+            ->select('ws.id, ws.name, ws.code, count(log.id) AS actions')
+            ->leftJoin('log.workspace', 'ws')
+            ->groupBy('ws')
+            ->orderBy('actions', 'DESC');
+
+        if ($max > 1) {
+            $qb->setMaxResults($max);
+        }
+
+        $qb = $this->addActionFilterToQueryBuilder($qb, $action, null);
+        $qb = $this->addDateRangeFilterToQueryBuilder($qb, $range);
+        $query = $qb->getQuery();
+
+        return $query->getResult();
+    }
+
+    public function topMediaByAction ($range, $action, $max)
+    {
+        $qb = $this
+            ->createQueryBuilder('log')
+            ->select('resource.id, resource.name, count(log.id) AS actions')
+            ->leftJoin('log.resource', 'resource')
+            ->leftJoin('log.resourceType', 'resource_type')
+            ->andWhere('resource_type.name=:fileType')
+            ->groupBy('resource')
+            ->orderBy('actions', 'DESC')
+            ->setParameter('fileType', 'file');
+
+        if ($max > 1) {
+            $qb->setMaxResults($max);
+        }
+
+        $qb = $this->addActionFilterToQueryBuilder($qb, $action, null);
+        $qb = $this->addDateRangeFilterToQueryBuilder($qb, $range);
+        $query = $qb->getQuery();
+
+        return $query->getResult();
+    }
+
+    public function topResourcesByAction ($range, $action, $max)
+    {
+        $qb = $this
+            ->createQueryBuilder('log')
+            ->select('resource.id, resource.name, count(log.id) AS actions')
+            ->leftJoin('log.resource', 'resource')
+            ->groupBy('resource')
+            ->orderBy('actions', 'DESC');
+
+        if ($max > 1) {
+            $qb->setMaxResults($max);
+        }
+
+        $qb = $this->addActionFilterToQueryBuilder($qb, $action, null);
+        $qb = $this->addDateRangeFilterToQueryBuilder($qb, $range);
+        $query = $qb->getQuery();
+
+        return $query->getResult();
+    }
+
+    public function topUsersByAction ($range, $action, $max)
+    {
+        $qb = $this
+            ->createQueryBuilder('log')
+            ->select(
+                'doer.id, '
+                . "CONCAT(CONCAT(doer.firstName, ' '), doer.lastName) AS name, "
+                . 'doer.username, count(log.id) AS actions'
+            )
+            ->leftJoin('log.doer', 'doer')
+            ->groupBy('doer')
+            ->orderBy('actions', 'DESC');
+
+        if ($max > 1) {
+            $qb->setMaxResults($max);
+        }
+
+        $qb = $this->addActionFilterToQueryBuilder($qb, $action, null);
+        $qb = $this->addDateRangeFilterToQueryBuilder($qb, $range);
+        $query = $qb->getQuery();
+
+        return $query->getResult();
+    }
+
+    public function activeUsers ()
+    {
+        $qb = $this
+            ->createQueryBuilder('log')
+            ->select('COUNT(DISTINCT log.doer) AS users');
+
+        $qb = $this->addActionFilterToQueryBuilder($qb, "user_login", null);
+
+        $query = $qb->getQuery();
+        $result = $query->getResult();
+
+        return $result[0]['users'];
+    }
+
+    private function addActionFilterToQueryBuilder($qb, $action, $actionsRestriction)
+    {
+        if ($action == 'resource_all') {
+            $action = array('resource_create',
+                'resource_move',
+                'resource_read',
+                'resource_export',
+                'resource_delete',
+                'resource_update',
+                'resource_shortcut',
+                'resource_child_update');
+        } elseif ($action == 'ws_role_all') {
+            $action = array('ws_role_create',
+                'ws_role_delete',
+                'ws_role_update',
+                'ws_role_change_right',
+                'ws_role_subscribe_user',
+                'ws_role_unsubscribe_user',
+                'ws_role_subscribe_group',
+                'ws_role_unsubscribe_group');
+        } elseif ($action == 'group_all') {
+            $action = array('group_add_user', 'group_create', 'group_delete', 'group_remove_user', 'group_update');
+        } elseif ($action == 'user_all') {
+            $action = array('user_create', 'user_delete', 'user_login', 'user_update');
+        } elseif ($action == 'workspace_all') {
+            $action = array('workspace_create', 'workspace_delete', 'workspace_update');
+        } elseif ($action == 'all' or $action === null) {
+            $action = $actionsRestriction;
+        } else {
+            $action = array($action);
+        }
+
+        if ($action !== null) {
+            $qb->andWhere("log.action IN (:action)");
+            $qb->setParameter('action', $action);
+        }
+
+        return $qb;
+    }
+
+    private function addDateRangeFilterToQueryBuilder($qb, $range)
+    {
+        if ($range !== null and count($range) == 2) {
+            $startDate = new \DateTime();
+            $startDate->setTimestamp($range[0]);
+            $startDate->setTime(0, 0, 0);
+
+            $endDate = new \DateTime();
+            $endDate->setTimestamp($range[1]);
+            $endDate->setTime(23, 59, 59);
+
+            $qb
+                ->andWhere("log.dateLog >= :startDate")
+                ->andWhere("log.dateLog <= :endDate")
+                ->setParameter('startDate', $startDate)
+                ->setParameter('endDate', $endDate);
+        }
+
+        return $qb;
+    }
+
+    private function addUserFilterToQueryBuilder($qb, $userSearch)
+    {
+        if ($userSearch !== null && $userSearch !== '') {
+            $upperUserSearch = strtoupper($userSearch);
+            $upperUserSearch = trim($upperUserSearch);
+            $upperUserSearch = preg_replace('/\s+/', ' ', $upperUserSearch);
+
+            $qb->leftJoin('log.doer', 'doer');
+            $qb->andWhere(
+                $qb->expr()->orx(
+                    $qb->expr()->like('UPPER(doer.lastName)', ':userSearch'),
+                    $qb->expr()->like('UPPER(doer.firstName)', ':userSearch'),
+                    $qb->expr()->like('UPPER(doer.username)', ':userSearch'),
+                    $qb->expr()->like(
+                        "CONCAT(CONCAT(UPPER(doer.firstName), ' '), UPPER(doer.lastName))",
+                        ':userSearch'
+                    ),
+                    $qb->expr()->like(
+                        "CONCAT(CONCAT(UPPER(doer.lastName), ' '), UPPER(doer.firstName))",
+                        ':userSearch'
+                    )
+                )
+            );
+
+            $qb->setParameter('userSearch', '%' . $upperUserSearch . '%');
+        }
+
+        return $qb;
+    }
+
+    private function addWorkspaceFilterToQueryBuilder($qb, $workspaceIds)
+    {
+        if ($workspaceIds !== null and count($workspaceIds) > 0) {
+            $qb->leftJoin('log.workspace', 'workspace');
+            if (count($workspaceIds) == 1) {
+                $qb->andWhere("workspace.id = :workspaceId");
+                $qb->setParameter('workspaceId', $workspaceIds[0]);
+            } else {
+                $qb->andWhere("workspace.id IN (:workspaceIds)")->setParameter('workspaceIds', $workspaceIds);
+            }
+        }
+
+        return $qb;
+    }
+
+    private function addConfigurationFilterToQueryBuilder($qb, $configs)
+    {
+        $actionIndex = 0;
+        foreach ($configs as $config) {
+            $workspaceId = $config->getWorkspace()->getId();
+            $actionRestriction = $config->getActionRestriction();
+            if (count($actionRestriction) > 0) {
+                foreach ($config->getActionRestriction() as $action) {
+                    $qb->orWhere('log.action = :action'.$actionIndex.' AND workspace.id = :workspace'.$workspaceId);
+                    $qb->setParameter('action'.$actionIndex, $action);
+                    $actionIndex++;
+                }
+                $qb->setParameter('workspace'.$workspaceId, $workspaceId);
+            }
+
+        }
+
+        return $qb;
+    }
+
+    private function extractChartData($result, $range)
+    {
+        $chartData = array();
+        if (count($result) > 0) {
+            //We send an array indexed by date dans contains count
+            $lastDay = null;
+            $endDay = null;
+            if ($range !== null and count($range) == 2) {
+                $lastDay = new \DateTime();
+                $lastDay->setTimestamp($range[0]);
+
+                $endDay = new \DateTime();
+                $endDay->setTimestamp($range[1]);
+            }
+
+            foreach ($result as $line) {
+                if ($lastDay !== null) {
+                    while ($lastDay->getTimestamp() < $line['shortDate']->getTimestamp()) {
+                        $chartData[] = array($lastDay->getTimestamp() * 1000, 0);
+                        $lastDay->add(new \DateInterval('P1D')); // P1D means a period of 1 day
+                    }
+                } else {
+                    $lastDay = $line['shortDate'];
+                }
+                $lastDay->add(new \DateInterval('P1D')); // P1D means a period of 1 day
+
+                $chartData[] = array($line['shortDate']->getTimestamp() * 1000, intval($line['total']));
+            }
+
+            while ($lastDay->getTimestamp() <= $endDay->getTimestamp()) {
+                $chartData[] = array($lastDay->getTimestamp() * 1000, 0);
+
+                $lastDay->add(new \DateInterval('P1D')); // P1D means a period of 1 day
+            }
+        }
+
+        return $chartData;
     }
 }

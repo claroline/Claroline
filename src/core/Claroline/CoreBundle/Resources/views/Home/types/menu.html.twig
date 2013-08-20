@@ -31,7 +31,7 @@
 
             </a>
             {% if (region is defined and region != 'header' and region != 'footer') or region is not defined %}
-                {{ menu | raw }}
+                  {% render controller("ClarolineCoreBundle:Home:menu", { 'id': content.id, 'size': size, 'type': type, 'father': father  }) %}
             {% endif %}
         </li>
     {% endif %}

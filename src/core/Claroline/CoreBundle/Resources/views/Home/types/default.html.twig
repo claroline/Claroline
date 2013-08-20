@@ -1,7 +1,8 @@
 {% if content != null %}
 
 <div class="content-element border {{ size }} relative" data-id="{{ content.id }}" data-type="{{ type }}">
-    {{ menu | raw }}
+    {% render controller("ClarolineCoreBundle:Home:menu", { 'id': content.id, 'size': size, 'type': type, 'father': father  }) %}
+
     <div class="margin">
         {% if content.title != "" %}
             <h3 class="sub-section-header">{{ content.title }}</h3>
