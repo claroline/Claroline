@@ -29,7 +29,7 @@
 
 <div>
     <h3>{{ 'announcements_list'|trans({}, 'announcement') }}</h3>
-    <h4>{{ 'resource'|trans({}, 'platform') }} : {{ _resource.getName() }}</h4>
+    <h4>{{ 'resource'|trans({}, 'platform') }} : {{ _resource.getResourceNode().getName() }}</h4>
     <br>
 
     {% if is_granted('EDIT', resourceCollection) %}
