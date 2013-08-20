@@ -1,6 +1,6 @@
 {% extends 'ICAPBlogBundle::layout.html.twig' %}
 
-{% block title %}{{ _resource.getName() }} - {{ "edit_post"|trans({'%postTitle%': post.title}, 'icap_blog') }}{% endblock %}
+{% block title %}{{ _resource.resourceNode.name }} - {{ "edit_post"|trans({'%postTitle%': post.title}, 'icap_blog') }}{% endblock %}
 
 {% block content %}
     <form action="{{ _path('icap_blog_post_edit', {'blogId':_resource.getId(), 'postSlug': post.slug}) }}" method="post" {{ form_enctype(form) }} id="edit_post_form">

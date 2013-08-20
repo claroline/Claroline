@@ -2,7 +2,7 @@
 
 {% trans_default_domain "icap_blog" %}
 
-{% block title %}{{ _resource.name }}{% endblock %}
+{% block title %}{{ _resource.resourceNode.name }}{% endblock %}
 
 {% block content %}
     {% if is_granted('EDIT', blog) %}

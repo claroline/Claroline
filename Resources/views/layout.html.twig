@@ -54,7 +54,7 @@
                 <div class="hero-unit">
                     <h1><a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" title="{{ _resource.resourceNode.name }}">{{ _resource.resourceNode.name }}</a></h1>
 
-                    <a href="{{ path('claro_desktop_open_tool', {"toolName": "resource_manager"}) ~ "#resources/" ~ personalWorkspace.id }}">
+                    <a href="{{ path('claro_desktop_open_tool', {"toolName": "resource_manager"}) ~ "#resources/" ~ user.personalWorkspace.id }}">
                         <small>{{ 'back_to_workspace'|trans({}, 'icap_blog') }}</small>
                     </a>
                 </div>
