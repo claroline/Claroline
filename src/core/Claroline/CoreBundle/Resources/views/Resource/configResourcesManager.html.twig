@@ -24,7 +24,7 @@
                 "parentElement": $('div.section-content'),
                 "isPickerMultiSelectAllowed": false,
                 "isPickerOnly": true,
-                "pickerCallback": function(resources){callBack(resources);},
+                "pickerCallback": function(nodes){callBack(nodes);},
                 "appPath": "{{ app.request.getBaseUrl }}",
                 "webPath": "{{ asset('') }}",
                 "resourceTypes": {
@@ -35,7 +35,7 @@
                                 {% for customAction in resourceType.getCustomActions() %}
                                     "{{ customAction.getAction() }}": {
                                         "name": "{{ customAction.getAction() }}",
-                                        "route": "{{ path('claro_resource_custom', {'resourceType': resourceType.getName(), 'action': customAction.getAction(), 'resourceId': '_resourceId' }) }}",
+                                        "route": "{{ path('claro_resource_custom', {'resourceType': resourceType.getName(), 'action': customAction.getAction(), 'resourceId': '_nodeId' }) }}",
                                         "async": {{ customAction.isAsync() }}
                                     }
                                     {% if loop.last != true %},{% endif %}
@@ -49,21 +49,21 @@
 
             $('#resource-picker').click(function(){Claroline.ResourceManager.picker('open')});
 
-            var callBack = function(resources){
-                console.debug(resources[_.keys(resources)][1]);
-                var id = _.keys(resources)[0];
-                var resourceTypes = resources[_.keys(resources)][1];
-                var resourceId = _.keys(resources)[0];
+            var callBack = function(nodes){
+                console.debug(nodes[_.keys(nodes)][1]);
+                var id = _.keys(nodes)[0];
+                var resourceTypes = nodes[_.keys(nodes)][1];
+                var nodeId = _.keys(nodes)[0];
                 var mimeArray = new Array('image/jpeg','image/gif','image/png');
-                var mimeType = resources[_.keys(resources)][2];
+                var mimeType = nodes[_.keys(nodes)][2];
 
                 if( mimeArray.indexOf(mimeType) > -1)
                 {
-                    tinyMCE.execCommand('mceInsertRawHTML', false, '<img src="' + Routing.generate('claro_file_get_image', {'imageId': id}) + '" alt ="'+resourceId+' width="200" height="100"/>');
+                    tinyMCE.execCommand('mceInsertRawHTML', false, '<img src="' + Routing.generate('claro_file_get_image', {'node': id}) + '" alt ="'+nodeId+' width="200" height="100"/>');
                 }
                 else
                 {
-                    tinyMCE.execCommand('mceInsertRawHTML', false, '<a href="' + Routing.generate('claro_resource_open', {'resourceType': resourceTypes,'resourceId':resourceId}) + '" />'+resources[_.keys(resources)][0] +'</a>');
+                    tinyMCE.execCommand('mceInsertRawHTML', false, '<a href="' + Routing.generate('claro_resource_open', {'resourceType': resourceTypes, 'node':resourceId}) + '" />'+nodes[_.keys(nodes)][0] +'</a>');
                 }
             };
         });

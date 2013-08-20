@@ -230,14 +230,14 @@ class WorkspaceControllerTest extends MockeryTestCase
     {
         $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
         $workspaceA = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $resource = $this->mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $resource = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $breadcrumbs = array(0, 0);
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $roles = array('ROLE_1', 'ROLE_2');
         $orderedTools = array('ordered_tool_1', 'ordered_tool_2');
 
         $this->resourceManager
-            ->shouldReceive('getResource')
+            ->shouldReceive('getNode')
             ->with(0)
             ->once()
             ->andReturn($resource);

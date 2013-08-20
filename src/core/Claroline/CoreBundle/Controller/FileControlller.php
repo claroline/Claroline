@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -12,7 +13,7 @@ class FileControlller extends Controller
 {
     /**
      * @Route(
-     *     "resource/img/{imageId}",
+     *     "resource/img/{node}",
      *     name="claro_file_get_image",
      *     options={"expose"=true}
      * )
@@ -22,10 +23,9 @@ class FileControlller extends Controller
      *
      * @return Response
      */
-    public function getImg($imageId)
+    public function getImg(ResourceNode $node)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $file = $em->getRepository('ClarolineCoreBundle:Resource\File')->find($imageId);
+        $file = $this->get('claroline.manager.resource_manager')->getResourceFromNode($node);
         $imgpath = $this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR
             . $file->getHashName();
 

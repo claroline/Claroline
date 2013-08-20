@@ -54,7 +54,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface
     {
         $userCreator = $this->container->get('claroline.manager.user_manager');
         $roleManager = $this->container->get('claroline.manager.role_manager');
-        $resourceRepo = $manager->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
+        $resourceRepo = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
 
         foreach ($this->users as $names => $role) {
             $namesArray = explode(' ', $names);

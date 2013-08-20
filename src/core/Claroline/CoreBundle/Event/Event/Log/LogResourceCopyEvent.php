@@ -2,6 +2,8 @@
 
 namespace Claroline\CoreBundle\Event\Event\Log;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+
 class LogResourceCopyEvent extends LogGenericEvent
 {
     const ACTION = 'resource_copy';
@@ -11,7 +13,7 @@ class LogResourceCopyEvent extends LogGenericEvent
      * $resource is the final copy
      * while $source is the original object
      */
-    public function __construct($resource, $source)
+    public function __construct(ResourceNode $resource, ResourceNode $source)
     {
         parent::__construct(
             self::ACTION,
