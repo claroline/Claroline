@@ -127,7 +127,6 @@
                         </div>
                         <div class="well">
                             <h3>Calendrier</h3>
-                            <div id='calendar-overlay'>loading...</div>
                             <div id='calendar'></div>
                         </div>
                         <div class="well">
@@ -176,15 +175,7 @@
             $(function() {
                 $('#calendar').fullCalendar({
                     editable: false,
-                    events: "{{ path('icap_blog_calendar_datas', {'blogId': _resource.id}) }}",
-                    loading: function(isLoading) {
-                        if(isLoading) {
-                            $("#calendar-overlay").show();
-                        }
-                        else {
-                            $('#calendar-overlay').hide();
-                        }
-                    }
+                    events: "{{ path('icap_blog_calendar_datas', {'blogId': _resource.id}) }}"
                 });
 
                 $('.delete').confirmModal();
