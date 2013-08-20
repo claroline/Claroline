@@ -21,15 +21,15 @@
                 <div class="btn-group">
                     <button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-eye-open"></i>{{ 'show_as'|trans({}, 'platform') }} <span class="caret"></span></button>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                        {% if has_role_access_to_workspace('ROLE_ANONYMOUS', _resource.workspace.id) %}
+                        {% if has_role_access_to_workspace('ROLE_ANONYMOUS', _resource.resourceNode.workspace.id) %}
                             <li>
-                                <a href="?view_as=ROLE_ANONYMOUS_{{ _resource.workspace.id }}">
+                                <a href="?view_as=ROLE_ANONYMOUS_{{ _resource.resourceNode.workspace.id }}">
                                     {{ 'anonymous'|trans({}, 'platform') }}
                                 </a>
                             </li>
                         {% endif %}
                         {% for role in user.personalWorkspace.roles %}
-                            {% if has_role_access_to_workspace(role.getName(), _resource.workspace.id) %}
+                            {% if has_role_access_to_workspace(role.getName(), _resource.resourceNode.workspace.id) %}
                                 <li>
                                     <a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}?view_as={{ role.getName() }}">
                                         {{ role.getTranslationKey()|trans({}, 'platform') }}
@@ -52,7 +52,7 @@
 
             <div class="row-fluid content">
                 <div class="hero-unit">
-                    <h1><a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" title="{{ _resource.name }}">{{ _resource.name }}</a></h1>
+                    <h1><a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" title="{{ _resource.resourceNode.name }}">{{ _resource.resourceNode.name }}</a></h1>
 
                     <a href="{{ path('claro_desktop_open_tool', {"toolName": "resource_manager"}) ~ "#resources/" ~ personalWorkspace.id }}">
                         <small>{{ 'back_to_workspace'|trans({}, 'icap_blog') }}</small>
@@ -120,6 +120,8 @@
                             <ul class="inline">
                                 {% for author in blog_authors(_resource) %}
                                 <li><a href="{{ path('icap_blog_view_filter', {'blogId': _resource.id, 'filter': author.username}) }}" title="{{ author.firstName ~ ' ' ~ author.lastName }}">{{ author.firstName ~ ' ' ~ author.lastName }}</a></li>
+                                {% else %}
+                                <li>{{ 'no_authors'|trans({}, 'icap_blog') }}</li>
                                 {% endfor %}
                             </ul>
                         </div>
