@@ -68,10 +68,10 @@ class ExerciseController extends Controller
     public function editAction($id)
     {
         $em = $this->getDoctrine()->getManager();
-        $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($id);
+        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($id);
         $this->checkAccess($exercise);
 
-        $workspace = $exercise->getWorkspace();
+        $workspace = $exercise->getResourceNode()->getWorkspace();
 
         $exoAdmin = $this->isExerciseAdmin($id);
 
@@ -146,13 +146,13 @@ class ExerciseController extends Controller
         $user = $this->container->get('security.context')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($exerciseId);
+        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exerciseId);
         $this->checkAccess($exercise);
 
         $allowToCompose = 0;
         $exoAdmin = $this->isExerciseAdmin($exerciseId);
 
-        $workspace = $exercise->getWorkspace();
+        $workspace = $exercise->getResourceNode()->getWorkspace();
 
         if (!$exercise) {
             throw $this->createNotFoundException('Unable to find Exercise entity.');
@@ -186,10 +186,10 @@ class ExerciseController extends Controller
     public function showQuestionsAction($id, $pageNow, $categoryToFind, $titleToFind)
     {
         $em = $this->getDoctrine()->getManager();
-        $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($id);
+        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($id);
         $this->checkAccess($exercise);
 
-        $workspace = $exercise->getWorkspace();
+        $workspace = $exercise->getResourceNode()->getWorkspace();
 
         $exoAdmin = $this->isExerciseAdmin($id);
 
@@ -279,10 +279,10 @@ class ExerciseController extends Controller
     public function importQuestionAction($exoID, $pageGoNow, $maxPage, $nbItem)
     {
         $em = $this->getDoctrine()->getManager();
-        $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($exoID);
+        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
         $this->checkAccess($exercise);
 
-        $workspace = $exercise->getWorkspace();
+        $workspace = $exercise->getResourceNode()->getWorkspace();
 
         $user = $this->container->get('security.context')->getToken()->getUser();
         $uid = $user->getId();
@@ -474,7 +474,7 @@ class ExerciseController extends Controller
     public function deleteQuestionAction($exoID, $qid, $pageNow, $maxPage, $nbItem, $lastPage)
     {
         $em = $this->getDoctrine()->getManager();
-        $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($exoID);
+        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
 
         $this->checkAccess($exercise);
 
@@ -516,12 +516,12 @@ class ExerciseController extends Controller
         $uid = $user->getId();
 
         $em = $this->getDoctrine()->getManager();
-        $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($id);
+        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($id);
 
         $exoAdmin = $this->isExerciseAdmin($id);
         $this->checkAccess($exercise);
 
-        $workspace = $exercise->getWorkspace();
+        $workspace = $exercise->getResourceNode()->getWorkspace();
 
         if ($this->controlDate($exoAdmin, $exercise) === true) {
             $session = $this->getRequest()->getSession();
@@ -599,7 +599,7 @@ class ExerciseController extends Controller
         $em = $this->getDoctrine()->getManager();
         $session = $this->getRequest()->getSession();
         $paper = $em->getRepository('UJMExoBundle:Paper')->find($session->get('paper'));
-        $workspace = $paper->getExercise()->getWorkspace();
+        $workspace = $paper->getExercise()->getResourceNode()->getWorkspace();
         $request = $this->getRequest();
         $typeInterToRecorded = $request->get('typeInteraction');
 
@@ -674,7 +674,7 @@ class ExerciseController extends Controller
     public function docimologyAction($exerciseId, $nbPapers)
     {
         $em = $this->getDoctrine()->getManager();
-        $exercise = $em->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->find($exerciseId);
+        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exerciseId);
         $this->checkAccess($exercise);
 
         $eqs = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(
@@ -686,7 +686,7 @@ class ExerciseController extends Controller
 
         if ($this->get('security.context')->isGranted('ROLE_WS_CREATOR')) {
 
-            $workspace = $exercise->getWorkspace();
+            $workspace = $exercise->getResourceNode()->getWorkspace();
 
             $histoMark = $this->histoMark($exerciseId);
             $histoSuccess = $this->histoSuccess($exerciseId, $eqs, $papers);

@@ -66,7 +66,7 @@ class PaperController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
-        $workspace = $exercise->getWorkspace();
+        $workspace = $exercise->getResourceNode()->getWorkspace();
 
         $subscription = $this->getSubscription($user, $exoID);
 
@@ -138,7 +138,7 @@ class PaperController extends Controller
 
         $subscription = $this->getSubscription($user, $paper->getExercise()->getId());
 
-        $worspace = $paper->getExercise()->getWorkspace();
+        $worspace = $paper->getExercise()->getResourceNode()->getWorkspace();
 
         $display = $this->ctrlDisplayPaper($user, $paper, $subscription);
 
