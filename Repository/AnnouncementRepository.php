@@ -38,6 +38,8 @@ class AnnouncementRepository extends EntityRepository
 
     public function findVisibleAnnouncementsByWorkspaces(array $workspaces, array $roles)
     {
+        $now = new \DateTime();
+
         $dql = '
             SELECT
                 a AS announcement,
@@ -61,6 +63,7 @@ class AnnouncementRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaces', $workspaces);
         $query->setParameter('roles', $roles);
+        $query->setParameter('now', $now);
 
         return $query->getResult();
     }
@@ -82,6 +85,8 @@ class AnnouncementRepository extends EntityRepository
 
     public function findVisibleAnnouncementsByAggregate(AnnouncementAggregate $aggregate)
     {
+        $now = new \DateTime();
+
         $dql = '
             SELECT a
             FROM Claroline\AnnouncementBundle\Entity\Announcement a
@@ -94,6 +99,7 @@ class AnnouncementRepository extends EntityRepository
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('aggregate', $aggregate);
+        $query->setParameter('now', $now);
 
         return $query->getResult();
     }
