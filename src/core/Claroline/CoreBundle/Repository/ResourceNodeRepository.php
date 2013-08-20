@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Repository;
 use Doctrine\ORM\AbstractQuery;
 use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Repository\Exception\UnknownFilterException;
@@ -13,7 +14,7 @@ use Claroline\CoreBundle\Repository\Exception\UnknownFilterException;
  * Repository for AbstractResource entities. The methods of this class may return
  * entities either as objects or as as arrays (see their respective documentation).
  */
-class AbstractResourceRepository extends MaterializedPathRepository
+class ResourceNodeRepository extends MaterializedPathRepository
 {
     /**
      * Returns the root directory of a workspace.
@@ -44,7 +45,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
      * @return array[AbstractResource]
      */
     public function findDescendants(
-        AbstractResource $resource,
+        ResourceNode $resource,
         $includeStartNode = false,
         $filterResourceType = null
     )
@@ -73,7 +74,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
      *
      * @return array[array] An array of resources represented as arrays
      */
-    public function findChildren(AbstractResource $parent, array $roles)
+    public function findChildren(ResourceNode $parent, array $roles)
     {
         if (count($roles) === 0) {
             throw new \RuntimeException('Roles cannot be empty');
@@ -162,10 +163,10 @@ class AbstractResourceRepository extends MaterializedPathRepository
      *
      * @return array[array] An array of resources represented as arrays
      */
-    public function findAncestors(AbstractResource $resource)
+    public function findAncestors(ResourceNode $resource)
     {
         // No need to access DB to get ancestors as they are given by the materialized path.
-        $regex = '/-(\d+)' . AbstractResource::PATH_SEPARATOR . '/';
+        $regex = '/-(\d+)' . ResourceNode::PATH_SEPARATOR . '/';
         $parts = preg_split($regex, $resource->getPath(), -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
         $ancestors = array();
         $currentPath = '';
@@ -255,21 +256,21 @@ class AbstractResourceRepository extends MaterializedPathRepository
      *
      * @throws \InvalidArgumentException if the resource ids array is empty
      */
-    public function findWorkspaceInfoByIds(array $resourceIds)
+    public function findWorkspaceInfoByIds(array $nodesIds)
     {
-        if (count($resourceIds) === 0) {
+        if (count($nodesIds) === 0) {
             throw new \InvalidArgumentException('Resource ids array cannot be empty');
         }
 
         $dql = '
             SELECT r.id AS id, w.code AS code, w.name AS name
-            FROM Claroline\CoreBundle\Entity\Resource\AbstractResource r
+            FROM Claroline\CoreBundle\Entity\Resource\ResourceNode r
             JOIN r.workspace w
-            WHERE r.id IN (:resourceIds)
+            WHERE r.id IN (:nodeIds)
             ORDER BY w.name ASC
         ';
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('resourceIds', $resourceIds);
+        $query->setParameter('nodeIds', $nodesIds);
 
         return $query->getResult();
     }
@@ -284,7 +285,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
      *
      * @todo find a proper way to prevent infinite recursion
      */
-    public function findRecursiveDirectoryShortcuts(array $criteria, array $roles = null)
+    public function findRecursiveDirectoryShortcuts(array $criteria, array $roles = null, $alreadyFound = array())
     {
         $builder = new ResourceQueryBuilder();
         $builder->selectAsArray();
@@ -296,8 +297,11 @@ class AbstractResourceRepository extends MaterializedPathRepository
 
         foreach ($results as $result) {
             $criteria['roots'] = array($result['target_path']);
-            $results = array_merge($this->findRecursiveDirectoryShortcuts($criteria, $roles, $results), $results);
-            $results = array_map('unserialize', array_unique(array_map('serialize', $results)));
+            //if the result was already found, stop the recursion.
+            if (!in_array($result, $alreadyFound)) {
+                $results = array_merge($this->findRecursiveDirectoryShortcuts($criteria, $roles, $results), $results);
+                $results = array_map('unserialize', array_unique(array_map('serialize', $results)));
+            }
         }
 
         return $results;
@@ -356,7 +360,7 @@ class AbstractResourceRepository extends MaterializedPathRepository
             foreach ($resources as $key => $resource) {
 
                 if (isset($resource['path'])) {
-                    $return[$key]['path_for_display'] = AbstractResource::convertPathForDisplay($resource['path']);
+                    $return[$key]['path_for_display'] = ResourceNode::convertPathForDisplay($resource['path']);
 
                 }
             }

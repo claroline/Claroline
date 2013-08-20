@@ -153,13 +153,13 @@ class FileListener implements ContainerAwareInterface
     public function onOpen(OpenResourceEvent $event)
     {
         $ds = DIRECTORY_SEPARATOR;
-        $file = $event->getResource();
-        $mimeType = $file->getMimeType();
+        $resource = $event->getResource();
+        $mimeType = $resource->getResourceNode()->getMimeType();
         $playEvent = $this->container->get('claroline.event.event_dispatcher')
                 ->dispatch(
                     strtolower(str_replace('/', '_', 'play_file_' . $mimeType)),
                     'PlayFile',
-                    array($file)
+                    array($resource)
                 );
 
         if ($playEvent->getResponse() instanceof Response) {
@@ -168,13 +168,16 @@ class FileListener implements ContainerAwareInterface
             $mimeElements = explode('/', $mimeType);
             $baseType = strtolower($mimeElements[0]);
             $fallBackPlayEventName = 'play_file_' . $baseType;
-            $fallBackPlayEvent = $this->container->get('claroline.event.event_dispatcher')
-                    ->dispatch($fallBackPlayEventName, 'PlayFile', array($file));
+            $fallBackPlayEvent = $this->container->get('claroline.event.event_dispatcher')->dispatch(
+                $fallBackPlayEventName,
+                'PlayFile',
+                array($resource)
+            );
             if ($fallBackPlayEvent->getResponse() instanceof Response) {
                 $response = $fallBackPlayEvent->getResponse();
             } else {
                 $item = $this->container
-                    ->getParameter('claroline.param.files_directory') . $ds . $file->getHashName();
+                    ->getParameter('claroline.param.files_directory') . $ds . $resource->getHashName();
                 $file = file_get_contents($item);
                 $response = new Response();
                 $response->setContent($file);

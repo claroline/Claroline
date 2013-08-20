@@ -15,7 +15,7 @@ use Claroline\CoreBundle\Event\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Event\Event\ExportResourceTemplateEvent;
+use Claroline\CoreBundle\Event\Event\ExportDirectoryTemplateEvent;
 use Claroline\CoreBundle\Event\Event\ImportResourceTemplateEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -124,7 +124,7 @@ class DirectoryListener
      */
     public function onOpen(OpenResourceEvent $event)
     {
-        $dir = $event->getResource();
+        $dir = $event->getResourceNode();
         $file = $this->resourceManager->download(array($dir));
         $response = new StreamedResponse();
 
@@ -147,36 +147,37 @@ class DirectoryListener
     /**
      * @DI\Observe("resource_directory_to_template")
      *
-     * @param ExportResourceTemplateEvent $event
+     * @param ExportDirectoryTemplateEvent $event
      */
-    public function onExportTemplate(ExportResourceTemplateEvent $event)
+    public function onExportTemplate(ExportDirectoryTemplateEvent $event)
     {
-        $resource = $event->getResource();
+        $node = $event->getNode();
         //@todo one request to retrieve every directory and not needing a condition.
+        $resource = $this->resourceManager->getResourceFromNode($node);
         $children = $resource instanceof Claroline\CoreBundle\Entity\Resource\Directory ?
-            $this->resourceManager->getChildren($resource, array('ROLE_ADMIN')): array();
+            $this->resourceManager->getChildren($node, array('ROLE_ADMIN')): array();
         $dataChildren = array();
 
         foreach ($children as $child) {
             if ($child['type'] === 'directory') {
                 $newEvent = $this->eventDispatcher->dispatch(
                     'resource_directory_to_template',
-                    'ExportResourceTemplate',
-                    array($this->resourceManager->getResource($child['id']))
+                    'ExportDirectoryTemplate',
+                    array($this->resourceManager->getNode($child['id']))
                 );
                 $descr = $newEvent->getConfig();
                 $dataChildren[] = $descr;
             }
         }
 
-        $config = array('type' => 'directory', 'name' => $resource->getName(), 'id' => $resource->getId());
+        $config = array('type' => 'directory', 'name' => $node->getName(), 'id' => $node->getId());
         $config['children'] = $dataChildren;
-        $roles = $this->roleManager->getRolesByWorkspace($resource->getWorkspace());
+        $roles = $this->roleManager->getRolesByWorkspace($node->getWorkspace());
 
         foreach ($roles as $role) {
-            $perms = $this->rightsManager->getMaximumRights(array($role->getName()), $resource);
+            $perms = $this->rightsManager->getMaximumRights(array($role->getName()), $node);
             $perms['canCreate'] = ($resource instanceof Claroline\CoreBundle\Entity\Resource\Directory) ?
-                $this->rightsManager->getCreationRights(array($role->getName()), $resource): array();
+                $this->rightsManager->getCreationRights(array($role->getName()), $node): array();
 
             $config['perms'][$this->roleManager->getRoleBaseName($role->getName())] = $perms;
         }
@@ -196,7 +197,7 @@ class DirectoryListener
         $manager = $this->container->get('claroline.manager.resource_manager');
         $directory = new Directory();
         $directory->setName($config['name']);
-        $manager->create(
+        $directory = $manager->create(
             $directory,
             $this->resourceManager->getResourceTypeByName($config['type']),
             $event->getUser(),
@@ -205,7 +206,7 @@ class DirectoryListener
             null,
             $this->rightsManager->addRolesToPermsArray($event->getRoles(), $config['perms'])
         );
-        $createdResources[$config['id']] = $directory;
+        $createdResources[$config['id']] = $directory->getResourceNode();
 
         foreach ($config['children'] as $child) {
             $newEvent = $this->eventDispatcher->dispatch(
@@ -213,7 +214,7 @@ class DirectoryListener
                 'ImportResourceTemplate',
                 array(
                     $child,
-                    $directory,
+                    $directory->getResourceNode(),
                     $event->getUser(),
                     $event->getWorkspace(),
                     $event->getRoles(),
@@ -241,18 +242,19 @@ class DirectoryListener
     public function delete(DeleteResourceEvent $event)
     {
         $resource = $event->getResource();
+        $node = $resource->getResourceNode();
 
-        if ($resource->getParent() === null) {
+        if ($node->getParent() === null) {
             throw new \LogicException('Root directory cannot be removed');
         }
 
-        $children = $this->resourceManager->getAllChildren($resource, false);
+        $children = $this->resourceManager->getAllChildren($node, false);
 
         foreach ($children as $child) {
             $this->eventDispatcher->dispatch(
-                'delete_{$child->getResourceType()->getName()}',
+                "delete_{$child->getResourceType()->getName()}",
                 'DeleteResource',
-                array($child)
+                array($this->resourceManager->getResourceFromNode($child))
             );
         }
     }
@@ -267,8 +269,6 @@ class DirectoryListener
     public function copy(CopyResourceEvent $event)
     {
         $resourceCopy = new Directory();
-        $dirType = $this->resourceManager->getResourceTypeByName('directory');
-        $resourceCopy->setResourceType($dirType);
         $event->setCopy($resourceCopy);
     }
 }

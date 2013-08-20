@@ -14,7 +14,7 @@ class WorkspaceManagerTest extends MockeryTestCase
     private $resourceManager;
     private $toolManager;
     private $orderedToolRepo;
-    private $resourceRepo;
+    private $resourceNodeRepo;
     private $resourceRightsRepo;
     private $resourceTypeRepo;
     private $roleRepo;
@@ -34,7 +34,7 @@ class WorkspaceManagerTest extends MockeryTestCase
         $this->toolManager = $this->mock('Claroline\CoreBundle\Manager\ToolManager');
         $this->resourceManager = $this->mock('Claroline\CoreBundle\Manager\ResourceManager');
         $this->orderedToolRepo = $this->mock('Claroline\CoreBundle\Repository\OrderedToolRepository');
-        $this->resourceRepo = $this->mock('Claroline\CoreBundle\Repository\AbstractResourceRepository');
+        $this->resourceNodeRepo = $this->mock('Claroline\CoreBundle\Repository\ResourceNodeRepository');
         $this->resourceRightsRepo = $this->mock('Claroline\CoreBundle\Repository\ResourceRightsRepository');
         $this->resourceTypeRepo = $this->mock('Claroline\CoreBundle\Repository\ResourceTypeRepository');
         $this->roleRepo = $this->mock('Claroline\CoreBundle\Repository\RoleRepository');
@@ -257,14 +257,14 @@ class WorkspaceManagerTest extends MockeryTestCase
         );
 
         $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
-        $root = new \Claroline\CoreBundle\Entity\Resource\Directory();
+        $root = new \Claroline\CoreBundle\Entity\Resource\ResourceNode();
         $roleA = $this->mock('Claroline\CoreBundle\Entity\Role');
         $roleA->shouldReceive('getName')->andReturn('ROLE_WS_TEST1_AAA');
         $roleB = $this->mock('Claroline\CoreBundle\Entity\Role');
         $roleB->shouldReceive('getName')->andReturn('ROLE_WS_TEST2_AAA');
         $this->roleRepo->shouldReceive('findByWorkspace')->once()
             ->with($workspace)->andReturn(array($roleA, $roleB));
-        $this->resourceRepo->shouldReceive('findWorkspaceRoot')->once()->with($workspace)->andReturn($root);
+        $this->resourceNodeRepo->shouldReceive('findWorkspaceRoot')->once()->with($workspace)->andReturn($root);
         $this->roleManager->shouldReceive('getRoleBaseName')->once()
             ->with('ROLE_WS_TEST1_AAA')->andReturn('ROLE_WS_TEST1');
         $this->roleManager->shouldReceive('getRoleBaseName')->once()
@@ -643,8 +643,8 @@ class WorkspaceManagerTest extends MockeryTestCase
     {
         $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Resource\ResourceType')
             ->andReturn($this->resourceTypeRepo);
-        $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Resource\AbstractResource')
-            ->andReturn($this->resourceRepo);
+        $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Resource\ResourceNode')
+            ->andReturn($this->resourceNodeRepo);
         $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Tool\OrderedTool')
             ->andReturn($this->orderedToolRepo);
         $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Role')
