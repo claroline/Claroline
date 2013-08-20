@@ -32,19 +32,10 @@ class AnnouncementType extends AbstractType
             )
         );
 
-        $disabled = true;
-
-        if (isset($options['data']) && !is_null($options['data'])) {
-            $disabled = !$options['data']->isVisible();
-        }
         $attr = array();
         $attr['class'] = 'datepicker input-small';
         $attr['data-date-format'] = 'dd-mm-yyyy';
         $attr['autocomplete'] = 'off';
-
-        if ($disabled) {
-            $attr['disabled'] = 'disabled';
-        }
 
         $builder->add(
             'visible_from',

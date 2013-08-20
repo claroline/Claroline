@@ -5,6 +5,7 @@ namespace Claroline\AnnouncementBundle\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
@@ -15,6 +16,7 @@ class AnnouncementControllerTest extends MockeryTestCase
     private $formFactory;
     private $pagerFactory;
     private $securityContext;
+    private $translator;
     private $utils;
     private $workspaceManager;
 
@@ -25,6 +27,7 @@ class AnnouncementControllerTest extends MockeryTestCase
         $this->formFactory = $this->mock('Symfony\Component\Form\FormFactoryInterface');
         $this->pagerFactory = $this->mock('Claroline\CoreBundle\Pager\PagerFactory');
         $this->securityContext = $this->mock('Symfony\Component\Security\Core\SecurityContextInterface');
+        $this->translator = $this->mock('Symfony\Component\Translation\Translator');
         $this->utils = $this->mock('Claroline\CoreBundle\Library\Security\Utilities');
         $this->workspaceManager = $this->mock('Claroline\CoreBundle\Manager\WorkspaceManager');
     }
@@ -32,12 +35,16 @@ class AnnouncementControllerTest extends MockeryTestCase
     public function testAnnouncementsListActionWithEditPerm()
     {
         $controller = $this->getController(array('checkAccess'));
-        $aggregate = new AnnouncementAggregate();
-        $collection = new ResourceCollection(array($aggregate));
+        $aggregate = $this->mock('Claroline\AnnouncementBundle\Entity\AnnouncementAggregate');
+        $resourceNode = new ResourceNode();
+        $collection = new ResourceCollection(array($resourceNode));
         $announcementA = new Announcement();
         $announcementB = new Announcement();
         $announcements = array($announcementA, $announcementB);
 
+        $aggregate->shouldReceive('getResourceNode')
+            ->once()
+            ->andReturn($resourceNode);
         $this->securityContext
             ->shouldReceive('isGranted')
             ->with('EDIT', anInstanceOf('Claroline\CoreBundle\Library\Resource\ResourceCollection'))
@@ -67,12 +74,16 @@ class AnnouncementControllerTest extends MockeryTestCase
     public function testAnnouncementsListActionWithOpenPerm()
     {
         $controller = $this->getController(array('checkAccess'));
-        $aggregate = new AnnouncementAggregate();
-        $collection = new ResourceCollection(array($aggregate));
+        $aggregate = $this->mock('Claroline\AnnouncementBundle\Entity\AnnouncementAggregate');
+        $resourceNode = new ResourceNode();
+        $collection = new ResourceCollection(array($resourceNode));
         $announcementA = new Announcement();
         $announcementB = new Announcement();
         $announcements = array($announcementA, $announcementB);
 
+        $aggregate->shouldReceive('getResourceNode')
+            ->once()
+            ->andReturn($resourceNode);
         $this->securityContext
             ->shouldReceive('isGranted')
             ->with('EDIT', anInstanceOf('Claroline\CoreBundle\Library\Resource\ResourceCollection'))
@@ -313,6 +324,7 @@ class AnnouncementControllerTest extends MockeryTestCase
                 $this->formFactory,
                 $this->pagerFactory,
                 $this->securityContext,
+                $this->translator,
                 $this->utils,
                 $this->workspaceManager
             );
@@ -334,6 +346,7 @@ class AnnouncementControllerTest extends MockeryTestCase
                 $this->formFactory,
                 $this->pagerFactory,
                 $this->securityContext,
+                $this->translator,
                 $this->utils,
                 $this->workspaceManager
             )

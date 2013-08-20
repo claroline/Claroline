@@ -14,3 +14,4 @@ by: par
 created_on: 'Créée le'
 create_new_announcement: 'Créer une nouvelle annonce'
 published_on: 'Publiée le'
+visible_from_until_condition: 'La date de fin doit être supérieure à la date de début'

@@ -116,12 +116,33 @@
                 {% endif %}
 
                 {% set publicationDate = announcement.getPublicationDate() %}
+                {% set visibleFrom = announcement.getVisibleFrom() %}
+                {% set visibleUntil = announcement.getVisibleUntil() %}
 
                 {% if publicationDate is not null %}
                     <div>
                         <small>
                             {{ 'published_on'|trans({}, 'announcement') }}
                             {{ publicationDate.format('d-m-Y') }}
+                            {% if (is_granted('EDIT', resourceCollection) or is_granted('DELETE', resourceCollection)) %}
+                            <span>
+                                <b>
+                                [
+                                {% if visibleFrom is not null %}
+                                    {{ visibleFrom.format('d-m-Y') }}
+                                {% else %}
+                                    ?
+                                {% endif %}
+                                &rarr;
+                                {% if visibleUntil is not null %}
+                                    {{ visibleUntil.format('d-m-Y') }}
+                                {% else %}
+                                    ?
+                                {% endif %}
+                                ]
+                                </b>
+                            </span>
+                            {% endif %}
                         </small>
                     </div>
                 {% endif %}

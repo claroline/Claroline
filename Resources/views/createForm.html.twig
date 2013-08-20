@@ -45,6 +45,10 @@
         ])
     }}
 
+    <div>
+        {{ macros.flashBox() }}
+    </div>
+
     <h3>
         {% if type == 'create' %}
             {{ typeText|trans({}, 'announcement') }}

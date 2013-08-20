@@ -17,6 +17,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Translation\Translator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -26,6 +27,7 @@ class AnnouncementController extends Controller
     private $formFactory;
     private $pagerFactory;
     private $securityContext;
+    private $translator;
     private $utils;
     private $workspaceManager;
 
@@ -35,6 +37,7 @@ class AnnouncementController extends Controller
      *     "formFactory"         = @DI\Inject("form.factory"),
      *     "pagerFactory"        = @DI\Inject("claroline.pager.pager_factory"),
      *     "securityContext"     = @DI\Inject("security.context"),
+     *     "translator"          = @DI\Inject("translator"),
      *     "utils"               = @DI\Inject("claroline.security.utilities"),
      *     "workspaceManager"    = @DI\Inject("claroline.manager.workspace_manager")
      * })
@@ -44,6 +47,7 @@ class AnnouncementController extends Controller
         FormFactoryInterface $formFactory,
         PagerFactory $pagerFactory,
         SecurityContextInterface $securityContext,
+        Translator $translator,
         Utilities $utils,
         WorkspaceManager $workspaceManager
     )
@@ -52,6 +56,7 @@ class AnnouncementController extends Controller
         $this->announcementManager = $announcementManager;
         $this->pagerFactory = $pagerFactory;
         $this->securityContext = $securityContext;
+        $this->translator = $translator;
         $this->utils = $utils;
         $this->workspaceManager = $workspaceManager;
     }
@@ -154,11 +159,32 @@ class AnnouncementController extends Controller
 
         if ($form->isValid()) {
             $now = new \DateTime();
+            $visibleFrom = $announcement->getVisibleFrom();
+            $visibleUntil = $announcement->getVisibleUntil();
+
+            if (!is_null($visibleFrom) && !is_null($visibleUntil) && $visibleUntil <= $visibleFrom) {
+                $this->get('session')->getFlashBag()->add(
+                    'danger',
+                    $this->translator->trans('visible_from_until_condition', array(), 'announcement')
+                );
+
+                return array(
+                    'form' => $form->createView(),
+                    'type' => 'create',
+                    '_resource' => $aggregate
+                );
+            }
+
             $announcement->setAggregate($aggregate);
             $announcement->setCreationDate($now);
 
             if ($announcement->isVisible()) {
-                $announcement->setPublicationDate($now);
+                if (is_null($visibleFrom) || $visibleFrom < $now) {
+                    $announcement->setPublicationDate($now);
+                }
+                else {
+                    $announcement->setPublicationDate($visibleFrom);
+                }
             }
             $announcement->setCreator($user);
             $this->announcementManager->insertAnnouncement($announcement);
@@ -238,10 +264,34 @@ class AnnouncementController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
+            $now = new \DateTime();
+            $visibleFrom = $announcement->getVisibleFrom();
+            $visibleUntil = $announcement->getVisibleUntil();
+
+            if (!is_null($visibleFrom) && !is_null($visibleUntil) && $visibleUntil <= $visibleFrom) {
+                $this->get('session')->getFlashBag()->add(
+                    'danger',
+                    $this->translator->trans('visible_from_until_condition', array(), 'announcement')
+                );
+
+                return array(
+                    'form' => $form->createView(),
+                    'type' => 'edit',
+                    'announcement' => $announcement,
+                    '_resource' => $resource
+                );
+            }
+
             if (!$announcement->isVisible()) {
                 $announcement->setPublicationDate(null);
-            } elseif (is_null($announcement->getPublicationDate())) {
-                $announcement->setPublicationDate(new \DateTime());
+            }
+            else {
+                if (is_null($visibleFrom) || $visibleFrom < $now) {
+                    $announcement->setPublicationDate($now);
+                }
+                else {
+                    $announcement->setPublicationDate($visibleFrom);
+                }
             }
             $this->announcementManager->insertAnnouncement($announcement);
 

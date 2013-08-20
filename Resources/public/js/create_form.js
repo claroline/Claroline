@@ -2,7 +2,16 @@
     'use strict';
 
     $('#announcement-form').on('click', '.datepicker', function (event) {
-        $(event.currentTarget).datepicker('show');
+        var isChecked = $('.visible-chk').attr('checked');
+
+        if (isChecked === 'checked') {
+            $(event.currentTarget).datepicker('show');
+        }
+        else {
+            $('.datepicker').each(function () {
+                $(this).attr('disabled', 'disabled');
+            });
+        }
     });
 
     $('#announcement-form').on('changeDate', '.datepicker', function (event) {

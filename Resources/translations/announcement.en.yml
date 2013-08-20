@@ -14,3 +14,4 @@ by: by
 creates_on: 'Create on'
 create_new_announcement: 'Create new announcement'
 published_on: 'Published on'
+visible_from_until_condition: 'Until date must be greater than From date'
