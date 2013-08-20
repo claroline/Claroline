@@ -15,7 +15,7 @@
         "@ClarolineCoreBundle/Resources/views/Resource/thumbnail.html.twigjs"
         "@ClarolineCoreBundle/Resources/views/Resource/results.html.twigjs"
         "@ClarolineCoreBundle/Resources/views/Resource/roles.html.twigjs"
-        "@ClarolineCoreBundle/Resources/views/modal.html.twigjs"
+        "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
         filter="twig_js"
     %}
         <script language="javascript" src="{{ asset_url }}"></script>
@@ -43,7 +43,7 @@
                                 {% for customAction in resourceType.getCustomActions() %}
                                     "{{ customAction.getAction() }}": {
                                         "name": "{{ customAction.getAction() }}",
-                                        "route": "{{ path('claro_resource_custom', {'resourceType': resourceType.getName(), 'action': customAction.getAction(), 'resourceId': '_resourceId' }) }}",
+                                        "route": "{{ path('claro_resource_custom', {'resourceType': resourceType.getName(), 'action': customAction.getAction(), 'resourceId': '_nodeId' }) }}",
                                         "async": {{ customAction.isAsync() }}
                                     }
                                     {% if loop.last != true %},{% endif %}
@@ -117,7 +117,7 @@
                     $(document).dnd(function (over, evt){
                         if (true == true) { //$('ul.create > li > a#file').length > 0
                             drop_enabled = ($(evt.target).hasClass('resources') || $(evt.target).parents('.resources').length > 0);
-     
+
                             if (over) {
                                 if (!dropzone_enabled) {
                                     $('.resources').addClass('dropzone');

@@ -15,7 +15,7 @@
 <form id="form_log_update_desktop_widget"
     method="POST"
     action="{{ path('claro_log_update_desktop_widget_config', {'isDefault': isDefault, 'redirectToHome': app.request.isXMLHttpRequest ? 1 : 0})}}"
-    
+
     class="form-horizontal"
     {{ form_enctype(form) }}>
     {% if not isDefault %}
@@ -30,7 +30,7 @@
     {{ macros.flashBox() }}
     <div class="form-actions">
         <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-        <a href="{{ path('claro_desktop_widget_properties') }}">
+        <a href="{{ path('claro_admin_widgets') }}">
             <button type="button" class="btn claro-widget-form-cancel">{{ 'cancel'|trans({}, 'platform') }}</button>
         </a>
     </div>

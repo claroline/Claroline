@@ -7,22 +7,16 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Content
  *
+ * @ORM\Entity()
  * @ORM\Table(name="claro_content")
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ContentRepository")
  */
 class Content
 {
-    public function __construct()
-    {
-        $this->created = new \Datetime();
-        $this->modified = new \Datetime();
-    }
-
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
+     * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
@@ -30,14 +24,14 @@ class Content
     /**
      * @var string
      *
-     * @ORM\Column(name="title", type="string", length=255, nullable=true)
+     * @ORM\Column(length=255, nullable=true)
      */
     private $title;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="content", type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $content;
 
@@ -51,17 +45,16 @@ class Content
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="created", type="datetime")
+     * @ORM\Column(type="datetime")
      */
     private $created;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="modified", type="datetime")
+     * @ORM\Column(type="datetime")
      */
     private $modified;
-
 
     /**
      * Get id
@@ -74,9 +67,18 @@ class Content
     }
 
     /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->created = new \Datetime();
+        $this->modified = new \Datetime();
+    }
+
+    /**
      * Set title
      *
-     * @param string $title
+     * @param  string  $title
      * @return Content
      */
     public function setTitle($title)
@@ -101,7 +103,7 @@ class Content
     /**
      * Set content
      *
-     * @param string $content
+     * @param  string  $content
      * @return Content
      */
     public function setContent($content)
@@ -126,7 +128,7 @@ class Content
     /**
      * Set created
      *
-     * @param \DateTime $created
+     * @param  \DateTime $created
      * @return Content
      */
     public function setCreated($created)
@@ -149,7 +151,7 @@ class Content
     /**
      * Set modified
      *
-     * @param \DateTime $modified
+     * @param  \DateTime $modified
      * @return Content
      */
     public function setModified($modified = null)
@@ -176,7 +178,7 @@ class Content
     /**
      * Set generated_content
      *
-     * @param string $generatedContent
+     * @param  string  $generatedContent
      * @return Content
      */
     public function setGeneratedContent($generatedContent)

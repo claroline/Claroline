@@ -8,13 +8,11 @@
 
 {% block content %}
     {% if _resource is defined %}
-        {% set workspace = _resource.getWorkspace() %}
+        {% set workspace = _resource.getResourceNode().getWorkspace() %}
     {% endif %}
-
     {% if not is_path_mode %}
         {% render controller("ClarolineCoreBundle:Workspace:renderToolList", {'workspaceId': workspace.getId(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})}) %}
     {% endif %}
-
     <div class="span9 section-content border">
         {% block breadcrumb %}
             <div id="resource-breadcrumb">
@@ -26,7 +24,7 @@
                 </div>
                 {% if not is_path_mode  %}
                 {% render controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
-                    {'workspaceId': workspace.getId(), 'resourceId': _resource.getId(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})
+                    {'workspace': workspace, 'resource': _resource.getResourceNode(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})
                 %}
                 {% endif %}
             {% endif %}

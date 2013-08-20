@@ -66,7 +66,7 @@
             .error(
                     function ()
                     {
-                        modal("content/error");
+                        alert("An error occurred!\n\nPlease try again later or check your internet connection");
                     }
                   )
             ;
@@ -183,6 +183,7 @@
                                         function (data)
                                         {
                                             insertElement(data);
+                                            resizeDivs();
                                         }
                                 )
                             ;
@@ -206,6 +207,7 @@
                                     function (data)
                                     {
                                         $(creatorElement).replaceWith(data);
+                                        resizeDivs();
                                     }
                                 )
                             ;
@@ -213,6 +215,7 @@
                         }
                         else
                         {
+                            //document.body.innerHTML = data;
                             modal("content/error");
                         }
                     }
@@ -252,7 +255,6 @@
             )
         ;
     }
-
 
     /** DOM events **/
 
@@ -295,6 +297,7 @@
                     });
 
                     $(element).addClass(size);
+                    resizeDivs();
 
                     $("#sizes").modal("hide");
                 }
@@ -351,31 +354,104 @@
         modal("content/confirm", "delete-content", element);
     });
 
+    $("body").on("click", ".type-delete", function (event) {
+        var element = parentByClassName(event.target, "alert");
+
+        modal("content/confirm", "delete-type", element);
+    });
+
+    $("body").on("click", "#delete-type a.delete", function () {
+        var element = $("#delete-type").data("element");
+        var id = $(element).data("id");
+
+        if (id && element) {
+            $.ajax(homePath + "content/deletetype/" + id)
+            .done(
+                function (data)
+                {
+                    if (data === "true") {
+                        $(element).hide("slow", function () {
+                            $(this).remove();
+                        });
+                    }
+                    else
+                    {
+                        modal("content/error");
+                    }
+                }
+            )
+            .error(
+                function ()
+                {
+                    modal("content/error");
+                }
+            );
+        }
+    });
+
+    $("body").on("click", ".create-type", function (event) {
+        var typeCreator = parentByClassName(event.target, "creator");
+        var name = $("input", typeCreator);
+
+        if (creator && name.val()) {
+            $.ajax(homePath + "content/typeexist/" + name.val())
+            .done(
+                function (data)
+                {
+                    if (data === "false") {
+                        $.ajax(homePath + "content/createtype/" + name.val())
+                        .done(
+                            function (data)
+                            {
+                                if (data !== "false" && data !== "") {
+                                    $(typeCreator).next().prepend(data);
+                                    name.val('');
+                                } else {
+                                    modal("content/error");
+                                }
+                            }
+                        )
+                        .error(
+                            function ()
+                            {
+                                modal("content/error");
+                            }
+                        );
+                    } else {
+                        modal("content/typeerror");
+                    }
+                }
+            );
+        }
+    });
+
     $("body").on("click", "#delete-content a.delete", function () {
         var element = $("#delete-content").data("element");
         var id = $(element).data("id");
 
         if (id && element) {
             $.ajax(homePath + "content/delete/" + id)
-        .done(
-            function (data)
-            {
-                if (data === "true") {
-                    $(element).hide("slow", function () { $(this).remove(); });
+            .done(
+                function (data)
+                {
+                    if (data === "true") {
+                        $(element).hide("slow", function () {
+                            $(this).remove();
+                            resizeDivs();
+                        });
+                    }
+                    else
+                    {
+                        modal("content/error");
+                    }
                 }
-                else
+            )
+            .error(
+                function ()
                 {
                     modal("content/error");
                 }
-            }
-            )
-        .error(
-            function ()
-            {
-                modal("content/error");
-            }
-            )
-        ;
+            );
         }
     });
 
@@ -398,6 +474,7 @@
                     function (data)
                     {
                         $(element).replaceWith(data);
+                        resizeDivs();
 
                         $(".creator textarea").each(function () {
                             resize(this);
@@ -448,6 +525,7 @@
                     function (data)
                     {
                         $(element).replaceWith(data);
+                        resizeDivs();
                     }
                 )
                 .error(
@@ -496,6 +574,9 @@
             if (a && type)
             {
                 $.ajax(homePath + "content/reorder/" + type + "/" + a + "/" + b)
+                .success(
+                    resizeDivs()
+                )
                 .error(
                         function ()
                         {

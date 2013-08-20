@@ -25,11 +25,13 @@ class AppKernel extends Kernel
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new JMS\TwigJsBundle\JMSTwigJsBundle(),
             new Claroline\CoreBundle\ClarolineCoreBundle(),
+            new Claroline\MigrationBundle\ClarolineMigrationBundle(),
             new Claroline\Bundle\FrontEndBundle\FrontEndBundle(),
             new Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle(),
             new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
             new IDCI\Bundle\ExporterBundle\IDCIExporterBundle(),
-            new Zenstruck\Bundle\FormBundle\ZenstruckFormBundle()
+            new Zenstruck\Bundle\FormBundle\ZenstruckFormBundle(),
+            new BeSimple\SsoAuthBundle\BeSimpleSsoAuthBundle()
         );
 
         if (file_exists(__DIR__ . '/config/local/plugin/bundles')) {
@@ -40,6 +42,7 @@ class AppKernel extends Kernel
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
+            $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
         }
 
         return $bundles;

@@ -9,13 +9,13 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Form\TextType;
 use Claroline\CoreBundle\Entity\Resource\Text;
 use Claroline\CoreBundle\Entity\Resource\Revision;
-use Claroline\CoreBundle\Library\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Library\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
-use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
-use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Library\Event\ExportResourceTemplateEvent;
-use Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent;
+use Claroline\CoreBundle\Event\Event\CreateFormResourceEvent;
+use Claroline\CoreBundle\Event\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Event\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Event\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Event\Event\ExportResourceTemplateEvent;
+use Claroline\CoreBundle\Event\Event\ImportResourceTemplateEvent;
 
 /**
  * @DI\Service
@@ -45,7 +45,7 @@ class TextListener implements ContainerAwareInterface
     {
         $form = $this->container->get('form.factory')->create(new TextType, new Text());
         $response = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:create_form.html.twig',
+            'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'text'
@@ -79,14 +79,14 @@ class TextListener implements ContainerAwareInterface
             $revision->setText($text);
             $em->persist($text);
             $em->persist($revision);
-            $event->setResource($text);
+            $event->setResources(array($text));
             $event->stopPropagation();
 
             return;
         }
 
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:create_form.html.twig',
+            'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'text'
@@ -128,12 +128,12 @@ class TextListener implements ContainerAwareInterface
     public function onOpen(OpenResourceEvent $event)
     {
         $text = $event->getResource();
-        $textRepo = $this->container->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\Text');
+        $revisionRepo = $this->container->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Resource\Revision');
         $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Text:index.html.twig',
             array(
-                'text' => $textRepo->getLastRevision($text)->getContent(),
+                'text' => $revisionRepo->getLastRevision($text)->getContent(),
                 '_resource' => $text
             )
         );
@@ -161,10 +161,10 @@ class TextListener implements ContainerAwareInterface
      */
     public function onExportTemplate(ExportResourceTemplateEvent $event)
     {
-        $textRepo = $this->container->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\Text');
         $text = $event->getResource();
-        $config['text'] = $textRepo->getLastRevision($text)->getContent();
+        $revisionRepo = $this->container->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Resource\Revision');
+        $config['text'] = $revisionRepo->getLastRevision($text)->getContent();
         $event->setConfig($config);
         $event->stopPropagation();
     }

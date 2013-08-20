@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
-use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Link extends AbstractResource
 {
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column()
      */
     protected $url;
 

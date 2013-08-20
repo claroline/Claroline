@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Entity\Logger;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -13,21 +12,20 @@ class LogHiddenWorkspaceWidgetConfig
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer", name="workspace_id", nullable=false)
+     * @ORM\Column(name="workspace_id", type="integer")
      */
     protected $workspaceId;
 
     /**
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;
 
     /**
      * Set workspaceId
      *
-     * @param integer $workspaceId
+     * @param integer  $workspaceId
      * @return LogHiddenWorkspaceWidgetConfig
      */
     public function setWorkspaceId($workspaceId)
@@ -40,7 +38,7 @@ class LogHiddenWorkspaceWidgetConfig
     /**
      * Get workspaceId
      *
-     * @return integer 
+     * @return integer
      */
     public function getWorkspaceId()
     {
@@ -50,7 +48,7 @@ class LogHiddenWorkspaceWidgetConfig
     /**
      * Set user
      *
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param  \Claroline\CoreBundle\Entity\User $user
      * @return LogHiddenWorkspaceWidgetConfig
      */
     public function setUser(\Claroline\CoreBundle\Entity\User $user)
@@ -63,7 +61,7 @@ class LogHiddenWorkspaceWidgetConfig
     /**
      * Get user
      *
-     * @return \Claroline\CoreBundle\Entity\User 
+     * @return \Claroline\CoreBundle\Entity\User
      */
     public function getUser()
     {

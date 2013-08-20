@@ -1,5 +1,5 @@
 {% if log.getDetails().owner is defined %}
-    
+
     <h4>
         {% if 'resource_' in log.getAction() %}
             {{ ('log_resource_owner')|trans({}, 'platform') }}

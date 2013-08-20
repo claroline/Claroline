@@ -1,0 +1,37 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block section_content %}
+
+    {{
+        macros.breadcrumbs([
+            {
+                'name': 'roles'|trans({}, 'platform'),
+                'href': path('claro_workspace_roles', {'workspace': workspace.getId()})
+            },
+            {
+                'name': role.getTranslationKey()|trans({}, 'platform'),
+                'href': '#'
+            },
+            {
+                'name': 'edit'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+
+    <div class="wrapper">
+    <form class="form-horizontal"
+          action="{{ path('claro_workspace_role_edit', {'workspace': workspace.getId(), 'role': role.getId()} ) }}"
+          method="post" {{ form_enctype(form) }}
+          id="workspace-role-creation"
+      >
+        <fieldset>
+            <legend>{{ 'role_creation'|trans({}, 'platform') }} :</legend>
+            {{ form_widget(form) }}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            </div>
+        </fieldset>
+    </form>
+    </div>
+{% endblock %}

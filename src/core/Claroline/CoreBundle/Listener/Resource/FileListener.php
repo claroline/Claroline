@@ -9,15 +9,14 @@ use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Form\FileType;
-use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Library\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Library\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
-use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
-use Claroline\CoreBundle\Library\Event\DownloadResourceEvent;
-use Claroline\CoreBundle\Library\Event\PlayFileEvent;
-use Claroline\CoreBundle\Library\Event\ExportResourceTemplateEvent;
-use Claroline\CoreBundle\Library\Event\ImportResourceTemplateEvent;
+use Claroline\CoreBundle\Event\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Event\Event\CreateFormResourceEvent;
+use Claroline\CoreBundle\Event\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Event\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Event\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\Event\DownloadResourceEvent;
+use Claroline\CoreBundle\Event\Event\ExportResourceTemplateEvent;
+use Claroline\CoreBundle\Event\Event\ImportResourceTemplateEvent;
 
 /**
  * @DI\Service
@@ -47,7 +46,7 @@ class FileListener implements ContainerAwareInterface
     {
         $form = $this->container->get('form.factory')->create(new FileType, new File());
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:create_form.html.twig',
+            'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'file'
@@ -75,21 +74,21 @@ class FileListener implements ContainerAwareInterface
             $extension = pathinfo($fileName, PATHINFO_EXTENSION);
             $size = filesize($tmpFile);
             $mimeType = $tmpFile->getClientMimeType();
-            $hashName = $this->container->get('claroline.resource.utilities')->generateGuid() . "." . $extension;
+            $hashName = $this->container->get('claroline.utilities.misc')->generateGuid() . "." . $extension;
             $tmpFile->move($this->container->getParameter('claroline.param.files_directory'), $hashName);
             $ds = DIRECTORY_SEPARATOR;
             $file->setSize($size);
             $file->setName($fileName);
             $file->setHashName($hashName);
             $file->setMimeType($mimeType);
-            $event->setResource($file);
+            $event->setResources(array($file));
             $event->stopPropagation();
 
             return;
         }
 
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:create_form.html.twig',
+            'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => $event->getResourceType()
@@ -114,7 +113,6 @@ class FileListener implements ContainerAwareInterface
         if (file_exists($pathName)) {
             unlink($pathName);
         }
-
         $event->stopPropagation();
     }
 
@@ -155,25 +153,31 @@ class FileListener implements ContainerAwareInterface
     public function onOpen(OpenResourceEvent $event)
     {
         $ds = DIRECTORY_SEPARATOR;
-        $file = $event->getResource();
-        $mimeType = $file->getMimeType();
-        $playEvent = new PlayFileEvent($file);
-        $eventName = strtolower(str_replace('/', '_', 'play_file_'.$mimeType));
-        $this->container->get('event_dispatcher')->dispatch($eventName, $playEvent);
+        $resource = $event->getResource();
+        $mimeType = $resource->getResourceNode()->getMimeType();
+        $playEvent = $this->container->get('claroline.event.event_dispatcher')
+                ->dispatch(
+                    strtolower(str_replace('/', '_', 'play_file_' . $mimeType)),
+                    'PlayFile',
+                    array($resource)
+                );
 
         if ($playEvent->getResponse() instanceof Response) {
             $response = $playEvent->getResponse();
         } else {
-            $fallBackPlayEvent = new PlayFileEvent($file);
             $mimeElements = explode('/', $mimeType);
             $baseType = strtolower($mimeElements[0]);
-            $fallBackPlayEventName = 'play_file_'.$baseType;
-            $this->container->get('event_dispatcher')->dispatch($fallBackPlayEventName, $fallBackPlayEvent);
+            $fallBackPlayEventName = 'play_file_' . $baseType;
+            $fallBackPlayEvent = $this->container->get('claroline.event.event_dispatcher')->dispatch(
+                $fallBackPlayEventName,
+                'PlayFile',
+                array($resource)
+            );
             if ($fallBackPlayEvent->getResponse() instanceof Response) {
                 $response = $fallBackPlayEvent->getResponse();
             } else {
                 $item = $this->container
-                    ->getParameter('claroline.param.files_directory') . $ds . $file->getHashName();
+                    ->getParameter('claroline.param.files_directory') . $ds . $resource->getHashName();
                 $file = file_get_contents($item);
                 $response = new Response();
                 $response->setContent($file);
@@ -232,7 +236,7 @@ class FileListener implements ContainerAwareInterface
         $files = $event->getFiles();
         $file = new File();
         $extension = pathinfo($files[0], PATHINFO_EXTENSION);
-        $hashName = $this->container->get('claroline.resource.utilities')->generateGuid() . "." . $extension;
+        $hashName = $this->container->get('claroline.utilities.misc')->generateGuid() . "." . $extension;
         $physicalPath = $this->container->getParameter('claroline.param.files_directory') . $ds . $hashName;
         rename($files[0], $physicalPath);
         $size = filesize($physicalPath);
@@ -259,7 +263,7 @@ class FileListener implements ContainerAwareInterface
         $newFile->setName($resource->getName());
         $newFile->setMimeType($resource->getMimeType());
         $hashName = $this->container
-            ->get('claroline.resource.utilities')
+            ->get('claroline.utilities.misc')
             ->generateGuid() . '.' . pathinfo($resource->getHashName(), PATHINFO_EXTENSION);
         $newFile->setHashName($hashName);
         $filePath = $this->container->getParameter('claroline.param.files_directory') . $ds . $resource->getHashName();

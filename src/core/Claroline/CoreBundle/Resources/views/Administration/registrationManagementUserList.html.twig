@@ -1,0 +1,72 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script
+        src="{{ asset('bundles/clarolinecore/js/administration/registrationManagementSubjectList.js') }}"
+        type="text/javascript"
+    >
+    </script>
+{% endblock %}
+
+{% block section_content %}
+    <div id="registration-list-div" subject-type="user" class="margin">
+        <div>
+            <div id="custom-flashbag-div" class="alert alert-success hide">
+                <a id="flashbag-close-button" class="close" href="#">×</a>
+                <ul id="custom-flashbag-ul">
+                </ul>
+            </div>
+            {{
+                macros.breadcrumbs([
+                    {
+                        'icon': 'icon-book',
+                        'name':'registration_to_workspaces'|trans({}, 'platform'),
+                        'href': path('claro_admin_registration_management')
+                    },
+                    {
+                        'icon': 'icon-user',
+                        'name':'users'|trans({}, 'platform'),
+                        'href': '#'
+                    }
+                ])
+            }}
+        </div>
+
+        <h1>{{ 'select_users_for_registration_to_workspace'|trans({}, 'platform') }}</h1>
+
+        <br>
+
+        {% include 'ClarolineCoreBundle:Administration:registrationManagementSelectedWorkspacesAndRoles.html.twig' %}
+
+        <br>
+        <br>
+
+        <div id="pager-block">
+            <div class="search-bar">
+                <button class="btn btn-secondary subscribe-subjects-button" disabled="disabled">
+                    <i class="icon-pencil"></i>
+                    {{ 'subscribe_selected_users'|trans({}, 'platform') }}
+                </button>
+                <div class="input-append pull-right">
+                    <input
+                        class="input"
+                        type="text"
+                        id="search-txt"
+                        placeholder="{{ 'search_user'|trans({}, 'platform') }}"
+                    >
+                    <button class="filter btn" type="button" id="search-button">
+                        <i class="icon-search"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="list-pager" class="list-pager">
+                {% include 'ClarolineCoreBundle:Administration:userListPager.html.twig' %}
+            </div>
+        </div>
+        <button class="btn btn-secondary subscribe-subjects-button" disabled="disabled">
+            <i class="icon-pencil"></i>
+            {{ 'subscribe_selected_users'|trans({}, 'platform') }}
+        </button>
+    </div>
+{% endblock %}
