@@ -557,8 +557,11 @@ Draw an area on the graph to zoom, double-click to cancel: 'Draw an area on the 
 Overview of recent activities of your workspaces: 'Overview of recent activities of your workspaces'
 Overview of recent activities in %workspaceName%: 'Overview of recent activities in %workspaceName%'
 Overview of all recent activities in %workspaceName% : 'Overview of all recent activities in %workspaceName%'
-Upload failed...: 'Upload failed...'
-Sorry. Max size 25MB: 'Sorry. Max size 25MB'
-Nonexistent size: 'Nonexistent size'
-Upload...: 'Upload...'
-select_all: Select all
+upload_fail: 'Upload failed'
+max_size_25mb: 'The maximum size is 25mb'
+empty_file: 'Empty file'
+upload: 'upload'
+upload_denied: "Permission denied"
+select_all: Tout sélectionner
+drop_file: Drop the file
+drag_file_here: Drag the file here
