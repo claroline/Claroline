@@ -89,9 +89,18 @@ class ThumbnailCreator
              throw new UnloadedExtensionException('The GD extension is missing \n');
         }
 
-        $extension = (pathinfo($originalPath, PATHINFO_EXTENSION) == 'jpg') ?
-            'jpeg':
-            pathinfo($originalPath, PATHINFO_EXTENSION);
+        if (file_exists($originalPath)) {
+            /*
+            This function is deprecated.
+            I had to do this for the DnD upload (.jpg files have png mime for some reasons).
+            It would be nice to know why it works this way.
+            */
+            $mime = mime_content_type($originalPath);
+            $eMime = explode('/', $mime);
+            $extension = $eMime[1];
+        } else {
+            throw new \Exception("The file {$originalPath} doesn't exists.");
+        }
 
         if (function_exists($funcname = "imagecreatefrom{$extension}")) {
             $srcImg = $funcname($originalPath);
