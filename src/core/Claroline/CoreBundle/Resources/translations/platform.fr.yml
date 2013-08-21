@@ -286,6 +286,18 @@ messages_removed: 'Messages supprimés'
 messages_sent: 'Messages envoyés'
 messages_sent_removed: 'Messages envoyés supprimés'
 misc: Divers
+month.january: "Janvier"
+month.february: "Février"
+month.march: "Mars"
+month.April: "Avril"
+month.may: "Mai"
+month.june: "Juin"
+month.july: "Juillet"
+month.August: "Août"
+month.september: "Septembre"
+month.october: "Octobre"
+month.november: "Novembre"
+month.december: "Décembre"
 move: Déplacer
 my_account: 'Mon compte'
 my_agenda: 'Mon agenda'
