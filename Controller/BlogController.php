@@ -43,20 +43,6 @@ class BlogController extends Controller
 
         $postRepository = $this->get('icap.blog.post_repository');
 
-        $archivesDatas          = $postRepository->findArchiveDatasByBlog($blog);
-        $displayedArchivesDatas = array();
-
-        $translator = $this->get('translator');
-
-        foreach($archivesDatas as $archivesData)
-        {
-            $displayedArchivesDatas[$archivesData['year']][] = array(
-                'year'  => $archivesData['year'],
-                'month' => $translator->trans('month.' . date("F", mktime(0, 0, 0, $archivesData['month'], 10)), array(), 'platform'),
-                'count' => $archivesData['number']
-            );
-        }
-
         $tag    = null;
         $author = null;
 
@@ -116,7 +102,7 @@ class BlogController extends Controller
             '_resource' => $blog,
             'user'      => $user,
             'pager'     => $pager,
-            'archives'  => $displayedArchivesDatas
+            'archives'  => $this->getArchiveDatas($blog)
         );
     }
 
@@ -169,7 +155,8 @@ class BlogController extends Controller
             '_resource' => $blog,
             'user'      => $user,
             'pager'     => $pager,
-            'search'    => $search
+            'search'    => $search,
+            'archives'  => $this->getArchiveDatas($blog)
         );
     }
 
@@ -209,7 +196,8 @@ class BlogController extends Controller
 
         return array(
             '_resource' => $blog,
-            'form'      => $form->createView()
+            'form'      => $form->createView(),
+            'archives'  => $this->getArchiveDatas($blog)
         );
     }
 
@@ -247,7 +235,8 @@ class BlogController extends Controller
 
         return array(
             '_resource' => $blog,
-            'form'      => $form->createView()
+            'form'      => $form->createView(),
+            'archives'  => $this->getArchiveDatas($blog)
         );
     }
 

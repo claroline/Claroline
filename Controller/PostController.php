@@ -67,7 +67,8 @@ class PostController extends Controller
             '_resource' => $blog,
             'user'      => $user,
             'post'      => $post,
-            'form'      => $form->createView()
+            'form'      => $form->createView(),
+            'archives'  => $this->getArchiveDatas($blog)
         );
     }
     /**
@@ -152,7 +153,8 @@ class PostController extends Controller
             '_resource' => $blog,
             'user'      => $user,
             'post'      => $post,
-            'form'      => $form->createView()
+            'form'      => $form->createView(),
+            'archives'  => $this->getArchiveDatas($blog)
         );
     }
 

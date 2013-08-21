@@ -39,4 +39,28 @@ class Controller extends BaseController
 
         return $checkPermission;
     }
+
+    /**
+     * @param Blog $blog
+     *
+     * @return array
+     */
+    protected function getArchiveDatas(Blog $blog)
+    {
+        $postDatas          = $this->get('icap.blog.post_repository')->findArchiveDatasByBlog($blog);
+        $archiveDatas = array();
+
+        $translator = $this->get('translator');
+
+        foreach($postDatas as $postData)
+        {
+            $archiveDatas[$postData['year']][] = array(
+                'year'  => $postData['year'],
+                'month' => $translator->trans('month.' . date("F", mktime(0, 0, 0, $postData['month'], 10)), array(), 'platform'),
+                'count' => $postData['number']
+            );
+        }
+
+        return $archiveDatas;
+    }
 }
