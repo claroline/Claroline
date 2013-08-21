@@ -2,7 +2,6 @@ nbproject/*
 !.gitempty
 !placeholder
 *~
-nbproject/*
 app/SymfonyRequirements.php
 app/bootstrap*
 app/build/api
