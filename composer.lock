@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "fdad08c795ace3398a1be1e3ace59165",
+    "hash": "7bf418a7f4c1b4873a7f362f82dc9c47",
     "packages": [
         {
             "name": "besimple/sso-auth-bundle",
@@ -54,7 +54,8 @@
             "authors": [
                 {
                     "name": "Jean-François Simon",
-                    "email": "contact@jfsimon.fr"
+                    "email": "contact@jfsimon.fr",
+                    "homepage": "http://www.jfsimon.fr"
                 },
                 {
                     "name": "BeSimple Community",
@@ -78,12 +79,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/FrontEndBundle.git",
-                "reference": "f343172af133fd89272c0760a90a890b7fee6f76"
+                "reference": "06de685c068a7574cd0f2cbfcf004ea4a9ee85e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/FrontEndBundle/zipball/f343172af133fd89272c0760a90a890b7fee6f76",
-                "reference": "f343172af133fd89272c0760a90a890b7fee6f76",
+                "url": "https://api.github.com/repos/claroline/FrontEndBundle/zipball/06de685c068a7574cd0f2cbfcf004ea4a9ee85e5",
+                "reference": "06de685c068a7574cd0f2cbfcf004ea4a9ee85e5",
                 "shasum": ""
             },
             "require": {
@@ -101,7 +102,7 @@
                 "source": "https://github.com/claroline/FrontEndBundle/tree/master",
                 "issues": "https://github.com/claroline/FrontEndBundle/issues"
             },
-            "time": "2013-07-25 15:31:08"
+            "time": "2013-08-20 08:49:43"
         },
         {
             "name": "claroline/migration-bundle",
@@ -110,12 +111,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/MigrationBundle.git",
-                "reference": "10bccdbc7e5a1ec14b6a5c953cc7c21faac30e52"
+                "reference": "7ea039726c37932f4b57b042219badd957e54602"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/MigrationBundle/zipball/10bccdbc7e5a1ec14b6a5c953cc7c21faac30e52",
-                "reference": "10bccdbc7e5a1ec14b6a5c953cc7c21faac30e52",
+                "url": "https://api.github.com/repos/claroline/MigrationBundle/zipball/7ea039726c37932f4b57b042219badd957e54602",
+                "reference": "7ea039726c37932f4b57b042219badd957e54602",
                 "shasum": ""
             },
             "require": {
@@ -152,7 +153,7 @@
                 "Claroline",
                 "migration"
             ],
-            "time": "2013-08-05 11:51:47"
+            "time": "2013-08-19 14:37:30"
         },
         {
             "name": "claroline/taxonomy-bundle",
@@ -255,7 +256,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -898,9 +899,9 @@
                     "email": "roman@code-factory.org"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -972,7 +973,6 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-
                 "reference": "cc83ac6ce8d11f0c6c421cd4afd3503c8a69c35f"
             },
             "dist": {
@@ -1016,7 +1016,7 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan H. Wage",
+                    "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/"
                 },
@@ -1056,8 +1056,7 @@
                 "reference": null,
                 "shasum": null
             },
-            "type": "library",
-            "time": "2013-06-26 15:41:16"
+            "type": "library"
         },
         {
             "name": "friendsofsymfony/jsrouting-bundle",
@@ -1119,12 +1118,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/l3pp4rd/DoctrineExtensions.git",
-                "reference": "v2.3.7"
+                "reference": "709c1fc4614e3738e2ca08ec5236af2cd36dcc42"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/l3pp4rd/DoctrineExtensions/zipball/v2.3.7",
-                "reference": "v2.3.7",
+                "url": "https://api.github.com/repos/l3pp4rd/DoctrineExtensions/zipball/709c1fc4614e3738e2ca08ec5236af2cd36dcc42",
+                "reference": "709c1fc4614e3738e2ca08ec5236af2cd36dcc42",
                 "shasum": ""
             },
             "require": {
@@ -1191,7 +1190,7 @@
                 "tree",
                 "uploadable"
             ],
-            "time": "2013-08-18 07:18:44"
+            "time": "2013-08-19 15:37:45"
         },
         {
             "name": "idci/exporter-bundle",
@@ -1745,7 +1744,7 @@
                 {
                     "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -2076,7 +2075,7 @@
                 {
                     "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -2458,13 +2457,13 @@
                 "symfony/framework-bundle": "~2.1"
             },
             "require-dev": {
-                "symfony/class-loader": ">=2.1,<3.0",
-                "symfony/console": ">=2.1,<3.0",
-                "symfony/css-selector": ">=2.1,<3.0",
-                "symfony/dom-crawler": ">=2.1,<3.0",
-                "symfony/form": ">=2.1,<3.0",
-                "symfony/twig-bundle": ">=2.1,<3.0",
-                "symfony/yaml": ">=2.1,<3.0"
+                "symfony/class-loader": "~2.1",
+                "symfony/console": "~2.1",
+                "symfony/css-selector": "~2.1",
+                "symfony/dom-crawler": "~2.1",
+                "symfony/form": "~2.1",
+                "symfony/twig-bundle": "~2.1",
+                "symfony/yaml": "~2.1"
             },
             "suggest": {
                 "symfony/twig-bundle": "~2.1"
@@ -2570,7 +2569,7 @@
                 "symfony/monolog-bridge": "~2.2-beta2"
             },
             "require-dev": {
-                "symfony/yaml": ">=2.2-beta2,<3.0"
+                "symfony/yaml": "~2.2-beta2"
             },
             "type": "symfony-bundle",
             "extra": {
@@ -2941,6 +2940,59 @@
             "time": "2013-06-06 08:08:38"
         },
         {
+            "name": "willdurand/expose-translation-bundle",
+            "version": "dev-master",
+            "target-dir": "Bazinga/ExposeTranslationBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/willdurand/BazingaExposeTranslationBundle.git",
+                "reference": "6df1246d89d1eb36242c8ee12d57f46a6a43f195"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/willdurand/BazingaExposeTranslationBundle/zipball/6df1246d89d1eb36242c8ee12d57f46a6a43f195",
+                "reference": "6df1246d89d1eb36242c8ee12d57f46a6a43f195",
+                "shasum": ""
+            },
+            "require": {
+                "symfony/console": ">=2.0,<2.4-dev",
+                "symfony/finder": ">=2.0,<2.4-dev",
+                "symfony/framework-bundle": ">=2.0,<2.4-dev"
+            },
+            "require-dev": {
+                "symfony/browser-kit": ">=2.0,<2.4-dev",
+                "symfony/yaml": ">=2.0,<2.4-dev"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Bazinga\\ExposeTranslationBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "William Durand",
+                    "email": "william.durand1@gmail.com",
+                    "homepage": "http://www.willdurand.fr"
+                }
+            ],
+            "description": "A pretty nice way to expose your translation messages to your JavaScript.",
+            "keywords": [
+                "javascript",
+                "translation"
+            ],
+            "time": "2013-06-20 15:42:20"
+        },
+        {
             "name": "xaguilars/bootstrap-colorpicker",
             "version": "dev-master",
             "source": {
@@ -2954,8 +3006,7 @@
                 "reference": null,
                 "shasum": null
             },
-            "type": "library",
-            "time": "2013-05-24 10:20:31"
+            "type": "library"
         },
         {
             "name": "zenstruck/form-bundle",
@@ -3066,14 +3117,11 @@
                     "org\\bovigo\\vfs\\": "src/main/php"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD"
             ],
             "homepage": "http://vfs.bovigo.org/",
-            "support": {
-                "source": "https://github.com/mikey179/vfsStream/tree/master",
-                "issues": "https://github.com/mikey179/vfsStream/issues"
-            },
             "time": "2013-05-28 21:32:26"
         },
         {
@@ -3082,12 +3130,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/padraic/mockery.git",
-                "reference": "9d2460275665f4506d359f4e2037705d07833173"
+                "reference": "7dbfcdd266797d67ff9c17e8aa44f2adb48662ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/9d2460275665f4506d359f4e2037705d07833173",
-                "reference": "9d2460275665f4506d359f4e2037705d07833173",
+                "url": "https://api.github.com/repos/padraic/mockery/zipball/7dbfcdd266797d67ff9c17e8aa44f2adb48662ca",
+                "reference": "7dbfcdd266797d67ff9c17e8aa44f2adb48662ca",
                 "shasum": ""
             },
             "require": {
@@ -3128,7 +3176,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2013-08-16 09:45:12"
+            "time": "2013-08-19 15:22:48"
         }
     ],
     "aliases": [
@@ -3136,7 +3184,6 @@
     ],
     "minimum-stability": "dev",
     "stability-flags": {
-        "doctrine/orm": 20,
         "jms/security-extra-bundle": 20,
         "jms/di-extra-bundle": 20,
         "stof/doctrine-extensions-bundle": 20,
@@ -3153,6 +3200,7 @@
         "fortawesome/fontawesome": 20,
         "xaguilars/bootstrap-colorpicker": 20,
         "zenstruck/form-bundle": 20,
+        "willdurand/expose-translation-bundle": 20,
         "mockery/mockery": 20,
         "mikey179/vfsstream": 20
     },
@@ -3163,3 +3211,4 @@
 
     ]
 }
+
