@@ -261,7 +261,7 @@ copiable: 'Copiable'
 editable: 'Editable'
 yes: 'yes'
 no: 'no'
-no_email: 'This email doesn't match a registered user'
+no_email: "This email doesn't match a registered user"
 link_outdated : 'link is no more valid'
 login: Login
 login_failure: 'Login has failed. Check your username and password are correct.'
