@@ -187,10 +187,13 @@ claro_install:
     prefix: install
 
 claro_file:
-    resource: "@ClarolineCoreBundle/Controller/FileControlller.php"
+    resource: "@ClarolineCoreBundle/Controller/FileController.php"
     type: annotation
     prefix: file
 
 idci_exporter:
     resource: "../../vendor/idci/exporter-bundle/IDCI/Bundle/ExporterBundle/Controller"
     type:     annotation
+# app/config/routing.yml
+_bazinga_exposetranslation:
+    resource: "@BazingaExposeTranslationBundle/Resources/config/routing/routing.yml"
