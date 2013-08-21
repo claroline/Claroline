@@ -462,6 +462,7 @@ unregistered: Non inscrit
 unregistered_groups: 'Groupes non enregistrés'
 unregistered_users: 'Utilisateurs non enregistrés'
 unwritable_file_exception: "Vous n'avez pas la permission d'écrire dans le fichier %path%."
+url_invalid: "Le code n'est pas correct, n'essayez pas de changer l'adresse"
 user: Utilisateur
 user_accounts: Comptes utilisateur
 user_form_administrativeCode: 'Code administratif'
