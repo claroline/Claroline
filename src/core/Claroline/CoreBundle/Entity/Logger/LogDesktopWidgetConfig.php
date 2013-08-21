@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class LogDesktopWidgetConfig
 {
-
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -19,18 +18,17 @@ class LogDesktopWidgetConfig
     protected $id;
 
     /**
-     * @ORM\Column(type="boolean", name="is_default", nullable=false)
+     * @ORM\Column(name="is_default", type="boolean")
      */
     protected $isDefault = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;
 
     /**
-     * @ORM\Column(type="integer", name="amount", nullable=false)
+     * @ORM\Column(type="integer")
      */
     protected $amount = 5;
 

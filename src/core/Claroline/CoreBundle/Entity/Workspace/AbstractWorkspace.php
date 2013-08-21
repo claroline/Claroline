@@ -37,13 +37,13 @@ abstract class AbstractWorkspace
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column()
      * @Assert\NotBlank()
      */
     protected $name;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(unique=true)
      * @Assert\NotBlank()
      */
     protected $code;
@@ -54,8 +54,13 @@ abstract class AbstractWorkspace
     protected $isPublic = true;
 
     /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    protected $displayable;
+
+    /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     mappedBy="workspace"
      * )
      */
@@ -81,9 +86,9 @@ abstract class AbstractWorkspace
 
     /**
      * @ORM\OneToMany(
-     * targetEntity="Claroline\CoreBundle\Entity\Role",
-     * mappedBy="workspace",
-     * cascade={"persist"}
+     *     targetEntity="Claroline\CoreBundle\Entity\Role",
+     *     mappedBy="workspace",
+     *     cascade={"persist"}
      * )
      */
     protected $roles;
@@ -100,14 +105,24 @@ abstract class AbstractWorkspace
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User"
      * )
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id",onDelete="SET NULL", nullable=true)
+     * @ORM\JoinColumn(name="user_id", onDelete="SET NULL")
      */
     protected $creator;
 
     /**
-     * @ORM\Column(name="guid", type="string", length=255, unique=true)
+     * @ORM\Column(unique=true)
      */
     protected $guid;
+
+    /**
+     * @ORM\Column(name="self_registration", type="boolean", nullable=true)
+     */
+    protected $selfRegistration;
+
+    /**
+     * @ORM\Column(name="self_unregistration", type="boolean", nullable=true)
+     */
+    protected $selfUnregistration;
 
     public function __construct()
     {
@@ -200,5 +215,35 @@ abstract class AbstractWorkspace
     public function getGuid()
     {
         return $this->guid;
+    }
+
+    public function setDisplayable($displayable)
+    {
+        $this->displayable = $displayable;
+    }
+
+    public function isDisplayable()
+    {
+        return $this->displayable;
+    }
+
+    public function setSelfRegistration($selfRegistration)
+    {
+        $this->selfRegistration = $selfRegistration;
+    }
+
+    public function getSelfRegistration()
+    {
+        return $this->selfRegistration;
+    }
+
+    public function setSelfUnregistration($selfUnregistration)
+    {
+        $this->selfUnregistration = $selfUnregistration;
+    }
+
+    public function getSelfUnregistration()
+    {
+        return $this->selfUnregistration;
     }
 }

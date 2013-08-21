@@ -26,12 +26,16 @@ class FormFactory
     const TYPE_WORKSPACE_TEMPLATE = 'workspace_template';
     const TYPE_LOG_WORKSPACE_WIDGET_CONFIG = 'log_workspace_widget_config';
     const TYPE_LOG_DESKTOP_WIDGET_CONFIG = 'log_desktop_widget_config';
-    const TYPE_CALENDAR = 'calendar';
+    const TYPE_AGENDA = 'agenda';
     const TYPE_WORKSPACE_TAG = 'workspace_tag';
     const TYPE_ADMIN_WORKSPACE_TAG = 'admin_workspace_tag';
     const TYPE_RESOURCE_PERMS = 'resource_permissions';
     const TYPE_RESOURCE_RENAME = 'resource_rename';
     const TYPE_RESOURCE_PROPERTIES = 'resource_properties';
+    const TYPE_WORKSPACE_ROLE = 'workspace_role';
+    const TYPE_ROLE_TRANSLATION = 'workspace_role_translation';
+    const TYPE_USER_EMAIL = 'email';
+    const TYPE_USER_RESET_PWD = 'user_reset_pwd';
 
     private static $types = array(
         self::TYPE_MESSAGE => array(
@@ -90,8 +94,8 @@ class FormFactory
         self::TYPE_LOG_DESKTOP_WIDGET_CONFIG => array(
             'formType' => 'Claroline\CoreBundle\Form\LogDesktopWidgetConfigType'
         ),
-        self::TYPE_CALENDAR => array(
-            'formType' => 'Claroline\CoreBundle\Form\CalendarType',
+        self::TYPE_AGENDA => array(
+            'formType' => 'Claroline\CoreBundle\Form\AgendaType',
             'entity' => 'Claroline\CoreBundle\Entity\Event'
         ),
         self::TYPE_WORKSPACE_TAG => array(
@@ -108,11 +112,24 @@ class FormFactory
         ),
         self::TYPE_RESOURCE_RENAME => array(
             'formType' => 'Claroline\CoreBundle\Form\ResourceNameType',
-            'entity' => 'Claroline\CoreBundle\Entity\Resource\AbstractResource'
+            'entity' => 'Claroline\CoreBundle\Entity\Resource\ResourceNode'
         ),
         self::TYPE_RESOURCE_PROPERTIES => array(
             'formType' => 'Claroline\CoreBundle\Form\ResourcePropertiesType',
-            'entity' => 'Claroline\CoreBundle\Entity\Resource\AbstractResource'
+            'entity' => 'Claroline\CoreBundle\Entity\Resource\ResourceNode'
+        ),
+        self::TYPE_WORKSPACE_ROLE => array(
+            'formType' => 'Claroline\CoreBundle\Form\WorkspaceRoleType'
+        ),
+        self::TYPE_ROLE_TRANSLATION => array(
+            'formType' => 'Claroline\CoreBundle\Form\RoleTranslationType',
+            'entity' => 'Claroline\CoreBundle\Entity\Role'
+        ),
+        self::TYPE_USER_EMAIL => array(
+            'formType' => 'Claroline\CoreBundle\Form\EmailType'
+        ),
+        self::TYPE_USER_RESET_PWD => array(
+            'formType' => 'Claroline\CoreBundle\Form\ResetPasswordType'
         )
     );
 
@@ -148,5 +165,10 @@ class FormFactory
         }
 
         return $this->factory->create($formType, $entityVar);
+    }
+
+    public function createFormBuilder($data = null, array $options = array())
+    {
+        return $this->factory->createBuilder('form', $data, $options);
     }
 }

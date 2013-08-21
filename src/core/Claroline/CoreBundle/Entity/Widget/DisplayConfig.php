@@ -22,12 +22,7 @@ class DisplayConfig
      *     targetEntity="Claroline\CoreBundle\Entity\Widget\DisplayConfig",
      *     inversedBy="children"
      * )
-     * @ORM\JoinColumn(
-     *     name="parent_id",
-     *     referencedColumnName="id",
-     *     onDelete="SET NULL",
-     *     nullable=true
-     * )
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $parent;
 
@@ -41,36 +36,35 @@ class DisplayConfig
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
-     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $workspace;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Widget\Widget")
-     * @ORM\JoinColumn(name="widget_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
      */
     protected $widget;
 
     /**
-     * @ORM\Column(type="boolean", name="is_locked", nullable=false)
+     * @ORM\Column(name="is_locked", type="boolean")
      */
-    protected $isLocked;
+    protected $isLocked = false;
 
     /**
-     * @ORM\Column(type="boolean", name="is_visible")
+     * @ORM\Column(name="is_visible", type="boolean")
      */
-    protected $isVisible;
+    protected $isVisible = false;
 
     /**
-     * @ORM\Column(type="boolean", name="is_desktop")
+     * @ORM\Column(name="is_desktop", type="boolean")
      */
-    protected $isDesktop;
+    protected $isDesktop = false;
 
     public function getId()
     {

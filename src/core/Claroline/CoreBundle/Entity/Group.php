@@ -14,7 +14,7 @@ use Claroline\CoreBundle\Entity\User;
  * @ORM\Table(
  *      name="claro_group",
 *       uniqueConstraints={
- *          @ORM\UniqueConstraint(name="name",columns={"name"})
+ *          @ORM\UniqueConstraint(name="group_unique_name", columns={"name"})
  *      }
  *  )
  * @DoctrineAssert\UniqueEntity("name")
@@ -29,7 +29,7 @@ class Group extends AbstractRoleSubject
     protected $id;
 
     /**
-     * @ORM\Column(name="name", type="string", length=50, nullable=false)
+     * @ORM\Column()
      * @Assert\NotBlank()
      */
     protected $name;
@@ -37,16 +37,8 @@ class Group extends AbstractRoleSubject
     /**
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     cascade={"persist"}, mappedBy="groups"
-     * )
-     * @ORM\JoinTable(
-     *     name="claro_user_group",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     *     }
+     *     cascade={"persist"},
+     *     mappedBy="groups"
      * )
      */
     protected $users;
@@ -57,15 +49,7 @@ class Group extends AbstractRoleSubject
      *     cascade={"persist"},
      *     inversedBy="groups"
      * )
-     * @ORM\JoinTable(
-     *     name="claro_group_role",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     *     }
-     * )
+     * @ORM\JoinTable(name="claro_group_role")
      */
     protected $roles;
 
@@ -131,5 +115,10 @@ class Group extends AbstractRoleSubject
         }
 
         $this->roles->add($platformRole);
+    }
+
+    public function containsUser(User $user)
+    {
+        return $this->users->contains($user);
     }
 }

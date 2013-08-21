@@ -3,8 +3,7 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 
 class ResourceRightsRepository extends EntityRepository
@@ -14,11 +13,11 @@ class ResourceRightsRepository extends EntityRepository
      * Used by the ResourceVoter.
      *
      * @param array[string]    $rights
-     * @param AbstractResource $resource
+     * @param ResourceNode     $resource
      *
      * @return array
      */
-    public function findMaximumRights(array $roles, AbstractResource $resource)
+    public function findMaximumRights(array $roles, ResourceNode $resource)
     {
         if (count($roles) === 0) {
             throw new \RuntimeException('Roles cannot be empty');
@@ -33,7 +32,7 @@ class ResourceRightsRepository extends EntityRepository
                 MAX (CASE rrw.canExport WHEN true THEN 1 ELSE 0 END) as canExport
             FROM Claroline\CoreBundle\Entity\Resource\ResourceRights rrw
             JOIN rrw.role role
-            JOIN rrw.resource resource
+            JOIN rrw.resourceNode resource
             WHERE ';
 
         $index = 0;
@@ -54,11 +53,11 @@ class ResourceRightsRepository extends EntityRepository
      * directory.
      *
      * @param array            $roles
-     * @param AbstractResource $resource
+     * @param ResourceNode     $resource
      *
      * @return array
      */
-    public function findCreationRights(array $roles, Directory $directory)
+    public function findCreationRights(array $roles, ResourceNode $node)
     {
         if (count($roles) === 0) {
             throw new \RuntimeException('Roles cannot be empty');
@@ -69,14 +68,14 @@ class ResourceRightsRepository extends EntityRepository
             FROM Claroline\CoreBundle\Entity\Resource\ResourceType type
             JOIN type.rights right
             JOIN right.role role
-            JOIN right.resource resource
+            JOIN right.resourceNode resource
             WHERE ';
 
         $index = 0;
 
         foreach ($roles as $role) {
             $dql .= $index !== 0 ? ' OR ' : '';
-            $dql .= "resource.id = {$directory->getId()} AND role.name = '{$role}'";
+            $dql .= "resource.id = {$node->getId()} AND role.name = '{$role}'";
             ++$index;
         }
 
@@ -88,12 +87,12 @@ class ResourceRightsRepository extends EntityRepository
     /**
      * @todo to be removed
      */
-    public function findNonAdminRights(AbstractResource $resource)
+    public function findNonAdminRights(ResourceNode $resource)
     {
         $dql = "
             SELECT rights
             FROM Claroline\CoreBundle\Entity\Resource\ResourceRights rights
-            JOIN rights.resource resource
+            JOIN rights.resourceNode resource
             JOIN rights.role role
             WHERE resource.id = {$resource->getId()}
             AND role.name != 'ROLE_ADMIN'
@@ -106,16 +105,16 @@ class ResourceRightsRepository extends EntityRepository
     /**
      * Returns all the resource rights of a resource and its descendants.
      *
-     * @param AbstractResource $resource
+     * @param ResourceNode $resource
      *
      * @return array[ResourceRights]
      */
-    public function findRecursiveByResource(AbstractResource $resource)
+    public function findRecursiveByResource(ResourceNode $resource)
     {
         $dql = "
             SELECT rights, role, resource
             FROM Claroline\CoreBundle\Entity\Resource\ResourceRights rights
-            JOIN rights.resource resource
+            JOIN rights.resourceNode resource
             JOIN rights.role role
             WHERE resource.path LIKE '{$resource->getPath()}%'
         ";
@@ -126,17 +125,17 @@ class ResourceRightsRepository extends EntityRepository
     /**
      * Find ResourceRights for each descendant of a resource for a role.
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $resource
      * @param \Claroline\CoreBundle\Entity\Role                      $role
      *
      * @return array
      */
-    public function findRecursiveByResourceAndRole(AbstractResource $resource, Role $role)
+    public function findRecursiveByResourceAndRole(ResourceNode $resource, Role $role)
     {
         $dql = "
             SELECT rights, role, resource
             FROM Claroline\CoreBundle\Entity\Resource\ResourceRights rights
-            JOIN rights.resource resource
+            JOIN rights.resourceNode resource
             JOIN rights.role role
             WHERE resource.path LIKE '{$resource->getPath()}%' AND role.name = '{$role->getName()}'
         ";

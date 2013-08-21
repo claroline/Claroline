@@ -25,14 +25,15 @@ class AppKernel extends Kernel
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new JMS\TwigJsBundle\JMSTwigJsBundle(),
             new Claroline\CoreBundle\ClarolineCoreBundle(),
+            new Claroline\MigrationBundle\ClarolineMigrationBundle(),
             new Claroline\BadgeBundle\ClarolineBadgeBundle(),
             new Claroline\Bundle\FrontEndBundle\FrontEndBundle(),
             new Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle(),
             new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
             new IDCI\Bundle\ExporterBundle\IDCIExporterBundle(),
             new Zenstruck\Bundle\FormBundle\ZenstruckFormBundle(),
-            new ICAPLyon1\Bundle\SimpleTagBundle\ICAPLyon1SimpleTagBundle(),
-            new BeSimple\SsoAuthBundle\BeSimpleSsoAuthBundle()
+            new BeSimple\SsoAuthBundle\BeSimpleSsoAuthBundle(),
+            new Bazinga\ExposeTranslationBundle\BazingaExposeTranslationBundle()
         );
 
         if (file_exists(__DIR__ . '/config/local/plugin/bundles')) {
