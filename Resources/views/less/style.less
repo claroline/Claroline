@@ -1,3 +1,8 @@
+@webPath: "../../../../../../..";
+
+// Core variables and mixins
+@import "@{webPath}/vendor/twbs/bootstrap/less/variables.less";
+
 article {
     margin-bottom: 30px;
 
@@ -39,5 +44,71 @@ article {
         &.unpublished {
             border: 1px dotted orange;
         }
+    }
+}
+
+/* collapsible tree */
+.tree {
+    margin: 0;
+    max-height: 300px;
+    min-height: 20px;
+    overflow-y: auto;
+    padding: 10px;
+    a {
+        display: inline;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 90%;
+    }
+    li {
+        list-style-type: none;
+        margin: 0px 0;
+        padding: 5px 0px 0px 2px;
+        position: relative;
+        &::before, &::after {
+            content: '';
+            left: -20px;
+            position: absolute;
+            right: auto;
+        }
+        &::before {
+            border-left: 1px solid @grayLight;
+            bottom: 50px;
+            height: 100%;
+            top: 0;
+            width: 1px;
+        }
+        &::after {
+            border-top: 1px solid @grayLight;
+            height: 20px;
+            top: 13px;
+            width: 23px;
+        }
+        span, a {
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+            border: 1px solid @grayLight;
+            border-radius: 5px;
+            line-height: 14px;
+            padding: 2px 4px;
+            text-decoration: none;
+        }
+        &.parent_li > span, &.parent_li > a {
+            cursor: pointer;
+            /*Time for some hover effects*/
+            &:hover, &:hover + ul li span, &:hover + ul li a {
+                background: @grayLighter;
+                border: 1px solid @gray;
+                color: #000;
+            }
+        }
+        /*Remove connectors after last child*/
+        &:last-child::before {
+            height: 30px;
+        }
+    }
+    /*Remove connectors before root*/
+    > li::before, > li::after {
+        border: 0;
     }
 }
