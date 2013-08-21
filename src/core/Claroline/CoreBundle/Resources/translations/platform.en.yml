@@ -261,6 +261,7 @@ copiable: 'Copiable'
 editable: 'Editable'
 yes: 'yes'
 no: 'no'
+no_email: 'This email doesn't match a registered user'
 link_outdated : 'link is no more valid'
 login: Login
 login_failure: 'Login has failed. Check your username and password are correct.'
@@ -457,6 +458,7 @@ type: Type
 type_s: Type(s)
 unique connections: 'Nb unique Cnx.'
 unregister: Unregister
+unregistered: Unregistered
 unregistered_groups: 'Unregistered groups'
 unregistered_users: 'Unregistered users'
 unwritable_file_exception: "You don't have the permission to write in the file %path%."
@@ -480,8 +482,6 @@ username: Username
 users: Users
 users_connected_once: users connected at least once
 users_visits: Users' connections
-unwritable_file_exception: "The file %path% is not writable."
-unregistered: Unregistered
 validate: Validate
 view: View
 views: Views
@@ -599,7 +599,6 @@ badge_delete_error_message: 'An error occured while deleting badge.'
 badge_edit_success_message: 'Badge edited with success.'
 badge_edit_error_message: 'An error occured while editing badge.'
 badge_awarded_count_message: '%awaredBadge% badge awarding made with success.|%awaredBadge% badge awardings made with success.'
-badge_awarded_count_message: '%awaredBadge% attribution de badge effectuée.|%awaredBadge% attributions de badge effectuées.'
 badge_award_error_message: 'An error occured while awarding badge.'
 badge_unaward_success_message: 'Badge awarded remove with success.'
 badge_unaward_error_message: 'An error occured while removing awarded badge.'
@@ -613,6 +612,7 @@ badge_form_change_image: "Change the image"
 badge_award_form_group: 'Group'
 badge_award_form_user: 'User'
 badge_expired_on_date: 'Expire the %expirationDate%'
+badge_award_info_no_group_message: "No selected group for attribution"
 claim: 'Claim'
 claim_badge: 'Claim a badge'
 claim_badge_form: 'Claim badge form'
