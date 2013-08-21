@@ -90,7 +90,7 @@ class PathTemplateController extends Controller
     /**
     * @Route(
     *     "/path_template/delete/{id}",
-    *     name = "innova_path_delete_path",
+    *     name = "innova_path_delete_pathtemplate",
     *     options = {"expose"=true}
     * )
     * @Method("DELETE")
@@ -105,9 +105,7 @@ class PathTemplateController extends Controller
         $em->remove($pathTemplate);
         $em->flush();
 
-       return New Response(
-           $id
-        );
+       return New Response("ok");
     }
 
     public function entityManager()

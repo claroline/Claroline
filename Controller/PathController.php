@@ -67,7 +67,11 @@ class PathController extends Controller
         $paths = array();
 
         foreach ($results as $result) {
-            $paths[$result->getId()] = json_decode($result->getPath());
+            $path = new \stdClass();
+            $path->id = $result->getId();
+            $path->path = json_decode($result->getPath());
+
+            $paths[] = $path;
         }
 
         return new JsonResponse($paths);
@@ -85,9 +89,10 @@ class PathController extends Controller
      */
     public function getPathAction(Path $path)
     {
-        $path = json_decode($path->getPath());
-        
-        return new JsonResponse($path);
+        $newPath = json_decode($path->getPath());
+        $newPath->id = $path->getId();
+    
+        return new JsonResponse($newPath);
     }
 
     /**
