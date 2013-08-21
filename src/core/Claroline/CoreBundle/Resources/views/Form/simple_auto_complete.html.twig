@@ -13,7 +13,7 @@
         </div>
         <script type="text/javascript">
             $(document).ready(function() {
-                var path = '{{ path('exporter_api', {'entity_reference': entity_reference, '_format': format}) }}';
+                var path = '{{ path('exporter_api', {'entityReference': entity_reference, '_format': format}) }}';
                 $( "#{{ form.vars['id'] }}" ).after('<a id="{{ form.vars['id'] }}_clear" class="btn"><i class="icon-remove"></i></a>');
                 $( "#{{ form.vars['id'] }}_clear" ).on('click', function(){
                     $( "#{{ form.vars['id'] }}" ).val('');
