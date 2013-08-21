@@ -85,11 +85,9 @@ class PathController extends Controller
      */
     public function getPathAction(Path $path)
     {
+        $path = json_decode($path->getPath());
         
-        $json_path = array();
-        $json_path[$path->getId()] = json_decode($path->getPath());
-        
-        return new JsonResponse($json_path);
+        return new JsonResponse($path);
     }
 
     /**
@@ -112,13 +110,15 @@ class PathController extends Controller
         
         $new_path = New Path;
         $new_path->setUser($user)
-                ->setEditDate($editDate)
-                ->setPath($content);
+                 ->setEditDate($editDate)
+                 ->setPath($content);
 
         $em->persist($new_path);
         $em->flush();
 
-        return New Response();
+        return New Response(
+            $new_path->getId()
+        );
     }
 
     /**
@@ -137,13 +137,15 @@ class PathController extends Controller
         $editDate = new \DateTime();
         $content = $this->get('request')->getContent();
 
-        $path->setEditDate($editDate);
-        $path->setPath($content);
+        $path->setEditDate($editDate)
+             ->setPath($content);
 
         $em->persist($path);
         $em->flush();
 
-        return New Response();
+        return New Response(
+            $path->getId()
+        );
     }
 
     /**
@@ -162,7 +164,7 @@ class PathController extends Controller
         $em->remove($path);
         $em->flush();
 
-        return New Response();
+        return New Response("ok");
     }
 
     public function entityManager()

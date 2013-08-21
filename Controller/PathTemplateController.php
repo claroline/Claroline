@@ -39,7 +39,13 @@ class PathTemplateController extends Controller
         $pathtemplates = array();
 
         foreach ($results as $result) {
-            $pathtemplates[$result->getId()] = json_decode($result->getStep());
+            $template = new \stdClass();
+            $template->id = $result->getId();
+            $template->name = $result->getName();
+            $template->description = $result->getDescription();
+            $template->step = json_decode($result->getStep());
+
+            $pathtemplates[] = $template;
         }
 
         return new JsonResponse($pathtemplates);
@@ -72,7 +78,13 @@ class PathTemplateController extends Controller
         $em->persist($pathTemplate);
         $em->flush();
 
-        return New Response();
+        $template = new \stdClass();
+        $template->id = $pathTemplate->getId();
+        $template->name = $pathTemplate->getName();
+        $template->description = $pathTemplate->getDescription();
+        $template->step = json_decode($pathTemplate->getStep());
+
+        return New JsonResponse($template);
     }
 
     /**
@@ -88,10 +100,14 @@ class PathTemplateController extends Controller
     {
         $em = $this->entityManager();
 
+        $id = $pathTemplate->getId();
+
         $em->remove($pathTemplate);
         $em->flush();
 
-        return New Response();
+       return New Response(
+           $id
+        );
     }
 
     public function entityManager()
