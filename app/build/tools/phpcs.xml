@@ -3,6 +3,7 @@
 <ruleset name="Claronext coding standard">
     <description>Claronext coding standard</description>
     <exclude-pattern>*/Resources/*</exclude-pattern>
+    <exclude-pattern>*/Migrations/*</exclude-pattern>
     <!-- our base coding standard is PSR -->
     <!-- sniffs come from PSR, Generic, PEAR, Squiz, Zend and Symfony -->
     <!-- see https://github.com/klaussilveira/phpcs-psr -->

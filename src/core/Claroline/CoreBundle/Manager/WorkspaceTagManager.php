@@ -12,6 +12,7 @@ use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\CoreBundle\Repository\WorkspaceTagRepository;
 use Claroline\CoreBundle\Repository\RelWorkspaceTagRepository;
 use Claroline\CoreBundle\Repository\WorkspaceTagHierarchyRepository;
+use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -30,18 +31,21 @@ class WorkspaceTagManager
     private $workspaceRepo;
     private $roleManager;
     private $om;
+    private $pagerFactory;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "roleManager" = @DI\Inject("claroline.manager.role_manager"),
-     *     "om"          = @DI\Inject("claroline.persistence.object_manager")
+     *     "roleManager"  = @DI\Inject("claroline.manager.role_manager"),
+     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
+     *     "pagerFactory" = @DI\Inject("claroline.pager.pager_factory")
      * })
      */
     public function __construct(
         RoleManager $roleManager,
-        ObjectManager $om
+        ObjectManager $om,
+        PagerFactory $pagerFactory
     )
     {
         $this->tagRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag');
@@ -50,6 +54,7 @@ class WorkspaceTagManager
         $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
         $this->roleManager = $roleManager;
         $this->om = $om;
+        $this->pagerFactory = $pagerFactory;
     }
 
     public function insert(WorkspaceTag $tag)
@@ -83,15 +88,35 @@ class WorkspaceTagManager
     public function deleteTagRelation(RelWorkspaceTag $relWorkspaceTag)
     {
         $this->om->remove($relWorkspaceTag);
-        $this->om->persist();
+        $this->om->flush();
     }
 
     public function deleteRelWorkspaceTag(WorkspaceTag $tag, AbstractWorkspace $workspace)
     {
-        $relWorkspaceTag = $this->relTagRepo->findBy(array('tag' => $tag, 'workspace' => $workspace));
+        $relWorkspaceTag = $this->relTagRepo->findOneBy(array('tag' => $tag, 'workspace' => $workspace));
 
         $this->om->remove($relWorkspaceTag);
-        $this->om->persist();
+        $this->om->flush();
+    }
+
+    public function deleteAllRelationsFromWorkspaceAndUser(AbstractWorkspace $workspace, User $user)
+    {
+        $relations = $this->relTagRepo->findByWorkspaceAndUser($workspace, $user);
+
+        foreach ($relations as $relation) {
+            $this->om->remove($relation);
+        }
+        $this->om->flush();
+    }
+
+    public function deleteAllAdminRelationsFromWorkspace(AbstractWorkspace $workspace)
+    {
+        $relations = $this->relTagRepo->findAdminByWorkspace($workspace);
+
+        foreach ($relations as $relation) {
+            $this->om->remove($relation);
+        }
+        $this->om->flush();
     }
 
     public function createTagHierarchy(WorkspaceTag $tag, WorkspaceTag $parent, $level)
@@ -110,7 +135,7 @@ class WorkspaceTagManager
     public function deleteTagHierarchy(WorkspaceTagHierarchy $tagHierarchy)
     {
         $this->om->remove($tagHierarchy);
-        $this->om->persist();
+        $this->om->flush();
     }
 
     public function getNonEmptyTagsByUser(User $user)
@@ -284,7 +309,7 @@ class WorkspaceTagManager
 
     public function getDatasForWorkspaceList($withRoles = true)
     {
-        $workspaces = $this->workspaceRepo->findNonPersonal();
+        $workspaces = $this->workspaceRepo->findDisplayableWorkspaces();
         $tags = $this->getNonEmptyAdminTags();
         $relTagWorkspace = $this->getTagRelationsByAdmin();
         $tagWorkspaces = array();
@@ -346,6 +371,78 @@ class WorkspaceTagManager
             }
         }
 
+        $tagWorkspacePager = array();
+
+        foreach ($tagWorkspaces as $key => $content) {
+            $tagWorkspacePager[$key] = $this->pagerFactory->createPagerFromArray($content, 1);
+        }
+
+        $datas = array();
+        $datas['workspaces'] = $this->pagerFactory->createPagerFromArray($workspaces, 1);
+        $datas['tags'] = $tags;
+        $datas['tagWorkspaces'] = $tagWorkspacePager;
+        $datas['hierarchy'] = $hierarchy;
+        $datas['rootTags'] = $rootTags;
+        $datas['displayable'] = $displayable;
+        $datas['workspaceRoles'] = $workspaceRoles;
+
+        return $datas;
+    }
+
+    /**
+     * Returns all datas necessary to display the list of all workspaces visible for all users
+     * that are open for self-registration.
+     */
+    public function getDatasForSelfRegistrationWorkspaceList()
+    {
+        $workspaces = $this->workspaceRepo->findWorkspacesWithSelfRegistration();
+        $tags = $this->getNonEmptyAdminTags();
+
+        try {
+            $relTagWorkspace = $this->getTagRelationsByAdminAndWorkspaces($workspaces);
+        } catch (\InvalidArgumentException $e) {
+            $relTagWorkspace = array();
+        }
+        
+        $tagWorkspaces = array();
+
+        // create an array: tagId => [associated_workspace_relation]
+        foreach ($relTagWorkspace as $tagWs) {
+
+            if (empty($tagWorkspaces[$tagWs['tag_id']])) {
+                $tagWorkspaces[$tagWs['tag_id']] = array();
+            }
+            $tagWorkspaces[$tagWs['tag_id']][] = $tagWs['rel_ws_tag'];
+        }
+
+        $tagsHierarchy = $this->getAllAdminHierarchies();
+        $rootTags = $this->getAdminRootTags();
+        $hierarchy = array();
+
+        // create an array : tagId => [direct_children_id]
+        foreach ($tagsHierarchy as $tagHierarchy) {
+
+            if ($tagHierarchy->getLevel() === 1) {
+
+                if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
+                    !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
+
+                    $hierarchy[$tagHierarchy->getParent()->getId()] = array();
+                }
+                $hierarchy[$tagHierarchy->getParent()->getId()][] = $tagHierarchy->getTag();
+            }
+        }
+
+        // create an array indicating which tag is displayable
+        // a tag is displayable if it or one of his children contains is associated to a workspace
+        $displayable = array();
+        $allAdminTags = $this->getTagsByUser(null);
+
+        foreach ($allAdminTags as $adminTag) {
+            $adminTagId = $adminTag->getId();
+            $displayable[$adminTagId] = $this->isTagDisplayable($adminTagId, $tagWorkspaces, $hierarchy);
+        }
+
         $datas = array();
         $datas['workspaces'] = $workspaces;
         $datas['tags'] = $tags;
@@ -353,7 +450,6 @@ class WorkspaceTagManager
         $datas['hierarchy'] = $hierarchy;
         $datas['rootTags'] = $rootTags;
         $datas['displayable'] = $displayable;
-        $datas['workspaceRoles'] = $workspaceRoles;
 
         return $datas;
     }
@@ -389,5 +485,19 @@ class WorkspaceTagManager
         }
 
         return $displayable;
+    }
+
+    public function getPagerRelationByTag(WorkspaceTag $workspaceTag, $page = 1)
+    {
+        $relations = $this->relTagRepo->findAdminRelationsByTags($workspaceTag);
+
+        return $this->pagerFactory->createPagerFromArray($relations, $page);
+    }
+
+    public function getPagerAllWorkspaces($page = 1)
+    {
+        $workspaces = $this->workspaceRepo->findDisplayableWorkspaces();
+
+        return $this->pagerFactory->createPagerFromArray($workspaces, $page);
     }
 }

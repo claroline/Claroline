@@ -22,6 +22,7 @@ use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
 use Claroline\CoreBundle\Entity\Resource\Text;
 use Claroline\CoreBundle\Entity\Resource\Revision;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Message;
@@ -122,6 +123,7 @@ abstract class RepositoryTestCase extends WebTestCase
         $user->setLastName($name . 'LastName');
         $user->setUsername($name . 'Username');
         $user->setPlainPassword($name . 'Password');
+        $user->setMail($name . '@claroline.net');
         $user->setCreationDate(self::$time);
 
         foreach ($roles as $role) {
@@ -175,11 +177,21 @@ abstract class RepositoryTestCase extends WebTestCase
         self::create($name, $workspace);
     }
 
+    protected static function createDisplayableWorkspace($name, $selfRegistration)
+    {
+        $workspace = new SimpleWorkspace();
+        $workspace->setName($name);
+        $workspace->setCode($name . 'Code');
+        $workspace->setDisplayable(true);
+        $workspace->setSelfRegistration($selfRegistration);
+        $workspace->setGuid(self::$client->getContainer()->get('claroline.utilities.misc')->generateGuid());
+        self::create($name, $workspace);
+    }
+
     protected static function createResourceType($name, $isExportable = true, Plugin $plugin = null)
     {
         $type = new ResourceType();
         $type->setName($name);
-        $type->setClass($name . 'Class');
         $type->setExportable($isExportable);
 
         if ($plugin) {
@@ -197,19 +209,35 @@ abstract class RepositoryTestCase extends WebTestCase
         Directory $parent = null
     )
     {
-        $directory = self::prepareResource(new Directory(), $type, $creator, $workspace, $parent);
-        $directory->setName($name);
-        $directory->setMimeType('directory/mime');
+        if ($parent) {
+            $parent = $parent->getResourceNode();
+        }
+
+        $directory = self::prepareResource(
+            new Directory(),
+            $type,
+            $creator,
+            $workspace,
+            $name,
+            'directory/mime',
+            $parent
+        );
         self::create($name, $directory);
     }
 
     protected static function createFile($name, ResourceType $type, User $creator, Directory $parent)
     {
-        $file = self::prepareResource(new File(), $type, $creator, $parent->getWorkspace(), $parent);
-        $file->setName($name);
+        $file = self::prepareResource(
+            new File(),
+            $type,
+            $creator,
+            $parent->getResourceNode()->getWorkspace(),
+            $name,
+            'file/mime',
+            $parent->getResourceNode()
+        );
         $file->setSize(123);
         $file->setHashName($name);
-        $file->setMimeType('file/mime');
         self::create($name, $file);
     }
 
@@ -221,8 +249,15 @@ abstract class RepositoryTestCase extends WebTestCase
         Directory $parent
     )
     {
-        $text = self::prepareResource(new Text(), $type, $creator, $parent->getWorkspace(), $parent);
-        $text->setName($name);
+        $text = self::prepareResource(
+            new Text(),
+            $type,
+            $creator,
+            $parent->getResourceNode()->getWorkspace(),
+            $name,
+            'text/mime',
+            $parent->getResourceNode()
+        );
         self::create($name, $text);
 
         $revision = new Revision();
@@ -240,10 +275,15 @@ abstract class RepositoryTestCase extends WebTestCase
         Directory $parent
     )
     {
-        $shortcut = self::prepareResource(new ResourceShortcut(), $type, $creator, $parent->getWorkspace(), $parent);
-        $shortcut->setName($name);
-        $shortcut->setResource($target);
-        $shortcut->setMimeType('shortcut/mime');
+        $shortcut = self::prepareResource(
+            new ResourceShortcut(),
+            $type, $creator,
+            $parent->getResourceNode()->getWorkspace(),
+            $name,
+            'shortcut/mime',
+            $parent->getResourceNode()
+        );
+        $shortcut->setTarget($target->getResourceNode());
         self::create($name, $shortcut);
     }
 
@@ -255,19 +295,23 @@ abstract class RepositoryTestCase extends WebTestCase
         Directory $parent
     )
     {
-        $activity = new Activity();
+        $activity = self::prepareResource(
+            new Activity(),
+            $type,
+            $creator,
+            $parent->getResourceNode()->getWorkspace(),
+            $name,
+            'mime/activity',
+            $parent->getResourceNode()
+        );
         $activity->setName($name);
         $activity->setInstructions('Some instructions...');
-        $activity->setResourceType($type);
-        $activity->setCreator($creator);
-        $activity->setWorkspace($parent->getWorkspace());
-        $activity->setParent($parent);
         self::$om->startFlushSuite();
 
         for ($i = 0, $count = count($resources); $i < $count; ++$i) {
             $activityResource = new ResourceActivity();
             $activityResource->setActivity($activity);
-            $activityResource->setResource($resources[$i]);
+            $activityResource->setResourceNode($resources[$i]->getResourceNode());
             $activityResource->setSequenceOrder($i);
             self::create(
                 'activityResource/' . $name . '-' . $resources[$i]->getName(),
@@ -276,7 +320,6 @@ abstract class RepositoryTestCase extends WebTestCase
             $activity->addResourceActivity($activityResource);
         }
 
-        $activity->setCreationDate(self::$time);
 
         self::create($name, $activity);
         self::$om->endFlushSuite();
@@ -291,7 +334,7 @@ abstract class RepositoryTestCase extends WebTestCase
     {
         $rights = new ResourceRights();
         $rights->setRole($role);
-        $rights->setResource($resource);
+        $rights->setResourceNode($resource->getResourceNode());
 
         foreach ($allowedActions as $action) {
             $method = 'setCan' . ucfirst($action);
@@ -302,7 +345,7 @@ abstract class RepositoryTestCase extends WebTestCase
             $rights->addCreatableResourceType($type);
         }
 
-        self::create("resource_right/{$role->getName()}-{$resource->getName()}", $rights);
+        self::create("resource_right/{$role->getName()}-{$resource->getResourceNode()->getName()}", $rights);
     }
 
     protected static function createTool($name)
@@ -462,7 +505,7 @@ abstract class RepositoryTestCase extends WebTestCase
      * @param ResourceType      $type
      * @param User              $creator
      * @param AbstractWorkspace $workspace
-     * @param Directory         $parent
+     * @param ResourceNode      $parent
      *
      * @return AbstractResource
      */
@@ -471,17 +514,27 @@ abstract class RepositoryTestCase extends WebTestCase
         ResourceType $type,
         User $creator,
         AbstractWorkspace $workspace,
+        $name,
+        $mimeType,
         $parent = null
     )
     {
-        $resource->setResourceType($type);
-        $resource->setCreator($creator);
-        $resource->setWorkspace($workspace);
-        $resource->setCreationDate(self::$time);
+
+        $node = new ResourceNode();
+        $node->setResourceType($type);
+        $node->setCreator($creator);
+        $node->setWorkspace($workspace);
+        $node->setCreationDate(self::$time);
+        $node->setClass('resourceClass');
+        $node->setName($name);
+        $node->setMimeType($mimeType);
 
         if ($parent) {
-            $resource->setParent($parent);
+            $node->setParent($parent);
         }
+
+        self::$om->persist($node);
+        $resource->setResourceNode($node);
 
         return $resource;
     }

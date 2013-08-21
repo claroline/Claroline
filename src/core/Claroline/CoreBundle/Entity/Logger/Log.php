@@ -23,134 +23,115 @@ class Log
     protected $id;
 
     /**
-     * @ORM\Column(type="string", name="action", nullable=false)
+     * @ORM\Column()
      */
     protected $action;
 
     /**
-     * @ORM\Column(type="datetime", name="date_log", nullable=false)
+     * @ORM\Column(name="date_log", type="datetime")
      * @Gedmo\Timestampable(on="create")
      */
     protected $dateLog;
 
     /**
-     * @ORM\Column(type="date", name="short_date_log", nullable=false)
+     * @ORM\Column(name="short_date_log", type="date")
      * @Gedmo\Timestampable(on="create")
      */
     protected $shortDateLog;
 
     /**
-     * @ORM\Column(type="json_array", name="details", nullable=true)
+     * @ORM\Column(type="json_array", nullable=true)
      */
     protected $details;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="doer_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     * @ORM\JoinColumn(name="doer_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $doer;
 
     /**
-     * @ORM\Column(type="string", name="doer_type", nullable=false)
+     * @ORM\Column(name="doer_type")
      */
     protected $doerType;
 
     /**
-     * @ORM\Column(type="string", name="doer_ip", nullable=true)
+     * @ORM\Column(name="doer_ip", nullable=true)
      */
     protected $doerIp;
 
     /**
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Role"
-     * )
-     * @ORM\JoinTable(
-     *     name="claro_log_doer_platform_roles",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="log_id", referencedColumnName="id" , onDelete="CASCADE", nullable=false)
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     *     }
-     * )
+     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Role")
+     * @ORM\JoinTable(name="claro_log_doer_platform_roles")
      */
     protected $doerPlatformRoles;
 
     /**
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Role"
-     * )
-     * @ORM\JoinTable(
-     *     name="claro_log_doer_workspace_roles",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="log_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     *     }
-     * )
+     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Role")
+     * @ORM\JoinTable(name="claro_log_doer_workspace_roles")
      */
     protected $doerWorkspaceRoles;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="receiver_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $receiver;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Group")
-     * @ORM\JoinColumn(name="receiver_group_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     * @ORM\JoinColumn(name="receiver_group_id", onDelete="SET NULL")
      */
     protected $receiverGroup;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="owner_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $owner;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
-     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $workspace;
 
     /**
-     * @ORM\Column(type="string", name="tool_name", nullable=true)
+     * @ORM\Column(name="tool_name", nullable=true)
      */
     protected $toolName;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource")
-     * @ORM\JoinColumn(name="resource_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
-    protected $resource;
+    protected $resourceNode;
 
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="resource_type_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     * @ORM\JoinColumn(name="resource_type_id", onDelete="SET NULL")
      */
     protected $resourceType;
 
     /**
-     * @ORM\Column(type="string", name="child_type", nullable=true)
+     * @ORM\Column(name="child_type", nullable=true)
      */
     protected $childType;
 
     /**
-     * @ORM\Column(type="string", name="child_action", nullable=true)
+     * @ORM\Column(name="child_action", nullable=true)
      */
     protected $childAction;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Role")
-     * @ORM\JoinColumn(name="role_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $role;
+
     /**
      * Constructor
      */
@@ -516,12 +497,12 @@ class Log
     /**
      * Set resource
      *
-     * @param  \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     * @param  \Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode
      * @return Log
      */
-    public function setResource(\Claroline\CoreBundle\Entity\Resource\AbstractResource $resource = null)
+    public function setResourceNode(\Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode = null)
     {
-        $this->resource = $resource;
+        $this->resourceNode = $resourceNode;
 
         return $this;
     }
@@ -529,11 +510,11 @@ class Log
     /**
      * Get resource
      *
-     * @return \Claroline\CoreBundle\Entity\Resource\AbstractResource
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
      */
-    public function getResource()
+    public function getResourceNode()
     {
-        return $this->resource;
+        return $this->resourceNode;
     }
 
     /**

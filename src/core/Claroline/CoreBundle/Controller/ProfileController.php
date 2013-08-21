@@ -133,7 +133,7 @@ class ProfileController extends Controller
 
             $this->eventDispatcher->dispatch(
                 'log',
-                'Log\LogUserUpdateEvent',
+                'Log\LogUserUpdate',
                 array($user, $changeSet)
             );
 

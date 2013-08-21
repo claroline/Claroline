@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 
 class RoleRepository extends EntityRepository
@@ -84,38 +85,47 @@ class RoleRepository extends EntityRepository
         return $query->getResult();
     }
 
-    /**
-     * Returns the first role found of a user or a group in a workspace.
-     *
-     * @param AbstractRoleSubject $subject   The subject of the role
-     * @param AbstractWorkspace   $workspace The workspace the role should be bound to
-     *
-     * @return null|Role
-     */
-    public function findWorkspaceRole(AbstractRoleSubject $subject, AbstractWorkspace $workspace)
+    public function findByUserAndWorkspace(User $user, AbstractWorkspace $workspace)
     {
-        $roles = $this->findByWorkspace($workspace);
+        $dql = "
+            SELECT r FROM Claroline\CoreBundle\Entity\Role r
+            JOIN r.users u
+            JOIN r.workspace w
+            WHERE u.id = :userId AND w.id = :workspaceId
+            ";
 
-        foreach ($roles as $role) {
-            foreach ($subject->getRoles() as $subjectRole) {
-                if ($subjectRole == $role->getName()) {
-                    return $role;
-                }
-            }
-        }
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('userId', $user->getId());
+        $query->setParameter('workspaceId', $workspace->getId());
 
-        return null;
+        return $query->getResult();
+    }
+
+    public function findByGroupAndWorkspace(Group $group, AbstractWorkspace $workspace)
+    {
+        $dql = "
+            SELECT r FROM Claroline\CoreBundle\Entity\Role r
+            JOIN r.groups g
+            JOIN r.workspace w
+            WHERE g.id = :groupId AND w.id = :workspaceId
+            ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('groupId', $group->getId());
+        $query->setParameter('workspaceId', $workspace->getId());
+
+        return $query->getResult();
     }
 
     /**
-     * Returns the unique role of a user in a workspace.
+     * Returns the roles of a user in a workspace.
      *
      * @param User              $user      The subject of the role
      * @param AbstractWorkspace $workspace The workspace the role should be bound to
      *
      * @return null|Role
      */
-    public function findWorkspaceRoleForUser(User $user, AbstractWorkspace $workspace)
+    public function findWorkspaceRolesForUser(User $user, AbstractWorkspace $workspace)
     {
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
@@ -128,7 +138,7 @@ class RoleRepository extends EntityRepository
 
         $query = $this->_em->createQuery($dql);
 
-        return $query->getOneOrNullResult();
+        return $query->getResult();
     }
 
     /**
@@ -166,7 +176,6 @@ class RoleRepository extends EntityRepository
         $dql = "
             SELECT DISTINCT r FROM Claroline\CoreBundle\Entity\Role r
             JOIN r.workspace ws
-            LEFT JOIN ws.personalUser pu
             LEFT JOIN Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag rwt
             WITH rwt.workspace = ws
             LEFT JOIN Claroline\CoreBundle\Entity\Workspace\WorkspaceTag wt
@@ -174,7 +183,7 @@ class RoleRepository extends EntityRepository
             LEFT JOIN Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy wth
             WITH wth.tag = wt AND wth.user IS NULL
             LEFT JOIN wth.parent p
-            WHERE pu IS NULL AND (UPPER(ws.code) LIKE :code
+            WHERE ws.displayable = true AND (UPPER(ws.code) LIKE :code
             OR UPPER(wt.name) LIKE :code
             OR UPPER(p.name) LIKE :code)
         ";

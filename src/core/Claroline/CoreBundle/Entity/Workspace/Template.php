@@ -6,10 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(
- *      name="claro_workspace_template",
- *      uniqueConstraints={@ORM\UniqueConstraint(name="tool", columns={"hash"})}
- *  )
+ * @ORM\Table(name="claro_workspace_template")
  */
 class Template
 {
@@ -21,12 +18,12 @@ class Template
     protected $id;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(unique=true)
      */
     protected $hash;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column()
      */
     protected $name;
 

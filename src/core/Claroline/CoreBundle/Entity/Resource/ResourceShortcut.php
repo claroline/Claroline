@@ -11,26 +11,21 @@ use Doctrine\ORM\Mapping as ORM;
 class ResourceShortcut extends AbstractResource
 {
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-    **/
-    protected $id;
-    /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     inversedBy="shortcuts"
      * )
-     * @ORM\JoinColumn(name="resource_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
-    protected $resource;
+    protected $target;
 
-    public function setResource(AbstractResource $resource)
+    public function setTarget(ResourceNode $target)
     {
-        $this->resource = $resource;
+        $this->target = $target;
     }
 
-    public function getResource()
+    public function getTarget()
     {
-        return $this->resource;
+        return $this->target;
     }
 }
