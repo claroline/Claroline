@@ -43,11 +43,25 @@ class BlogController extends Controller
 
         $postRepository = $this->get('icap.blog.post_repository');
 
+        $archivesDatas          = $postRepository->findArchiveDatasByBlog($blog);
+        $displayedArchivesDatas = array();
+
+        $translator = $this->get('translator');
+
+        foreach($archivesDatas as $archivesData)
+        {
+            $displayedArchivesDatas[$archivesData['year']][] = array(
+                'year'  => $archivesData['year'],
+                'month' => $translator->trans('month.' . date("F", mktime(0, 0, 0, $archivesData['month'], 10)), array(), 'platform'),
+                'count' => $archivesData['number']
+            );
+        }
+
         $tag    = null;
         $author = null;
 
         if(null !== $filter) {
-            $tag = $this->getDoctrine()->getRepository('ICAPBlogBundle:Tag')->findOneByName($filter);
+            $tag = $this->get('icap.blog.tag_repository')->findOneByName($filter);
 
             if(null === $tag) {
                 $author = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByUsername($filter);
@@ -84,7 +98,7 @@ class BlogController extends Controller
 
         $query
             ->setParameter('blogId', $blog->getId())
-            ->orderBy('post.publicationDate', 'ASC')
+            ->orderBy('post.publicationDate', 'DESC')
         ;
 
         $adapter = new DoctrineORMAdapter($query);
@@ -102,8 +116,7 @@ class BlogController extends Controller
             '_resource' => $blog,
             'user'      => $user,
             'pager'     => $pager,
-            'tag'       => $tag,
-            'author'    => $author
+            'archives'  => $displayedArchivesDatas
         );
     }
 

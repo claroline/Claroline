@@ -113,4 +113,27 @@ class PostRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult(): $query;
     }
+
+
+    /**
+     * @param Blog $blog
+     * @param bool $executeQuery
+     *
+     * @return array|\Doctrine\ORM\AbstractQuery
+     */
+    public function findArchiveDatasByBlog(Blog $blog, $executeQuery = true)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery('
+                SELECT SUBSTRING(p.publicationDate, 1, 4) as year, SUBSTRING(p.publicationDate, 6, 2) as month, COUNT(p) as number
+                FROM ICAPBlogBundle:Post p
+                WHERE p.blog = :blogId
+                GROUP BY year, month
+                ORDER BY year DESC
+            ')
+            ->setParameter('blogId', $blog->getId())
+        ;
+
+        return $executeQuery ? $query->getResult(): $query;
+    }
 }

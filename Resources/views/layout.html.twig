@@ -133,25 +133,18 @@
                             <h3>Archives</h3>
                             <div class="well">
                                 <ul class="tree">
+                                    {% for year, datas in archives %}
                                     <li>
-                                        <span>2013</span>
+                                        <span>{{ year }}</span>
                                         <ul>
-                                            <li>
-                                                <a href="#">Juillet</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Août</a>
-                                            </li>
+                                        {% for data in datas %}
+                                            <li><a href="#">{{ data.month }} ({{ data.count }})</a></li>
+                                        {% endfor %}
                                         </ul>
                                     </li>
-                                    <li>
-                                        <span>2014</span>
-                                        <ul>
-                                            <li>
-                                                <a href="#">Juillet</a>
-                                            </li>
-                                        </ul>
-                                    </li>
+                                    {% else %}
+                                    <li>{{ 'no_archives'|trans({}, 'platform') }}</li>
+                                    {% endfor %}
                                 </ul>
                             </div>
                         </div>
