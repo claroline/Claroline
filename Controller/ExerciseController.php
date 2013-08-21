@@ -697,6 +697,8 @@ class ExerciseController extends Controller
                 $histoDiscrimination['coeffQ'] = 'none';
             }
 
+            $histoMeasureDifficulty = $this->histoMeasureOfDifficulty($exerciseId, $eqs);
+
             return $this->render(
                 'UJMExoBundle:Exercise:docimology.html.twig',
                 array(
@@ -709,7 +711,8 @@ class ExerciseController extends Controller
                     'questionsList'         => $histoSuccess['questionsList'],
                     'seriesResponsesTab'    => $histoSuccess['seriesResponsesTab'],
                     'maxY2'                 => $histoSuccess['maxY'],
-                    'coeffQ'                => $histoDiscrimination['coeffQ']
+                    'coeffQ'                => $histoDiscrimination['coeffQ'],
+                    'MeasureDifficulty'     => $histoMeasureDifficulty
                 )
             );
         } else {
@@ -919,6 +922,10 @@ class ExerciseController extends Controller
         }
     }
 
+    /**
+     * To check the right to open exo or not
+     *
+     */
     private function checkAccess($exo)
     {
         $collection = new ResourceCollection(array($exo));
@@ -928,6 +935,10 @@ class ExerciseController extends Controller
         }
     }
 
+    /**
+     * To draw histogram of marks
+     *
+     */
     private function histoMark ($exerciseId)
     {
         $em = $this->getDoctrine()->getManager();
@@ -945,7 +956,9 @@ class ExerciseController extends Controller
             if ($exercise->getNbQuestion() > 0) {
                 $exoScoreMax = $this->container->get('ujm.exercise_services')->getExercisePaperTotalScore($mark['paper']);
             }
-            $score = round(($mark["noteExo"] / $exoScoreMax) * 20, 2);
+            $scoreU = round(($mark["noteExo"] / $exoScoreMax) * 20, 2);
+
+            $score = $this->roundUpDown($scoreU);
 
             if (isset($tabMarks[(string) $score])) {
                 $tabMarks[(string) $score] += 1;
@@ -970,6 +983,10 @@ class ExerciseController extends Controller
         return $histoMark;
     }
 
+    /**
+     * To draw histogram of success
+     *
+     */
     private function histoSuccess ($exerciseId, $eqs, $papers)
     {
         $em = $this->getDoctrine()->getManager();
@@ -1056,9 +1073,12 @@ class ExerciseController extends Controller
         $histoSuccess['maxY'] = $maxY;
 
         return $histoSuccess;
-
     }
 
+    /**
+     * To draw histogram of discrimination
+     *
+     */
     private function histoDiscrimination ($exerciseId, $eqs, $papers)
     {
         $em = $this->getDoctrine()->getManager();
@@ -1094,10 +1114,7 @@ class ExerciseController extends Controller
                 $tabScoreQ[$eq->getQuestion()->getId()][] = $response['mark'];
             }
 
-            $inf = count($tabScoreQ[$eq->getQuestion()->getId()]);
-            $sup = count($papers);
-
-            while ($inf < $sup) {
+            while ((count($tabScoreQ[$eq->getQuestion()->getId()])) < (count($papers))) {
                 $tabScoreQ[$eq->getQuestion()->getId()][] = 0;
             }
         }
@@ -1165,4 +1182,98 @@ class ExerciseController extends Controller
         return sqrt(array_sum(array_map(array($this, "sd_square"), $array, array_fill(0, count($array), (array_sum($array) / count($array))))) / (count($array) - 1));
     }
 
+    /**
+     * To draw histogram of measure of difficulty
+     *
+     */
+    private function histoMeasureOfDifficulty ($exerciseId, $eqs)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $exerciseSer = $this->container->get('ujm.exercise_services');
+        $up = array();
+        $down = array();
+        $measureTab = array();
+
+        foreach ($eqs as $eq) {
+            $interaction = $em->getRepository('UJMExoBundle:Interaction')->getInteraction($eq->getQuestion()->getId());
+
+            $responsesCorrect = $em->getRepository('UJMExoBundle:Response')
+                ->getExerciseInterResponsesWithCount($exerciseId, $interaction[0]->getId());
+
+            switch ( $interaction[0]->getType()) {
+                case "InteractionQCM":
+                    $scoreMax = $exerciseSer->qcmMaxScore($interaction[0]);
+                    $responsesTab = $this->responseStatus($responsesCorrect, $scoreMax);
+                    break;
+
+                case "InteractionGraphic":
+                    $scoreMax = $exerciseSer->graphicMaxScore($interaction[0]);
+                    $responsesTab = $this->responseStatus($responsesCorrect, $scoreMax);
+                    break;
+
+                case "InteractionHole":
+
+                    break;
+
+                case "InteractionOpen":
+
+                    break;
+            }
+
+            $up[] = $responsesTab['correct'];
+            $down[] = (int) $responsesTab['correct'] + (int) $responsesTab['partiallyRight'] + (int) $responsesTab['wrong'];
+        }
+
+        $stop = count($up);
+
+        for ($i = 0 ; $i < $stop ; $i++) {
+            $measureTab[$i] = $this->roundUpDown(($up[$i] / $down[$i]) * 100);
+        }
+
+        $measure = implode(",", $measureTab);
+
+        return $measure;
+    }
+
+    /**
+     * Round up or down parameter's value
+     *
+     */
+    private function roundUpDown($toBeAdjusted)
+    {
+        if (strrpos($toBeAdjusted, ".")) {
+            list($integer, $rest) = explode(".", $toBeAdjusted);
+        } else if (strrpos($toBeAdjusted, ",")) {
+            list($integer, $rest) = explode(",", $toBeAdjusted);
+        } else {
+            return $toBeAdjusted;
+        }
+
+        $ten = substr($rest, 0, 1);
+        $hundred = substr($rest, 1);
+
+        if ($hundred == 5 || $hundred > 5) {
+            $ten = $ten + 1;
+            if ($ten > 5) {
+                $ten = 0;
+                $integer = $integer + 1;
+            } else if ($ten < 5) {
+                $ten = 0;
+            }
+        } else if ($hundred < 5) {
+            $ten = $ten - 1;
+            if ($ten > 5) {
+                $ten = 0;
+                $integer = $integer + 1;
+            } else if ($ten < 5) {
+                $ten = 0;
+            }
+        }
+
+        if ($ten == 0) {
+            return $integer;
+        } else {
+            return $integer.'.'.$ten;
+        }
+    }
 }

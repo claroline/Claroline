@@ -59,6 +59,7 @@ bank of questions: Banque de questions
 
 # C
 category: Catégorie
+calculationMeasureDifficulty: Il se calcul avec le nombre de candidats ayant répondu correctement divisé par le nombre total de répondants
 cercle: Cercle
 change: Changer
 changeName: Changer le nom
@@ -110,6 +111,7 @@ explainCoeffDis0: Les copies doivent avoir les mêmes questions pour pouvoir cal
 explainCoeffDis1: Analyse de la pertinence des questions, ce coefficient de corrélation varie de -1 à + 1.
 explainCoeffDis2: Les questions dont le coefficient de discrimination se situe entre 0,35 et 0,65 maximisent la discrimination des étudiants.
 explainCoeffDis3: Les questions ayant un indice négatif signalent une incohérence, les meilleurs candidats échouent ces questions, les plus faibles réussissent ces questions.
+explainMeasureDifficulty: L'indice de difficulté équivaut à un pourcentage de réussite à la question
 
 # F
 feedback: Commentaire
@@ -133,11 +135,13 @@ hints: Indices
 hint number: Num indice
 histoDiscrimination: Coefficient de discrimination
 histoMarks: Histogramme des notes
+histoMeasureOfDifficulty: Histogramme de l'indice de difficulté
 histoSuccess: Histogramme de réussite
 hole: Blancs
 
 # I
 infiny: Infini
+infoMeasureDifficulty: Cet indice ne prend pas en compte les étudiants n'ayant pas vu la question
 interupt: Interrompre
 invite_question: L'invite de la question doit être rempli
 isInterupt: Interrompu
@@ -164,6 +168,7 @@ lock attempt: Vérouiller le test
 manageImg: Gérer mes documents
 mark: Score
 maximum number of tries: Nombre d'essaies maximum
+meaningMeasureDifficulty: Si l'indice est élevé, c'est que la question est facile ; Inversement, si un indice est faible, la question est difficile
 multiple response: Réponse multiples
 my account: Mon compte
 my questions: Mes questions
@@ -204,6 +209,7 @@ paper: Passage
 paper list: Listes des copies
 partially: Partiellement correcte
 penalty: Pénalité
+percentage: Pourcentage
 picture name: Nom de l'image
 placeZone: Pour déplacer une zone de réponse, selecionnez-la en cliquant dessus et disposez-la en recliquant à l'endroit voulu.
 planning_Of_Groups: Planning des groupes

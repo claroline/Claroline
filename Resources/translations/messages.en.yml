@@ -59,6 +59,7 @@ bank of questions: Bank of questions
 
 # C
 category: Category
+calculationMeasureDifficulty: It's calculate with the number of applicant which have correctly reply divided by total number of applicants
 cercle: Circle
 change: Change
 changeName: Change the name
@@ -110,6 +111,7 @@ explainCoeffDis0: The copies must have the same questions to calculate the coeff
 explainCoeffDis1: Analysis of the relevance of the questions, this correlation coefficient ranges from -1 to +1.
 explainCoeffDis2: The questions with a discrimination coefficient between 0.35 and 0.65 maximize the discrimination of students.
 explainCoeffDis3: Questions which have a negative index signal a discrepancy, the best students fail these questions, the lowest pass these questions.
+explainMeasureDifficulty: The measure of difficulty is equal to the percentage of success to the question
 
 # F
 feedback: Feedback
@@ -133,11 +135,13 @@ hints: Hints
 hint number: Hint number
 histoDiscrimination: Discrimination coefficient
 histoMarks: Marks' histogram
+histoMeasureOfDifficulty: Histogram of the measure of the difficulty
 histoSuccess: Success' histogram
 hole: Hole
 
 # I
 infiny: Indefinite
+infoMeasureDifficulty: This measure doesn't count students that didn't saw the question
 interupt: Interupt
 invite_question: The prompt of question must be completed
 isInterupt: Interupted
@@ -164,6 +168,7 @@ lock attempt: Lock attempt
 manageImg: Manage my documents
 mark: Mark
 maximum number of tries: Maximum number of tries
+meaningMeasureDifficulty: If the measure is hight, the question is easy ; In return, if the measure is low, the question is difficult
 multiple response: Multiple response
 my account: My account
 my questions: My questions
@@ -204,6 +209,7 @@ paper: Paper
 paper list: Paper list
 partially: Partially correct
 penalty: Penalty
+percentage: Percentage
 picture name: Picture name
 placeZone: To move an answer zone, select it by clicking on it and click again to place it.
 planning_Of_Groups: Planning of groups

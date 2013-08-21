@@ -59,7 +59,7 @@
         .jqplot-xaxis-tick {
             margin-bottom: 10px;
         }
-        
+
         table.jqplot-table-legend {
             position: absolute;
             border: #06A1E3 double thick;
@@ -67,19 +67,19 @@
             margin-left: 20px;
             top: 0px;
         }
-        
+
         div.jqplot-table-legend-swatch {
             margin: 10px;
             width: 20px;
             height: 20px;
         }
-        
+
         td.jqplot-table-legend.jqplot-table-legend-label {
             padding-right: 10px;
         }
     </style>
 
-    <h1>{{ "docimology" | trans }}</h1>
+    <h1>{{ 'docimology' | trans }}</h1>
     <a href="{{ path('ujm_exercise_open', { 'exerciseId': exoID }) }}" ><i class="icon-arrow-left"></i> {{ "back" | trans }}</a>
     <br/><br/>
     {{ "number of papers" | trans }}: {{ nbPapers }}
@@ -88,17 +88,28 @@
     <hr/>
     <div id="histoSuccess" style="height:100%; width:80%;"></div>
     <hr/>
-    <div id="histoDiscrimination" style="height:100%; width:80%;">
+    <div id="histoDiscrimination" style="height:100%; width:100%;">
         {% if coeffQ == 'none' %}
-            {{ "explainCoeffDis0" | trans }}
+            {{ 'explainCoeffDis0' | trans }}
             <br/><br/><br/>
         {% endif %}
     </div>
+    <br/>
     <p>
-        {{ "explainCoeffDis1" | trans }}<br/>
-        {{ "explainCoeffDis2" | trans }}<br/>
-        {{ "explainCoeffDis3" | trans }}
+        {{ 'explainCoeffDis1' | trans }}<br/>
+        {{ 'explainCoeffDis2' | trans }}<br/>
+        {{ 'explainCoeffDis3' | trans }}
     </p>
+    <hr/>
+    <div id="histoMeasureOfDifficulty" style="height:100%; width:100%;"></div>
+    <br/>
+    <p>
+        {{ 'explainMeasureDifficulty' | trans }}.<br/>
+        {{ 'calculationMeasureDifficulty' | trans }}.<br/>
+        {{ 'meaningMeasureDifficulty' | trans }}.<br/>
+        {{ 'infoMeasureDifficulty' | trans }}.
+    </p>
+
     <hr/>
     <div id="questionList">
         <h4>{{ "list of question" | trans }}</h4>
@@ -161,9 +172,9 @@
                     }
                 }
             });
-            
+
             /*********************************histoSuccess******************************************************/
-            
+
             {% set series = '' %}
             {% set i = 1 %}
             {% for serie in seriesResponsesTab %}
@@ -182,49 +193,49 @@
 
                 stackSeries: true,
                 captureRightClick: true,
-                
+
                 seriesDefaults:{
                     renderer:$.jqplot.BarRenderer,
-                    
+
                     rendererOptions: {
                         barMargin: 30,
-                        highlightMouseDown: true, 
+                        highlightMouseDown: true,
                         fillToZero: true
                     },
-                    
+
                     pointLabels: {
                         show: true,
                         hideZeros: true
                     },
-                    
+
                 },
                 axes: {
-                    
+
                     xaxis: {
                         label: '{{ 'question'|trans }}',
                         renderer: $.jqplot.CategoryAxisRenderer,
-                        
+
                         labelOptions:{
                             fontFamily:'Helvetica',
                             fontSize: '14pt'
                         },
-                        
+
                         tickOptions: {showGridline: false}
                     },
-                    
+
                     yaxis: {
                         label: '{{ 'frequency'|trans }}',
                         labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
-                        
+
                         labelOptions:{
                             fontFamily:'Helvetica',
                             fontSize: '14pt'
                         },
-                        
+
                         pad: 1,
                         min: 0,
                         max: {{ maxY2 }},
-                        
+
                         tickOptions: {formatString: '%d'}
                     }
                 },
@@ -233,15 +244,15 @@
                     location: 'e',
                     placement: 'outside',
                 },
-                
+
                 series:[
-                    {label:'{{ 'correct'|trans }}', color: 'green'}, 
-                    {label:'{{ 'partially'|trans }}', color: 'blue'}, 
-                    {label:'{{ 'wrong'|trans }}', color: 'red'}, 
+                    {label:'{{ 'correct'|trans }}', color: 'green'},
+                    {label:'{{ 'partially'|trans }}', color: 'blue'},
+                    {label:'{{ 'wrong'|trans }}', color: 'red'},
                     {label:'{{ 'no answer'|trans }}', color: 'yellow'}
                 ],
             });
-            
+
             /*********************************histoDiscrimination******************************************************/
             var s1 = [{{ coeffQ }}];
 
@@ -288,6 +299,50 @@
                     }
                 });
             }
+
+            /*********************************histoMeasureOfDifficulty******************************************************/
+            var percent = [{{MeasureDifficulty}}];
+
+            $.jqplot('histoMeasureOfDifficulty', [percent], {
+                title:'{{ "histoMeasureOfDifficulty" | trans }}',
+
+                series:[{renderer:$.jqplot.BarRenderer}],
+
+                seriesDefaults:{
+                    color: '#06A1E3',
+                    rendererOptions: {fillToZero: true},
+                    pointLabels: {
+                        show: true,
+                        formatString: '%.1f %'
+                    }
+                },
+
+                axes: {
+                    xaxis: {
+                        label: '{{ 'question'|trans }}',
+                        labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                        labelOptions:{
+                            fontFamily:'Helvetica',
+                            fontSize: '14pt'
+                        },
+                        renderer: $.jqplot.CategoryAxisRenderer,
+                        tickOptions: {showGridline: false}
+                    },
+
+                    yaxis: {
+                        label: '{{ 'percentage'|trans }}',
+                        labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                        labelOptions:{
+                            fontFamily:'Helvetica',
+                            fontSize: '14pt'
+                        },
+                        pad: 10,
+                        min: 0,
+                        max: 100,
+                        tickOptions: {formatString: '%d%'}
+                    }
+                }
+            });
         });
     </script>
 {% endblock %}
