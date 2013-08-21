@@ -1,44 +1,4 @@
 services:
-  innova.listener.path_listener:
-    class: Innova\PathBundle\Listener\ResourceListener
-    calls:
-      - [setContainer, ["@service_container"]]
-    #event definition
-    #these are the events fired by the resource manager:
-      # create_form_myresourcetype
-      # create_myresourcetype
-      # delete_myresourcetype
-      # export_myresourcetype
-      # copy_myresourcetype
-      # mycustomaction_myresourcetype
-      #
-      # In this case, my resource type is "example".
-      # mycustomaction is the custom action names you defined earlier.
-    #this event is fired by the platform plugin manager:
-      # plugin_options_mydomain
-      # in this case mydomain is the domain you specified in the config.yml file.
-    tags:
-      - { name: kernel.event_listener, event: create_form_claroline_example, method: onCreateForm }
-      - { name: kernel.event_listener, event: create_claroline_example, method: onCreate }
-      - { name: kernel.event_listener, event: open_claroline_example, method: onOpen }
-      - { name: kernel.event_listener, event: download_claroline_example, method: onDownload }
-      - { name: kernel.event_listener, event: delete_claroline_example, method: onDelete }
-      - { name: kernel.event_listener, event: copy_claroline_example, method: onCopy }
-      - { name: kernel.event_listener, event: plugin_options_clarolineexampletest, method: onAdministrate }
-      #... more to come.
-
-
-  innova.listener.path_widget:
-    class: Innova\PathBundle\Listener\WidgetListener
-    calls:
-      - [setContainer, ["@service_container"]]
-    tags:
-      - { name: kernel.event_listener, event: widget_claroline_mywidget1_desktop, method: onDisplay }
-      - { name: kernel.event_listener, event: widget_claroline_mywidget1_workspace, method: onDisplay }
-      - { name: kernel.event_listener, event: widget_claroline_mywidget2_desktop, method: onDisplay }
-      - { name: kernel.event_listener, event: widget_claroline_mywidget2_workspace, method: onDisplay }
-      - { name: kernel.event_listener, event: widget_claroline_mywidget1_configuration, method: onConfigure }
-
   innova.listener.path_tool:
     class: Innova\PathBundle\Listener\ToolListener
     calls:

@@ -2,14 +2,13 @@
 
 namespace Innova\PathBundle\Entity;
 
-use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Path
  *
  * @ORM\Table(name="innova_path")
- * @ORM\Entity
+* @ORM\Entity
  */
 class Path
 {
@@ -25,56 +24,29 @@ class Path
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column(name="path", type="text")
      */
-    private $name;
+    private $path;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="description", type="text", nullable=true)
+     * @ORM\Column(name="user", type="string", length=255)
      */
-    private $description;
+    private $user;
 
     /**
-     * @var boolean
+     * @var \DateTime
      *
-     * @ORM\Column(name="pattern", type="boolean")
+     * @ORM\Column(name="edit_date", type="datetime")
      */
-    private $pattern = false;
-
-    /**
-     * @Gedmo\Slug(fields={"name"})
-     * @ORM\Column(length=128, unique=true)
-     */
-    private $slug;
-
-    /**
-     * @var datetime $created
-     *
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime")
-     */
-    private $created;
-
-    /**
-     * @var datetime $updated
-     *
-     * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(type="datetime")
-     */
-    private $updated;
-
-    /**
-    * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace")
-    */
-    private $workspace;
+    private $editDate;
 
 
     /**
      * Get id
      *
-     * @return integer
+     * @return integer 
      */
     public function getId()
     {
@@ -82,134 +54,71 @@ class Path
     }
 
     /**
-     * Set name
+     * Set path
      *
-     * @param string $name
+     * @param string $path
      * @return Path
      */
-    public function setName($name)
+    public function setPath($path)
     {
-        $this->name = $name;
+        $this->path = $path;
 
         return $this;
     }
 
     /**
-     * Get name
+     * Get path
      *
-     * @return string
+     * @return string 
      */
-    public function getName()
+    public function getPath()
     {
-        return $this->name;
+        return $this->path;
     }
 
     /**
-     * Set description
+     * Set user
      *
-     * @param string $description
-     *
+     * @param string $user
      * @return Path
      */
-    public function setDescription($description)
+    public function setUser($user)
     {
-        $this->description = $description;
+        $this->user = $user;
 
         return $this;
     }
 
     /**
-     * Get description
+     * Get user
      *
-     * @return string
+     * @return string 
      */
-    public function getDescription()
+    public function getUser()
     {
-        return $this->description;
+        return $this->user;
     }
 
     /**
-     * Set pattern
+     * Set editDate
      *
-     * @param boolean $pattern
-     *
+     * @param \DateTime $editDate
      * @return Path
      */
-    public function setPattern($pattern)
+    public function setEditDate($editDate)
     {
-        $this->pattern = $pattern;
+        $this->editDate = $editDate;
 
         return $this;
     }
 
     /**
-     * Is pattern
+     * Get editDate
      *
-     * @return boolean
+     * @return \DateTime 
      */
-    public function isPattern()
+    public function getEditDate()
     {
-        return $this->pattern;
-    }
-
-    /**
-     * Get slug
-     *
-     * @return string
-     */
-    public function getSlug()
-    {
-        return $this->slug;
-    }
-
-    /**
-     * Get created
-     *
-     * @return string
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * Get updated
-     *
-     * @return string
-     */
-    public function getUpdated()
-    {
-        return $this->updated;
-    }
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->steps = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    /**
-     * Set workspace
-     *
-     * @param string $workspace
-     * @return Path
-     */
-    public function setWorkspace($workspace)
-    {
-        $this->workspace = $workspace;
-
-        return $this;
-    }
-
-    /**
-     * Get workspace
-     *
-     * @return string
-     */
-    public function getWorkspace()
-    {
-        return $this->workspace;
+        return $this->editDate;
     }
 }

@@ -5,12 +5,12 @@ namespace Innova\PathBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * OperatorType
+ * PathTemplate
  *
- * @ORM\Table(name="innova_operatortype")
+ * @ORM\Table(name="innova_pathtemplate")
  * @ORM\Entity
  */
-class OperatorType
+class PathTemplate
 {
     /**
      * @var integer
@@ -31,26 +31,31 @@ class OperatorType
     /**
      * @var string
      *
-     * @ORM\Column(name="description", type="string", length=255, nullable=true)
+     * @ORM\Column(name="description", type="text")
      */
     private $description;
 
     /**
-     * @ORM\ManyToMany(targetEntity="\Claroline\CoreBundle\Entity\Resource\Activity")
-     * @ORM\JoinTable(name="innova_operatortype_activity",
-     *      joinColumns={@ORM\JoinColumn(name="operatortype_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="activity_id", referencedColumnName="id", unique=true)}
-     *      )
+     * @var string
+     *
+     * @ORM\Column(name="step", type="text")
      */
-    private $activities;
+    private $step;
 
     /**
-     * Constructor
+     * @var string
+     *
+     * @ORM\Column(name="user", type="string", length=255)
      */
-    public function __construct()
-    {
-        $this->activities = new \Doctrine\Common\Collections\ArrayCollection();
-    }
+    private $user;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="edit_date", type="datetime")
+     */
+    private $editDate;
+
 
     /**
      * Get id
@@ -66,8 +71,7 @@ class OperatorType
      * Set name
      *
      * @param string $name
-     *
-     * @return StepType
+     * @return PathTemplate
      */
     public function setName($name)
     {
@@ -90,8 +94,7 @@ class OperatorType
      * Set description
      *
      * @param string $description
-     *
-     * @return StepType
+     * @return PathTemplate
      */
     public function setDescription($description)
     {
@@ -111,35 +114,71 @@ class OperatorType
     }
 
     /**
-     * Add activities
+     * Set step
      *
-     * @param \Innova\PathBundle\Entity\AbstractWorkspace $activities
-     * @return AbstractRessource
+     * @param string $step
+     * @return PathTemplate
      */
-    public function addActivity(\Innova\PathBundle\Entity\Activity $activities)
+    public function setstep($step)
     {
-        $this->activities[] = $activities;
+        $this->step = $step;
 
         return $this;
     }
 
     /**
-     * Remove activities
+     * Get step
      *
-     * @param \Innova\PathBundle\Entity\Activity $activities
+     * @return string 
      */
-    public function removeActivity(\Innova\PathBundle\Entity\Activity $activities)
+    public function getstep()
     {
-        $this->activities->removeElement($activities);
+        return $this->step;
     }
 
     /**
-     * Get activities
+     * Set user
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @param string $user
+     * @return PathTemplate
      */
-    public function getActivities()
+    public function setUser($user)
     {
-        return $this->activities;
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return string 
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set editDate
+     *
+     * @param \DateTime $editDate
+     * @return PathTemplate
+     */
+    public function setEditDate($editDate)
+    {
+        $this->editDate = $editDate;
+
+        return $this;
+    }
+
+    /**
+     * Get editDate
+     *
+     * @return \DateTime 
+     */
+    public function getEditDate()
+    {
+        return $this->editDate;
     }
 }
