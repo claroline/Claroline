@@ -1,13 +1,15 @@
 {% extends "ClarolineBadgeBundle:Admin:layout.html.twig" %}
 
+{% trans_default_domain "badge" %}
+
 {% block section_content %}
     <div class="margin">
-        <h3 id='user-list-block' class="sub-section-header">{{ 'add_badge'|trans({}, 'platform') }}</h3>
+        <h3 id='user-list-block' class="sub-section-header">{{ 'add_badge'|trans }}</h3>
     </div>
     <form action="{{ path('claro_admin_badges_add') }}" method="post" class="form-horizontal" {{ form_enctype(form) }}>
         <ul class="nav nav-tabs" id="translationFormTabs">
-            <li class="active"><a href="#fr" data-toggle="tab">{{ 'badge_form_frTranslation'|trans({}, 'platform') }}</a></li>
-            <li><a href="#en" data-toggle="tab">{{ 'badge_form_enTranslation'|trans({}, 'platform') }}</a></li>
+            <li class="active"><a href="#fr" data-toggle="tab">{{ 'badge_form_frTranslation'|trans }}</a></li>
+            <li><a href="#en" data-toggle="tab">{{ 'badge_form_enTranslation'|trans }}</a></li>
         </ul>
 
         <div class="tab-content well well-small badge_translations">

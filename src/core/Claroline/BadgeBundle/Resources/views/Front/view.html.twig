@@ -1,12 +1,14 @@
 {% extends "ClarolineBadgeBundle::layout.html.twig" %}
 
+{% trans_default_domain "badge" %}
+
 {% block content %}
     <div class="border badge_container">
         <h3 class="sub-section-header">
-            <span class="badge badge-info accordion-toggle" data-toggle="tooltip" title="{{ 'badge_form_version'|trans({}, 'platform') }} {{ badge.version }}">{{ badge.version }}</span>
-            {{ 'badge'|trans({}, 'platform') }} "{{ badge.name }}"
+            <span class="badge badge-info accordion-toggle" data-toggle="tooltip" title="{{ 'badge_form_version'|trans }} {{ badge.version }}">{{ badge.version }}</span>
+            {{ 'badge'|trans }} "{{ badge.name }}"
             {% if badge.expiredAt is not null %}
-            <small>{{ 'badge_expired_on_date'|trans({'%expirationDate%': badge.expiredAt|date('date_format'|trans({}, 'platform'))}, 'platform') }}</small>
+            <small>{{ 'badge_expired_on_date'|trans({'%expirationDate%': badge.expiredAt|date('date_format'|trans({}, 'platform'))}) }}</small>
             {% endif %}
         </h3>
         <div class="media">

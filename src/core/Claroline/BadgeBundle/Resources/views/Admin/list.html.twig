@@ -1,12 +1,14 @@
 {% extends "ClarolineBadgeBundle:Admin:layout.html.twig" %}
 
+{% trans_default_domain "badge" %}
+
 {% block section_content %}
     {{ macros.flashBox() }}
 
     <div class="margin">
         <h3 id='user-list-block' class="sub-section-header">
-            {{ 'Badges'|trans({}, 'platform') }}
-            <a href="{{ path('claro_admin_badges_add') }}" class="btn btn-mini" data-toggle="tooltip" data-placement="right" title="{{ 'add_badge'|trans({}, 'platform') }}"><i class="icon-plus"></i></a>
+            {{ 'Badges'|trans }}
+            <a href="{{ path('claro_admin_badges_add') }}" class="btn btn-mini" data-toggle="tooltip" data-placement="right" title="{{ 'add_badge'|trans }}"><i class="icon-plus"></i></a>
         </h3>
     </div>
 
@@ -15,7 +17,7 @@
         <div class="accordion-group">
             <div class="accordion-heading">
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
-                    {{ 'badge_current_claimed_badges'|transchoice(badgeClaims|length, {'%claimedBadgeCount%': badgeClaims|length}, 'platform') }}
+                    {{ 'badge_current_claimed_badges'|transchoice(badgeClaims|length, {'%claimedBadgeCount%': badgeClaims|length}) }}
                 </a>
             </div>
             <div id="collapseOne" class="accordion-body collapse">
@@ -31,10 +33,10 @@
                         {% for badgeClaim in badgeClaims %}
                             <tr>
                                 <td>
-                                    <a href="{{ path('claro_admin_manage_claim', {'id': badgeClaim.id, 'validate': true}) }}" class="btn confirm" data-toggle="tooltip" title="{{ 'badge_validate_award'|trans({}, 'platform') }}" data-confirm-title="{{ 'badge_award_confirm_title'|trans({}, 'platform') }}" data-confirm-message="{{ 'badge_award_confirm_message'|trans({'%badgeName%': badgeClaim.badge.name(language), '%user%': badgeClaim.user.firstname ~ ' ' ~ badgeClaim.user.lastname }, 'platform') }}" data-confirm-ok="{{ 'award'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}">
+                                    <a href="{{ path('claro_admin_manage_claim', {'id': badgeClaim.id, 'validate': true}) }}" class="btn confirm" data-toggle="tooltip" title="{{ 'badge_validate_award'|trans }}" data-confirm-title="{{ 'badge_award_confirm_title'|trans }}" data-confirm-message="{{ 'badge_award_confirm_message'|trans({'%badgeName%': badgeClaim.badge.name(language), '%user%': badgeClaim.user.firstname ~ ' ' ~ badgeClaim.user.lastname }) }}" data-confirm-ok="{{ 'award'|trans }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}">
                                         <i class="icon-ok-circle"></i>
                                     </a>
-                                    <a href="{{ path('claro_admin_manage_claim', {'id': badgeClaim.id, 'validate': false}) }}" class="btn confirm" data-toggle="tooltip" title="{{ 'badge_reject_award'|trans({}, 'platform') }}" data-confirm-title="{{ 'badge_dont_award_confirm_title'|trans({}, 'platform') }}" data-confirm-message="{{ 'badge_dont_award_confirm_message'|trans({'%badgeName%': badgeClaim.badge.name(language), '%user%': badgeClaim.user.firstname ~ ' ' ~ badgeClaim.user.lastname}, 'platform') }}" data-confirm-ok="{{ 'dont_award'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}">
+                                    <a href="{{ path('claro_admin_manage_claim', {'id': badgeClaim.id, 'validate': false}) }}" class="btn confirm" data-toggle="tooltip" title="{{ 'badge_reject_award'|trans }}" data-confirm-title="{{ 'badge_dont_award_confirm_title'|trans }}" data-confirm-message="{{ 'badge_dont_award_confirm_message'|trans({'%badgeName%': badgeClaim.badge.name(language), '%user%': badgeClaim.user.firstname ~ ' ' ~ badgeClaim.user.lastname}) }}" data-confirm-ok="{{ 'dont_award'|trans }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}">
                                         <i class="icon-remove-circle"></i>
                                     </a>
                                 </td>
@@ -59,7 +61,7 @@
             </a>
         </li>
     {% else %}
-        <li>{{ 'no_badges'|trans({}, 'platform') }}</li>
+        <li>{{ 'no_badges'|trans({}, 'badge') }}</li>
     {% endfor %}
     </ul>
     {% if pager.haveToPaginate %}
