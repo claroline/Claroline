@@ -4,7 +4,6 @@ namespace Claroline\BadgeBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -103,8 +102,7 @@ class Badge
     {
         $users = new ArrayCollection();
 
-        foreach($this->userBadges as $userBadge)
-        {
+        foreach ($this->userBadges as $userBadge) {
             $users[] = $userBadge->getUser();
         }
 
@@ -120,8 +118,7 @@ class Badge
     {
         $this->userBadges->clear();
 
-        foreach($users as $user)
-        {
+        foreach ($users as $user) {
             $userBagde = new UserBadge();
 
             $userBagde
@@ -150,7 +147,7 @@ class Badge
      */
     public function addUserBadge(UserBadge $userBadge)
     {
-        if(!$this->userBadges->contains($userBadge)) {
+        if (!$this->userBadges->contains($userBadge)) {
             $this->userBadges[] = $userBadge;
         }
 
@@ -183,9 +180,8 @@ class Badge
      */
     public function getTranslationForLocale($locale)
     {
-        foreach($this->getTranslations() as $translation)
-        {
-            if($locale === $translation->getLocale()) {
+        foreach ($this->getTranslations() as $translation) {
+            if ($locale === $translation->getLocale()) {
                 return $translation;
             }
         }
@@ -210,7 +206,7 @@ class Badge
     }
 
     /**
-     * @param BadgeTranslation $translation
+     * @param  BadgeTranslation $translation
      * @return Badge
      */
     public function addTranslation(BadgeTranslation $translation)
@@ -224,7 +220,7 @@ class Badge
     }
 
     /**
-     * @param BadgeTranslation $translation
+     * @param  BadgeTranslation $translation
      * @return Badge
      */
     public function removeTranslation(BadgeTranslation $translation)
@@ -292,7 +288,7 @@ class Badge
      */
     public function getLocale()
     {
-        if(null === $this->locale) {
+        if (null === $this->locale) {
             throw new \InvalidArgumentException('No locale setted for badge translation.');
         }
 
@@ -347,7 +343,7 @@ class Badge
      */
     public function getName($locale = null)
     {
-        if(null === $locale) {
+        if (null === $locale) {
             $locale = $this->getLocale();
         }
 
@@ -362,7 +358,7 @@ class Badge
      */
     public function getDescription($locale = null)
     {
-        if(null === $locale) {
+        if (null === $locale) {
             $locale = $this->getLocale();
         }
 
@@ -377,7 +373,7 @@ class Badge
      */
     public function getSlug($locale = null)
     {
-        if(null === $locale) {
+        if (null === $locale) {
             $locale = $this->getLocale();
         }
 
@@ -392,7 +388,7 @@ class Badge
      */
     public function getCriteria($locale = null)
     {
-        if(null === $locale) {
+        if (null === $locale) {
             $locale = $this->getLocale();
         }
 
@@ -408,7 +404,7 @@ class Badge
     {
         $newFileName = $file->getClientOriginalName();
 
-        if($this->imagePath !== $newFileName) {
+        if ($this->imagePath !== $newFileName) {
             $this->olfFileName = $this->imagePath;
             $this->imagePath   = null;
         }
@@ -446,6 +442,7 @@ class Badge
     protected function getUploadRootDir()
     {
         $ds = DIRECTORY_SEPARATOR;
+
         return realpath(sprintf('%s%s..%s..%s..%s..%s..%sweb%s%s', __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir()));
     }
 

@@ -16,11 +16,11 @@ class Version20130821154602 extends AbstractMigration
     {
         $this->addSql("
             CREATE TABLE claro_user_badge (
-                id INTEGER NOT NULL, 
-                user_id INTEGER NOT NULL, 
-                badge_id INTEGER NOT NULL, 
-                issuer_id INTEGER DEFAULT NULL, 
-                issued_at DATETIME NOT NULL, 
+                id INTEGER NOT NULL,
+                user_id INTEGER NOT NULL,
+                badge_id INTEGER NOT NULL,
+                issuer_id INTEGER DEFAULT NULL,
+                issued_at DATETIME NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -38,10 +38,10 @@ class Version20130821154602 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_badge_claim (
-                id INTEGER NOT NULL, 
-                user_id INTEGER NOT NULL, 
-                badge_id INTEGER NOT NULL, 
-                claimed_at DATETIME NOT NULL, 
+                id INTEGER NOT NULL,
+                user_id INTEGER NOT NULL,
+                badge_id INTEGER NOT NULL,
+                claimed_at DATETIME NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -56,13 +56,13 @@ class Version20130821154602 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_badge_translation (
-                id INTEGER NOT NULL, 
-                badge_id INTEGER DEFAULT NULL, 
-                locale VARCHAR(8) NOT NULL, 
-                name VARCHAR(128) NOT NULL, 
-                description VARCHAR(128) NOT NULL, 
-                slug VARCHAR(128) NOT NULL, 
-                criteria CLOB NOT NULL, 
+                id INTEGER NOT NULL,
+                badge_id INTEGER DEFAULT NULL,
+                locale VARCHAR(8) NOT NULL,
+                name VARCHAR(128) NOT NULL,
+                description VARCHAR(128) NOT NULL,
+                slug VARCHAR(128) NOT NULL,
+                criteria CLOB NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -80,10 +80,10 @@ class Version20130821154602 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_badge (
-                id INTEGER NOT NULL, 
-                version INTEGER NOT NULL, 
-                image VARCHAR(255) NOT NULL, 
-                expired_at DATETIME DEFAULT NULL, 
+                id INTEGER NOT NULL,
+                version INTEGER NOT NULL,
+                image VARCHAR(255) NOT NULL,
+                expired_at DATETIME DEFAULT NULL,
                 PRIMARY KEY(id)
             )
         ");

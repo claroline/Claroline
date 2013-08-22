@@ -16,11 +16,11 @@ class Version20130821154602 extends AbstractMigration
     {
         $this->addSql("
             CREATE TABLE claro_user_badge (
-                id SERIAL NOT NULL, 
-                user_id INT NOT NULL, 
-                badge_id INT NOT NULL, 
-                issuer_id INT DEFAULT NULL, 
-                issued_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, 
+                id SERIAL NOT NULL,
+                user_id INT NOT NULL,
+                badge_id INT NOT NULL,
+                issuer_id INT DEFAULT NULL,
+                issued_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -38,10 +38,10 @@ class Version20130821154602 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_badge_claim (
-                id SERIAL NOT NULL, 
-                user_id INT NOT NULL, 
-                badge_id INT NOT NULL, 
-                claimed_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, 
+                id SERIAL NOT NULL,
+                user_id INT NOT NULL,
+                badge_id INT NOT NULL,
+                claimed_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -56,13 +56,13 @@ class Version20130821154602 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_badge_translation (
-                id SERIAL NOT NULL, 
-                badge_id INT DEFAULT NULL, 
-                locale VARCHAR(8) NOT NULL, 
-                name VARCHAR(128) NOT NULL, 
-                description VARCHAR(128) NOT NULL, 
-                slug VARCHAR(128) NOT NULL, 
-                criteria TEXT NOT NULL, 
+                id SERIAL NOT NULL,
+                badge_id INT DEFAULT NULL,
+                locale VARCHAR(8) NOT NULL,
+                name VARCHAR(128) NOT NULL,
+                description VARCHAR(128) NOT NULL,
+                slug VARCHAR(128) NOT NULL,
+                criteria TEXT NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -80,47 +80,47 @@ class Version20130821154602 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_badge (
-                id SERIAL NOT NULL, 
-                version SMALLINT NOT NULL, 
-                image VARCHAR(255) NOT NULL, 
-                expired_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, 
+                id SERIAL NOT NULL,
+                version SMALLINT NOT NULL,
+                image VARCHAR(255) NOT NULL,
+                expired_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL,
                 PRIMARY KEY(id)
             )
         ");
         $this->addSql("
-            ALTER TABLE claro_user_badge 
-            ADD CONSTRAINT FK_7EBB381FA76ED395 FOREIGN KEY (user_id) 
-            REFERENCES claro_user (id) 
+            ALTER TABLE claro_user_badge
+            ADD CONSTRAINT FK_7EBB381FA76ED395 FOREIGN KEY (user_id)
+            REFERENCES claro_user (id)
             ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
-            ALTER TABLE claro_user_badge 
-            ADD CONSTRAINT FK_7EBB381FF7A2C2FC FOREIGN KEY (badge_id) 
-            REFERENCES claro_badge (id) 
+            ALTER TABLE claro_user_badge
+            ADD CONSTRAINT FK_7EBB381FF7A2C2FC FOREIGN KEY (badge_id)
+            REFERENCES claro_badge (id)
             ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
-            ALTER TABLE claro_user_badge 
-            ADD CONSTRAINT FK_7EBB381FBB9D6FEE FOREIGN KEY (issuer_id) 
-            REFERENCES claro_user (id) 
+            ALTER TABLE claro_user_badge
+            ADD CONSTRAINT FK_7EBB381FBB9D6FEE FOREIGN KEY (issuer_id)
+            REFERENCES claro_user (id)
             ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
-            ALTER TABLE claro_badge_claim 
-            ADD CONSTRAINT FK_487A496AA76ED395 FOREIGN KEY (user_id) 
-            REFERENCES claro_user (id) 
+            ALTER TABLE claro_badge_claim
+            ADD CONSTRAINT FK_487A496AA76ED395 FOREIGN KEY (user_id)
+            REFERENCES claro_user (id)
             ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
-            ALTER TABLE claro_badge_claim 
-            ADD CONSTRAINT FK_487A496AF7A2C2FC FOREIGN KEY (badge_id) 
-            REFERENCES claro_badge (id) 
+            ALTER TABLE claro_badge_claim
+            ADD CONSTRAINT FK_487A496AF7A2C2FC FOREIGN KEY (badge_id)
+            REFERENCES claro_badge (id)
             ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
-            ALTER TABLE claro_badge_translation 
-            ADD CONSTRAINT FK_849BC831F7A2C2FC FOREIGN KEY (badge_id) 
-            REFERENCES claro_badge (id) 
+            ALTER TABLE claro_badge_translation
+            ADD CONSTRAINT FK_849BC831F7A2C2FC FOREIGN KEY (badge_id)
+            REFERENCES claro_badge (id)
             ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
     }
@@ -128,15 +128,15 @@ class Version20130821154602 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE claro_user_badge 
+            ALTER TABLE claro_user_badge
             DROP CONSTRAINT FK_7EBB381FF7A2C2FC
         ");
         $this->addSql("
-            ALTER TABLE claro_badge_claim 
+            ALTER TABLE claro_badge_claim
             DROP CONSTRAINT FK_487A496AF7A2C2FC
         ");
         $this->addSql("
-            ALTER TABLE claro_badge_translation 
+            ALTER TABLE claro_badge_translation
             DROP CONSTRAINT FK_849BC831F7A2C2FC
         ");
         $this->addSql("

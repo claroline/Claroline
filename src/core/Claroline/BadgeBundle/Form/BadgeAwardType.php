@@ -2,7 +2,6 @@
 
 namespace Claroline\BadgeBundle\Form;
 
-use Claroline\BadgeBundle\Entity\BadgeTranslation;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;

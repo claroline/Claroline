@@ -12,7 +12,7 @@ class BadgeRepository extends EntityRepository
     /**
      * @param Badge $badge
      *
-     * @param bool  $executeQuery
+     * @param bool $executeQuery
      *
      * @return Query|array
      */
@@ -58,7 +58,7 @@ class BadgeRepository extends EntityRepository
     /**
      * @param null|string $locale
      *
-     * @param bool        $executeQuery
+     * @param bool $executeQuery
      *
      * @return Query|array
      */
@@ -81,7 +81,7 @@ class BadgeRepository extends EntityRepository
     /**
      * @param string $slug
      *
-     * @param bool   $executeQuery
+     * @param bool $executeQuery
      *
      * @return array
      */
@@ -145,7 +145,7 @@ class BadgeRepository extends EntityRepository
     }
 
     /**
-     * @param array $params
+     * @param  array           $params
      * @return ArrayCollection
      */
     public function extract($params)

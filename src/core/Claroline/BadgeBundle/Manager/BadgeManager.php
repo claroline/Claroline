@@ -38,7 +38,7 @@ class BadgeManager
     }
 
     /**
-     * @param Badge $badge
+     * @param Badge                               $badge
      * @param \Claroline\CoreBundle\Entity\User[] $users
      *
      * @return int
@@ -47,9 +47,8 @@ class BadgeManager
     {
         $addedBadge = 0;
 
-        foreach($users as $user)
-        {
-            if(!$user->hasBadge($badge)) {
+        foreach ($users as $user) {
+            if (!$user->hasBadge($badge)) {
                 $addedBadge++;
 
                 $userBadge = new UserBadge();

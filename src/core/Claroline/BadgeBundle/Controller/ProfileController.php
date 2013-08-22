@@ -36,7 +36,7 @@ class ProfileController extends Controller
         $badgeClaim->setUser($user);
         $form = $this->createForm(new ClaimBadgeType(), $badgeClaim);
 
-        if($request->isMethod('POST')) {
+        if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isValid()) {
                 /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
@@ -49,13 +49,11 @@ class ProfileController extends Controller
 
                     $badge = $entityManager->getRepository('ClarolineBadgeBundle:Badge')->findOneByName($badgeName);
 
-                    if($user->hasBadge($badge)) {
+                    if ($user->hasBadge($badge)) {
                         $this->get('session')->getFlashBag()->add('alert', $translator->trans('badge_already_award_message', array(), 'badge'));
-                    }
-                    elseif($user->hasClaimedFor($badge)) {
+                    } elseif ($user->hasClaimedFor($badge)) {
                         $this->get('session')->getFlashBag()->add('alert', $translator->trans('badge_already_claim_message', array(), 'badge'));
-                    }
-                    else {
+                    } else {
                         $badgeClaim->setBadge($badge);
 
                         $entityManager->persist($badgeClaim);
@@ -63,11 +61,9 @@ class ProfileController extends Controller
 
                         $this->get('session')->getFlashBag()->add('success', $translator->trans('badge_claim_success_message', array(), 'badge'));
                     }
-                }
-                catch(NoResultException $exception) {
+                } catch (NoResultException $exception) {
                     $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_not_found_with_name', array('%badgeName%' => $badgeName), 'badge'));
-                }
-                catch(\Exception $exception) {
+                } catch (\Exception $exception) {
                     $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_claim_error_message', array(), 'badge'));
                 }
 

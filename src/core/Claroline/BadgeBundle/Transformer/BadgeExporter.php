@@ -25,8 +25,8 @@ class BadgeExporter extends TwigTransformer
     /**
      * transform
      *
-     * @param \CLaroline\BadgeBundle\Entity\Badge $entity
-     * @param string $format
+     * @param  \CLaroline\BadgeBundle\Entity\Badge $entity
+     * @param  string                              $format
      * @return string
      */
     public function transform($entity, $format)
