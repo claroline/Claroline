@@ -111,8 +111,8 @@
         });
     };
 
-    createValidationBox = function() {
+   function createValidationBox() {
         var html = Twig.render(ModalWindow, {'footer': Twig.render(ValidationFooter), 'isHidden': true});
         $('body').append(html);
-    };
+    }
 })();
