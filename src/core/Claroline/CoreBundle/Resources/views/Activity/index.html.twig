@@ -31,7 +31,7 @@
                 "parentElement": $('div.section-content'),
                 "isPickerMultiSelectAllowed": false,
                 "isPickerOnly": true,
-                "pickerCallback": function(resources){callBack(resources);},
+                "pickerCallback": function(nodes){callBack(nodes);},
                 "appPath": "{{ app.request.getBaseUrl }}",
                 "webPath": "{{ asset('') }}",
                 "resourceTypes": {
@@ -42,7 +42,7 @@
                                 {% for customAction in resourceType.getCustomActions() %}
                                     "{{ customAction.getAction() }}": {
                                         "name": "{{ customAction.getAction() }}",
-                                        "route": "{{ path('claro_resource_custom', {'resourceType': resourceType.getName(), 'action': customAction.getAction(), 'resourceId': '_resourceId' }) }}",
+                                        "route": "{{ path('claro_resource_custom', {'resourceType': resourceType.getName(), 'action': customAction.getAction(), 'resourceId': '_nodeId' }) }}",
                                         "async": {{ customAction.isAsync() }}
                                     }
                                     {% if loop.last != true %},{% endif %}
@@ -56,16 +56,15 @@
 
         $('#add_resource_button').click(function(){Claroline.ResourceManager.picker('open')});
 
-        var callBack = function(resources){
-            console.debug(resources);
+        var callBack = function(nodes){
             $.ajax({
-            url: Routing.generate('claro_activity_add_resource', {'activityId':{{ _resource.getId() }}, 'resourceId': _.keys(resources)[0]}),
+            url: Routing.generate('claro_activity_add_resource', {'activityId':{{ _resource.getId() }}, 'nodeId': _.keys(nodes)[0]}),
             type: 'GET',
-            success: function(resources){
+            success: function(nodes){
                 var html = "";
                 html+= "<li>";
-                html+= "<span class='close' href="+Routing.generate('claro_activity_remove_resource', {'resourceId':resources[0].id, 'activityId': {{ _resource.getId() }} })+">x</span>";
-                html+= "<a href="+Routing.generate('claro_resource_open', {'resourceType': resources[0].type, 'action': 'open', 'resourceId': resources[0].id})+">"+resources[0].name+"</a> ";
+                html+= "<span class='close' href="+Routing.generate('claro_activity_remove_resource', {'node':nodes[0].id, 'activityId': {{ _resource.getId() }} })+">x</span>";
+                html+= "<a href="+Routing.generate('claro_resource_open', {'resourceType': nodes[0].type, 'action': 'open', 'node': nodes[0].id})+">"+nodes[0].name+"</a> ";
                 html+="</li>";
 
                 $("#sortable").append(html);
@@ -99,9 +98,9 @@
 
     <ul id="sortable" class="nav nav-tabs nav-stacked">
     {% for resourceActivity in resourceActivities %}
-            <li id={{ resourceActivity.getResource().getId() }}>
-                <span><a class="close" href="{{ path('claro_activity_remove_resource', {'resourceId':resourceActivity.getResource().getId(), 'activityId': resourceActivity.getActivity().getId()})}}">x</a></span>
-                <a href="{{ path('claro_resource_open', {'resourceType':resourceActivity.getResource().getResourceType().getName(), 'resourceId':resourceActivity.getResource().getId()} )}}">{{ resourceActivity.getResource().getName() }}</a>
+            <li id={{ resourceActivity.getResourceNode().getId() }}>
+                <span><a class="close" href="{{ path('claro_activity_remove_resource', {'nodeId':resourceActivity.getResourceNode().getId(), 'activityId': resourceActivity.getActivity().getId()})}}">x</a></span>
+                <a href="{{ path('claro_resource_open', {'resourceType':resourceActivity.getResourceNode().getResourceType().getName(), 'node':resourceActivity.getResourceNode().getId()} )}}">{{ resourceActivity.getResourceNode().getName() }}</a>
             </li>
     {% endfor %}
     </ul>

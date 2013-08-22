@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Event\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Response;
+use Claroline\CoreBundle\Entity\Resource\File;
 
 class PlayFileEvent extends Event
 {
@@ -15,7 +16,7 @@ class PlayFileEvent extends Event
      *
      * @param integer $resourceId
      */
-    public function __construct($resource)
+    public function __construct(File $resource)
     {
         $this->resource = $resource;
     }

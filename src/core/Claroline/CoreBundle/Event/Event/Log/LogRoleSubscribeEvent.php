@@ -14,14 +14,14 @@ class LogRoleSubscribeEvent extends LogGenericEvent
     /**
      * Constructor.
      */
-    public function __construct(Role $role, AbstractRoleSubject $subject, AbstractWorkspace $workspace = null)
+    public function __construct(Role $role, AbstractRoleSubject $subject)
     {
         $receiver = null;
         $receiverGroup = null;
 
         $details = array('role' => array('name' => $role->getTranslationKey()));
 
-        if ($workspace) {
+        if ($role->getWorkspace()) {
             $details['workspace'] = array('name' => $role->getWorkspace()->getName());
         }
 

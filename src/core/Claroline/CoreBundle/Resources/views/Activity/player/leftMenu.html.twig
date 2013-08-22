@@ -1,7 +1,7 @@
 {% macro parseActivity(item) %}
       {% if item.resources is defined %}
         <li>
-            <a id="item-{{ item.step }}" href="{{ path('claro_activity_show_instructions', {'activityId':item.resource.getId()}) }}" class="activity-instruction">{{ item.resource.getName() }}</a>
+            <a id="item-{{ item.step }}" href="{{ path('claro_activity_show_instructions', {'activity':item.resource.getId()}) }}" class="activity-instruction">{{ item.resource.getResourceNode().getName() }}</a>
             <ul>
                {% for subItem in item.resources %}
                     {{ _self.parseActivity(subItem) }}
@@ -10,8 +10,8 @@
         </li>
         {% else %}
         <li>
-            <a id="item-{{ item.step }}" class="activity-step" data-is-passed="false" href="{{ path('claro_resource_open',{'resourceType': item.resource.getResourceType().getName(), 'resourceId': item.resource.getId()}) }}?_mode=path">
-                {{ item.resource.getName() }}
+            <a id="item-{{ item.step }}" class="activity-step" data-is-passed="false" href="{{ path('claro_resource_open',{'resourceType': item.resource.getResourceNode().getResourceType().getName(), 'node': item.resource.getResourceNode().getId()}) }}?_mode=path">
+                {{ item.resource.getResourceNode().getName() }}
             </a>
         </li>
       {% endif %}

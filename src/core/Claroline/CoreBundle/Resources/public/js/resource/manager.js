@@ -37,10 +37,10 @@
                 this.subViews = {
                     breadcrumbs: new manager.Views.Breadcrumbs(parameters, dispatcher),
                     actions: new manager.Views.Actions(parameters, dispatcher),
-                    resources: new manager.Views.Resources(parameters, dispatcher)
+                    nodes: new manager.Views.Nodes(parameters, dispatcher)
                 };
             },
-            render: function (resources, path, creatableTypes, isSearchMode, searchParameters) {
+            render: function (nodes, path, creatableTypes, isSearchMode, searchParameters) {
                 this.currentDirectory = _.last(path);
 
                 // if directoryHistory is empty
@@ -80,8 +80,8 @@
 
                 this.subViews.breadcrumbs.render(this.parameters.directoryHistory);
                 this.subViews.actions.render(this.currentDirectory, creatableTypes, isSearchMode, searchParameters);
-                this.subViews.resources.render(
-                    resources,
+                this.subViews.nodes.render(
+                    nodes,
                     isSearchMode,
                     this.currentDirectory.id,
                     this.directoryHistory
@@ -91,7 +91,7 @@
                     this.wrapper.append(
                         this.subViews.breadcrumbs.el,
                         this.subViews.actions.el,
-                        this.subViews.resources.el
+                        this.subViews.nodes.el
                     );
                     this.subViews.areAppended = true;
                 }
@@ -104,7 +104,7 @@
                 'click a': function (event) {
                     event.preventDefault();
                     this.dispatcher.trigger('breadcrumb-click', {
-                        resourceId: event.currentTarget.getAttribute('data-resource-id'),
+                        resourceId: event.currentTarget.getAttribute('data-node-id'),
                         isPickerMode: this.parameters.isPickerMode
                     });
                 }
@@ -113,9 +113,9 @@
                 this.parameters = parameters;
                 this.dispatcher = dispatcher;
             },
-            render: function (resources) {
+            render: function (nodes) {
                 $(this.el).html(Twig.render(ResourceManagerBreadcrumbs, {
-                    'resources': resources
+                    'nodes': nodes
                 }));
             }
         }),
@@ -134,7 +134,7 @@
                     event.preventDefault();
                     this.dispatcher.trigger('display-form', {
                         type: 'create',
-                        resource: {
+                        node: {
                             type: event.currentTarget.getAttribute('id'),
                             id: this.currentDirectory.id
                         }
@@ -144,14 +144,14 @@
                     event.preventDefault();
 
                     var zoom = event.currentTarget.getAttribute('id');
-                    var tmp = $('.resource-thumbnail')[0].className.substring(
-                        $('.resource-thumbnail')[0].className.indexOf('zoom')
+                    var tmp = $('.node-thumbnail')[0].className.substring(
+                        $('.node-thumbnail')[0].className.indexOf('zoom')
                     );
 
                     $('.dropdown-menu.zoom li').removeClass('active');
                     $(event.currentTarget).parent().addClass('active');
 
-                    var thumbnail = $('.resource-thumbnail');
+                    var thumbnail = $('.node-thumbnail');
 
                     thumbnail.removeClass(tmp);
                     thumbnail.addClass(zoom);
@@ -159,32 +159,34 @@
                 },
                 'click a.delete': function () {
                     if (!(this.$('a.delete').hasClass('disabled'))) {
-                        this.dispatcher.trigger('delete', {ids: _.keys(this.checkedResources.resources)});
-                        this.checkedResources.resources = {};
+                        this.dispatcher.trigger('delete', {ids: _.keys(this.checkedNodes.nodes)});
+                        this.checkedNodes.nodes = {};
                     }
                 },
                 'click a.download': function () {
                     if (!(this.$('a.download').hasClass('disabled'))) {
-                        this.dispatcher.trigger('download', {ids: _.keys(this.checkedResources.resources)});
+                        this.dispatcher.trigger('download', {ids: _.keys(this.checkedNodes.nodes)});
                     }
                 },
                 'click a.copy': function () {
-                    if (!(this.$('a.copy').hasClass('disabled')) && _.size(this.checkedResources.resources) > 0) {
+
+                    if (!(this.$('a.copy').hasClass('disabled')) && _.size(this.checkedNodes.nodes) > 0) {
                         this.setPasteBinState(true, false);
                     }
                 },
                 'click a.cut': function () {
-                    if (!(this.$('a.cut').hasClass('disabled')) && _.size(this.checkedResources.resources) > 0) {
+
+                    if (!(this.$('a.cut').hasClass('disabled')) && _.size(this.checkedNodes.nodes) > 0) {
                         this.setPasteBinState(true, true);
                     }
                 },
                 'click a.paste': function () {
                     if (!(this.$('a.paste').hasClass('disabled'))) {
                         this.dispatcher.trigger('paste', {
-                            ids:  _.keys(this.checkedResources.resources),
+                            ids:  _.keys(this.checkedNodes.nodes),
                             isCutMode: this.isCutMode,
                             directoryId: this.currentDirectory.id,
-                            sourceDirectoryId: this.checkedResources.directoryId
+                            sourceDirectoryId: this.checkedNodes.directoryId
                         });
                     }
                 },
@@ -210,13 +212,13 @@
                     }
 
                     if (this.parameters.isPickerOnly) {
-                        this.parameters.pickerCallback(this.checkedResources.resources, this.currentDirectory.id);
+                        this.parameters.pickerCallback(this.checkedNodes.nodes, this.currentDirectory.id);
                     } else {
                         if (this.callback) {
-                            this.callback(_.keys(this.checkedResources.resources), this.targetDirectoryId);
+                            this.callback(_.keys(this.checkedNodes.nodes), this.targetDirectoryId);
                         } else {
                             this.dispatcher.trigger('paste', {
-                                ids: _.keys(this.checkedResources.resources),
+                                ids: _.keys(this.checkedNodes.nodes),
                                 directoryId: this.targetDirectoryId,
                                 isCutMode: false
                             });
@@ -234,7 +236,7 @@
                 var name = this.$('.name').val().trim();
                 var dateFrom = $('input.date-from').first().val();
                 var dateTo = $('input.date-to').first().val();
-                var types = $('select.resource-types').val();
+                var types = $('select.node-types').val();
 
                 if (name) {
                     searchParameters.name = name;
@@ -269,16 +271,16 @@
                 this.currentDirectory = {id: parameters.directoryId};
                 // destination directory for picker "add" action
                 this.targetDirectoryId = this.currentDirectory.id;
-                // selection of resources checked by the user
-                this.checkedResources = {
-                    resources: {},
+                // selection of nodes checked by the user
+                this.checkedNodes = {
+                    nodes: {},
                     directoryId: parameters.directoryId,
                     isSearchMode: false
                 };
                 this.setPasteBinState(false, false);
-                // if a resource has been (un-)checked
-                this.dispatcher.on('resource-check-status', function (event) {
-                    // if the resource belongs to this view instance
+                // if a node has been (un-)checked
+                this.dispatcher.on('node-check-status', function (event) {
+                    // if the node belongs to this view instance
                     if (event.isPickerMode === this.parameters.isPickerMode) {
                         // cancel any previous paste bin state
                         if (this.isReadyToPaste) {
@@ -287,28 +289,28 @@
                         // cancel any previous selection made in another directory
                         // or in a previous search results list
                         // or in this directory if we're in picker 'mono-select' mode
-                        if (this.checkedResources.directoryId !== this.currentDirectory.id ||
-                            (this.checkedResources.isSearchMode && !this.isSearchMode) ||
+                        if (this.checkedNodes.directoryId !== this.currentDirectory.id ||
+                            (this.checkedNodes.isSearchMode && !this.isSearchMode) ||
                             (this.parameters.isPickerMode &&
                                 !this.parameters.isPickerMultiSelectAllowed &&
                                 event.isChecked)) {
-                            this.checkedResources.directoryId = this.currentDirectory.id;
-                            this.checkedResources.resources = {};
+                            this.checkedNodes.directoryId = this.currentDirectory.id;
+                            this.checkedNodes.nodes = {};
                             this.setPasteBinState(false, false);
                         }
-                        // add the resource to the selection or remove it if already present
-                        if (this.checkedResources.resources.hasOwnProperty(event.resource.id)) {
-                            delete this.checkedResources.resources[event.resource.id];
+                        // add the node to the selection or remove it if already present
+                        if (this.checkedNodes.nodes.hasOwnProperty(event.node.id)) {
+                            delete this.checkedNodes.nodes[event.node.id];
                         } else {
-                            this.checkedResources.resources[event.resource.id] = [
-                                event.resource.name,
-                                event.resource.type,
-                                event.resource.mimeType
+                            this.checkedNodes.nodes[event.node.id] = [
+                                event.node.name,
+                                event.node.type,
+                                event.node.mimeType
                             ];
                         }
 
-                        this.checkedResources.directoryId = this.currentDirectory.id;
-                        this.checkedResources.isSearchMode = this.isSearchMode;
+                        this.checkedNodes.directoryId = this.currentDirectory.id;
+                        this.checkedNodes.isSearchMode = this.isSearchMode;
                         this.setActionsEnabledState(event.isPickerMode);
                     }
                 }, this);
@@ -317,7 +319,7 @@
                 return isEnabled ? jqButton.removeClass('disabled') : jqButton.addClass('disabled');
             },
             setActionsEnabledState: function (isPickerMode) {
-                var isSelectionNotEmpty = _.size(this.checkedResources.resources) > 0;
+                var isSelectionNotEmpty = _.size(this.checkedNodes.nodes) > 0;
                 // enable picker "add" button on non-root directories if selection is not empty
                 if (isPickerMode && (this.currentDirectory.id !== '0' || this.isSearchMode)) {
                     this.setButtonEnabledState(this.$('a.add'), isSelectionNotEmpty);
@@ -352,8 +354,8 @@
                 this.currentDirectory = directory;
 
                 if (isSearchMode && !this.isSearchMode) {
-                    this.checkedResources.resources = {};
-                    this.checkedResources.isSearchMode = true;
+                    this.checkedNodes.nodes = {};
+                    this.checkedNodes.isSearchMode = true;
                 }
 
                 this.isSearchMode = isSearchMode;
@@ -404,17 +406,17 @@
             }
         }),
         Thumbnail: Backbone.View.extend({
-            className: 'resource-thumbnail resource zoom100 ui-state-default',
+            className: 'node-thumbnail node zoom100 ui-state-default',
             tagName: 'li',
             events: {
-                'click .resource-menu-action': function (event) {
+                'click .node-menu-action': function (event) {
                     event.preventDefault();
                     var action = event.currentTarget.getAttribute('data-action');
                     var actionType = event.currentTarget.getAttribute('data-action-type');
                     var resourceId = event.currentTarget.getAttribute('data-id');
 
                     if (actionType === 'display-form') {
-                        this.dispatcher.trigger('display-form', {type: action, resource : {id: resourceId}});
+                        this.dispatcher.trigger('display-form', {type: action, node : {id: resourceId}});
                     } else {
                         if (event.currentTarget.getAttribute('data-is-custom') === 'no') {
                             this.dispatcher.trigger(action, {ids: [resourceId]});
@@ -428,26 +430,26 @@
                 this.parameters = parameters;
                 this.dispatcher = dispatcher;
             },
-            render: function (resource, isSelectionAllowed, hasMenu) {
-                this.el.id = resource.id;
-                resource.displayableName = Claroline.Utilities.formatText(resource.name, 20, 2);
+            render: function (node, isSelectionAllowed, hasMenu) {
+                this.el.id = node.id;
+                node.displayableName = Claroline.Utilities.formatText(node.name, 20, 2);
                 $(this.el).html(Twig.render(ResourceManagerThumbnail, {
-                    'resource': resource,
+                    'node': node,
                     'isSelectionAllowed': isSelectionAllowed,
                     'hasMenu': hasMenu,
-                    'customActions': this.parameters.resourceTypes[resource.type].customActions || {},
+                    'customActions': this.parameters.resourceTypes[node.type].customActions || {},
                     'webRoot': this.parameters.webPath
                 }));
             }
         }),
-        Resources: Backbone.View.extend({
-            className: 'resources',
+        Nodes: Backbone.View.extend({
+            className: 'nodes',
             tagName: 'ul',
             attributes: {'id': 'sortable'},
             events: {
-                'click .resource-thumbnail .resource-element': 'dispatchOpen',
-                'click .resource-thumbnail input[type=checkbox]': 'dispatchCheck',
-                'click .results table a.resource-link': 'dispatchOpen',
+                'click .node-thumbnail .node-element': 'dispatchOpen',
+                'click .node-thumbnail input[type=checkbox]': 'dispatchCheck',
+                'click .results table a.node-link': 'dispatchOpen',
                 'click .results table input[type=checkbox]': 'dispatchCheck'
             },
             initialize: function (parameters, dispatcher) {
@@ -455,10 +457,10 @@
                 this.dispatcher = dispatcher;
                 this.directoryId = parameters.directoryId;
             },
-            addThumbnails: function (resources, successHandler) {
-                _.each(resources, function (resource) {
+            addThumbnails: function (nodes, successHandler) {
+                _.each(nodes, function (node) {
                     var thumbnail = new manager.Views.Thumbnail(this.parameters, this.dispatcher);
-                    thumbnail.render(resource, this.directoryId !== 0 && !this.parameters.isPickerMode, true);
+                    thumbnail.render(node, this.directoryId !== 0 && !this.parameters.isPickerMode, true);
                     this.$el.append(thumbnail.$el);
                 }, this);
 
@@ -468,7 +470,7 @@
             },
             renameThumbnail: function (resourceId, newName, successHandler) {
                 var displayableName = Claroline.Utilities.formatText(newName, 20, 2);
-                this.$('#' + resourceId + ' .resource-name').html(displayableName);
+                this.$('#' + resourceId + ' .node-name').html(displayableName);
                 this.$('#' + resourceId + ' .dropdown[rel=tooltip]').attr('title', newName);
 
                 if (successHandler) {
@@ -490,7 +492,7 @@
             },
             dispatchOpen: function (event) {
                 event.preventDefault();
-                this.dispatcher.trigger('resource-click', {
+                this.dispatcher.trigger('node-click', {
                     resourceId: event.currentTarget.getAttribute('data-id'),
                     resourceType: event.currentTarget.getAttribute('data-type'),
                     isPickerMode: this.parameters.isPickerMode,
@@ -508,10 +510,10 @@
                     });
                 }
 
-                this.dispatcher.trigger('resource-check-status', {
-                    resource: {
+                this.dispatcher.trigger('node-check-status', {
+                    node: {
                         id: event.currentTarget.getAttribute('value'),
-                        name: event.currentTarget.getAttribute('data-resource-name'),
+                        name: event.currentTarget.getAttribute('data-node-name'),
                         type: event.currentTarget.getAttribute('data-type'),
                         mimeType: event.currentTarget.getAttribute('data-mime-type')
 
@@ -520,20 +522,20 @@
                     isPickerMode: this.parameters.isPickerMode
                 });
             },
-            render: function (resources, isSearchMode, directoryId) {
+            render: function (nodes, isSearchMode, directoryId) {
                 this.directoryId = directoryId;
                 this.$el.empty();
 
                 if (isSearchMode) {
                     $(this.el).html(Twig.render(ResourceManagerResults, {
-                        'resources': resources,
+                        'nodes': nodes,
                         'resourceTypes': this.parameters.resourceTypes
                     }));
                 } else {
-                    _.each(resources, function (resource) {
+                    _.each(nodes, function (node) {
                         var thumbnail = new manager.Views.Thumbnail(this.parameters, this.dispatcher);
                         thumbnail.render(
-                            resource,
+                            node,
                             directoryId !== 0 || !this.parameters.isPickerMode,
                             directoryId !== 0 && !this.parameters.isPickerMode
                         );
@@ -548,7 +550,7 @@
             }
         }),
         Form: Backbone.View.extend({
-            className: 'resource-form',
+            className: 'node-form modal hide',
             events: {
                 'click #submit-default-rights-form-button': function (event) {
                     event.preventDefault();
@@ -556,7 +558,7 @@
                     this.dispatcher.trigger(this.eventOnSubmit, {
                         action: form.getAttribute('action'),
                         data: new FormData(form),
-                        resourceId: this.targetResourceId
+                        nodeId: this.targetNodeId
                     });
                 },
                 'click .res-creation-options': function (event) {
@@ -571,7 +573,7 @@
                             success: function (form) {
                                 this.views.form.render(
                                     form,
-                                    event.currentTarget.getAttribute('data-resource-id'),
+                                    event.currentTarget.getAttribute('data-node-id'),
                                     'edit-rights-creation'
                                 );
                             }
@@ -591,7 +593,7 @@
                             $('#form-right-wrapper').empty();
                             $('#role-list').empty();
                             $('#role-list').append(Twig.render(resourceRightsRoles,
-                                {'workspaces': workspaces, 'resourceId': this.targetResourceId})
+                                {'workspaces': workspaces, 'nodeId': this.targetNodeId})
                             );
                         }
                     });
@@ -661,23 +663,23 @@
                     this.dispatcher.trigger(this.eventOnSubmit, {
                         action: form.getAttribute('action'),
                         data: new FormData(form),
-                        resourceId: this.targetResourceId
+                        resourceId: this.targetNodeId
                     });
                 }
             },
             initialize: function (dispatcher) {
                 this.dispatcher = dispatcher;
-                this.targetResourceId = null;
+                this.targetNodeId = null;
                 this.eventOnSubmit = '';
                 this.on('close', this.close, this);
             },
             close: function () {
                 $('.modal', this.el).modal('hide');
             },
-            render: function (form, targetResourceId, eventOnSubmit) {
-                this.targetResourceId = targetResourceId;
+            render: function (form, targetNodeId, eventOnSubmit) {
+                this.targetNodeId = targetNodeId;
                 this.eventOnSubmit = eventOnSubmit;
-                form = form.replace('_resourceId', targetResourceId);
+                form = form.replace('_nodeId', targetNodeId);
                 $(this.el).html(Twig.render(ModalWindow, {
                     'body': form
                 }));
@@ -717,7 +719,7 @@
                 this.picker(event.action, event.callback);
             },
             'display-form': function (event) {
-                this.displayForm(event.type, event.resource);
+                this.displayForm(event.type, event.node);
             },
             'create': function (event) {
                 this.create(event.action, event.data, event.resourceId);
@@ -747,7 +749,7 @@
                     this.router.navigate('resources/' + event.resourceId, {trigger: true});
                 }
             },
-            'resource-click': function (event) {
+            'node-click': function (event) {
                 if (this.isOpenEnabled) {
                     if (event.isPickerMode) {
                         if (event.resourceType === 'directory') {
@@ -821,9 +823,9 @@
             }
         },
         setFilterState: function (type) {
-            $('.resource-thumbnail').show();
+            $('.node-thumbnail').show();
             if (type !== 'none') {
-                $.each($('.resource-element'), function (key, element) {
+                $.each($('.node-element'), function (key, element) {
                     if ($(element).attr('data-type') !== type && $(element).attr('data-type') !== 'directory') {
                         $(element.parentElement).hide();
                     }
@@ -852,7 +854,7 @@
                     }
 
                     this.views[view].render(
-                        data.resources,
+                        data.nodes,
                         data.path,
                         data.creatableTypes,
                         isSearchMode,
@@ -890,7 +892,7 @@
                                 $.ajax({
                                     url: Routing.generate(
                                         'claro_resource_insert_before',
-                                        {'resourceId': moved, 'nextId': nextId}
+                                        {'node': moved, 'nextId': nextId}
                                     )
                                 });
                             }
@@ -910,10 +912,10 @@
                 }
             });
         },
-        displayForm: function (type, resource) {
-            if (resource.type === 'resource_shortcut') {
-                var createShortcut = _.bind(function (resources, parentId) {
-                    this.createShortcut(resources, parentId);
+        displayForm: function (type, node) {
+            if (node.type === 'resource_shortcut') {
+                var createShortcut = _.bind(function (nodes, parentId) {
+                    this.createShortcut(nodes, parentId);
                 }, this);
                 this.dispatcher.trigger('picker', {
                     action: 'open',
@@ -921,10 +923,10 @@
                 });
             } else {
                 var urlMap = {
-                    'create': '/resource/form/' + resource.type,
-                    'rename': '/resource/rename/form/' + resource.id,
-                    'edit-properties': '/resource/properties/form/' + resource.id,
-                    'edit-rights': '/resource/' + resource.id + '/rights/form/role'
+                    'create': '/resource/form/' + node.type,
+                    'rename': '/resource/rename/form/' + node.id,
+                    'edit-properties': '/resource/properties/form/' + node.id,
+                    'edit-rights': '/resource/' + node.id + '/rights/form/role'
                 };
 
                 if (!urlMap[type]) {
@@ -939,7 +941,7 @@
                     context: this,
                     url: this.parameters.appPath + urlMap[type],
                     success: function (form) {
-                        this.views.form.render(form, resource.id, type);
+                        this.views.form.render(form, node.id, type);
 
                         if (!this.views.form.isAppended) {
                             this.parameters.parentElement.append(this.views.form.el);
@@ -959,7 +961,7 @@
                 contentType: false,
                 success: function (data, textStatus, jqXHR) {
                     if (jqXHR.getResponseHeader('Content-Type') === 'application/json') {
-                        this.views.main.subViews.resources.addThumbnails(data, this.views.form.close());
+                        this.views.main.subViews.nodes.addThumbnails(data, this.views.form.close());
                     } else {
                         this.views.form.render(data, parentDirectoryId, 'create');
                     }
@@ -972,7 +974,7 @@
                 url: this.parameters.appPath + '/resource/shortcut/' +  parentId + '/create',
                 data: {ids: resourceIds},
                 success: function (data) {
-                    this.views.main.subViews.resources.addThumbnails(data);
+                    this.views.main.subViews.nodes.addThumbnails(data);
                 }
             });
         },
@@ -982,7 +984,7 @@
                 url: this.parameters.appPath + '/resource/delete',
                 data: {ids: resourceIds},
                 success: function () {
-                    this.views.main.subViews.resources.removeResources(resourceIds);
+                    this.views.main.subViews.nodes.removeResources(resourceIds);
                     this.views.main.subViews.actions.setInitialState();
                 }
             });
@@ -994,15 +996,15 @@
                 data: {ids: resourceIds},
                 success: function (data, textStatus, jqXHR) {
                     if (jqXHR.getResponseHeader('Content-Type') === 'application/json') {
-                        this.views.main.subViews.resources.addThumbnails(data);
+                        this.views.main.subViews.nodes.addThumbnails(data);
                     }
                 }
             });
         },
         move: function (resourceIds, newParentDirectoryId, oldParentDirectoryId) {
             if (newParentDirectoryId === oldParentDirectoryId) {
-                this.views.main.subViews.resources.uncheckAll();
-                this.views.main.subViews.actions.checkedResources.resources = {};
+                this.views.main.subViews.nodes.uncheckAll();
+                this.views.main.subViews.actions.checkedNodes.nodes = {};
                 this.views.main.subViews.actions.setInitialState();
             }
             else {
@@ -1011,7 +1013,7 @@
                     url: this.parameters.appPath + '/resource/move/' + newParentDirectoryId,
                     data: {ids: resourceIds},
                     success: function (data) {
-                        this.views.main.subViews.resources.addThumbnails(data);
+                        this.views.main.subViews.nodes.addThumbnails(data);
                         this.views.main.subViews.actions.setInitialState();
                     }
                 });
@@ -1027,7 +1029,7 @@
                 contentType: false,
                 success: function (data, textStatus, jqXHR) {
                     if (jqXHR.getResponseHeader('Content-Type') === 'application/json') {
-                        this.views.main.subViews.resources.renameThumbnail(
+                        this.views.main.subViews.nodes.renameThumbnail(
                             resourceId,
                             data[0],
                             this.views.form.close()
@@ -1049,7 +1051,7 @@
                 success: function (data, textStatus, jqXHR) {
                     if (jqXHR.getResponseHeader('Content-Type') === 'application/json') {
                         if (data.name) {
-                            this.views.main.subViews.resources.renameThumbnail(
+                            this.views.main.subViews.nodes.renameThumbnail(
                                 resourceId,
                                 data.name,
                                 this.views.form.close()
@@ -1057,7 +1059,7 @@
                         }
 
                         if (data.icon) {
-                            this.views.main.subViews.resources.changeThumbnailIcon(
+                            this.views.main.subViews.nodes.changeThumbnailIcon(
                                 resourceId,
                                 data.icon,
                                 this.views.form.close()
@@ -1141,9 +1143,9 @@
      *      (default to empty object)
      * - isPickerOnly: whether the manager must initialize a main view and a picker view, or just the picker one
      *      (default to false)
-     * - isMultiSelectAllowed: whether the selection of multiple resources in picker mode should be allowed or not
+     * - isMultiSelectAllowed: whether the selection of multiple nodes in picker mode should be allowed or not
      *      (default to false)
-     * - pickerCallback: the function to be called when resources are selected in picker mode
+     * - pickerCallback: the function to be called when nodes are selected in picker mode
      *      (default to  empty function)
      *
      * @param object parameters The parameters of the manager

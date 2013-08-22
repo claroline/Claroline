@@ -321,6 +321,18 @@ messages_removed: 'Messages removed'
 messages_sent: 'Messages sent'
 messages_sent_removed: 'Messages sent removed'
 misc: Miscellaneous
+month.january: "January"
+month.february: "February"
+month.march: "March"
+month.april: "April"
+month.may: "May"
+month.june: "June"
+month.july: "July"
+month.august: "August"
+month.september: "September"
+month.october: "October"
+month.november: "November"
+month.december: "December"
 move: Move
 my_account: 'My account'
 my_agenda: 'My agenda'
@@ -570,7 +582,56 @@ workspace_unregistration_confirm_title: 'Do you really want to unregister from t
 workspace_welcome: Welcome
 workspaces: Workspaces
 ws_creator: 'Workspace creator'
-ws_most_viewed: 'Most viewed workspaces'
-yes: 'yes'
-yesterday_activity: 'Yesterday''s activity'
+ws_most_viewed: Most viewed workspaces
+date_format: 'm/d/Y'
+date_range.format: 'm/d/Y'
+date_range.js_format: 'MM/dd/yyyy'
+date_range.apply: 'Apply'
+date_range.clear: 'Clear'
+date_range.week: 'w'
+date_range.from: 'From'
+date_range.to: 'To'
+date_range.custom_range: 'Custom range'
+date_range.day_names: '["Su","Mo","Tu","We","Th","Fr","Sa"]'
+date_range.month_names: '["January","February","March","April","May","June","July","August","September","October","November","December"]'
+date_range.first_day: '0'
+date_range.today: 'Today'
+date_range.yesterday: 'Yesterday'
+date_range.last_week: 'Last week'
+date_range.this_week: 'This week'
+date_range.last_month: 'Last month'
+date_range.this_month: 'This month'
+date_range.last_year: 'Last year'
+date_range.this_year: 'This year'
+date_range.last_school_year: 'Last school year'
+date_range.this_school_year: 'This school year'
+date_range.last_seven_days: 'Last 7 days'
+date_range.last_thirty_days: 'Last 30 days'
+jqplot_date_output_format: '%m/%d/%Y'
+Show actions for: 'Show actions for'
+for period: 'for period'
+for user: 'for user'
+Show actions: 'Show actions'
+See all: 'See all'
+yesterday_activity: Yesterday's activity
 Your changes have been saved: 'Your changes have been saved'
+The form is not valid: 'The form is not valid'
+Choose workspaces displayed in the widget: 'Choose workspaces displayed in the widget'
+Choose visible actions in the widget: 'Choose visible actions in the widget'
+Actions per day: 'Actions per day'
+Last action: '{1} Last action|[1,Inf] Last %logAmount% actions'
+log_hidden_workspace_widget_config_amount : Amount
+Action List: 'Action List'
+Filter actions: 'Filter actions'
+Draw an area on the graph to zoom, double-click to cancel: 'Draw an area on the graph to zoom, double-click to cancel'
+Overview of recent activities of your workspaces: 'Overview of recent activities of your workspaces'
+Overview of recent activities in %workspaceName%: 'Overview of recent activities in %workspaceName%'
+Overview of all recent activities in %workspaceName% : 'Overview of all recent activities in %workspaceName%'
+upload_fail: 'Upload failed'
+max_size_25mb: 'The maximum size is 25mb'
+empty_file: 'Empty file'
+upload: 'upload'
+upload_denied: "Permission denied"
+select_all: Tout sélectionner
+drop_file: Drop the file
+drag_file_here: Drag the file here

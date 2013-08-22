@@ -237,7 +237,7 @@ class WorkspaceRepository extends EntityRepository
         $qb = $this
             ->createQueryBuilder('ws')
             ->select('ws.name, ws.code, COUNT(rs.id) AS total')
-            ->leftJoin('Claroline\CoreBundle\Entity\Resource\AbstractResource', 'rs', 'WITH', 'ws = rs.workspace')
+            ->leftJoin('Claroline\CoreBundle\Entity\Resource\ResourceNode', 'rs', 'WITH', 'ws = rs.workspace')
             ->groupBy('ws.id')
             ->orderBy('total', 'DESC');
 

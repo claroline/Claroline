@@ -15,10 +15,13 @@ class AuthenticationControllerTest extends MockeryTestCase
     private $mailer;
     private $translator;
     private $formFactory;
+    private $authenticator;
+    private $controller;
 
     protected function setUp()
     {
         parent::setUp();
+
         $this->request = $this->mock('Symfony\Component\HttpFoundation\Request');
         $this->router = $this->mock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
         $this->userManager = $this->mock('Claroline\CoreBundle\Manager\UserManager');
@@ -27,6 +30,7 @@ class AuthenticationControllerTest extends MockeryTestCase
         $this->mailer = $this->mock('Swift_Mailer');
         $this->translator = $this->mock('Symfony\Component\Translation\Translator');
         $this->formFactory = $this->mock('Claroline\CoreBundle\Form\Factory\FormFactory');
+        $this->authenticator = $this->mock('Claroline\CoreBundle\Library\Security\Authenticator');
         $this->controller = new AuthenticationController(
             $this->request,
             $this->userManager,
@@ -35,7 +39,8 @@ class AuthenticationControllerTest extends MockeryTestCase
             $this->mailer,
             $this->router,
             $this->translator,
-            $this->formFactory
+            $this->formFactory,
+            $this->authenticator
         );
     }
 
@@ -93,5 +98,31 @@ class AuthenticationControllerTest extends MockeryTestCase
             ->once()
             ->andReturn('view');
         $this->assertEquals(array('user' => $user, 'form' => 'view'), $this->controller->sendEmailAction());
+    }
+
+    public function testPostAuthenticationAction()
+    {
+        $parameterBag = $this->mock('Symfony\Component\HttpFoundation\ServerBag');
+        $parameterBag->shouldReceive('get')->with('username')->once()->andReturn('username');
+        $parameterBag->shouldReceive('get')->with('password')->once()->andReturn('password');
+        $this->request->request = $parameterBag;
+        $this->authenticator->shouldReceive('authenticate')->once()->with('username', 'password')
+            ->andReturn(true);
+        $response = new \Symfony\Component\HttpFoundation\JsonResponse(array(), 200);
+        $this->assertEquals($response, $this->controller->postAuthenticationAction());
+    }
+
+    public function testFailedPostAuthenticationAction()
+    {
+        $parameterBag = $this->mock('Symfony\Component\HttpFoundation\ServerBag');
+        $parameterBag->shouldReceive('get')->with('username')->once()->andReturn('username');
+        $parameterBag->shouldReceive('get')->with('password')->once()->andReturn('password');
+        $this->request->request = $parameterBag;
+        $this->authenticator->shouldReceive('authenticate')->once()->with('username', 'password')
+            ->andReturn(false);
+        $this->translator->shouldReceive('trans')->once()->with('login_failure', array(), 'platform')
+            ->andReturn('message');
+        $response = new \Symfony\Component\HttpFoundation\JsonResponse(array('message' => 'message'), 403);
+        $this->assertEquals($response, $this->controller->postAuthenticationAction());
     }
 }

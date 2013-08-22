@@ -8,13 +8,11 @@
 
 {% block content %}
     {% if _resource is defined %}
-        {% set workspace = _resource.getWorkspace() %}
+        {% set workspace = _resource.getResourceNode().getWorkspace() %}
     {% endif %}
-
     {% if not is_path_mode %}
         {% render controller("ClarolineCoreBundle:Workspace:renderToolList", {'workspaceId': workspace.getId(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})}) %}
     {% endif %}
-
     <div class="col-lg-9 section-content">
         <div class="panel panel-default">
                 {% block breadcrumb %}
