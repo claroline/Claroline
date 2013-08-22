@@ -1468,4 +1468,23 @@ class QuestionController extends Controller
 
         return $this->redirect($this->generateUrl('ujm_question_index', array('pageNowShared' => $pageNow)));
     }
+
+    public function seeSharedWithAction ($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $questionsharedWith = $em->getRepository('UJMExoBundle:Share')->findBy(array('question' => $id));
+
+        $sharedWith = array();
+        $stop = count($questionsharedWith);
+
+        for ($i = 0 ; $i < $stop ; $i++) {
+            $sharedWith[] = $em->getRepository('ClarolineCoreBundle:User')->find($questionsharedWith[$i]->getUser()->getId());
+        }
+
+        return $this->render(
+            'UJMExoBundle:Question:seeSharedWith.html.twig', array(
+            'sharedWith' => $sharedWith,
+            )
+        );
+    }
 }

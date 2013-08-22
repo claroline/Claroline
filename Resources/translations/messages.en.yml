@@ -229,6 +229,7 @@ print paper: Print paper
 qcm: QCM
 question: Question
 question creation: Question creation
+questionSharedWith: This question is shared with users below
 
 # R
 random order of questions: Random order of questions
@@ -246,6 +247,7 @@ role: Role
 sawHint: of penalty for seen hints
 searchQuestion: Search questions
 seeDoc: See linked questions to this document
+seeSharedWith: Question shared with users
 select: Select
 selection: => Click on a pointer to select it and click again on the picture to define your answer.
 selectZone: To define an answer zone, click on it and place it by re-clicking to the selected place on the image. You can also press CTRL key and click on the picture where it should be placed.
