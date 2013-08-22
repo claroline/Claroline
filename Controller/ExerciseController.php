@@ -295,7 +295,7 @@ class ExerciseController extends Controller
         $click = $request->query->get('click', 'my'); // Get which array to change page (default 'my question')
         $pagerMy = $request->query->get('pagerMy', 1); // Get the page of the array my question (default 1)
         $pagerShared = $request->query->get('pagerShared', 1); // Get the pager of the array my shared question (default 1)
-        $pageToGo = $request->query->get('pageToGo'); // Page to go for the list of the questions of the exercise
+        $pageToGo = $request->query->get('pageGoNow'); // Page to go for the list of the questions of the exercise
         $max = 2; // Max of questions per page
 
         // If change page of my questions array
@@ -377,7 +377,7 @@ class ExerciseController extends Controller
                     'sharedWithMe' => $sharedWithMePager,
                     'pagerMy'      => $pagerfantaMy,
                     'pagerShared'  => $pagerfantaShared,
-                    'page2go'      => $pageGoNow
+                    'pageToGo'      => $pageGoNow
                 )
             );
         } else {

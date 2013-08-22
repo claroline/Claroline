@@ -138,13 +138,13 @@ class InteractionQCMController extends Controller
             if ($exoID == -1) {
                 return $this->redirect(
                     $this->generateUrl('ujm_question_index', array(
-                        'category2Find' => $categoryToFind, 'title2Find' => $titleToFind)
+                        'categoryToFind' => $categoryToFind, 'titleToFind' => $titleToFind)
                     )
                 );
             } else {
                 return $this->redirect(
                     $this->generateUrl('ujm_exercise_questions', array(
-                        'id' => $exoID, 'category2Find' => $categoryToFind, 'title2Find' => $titleToFind)
+                        'id' => $exoID, 'categoryToFind' => $categoryToFind, 'titleToFind' => $titleToFind)
                     )
                 );
             }

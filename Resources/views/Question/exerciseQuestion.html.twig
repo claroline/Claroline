@@ -42,7 +42,7 @@
 
     <a href="{{ path('ujm_exercise_open', { 'exerciseId':  exerciseID }) }}"><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
     &nbsp;&nbsp;|&nbsp;&nbsp;
-    <a href="{{ path('ujm_exercise_import_question', { 'exoID':  exerciseID, 'page2Go': pagerQuestion.getNbPages,
+    <a href="{{ path('ujm_exercise_import_question', { 'exoID':  exerciseID, 'pageGoNow': pagerQuestion.getNbPages,
         'maxPage': pagerQuestion.maxPerPage, 'nbItem': pagerQuestion.getNbResults }) }}">{{ 'import questions' | trans }}</a>
     &nbsp;&nbsp;|&nbsp;&nbsp;
     <a href="{{ path('ujm_question_new', { 'exoID': exerciseID }) }}">{{ 'create a new entry' | trans }}</a>

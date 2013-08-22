@@ -1237,7 +1237,7 @@ class QuestionController extends Controller
 
         // If what and where to search is defined
         if ($type && $whatToFind && $where) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $questionRepository = $em->getRepository('UJMExoBundle:Question');
             $interactionRepository = $em->getRepository('UJMExoBundle:Interaction');
 
