@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "837b42c260204f59d6df9fce02645de9",
+    "hash": "2d7c036e437612a42bbb27547224c686",
     "packages": [
         {
             "name": "besimple/sso-auth-bundle",
@@ -1191,49 +1191,6 @@
                 "uploadable"
             ],
             "time": "2013-08-19 15:37:45"
-        },
-        {
-            "name": "icap-lyon1/simple-tag-bundle",
-            "version": "dev-master",
-            "target-dir": "ICAPLyon1/Bundle/SimpleTagBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/iCAPLyon1/SimpleTagBundle.git",
-                "reference": "4ce5e2ca761c573c5246fd1528dd3e8cc86ca91f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/SimpleTagBundle/zipball/4ce5e2ca761c573c5246fd1528dd3e8cc86ca91f",
-                "reference": "4ce5e2ca761c573c5246fd1528dd3e8cc86ca91f",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/doctrine-bundle": "*",
-                "php": ">=5.3.2",
-                "symfony/framework-bundle": "~2.1",
-                "twig/twig": "*"
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-0": {
-                    "ICAPLyon1\\Bundle\\SimpleTagBundle": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Panagiotis Tsavdaris",
-                    "email": "ptsavdar@gmail.com"
-                }
-            ],
-            "description": "Symfony TagBundle that easily adds tags to any entity",
-            "keywords": [
-                "tag"
-            ],
-            "time": "2013-06-19 12:12:01"
         },
         {
             "name": "idci/exporter-bundle",
@@ -2993,6 +2950,59 @@
             "time": "2013-06-06 08:08:38"
         },
         {
+            "name": "willdurand/expose-translation-bundle",
+            "version": "dev-master",
+            "target-dir": "Bazinga/ExposeTranslationBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/willdurand/BazingaExposeTranslationBundle.git",
+                "reference": "6df1246d89d1eb36242c8ee12d57f46a6a43f195"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/willdurand/BazingaExposeTranslationBundle/zipball/6df1246d89d1eb36242c8ee12d57f46a6a43f195",
+                "reference": "6df1246d89d1eb36242c8ee12d57f46a6a43f195",
+                "shasum": ""
+            },
+            "require": {
+                "symfony/console": ">=2.0,<2.4-dev",
+                "symfony/finder": ">=2.0,<2.4-dev",
+                "symfony/framework-bundle": ">=2.0,<2.4-dev"
+            },
+            "require-dev": {
+                "symfony/browser-kit": ">=2.0,<2.4-dev",
+                "symfony/yaml": ">=2.0,<2.4-dev"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Bazinga\\ExposeTranslationBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "William Durand",
+                    "email": "william.durand1@gmail.com",
+                    "homepage": "http://www.willdurand.fr"
+                }
+            ],
+            "description": "A pretty nice way to expose your translation messages to your JavaScript.",
+            "keywords": [
+                "javascript",
+                "translation"
+            ],
+            "time": "2013-06-20 15:42:20"
+        },
+        {
             "name": "xaguilars/bootstrap-colorpicker",
             "version": "dev-master",
             "source": {
@@ -3089,6 +3099,49 @@
             "include-path": [
                 "Hamcrest-1.1.0/"
             ]
+        },
+        {
+            "name": "icap-lyon1/simple-tag-bundle",
+            "version": "dev-master",
+            "target-dir": "ICAPLyon1/Bundle/SimpleTagBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/iCAPLyon1/SimpleTagBundle.git",
+                "reference": "4ce5e2ca761c573c5246fd1528dd3e8cc86ca91f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/iCAPLyon1/SimpleTagBundle/zipball/4ce5e2ca761c573c5246fd1528dd3e8cc86ca91f",
+                "reference": "4ce5e2ca761c573c5246fd1528dd3e8cc86ca91f",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/doctrine-bundle": "*",
+                "php": ">=5.3.2",
+                "symfony/framework-bundle": "~2.1",
+                "twig/twig": "*"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-0": {
+                    "ICAPLyon1\\Bundle\\SimpleTagBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Panagiotis Tsavdaris",
+                    "email": "ptsavdar@gmail.com"
+                }
+            ],
+            "description": "Symfony TagBundle that easily adds tags to any entity",
+            "keywords": [
+                "tag"
+            ],
+            "time": "2013-06-19 12:12:01"
         },
         {
             "name": "mikey179/vfsStream",
@@ -3204,7 +3257,7 @@
         "fortawesome/fontawesome": 20,
         "xaguilars/bootstrap-colorpicker": 20,
         "zenstruck/form-bundle": 20,
-        "icap-lyon1/simple-tag-bundle": 20,
+        "willdurand/expose-translation-bundle": 20,
         "mockery/mockery": 20,
         "mikey179/vfsstream": 20
     },
