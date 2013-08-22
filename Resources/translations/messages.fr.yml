@@ -42,6 +42,7 @@ add hint: Ajouter un indice
 add user: Ajouter un utilisateur
 administration: Administration
 after the last attempt: Après le dernier essai
+alert ending: Etes-vous sur de vouloir terminer ? (Vous ne pourrez plus modifier vos réponses)
 allQuestion: Toutes
 already: Cette question est déjà partagée avec cet utilisateur
 alreadyExist: Ce nom existe déjà.

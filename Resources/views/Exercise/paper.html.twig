@@ -223,10 +223,10 @@
                 <td>&nbsp;&nbsp;<i class="icon-chevron-right"></i><i class="icon-chevron-right"></i>&nbsp;&nbsp;</td>
             {% endif %}
             {% if dispButtonInterrupt %}
-                <td><input type="button" value="{{ "interupt" | trans }}" onClick="interupt('{{ interactionType }}')"/>
+                <td><input type="button" value="{{ "interupt" | trans }}" onClick="interupt('{{ interactionType }}');"/>
                 </td>
             {% endif %}
-            <td><input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }}')"/></td>
+            <td><input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }}', '{{ 'alert ending' | trans }}');"/></td>
         </tr>
     </table>
 {% endblock %}

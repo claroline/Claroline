@@ -28,14 +28,16 @@ function submitForm(numQuestionToDisplayed, interactionType) {
     document.getElementById('formResponse').submit();
 }
 
-function finish(interactionType) {
+function finish(interactionType, alert) {
     document.getElementById('numQuestionToDisplayed').value = 'finish';
 
     if (interactionType == 'InteractionGraphic') {
         recordGraph();
     }
 
-    document.getElementById('formResponse').submit();
+    if (confirm(alert)) {
+        document.getElementById('formResponse').submit();
+    }
 }
 
 function interupt(interactionType) {
