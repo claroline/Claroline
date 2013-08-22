@@ -120,7 +120,7 @@
             }
         }),
         Actions: Backbone.View.extend({
-            className: 'row',
+            className: 'navbar navbar-default navbar-static-top',
             events: {
                 'keypress input.name': function (event) {
                     if (event.keyCode !== 13) {

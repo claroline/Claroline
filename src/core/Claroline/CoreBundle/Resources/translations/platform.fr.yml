@@ -159,7 +159,7 @@ informations: Informations
 instructions: Consignes
 import: Importer
 import_users: 'Importer des utilisateurs'
-import_user_file_file: 'Importer depuis fichier'
+import_user_file_file: 'Importer depuis fichier csv'
 invalid_csv_file: 'Le fichier CSV n''est pas valide'
 jqplot_date_output_format: '%d-%m-%Y'
 last_30_days_activity: 'Activités des 30 derniers jours'

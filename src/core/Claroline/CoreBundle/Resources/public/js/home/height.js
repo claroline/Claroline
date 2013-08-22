@@ -47,7 +47,7 @@ function iterateDivs(divs, each) {
 
 function resizeDivs()
 {
-    var divs = getResizeDivs(".row.contents .content-element .panel");
+    var divs = getResizeDivs(".row.contents .content-element.panel");
     var minHeight = 0;
     var currentline = -1;
 
@@ -78,7 +78,7 @@ function resizeDivs()
         //alert(height + ">" + minHeight);
         if (height > minHeight) {
             minHeight = height;
-            divs[line].height = minHeight + 50;
+            divs[line].height = minHeight + 20;
         }
     });
 

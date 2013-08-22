@@ -80,10 +80,10 @@
 {% endblock %}
 {% block section_content %}
     <div class="search-bar row">
-        <div class="col-lg-6">
+        <div class="col-lg-8">
             {{ displayControls() }}
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-4">
              <div class="input-group">
                 <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
                 <span class="input-group-btn">
@@ -127,5 +127,5 @@
         </tbody>
     </table>
     {{ renderPager(search, pager) }}
-    {{ displayControls() }}
+    <div>{{ displayControls() }}</div>
 {% endblock %}

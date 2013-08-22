@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "052686a831d3b6c5090b5a48a36019bf",
+    "hash": "837b42c260204f59d6df9fce02645de9",
     "packages": [
         {
             "name": "besimple/sso-auth-bundle",
@@ -78,12 +78,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/FrontEndBundle.git",
-                "reference": "f343172af133fd89272c0760a90a890b7fee6f76"
+                "reference": "06de685c068a7574cd0f2cbfcf004ea4a9ee85e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/FrontEndBundle/zipball/f343172af133fd89272c0760a90a890b7fee6f76",
-                "reference": "f343172af133fd89272c0760a90a890b7fee6f76",
+                "url": "https://api.github.com/repos/claroline/FrontEndBundle/zipball/06de685c068a7574cd0f2cbfcf004ea4a9ee85e5",
+                "reference": "06de685c068a7574cd0f2cbfcf004ea4a9ee85e5",
                 "shasum": ""
             },
             "require": {
@@ -101,7 +101,7 @@
                 "source": "https://github.com/claroline/FrontEndBundle/tree/master",
                 "issues": "https://github.com/claroline/FrontEndBundle/issues"
             },
-            "time": "2013-07-25 15:31:08"
+            "time": "2013-08-20 08:49:43"
         },
         {
             "name": "claroline/migration-bundle",
@@ -110,12 +110,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/MigrationBundle.git",
-                "reference": "10bccdbc7e5a1ec14b6a5c953cc7c21faac30e52"
+                "reference": "7ea039726c37932f4b57b042219badd957e54602"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/MigrationBundle/zipball/10bccdbc7e5a1ec14b6a5c953cc7c21faac30e52",
-                "reference": "10bccdbc7e5a1ec14b6a5c953cc7c21faac30e52",
+                "url": "https://api.github.com/repos/claroline/MigrationBundle/zipball/7ea039726c37932f4b57b042219badd957e54602",
+                "reference": "7ea039726c37932f4b57b042219badd957e54602",
                 "shasum": ""
             },
             "require": {
@@ -152,7 +152,7 @@
                 "Claroline",
                 "migration"
             ],
-            "time": "2013-08-05 11:51:47"
+            "time": "2013-08-19 14:37:30"
         },
         {
             "name": "claroline/taxonomy-bundle",
@@ -272,7 +272,7 @@
         },
         {
             "name": "doctrine/cache",
-            "version": "dev-master",
+            "version": "v1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
@@ -412,12 +412,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/common.git",
-                "reference": "9c6b8615a988117dec83bdbb0fad80afef23eab8"
+                "reference": "b4c7860e0c5a8d13598ca34d156533300b0dacf0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/common/zipball/9c6b8615a988117dec83bdbb0fad80afef23eab8",
-                "reference": "9c6b8615a988117dec83bdbb0fad80afef23eab8",
+                "url": "https://api.github.com/repos/doctrine/common/zipball/b4c7860e0c5a8d13598ca34d156533300b0dacf0",
+                "reference": "b4c7860e0c5a8d13598ca34d156533300b0dacf0",
                 "shasum": ""
             },
             "require": {
@@ -478,7 +478,7 @@
                 "persistence",
                 "spl"
             ],
-            "time": "2013-07-30 05:35:10"
+            "time": "2013-08-20 18:10:31"
         },
         {
             "name": "doctrine/data-fixtures",
@@ -972,12 +972,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "0ae8aa36d7437baf9801bf3f8c572c3b7062e768"
+                "reference": "44f9952063efd0da7295b0ac7ef802bbd3179958"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/0ae8aa36d7437baf9801bf3f8c572c3b7062e768",
-                "reference": "0ae8aa36d7437baf9801bf3f8c572c3b7062e768",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/44f9952063efd0da7295b0ac7ef802bbd3179958",
+                "reference": "44f9952063efd0da7295b0ac7ef802bbd3179958",
                 "shasum": ""
             },
             "require": {
@@ -1039,7 +1039,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2013-08-12 03:11:11"
+            "time": "2013-08-20 12:38:02"
         },
         {
             "name": "fortawesome/fontawesome",
@@ -1056,7 +1056,7 @@
                 "shasum": null
             },
             "type": "library",
-            "time": "2013-06-17 15:31:59"
+            "time": "2013-06-26 15:41:16"
         },
         {
             "name": "friendsofsymfony/jsrouting-bundle",
@@ -1118,12 +1118,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/l3pp4rd/DoctrineExtensions.git",
-                "reference": "fb0aeab1341c7e29cc76e9f3865b8c7fa7df82cf"
+                "reference": "709c1fc4614e3738e2ca08ec5236af2cd36dcc42"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/l3pp4rd/DoctrineExtensions/zipball/fb0aeab1341c7e29cc76e9f3865b8c7fa7df82cf",
-                "reference": "fb0aeab1341c7e29cc76e9f3865b8c7fa7df82cf",
+                "url": "https://api.github.com/repos/l3pp4rd/DoctrineExtensions/zipball/709c1fc4614e3738e2ca08ec5236af2cd36dcc42",
+                "reference": "709c1fc4614e3738e2ca08ec5236af2cd36dcc42",
                 "shasum": ""
             },
             "require": {
@@ -1190,7 +1190,7 @@
                 "tree",
                 "uploadable"
             ],
-            "time": "2013-08-07 11:28:20"
+            "time": "2013-08-19 15:37:45"
         },
         {
             "name": "icap-lyon1/simple-tag-bundle",
@@ -1242,12 +1242,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/IDCI-Consulting/ExporterBundle.git",
-                "reference": "162c8c7c0af0eb9bf254499bd9c8b68bd8da2e69"
+                "reference": "f905f202c24d04c89f8d532dc17ab53266a013d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/IDCI-Consulting/ExporterBundle/zipball/162c8c7c0af0eb9bf254499bd9c8b68bd8da2e69",
-                "reference": "162c8c7c0af0eb9bf254499bd9c8b68bd8da2e69",
+                "url": "https://api.github.com/repos/IDCI-Consulting/ExporterBundle/zipball/f905f202c24d04c89f8d532dc17ab53266a013d2",
+                "reference": "f905f202c24d04c89f8d532dc17ab53266a013d2",
                 "shasum": ""
             },
             "require": {
@@ -1282,7 +1282,7 @@
                 "twig",
                 "xml"
             ],
-            "time": "2013-07-24 13:42:58"
+            "time": "2013-08-18 17:09:32"
         },
         {
             "name": "incenteev/composer-parameter-handler",
@@ -2026,12 +2026,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/whiteoctober/Pagerfanta.git",
-                "reference": "1a3cb8addb92df6396e59a2c44c3b7f216b4218a"
+                "reference": "deb6401540518b11f5547b4f962e9e5b6e762341"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/1a3cb8addb92df6396e59a2c44c3b7f216b4218a",
-                "reference": "1a3cb8addb92df6396e59a2c44c3b7f216b4218a",
+                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/deb6401540518b11f5547b4f962e9e5b6e762341",
+                "reference": "deb6401540518b11f5547b4f962e9e5b6e762341",
                 "shasum": ""
             },
             "require": {
@@ -2041,7 +2041,7 @@
                 "doctrine/mongodb-odm": "*",
                 "doctrine/orm": "2.*",
                 "mandango/mandango": "*",
-                "propel/propel1": ">=1.6,<2.0",
+                "propel/propel1": "~1.6",
                 "solarium/solarium": "dev-develop"
             },
             "suggest": {
@@ -2080,7 +2080,7 @@
                 "paginator",
                 "paging"
             ],
-            "time": "2013-06-13 22:25:28"
+            "time": "2013-08-14 07:27:55"
         },
         {
             "name": "phpoption/phpoption",
@@ -2269,12 +2269,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/SensioGeneratorBundle.git",
-                "reference": "a8c497fb2d59d347fb6c22173827ae70d91d37fa"
+                "reference": "8daadf79d5f305fbcf4261c052968415f4e69a00"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/SensioGeneratorBundle/zipball/a8c497fb2d59d347fb6c22173827ae70d91d37fa",
-                "reference": "a8c497fb2d59d347fb6c22173827ae70d91d37fa",
+                "url": "https://api.github.com/repos/sensiolabs/SensioGeneratorBundle/zipball/8daadf79d5f305fbcf4261c052968415f4e69a00",
+                "reference": "8daadf79d5f305fbcf4261c052968415f4e69a00",
                 "shasum": ""
             },
             "require": {
@@ -2308,7 +2308,7 @@
                 }
             ],
             "description": "This bundle generates code for you",
-            "time": "2013-08-10 06:57:32"
+            "time": "2013-08-13 20:01:59"
         },
         {
             "name": "stfalcon/tinymce-bundle",
@@ -2317,12 +2317,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/stfalcon/TinymceBundle.git",
-                "reference": "v0.3.0"
+                "reference": "0e6f8b05493c8d534510de5f96400a0258efe767"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stfalcon/TinymceBundle/zipball/v0.3.0",
-                "reference": "v0.3.0",
+                "url": "https://api.github.com/repos/stfalcon/TinymceBundle/zipball/0e6f8b05493c8d534510de5f96400a0258efe767",
+                "reference": "0e6f8b05493c8d534510de5f96400a0258efe767",
                 "shasum": ""
             },
             "require": {
@@ -2366,7 +2366,7 @@
                 "tinymce",
                 "wysiwyg"
             ],
-            "time": "2013-07-30 07:59:56"
+            "time": "2013-08-20 15:24:05"
         },
         {
             "name": "stof/doctrine-extensions-bundle",
@@ -2596,12 +2596,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/MonologBundle.git",
-                "reference": "v2.3.0"
+                "reference": "03ed73bc11367b3156cc21f22ac37c7f70fcd10a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/MonologBundle/zipball/v2.3.0",
-                "reference": "v2.3.0",
+                "url": "https://api.github.com/repos/symfony/MonologBundle/zipball/03ed73bc11367b3156cc21f22ac37c7f70fcd10a",
+                "reference": "03ed73bc11367b3156cc21f22ac37c7f70fcd10a",
                 "shasum": ""
             },
             "require": {
@@ -2612,7 +2612,7 @@
                 "symfony/monolog-bridge": "~2.2-beta2"
             },
             "require-dev": {
-                "symfony/yaml": ">=2.2-beta2,<3.0"
+                "symfony/yaml": "~2.2-beta2"
             },
             "type": "symfony-bundle",
             "extra": {
@@ -2708,12 +2708,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "615bd0ba7d4ec48b5b73fb06db3a6cced5a2f2f6"
+                "reference": "4cfbdf11c3d294b56e510352964a794964005817"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/615bd0ba7d4ec48b5b73fb06db3a6cced5a2f2f6",
-                "reference": "615bd0ba7d4ec48b5b73fb06db3a6cced5a2f2f6",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/4cfbdf11c3d294b56e510352964a794964005817",
+                "reference": "4cfbdf11c3d294b56e510352964a794964005817",
                 "shasum": ""
             },
             "require": {
@@ -2808,20 +2808,20 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2013-08-11 17:29:22"
+            "time": "2013-08-21 07:58:38"
         },
         {
             "name": "twbs/bootstrap",
-            "version": "dev-3.0.0-wip",
+            "version": "v3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "96136dbb56e136278cc7084caf84291949925d0c"
+                "reference": "v3.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/96136dbb56e136278cc7084caf84291949925d0c",
-                "reference": "96136dbb56e136278cc7084caf84291949925d0c",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/v3.0.0",
+                "reference": "v3.0.0",
                 "shasum": ""
             },
             "type": "library",
@@ -2839,13 +2839,13 @@
                     "email": "jacobthornton@gmail.com"
                 }
             ],
-            "description": "Sleek, intuitive, and powerful front-end framework for faster and easier web development.",
+            "description": "Sleek, intuitive, and powerful mobile first front-end framework for faster and easier web development.",
             "homepage": "http://getbootstrap.com",
             "keywords": [
                 "bootstrap",
                 "css"
             ],
-            "time": "2013-08-05 19:20:52"
+            "time": "2013-08-19 21:18:20"
         },
         {
             "name": "twig/extensions",
@@ -3007,7 +3007,7 @@
                 "shasum": null
             },
             "type": "library",
-            "time": "2013-05-24 10:20:31"
+            "time": "2013-07-22 08:29:52"
         },
         {
             "name": "zenstruck/form-bundle",
@@ -3134,12 +3134,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/padraic/mockery.git",
-                "reference": "f0e835aebf28d7323efefffb31b9a6df27427f29"
+                "reference": "7dbfcdd266797d67ff9c17e8aa44f2adb48662ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/f0e835aebf28d7323efefffb31b9a6df27427f29",
-                "reference": "f0e835aebf28d7323efefffb31b9a6df27427f29",
+                "url": "https://api.github.com/repos/padraic/mockery/zipball/7dbfcdd266797d67ff9c17e8aa44f2adb48662ca",
+                "reference": "7dbfcdd266797d67ff9c17e8aa44f2adb48662ca",
                 "shasum": ""
             },
             "require": {
@@ -3180,7 +3180,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2013-08-07 21:50:22"
+            "time": "2013-08-19 15:22:48"
         }
     ],
     "aliases": [
@@ -3201,7 +3201,6 @@
         "jms/twig-js-bundle": 20,
         "white-october/pagerfanta-bundle": 20,
         "idci/exporter-bundle": 20,
-        "twbs/bootstrap": 20,
         "fortawesome/fontawesome": 20,
         "xaguilars/bootstrap-colorpicker": 20,
         "zenstruck/form-bundle": 20,

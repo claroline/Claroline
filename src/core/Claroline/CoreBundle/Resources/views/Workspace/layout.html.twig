@@ -16,24 +16,24 @@
     {% endif %}
 
     <div class="col-lg-9 section-content">
-        <div class="panel">
-        {% block breadcrumb %}
-            <div id="resource-breadcrumb">
-            {% if _resource is defined %}
-                <div id="twig-resource-attributes"
-                     data-resource-id="{{ _resource.getId() }}"
-                     data-resource-name="{{ _resource.getName() }}"
-                     data-workspace-id="{{ workspaceId }}">
-                </div>
-                {% if not is_path_mode  %}
-                {% render controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
-                    {'workspace': workspace, 'resource': _resource, '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})
-                %}
+        <div class="panel panel-default">
+                {% block breadcrumb %}
+                <div id="resource-breadcrumb">
+                {% if _resource is defined %}
+                    <div id="twig-resource-attributes"
+                         data-resource-id="{{ _resource.getId() }}"
+                         data-resource-name="{{ _resource.getName() }}"
+                         data-workspace-id="{{ workspaceId }}">
+                    </div>
+                    {% if not is_path_mode  %}
+                    {% render controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
+                        {'workspace': workspace, 'resource': _resource, '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})
+                    %}
+                    {% endif %}
                 {% endif %}
-            {% endif %}
-            </div>
-        {% endblock %}
-        {% block section_content %}{% endblock %}
+                </div>
+                {% endblock %}
+                {% block section_content %}{% endblock %}
         </div>
     </div>
 {% endblock %}
