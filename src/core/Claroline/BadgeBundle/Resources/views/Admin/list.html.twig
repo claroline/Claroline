@@ -24,10 +24,10 @@
                 <div class="accordion-inner">
                     <table class="table">
                         <thead>
-                            <th>Actions</th>
-                            <th>Badge</th>
-                            <th>Utilisateur</th>
-                            <th>Date</th>
+                            <th>{{ 'actions'|trans }}</th>
+                            <th>{{ 'badge'|trans }}</th>
+                            <th>{{ 'user'|trans({}, 'platform') }}</th>
+                            <th>{{ 'claim_date'|trans }}</th>
                         </thead>
                         <tbody>
                         {% for badgeClaim in badgeClaims %}

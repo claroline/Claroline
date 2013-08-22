@@ -1,3 +1,4 @@
+actions: 'Actions'
 badges: 'Badges'
 badge: 'Badge'
 back_to_badges_list: 'Back to badges list'
@@ -39,6 +40,7 @@ badge_award_form_user: 'User'
 badge_expired_on_date: 'Expire the %expirationDate%'
 badge_award_info_no_group_message: "No selected group for attribution"
 claim: 'Claim'
+claim_date: 'Claim date'
 claim_badge: 'Claim a badge'
 claim_badge_form: 'Claim badge form'
 badge_not_found_with_name: "No badge found with the name '%badgeName%'."

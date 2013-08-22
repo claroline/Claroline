@@ -74,8 +74,7 @@ class AdminController extends Controller
 
         //@TODO Get locales from locale source (database etc...)
         $locales = array('fr', 'en');
-        foreach($locales as $locale)
-        {
+        foreach ($locales as $locale) {
             $translation = new BadgeTranslation();
             $translation->setLocale($locale);
             $badge->addTranslation($translation);
@@ -86,7 +85,7 @@ class AdminController extends Controller
 
         $form = $this->createForm(new BadgeType(), $badge, array('language' => $platformConfigHandler->getParameter('locale_language'), 'date_format' => $this->get('translator')->trans('date_form_format', array(), 'platform')));
 
-        if($request->isMethod('POST')) {
+        if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isValid()) {
                 /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
@@ -100,7 +99,7 @@ class AdminController extends Controller
 
                     $this->get('session')->getFlashBag()->add('success', $translator->trans('badge_add_success_message', array(), 'badge'));
                 }
-                catch(\Exception $exception) {
+                catch (\Exception $exception) {
                     $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_add_error_message', array(), 'badge'));
                 }
 
