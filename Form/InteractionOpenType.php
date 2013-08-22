@@ -35,66 +35,67 @@
  * knowledge of the CeCILL license and that you accept its terms.
 */
 
-namespace UJM\ExoBundle\Entity;
+namespace UJM\ExoBundle\Form;
 
-use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-/**
- * UJM\ExoBundle\Entity\TypeOpenQuestion
- *
- * @ORM\Entity
- * @ORM\Table(name="ujm_type_open_question")
- */
-class TypeOpenQuestion
+use Claroline\CoreBundle\Entity\User;
+
+class InteractionOpenType extends AbstractType
 {
-    /**
-     * @var integer $id
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    private $user;
 
-    /**
-     * @var string $value
-     *
-     * @ORM\Column(name="value", type="string", length=255)
-     */
-    private $value;
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
+    public function __construct(User $user)
     {
-        return $this->id;
+        $this->user = $user;
     }
 
-    /**
-     * Set value
-     *
-     * @param string $value
-     */
-    public function setValue($value)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->value = $value;
+        $builder
+            ->add(
+                'interaction', new InteractionType(
+                    $this->user
+                )
+            );
+        $builder
+            ->add(
+                'typeopenquestion', 'entity', array(
+                    'class' => 'UJM\\ExoBundle\\Entity\\TypeOpenQuestion',
+                    'label' => 'TypeOpenQuestion.value'
+                )
+            );
+        $builder
+            ->add(
+                'orthographyCorrect', 'checkbox', array(
+                    'label' => 'Inter_Hole.orthography',
+                    'required' => false
+                )
+            );
+        $builder
+            ->add(
+                'unit', 'entity', array(
+                    'class' => 'UJM\\ExoBundle\\Entity\\Unit',
+                    'label' => 'Unit.value',
+                    'required' => false
+                )
+            );
     }
 
-    /**
-     * Get value
-     *
-     * @return string
-     */
-    public function getValue()
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return $this->value;
+        $resolver->setDefaults(
+            array(
+                'data_class' => 'UJM\ExoBundle\Entity\InteractionOpen',
+                'cascade_validation' => true
+            )
+        );
     }
-    
-    public function __toString()
+
+    public function getName()
     {
-        return $this->value;
+        return 'ujm_exobundle_interactionopentype';
     }
 }

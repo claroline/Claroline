@@ -379,6 +379,8 @@ Unit.value: Unité
 
 ujm_exobundle_interactiongraphictype_document: Documents
 ujm_exobundle_interactiongraphictype_interaction_hints: Indices
+ujm_exobundle_interactionopentype_interaction: Question ouverte
+ujm_exobundle_interactionopentype_interaction_hints: Indices
 ujm_exobundle_interactionqcmtype_choices: Choix
 ujm_exobundle_interactionqcmtype_interaction: QCM
 ujm_exobundle_interactionqcmtype_interaction_hints: Indices

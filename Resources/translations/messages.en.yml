@@ -379,6 +379,8 @@ Unit.value: Unity
 
 ujm_exobundle_interactiongraphictype_document: Documents
 ujm_exobundle_interactiongraphictype_interaction_hints: Hints
+ujm_exobundle_interactionopentype_interaction: Open question
+ujm_exobundle_interactionopentype_interaction_hints: Hints
 ujm_exobundle_interactionqcmtype_choices: Choices
 ujm_exobundle_interactionqcmtype_interaction: QCM
 ujm_exobundle_interactionqcmtype_interaction_hints: Hints
