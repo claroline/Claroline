@@ -110,7 +110,7 @@ class RegistrationController extends Controller
      */
     public function postUserRegistrationAction()
     {
-        $status = 500;
+        $status = 200;
         $content = array();
 
         if ($this->configHandler->getParameter('allow_self_registration')) {
@@ -119,8 +119,8 @@ class RegistrationController extends Controller
             $user = new User();
             $user->setUsername($request->request->get('username'));
             $user->setPlainPassword($request->request->get('password'));
-            $user->setFirstName($request->request->get('firstname'));
-            $user->setLastName($request->request->get('lastname'));
+            $user->setFirstName($request->request->get('firstName'));
+            $user->setLastName($request->request->get('lastName'));
             $user->setMail($request->request->get('mail'));
 
             $errorList = $this->validator->validate($user);
@@ -132,7 +132,6 @@ class RegistrationController extends Controller
                 }
             } else {
                 $this->userManager->createUser($user);
-                $status = 200;
             }
         } else {
             $status = 403;

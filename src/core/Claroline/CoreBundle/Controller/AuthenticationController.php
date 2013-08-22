@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Security\Authenticator;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -241,9 +241,11 @@ class AuthenticationController
         $request = $this->request;
         $username = $request->request->get('username');
         $password = $request->request->get('password');
+        $status = $this->authenticator->authenticate($username, $password) ? 200 : 403;
+        $content = ($status === 403) ?
+            array('message' => $this->translator->trans('login_failure', array(), 'platform')) :
+            array();
 
-        $status = $this->authenticator->authenticate($username, $password) ? 200: 403;
-
-        return new Response('', $status);
+        return new JsonResponse($content, $status);
     }
 }
