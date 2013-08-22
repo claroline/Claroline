@@ -40,18 +40,18 @@
                         <thead>
                         <tr>
                             <th></th>
-                            <th>{{ 'admin_form_lastName'|trans({}, 'platform') }}</th>
                             <th>{{ 'admin_form_firstName'|trans({}, 'platform') }}</th>
+                            <th>{{ 'admin_form_lastName'|trans({}, 'platform') }}</th>
                         </tr>
                         </thead>
                         <tbody>
                         {% for user in pager.currentPageResults %}
                             <tr>
                                 <td>
-                                    <a class="close delete" href="{{ path('claro_admin_badges_unaward', {'id': badge.id, 'username': user.username}) }}" data-toggle="tooltip" title="{{ 'badge_unaward_confirm_title'|trans }}" data-confirm-title="{{ 'badge_unaward_confirm_title'|trans({}, 'platform') }}" data-confirm-message="{{ 'badge_unaward_confirm_message'|trans({'%badgeName%': badge.name, '%user%': user.username ~ ' ' ~ user.firstname}, 'platform') }}" data-confirm-ok="{{ 'unaward'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"><i class="icon-remove-circle"></i></a>
+                                    <a class="close delete" href="{{ path('claro_admin_badges_unaward', {'id': badge.id, 'username': user.username}) }}" data-toggle="tooltip" title="{{ 'badge_unaward_confirm_title'|trans }}" data-confirm-title="{{ 'badge_unaward_confirm_title'|trans }}" data-confirm-message="{{ 'badge_unaward_confirm_message'|trans({'%badgeName%': badge.name, '%user%': user.firstname ~ ' ' ~ user.lastname}) }}" data-confirm-ok="{{ 'unaward'|trans }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"><i class="icon-remove-circle"></i></a>
                                 </td>
-                                <td>{{ user.lastname }}</td>
                                 <td>{{ user.firstname }}</td>
+                                <td>{{ user.lastname }}</td>
                             </tr>
                         {% else %}
                             <tr><td colspan="3">{{ 'bagde_awarded_to_none_user'|trans }}.</td></tr>
