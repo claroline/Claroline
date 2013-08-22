@@ -229,6 +229,7 @@ print paper: Imprimer la copie
 qcm: QCM
 question: Question
 question creation: Création d'une question
+questionSharedWith: Cette question est partagée avec les utilisateurs suivants
 
 # R
 random order of questions: Ordre des question aléatoire
@@ -246,6 +247,7 @@ role: Rôle
 sawHint: de pénalité pour indices vus
 searchQuestion: Chercher des questions
 seeDoc: Voir les questions liées à ce document
+seeSharedWith: Question partagée avec des utilisateurs
 select: Sélectionner
 selection: => Cliquez sur un pointeurs pour le sélectionner et cliquez ensuite sur l'image pour définir votre zone de réponse.
 selectZone: Pour définir une zone de réponse, selectionnez la en cliquant dessus puis déposez la en re-cliquant à l'endroit voulu sur l'image. Vous pouvez aussi maintenir la touche CTRL enfoncée et cliquez sur l'image à l'endroit où vous voulez la placer.

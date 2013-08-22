@@ -131,7 +131,9 @@
                         </ul>
                     </td>
                     {% if(alreadyShared[x] == 1) %}
-                        <td style="text-align: center; vertical-align: middle;"><i class=" icon-share-alt"></i></td>
+                        <td style="text-align: center; vertical-align: middle;">
+                            <a href="{{ path('ujm_see_shared', { 'id': interaction.question.id }) }}"><i class=" icon-share-alt"></i></a>
+                        </td>
                     {% else %}
                         <td></td>
                     {% endif %}
