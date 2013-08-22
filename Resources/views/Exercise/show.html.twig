@@ -41,8 +41,10 @@
 <h1>{{ 'exercise'|trans }}</h1>
 
 <a href="{{ path('claro_workspace_open_tool', { 'toolName': 'resource_manager', 'workspaceId': userId  }) }}" >
-    <i class="icon-arrow-left"></i> {{ "back" | trans }}
+    <i class="icon-arrow-left"></i> {{ 'back' | trans }}
 </a>
+ &nbsp;&nbsp;|&nbsp;&nbsp;
+<a href="{{ path('ujm_question_index') }}" >{{ 'access my question bank' | trans }}</a>
 <br/><br/>
 <table class="record_properties table table-striped table-bordered table-condensed">
     <tbody>

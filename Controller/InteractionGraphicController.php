@@ -177,8 +177,8 @@ class InteractionGraphicController extends Controller
                 return $this->redirect(
                     $this->generateUrl(
                         'ujm_question_index', array(
-                            'category2Find' => $categoryToFind,
-                            'title2Find' => $titleToFind
+                            'categoryToFind' => $categoryToFind,
+                            'titleToFind' => $titleToFind
                         )
                     )
                 );
@@ -188,8 +188,8 @@ class InteractionGraphicController extends Controller
                         'ujm_exercise_questions',
                         array(
                             'id' => $exoID,
-                            'category2Find' => $categoryToFind,
-                            'title2Find' => $titleToFind
+                            'categoryToFind' => $categoryToFind,
+                            'titleToFind' => $titleToFind
                         )
                     )
                 );
@@ -345,13 +345,23 @@ class InteractionGraphicController extends Controller
         $form->handleRequest($request);
 
         $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->find($id);
+        $interactionGraphic = $em->getRepository('UJMExoBundle:InteractionGraphic')->find($id);
+        $coords = $em->getRepository('UJMExoBundle:Coords')->findBy(array('interactionGraphic' => $id));
 
-        if (!$entity) {
+        if (!$interactionGraphic) {
             throw $this->createNotFoundException('Unable to find InteractionGraphic entity.');
         }
 
-        $em->remove($entity);
+        if (!$coords) {
+            throw $this->createNotFoundException('Unable to find Coords link to interactiongraphic.');
+        }
+
+        $stop = count($coords);
+        for ($i = 0 ; $i < $stop ; $i++) {
+            $em->remove($coords[$i]);
+        }
+
+        $em->remove($interactionGraphic);
         $em->flush();
 
         return $this->redirect($this->generateUrl('ujm_question_index', array('pageNow' => $pageNow)));
