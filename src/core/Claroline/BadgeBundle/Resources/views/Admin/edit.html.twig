@@ -1,8 +1,10 @@
 {% extends "ClarolineBadgeBundle:Admin:layout.html.twig" %}
 
+{% trans_default_domain "badge" %}
+
 {% block section_content %}
     <ul class="nav nav-tabs">
-        <li><a href="{{ path('claro_admin_badges') }}" data-toggle="tooltip" data-placement="bottom" title="{{ 'back_to_badges_list'|trans({}, 'platform') }}"><i class="icon-reply"></i></a></li>
+        <li><a href="{{ path('claro_admin_badges') }}" data-toggle="tooltip" data-placement="bottom" title="{{ 'back_to_badges_list'|trans }}"><i class="icon-reply"></i></a></li>
         <li class="active"><a href="#view" data-toggle="tab">{{ 'view'|trans({}, 'platform') }}</a></li>
         <li><a href="#edit" data-toggle="tab">{{ 'edit'|trans({}, 'platform') }}</a></li>
     </ul>
@@ -11,8 +13,8 @@
             {{ macros.flashBox() }}
             <div class="margin">
                 <h3 class="sub-section-header">
-                    <span class="badge badge-info accordion-toggle" data-toggle="tooltip" title="{{ 'badge_form_version'|trans({}, 'platform') }} {{ badge.version }}">{{ badge.version }}</span>
-                    {{ 'badge'|trans({}, 'platform') }} "{{ badge.name }}"
+                    <span class="badge badge-info accordion-toggle" data-toggle="tooltip" title="{{ 'badge_form_version'|trans }} {{ badge.version }}">{{ badge.version }}</span>
+                    {{ 'badge'|trans }} "{{ badge.name }}"
                     {% if badge.expiredAt is not null %}
                     <small>{{ 'badge_expired_on_date'|trans({'%expirationDate%': badge.expiredAt|date('date_format'|trans({}, 'platform'))}, 'platform') }}</small>
                     {% endif %}
@@ -30,8 +32,8 @@
             <div class="margin">
                 <div id="award_users_container">
                     <h3 class="sub-section-header">
-                        {{ 'badge_awarded_to'|trans({}, 'platform') }} :
-                        <a href="{{ path('claro_admin_badges_award', {'id': badge.id}) }}" id="awardUser" role="button" class="btn pull-right" data-toggle="tooltip" data-placement="left" title="{{ 'award_badge'|trans({}, 'platform') }}"><i class="icon-plus-sign"></i></a>
+                        {{ 'badge_awarded_to'|trans }} :
+                        <a href="{{ path('claro_admin_badges_award', {'id': badge.id}) }}" id="awardUser" role="button" class="btn pull-right" data-toggle="tooltip" data-placement="left" title="{{ 'award_badge'|trans }}"><i class="icon-plus-sign"></i></a>
                     </h3>
 
                     <table class="table">
@@ -46,13 +48,13 @@
                         {% for user in pager.currentPageResults %}
                             <tr>
                                 <td>
-                                    <a class="close delete" href="{{ path('claro_admin_badges_unaward', {'id': badge.id, 'username': user.username}) }}" data-toggle="tooltip" title="{{ 'badge_unaward_confirm_title'|trans({}, 'platform') }}" data-confirm-title="{{ 'badge_unaward_confirm_title'|trans({}, 'platform') }}" data-confirm-message="{{ 'badge_unaward_confirm_message'|trans({'%badgeName%': badge.name, '%user%': user.username ~ ' ' ~ user.firstname}, 'platform') }}" data-confirm-ok="{{ 'unaward'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"><i class="icon-remove-circle"></i></a>
+                                    <a class="close delete" href="{{ path('claro_admin_badges_unaward', {'id': badge.id, 'username': user.username}) }}" data-toggle="tooltip" title="{{ 'badge_unaward_confirm_title'|trans }}" data-confirm-title="{{ 'badge_unaward_confirm_title'|trans({}, 'platform') }}" data-confirm-message="{{ 'badge_unaward_confirm_message'|trans({'%badgeName%': badge.name, '%user%': user.username ~ ' ' ~ user.firstname}, 'platform') }}" data-confirm-ok="{{ 'unaward'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"><i class="icon-remove-circle"></i></a>
                                 </td>
                                 <td>{{ user.lastname }}</td>
                                 <td>{{ user.firstname }}</td>
                             </tr>
                         {% else %}
-                            <tr><td colspan="3">{{ 'bagde_awarded_to_none_user'|trans({}, 'platform') }}.</td></tr>
+                            <tr><td colspan="3">{{ 'bagde_awarded_to_none_user'|trans }}.</td></tr>
                         {% endfor %}
                         </tbody>
                     </table>
@@ -72,7 +74,7 @@
                 </div>
                 <div id="award_form_container" class="hide">
                     <h3 class="sub-section-header">
-                        {{ 'badge_awarded_to'|trans({}, 'platform') }} :
+                        {{ 'badge_awarded_to'|trans }} :
                     </h3>
 
                     {{ render(controller('ClarolineBadgeBundle:Admin:award', { 'id': badge.id })) }}
@@ -81,14 +83,14 @@
         </div>
         <div class="tab-pane" id="edit">
             <div class="margin">
-                <h3 id='user-list-block' class="sub-section-header">{{ 'edit_badge'|trans({'%badge_name%' : badge.name}, 'platform') }}</h3>
+                <h3 id='user-list-block' class="sub-section-header">{{ 'edit_badge'|trans({'%badge_name%' : badge.name}) }}</h3>
             </div>
             <form action="{{ path('claro_admin_badges_edit', {'id': badge.id}) }}" method="post" {{ form_enctype(form) }} novalidate>
                 {{ form_errors(form) }}
 
                 <ul class="nav nav-tabs" id="translationFormTabs">
-                    <li class="active"><a href="#fr" data-toggle="tab">{{ 'badge_form_frTranslation'|trans({}, 'platform') }}</a></li>
-                    <li><a href="#en" data-toggle="tab">{{ 'badge_form_enTranslation'|trans({}, 'platform') }}</a></li>
+                    <li class="active"><a href="#fr" data-toggle="tab">{{ 'badge_form_frTranslation'|trans }}</a></li>
+                    <li><a href="#en" data-toggle="tab">{{ 'badge_form_enTranslation'|trans }}</a></li>
                 </ul>
 
                 <div class="tab-content well well-small badge_translations">
@@ -111,7 +113,7 @@
                         <img src="{{ asset(badge.webPath) }}" id="current_image" alt="{{ badge.name }}" />
                         {{ form_widget(form.file, {'attr': {'class': 'hidden'}}) }}
                         <label class="checkbox">
-                            <input type="checkbox" id="delete_image" /> {{ 'badge_form_change_image'|trans({}, 'platform') }}
+                            <input type="checkbox" id="delete_image" /> {{ 'badge_form_change_image'|trans }}
                         </label>
                     </div>
                 </div>
@@ -123,7 +125,7 @@
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
                     <a href="{{ path('claro_admin_badges') }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-inverse">{{ 'cancel'|trans({}, 'platform') }}</a>
-                    <a href="{{ path('claro_admin_badges_delete', {'id': badge.id}) }}" title="{{ 'delete'|trans({}, 'platform') }}" class="btn btn-danger delete" data-confirm-title="{{ 'badge_delete_confirm_title'|trans({}, 'platform') }}" data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name}, 'platform') }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}">{{ 'delete'|trans({}, 'platform') }}</a>
+                    <a href="{{ path('claro_admin_badges_delete', {'id': badge.id}) }}" title="{{ 'delete'|trans({}, 'platform') }}" class="btn btn-danger delete" data-confirm-title="{{ 'badge_delete_confirm_title'|trans }}" data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name}) }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}">{{ 'delete'|trans({}, 'platform') }}</a>
                 </div>
             </form>
         </div>

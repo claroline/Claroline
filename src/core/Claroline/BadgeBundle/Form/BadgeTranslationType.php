@@ -38,8 +38,8 @@ class BadgeTranslationType extends AbstractType
         $resolver
         ->setDefaults(
             array(
-                'data_class' => 'Claroline\badgeBundle\Entity\BadgeTranslation',
-                'translation_domain' => 'platform'
+                'data_class'         => 'Claroline\badgeBundle\Entity\BadgeTranslation',
+                'translation_domain' => 'badge'
             )
         );
     }

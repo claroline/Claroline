@@ -24,7 +24,7 @@ class ClaimBadgeType extends AbstractType
 
     public function getName()
     {
-        return 'badge_form';
+        return 'badge_claim_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -33,7 +33,7 @@ class ClaimBadgeType extends AbstractType
         ->setDefaults(
             array(
                 'data_class'         => 'Claroline\BadgeBundle\Entity\BadgeClaim',
-                'translation_domain' => 'platform'
+                'translation_domain' => 'badge'
             )
         );
     }

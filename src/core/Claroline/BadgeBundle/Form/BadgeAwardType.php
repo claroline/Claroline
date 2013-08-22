@@ -34,7 +34,7 @@ class BadgeAwardType extends AbstractType
         $resolver
         ->setDefaults(
             array(
-                'translation_domain' => 'platform'
+                'translation_domain' => 'badge'
             )
         );
     }

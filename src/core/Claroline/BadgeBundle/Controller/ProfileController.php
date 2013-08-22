@@ -50,10 +50,10 @@ class ProfileController extends Controller
                     $badge = $entityManager->getRepository('ClarolineBadgeBundle:Badge')->findOneByName($badgeName);
 
                     if($user->hasBadge($badge)) {
-                        $this->get('session')->getFlashBag()->add('alert', $translator->trans('badge_already_award_message', array(), 'platform'));
+                        $this->get('session')->getFlashBag()->add('alert', $translator->trans('badge_already_award_message', array(), 'badge'));
                     }
                     elseif($user->hasClaimedFor($badge)) {
-                        $this->get('session')->getFlashBag()->add('alert', $translator->trans('badge_already_claim_message', array(), 'platform'));
+                        $this->get('session')->getFlashBag()->add('alert', $translator->trans('badge_already_claim_message', array(), 'badge'));
                     }
                     else {
                         $badgeClaim->setBadge($badge);
@@ -61,14 +61,14 @@ class ProfileController extends Controller
                         $entityManager->persist($badgeClaim);
                         $entityManager->flush();
 
-                        $this->get('session')->getFlashBag()->add('success', $translator->trans('badge_claim_success_message', array(), 'platform'));
+                        $this->get('session')->getFlashBag()->add('success', $translator->trans('badge_claim_success_message', array(), 'badge'));
                     }
                 }
                 catch(NoResultException $exception) {
-                    $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_not_found_with_name', array('%badgeName%' => $badgeName), 'platform'));
+                    $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_not_found_with_name', array('%badgeName%' => $badgeName), 'badge'));
                 }
                 catch(\Exception $exception) {
-                    $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_claim_error_message', array(), 'platform'));
+                    $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_claim_error_message', array(), 'badge'));
                 }
 
                 return $this->redirect($this->generateUrl('claro_profile_view_badges'));

@@ -1,12 +1,14 @@
 {% extends "ClarolineBadgeBundle::layout.html.twig" %}
 
+{% trans_default_domain "badge" %}
+
 {% block content %}
     {{ macros.flashBox() }}
 
     <div class="border badge_container">
             <h3 class="sub-section-header">
                 {{ 'my_badges'|trans({}, 'platform') }}
-                <a href="{{ path('claro_claim_badge', {'id': user.id}) }}" class="btn btn-small" data-toggle="tooltip" data-placement="right" title="{{ 'claim_badge'|trans({}, 'platform') }}"><i class="icon-plus"></i></a>
+                <a href="{{ path('claro_claim_badge', {'id': user.id}) }}" class="btn btn-small" data-toggle="tooltip" data-placement="right" title="{{ 'claim_badge'|trans }}"><i class="icon-plus"></i></a>
             </h3>
 
             {% if 0 < badgeClaims|length %}
@@ -14,7 +16,7 @@
                 <div class="accordion-group">
                     <div class="accordion-heading">
                         <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
-                            {{ 'badge_current_claimed_badges'|transchoice(badgeClaims|length, {'%claimedBadgeCount%': badgeClaims|length}, 'platform') }}
+                            {{ 'badge_current_claimed_badges'|transchoice(badgeClaims|length, {'%claimedBadgeCount%': badgeClaims|length}) }}
                         </a>
                     </div>
                     <div id="collapseOne" class="accordion-body collapse">
@@ -36,7 +38,7 @@
                     </a>
                 </li>
             {% else %}
-                <li>{{ 'no_badges'|trans({}, 'platform') }}</li>
+                <li>{{ 'no_badges'|trans }}</li>
             {% endfor %}
             </ul>
 

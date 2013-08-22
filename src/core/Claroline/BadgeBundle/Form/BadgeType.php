@@ -40,7 +40,7 @@ class BadgeType extends AbstractType
         ->setDefaults(
             array(
                 'data_class'         => 'Claroline\BadgeBundle\Entity\Badge',
-                'translation_domain' => 'platform',
+                'translation_domain' => 'badge',
                 'language'           => 'en',
                 'date_format'        => DateType::HTML5_FORMAT
             )
