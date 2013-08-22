@@ -2,31 +2,31 @@
 
 <div class='checkbox'>
     <input type="checkbox"
-        value="{{ resource.id }}"
-        data-resource-name="{{ resource.name }}"
-        data-type="{{ resource.type }}"
-        data-mime-type="{{ resource.mime_type }}"
+        value="{{ node.id }}"
+        data-node-name="{{ node.name }}"
+        data-type="{{ node.type }}"
+        data-mime-type="{{ node.mime_type }}"
         {% if isSelectionAllowed == false %}style="visibility: collapse;"{% endif %}
         />
 </div>
 
-<div class="resource-element"
-    style="background-image: url('{{ webRoot }}{{ resource.large_icon }}');"
-    data-id="{{ resource.id }}"
-    data-type="{{ resource.type }}"
-    data-mime-type="{{ resource.mime_type }}"
+<div class="node-element"
+    style="background-image: url('{{ webRoot }}{{ node.large_icon }}');"
+    data-id="{{ node.id }}"
+    data-type="{{ node.type }}"
+    data-mime-type="{{ node.mime_type }}"
     >
 
 </div>
 {% if hasMenu == true %}
-    <div class="dropdown" rel="tooltip" title="{{ resource.name }}">
+    <div class="dropdown" rel="tooltip" title="{{ node.name }}">
         <a class="dropdown-toggle name dropdown-thumbnail" role="button" data-toggle="dropdown" href="#">
-            <div class="resource-name">{{ resource.displayableName|raw }} <i class="icon-caret-down"></i></div>
+            <div class="node-name">{{ node.displayableName|raw }} <i class="icon-caret-down"></i></div>
         </a>
         <ul class="dropdown-menu" role="menu">
-            {% if resource.can_edit == true %}
+            {% if node.can_edit == true %}
                 <li>
-                    <a class="resource-menu-action" data-action="rename" data-action-type="display-form" data-is-custom="no" data-id="{{ resource.id }}" tabindex="-1" href="#">
+                    <a class="node-menu-action" data-action="rename" data-action-type="display-form" data-is-custom="no" data-id="{{ node.id }}" tabindex="-1" href="#">
                         {{ 'rename'|trans({}, 'platform') }}
                     </a>
                 </li>
@@ -37,9 +37,9 @@
                     </a>
                 </li>
             {% endif %}
-            {% if resource.can_export == true %}
+            {% if node.can_export == true %}
                 <li>
-                    <a class="resource-menu-action" data-action="download" data-is-custom="no" data-id="{{ resource.id }}" tabindex="-1" href="#">
+                    <a class="node-menu-action" data-action="download" data-is-custom="no" data-id="{{ node.id }}" tabindex="-1" href="#">
                         {{ 'download'|trans({}, 'platform') }}
                     </a>
                 </li>
@@ -49,9 +49,9 @@
                         {{ 'download'|trans({}, 'platform') }}
                 </a>
             {% endif %}
-            {% if resource.can_delete == true %}
+            {% if node.can_delete == true %}
                 <li>
-                    <a class="resource-menu-action" data-action="delete" data-is-custom="no" data-id="{{ resource.id }}" tabindex="-1" href="#">
+                    <a class="node-menu-action" data-action="delete" data-is-custom="no" data-id="{{ node.id }}" tabindex="-1" href="#">
                         {{ 'delete'|trans({}, 'platform') }}
                     </a>
                 </li>
@@ -61,9 +61,9 @@
                         {{ 'delete'|trans({}, 'platform') }}
                 </a>
             {% endif %}
-            {% if resource.can_edit == true %}
+            {% if node.can_edit == true %}
                 <li>
-                    <a class="resource-menu-action" data-action="edit-rights" data-action-type="display-form" data-is-custom="no" data-id="{{ resource.id }}" tabindex="-1" href="#">
+                    <a class="node-menu-action" data-action="edit-rights" data-action-type="display-form" data-is-custom="no" data-id="{{ node.id }}" tabindex="-1" href="#">
                         {{ 'manage_rights'|trans({}, 'platform') }}
                     </a>
                 </li>
@@ -74,9 +74,9 @@
                     </a>
                 </li>
             {% endif %}
-            {% if resource.can_edit == true %}
+            {% if node.can_edit == true %}
                 <li>
-                    <a class="resource-menu-action" data-action="edit-properties" data-action-type="display-form" data-is-custom="no" data-id="{{ resource.id }}" tabindex="-1" href="#">
+                    <a class="node-menu-action" data-action="edit-properties" data-action-type="display-form" data-is-custom="no" data-id="{{ node.id }}" tabindex="-1" href="#">
                         {{ 'properties'|trans({}, 'platform') }}
                     </a>
                 </li>
@@ -92,7 +92,7 @@
             <li class="divider"></li>
                 {% for customAction, attributes in customActions %}
                     <li>
-                        <a class="resource-menu-action" data-action="{{ customAction }}" data-is-custom="yes" data-id="{{ resource.id }}" tabindex="-1" href="#">
+                        <a class="node-menu-action" data-action="{{ customAction }}" data-is-custom="yes" data-id="{{ node.id }}" tabindex="-1" href="#">
                             {{ attributes.name }}
                         </a>
                     </li>
@@ -101,5 +101,5 @@
         </ul>
     </div>
 {% else %}
-    <div class="resource-name">{{ resource.displayableName|raw }}&nbsp;&nbsp;&nbsp;</div>
+    <div class="node-name">{{ node.displayableName|raw }}&nbsp;&nbsp;&nbsp;</div>
 {% endif %}

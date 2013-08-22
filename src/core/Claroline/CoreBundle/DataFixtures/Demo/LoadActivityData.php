@@ -57,11 +57,11 @@ class LoadActivityData extends AbstractFixture implements ContainerAwareInterfac
             );
 
         for ($i = 0, $count = count($this->resources), $order = 1; $i < $count; $i++, $order++) {
-                $resource = $manager->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+                $resource = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
                     ->find($this->resources[$i]);
                 $rs = new ResourceActivity;
                 $rs->setActivity($activity);
-                $rs->setResource($resource);
+                $rs->setResourceNode($resource);
                 $rs->setSequenceOrder($order);
                 $manager->persist($rs);
         }

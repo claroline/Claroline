@@ -28,15 +28,6 @@ class ResourceTypeRepositoryTest extends RepositoryTestCase
         $this->assertEquals(2, count(self::$repo->findPluginResourceTypes()));
     }
 
-    public function testFindPluginResourceNameFqcns()
-    {
-        $types = self::$repo->findPluginResourceNameFqcns();
-        $this->assertEquals(2, count($types));
-        $this->assertEquals(2, count($types));
-        $this->assertEquals('type_2Class', $types[0]['class']);
-        $this->assertEquals('type_3Class', $types[1]['class']);
-    }
-
     public function testCountResourcesByType()
     {
         $types = self::$repo->countResourcesByType();

@@ -2,6 +2,8 @@
 
 namespace Claroline\CoreBundle\Event\Event\Log;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+
 class LogResourceShortcutEvent extends LogGenericEvent
 {
     const ACTION = 'resource_shortcut';
@@ -11,21 +13,21 @@ class LogResourceShortcutEvent extends LogGenericEvent
      * $resource is the final shortcut object
      * while $source is the original object
      */
-    public function __construct($resource, $source)
+    public function __construct(ResourceNode $node, ResourceNode $source)
     {
         parent::__construct(
             self::ACTION,
             array(
                 'resource' => array(
-                    'name' => $resource->getName(),
-                    'path' => $resource->getPathForDisplay()
+                    'name' => $node->getName(),
+                    'path' => $node->getPathForDisplay()
                 ),
                 'workspace' => array(
-                    'name' => $resource->getWorkspace()->getName()
+                    'name' => $node->getWorkspace()->getName()
                 ),
                 'owner' => array(
-                    'lastName' => $resource->getCreator()->getLastName(),
-                    'firstName' => $resource->getCreator()->getFirstName()
+                    'lastName' => $node->getCreator()->getLastName(),
+                    'firstName' => $node->getCreator()->getFirstName()
                 ),
                 'source' => array(
                     'resource' => array(
@@ -41,10 +43,10 @@ class LogResourceShortcutEvent extends LogGenericEvent
             ),
             null,
             null,
-            $resource,
+            $node,
             null,
-            $resource->getWorkspace(),
-            $resource->getCreator()
+            $node->getWorkspace(),
+            $node->getCreator()
         );
     }
 }

@@ -31,8 +31,8 @@ class AppKernel extends Kernel
             new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
             new IDCI\Bundle\ExporterBundle\IDCIExporterBundle(),
             new Zenstruck\Bundle\FormBundle\ZenstruckFormBundle(),
-            new ICAPLyon1\Bundle\SimpleTagBundle\ICAPLyon1SimpleTagBundle(),
-            new BeSimple\SsoAuthBundle\BeSimpleSsoAuthBundle()
+            new BeSimple\SsoAuthBundle\BeSimpleSsoAuthBundle(),
+            new Bazinga\ExposeTranslationBundle\BazingaExposeTranslationBundle()
         );
 
         if (file_exists(__DIR__ . '/config/local/plugin/bundles')) {

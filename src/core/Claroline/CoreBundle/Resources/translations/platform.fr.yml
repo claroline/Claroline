@@ -321,6 +321,18 @@ messages_removed: 'Messages supprimés'
 messages_sent: 'Messages envoyés'
 messages_sent_removed: 'Messages envoyés supprimés'
 misc: Divers
+month.january: "Janvier"
+month.february: "Février"
+month.march: "Mars"
+month.April: "Avril"
+month.may: "Mai"
+month.june: "Juin"
+month.july: "Juillet"
+month.August: "Août"
+month.september: "Septembre"
+month.october: "Octobre"
+month.november: "Novembre"
+month.december: "Décembre"
 move: Déplacer
 my_account: 'Mon compte'
 my_agenda: 'Mon agenda'
@@ -572,7 +584,56 @@ workspace_unregistration_confirm_title: 'Voulez-vous vous désinscrire de cet es
 workspace_welcome: Accueil
 workspaces: 'Espaces d''activités'
 ws_creator: 'Créateur d''espaces'
-ws_most_viewed: 'Espaces d''activités les plus consultés'
-yes: 'oui'
-yesterday_activity: 'Activité de la veille'
+ws_most_viewed: Espaces d'activités les plus consultés
+date_format: 'd/m/Y'
+date_range.format: 'd-m-Y'
+date_range.js_format: 'dd-MM-yyyy'
+date_range.apply: 'Appliquer'
+date_range.clear: 'Effacer'
+date_range.week: 's'
+date_range.from: 'De'
+date_range.to: 'A'
+date_range.custom_range: 'Plage personnalisée'
+date_range.day_names: '["Di","Lu","Ma","Me","Je","Ve","Sa"]'
+date_range.month_names: '["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"]'
+date_range.first_day: '1'
+date_range.today: 'Aujourd''hui'
+date_range.yesterday: 'Hier'
+date_range.last_week: 'Semaine précédente'
+date_range.this_week: 'Semaine en cours'
+date_range.last_month: 'Mois précédent'
+date_range.this_month: 'Mois en cours'
+date_range.last_year: 'Année précédente'
+date_range.this_year: 'Année en cours'
+date_range.last_school_year: 'Année sco. précédente'
+date_range.this_school_year: 'Année sco. en cours'
+date_range.last_seven_days: '7 derniers jours'
+date_range.last_thirty_days: '30 derniers jours'
+jqplot_date_output_format: '%d-%m-%Y'
+Show actions for: 'Afficher les actions sur'
+for period: 'sur la période du'
+for user: 'de l''utilisateur'
+Show actions: 'Afficher les actions'
+See all: 'Voir tous'
+yesterday_activity: Activité de la veille
 Your changes have been saved: 'Vos changements ont été sauvegardés'
+The form is not valid: 'Le formulaire n''est pas valide'
+Choose workspaces displayed in the widget: 'Choisissez les espaces de travail affichés par le widget'
+Choose visible actions in the widget: 'Choisissez les actions visibles dans le widget'
+Actions per day: 'Nombre d''actions par jour'
+Last action: '{1} Dernière action|[1,Inf] %logAmount% dernières actions'
+log_hidden_workspace_widget_config_amount : 'Nombre d''actions'
+Action List: 'Liste des actions'
+Filter actions: 'Filtrer les actions'
+Draw an area on the graph to zoom, double-click to cancel: 'Tracez une zone sur le graphique pour zoomer; double cliquez pour annuler'
+Overview of recent activities of your workspaces: 'Aperçu des activités récentes de vos espaces de travail'
+Overview of recent activities in %workspaceName%: 'Aperçu des activités récentes de %workspaceName%'
+Overview of all recent activities in %workspaceName%: 'Aperçu de toutes les activités récentes de %workspaceName%'
+upload_fail: 'Echec du téléchargement'
+max_size_25mb: 'Taille max 25MB'
+empty_file: 'Fichier vide'
+upload: 'Téléchargement'
+upload_denied: "Vous n'avez pas la permission de créer une ressource à cet endroit"
+select_all: Tout sélectionner
+drop_file: Déposez le fichier
+drag_file_here: Déplacez le fichier ici

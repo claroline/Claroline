@@ -115,12 +115,13 @@ class ActivityListener implements ContainerAwareInterface
 
         foreach ($resourceActivities as $resourceActivity) {
             $ra = new ResourceActivity();
-            $ra->setResource($resourceActivity->getResource());
+            $ra->setResourceNode($resourceActivity->getResourceNode());
             $ra->setSequenceOrder($resourceActivity->getSequenceOrder());
             $ra->setActivity($copy);
             $em->persist($ra);
         }
-
+        
+        $em->persist($copy);
         $event->setCopy($copy);
         $event->stopPropagation();
     }
@@ -192,7 +193,7 @@ class ActivityListener implements ContainerAwareInterface
             ->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
             ->findResourceActivities($activity);
 
-        if ($this->container->get('security.context')->getToken()->getUser() == $activity->getCreator()) {
+        if ($this->container->get('security.context')->getToken()->getUser() == $activity->getResourceNode()->getCreator()) {
             $content = $this->container->get('templating')->render(
                 'ClarolineCoreBundle:Activity:index.html.twig',
                 array(
@@ -206,7 +207,7 @@ class ActivityListener implements ContainerAwareInterface
                 'ClarolineCoreBundle:Activity/player:activity.html.twig',
                 array(
                     'activity' => $activity,
-                    'resource' => $resourceActivities[0]->getResource()
+                    'resource' => $resourceActivities[0]
                 )
             );
         }

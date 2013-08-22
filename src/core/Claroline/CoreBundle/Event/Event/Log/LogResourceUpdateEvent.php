@@ -2,6 +2,8 @@
 
 namespace Claroline\CoreBundle\Event\Event\Log;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+
 class LogResourceUpdateEvent extends LogGenericEvent
 {
     const ACTION = 'resource_update';
@@ -18,7 +20,7 @@ class LogResourceUpdateEvent extends LogGenericEvent
      *
      * Please respect lower caml case naming convention for property names
      */
-    public function __construct($resource, $changeSet)
+    public function __construct(ResourceNode $node, $changeSet)
     {
         $action = self::ACTION;
         if ($changeSet != null and count($changeSet) == 1 and array_key_exists('name', $changeSet)) {
@@ -29,24 +31,24 @@ class LogResourceUpdateEvent extends LogGenericEvent
             $action,
             array(
                 'resource' => array(
-                    'name' => $resource->getName(),
-                    'path' => $resource->getPathForDisplay(),
+                    'name' => $node->getName(),
+                    'path' => $node->getPathForDisplay(),
                     'changeSet' => $changeSet
                 ),
                 'workspace' => array(
-                    'name' => $resource->getWorkspace()->getName()
+                    'name' => $node->getWorkspace()->getName()
                 ),
                 'owner' => array(
-                    'lastName' => $resource->getCreator()->getLastName(),
-                    'firstName' => $resource->getCreator()->getFirstName()
+                    'lastName' => $node->getCreator()->getLastName(),
+                    'firstName' => $node->getCreator()->getFirstName()
                 )
             ),
             null,
             null,
-            $resource,
+            $node,
             null,
-            $resource->getWorkspace(),
-            $resource->getCreator()
+            $node->getWorkspace(),
+            $node->getCreator()
         );
     }
 }
