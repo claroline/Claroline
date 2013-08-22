@@ -5,10 +5,10 @@ namespace Claroline\CoreBundle\Entity\Resource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\License;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Base entity for all resources.
@@ -175,7 +175,7 @@ class ResourceNode
      */
     protected $class;
 
-    private $pathForCreationLog;
+    private $pathForCreationLog = '';
 
     public function __construct()
     {
@@ -494,11 +494,23 @@ class ResourceNode
         $this->class = $class;
     }
 
+    /**
+     * This is required for logging the resource path at the creation.
+     * Do not use this function otherwise.
+     *
+     * @return type
+     */
     public function setPathForCreationLog($path)
     {
         $this->pathForCreationLog = $path;
     }
 
+    /**
+     * This is required for logging the resource path at the creation.
+     * Do not use this function otherwise.
+     *
+     * @return type
+     */
     public function getPathForCreationLog()
     {
         return $this->pathForCreationLog;
