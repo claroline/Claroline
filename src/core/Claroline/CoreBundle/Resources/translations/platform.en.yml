@@ -288,6 +288,18 @@ messages_removed: 'Messages removed'
 messages_sent: 'Messages sent'
 messages_sent_removed: 'Messages sent removed'
 misc: Miscellaneous
+month.january: "January"
+month.february: "February"
+month.march: "March"
+month.april: "April"
+month.may: "May"
+month.june: "June"
+month.july: "July"
+month.august: "August"
+month.september: "September"
+month.october: "October"
+month.november: "November"
+month.december: "December"
 move: Move
 my_account: 'My account'
 my_agenda: 'My agenda'

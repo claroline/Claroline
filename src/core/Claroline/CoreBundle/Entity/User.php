@@ -9,10 +9,10 @@ use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Role;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\UserRepository")
@@ -53,6 +53,11 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      *
      * @ORM\Column(unique=true)
      * @Assert\NotBlank()
+     * @Assert\Length(min="3")
+     * @Assert\Regex(
+     *     pattern="/^[\w]*$/",
+     *     message="special_char_not_allowed"
+     * )
      */
     protected $username;
 
@@ -74,6 +79,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      * @var string
      *
      * @Assert\NotBlank()
+     * @Assert\Length(min="4")
      */
     protected $plainPassword;
 
