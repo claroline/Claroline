@@ -77,7 +77,7 @@ class QuestionController extends Controller
      * Lists the User's Question entities.
      *
      */
-    public function indexAction($pageNow = 0, $categoryToFind = '', $titleToFind = '')
+    public function indexAction($pageNow = 0, $pageNowShared = 0, $categoryToFind = '', $titleToFind = '')
     {
         // To paginate the result :
         $request = $this->get('request'); // Get the request which contains the following parameters :
@@ -183,11 +183,19 @@ class QuestionController extends Controller
                     ->getCurrentPageResults();
             }
 
+            if ($pageNowShared == 0) {
             // Test if my shared questions array exists (try) and affects the matching results (which page, how many per page ...)
-            $sharedWithMePager = $pagerfantaShared
-                ->setMaxPerPage($max)
-                ->setCurrentPage($pagerShared)
-                ->getCurrentPageResults();
+                $sharedWithMePager = $pagerfantaShared
+                    ->setMaxPerPage($max)
+                    ->setCurrentPage($pagerShared)
+                    ->getCurrentPageResults();
+            } else {
+                $sharedWithMePager = $pagerfantaShared
+                    ->setMaxPerPage($max)
+                    ->setCurrentPage($pageNowShared)
+                    ->getCurrentPageResults();
+            }
+
         } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
             // If page don't exist
             throw $this->createNotFoundException("Cette page n'existe pas.");
@@ -1437,5 +1445,27 @@ class QuestionController extends Controller
                 )
             );
         }
+    }
+
+    public function deleteSharedQuestionAction ($id, $pageNow, $maxPage, $nbItem, $lastPage)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $sharedToDel = $em->getRepository('UJMExoBundle:Share')->findOneBy(array('question' => $id));
+
+        if (!$sharedToDel) {
+            throw $this->createNotFoundException('Unable to find Share entity.');
+        }
+
+        $em->remove($sharedToDel);
+        $em->flush();
+
+        // If delete last item of page, display the previous one
+        $rest = $nbItem % $maxPage;
+
+        if ($rest == 1 && $pageNow == $lastPage) {
+            $pageNow -= 1;
+        }
+
+        return $this->redirect($this->generateUrl('ujm_question_index', array('pageNowShared' => $pageNow)));
     }
 }

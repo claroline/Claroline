@@ -188,7 +188,7 @@
                         {{ 'question' | trans }}
                     </th>
                     <th style="text-align: center">{{ 'shared by' | trans }}</th>
-                    <!--th style="text-align: center">{#{ "actions" | trans }#}</th-->
+                    <th style="text-align: center">{{ "actions" | trans }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -222,6 +222,12 @@
                     </td-->
                     <td style="text-align: center; vertical-align: middle;">
                         {{ myQShare.question.user.firstName }} {{ myQShare.question.user.lastName }}
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        <a href="{{ path('ujm_delete_shared_question', { 'id': myQShare.question.id, 'pageNow': pagerShared.currentPage,
+                            'maxPage': pagerShared.maxPerPage,'nbItem': pagerShared.getNbResults, 'lastPage': pagerShared.getNbPages }) }}"
+                           <i class="icon-trash"></i>
+                        </a>
                     </td>
                 </tr>
                 {% set i=i+1 %}

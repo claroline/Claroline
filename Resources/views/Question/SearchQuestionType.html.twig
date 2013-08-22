@@ -118,6 +118,12 @@
                     <td style="text-align: center; vertical-align: middle;">
                         {{ FindQuestion.question.user.firstName }} {{ FindQuestion.question.user.lastName }}
                     </td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        <a href="{{ path('ujm_delete_shared_question', { 'id': FindQuestion.question.id, 'pageNow': pagerSearch.currentPage,
+                            'maxPage': pagerSearch.maxPerPage,'nbItem': pagerSearch.getNbResults, 'lastPage': pagerSearch.getNbPages }) }}"
+                           <i class="icon-trash"></i>
+                        </a>
+                    </td>
                {% endif %}
             </tr>
             {% set i=i+1 %}

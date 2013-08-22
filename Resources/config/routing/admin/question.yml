@@ -1,6 +1,6 @@
 ujm_question_index:
-    pattern: /index/{pageNow}/{categoryToFind}/{titleToFind}
-    defaults: { _controller: UJMExoBundle:Question:index, pageNow: 0, categoryToFind: z, titleToFind: z }
+    pattern: /index/{pageNow}/{pageNowShared}/{categoryToFind}/{titleToFind}
+    defaults: { _controller: UJMExoBundle:Question:index, pageNow: 0, pageNowShared: 0, categoryToFind: z, titleToFind: z }
 
 ujm_question_new:
     pattern:  /new/{exoID}/{pageToGo}/{maxPage}/{nbItem}
@@ -78,3 +78,7 @@ ujm_Document_name_alreadyExist:
     defaults: { _controller: "UJMExoBundle:WSRest:nameAlreadyExist" }
     requirements:
       _method: POST
+
+ujm_delete_shared_question:
+    pattern:  /{id}/delete/{pageNow}/{maxPage}/{nbItem}/{lastPage}
+    defaults: { _controller: UJMExoBundle:Question:deleteSharedQuestion, pageNow: 1, maxPage: 10, nbItem: 1, lastPage: 1 }
