@@ -39,6 +39,7 @@ namespace UJM\ExoBundle\DataFixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use UJM\ExoBundle\Entity\TypeOpenQuestion;
 use UJM\ExoBundle\Entity\TypeQCM;
 
 
@@ -55,6 +56,11 @@ class LoadOptionsData extends AbstractFixture
             $this->newTQCM($val);
         }
 
+        $valTopen = array('numerical', 'long', 'short', 'oneWord');
+        foreach ($valTopen as $val) {
+            $this->newTOPEN($val);
+        }
+        
         $this->manager->flush();
     }
 
@@ -64,6 +70,14 @@ class LoadOptionsData extends AbstractFixture
         $tqcm->setValue($val);
 
         $this->manager->persist($tqcm);
+    }
+    
+    private function newTOPEN($val)
+    {
+        $topen = new TypeOpenQuestion();
+        $topen->setValue($val);
+
+        $this->manager->persist($topen);
     }
 
 }
