@@ -21,12 +21,10 @@
             {% endif %}>
             {% if content.content is defined and content.content != "" %}
                 <a  href="{{ content.content | homeLink }}">
-                    {% if father is not defined %}<b>{% endif %}
                     {{ content.title }}
-                    {% if father is not defined %}</b>{% endif %}
                 </a>
             {% else %}
-                <b>{{ content.title }}</b>
+                {{ content.title }}
             {% endif %}
             </li>
         {% else %}

@@ -158,7 +158,7 @@ id: Id
 informations: Informations
 instructions: Instructions
 import: Import
-import_user_file_file: Import from a file
+import_user_file_file: Import from a csv file
 import_users: 'Import users'
 invalid_csv_file: 'Invalid CSV file'
 jqplot_date_output_format: '%m/%d/%Y'

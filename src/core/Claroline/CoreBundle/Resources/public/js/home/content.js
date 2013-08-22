@@ -56,7 +56,7 @@
 
                     $(modal).modal("show");
 
-                    $(modal).on("hidden", function () {
+                    $(modal).on("hidden.bs.modal", function () {
                         $(this).remove();
                     });
 
@@ -80,7 +80,13 @@
     function resize(obj)
     {
         var lineheight = $(obj).css("line-height").substr(0, $(obj).css("line-height").indexOf("px"));
+        //var topPadding = $(obj).css("padding-top").substr(0, $(obj).css("padding-top").indexOf("px"));
+        //var bottomPadding = $(obj).css("padding-bottom").substr(0, $(obj).css("padding-bottom").indexOf("px"));
         var lines = $(obj).val().split("\n").length;
+
+        lineheight = parseInt(lineheight, 10) + 4;
+        //topPadding = parseInt(topPadding, 10);
+        //bottomPadding = parseInt(bottomPadding, 10);
 
         $(obj).css("height", ((lines + 1) * lineheight) + "px");
     }
@@ -162,7 +168,7 @@
                             contentPath = "content/" + data + "/" + type;
 
                             var insertElement = function (content) {
-                                $(creatorElement).next().prepend(content);
+                                $(creatorElement).next().prepend(content).hide().fadeIn("slow");
                             };
 
                             if (father) {
@@ -182,7 +188,6 @@
                                         function (data)
                                         {
                                             insertElement(data);
-                                            //resizeDivs();
                                         }
                                 )
                             ;
@@ -206,7 +211,6 @@
                                     function (data)
                                     {
                                         $(creatorElement).replaceWith(data);
-                                        //resizeDivs();
                                     }
                                 )
                             ;
@@ -272,7 +276,7 @@
 
     $("body").on("click", ".content-size", function (event) {
         var element = parentByClassName(event.target, "content-element");
-        var size = (element.className.match(/\bcol-lg-\S+/g) || []).join(" ").substr(7);
+        var size = (element.className.match(/\bcontent-\d+/g) || []).join(" ").substr(8);
         var id = $(element).data("id");
         var type = $(element).data("type");
 
@@ -280,7 +284,7 @@
     });
 
     $("body").on("click", "#sizes .panel", function (event) {
-        var size = "col-lg-" + event.target.innerHTML;
+        var size = "content-" + event.target.innerHTML;
         var id = $("#sizes .modal-body").data("id");
         var type = $("#sizes .modal-body").data("type");
         var element = $("#sizes").data("element");
@@ -292,11 +296,10 @@
             {
                 if (data === "true") {
                     $(element).removeClass(function (index, css) {
-                        return (css.match(/\bcol-lg-\S+/g) || []).join(" ");
+                        return (css.match(/\bcontent-\d+/g) || []).join(" ");
                     });
 
                     $(element).addClass(size);
-                    //resizeDivs();
 
                     $("#sizes").modal("hide");
                 }
@@ -353,13 +356,42 @@
         modal("content/confirm", "delete-content", element);
     });
 
+    $("body").on("click", "#delete-content .btn.delete", function () {
+        var element = $("#delete-content").data("element");
+        var id = $(element).data("id");
+
+        if (id && element) {
+            $.ajax(homePath + "content/delete/" + id)
+            .done(
+                function (data)
+                {
+                    if (data === "true") {
+                        $(element).hide("slow", function () {
+                            $(this).remove();
+                        });
+                    }
+                    else
+                    {
+                        modal("content/error");
+                    }
+                }
+            )
+            .error(
+                function ()
+                {
+                    modal("content/error");
+                }
+            );
+        }
+    });
+
     $("body").on("click", ".type-delete", function (event) {
         var element = parentByClassName(event.target, "alert");
 
         modal("content/confirm", "delete-type", element);
     });
 
-    $("body").on("click", "#delete-type a.delete", function () {
+    $("body").on("click", "#delete-type .btn.delete", function () {
         var element = $("#delete-type").data("element");
         var id = $(element).data("id");
 
@@ -424,36 +456,6 @@
         }
     });
 
-    $("body").on("click", "#delete-content a.delete", function () {
-        var element = $("#delete-content").data("element");
-        var id = $(element).data("id");
-
-        if (id && element) {
-            $.ajax(homePath + "content/delete/" + id)
-            .done(
-                function (data)
-                {
-                    if (data === "true") {
-                        $(element).hide("slow", function () {
-                            $(this).remove();
-                            //resizeDivs();
-                        });
-                    }
-                    else
-                    {
-                        modal("content/error");
-                    }
-                }
-            )
-            .error(
-                function ()
-                {
-                    modal("content/error");
-                }
-            );
-        }
-    });
-
     $("body").on("click", ".content-edit", function (event) {
         var element = parentByClassName(event.target, "content-element");
         var id = $(element).data("id");
@@ -473,7 +475,6 @@
                     function (data)
                     {
                         $(element).replaceWith(data);
-                        //resizeDivs();
 
                         $(".creator textarea").each(function () {
                             resize(this);
@@ -524,7 +525,6 @@
                     function (data)
                     {
                         $(element).replaceWith(data);
-                        //resizeDivs();
                     }
                 )
                 .error(

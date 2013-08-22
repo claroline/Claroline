@@ -24,44 +24,12 @@ body
     .box-shadow(0 1px 3px rgba(0,0,0,.25))
 }
 
-.navbar.navbar-inverse.navbar-fixed-top .navbar-inner
+.navbar.navbar-inverse.navbar-fixed-top .badge
 {
-    background:transparent;
+    background:@brand-danger;
 }
 
-/** tools **/
-/*
-.nav.nav-tabs.nav-stacked li.active a
-{
-    background:@linkColor;
-    color:@white;
-}
-
-.nav.nav-tabs.nav-stacked li.disabled a
-{
-    color:@grayDark;
-    background:@grayLighter;
-}
-*/
-/** content **/
-/*
-.section-content .navbar .navbar-inner a
-{
-    color:@navbarLinkColorActive;
-}
-
-.section-content .navbar .navbar-inner .dropdown-menu a:hover, .section-content .navbar .navbar-inner li.active a
-{
-    color:@white;
-}
-
-.nav.nav-tabs.nav-stacked
-{
-    .border-radius(@baseBorderRadius);
-}
-*/
-
-.list-group.menu, .panel, .creator .form-control.content-title
+.list-group.menu, .section-content > .panel, .content-element.panel, .creator .panel, .creator .form-control.content-title
 {
     .box-shadow(0 1px 10px rgba(0,0,0,.2));
 }

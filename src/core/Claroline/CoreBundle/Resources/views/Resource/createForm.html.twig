@@ -5,7 +5,8 @@
       class="form-horizontal">
    {{ form_widget(form) }}
    {{ form_rest(form) }}
-    <div class="form-actions panel-footer">
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
         <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
     </div>
 </form>

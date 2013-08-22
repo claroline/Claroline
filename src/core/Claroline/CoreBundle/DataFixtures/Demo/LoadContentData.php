@@ -49,7 +49,7 @@ class LoadContentData extends AbstractFixture
 
         $types = array("home", "home", "home", "home", "opengraph", "opengraph", "opengraph", "opengraph");
         $sizes = array(
-            "col-lg-5", "col-lg-7", "col-lg-8", "col-lg-4", "col-lg-12", "col-lg-12", "col-lg-12", "col-lg-12"
+            "content-3", "content-5", "content-5", "content-3", "content-8", "content-8", "content-8", "content-8"
         );
 
         foreach ($titles as $i => $title) {

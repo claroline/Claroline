@@ -2,8 +2,8 @@
 {% for tag in tagsList %}
     {% if displayable[tag.getId()] %}
     {% set currentIndex = index ~ "-" ~ tag.getId() %}
-    <div class="accordion-group">
-        <div class="accordion-heading">
+    <div class="panel panel-default">
+        <div class="panel-heading">
             <a  class="accordion-toggle"
                 data-toggle="collapse"
                 href="#collapse-{{ currentIndex }}"
@@ -13,49 +13,43 @@
                 <i class="icon-chevron-down pull-right"></i>
             </a>
         </div>
-        <div id="collapse-{{ currentIndex }}" class="accordion-body collapse">
-            <div class="accordion-inner">
-                {% if hierarchy[tag.getId()]|length > 0 %}
-                {{ _self.showTag(hierarchy[tag.getId()], tagWorkspaces, hierarchy, currentIndex, displayable) }}
-                {% endif %}
-                <ul>
-                    {% for relWorkspaceTag in tagWorkspaces[tag.id] %}
-                    {% set workspace = relWorkspaceTag.getWorkspace() %}
-                    <li class="row-workspace row-workspace-id-{{ workspace.getId() }}">
-                        {% set granted = has_access_to_workspace(workspace.getId(), app.security.getToken()) %}
-                        {% if granted == true %}
-                        <a href="{{ path('claro_workspace_open',
-                           {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
-                           id="link-home-{{ workspace.getId() }}"
-                        >
+        <div id="collapse-{{ currentIndex }}" class="list-group collapse">
+            {% if hierarchy[tag.getId()]|length > 0 %}
+            {{ _self.showTag(hierarchy[tag.getId()], tagWorkspaces, hierarchy, currentIndex, displayable) }}
+            {% endif %}
+                {% for relWorkspaceTag in tagWorkspaces[tag.id] %}
+                {% set workspace = relWorkspaceTag.getWorkspace() %}
+                <a class="row-workspace row-workspace-id-{{ workspace.getId() }}"
+                    {% set granted = has_access_to_workspace(workspace.getId(), app.security.getToken()) %}
+                    {% if granted == true %}
+                        href="{{ path('claro_workspace_open',
+                        {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
+                        id="link-home-{{ workspace.getId() }}"
+                    {% endif %}
+                    ><i class="icon-book"></i>
+                    {{ workspace.getName() }}
+                    <span class="workspace-code">({{ workspace.getCode() }})</span>
+                    {% if granted %}
+                        {% if workspace.getSelfUnregistration() %}
+                        <span class="label label-danger unregister-user-to-workspace"
+                            data-workspace-id="{{ workspace.getId() }}"
+                            data-workspace-name="{{ workspace.getName() }}"
+                            data-workspace-code="{{ workspace.getCode() }}">
+                            <i class="icon-remove-sign"></i>
+                            {{ 'unregister'|trans({}, 'platform') }}
+                        </span>
                         {% endif %}
-                        <i class="icon-book"></i>
-                        {{ workspace.getName() }}
-                        <span class="workspace-code">({{ workspace.getCode() }})</span>
-                        {% if granted %}
-                            </a>
-                            {% if workspace.getSelfUnregistration() %}
-                            <span class="label label-danger unregister-user-to-workspace"
-                                data-workspace-id="{{ workspace.getId() }}"
-                                data-workspace-name="{{ workspace.getName() }}"
-                                data-workspace-code="{{ workspace.getCode() }}">
-                                <i class="icon-remove-sign"></i>
-                                {{ 'unregister'|trans({}, 'platform') }}
-                            </span>
-                            {% endif %}
-                        {% elseif workspace.getSelfRegistration() %}
-                            <span class="label label-success register-user-to-workspace"
-                                data-workspace-id="{{ workspace.getId() }}"
-                                data-workspace-name="{{ workspace.getName() }}"
-                                data-workspace-code="{{ workspace.getCode() }}">
-                                <i class="icon-plus-sign"></i>
-                                {{ 'register'|trans({}, 'platform') }}
-                            </span>
-                        {% endif %}
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
+                    {% elseif workspace.getSelfRegistration() %}
+                        <span class="label label-success register-user-to-workspace"
+                            data-workspace-id="{{ workspace.getId() }}"
+                            data-workspace-name="{{ workspace.getName() }}"
+                            data-workspace-code="{{ workspace.getCode() }}">
+                            <i class="icon-plus-sign"></i>
+                            {{ 'register'|trans({}, 'platform') }}
+                        </span>
+                    {% endif %}
+                </a>
+            {% endfor %}
         </div>
     </div>
     {% endif %}
@@ -76,81 +70,72 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'public_workspaces'|trans({}, 'platform') }}</h3>
     </div>
+    <div class="panel-body">
 
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'icon-book',
-                'name': 'my_workspaces'|trans({}, 'platform'),
-                'href': path('claro_workspace_by_user')
-            },
-            {
-                'icon': 'icon-book',
-                'name': 'public_workspaces'|trans({}, 'platform'),
-                'href': '#'
-            }
-        ])
-    }}
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'icon-book',
+                    'name': 'my_workspaces'|trans({}, 'platform'),
+                    'href': path('claro_workspace_by_user')
+                },
+                {
+                    'name': 'public_workspaces'|trans({}, 'platform'),
+                    'href': '#'
+                }
+            ])
+        }}
 
-    <div class="widget">
-
-        <div class="accordion" id="accordion-all">
-            <div class="accordion-group">
-                <div class="accordion-heading">
-                    <a  class="accordion-toggle"
-                        data-toggle="collapse"
-                        data-parent="#accordion-all"
-                        href="#collapse-all"
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a  class="accordion-toggle"
+                    data-toggle="collapse"
+                    data-parent="#accordion-all"
+                    href="#collapse-all"
+                >
+                    <i class="icon-align-justify"></i>
+                    {{ 'available_workspaces'|trans({}, 'platform') }}
+                    <i class="icon-chevron-down pull-right"></i>
+                </a>
+            </div>
+            <div id="collapse-all" class="list-group collapse {% if tags|length == 0 %}in{% endif %}">
+                {% for workspace in workspaces %}
+                <a class="list-group-item row-workspace row-workspace-id-{{ workspace.getId() }}"
+                    {% set granted = has_access_to_workspace(workspace.getId(), app.security.getToken()) %}
+                    {% if granted == true %}
+                        href="{{ path('claro_workspace_open',
+                       {'workspaceId': workspace.getId()}) }}"
+                       id="link-home-{{ workspace.getId() }}"
+                    {% endif %}
                     >
-                        <i class="icon-align-justify"></i>
-                        {{ 'available_workspaces'|trans({}, 'platform') }}
-                        <i class="icon-chevron-down pull-right"></i>
-                    </a>
-                </div>
-                <div id="collapse-all" class="accordion-body collapse {% if tags|length == 0 %}in{% endif %}">
-                    <div class="accordion-inner">
-                        <ul>
-                            {% for workspace in workspaces %}
-                            <li class="row-workspace row-workspace-id-{{ workspace.getId() }}">
-                                {% set granted = has_access_to_workspace(workspace.getId(), app.security.getToken()) %}
-                                {% if granted == true %}
-                                <a href="{{ path('claro_workspace_open',
-                                   {'workspaceId': workspace.getId()}) }}"
-                                   id="link-home-{{ workspace.getId() }}"
-                                >
-                                {% endif %}
-                                <i class="icon-book"></i>
-                                {{ workspace.getName() }}
-                                <span class="workspace-code">({{ workspace.getCode() }})</span>
-                                {% if granted %}
-                                    </a>
-                                    {% if workspace.getSelfUnregistration() %}
-                                    <span class="label label-danger unregister-user-to-workspace"
-                                        data-workspace-id="{{ workspace.getId() }}"
-                                        data-workspace-name="{{ workspace.getName() }}"
-                                        data-workspace-code="{{ workspace.getCode() }}">
-                                        <i class="icon-remove-sign"></i>
-                                        {{ 'unregister'|trans({}, 'platform') }}
-                                    </span>
-                                    {% endif %}
-                                {% elseif workspace.getSelfRegistration() %}
-                                    <span class="label label-success register-user-to-workspace"
-                                        data-workspace-id="{{ workspace.getId() }}"
-                                        data-workspace-name="{{ workspace.getName() }}"
-                                        data-workspace-code="{{ workspace.getCode() }}">
-                                        <i class="icon-plus-sign"></i>
-                                        {{ 'register'|trans({}, 'platform') }}
-                                    </span>
-                                {% endif %}
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </div>
+                    <i class="icon-book"></i>
+                    {{ workspace.getName() }}
+                    <span class="workspace-code">({{ workspace.getCode() }})</span>
+                    {% if granted %}
+                        {% if workspace.getSelfUnregistration() %}
+                        <span class="label label-danger unregister-user-to-workspace"
+                            data-workspace-id="{{ workspace.getId() }}"
+                            data-workspace-name="{{ workspace.getName() }}"
+                            data-workspace-code="{{ workspace.getCode() }}">
+                            <i class="icon-remove-sign"></i>
+                            {{ 'unregister'|trans({}, 'platform') }}
+                        </span>
+                        {% endif %}
+                    {% elseif workspace.getSelfRegistration() %}
+                        <span class="label label-success register-user-to-workspace"
+                            data-workspace-id="{{ workspace.getId() }}"
+                            data-workspace-name="{{ workspace.getName() }}"
+                            data-workspace-code="{{ workspace.getCode() }}">
+                            <i class="icon-plus-sign"></i>
+                            {{ 'register'|trans({}, 'platform') }}
+                        </span>
+                    {% endif %}
+                </a>
+                {% endfor %}
             </div>
         </div>
 
-    {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable) }}
+        {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable) }}
     </div>
 
     <div id="twig-self-registration-user-id" data-user-id="{{ user.getId() }}">

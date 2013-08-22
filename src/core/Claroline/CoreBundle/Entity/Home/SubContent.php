@@ -61,7 +61,7 @@ class SubContent
     {
         // the size may vary between 1 and 12 and corresponds to
         // bootstrap container col classes
-        $this->size = 'col-lg-12';
+        $this->size = 'content-8';
 
         if ($first) {
             $first->setBack($this);

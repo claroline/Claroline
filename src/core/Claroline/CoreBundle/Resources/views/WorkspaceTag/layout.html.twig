@@ -24,8 +24,10 @@
             </div>
         </div>
     {% endif %}
-    <div class="panel {% if is_granted('ROLE_USER') %}col-lg-9{% else %}col-lg-12{% endif %}">
-        {% block section_content %}
-        {% endblock %}
+    <div class="{% if is_granted('ROLE_USER') %}col-lg-9{% else %}col-lg-12{% endif %}">
+        <div class="panel panel-default">
+            {% block section_content %}
+            {% endblock %}
+        </div>
     </div>
 {% endblock %}

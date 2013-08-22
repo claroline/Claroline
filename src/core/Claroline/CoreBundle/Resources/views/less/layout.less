@@ -1,8 +1,8 @@
-///////////////////////////////////////////////////////////////////////////////////
-// This less file contains only global layout rules (mainly for navbar, grid and //
-// footer positionning). It is included at the end of "common.less". Keep it     //
-// short and design-neutral.                                                     //
-///////////////////////////////////////////////////////////////////////////////////
+/*********************************************************************************/
+/* This less file contains only global layout rules (mainly for navbar, grid and */
+/* footer positionning). It is included at the end of "common.less". Keep it     */
+/* short and design-neutral.                                                     */
+/*********************************************************************************/
 
 html, body {
     height: 100%;
@@ -23,71 +23,6 @@ body {
 #push {
     height: 100%;
 }
-
-/* Debug
-.rax, [class*="col-lg-"]
-{
-    border:1px solid red;
-}
-*/
-/************/
-/*  @media  */
-/************/
-
-/*
-@media (max-width: 980px) {
-     #top_bar {
-        margin-bottom:0 !important;
-    }
-
-    .dropdown-submenu .dropdown-menu
-    {
-        padding-left:20px;
-    }
-
-}
-
-@media (min-width: 768px) {
-
-    footer
-    {
-        margin: -@navbarHeight 0 0 0;
-        padding: 0;
-    }
-
-    .workspace-toolbox-item {
-        display: block;
-        text-align: center;
-    }
-}
-*/
-//@media (max-width: 767px) {
-    /* // Compensates for the 20px body padding set in bootstrap "responsive-767px-max.less" */
-
-
-    /*.creator .navbar.navbar-static-top
-    {
-       margin:0 !important;
-
-    }
-
-    .creator .navbar.navbar-static-top .navbar-inner
-    {
-        padding:5px;
-    }
-
-    .tool-list {
-        #grid > .fluid > .span(12);
-    }
-
-    .section-content {
-        #grid > .fluid > .span(12);
-    }
-
-    .workspace-toolbox-item {
-        display: inline-block;
-    }*/
-//}
 
 /************/
 /*  Footer  */
@@ -115,8 +50,8 @@ body {
 .list-group .list-group-item.disabled
 {
     padding: 8px 15px !important;
-    font-size: (@font-size-base * 1.25);
-    background:@panel-heading-bg;
+    font-size: (@font-size-base * 1.125);
+    background:@panel-default-heading-bg;
 }
 
 .list-group
@@ -125,25 +60,45 @@ body {
     .border-bottom-radius(@list-group-border-radius);
 }
 
+.content-element > .list-group > div.list-group-item
+{
+    padding:0;
+}
+
+.content-element > .list-group > a.list-group-item
+{
+    cursor:pointer;
+}
+
+.content-element > .list-group > .list-group-item > a
+{
+    display:block;
+    padding:10px 15px;
+    color:@gray;
+}
+
+.content-element > .list-group > .list-group-item.active > a,
+.content-element > .list-group > .list-group-item.active > a:hover
+{
+    color:#fff;
+    background:@link-color;
+}
+
+.content-element > .list-group > .list-group-item > a:hover
+{
+    text-decoration: none;
+    background:@panel-default-heading-bg;
+}
+
 /***********/
 /* WIDGETS */
 /***********/
 
-.accordion .accordion-heading .accordion-toggle
-{
-    background:@panel-heading-bg;
-}
-
-.accordion .accordion-heading .btn
+.panel-group > .panel .panel-heading .btn
 {
     position:absolute;
     right:3px;
     top:3px
-}
-
-.accordion .accordion-heading .accordion-toggle:hover
-{
-    text-decoration:none;
 }
 
 .notification-date {
@@ -154,10 +109,14 @@ body {
 /*****************/
 /* RESOURCES MGR */
 /*****************/
-
-.section-content .navbar .navbar-inner a.disabled
+.resource-manager .breadcrumb
 {
-    color:@gray-light;
+    margin:0;
+    .border-bottom-radius(0);
+}
+.resource-manager .navbar a.disabled, .resource-manager .navbar a.disabled:hover
+{
+    color:lighten(@gray-light, 20%);
 }
 
 .resource-manager .actions .btn,
@@ -166,15 +125,15 @@ body {
     margin: 0;
 }
 
-.section-content .navbar .nav.navbar-nav > li > a
+.resource-manager .navbar .nav.navbar-nav > li > a
 {
     cursor:pointer;
 }
 
-/*.section-content .navbar .navbar-inner a.disabled .caret
+.resource-manager .navbar a.disabled .caret
 {
     visibility:hidden;
-}*/
+}
 
 .resource-manager .filters .row
 {
@@ -183,14 +142,14 @@ body {
 
 .filters-arrow-border
 {
-    border-color: transparent transparent @gray-light transparent;
+    border-color: transparent transparent @gray-lighter transparent;
     border-style: solid;
     border-width: 10px;
     height:0;
     width:0;
     position:absolute;
     top:-24px;
-    right:7px;
+    right:20px;
 }
 
 .filters-arrow
@@ -202,17 +161,18 @@ body {
     width:0;
     position:absolute;
     top:-23px;
-    right:7px;
+    right:20px;
 }
 
 .resource-manager .filters
 {
     background:#fff;
-    border:1px solid @gray-light;
+    border:1px solid @gray-lighter;
     .box-shadow(0 1px 3px rgba(0,0,0,.25));
     margin:5px;
     padding:5px;
-    .border-radius(@border-radius-base);
+    .border-top-radius(@border-radius-base);
+    .border-bottom-radius(@border-radius-base);
 }
 
 .resource-manager .filters label
@@ -425,28 +385,6 @@ body {
     font-style: italic;
 }
 */
-/***********/
-/* PLUGINS */
-/***********/
-/*
-.plugin-item {
-    display: inline-block;
-}
-
-.plugin-figcaption {
-    text-align:center;
-}
-*/
-/************/
-/* MESSAGES */
-/************/
-/*
-.user-information {
-    border: 1px solid @grayLighter;
-    padding: 5px;
-    .border-radius(@baseBorderRadius);
-}
-*/
 
 /**********/
 /*  Tabs  */
@@ -491,47 +429,34 @@ div.pagination ul
     margin: 0 0 10px 0;
 }
 
-/*
-
-.nav.nav-tabs.nav-stacked .icon-chevron-right.pull-right
-{
-    position:relative;
-    top:4px;
-}
-
-.sub-section-header
-{
-    margin:0;
-    padding:0 0 0 0;
-    font-size:21px;
-    overflow:auto;
-    height:auto;
-}
-*/
-/*********/
-/* Forms */
-/*********/
-/*
-.section-content form
-{
-    margin: 0 10px;
-}
-
-.form-actions
-{
-    margin:11px 0;
-}
-
-form legend
-{
-    margin:0 0 10px 0;
-    font-weight:bold;
-}
-*/
-
 /**********************/
 /***      HOME      ***/
 /**********************/
+
+/* special grid sistem for content in home page*/
+@media (min-width: 767px)
+{
+	@content-iteration: 8;
+    @content-margin: 1.6;
+
+    .content-size (@index) when (@index >= 1) {
+
+        .content-@{index} {
+            width:unit(((@index * 100 / @content-iteration) - (@content-margin * 2)), "%");
+            margin-left: unit(@content-margin, "%");
+		    margin-right: unit(@content-margin, "%");
+            float:left;
+        }
+
+        .content-offset@{index} {
+            margin-left:unit(((@index * 100 / @content-iteration)), "%");
+        }
+
+        .content-size(@index - 1);
+    }
+
+    .content-size(@content-iteration);
+}
 
 .content-element .dropdown-menu a
 {
@@ -553,40 +478,6 @@ form legend
 {
     position:relative; top: -1px; right: -1px
 }
-
-/*
-
-.content-element .btn.dropdown-toggle
-{
-    color:@gray !important;
-    background:@grayLighter !important;
-}
-
-.content-element .dropdown-menu
-{
-    .border-radius(@baseBorderRadius);
-}
-
-.content-element .dropdown-menu a
-{
-    color:@dropdownLinkColor !important;
-    background:@dropdownBackground !important;
-}
-*/
-//.content-element .dropdown-menu a:hover
-//{
-    /*#gradient > .vertical(@dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%));*/
-    /*color:@dropdownLinkColorHover !important;
-    background-color: mix(@dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%), 60%) !important;
-    background-image: -moz-linear-gradient(top, @dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%)) !important; // FF 3.6+
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@dropdownLinkBackgroundHover), to(darken(@dropdownLinkBackgroundHover, 5%))) !important; // Safari 4+, Chrome 2+
-    background-image: -webkit-linear-gradient(top, @dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%)) !important; // Safari 5.1+, Chrome 10+
-    background-image: -o-linear-gradient(top, @dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%)) !important; // Opera 11.10
-    background-image: linear-gradient(to bottom, @dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%)) !important; // Standard, IE10
-    background-repeat: repeat-x;
-    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColparametersorstr='%d', GradientType=0)",argb(@dropdownLinkBackgroundHover),argb(darken(@dropdownLinkBackgroundHover, 5%)))); // IE9 and down*/
-//}
-
 
 .float-right-top
 {
@@ -694,6 +585,9 @@ form legend
 /** Theme Generator  **/
 /**********************/
 /*
+
+Colors no longer valid in bootstrap 3
+
 .theme-generator .theme-value input
 {
     margin:0px;
@@ -707,4 +601,5 @@ form legend
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
-}*/
+}
+*/

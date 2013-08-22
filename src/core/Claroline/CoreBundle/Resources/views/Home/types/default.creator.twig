@@ -1,4 +1,4 @@
-<div class="creator" data-type="{{ type }}" {% if content is defined %}data-id="{{ content.id }}"{% endif %}>
+<div class="creator{% if content is defined %} col-lg-12{% endif %}" data-type="{{ type }}" {% if content is defined %}data-id="{{ content.id }}"{% endif %}>
     <div class="row">
         <div class="col-lg-12">
             <input
@@ -12,7 +12,7 @@
     <br>
     <div class="row">
         <div class="col-lg-12">
-            <div class="panel">
+            <div class="panel panel-default">
                 <textarea
                     class="form-control content-text"
                     placeholder="{{ "Create" | trans({}, 'home') }} {{ "a content" | trans({}, 'home') }}..."
@@ -25,7 +25,7 @@
                         </div>
                     {% endif %}
                 </div>
-                <div class="navbar navbar-static-top">
+                <div class="navbar navbar-default navbar-static-top">
 
                     <!--<ul class="nav">
                         <li><a href="#"><i class="icon-picture"></i> {{ "Add Pictures" | trans({}, 'home') }}</a></li>
@@ -34,10 +34,10 @@
                     </ul>-->
                     <form class="navbar-form pull-right">
                         {% if content is defined %}
-                            <button class="cancel-button btn btn-default">{{ 'Cancel' | trans({}, 'home') }}</button>
-                            <button class="edit-button btn btn-primary">{{ 'Edit' | trans({}, 'home') }}</button>
+                            <a class="cancel-button btn btn-default">{{ 'Cancel' | trans({}, 'home') }}</a>
+                            <a class="edit-button btn btn-primary">{{ 'Edit' | trans({}, 'home') }}</a>
                         {% else %}
-                            <button class="creator-button btn btn-primary">{{ 'Create' | trans({}, 'home') }}</button>
+                            <a class="creator-button btn btn-primary">{{ 'Create' | trans({}, 'home') }}</a>
                         {% endif %}
                     </form>
 

@@ -4,28 +4,12 @@
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4>{{ "Size of content" | trans({}, "home")}}</h4>
         </div>
-        <div class="modal-body" data-id="{{ id }}" data-type="{{ type }}">
-            <div class="row">
-                <div class="col-lg-6"><div class="panel{% if size == 6 %} active{% endif %}">6</div></div>
-                <div class="col-lg-6"><div class="panel{% if size == 6 %} active{% endif %} align-right">6</div></div>
-
-                <div class="col-lg-7"><div class="panel{% if size == 7 %} active{% endif %}">7</div></div>
-                <div class="col-lg-5"><div class="panel{% if size == 5 %} active{% endif %} align-right">5</div></div>
-
-                <div class="col-lg-8"><div class="panel{% if size == 8 %} active{% endif %}">8</div></div>
-                <div class="col-lg-4"><div class="panel{% if size == 4 %} active{% endif %} align-right">4</div></div>
-
-                <div class="col-lg-9"><div class="panel{% if size == 9 %} active{% endif %}">9</div></div>
-                <div class="col-lg-3"><div class="panel{% if size == 3 %} active{% endif %} align-right">3</div></div>
-
-                <div class="col-lg-10"><div class="panel{% if size == 10 %} active{% endif %}">10</div></div>
-                <div class="col-lg-2"><div class="panel{% if size == 2 %} active{% endif %} align-right">2</div></div>
-
-                <div class="col-lg-11"><div class="panel{% if size == 11 %} active{% endif %}">11</div></div>
-                <div class="col-lg-1"><div class="panel{% if size == 1 %} active{% endif %} align-right">1</div></div>
-
-                <div class="col-lg-12"><div class="panel{% if size == 12 %} active{% endif %}">12</div></div>
-            </div>
+        <div class="modal-body clearfix" data-id="{{ id }}" data-type="{{ type }}">
+            {% for i in 4..7 %}
+                <div class="content-{{ i }}"><div class="panel panel-default{% if size == i %} active{% endif %}">{{ i }}</div></div>
+                <div class="content-{{ 8-i }}"><div class="panel panel-default{% if size == 8-i %} active{% endif %}">{{ 8-i }}</div></div>
+            {% endfor %}
+                <div class="content-8"><div class="panel panel-default{% if size == 8 %} active{% endif %}">8</div></div>
         </div>
     </div>
 </div>

@@ -10,74 +10,75 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'tags_management'|trans({}, 'platform') }}</h3>
     </div>
+    <div class="panel-body">
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'icon-book',
+                    'name': 'my_workspaces'|trans({}, 'platform'),
+                    'href': path('claro_workspace_by_user', {'userId': user.getId()})
+                },
+                {
+                    'name': 'tags_management'|trans({}, 'platform'),
+                    'href': ''
+                }
+            ])
+        }}
 
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'icon-book',
-                'name': 'my_workspaces'|trans({}, 'platform'),
-                'href': path('claro_workspace_by_user', {'userId': user.getId()})
-            },
-            {
-                'name': 'tags_management'|trans({}, 'platform'),
-                'href': ''
-            }
-        ])
-    }}
+        <a href="{{ path('claro_workspace_tag_create_form') }}">
+            <button type="button" class="btn btn-default">{{ 'create_new_tag'|trans({}, 'platform') }}</button>
+        </a>
+        <a href="{{ path('claro_workspace_organize_tag') }}">
+            <button type="button" class="btn btn-default">{{ 'organize_private_tags'|trans({}, 'platform') }}</button>
+        </a>
 
-    <a href="{{ path('claro_workspace_tag_create_form') }}">
-        <button type="button" class="btn btn-default">{{ 'create_new_tag'|trans({}, 'platform') }}</button>
-    </a>
-    <a href="{{ path('claro_workspace_organize_tag') }}">
-        <button type="button" class="btn btn-default">{{ 'organize_private_tags'|trans({}, 'platform') }}</button>
-    </a>
+        <hr>
 
-    <hr>
-
-    <table id="manage-tag-table" class="table table-striped table-bordered table-condensed">
-        <thead>
-            <th> {{ 'workspace'|trans({}, 'platform') }} </th>
-            <th> {{ 'tag'|trans({}, 'platform') }} </th>
-        </thead>
-        <tbody id="manage-tag-table-body">
-            {% for workspace in workspaces %}
-                <tr>
-                    <td>
-                        {{ workspace.getName() }}
-                        <small><em>({{ workspace.getCode() }})</em></small>
-                    </td>
-                    <td>
-                        {% for workspaceTag in workspacesTags[workspace.getId()] %}
-                            <span class="label
-                                {% if workspaceTag.getTag().getUser() is not null %}
-                                    label-success
-                                {% else %}
-                                    label-danger
-                                {% endif %}
-                            ">
-                                {{ workspaceTag.getTag().getName() }}
-                                {% if workspaceTag.getTag().getUser() is not null %}
-                                    <i  class="icon-remove-sign remove-tag-button"
-                                        data-workspace-id="{{ workspace.getId() }}"
-                                        data-tag-id="{{ workspaceTag.getTag().getId() }}"
-                                    >
-                                    </i>
-                                {% endif %}
-                            </span>
-                            &nbsp;
-                        {% endfor %}
-                        <i  class="icon-plus-sign add-tag-button"
-                            data-trigger="hover"
-                            data-placement="top"
-                            data-content="{{ 'add_tag_to_workspace'|trans({}, 'platform') }}"
-                            data-workspace-id="{{ workspace.getId() }}"
-                        >
-                        </i>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        <table id="manage-tag-table" class="table table-striped table-bordered table-condensed">
+            <thead>
+                <th> {{ 'workspace'|trans({}, 'platform') }} </th>
+                <th> {{ 'tag'|trans({}, 'platform') }} </th>
+            </thead>
+            <tbody id="manage-tag-table-body">
+                {% for workspace in workspaces %}
+                    <tr>
+                        <td>
+                            {{ workspace.getName() }}
+                            <small><em>({{ workspace.getCode() }})</em></small>
+                        </td>
+                        <td>
+                            {% for workspaceTag in workspacesTags[workspace.getId()] %}
+                                <span class="label
+                                    {% if workspaceTag.getTag().getUser() is not null %}
+                                        label-success
+                                    {% else %}
+                                        label-danger
+                                    {% endif %}
+                                ">
+                                    {{ workspaceTag.getTag().getName() }}
+                                    {% if workspaceTag.getTag().getUser() is not null %}
+                                        <i  class="icon-remove-sign remove-tag-button"
+                                            data-workspace-id="{{ workspace.getId() }}"
+                                            data-tag-id="{{ workspaceTag.getTag().getId() }}"
+                                        >
+                                        </i>
+                                    {% endif %}
+                                </span>
+                                &nbsp;
+                            {% endfor %}
+                            <i  class="icon-plus-sign add-tag-button"
+                                data-trigger="hover"
+                                data-placement="top"
+                                data-content="{{ 'add_tag_to_workspace'|trans({}, 'platform') }}"
+                                data-workspace-id="{{ workspace.getId() }}"
+                            >
+                            </i>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
     <div id="twig-add-tag-user-id" data-user-id="{{ user.getId() }}">
     </div>

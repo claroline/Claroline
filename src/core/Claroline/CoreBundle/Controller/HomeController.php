@@ -149,7 +149,7 @@ class HomeController
      * Render the page of the menu.
      *
      * @param string $id   The id of the content.
-     * @param string $size The size (col-lg-12) of the content.
+     * @param string $size The size (content-12) of the content.
      * @param string $type The type of the content.
      *
      * @Template("ClarolineCoreBundle:Home:menu.html.twig")
@@ -165,7 +165,7 @@ class HomeController
      * Render the HTML of the menu of sizes of the contents.
      *
      * @param string $id   The id of the content.
-     * @param string $size The size (col-lg-12) of the content.
+     * @param string $size The size (content-12) of the content.
      * @param string $type The type of the content.
      *
      * @Route("/content/size/{id}/{size}/{type}", name="claroline_content_size")
