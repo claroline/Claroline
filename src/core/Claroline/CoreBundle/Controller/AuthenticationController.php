@@ -7,15 +7,15 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Library\Security\Authenticator;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Authentication/login controller.
@@ -30,6 +30,7 @@ class AuthenticationController
     private $mailer;
     private $translator;
     private $formFactory;
+    private $authenticator;
 
     /**
      * @DI\InjectParams({
@@ -40,7 +41,8 @@ class AuthenticationController
      *     "mailer"         = @DI\Inject("mailer"),
      *     "router"         = @DI\Inject("router"),
      *     "translator"     = @DI\Inject("translator"),
-     *     "formFactory"    = @DI\Inject("claroline.form.factory")
+     *     "formFactory"    = @DI\Inject("claroline.form.factory"),
+     *     "authenticator" = @Di\Inject("claroline.authenticator")
      * })
      */
     public function __construct(
@@ -51,7 +53,8 @@ class AuthenticationController
         \Swift_Mailer $mailer,
         UrlGeneratorInterface $router,
         Translator $translator,
-        FormFactory $formFactory
+        FormFactory $formFactory,
+        Authenticator $authenticator
     )
     {
         $this->request = $request;
@@ -62,6 +65,7 @@ class AuthenticationController
         $this->router = $router;
         $this->translator = $translator;
         $this->formFactory = $formFactory;
+        $this->authenticator = $authenticator;
     }
     /**
      * @Route(
@@ -226,5 +230,22 @@ class AuthenticationController
         return array(
             'error' => $this->translator->trans('password_missmatch', array(), 'platform')
         );
+    }
+
+    /**
+     * @Route("/authenticate")
+     * @Method("POST")
+     */
+    public function postAuthenticationAction()
+    {
+        $request = $this->request;
+        $username = $request->request->get('username');
+        $password = $request->request->get('password');
+        $status = $this->authenticator->authenticate($username, $password) ? 200 : 403;
+        $content = ($status === 403) ?
+            array('message' => $this->translator->trans('login_failure', array(), 'platform')) :
+            array();
+
+        return new JsonResponse($content, $status);
     }
 }
