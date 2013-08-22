@@ -15,7 +15,7 @@ admin: Administrateur
 admin_analytics: 'Statistiques plateforme'
 administration: Administration
 administrative_code: 'Code administratif'
-admin_form_firstName : 'Prenom'
+admin_form_firstName : 'Prénom'
 admin_form_lastName : 'Nom de famille'
 admin_form_plainPassword_first : 'Mot de passe'
 admin_form_plainPassword_second : 'Répétez votre mot de passe'
@@ -62,6 +62,8 @@ creation_date: 'Date de création'
 cut: Couper
 dashboard: 'Tableau de bord'
 date: Date
+date_format: 'd-m-Y'
+date_form_format: 'dd-MM-yyyy'
 delete: Supprimer
 desktop: Bureau
 desktop_tools: Outils du bureau
@@ -303,6 +305,7 @@ my_account: 'Mon compte'
 my_agenda: 'Mon agenda'
 my_contacts: 'Mes contacts'
 my_notes: 'Mes notes'
+my_badges: 'Mes badges'
 my_portfolio: 'Mon portfolio'
 my_resources: 'Mes resources'
 my_workspace: 'Mon espace de travail'
@@ -314,6 +317,7 @@ note: Note
 none: Aucun
 object: Objet
 ok: Ok
+or: Ou
 open: Ouvrir
 options: Options
 organize_admin_tags: 'Organiser les Tags administrateur'
@@ -385,7 +389,7 @@ resources: Ressources
 resources_most_downloaded: Ressources les plus téléchargés
 resources_rights: 'Droits des ressources'
 resources_usage_ratio: Taux d'utilisation des resources
-resources_usage_list: Liste d'utilisation des resources
+resources_usage_list: Liste d'utilisation des ressources
 resource_right_form_canCopy: Copier
 resource_right_form_canDelete: Supprimer
 resource_right_form_canEdit: Editer
@@ -470,6 +474,7 @@ unregistered: Non inscrit
 unregistered_groups: 'Groupes non enregistrés'
 unregistered_users: 'Utilisateurs non enregistrés'
 unwritable_file_exception: "Vous n'avez pas la permission d'écrire dans le fichier %path%."
+url_invalid: "Le code n'est pas correct, n'essayez pas de changer l'adresse"
 user: Utilisateur
 user_accounts: Comptes utilisateur
 user_form_administrativeCode: 'Code administratif'
@@ -579,3 +584,4 @@ upload_denied: "Vous n'avez pas la permission de créer une ressource à cet end
 select_all: Tout sélectionner
 drop_file: Déposez le fichier
 drag_file_here: Déplacez le fichier ici
+badges_management: 'Gestion des badges'

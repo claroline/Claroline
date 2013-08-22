@@ -13,6 +13,8 @@ add_users: 'Add users'
 add_user_s_confirm_message: 'users(s) added'
 admin: Administrator
 admin_analytics: 'Platform analytics'
+administration: Administration
+administrative_code: 'Administrative code'
 admin_form_firstName : 'first name'
 admin_form_lastName : 'Lastname'
 admin_form_plainPassword_first : 'Paswword'
@@ -28,8 +30,6 @@ admin_tags_list: 'Admin tags list'
 admin_tags_management: 'Admin tags management'
 admin_tags_organization: 'Admin tags organization'
 admin_workspace_tag_form_name: Name
-administration: Administration
-administrative_code: 'Administrative code'
 advanced: Advanced
 agenda: Agenda
 all: All
@@ -62,6 +62,8 @@ creation_date: 'Creation date'
 cut: Cut
 dashboard: Dashboard
 date: Date
+date_format: 'm-d-Y'
+date_form_format: 'MM-dd-yyyy'
 delete: Delete
 desktop: Desktop
 desktop_tools: Desktop tools
@@ -259,6 +261,7 @@ copiable: 'Copiable'
 editable: 'Editable'
 yes: 'yes'
 no: 'no'
+no_email: "This email doesn't match a registered user"
 link_outdated : 'link is no more valid'
 login: Login
 login_failure: 'Login has failed. Check your username and password are correct.'
@@ -302,6 +305,7 @@ my_account: 'My account'
 my_agenda: 'My agenda'
 my_contacts: 'My contacts'
 my_notes: 'My notes'
+my_badges: 'My badges'
 my_portfolio: 'My portfolio'
 my_resources: 'My resources'
 my_workspace: 'My workspace'
@@ -312,8 +316,10 @@ no_email: 'No email found, check the spelling'
 no_search_results: 'Your search hasn''t returned any result.'
 none: None
 note: Note
+none: None
 object: Object
 ok: Ok
+or: Or
 open: Open
 options: Options
 organize_admin_tags: 'Organize admin tags'
@@ -462,9 +468,12 @@ top_media_views: "Top most viewed media"
 trash : Trash
 type: Type
 type_s: Type(s)
+unique connections: 'Nb unique Cnx.'
 unregister: Unregister
+unregistered: Unregistered
 unregistered_groups: 'Unregistered groups'
 unregistered_users: 'Unregistered users'
+unwritable_file_exception: "You don't have the permission to write in the file %path%."
 url_invalid: 'the code is not correct, do no try to change the url'
 user: User
 user_accounts: User accounts
@@ -485,8 +494,6 @@ username: Username
 users: Users
 users_connected_once: users connected at least once
 users_visits: Users' connections
-unwritable_file_exception: "The file %path% is not writable."
-unregistered: Unregistered
 validate: Validate
 view: View
 views: Views
@@ -577,3 +584,4 @@ upload_denied: "Permission denied"
 select_all: Tout sélectionner
 drop_file: Drop the file
 drag_file_here: Drag the file here
+badges_management: 'Badges management'
