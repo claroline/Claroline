@@ -112,8 +112,8 @@ class RegistrationControllerTest extends MockeryTestCase
         $parameterBag = $this->mock('Symfony\Component\HttpFoundation\ServerBag');
         $parameterBag->shouldReceive('get')->with('username')->once()->andReturn('username');
         $parameterBag->shouldReceive('get')->with('password')->once()->andReturn('password');
-        $parameterBag->shouldReceive('get')->with('firstname')->once()->andReturn('firstname');
-        $parameterBag->shouldReceive('get')->with('lastname')->once()->andReturn('lastname');
+        $parameterBag->shouldReceive('get')->with('firstName')->once()->andReturn('firstname');
+        $parameterBag->shouldReceive('get')->with('lastName')->once()->andReturn('lastname');
         $parameterBag->shouldReceive('get')->with('mail')->once()->andReturn('mail@mail.com');
 
         return $parameterBag;

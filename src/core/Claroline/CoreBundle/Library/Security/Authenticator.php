@@ -34,6 +34,7 @@ class Authenticator
         $this->sc = $sc;
         $this->encodeFactory = $encodeFactory;
     }
+    
     public function authenticate($username, $password)
     {
         try {
