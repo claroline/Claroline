@@ -63,9 +63,8 @@
         table.jqplot-table-legend {
             position: absolute;
             border: #06A1E3 double thick;
-            left: 80%;
-            margin-left: 20px;
-            top: 0px;
+            margin-left: 1%;
+            margin-top: 8%;
         }
 
         div.jqplot-table-legend-swatch {
@@ -77,6 +76,10 @@
         td.jqplot-table-legend.jqplot-table-legend-label {
             padding-right: 10px;
         }
+
+        tr.jqplot-table-legend {
+            display: inline;
+        }
     </style>
 
     <h1>{{ 'docimology' | trans }}</h1>
@@ -86,7 +89,7 @@
     <hr/>
     <div id="histoMarks" style="height:100%; width:100%;"></div>
     <hr/>
-    <div id="histoSuccess" style="height:100%; width:80%;"></div>
+    <div id="histoSuccess" style="height:100%; width:100%;"></div><br/><br/><br/>
     <hr/>
     <div id="histoDiscrimination" style="height:100%; width:100%;">
         {% if coeffQ == 'none' %}
@@ -206,7 +209,7 @@
                     pointLabels: {
                         show: true,
                         hideZeros: true
-                    },
+                    }
 
                 },
                 axes: {
@@ -241,8 +244,8 @@
                 },
                 legend: {
                     show: true,
-                    location: 'e',
-                    placement: 'outside',
+                    location: 's',
+                    placement: 'outside'
                 },
 
                 series:[
@@ -250,7 +253,7 @@
                     {label:'{{ 'partially'|trans }}', color: 'blue'},
                     {label:'{{ 'wrong'|trans }}', color: 'red'},
                     {label:'{{ 'no answer'|trans }}', color: 'yellow'}
-                ],
+                ]
             });
 
             /*********************************histoDiscrimination******************************************************/
