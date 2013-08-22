@@ -23,8 +23,7 @@ class BadgeControllerTest extends FunctionalTestCase
         $this->loadUserData(array('admin' => 'admin'));
         $this->logUser($this->getUser('admin'));
 
-        foreach($urls as $url)
-        {
+        foreach ($urls as $url) {
             $this->client->request('GET', $url);
             $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         }
