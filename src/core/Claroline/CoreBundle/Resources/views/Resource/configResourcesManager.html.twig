@@ -63,7 +63,7 @@
                 }
                 else
                 {
-                    tinyMCE.execCommand('mceInsertRawHTML', false, '<a href="' + Routing.generate('claro_resource_open', {'resourceType': resourceTypes, 'node':resourceId}) + '" />'+nodes[_.keys(nodes)][0] +'</a>');
+                    tinyMCE.execCommand('mceInsertRawHTML', false, '<a href="' + Routing.generate('claro_resource_open', {'resourceType': resourceTypes, 'node':nodeId}) + '" />'+nodes[_.keys(nodes)][0] +'</a>');
                 }
             };
         });
