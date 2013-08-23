@@ -1,45 +1,43 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
 {% block content %}
-
+<div class="col-lg-12">
     <div id="homePath" class="hide">{{ path("claro_index") }}</div>
 
     {% if region['header'] is defined %}
-        <div class="row-fluid">
+        <div class="row">
             {{  region['header'] | raw }}
         </div>
+        <br>
     {% endif %}
 
-    <div class="row-fluid">
+    <div class="row">
         {% if region['left'] is defined or is_granted('ROLE_ADMIN') %}
-            <div class="span3">
-                {% if is_granted('ROLE_ADMIN') %}
-                    <div class="content-element relative span12">
-                        <ul class="nav nav-tabs nav-stacked">
-                            <li class="disabled"><a><b>{{ "Content Administration" | trans({}, "home") }}</b></a></li>
-                            <li class="content-element relative{{ "/type/menu" | compareRoute(" active") }}">
-                                <a href="{{ path("claro_get_content_by_type", { "type": "menu"}) }}">
-                                    <i class="icon-th-list"></i> {{ "Menus" | trans({}, "home") }}
-                                    <i class="icon-chevron-right pull-right"></i>
-                                </a>
-                            </li>
-                            <li class="content-element relative{{ "/types" | compareRoute(" active") }}">
-                                <a href="{{ path("claroline_types_manager") }}">
-                                    <i class="icon-th-large"></i> {{ "Content" | trans({}, "home") }}
-                                    <i class="icon-chevron-right pull-right"></i>
-                                </a>
-                            </li>
-                        </ul>
+            <div class="col-lg-3">
+                <div class="row"> {% if is_granted('ROLE_ADMIN') %}
+                    <div class="content-element relative col-lg-12">
+                        <div class="list-group menu">
+                            <div class="list-group-item disabled">{{ "Content Administration" | trans({}, "home") }}</div>
+                            <a class="list-group-item{{ "/type/menu" | compareRoute(" active") }}"
+                                href="{{ path("claro_get_content_by_type", { "type": "menu"}) }}">
+                                <i class="icon-th-list"></i> {{ "Menus" | trans({}, "home") }}
+                            </a>
+                            <a class="list-group-item relative{{ "/types" | compareRoute(" active") }}"²
+                                href="{{ path("claroline_types_manager") }}">
+                                <i class="icon-th-large"></i> {{ "Content" | trans({}, "home") }}
+                            </a>
+                        </div>
                     </div>
                 {% endif %}
                 {{ region['left'] | raw }}
+            </div>
             </div>
         {% endif %}
 
         <div class="{% if
                 (is_granted('ROLE_ADMIN') or region['left'] is defined) and
-                region['right'] is defined %}span6{% elseif (is_granted('ROLE_ADMIN') or region['left'] is defined) or
-                    region['rigth'] is defined %}span9{% else %}span12{% endif %}">
+                region['right'] is defined %}col-lg-6{% elseif (is_granted('ROLE_ADMIN') or region['left'] is defined) or
+                    region['rigth'] is defined %}col-lg-9{% else %}col-lg-12{% endif %}">
             {% if region['content'] is defined %}
                 {{ region['content'] | raw }}
             {% endif %}
@@ -48,19 +46,18 @@
         </div>
 
         {% if region['right'] is defined %}
-            <div class="span3">
+            <div class="col-lg-3">
                 {{ region['right'] | raw }}
             </div>
         {% endif %}
     </div>
-
     {% if region['footer'] is defined %}
         <hr>
-        <div class="row-fluid">
+        <div class="row">
             {{  region['footer'] | raw }}
         </div>
     {% endif %}
-
+</div>
 {% endblock %}
 
 {% block javascripts %}
