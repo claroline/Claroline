@@ -35,17 +35,82 @@
 
 <link href="{{ asset('bundles/ujmexo/css/errorValidation.css') }}" type="text/css" rel="stylesheet" />
 
+<h1>{{ 'qcm creation' | trans }}</h1>
+
 <form class="well label_bold" onsubmit="return check_form('{{ 'nbr_choices' | trans }}', '{{ 'answer_coched' | trans }}', '{{ 'label_empty' | trans }}', '{{ 'point_answers' | trans }}', '{{ 'point_answer' | trans }}', '{{ 'invite_question' | trans }}');"
       action="{{ path('ujm_interactionqcm_create') }}" method="post" {{ form_enctype(form) }}>
-    {{ form_widget(form) }}
+    <p>
+        {{ form_row(form.interaction.question.title) }}
+    </p><p>
+    <ul style="margin-left: 0; list-style-type: none;">
+        <li style="float: left;">
+            {{ form_row(form.interaction.question.category, { 'attr': {'style': 'float left;'} }) }}
+        </li>
+        <li style="float: left;  margin-left: 70px; margin-top: 4%;">
+            <a href="#" id="lien_category">{{ 'create a new category' | trans }}</a>
+        </li>
+    </ul>
+    </p><br/><br/><br/><br/>
+    
+    <a onclick="DisplayOptional('description');" id="descriptionOptionalShow" 
+        onmouseover="document.body.style.cursor = 'pointer';" 
+        onmouseout="document.body.style.cursor = 'default';"
+    >{{ 'Question.description' | trans }}</a>
+    
+    <a onclick="HideOptional('description');" id="descriptionOptionalHide" 
+        onmouseover="document.body.style.cursor = 'pointer';" 
+        onmouseout="document.body.style.cursor = 'default';"
+    >{{ 'Question.description' | trans }}</a>
+    
+    <div id="descriptionOptional">
+        {{ form_widget(form.interaction.question.description) }}
+    </div><br/>
+    <p>
+        {{ form_widget(form.interaction.question.model, { 'attr': {'style': 'display inline;float:left;position: relative; top: -1px;margin-right: 7px;'} }) }} 
+        {{ form_label(form.interaction.question.model) }} 
+    </p><p>
+        {{ form_row(form.interaction.invite) }}
+    </p>
+    
+    <a onclick="DisplayOptional('feedback');" id="feebackOptionalShow" 
+        onmouseover="document.body.style.cursor = 'pointer';" 
+        onmouseout="document.body.style.cursor = 'default';"
+    >{{ 'Interaction.feedback' | trans }}</a>
+    
+    <a onclick="HideOptional('feedback');" id="feebackOptionalHide" 
+        onmouseover="document.body.style.cursor = 'pointer';" 
+        onmouseout="document.body.style.cursor = 'default';"
+    >{{ 'Interaction.feedback' | trans }}</a>
+    
+    <div id="feedbackOptional">
+        {{ form_widget(form.interaction.feedBack) }}
+    </div>
+    <p>
+        {{ form_row(form.interaction.hints) }}
+    </p><br/><p>
+        {{ form_widget(form.shuffle, { 'attr': {'style': 'display inline;float:left;position: relative; top: -1px;margin-right: 7px;'} }) }} 
+        {{ form_label(form.shuffle) }} 
+    </p><br/><p>
+        {{ form_row(form.scoreRightResponse) }}
+    </p><p>
+        {{ form_row(form.scoreFalseResponse) }}
+    </p><p>
+        {{ form_widget(form.weightResponse, { 'attr': {'style': 'display inline;float:left;position: relative; top: -1px;margin-right: 7px;'} }) }} 
+        {{ form_label(form.weightResponse) }}
+    </p><p>
+        {{ form_row(form.typeQCM) }}
+    </p><p>
+        {{ form_row(form.choices) }}
+    </p>
+    
+     <div style="visibility: hidden;">{{ form_rest(form) }}</div>
+    {{ form_errors(form) }}
+    
     <p>
         <input type="hidden" name="exercise" value="{{ exoID }}" />
         <button type="submit" id="button_submit">{{ 'create' | trans }}</button>
     </p>
 </form>
-
-{# lien vers category #}
-<a href="#" style="margin: 5px 5px 5px 5px;" id="lien_category">{{ 'create a new category' | trans }}</a>
 
 <div id="popupEA">
     <div id="popupContainer" class="hiddenCat"> <a id="close" class="hiddenCat" title="close popup">{{ 'close' | trans }}</a><h1>{{ 'response' | trans }}</h1><div id="div_input_popup"><textarea id="input_popup" class="tinymce" data-theme="medium"></textarea></div></div><div id="overlayEffect"> </div>
@@ -62,6 +127,7 @@
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/editionAv.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/category_pop.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/hint.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/ujmexo/js/allQuestionsType.js') }}"></script>
 
 {# functions javascript #}
 {% if error is defined %}

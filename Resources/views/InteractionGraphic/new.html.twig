@@ -54,15 +54,42 @@
             <a href="#" id="lien_category">{{ 'create a new category' | trans }}</a>
         </li>
     </ul>
-    </p><br/><br/><br/><br/><p>
-        {{ form_row(form.interaction.question.description) }}
-    </p><p>
-        {{ form_row(form.interaction.question.model) }}
+    </p><br/><br/><br/><br/>
+    
+    <a onclick="DisplayOptional('description');" id="descriptionOptionalShow" 
+        onmouseover="document.body.style.cursor = 'pointer';" 
+        onmouseout="document.body.style.cursor = 'default';"
+    >{{ 'Question.description' | trans }}</a>
+    
+    <a onclick="HideOptional('description');" id="descriptionOptionalHide" 
+        onmouseover="document.body.style.cursor = 'pointer';" 
+        onmouseout="document.body.style.cursor = 'default';"
+    >{{ 'Question.description' | trans }}</a>
+    
+    <div id="descriptionOptional" style="vertical-align: middle">
+        {{ form_widget(form.interaction.question.description) }}
+    </div><br/>
+    <p>
+        {{ form_widget(form.interaction.question.model, { 'attr': {'style': 'display inline;float:left;position: relative; top: -1px;margin-right: 7px;'} }) }} 
+        {{ form_label(form.interaction.question.model) }} 
     </p><p>
         {{ form_row(form.interaction.invite) }}
-    </p><p>
-        {{ form_row(form.interaction.feedBack) }}
-    </p><p>
+    </p>
+    
+    <a onclick="DisplayOptional('feedback');" id="feebackOptionalShow" 
+        onmouseover="document.body.style.cursor = 'pointer';" 
+        onmouseout="document.body.style.cursor = 'default';"
+    >{{ 'Interaction.feedback' | trans }}</a>
+    
+    <a onclick="HideOptional('feedback');" id="feebackOptionalHide" 
+        onmouseover="document.body.style.cursor = 'pointer';" 
+        onmouseout="document.body.style.cursor = 'default';"
+    >{{ 'Interaction.feedback' | trans }}</a>
+    
+    <div id="feedbackOptional">
+        {{ form_widget(form.interaction.feedBack) }}
+    </div>
+    <p>
         {{ form_row(form.interaction.hints) }}
     </p><p>
 
@@ -184,6 +211,7 @@
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/hint.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/category_pop.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphic.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/ujmexo/js/allQuestionsType.js') }}"></script>
 
 {# ------------------------------------------------- Javascript ---------------------------------------------------------------------------- #}
 

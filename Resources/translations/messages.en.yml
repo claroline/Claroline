@@ -227,6 +227,7 @@ print paper: Print paper
 
 # Q
 qcm: QCM
+qcm creation: Creation of a question of type QCM 
 question: Question
 question creation: Question creation
 questionSharedWith: This question is shared with users below
