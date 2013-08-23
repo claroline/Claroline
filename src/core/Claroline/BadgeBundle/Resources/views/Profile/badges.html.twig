@@ -1,0 +1,45 @@
+{% extends "ClarolineBadgeBundle::layout.html.twig" %}
+
+{% trans_default_domain "badge" %}
+
+{% block content %}
+    {{ macros.flashBox() }}
+
+    <div class="border badge_container">
+        <h3 class="sub-section-header">
+            {{ 'my_badges'|trans({}, 'platform') }}
+            <a href="{{ path('claro_claim_badge', {'id': user.id}) }}" class="btn btn-small" data-toggle="tooltip" data-placement="right" title="{{ 'claim_badge'|trans }}"><i class="icon-plus"></i></a>
+        </h3>
+
+        {% if 0 < badgeClaims|length %}
+        <div class="accordion" id="accordion2">
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+                        {{ 'badge_current_claimed_badges'|transchoice(badgeClaims|length, {'%claimedBadgeCount%': badgeClaims|length}) }}
+                    </a>
+                </div>
+                <div id="collapseOne" class="accordion-body collapse">
+                    {% for badgeClaim in badgeClaims %}
+                    <div class="accordion-inner">
+                        <a href="{{ path('claro_view_badge', {'id': badgeClaim.badge.id}) }}" title="{{ badgeClaim.badge.name(language) }}">{{ badgeClaim.badge.name(language) }}</a> {{ badgeClaim.claimedAt|date('date_format'|trans({}, 'platform')) }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% include 'ClarolineBadgeBundle:Badge:display.html.twig' with {'badgeUrl': 'claro_profile_view_badge', 'paginationurl': 'claro_profile_view_badges', 'routeParams': {}} %}
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('[data-toggle=tooltip]').tooltip();
+    });
+</script>
+{% endblock %}
