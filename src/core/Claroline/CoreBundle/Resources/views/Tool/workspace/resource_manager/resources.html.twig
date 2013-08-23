@@ -44,8 +44,8 @@
                                 {% for customAction in resourceType.getCustomActions() %}
                                     "{{ customAction.getAction() }}": {
                                         "name": "{{ customAction.getAction() }}",
-                                        "route": "{{ path('claro_resource_custom', {'resourceType': resourceType.getName(), 'action': customAction.getAction(), 'resourceId': '_nodeId' }) }}",
-                                        "async": {{ customAction.isAsync() }}
+                                        "route": "{{ path('claro_resource_custom', {'resourceType': resourceType.getName(), 'action': customAction.getAction(), 'node': '_nodeId' }) }}",
+                                        "async": {% if customAction.isAsync() %} 1 {% else %} 0 {% endif %}
                                     }
                                     {% if loop.last != true %},{% endif %}
                                 {% endfor %}
