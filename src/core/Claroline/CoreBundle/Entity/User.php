@@ -63,7 +63,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
 
     /**
      * @var string
-     * 
+     *
      * @ORM\Column()
      */
     protected $password;
@@ -187,7 +187,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     /**
      * @ORM\Column(name="hash_time", type="integer", nullable=true)
      */
-    protected  $hashTime;
+    protected $hashTime;
 
     /**
      * @var UserBadge[]|ArrayCollection
@@ -414,7 +414,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     }
 
     /**
-     * @param string $phone
+     * @param  string $phone
      * @return User
      */
     public function setPhone($phone)
@@ -619,8 +619,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     {
         $badges = new ArrayCollection();
 
-        foreach($this->getUserBadges() as $userBadge)
-        {
+        foreach ($this->getUserBadges() as $userBadge) {
             $badges[] = $userBadge->getBadge();
         }
 
@@ -634,9 +633,8 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      */
     public function hasBadge(badge $badge)
     {
-        foreach($this->getBadges() as $userBadge)
-        {
-            if($userBadge->getId() === $badge->getId()) {
+        foreach ($this->getBadges() as $userBadge) {
+            if ($userBadge->getId() === $badge->getId()) {
                 return true;
             }
         }
@@ -669,9 +667,8 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      */
     public function hasClaimedFor(Badge $badge)
     {
-        foreach($this->getBadgeClaims() as $claimedBadge)
-        {
-            if($badge->getId() === $claimedBadge->getId()) {
+        foreach ($this->getBadgeClaims() as $claimedBadge) {
+            if ($badge->getId() === $claimedBadge->getId()) {
                 return true;
             }
         }
