@@ -1,0 +1,35 @@
+{% extends "ClarolineCoreBundle:Administration:ajaxLayout.html.twig" %}
+
+{% trans_default_domain "platform" %}
+
+{% block content %}
+    <form action="{{ path('claro_admin_badges_award', {'id': badge.id}) }}" method="post" class="form-horizontal" id="award_form">
+
+        {{ form_errors(form) }}
+
+        <div class="row-fluid">
+            <div class="span5">
+                {{ form_label(form.group) }}
+                {{ form_errors(form.group) }}
+                {{ form_widget(form.group) }}
+            </div>
+
+            <div class="span2">
+                <p>{{ 'or'|trans }}</p>
+            </div>
+
+            <div class="span5">
+                {{ form_label(form.user) }}
+                {{ form_errors(form.user) }}
+                {{ form_widget(form.user) }}
+            </div>
+        </div>
+
+        {{ form_rest(form) }}
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">{{ 'award'|trans({}, 'badge') }}</button>
+            <button class="btn btn-danger" id="viewAwardedUser" type="button" title="{{ 'cancel'|trans }}">{{ 'cancel'|trans }}</button>
+        </div>
+    </form>
+{% endblock %}

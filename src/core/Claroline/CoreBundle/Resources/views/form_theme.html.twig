@@ -21,7 +21,7 @@
         {{ label|trans({}, translation_domain) }}
         {% else %}
         {{ id|trans({}, translation_domain) }}
-        {% endif %}
+        {% endif %} :
             {% if is_multichoice_widget %}
                 {{ form_widget(form) }}
             {% endif %}

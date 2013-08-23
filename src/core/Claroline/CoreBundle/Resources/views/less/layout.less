@@ -512,6 +512,29 @@ footer {
     text-align:center;
 }
 
+/* Special grid styles
+-------------------------------------------------- */
+
+.view_badge {
+    .row-fluid {
+        margin-top: 10px;
+        margin-bottom: 20px;
+        .row-fluid {
+            margin-top: 0;
+            margin-bottom: 0;
+            [class*="span"] {
+                margin-top: 5px;
+            }
+        }
+    }
+    [class*="span"] {
+        text-align: center;
+        min-height: 40px;
+        line-height: 40px;
+    }
+}
+
+
 /************/
 /* MESSAGES */
 /************/
