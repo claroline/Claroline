@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Persistence;
 
-use Mockery as m;
 use Doctrine\ORM\Query;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 

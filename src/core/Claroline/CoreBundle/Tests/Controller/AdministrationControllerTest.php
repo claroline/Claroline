@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use \Mockery as m;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
@@ -994,7 +993,6 @@ class AdministrationControllerTest extends MockeryTestCase
     private function getController(array $mockedMethods = array())
     {
         if (count($mockedMethods) === 0) {
-
             return new AdministrationController(
                 $this->userManager,
                 $this->roleManager,

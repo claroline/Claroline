@@ -802,7 +802,7 @@ class ResourceManager
     /**
      * Returns every children of every resource (includes the startnode).
      *
-     * @param  array $nodes
+     * @param  array      $nodes
      * @return type
      * @throws \Exception
      */
@@ -1000,7 +1000,8 @@ class ResourceManager
     }
 
     /** required by insertBefore */
-    public function removeNextWhereNextIs(ResourceNode $next = null) {
+    public function removeNextWhereNextIs(ResourceNode $next = null)
+    {
         $node = $this->resourceNodeRepo->findOneBy(array('next' => $next));
         if ($node) {
             $node->setNext(null);
@@ -1010,7 +1011,8 @@ class ResourceManager
     }
 
     /** required by insertBefore */
-    public function removePreviousWherePreviousIs(ResourceNode $previous = null) {
+    public function removePreviousWherePreviousIs(ResourceNode $previous = null)
+    {
         $node = $this->resourceNodeRepo->findOneBy(array('previous' => $previous));
         if ($node) {
             $node->setPrevious(null);
@@ -1029,14 +1031,14 @@ class ResourceManager
         for ($i = 0; $i < $countChildren; $i++) {
             if ($i === 0) {
                 $children[$i]->setPrevious(null);
-                $children[$i]->setNext($children[$i+1]);
+                $children[$i]->setNext($children[$i + 1]);
             } else {
-                if ($i === $countChildren-1) {
+                if ($i === $countChildren - 1) {
                     $children[$i]->setNext(null);
-                    $children[$i]->setPrevious($children[$i-1]);
+                    $children[$i]->setPrevious($children[$i - 1]);
                 } else {
-                    $children[$i]->setPrevious($children[$i-1]);
-                    $children[$i]->setNext($children[$i+1]);
+                    $children[$i]->setPrevious($children[$i - 1]);
+                    $children[$i]->setNext($children[$i + 1]);
                 }
             }
             $this->om->persist($children[$i]);

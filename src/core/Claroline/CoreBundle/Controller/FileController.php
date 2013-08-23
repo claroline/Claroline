@@ -98,7 +98,7 @@ class FileController extends Controller
      * - for MOVE / COPY $collection->setAttributes(array('parent' => $parent))
      *  where $parent is the new parent entity.
      *
-     * @param string $permission
+     * @param string             $permission
      * @param ResourceCollection $collection
      *
      * @throws AccessDeniedException

@@ -43,7 +43,7 @@
                                     "{{ customAction.getAction() }}": {
                                         "name": "{{ customAction.getAction() }}",
                                         "route": "{{ path('claro_resource_custom', {'resourceType': resourceType.getName(), 'action': customAction.getAction(), 'node': '_nodeId' }) }}",
-                                        "async": {{ customAction.isAsync() }}
+                                        "async": {% if customAction.isAsync() %} 1 {% else %} 0 {% endif %}
                                     }
                                     {% if loop.last != true %},{% endif %}
                                 {% endfor %}
@@ -60,5 +60,5 @@
     </script>
     <script type="text/javascript" src='{{ asset('bundles/frontend/FileAPI/FileAPI.min.js') }}'></script>
     <script type="text/javascript" src='{{ asset('bundles/frontend/FileAPI/FileAPI.exif.js') }}'></script>
-    <script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/resource/dnd.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/resource/dragndrop.js') }}'></script>
 {% endblock %}

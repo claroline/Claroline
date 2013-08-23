@@ -104,7 +104,7 @@ class RegistrationControllerTest extends MockeryTestCase
         )->andReturn($errorList);
 
         $response = new JsonResponse(array(array('property' => 'username', 'message' => 'message')), 422);
-        $this->assertEquals($response, $this->controller->postUserRegistrationAction());
+        $this->assertEquals($response->getContent(), $this->controller->postUserRegistrationAction()->getContent());
     }
 
     private function getUserParameterBag()

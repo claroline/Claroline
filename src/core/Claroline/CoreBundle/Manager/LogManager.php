@@ -501,15 +501,13 @@ class LogManager
         $translator = $this->container->get('translator');
 
         /** @var \SplFileInfo $file */
-        foreach($finder as $file)
-        {
+        foreach ($finder as $file) {
             $className      = basename($file->getFilename(), '.' . $file->getExtension());
             $classNamespace = $logEventClassNamespace . $className;
             $classParents   = class_parents($classNamespace);
-            if(in_array('Claroline\CoreBundle\Event\Event\Log\LogGenericEvent', $classParents)){
+            if (in_array('Claroline\CoreBundle\Event\Event\Log\LogGenericEvent', $classParents)) {
                 $reflectionClass = new \ReflectionClass($classNamespace);
-                foreach($reflectionClass->getConstants() as $constant)
-                {
+                foreach ($reflectionClass->getConstants() as $constant) {
                     $eventList[$constant] = $translator->trans(sprintf('log_%s_title', $constant), array(), 'platform');
                 }
             }

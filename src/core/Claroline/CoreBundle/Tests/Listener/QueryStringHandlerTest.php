@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Listener;
 
-use \Mockery as m;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
 class QueryStringHandlerTest extends MockeryTestCase

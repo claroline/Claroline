@@ -123,8 +123,7 @@ class Badge
 
             $userBagde
                 ->setBadge($this)
-                ->setUser($user)
-            ;
+                ->setUser($user);
 
             $this->addUserBadge($userBagde);
         }
