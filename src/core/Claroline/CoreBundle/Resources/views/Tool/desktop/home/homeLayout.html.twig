@@ -9,6 +9,11 @@
             <li class="{% if 'claro_tool_desktop_perso' == app.request.get('_route') %}active{% endif %}">
             <a href="{{ path('claro_tool_desktop_perso') }}" id="desktop_perso_link">{{ 'misc'|trans({}, 'platform') }}</a>
             </li>
+            {% for homeTab in homeTabs %}
+            <li>
+                <a href="#" id="{{ homeTab.getName() }}_link">{{ homeTab.getName() }}</a>
+            </li>
+            {% endfor %}
         </ul>
 
     {% block homeTab %}{% endblock %}

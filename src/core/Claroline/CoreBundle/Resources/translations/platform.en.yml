@@ -19,6 +19,7 @@ admin_form_plainPassword_first : 'Paswword'
 admin_form_plainPassword_second : 'Repeat your password'
 admin_form_mail : 'Email adress'
 admin_form_username : 'Username'
+admin_home_tabs_configuration: 'Home tabs configuration'
 admin_logs: 'Platform logs'
 admin_tag_children_list: 'Admin tag children list'
 admin_tag_potential_children_list: 'Admin tag potential children list'
@@ -56,6 +57,7 @@ create: Create
 creation: Creation
 create_group: 'Create group'
 create_new_admin_tag: 'Create new admin tag'
+create_new_home_tab: 'Create new tab'
 create_new_tag: 'Create new tag'
 create_workspace: 'Create workspace'
 creation_date: 'Creation date'
@@ -63,7 +65,11 @@ cut: Cut
 dashboard: Dashboard
 date: Date
 delete: Delete
+delete_home_tab: 'Delete tab'
 desktop: Desktop
+desktop_home_tab_creation : 'Desktop Home tab creation'
+desktop_home_tab_edition : 'Desktop Home tab edition'
+desktop_home_tabs: 'Desktop Home tabs'
 desktop_tools: Desktop tools
 directory: Directory
 directory_form_name: Name
@@ -106,6 +112,12 @@ has_not_been_imported: 'has not been imported'
 has_not_been_imported_into_the_group: 'has not been imported into the group'
 history: History
 home: Home
+home_tab: 'Home tab'
+home_tab_delete_confirm_title: 'Delete Home tab'
+home_tab_delete_confirm_message: 'Do you really want to delete this Home tab ?'
+home_tab_form_name: 'Name'
+home_tabs: 'Home tabs'
+home_tabs_configuration: 'Home tabs configuration'
 id: Id
 informations: Informations
 instructions: Instructions
@@ -304,6 +316,7 @@ object: Object
 ok: Ok
 open: Open
 options: Options
+order: Order
 organize_admin_tags: 'Organize admin tags'
 organize_private_tags: 'Organize private tags'
 owner: Owner
@@ -456,6 +469,8 @@ unregistered_users: 'Unregistered users'
 url_invalid: 'the code is not correct, do no try to change the url'
 user: User
 user_accounts: User accounts
+user_desktop_home_tab_creation: 'Home tab creation'
+user_desktop_home_tab_edition: 'Home tab edition'
 user_form_administrativeCode: 'Administrative code'
 user_form_firstName: 'First name'
 user_form_lastName: 'Last name'
@@ -500,6 +515,9 @@ workspace_form_displayable: Public
 workspace_form_name: Name
 workspace_form_template: Template
 workspace_form_type: Type
+workspace_home_tab_creation: 'Workspace Home tab creation'
+workspace_home_tab_edition: 'Workspace Home tab edition'
+workspace_home_tabs: 'Workspace Home tabs'
 workspace_order_tool_edit_form_name: Name
 workspace_registration_confirm_title: 'Do you really want to register to this workspace ?'
 workspace_resource: Resources
