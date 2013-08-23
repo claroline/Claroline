@@ -21,8 +21,6 @@
 
                 if (parameters.isPickerMode) {
                     this.el.className = 'picker resource-manager';
-                    //this.wrapper = $('<div class="modal-body"/>');
-                    //$(this.el).append(this.wrapper);
 
                     $(this.el).html(Twig.render(ModalWindow, {
                         'header' : 'Resource Picker',
@@ -897,7 +895,7 @@
                                 });
                             }
                         },
-                        start: function (event, ui) {
+                        start: function () {
                             that.isOpenEnabled = false;
                         }
                     });
