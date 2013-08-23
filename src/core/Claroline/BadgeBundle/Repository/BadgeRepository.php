@@ -42,15 +42,14 @@ class BadgeRepository extends EntityRepository
     public function findByUser(User $user, $executeQuery = true)
     {
         $query = $this->getEntityManager()
-            ->createQuery('
-                SELECT b, ub, bt
+            ->createQuery(
+                'SELECT b, ub, bt
                 FROM ClarolineBadgeBundle:Badge b
                 JOIN b.userBadges ub
                 JOIN b.translations bt
                 WHERE ub.user = :userId
             ')
-            ->setParameter('userId', $user->getId())
-        ;
+            ->setParameter('userId', $user->getId());
 
         return $executeQuery ? $query->getResult(): $query;
     }
@@ -65,15 +64,14 @@ class BadgeRepository extends EntityRepository
     public function findOrderedByName($locale = null, $executeQuery = true)
     {
         $query = $this->getEntityManager()
-            ->createQuery('
-                SELECT b, t
+            ->createQuery(
+                'SELECT b, t
                 FROM ClarolineBadgeBundle:Badge b
                 JOIN b.translations t
                 WHERE t.locale = :locale
                 ORDER BY t.name ASC'
             )
-            ->setParameter('locale', $locale)
-        ;
+            ->setParameter('locale', $locale);
 
         return $executeQuery ? $query->getResult(): $query;
     }
@@ -88,15 +86,14 @@ class BadgeRepository extends EntityRepository
     public function findBySlug($slug, $executeQuery = true)
     {
         $query = $this->getEntityManager()
-            ->createQuery('
-                SELECT b, t
+            ->createQuery(
+                'SELECT b, t
                 FROM ClarolineBadgeBundle:Badge b
                 JOIN b.translations t
                 WHERE t.slug = :slug
                 ORDER BY t.name ASC'
             )
-            ->setParameter('slug', $slug)
-        ;
+            ->setParameter('slug', $slug);
 
         return $executeQuery ? $query->getSingleResult(): $query;
     }
@@ -111,15 +108,14 @@ class BadgeRepository extends EntityRepository
     {
         $name  = strtoupper($name);
         $query = $this->getEntityManager()
-            ->createQuery('
-                SELECT b, t
+            ->createQuery(
+                'SELECT b, t
                 FROM ClarolineBadgeBundle:Badge b
                 JOIN b.translations t
                 WHERE UPPER(t.name) LIKE :name
                 ORDER BY t.name ASC'
             )
-            ->setParameter('name', "%{$name}%")
-        ;
+            ->setParameter('name', "%{$name}%");
 
         return $executeQuery ? $query->getResult(): $query;
     }
@@ -132,14 +128,13 @@ class BadgeRepository extends EntityRepository
     public function findOneByName($name)
     {
         $query = $this->getEntityManager()
-            ->createQuery('
-                SELECT b, t
+            ->createQuery(
+                'SELECT b, t
                 FROM ClarolineBadgeBundle:Badge b
                 JOIN b.translations t
                 WHERE t.name = :name'
             )
-            ->setParameter('name', $name)
-        ;
+            ->setParameter('name', $name);
 
         return $query->getSingleResult();
     }
@@ -158,8 +153,7 @@ class BadgeRepository extends EntityRepository
             return $query
                 ->setFirstResult(0)
                 ->setMaxResults(10)
-                ->getResult()
-            ;
+                ->getResult();
         }
 
         return array();

@@ -25,7 +25,7 @@ class LogHiddenWorkspaceWidgetConfig
     /**
      * Set workspaceId
      *
-     * @param integer  $workspaceId
+     * @param  integer                        $workspaceId
      * @return LogHiddenWorkspaceWidgetConfig
      */
     public function setWorkspaceId($workspaceId)

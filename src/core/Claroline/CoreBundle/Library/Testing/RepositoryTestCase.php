@@ -320,7 +320,6 @@ abstract class RepositoryTestCase extends WebTestCase
             $activity->addResourceActivity($activityResource);
         }
 
-
         self::create($name, $activity);
         self::$om->endFlushSuite();
     }
