@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Event\Event\ImportToolEvent;
 use Claroline\CoreBundle\Event\Event\ConfigureWorkspaceToolEvent;
 use Claroline\CoreBundle\Event\Event\ConfigureDesktopToolEvent;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
+use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -18,6 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 class HomeListener
 {
     private $workspaceManager;
+    private $homeTabManager;
 
     /**
      * @DI\InjectParams({
@@ -25,16 +27,25 @@ class HomeListener
      *     "ed"                 = @DI\Inject("claroline.event.event_dispatcher"),
      *     "templating"         = @DI\Inject("templating"),
      *     "wm"                 = @DI\Inject("claroline.widget.manager"),
-     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager")
+     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "homeTabManager"     = @DI\Inject("claroline.manager.home_tab_manager")
      * })
      */
-    public function __construct($em, $ed, $templating, $wm, WorkspaceManager $workspaceManager)
+    public function __construct(
+        $em,
+        $ed,
+        $templating,
+        $wm,
+        WorkspaceManager $workspaceManager,
+        HomeTabManager $homeTabManager
+    )
     {
         $this->em = $em;
         $this->ed = $ed;
         $this->templating = $templating;
         $this->wm = $wm;
         $this->workspaceManager = $workspaceManager;
+        $this->homeTabManager = $homeTabManager;
     }
 
     /**

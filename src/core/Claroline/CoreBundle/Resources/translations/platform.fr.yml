@@ -21,6 +21,7 @@ admin_form_plainPassword_first : 'Mot de passe'
 admin_form_plainPassword_second : 'Répétez votre mot de passe'
 admin_form_mail : 'Adresse email'
 admin_form_username : 'Nom d''utilisateur'
+admin_home_tabs_configuration: 'Configuration des onglets pour les pages d''accueil'
 admin_logs: 'Suivi plateforme'
 admin_tag_children_list: 'Liste des enfants'
 admin_tag_potential_children_list: 'Liste des enfants potentiels'
@@ -56,6 +57,7 @@ create: Créer
 creation: Création
 create_group: 'Créer un groupe'
 create_new_admin_tag: 'Créer un nouveau Tag administrateur'
+create_new_home_tab: 'Créer un nouvel onglet'
 create_new_tag: 'Créer un nouveau Tag'
 create_workspace: 'Créer un espace d''activités'
 creation_date: 'Date de création'
@@ -63,7 +65,11 @@ cut: Couper
 dashboard: 'Tableau de bord'
 date: Date
 delete: Supprimer
+delete_home_tab: 'Supprimer l''onglet'
 desktop: Bureau
+desktop_home_tab_creation : 'Création d''un onglet pour le bureau'
+desktop_home_tab_edition : 'Edition de l''onglet pour le bureau'
+desktop_home_tabs: 'Onglets pour le bureau'
 desktop_tools: Outils du bureau
 directory: Répertoire
 directory_form_name: Nom
@@ -106,6 +112,12 @@ has_not_been_imported: 'n''a pas été importé(e)'
 has_not_been_imported_into_the_group: 'n''a pas été importé(e) dans le groupe'
 history: Historique
 home: Accueil
+home_tab: 'Onglet'
+home_tab_delete_confirm_title: 'Suppression de l''onglet'
+home_tab_delete_confirm_message: 'Voulez-vous vraiment supprimer cet onglet de la page d''accueil ?'
+home_tab_form_name: 'Nom'
+home_tabs: 'Onglets de la page d''accueil'
+home_tabs_configuration: 'Configuration des onglets de la page d''accueil'
 id: Id
 informations: Informations
 instructions: Consignes
@@ -304,6 +316,7 @@ object: Objet
 ok: Ok
 open: Ouvrir
 options: Options
+order: Ordre
 organize_admin_tags: 'Organiser les Tags administrateur'
 organize_private_tags: 'Organiser les Tags personnels'
 owner: Propriétaire
@@ -460,6 +473,8 @@ unregistered_users: 'Utilisateurs non enregistrés'
 unwritable_file_exception: "Vous n'avez pas la permission d'écrire dans le fichier %path%."
 user: Utilisateur
 user_accounts: Comptes utilisateur
+user_desktop_home_tab_creation: 'Création d''un onglet'
+user_desktop_home_tab_edition: 'Edition de l''onglet'
 user_form_administrativeCode: 'Code administratif'
 user_form_firstName: Nom
 user_form_lastName: Prénom
@@ -502,6 +517,9 @@ workspace_form_displayable: Publique
 workspace_form_name: Nom
 workspace_form_template: Modèle
 workspace_form_type: Type
+workspace_home_tab_creation: 'Création d''un onglet pour les espaces d''activités'
+workspace_home_tab_edition: 'Edition de l''onglet pour les espaces d''activités'
+workspace_home_tabs: 'Onglets pour les espaces d''activités'
 workspace_order_tool_edit_form_name: Nom
 workspace_registration_confirm_title: 'Voulez-vous vous inscrire à cet espace d''activités ?'
 workspace_resource: Ressources
