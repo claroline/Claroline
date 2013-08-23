@@ -19,10 +19,5 @@
             {{ node.name }}
         </li>
     {% endif %}
-    {% if not loop.last %}
-        <li>
-            <span class="divider"> / </span>
-        </li>
-    {% endif %}
 
 {% endfor %}

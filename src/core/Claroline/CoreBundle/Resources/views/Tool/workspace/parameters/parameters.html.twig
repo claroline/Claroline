@@ -10,6 +10,9 @@
         }
     ])}}
 
+    <h3>{{ 'parameters'|trans({}, 'platform') }}</h3>
+    <br>
+
     <ul>
         <li>
             <a href="{{ path('claro_workspace_edit_form', {'workspace': workspace.getId()}) }}"> {{ 'general'|trans({}, 'platform') }} </a>

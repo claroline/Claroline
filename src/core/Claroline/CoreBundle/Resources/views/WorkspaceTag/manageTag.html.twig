@@ -7,26 +7,29 @@
 
 {% block section_content %}
 
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'icon-book',
-                'name': 'my_workspaces'|trans({}, 'platform'),
-                'href': path('claro_workspace_by_user', {'userId': user.getId()})
-            },
-            {
-                'name': 'tags_management'|trans({}, 'platform'),
-                'href': ''
-            }
-        ])
-    }}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'tags_management'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="panel-body">
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'icon-book',
+                    'name': 'my_workspaces'|trans({}, 'platform'),
+                    'href': path('claro_workspace_by_user', {'userId': user.getId()})
+                },
+                {
+                    'name': 'tags_management'|trans({}, 'platform'),
+                    'href': ''
+                }
+            ])
+        }}
 
-    <div class="margin">
         <a href="{{ path('claro_workspace_tag_create_form') }}">
-            <button type="button" class="btn">{{ 'create_new_tag'|trans({}, 'platform') }}</button>
+            <button type="button" class="btn btn-default">{{ 'create_new_tag'|trans({}, 'platform') }}</button>
         </a>
         <a href="{{ path('claro_workspace_organize_tag') }}">
-            <button type="button" class="btn">{{ 'organize_private_tags'|trans({}, 'platform') }}</button>
+            <button type="button" class="btn btn-default">{{ 'organize_private_tags'|trans({}, 'platform') }}</button>
         </a>
 
         <hr>
@@ -49,7 +52,7 @@
                                     {% if workspaceTag.getTag().getUser() is not null %}
                                         label-success
                                     {% else %}
-                                        label-important
+                                        label-danger
                                     {% endif %}
                                 ">
                                     {{ workspaceTag.getTag().getName() }}
@@ -61,6 +64,7 @@
                                         </i>
                                     {% endif %}
                                 </span>
+                                &nbsp;
                             {% endfor %}
                             <i  class="icon-plus-sign add-tag-button"
                                 data-trigger="hover"
@@ -79,24 +83,36 @@
     <div id="twig-add-tag-user-id" data-user-id="{{ user.getId() }}">
     </div>
 
-    <div id="add-tag-validation-box" class="modal hide fade">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">×</button>
-            <h3>{{ 'enter_tag_name_message'|trans({}, 'platform') }}</h3>
-        </div>
-        <div class="modal-body" style="overflow-y: visible">
-            <label for="modal-tag-input">{{ 'name'|trans({}, 'platform') }} : </label>
-            <input
-                id='modal-tag-input'
-                type='text'
-                name='tag-to-add'
-                data-provide='typeahead'
-                data-source='{{ tagsNameTxt }}'
-                autocomplete='off'>
-        </div>
-        <div class="modal-footer">
-            <input type="button" id="add-tag-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-            <input type="button" class="btn btn-secondary" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+    <div id="add-tag-validation-box" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>{{ 'enter_tag_name_message'|trans({}, 'platform') }}</h4>
+                </div>
+                <div class="modal-body" style="overflow-y: visible">
+                    <form class="form-horizontal">
+                        <label for="modal-tag-input" class="col-lg-2 control-label">
+                            {{ 'name'|trans({}, 'platform') }}
+                        </label>
+                        <div class="col-lg-6">
+                            <input
+                                id='modal-tag-input'
+                                class="form-control"
+                                type='text'
+                                name='tag-to-add'
+                                data-provide='typeahead'
+                                data-source='{{ tagsNameTxt }}'
+                                autocomplete='off'>
+                        </div>
+                    </form>
+                    <br>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" id="add-tag-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
