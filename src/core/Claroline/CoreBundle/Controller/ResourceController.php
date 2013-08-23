@@ -402,8 +402,8 @@ class ResourceController
      * Needs an array of ids to be functionnal (query string: "ids[]=1&ids[]=2" ...).
      *
      * @param ResourceNode $parent
-     * @param array            $resources
-     * @param User             $user
+     * @param array        $resources
+     * @param User         $user
      *
      * @return Response
      */

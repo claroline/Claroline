@@ -210,7 +210,6 @@ class WorkspaceController extends Controller
         return $displayable;
     }
 
-
     /**
      * @EXT\Route(
      *     "/displayable/selfregistration",
@@ -594,7 +593,7 @@ class WorkspaceController extends Controller
      * Adds a user to a workspace.
      *
      * @param AbstractWorkspace $workspace
-     * @param User $user
+     * @param User              $user
      *
      * @return Response
      */
@@ -692,7 +691,7 @@ class WorkspaceController extends Controller
      * Removes an user from a workspace.
      *
      * @param AbstractWorkspace $workspace
-     * @param User $userId
+     * @param User              $userId
      *
      * @return Response
      */

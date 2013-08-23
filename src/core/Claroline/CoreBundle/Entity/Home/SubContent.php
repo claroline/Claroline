@@ -165,7 +165,7 @@ class SubContent
     /**
      * Set next
      *
-     * @param \Claroline\CoreBundle\Entity\Home\SubContent $next
+     * @param  \Claroline\CoreBundle\Entity\Home\SubContent $next
      * @return SubContent
      */
     public function setNext(SubContent $next = null)

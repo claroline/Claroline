@@ -165,9 +165,9 @@ class ResourceVoter implements VoterInterface
     /**
      * Checks if the current token has the right to do the action $action.
      *
-     * @param ResourceNode     $resource
-     * @param TokenInterface   $token
-     * @param string           $action
+     * @param ResourceNode   $resource
+     * @param TokenInterface $token
+     * @param string         $action
      *
      * @return boolean
      */
@@ -185,9 +185,9 @@ class ResourceVoter implements VoterInterface
      * Checks if the a resource whole type is $type
      * can be created in the directory $resource by the $token
      *
-     * @param string           $type
-     * @param ResourceNode     $resource
-     * @param TokenInterface   $token
+     * @param string         $type
+     * @param ResourceNode   $resource
+     * @param TokenInterface $token
      *
      * @return array
      */

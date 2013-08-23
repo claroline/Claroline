@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContext;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;

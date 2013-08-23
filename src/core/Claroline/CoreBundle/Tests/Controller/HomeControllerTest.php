@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use \Mockery as m;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Controller\HomeController;
 use Symfony\Component\HttpFoundation\Response;

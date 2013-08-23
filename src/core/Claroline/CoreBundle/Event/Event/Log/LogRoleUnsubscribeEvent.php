@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Event\Event\Log;
 
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 class LogRoleUnsubscribeEvent extends LogGenericEvent
 {
@@ -33,11 +32,11 @@ class LogRoleUnsubscribeEvent extends LogGenericEvent
             $action = self::ACTION_USER;
             $receiver = $subject;
         } else {
-          $details['receiverGroup'] = array(
+            $details['receiverGroup'] = array(
                 'name' => $subject->getName()
             );
-           $action = self::ACTION_GROUP;
-           $receiverGroup = $subject;
+            $action = self::ACTION_GROUP;
+            $receiverGroup = $subject;
         }
 
         parent::__construct(

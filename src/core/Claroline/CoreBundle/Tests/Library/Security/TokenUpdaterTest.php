@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Library\Security;
 
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
-use \Mockery as m;
 use Claroline\CoreBundle\Entity\User;
 
 class TokenUpdaterTest extends MockeryTestCase
@@ -44,7 +43,6 @@ class TokenUpdaterTest extends MockeryTestCase
     private function getUpdater(array $mockedMethods = array())
     {
         if (count($mockedMethods) === 0) {
-
             return new TokenUpdater($this->sc, $this->om);
         }
 
