@@ -92,7 +92,7 @@
             <li class="divider"></li>
                 {% for customAction, attributes in customActions %}
                     <li>
-                        <a class="node-menu-action" data-action="{{ customAction }}" data-is-custom="yes" data-id="{{ node.id }}" tabindex="-1" href="#">
+                        <a class="node-menu-action" data-action="{{ customAction }}" data-async="{{ attributes.async }}" data-is-custom="yes" data-id="{{ node.id }}" tabindex="-1" href="#">
                             {{ attributes.name }}
                         </a>
                     </li>
