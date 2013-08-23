@@ -4,21 +4,15 @@ body
     background:#fff url(../../bundles/clarolinecore/images/themes/claroline/bg2.jpg) repeat-x;
 }
 
-h2.section-header {
-    margin: 20px auto;
-}
-
-h3.sub-section-header {
-    min-height: 30px;
-    margin-bottom: 16px;
-    border-bottom: solid @grayLighter 1px;
-}
-
-.brand
+.navbar-brand
 {
-	background:transparent url(../../bundles/clarolinecore/images/logo/claroline-logo-bulles-22x25.png) 20px 5px no-repeat;
+	background:transparent url(../../bundles/clarolinecore/images/logo/claroline-logo-bulles-22x25.png) 20px 11px no-repeat;
 	padding-left:50px !important;
+}
 
+.navbar-brand
+{
+    font-size:22px;
 }
 
 /** NAVBAR **/
@@ -26,48 +20,16 @@ h3.sub-section-header {
 .navbar.navbar-inverse.navbar-fixed-top
 {
     background:#222 url(../../bundles/clarolinecore/images/themes/claroline/bg.jpg) repeat;
-    border-bottom:3px solid @orange;
+    border-bottom:3px solid #f89406;
     .box-shadow(0 1px 3px rgba(0,0,0,.25))
 }
 
-.navbar.navbar-inverse.navbar-fixed-top .navbar-inner
+.navbar.navbar-inverse.navbar-fixed-top .badge
 {
-    background:transparent;
+    background:@brand-danger;
 }
 
-/** tools **/
-
-.nav.nav-tabs.nav-stacked li.active a
+.list-group.menu, .section-content > .panel, .content-element.panel, .creator .panel, .creator .form-control.content-title
 {
-    background:@linkColor;
-    color:@white;
-}
-
-.nav.nav-tabs.nav-stacked li.disabled a
-{
-    color:@grayDark;
-    background:@grayLighter;
-}
-
-/** content **/
-
-.section-content .navbar .navbar-inner a
-{
-    color:@navbarLinkColorActive;
-}
-
-.section-content .navbar .navbar-inner .dropdown-menu a:hover, .section-content .navbar .navbar-inner li.active a
-{
-    color:@white;
-}
-
-div > .nav.nav-tabs.nav-stacked
-{
-    .border-radius(@baseBorderRadius);
-}
-
-div > .nav.nav-tabs.nav-stacked, .border
-{
-    background-color:@white;
     .box-shadow(0 1px 10px rgba(0,0,0,.2));
 }

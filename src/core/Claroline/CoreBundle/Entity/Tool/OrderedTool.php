@@ -14,8 +14,14 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  * @ORM\Table(
  *     name="claro_ordered_tool",
  *     uniqueConstraints={
- *         @ORM\UniqueConstraint(name="ordered_tool_unique_tool_ws_usr", columns={"tool_id", "workspace_id", "user_id"}),
- *         @ORM\UniqueConstraint(name="ordered_tool_unique_name_by_workspace", columns={"workspace_id", "name"})
+ *         @ORM\UniqueConstraint(
+ *             name="ordered_tool_unique_tool_ws_usr",
+ *             columns={"tool_id", "workspace_id", "user_id"}
+ *         ),
+ *         @ORM\UniqueConstraint(
+ *             name="ordered_tool_unique_name_by_workspace",
+ *             columns={"workspace_id", "name"}
+ *         )
  *     }
  * )
  * @DoctrineAssert\UniqueEntity({"name", "workspace"})

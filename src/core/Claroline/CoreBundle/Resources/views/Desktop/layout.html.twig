@@ -8,19 +8,20 @@
 
 {% block content %}
 
-    <div class="span3">
-        <ul class="nav nav-tabs nav-stacked">
-            <li class="disabled">
-               <a><b>{{ 'desktop'|trans({}, 'platform') }}</b></a>
-            </li>
+    <div class="col-lg-3">
+        <div class="list-group menu">
+            <div class="list-group-item disabled">
+               {{ 'desktop'|trans({}, 'platform') }}
+            </div>
 
             {% render controller("ClarolineCoreBundle:Desktop:renderToolList") %}
-        </ul>
+        </div>
     </div>
 
-    <div class="span9 section-content border">
-
-        {% block section_content %}{% endblock %}
+    <div class="col-lg-9 section-content">
+        <div class="panel panel-default">
+            {% block section_content %}{% endblock %}
+        </div>
     </div>
 
 {% endblock %}

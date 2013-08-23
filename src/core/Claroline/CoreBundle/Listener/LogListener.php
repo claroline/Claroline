@@ -107,7 +107,7 @@ class LogListener
         }
         if ($event->getAction() !== LogResourceDeleteEvent::ACTION) {
             //Prevent delete resource case
-            $log->setResource($event->getResource());
+            $log->setResourceNode($event->getResource());
         }
         if ($event->getAction() !== LogWorkspaceRoleDeleteEvent::ACTION) {
             //Prevent delete role case

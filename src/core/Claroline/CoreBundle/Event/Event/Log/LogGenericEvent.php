@@ -3,6 +3,10 @@
 namespace Claroline\CoreBundle\Event\Event\Log;
 
 use Symfony\Component\EventDispatcher\Event;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\User;
 
 class LogGenericEvent extends Event
 {
@@ -16,21 +20,21 @@ class LogGenericEvent extends Event
     protected $workspace;
     protected $owner;
     protected $toolName;
-
     protected $childType;
     protected $childAction;
 
     /**
      * Constructor.
      */
-    public function __construct($action,
+    public function __construct(
+        $action,
         $details = null,
-        $receiver = null,
+        User $receiver = null,
         $receiverGroup = null,
-        $resource = null,
-        $role = null,
-        $workspace = null,
-        $owner = null,
+        ResourceNode $resource = null,
+        Role $role = null,
+        AbstractWorkspace $workspace = null,
+        User $owner = null,
         $toolName = null,
         $childType = null,
         $childAction = null

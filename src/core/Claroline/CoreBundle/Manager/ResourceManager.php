@@ -4,13 +4,13 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
-use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
-use Claroline\CoreBundle\Repository\AbstractResourceRepository;
+use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\ResourceShortcutRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
@@ -37,8 +37,8 @@ class ResourceManager
     private $rightsManager;
     /** @var ResourceTypeRepository */
     private $resourceTypeRepo;
-    /** @var AbstractResourceRepository */
-    private $resourceRepo;
+    /** @var ResourceNodeRepository */
+    private $resourceNodeRepo;
     /** @var ResourceRightsRepository */
     private $resourceRightsRepo;
     /** @var ResourceShortcutRepository */
@@ -78,7 +78,7 @@ class ResourceManager
     )
     {
         $this->resourceTypeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
-        $this->resourceRepo = $om->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
+        $this->resourceNodeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
         $this->resourceRightsRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
         $this->shortcutRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceShortcut');
@@ -101,38 +101,56 @@ class ResourceManager
         ResourceType $resourceType,
         User $creator,
         AbstractWorkspace $workspace,
-        AbstractResource $parent = null,
+        ResourceNode $parent = null,
         ResourceIcon $icon = null,
         array $rights = array()
     )
     {
         $this->om->startFlushSuite();
         $this->checkResourcePrepared($resource);
-        $name = $this->getUniqueName($resource, $parent);
+        $node = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceNode');
+        $node->setResourceType($resourceType);
 
-        if ($resource->getMimeType() === null) {
-            $resource->setMimeType('custom/' . $resourceType->getName());
-        }
+        $mimeType = ($resource->getMimeType() === null) ?
+            'custom/' . $resourceType->getName():
+            $resource->getMimeType();
 
-        $previous = $this->resourceRepo->findOneBy(array('parent' => $parent, 'next' => null));
+        $node->setMimeType($mimeType);
+        $node->setName($resource->getName());
+        $name = $this->getUniqueName($node, $parent);
+
+        $previous = $parent === null ?
+            null:
+            $this->resourceNodeRepo->findOneBy(array('parent' => $parent, 'next' => null));
 
         if ($previous) {
-            $previous->setNext($resource);
-        }
-        if ($icon === null) {
-            $icon = $this->iconManager->getIcon($resource, $icon);
+            $previous->setNext($node);
         }
 
-        $resource->setCreator($creator);
-        $resource->setWorkspace($workspace);
-        $resource->setResourceType($resourceType);
-        $resource->setParent($parent);
-        $resource->setName($name);
-        $resource->setPrevious($previous);
-        $resource->setIcon($icon);
-        $this->setRights($resource, $parent, $rights);
+        $node->setCreator($creator);
+        $node->setWorkspace($workspace);
+        $node->setParent($parent);
+        $node->setName($name);
+        $node->setPrevious($previous);
+        $node->setClass(get_class($resource));
+        $resource->setResourceNode($node);
+        $this->setRights($node, $parent, $rights);
+        $this->om->persist($node);
         $this->om->persist($resource);
-        $this->dispatcher->dispatch('log', 'Log\LogResourceCreate', array($resource));
+
+        if ($icon === null) {
+            $icon = $this->iconManager->getIcon($resource);
+        }
+
+        $parentPath = '';
+
+        if ($parent) {
+            $parentPath .= $parent->getPathForDisplay() . ' / ';
+        }
+
+        $node->setPathForCreationLog($parentPath . $name);
+        $node->setIcon($icon);
+        $this->dispatcher->dispatch('log', 'Log\LogResourceCreate', array($node));
         $this->om->endFlushSuite();
 
         return $resource;
@@ -143,15 +161,15 @@ class ResourceManager
      * If the name of the resource already exists here, ~*indice* will be happended
      * to its name
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $parent
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $resource
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
      *
      * @return string
      */
-    public function getUniqueName(AbstractResource $resource, AbstractResource $parent = null)
+    public function getUniqueName(ResourceNode $node, ResourceNode $parent = null)
     {
         $children = $this->getSiblings($parent);
-        $name = $resource->getName();
+        $name = $node->getName();
         $arName = explode('~', pathinfo($name, PATHINFO_FILENAME));
         $baseName = $arName[0];
         $nbName = 0;
@@ -168,29 +186,29 @@ class ResourceManager
         return (0 !== $nbName) ?  $baseName.'~'.$nbName.'.'.pathinfo($name, PATHINFO_EXTENSION): $name;
     }
 
-    public function getSiblings(AbstractResource $parent = null)
+    public function getSiblings(ResourceNode $parent = null)
     {
         if ($parent !== null) {
             return $parent->getChildren();
         }
 
-        return $this->resourceRepo->findBy(array('parent' => null));
+        return $this->resourceNodeRepo->findBy(array('parent' => null));
     }
 
     /**
      * Checks if an array of serialized resources share the same parent.
      *
-     * @param array $resources
+     * @param array nodes
      *
      * @return array
      */
-    public function haveSameParents(array $resources)
+    public function haveSameParents(array $nodes)
     {
-        $firstRes = array_pop($resources);
+        $firstRes = array_pop($nodes);
         $tmp = $firstRes['parent_id'];
 
-        foreach ($resources as $resource) {
-            if ($tmp !== $resource['parent_id']) {
+        foreach ($nodes as $node) {
+            if ($tmp !== $node['parent_id']) {
                 return false;
             }
         }
@@ -201,31 +219,31 @@ class ResourceManager
     /**
      * Sort every children of a resource.
      *
-     * @param array $resources
+     * @param ResourceNode $parent
      *
      * @return array
      */
-    public function findAndSortChildren(AbstractResource $parent)
+    public function findAndSortChildren(ResourceNode $parent)
     {
         //a little bit hacky but retrieve all children of the parent
-        $resources = $this->resourceRepo->findChildren($parent, array('ROLE_ADMIN'));
+        $nodes = $this->resourceNodeRepo->findChildren($parent, array('ROLE_ADMIN'));
         $sorted = array();
         //set the 1st item.
-        foreach ($resources as $resource) {
-            if ($resource['previous_id'] === null) {
-                $sorted[] = $resource;
+        foreach ($nodes as $node) {
+            if ($node['previous_id'] === null) {
+                $sorted[] = $node;
             }
         }
 
-        $resourceCount = count($resources);
+        $resourceCount = count($nodes);
         $sortedCount = 0;
 
         for ($i = 0; $sortedCount < $resourceCount; ++$i) {
             $sortedCount = count($sorted);
 
-            foreach ($resources as $resource) {
-                if ($sorted[$sortedCount - 1]['id'] === $resource['previous_id']) {
-                    $sorted[] = $resource;
+            foreach ($nodes as $node) {
+                if ($sorted[$sortedCount - 1]['id'] === $node['previous_id']) {
+                    $sorted[] = $node;
                 }
             }
 
@@ -240,23 +258,23 @@ class ResourceManager
     /**
      * Sort an array of serialized resources. The chained list can have some "holes".
      *
-     * @param array $resources
+     * @param array $nodes
      *
      * @return array
      */
-    public function sort(array $resources)
+    public function sort(array $nodes)
     {
         $sortedResources = array();
 
-        if (count($resources) > 0) {
-            if ($this->haveSameParents($resources)) {
-                $parent = $this->resourceRepo->find($resources[0]['parent_id']);
+        if (count($nodes) > 0) {
+            if ($this->haveSameParents($nodes)) {
+                $parent = $this->resourceNodeRepo->find($nodes[0]['parent_id']);
                 $sortedList = $this->findAndSortChildren($parent);
 
                 foreach ($sortedList as $sortedItem) {
-                    foreach ($resources as $resource) {
-                        if ($resource['id'] === $sortedItem['id']) {
-                            $sortedResources[] = $resource;
+                    foreach ($nodes as $node) {
+                        if ($node['id'] === $sortedItem['id']) {
+                            $sortedResources[] = $node;
                         }
                     }
                 }
@@ -268,14 +286,14 @@ class ResourceManager
         return $sortedResources;
     }
 
-    public function makeShortcut(AbstractResource $target, Directory $parent, User $creator, ResourceShortcut $shortcut)
+    public function makeShortcut(ResourceNode $target, ResourceNode $parent, User $creator, ResourceShortcut $shortcut)
     {
         $shortcut->setName($target->getName());
 
         if (get_class($target) !== 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
-            $shortcut->setResource($target);
+            $shortcut->setTarget($target);
         } else {
-            $shortcut->setResource($target->getResource());
+            $shortcut->setTarget($target->getTarget());
         }
 
         $shortcut = $this->create(
@@ -287,7 +305,7 @@ class ResourceManager
             $target->getIcon()->getShortcutIcon()
         );
 
-        $this->dispatcher->dispatch('log', 'Log\LogResourceCreate', array($shortcut));
+        $this->dispatcher->dispatch('log', 'Log\LogResourceCreate', array($shortcut->getResourceNode()));
 
         return $shortcut;
     }
@@ -299,18 +317,18 @@ class ResourceManager
      * Otherwise: use the new rights array;
      */
     public function setRights(
-        AbstractResource $resource,
-        AbstractResource $parent = null,
+        ResourceNode $node,
+        ResourceNode $parent = null,
         array $rights = array()
     )
     {
         if (count($rights) === 0 && $parent !== null) {
-            $this->rightsManager->copy($parent, $resource);
+            $this->rightsManager->copy($parent, $node);
         } else {
             if (count($rights) === 0) {
                 throw new RightsException('Rights must be specified if there is no parent');
             }
-            $this->createRights($resource, $rights);
+            $this->createRights($node, $rights);
         }
     }
 
@@ -318,13 +336,13 @@ class ResourceManager
      * Creates the base rights for a resource
      */
     public function createRights(
-        AbstractResource $resource,
+        ResourceNode $node,
         array $rights = array()
     )
     {
         foreach ($rights as $data) {
             $resourceTypes = $this->checkResourceTypes($data['canCreate']);
-            $this->rightsManager->create($data, $data['role'], $resource, false, $resourceTypes);
+            $this->rightsManager->create($data, $data['role'], $node, false, $resourceTypes);
         }
 
         $resourceTypes = $this->resourceTypeRepo->findAll();
@@ -339,7 +357,7 @@ class ResourceManager
                 'canExport' => true,
             ),
             $this->roleRepo->findOneBy(array('name' => 'ROLE_ADMIN')),
-            $resource,
+            $node,
             false,
             $resourceTypes
         );
@@ -353,7 +371,7 @@ class ResourceManager
                 'canExport' => false,
             ),
             $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
-            $resource,
+            $node,
             false,
             array()
         );
@@ -405,55 +423,60 @@ class ResourceManager
     /**
      * Insert the resource $resource before the target $next.
      *
-     * @param AbstractResource $resource
-     * @param AbstractResource $next
+     * @param ResourceNode $resource
+     * @param ResourceNode $next
      */
-    public function insertBefore(AbstractResource $resource, AbstractResource $next = null)
+    public function insertBefore(ResourceNode $node, ResourceNode $next = null)
     {
-        $previous = $this->findPreviousOrLastRes($resource->getParent(), $next);
-        $oldPrev = $resource->getPrevious();
-        $oldNext = $resource->getNext();
-        $resource->setPrevious($previous);
-        $resource->setNext($next);
+        $previous = $this->findPreviousOrLastRes($node->getParent(), $next);
+        $oldPrev = $node->getPrevious();
+        $oldNext = $node->getNext();
 
         if ($next) {
-            $next->setPrevious($resource);
+            $this->removePreviousWherePreviousIs($node);
+            $next->setPrevious($node);
             $this->om->persist($next);
         }
 
         if ($previous) {
-            $previous->setNext($resource);
+            $this->removeNextWhereNextIs($node);
+            $previous->setNext($node);
             $this->om->persist($previous);
         }
 
         if ($oldPrev) {
+            $this->removePreviousWherePreviousIs($oldPrev);
             $oldPrev->setNext($oldNext);
             $this->om->persist($oldPrev);
         }
 
         if ($oldNext) {
+            $this->removePreviousWherePreviousIs($oldPrev);
             $oldNext->setPrevious($oldPrev);
             $this->om->persist($oldNext);
         }
 
+        $node->setNext($next);
+        $node->setPrevious($previous);
+        $this->om->persist($node);
+
         $this->om->flush();
 
-        return $resource;
+        return $node;
     }
 
     /**
      * Moves a resource.
      *
-     * @param Abstractesource $child
-     * @param Abstractesource $parent
+     * @param ResourceNode $child
+     * @param ResourceNode $parent
      */
-    public function move(AbstractResource $child, AbstractResource $parent)
+    public function move(ResourceNode $child, ResourceNode $parent)
     {
         $this->removePosition($child);
         $this->setLastPosition($parent, $child);
 
         try {
-
             $child->setParent($parent);
             $child->setName($this->getUniqueName($child, $parent));
             $this->om->persist($child);
@@ -468,21 +491,21 @@ class ResourceManager
 
 
     /**
-     * Set the $resource at the last position of the $parent.
+     * Set the $node at the last position of the $parent.
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $parent
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      */
-    public function setLastPosition(AbstractResource $parent, AbstractResource $resource)
+    public function setLastPosition(ResourceNode $parent, ResourceNode $node)
     {
-        $lastChild = $this->resourceRepo->findOneBy(array('parent' => $parent, 'next' => null));
+        $lastChild = $this->resourceNodeRepo->findOneBy(array('parent' => $parent, 'next' => null));
 
-        $resource->setPrevious($lastChild);
-        $resource->setNext(null);
-        $this->om->persist($resource);
+        $node->setPrevious($lastChild);
+        $node->setNext(null);
+        $this->om->persist($node);
 
         if ($lastChild) {
-            $lastChild->setNext($resource);
+            $lastChild->setNext($node);
             $this->om->persist($lastChild);
         }
 
@@ -490,14 +513,17 @@ class ResourceManager
     }
 
     /**
-     * Remove the $resource from the chained list.
+     * Remove the $node from the chained list.
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      */
-    public function removePosition(AbstractResource $resource)
+    public function removePosition(ResourceNode $node)
     {
-        $next = $resource->getNext();
-        $previous = $resource->getPrevious();
+        $next = $node->getNext();
+        $previous = $node->getPrevious();
+        $node->setPrevious(null);
+        $node->setNext(null);
+        $this->om->persist($node);
 
         if ($next) {
             $next->setPrevious($previous);
@@ -512,19 +538,21 @@ class ResourceManager
         $this->om->flush();
     }
 
-    public function findPreviousOrLastRes(AbstractResource $parent, AbstractResource $resource = null)
+    public function findPreviousOrLastRes(ResourceNode $parent, ResourceNode $node = null)
     {
-        return ($resource !== null) ?
-            $resource->getPrevious():
-            $this->resourceRepo->findOneBy(array('parent' => $parent, 'next' => null));
+        return ($node !== null) ?
+            $node->getPrevious():
+            $this->resourceNodeRepo->findOneBy(array('parent' => $parent, 'next' => null));
     }
 
-    public function hasLinkTo(Directory $parent, Directory $target)
+    public function hasLinkTo(ResourceNode $parent, ResourceNode $target)
     {
-        $shortcuts = $this->shortcutRepo->findBy(array('parent' => $parent));
+        $nodes = $this->resourceNodeRepo
+            ->findBy(array('parent' => $parent, 'class' => 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut'));
 
-        foreach ($shortcuts as $shortcut) {
-            if ($shortcut->getResource() == $target) {
+        foreach ($nodes as $node) {
+            $shortcut = $this->getResourceFromNode($node);
+            if ($shortcut->getTarget() == $target) {
                 return true;
             }
         }
@@ -601,47 +629,34 @@ class ResourceManager
     /**
      * Copies a resource in a directory.
      *
-     * @param AbstractResource $resource
-     * @param AbstractResource $parent
+     * @param ResourceNode $node
+     * @param ResourceNode $parent
      */
-    public function copy(AbstractResource $resource, AbstractResource $parent, User $user)
+    public function copy(ResourceNode $node, ResourceNode $parent, User $user)
     {
-        $last = $this->resourceRepo->findOneBy(array('parent' => $parent, 'next' => null));
+        $last = $this->resourceNodeRepo->findOneBy(array('parent' => $parent, 'next' => null));
+        $resource = $this->getResourceFromNode($node);
 
         if ($resource instanceof \Claroline\CoreBundle\Entity\Resource\ResourceShortcut) {
             $copy = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceShortcut');
-            $copy->setResource($resource->getResource());
-            $copy->setCreator($user);
-            $copy->setWorkspace($parent->getWorkspace());
-            $copy->setResourceType($resource->getResourceType());
-            $copy->setParent($parent);
-            $copy->setName($this->getUniqueName($resource, $parent));
-            $copy->setPrevious($last);
-            $copy->setNext(null);
-            $copy->setIcon($resource->getIcon());
-            $this->rightsManager->copy($resource, $copy);
+            $copy->setTarget($resource->getTarget());
+            $newNode = $this->copyNode($node, $parent, $user, $last);
+            $copy->setResourceNode($newNode);
+
         } else {
             $event = $this->dispatcher->dispatch(
-                'copy_' . $resource->getResourceType()->getName(),
+                'copy_' . $node->getResourceType()->getName(),
                 'CopyResource',
                 array($resource)
             );
 
             $copy = $event->getCopy();
-            $copy->setResourceType($resource->getResourceType());
-            $copy->setCreator($user);
-            $copy->setWorkspace($parent->getWorkspace());
-            $copy->setResourceType($resource->getResourceType());
-            $copy->setParent($parent);
-            $copy->setName($this->getUniqueName($resource, $parent));
-            $copy->setPrevious($last);
-            $copy->setNext(null);
-            $copy->setIcon($resource->getIcon());
-            $this->rightsManager->copy($resource, $copy);
+            $newNode = $this->copyNode($node, $parent, $user, $last);
+            $copy->setResourceNode($newNode);
 
-            if ($resource->getResourceType()->getName() == 'directory') {
-                foreach ($resource->getChildren() as $child) {
-                    $this->copy($child, $copy, $user);
+            if ($node->getResourceType()->getName() == 'directory') {
+                foreach ($node->getChildren() as $child) {
+                    $this->copy($child, $newNode, $user);
                 }
             }
         }
@@ -649,11 +664,11 @@ class ResourceManager
         $this->om->persist($copy);
 
         if ($last) {
-            $last->setNext($copy);
+            $last->setNext($newNode);
             $this->om->persist($last);
         }
 
-        $this->dispatcher->dispatch('log', 'Log\LogResourceCopy', array($copy, $resource));
+        $this->dispatcher->dispatch('log', 'Log\LogResourceCopy', array($newNode, $node));
         $this->om->flush();
 
         return $copy;
@@ -663,27 +678,27 @@ class ResourceManager
      * Convert a ressource into an array (mainly used to be serialized and sent to the manager.js as
      * a json response)
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      *
      * @return array
      */
-    public function toArray(AbstractResource $resource)
+    public function toArray(ResourceNode $node)
     {
         $resourceArray = array();
-        $resourceArray['id'] = $resource->getId();
-        $resourceArray['name'] = $resource->getName();
-        $resourceArray['parent_id'] = ($resource->getParent() != null) ? $resource->getParent()->getId() : null;
-        $resourceArray['creator_username'] = $resource->getCreator()->getUsername();
-        $resourceArray['type'] = $resource->getResourceType()->getName();
-        $resourceArray['large_icon'] = $resource->getIcon()->getRelativeUrl();
-        $resourceArray['path_for_display'] = $resource->getPathForDisplay();
-        $resourceArray['mime_type'] = $resource->getMimeType();
+        $resourceArray['id'] = $node->getId();
+        $resourceArray['name'] = $node->getName();
+        $resourceArray['parent_id'] = ($node->getParent() != null) ? $node->getParent()->getId() : null;
+        $resourceArray['creator_username'] = $node->getCreator()->getUsername();
+        $resourceArray['type'] = $node->getResourceType()->getName();
+        $resourceArray['large_icon'] = $node->getIcon()->getRelativeUrl();
+        $resourceArray['path_for_display'] = $node->getPathForDisplay();
+        $resourceArray['mime_type'] = $node->getMimeType();
 
-        if ($resource->getPrevious() !== null) {
-            $resourceArray['previous_id'] = $resource->getPrevious()->getId();
+        if ($node->getPrevious() !== null) {
+            $resourceArray['previous_id'] = $node->getPrevious()->getId();
         }
-        if ($resource->getNext() !== null) {
-            $resourceArray['next_id'] = $resource->getNext()->getId();
+        if ($node->getNext() !== null) {
+            $resourceArray['next_id'] = $node->getNext()->getId();
         }
 
         $isAdmin = false;
@@ -701,7 +716,7 @@ class ResourceManager
             $resourceArray['can_edit'] = true;
             $resourceArray['can_delete'] = true;
         } else {
-            $rights = $this->resourceRightsRepo->findMaximumRights($roles, $resource);
+            $rights = $this->resourceRightsRepo->findMaximumRights($roles, $node);
             $resourceArray['can_export'] = $rights['canExport'];
             $resourceArray['can_edit'] = $rights['canEdit'];
             $resourceArray['can_delete'] = $rights['canDelete'];
@@ -713,67 +728,70 @@ class ResourceManager
     /**
      * Removes a resource.
      *
-     * @param AbstractResource $resource
+     * @param ResourceNode $resource
      */
-    public function delete(AbstractResource $resource)
+    public function delete(ResourceNode $node)
     {
+        //why is it broken when this function is fired after startFlushSuite ?
+        $this->removePosition($node);
         $this->om->startFlushSuite();
-        $this->removePosition($resource);
         $this->dispatcher->dispatch(
-            "delete_{$resource->getResourceType()->getName()}",
+            "delete_{$node->getResourceType()->getName()}",
             'DeleteResource',
-            array($resource)
+            array($this->getResourceFromNode($node))
         );
-        $this->om->remove($resource);
-        $this->dispatcher->dispatch('log', 'Log\LogResourceDelete', array($resource));
+        $this->om->remove($node);
+        $this->dispatcher->dispatch('log', 'Log\LogResourceDelete', array($node));
         $this->om->endFlushSuite();
     }
 
     /**
      * Returns an archive with the required content.
      *
-     * @param array $resources the resources being exported
+     * @param array $nodes the nodes being exported
      *
      * @return file
      */
-    public function download(array $resources)
+    public function download(array $nodes)
     {
-        if (count($resources) === 0) {
+        if (count($nodes) === 0) {
             throw new ExportResourceException('No resources were selected.');
         }
 
         $archive = new \ZipArchive();
         $pathArch = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $this->ut->generateGuid() . '.zip';
         $archive->open($pathArch, \ZipArchive::CREATE);
-        $resources = $this->expandResources($resources);
+        $nodes = $this->expandResources($nodes);
 
-        $currentDir = $resources[0];
+        $currentDir = $nodes[0];
 
-        foreach ($resources as $resource) {
+        foreach ($nodes as $node) {
+
+            $resource = $this->getResourceFromNode($node);
 
             if (get_class($resource) === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
-                $resource = $resource->getResource();
+                $node = $resource->getTarget()->getResourceNode();
             }
 
-            if ($resource->getResourceType()->getName() !== 'directory') {
+            if ($node->getResourceType()->getName() !== 'directory') {
                 $event = $this->dispatcher->dispatch(
-                    "download_{$resource->getResourceType()->getName()}",
+                    "download_{$node->getResourceType()->getName()}",
                     'DownloadResource',
-                    array($resource)
+                    array($this->getResourceFromNode($node))
                 );
 
                 $obj = $event->getItem();
 
                 if ($obj !== null) {
-                    $archive->addFile($obj, $this->getRelativePath($currentDir, $resource) . $resource->getName());
+                    $archive->addFile($obj, $this->getRelativePath($currentDir, $node) . $node->getName());
                 } else {
-                     $archive->addFromString($this->getRelativePath($currentDir, $resource) . $resource->getName(), '');
+                     $archive->addFromString($this->getRelativePath($currentDir, $node) . $node->getName(), '');
                 }
             } else {
-                $archive->addEmptyDir($this->getRelativePath($currentDir, $resource). $resource->getName());
+                $archive->addEmptyDir($this->getRelativePath($currentDir, $node). $node->getName());
             }
 
-            $this->dispatcher->dispatch('log', 'Log\LogResourceExport', array($resource));
+            $this->dispatcher->dispatch('log', 'Log\LogResourceExport', array($node));
         }
 
         $archive->close();
@@ -784,18 +802,19 @@ class ResourceManager
     /**
      * Returns every children of every resource (includes the startnode).
      *
-     * @param  array      $resources
+     * @param  array $nodes
      * @return type
      * @throws \Exception
      */
-    public function expandResources(array $resources)
+    public function expandResources(array $nodes)
     {
         $dirs = array();
         $ress = array();
+        $toAppend = array();
 
-        foreach ($resources as $resource) {
-            $resourceTypeName = $resource->getResourceType()->getName();
-            ($resourceTypeName === 'directory') ? $dirs[] = $resource : $ress[] = $resource;
+        foreach ($nodes as $node) {
+            $resourceTypeName = $node->getResourceType()->getName();
+            ($resourceTypeName === 'directory') ? $dirs[] = $node : $ress[] = $node;
         }
 
         foreach ($dirs as $dir) {
@@ -817,111 +836,113 @@ class ResourceManager
     /**
      * Gets the relative path between 2 instances (not optimized yet).
      *
-     * @param ResourceInstance $root
-     * @param ResourceInstance $resourceInstance
-     * @param string           $path
+     * @param ResourceNode $root
+     * @param ResourceNode $resourceInstance
+     * @param string       $path
      *
      * @return string
      */
-    private function getRelativePath($root, AbstractResource $resource, $path = '')
+    private function getRelativePath(ResourceNode $root, ResourceNode $node, $path = '')
     {
-        if ($root !== $resource->getParent() && $resource->getParent() !== null) {
-            $path = $resource->getParent()->getName() . DIRECTORY_SEPARATOR . $path;
-            $path = $this->getRelativePath($root, $resource->getParent(), $path);
+        if ($root !== $node->getParent() && $node->getParent() !== null) {
+            $path = $node->getParent()->getName() . DIRECTORY_SEPARATOR . $path;
+            $path = $this->getRelativePath($root, $node->getParent(), $path);
         }
 
         return $path;
     }
 
-    public function rename(AbstractResource $resource, $name)
+    public function rename(ResourceNode $node, $name)
     {
-        $resource->setName($name);
-        $this->om->persist($resource);
-        $this->logChangeSet($resource);
+        $node->setName($name);
+        $this->om->persist($node);
+        $this->logChangeSet($node);
         $this->om->flush();
 
-        return $resource;
+        return $node;
     }
 
-    public function changeIcon(AbstractResource $resource, UploadedFile $file)
+    public function changeIcon(ResourceNode $node, UploadedFile $file)
     {
         $this->om->startFlushSuite();
         $icon = $this->iconManager->createCustomIcon($file);
-        $this->iconManager->replace($resource, $icon);
-        $this->logChangeSet($resource);
+        $this->iconManager->replace($node, $icon);
+        $this->logChangeSet($node);
         $this->om->endFlushSuite();
 
         return $icon;
     }
 
-    public function logChangeSet(AbstractResource $resource)
+    public function logChangeSet(ResourceNode $node)
     {
         $uow = $this->om->getUnitOfWork();
         $uow->computeChangeSets();
-        $changeSet = $uow->getEntityChangeSet($resource);
+        $changeSet = $uow->getEntityChangeSet($node);
 
         if (count($changeSet > 0)) {
             $this->dispatcher->dispatch(
                 'log',
                 'Log\LogResourceUpdate',
-                array($resource, $changeSet)
+                array($node, $changeSet)
             );
         }
     }
 
-    public function createResource($class, $name) {
-
+    public function createResource($class, $name)
+    {
         $entity = $this->om->factory($class);
 
         if ($entity instanceof \Claroline\CoreBundle\Entity\Resource\AbstractResource) {
             $entity->setName($name);
 
             return $entity;
-        } else {
-            throw new WrongClassException("{$class} doesn't extends Claroline\CoreBundle\Entity\Resource\AbstractResource.");
         }
+
+        throw new WrongClassException(
+            "{$class} doesn't extend Claroline\CoreBundle\Entity\Resource\AbstractResource."
+        );
     }
 
-    public function getResource($id)
+    public function getNode($id)
     {
-        return $this->resourceRepo->find($id);
+        return $this->resourceNodeRepo->find($id);
     }
 
     public function getRoots(User $user)
     {
-        return $this->resourceRepo->findWorkspaceRootsByUser($user);
+        return $this->resourceNodeRepo->findWorkspaceRootsByUser($user);
     }
 
     public function getWorkspaceRoot(AbstractWorkspace $workspace)
     {
-        return $this->resourceRepo->findWorkspaceRoot($workspace);
+        return $this->resourceNodeRepo->findWorkspaceRoot($workspace);
     }
 
-    public function getAncestors(AbstractResource $resource)
+    public function getAncestors(ResourceNode $node)
     {
-        return $this->resourceRepo->findAncestors($resource);
+        return $this->resourceNodeRepo->findAncestors($node);
     }
 
-    public function getChildren(Directory $directory, array $roles, $isSorted = true)
+    public function getChildren(ResourceNode $node, array $roles, $isSorted = true)
     {
-        $children = $this->resourceRepo->findChildren($directory, $roles);
+        $children = $this->resourceNodeRepo->findChildren($node, $roles);
 
         return ($isSorted) ? $this->sort($children): $children;
     }
 
-    public function getAllChildren(AbstractResource $resource, $includeStartNode)
+    public function getAllChildren(ResourceNode $node, $includeStartNode)
     {
-        return $this->resourceRepo->getChildren($resource, $includeStartNode, 'path', 'DESC');
+        return $this->resourceNodeRepo->getChildren($node, $includeStartNode, 'path', 'DESC');
     }
 
-    public function getDescendants(Directory $directory)
+    public function getDescendants(ResourceNode $node)
     {
-        return $this->resourceRepo->findDescendants($directory);
+        return $this->resourceNodeRepo->findDescendants($node);
     }
 
-    public function getByCriteria(array $criteria, array $userRoles, $isRecursive)
+    public function getByCriteria(array $criteria, array $userRoles = null, $isRecursive = false)
     {
-        return $this->resourceRepo->findByCriteria($criteria, $userRoles, $isRecursive);
+        return $this->resourceNodeRepo->findByCriteria($criteria, $userRoles, $isRecursive);
     }
 
     public function getResourceTypeByName($name)
@@ -937,8 +958,90 @@ class ResourceManager
     public function getByIds(array $ids)
     {
         return $this->om->findByIds(
-            'Claroline\CoreBundle\Entity\Resource\AbstractResource',
+            'Claroline\CoreBundle\Entity\Resource\ResourceNode',
             $ids
         );
+    }
+
+    public function getResourceFromNode(ResourceNode $node)
+    {
+        return $this->om->getRepository($node->getClass())->findOneByResourceNode($node->getId());
+    }
+
+    private function copyNode(ResourceNode $node, ResourceNode $newParent, User $user,  ResourceNode $last = null)
+    {
+        $newNode = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceNode');
+        $newNode->setResourceType($node->getResourceType());
+        $newNode->setCreator($user);
+        $newNode->setWorkspace($newParent->getWorkspace());
+        $newNode->setParent($newParent);
+        $newNode->setName($this->getUniqueName($node, $newParent));
+        $newNode->setPrevious($last);
+        $newNode->setNext(null);
+        $newNode->setIcon($node->getIcon());
+        $newNode->setClass($node->getClass());
+        $this->rightsManager->copy($node, $newNode);
+        $this->om->persist($newNode);
+
+        return $newNode;
+    }
+
+    private function resetNodeOrder($nodes)
+    {
+        foreach ($nodes as $node) {
+            if (null !== $node) {
+                $node->setPrevious(null);
+                $node->setNext(null);
+                $this->om->persist($node);
+            }
+        }
+
+        $this->om->flush();
+    }
+
+    /** required by insertBefore */
+    public function removeNextWhereNextIs(ResourceNode $next = null) {
+        $node = $this->resourceNodeRepo->findOneBy(array('next' => $next));
+        if ($node) {
+            $node->setNext(null);
+            $this->om->persist($node);
+            $this->om->flush();
+        }
+    }
+
+    /** required by insertBefore */
+    public function removePreviousWherePreviousIs(ResourceNode $previous = null) {
+        $node = $this->resourceNodeRepo->findOneBy(array('previous' => $previous));
+        if ($node) {
+            $node->setPrevious(null);
+            $this->om->persist($node);
+            $this->om->flush();
+        }
+    }
+
+    public function restoreNodeOrder(ResourceNode $parent)
+    {
+        $children = $parent->getChildren();
+        $countChildren = count($children);
+        $this->resetNodeOrder($children);
+        $this->om->flush();
+
+        for ($i = 0; $i < $countChildren; $i++) {
+            if ($i === 0) {
+                $children[$i]->setPrevious(null);
+                $children[$i]->setNext($children[$i+1]);
+            } else {
+                if ($i === $countChildren-1) {
+                    $children[$i]->setNext(null);
+                    $children[$i]->setPrevious($children[$i-1]);
+                } else {
+                    $children[$i]->setPrevious($children[$i-1]);
+                    $children[$i]->setNext($children[$i+1]);
+                }
+            }
+            $this->om->persist($children[$i]);
+        }
+
+        $this->om->flush();
     }
 }

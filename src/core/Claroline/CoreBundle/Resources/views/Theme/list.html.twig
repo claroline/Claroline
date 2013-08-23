@@ -1,16 +1,16 @@
 {% extends 'ClarolineCoreBundle:Administration:layout.html.twig' %}
 
 {% block section_content %}
-    <div class="margin">
-        <h3 class="sub-section-header">{{ "Theme Generator" | trans({}, "theme") }}</h3>
 
-        {% for theme in themes %}
-        <a href="{{ path("claroline_admin_theme_edit", {"id": theme.id }) }}" class="margin span4 label">
-                <h5>&nbsp;&nbsp;&nbsp;<i class="icon-edit"></i> {{ theme.name }}&nbsp;&nbsp;&nbsp;</h5>
-            </a>
-        {% endfor %}
-        <a href="{{ path("claroline_admin_theme_edit") }}" class="margin span4 label label-info">
-            <h5>&nbsp;&nbsp;&nbsp;<i class="icon-plus-sign"></i> {{ "Create New Theme" | trans({}, "theme") }}&nbsp;&nbsp;&nbsp;</h5>
+    <h3 class="sub-section-header">{{ "Theme Generator" | trans({}, "theme") }}</h3>
+
+    {% for theme in themes %}
+        <a href="{{ path("claroline_admin_theme_edit", {"id": theme.id }) }}" class="col-lg-4 label">
+            <h5>&nbsp;&nbsp;&nbsp;<i class="icon-edit"></i> {{ theme.name }}&nbsp;&nbsp;&nbsp;</h5>
         </a>
-    </div>
+    {% endfor %}
+    <a href="{{ path("claroline_admin_theme_edit") }}" class="col-lg-4 label label-info">
+        <h5>&nbsp;&nbsp;&nbsp;<i class="icon-plus-sign"></i> {{ "Create New Theme" | trans({}, "theme") }}&nbsp;&nbsp;&nbsp;</h5>
+    </a>
+
 {% endblock %}

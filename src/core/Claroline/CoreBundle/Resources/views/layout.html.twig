@@ -48,9 +48,9 @@
 
 {% block layout %}
     <div id="sf-environement" data-env="{{ app.environment }}"></div>
-    <div id="wrapper">
+    <div id="wrap">
         <div class="please-wait">
-            <span class="label label-warning"> {{ 'please_wait'|trans({}, 'platform') }} </span>
+            <h4><span class="label label-warning"> {{ 'please_wait'|trans({}, 'platform') }} </span></h4>
         </div>
         {% if not is_path_mode %}
             {% if workspace is defined %}
@@ -60,30 +60,34 @@
             {% endif %}
         {% endif %}
 
-        {% if has_role('ROLE_USURPATE_WORKSPACE_ROLE') %}
-           {% render controller('ClarolineCoreBundle:Layout:renderWarningImpersonation') %}
-        {% endif %}
-
-        <div id="grid" class="container container-fluid">
+        <div class="container">
+            {% if has_role('ROLE_USURPATE_WORKSPACE_ROLE') %}
+                {% render controller('ClarolineCoreBundle:Layout:renderWarningImpersonation') %}
+            {% endif %}
             {% block sectionHeader %}
             &nbsp;
             {% endblock %}
 
-            <div class="row-fluid content">
+            <div class="row content">
                 {% block content %}{% endblock %}
             </div>
         </div>
+        <div id="push"></div>
     </div>
    {% block footer %}
         {% if not is_path_mode %}
             {% render controller('ClarolineCoreBundle:Layout:footer') %}
         {% endif %}
     {% endblock%}
-    <div id="ajax-login-modal" class="modal hide fade">
-        <div class="modal-header">
-        </div>
-        <div class="modal-body" id="ajax-login-modal-body">
-            <div id="ajax-login-validation-box-body">
+    <div id="ajax-login-modal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                </div>
+                <div class="modal-body" id="ajax-login-modal-body">
+                    <div id="ajax-login-validation-box-body">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -91,19 +95,18 @@
 
 {% block javascripts %}
     {% javascripts debug=false  output='vendor/twbs/bootstrap/js/bootstrap.js'
-        '../vendor/twbs/bootstrap/js/bootstrap-affix.js'
-        '../vendor/twbs/bootstrap/js/bootstrap-alert.js'
-        '../vendor/twbs/bootstrap/js/bootstrap-button.js'
-        '../vendor/twbs/bootstrap/js/bootstrap-carousel.js'
-        '../vendor/twbs/bootstrap/js/bootstrap-collapse.js'
-        '../vendor/twbs/bootstrap/js/bootstrap-dropdown.js'
-        '../vendor/twbs/bootstrap/js/bootstrap-modal.js'
-        '../vendor/twbs/bootstrap/js/bootstrap-scrollspy.js'
-        '../vendor/twbs/bootstrap/js/bootstrap-tab.js'
-        '../vendor/twbs/bootstrap/js/bootstrap-tooltip.js'
-        '../vendor/twbs/bootstrap/js/bootstrap-popover.js'
-        '../vendor/twbs/bootstrap/js/bootstrap-transition.js'
-        '../vendor/twbs/bootstrap/js/bootstrap-typeahead.js'
+        '../vendor/twbs/bootstrap/js/transition.js'
+        '../vendor/twbs/bootstrap/js/alert.js'
+        '../vendor/twbs/bootstrap/js/button.js'
+        '../vendor/twbs/bootstrap/js/carousel.js'
+        '../vendor/twbs/bootstrap/js/collapse.js'
+        '../vendor/twbs/bootstrap/js/dropdown.js'
+        '../vendor/twbs/bootstrap/js/modal.js'
+        '../vendor/twbs/bootstrap/js/scrollspy.js'
+        '../vendor/twbs/bootstrap/js/tab.js'
+        '../vendor/twbs/bootstrap/js/tooltip.js'
+        '../vendor/twbs/bootstrap/js/popover.js'
+        '../vendor/twbs/bootstrap/js/affix.js'
         %}<script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     {% javascripts debug=false  output='vendor/jms/twig-js/twig.js'
@@ -111,6 +114,7 @@
         %}<script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/bazingaexposetranslation/js/translator.min.js') }}"></script>
     <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/utilities.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/startup.js') }}"></script>

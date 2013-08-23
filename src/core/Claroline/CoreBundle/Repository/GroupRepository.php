@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Repository;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Role;
@@ -173,6 +174,28 @@ class GroupRepository extends EntityRepository
         $query->setParameter('search', "%{$search}%");
 
         return $executeQuery ? $query->getResult() : $query;
+        return ($getQuery) ? $query: $query->getResult();
+    }
+
+    /**
+     * @param array $params
+     * @return ArrayCollection
+     */
+    public function extract($params)
+    {
+        $search = $params['search'];
+        if ($search !== null) {
+
+            $query = $this->findByName($search, true);
+
+            return $query
+                ->setFirstResult(0)
+                ->setMaxResults(10)
+                ->getResult()
+            ;
+        }
+
+        return array();
     }
 
     public function findByRoles(array $roles, $getQuery = false)
@@ -234,14 +257,19 @@ class GroupRepository extends EntityRepository
         $query->setParameter('roles', $roles);
         $query->setParameter('wsId', $workspace);
 
-        return ($getQuery) ? $query: $query->getResult();
+        return $getQuery ? $query : $query->getResult();
     }
 
     /**
      * This method should be renamed.
      * Find groups who are outside the workspace and users whose role are in $roles.
      */
-    public function findOutsidersByWorkspaceRolesAndName(array $roles, $name, AbstractWorkspace $workspace, $getQuery = false)
+    public function findOutsidersByWorkspaceRolesAndName(
+        array $roles,
+        $name,
+        AbstractWorkspace $workspace,
+        $getQuery = false
+    )
     {
         //feel free to make this request easier if you can
         $search = strtoupper($name);
@@ -267,6 +295,6 @@ class GroupRepository extends EntityRepository
         $query->setParameter('wsId', $workspace);
         $query->setParameter('search', "%{$search}%");
 
-        return ($getQuery) ? $query: $query->getResult();
+        return $getQuery ? $query : $query->getResult();
     }
 }

@@ -7,7 +7,7 @@
 
         for (var i = 0; i < tab.length; i++) {
             if (tab[i] === 'page') {
-                if (typeof(tab[i + 1]) != 'undefined') {
+                if (typeof(tab[i + 1]) !== 'undefined') {
                     page = tab[i + 1];
                 }
                 break;
@@ -23,7 +23,7 @@
 
         for (var i = 0; i < tab.length; i++) {
             if (tab[i] === 'search') {
-                if (typeof(tab[i + 1]) != 'undefined') {
+                if (typeof(tab[i + 1]) !== 'undefined') {
                     search = tab[i + 1];
                 }
                 break;
@@ -109,7 +109,7 @@
                 });
                 parameters.subjectIds = subjects;
 
-                if ($('#roles-list').attr('nb-workspaces') === '1' ) {
+                if ($('#roles-list').attr('nb-workspaces') === '1') {
                     $('.role-option:selected').each(function (index, element) {
                         roles[k] = element.value;
                         k++;
@@ -136,7 +136,7 @@
                                 activateRegisterButton();
 
                                 var messages = data.split('-;-');
-                                var nbMessages = messages.length - 1
+                                var nbMessages = messages.length - 1;
                                 var flashbag = $('#custom-flashbag-ul');
 
                                 for (var i = 0; i < nbMessages; i++) {
@@ -181,7 +181,7 @@
                                     activateRegisterButton();
 
                                     var messages = data.split('-;-');
-                                    var nbMessages = messages.length - 1
+                                    var nbMessages = messages.length - 1;
                                     var flashbag = $('#custom-flashbag-ul');
 
                                     for (var i = 0; i < nbMessages; i++) {
@@ -245,4 +245,3 @@
 
     initEvents();
 })();
-

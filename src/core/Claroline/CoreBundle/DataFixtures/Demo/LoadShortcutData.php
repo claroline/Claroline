@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\DataFixtures\Demo;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -16,7 +16,7 @@ class LoadShortcutData extends AbstractFixture implements ContainerAwareInterfac
      *
      * @param array $roles
      */
-    public function __construct(AbstractResource $target, $directory, $creator, $referenceName = '')
+    public function __construct(ResourceNode $target, $directory, $creator, $referenceName = '')
     {
         $this->creator = $creator;
         $this->directory = $directory;
