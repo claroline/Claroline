@@ -3,7 +3,7 @@
 {% block title %}{{ 'administration'|trans({}, 'platform') }}{% endblock %}
 
 {% block content %}
-    <div class="col-lg-3 administration">
+    <div class="col-md-3 administration">
         <div class="list-group menu">
             <div class="list-group-item disabled">{{ 'administration'|trans({}, 'platform') }}</div>
             <a class="list-group-item{% if path('claro_admin_platform_settings_form') == app.request.requesturi or app.request.requesturi == '/Claroline/web/app_dev.php/admin/' %} active{% endif %}"
@@ -46,7 +46,7 @@
             </a>
         </div>
     </div>
-    <div class="col-lg-9 section-content">
+    <div class="col-md-9 section-content">
         <div class="panel panel-default">
             {% block section_content %}{% endblock %}
         </div>

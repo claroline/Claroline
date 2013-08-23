@@ -1,6 +1,6 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 {% block content %}
-    <div class="col-lg-6">
+    <div class="col-md-6">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">{{ "user" | trans({}, "platform") }}: {{ message.getUser().getUsername() }}</h3>
@@ -29,7 +29,7 @@
         {% endfor %}
 
     </div>
-    <div class="col-lg-6">
+    <div class="col-md-6">
         <div class="panel panel-default">
             <div class="panel-heading"><h3 class="panel-title">{{ 'fast_answer'|trans({}, 'platform') }}</h3></div>
             <form novalidate="novalidate"
