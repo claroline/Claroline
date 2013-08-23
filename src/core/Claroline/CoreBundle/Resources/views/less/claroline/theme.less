@@ -29,7 +29,15 @@ body
     background:@brand-danger;
 }
 
-.list-group.menu, .section-content > .panel, .content-element.panel, .creator .panel, .creator .form-control.content-title
+.list-group.menu,
+.panel,
+.creator .panel,
+.creator .form-control.content-title
 {
     .box-shadow(0 1px 10px rgba(0,0,0,.2));
+}
+
+.panel .panel
+{
+    .box-shadow(none);
 }
