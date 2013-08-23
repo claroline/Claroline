@@ -64,10 +64,11 @@ class WorkspaceAgendaController extends Controller
     public function addEventAction(AbstractWorkspace $workspace)
     {
         $this->checkUserIsAllowed('agenda', $workspace);
-        $event = new Event();
-        $form = $this->formFactory->create(FormFactory::TYPE_CALENDAR, array(), $event);
+        $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
         $form->handleRequest($this->request);
+
         if ($form->isValid()) {
+            $event = $form->getData();
             // the end date has to be bigger
             if ($event->getStart() <= $event->getEnd()) {
                 $event->setWorkspace($workspace);
@@ -80,7 +81,8 @@ class WorkspaceAgendaController extends Controller
                     'start' => $event->getStart()->getTimestamp(),
                     'end' => $event->getEnd()->getTimestamp(),
                     'color' => $event->getPriority(),
-                    'allDay' => $event->getAllDay()
+                    'allDay' => $event->getAllDay(),
+                    'description' => $event->getDescription()
                 );
 
                 return new Response(
@@ -125,26 +127,35 @@ class WorkspaceAgendaController extends Controller
         $this->checkUserIsAllowed('agenda', $workspace);
         $postData = $this->request->request->all();
         $event = $this->om->getRepository('ClarolineCoreBundle:Event')->find($postData['id']);
-        $form = $this->formFactory->create(FormFactory::TYPE_CALENDAR, array(), $event);
+        $form = $this->formFactory->create(FormFactory::TYPE_AGENDA, array(), $event);
         $form->handleRequest($this->request);
-
         if ($form->isValid()) {
             $this->om->flush();
-        }
 
-        return new Response(
-            json_encode(
-                array(
-                    'id' => $event->getId(),
-                    'title' => $event->getTitle(),
-                    'start' => $event->getStart()->getTimestamp(),
-                    'end' => $event->getEnd()->getTimestamp(),
-                    'color' => $event->getPriority()
-                )
-            ),
-            200,
-            array('Content-Type' => 'application/json')
-        );
+            return new Response(
+                json_encode(
+                    array(
+                        'id' => $event->getId(),
+                        'title' => $event->getTitle(),
+                        'start' => $event->getStart()->getTimestamp(),
+                        'end' => $event->getEnd()->getTimestamp(),
+                        'color' => $event->getPriority(),
+                        'description' => $event->getDescription()
+                    )
+                ),
+                200,
+                array('Content-Type' => 'application/json')
+            );
+        } else {
+
+            return new Response(
+                json_encode(
+                    array('dates are not valids')
+                ),
+                200,
+                array('Content-Type' => 'application/json')
+            );
+        }
     }
 
     /**
@@ -167,11 +178,11 @@ class WorkspaceAgendaController extends Controller
     {
 
         $this->checkUserIsAllowed('agenda', $workspace);
-        $repository = $em->getRepository('ClarolineCoreBundle:Event');
+        $repository = $this->om->getRepository('ClarolineCoreBundle:Event');
         $postData = $this->request->request->all();
         $event = $repository->find($postData['id']);
-        $em->remove($event);
-        $em->flush();
+        $this->om->remove($event);
+        $this->om->flush();
 
         return new Response(
             json_encode(array('greeting' => 'delete')),
@@ -198,9 +209,9 @@ class WorkspaceAgendaController extends Controller
      */
     public function showAction(AbstractWorkspace $workspace)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
+
         $this->checkUserIsAllowed('agenda', $workspace);
-        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')
+        $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')
             ->findbyWorkspaceId($workspace->getId(), false);
         $data = array();
 
@@ -211,6 +222,7 @@ class WorkspaceAgendaController extends Controller
             $data[$key]['start'] = $object->getStart()->getTimestamp();
             $data[$key]['end'] = $object->getEnd()->getTimestamp();
             $data[$key]['color'] = $object->getPriority();
+            $data[$key]['description'] = $object->getDescription();
         }
 
         return new Response(
@@ -229,10 +241,9 @@ class WorkspaceAgendaController extends Controller
      */
     public function moveAction()
     {
-        $request = $this->get('request');
-        $postData = $request->request->all();
-        $em = $this->get('doctrine.orm.entity_manager');
-        $repository = $em->getRepository('ClarolineCoreBundle:Event');
+
+        $postData = $this->request->request->all();
+        $repository = $this->om->getRepository('ClarolineCoreBundle:Event');
         $event = $repository->find($postData['id']);
         $this->checkUserIsAllowed('agenda', $event->getWorkspace());
         // timestamp 1h = 3600
@@ -243,7 +254,7 @@ class WorkspaceAgendaController extends Controller
         $dateEnd = new \DateTime(date('d-m-Y H:i', $newEndDate));
         $event->setStart($dateStart);
         $event->setEnd($dateEnd);
-        $em->flush();
+        $this->om->flush();
 
         return new Response(
             json_encode(

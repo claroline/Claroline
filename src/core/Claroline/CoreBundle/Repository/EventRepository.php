@@ -31,6 +31,21 @@ class EventRepository extends EntityRepository
         return $query->getResult();
     }
 
+    /*
+     * Get All the Desktop User's events 
+     */
+
+    public function findDesktop()
+    {
+        $dql = " 
+            SELECT e
+            FROM Claroline\CoreBundle\Entity\Event e
+            WHERE e.workspace is NULL
+            ";
+        $query = $this->_em->createQuery($dql);
+        return $query->getResult();
+    }
+
     public function findByWorkspaceId($workspaceId,$allDay)
     {
         $dql = "

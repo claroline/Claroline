@@ -78,12 +78,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/FrontEndBundle.git",
-                "reference": "f343172af133fd89272c0760a90a890b7fee6f76"
+                "reference": "06de685c068a7574cd0f2cbfcf004ea4a9ee85e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/FrontEndBundle/zipball/f343172af133fd89272c0760a90a890b7fee6f76",
-                "reference": "f343172af133fd89272c0760a90a890b7fee6f76",
+                "url": "https://api.github.com/repos/claroline/FrontEndBundle/zipball/06de685c068a7574cd0f2cbfcf004ea4a9ee85e5",
+                "reference": "06de685c068a7574cd0f2cbfcf004ea4a9ee85e5",
                 "shasum": ""
             },
             "require": {
@@ -101,7 +101,7 @@
                 "source": "https://github.com/claroline/FrontEndBundle/tree/master",
                 "issues": "https://github.com/claroline/FrontEndBundle/issues"
             },
-            "time": "2013-07-25 15:31:08"
+            "time": "2013-08-20 08:49:43"
         },
         {
             "name": "claroline/migration-bundle",
@@ -1056,7 +1056,7 @@
                 "shasum": null
             },
             "type": "library",
-            "time": "2013-06-26 15:41:16"
+            "time": "2013-06-17 15:31:59"
         },
         {
             "name": "friendsofsymfony/jsrouting-bundle",

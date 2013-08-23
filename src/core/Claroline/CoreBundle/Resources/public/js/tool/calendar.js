@@ -51,19 +51,37 @@
             $('#agenda_form').find('input:radio, input:checkbox')
                 .removeAttr('checked')
                 .removeAttr('selected');
-            var  currentDate = new Date();
-            var pickedDate = new Date(date);
-            $('#agenda_form_start').val(date.toLocaleString())
+            var  currentDate = Date.today().toString("d/M/yyyy HH:mm");
+            var pickedDate = $.fullCalendar.formatDate( date,'dd/MM/yyyy HH:mm');
+
+            $('#agenda_form_start').val(pickedDate)
             if (pickedDate > currentDate) {
-                $('#agenda_form_end').val(pickedDate.toLocaleString());
+                $('#agenda_form_end').val(pickedDate);
                     
             } else {
-                $('#agenda_form_end').val(currentDate.toLocaleString());
+                $('#agenda_form_end').val(currentDate);
             }
             $('#myModal').modal();
         };
-        var dayClickDesktop = function () {
-            alert('Not implemented yet');
+        var dayClickDesktop = function (date) {
+            clickedDate = date;
+            $('#deleteBtn').hide();
+            $('#save').show();
+            $('#updateBtn').hide();
+            $('#agenda_form').find('input:text, input:password, input:file, select, textarea').val('');
+            $('#agenda_form').find('input:radio, input:checkbox')
+                .removeAttr('checked')
+                .removeAttr('selected');
+            var  currentDate = $.fullCalendar.formatDate(new Date(), 'dd/MM/yyyy HH:mm');
+            var pickedDate = $.fullCalendar.formatDate(date, 'dd/MM/yyyy HH:mm');
+            $('#agenda_form_start').val(pickedDate)
+            if (pickedDate > currentDate) {
+                $('#agenda_form_end').val(pickedDate);
+                    
+            } else {
+                $('#agenda_form_end').val(currentDate);
+            }
+            $('#myModal').modal();
         };
         var dayClickFunction = context === 'desktop' ? dayClickDesktop : dayClickWorkspace;
 
@@ -71,7 +89,7 @@
             if ($('#agenda_form_title').val() !== '') {
                 $('#save').attr('disabled', 'disabled');
                 var data = new FormData($('#myForm')[0]);
-                console.debug(data);
+                data.append('agenda_form[description]',$('#agenda_form_description').val());
                 var url = $('#myForm').attr('action');
                 $.ajax({
                     'url': url,
@@ -124,6 +142,7 @@
             $('#updateBtn').attr('disabled', 'disabled');
             var data = new FormData($('#myForm')[0]);
             data.append('id', id);
+            data.append('agenda_form[description]',$('#agenda_form_description').val());
             url = $('a#update').attr('href');
             $.ajax({
                 'url': url,
@@ -187,6 +206,11 @@
             $('#agenda_form_start').val($(list[0])[0].innerHTML);
             $('#agenda_form_end').val($(list[1])[0].innerHTML);
             $('#agenda_form_description').val($(list[2])[0].innerHTML);
+            if( $(list[4])[0].innerHTML == 1)
+            {
+                $('#agenda_form_allDay').attr('checked', true);
+            }
+             $('#agenda_form_priority option[value=' + $(list[3])[0].innerHTML + ']').attr('selected', 'selected');
         });
         function dropEvent(event, dayDelta, minuteDelta) {
             id = event.id;
@@ -236,18 +260,17 @@
             $('#agenda_form_description').val(calEvent.description);
             $('#agenda_form_priority option[value=' + calEvent.color + ']').attr('selected', 'selected');
             var pickedDate = new Date(calEvent.start);
-            $('#agenda_form_start').val(pickedDate.toLocaleString());
+            $('#agenda_form_start').val($.fullCalendar.formatDate( pickedDate,'dd/MM/yyyy HH:mm'));
             if (calEvent.end === null)
             {
-
-                $('#agenda_form_end').val(pickedDate.toLocaleString());
+                $('#agenda_form_end').val($.fullCalendar.formatDate( pickedDate,'dd/MM/yyyy HH:mm'));
             }
             else
             {
                 var Enddate = new Date(calEvent.end);
-                $('#agenda_form_end').val(Enddate.toLocaleString());
+                $('#agenda_form_end').val($.fullCalendar.formatDate( Enddate,'dd/MM/yyyy HH:mm'));
             }
-
+            $('#agenda_form_allDay').attr('checked', false);
             $.ajaxSetup({
                 'type': 'POST',
                 'error': function (xhr, textStatus) {
