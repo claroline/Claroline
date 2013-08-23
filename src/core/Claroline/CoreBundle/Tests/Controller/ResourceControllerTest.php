@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use \Mockery as m;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
 /**
@@ -58,7 +57,6 @@ class ResourceControllerTest extends MockeryTestCase
     private function getController(array $mockedMethods = array())
     {
         if (count($mockedMethods) === 0) {
-
             return new ResourceController(
                 $this->sc,
                 $this->resourceManager,

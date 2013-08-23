@@ -414,7 +414,6 @@ class RoleManagerTest extends MockeryTestCase
         $this->assertEquals('return', $this->getManager()->getWorkspaceRolesForUser($user, $workspace));
     }
 
-
     public function testGetRolesByWorkspaceAndTool()
     {
         $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();

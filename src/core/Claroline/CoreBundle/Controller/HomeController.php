@@ -92,7 +92,6 @@ class HomeController
         $layout = $this->manager->contentLayout($type, $father, $region);
 
         if ($layout) {
-
             return $this->render('ClarolineCoreBundle:Home:layout.html.twig', $this->renderContent($layout));
         }
 
