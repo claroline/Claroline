@@ -415,7 +415,9 @@
                         if (event.currentTarget.getAttribute('data-is-custom') === 'no') {
                             this.dispatcher.trigger(action, {ids: [nodeId]});
                         } else {
-                            this.dispatcher.trigger('custom', {'action': action, id: [nodeId]});
+                            var async = event.currentTarget.getAttribute('data-async');
+                            var redirect = (async === '1') ? false : true;
+                            this.dispatcher.trigger('custom', {'action': action, id: [nodeId], 'redirect': redirect});
                         }
                     }
                 }
@@ -730,7 +732,7 @@
                 this.editProperties(event.action, event.data, event.nodeId);
             },
             'custom': function (event) {
-                this.custom(event.action, event.id);
+                this.custom(event.action, event.id, event.redirect);
             },
             'paste': function (event) {
                 this[event.isCutMode ? 'move' : 'copy'](event.ids, event.directoryId, event.sourceDirectoryId);
@@ -1102,8 +1104,12 @@
                 contentType: false
             });
         },
-        custom: function (action, nodeId) {
-            alert('Custom action "' + action + '" on resource ' + nodeId + ' (not implemented yet)');
+        custom: function (action, nodeId, redirect) {
+            if (redirect) {
+                window.location = this.parameters.appPath + '/resource/custom/' + action + '/' + nodeId;
+            } else {
+                alert("ajax call: no implementation yet");
+            }
         },
         picker: function (action, callback) {
             if (action === 'open' && !this.views.picker.isAppended) {
