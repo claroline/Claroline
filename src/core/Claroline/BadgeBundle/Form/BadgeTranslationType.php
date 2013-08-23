@@ -24,8 +24,7 @@ class BadgeTranslationType extends AbstractType
                     'data-theme' => 'medium'
                 )
             ))
-            ->add('locale', 'hidden')
-        ;
+            ->add('locale', 'hidden');
     }
 
     public function getName()
@@ -36,11 +35,11 @@ class BadgeTranslationType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver
-        ->setDefaults(
-            array(
-                'data_class'         => 'Claroline\badgeBundle\Entity\BadgeTranslation',
-                'translation_domain' => 'badge'
-            )
-        );
+            ->setDefaults(
+                array(
+                    'data_class'         => 'Claroline\badgeBundle\Entity\BadgeTranslation',
+                    'translation_domain' => 'badge'
+                )
+            );
     }
 }

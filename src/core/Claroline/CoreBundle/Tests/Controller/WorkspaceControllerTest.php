@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use \Mockery as m;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -713,7 +712,6 @@ class WorkspaceControllerTest extends MockeryTestCase
     private function getController(array $mockedMethods = array())
     {
         if (count($mockedMethods) === 0) {
-
             return new WorkspaceController(
                 $this->workspaceManager,
                 $this->resourceManager,

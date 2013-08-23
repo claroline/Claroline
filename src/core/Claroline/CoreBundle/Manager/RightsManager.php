@@ -7,7 +7,6 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
-use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
@@ -133,7 +132,6 @@ class RightsManager
         }
 
         //$this->om->endFlushSuite();
-
         return $arRights;
     }
 
@@ -213,8 +211,8 @@ class RightsManager
      * Parse each key of the $perms array
      * and add the entry 'role' where it is needed.
      *
-     * @param  array $baseRoles
-     * @param  array $perms
+     * @param array $baseRoles
+     * @param array $perms
      *
      * @return array
      */

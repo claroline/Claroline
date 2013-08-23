@@ -150,7 +150,6 @@ class RoleManager
         $this->om->flush();
     }
 
-
     public function associateRoleToMultipleSubjects(array $subjects, Role $role)
     {
         foreach ($subjects as $subject) {
@@ -253,9 +252,9 @@ class RoleManager
     }
 
     /**
-     * @param array[AbstractRoleSubject] $subjects
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param array[Role] $roles
+     * @param  array[AbstractRoleSubject]                               $subjects
+     * @param  \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param  array[Role]                                              $roles
      * @throws \LogicException
      */
     public function checkWorkspaceRoleEditionIsValid(array $subjects, AbstractWorkspace $workspace, array $roles)

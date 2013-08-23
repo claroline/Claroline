@@ -25,7 +25,6 @@ class BadgeManagerTest extends MockeryTestCase
                 ->andReturn(null)
                 ->shouldReceive('flush')
                 ->andReturn(null);
-            ;
         });
         $this->manager         = new BadgeManager($this->badgeRepository, $this->entityManager);
     }
