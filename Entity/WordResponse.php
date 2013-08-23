@@ -71,7 +71,7 @@ class WordResponse
     private $score;
 
     /**
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\InteractionOpen")
+     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\InteractionOpen", inversedBy="wordResponses")
      */
     private $interactionopen;
 

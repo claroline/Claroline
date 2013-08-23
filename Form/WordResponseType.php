@@ -1,5 +1,4 @@
 <?php
-
 /**
  * ExoOnLine
  * Copyright or © or Copr. Université Jean Monnet (France), 2012
@@ -41,70 +40,27 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-use Claroline\CoreBundle\Entity\User;
-
-class InteractionOpenType extends AbstractType
+class WordResponseType extends AbstractType
 {
-    private $user;
-
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add(
-                'interaction', new InteractionType(
-                    $this->user
-                )
-            );
-        $builder
-            ->add(
-                'typeopenquestion', 'entity', array(
-                    'class' => 'UJM\\ExoBundle\\Entity\\TypeOpenQuestion',
-                    'label' => 'TypeOpenQuestion.value'
-                )
-            );
-        $builder
-            ->add(
-                'orthographyCorrect', 'checkbox', array(
-                    'label' => 'Inter_Hole.orthography',
-                    'required' => false
-                )
-            );
-        $builder
-            ->add(
-                'unit', 'entity', array(
-                    'class' => 'UJM\\ExoBundle\\Entity\\Unit',
-                    'label' => 'Unit.value',
-                    'required' => false
-                )
-            );
-        $builder
-            ->add(
-                'wordResponses', 'collection', array(
-                    'type' => new WordResponseType,
-                    'prototype' => true,
-                    'allow_add' => true,
-                    'allow_delete' => true
-                )
-            );
+            ->add('response', 'text')
+            ->add('score', 'text')
+            //->add('interactionopen')
+            //->add('hole')
+        ;
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(
-            array(
-                'data_class' => 'UJM\ExoBundle\Entity\InteractionOpen',
-                'cascade_validation' => true
-            )
-        );
+        $resolver->setDefaults(array(
+            'data_class' => 'UJM\ExoBundle\Entity\WordResponse',
+        ));
     }
 
     public function getName()
     {
-        return 'ujm_exobundle_interactionopentype';
+        return 'ujm_exobundle_wordresponsetype';
     }
 }

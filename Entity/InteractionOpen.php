@@ -85,10 +85,16 @@ class InteractionOpen
      * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\TypeOpenQuestion")
      */
     private $typeopenquestion;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\WordResponse", mappedBy="interactionOpen", cascade={"remove"})
+     */
+    private $wordResponses;
 
     public function __construct()
     {
         $this->unit = new \Doctrine\Common\Collections\ArrayCollection;
+        $this->wordResponses = new \Doctrine\Common\Collections\ArrayCollection;
     }
 
     /**
@@ -157,5 +163,23 @@ class InteractionOpen
     public function setTypeOpenQuestion(\UJM\ExoBundle\Entity\TypeOpenQuestion $typeOpenQuestion)
     {
         $this->typeopenquestion = $typeOpenQuestion;
+    }
+    
+    public function getWordResponses()
+    {
+        
+        return $this->wordResponses;
+    }
+
+    public function addWordResponse(\UJM\ExoBundle\Entity\WordResponse $wordResponse)
+    {
+        $this->wordResponses[] = $wordResponse;
+
+        $wordResponse->setInteractionOpen($this);
+    }
+
+    public function removeWordResponse(\UJM\ExoBundle\Entity\WordResponse $wordResponse)
+    {
+        
     }
 }
