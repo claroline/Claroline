@@ -1,0 +1,27 @@
+{
+    "name": "innova/path",
+    "type": "library",
+    "description": "Claroline Path Bundle",
+    "keywords": ["Claroline", "Path"],
+    "homepage": "http://github.com/InnovaLangues/PathBundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Arnaud Bey",
+            "email": "arnaud.bey@u-grenoble3.fr"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "symfony/framework-bundle":  "2.*",
+        "symfony/symfony":           "2.*",
+        "innova/angularjs":          "dev-master",
+        "innova/angular-ui":         "dev-master",
+        "innova/angular-pageslide":  "dev-master"
+    },
+    "autoload": {
+        "psr-0": { "Innova\\PathBundle": "." }
+    },
+    "target-dir": "Innova/PathBundle"
+}
+
