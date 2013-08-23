@@ -20,9 +20,13 @@
                 this.currentDirectory = {id: parameters.directoryId};
 
                 if (parameters.isPickerMode) {
-                    this.el.className = 'picker resource-manager modal hide';
-                    this.wrapper = $('<div class="modal-body"/>');
-                    $(this.el).append(this.wrapper);
+                    this.el.className = 'picker resource-manager';
+
+                    $(this.el).html(Twig.render(ModalWindow, {
+                        'header' : 'Resource Picker',
+                        'body': ''
+                    }));
+                    this.wrapper = $('.modal-body', this.el);
                 } else {
                     this.el.className = 'main resource-manager';
                     this.wrapper = $(this.el);
@@ -114,7 +118,7 @@
             }
         }),
         Actions: Backbone.View.extend({
-            className: 'navbar navbar-static-top',
+            className: 'navbar navbar-default navbar-static-top',
             events: {
                 'keypress input.name': function (event) {
                     if (event.keyCode !== 13) {
@@ -619,18 +623,18 @@
                         success: function (form) {
                             $('#modal-check-role').empty();
                             $('#modal-check-role').append(form);
-                            $('#rights-form-node-tab-content').css('display', 'none');
-                            $('#rights-form-node-nav-tabs').css('display', 'none');
-                            $('#modal-check-node-right-box').modal('show');
+                            $('#rights-form-resource-tab-content').css('display', 'none');
+                            $('#rights-form-resource-nav-tabs').css('display', 'none');
+                            $('#modal-check-resource-right-box .modal').modal('show');
                         }
                     });
                 },
                 'click .modal-close': function (event) {
                     event.preventDefault();
                     $('#modal-check-role').empty();
-                    $('#modal-check-node-right-box').modal('hide');
-                    $('#rights-form-node-tab-content').css('display', 'block');
-                    $('#rights-form-node-nav-tabs').css('display', 'block');
+                    $('#modal-check-resource-right-box .modal').modal('hide');
+                    $('#rights-form-resource-tab-content').css('display', 'block');
+                    $('#rights-form-resource-nav-tabs').css('display', 'block');
                 },
                 'click #submit-right-form-button': function (event) {
                     event.preventDefault();
@@ -647,9 +651,9 @@
                             $('#form-right-wrapper').empty();
                             $('#perms-table').append(newrow);
                             $('#modal-check-role').empty();
-                            $('#modal-check-node-right-box').modal('hide');
-                            $('#rights-form-node-tab-content').css('display', 'block');
-                            $('#rights-form-node-nav-tabs').css('display', 'block');
+                            $('#modal-check-resource-right-box .modal').modal('hide');
+                            $('#rights-form-resource-tab-content').css('display', 'block');
+                            $('#rights-form-resource-nav-tabs').css('display', 'block');
                         }
                     });
                 },
@@ -670,7 +674,7 @@
                 this.on('close', this.close, this);
             },
             close: function () {
-                $(this.el).modal('hide');
+                $('.modal', this.el).modal('hide');
             },
             render: function (form, targetNodeId, eventOnSubmit) {
                 this.targetNodeId = targetNodeId;
@@ -678,7 +682,8 @@
                 form = form.replace('_nodeId', targetNodeId);
                 $(this.el).html(Twig.render(ModalWindow, {
                     'body': form
-                })).modal();
+                }));
+                $('.modal', this.el).modal('show');
             }
         })
     };
@@ -892,7 +897,7 @@
                                 });
                             }
                         },
-                        start: function (event, ui) {
+                        start: function () {
                             that.isOpenEnabled = false;
                         }
                     });
@@ -1124,7 +1129,7 @@
                 this.views.picker.subViews.actions.callback = callback;
             }
 
-            this.views.picker.$el.modal(action === 'open' ? 'show' : 'hide');
+            $('.modal', this.views.picker.$el).modal(action === 'open' ? 'show' : 'hide');
         }
     };
 

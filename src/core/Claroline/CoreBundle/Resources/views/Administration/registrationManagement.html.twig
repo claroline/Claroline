@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block section_content %}
-    <div id="workspace-list-div" class="margin">
+    <div id="workspace-list-div">
         {{
             macros.breadcrumbs([
                 {
@@ -26,35 +26,39 @@
             ])
         }}
 
-        <h1>{{ 'select_workspaces_for_registration'|trans({}, 'platform') }}</h1>
+        <h3>{{ 'select_workspaces_for_registration'|trans({}, 'platform') }}</h3>
+        <br>
 
-        <div class="search-bar">
-            <button
-                class="btn btn-secondary subscribe-user-button"
-                subject-type="user"
-                disabled="disabled"
-            >
-                {{ 'subscribe_users'|trans({}, 'platform') }}
-            </button>
-            <button
-                class="btn btn-secondary subscribe-group-button"
-                subject-type="group"
-                disabled="disabled"
-            >
-                {{ 'subscribe_groups'|trans({}, 'platform') }}
-            </button>
-            <div class="input-append pull-right">
-                <input
-                    class="input-medium"
-                    type="text"
-                    id="search-workspace-txt"
-                    placeholder="{{ 'search'|trans({}, 'platform') }}"
+        <div class="search-bar row">
+            <div class="col-lg-6">
+                <button
+                    class="btn btn-default subscribe-user-button"
+                    subject-type="user"
+                    disabled="disabled"
                 >
-                <button class="filter btn" type="button" id="search-workspace-button">
-                    <i class="icon-search"></i>
+                    {{ 'subscribe_users'|trans({}, 'platform') }}
+                </button>
+                <button
+                    class="btn btn-default subscribe-group-button"
+                    subject-type="group"
+                    disabled="disabled"
+                >
+                    {{ 'subscribe_groups'|trans({}, 'platform') }}
                 </button>
             </div>
+            <div class="col-lg-6">
+                 <div class="input-group">
+                    <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
+                    <span class="input-group-btn">
+                        <button class="filter btn btn-default" type="button" id="search-workspace-button">
+                            <i class="icon-search"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
         </div>
+
+        <br>
 
         {% if search == '' %}
             <div id="search-mode" search=""></div>
@@ -66,14 +70,14 @@
 
         <br>
         <button
-            class="btn btn-secondary subscribe-user-button"
+            class="btn btn-default subscribe-user-button"
             subject-type="user"
             disabled="disabled"
         >
             {{ 'subscribe_users'|trans({}, 'platform') }}
         </button>
         <button
-            class="btn btn-secondary subscribe-group-button"
+            class="btn btn-default subscribe-group-button"
             subject-type="group"
             disabled="disabled"
         >

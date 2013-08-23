@@ -18,20 +18,20 @@
 
     class="form-horizontal"
     {{ form_enctype(form) }}>
-    {% if not isDefault %}
-        <legend>{{ 'Choose workspaces displayed in the widget'|trans({}, 'platform') }}</legend>
-    {% endif %}
 
-    <fieldset>
+    <div class="panel-body">
+        {% if not isDefault %}
+            <legend>{{ 'Choose workspaces displayed in the widget'|trans({}, 'platform') }}</legend>
+        {% endif %}
         {{ form_widget(form._token) }}
         {{ form_widget(form) }}
-    </fieldset>
+    </div>
 
     {{ macros.flashBox() }}
-    <div class="form-actions">
+    <div class="panel-footer">
         <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
         <a href="{{ path('claro_admin_widgets') }}">
-            <button type="button" class="btn claro-widget-form-cancel">{{ 'cancel'|trans({}, 'platform') }}</button>
+            <button type="button" class="btn btn-default claro-widget-form-cancel">{{ 'cancel'|trans({}, 'platform') }}</button>
         </a>
     </div>
 </form>

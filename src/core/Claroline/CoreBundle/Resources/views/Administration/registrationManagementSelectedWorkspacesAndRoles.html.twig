@@ -1,41 +1,44 @@
-<div id="selected-workspaces">
-    <label for="workspaces-list">
-        <b>{{ 'selected_workspaces_for_registration'|trans({}, 'platform') }}</b>
-    </label>
-    <select id="workspaces-list" name="workspaces-list" size="5" class="span12" disabled="disabled">
-        {% for workspace in workspaces %}
-            <option class="dropdown-submenu workspace-option" workspace-id="{{ workspace.getId() }}">
-                {{ workspace.getName() }}
-                <span class="workspace-code">({{ workspace.getCode() }})</span>
-            </option>
-        {% endfor %}
-    </select>
-</div>
+<form>
+    <fieldset>
+        <div id="selected-workspaces" class="form-group">
+            <label for="workspaces-list">
+                <b>{{ 'selected_workspaces_for_registration'|trans({}, 'platform') }}</b>
+            </label>
+            <select id="workspaces-list" name="workspaces-list" size="5" class="form-control" disabled="disabled">
+                {% for workspace in workspaces %}
+                    <option class="dropdown-submenu workspace-option" workspace-id="{{ workspace.getId() }}">
+                        {{ workspace.getName() }}
+                        <span class="workspace-code">({{ workspace.getCode() }})</span>
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
 
-<br>
-
-<label for="roles-list">
-    <b>{{ 'select_roles_to_assign'|trans({}, 'platform') }}</b>
-</label>
-
-{% if workspaces|length > 1 %}
-    <select id="roles-list" name="roles-list" size="5" multiple="multiple" class="span12">
-        <option class="dropdown-submenu role-option" value="collaborator">
-            {{ 'collaborator'|trans({}, 'platform') }}
-        </option>
-        <option class="dropdown-submenu role-option" value="manager">
-            {{ 'manager'|trans({}, 'platform') }}
-        </option>
-        <option class="dropdown-submenu role-option" value="visitor">
-            {{ 'visitor'|trans({}, 'platform') }}
-        </option>
-    </select>
-{% else %}
-    <select id="roles-list" name="roles-list" size="5" multiple="multiple" nb-workspaces="1">
-    {% for role in workspaces[0].getRoles() %}
-        <option class="dropdown-submenu role-option" value="{{ role.getId() }}">
-            {{ role.getTranslationKey()|trans({}, 'platform') }}
-        </option>
-    {% endfor %}
-    </select>
-{% endif %}
+        <div class="form-group">
+            <label for="roles-list">
+                <b>{{ 'select_roles_to_assign'|trans({}, 'platform') }}</b>
+            </label>
+            {% if workspaces|length > 1 %}
+                <select id="roles-list" name="roles-list" size="5" multiple="multiple" class="form-control">
+                    <option class="dropdown-submenu role-option" value="collaborator">
+                        {{ 'collaborator'|trans({}, 'platform') }}
+                    </option>
+                    <option class="dropdown-submenu role-option" value="manager">
+                        {{ 'manager'|trans({}, 'platform') }}
+                    </option>
+                    <option class="dropdown-submenu role-option" value="visitor">
+                        {{ 'visitor'|trans({}, 'platform') }}
+                    </option>
+                </select>
+            {% else %}
+                <select id="roles-list" name="roles-list" size="5" multiple="multiple" nb-workspaces="1" class="col-lg-8 form-control">
+                {% for role in workspaces[0].getRoles() %}
+                    <option class="dropdown-submenu role-option" value="{{ role.getId() }}">
+                        {{ role.getTranslationKey()|trans({}, 'platform') }}
+                    </option>
+                {% endfor %}
+                </select>
+            {% endif %}
+        </div>
+    </fieldset>
+</form>
