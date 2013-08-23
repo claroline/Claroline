@@ -74,7 +74,7 @@ create_workspace: 'Create workspace'
 creation_date: 'Creation date'
 csv_users_import_infos: 'CSV file informations'
 csv_users_import_infos_format: 'Format'
-csv_users_import_infos_format_1: 'User informations must be defined in one line and separated by comma'
+csv_users_import_infos_format_a: 'User informations must be defined in one line and separated by comma'
 csv_users_import_infos_optional: 'Optional'
 csv_users_import_infos_required: 'Required'
 cut: Cut
