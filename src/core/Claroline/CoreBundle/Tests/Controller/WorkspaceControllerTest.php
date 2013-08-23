@@ -24,6 +24,7 @@ class WorkspaceControllerTest extends MockeryTestCase
     private $router;
     private $utils;
     private $formFactory;
+    private $tokenUpdater;
 
     protected function setUp()
     {
@@ -39,6 +40,7 @@ class WorkspaceControllerTest extends MockeryTestCase
         $this->router = $this->mock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
         $this->utils = $this->mock('Claroline\CoreBundle\Library\Security\Utilities');
         $this->formFactory = $this->mock('Claroline\CoreBundle\Form\Factory\FormFactory');
+        $this->tokenUpdater = $this->mock('Claroline\CoreBundle\Library\Security\TokenUpdater');
     }
 
     public function testListAction()
@@ -211,12 +213,17 @@ class WorkspaceControllerTest extends MockeryTestCase
     {
         $controller = $this->getController(array('assertIsGranted'));
         $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
 
         $this->security
             ->shouldReceive('isGranted')
             ->with('DELETE', $workspace)
             ->once()
             ->andReturn(true);
+        $this->security
+            ->shouldReceive('getToken')
+            ->once()
+            ->andReturn($token);
         $this->eventDispatcher
             ->shouldReceive('dispatch')
             ->with('log', 'Log\LogWorkspaceDelete', array($workspace))
@@ -225,6 +232,10 @@ class WorkspaceControllerTest extends MockeryTestCase
             ->shouldReceive('deleteWorkspace')
             ->with($workspace)
             ->once();
+        $this->tokenUpdater
+            ->shouldReceive('cancelUsurpation')
+            ->once()
+            ->with($token);
 
         $this->assertEquals(new Response('success', 204), $controller->deleteAction($workspace));
     }
@@ -714,7 +725,8 @@ class WorkspaceControllerTest extends MockeryTestCase
                 $this->security,
                 $this->router,
                 $this->utils,
-                $this->formFactory
+                $this->formFactory,
+                $this->tokenUpdater
             );
         }
 
@@ -740,7 +752,8 @@ class WorkspaceControllerTest extends MockeryTestCase
                 $this->security,
                 $this->router,
                 $this->utils,
-                $this->formFactory
+                $this->formFactory,
+                $this->tokenUpdater
             )
         );
     }

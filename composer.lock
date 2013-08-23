@@ -1199,12 +1199,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/IDCI-Consulting/ExporterBundle.git",
-                "reference": "f905f202c24d04c89f8d532dc17ab53266a013d2"
+                "reference": "82bec6efaa74a256c931144c52941af934db48dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/IDCI-Consulting/ExporterBundle/zipball/f905f202c24d04c89f8d532dc17ab53266a013d2",
-                "reference": "f905f202c24d04c89f8d532dc17ab53266a013d2",
+                "url": "https://api.github.com/repos/IDCI-Consulting/ExporterBundle/zipball/82bec6efaa74a256c931144c52941af934db48dd",
+                "reference": "82bec6efaa74a256c931144c52941af934db48dd",
                 "shasum": ""
             },
             "require": {
@@ -1239,7 +1239,7 @@
                 "twig",
                 "xml"
             ],
-            "time": "2013-08-18 17:09:32"
+            "time": "2013-08-21 14:41:39"
         },
         {
             "name": "incenteev/composer-parameter-handler",
@@ -3017,7 +3017,7 @@
                 "shasum": null
             },
             "type": "library",
-            "time": "2013-07-22 08:29:52"
+            "time": "2013-05-24 10:20:31"
         },
         {
             "name": "zenstruck/form-bundle",

@@ -3,8 +3,10 @@
 {% block simpleautocomplete_widget %}
     {% spaceless %}
         {% block simpleautocomplete_assets %}
+            {% if with_vendors %}
             <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/css/common/jquery-ui-bootstrap/jquery-ui-1.9.2.custom.css') }}'/>
             <script src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
+            {% endif %}
         {% endblock %}
         <div class="input-append">
             {{ block('form_widget') }}
@@ -20,7 +22,11 @@
                     source: function( request, response ) {
                         $.ajax({
                             url: path,
-                            dataType: 'jsonp',
+                            dataType: '{{ format }}',
+                            {% if 'jsonp' == format %}
+                            jsonp: 'extractData',
+                            jsonpCallback: 'extractData',
+                            {% endif %}
                             contentType: "application/json; charset=utf-8",
                             data: {
                                 search: request.term

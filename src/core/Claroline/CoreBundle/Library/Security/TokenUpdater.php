@@ -6,6 +6,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Claroline\CoreBundle\Library\Security\Token\ViewAsToken;
 
 /**
  * @DI\Service("claroline.security.token_updater")
@@ -13,17 +14,20 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 class TokenUpdater
 {
     private $sc;
+    private $om;
 
     /**
      * @DI\InjectParams({
-     *     "context" = @DI\Inject("security.context")
+     *     "context" = @DI\Inject("security.context"),
+     *     "om"      = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
      * @param SecurityContextInterface $context
      */
-    public function __construct($context)
+    public function __construct($context, $om)
     {
         $this->sc = $context;
+        $this->om = $om;
     }
 
     public function update(AbstractToken $token)
@@ -49,9 +53,17 @@ class TokenUpdater
         }
     }
 
-    private function updateUsurpator()
+    private function updateUsurpator($token)
     {
-        throw new \Exception('No implementation for updateUsurpator yet.');
+        //no implementation yet
+    }
+
+    public function cancelUsurpation($token)
+    {
+        $user = $token->getUser();
+        $this->om->refresh($user);
+        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+        $this->sc->setToken($token);
     }
 
     private function updateNormal($token)
