@@ -1,15 +1,14 @@
 {% for tool in tools %}
-<li{{ path('claro_desktop_open_tool', {'toolName': tool.getName() }) | compareRoute | raw }}>
-    <a href="{{ path('claro_desktop_open_tool', {'toolName': tool.getName() }) }}"
-        id="{{ tool.getName() }}-link"
-        data-original-title="{{ tool.getName()|trans({}, 'tools') }}"
-        >
-        <i class="{{ tool.getClass() }}"></i>
-        <i class="icon-chevron-right pull-right"></i>
-        {% if tool.getDisplayName is empty %}
-            <span>{{ tool.getName()|trans({}, 'tools') }}</span>
-        {% else %}
-            <span>{{ tool.getDisplayName()|trans({}, 'tools') }}</span>
-        {% endif %}
-    </a>
+<a class="list-group-item{{ path('claro_desktop_open_tool', {'toolName': tool.getName() }) | compareRoute(" active") | raw }}"
+    href="{{ path('claro_desktop_open_tool', {'toolName': tool.getName() }) }}"
+    id="{{ tool.getName() }}-link"
+    data-original-title="{{ tool.getName()|trans({}, 'tools') }}"
+    >
+    <i class="{{ tool.getClass() }}"></i>
+    {% if tool.getDisplayName is empty %}
+        <span>{{ tool.getName()|trans({}, 'tools') }}</span>
+    {% else %}
+        <span>{{ tool.getDisplayName()|trans({}, 'tools') }}</span>
+    {% endif %}
+</a>
 {% endfor %}

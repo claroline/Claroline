@@ -95,8 +95,8 @@ class HomeControllerTest extends MockeryTestCase
     public function testSizeAction()
     {
         $this->assertEquals(
-            array('id' => 1, 'size' => 'span12', 'type' => 'home'),
-            $this->controller->sizeAction(1, 'span12', 'home')
+            array('id' => 1, 'size' => 'col-lg-12', 'type' => 'home'),
+            $this->controller->sizeAction(1, 'col-lg-12', 'home')
         );
     }
 

@@ -1,15 +1,17 @@
 {% extends "ClarolineCoreBundle::layout.html.twig" %}
 
 {% block content %}
-    <div class="border">
-        <form class="margin form-horizontal" action="{{ path('claro_profile_update') }}" method="post" {{ form_enctype(profile_form) }} id="profile_form">
-            <fieldset>
-                <legend>{{ 'my_account'|trans({}, 'platform') }} :</legend>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ 'my_account'|trans({}, 'platform') }}</h3>
+        </div>
+        <form class="form-horizontal" action="{{ path('claro_profile_update') }}" method="post" {{ form_enctype(profile_form) }} id="profile_form">
+            <div class="panel-body">
                 {{ form_widget(profile_form) }}
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-                </div>
-            </fieldset>
+            </div>
+            <div class="panel-footer">
+                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            </div>
         </form>
     </div>
 {% endblock %}
