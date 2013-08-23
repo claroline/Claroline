@@ -41,6 +41,8 @@ namespace UJM\ExoBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use UJM\ExoBundle\Entity\InteractionOpen;
+use UJM\ExoBundle\Form\InteractionOpenType;
+use UJM\ExoBundle\Form\InteractionOpenHandler;
 
 /**
  * InteractionOpen controller.
@@ -89,6 +91,54 @@ class InteractionOpenController extends Controller
      */
     public function createAction()
     {
- 
+        $interOpen  = new InteractionOpen();
+        $form      = $this->createForm(
+            new InteractionOpenType(
+                $this->container->get('security.context')->getToken()->getUser()
+            ), $interOpen
+        );
+        
+        $exoID = $this->container->get('request')->request->get('exercise');
+        
+        $formHandler = new InteractionOpenHandler(
+            $form, $this->get('request'), $this->getDoctrine()->getManager(),
+            $this->container->get('security.context')->getToken()->getUser(), $exoID
+        );
+        
+        if ($formHandler->processAdd()) {
+            $categoryToFind = $interOpen->getInteraction()->getQuestion()->getCategory();
+            $titleToFind = $interOpen->getInteraction()->getQuestion()->getTitle();
+
+            if ($exoID == -1) {
+                return $this->redirect(
+                    $this->generateUrl('ujm_question_index', array(
+                        'categoryToFind' => $categoryToFind, 'titleToFind' => $titleToFind)
+                    )
+                );
+            } else {
+                return $this->redirect(
+                    $this->generateUrl('ujm_exercise_questions', array(
+                        'id' => $exoID, 'categoryToFind' => $categoryToFind, 'titleToFind' => $titleToFind)
+                    )
+                );
+            }
+        }
+        
+        $formWithError = $this->render(
+            'UJMExoBundle:InteractionOpen:new.html.twig', array(
+            'entity' => $interOpen,
+            'form'   => $form->createView(),
+            'exoID'  => $exoID,
+            'error'  => true
+            )
+        );
+
+        $formWithError = substr($formWithError, strrpos($formWithError, 'GMT') + 3);
+
+        return $this->render(
+            'UJMExoBundle:Question:new.html.twig', array(
+            'formWithError' => $formWithError
+            )
+        );
     }
 }
