@@ -210,7 +210,6 @@
                             ;
 
                         } else {
-                            //document.body.innerHTML = data; //DEBUG
                             modal("content/error");
                         }
                     }

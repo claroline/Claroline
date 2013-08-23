@@ -10,13 +10,11 @@
         var first = $(selector).first().offset();
 
         $(selector).each(function (index, element) {
-            //console.log($(element).offset());
 
             //lines
             if ($(element).offset().left === first.left) {
                 first = $(element).offset();
                 line++;
-                //console.log("Line" + line);
                 column = -1;
                 divs[line] = [];
             }
@@ -24,7 +22,6 @@
             //columns
             if ($(element).offset().top === first.top) {
                 column++;
-                //console.log("Column" + column);
                 divs[line][column] = [];
                 divs[line][column].elements = [];
             }
@@ -74,7 +71,6 @@
                 if (elements.hasOwnProperty(element)) {
                     height = height + $(elements[element]).outerHeight(true);
                     divs[line][column].height = height;
-                    //console.log($(".text", elements[element]).text());
                 }
             }
 

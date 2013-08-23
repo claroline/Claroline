@@ -499,6 +499,27 @@ div.pagination ul
     .content-size(@content-iteration);
 }
 
+@media (max-width: 767px)
+{
+	@content-iteration: 8;
+
+    .content-size (@index) when (@index >= 1) {
+
+        .content-@{index} {
+            margin-left: 15px;
+		    margin-right: 15px;
+        }
+
+        .content-offset@{index} {
+            margin-left:0;
+        }
+
+        .content-size(@index - 1);
+    }
+
+    .content-size(@content-iteration);
+}
+
 .content-element .dropdown-menu a
 {
     cursor:pointer;
