@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "7bf418a7f4c1b4873a7f362f82dc9c47",
+    "hash": "2d7c036e437612a42bbb27547224c686",
     "packages": [
         {
             "name": "besimple/sso-auth-bundle",
@@ -391,7 +391,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -1876,16 +1876,16 @@
         },
         {
             "name": "leafo/lessphp",
-            "version": "v0.3.9",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leafo/lessphp.git",
-                "reference": "v0.3.9"
+                "reference": "v0.4.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leafo/lessphp/zipball/v0.3.9",
-                "reference": "v0.3.9",
+                "url": "https://api.github.com/repos/leafo/lessphp/zipball/v0.4.0",
+                "reference": "v0.4.0",
                 "shasum": ""
             },
             "type": "library",
@@ -1913,7 +1913,7 @@
             ],
             "description": "lessphp is a compiler for LESS written in PHP.",
             "homepage": "http://leafo.net/lessphp/",
-            "time": "2013-03-02 16:13:31"
+            "time": "2013-08-09 17:09:19"
         },
         {
             "name": "monolog/monolog",
@@ -2769,16 +2769,16 @@
         },
         {
             "name": "twbs/bootstrap",
-            "version": "v2.3.2",
+            "version": "v3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "v2.3.2"
+                "reference": "v3.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/v2.3.2",
-                "reference": "v2.3.2",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/v3.0.0",
+                "reference": "v3.0.0",
                 "shasum": ""
             },
             "type": "library",
@@ -2786,13 +2786,23 @@
             "license": [
                 "Apache-2.0"
             ],
-            "description": "Sleek, intuitive, and powerful front-end framework for faster and easier web development.",
-            "homepage": "http://twbs.github.com/bootstrap/",
+            "authors": [
+                {
+                    "name": "Mark Otto",
+                    "email": "markdotto@gmail.com"
+                },
+                {
+                    "name": "Jacob Thornton",
+                    "email": "jacobthornton@gmail.com"
+                }
+            ],
+            "description": "Sleek, intuitive, and powerful mobile first front-end framework for faster and easier web development.",
+            "homepage": "http://getbootstrap.com",
             "keywords": [
                 "bootstrap",
                 "css"
             ],
-            "time": "2013-07-27 06:36:38"
+            "time": "2013-08-19 21:18:20"
         },
         {
             "name": "twig/extensions",
@@ -3056,7 +3066,7 @@
                 {
                     "name": "Kevin Bond",
                     "email": "kevinbond@gmail.com",
-                    "homepage": "https://zenstruck.com/"
+                    "homepage": "http://zenstruck.com"
                 }
             ],
             "description": "Provides Twitter Bootstrap form theme, a help type extension, Ajax/Tunnel/Select2 entity form types and javascript helpers",
@@ -3089,6 +3099,49 @@
             "include-path": [
                 "Hamcrest-1.1.0/"
             ]
+        },
+        {
+            "name": "icap-lyon1/simple-tag-bundle",
+            "version": "dev-master",
+            "target-dir": "ICAPLyon1/Bundle/SimpleTagBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/iCAPLyon1/SimpleTagBundle.git",
+                "reference": "4ce5e2ca761c573c5246fd1528dd3e8cc86ca91f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/iCAPLyon1/SimpleTagBundle/zipball/4ce5e2ca761c573c5246fd1528dd3e8cc86ca91f",
+                "reference": "4ce5e2ca761c573c5246fd1528dd3e8cc86ca91f",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/doctrine-bundle": "*",
+                "php": ">=5.3.2",
+                "symfony/framework-bundle": "~2.1",
+                "twig/twig": "*"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-0": {
+                    "ICAPLyon1\\Bundle\\SimpleTagBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Panagiotis Tsavdaris",
+                    "email": "ptsavdar@gmail.com"
+                }
+            ],
+            "description": "Symfony TagBundle that easily adds tags to any entity",
+            "keywords": [
+                "tag"
+            ],
+            "time": "2013-06-19 12:12:01"
         },
         {
             "name": "mikey179/vfsStream",

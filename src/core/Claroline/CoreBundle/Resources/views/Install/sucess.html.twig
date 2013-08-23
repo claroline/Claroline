@@ -1,6 +1,6 @@
 {% extends 'ClarolineCoreBundle:Install:layout.html.twig' %}
 {% block content %}
-<div class="span3">
+<div class="col-lg-3">
     <h3> Progression</h3>
     <ol class="nav nav-list">
      {%block naviguation %}
@@ -11,7 +11,7 @@
         <div class="bar" style="width: 100%;"></div>
     </div>
 </div>
-<div class="span6">
+<div class="col-lg-6">
     <h3>Installation reussie</h3>
     {%block data %}
        <div class="alert alert-success">
@@ -20,14 +20,14 @@
         <p> <a href="{{path('claro_index')}}" class="button"> {{ 'home'|trans({}, 'install') }}</a></p>
     {%endblock data %}
 </div>
-<div class="span2">
+<div class="col-lg-2">
     <h3> {{ 'hint'|trans({}, 'install') }}</h3>
     <div class="action">
 
     </div>
 
     </div>
-<div class="span12">
+<div class="col-lg-12">
 
      {% if app.session.getFlashes() is defined %}
         <div class="alert alert-error">

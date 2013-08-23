@@ -5,14 +5,16 @@ namespace Claroline\CoreBundle\Event\Event;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Event\DataConveyorEventInterface;
 
 /**
  * Event dispatched by the resource controller when a custom action is asked on a resource.
  */
-class CustomActionResourceEvent extends Event
+class CustomActionResourceEvent extends Event implements DataConveyorEventInterface
 {
     private $resource;
     private $response;
+    private $isPopulated = false;
 
     /**
      * Constructor.
@@ -42,6 +44,7 @@ class CustomActionResourceEvent extends Event
     public function setResponse(Response $response)
     {
         $this->response = $response;
+        $this->isPopulated = true;
     }
 
     /**
@@ -52,5 +55,10 @@ class CustomActionResourceEvent extends Event
     public function getResponse()
     {
         return $this->response;
+    }
+
+    public function isPopulated()
+    {
+        return $this->isPopulated;
     }
 }

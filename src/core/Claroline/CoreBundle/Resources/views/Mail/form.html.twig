@@ -1,5 +1,27 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
 {% block content %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ "send_message" | trans({}, "platform" )}}</h3>
+        </div>
+        <form novalidate="novalidate"
+            action="{{path('claro_mail_send', {'userId': userId})}}"
+            method="post" {{ form_enctype(form) }}
+            id="generic-form"
+            class="form-horizontal">
+            <div class="panel-body">
+                {{ form_widget(form) }}
+                {{ form_rest(form) }}
+            </div>
+            <div class="panel-footer">
+                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
     <!-- editeur wysiwyg -->
         <script src='{{ asset('bundles/frontend/jquery/plugin/tinymce/jscripts/tiny_mce/tiny_mce.js') }}' type='text/javascript'></script>
         <script type="text/javascript">
@@ -8,15 +30,5 @@
         mode : "textareas"
     });
     </script>
-<form novalidate="novalidate"
-      action="{{path('claro_mail_send', {'userId': userId})}}"
-      method="post" {{ form_enctype(form) }}
-      id="generic-form"
-      class="form-horizontal">
-   {{ form_widget(form) }}
-   {{ form_rest(form) }}
-    <div class="form-actions">
-        <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-    </div>
-</form>
 {% endblock %}
+
