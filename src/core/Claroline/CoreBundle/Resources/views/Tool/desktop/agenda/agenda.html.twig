@@ -23,7 +23,11 @@
 
     <div id="selectWorkspace">
         {% for c in cours %}
-                {{c}}
+               {% if c is empty %} 
+                    {{ 'desktop'|trans({}, 'platform') }}
+                {% else %}
+                    {{c}}
+                {% endif %}
                  <input type="checkbox" name="{{c}}"  class="filter" />
         {% endfor %}
     </div>
@@ -37,13 +41,12 @@
             </div>
             <div class="modal-body">
                 <button class="btn btn-danger" id="deleteBtn" > delete</button>
-                <form method="post" action="{#{{ path('claro_workspace_agenda_add_event') }}#}" id="myForm" name="myForm" {{ form_enctype(form) }}>
+                <form method="post" action="{{ path('claro_desktop_agenda_add') }}" id="myForm" name="myForm" {{ form_enctype(form) }}>
                     {{ form_widget(form) }}
                 </form>
                 <a href="{{ path('claro_desktop_agenda_show') }}" id="link"></a>
                 <a href="{{ path('claro_workspace_agenda_move') }}" id="move"></a>
-               {#}  <a href="{{ path('claro_workspace_agenda_delete') }}" id="delete"></a>
-                <a href="{{ path('claro_workspace_agenda_delete') }}" id="update"></a>#}
+                 <a href="{{ path('claro_desktop_agenda_delete') }}" id="delete"></a>
             </div>
         <div class="modal-footer">
             <button class="btn" data-dismiss="modal" aria-hidden="true">{{'close'|trans({}, 'agenda') }}</button>
@@ -61,7 +64,7 @@
            <ul>
                 <li data-event-start="{{ e.start|date("d/m/Y") }}"> {{ e.start|date("d/m/Y")}} </li>
                 <li > {{ e.end|date("d/m/Y") }} </li>
-                <li>{{ e.description }}</li>
+                <li>{{ e.description|raw }}</li>
                 <li class="hidden"> {{e.priority}}</li>
                   <a href="#myModal" class="update-task" role="button">modifier</a> </p>
             </ul>

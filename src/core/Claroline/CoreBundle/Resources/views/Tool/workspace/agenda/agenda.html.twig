@@ -58,6 +58,7 @@
                 <li > {{ e.end|date("d/m/Y") }} </li>
                 <li>{{ e.description }}</li>
                 <li class="hidden"> {{e.priority}}</li>
+                <li class="hidden"> {{e.allDay}}</li>
                 <a href="#myModal" class="update-task" role="button">modifier</a> </p>
             </ul>
         </div>
@@ -80,7 +81,7 @@
     <script type='text/javascript' src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}' ></script>
     <script type='text/javascript' src='{{ asset(calendarPath ~ 'js/fullcalendar.js') }}' ></script>
     <script type='text/javascript'src='{{ asset('bundles/clarolinecore/js/tool/calendar.js') }}'></script>
-
+    <script type='text/javascript'src='{{ asset('bundles/frontend/date.js') }}'></script>
     <script type='text/javascript'>
         $(function () {
             Claroline.Calendar.initialize('workspace');
