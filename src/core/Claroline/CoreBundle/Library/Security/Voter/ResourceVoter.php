@@ -10,7 +10,7 @@ use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -165,13 +165,13 @@ class ResourceVoter implements VoterInterface
     /**
      * Checks if the current token has the right to do the action $action.
      *
-     * @param AbstractResource $resource
+     * @param ResourceNode     $resource
      * @param TokenInterface   $token
      * @param string           $action
      *
      * @return boolean
      */
-    private function canDo(AbstractResource $resource, TokenInterface $token, $action)
+    private function canDo(ResourceNode $resource, TokenInterface $token, $action)
     {
         $rights = $this->em
             ->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
@@ -186,12 +186,12 @@ class ResourceVoter implements VoterInterface
      * can be created in the directory $resource by the $token
      *
      * @param string           $type
-     * @param AbstractResource $resource
+     * @param ResourceNode     $resource
      * @param TokenInterface   $token
      *
      * @return array
      */
-    private function checkCreation($types, AbstractResource $resource, TokenInterface $token)
+    private function checkCreation($types, ResourceNode $resource, TokenInterface $token)
     {
         $rightsCreation = $this->repository->findCreationRights($this->ut->getRoles($token), $resource);
         $errors = array();
@@ -233,13 +233,13 @@ class ResourceVoter implements VoterInterface
      * Checks if the array of resources can be moved to the resource $parent
      * by the $token.
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource               $parent
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode                   $parent
      * @param array                                                                $resources
      * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
      *
      * @return array
      */
-    private function checkMove(AbstractResource $parent, $resources, TokenInterface $token)
+    private function checkMove(ResourceNode $parent, $resources, TokenInterface $token)
     {
         $errors = array();
         $rightsCreation = $this->repository
@@ -289,13 +289,13 @@ class ResourceVoter implements VoterInterface
      * Checks if the array of resources can be copied to the resource $parent
      * by the $token.
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource               $parent
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode                   $parent
      * @param type                                                                 $resources
      * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
      *
      * @return array
      */
-    public function checkCopy(AbstractResource $parent, $resources, TokenInterface $token)
+    public function checkCopy(ResourceNode $parent, $resources, TokenInterface $token)
     {
         $errors = array();
         $rightsCreation = $this->repository

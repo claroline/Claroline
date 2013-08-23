@@ -127,8 +127,7 @@ class GroupManager
                     'firstName' => $firstName,
                     'lastName' => $lastName
                 );
-            }
-            else {
+            } else {
                 $toImport[] = $existingUser;
             }
         }
@@ -224,7 +223,7 @@ class GroupManager
 
     public function getGroupsByRolesAndName(array $roles, $name, $page = 1)
     {
-        $query = $this->groupRepo->findByRolesAndName($roles, $name,  true);
+        $query = $this->groupRepo->findByRolesAndName($roles, $name, true);
 
         return $this->pagerFactory->createPager($query, $page);
     }

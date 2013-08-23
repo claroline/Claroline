@@ -60,8 +60,8 @@ class Content2Type
     public function __construct(Content2Type $first = null)
     {
         // the size may vary between 1 and 12 and corresponds to
-        // bootstrap container span classes
-        $this->size = 'span12';
+        // bootstrap container col classes
+        $this->size = 'content-8';
 
         if ($first) {
             $first->setBack($this);
@@ -158,7 +158,7 @@ class Content2Type
      * @param  \Claroline\CoreBundle\Entity\Home\Content2Type $next
      * @return Content2Type
      */
-    public function setNext(Content2Type $next)
+    public function setNext(Content2Type $next = null)
     {
         $this->next = $next;
 
@@ -181,7 +181,7 @@ class Content2Type
      * @param  \Claroline\CoreBundle\Entity\Home\Content2Type $back
      * @return Content2Type
      */
-    public function setBack(Content2Type $back)
+    public function setBack(Content2Type $back = null)
     {
         $this->back = $back;
 

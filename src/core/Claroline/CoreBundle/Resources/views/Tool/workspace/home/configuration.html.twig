@@ -16,6 +16,9 @@
         ])
     }}
 
+    <h3>{{ 'home_parameters'|trans({}, 'platform') }}</h3>
+    <br>
+
     <ul>
         <li>
             <a href="{{ path('claro_workspace_widget_properties', {'workspace': workspace.getId()}) }}">

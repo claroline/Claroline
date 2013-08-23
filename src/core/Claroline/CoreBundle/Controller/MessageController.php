@@ -24,7 +24,7 @@ class MessageController
     /**
      * @DI\InjectParams({
      *     "request"        = @DI\Inject("request"),
-     *     "urlGenerator"   = @DI\Inject("router"),
+     *     "router"         = @DI\Inject("router"),
      *     "formFactory"    = @DI\Inject("claroline.form.factory"),
      *     "manager"        = @DI\Inject("claroline.manager.message_manager")
      * })

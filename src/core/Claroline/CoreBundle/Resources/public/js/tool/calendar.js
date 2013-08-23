@@ -13,32 +13,25 @@
         $('.filter').click(function () {
             var numberOfChecked = $('.filter:checkbox:checked').length;
             var totalCheckboxes = $('.filter:checkbox').length;
-            var selected =  new Array();
+            var selected = [];
             $('.filter:checkbox:checked').each(function () {
                 selected.push($(this).attr('name'));
             });
             //if all checkboxes or none checkboxes are checked display all events
-            if ((totalCheckboxes - numberOfChecked === 0) || (numberOfChecked === 0))
-            {
+            if ((totalCheckboxes - numberOfChecked === 0) || (numberOfChecked === 0)) {
                 $('#calendar').fullCalendar('clientEvents', function (eventObject) {
                     eventObject.visible = true;
                 });
                 $('#calendar').fullCalendar('rerenderEvents');
-            }
-            else
-            {
-
+            } else {
                 for (var i = 0; i < selected.length; i++) {
                     $('#calendar').fullCalendar('clientEvents', function (eventObject) {
                         var reg = new RegExp('[:]+', 'g');
                         var title = eventObject.title.split(reg);
-                        if (selected.indexOf(title[0]) < 0)
-                        {
+                        if (selected.indexOf(title[0]) < 0) {
                             eventObject.visible = false;
                             return true;
-                        }
-                        else
-                        {
+                        } else {
                             eventObject.visible = true;
                             return false;
                         }
@@ -46,7 +39,6 @@
                     //console.debug($('#calendar').fullCalendar('clientEvents'));
                     $('#calendar').fullCalendar('rerenderEvents');
                 }
-
             }
         });
 
@@ -63,15 +55,24 @@
             var pickedDate = new Date(date);
 
             $('#calendar_form_start').val(date.getDate() + '/' +
-                (date.getMonth() + 1) + '/' + date.getFullYear() + ' ' 
+                (date.getMonth() + 1) + '/' + date.getFullYear() + ' '
                 + date.getHours() + ':' + pickedDate.getMinutes());
             if (pickedDate > currentDate) {
                 $('#calendar_form_end').val(pickedDate.getDate() + '/' +
-                    (pickedDate.getMonth() + 1) + '/' + pickedDate.getFullYear() + ' ' 
+                    (pickedDate.getMonth() + 1) + '/' + pickedDate.getFullYear() + ' '
                     + pickedDate.getHours() + ':' + pickedDate.getMinutes());
             } else {
-                $('#calendar_form_end').val(currentDate.getDate() + '/' +
-                    (currentDate.getMonth() + 1) + '/' + currentDate.getFullYear() + ' ' + pickedDate.getHours() + ':' + pickedDate.getMinutes());
+                $('#calendar_form_end').val(
+                    currentDate.getDate()
+                    + '/'
+                    + (currentDate.getMonth() + 1)
+                    + '/'
+                    + currentDate.getFullYear()
+                    + ' '
+                    + pickedDate.getHours()
+                    + ':'
+                    + pickedDate.getMinutes()
+                );
             }
             $('#myModal').modal();
         };
@@ -96,17 +97,17 @@
                         if (xhr.status === 200) {
                             $('#myModal').modal('hide');
                             $('#save').removeAttr('disabled');
-                            if (data.allDay === false)
-                            {
-                                $('#calendar').fullCalendar('renderEvent',
-                                {
-                                    title: data.title,
-                                    start: data.start,
-                                    end: data.end,
-                                    allDay: data.allDay,
-                                    color: data.color
-                                },
-                                true // make the event 'stick'
+                            if (data.allDay === false) {
+                                $('#calendar').fullCalendar(
+                                    'renderEvent',
+                                    {
+                                        title: data.title,
+                                        start: data.start,
+                                        end: data.end,
+                                        allDay: data.allDay,
+                                        color: data.color
+                                    },
+                                    true // make the event 'stick'
                                 );
                                 $('#calendar').fullCalendar('unselect');
                             }
@@ -209,8 +210,7 @@
 
                     if (xhr.status  === 200) {
                         alert('event update');
-                    }
-                    else if (xhr.status === 500) {//internal server error
+                    } else if (xhr.status === 500) {//internal server error
                         alert('An error occured' + data.greeting);
                         $('#output').html(data);
                     }

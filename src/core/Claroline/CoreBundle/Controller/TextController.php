@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Resource\Revision;
+use Claroline\CoreBundle\Entity\Resource\Text;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -144,7 +145,7 @@ class TextController extends Controller
 
     /**
      * @Route(
-     *     "/history/{textId}",
+     *     "/history/{text}",
      *     name="claro_text_history"
      * )
      *
@@ -156,10 +157,8 @@ class TextController extends Controller
      *
      * @return type
      */
-    public function historyAction($textId)
+    public function historyAction(Text $text)
     {
-        $em = $this->getDoctrine()->getManager();
-        $text = $em->getRepository('ClarolineCoreBundle:Resource\Text')->find($textId);
         $revisions = $text->getRevisions();
         $size = count($revisions);
         $size--;
@@ -183,14 +182,13 @@ class TextController extends Controller
         return array(
             'differences' => $differences,
             'original' => $revisions[$size]->getContent(),
-            'workspace' => $text->getWorkspace(),
             '_resource' => $text
         );
     }
 
     /**
      * @Route(
-     *     "/form/edit/{textId}",
+     *     "/form/edit/{text}",
      *     name="claro_text_edit_form"
      * )
      *
@@ -202,12 +200,10 @@ class TextController extends Controller
      *
      * @return Response
      */
-    public function editFormAction($textId)
+    public function editFormAction(Text $text)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $textRepo = $em->getRepository('ClarolineCoreBundle:Resource\Text');
         $revisionRepo = $em->getRepository('ClarolineCoreBundle:Resource\Revision');
-        $text = $textRepo->find($textId);
 
         return array(
             'text' => $revisionRepo->getLastRevision($text)->getContent(),
@@ -217,7 +213,7 @@ class TextController extends Controller
 
     /**
      * @Route(
-     *     "/edit/{textId}",
+     *     "/edit/{old}",
      *     name="claro_text_edit"
      * )
      *
@@ -227,14 +223,13 @@ class TextController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function editAction($textId)
+    public function editAction(Text $old)
     {
 
         $request = $this->get('request');
         $user = $this->get('security.context')->getToken()->getUser();
         $text = $request->request->get('content');
         $em = $this->getDoctrine()->getManager();
-        $old = $em->getRepository('ClarolineCoreBundle:Resource\Text')->find($textId);
         $version = $old->getVersion();
         $revision = new Revision();
         $revision->setContent($text);
@@ -247,7 +242,7 @@ class TextController extends Controller
 
         $route = $this->get('router')->generate(
             'claro_resource_open',
-            array('resourceType' => 'text', 'resourceId' => $textId)
+            array('resourceType' => 'text', 'node' => $old->getResourceNode()->getId())
         );
 
         return new RedirectResponse($route);
