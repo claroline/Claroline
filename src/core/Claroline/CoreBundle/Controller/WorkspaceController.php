@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Security\Utilities;
+use Claroline\CoreBundle\Library\Security\TokenUpdater;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
@@ -45,6 +46,7 @@ class WorkspaceController extends Controller
     private $router;
     private $utils;
     private $formFactory;
+    private $tokenUpdater;
 
     /**
      * @DI\InjectParams({
@@ -58,7 +60,8 @@ class WorkspaceController extends Controller
      *     "security"           = @DI\Inject("security.context"),
      *     "router"             = @DI\Inject("router"),
      *     "utils"              = @DI\Inject("claroline.security.utilities"),
-     *     "formFactory"        = @DI\Inject("claroline.form.factory")
+     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
+     *     "tokenUpdater"       = @DI\Inject("claroline.security.token_updater")
      * })
      */
     public function __construct(
@@ -72,7 +75,8 @@ class WorkspaceController extends Controller
         SecurityContextInterface $security,
         UrlGeneratorInterface $router,
         Utilities $utils,
-        FormFactory $formFactory
+        FormFactory $formFactory,
+        TokenUpdater $tokenUpdater
     )
     {
         $this->workspaceManager = $workspaceManager;
@@ -86,6 +90,7 @@ class WorkspaceController extends Controller
         $this->router = $router;
         $this->utils = $utils;
         $this->formFactory = $formFactory;
+        $this->tokenUpdater = $tokenUpdater;
     }
 
     /**
@@ -299,7 +304,7 @@ class WorkspaceController extends Controller
             $config->setDisplayable($form->get('displayable')->getData());
             $user = $this->security->getToken()->getUser();
             $this->workspaceManager->create($config, $user);
-            $this->get('claroline.security.token_updater')->update($this->security->getToken());
+            $this->tokenUpdater->update($this->security->getToken());
             $route = $this->router->generate('claro_workspace_list');
 
             return new RedirectResponse($route);
@@ -335,6 +340,8 @@ class WorkspaceController extends Controller
             array($workspace)
         );
         $this->workspaceManager->deleteWorkspace($workspace);
+
+        $this->tokenUpdater->cancelUsurpation($this->security->getToken());
 
         return new Response('success', 204);
     }

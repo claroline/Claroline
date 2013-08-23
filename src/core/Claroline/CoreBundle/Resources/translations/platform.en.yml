@@ -16,6 +16,8 @@ add_users: 'Add users'
 add_user_s_confirm_message: 'users(s) added'
 admin: Administrator
 admin_analytics: 'Platform analytics'
+administration: Administration
+administrative_code: 'Administrative code'
 admin_form_firstName : 'first name'
 admin_form_lastName : 'Lastname'
 admin_form_plainPassword_first : 'Paswword'
@@ -31,8 +33,6 @@ admin_tags_list: 'Admin tags list'
 admin_tags_management: 'Admin tags management'
 admin_tags_organization: 'Admin tags organization'
 admin_workspace_tag_form_name: Name
-administration: Administration
-administrative_code: 'Administrative code'
 advanced: Advanced
 agenda: Agenda
 all: All
@@ -295,7 +295,24 @@ log_widget_config_updateChild: 'News in the object'
 log_widget_config_delete: Delete
 log_widget_config_move: Move
 log_widget_config_subscribe: Subscribe
-log_widget_config_amount: 'Line number'
+log_widget_config_amount: Line number
+firstName: First name
+lastName: Last name
+canOpen: 'Right to open'
+canCopy: 'Right to copy'
+canDelete: 'Right to delete'
+canEdit: 'Right to edit'
+canExport: 'Right to export'
+canCreate: 'Create %type%'
+sharable: 'Sharable'
+deletable: 'Deletable'
+exportable: 'Exportable'
+copiable: 'Copiable'
+editable: 'Editable'
+yes: 'yes'
+no: 'no'
+no_email: "This email doesn't match a registered user"
+link_outdated : 'link is no more valid'
 login: Login
 login_failure: 'Login has failed. Check your username and password are correct.'
 logout: Logout
@@ -338,6 +355,7 @@ my_account: 'My account'
 my_agenda: 'My agenda'
 my_contacts: 'My contacts'
 my_notes: 'My notes'
+my_badges: 'My badges'
 my_portfolio: 'My portfolio'
 my_resources: 'My resources'
 my_workspace: 'My workspace'
@@ -349,8 +367,10 @@ no_email: 'No email found, check the spelling'
 no_search_results: 'Your search hasn''t returned any result.'
 none: None
 note: Note
+none: None
 object: Object
 ok: Ok
+or: Or
 open: Open
 options: Options
 organize_admin_tags: 'Organize admin tags'
@@ -516,9 +536,12 @@ top_media_views: 'Top most viewed media'
 trash : Trash
 type: Type
 type_s: Type(s)
+unique connections: 'Nb unique Cnx.'
 unregister: Unregister
+unregistered: Unregistered
 unregistered_groups: 'Unregistered groups'
 unregistered_users: 'Unregistered users'
+unwritable_file_exception: "You don't have the permission to write in the file %path%."
 url_invalid: 'the code is not correct, do no try to change the url'
 user: User
 user_accounts: 'User accounts'
@@ -635,3 +658,4 @@ upload_denied: "Permission denied"
 select_all: Tout sélectionner
 drop_file: Drop the file
 drag_file_here: Drag the file here
+badges_management: 'Badges management'

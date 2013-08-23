@@ -39,5 +39,11 @@
                 </div>
             </div>
         </div>
+        <div class="row margin">
+            <h3 class="sub-section-header">{{ 'badges'|trans({}, 'platform') }}</h3>
+
+            {% include 'ClarolineBadgeBundle:Badge:display.html.twig' with {'badgeUrl': 'claro_view_badge', 'paginationurl': 'claro_profile_view', 'routeParams': {'userId': user.id}} %}
+
+        </div>
     </div>
 {% endblock %}
