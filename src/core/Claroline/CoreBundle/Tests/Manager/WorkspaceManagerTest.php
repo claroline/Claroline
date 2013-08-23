@@ -411,7 +411,6 @@ class WorkspaceManagerTest extends MockeryTestCase
         $this->assertEquals($workspaces, $this->getManager()->getWorkspacesByAnonymous());
     }
 
-
     public function testGetNbWorkspaces()
     {
         m::getConfiguration()->allowMockingNonExistentMethods(true);
