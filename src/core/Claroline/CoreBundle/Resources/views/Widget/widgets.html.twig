@@ -22,8 +22,8 @@
                     {% endif %}
                 {% endif %}
             </div>
-            <div id="collapse{{ widget.id }}" class="panel-body collapse in">
-                <div class="view clearfix">
+            <div id="collapse{{ widget.id }}" class="collapse-widget collapse in">
+                <div class="panel-body view">
                    {{ widget.content|raw }}
                </div>
                <div class="edition hide"></div>
@@ -53,27 +53,27 @@
                 $(this).removeClass('btn-danger editing');
                 $(this).addClass('btn-primary');
                 $(this).html('<i class="icon-edit"></i> {{ 'edit'|trans({}, 'platform') }}');
-                $('.panel-body .view', accordionGroup).removeClass('hide');
-                $('.panel-body .edition', accordionGroup).addClass('hide');
+                $('.view', accordionGroup).removeClass('hide');
+                $('.edition', accordionGroup).addClass('hide');
 
             } else {
 
-                if ($('.panel-body .edition', accordionGroup).html() == '') {
+                if ($('.edition', accordionGroup).html() == '') {
                     $.get($(this).data('url'))
                     .done(function (data) {
-                        $('.panel-body .edition', accordionGroup).html(data);
+                        $('.edition', accordionGroup).html(data);
                     });
                 }
 
                 $(this).removeClass('btn-primary');
                 $(this).addClass('btn-danger editing');
                 $(this).html('<i class="icon-ban-circle"></i> {{ 'cancel'|trans({}, 'platform') }}');
-                $('.panel-body .view', accordionGroup).addClass('hide');
-                $('.panel-body .edition', accordionGroup).removeClass('hide');
+                $('.view', accordionGroup).addClass('hide');
+                $('.edition', accordionGroup).removeClass('hide');
             }
 
-            if(!$('.panel-body', accordionGroup).hasClass('collapse in')){
-                $('.panel-body', accordionGroup).collapse('show'); //show if is hide
+            if(!$('.collapse-widget', accordionGroup).hasClass('collapse in')){
+                $('.collapse-widget', accordionGroup).collapse('show'); //show if is hide
             }
         });
 
@@ -85,8 +85,8 @@
             $('.panel-heading .btn', accordionGroup).removeClass('btn-danger editing');
             $('.panel-heading .btn', accordionGroup).addClass('btn-primary');
             $('.panel-heading .btn', accordionGroup).html('<i class="icon-edit"></i> {{ 'edit'|trans({}, 'platform') }}');
-            $('.panel-body .view', accordionGroup).removeClass('hide');
-            $('.panel-body .edition', accordionGroup).addClass('hide');
+            $('.view', accordionGroup).removeClass('hide');
+            $('.edition', accordionGroup).addClass('hide');
         });
     });
 </script>
