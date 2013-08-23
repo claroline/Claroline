@@ -7,7 +7,6 @@ use Claroline\CoreBundle\Event\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Event\OpenResourceEvent;
-use Doctrine\Common\Collections\ArrayCollection;
 use ICAP\BlogBundle\Entity\Blog;
 use ICAP\BlogBundle\Entity\Comment;
 use ICAP\BlogBundle\Entity\Post;

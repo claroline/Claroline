@@ -108,7 +108,7 @@ class Post extends Statusable
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -118,7 +118,7 @@ class Post extends Statusable
     /**
      * Set title
      *
-     * @param string $title
+     * @param  string $title
      * @return Post
      */
     public function setTitle($title)
@@ -131,7 +131,7 @@ class Post extends Statusable
     /**
      * Get title
      *
-     * @return string 
+     * @return string
      */
     public function getTitle()
     {
@@ -141,7 +141,7 @@ class Post extends Statusable
     /**
      * Set content
      *
-     * @param string $content
+     * @param  string $content
      * @return Post
      */
     public function setContent($content)
@@ -154,7 +154,7 @@ class Post extends Statusable
     /**
      * Get content
      *
-     * @return string 
+     * @return string
      */
     public function getContent()
     {
@@ -164,7 +164,7 @@ class Post extends Statusable
     /**
      * Set slug
      *
-     * @param string $slug
+     * @param  string $slug
      * @return Post
      */
     public function setSlug($slug)
@@ -177,7 +177,7 @@ class Post extends Statusable
     /**
      * Get slug
      *
-     * @return string 
+     * @return string
      */
     public function getSlug()
     {
@@ -187,7 +187,7 @@ class Post extends Statusable
     /**
      * Set creationDate
      *
-     * @param \DateTime $creationDate
+     * @param  \DateTime $creationDate
      * @return Post
      */
     public function setCreationDate($creationDate)
@@ -200,7 +200,7 @@ class Post extends Statusable
     /**
      * Get creationDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreationDate()
     {
@@ -210,7 +210,7 @@ class Post extends Statusable
     /**
      * Set modificationDate
      *
-     * @param \DateTime $modificationDate
+     * @param  \DateTime $modificationDate
      * @return Post
      */
     public function setModificationDate($modificationDate)
@@ -223,7 +223,7 @@ class Post extends Statusable
     /**
      * Get modificationDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getModificationDate()
     {
@@ -233,7 +233,7 @@ class Post extends Statusable
     /**
      * Set publicationDate
      *
-     * @param \DateTime $publicationDate
+     * @param  \DateTime $publicationDate
      * @return Post
      */
     public function setPublicationDate($publicationDate)
@@ -246,7 +246,7 @@ class Post extends Statusable
     /**
      * Get publicationDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getPublicationDate()
     {
@@ -256,7 +256,7 @@ class Post extends Statusable
     /**
      * Add comments
      *
-     * @param Comment $comments
+     * @param  Comment $comments
      * @return Post
      */
     public function addComment(Comment $comments)
@@ -283,14 +283,13 @@ class Post extends Statusable
     /***
      * Set comments
      *
-     * @param ArrayCollection $comments
+     * @param  ArrayCollection $comments
      * @return Post
      */
     public function setComments(ArrayCollection $comments)
     {
         /** @var \ICAP\BlogBundle\Entity\Comment[] $comments */
-        foreach($comments as $comment)
-        {
+        foreach ($comments as $comment) {
             $comment->setPost($this);
         }
 
@@ -312,7 +311,7 @@ class Post extends Statusable
     /**
      * Set author
      *
-     * @param User $author
+     * @param  User $author
      * @return Post
      */
     public function setAuthor(User $author = null)
@@ -335,7 +334,7 @@ class Post extends Statusable
     /**
      * Set blog
      *
-     * @param Blog $blog
+     * @param  Blog $blog
      * @return Post
      */
     public function setBlog(Blog $blog = null)
@@ -408,13 +407,11 @@ class Post extends Statusable
     {
         $countComments = 0;
 
-        if($countUnpublished) {
+        if ($countUnpublished) {
             $countComments = $this->getComments()->count();
-        }
-        else {
-            foreach($this->getComments() as $comment)
-            {
-                if($comment->isPublished()) {
+        } else {
+            foreach ($this->getComments() as $comment) {
+                if ($comment->isPublished()) {
                     $countComments++;
                 }
             }

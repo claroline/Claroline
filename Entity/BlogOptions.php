@@ -2,8 +2,6 @@
 
 namespace ICAP\BlogBundle\Entity;
 
-use Claroline\CoreBundle\Entity\User;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

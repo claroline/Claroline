@@ -71,8 +71,7 @@ class ICAPBlogExtension extends \Twig_Extension
 
         $returnHighlightedString = $sentence;
 
-        foreach($searchParameters as $searchParameter)
-        {
+        foreach ($searchParameters as $searchParameter) {
             $returnHighlightedString = preg_replace('/(' . $searchParameter . ')/','<span class="highlight">\1</span>', $returnHighlightedString);
         }
 

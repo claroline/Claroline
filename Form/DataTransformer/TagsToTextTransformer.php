@@ -2,7 +2,6 @@
 namespace ICAP\BlogBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
-use Symfony\Component\Form\Exception\TransformationFailedException;
 use ICAP\BlogBundle\Manager\TagManager;
 use ICAP\BlogBundle\Entity\Tag;
 
@@ -24,7 +23,7 @@ class TagsToTextTransformer implements DataTransformerInterface
     /**
      * Transforms objects (tags) to a string.
      *
-     * @param Tags|null $tags
+     * @param  Tags|null $tags
      * @return string
      */
     public function transform($tags)
@@ -32,7 +31,7 @@ class TagsToTextTransformer implements DataTransformerInterface
         if (!$tags) {
             $tags = array();
         }
-        
+
         $tagNames = array();
         foreach ($tags as $tag) {
             array_push($tagNames, $tag->getName());
@@ -45,7 +44,7 @@ class TagsToTextTransformer implements DataTransformerInterface
      * Transforms a string to an array of tags.
      *
      * @param  string $tagNames
-     * @return array of strings (names for tags)
+     * @return array  of strings (names for tags)
      */
     public function reverseTransform($tagNames)
     {

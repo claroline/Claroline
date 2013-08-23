@@ -57,13 +57,12 @@ class PostRepository extends EntityRepository
         $titleCondition   = '';
         $contentCondition = '';
         $hasWords         = false;
-        foreach($searchParameters as $key => $searchParameter)
-        {
-            if(false === in_array($searchParameter, $forbiddenWords)) {
+        foreach ($searchParameters as $key => $searchParameter) {
+            if (false === in_array($searchParameter, $forbiddenWords)) {
                 $hasWords = true;
                 $titleCondition .= "post.title LIKE :titleSearch$key";
                 $contentCondition .= "post.content LIKE :contentSearch$key";
-                if($key < count($searchParameters) - 1) {
+                if ($key < count($searchParameters) - 1) {
                     $titleCondition .= " AND ";
                     $contentCondition .= " AND ";
                 }
@@ -73,10 +72,9 @@ class PostRepository extends EntityRepository
             }
         }
 
-        if($hasWords) {
+        if ($hasWords) {
             $query->andWhere('(' . $titleCondition . ') OR (' . $contentCondition . ')');
-        }
-        else {
+        } else {
             throw new TooMuchResultException();
         }
 
@@ -113,7 +111,6 @@ class PostRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult(): $query;
     }
-
 
     /**
      * @param Blog $blog

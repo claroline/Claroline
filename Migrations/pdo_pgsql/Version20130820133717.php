@@ -16,8 +16,8 @@ class Version20130820133717 extends AbstractMigration
     {
         $this->addSql("
             CREATE TABLE icap__blog_tag (
-                id SERIAL NOT NULL, 
-                name VARCHAR(255) NOT NULL, 
+                id SERIAL NOT NULL,
+                name VARCHAR(255) NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -26,16 +26,16 @@ class Version20130820133717 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE icap__blog_post (
-                id SERIAL NOT NULL, 
-                user_id INT DEFAULT NULL, 
-                blog_id INT DEFAULT NULL, 
-                title VARCHAR(255) NOT NULL, 
-                content TEXT NOT NULL, 
-                slug VARCHAR(128) NOT NULL, 
-                creation_date TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, 
-                modification_date TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, 
-                publication_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, 
-                status SMALLINT NOT NULL, 
+                id SERIAL NOT NULL,
+                user_id INT DEFAULT NULL,
+                blog_id INT DEFAULT NULL,
+                title VARCHAR(255) NOT NULL,
+                content TEXT NOT NULL,
+                slug VARCHAR(128) NOT NULL,
+                creation_date TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,
+                modification_date TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,
+                publication_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL,
+                status SMALLINT NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -50,8 +50,8 @@ class Version20130820133717 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE icap__blog_post_tag (
-                post_id INT NOT NULL, 
-                tag_id INT NOT NULL, 
+                post_id INT NOT NULL,
+                tag_id INT NOT NULL,
                 PRIMARY KEY(post_id, tag_id)
             )
         ");
@@ -63,13 +63,13 @@ class Version20130820133717 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE icap__blog_comment (
-                id SERIAL NOT NULL, 
-                user_id INT DEFAULT NULL, 
-                post_id INT DEFAULT NULL, 
-                message TEXT NOT NULL, 
-                creation_date TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, 
-                publication_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, 
-                status SMALLINT NOT NULL, 
+                id SERIAL NOT NULL,
+                user_id INT DEFAULT NULL,
+                post_id INT DEFAULT NULL,
+                message TEXT NOT NULL,
+                creation_date TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,
+                publication_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL,
+                status SMALLINT NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -81,9 +81,9 @@ class Version20130820133717 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE icap__blog (
-                id SERIAL NOT NULL, 
-                infos TEXT DEFAULT NULL, 
-                resourceNode_id INT DEFAULT NULL, 
+                id SERIAL NOT NULL,
+                infos TEXT DEFAULT NULL,
+                resourceNode_id INT DEFAULT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -92,13 +92,13 @@ class Version20130820133717 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE icap__blog_options (
-                id SERIAL NOT NULL, 
-                blog_id INT DEFAULT NULL, 
-                authorize_comment BOOLEAN NOT NULL, 
-                authorize_anonymous_comment BOOLEAN NOT NULL, 
-                post_per_page SMALLINT NOT NULL, 
-                auto_publish_post BOOLEAN NOT NULL, 
-                auto_publish_comment BOOLEAN NOT NULL, 
+                id SERIAL NOT NULL,
+                blog_id INT DEFAULT NULL,
+                authorize_comment BOOLEAN NOT NULL,
+                authorize_anonymous_comment BOOLEAN NOT NULL,
+                post_per_page SMALLINT NOT NULL,
+                auto_publish_post BOOLEAN NOT NULL,
+                auto_publish_comment BOOLEAN NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -106,46 +106,46 @@ class Version20130820133717 extends AbstractMigration
             CREATE UNIQUE INDEX UNIQ_D1AAC984DAE07E97 ON icap__blog_options (blog_id)
         ");
         $this->addSql("
-            ALTER TABLE icap__blog_post 
-            ADD CONSTRAINT FK_1B067922A76ED395 FOREIGN KEY (user_id) 
+            ALTER TABLE icap__blog_post
+            ADD CONSTRAINT FK_1B067922A76ED395 FOREIGN KEY (user_id)
             REFERENCES claro_user (id) NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
-            ALTER TABLE icap__blog_post 
-            ADD CONSTRAINT FK_1B067922DAE07E97 FOREIGN KEY (blog_id) 
+            ALTER TABLE icap__blog_post
+            ADD CONSTRAINT FK_1B067922DAE07E97 FOREIGN KEY (blog_id)
             REFERENCES icap__blog (id) NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
-            ALTER TABLE icap__blog_post_tag 
-            ADD CONSTRAINT FK_C3C6F4794B89032C FOREIGN KEY (post_id) 
-            REFERENCES icap__blog_post (id) 
+            ALTER TABLE icap__blog_post_tag
+            ADD CONSTRAINT FK_C3C6F4794B89032C FOREIGN KEY (post_id)
+            REFERENCES icap__blog_post (id)
             ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
-            ALTER TABLE icap__blog_post_tag 
-            ADD CONSTRAINT FK_C3C6F479BAD26311 FOREIGN KEY (tag_id) 
-            REFERENCES icap__blog_tag (id) 
+            ALTER TABLE icap__blog_post_tag
+            ADD CONSTRAINT FK_C3C6F479BAD26311 FOREIGN KEY (tag_id)
+            REFERENCES icap__blog_tag (id)
             ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
-            ALTER TABLE icap__blog_comment 
-            ADD CONSTRAINT FK_95EB616FA76ED395 FOREIGN KEY (user_id) 
+            ALTER TABLE icap__blog_comment
+            ADD CONSTRAINT FK_95EB616FA76ED395 FOREIGN KEY (user_id)
             REFERENCES claro_user (id) NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
-            ALTER TABLE icap__blog_comment 
-            ADD CONSTRAINT FK_95EB616F4B89032C FOREIGN KEY (post_id) 
+            ALTER TABLE icap__blog_comment
+            ADD CONSTRAINT FK_95EB616F4B89032C FOREIGN KEY (post_id)
             REFERENCES icap__blog_post (id) NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
-            ALTER TABLE icap__blog 
-            ADD CONSTRAINT FK_FD75E6C4B87FAB32 FOREIGN KEY (resourceNode_id) 
-            REFERENCES claro_resource_node (id) 
+            ALTER TABLE icap__blog
+            ADD CONSTRAINT FK_FD75E6C4B87FAB32 FOREIGN KEY (resourceNode_id)
+            REFERENCES claro_resource_node (id)
             ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
-            ALTER TABLE icap__blog_options 
-            ADD CONSTRAINT FK_D1AAC984DAE07E97 FOREIGN KEY (blog_id) 
+            ALTER TABLE icap__blog_options
+            ADD CONSTRAINT FK_D1AAC984DAE07E97 FOREIGN KEY (blog_id)
             REFERENCES icap__blog (id) NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
     }
@@ -153,23 +153,23 @@ class Version20130820133717 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE icap__blog_post_tag 
+            ALTER TABLE icap__blog_post_tag
             DROP CONSTRAINT FK_C3C6F479BAD26311
         ");
         $this->addSql("
-            ALTER TABLE icap__blog_post_tag 
+            ALTER TABLE icap__blog_post_tag
             DROP CONSTRAINT FK_C3C6F4794B89032C
         ");
         $this->addSql("
-            ALTER TABLE icap__blog_comment 
+            ALTER TABLE icap__blog_comment
             DROP CONSTRAINT FK_95EB616F4B89032C
         ");
         $this->addSql("
-            ALTER TABLE icap__blog_post 
+            ALTER TABLE icap__blog_post
             DROP CONSTRAINT FK_1B067922DAE07E97
         ");
         $this->addSql("
-            ALTER TABLE icap__blog_options 
+            ALTER TABLE icap__blog_options
             DROP CONSTRAINT FK_D1AAC984DAE07E97
         ");
         $this->addSql("

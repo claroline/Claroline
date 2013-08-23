@@ -2,17 +2,13 @@
 
 namespace ICAP\BlogBundle\Controller;
 
-use Claroline\CoreBundle\Entity\User;
 use ICAP\BlogBundle\Entity\Comment;
 use ICAP\BlogBundle\Entity\Post;
 use ICAP\BlogBundle\Entity\Blog;
-use ICAP\BlogBundle\Form\CommentType;
-use ICAP\BlogBundle\Form\PostType;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\HttpFoundation\Request;
 
 class CommentController extends Controller
 {
@@ -37,9 +33,7 @@ class CommentController extends Controller
             $entityManager->flush();
 
             $flashBag->add('success', $translator->trans('icap_blog_comment_delete_success', array(), 'icap_blog'));
-        }
-        catch(\Exception $exception)
-        {
+        } catch (\Exception $exception) {
             $flashBag->add('error', $translator->trans('icap_blog_comment_delete_error', array(), 'icap_blog'));
         }
 
@@ -110,9 +104,7 @@ class CommentController extends Controller
             $entityManager->flush();
 
             $flashBag->add('success', $messages['success']);
-        }
-        catch(\Exception $exception)
-        {
+        } catch (\Exception $exception) {
             $flashBag->add('error', $messages['error']);
         }
 

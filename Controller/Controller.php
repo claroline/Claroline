@@ -12,7 +12,7 @@ class Controller extends BaseController
     /**
      * @param string $permission
      *
-     * @param Blog   $blog
+     * @param Blog $blog
      *
      * @throws AccessDeniedException
      */
@@ -26,7 +26,7 @@ class Controller extends BaseController
     /**
      * @param string $permission
      *
-     * @param Blog   $blog
+     * @param Blog $blog
      *
      * @return bool
      */
@@ -52,8 +52,7 @@ class Controller extends BaseController
 
         $translator = $this->get('translator');
 
-        foreach($postDatas as $postData)
-        {
+        foreach ($postDatas as $postData) {
             $archiveDatas[$postData['year']][] = array(
                 'year'  => $postData['year'],
                 'month' => $translator->trans('month.' . date("F", mktime(0, 0, 0, $postData['month'], 10)), array(), 'platform'),

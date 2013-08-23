@@ -2,7 +2,6 @@
 
 namespace ICAP\BlogBundle\Form;
 
-use ICAPLyon1\Bundle\SimpleTagBundle\Repository\TagRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;

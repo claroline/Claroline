@@ -2,8 +2,6 @@
 
 namespace ICAP\BlogBundle\Manager;
 
-use Doctrine\ORM\EntityManager;
-use ICAP\BlogBundle\Entity\Blog;
 use ICAP\BlogBundle\Entity\Tag;
 use ICAP\BlogBundle\Repository\TagRepository;
 
@@ -46,8 +44,8 @@ class TagManager
     /**
      * Load or Create tag following to a given string or list of names
      *
-     * @param string or array $tagNames
-     * @return array tags
+     * @param  string or array $tagNames
+     * @return array           tags
      */
     public function loadOrCreateTags($tagNames)
     {
@@ -66,7 +64,7 @@ class TagManager
     /**
      * Load or Create tag following to a given name
      *
-     * @param string $name
+     * @param  string                      $name
      * @return \ICAP\BlogBundle\Entity\Tag
      */
     public function loadOrCreateTag($name)
@@ -82,7 +80,7 @@ class TagManager
     /**
      * Load a tag following to its name
      *
-     * @param string $name
+     * @param  string                      $name
      * @return \ICAP\BlogBundle\Entity\Tag
      */
     public function loadTag($name)
@@ -93,7 +91,7 @@ class TagManager
     /**
      * Create, not persist, tag given its name
      *
-     * @param String $name
+     * @param  String     $name
      * @return TagManager the generated Tag
      */
     public function createTag($name)

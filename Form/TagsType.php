@@ -8,7 +8,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class TagsType extends AbstractType
 {
@@ -34,12 +33,12 @@ class TagsType extends AbstractType
 
         $view->vars['attr']['class'] = $class;
     }
-    
+
     public function getParent()
     {
         return 'text';
     }
- 
+
     public function getName()
     {
         return 'tags';

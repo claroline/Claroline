@@ -37,7 +37,7 @@ class BlogController extends Controller
         $this->checkAccess("OPEN", $blog);
 
         $search = $this->getRequest()->get('search');
-        if(null !== $search && '' !== $search) {
+        if (null !== $search && '' !== $search) {
             return $this->redirect($this->generateUrl('icap_blog_view_search', array('blogId' => $blog->getId(), 'search' => $search)));
         }
 
@@ -46,10 +46,10 @@ class BlogController extends Controller
         $tag    = null;
         $author = null;
 
-        if(null !== $filter) {
+        if (null !== $filter) {
             $tag = $this->get('icap.blog.tag_repository')->findOneByName($filter);
 
-            if(null === $tag) {
+            if (null === $tag) {
                 $author = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByUsername($filter);
             }
         }
@@ -60,7 +60,7 @@ class BlogController extends Controller
             ->andWhere('post.blog = :blogId')
         ;
 
-        if(!$this->isUserGranted("EDIT", $blog)) {
+        if (!$this->isUserGranted("EDIT", $blog)) {
             $query
                 ->andWhere('post.publicationDate IS NOT NULL')
                 ->andWhere('post.status = :publishedStatus')
@@ -68,14 +68,13 @@ class BlogController extends Controller
             ;
         }
 
-        if(null !== $tag) {
+        if (null !== $tag) {
             $query
                 ->join('post.tags', 't')
                 ->andWhere('t.id = :tagId')
                 ->setParameter('tagId', $tag->getId())
             ;
-        }
-        elseif(null !== $author) {
+        } elseif (null !== $author) {
             $query
                 ->andWhere('post.author = :authorId')
                 ->setParameter('authorId', $author->getId())
@@ -119,12 +118,11 @@ class BlogController extends Controller
         /** @var \ICAp\BlogBundle\Repository\PostRepository $postRepository */
         $postRepository = $this->get('icap.blog.post_repository');
 
-        try
-        {
+        try {
             /** @var \Doctrine\ORM\QueryBuilder $query */
             $query = $postRepository->searchByBlog($blog, $search, false);
 
-            if(!$this->isUserGranted("EDIT", $blog)) {
+            if (!$this->isUserGranted("EDIT", $blog)) {
                 $query
                     ->andWhere('post.publicationDate IS NOT NULL')
                     ->andWhere('post.status = :publishedStatus')
@@ -139,11 +137,9 @@ class BlogController extends Controller
                 ->setMaxPerPage($blog->getOptions()->getPostPerPage())
                 ->setCurrentPage($page)
             ;
-        }
-        catch (NotValidCurrentPageException $exception) {
+        } catch (NotValidCurrentPageException $exception) {
             throw new NotFoundHttpException();
-        }
-        catch(TooMuchResultException $exception) {
+        } catch (TooMuchResultException $exception) {
             $this->get('session')->getFlashBag()->add('alert', $this->get('translator')->trans('icap_blog_post_search_too_much_result', array(), 'icap_blog'));
             $adapter = new ArrayAdapter(array());
             $pager   = new PagerFanta($adapter);
@@ -173,7 +169,7 @@ class BlogController extends Controller
 
         $form = $this->createForm(new BlogOptionsType(), $blogOptions);
 
-        if("POST" === $request->getMethod()) {
+        if ("POST" === $request->getMethod()) {
             $form->submit($request);
             if ($form->isValid()) {
                 $entityManager = $this->getDoctrine()->getManager();
@@ -185,8 +181,7 @@ class BlogController extends Controller
                     $entityManager->flush();
 
                     $flashBag->add('success', $translator->trans('icap_blog_post_configure_success', array(), 'icap_blog'));
-                }
-                catch(\Exception $exception) {
+                } catch (\Exception $exception) {
                     $flashBag->add('error', $translator->trans('icap_blog_post_configure_error', array(), 'icap_blog'));
                 }
 
@@ -212,7 +207,7 @@ class BlogController extends Controller
 
         $form = $this->createForm(new BlogInfosType(), $blog);
 
-        if("POST" === $request->getMethod()) {
+        if ("POST" === $request->getMethod()) {
             $form->submit($request);
             if ($form->isValid()) {
                 $entityManager = $this->getDoctrine()->getManager();
@@ -224,8 +219,7 @@ class BlogController extends Controller
                     $entityManager->flush();
 
                     $flashBag->add('success', $translator->trans('icap_blog_edit_infos_success', array(), 'icap_blog'));
-                }
-                catch(\Exception $exception) {
+                } catch (\Exception $exception) {
                     $flashBag->add('error', $translator->trans('icap_blog_edit_infos_error', array(), 'icap_blog'));
                 }
 
@@ -255,8 +249,7 @@ class BlogController extends Controller
 
         $posts = $postRepository->findPublishedByBlogAndDates($blog, $startDate, $endDate);
 
-        foreach($posts as $post)
-        {
+        foreach ($posts as $post) {
             $calendarDatas[] = array(
                 'id'    => $post->getId(),
                 'start' => $post->getPublicationDate()->format('Y-m-d'),

@@ -29,7 +29,7 @@ class PostController extends Controller
         $this->checkAccess("OPEN", $blog);
 
         $commentStatus = Comment::STATUS_UNPUBLISHED;
-        if($blog->isAutoPublishComment()) {
+        if ($blog->isAutoPublishComment()) {
             $commentStatus = Comment::STATUS_PUBLISHED;
         }
 
@@ -42,7 +42,7 @@ class PostController extends Controller
 
         $form = $this->createForm(new CommentType(), $comment);
 
-        if("POST" === $request->getMethod()) {
+        if ("POST" === $request->getMethod()) {
             $form->handleRequest($request);
             if ($form->isValid()) {
                 $translator = $this->get('translator');
@@ -54,11 +54,10 @@ class PostController extends Controller
                     $entityManager->flush();
 
                     $flashBag->add('success', $translator->trans('icap_blog_comment_add_success', array(), 'icap_blog'));
-                }
-                catch(\Exception $exception)
-                {
+                } catch (\Exception $exception) {
                     $flashBag->add('error', $translator->trans('icap_blog_comment_add_error', array(), 'icap_blog'));
                 }
+
                 return $this->redirect($this->generateUrl('icap_blog_post_view', array('blogId' => $blog->getId(), 'postSlug' => $post->getSlug())) . '#comments');
             }
         }
@@ -83,7 +82,7 @@ class PostController extends Controller
         $this->checkAccess("EDIT", $blog);
 
         $postStatus = Comment::STATUS_UNPUBLISHED;
-        if($blog->isAutoPublishPost()) {
+        if ($blog->isAutoPublishPost()) {
             $postStatus = Comment::STATUS_PUBLISHED;
         }
         $post = new Post();
@@ -129,7 +128,7 @@ class PostController extends Controller
     {
         $form = $this->createForm(new PostType(), $post);
 
-        if("POST" === $request->getMethod()) {
+        if ("POST" === $request->getMethod()) {
             $form->handleRequest($request);
             if ($form->isValid()) {
                 $flashBag = $this->get('session')->getFlashBag();
@@ -140,11 +139,10 @@ class PostController extends Controller
                     $entityManager->flush();
 
                     $flashBag->add('success', $messages['success']);
-                }
-                catch(\Exception $exception)
-                {
+                } catch (\Exception $exception) {
                     $flashBag->add('error', $messages['error']);
                 }
+
                 return $this->redirect($this->generateUrl('icap_blog_view', array('blogId' => $blog->getId())));
             }
         }
@@ -178,9 +176,7 @@ class PostController extends Controller
             $entityManager->flush();
 
             $flashBag->add('success', $translator->trans('icap_blog_post_delete_success', array(), 'icap_blog'));
-        }
-        catch(\Exception $exception)
-        {
+        } catch (\Exception $exception) {
             $flashBag->add('error', $translator->trans('icap_blog_post_delete_error', array(), 'icap_blog'));
         }
 
@@ -248,9 +244,7 @@ class PostController extends Controller
             $entityManager->flush();
 
             $flashBag->add('success', $messages['success']);
-        }
-        catch(\Exception $exception)
-        {
+        } catch (\Exception $exception) {
             $flashBag->add('error', $messages['error']);
         }
 

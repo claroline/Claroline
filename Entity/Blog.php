@@ -51,8 +51,7 @@ class Blog extends AbstractResource
     public function setPosts(ArrayCollection $posts)
     {
         /** @var \ICAP\BlogBundle\Entity\Post[] $posts */
-        foreach($posts as $post)
-        {
+        foreach ($posts as $post) {
             $post->setBlog($this);
         }
 
@@ -128,8 +127,7 @@ class Blog extends AbstractResource
     {
         $authors = array();
 
-        foreach($this->getPosts() as $post)
-        {
+        foreach ($this->getPosts() as $post) {
             $postAuthor                           = $post->getAuthor();
             $authors[$postAuthor->getUsername()]  = $postAuthor;
         }

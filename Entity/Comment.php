@@ -5,7 +5,6 @@ namespace ICAP\BlogBundle\Entity;
 use Claroline\CoreBundle\Entity\User;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
@@ -79,7 +78,7 @@ class Comment extends Statusable
     /**
      * Set message
      *
-     * @param string $message
+     * @param  string  $message
      * @return Comment
      */
     public function setMessage($message)
@@ -92,7 +91,7 @@ class Comment extends Statusable
     /**
      * Get message
      *
-     * @return string 
+     * @return string
      */
     public function getMessage()
     {
@@ -102,7 +101,7 @@ class Comment extends Statusable
     /**
      * Set creationDate
      *
-     * @param \DateTime $creationDate
+     * @param  \DateTime $creationDate
      * @return Comment
      */
     public function setCreationDate($creationDate)
@@ -115,7 +114,7 @@ class Comment extends Statusable
     /**
      * Get creationDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreationDate()
     {
@@ -125,7 +124,7 @@ class Comment extends Statusable
     /**
      * Set author
      *
-     * @param User $author
+     * @param  User    $author
      * @return Comment
      */
     public function setAuthor(User $author = null)
@@ -148,7 +147,7 @@ class Comment extends Statusable
     /**
      * Set post
      *
-     * @param Post $post
+     * @param  Post    $post
      * @return Comment
      */
     public function setPost(Post $post = null)

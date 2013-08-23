@@ -16,8 +16,8 @@ class Version20130820133717 extends AbstractMigration
     {
         $this->addSql("
             CREATE TABLE icap__blog_tag (
-                id INTEGER NOT NULL, 
-                name VARCHAR(255) NOT NULL, 
+                id INTEGER NOT NULL,
+                name VARCHAR(255) NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -26,16 +26,16 @@ class Version20130820133717 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE icap__blog_post (
-                id INTEGER NOT NULL, 
-                user_id INTEGER DEFAULT NULL, 
-                blog_id INTEGER DEFAULT NULL, 
-                title VARCHAR(255) NOT NULL, 
-                content CLOB NOT NULL, 
-                slug VARCHAR(128) NOT NULL, 
-                creation_date DATETIME NOT NULL, 
-                modification_date DATETIME NOT NULL, 
-                publication_date DATETIME DEFAULT NULL, 
-                status INTEGER NOT NULL, 
+                id INTEGER NOT NULL,
+                user_id INTEGER DEFAULT NULL,
+                blog_id INTEGER DEFAULT NULL,
+                title VARCHAR(255) NOT NULL,
+                content CLOB NOT NULL,
+                slug VARCHAR(128) NOT NULL,
+                creation_date DATETIME NOT NULL,
+                modification_date DATETIME NOT NULL,
+                publication_date DATETIME DEFAULT NULL,
+                status INTEGER NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -50,8 +50,8 @@ class Version20130820133717 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE icap__blog_post_tag (
-                post_id INTEGER NOT NULL, 
-                tag_id INTEGER NOT NULL, 
+                post_id INTEGER NOT NULL,
+                tag_id INTEGER NOT NULL,
                 PRIMARY KEY(post_id, tag_id)
             )
         ");
@@ -63,13 +63,13 @@ class Version20130820133717 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE icap__blog_comment (
-                id INTEGER NOT NULL, 
-                user_id INTEGER DEFAULT NULL, 
-                post_id INTEGER DEFAULT NULL, 
-                message CLOB NOT NULL, 
-                creation_date DATETIME NOT NULL, 
-                publication_date DATETIME DEFAULT NULL, 
-                status INTEGER NOT NULL, 
+                id INTEGER NOT NULL,
+                user_id INTEGER DEFAULT NULL,
+                post_id INTEGER DEFAULT NULL,
+                message CLOB NOT NULL,
+                creation_date DATETIME NOT NULL,
+                publication_date DATETIME DEFAULT NULL,
+                status INTEGER NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -81,9 +81,9 @@ class Version20130820133717 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE icap__blog (
-                id INTEGER NOT NULL, 
-                infos CLOB DEFAULT NULL, 
-                resourceNode_id INTEGER DEFAULT NULL, 
+                id INTEGER NOT NULL,
+                infos CLOB DEFAULT NULL,
+                resourceNode_id INTEGER DEFAULT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -92,13 +92,13 @@ class Version20130820133717 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE icap__blog_options (
-                id INTEGER NOT NULL, 
-                blog_id INTEGER DEFAULT NULL, 
-                authorize_comment BOOLEAN NOT NULL, 
-                authorize_anonymous_comment BOOLEAN NOT NULL, 
-                post_per_page INTEGER NOT NULL, 
-                auto_publish_post BOOLEAN NOT NULL, 
-                auto_publish_comment BOOLEAN NOT NULL, 
+                id INTEGER NOT NULL,
+                blog_id INTEGER DEFAULT NULL,
+                authorize_comment BOOLEAN NOT NULL,
+                authorize_anonymous_comment BOOLEAN NOT NULL,
+                post_per_page INTEGER NOT NULL,
+                auto_publish_post BOOLEAN NOT NULL,
+                auto_publish_comment BOOLEAN NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
