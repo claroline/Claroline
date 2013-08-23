@@ -80,13 +80,9 @@
     function resize(obj)
     {
         var lineheight = $(obj).css("line-height").substr(0, $(obj).css("line-height").indexOf("px"));
-        //var topPadding = $(obj).css("padding-top").substr(0, $(obj).css("padding-top").indexOf("px"));
-        //var bottomPadding = $(obj).css("padding-bottom").substr(0, $(obj).css("padding-bottom").indexOf("px"));
         var lines = $(obj).val().split("\n").length;
 
         lineheight = parseInt(lineheight, 10) + 4;
-        //topPadding = parseInt(topPadding, 10);
-        //bottomPadding = parseInt(bottomPadding, 10);
 
         $(obj).css("height", ((lines + 1) * lineheight) + "px");
     }
@@ -149,8 +145,7 @@
             generatedContent = $(creatorElement).find(".generated-content").html();
         }
 
-        if (text.value !== "" || title.value !== "")
-        {
+        if (text.value !== "" || title.value !== "") {
             $.post(homePath + path,
                 {
                     "title": title.value,
@@ -163,8 +158,7 @@
                 .done(
                     function (data)
                     {
-                        if (!isNaN(data) && data !== "")
-                        {
+                        if (!isNaN(data) && data !== "") {
                             contentPath = "content/" + data + "/" + type;
 
                             var insertElement = function (content) {
@@ -196,9 +190,9 @@
                             text.value = "";
                             resize(text);
                             $(creatorElement).find(".generated").html("");
-                        }
-                        else if (data === "true")
-                        {
+
+                        } else if (data === "true") {
+
                             contentPath = "content/" + id + "/" + type;
 
                             if (father) {
@@ -215,10 +209,8 @@
                                 )
                             ;
 
-                        }
-                        else
-                        {
-                            //document.body.innerHTML = data;
+                        } else {
+                            //document.body.innerHTML = data; //DEBUG
                             modal("content/error");
                         }
                     }
@@ -268,8 +260,7 @@
     });
 
     $("body").on("mouseleave", ".content-element", function () {
-        if (!$(this).find(".content-menu").first().hasClass("open"))
-        {
+        if (!$(this).find(".content-menu").first().hasClass("open")) {
             $(this).find(".content-menu").first().addClass("hide");
         }
     });
@@ -300,11 +291,10 @@
                     });
 
                     $(element).addClass(size);
-
+                    $(element).trigger("DOMSubtreeModified"); //height resize event
                     $("#sizes").modal("hide");
-                }
-                else
-                {
+
+                } else {
                     modal("content/error");
                 }
             }
@@ -331,8 +321,7 @@
         var name = $(event.target).data("region");
         var id = $("#regions .modal-body").data("id");
 
-        if (id && name)
-        {
+        if (id && name) {
             $.ajax(homePath + "region/" + name + "/" + id)
                 .done(
                     function ()
@@ -369,9 +358,7 @@
                         $(element).hide("slow", function () {
                             $(this).remove();
                         });
-                    }
-                    else
-                    {
+                    } else {
                         modal("content/error");
                     }
                 }
@@ -404,9 +391,7 @@
                         $(element).hide("slow", function () {
                             $(this).remove();
                         });
-                    }
-                    else
-                    {
+                    } else {
                         modal("content/error");
                     }
                 }
@@ -462,8 +447,7 @@
         var type = $(element).data("type");
         var father = $(element).data("father");
 
-        if (id && type && element)
-        {
+        if (id && type && element) {
             var contentPath = "content/creator/" + type + "/" + id;
 
             if (father) {
@@ -499,8 +483,7 @@
         var element = parentByClassName(event.target, "creator");
         var id = $(element).data("id");
 
-        if (element && id)
-        {
+        if (element && id) {
             creator(event.target, id);
         }
     });
@@ -511,8 +494,7 @@
         var type = $(element).data("type");
         var father = $(element).data("father");
 
-        if (id && type && element)
-        {
+        if (id && type && element) {
             var contentPath = "content/" + id + "/" + type;
 
             if (father) {
@@ -570,12 +552,8 @@
             var b = $(ui.item).next().data("id");
             var type = $(ui.item).data("type");
 
-            if (a && type)
-            {
+            if (a && type) {
                 $.ajax(homePath + "content/reorder/" + type + "/" + a + "/" + b)
-                .success(
-                    //resizeDivs()
-                )
                 .error(
                         function ()
                         {
