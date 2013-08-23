@@ -1,38 +1,40 @@
+/* global FileAPI */
+/* global Translator */
+
 (function () {
     'use strict';
     $(document).on('ready', function () {
-        if( !(FileAPI.support.cors || FileAPI.support.flash) ){
+        if (!(FileAPI.support.cors || FileAPI.support.flash)) {
             alert('Flash is needed');
         } else {
-            var dropzone_enabled = false;
-            var drop_enabled = false;
+            var dropzoneEnabled = false;
+            var dropEnabled = false;
 
-            if( FileAPI.support.dnd ){
-                    $(document).dnd(function (over, evt){
-                    drop_enabled = ($(evt.target).hasClass('nodes') || $(evt.target).parents('.nodes').length > 0);
+            if (FileAPI.support.dnd) {
+                $(document).dnd(function (over, evt) {
+                    dropEnabled = ($(evt.target).hasClass('nodes') || $(evt.target).parents('.nodes').length > 0);
                     if (over) {
-                        if (!dropzone_enabled) {
+                        if (!dropzoneEnabled) {
                             $('.nodes').addClass('dropzone');
                             $('.nodes').after('<div class="dropzone-text"></div>');
-                            dropzone_enabled = true;
+                            dropzoneEnabled = true;
                         }
                     } else {
-                        if (dropzone_enabled) {
+                        if (dropzoneEnabled) {
                             $('.nodes').removeClass('dropzone');
                             $('.dropzone-text').remove();
-                            dropzone_enabled = false;
+                            dropzoneEnabled = false;
                         }
                     }
 
-                    if (drop_enabled) {
+                    if (dropEnabled) {
                         $('.dropzone-text').html(Translator.get('platform:drop_file'));
-                    }else {
+                    } else {
                         $('.dropzone-text').html(Translator.get('platform:drag_file_here'));
                     }
-                }, function (files){
-                    if (drop_enabled) {
+                }, function (files) {
+                    if (dropEnabled) {
                         onFiles(files);
-                    }else {
                     }
                 });
             }
@@ -44,61 +46,63 @@
         index: 0,
         active: false,
 
-        add: function (file){
+        add: function (file) {
             FU.files.push(file);
         },
 
-        getFileById: function (id){
+        getFileById: function (id) {
             var i = FU.files.length;
-            while( i-- ){
-                if( FileAPI.uid(FU.files[i]) === id ){
+            while (i--) {
+                if (FileAPI.uid(FU.files[i]) === id) {
                     return  FU.files[i];
                 }
             }
         },
 
-        start: function (){
-            if( !FU.active && (FU.active = FU.files.length > FU.index) ){
+        start: function () {
+            if (!FU.active && (FU.active = FU.files.length > FU.index)) {
                 FU._upload(FU.files[FU.index]);
             }
         },
 
-        abort: function (id){
+        abort: function (id) {
             var file = this.getFileById(id);
-            if( file.xhr ){
+            if (file.xhr) {
                 file.xhr.abort();
             }
         },
 
-        _upload: function (file){
-            if( file ){
+        _upload: function (file) {
+            if (file) {
                 var currentDirectoryId = Claroline.ResourceManager.Controller.views.main.currentDirectory.id;
 
                 file.xhr = FileAPI.upload({
                     url: Routing.generate('claro_file_upload_with_ajax', {'parent': currentDirectoryId}),
                     imageAutoOrientation: true,
                     data: { fileName: file.name },
-                    files: { file: file},
-                    upload: function (){
+                    files: { file: file },
+                    upload: function () {
                         if (FU.index === 0) {
                             $('.resources').after(
-                                '<div class="resources-progress-bar"><div>' + Translator.get('platform:upload') + '<div class="progress progress-striped active"><div class="bar" style="width: 0%;"></div></div><div id="progress-files">1/' + FU.files.length + '</div></div></div>'
+                                '<div class="resources-progress-bar"><div>' + Translator.get('platform:upload') +
+                                '<div class="progress progress-striped active"><div class="bar" style="width: 0%;">' +
+                                '</div></div><div id="progress-files">1/' + FU.files.length + '</div></div></div>'
                             );
                         }
                     },
-                    progress: function (evt){
-                        var progress = ((evt.loaded/evt.total*(100/FU.files.length))+((100/FU.files.length)*FU.index))+'%';
+                    progress: function (evt) {
+                        var progress = ((evt.loaded / evt.total * (100 / FU.files.length)) +
+                            ((100 / FU.files.length) * FU.index)) + '%';
                         console.log('progress: ' + progress);
                         $('div.progress > div.bar').css('width', progress);
                     },
-                    complete: function (err, xhr){
-                        var state = err ? 'error' : 'done';
+                    complete: function (err, xhr) {
                         FU.index++;
                         FU.active = false;
-                        $('#progress-files').html(FU.index+'/'+FU.files.length);
-                        var progress = (100/FU.files.length)*FU.index;
-                        console.log('progress: '+progress);
-                        $('div.progress > div.bar').css('width', progress+'%');
+                        $('#progress-files').html(FU.index + '/' + FU.files.length);
+                        var progress = (100 / FU.files.length) * FU.index;
+                        console.log('progress: '  + progress);
+                        $('div.progress > div.bar').css('width', progress + '%');
                         FU.start();
 
                         if (xhr.status === 200) {
@@ -113,7 +117,7 @@
                         }
 
                         if (FU.index === FU.files.length) {
-                            setTimeout(function(){
+                            setTimeout(function () {
                                 $('div.resources-progress-bar').remove();
                             }, 500);
                             FU.index = 0;
@@ -130,25 +134,21 @@
         var alertUl = $('.alert-error > ul');
         if (alertUl.length > 0) {
             alertUl.append(
-                '<li>'+message+'</li>'
+                '<li>' + message + '</li>'
             );
         } else {
             $('.resource-manager').prepend(
-                '<div class="alert alert-error">'
-            +      '<a class="close" href="#" data-dismiss="alert">×</a>'
-            +      '<ul>'
-            +          '<li>' + message + '</li>'
-            +      '</ul>'
-            +   '</div>'
+                '<div class="alert alert-error">' + '<a class="close" href="#" data-dismiss="alert">×</a>' + '<ul>' +
+                '<li>' + message + '</li>' + '</ul>' + '</div>'
             );
         }
     }
 
     function onFiles(files) {
         FileAPI.each(files, function (file) {
-            if ( file.size >= 25*FileAPI.MB ){
+            if (file.size >= 25 * FileAPI.MB) {
                 showErrorMessage(Translator.get('platform:max_size_25mb'));
-            } else if ( file.size === void 0 ){
+            } else if (file.size === void 0) {
                 showErrorMessage(Translator.get('platform:empty_file'));
             } else {
                 FU.add(file);
