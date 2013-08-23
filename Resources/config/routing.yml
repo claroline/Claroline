@@ -10,6 +10,10 @@ admin_interaction_graphic:
     resource: "routing/admin/interactionGraphic.yml"
     prefix:   /admin/interactiongraphic
     
+admin_interaction_open:
+    resource: "routing/admin/interactionOpen.yml"
+    prefix:   /admin/interactionopen
+    
 admin_interaction_qcm:
     resource: "routing/admin/interactionQCM.yml"
     prefix:   /admin/interactionqcm
