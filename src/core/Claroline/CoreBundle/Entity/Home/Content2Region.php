@@ -60,8 +60,8 @@ class Content2Region
     public function __construct(Content2Region $first = null)
     {
         // the size may vary between 1 and 12 and corresponds to
-        // bootstrap container span classes
-        $this->size = 'span12';
+        // bootstrap container col classes
+        $this->size = 'content-8';
 
         if ($first) {
             $first->setBack($this);

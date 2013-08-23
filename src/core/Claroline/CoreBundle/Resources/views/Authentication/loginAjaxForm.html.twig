@@ -1,5 +1,5 @@
 <form id="login-form" class="form-horizontal" action="{{ path('claro_security_login_check') }}" method="post">
-    <fieldset>
+    <div class="panel-body">
         <div class="control-group">
             <label class="control-label" for="username">{{ 'username'|trans({}, 'platform') }} :</label>
             <div class="controls">
@@ -12,8 +12,8 @@
                 <input type="password" id="password" name="_password" required="required" />
             </div>
         </div>
-        <div class="form-actions">
-            <button type="submit" class="btn btn-primary">{{ 'login'|trans({}, 'platform') }}</button>
-        </div>
-    </fieldset>
+    </div>
+    <div class="panel-footer">
+        <button type="submit" class="btn btn-primary">{{ 'login'|trans({}, 'platform') }}</button>
+    </div>
 </form>

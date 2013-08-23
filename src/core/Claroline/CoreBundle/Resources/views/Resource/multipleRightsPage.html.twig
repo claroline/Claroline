@@ -110,7 +110,7 @@
     </div>
     <div class="tab-pane" id="advanced">
         <input type="text" id="role-search-text"/>
-        <input type="submit" value="{{ 'search'|trans({}, 'platform') }}" class="btn search-role-btn">
+        <input type="submit" value="{{ 'search'|trans({}, 'platform') }}" class="btn btn-default search-role-btn">
         <div id="advanced-pane-content">
             <div id="role-list"></div>
             <div id="form-right-wrapper"></div>
@@ -166,11 +166,14 @@
     </div>
 </div>
 
-<div id="modal-check-node-right-box" class="modal hide fade">
-    <div class="modal-header">
-        <button type="button" class="close modal-close">×</button>
-        <h3>{{ 'rights_management'|trans({}, 'platform') }}</h3>
-    </div>
-    <div class="modal-body" id="modal-check-role">
+<div id="modal-check-resource-right-box" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close modal-close">&times;</button>
+                <h4>{{ 'rights_management'|trans({}, 'platform') }}</h4>
+            </div>
+            <div class="modal-body" id="modal-check-role"></div>
+        </div>
     </div>
 </div>

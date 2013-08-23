@@ -74,6 +74,7 @@ abstract class MockeryTestCase extends \PHPUnit_Framework_TestCase
         if (!is_string($class) // probably a final class mock
             || in_array($class, self::$nonCloneableClasses) // already checked
             || false !== strpos($class, '[')) { // partial mock
+
             return false;
         }
 
