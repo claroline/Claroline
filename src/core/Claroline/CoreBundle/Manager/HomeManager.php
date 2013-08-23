@@ -54,7 +54,7 @@ class HomeManager
      */
     public function getContent($content, $type, $father = null)
     {
-        $array = array('type' => $type->getName(), 'size' => 'span12');
+        $array = array('type' => $type->getName(), 'size' => 'col-lg-12');
 
         if ($father) {
             $array['father'] = $father->getId();
@@ -407,7 +407,7 @@ class HomeManager
      * Get the variables of the menu.
      *
      * @param string $id   The id of the content.
-     * @param string $size The size (span12) of the content.
+     * @param string $size The size (col-lg-12) of the content.
      * @param string $type The type of the content.
      *
      * @return array

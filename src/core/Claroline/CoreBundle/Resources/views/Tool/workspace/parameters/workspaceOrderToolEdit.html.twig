@@ -2,33 +2,36 @@
 
 {% block section_content %}
 
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'icon-cog',
-                'name': 'parameters'|trans({}, 'platform'),
-                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
-            },
-            {
-                'name': 'tools'|trans({}, 'platform'),
-                'href': path('claro_workspace_tools_roles', {'workspaceId': workspace.getId()})
-            },
-            {
-                'name': 'edit'|trans({}, 'platform'),
-                'href': ''
-            }
-        ])
-    }}
-
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'rename_tool'|trans({}, 'platform') }} ({{ wot.getTool().getName()|trans({}, 'platform') }})</h3>
+    </div>
     <form class="form-horizontal" action="{{ path('claro_workspace_order_tool_edit', {'workspaceId': workspace.getId(), 'workspaceOrderToolId': wot.getId()}) }}" method="post" {{ form_enctype(form) }}>
-        <fieldset>
+        <div class="panel-body">
+            {{
+                macros.breadcrumbs([
+                    {
+                        'icon': 'icon-cog',
+                        'name': 'parameters'|trans({}, 'platform'),
+                        'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
+                    },
+                    {
+                        'name': 'tools'|trans({}, 'platform'),
+                        'href': path('claro_workspace_tools_roles', {'workspaceId': workspace.getId()})
+                    },
+                    {
+                        'name': 'edit'|trans({}, 'platform'),
+                        'href': ''
+                    }
+                ])
+            }}
+
             {{ form_widget(form) }}
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-                <a href="{{ path('claro_workspace_tools_roles', {'workspaceId': workspace.getId()}) }}">
-                    <button type="button" class="btn">{{ 'cancel'|trans({}, 'platform') }}</button>
-                </a>
-            </div>
-        </fieldset>
+        </div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            <a class="btn btn-default" href="{{ path('claro_workspace_tools_roles', {'workspaceId': workspace.getId()}) }}">
+                {{ 'cancel'|trans({}, 'platform') }}
+            </a>
+        </div>
     </form>
 {% endblock %}

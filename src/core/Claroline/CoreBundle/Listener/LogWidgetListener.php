@@ -162,7 +162,6 @@ class LogWidgetListener
         }
 
         if ($config === null) {
-            var_dump('pas de config...');
             $config = new LogWorkspaceWidgetConfig();
             $config->setIsDefault($event->isDefault());
             $config->setWorkspace($event->getWorkspace());
