@@ -2,9 +2,10 @@
 
 {% trans_default_domain "badge" %}
 
-{% block section_content %}
+{% block section_title %}<li class="active">{{ badge.name }}</li>{% endblock %}
+
+{% block section_body %}
     <ul class="nav nav-tabs">
-        <li><a href="{{ path('claro_admin_badges') }}" data-toggle="tooltip" data-placement="bottom" title="{{ 'back_to_badges_list'|trans }}"><i class="icon-reply"></i></a></li>
         <li class="active"><a href="#view" data-toggle="tab">{{ 'view'|trans({}, 'platform') }}</a></li>
         <li><a href="#edit" data-toggle="tab">{{ 'edit'|trans({}, 'platform') }}</a></li>
     </ul>
