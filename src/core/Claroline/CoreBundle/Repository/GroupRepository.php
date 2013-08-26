@@ -174,11 +174,10 @@ class GroupRepository extends EntityRepository
         $query->setParameter('search', "%{$search}%");
 
         return $executeQuery ? $query->getResult() : $query;
-        return ($getQuery) ? $query: $query->getResult();
     }
 
     /**
-     * @param array $params
+     * @param  array           $params
      * @return ArrayCollection
      */
     public function extract($params)
@@ -191,8 +190,7 @@ class GroupRepository extends EntityRepository
             return $query
                 ->setFirstResult(0)
                 ->setMaxResults(10)
-                ->getResult()
-            ;
+                ->getResult();
         }
 
         return array();
