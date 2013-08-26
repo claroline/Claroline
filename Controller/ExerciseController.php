@@ -236,27 +236,7 @@ class ExerciseController extends Controller
                     $pageNow = ceil($pos / $max);
                 }
             }
-/*
-            // Pagination finded documents
-            $adapterQuestion = new ArrayAdapter($interactions);
-            $pagerQuestion = new Pagerfanta($adapterQuestion);
 
-            try {
-                if ($pageNow == 0) {
-                    $interactionsPager = $pagerQuestion
-                        ->setMaxPerPage($max)
-                        ->setCurrentPage($page)
-                        ->getCurrentPageResults();
-                } else {
-                    $interactionsPager = $pagerQuestion
-                        ->setMaxPerPage($max)
-                        ->setCurrentPage($pageNow)
-                        ->getCurrentPageResults();
-                }
-            } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
-                throw $this->createNotFoundException("Cette page n'existe pas.");
-            }
-*/
             $pagination = $this->paginationWithIf($interactions, $max, $page, $pageNow);
 
             $interactionsPager = $pagination[0];
@@ -331,33 +311,7 @@ class ExerciseController extends Controller
                 $sharedWithMe[] = $em->getRepository('UJMExoBundle:Interaction')
                     ->findOneBy(array('question' => $shared[$i]->getQuestion()->getId()));
             }
-/*
-            // Do the pagination of the result depending on which page of which array was changed
-            // (My questions array)
-            $adapterMy = new ArrayAdapter($interactions);
-            $pagerfantaMy = new Pagerfanta($adapterMy);
 
-            // (My shared questions array)
-            $adapterShared = new ArrayAdapter($sharedWithMe);
-            $pagerfantaShared = new Pagerfanta($adapterShared);
-
-            try {
-                // Test if my questions array exists (try) and affects the matching results (which page, how many per page ...)
-                $interactionsPager = $pagerfantaMy
-                    ->setMaxPerPage($max)
-                    ->setCurrentPage($pagerMy)
-                    ->getCurrentPageResults();
-
-                // Test if my shared questions array exists (try) and affects the matching results (which page, how many per page ...)
-                $sharedWithMePager = $pagerfantaShared
-                    ->setMaxPerPage($max)
-                    ->setCurrentPage($pagerShared)
-                    ->getCurrentPageResults();
-            } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
-                // If page don't exist
-                throw $this->createNotFoundException("Cette page n'existe pas.");
-            }
-*/
             $doublePagination = $this->doublePagination($interactions, $sharedWithMe, $max, $pagerMy, $pagerShared);
 
             $interactionsPager = $doublePagination[0];
@@ -399,7 +353,7 @@ class ExerciseController extends Controller
     }
 
     /**
-     * To record the Question's import.
+     * To record the question's import.
      *
      */
     public function importValidateAction($exoID, $qid, $pageGoNow)
@@ -442,6 +396,10 @@ class ExerciseController extends Controller
         }
     }
 
+    /**
+     * To record the shared question's import.
+     *
+     */
     public function importValidateSharedAction($exoID, $qid, $pageGoNow)
     {
         $em = $this->getDoctrine()->getManager();
@@ -684,6 +642,10 @@ class ExerciseController extends Controller
         }
     }
 
+    /**
+     * To display the docimology's histogramms
+     *
+     */
     public function docimologyAction($exerciseId, $nbPapers)
     {
         $em = $this->getDoctrine()->getManager();
@@ -733,6 +695,10 @@ class ExerciseController extends Controller
         }
     }
 
+    /**
+     * To have the status of an answer
+     *
+     */
     private function responseStatus($responses, $scoreMax)
     {
         $responsesTab = array();
@@ -900,7 +866,7 @@ class ExerciseController extends Controller
     }
 
     /**
-     * The user must be registered and (the dates must be good or the user must to be admin for the exercise)
+     * The user must be registered (and the dates must be good or the user must to be admin for the exercise)
      *
      */
     private function controlDate($exoAdmin, $exercise)
@@ -1244,6 +1210,10 @@ class ExerciseController extends Controller
         }
     }
 
+    /**
+     * To get the number of answers with the 'correct' status
+     *
+     */
     private function getCorrectAnswer($exerciseId, $eq, $em, $exerciseSer)
     {
         $scoreMax = 0;
@@ -1276,6 +1246,10 @@ class ExerciseController extends Controller
         return $responsesTab;
     }
 
+    /**
+     * To paginate two tables on one page
+     *
+     */
     private function doublePagination($entityToPaginate1, $entityToPaginate2, $max, $page1, $page2)
     {
         $adapter1 = new ArrayAdapter($entityToPaginate1);
@@ -1307,6 +1281,10 @@ class ExerciseController extends Controller
         return $doublePagination;
     }
 
+    /**
+     * To paginate table
+     *
+     */
     private function paginationWithIf($entityToPaginate, $max, $page, $pageNow)
     {
         $adapter = new ArrayAdapter($entityToPaginate);
