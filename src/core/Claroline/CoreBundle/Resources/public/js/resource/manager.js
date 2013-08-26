@@ -550,7 +550,7 @@
             }
         }),
         Form: Backbone.View.extend({
-            className: 'node-form modal hide',
+            className: 'node-form',
             events: {
                 'click #submit-default-rights-form-button': function (event) {
                     event.preventDefault();
@@ -621,18 +621,13 @@
                         processData: false,
                         contentType: false,
                         success: function (form) {
-                            $('#modal-check-role').empty();
-                            $('#modal-check-role').append(form);
-                            $('#rights-form-resource-tab-content').css('display', 'none');
-                            $('#rights-form-resource-nav-tabs').css('display', 'none');
-                            $('#modal-check-resource-right-box .modal').modal('show');
+                            $('#form-rights-tag-wrapper').empty();
+                            $('#form-rights-tag-wrapper').append(form);
                         }
                     });
                 },
                 'click .modal-close': function (event) {
-                    event.preventDefault();
                     $('#modal-check-role').empty();
-                    $('#modal-check-resource-right-box .modal').modal('hide');
                     $('#rights-form-resource-tab-content').css('display', 'block');
                     $('#rights-form-resource-nav-tabs').css('display', 'block');
                 },
@@ -1106,7 +1101,10 @@
                 data: formData,
                 type: 'POST',
                 processData: false,
-                contentType: false
+                contentType: false,
+                success: function() {
+                    this.views.form.close();
+                }
             });
         },
         custom: function (action, nodeId, redirect) {
