@@ -72,6 +72,11 @@ create_new_admin_tag: 'Créer un nouveau Tag administrateur'
 create_new_tag: 'Créer un nouveau Tag'
 create_workspace: 'Créer un espace d''activités'
 creation_date: 'Date de création'
+csv_users_import_infos: 'Informations sur le format du fichier CSV'
+csv_users_import_infos_format: 'Format'
+csv_users_import_infos_format_a: 'Les données d''un utilisateur doivent être définies sur une ligne et séparées par une virgule'
+csv_users_import_infos_optional: 'Optionel'
+csv_users_import_infos_required: 'Requis'
 cut: Couper
 dashboard: 'Tableau de bord'
 date: Date
@@ -362,6 +367,7 @@ ok: Ok
 or: Ou
 open: Ouvrir
 options: Options
+order: Ordre
 organize_admin_tags: 'Organiser les Tags administrateur'
 organize_private_tags: 'Organiser les Tags personnels'
 Overview of all recent activities in %workspaceName%: 'Aperçu de toutes les activités récentes de %workspaceName%'
@@ -600,3 +606,4 @@ ws_creator: 'Créateur d''espaces'
 ws_most_viewed: 'Espaces d''activités les plus consultés'
 yes: 'oui'
 yesterday_activity: 'Activité de la veille'
+Your changes have been saved: 'Vos changements ont été sauvegardés'
