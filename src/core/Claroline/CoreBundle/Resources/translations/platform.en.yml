@@ -74,6 +74,8 @@ creation_date: 'Creation date'
 cut: Cut
 dashboard: Dashboard
 date: Date
+date_format: 'm-d-Y'
+date_form_format: 'MM-dd-yyyy'
 date_range.apply: 'Apply'
 date_range.clear: 'Clear'
 date_range.custom_range: 'Custom range'
