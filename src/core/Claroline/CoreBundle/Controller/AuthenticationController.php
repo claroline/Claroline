@@ -15,6 +15,8 @@ use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Security\Authenticator;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Claroline\CoreBundle\Library\HttpFoundation\XmlResponse;
+use Symfony\Component\HttpFoundation\Response;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -232,11 +234,20 @@ class AuthenticationController
     }
 
     /**
-     * @Route("/authenticate")
+     * @Route("/authenticate.{format}")
      * @Method("POST")
      */
-    public function postAuthenticationAction()
+    public function postAuthenticationAction($format)
     {
+        $formats = array('json', 'xml');
+
+        if (!in_array($format, $formats)) {
+            Return new Response(
+                "The format {$format} is not supported (supported formats are 'json', 'xml'",
+                400
+            );
+        }
+
         $request = $this->request;
         $username = $request->request->get('username');
         $password = $request->request->get('password');
@@ -245,6 +256,9 @@ class AuthenticationController
             array('message' => $this->translator->trans('login_failure', array(), 'platform')) :
             array();
 
-        return new JsonResponse($content, $status);
+        switch ($format) {
+            case 'json': return new JsonResponse($content, $status);
+            case 'xml' : return new XmlResponse($content, $status);
+        }
     }
 }

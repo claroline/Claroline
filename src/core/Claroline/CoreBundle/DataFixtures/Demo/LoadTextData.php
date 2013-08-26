@@ -51,7 +51,7 @@ class LoadTextData extends AbstractFixture implements ContainerAwareInterface
             $lipsumGenerator = $this->container->get('claroline.utilities.lipsum_generator');
             $manager = $this->container->get('doctrine.orm.entity_manager');
             $revision = new Revision();
-            $revision->setContent($lipsumGenerator->generateLipsum($this->words));
+            $revision->setContent($lipsumGenerator->generateLipsum($this->words), true, 1023);
             $revision->setUser($user);
             $manager->persist($revision);
             $manager->flush();
