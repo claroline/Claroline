@@ -159,7 +159,7 @@ class QuestionController extends Controller
                 $pageNow = ceil($pos / $max);
             }
         }
-
+/*
         // Do the pagination of the result depending on which page of which array was changed
         // (My questions array)
         $adapterMy = new ArrayAdapter($interactions);
@@ -200,6 +200,14 @@ class QuestionController extends Controller
             // If page don't exist
             throw $this->createNotFoundException("Cette page n'existe pas.");
         }
+*/
+        $doublePagination = $this->doublePaginationWithIf($interactions, $sharedWithMe, $max, $pagerMy, $pagerShared, $pageNow, $pageNowShared);
+
+        $interactionsPager = $doublePagination[0];
+        $pagerfantaMy = $doublePagination[1];
+
+        $sharedWithMePager = $doublePagination[2];
+        $pagerfantaShared = $doublePagination[3];
 
         return $this->render(
             'UJMExoBundle:Question:index.html.twig', array(
@@ -704,7 +712,7 @@ class QuestionController extends Controller
             $em = $this->getDoctrine()->getManager();
             $userList = $em->getRepository('ClarolineCoreBundle:User')->findByName($search);
 
-            // Pagination users for share question
+ /*           // Pagination users for share question
             $adapterUserSearch = new ArrayAdapter($userList);
             $pagerUserSearch = new Pagerfanta($adapterUserSearch);
 
@@ -716,6 +724,11 @@ class QuestionController extends Controller
             } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
                 throw $this->createNotFoundException("Cette page n'existe pas.");
             }
+*/
+            $pagination = $this->pagination($userList, $max, $page);
+
+            $userListPager = $pagination[0];
+            $pagerUserSearch = $pagination[1];
 
             // Put the result in a twig
             $divResultSearch = $this->render(
@@ -800,7 +813,7 @@ class QuestionController extends Controller
         $max = 5; // Max questions displayed per page
 
         $page = $request->query->get('page', 1); // Which page
-
+/*
          // Make the pagination of the result with pagerfanta bundle
         $adapterDoc = new ArrayAdapter($listDoc);
         $pagerDoc = new Pagerfanta($adapterDoc);
@@ -813,6 +826,11 @@ class QuestionController extends Controller
         } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
             throw $this->createNotFoundException("Cette page n'existe pas.");
         }
+*/
+        $pagination = $this->pagination($listDoc, $max, $page);
+
+        $listDocPager = $pagination[0];
+        $pagerDoc= $pagination[1];
 
         return $this->render(
             'UJMExoBundle:Question:manageImg.html.twig',
@@ -854,16 +872,16 @@ class QuestionController extends Controller
 
             $listDoc = $repository->findBy(array('user' => $userId));
 
-            // Pagination to see questions link to paper (and cannot be deleted)
-            $adapterDoc = new ArrayAdapter($listDoc);
-            $pagerDoc = new Pagerfanta($adapterDoc);
-
             // If delete last item of page, display the previous one
             $rest = $nbItem % $maxPage;
 
             if ($rest == 1 && $pageNow == $lastPage) {
                 $pageNow -= 1;
             }
+/*
+            // Pagination to see questions link to paper (and cannot be deleted)
+            $adapterDoc = new ArrayAdapter($listDoc);
+            $pagerDoc = new Pagerfanta($adapterDoc);
 
             try {
                 $listDocPager = $pagerDoc
@@ -873,6 +891,12 @@ class QuestionController extends Controller
             } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
                 throw $this->createNotFoundException("Cette page n'existe pas.");
             }
+*/
+
+            $pagination = $this->pagination($listDoc, $maxPage, $pageNow);
+
+            $listDocPager = $pagination[0];
+            $pagerDoc = $pagination[1];
 
             return $this->render(
                 'UJMExoBundle:Question:manageImg.html.twig',
@@ -916,7 +940,7 @@ class QuestionController extends Controller
             } else {
                 $linkPaper[] = 0;
             }
-
+/*
             $adapterDelDoc = new ArrayAdapter($entity);
             $pagerDelDoc = new Pagerfanta($adapterDelDoc);
 
@@ -928,6 +952,11 @@ class QuestionController extends Controller
             } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
                 throw $this->createNotFoundException("Cette page n'existe pas.");
             }
+*/
+            $pagination = $this->pagination($entity, $max, $page);
+
+            $entities = $pagination[0];
+            $pagerDelDoc = $pagination[1];
 
             return $this->render(
                 'UJMExoBundle:Question:safeDelete.html.twig',
@@ -1019,7 +1048,7 @@ class QuestionController extends Controller
                 ->getRepository('UJMExoBundle:Document');
 
             $listDocSort = $repository->findByType($type, $user->getId(), $searchLabel);
-
+/*
             // Pagination of sorted documents
             $adapterSortDoc = new ArrayAdapter($listDocSort);
             $pagerSortDoc = new Pagerfanta($adapterSortDoc);
@@ -1032,6 +1061,11 @@ class QuestionController extends Controller
             } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
                 throw $this->createNotFoundException("Cette page n'existe pas.");
             }
+*/
+            $pagination = $this->pagination($listDocSort, $max, $page);
+
+            $listDocSortPager = $pagination[0];
+            $pagerSortDoc = $pagination[1];
 
             // Put the result in a twig
             $divResultSearch = $this->render(
@@ -1085,7 +1119,7 @@ class QuestionController extends Controller
         if ($labelToFind) {
             $em = $this->getDoctrine()->getManager();
             $listFindDoc = $em->getRepository('UJMExoBundle:Document')->findByLabel($labelToFind, $userId, 1);
-
+/*
             // Pagination finded documents
             $adapterFindDoc = new ArrayAdapter($listFindDoc);
             $pagerFindDoc = new Pagerfanta($adapterFindDoc);
@@ -1098,6 +1132,11 @@ class QuestionController extends Controller
             } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
                 throw $this->createNotFoundException("Cette page n'existe pas.");
             }
+*/
+            $pagination = $this->pagination($listFindDoc, $max, $page);
+
+            $listFindDocPager = $pagination[0];
+            $pagerFindDoc = $pagination[1];
 
             // Put the result in a twig
             $divResultSearch = $this->render(
@@ -1306,7 +1345,7 @@ class QuestionController extends Controller
                         $alreadyShared[] = 0;
                     }
                 }
-
+/*
                 // Make the pagination of the result with pagerfanta bundle
                 $adapterSearch = new ArrayAdapter($listQuestions);
                 $pagerSearch = new Pagerfanta($adapterSearch);
@@ -1319,6 +1358,11 @@ class QuestionController extends Controller
                 } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
                     throw $this->createNotFoundException("Cette page n'existe pas.");
                 }
+*/
+                $pagination = $this->pagination($listQuestions, $max, $page);
+
+                $listQuestionsPager = $pagination[0];
+                $pagerSearch = $pagination[1];
 
                 // Put the result in a twig
                 $divResultSearch = $this->render(
@@ -1398,7 +1442,7 @@ class QuestionController extends Controller
                         }
                         break;
                 }
-
+/*
                 // Make the pagination of the result with pagerfanta bundle
                 $adapterSearch = new ArrayAdapter($listQuestions);
                 $pagerSearch = new Pagerfanta($adapterSearch);
@@ -1411,6 +1455,11 @@ class QuestionController extends Controller
                 } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
                     throw $this->createNotFoundException("Cette page n'existe pas.");
                 }
+*/
+                $pagination = $this->pagination($listQuestions, $max, $page);
+
+                $listQuestionsPager = $pagination[0];
+                $pagerSearch = $pagination[1];
 
                 // Put the result in a twig
                 $divResultSearch = $this->render(
@@ -1486,5 +1535,70 @@ class QuestionController extends Controller
             'sharedWith' => $sharedWith,
             )
         );
+    }
+
+    private function pagination($entityToPaginate, $max, $page)
+    {
+        $adapter = new ArrayAdapter($entityToPaginate);
+        $pager = new Pagerfanta($adapter);
+
+        try {
+            $entityPaginated = $pager
+                ->setMaxPerPage($max)
+                ->setCurrentPage($page)
+                ->getCurrentPageResults();
+        } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
+            throw $this->createNotFoundException("Cette page n'existe pas.");
+        }
+
+        $pagination[0] = $entityPaginated;
+        $pagination[1] = $pager;
+
+        return $pagination;
+    }
+
+    private function doublePaginationWithIf($entityToPaginate1, $entityToPaginate2, $max, $page1, $page2, $pageNow1, $pageNow2)
+    {
+        $adapter1 = new ArrayAdapter($entityToPaginate1);
+        $pager1 = new Pagerfanta($adapter1);
+
+        $adapter2 = new ArrayAdapter($entityToPaginate2);
+        $pager2 = new Pagerfanta($adapter2);
+
+        try {
+            if ($pageNow1 == 0) {
+                $entityPaginated1 = $pager1
+                    ->setMaxPerPage($max)
+                    ->setCurrentPage($page1)
+                    ->getCurrentPageResults();
+            } else {
+                $entityPaginated1 = $pager1
+                    ->setMaxPerPage($max)
+                    ->setCurrentPage($pageNow1)
+                    ->getCurrentPageResults();
+            }
+
+            if ($pageNow2 == 0) {
+                $entityPaginated2 = $pager2
+                    ->setMaxPerPage($max)
+                    ->setCurrentPage($page2)
+                    ->getCurrentPageResults();
+            } else {
+                $entityPaginated2 = $pager2
+                    ->setMaxPerPage($max)
+                    ->setCurrentPage($pageNow2)
+                    ->getCurrentPageResults();
+            }
+        } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
+            throw $this->createNotFoundException("Cette page n'existe pas.");
+        }
+
+        $doublePagination[0] = $entityPaginated1;
+        $doublePagination[1] = $pager1;
+
+        $doublePagination[2] = $entityPaginated2;
+        $doublePagination[3] = $pager2;
+
+        return $doublePagination;
     }
 }
