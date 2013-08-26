@@ -45,6 +45,8 @@ namespace UJM\ExoBundle\Services\classes;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\HttpFoundation\Request;
 
+use UJM\ExoBundle\Entity\ExerciseQuestion;
+
 class exerciseServices
 {
     protected $doctrine;
@@ -430,5 +432,21 @@ class exerciseServices
         }
 
         return $scoreMax;
+    }
+
+    public function setExerciseQuestion($exercise, $interX)
+    {
+        $exo = $this->doctrine->getManager()->getRepository('UJMExoBundle:Exercise')->find($exercise);
+        $eq = new ExerciseQuestion($exo, $interX->getInteraction()->getQuestion());
+
+        $dql = 'SELECT max(eq.ordre) FROM UJM\ExoBundle\Entity\ExerciseQuestion eq '
+              . 'WHERE eq.exercise='.$exercise;
+        $query = $this->doctrine->getManager()->createQuery($dql);
+        $maxOrdre = $query->getResult();
+
+        $eq->setOrdre((int) $maxOrdre[0][1] + 1);
+        $this->doctrine->getManager()->persist($eq);
+
+        $this->doctrine->getManager()->flush();
     }
 }
