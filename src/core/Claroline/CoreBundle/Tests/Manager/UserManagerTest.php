@@ -161,7 +161,6 @@ class UserManagerTest extends MockeryTestCase
             ->once()
             ->andReturn($user);
 
-//        m::getConfiguration()->allowMockingNonExistentMethods(true);
         $this->userRepo->shouldReceive('findUserByUsernameOrEmail')
             ->with('username_1', 'email_1')
             ->once()
@@ -170,7 +169,6 @@ class UserManagerTest extends MockeryTestCase
             ->with('username_2', 'email_2')
             ->once()
             ->andReturn(null);
-//        m::getConfiguration()->allowMockingNonExistentMethods(false);
 
         $user->shouldReceive('setFirstName')
             ->with('first_name_2')

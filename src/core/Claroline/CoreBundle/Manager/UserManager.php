@@ -138,9 +138,9 @@ class UserManager
             $email = $user[4];
             $code = isset($user[5])? $user[5] : null;
             $phone = isset($user[6])? $user[6] : null;
-            $existingUser = $this->userRepo->findUserByUsernameOrEmail($username, $email);
+            $existingUsers = $this->userRepo->findUserByUsernameOrEmail($username, $email);
 
-            if (count($existingUser) === 0 && filter_var($email, FILTER_VALIDATE_EMAIL) !== false) {
+            if (count($existingUsers) === 0 && filter_var($email, FILTER_VALIDATE_EMAIL) !== false) {
                 $newUser = $this->om->factory('Claroline\CoreBundle\Entity\User');
                 $newUser->setFirstName($firstName);
                 $newUser->setLastName($lastName);
