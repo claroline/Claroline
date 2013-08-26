@@ -74,14 +74,14 @@ class InteractionOpenType extends AbstractType
                     'required' => false
                 )
             );
-        $builder
+        /*$builder
             ->add(
                 'unit', 'entity', array(
                     'class' => 'UJM\\ExoBundle\\Entity\\Unit',
                     'label' => 'Unit.value',
                     'required' => false
                 )
-            );
+            );*/
         $builder
             ->add(
                 'wordResponses', 'collection', array(

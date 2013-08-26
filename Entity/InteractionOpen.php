@@ -68,19 +68,7 @@ class InteractionOpen
      */
     private $interaction;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="UJM\ExoBundle\Entity\Unit")
-     * @ORM\JoinTable(
-     *     name="ujm_interaction_open_unit",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="interaction_open_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="unit_id", referencedColumnName="id")}
-     * )
-     */
-    private $unit;
-
+    
     /**
      * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\TypeOpenQuestion")
      */
@@ -93,7 +81,6 @@ class InteractionOpen
 
     public function __construct()
     {
-        $this->unit = new \Doctrine\Common\Collections\ArrayCollection;
         $this->wordResponses = new \Doctrine\Common\Collections\ArrayCollection;
     }
 
@@ -133,26 +120,6 @@ class InteractionOpen
     public function setInteraction(\UJM\ExoBundle\Entity\Interaction $interaction)
     {
         $this->interaction = $interaction;
-    }
-
-    /**
-     * Gets an array of Units.
-     *
-     * @return array An array of Units objects
-     */
-    public function getUnit()
-    {
-        return $this->unit;
-    }
-
-    /**
-     * Add $Unit
-     *
-     * @param UJM\ExoBundle\Entity\Unit $Unit
-     */
-    public function addUnit(\UJM\ExoBundle\Entity\Unit $unit)
-    {
-        $this->unit[] = $unit;
     }
 
     public function getTypeOpenQuestion()
