@@ -603,6 +603,7 @@ workspace_unregistration_confirm_title: 'Voulez-vous vous désinscrire de cet es
 workspace_welcome: Accueil
 workspaces: 'Espaces d''activités'
 ws_creator: 'Créateur d''espaces'
-ws_most_viewed: Espaces d'activités les plus consultés
-yesterday_activity: Activité de la veille
+ws_most_viewed: 'Espaces d''activités les plus consultés'
+yes: 'oui'
+yesterday_activity: 'Activité de la veille'
 Your changes have been saved: 'Vos changements ont été sauvegardés'
