@@ -41,7 +41,7 @@ badge_award_form_user: 'Utilisateur'
 badge_expired_on_date: 'Expire le %expirationDate%'
 badge_award_info_no_group_message: "Aucun groupe sélectionné pour l'attribution"
 claim: 'Réclamer'
-claim_date: 'Date de réclamation'
+claim_date: 'Date de la réclamation'
 claim_badge: 'Réclamer un badge'
 claim_badge_form: 'Formulaire de réclamation de badge'
 badge_not_found_with_name: "Aucun badge avec le nom '%badgeName%' n'a pu être retrouvé."
