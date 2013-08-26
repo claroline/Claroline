@@ -599,7 +599,7 @@ class ExerciseController extends Controller
                 break;
 
             case "InteractionOpen":
-
+                $res = $exerciseSer->responseOpen($request, $session->get('paper'));
                 break;
         }
 
@@ -790,7 +790,23 @@ class ExerciseController extends Controller
                 break;
 
             case "InteractionOpen":
+                
+                $interactionToDisplayed = $this->getDoctrine()
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:InteractionOpen')
+                    ->getInteractionOpen($interactionToDisplay->getId());
 
+                $responseGiven = $this->getDoctrine()
+                                      ->getManager()
+                                      ->getRepository('UJMExoBundle:Response')
+                                      ->getAlreadyResponded($session->get('paper'), $interactionToDisplay->getId());
+
+                if (count($responseGiven) > 0) {
+                    $responseGiven = $responseGiven[0]->getResponse();
+                } else {
+                    $responseGiven = '';
+                }
+                
                 break;
         }
 

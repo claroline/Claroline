@@ -91,6 +91,13 @@ class InteractionOpenType extends AbstractType
                     'allow_delete' => true
                 )
             );
+        $builder
+            ->add(
+                'scoreMaxLongResp', 'text', array(
+                'required' => false,
+                'label' => 'Inter_Open.ScoreMaxLongResp'
+                )
+            );
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

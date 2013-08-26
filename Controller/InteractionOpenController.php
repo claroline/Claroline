@@ -150,17 +150,17 @@ class InteractionOpenController extends Controller
     public function responseOpenAction()
     {
         $request = $this->get('request');
-        $interOpen = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:InteractionOpen')
-                          ->find($request->request->get('interactionOpenToValidated'));
         
-        if($interOpen->getTypeOpenQuestion() == 'long'){
-            $response = $request->request->get('interOpenLong');
-        }
+        $exerciseSer = $this->container->get('ujm.exercise_services');
+        $res = $exerciseSer->responseOpen($request);
         
         return $this->render(
             'UJMExoBundle:InteractionOpen:openOverview.html.twig', array(
-            'interOpen'   => $interOpen,
-            'response'    => $response
+            'interOpen'   => $res['interOpen'],
+            'penalty'     => $res['penalty'],
+            'response'    => $res['response'],
+            'score'       => $res['score'],
+            'tempMark'    => $res['tempMark']
             )
         );
     }

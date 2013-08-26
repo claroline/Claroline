@@ -194,6 +194,7 @@ noQuestionFound: Pas de question trouvée
 noRightAnswer: Aucune bonne réponse
 notImageMesssage: Le document doit être une image
 noTitle: La question n\'a pas de titre
+not yet mark: Pas encore noté
 noUserFound: Pas d'utilisateur trouvé
 number of papers: Nombre de copies
 number of questions: Nombre de questions
@@ -264,6 +265,7 @@ start date: Date de début
 subscription: Inscription
 
 # T
+temporary mark: Note temporaire
 test exit: Sortie du test
 title: Titre
 try: Tester
@@ -340,6 +342,8 @@ Hint.value: Indice
 
 Interaction.feedback: Commentaire à afficher avec la correction (facultatif)
 Interaction.invite: Question
+
+Inter_Open.ScoreMaxLongResp: Points pour la bonne réponse
 
 Inter_QCM.ScoreRightResponse: Points pour la bonne réponse
 Inter_QCM.ScoreFalseResponse: Points pour une mauvaise réponse

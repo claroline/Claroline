@@ -62,7 +62,7 @@
         <p>
             <table>
                 {% set nbr_hint = 1 %}
-                {% for hint in interactionQCM.interaction.hints %}              
+                {% for hint in interactionOpen.interaction.hints %}              
                    <tr>
                        <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}', '{{path('ujm_hint_show')}}', '{{ 'consult_hint' | trans }} ?', '{{nbr_hint}}')">{{ 'hint' | trans }} {{nbr_hint}} </a></td>
                        <td id="div_hint{{nbr_hint}}"></td>

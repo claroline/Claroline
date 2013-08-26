@@ -72,5 +72,16 @@
     {{ interOpen.interaction.feedback|raw}}
 </div>
 <br/><br/>     
+
+{% if penalty > 0 %}
+    {{ 'penalty' | trans }}: {{ penalty }}<br/>
+{% endif %}
+{% if tempMark == true %}
+    {{ 'not yet mark' | trans }}: {{ score }}
+{% else %}
+    {{ 'mark' | trans }}: <span id="score">{{ score }}</span>
+{% endif %}
+
+<br/><br/>
 <a href="{{ path('ujm_question_index') }}">{{ 'list of question' | trans }}</a>
 {% endblock %}

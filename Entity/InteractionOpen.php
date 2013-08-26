@@ -78,6 +78,13 @@ class InteractionOpen
      * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\WordResponse", mappedBy="interactionOpen", cascade={"remove"})
      */
     private $wordResponses;
+    
+    /**
+     * @var float $scoreMaxLongResp
+     *
+     * @ORM\Column(name="scoreMaxLongResp", type="float", nullable=true)
+     */
+    private $scoreMaxLongResp;
 
     public function __construct()
     {
@@ -148,5 +155,23 @@ class InteractionOpen
     public function removeWordResponse(\UJM\ExoBundle\Entity\WordResponse $wordResponse)
     {
         
+    }
+    
+    /**
+     * Set scoreMaxLongResp
+     *
+     * @param float $scoreMaxLongResp
+     */
+    public function setScoreMaxLongResp($scoreMaxLongResp)
+    {
+        $this->scoreMaxLongResp = $scoreMaxLongResp;
+    }
+
+    /**
+     * Get scoreMaxLongResp
+     */
+    public function getScoreMaxLongResp()
+    {
+        return $this->scoreMaxLongResp;
     }
 }
